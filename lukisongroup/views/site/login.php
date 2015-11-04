@@ -1,5 +1,5 @@
 <?php
-require('_index_nologin.php');
+require('index_nologin.php');
 use yii\helpers\Html;
 use kartik\icons\Icon;
 /* @var $this yii\web\View */
