@@ -12,10 +12,10 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
-        'method' => 'get',
+        'method' => 'post',
     ]); ?>
 
-    <?= $form->field($model, 'ID') ?>
+    <!--$form->field($model, 'ID') ?>-->
 
     <?= $form->field($model, 'KD_BARANG') ?>
 

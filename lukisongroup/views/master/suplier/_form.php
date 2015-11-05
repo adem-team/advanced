@@ -17,6 +17,8 @@ use lukisongroup\models\hrd\Corp;
 
     <?php $form = ActiveForm::begin([
 		'type' => ActiveForm::TYPE_HORIZONTAL,
+                'id' => 'createsuplier',
+                'enableClientValidation' => true,
 		'method' => 'post',
 		'action' => ['master/suplier/simpan'],
 		]); ?>
@@ -49,8 +51,7 @@ use lukisongroup\models\hrd\Corp;
     <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>
 
     <?=  $form->field($model, 'STATUS')->radioList(['1'=>'Aktif','0'=>'Tidak Aktif']) ?>
-    <?= $form->field($model, 'CREATED_BY')->hiddenInput(['value'=>Yii::$app->user->identity->username])->label(false) ?>
-    <?= $form->field($model, 'CREATED_AT')->hiddenInput(['value'=>date('Y-m-d H:i:s')])->label(false) ?>
+    
 
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">

@@ -2,7 +2,8 @@
 
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
-use kartik\widgets\SwitchInput
+use kartik\widgets\SwitchInput;
+use kartik\widgets\ColorInput;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\models\master\Unitbarang */
@@ -12,6 +13,8 @@ use kartik\widgets\SwitchInput
 <div class="unitbarang-form">
 
     <?php $form = ActiveForm::begin([
+                 'id'=>'createunit',
+                 'enableClientValidation' => true,
 		'type' => ActiveForm::TYPE_HORIZONTAL,
 		'method' => 'post',
 		'action' => ['master/unitbarang/simpan'],]); ?>
@@ -24,7 +27,9 @@ use kartik\widgets\SwitchInput
 
     <?= $form->field($model, 'WIGHT')->textInput() ?>
 
-    <?= $form->field($model, 'COLOR')->textInput(['maxlength' => true]) ?>
+     <?=$form->field($model, 'COLOR')->widget(ColorInput::classname(), [
+    'options' => ['placeholder' => 'Select color ...'],
+])?>
 
     <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>
 

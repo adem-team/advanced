@@ -12,13 +12,15 @@ use kartik\widgets\SwitchInput
 <div class="kategori-form">
 
     <?php $form = ActiveForm::begin([
+                'id'=>'createkat',
+                'enableClientValidation' => true,
 		'type' => ActiveForm::TYPE_HORIZONTAL,
 		'method' => 'post',
 		'action' => ['master/kategori/simpan'],
 		]); ?>
 
-    <?= $form->field($model, 'CREATED_BY')->hiddenInput(['value'=>Yii::$app->user->identity->username])->label(false) ?>
-    <?= $form->field($model, 'CREATED_AT')->hiddenInput(['value'=>date('Y-m-d H:i:s')])->label(false) ?>
+     <!--$form->field($model, 'CREATED_BY')->hiddenInput(['value'=>Yii::$app->user->identity->username])->label(false) ?>-->
+     <!--$form->field($model, 'CREATED_AT')->hiddenInput(['value'=>date('Y-m-d H:i:s')])->label(false) ?>-->
 	
     <?= $form->field($model, 'NM_KATEGORI')->textInput(['maxlength' => true]) ?>
 
@@ -28,7 +30,7 @@ use kartik\widgets\SwitchInput
 	
   <div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">
-			<?= Html::submitButton($model->isNewRecord ? '<i class="fa fa-plus"></i>&nbsp;&nbsp; Tambah Kategori' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+			<?= Html::submitButton($model->isNewRecord ? '<i class="fa fa-plus"></i>&nbsp;&nbsp; Tambah Kategori' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary','id'=>'tbk']) ?>
 		</div>
     </div>
 

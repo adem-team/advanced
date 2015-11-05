@@ -3,8 +3,9 @@
 use yii\helpers\Html;
 //use yii\widgets\ActiveForm;
 use kartik\form\ActiveForm;
-use kartik\widgets\SwitchInput;
+//use kartik\widgets\SwitchInput;
 use yii\helpers\ArrayHelper;
+use kartik\widgets\Select2;
 	
 use lukisongroup\models\master\Kategori;
 use lukisongroup\models\master\Unitbarang;
@@ -12,48 +13,71 @@ use lukisongroup\models\master\Suplier;
 //use lukisongroup\models\master\Perusahaan;
 use lukisongroup\models\master\Tipebarang;
 use lukisongroup\models\hrd\Corp;
+use kartik\widgets\DatePicker;
 
 use kartik\widgets\FileInput;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\models\master\Barangumum */
 /* @var $form yii\widgets\ActiveForm */
+
+
+// dropdown data
+
+ $drop = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM'); 
+ $droptipe = ArrayHelper::map(Tipebarang::find()->where(['STATUS' => 1])->all(), 'KD_TYPE', 'NM_TYPE');
+ $dropkategori = ArrayHelper::map(Kategori::find()->where(['STATUS' => 1])->all(), 'KD_KATEGORI', 'NM_KATEGORI');
+ $dropunit = ArrayHelper::map(Unitbarang::find()->where(['STATUS' => 1])->all(), 'KD_UNIT', 'NM_UNIT');
+ $dropsuplier = ArrayHelper::map(Suplier::find()->where(['STATUS' => 1])->all(), 'KD_SUPPLIER', 'NM_SUPPLIER');
 ?>
 
-<div class="barangumum-form">
+         <div class="row">
+            
+             <div class="col-lg-3"></div>
+             <div class="col-lg-9">
 
     <?php $form = ActiveForm::begin([
 		'type' => ActiveForm::TYPE_HORIZONTAL,
+                'id'=>'createumum',
+                'enableClientValidation' => true,
 		'method' => 'post',
 		'action' => ['master/barangumum/simpan'],
 		'options' => ['enctype' => 'multipart/form-data']
 		]);
 	?>
 
-    <?php $drop = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM'); ?>
-    <?= $form->field($model, 'KD_CORP')->dropDownList($drop,['prompt'=>' -- Pilih Salah Satu --'])->label('Group Perusahaan') ?>
+   
+    <?= $form->field($model, 'KD_CORP')->dropDownList($drop,['prompt'=>' -- Pilih Salah Satu --']) ?>
     
     <?= $form->field($model, 'NM_BARANG')->textInput(['maxlength' => true]) ?>
 
-	<?php $drop = ArrayHelper::map(Tipebarang::find()->where(['STATUS' => 1])->all(), 'KD_TYPE', 'NM_TYPE'); ?>
-    <?= $form->field($model, 'KD_TYPE')->dropDownList($drop,['prompt'=>' -- Pilih Salah Satu --'])->label('Type Barang') ?>
+	 
+    <?= $form->field($model, 'KD_TYPE')->dropDownList($droptipe,['prompt'=>' -- Pilih Salah Satu --'])->label('Type Barang') ?>
 
-	<?php $drop = ArrayHelper::map(Kategori::find()->where(['STATUS' => 1])->all(), 'KD_KATEGORI', 'NM_KATEGORI'); ?>
-    <?= $form->field($model, 'KD_KATEGORI')->dropDownList($drop,['prompt'=>' -- Pilih Salah Satu --'])->label('Kategori') ?>
+	
+    <?= $form->field($model, 'KD_KATEGORI')->dropDownList($dropkategori,['prompt'=>' -- Pilih Salah Satu --'])->label('Kategori') ?>
+                 
+	 
+       
+    <?=$form->field($model, 'KD_UNIT')->widget(Select2::classname(), [
+    'data' => $dropunit,
+    'options' => ['placeholder' => 'pilih KD_unit ...'],
+    'pluginOptions' => [
+        'allowClear' => true
+    ],
+]); ?>
 
-	<?php $drop = ArrayHelper::map(Unitbarang::find()->where(['STATUS' => 1])->all(), 'KD_UNIT', 'NM_UNIT'); ?>
-    <?= $form->field($model, 'KD_UNIT')->dropDownList($drop,['prompt'=>' -- Pilih Salah Satu --'])->label('Unit') ?>
+	
+    <?= $form->field($model, 'KD_SUPPLIER')->dropDownList($dropsuplier,['prompt'=>' -- Pilih Salah Satu --'])->label('Supplier') ?>
 
-	<?php $drop = ArrayHelper::map(Suplier::find()->where(['STATUS' => 1])->all(), 'KD_SUPPLIER', 'NM_SUPPLIER'); ?>
-    <?= $form->field($model, 'KD_SUPPLIER')->dropDownList($drop,['prompt'=>' -- Pilih Salah Satu --'])->label('Supplier') ?>
-
-    <!-- ?= $form->field($model, 'KD_DISTRIBUTOR')->textInput(['maxlength' => true]) ? -->
 
     <?= $form->field($model, 'PARENT')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'HPP')->textInput() ?>
 
     <?= $form->field($model, 'HARGA')->textInput() ?>
+                 
+               
 
     <?= $form->field($model, 'BARCODE')->textInput(['maxlength' => true]) ?>
 
@@ -62,24 +86,21 @@ use kartik\widgets\FileInput;
     'pluginOptions'=>['allowedFileExtensions'=>['jpg','gif','png']]
 	]);
 	?>
-
+              
     <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'KD_CAB')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'KD_DEP')->textInput(['maxlength' => true]) ?>
-
+    
     <?= $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']) ?>
 
-	<div class="form-group">
-		<div class="col-sm-offset-2 col-sm-10">
-			<?= Html::submitButton($model->isNewRecord ? '<i class="fa fa-plus"></i>&nbsp;&nbsp;Tambah Barang' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-		</div>
-    </div>
+    <?= Html::submitButton($model->isNewRecord ? '<i class="fa fa-plus"></i>&nbsp;&nbsp;Tambah Barang' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+		
+     
 
-    <?= $form->field($model, 'CREATED_BY')->hiddenInput(['value'=>Yii::$app->user->identity->username])->label(false) ?>
-    <?= $form->field($model, 'CREATED_AT')->hiddenInput(['value'=>date('Y-m-d H:i:s')])->label(false) ?>
+    
     
     <?php ActiveForm::end(); ?>
+             </div>
 
-</div>

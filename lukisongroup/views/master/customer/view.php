@@ -9,16 +9,6 @@ $this->title = Yii::t('app', 'Umum - Customer Detail ');    /* title pada header
 ?>
 <div class="customer-view">
 
-     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->CUST_KD], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->CUST_KD], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
 
     <?= DetailView::widget([
         'model' => $model,

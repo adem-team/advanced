@@ -51,13 +51,13 @@ $this->title = Yii::t('app', 'Umum - Supplier Detail');	    /* title pada header
     ]) ?>
 
     <p>
-        <?= Html::a('<i class="fa fa-pencil"></i>&nbsp;&nbsp;Ubah', ['update', 'ID' => $model->ID, 'KD_SUPPLIER' => $model->KD_SUPPLIER], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('<i class="fa fa-trash-o"></i>&nbsp;&nbsp;Hapus', ['delete', 'ID' => $model->ID, 'KD_SUPPLIER' => $model->KD_SUPPLIER], [
+<!--         Html::a('<i class="fa fa-pencil"></i>&nbsp;&nbsp;Ubah', ['update', 'ID' => $model->ID, 'KD_SUPPLIER' => $model->KD_SUPPLIER], ['class' => 'btn btn-primary']) ?>
+         Html::a('<i class="fa fa-trash-o"></i>&nbsp;&nbsp;Hapus', ['delete', 'ID' => $model->ID, 'KD_SUPPLIER' => $model->KD_SUPPLIER], [
 			'class' => 'btn btn-danger',
 			'data' => [
 			    'confirm' => 'Are you sure you want to delete this item?',
 			    'method' => 'post',
 			],
-        ]) ?>
+        ]) ?>-->
     </p>
 </div>

@@ -14,7 +14,10 @@ use lukisongroup\models\hrd\Corp;
 
 <div class="suplier-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+          'id' => 'updatesuplier',
+          'enableClientValidation' => true,
+    ]); ?>
 
     <?php
         $drop = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM');
@@ -43,7 +46,7 @@ use lukisongroup\models\hrd\Corp;
 
     <?= $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']) ?>
 
-    <?= $form->field($model, 'UPDATED_BY')->hiddenInput(['value'=>Yii::$app->user->identity->username])->label(false) ?>
+   
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Ubah', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
