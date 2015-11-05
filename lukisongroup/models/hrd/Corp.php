@@ -26,7 +26,7 @@ class Corp extends \yii\db\ActiveRecord
     public static function tableName()
     {
         //return '{{dbm000.a0001}}';
-		return '{{u0001}}';
+		return '{{dbm002.u0001}}';
     }
 
 	/* [3] RULE SCENARIO -> DetailView */
