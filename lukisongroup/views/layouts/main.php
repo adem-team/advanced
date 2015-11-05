@@ -15,6 +15,10 @@ use mdm\admin\components\MenuHelper;
 use yii\bootstrap\Modal;
 //AppAsset::register($this);
 dmstr\web\AdminLteAsset::register($this);
+use lukisongroup\assets\AppAsset_style;
+AppAsset_style::register($this);
+//use lukisongroup\assets\AppAsset_gvk;
+//AppAsset_gvk::register($this);
 ?>
 <?php $this->beginPage() ?>
 	<!DOCTYPE html>

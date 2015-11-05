@@ -31,8 +31,8 @@ class OrgAsset extends AssetBundle
     ];
     
     public $depends = [
-        'yii\web\YiiAsset',
-        'yii\bootstrap\BootstrapAsset',
+        //'yii\web\YiiAsset',
+       // 'yii\bootstrap\BootstrapAsset',
     ];
     
 }
