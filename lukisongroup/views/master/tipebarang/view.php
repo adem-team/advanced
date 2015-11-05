@@ -30,15 +30,15 @@ $this->title = Yii::t('app', 'Umum - Type Detail Barang ');	    /* title pada he
         ],
     ]) ?>
 	
-    <p>
-        <?= Html::a('<i class="fa fa-pencil"></i>&nbsp;&nbsp; Ubah', ['update', 'ID' => $model->ID, 'KD_TYPE' => $model->KD_TYPE], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('<i class="fa fa-trash"></i>&nbsp;&nbsp; Hapus', ['delete', 'ID' => $model->ID, 'KD_TYPE' => $model->KD_TYPE], [
+<!--    <p>
+        Html::a('<i class="fa fa-pencil"></i>&nbsp;&nbsp; Ubah', ['update', 'ID' => $model->ID, 'KD_TYPE' => $model->KD_TYPE], ['class' => 'btn btn-primary']) ?>
+         Html::a('<i class="fa fa-trash"></i>&nbsp;&nbsp; Hapus', ['delete', 'ID' => $model->ID, 'KD_TYPE' => $model->KD_TYPE], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',
                 'method' => 'post',
             ],
-        ]) ?>
+        ]) ?>-->
     </p>
 
 </div>

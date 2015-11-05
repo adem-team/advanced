@@ -13,6 +13,8 @@ use kartik\widgets\SwitchInput
 <div class="tipebarang-form">
 
     <?php $form = ActiveForm::begin([
+                'id'=>'createtipe',
+                'enableClientValidation' => true,
 		'type' => ActiveForm::TYPE_HORIZONTAL,
 		'method' => 'post',
 		'action' => ['master/tipebarang/simpan'],
@@ -23,8 +25,7 @@ use kartik\widgets\SwitchInput
 
     <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'CREATED_AT')->hiddenInput(['value'=>date('Y-m-d H:i:s')])->label(false) ?>
-    <?= $form->field($model, 'CREATED_BY')->hiddenInput(['value'=>Yii::$app->user->identity->username])->label(false) ?>
+    
 	
     <?=  $form->field($model, 'STATUS')->radioList(['1'=>'Aktif','0'=>'Tidak Aktif']) ?>
 

@@ -10,9 +10,14 @@ use yii\widgets\ActiveForm;
 
 <div class="customer-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+          'id' => 'createcustomer',
+          'enableClientValidation' => true,
+        
+        
+    ]); ?>
 
-    <?= $form->field($model, 'CUST_KD')->textInput(['maxlength' => true]) ?>
+    <?=$form->field($model, 'CUST_KD')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'CUST_NM')->textInput(['maxlength' => true]) ?>
 
@@ -32,19 +37,19 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'STATUS')->textInput() ?>
+  <?=  $form->field($model, 'STATUS')->radioList(['1'=>'Aktif','0'=>'Tidak Aktif']) ?>
 
     <?= $form->field($model, 'NPWP')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'STT_TOKO')->textInput() ?>
 
-    <?= $form->field($model, 'CREATED_BY')->textInput(['maxlength' => true]) ?>
+     <!-- $form->field($model, 'CREATED_BY')->textInput(['maxlength' => true]) ?> -->
 
-    <?= $form->field($model, 'CREATED_AT')->textInput() ?>
+     <!-- $form->field($model, 'CREATED_AT')->textInput() ?> -->
 
-    <?= $form->field($model, 'UPDATED_AT')->textInput() ?>
+    <!-- $form->field($model, 'UPDATED_AT')->textInput() ?> -->
 
-    <?= $form->field($model, 'UPDATED_BY')->textInput(['maxlength' => true]) ?>
+     <!-- $form->field($model, 'UPDATED_BY')->textInput(['maxlength' => true]) ?> -->
 
     <?= $form->field($model, 'DATA_ALL')->textInput(['maxlength' => true]) ?>
 

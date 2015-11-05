@@ -51,14 +51,15 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 
 
     <p>
-        <?= Html::a('<i class="fa fa-pencil"></i>&nbsp;&nbsp;Ubah', ['update', 'ID' => $model->ID, 'KD_UNIT' => $model->KD_UNIT], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('<i class="fa fa-trash-o"></i>&nbsp;&nbsp;Hapus', ['delete', 'ID' => $model->ID, 'KD_UNIT' => $model->KD_UNIT], [
+         <!--Html::a('<i class="fa fa-pencil"></i>&nbsp;&nbsp;Ubah', ['update', 'ID' => $model->ID, 'KD_UNIT' => $model->KD_UNIT], ['class' => 'btn btn-primary']) ?>-->
+<!--         Html::a('<i class="fa fa-trash-o"></i>&nbsp;&nbsp;Hapus', ['delete', 'ID' => $model->ID, 'KD_UNIT' => $model->KD_UNIT], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                   Html::a('<i class="fa fa-trash-o"></i>&nbsp;&nbsp;Hapus', ['delete', 'ID' => $model->ID, 'KD_UNIT' => $model->KD_UNIT], [
+      'confirm' => 'Are you sure you want to delete this item?',
                 'method' => 'post',
-            ],
-        ]) ?>
+            ],-->
+        <!--]) ?>-->
 		
     </p>
 </div>

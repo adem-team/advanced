@@ -11,13 +11,17 @@ use kartik\form\ActiveForm;
 
 <div class="tipebarang-form">
 
-    <?php $form = ActiveForm::begin(['type' => ActiveForm::TYPE_HORIZONTAL]); ?>
+    <?php $form = ActiveForm::begin([
+        'type' => ActiveForm::TYPE_HORIZONTAL,
+              'id'=>'updatetipe',
+                'enableClientValidation' => true,
+            ]); ?>
 
     <?= $form->field($model, 'NM_TYPE')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'UPDATED_BY')->hiddenInput(['value'=>Yii::$app->user->identity->username])->label(false) ?>
+    <!--$form->field($model, 'UPDATED_BY')->hiddenInput(['value'=>Yii::$app->user->identity->username])->label(false) ?>-->
 	
     <?=  $form->field($model, 'STATUS')->radioList(['1'=>'Aktif','0'=>'Tidak Aktif']) ?>
 

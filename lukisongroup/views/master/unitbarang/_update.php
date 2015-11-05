@@ -10,7 +10,10 @@ use yii\widgets\ActiveForm;
 
 <div class="unitbarang-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'id'=> 'updateunit',
+        'enableClientValidation' => true,
+    ]); ?>
 
     <?= $form->field($model, 'NM_UNIT')->textInput(['maxlength' => true]) ?>
 
@@ -22,7 +25,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'UPDATED_BY')->hiddenInput(['value'=>Yii::$app->user->identity->username])->label(false) ?>
+   
 
     <?= $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']) ?>
     <?php //= $form->field($model, 'STATUS')->textInput() ?>

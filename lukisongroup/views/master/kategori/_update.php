@@ -8,9 +8,11 @@ use kartik\form\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="kategori-form">
+
 
     <?php $form = ActiveForm::begin([
+                'id'=>'updatekat',
+                'enableClientValidation' => true,
 		'type' => ActiveForm::TYPE_HORIZONTAL,]); ?>
 
     <?PHP //= $form->field($model, 'KD_KATEGORI')->textInput(['maxlength' => true]) ?>
