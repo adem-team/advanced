@@ -1,0 +1,9 @@
+CREATE TABLE `b0003` (
+  `JAB_ID` varchar(5) NOT NULL,
+  `JAB_NM` varchar(30) DEFAULT NULL,
+  `JAB_STS` smallint(6) DEFAULT NULL,
+  `JAB_AVATAR` varchar(50) DEFAULT NULL,
+  `JAB_SCRP` text,
+  `SORT` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`JAB_ID`)
+) ENGINE=FEDERATED DEFAULT CHARSET=latin1 CONNECTION='mysql://root@localhost:3306/dbm000/a0003';

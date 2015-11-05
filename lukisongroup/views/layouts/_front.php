@@ -60,6 +60,8 @@ AppAsset_front::register($this);
 								'items' => [
 									['label' => 'e-Procurement', 'url' => '/front/procurement/index'],
 									['label' => 'e-Recruitment', 'url' => '/front/recruitment/index'],
+									['label' => 'e-CRM', 'url' => 'http://crm.lukisongroup.com'],
+								
 								],
 						];
 						$menuItemsNoLogin[] = ['label' => '<div class="btn">LOGIN</div>', 'url' => ['/site/login'],];
@@ -67,7 +69,7 @@ AppAsset_front::register($this);
 						<div class="navbar navbar-inverse navbar-fixed-top headroom" ></div>
 						<?php
 						NavBar::begin([
-							'brandLabel' => '<img src="http://lukisongroup.com/logo.png" class="navbar" style="width:150px; height:100px; margin-left:20px"/>'.'<div class=" navbar-fixed-top pull-right" style="margin-left:20%; margin-top:10px; color:black"><h5>Under Maintenance !!</h5> </div>',//.'<div class=" navbar-fixed-top pull-right" style="margin-left:20%; margin-top:10px; color:black"><h5>info@lukison.com / Support: 021888888</h5> </div>',
+							'brandLabel' => '<img src="http://lukisongroup.com/logo.png" class="navbar-fixed-top" style="width:150px; height:110px; margin-left:50px; margin-top:10px"/>'.'<div class=" navbar-fixed-top pull-right" style="margin-left:20%; margin-top:10px; color:black"><h5>Under Maintenance !!</h5> </div>',//.'<div class=" navbar-fixed-top pull-right" style="margin-left:20%; margin-top:10px; color:black"><h5>info@lukison.com / Support: 021888888</h5> </div>',
 								
 							//'<div style="margin-left:50px"><img src="http://lukisongroup.com/favicon.ico"/>LukisonGroup</div>',
 							//'brandUrl' => Yii::$app->homeUrl,
