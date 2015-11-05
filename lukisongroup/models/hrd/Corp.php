@@ -22,7 +22,7 @@ class Corp extends \yii\db\ActiveRecord
         return \Yii::$app->db2;
     }
 
-	/* [2] TABLE SELECT */
+	/* [2] TABLE SELECT  */
     public static function tableName()
     {
         //return '{{dbm000.a0001}}';
