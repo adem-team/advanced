@@ -19,7 +19,7 @@ $formlogin= FormGrid::widget([
     'autoGenerateColumns'=>true,
     'rows'=>[
         [
-            'contentBefore'=>'<legend class="text-info"><small>User Login</small></legend>',
+            //'contentBefore'=>'<legend class="text-info"><small>User Login</small></legend>',
             'columns'=>1,
             'autoGenerateColumns'=>false,
             'attributes'=>[
@@ -82,7 +82,12 @@ $formlogin= FormGrid::widget([
 <?php
     Modal::begin([
         'id' => 'modal_login',
-        //'header' => '<h2>Hello world</h2>'
+        'header' => '<img src="http://crm.lukisongroup.com/login.png" style="width:80px; height:60px"/>',
+		'size' => Modal::SIZE_SMALL,
+        'options' => ['class'=>'slide'],
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color: rgba(196, 189, 225, 1);'
+		], 
     ]);
         echo $formlogin;
     Modal::end();

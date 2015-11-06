@@ -1,6 +1,7 @@
 <?php
 /* @var $this yii\web\View */
-
+use lukisongroup\assets\AppAsset_style;
+AppAsset_style::register($this);
 $this->title = 'lukisongroup';
 ?>
 

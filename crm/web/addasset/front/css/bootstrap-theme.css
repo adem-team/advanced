@@ -4,7 +4,7 @@
 /* RGBa: http://www.generateit.net/color-schemes/index.php */
 /* Color Hex  http://www.color-hex.com/color/ffffff */
 /*******************************/
-.navbar-inverse { border-radius: 0; background:rgba(200, 7, 44, .8); border-bottom:1px solid rgba(255, 255, 0, .8); min-height:103px; padding-top:25px; margin-bottom:0;}
+.navbar-inverse { border-radius: 0; background:rgba(200, 7, 44, .8); border-bottom:0px solid rgba(255, 255, 0, .8); min-height:103px; padding-top:25px; margin-bottom:0;}
 .navbar-inverse *:focus { outline: 0; }
 @media (max-width: 767px) {
 	.navbar-inverse {  background:rgba(200, 7, 44, .8); }

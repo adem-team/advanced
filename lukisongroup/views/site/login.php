@@ -9,9 +9,12 @@ use kartik\widgets\ActiveForm;
 use kartik\builder\Form;
 use kartik\builder\FormGrid;
 use yii\bootstrap\Modal;
+/* $this->registerCss("div#modal_login{ padding-right: 11000%;
+												}"); */
 //use kartik\widgets\FileInput;
 //echo $pk_emp.'ok';
-$form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,]);
+$form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'id'=>'form']);
+
 $formlogin= FormGrid::widget([
 //echo  FormGrid::widget([
     'model'=>$model,
@@ -19,7 +22,7 @@ $formlogin= FormGrid::widget([
     'autoGenerateColumns'=>true,
     'rows'=>[
         [
-            'contentBefore'=>'<legend class="text-info"><small>User Login</small></legend>',
+            //'contentBefore'=>'<legend class="text-info"><small>User Login</small></legend>',
             'columns'=>1,
             'autoGenerateColumns'=>false,
             'attributes'=>[
@@ -62,9 +65,10 @@ $formlogin= FormGrid::widget([
             ],
         ],
         [ //-Action Author: -ptr.nov-
-            'columns'=>1,
+            'columns'=>6,
             'attributes'=>[
                 'actions'=>[    // embed raw HTML content
+				'columns'=>7,
                     'type'=>Form::INPUT_RAW,
                     'value'=>  '<div style="text-align: right; margin-top: 25px">' .
 
@@ -77,17 +81,42 @@ $formlogin= FormGrid::widget([
 
 ]);
 
+
 ?>
 <!-- <div class="col-md-3 col-md-offset-5" style="margin-top: 10px"> !-->
+
+
 <?php
+//echo $formlogin; 
+	/*   $this->registerJs('$(".modal").modal({
+        backdrop: true,
+        keyboard: true
+		}).css({
+		   padding-right: function () { 
+			   return ($(document).padding-right("170px")),  
+		   },
+		   
+		})',$this::POS_HEAD);  */
+	 
     Modal::begin([
         'id' => 'modal_login',
-        //'header' => '<h2>Hello world</h2>'
+        'header' => '<img src="http://lukisongroup.com/login_icon1.png" style="width:70px; height:50px"/>',
+		'size' => Modal::SIZE_SMALL,
+        'options' => ['class'=>'slide'],
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1);'
+		], 
+		/* 'options'=>[
+			'style'=> 'display:bloack;padding-right:270px;'
+		] */
+	
     ]);
-        echo $formlogin;
-    Modal::end();
-    ActiveForm::end()
+		echo $formlogin; 
+	Modal::end();
+    ActiveForm::end() ;
+	
 ?>
+
 </div>
 
 
