@@ -84,7 +84,7 @@ AppAsset_style::register($this);
 				<?php $this->beginBody(); ?>
                 <div class="wrapper">
                     <header class="main-header">
-                        <a  class="logo bg-red">
+                        <a  class="logo bg-blue">
                             <?php
                             echo Html::img('http://lukisongroup.com/favicon.ico', ['width'=>'20']);
                             ?>
