@@ -41,7 +41,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 							'heading' => '<div></div>',
 							'body'=>$prof,
 						],
-						Html::TYPE_INFO
+						Html::TYPE_WARNING
 					);
 					?>
 		</div>
@@ -53,15 +53,38 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 							'heading' => 'Data Prosess',
 							'postBody' => Html::listGroup([
 									[
-										'content' => 'Entry Stock Penjualan',
-										'url' => '/salespromo/sales-daily',
+										'content' => 'Stock Gudang',
+										'url' => '/salespromo/stock-gudang',
 										'badge' => '0'
 									],
 									[
-										'content' => 'Entry Stock Gudang',
-										'url' => '/salespromo/stock-daily',
+										'content' => 'Stock Promo',
+										'url' => '/salespromo/stock-promo',
 										'badge' => '0'
 									],
+									[
+										'content' => 'Penjualan',
+										'url' => '/salespromo/penjualan',
+										'badge' => '0'
+									],
+									[
+										'content' => 'Promo',
+										'url' => '/salespromo/penjualan-promo',
+										'badge' => '0'
+									],									
+								]),
+						],
+						Html::TYPE_WARNING
+					);
+				?>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-dm-4  col-lg-4" >
+				
+				<?php
+					echo Html::panel([
+							'id'=>'home1',
+							'heading' => 'Widget',
+							'postBody' => Html::listGroup([
 									[
 										'content' => 'Jadwak Kunjungan',
 										'url' => '/salespromo/schadule',
@@ -72,37 +95,19 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										'url' => '/salespromo/customer-map',
 										'badge' => '0'
 									],
-								]),
-						],
-						Html::TYPE_INFO
-					);
-				?>
-			</div>
-			<div class="col-xs-12 col-sm-6 col-dm-4  col-lg-4" >
-				
-				<?php
-					echo Html::panel([
-							'id'=>'home1',
-							'heading' => 'Penjualan Terbanyak',
-							'postBody' => Html::listGroup([
 									[
-										'content' => 'Penjualan perHarian',
-										'url' => '/salespromo/top-daily',
-										'badge' => '0'
-									],									
-									[
-										'content' => 'Penjualan perBulanan',
-										'url' => '/salespromo/top-monthly',
+										'content' => 'Abseni',
+										'url' => '/salespromo/absensi',
 										'badge' => '0'
 									],
 									[
-										'content' => 'Penjualan perTahun',
-										'url' => '/salespromo/top-monthly',
+										'content' => 'Profile',
+										'url' => '/salespromo/profile',
 										'badge' => '0'
-									]
+									],
 								]),
 						],
-						Html::TYPE_INFO
+						Html::TYPE_WARNING
 					);
 				?>
 			</div>
@@ -110,26 +115,31 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 			<?php
 					echo Html::panel([
 							'id'=>'home1',
-							'heading' => 'Lows Sales',
+							'heading' => 'Reporting Sales',
 							'postBody' => Html::listGroup([
 									[
-										'content' => 'Penjualan perHarian',
-										'url' => '/salespromo/low-daily',
-										'badge' => '0'
-									],
-									[
-										'content' => 'Penjualan perBulanan',
-										'url' => '/salespromo/low-monthly',
+										'content' => 'Prodak',
+										'url' => '/salespromo/prodak',
 										'badge' => '0'
 									],	
 									[
-										'content' => 'Penjualan perTahun',
-										'url' => '/salespromo/low-yearly',
+										'content' => 'Penjualan perHarian',
+										'url' => '/salespromo/report-daily',
 										'badge' => '0'
-									]
+									],									
+									[
+										'content' => 'Penjualan perBulanan',
+										'url' => '/salespromo/report-monthly',
+										'badge' => '0'
+									],
+									[
+										'content' => 'Penjualan perTahun',
+										'url' => '/salespromo/report-monthly',
+										'badge' => '0'
+									],									
 								]),
 						],
-						Html::TYPE_INFO
+						Html::TYPE_WARNING
 					);
 				?>
 				

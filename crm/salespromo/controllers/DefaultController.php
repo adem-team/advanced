@@ -1,6 +1,6 @@
 <?php
 
-namespace crm\front\controllers;
+namespace crm\salespromo\controllers;
 
 use yii\web\Controller;
 
