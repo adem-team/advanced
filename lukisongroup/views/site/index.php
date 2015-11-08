@@ -35,22 +35,24 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 
 <div class="container-fluid" style="padding-left: 20px; padding-right: 20px" >
 		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-dm-12  col-lg-12">
 					<?php
 					echo Html::panel(
 						[
 							'heading' => '<div></div>',
 							'body'=>$prof,
 						],
-						Html::TYPE_INFO
+						Html::TYPE_DANGER
 					);
 					?>
+			</div>
 		</div>
        <div class="row" >
 			<div class="col-xs-12 col-sm-6 col-dm-4  col-lg-4">
 				<?php
 					echo Html::panel([
 							'id'=>'home1',
-							'heading' => 'Widget',
+							'heading' => '<b>WIDGET</b>',
 							'postBody' => Html::listGroup([
 									[
 										'content' => 'Berita Acara ',
@@ -85,7 +87,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 
 								]),
 						],
-						Html::TYPE_INFO
+						Html::TYPE_DANGER
 					);
 				?>
 			</div>
@@ -94,7 +96,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 				<?php
 					echo Html::panel([
 							'id'=>'home1',
-							'heading' => 'Task Manager',
+							'heading' => '<b>TASK MANAGER </b>',
 							'postBody' => Html::listGroup([
 									[
 										'content' => 'Pilot Project',
@@ -125,7 +127,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 
 								]),
 						],
-						Html::TYPE_INFO
+						Html::TYPE_DANGER
 					);
 				?>
 			</div>
@@ -133,7 +135,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 			<?php
 					echo Html::panel([
 							'id'=>'home1',
-							'heading' => 'Approval',
+							'heading' => '<b>APPROVAL</b>',
 							'postBody' => Html::listGroup([
 									[
 										'content' => 'Administration ',
@@ -167,7 +169,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									],
 								]),
 						],
-						Html::TYPE_INFO
+						Html::TYPE_DANGER
 					);
 				?>
 				
@@ -214,13 +216,13 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 			</div>
 			<div class="row" style="padding-top:20px" >
 				<?php                       
-					echo Html::panel(
+					/* echo Html::panel(
 						[
 							'heading' => '<div></div>',
 							'body'=>$EmpDashboard,
 						],
 						Html::TYPE_INFO
-					);
+					); */
 				?>
 				
 			</div>

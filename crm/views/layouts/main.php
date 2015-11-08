@@ -15,6 +15,8 @@ use mdm\admin\components\MenuHelper;
 use yii\bootstrap\Modal;
 //AppAsset::register($this);
 dmstr\web\AdminLteAsset::register($this);
+use lukisongroup\assets\AppAsset_style;
+AppAsset_style::register($this);
 ?>
 <?php $this->beginPage() ?>
 	<!DOCTYPE html>
@@ -82,10 +84,10 @@ dmstr\web\AdminLteAsset::register($this);
                     <header class="main-header">
                         <a  class="logo bg-red">
                             <?php
-                            echo Html::img('http://lukisongroup.com/favicon.ico', ['width'=>'20']);
+                            //echo Html::img('http://lukisongroup.com/favicon.ico', ['width'=>'20']);
                             ?>
                             <!-- LOGO -->
-                            LukisonGroup
+                            CRM LukisonGroup
                         </a>
                            <!--  <div class="navbar-custom-menu">!-->
                                 <?php
@@ -94,7 +96,7 @@ dmstr\web\AdminLteAsset::register($this);
                                         //$menuItems  = MenuHelper::getAssignedMenu(Yii::$app->user->id);
                                         $menuItems = MenuHelper::getAssignedMenu(Yii::$app->user->id, null, $callback);
                                         $menuItems[] = [
-                                            'label' => Icon::show('power-off') ,//. 'Logout',// (' . Yii::$app->user->identity->username . ')',
+                                            'label' => Icon::show('power-off') . ' ' . Yii::$app->user->identity->username . ' ',
                                             //'label' => Icon::showStack('twitter', 'square-o', ['class'=>'fa-lg']) . 'Logout (' . Yii::$app->user->identity->username . ')',
                                             'url' => ['/site/logout'],
                                             'linkOptions' => ['data-method' => 'post']
@@ -228,23 +230,25 @@ dmstr\web\AdminLteAsset::register($this);
 								*/
                             ?>
                         <!--</div>!-->
-                        <div class="panel panel-default" style="margin-left: 2px; margin-right: 2px ;margin-bottom: 0">
+                        <div class="panel panel-default" style="margin-left: 2px; margin-right: 2px ;margin-bottom: 0; margin-top: 20">
                             <?php
                                 // Title Penganti Breadcrumbs Author: -ptr.nov-
-                                echo Html::panel(
-                                    ['heading' => $this->title ],
-                                    Html::TYPE_DANGER
-                                );
+                                //echo Html::panel(
+                               //     ['heading' => $this->title ],
+                               //     Html::TYPE_DANGER
+                                //);
 
-                               echo $content;
+                              // echo $content;
                             ?>
+							 <div style="margin-top: 20px";>
+								<?php echo $content; ?>
+							 </div>
                        </div>
                     </div>
                 </div>
                 <div class="box-footer bg-black" style="color: blue">
                     <p> <?php echo $corp .'-'. date('Y') ?></p>
                 </div>
-
 			<?php $this->endBody() ?>
 		</body>
 	<?php }; ?>

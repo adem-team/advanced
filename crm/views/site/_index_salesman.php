@@ -35,22 +35,24 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 
 <div class="container-fluid" style="padding-left: 20px; padding-right: 20px" >
 		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-dm-12  col-lg-12">
 					<?php
 					echo Html::panel(
 						[
 							'heading' => '<div></div>',
 							'body'=>$prof,
 						],
-						Html::TYPE_WARNING
+						Html::TYPE_INFO
 					);
 					?>
+			</div>
 		</div>
        <div class="row" >
 			<div class="col-xs-12 col-sm-6 col-dm-4  col-lg-4">
 				<?php
 					echo Html::panel([
 							'id'=>'home1',
-							'heading' => 'Salesman Maintain',
+							'heading' => '<b>DATA PROSESS</b>',
 							'postBody' => Html::listGroup([
 									[
 										/* 
@@ -86,7 +88,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									],
 								]),
 						],
-						Html::TYPE_WARNING
+						Html::TYPE_INFO
 					);
 				?>
 			</div>
@@ -95,7 +97,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 				<?php
 					echo Html::panel([
 							'id'=>'home1',
-							'heading' => 'Widget',
+							'heading' => '<b>WIDGET</b>',
 							'postBody' => Html::listGroup([									
 									[
 										/* 
@@ -131,7 +133,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									],
 								]),
 						],
-						Html::TYPE_WARNING
+						Html::TYPE_INFO
 					);
 				?>
 			</div>
@@ -139,13 +141,13 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 			<?php
 					echo Html::panel([
 							'id'=>'home1',
-							'heading' => 'Reporting Sales',
+							'heading' => '<b>REPORTING</b>',
 							'postBody' => Html::listGroup([
 									[
 										/* 
 										 * Modul Salesman - Sales Promotion  | Reporting total penjualan(normal/promo) harian Under report Sales promotion
 										*/
-										'content' => 'Daily Customer Selling Out',
+										'content' => 'Daily Selling Out',
 										'url' => '/salespromo/report-daily',
 										'badge' => '0'
 									],	
@@ -153,7 +155,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										/* 
 										 * Modul Salesman - Sales Promotion  | Reporting total Stock (normal/promo) gudang harian di customer under report Sales promotion
 										*/
-										'content' => 'Daily Customer Stock Harian',
+										'content' => 'Daily Stock Harian',
 										'url' => '/salespromo/report-daily',
 										'badge' => '0'
 									],
@@ -161,7 +163,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										/* 
 										 * Modul Salesman - Sales Promotion  | Reporting total penjualan(normal/promo) harian bulanan report Sales promotion
 										*/
-										'content' => 'monthly Customer Selling Out',
+										'content' => 'monthly Selling Out',
 										'url' => '/salespromo/report-daily',
 										'badge' => '0'
 									],	
@@ -169,13 +171,13 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										/* 
 										 * Modul Salesman - Sales Promotion  | Reporting total Stock (normal/promo) gudang bulanan di customer under report Sales promotion
 										*/
-										'content' => 'monthly Customer Stock Harian',
+										'content' => 'monthly Stock Harian',
 										'url' => '/salespromo/report-daily',
 										'badge' => '0'
 									],							
 								]),
 						],
-						Html::TYPE_WARNING
+						Html::TYPE_INFO
 					);
 				?>
 				

@@ -37,22 +37,24 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 
 <div class="container-fluid" style="padding-left: 20px; padding-right: 20px" >
 		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-dm-12  col-lg-12">
 					<?php
 					echo Html::panel(
 						[
 							'heading' => '<div></div>',
 							'body'=>$prof,
 						],
-						Html::TYPE_WARNING
+						Html::TYPE_INFO
 					);
 					?>
+			</div>
 		</div>
        <div class="row" >
 			<div class="col-xs-12 col-sm-6 col-dm-4  col-lg-4">
 				<?php
 					echo Html::panel([
 							'id'=>'home1',
-							'heading' => 'Data Prosess',
+							'heading' => '<b>DATA PROSESS</b>',
 							'postBody' => Html::listGroup([
 									[
 										/* 
@@ -88,7 +90,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									],									
 								]),
 						],
-						Html::TYPE_WARNING
+						Html::TYPE_INFO
 					);
 				?>
 			</div>
@@ -97,7 +99,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 				<?php
 					echo Html::panel([
 							'id'=>'home1',
-							'heading' => 'Widget',
+							'heading' => '<b>WIDGET</b>',
 							'postBody' => Html::listGroup([
 									[
 										/* 
@@ -133,7 +135,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									],
 								]),
 						],
-						Html::TYPE_WARNING
+						Html::TYPE_INFO
 					);
 				?>
 			</div>
@@ -141,7 +143,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 			<?php
 					echo Html::panel([
 							'id'=>'home1',
-							'heading' => 'Reporting Sales',
+							'heading' => '<b>REPORTING</b>',
 							'postBody' => Html::listGroup([
 									[
 										/* 
@@ -177,7 +179,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									],									
 								]),
 						],
-						Html::TYPE_WARNING
+						Html::TYPE_INFO
 					);
 				?>
 				
