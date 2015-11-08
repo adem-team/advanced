@@ -17,8 +17,7 @@ use yii\bootstrap\Modal;
 dmstr\web\AdminLteAsset::register($this);
 use lukisongroup\assets\AppAsset_style;
 AppAsset_style::register($this);
-//use lukisongroup\assets\AppAsset_gvk;
-//AppAsset_gvk::register($this);
+
 ?>
 <?php $this->beginPage() ?>
 	<!DOCTYPE html>
@@ -84,7 +83,7 @@ AppAsset_style::register($this);
 				<?php $this->beginBody(); ?>
                 <div class="wrapper">
                     <header class="main-header">
-                        <a  class="logo bg-blue">
+                        <a  class="logo bg-red">
                             <?php
                             echo Html::img('http://lukisongroup.com/favicon.ico', ['width'=>'20']);
                             ?>
@@ -235,13 +234,16 @@ AppAsset_style::register($this);
                         <div class="panel panel-default" style="margin-left: 2px; margin-right: 2px ;margin-bottom: 0">
                             <?php
                                 // Title Penganti Breadcrumbs Author: -ptr.nov-
-                                echo Html::panel(
+                               /*  echo Html::panel(
                                     ['heading' => $this->title ],
                                     Html::TYPE_DANGER
                                 );
-
-                               echo $content;
-                            ?>
+								*/
+							 ?>
+							  <div style="margin-top: 20px";>
+								<?php echo $content; ?>
+							  </div>
+                            
                        </div>
                     </div>
                 </div>

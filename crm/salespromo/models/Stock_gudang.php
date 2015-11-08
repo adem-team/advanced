@@ -63,12 +63,12 @@ class Stock_gudang extends \yii\db\ActiveRecord
     {
         return [
             'ID' => 'ID',
-            'WAKTU' => 'Waktu',
-            'CUST_KD' => 'Cust  Kd',
+            'WAKTU' => 'Tanggal',
+            'CUST_KD' => 'Customer',
             'CUST_NM' => 'Cust  Nm',
-            'KD_BARANG' => 'Kd  Barang',
+            'KD_BARANG' => 'Items',
             'NM_BARANG' => 'Nm  Barang',
-            'STOCK_GUDANG' => 'Stock  Gudang',
+            'STOCK_GUDANG' => 'Stock.Gudang',
             'PRODAK_LINE' => 'Prodak  Line',
             'CORP_ID' => 'Corp  ID',
             'KD_DISTRIBUTOR' => 'Kd  Distributor',
