@@ -53,35 +53,21 @@ class EmailTestingController extends Controller
 		//return $this->render('index');
 		*/
 		
-		//$form = ActiveForm::begin();
-			//$model = new DynamicModel([
-			//	'TextBody', 'Subject'
-			//]);
-			//$model->addRule(['TextBody', 'Subject'], 'required');
-			$ok_html='HTML <h1><b>LG-POSTMAN ERP FROM HOME</b></h1> .... GOOD NIGHT ALL, SEE U LATER, check Attach';	
-			$ok_text='Test LG-POSTMAN ERP FROM HOME> .... GOOD NIGHT ALL, SEE U LATER, check Attach';
-		    $path='@lukisongroup/web/upload/hrd/Employee/1436076377.jpg';
-			//$
-			//$form->field($model, 'Subject')->textInput();
-			
-		//ActiveForm::end(); 
-		//$path_atch='D:\xampp\htdocs\advanced\lukisongroup\web\upload\hrd\Employee';
-		//$path_atch='/var/www/advanced/lukisongroup/web/upload/hrd/Employee/';
-		$path_atch='/var/www/advanced/lukisongroup/web/upload/hrd/Employee/';
-		$opt=['fileName'=>'1436076377','contentType'=>'jpg','encoding'=>'base64','disposition'=>'attachment'];
-		//$opt=['1436076377','jpg'];
-		Yii::$app->mailer->compose()
+		$form = ActiveForm::begin();
+		$model = new DynamicModel([
+			'TextBody', 'Subject'
+		]);
+		 $model->addRule(['TextBody', 'Subject'], 'required');
+		$ok='Test LG-POSTMAN ERP FROM HOME .... GOOD NIGHT ALL, SEE U LATER, check sound';
+		
+		 $form->field($model, 'Subject')->textInput();
+		  ActiveForm::end(); 
+		  Yii::$app->mailer->compose()
 		 ->setFrom(['postman@lukison.com' => 'LG-POSTMAN'])
+		 //->setTo(['piter@lukison.com'])
 		 ->setTo(['it-dept@lukison.com'])
-		 ->setCc(['ptr.nov@gmail.com'])
-		 ->setBcc(['piter@lipat.co.id'])		 
 		 ->setSubject('ERP TEST EMAIL')
-		 //->attach($path_atch,['fileName'=>'1436076377','contentType'=>'jpg','encoding'=>'base64','disposition'=>'attachment'])
-		 //->attach('@lukisongroup/web/upload/hrd/Employee/1436076377.jpg',['fileName'=>'1436076377.jpg','contentType'=>'image/jpg'])
-		 ->attach($path)
-		 ->setHtmlBody($ok_html)
-		 //->setTextBody($ok)
-		// ->attach($path_atch,[$opt])
+		 ->setTextBody($ok)
 		 ->send();
 		 
 		

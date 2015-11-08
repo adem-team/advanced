@@ -2,6 +2,7 @@
 
 namespace lukisongroup\email\controllers;
 
+use Yii;
 use yii\web\Controller;
 
 class DefaultController extends Controller
