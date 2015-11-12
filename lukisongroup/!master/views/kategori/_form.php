@@ -16,7 +16,7 @@ use kartik\widgets\SwitchInput
                 'enableClientValidation' => true,
 		'type' => ActiveForm::TYPE_HORIZONTAL,
 		'method' => 'post',
-		'action' => ['kategori/simpan'],
+		'action' => ['master/kategori/simpan'],
 		]); ?>
 
      <!--$form->field($model, 'CREATED_BY')->hiddenInput(['value'=>Yii::$app->user->identity->username])->label(false) ?>-->

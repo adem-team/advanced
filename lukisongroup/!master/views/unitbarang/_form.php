@@ -17,7 +17,7 @@ use kartik\widgets\ColorInput;
                  'enableClientValidation' => true,
 		'type' => ActiveForm::TYPE_HORIZONTAL,
 		'method' => 'post',
-		'action' => ['unitbarang/simpan'],]); ?>
+		'action' => ['master/unitbarang/simpan'],]); ?>
 
     <?php //= $form->field($model, 'KD_UNIT')->textInput(['maxlength' => true]) ?>
 
@@ -26,11 +26,15 @@ use kartik\widgets\ColorInput;
     <?= $form->field($model, 'SIZE')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'WIGHT')->textInput() ?>
-    
-     <?= $form->field($model, 'COLOR')->textInput() ?>
+
+     <?=$form->field($model, 'COLOR')->widget(ColorInput::classname(), [
+    'options' => ['placeholder' => 'Select color ...'],
+])?>
 
     <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>
 
+    <?= $form->field($model, 'CREATED_BY')->hiddenInput(['value'=>Yii::$app->user->identity->username])->label(false) ?>
+    <?= $form->field($model, 'CREATED_AT')->hiddenInput(['value'=>date('Y-m-d H:i:s')])->label(false) ?>
     <?= $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']) ?>
     <?php //= $form->field($model, 'STATUS')->textInput() ?>
 

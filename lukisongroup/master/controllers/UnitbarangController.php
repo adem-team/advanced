@@ -151,8 +151,11 @@ class UnitbarangController extends Controller
 
 		$nw = str_pad( $nw, "2", "0", STR_PAD_LEFT );
 		$model->KD_UNIT = 'U'.$nw;
+                $model->CREATED_BY = Yii::$app->user->identity->username;
+                $model->CREATED_AT = date('Y-m-d H:i:s');
+                
 		$model->save();
-		return $this->redirect(['master/unitbarang']);
+		return $this->redirect(['/master/unitbarang']);
     }
 
     /**
@@ -170,7 +173,7 @@ class UnitbarangController extends Controller
             
             $model->UPDATED_BY = Yii::$app->user->identity->username;
             $model->save();
-            return $this->redirect(['master/unitbarang']);
+            return $this->redirect(['/master/unitbarang']);
         } else {
             return $this->renderAjax('update', [
                 'model' => $model,

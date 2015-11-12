@@ -249,8 +249,6 @@ class BarangumumController extends Controller
             ]);
         }
     }
-    
-   
 
     /**
      * Deletes an existing Barangumum model.

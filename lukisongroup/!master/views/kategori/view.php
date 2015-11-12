@@ -1,8 +1,8 @@
 <?php
 
-//use yii\helpers\Html;
-use yii\widgets\DetailView;
-//use yii\bootstrap\Modal;
+use yii\helpers\Html;
+use kartik\widgets\DetailView;
+use yii\bootstrap\Modal;
 
 $this->sideCorp = 'Master Data Umum';                  				/* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'umum_datamaster';                   				/* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -50,26 +50,26 @@ $this->title = Yii::t('app', 'Umum - Detail Kategori Barang ');	    /* title pad
 <?php
 
 
-//$this->registerJs("
-//        $('#modal-dept').on('show.bs.modal', function (event) {
-//            var button = $(event.relatedTarget)
-//            var modal = $(this)
-//            var title = button.data('title') 
-//            var href = button.attr('href') 
-//            //modal.find('.modal-title').html(title)
-//            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-//            $.post(href)
-//                .done(function( data ) {
-//                    modal.find('.modal-body').html(data)
-//                });
-//            })
-//    ",$this::POS_READY);
-//    
-//    Modal::begin([
-//        'id' => 'modal-dept',
-//        'header' => '<h4 class="modal-title">LukisonGroup</h4>',
-//    ]);
-//    Modal::end();
+$this->registerJs("
+        $('#modal-dept').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+    
+    Modal::begin([
+        'id' => 'modal-dept',
+        'header' => '<h4 class="modal-title">LukisonGroup</h4>',
+    ]);
+    Modal::end();
 
 
 

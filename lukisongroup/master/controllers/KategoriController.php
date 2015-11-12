@@ -164,7 +164,7 @@ class KategoriController extends Controller
 //                    print_r($model);
 //                    die();
                     
-		return $this->redirect(['master/kategori']);
+		return $this->redirect(['index']);
                     
                 }
 		
@@ -183,20 +183,20 @@ class KategoriController extends Controller
         
         
         if ($model->load(Yii::$app->request->post())) {
-                $data = Kategori::find()->where(['ID'=>$ID, 'KD_KATEGORI'=>$KD_KATEGORI])->one();
-                $ktgr = $data['STATUS'];
-        
-		$baris = Kategori::find()->where(['ID'=>$ID, 'KD_KATEGORI'=>$KD_KATEGORI])->count();
-	
-		if($ktgr == 3 && $baris == 0 ){
-			return $this->redirect(['index']);
-		}
-                else{
+//                $data = Kategori::find()->where(['ID'=>$ID, 'KD_KATEGORI'=>$KD_KATEGORI])->one();
+//                $ktgr = $data['STATUS'];
+//        
+//		$baris = Kategori::find()->where(['ID'=>$ID, 'KD_KATEGORI'=>$KD_KATEGORI])->count();
+//	
+//		if($ktgr == 3 && $baris == 0 ){
+//			return $this->redirect(['master/kategori']);
+//		}
+//                else{
                     
                      $model->save();
                      
-                }
-            return $this->redirect(['master/kategori']);
+//                }
+            return $this->redirect(['/master/kategori/']);
         } else {
             return $this->renderAjax('update', [
                 'model' => $model,
@@ -222,7 +222,7 @@ class KategoriController extends Controller
 		$model->save();  // equivalent to $model->update();
 		
         //$this->findModel($ID, $KD_KATEGORI)->delete();
-        return $this->redirect(['index']);
+        return $this->redirect(['/master/kategori/']);
     }
 
     /**
