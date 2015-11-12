@@ -3,24 +3,24 @@
 namespace lukisongroup\master\controllers;
 
 use Yii;
-use lukisongroup\master\models\Tipebarang;
-use lukisongroup\master\models\TipebarangSearch;
+use lukisongroup\master\models\Customer;
+use lukisongroup\master\models\CustomerSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\db\Query;
 use yii\helpers\Json;
 
-
 /**
- * TipebarangController implements the CRUD actions for Tipebarang model.
+ * CustomerController implements the CRUD actions for Customer model.
  */
-class TipebarangController extends Controller
+class CustomerController extends Controller
 {
     public function behaviors()
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::className(['customer']),
                 'actions' => [
                     'delete' => ['post'],
                 ],
@@ -29,10 +29,9 @@ class TipebarangController extends Controller
     }
 
     /**
-     * Lists all Tipebarang models.
+     * Lists all Customer models.
      * @return mixed
      */
-    
     public function beforeAction(){
 			if (Yii::$app->user->isGuest)  {
 				 Yii::$app->user->logout();
@@ -56,14 +55,15 @@ class TipebarangController extends Controller
     
     public function actionIndex()
     {
-        $searchModel = new TipebarangSearch();
+        $searchModel = new CustomerSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-         if (Yii::$app->request->post('hasEditable')) {
-            // instantiate your book model for saving
-             $PK = unserialize(Yii::$app->request->post('editableKey'));
-             $model = $this->findModel($PK['ID'],$PK['KD_TYPE']);
-
-            // store a default json response as desired by editable
+        
+        if(Yii::$app->request->post('hasEditable'))
+        {
+            $ID = \Yii::$app->request->post('editableKey');
+            $model = Customer::findOne($ID);
+            
+            
             $out = Json::encode(['output'=>'', 'message'=>'']);
 
             // fetch the first entry in posted data (there should
@@ -72,8 +72,8 @@ class TipebarangController extends Controller
             // - $posted is the posted data for Book without any indexes
             // - $post is the converted array for single model validation
             $post = [];
-            $posted = current($_POST['Tipebarang']);
-            $post['Tipebarang'] = $posted;
+            $posted = current($_POST['Customer']);
+            $post['Customer'] = $posted;
 
             // load model like any single model validation
             if ($model->load($post)) {
@@ -89,9 +89,9 @@ class TipebarangController extends Controller
                 // editable column posted when you have more than one
                 // EditableColumn in the grid view. We evaluate here a
                 // check to see if buy_amount was posted for the Book model
-                if (isset($posted['NM_TYPE'])) {
+                if (isset($posted['CUST_NM'])) {
                    // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-                    $output =$model->NM_TYPE;
+                    $output =$model->CUST_NM;
                 }
 
                 // similarly you can check if the name attribute was posted as well
@@ -103,7 +103,9 @@ class TipebarangController extends Controller
             // return ajax json encoded response and exit
             echo $out;
             return;
-          }
+        
+            
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -112,121 +114,106 @@ class TipebarangController extends Controller
     }
 
     /**
-     * Displays a single Tipebarang model.
+     * Displays a single Customer model.
      * @param string $id
-     * @param string $kd_type
      * @return mixed
      */
-    public function actionView($ID, $KD_TYPE)
+    public function actionView($id)
     {
-		
-		$ck = Tipebarang::find()->where(['ID'=>$ID, 'KD_TYPE'=>$KD_TYPE])->one();
-		if(count($ck) == 0){
-			return $this->redirect(['index']);
-		}
-		if($ck->STATUS != 3){
-			return $this->renderAjax('view', [
-				'model' => $ck,
-			]);
-		} else {
-			return $this->redirect(['index']);
-		}
+        return $this->renderAjax('view', [
+            'model' => $this->findModel($id),
+        ]);
     }
 
     /**
-     * Creates a new Tipebarang model.
+     * Creates a new Customer model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Tipebarang();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'ID' => $model->ID, 'KD_TYPE' => $model->KD_TYPE]);
-        } else {
+        $model = new Customer();
+          
+        if ($model->load(Yii::$app->request->post())) {
+            $query = Customer::find()->select('CUST_KD')
+                                    ->where(['CUST_KD'=> $model->CUST_KD])
+                                    ->one();
+            $data = $query['CUST_KD'];
+           
+               if($data === $model->CUST_KD)
+               {
+               
+                \Yii::$app->session->setFlash('error', Yii::t('app', 'Cannot Save data,Because Same Data'   .$model->CUST_KD. ''));
+                 return $this->redirect(['master/customer']);
+               }
+               else{
+                    $model->CREATED_BY = Yii::$app->user->identity->username;
+                    $model->CREATED_AT = date('Y-m-d H:i:s');
+            
+                    $model->save();
+               }
+//           if($data == $model-)
+//        
+  
+                       
+  
+            
+            
+            return $this->redirect(['master/customer']);
+        } else{
+        
             return $this->renderAjax('create', [
                 'model' => $model,
             ]);
         }
     }
 
-    public function actionSimpan()
-    {
-        $model = new Tipebarang();
-
-		$model->load(Yii::$app->request->post());
-		$ck = Tipebarang::find()->where('STATUS <> 3')->max('KD_TYPE');
-		$nw = $ck+1;
-		$nw = str_pad( $nw, "2", "0", STR_PAD_LEFT );
-		$model->KD_TYPE = $nw;
-                $model->CREATED_AT = date('Y-m-d H:i:s');
-                $model->CREATED_BY = Yii::$app->user->identity->username;
-		$model->save();
-                   
-		return $this->redirect(['/master/tipebarang']);
-    }
     /**
-     * Updates an existing Tipebarang model.
+     * Updates an existing Customer model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
-     * @param string $kd_type
      * @return mixed
      */
-    public function actionUpdate($ID, $KD_TYPE)
+    public function actionUpdate($id)
     {
-//        $model = $this->findModel($ID, $KD_TYPE);
+        $model = $this->findModel($id);
 
-		$model = Tipebarang::find()->where(['ID'=>$ID, 'KD_TYPE'=>$KD_TYPE])->one();
-		if(count($model) == 0){
-			return $this->redirect(['index']);
-		}
-		if($model->STATUS == 3){
-			return $this->redirect(['index']);
-		}
-		
-        if ($model->load(Yii::$app->request->post()) ) {
-            $model->UPDATED_BY = Yii::$app->user->identity->username;
-            $model->save();
-            return $this->redirect(['/master/tipebarang']);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->CUST_KD]);
         } else {
-            return $this->renderAjax('update', [
+            return $this->renderajax('update', [
                 'model' => $model,
             ]);
         }
     }
 
     /**
-     * Deletes an existing Tipebarang model.
+     * Deletes an existing Customer model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
-     * @param string $kd_type
      * @return mixed
      */
-    public function actionDelete($ID, $KD_TYPE)
+    public function actionDelete($id)
     {
-		
-		$model = Tipebarang::find()->where(['ID'=>$ID, 'KD_TYPE'=>$KD_TYPE])->one();
-		$model->STATUS = 3;
-		$model->UPDATED_BY = Yii::$app->user->identity->username;
-		$model->save();  // equivalent to $model->update();
-		
-//        $this->findModel($ID, $KD_TYPE)->delete();
+//        $this->findModel($id)->delete();
+        $query = Customer::find()->where(['CUST_KD'=> $id])->one();
+        $query->STATUS = 3;
+        $query->UPDATED_BY = Yii::$app->user->identity->username;
+        $query->save();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['master/customer']);
     }
 
     /**
-     * Finds the Tipebarang model based on its primary key value.
+     * Finds the Customer model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @param string $kd_type
-     * @return Tipebarang the loaded model
+     * @return Customer the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($ID, $KD_TYPE)
+    protected function findModel($id)
     {
-        if (($model = Tipebarang::findOne(['ID' => $ID, 'KD_TYPE' => $KD_TYPE])) !== null) {
+        if (($model = Customer::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

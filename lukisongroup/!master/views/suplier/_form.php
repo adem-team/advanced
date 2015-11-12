@@ -20,14 +20,12 @@ use lukisongroup\models\hrd\Corp;
                 'id' => 'createsuplier',
                 'enableClientValidation' => true,
 		'method' => 'post',
-		'action' => ['suplier/simpan'],
+		'action' => ['master/suplier/simpan'],
 		]); ?>
 
-    
+    <?php //= $form->field($model, 'KD_SUPPLIER')->textInput(['maxlength' => true]) ?>
 
     <?php
-    
-//    dropdown data
         $drop = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM');
     ?>
     <?= $form->field($model, 'KD_CORP')->dropDownList($drop,['prompt'=>' -- Pilih Salah Satu --'])->label('Group Perusahaan') ?>
@@ -47,6 +45,8 @@ use lukisongroup\models\hrd\Corp;
     <?= $form->field($model, 'EMAIL')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'WEBSITE')->textInput(['maxlength' => true]) ?>
+
+    <?php //= $form->field($model, 'IMAGE')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>
 

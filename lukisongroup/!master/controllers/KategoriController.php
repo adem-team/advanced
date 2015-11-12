@@ -1,23 +1,19 @@
 <?php
+
 namespace lukisongroup\master\controllers;
 
 use Yii;
+use lukisongroup\master\models\Kategori;
+use lukisongroup\master\models\KategoriSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
-use lukisongroup\master\models\Barangumum;
-use lukisongroup\master\models\BarangumumSearch;
 
-
-
-
-//use app\models\UploadForm;
-//use yii\web\UploadedFile;
 /**
- * BarangumumController implements the CRUD actions for Barangumum model.
+ * KategoriController implements the CRUD actions for Kategori model.
  */
-class BarangumumController extends Controller
+class KategoriController extends Controller
 {
     public function behaviors()
     {
@@ -32,9 +28,10 @@ class BarangumumController extends Controller
     }
 
     /**
-     * Lists all Barangumum models.
+     * Lists all Kategori models.
      * @return mixed
      */
+    
     public function beforeAction(){
 			if (Yii::$app->user->isGuest)  {
 				 Yii::$app->user->logout();
@@ -58,13 +55,12 @@ class BarangumumController extends Controller
     
     public function actionIndex()
     {
-          $searchModel = new BarangumumSearch();
-          $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-          
-           if (Yii::$app->request->post('hasEditable')) {
+        $searchModel = new KategoriSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+         if (Yii::$app->request->post('hasEditable')) {
             // instantiate your book model for saving
              $PK = unserialize(Yii::$app->request->post('editableKey'));
-             $model = $this->findModel($PK['ID'],$PK['KD_BARANG']);
+             $model = $this->findModel($PK['ID'],$PK['KD_KATEGORI']);
 
             // store a default json response as desired by editable
             $out = Json::encode(['output'=>'', 'message'=>'']);
@@ -75,8 +71,8 @@ class BarangumumController extends Controller
             // - $posted is the posted data for Book without any indexes
             // - $post is the converted array for single model validation
             $post = [];
-            $posted = current($_POST['Barangumum']);
-            $post['Barangumum'] = $posted;
+            $posted = current($_POST['Kategori']);
+            $post['Kategori'] = $posted;
 
             // load model like any single model validation
             if ($model->load($post)) {
@@ -92,9 +88,9 @@ class BarangumumController extends Controller
                 // editable column posted when you have more than one
                 // EditableColumn in the grid view. We evaluate here a
                 // check to see if buy_amount was posted for the Book model
-                if (isset($posted['NM_BARANG'])) {
+                if (isset($posted['NM_KATEGORI'])) {
                    // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-                    $output =$model->NM_BARANG;
+                    $output =$model->NM_KATEGORI;
                 }
 
                 // similarly you can check if the name attribute was posted as well
@@ -107,7 +103,7 @@ class BarangumumController extends Controller
             echo $out;
             return;
         }
-    
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -115,57 +111,34 @@ class BarangumumController extends Controller
     }
 
     /**
-     * Displays a single Barangumum model.
+     * Displays a single Kategori model.
      * @param string $id
-     * @param string $kd_barang
+     * @param string $kd_kategori
      * @return mixed
      */
-    
-//    action view and update mix
-    public function actionView($ID, $KD_BARANG)
+    public function actionView($ID, $KD_KATEGORI)
     {
-         $model = $this->findModel($ID, $KD_BARANG);
-
-//        if ($model->load(Yii::$app->request->post())){
-//			
-//			$image = $model->uploadImage();
-//			if ($model->save()) {
-//				// upload only if valid uploaded file instance found
-//				if ($image !== false) {
-//					$path = $model->getImageFile();
-//					$image->saveAs($path);
-//				}
-//                                return $this->redirect(['index']);
-//			}
-//                  else{
-//                      $jscript = "$('#view-emp').on('show.bs.modal', function (event) {
-//		        var button = $(event.relatedTarget)
-//		        var modal = $(this)
-//		        var title = button.data('title') 				
-//		        var href = button.attr('href') 
-//		        modal.find('.modal-title').html(title)
-//		        modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-//				$.post(href)
-//		            .done(function( data ) {
-//		                modal.find('.modal-body').html(data)						
-//					});				
-//				})";
-//				$this->enableCsrfValidation = false;
-//                  }
-//        }
-        return $this->renderAjax('view', [
-            'model' => $this->findModel($ID, $KD_BARANG),
-        ]);
+		$ck = Kategori::find()->where(['ID'=>$ID, 'KD_KATEGORI'=>$KD_KATEGORI])->one();
+		if(count($ck) == 0){
+			return $this->redirect(['index']);
+		}
+		if($ck->STATUS !== 3){
+			return $this->renderAjax('view', [
+				'model' => $this->findModel($ID, $KD_KATEGORI),
+			]);
+		} else {
+			return $this->redirect(['index']);
+		}
     }
 
     /**
-     * Creates a new Barangumum model.
+     * Creates a new Kategori model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-     public function actionCreate()
-        {
-            $model = new Barangumum();
+    public function actionCreate()
+    {
+        $model = new Kategori();
 
 
          {
@@ -178,109 +151,91 @@ class BarangumumController extends Controller
 
     public function actionSimpan()
     {
-        $model = new Barangumum();
-	//	$bupload = new Barangumumupload();
-		
-		$model->load(Yii::$app->request->post());
-		
-		$kdBrg = $model->KD_BARANG;	
-		$kdCorp = $model->KD_CORP;	
-		$kdType = $model->KD_TYPE;	
-		$kdKategori = $model->KD_KATEGORI;	
-		$kdUnit = $model->KD_UNIT;	
-		
+        $model = new Kategori();
 
-        $kd = Yii::$app->mastercode->barangumum($kdCorp,$kdType,$kdKategori,$kdUnit);
-        
-/*
-		$ck = Barangumum::find()->select('KD_BARANG')->where(['KD_CORP' => $kdCorp])->andWhere('STATUS <> 3')->orderBy(['ID'=>SORT_DESC])->one();
-		if(count($ck) == 0){ $nkd = 1; } else { $kd = explode('.',$ck->KD_BARANG); $nkd = $kd[5]+1; }
+		if($model->load(Yii::$app->request->post())){
+                    $ck = Kategori::find()->where('STATUS <> 3')->max('KD_KATEGORI');
+                    $nw = $ck+1;
+                    $nw = str_pad( $nw, "2", "0", STR_PAD_LEFT );
+                    $model->KD_KATEGORI = $nw;
+                    $model->CREATED_BY = Yii::$app->user->identity->username;
+                    $model->CREATED_AT = date('Y-m-d H:i:s');
+                    $model->save();
+//                    print_r($model);
+//                    die();
+                    
+		return $this->redirect(['master/kategori']);
+                    
+                }
 		
-		$kd = "BRG.".$kdCorp.".".$kdType.".".$kdKategori.".".$kdUnit.".".str_pad( $nkd, "4", "0", STR_PAD_LEFT );
-*/
-		
-		$model->KD_BARANG = $kd;
-                $model->CREATED_BY = Yii::$app->user->identity->username;
-                $model->CREATED_AT = date('Y-m-d H:i:s');
-		
-		$image = $model->uploadImage();
-		if ($model->save()) {
-			// upload only if valid uploaded file instance found
-			if ($image !== false) {
-				$path = $model->getImageFile();
-				$image->saveAs($path);
-			}
-		}
-	
-		
-		return $this->redirect(['/master/barangumum']);
-//		echo  $hsl['barangumum']['KD_BARANG'];
     }
 
     /**
-     * Updates an existing Barangumum model.
+     * Updates an existing Kategori model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
-     * @param string $kd_barang
+     * @param string $kd_kategori
      * @return mixed
      */
-    public function actionUpdate($ID, $KD_BARANG)
+    public function actionUpdate($ID, $KD_KATEGORI)
     {
-        $model = $this->findModel($ID, $KD_BARANG);
-
-        if ($model->load(Yii::$app->request->post())){
-			
-			$image = $model->uploadImage();
+        $model = $this->findModel($ID, $KD_KATEGORI);
+        
+        
+        if ($model->load(Yii::$app->request->post())) {
+                $data = Kategori::find()->where(['ID'=>$ID, 'KD_KATEGORI'=>$KD_KATEGORI])->one();
+                $ktgr = $data['STATUS'];
+        
+		$baris = Kategori::find()->where(['ID'=>$ID, 'KD_KATEGORI'=>$KD_KATEGORI])->count();
+	
+		if($ktgr == 3 && $baris == 0 ){
+			return $this->redirect(['index']);
+		}
+                else{
                     
-			if ($model->save()) {
-				// upload only if valid uploaded file instance found
-				if ($image !== false) {
-					$path = $model->getImageFile();
-					$image->saveAs($path);
-				}
-                               
-			}
-//                         print_r($model);
-//                                die();
-            return $this->redirect(['/master/barangumum']);
+                     $model->save();
+                     
+                }
+            return $this->redirect(['master/kategori']);
         } else {
             return $this->renderAjax('update', [
                 'model' => $model,
             ]);
         }
+        
     }
     
-   
+    
 
     /**
-     * Deletes an existing Barangumum model.
+     * Deletes an existing Kategori model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
-     * @param string $kd_barang
+     * @param string $kd_kategori
      * @return mixed
      */
-    public function actionDelete($ID, $KD_BARANG)
+    public function actionDelete($ID, $KD_KATEGORI)
     {
-		$model = Barangumum::find()->where(['ID'=>$ID, 'KD_BARANG'=>$KD_BARANG])->one();
+		$model = Kategori::find()->where(['ID'=>$ID, 'KD_KATEGORI'=>$KD_KATEGORI])->one();
 		$model->STATUS = 3;
 		$model->UPDATED_BY = Yii::$app->user->identity->username;
-		$model->save();
-//   $this->findModel($ID, $KD_BARANG)->delete();
-
+		$model->save();  // equivalent to $model->update();
+		
+        //$this->findModel($ID, $KD_KATEGORI)->delete();
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the Barangumum model based on its primary key value.
+     * Finds the Kategori model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @param string $kd_barang
-     * @return Barangumum the loaded model
+     * @param string $kd_kategori
+     * @return Kategori the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($ID, $KD_BARANG)
+    protected function findModel($ID, $KD_KATEGORI)
     {
-        if (($model = Barangumum::findOne(['ID' => $ID, 'KD_BARANG' => $KD_BARANG])) !== null) {
+        if (($model = Kategori::find()->where(['ID'=>$ID, 'KD_KATEGORI'=>$KD_KATEGORI])->one()) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

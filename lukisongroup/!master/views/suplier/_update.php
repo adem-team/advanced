@@ -1,8 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use kartik\form\ActiveForm;
-use kartik\widgets\SwitchInput;
+use yii\widgets\ActiveForm;
 
 use yii\helpers\ArrayHelper;
 use lukisongroup\models\master\Perusahaan;
@@ -16,18 +15,11 @@ use lukisongroup\models\hrd\Corp;
 <div class="suplier-form">
 
     <?php $form = ActiveForm::begin([
-		'type' => ActiveForm::TYPE_HORIZONTAL,
-                'id' => 'createsuplier',
-                'enableClientValidation' => true,
-		'method' => 'post',
-		'action' => ['suplier/simpan'],
-		]); ?>
-
-    
+          'id' => 'updatesuplier',
+          'enableClientValidation' => true,
+    ]); ?>
 
     <?php
-    
-//    dropdown data
         $drop = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM');
     ?>
     <?= $form->field($model, 'KD_CORP')->dropDownList($drop,['prompt'=>' -- Pilih Salah Satu --'])->label('Group Perusahaan') ?>
@@ -48,15 +40,16 @@ use lukisongroup\models\hrd\Corp;
 
     <?= $form->field($model, 'WEBSITE')->textInput(['maxlength' => true]) ?>
 
+    <?php //= $form->field($model, 'IMAGE')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>
 
-    <?=  $form->field($model, 'STATUS')->radioList(['1'=>'Aktif','0'=>'Tidak Aktif']) ?>
-    
+    <?= $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']) ?>
 
-	<div class="form-group">
-		<div class="col-sm-offset-2 col-sm-10">
-			<?= Html::submitButton($model->isNewRecord ? '<i class="fa fa-plus"></i>&nbsp;&nbsp; Tambah Suplier' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-		</div>
+   
+
+    <div class="form-group">
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Ubah', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

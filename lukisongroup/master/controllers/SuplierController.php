@@ -142,7 +142,7 @@ class SuplierController extends Controller
                 $model->CREATED_BY = Yii::$app->user->identity->username;
                 $model->CREATED_AT = date('Y-m-d H:i:s');
 		$model->save();
-		return $this->redirect(['master/suplier']);
+		return $this->redirect(['/master/suplier']);
     }
     /**
      * Creates a new Suplier model.
@@ -177,7 +177,7 @@ class SuplierController extends Controller
             $model->UPDATED_BY = Yii::$app->user->identity->username;
            
              $model->save();
-            return $this->redirect(['master/suplier']);
+            return $this->redirect(['/master/suplier']);
         } else {
             return $this->renderAjax('update', [
                 'model' => $model,

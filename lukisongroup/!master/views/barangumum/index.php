@@ -9,10 +9,6 @@ $this->sideCorp = 'Master Data Umum';              /* Title Select Company pada 
 $this->sideMenu = 'umum_datamaster';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Umum - Barang ');
 
-    
-
-
-
 
 ?>
   
@@ -48,9 +44,8 @@ $gridColumns = [
 					'buttons' => [
 						'view'=>function($url, $model, $key){
 								return Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px;">View </button>',
-                                                                       
                                                                     ['view','ID'=>$model->ID,'KD_BARANG'=>$model->KD_BARANG],
-                                                                        [   
+                                                                        [
                                                                             'data-toggle'=>"modal",
                                                                             'data-target'=>"#modal-bumum",													
                                                                             'data-title'=> $model->ID,
@@ -108,18 +103,6 @@ $gridColumns = [
 			'dataProvider'=> $dataProvider,
 			'filterModel' => $searchModel,
 			'columns' => $gridColumns,
-                        'rowOptions' => function($data) { 
-                                         if($data->STATUS == 'tidak aktif')
-                                         {
-                                             return ['class'=>'danger'];
-                                         }
-                                        else {
-                                            return ['class'=>'success'];
-                                        }
-                            
-                                   },
-			'responsive'=>true,
-                        'resizableColumns'=>true,
 			'pjax'=>true,
                         'pjaxSettings'=>[
                         'options'=>[
@@ -136,8 +119,7 @@ $gridColumns = [
 				'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
 						['modelClass' => 'Barangumum',]),'/master/barangumum/create',[
 							'data-toggle'=>"modal",
-								'data-target'=>"#modal-barangumum",
-                                                                     'id'=>'modl',
+								'data-target'=>"#modal-barangumum",							
 									'class' => 'btn btn-success'						
 												]),								
                             
@@ -200,11 +182,9 @@ $this->registerJs("
             })
     ",$this::POS_READY);
 
-
 $this->registerJs("
         $('#modal-barangumum').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
-          
             var modal = $(this)
             var title = button.data('title') 
             var href = button.attr('href') 
@@ -213,35 +193,24 @@ $this->registerJs("
             $.post(href)
                 .done(function( data ) {
                     modal.find('.modal-body').html(data)
-                    
                 });
             })
     ",$this::POS_READY);
-
-
 ?>
    
             <!--modal-->
             
                <?php
-                  Modal::begin([
+               
+                Modal::begin([
                             'id' => 'modal-barangumum',
                             'header' => '<h4 class="modal-title">LukisonGroup</h4> ',
-                            'options'=>[
-                                   'tabindex' => false,
-                                    'hideSearch' => true,
-                            ],
-                           
                             'headerOptions'=>[
-                                    'style'=>'background-color:blue;'
+                                   // 'style'=>'background-color:blue;'
                             ],
-                   
                                  
                              ]);
-                
-               
-                    Modal::end();
-            
+                Modal::end();
                 
              
                   Modal::begin([

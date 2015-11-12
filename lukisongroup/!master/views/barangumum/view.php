@@ -1,13 +1,13 @@
 <?php
 
-//use yii;
-//use yii\helpers\Html;
+use Yii;
+use yii\helpers\Html;
 use yii\widgets\DetailView;
 //use kartik\widgets\ActiveForm;
 //use kartik\detail\DetailView
-//use lukisongroup\master\models\Barangumum;
-//use lukisongroup\models\hrd\Corp;
-//use yii\bootstrap\Modal;
+use lukisongroup\models\master\Barangumum;
+use lukisongroup\models\hrd\Corp;
+use yii\bootstrap\Modal;
 //use yii\helpers\Url;
 
 $this->sideCorp = 'Master Data Umum';                  	/* Title Select Company pada header pasa sidemenu/menu samping kiri */

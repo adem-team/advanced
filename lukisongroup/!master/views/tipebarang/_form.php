@@ -17,7 +17,7 @@ use kartik\widgets\SwitchInput
                 'enableClientValidation' => true,
 		'type' => ActiveForm::TYPE_HORIZONTAL,
 		'method' => 'post',
-		'action' => ['tipebarang/simpan'],
+		'action' => ['master/tipebarang/simpan'],
 		]); 
 	?>
 
