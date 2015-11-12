@@ -35,7 +35,7 @@ use kartik\widgets\FileInput;
                 'id'=>'createumum',
                 'enableClientValidation' => true,
 		'method' => 'post',
-		'action' => ['barangumum/simpan'],
+		'action' => ['master/barangumum/simpan'],
 		'options' => ['enctype' => 'multipart/form-data']
 		]);
 	?>
