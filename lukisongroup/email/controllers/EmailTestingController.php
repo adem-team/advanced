@@ -4,14 +4,28 @@ namespace lukisongroup\email\controllers;
 
 use Yii;
 use yii\web\Controller;
-use yii\helpers\Html;
-use yii\helpers\Url;
+//use yii\helpers\Html;
+//use yii\helpers\Url;
 use zyx\phpmailer\Mailer;
-use yii\widgets\ActiveForm;
-use yii\base\DynamicModel;
+//use yii\widgets\ActiveForm;
+//use yii\base\DynamicModel;
+use yii\filters\VerbFilter;
 
 class EmailTestingController extends Controller
 {
+	
+	 public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    //'delete' => ['post'],
+					'save' => ['post'],
+                ],
+            ],
+        ];
+    }
 	public function beforeAction(){
 			if (Yii::$app->user->isGuest)  {
 				 Yii::$app->user->logout();
@@ -68,7 +82,7 @@ class EmailTestingController extends Controller
 		//$path_atch='D:\xampp\htdocs\advanced\lukisongroup\web\upload\hrd\Employee';
 		//$path_atch='/var/www/advanced/lukisongroup/web/upload/hrd/Employee/';
 		$path_atch='/var/www/advanced/lukisongroup/web/upload/hrd/Employee/';
-		$opt=['fileName'=>'1436076377','contentType'=>'jpg','encoding'=>'base64','disposition'=>'attachment'];
+		$opt=['fileName'=>'1436076377.jpg','contentType'=>'image/jpg','encoding'=>'base64','disposition'=>'attachment'];
 		//$opt=['1436076377','jpg'];
 		Yii::$app->mailer->compose()
 		 ->setFrom(['postman@lukison.com' => 'LG-POSTMAN'])
@@ -76,13 +90,14 @@ class EmailTestingController extends Controller
 		 ->setCc(['ptr.nov@gmail.com'])
 		 ->setBcc(['piter@lipat.co.id'])		 
 		 ->setSubject('ERP TEST EMAIL')
+		 ->setHtmlBody($ok_html);
 		 //->attach($path_atch,['fileName'=>'1436076377','contentType'=>'jpg','encoding'=>'base64','disposition'=>'attachment'])
-		 //->attach('@lukisongroup/web/upload/hrd/Employee/1436076377.jpg',['fileName'=>'1436076377.jpg','contentType'=>'image/jpg'])
-		 ->attach($path)
-		 ->setHtmlBody($ok_html)
+		 //->attach('@lukisongroup/web/upload/hrd/Employee/',['fileName'=>'1436076377.jpg','contentType'=>'image/jpg'])
+		 //->attach($path)
+		//->attach()
 		 //->setTextBody($ok)
-		// ->attach($path_atch,[$opt])
-		 ->send();
+		 Yii::$app->mailer->compose()->attach('/var/www/advanced/lukisongroup/web/upload/hrd/Employee/',['1436076377','image/jpg']);
+		 Yii::$app->mailer->compose()->send();
 		 
 		
     }
