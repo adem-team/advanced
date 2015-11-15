@@ -26,7 +26,7 @@ class UserloginSearch extends Userlogin
     {
         return [
             [['username','EMP_ID','email'], 'string'],
-            [['email','avatar','avatarImage'], 'string'],
+            [['email'], 'string'],
 			[['id','status','created_at','updated_at'],'integer'],
         ];
     }
@@ -63,7 +63,7 @@ class UserloginSearch extends Userlogin
 	public function attributes()
 	{
 		/*Author -ptr.nov- add related fields to searchable attributes */
-		return array_merge(parent::attributes(), ['emp.EMP_IMG','emp.EMP_NM','emp.EMP_NM_BLK','Mdlpermission.ID']);
+		//return array_merge(parent::attributes(), ['emp.EMP_IMG','emp.EMP_NM','emp.EMP_NM_BLK','Mdlpermission.ID']);
 	}
 	
 	/** 
@@ -71,10 +71,10 @@ class UserloginSearch extends Userlogin
 	  * @author ptrnov  <piter@lukison.com>
 	  * @since 1.1
 	*/
-	public function findUserAttr($id)
+	 public function findUserAttr($id)
     {
 		$model = Userlogin::find()->select('*')
-				->joinWith('emp',true,'LEFT JOIN')
+				->joinWith('userprofile',true,'LEFT JOIN')
 				->Where(['dbm001.user.id' => $id]);
 				//->one();
 		if ($model !== null) {
@@ -82,14 +82,33 @@ class UserloginSearch extends Userlogin
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }
+    } 
+	
+	
+	/** 
+	  * findUserAttr User and Employe
+	  * @author ptrnov  <piter@lukison.com>
+	  * @since 1.1
+	*/
+	/*  public function findUserAttr($id)
+    {
+		$model = Userlogin::find()->select('*')
+				->joinWith('emp',true,'LEFT JOIN')
+				->Where(['dbm_086.user.id' => $id]);
+				//->one();
+		if ($model !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    } */
 	
 	/** 
 	  * findUserAttr User and Employe and Modul Permission
 	  * @author ptrnov  <piter@lukison.com>	
 	  * @since 1.1
 	*/
-	public function findModulAcess($id,$modul_id)
+	/* public function findModulAcess($id,$modul_id)
     {
 		$model = Userlogin::find()->select('*')
 					->joinWith('emp',true,'LEFT JOIN')
@@ -100,5 +119,5 @@ class UserloginSearch extends Userlogin
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }
+    } */
 }

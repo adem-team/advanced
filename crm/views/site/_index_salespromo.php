@@ -8,12 +8,13 @@ use kartik\builder\Form;
 use kartik\widgets\FileInput;
 use kartik\builder\FormGrid;
 use kartik\tabs\TabsX;
+use yii\widgets\Pjax;
 $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctype'=>'multipart/form-data']]);
 $ProfAttribute1 = [
     [
         'label'=>'',
         'attribute' =>'EMP_IMG',
-        'value'=>Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$model->EMP_IMG,
+        //'value'=>Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$model->EMP_IMG,
         //'group'=>true ,
         //'groupOptions'=>[
         //	'value'=>Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$model->EMP_IMG,
@@ -23,11 +24,11 @@ $ProfAttribute1 = [
         //'inputContainer' => ['class'=>'col-md-1'],
     ],
 ];
-$this->title = 'Workbench CRM <i class="fa  fa fa-coffee"></i> ' . $model->EMP_NM . ' ' . $model->EMP_NM_BLK .'</a>';
-$prof=$this->render('login_index/_info', [
+//$this->title = 'Workbench CRM <i class="fa  fa fa-coffee"></i> ' . $model->EMP_NM . ' ' . $model->EMP_NM_BLK .'</a>';
+/* $prof=$this->render('login_index/_info', [
     'model' => $model,
 	'dataProvider' => $dataProvider,
-]);
+]); */
 $EmpDashboard=$this->render('login_index/_dashboard', [
     'model' => $model,
 ]);
@@ -41,10 +42,10 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 					<?php
 					echo Html::panel(
 						[
-							'heading' => '<div></div>',
-							'body'=>$prof,
+							'heading' => '<div>DASHBOARD - SALES PROMO </div>',
+							'body'=>'',//$prof,
 						],
-						Html::TYPE_INFO
+						Html::TYPE_WARNING
 					);
 					?>
 			</div>
@@ -52,6 +53,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
        <div class="row" >
 			<div class="col-xs-12 col-sm-6 col-dm-4  col-lg-4">
 				<?php
+					Pjax::begin();
 					echo Html::panel([
 							'id'=>'home1',
 							'heading' => '<b>DATA PROSESS</b>',
@@ -61,7 +63,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										 * Modul Sales Promotion - Stock Gudang | input data stock gudang di customer
 										*/
 										'content' => 'Stock Gudang',
-										'url' => '/salespromo/stock-gudang',
+										'url' => '/salespromo/stock-gudang',										
 										'badge' => '0'
 									],
 									[
@@ -90,8 +92,9 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									],									
 								]),
 						],
-						Html::TYPE_INFO
+						Html::TYPE_WARNING
 					);
+					Pjax::end();
 				?>
 			</div>
 			<div class="col-xs-12 col-sm-6 col-dm-4  col-lg-4" >
@@ -135,7 +138,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									],
 								]),
 						],
-						Html::TYPE_INFO
+						Html::TYPE_WARNING
 					);
 				?>
 			</div>
@@ -179,7 +182,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									],									
 								]),
 						],
-						Html::TYPE_INFO
+						Html::TYPE_WARNING
 					);
 				?>
 				

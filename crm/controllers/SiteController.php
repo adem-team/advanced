@@ -7,9 +7,10 @@ use yii\web\Controller;
 use crm\sistem\models\LoginForm;
 use Yii\web\User;
 use yii\filters\VerbFilter;
-use lukisongroup\models\hrd\Employe;
-use lukisongroup\models\hrd\EmployeSearch;
-use lukisongroup\models\system\user\UserloginSearch;
+use crm\sistem\models\UserloginSearch;
+//use lukisongroup\models\hrd\Employe;
+//use lukisongroup\models\hrd\EmployeSearch;
+//use lukisongroup\models\system\user\UserloginSearch;
 /**
  * Site controller
  */
@@ -66,7 +67,7 @@ class SiteController extends Controller
                 'model' => $model,
             ]);
         } else {
-            $ModelUser = UserloginSearch::findUserAttr(Yii::$app->user->id)->one();
+            /* $ModelUser = UserloginSearch::findUserAttr(Yii::$app->user->id)->one();
             $model = $this->findModel1($ModelUser->emp->EMP_ID);
             $searchModel1 = new EmployeSearch();
             $dataProvider = $searchModel1->search_empid($ModelUser->emp->EMP_ID);
@@ -75,7 +76,8 @@ class SiteController extends Controller
             return $this->render('index', [
                 'model' => $model,
                 'dataProvider'=>$dataProvider->getModels(),
-            ]);
+            ]); */
+			return $this->render('index');
         }
     }
 	
