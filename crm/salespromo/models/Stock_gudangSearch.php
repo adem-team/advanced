@@ -3,6 +3,7 @@
 namespace crm\salespromo\models;
 
 use Yii;
+use yii\helpers\Html;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use crm\salespromo\models\Stock_gudang;
@@ -17,8 +18,10 @@ class Stock_gudangSearch extends Stock_gudang
      */
     public function rules()
     {
-        return [
-            [['ID', 'STOCK_GUDANG', 'STATUS'], 'integer'],
+        return [			
+            [['ID','STATUS'], 'integer'],
+			//[['CUST_KD','KD_BARANG','STOCK_GUDANG_UNIT','STOCK_GUDANG_PCS'],'required'], 
+			[['STOCK_GUDANG_UNIT','STOCK_GUDANG_PCS'],'safe'],
             [['WAKTU', 'CUST_KD', 'CUST_NM', 'KD_BARANG', 'NM_BARANG', 'PRODAK_LINE', 'CORP_ID', 'KD_DISTRIBUTOR', 'KD_SUBDIST', 'CREATED_BY', 'UPDATED_BY', 'UPDATED_TIME'], 'safe'],
         ];
     }
@@ -54,13 +57,15 @@ class Stock_gudangSearch extends Stock_gudang
             // $query->where('0=1');
             return $dataProvider;
         }
-
-        $query->andFilterWhere([
+		$query->andFilterWhere([
             'ID' => $this->ID,
             'WAKTU' => $this->WAKTU,
-            'STOCK_GUDANG' => $this->STOCK_GUDANG,
             'UPDATED_TIME' => $this->UPDATED_TIME,
             'STATUS' => $this->STATUS,
+        ]);
+        $query->andFilterWhere([
+            'STOCK_GUDANG_UNIT' => $this->STOCK_GUDANG_UNIT,
+            'STOCK_GUDANG_PCS' => $this->STOCK_GUDANG_PCS
         ]);
 
         $query->andFilterWhere(['like', 'CUST_KD', $this->CUST_KD])
