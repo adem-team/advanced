@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\widgets\DepDrop;
-use lukisongroup\back\models\Parents;
+use lukisongroup\front\models\Parents;
 use yii\helpers\ArrayHelper;
 use kartik\select2\select2;
 use yii\helpers\Url;
