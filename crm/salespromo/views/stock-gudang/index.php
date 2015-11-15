@@ -3,39 +3,70 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
+use lukisongroup\master\models\Customer;
+use lukisongroup\esm\models\Barang;
 /* @var $this yii\web\View */
 /* @var $searchModel crm\salespromo\models\Stock_gudangSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Stock Gudang';
+$this->title = 'Stock Gudang Customer';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="stock-gudang-index">
 	<div style="margin-left:15px; margin-right:15px">
 		<h3><?= Html::encode($this->title) ?></h3>
-		<h4><?php echo 'Tanggal';?></h4>
+		<h4><?php echo '<h6>Tanggal : ' . Yii::$app->ambilKonvesi->convert(date('Y-m-d'),'date').'</h6>';?></h4>
 		<?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
 		
 	
 		<?= GridView::widget([
 			'dataProvider' => $dataProvider,
-			//'filterModel' => $searchModel,
+			'filterModel' => $searchModel,
 			'columns' => [
-				['class' => 'yii\grid\SerialColumn'],
-
-				//'ID',
-				
-				'CUST_KD',
-				//'CUST_NM',
-				'KD_BARANG',
+				['class' => 'yii\grid\SerialColumn'],				
+				'WAKTU',
+				//'ID',				
+				[
+					'attribute'=>'CUST_KD',
+					'format' => 'html',
+					'value'=>function($model, $key, $index, $widget) { 
+								$cus_atrb = Customer::find()->where(['CUST_KD'=>$model->CUST_KD])->one();
+								if (count($cus_atrb)==0){
+									return '<div style="color:red"> CUST_KD Changed </div>';
+								}else{
+									return $cus_atrb['CUST_NM'];
+								}							
+							},
+				],
+				[
+					'attribute'=>'KD_BARANG',
+					'format' => 'html',
+					'value'=>function($model, $key, $index, $widget) { 
+								$brg_atrb = Barang::find()->where(['KD_BARANG'=>$model->KD_BARANG])->one();
+								if (count($brg_atrb)==0){
+									return '<div style="color:red"> KD_BARANG Changed </div>';
+								}else{
+									return $brg_atrb['NM_BARANG'];
+								}									
+							},
+				],
 				// 'NM_BARANG',
-				 'STOCK_GUDANG',
+				[
+					'label'=>'Stock-Unit',
+					'hAlign'=>'right',
+					'attribute'=>'STOCK_GUDANG_UNIT'
+				],
+				[
+					'label'=>'Stock-PCS',
+					'hAlign'=>'right',
+					'attribute'=>'STOCK_GUDANG_PCS',
+				],				 
 				// 'PRODAK_LINE',
 				// 'CORP_ID',
 				// 'KD_DISTRIBUTOR',
 				// 'KD_SUBDIST',
-				// 'CREATED_BY',
+				 'CREATED_BY',
 				// 'UPDATED_BY',
 				// 'UPDATED_TIME',
 				// 'STATUS',
@@ -73,18 +104,19 @@ $this->params['breadcrumbs'][] = $this->title;
 		
 <?php
 	$this->registerJs("
+		$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
         $('#stock-gudang').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
             var title = button.data('title') 
             var href = button.attr('href') 
-            //modal.find('.modal-title').html(title)
+            modal.find('.modal-title').html(title)
             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
             $.post(href)
                 .done(function( data ) {
-                    modal.find('.modal-body').html(data)
+                    modal.find('.modal-body').html(data)					
                 });
-            })
+            }),			
     ",$this::POS_READY);
     
     Modal::begin([
@@ -92,6 +124,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'header' => '<h4 class="modal-title">Input Stock Gudang</h4>',
     ]);
     Modal::end();
+	
 ?>
 	</div>
 </div>
