@@ -36,7 +36,11 @@ class PersonaliaController extends Controller
         ];
     }
 	
-	/* -- Created By ptr.nov --*/
+	/**
+     * ACTION INDEX | Session Login
+     * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+	*/
 	public function beforeAction(){
 			if (Yii::$app->user->isGuest)  {
 				 Yii::$app->user->logout();

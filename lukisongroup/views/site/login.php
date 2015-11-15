@@ -112,6 +112,7 @@ $formlogin= FormGrid::widget([
 	
     ]);
 		echo $formlogin; 
+		echo $form->field($model, 'POSITION_SITE')->hiddenInput(['value'=> 'ERP'])->label(false); /*SITE POSITION LOGIN*/
 	Modal::end();
     ActiveForm::end() ;
 	
