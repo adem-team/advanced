@@ -64,8 +64,8 @@ AppAsset_style::register($this);
 				$ModelUserAttr = UserloginSearch::findUserAttr(Yii::$app->user->id)->one();
 				//print_r($ModelUserAttr);
 				//echo $ModelUserAttr->emp->EMP_IMG;
-				$MainAvatar =  $ModelUserAttr->emp->EMP_IMG;
-				$MainUserProfile = $ModelUserAttr->emp->EMP_NM . ' '. $ModelUserAttr->emp->EMP_NM_BLK;
+				$MainAvatar =  $ModelUserAttr->userprofile['EMP_IMG'];
+				$MainUserProfile = $ModelUserAttr->userprofile['NM_FIRST'] . '  '. $ModelUserAttr->userprofile['NM_MIDDLE'] . '  '. $ModelUserAttr->userprofile['NM_END'];
 			
 			}
 			$corp="<p class='pull-left'>&copy; LukisonGroup <?= date('Y') ?></p>";

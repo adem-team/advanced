@@ -13,7 +13,7 @@ $ProfAttribute1 = [
     [
         'label'=>'',
         'attribute' =>'EMP_IMG',
-        'value'=>Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$model->EMP_IMG,
+        //'value'=>Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$model->EMP_IMG,
         //'group'=>true ,
         //'groupOptions'=>[
         //	'value'=>Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$model->EMP_IMG,
@@ -23,11 +23,11 @@ $ProfAttribute1 = [
         //'inputContainer' => ['class'=>'col-md-1'],
     ],
 ];
-$this->title = 'Workbench CRM <i class="fa  fa fa-coffee"></i> ' . $model->EMP_NM . ' ' . $model->EMP_NM_BLK .'</a>';
-$prof=$this->render('login_index/_info', [
+//$this->title = 'Workbench CRM <i class="fa  fa fa-coffee"></i> ' . $model->EMP_NM . ' ' . $model->EMP_NM_BLK .'</a>';
+/* $prof=$this->render('login_index/_info', [
     'model' => $model,
 	'dataProvider' => $dataProvider,
-]);
+]); */
 $EmpDashboard=$this->render('login_index/_dashboard', [
     'model' => $model,
 ]);
@@ -39,13 +39,13 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 		<div class="row">
 			<div class="col-xs-12 col-sm-12 col-dm-12  col-lg-12">
 					<?php
-					echo Html::panel(
+					 echo Html::panel(
 						[
-							'heading' => '<div></div>',
-							'body'=>$prof,
+							'heading' => '<div>DASHBOARD - CUSTOMER</div>',
+							'body'=>'',//$prof,
 						],
 						Html::TYPE_INFO
-					);
+					); 
 					?>
 			</div>
 		</div>
