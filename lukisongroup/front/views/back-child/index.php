@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
+use lukisongroup\front\models\Parents;
+use yii\helpers\ArrayHelper;
 /* @var $this yii\web\View */
 /* @var $searchModel lukisongroup\child\models\ChildSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -12,13 +14,22 @@ $this->title = 'Children';
 ?>
 <div class="child-index">
 
+
     <?php
             $gridColumns = [
 
 
-            ['class' => 'yii\grid\SerialColumn'], 
-            'PARENT_ID', 
-            'CHILD_NAME', 
+            ['class' => 'yii\grid\SerialColumn'],             
+            [
+              'label' => 'Parents',
+              'attribute' => 'PARENT_ID',
+              'value' => 'PARENT_ID',
+               'filter' => ArrayHelper::map(Parents::find()->all(), 'parent_id', 'parent'),
+              'enableSorting' => false,
+
+            ],
+              'CHILD_NAME', 
+        
            
              [
             'class' => 'yii\grid\ActionColumn',
@@ -50,36 +61,36 @@ $this->title = 'Children';
 
             ?>
             <?= $grid = GridView::widget([
-				'dataProvider'=> $dataProvider,
-				'filterModel' => $searchModel,
-				'columns' => $gridColumns,
-				'pjax'=>true,
-				'pjaxSettings'=>[
-					'options'=>[
-						'enablePushState'=>false,
-						'id'=>'activekat',
-					],
-				],
-				'toolbar' => [
-					'{export}',
-				],
-				'panel' => [
-					'heading'=>'<h3 class="panel-title">'. Html::encode($this->title).'</h3>',
-					'type'=>'warning',
-					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Tambah Category ',
-					['modelClass' => 'child',]),'/front/back-child/create',[
-						'data-toggle'=>"modal",
-						'data-target'=>"#modal-create-child",                            
-						'class' => 'btn btn-success'                        
-					]),
-					'showFooter'=>false,
-				],      
+                'dataProvider'=> $dataProvider,
+                'filterModel' => $searchModel,
+                'columns' => $gridColumns,
+                'pjax'=>true,
+                'pjaxSettings'=>[
+                    'options'=>[
+                        'enablePushState'=>false,
+                        'id'=>'activekat',
+                    ],
+                ],
+                'toolbar' => [
+                    '{export}',
+                ],
+                'panel' => [
+                    'heading'=>'<h3 class="panel-title">'. Html::encode($this->title).'</h3>',
+                    'type'=>'warning',
+                    'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Tambah Category ',
+                    ['modelClass' => 'child',]),'/front/back-child/create',[
+                        'data-toggle'=>"modal",
+                        'data-target'=>"#modal-create-child",                            
+                        'class' => 'btn btn-success'                        
+                    ]),
+                    'showFooter'=>false,
+                ],      
 
-				'export' =>['target' => GridView::TARGET_BLANK],
-				'exportConfig' => [
-				GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
-				GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
-				],
+                'export' =>['target' => GridView::TARGET_BLANK],
+                'exportConfig' => [
+                GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
+                GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
+                ],
             ]);
             ?>
 
