@@ -4,6 +4,9 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
+use lukisongroup\front\models\Child;
+use lukisongroup\front\models\Parents;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel lukisongroup\grandchild\models\GrandchildSearch */
@@ -19,8 +22,15 @@ $this->params['breadcrumbs'][] = $this->title;
             $gridColumns = [
 
             ['class' => 'yii\grid\SerialColumn'], 
-            'CHILD_ID',
-            'PARENT_ID', 
+          [
+              'label' => 'Parents',
+              'attribute' => 'PARENT_ID',
+              'value' => 'PARENT_ID',
+               'filter' => ArrayHelper::map(Parents::find()->all(), 'parent_id', 'parent'),
+              'enableSorting' => false,
+
+            ],
+ 
             'GRANDCHILD', 
            
              [

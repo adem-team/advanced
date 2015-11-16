@@ -25,11 +25,11 @@ use yii\helpers\Url;
     
      <?php
   
-     echo $form->field($model,'CHILD_ID')->dropDownList(ArrayHelper::map(Parents::find()->asArray()->all(), 'parent_id', 'parent'),['id'=>'cat-id'] );
+     echo $form->field($model,'PARENT_ID')->dropDownList(ArrayHelper::map(Parents::find()->asArray()->all(), 'parent_id', 'parent'),['id'=>'cat-id'] );
         
  
    
-      echo $form->field($model, 'PARENT_ID')->widget(\kartik\depdrop\DepDrop::classname(), [
+      echo $form->field($model, 'CHILD_ID')->widget(\kartik\depdrop\DepDrop::classname(), [
       'options'=>['id'=>'subcat-id'],
       'pluginOptions'=>[
         'depends'=>['cat-id'],
