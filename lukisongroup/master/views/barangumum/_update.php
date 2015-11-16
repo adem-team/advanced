@@ -9,6 +9,7 @@ use lukisongroup\master\models\Suplier;
 //use lukisongroup\master\models\Perusahaan;
 use lukisongroup\master\models\Tipebarang;
 use lukisongroup\models\hrd\Corp;
+use kartik\widgets\Select2;
 
 use kartik\widgets\FileInput;
 /* @var $this yii\web\View */
@@ -47,13 +48,38 @@ use kartik\widgets\FileInput;
 
     <?= $form->field($model, 'NM_BARANG')->textInput(['maxlength' => true]) ?>	
 	
-    <?= $form->field($model, 'KD_TYPE')->dropDownList($droptype,['prompt'=>' -- Pilih Salah Satu --'])->label('Type Barang') ?>	
+   <?= $form->field($model, 'KD_TYPE')->widget(Select2::classname(), [
+        'data' => $droptype,
+        'options' => ['placeholder' => 'Pilih KD TYPE ...'],
+        'pluginOptions' => [
+            'allowClear' => true
+             ],
+    ]);?>
+    <?= $form->field($model, 'KD_KATEGORI')->widget(Select2::classname(), [
+        'data' => $dropkat,
+        'options' => ['placeholder' => 'Pilih KD Kategori ...'],
+        'pluginOptions' => [
+            'allowClear' => true
+             ],
+    ]);?>
 	
-    <?= $form->field($model, 'KD_KATEGORI')->dropDownList($dropkat,['prompt'=>' -- Pilih Salah Satu --'])->label('Kategori') ?>
-
-    <?= $form->field($model, 'KD_UNIT')->dropDownList($dropunit,['prompt'=>' -- Pilih Salah Satu --'])->label('Unit') ?>
-
-    <?= $form->field($model, 'KD_SUPPLIER')->dropDownList($dropsuplier,['prompt'=>' -- Pilih Salah Satu --'])->label('Supplier') ?>
+   
+        
+     <?= $form->field($model, 'KD_UNIT')->widget(Select2::classname(), [
+    'data' => $dropunit,
+    'options' => ['placeholder' => 'Pilih KD Unit ...'],
+    'pluginOptions' => [
+        'allowClear' => true
+    ],
+]);?>
+     
+    <?=$form->field($model, 'KD_SUPPLIER')->widget(Select2::classname(), [
+    'data' => $dropsuplier,
+    'options' => ['placeholder' => 'Pilih KD SUPPLIER ...'],
+    'pluginOptions' => [
+        'allowClear' => true
+    ],
+]);?>
 
     <?= $form->field($model, 'PARENT')->textInput(['maxlength' => true]) ?>
 

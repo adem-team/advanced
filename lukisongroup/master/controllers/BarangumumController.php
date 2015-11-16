@@ -181,9 +181,13 @@ class BarangumumController extends Controller
         $model = new Barangumum();
 	//	$bupload = new Barangumumupload();
 		
-		$model->load(Yii::$app->request->post());
+		if($model->load(Yii::$app->request->post())){
+                    
+                
 		
-		$kdBrg = $model->KD_BARANG;	
+              
+               
+//		$kdBrg = $model->KD_BARANG;	
 		$kdCorp = $model->KD_CORP;	
 		$kdType = $model->KD_TYPE;	
 		$kdKategori = $model->KD_KATEGORI;	
@@ -197,9 +201,11 @@ class BarangumumController extends Controller
 		if(count($ck) == 0){ $nkd = 1; } else { $kd = explode('.',$ck->KD_BARANG); $nkd = $kd[5]+1; }
 		
 		$kd = "BRG.".$kdCorp.".".$kdType.".".$kdKategori.".".$kdUnit.".".str_pad( $nkd, "4", "0", STR_PAD_LEFT );
-*/
+*/          
 		
 		$model->KD_BARANG = $kd;
+                if($model->validate())
+                {
                 $model->CREATED_BY = Yii::$app->user->identity->username;
                 $model->CREATED_AT = date('Y-m-d H:i:s');
 		
@@ -210,10 +216,19 @@ class BarangumumController extends Controller
 				$path = $model->getImageFile();
 				$image->saveAs($path);
 			}
-		}
-	
+                        
 		
-		return $this->redirect(['/master/barangumum']);
+                }
+                }
+                        
+             
+////	
+		
+		return $this->redirect(['index']);
+                }
+                else{
+                     return ActiveForm::validate($model);
+                }
 //		echo  $hsl['barangumum']['KD_BARANG'];
     }
 
@@ -229,6 +244,10 @@ class BarangumumController extends Controller
         $model = $this->findModel($ID, $KD_BARANG);
 
         if ($model->load(Yii::$app->request->post())){
+            if($model->validate())
+            {
+                
+            
 			
 			$image = $model->uploadImage();
                     
@@ -240,9 +259,10 @@ class BarangumumController extends Controller
 				}
                                
 			}
+            }
 //                         print_r($model);
 //                                die();
-            return $this->redirect(['/master/barangumum']);
+          return $this->redirect(['index']);
         } else {
             return $this->renderAjax('update', [
                 'model' => $model,

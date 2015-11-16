@@ -154,17 +154,20 @@ class TipebarangController extends Controller
     public function actionSimpan()
     {
         $model = new Tipebarang();
-
+        
 		$model->load(Yii::$app->request->post());
 		$ck = Tipebarang::find()->where('STATUS <> 3')->max('KD_TYPE');
-		$nw = $ck+1;
-		$nw = str_pad( $nw, "2", "0", STR_PAD_LEFT );
+		$nwa = $ck+1;
+		$nw = str_pad( $nwa, "2", "0", STR_PAD_LEFT );
 		$model->KD_TYPE = $nw;
+             if($model->validate())
+             {
                 $model->CREATED_AT = date('Y-m-d H:i:s');
                 $model->CREATED_BY = Yii::$app->user->identity->username;
 		$model->save();
+             }
                    
-		return $this->redirect(['/master/tipebarang']);
+		return $this->redirect(['index']);
     }
     /**
      * Updates an existing Tipebarang model.
@@ -186,9 +189,12 @@ class TipebarangController extends Controller
 		}
 		
         if ($model->load(Yii::$app->request->post()) ) {
+            if($model->validate())
+            {
             $model->UPDATED_BY = Yii::$app->user->identity->username;
             $model->save();
-            return $this->redirect(['/master/tipebarang']);
+            }
+            return $this->redirect(['index']);
         } else {
             return $this->renderAjax('update', [
                 'model' => $model,

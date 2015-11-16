@@ -154,20 +154,25 @@ class KategoriController extends Controller
         $model = new Kategori();
 
 		if($model->load(Yii::$app->request->post())){
+                  
+                    
                     $ck = Kategori::find()->where('STATUS <> 3')->max('KD_KATEGORI');
-                    $nw = $ck+1;
-                    $nw = str_pad( $nw, "2", "0", STR_PAD_LEFT );
+                    $nwa = $ck+1;
+                    $nw = str_pad( $nwa, "2", "0", STR_PAD_LEFT );
                     $model->KD_KATEGORI = $nw;
                     $model->CREATED_BY = Yii::$app->user->identity->username;
                     $model->CREATED_AT = date('Y-m-d H:i:s');
                     $model->save();
+                    
 //                    print_r($model);
 //                    die();
                     
 		return $this->redirect(['index']);
                     
                 }
-		
+	else{
+            return ActiveForm::validate($model);
+        }	
     }
 
     /**
@@ -192,11 +197,17 @@ class KategoriController extends Controller
 //			return $this->redirect(['master/kategori']);
 //		}
 //                else{
-                    
-                     $model->save();
+//        }
+                    if($model->validate())
+                    {
+                        
+                        
+                        $model->save();
+                    }
                      
-//                }
-            return $this->redirect(['/master/kategori/']);
+                     
+
+                return $this->redirect(['index']);
         } else {
             return $this->renderAjax('update', [
                 'model' => $model,

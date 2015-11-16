@@ -28,7 +28,8 @@ use kartik\widgets\FileInput;
  $dropkategori = ArrayHelper::map(Kategori::find()->where(['STATUS' => 1])->all(), 'KD_KATEGORI', 'NM_KATEGORI');
  $dropunit = ArrayHelper::map(Unitbarang::find()->where(['STATUS' => 1])->all(), 'KD_UNIT', 'NM_UNIT');
  $dropsuplier = ArrayHelper::map(Suplier::find()->where(['STATUS' => 1])->all(), 'KD_SUPPLIER', 'NM_SUPPLIER');
-?>
+
+ ?>
 
     <?php $form = ActiveForm::begin([
 		'type' => ActiveForm::TYPE_HORIZONTAL,
@@ -46,23 +47,39 @@ use kartik\widgets\FileInput;
     <?= $form->field($model, 'NM_BARANG')->textInput(['maxlength' => true]) ?>
 
 	 
-    <?= $form->field($model, 'KD_TYPE')->dropDownList($droptipe,['prompt'=>' -- Pilih Salah Satu --'])->label('Type Barang') ?>
-
+    <?= $form->field($model, 'KD_TYPE')->widget(Select2::classname(), [
+        'data' => $droptipe,
+        'options' => [
+        'placeholder' => 'Pilih KD TYPE ...'],
+        'pluginOptions' => [
+            'allowClear' => true
+             ],
+    ]);?>
+    <?= $form->field($model, 'KD_KATEGORI')->widget(Select2::classname(), [
+        'data' => $dropkategori,
+        'options' => ['placeholder' => 'Pilih KD Kategori ...'],
+        'pluginOptions' => [
+            'allowClear' => true
+             ],
+    ]);?>
 	
-    <?= $form->field($model, 'KD_KATEGORI')->dropDownList($dropkategori,['prompt'=>' -- Pilih Salah Satu --'])->label('Kategori') ?>
-                 
-	 
-       
-    <?=$form->field($model, 'KD_UNIT')->widget(Select2::classname(), [
+   
+        
+     <?= $form->field($model, 'KD_UNIT')->widget(Select2::classname(), [
     'data' => $dropunit,
-    'options' => ['placeholder' => 'pilih KD_unit ...'],
+    'options' => ['placeholder' => 'Pilih KD Unit ...'],
     'pluginOptions' => [
         'allowClear' => true
     ],
-]); ?>
-
-	
-    <?= $form->field($model, 'KD_SUPPLIER')->dropDownList($dropsuplier,['prompt'=>' -- Pilih Salah Satu --'])->label('Supplier') ?>
+]);?>
+     
+    <?=$form->field($model, 'KD_SUPPLIER')->widget(Select2::classname(), [
+    'data' => $dropsuplier,
+    'options' => ['placeholder' => 'Pilih KD SUPPLIER ...'],
+    'pluginOptions' => [
+        'allowClear' => true
+    ],
+]);?>
 
 
     <?= $form->field($model, 'PARENT')->textInput(['maxlength' => true]) ?>
