@@ -146,16 +146,21 @@ class UnitbarangController extends Controller
         $model = new Unitbarang();
 
 		$model->load(Yii::$app->request->post());
+             
 		$ck = Unitbarang::find()->where('STATUS <> 3')->max('KD_UNIT');
-		$nw = preg_replace("/[^0-9\']/", '', $ck)+1;
+		$nwa = preg_replace("/[^0-9\']/", '', $ck)+1;
 
-		$nw = str_pad( $nw, "2", "0", STR_PAD_LEFT );
+		$nw = str_pad( $nwa, "2", "0", STR_PAD_LEFT );
+                  
 		$model->KD_UNIT = 'U'.$nw;
+                 if($model->validate())
+                {
                 $model->CREATED_BY = Yii::$app->user->identity->username;
                 $model->CREATED_AT = date('Y-m-d H:i:s');
                 
 		$model->save();
-		return $this->redirect(['/master/unitbarang']);
+                }
+		return $this->redirect(['index']);
     }
 
     /**
@@ -170,9 +175,11 @@ class UnitbarangController extends Controller
         $model = $this->findModel($ID, $KD_UNIT);
 
         if ($model->load(Yii::$app->request->post())) {
-            
+            if($model->validate())
+            {
             $model->UPDATED_BY = Yii::$app->user->identity->username;
             $model->save();
+            }
             return $this->redirect(['/master/unitbarang']);
         } else {
             return $this->renderAjax('update', [

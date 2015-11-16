@@ -20,7 +20,7 @@ class BarangumumSearch extends Barangumum
     public function rules()
     {
         return [
-            [['KD_BARANG', 'NM_BARANG','nmtype','nmktegori', 'KD_TYPE', 'KD_KATEGORI', 'KD_UNIT', 'KD_SUPPLIER', 'KD_DISTRIBUTOR', 'PARENT', 'BARCODE', 'IMAGE', 'NOTE', 'KD_CORP', 'KD_CAB', 'KD_DEP', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT', 'DATA_ALL'], 'safe'],
+            [['KD_BARANG','NM_BARANG','nmtype','nmktegori', 'KD_TYPE', 'KD_KATEGORI', 'KD_UNIT', 'KD_SUPPLIER', 'KD_DISTRIBUTOR', 'PARENT', 'BARCODE', 'IMAGE', 'NOTE', 'KD_CORP', 'KD_CAB', 'KD_DEP', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT', 'DATA_ALL'], 'safe'],
             [['ID', 'STATUS'], 'integer'],
             [['HPP', 'HARGA'], 'number'],
         ];

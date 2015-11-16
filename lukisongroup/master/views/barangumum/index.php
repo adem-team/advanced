@@ -171,6 +171,7 @@ $gridColumns = [
 
 //js
 $this->registerJs("
+           $.fn.modal.Constructor.prototype.enforceFocus = function(){};
         $('#modal-Umum').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
@@ -186,6 +187,7 @@ $this->registerJs("
     ",$this::POS_READY);
 
 $this->registerJs("
+        
         $('#modal-bumum').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
@@ -202,6 +204,7 @@ $this->registerJs("
 
 
 $this->registerJs("
+         $.fn.modal.Constructor.prototype.enforceFocus = function(){};
         $('#modal-barangumum').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
           

@@ -134,6 +134,8 @@ class SuplierController extends Controller
     {
         $model = new Suplier();
 		$model->load(Yii::$app->request->post());
+                if($model->validate())
+                {
 		$crp = $model->KD_CORP;
 		
 		$kd = Yii::$app->mastercode->kdsupplier($crp);
@@ -142,7 +144,8 @@ class SuplierController extends Controller
                 $model->CREATED_BY = Yii::$app->user->identity->username;
                 $model->CREATED_AT = date('Y-m-d H:i:s');
 		$model->save();
-		return $this->redirect(['/master/suplier']);
+                }
+		return $this->redirect(['index']);
     }
     /**
      * Creates a new Suplier model.
@@ -174,10 +177,13 @@ class SuplierController extends Controller
         $model = $this->findModel($ID, $KD_SUPPLIER);
 
         if ($model->load(Yii::$app->request->post()) ) {
+            if($model->validate())
+            {
             $model->UPDATED_BY = Yii::$app->user->identity->username;
            
              $model->save();
-            return $this->redirect(['/master/suplier']);
+            }
+            return $this->redirect(['index']);
         } else {
             return $this->renderAjax('update', [
                 'model' => $model,
