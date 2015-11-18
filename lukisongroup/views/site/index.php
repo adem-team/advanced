@@ -144,7 +144,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									],
 									[
 										'content' => 'Request Order',
-										'url' => '/esm/requestorder',
+										'url' => '/purchasing/request-order',
 										'badge' => '14'
 									],	
 									[
@@ -154,7 +154,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									],											
 									[
 										'content' => 'Purchase Order',
-										'url' => '/esm/purchaseorder',
+										'url' => '/purchasing/purchase-order',
 										'badge' => '2'
 									],
 									[
