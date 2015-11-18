@@ -42,7 +42,7 @@ class PostingSearch extends Posting
      * @return ActiveDataProvider
      */
      public function search($params) {
-    $query = Posting::find();
+    $query = Posting::find()->where(['status' =>1]);
     $dataProvider = new ActiveDataProvider([
         'query' => $query,
     ]);
