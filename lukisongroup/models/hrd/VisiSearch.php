@@ -41,7 +41,7 @@ class VisiSearch extends Visi
      */
     public function search($params)
     {
-        $query = Visi::find();
+        $query = Visi::find()->where('STATUS <>3');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -65,16 +65,16 @@ class VisiSearch extends Visi
             'STATUS' => $this->STATUS,
         ]);
 
-        $query->andFilterWhere(['like', 'VISIMISI_TITEL', $this->VISIMISI_TITEL])
-            ->andFilterWhere(['like', 'VISIMISI_ISI', $this->VISIMISI_ISI])
-            ->andFilterWhere(['like', 'VISIMISI_DCRPT', $this->VISIMISI_DCRPT])
-            ->andFilterWhere(['like', 'VISIMISI_IMG', $this->VISIMISI_IMG])
-            ->andFilterWhere(['like', 'CORP_ID', $this->CORP_ID])
-            ->andFilterWhere(['like', 'DEP_ID', $this->DEP_ID])
-            ->andFilterWhere(['like', 'DEP_SUB_ID', $this->DEP_SUB_ID])
-            ->andFilterWhere(['like', 'JOBGRADE_ID', $this->JOBGRADE_ID])
-            ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
-            ->andFilterWhere(['like', 'UPDATED_BY', $this->UPDATED_BY]);
+//        $query->andFilterWhere(['like', 'VISIMISI_TITEL', $this->VISIMISI_TITEL])
+//            ->andFilterWhere(['like', 'VISIMISI_ISI', $this->VISIMISI_ISI])
+//            ->andFilterWhere(['like', 'VISIMISI_DCRPT', $this->VISIMISI_DCRPT])
+//            ->andFilterWhere(['like', 'VISIMISI_IMG', $this->VISIMISI_IMG])
+//            ->andFilterWhere(['like', 'CORP_ID', $this->CORP_ID])
+//            ->andFilterWhere(['like', 'DEP_ID', $this->DEP_ID])
+//            ->andFilterWhere(['like', 'DEP_SUB_ID', $this->DEP_SUB_ID])
+//            ->andFilterWhere(['like', 'JOBGRADE_ID', $this->JOBGRADE_ID])
+//            ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
+//            ->andFilterWhere(['like', 'UPDATED_BY', $this->UPDATED_BY]);
 
         return $dataProvider;
     }
