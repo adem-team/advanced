@@ -15,13 +15,11 @@ class ChildSearch extends Child
     /**
      * @inheritdoc
      */
-     public $ParentsName;
     public function rules()
     {
         return [
             [['CHILD_ID', 'PARENT_ID'], 'integer'],
             [['CHILD_NAME'], 'safe'],
-            [['ParentsName'], 'safe'],
         ];
     }
 
@@ -41,47 +39,29 @@ class ChildSearch extends Child
      *
      * @return ActiveDataProvider
      */
-     public function search($params) {
-    $query = Child::find();
-    $dataProvider = new ActiveDataProvider([
-        'query' => $query,
-    ]);
- 
-    /**
-     * Setup your sorting attributes
-     * Note: This is setup before the $this->load($params) 
-     * statement below
-     */
-     $dataProvider->setSort([
-        'attributes' => [
-            'parent_id',
-            'ParentsName' => [
-                'asc' => ['fr001.parent' => SORT_ASC],
-                'desc' => ['fr001.parent' => SORT_DESC],
-                'label' => 'Parent Name'
-            ]
-        ]
-    ]);
- 
-    if (!($this->load($params) && $this->validate())) {
-        /**
-         * The following line will allow eager loading with country data 
-         * to enable sorting by country on initial loading of the grid.
-         */ 
-        $query->joinWith(['parents']);
+    public function search($params)
+    {
+        $query = Child::find();
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'CHILD_ID' => $this->CHILD_ID,
+            'PARENT_ID' => $this->PARENT_ID,
+        ]);
+
+        $query->andFilterWhere(['like', 'CHILD_NAME', $this->CHILD_NAME]);
+
         return $dataProvider;
     }
- 
-   
-  
-    /* Add your filtering criteria */
- 
-
-    // filter by parent name
-    $query->joinWith(['parents' => function ($q) {
-        $q->where('fr001.parent LIKE "%' . $this->ParentsName . '%"');
-    }]);
- 
-    return $dataProvider;
-}
 }

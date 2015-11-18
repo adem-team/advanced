@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
             ['class' => 'yii\grid\SerialColumn'],
-            'ParentsName',
+            'PARENT', 
             'JUDUL', 
             
              [

@@ -1,8 +1,6 @@
 <?php
 
 namespace lukisongroup\front\models;
-use lukisongroup\front\models\Parents;
-use lukisongroup\front\models\Child;
 
 use Yii;
 
@@ -42,26 +40,6 @@ class Grandchild extends \yii\db\ActiveRecord
             [['GRANDCHILD'], 'string', 'max' => 70]
         ];
     }
-    public function getParents()
-    {
-        return $this->hasOne(Parents::className(), ['parent_id' => 'PARENT_ID']);
-    }
- 
-/* Getter for country name */
-    public function getParentsName()
-     {
-        return $this->parents['parent'];
-     }
-     public function getChild()
-    {
-        return $this->hasOne(Child::className(), ['CHILD_ID' => 'CHILD_ID']);
-    }
- 
-/* Getter for country name */
-    public function getChildName()
-     {
-        return $this->child['CHILD_NAME'];
-     }
 
     /**
      * @inheritdoc
@@ -73,8 +51,6 @@ class Grandchild extends \yii\db\ActiveRecord
             'CHILD_ID' => 'Child  ID',
             'PARENT_ID' => 'Parent  ID',
             'GRANDCHILD' => 'Grandchild',
-            'parentsName' => Yii::t('app', 'Nama Parent'),
-            'childName' => Yii::t('app', 'Nama Child'),
         ];
     }
 

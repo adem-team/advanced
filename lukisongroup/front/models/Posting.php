@@ -1,7 +1,6 @@
 <?php
 
 namespace lukisongroup\front\models;
-use lukisongroup\front\models\Parents;
 
 use Yii;
 use yii\web\UploadedFile;
@@ -30,17 +29,7 @@ class Posting extends \yii\db\ActiveRecord
     {
         return 'fr002';
     }
-    
-     public function getParents()
-    {
-        return $this->hasOne(Parents::className(), ['parent_id' => 'PARENT']);
-    }
- 
-/* Getter for country name */
-    public function getParentsName()
-     {
-        return $this->parents->parent;
-     }
+
     /**
      * @return \yii\db\Connection the database connection used by this AR class.
      */
@@ -117,7 +106,6 @@ class Posting extends \yii\db\ActiveRecord
             'IMAGE' => 'Image',
             'CREATEBY' => 'Createby',
             'UPDATEBY' => 'Updateby',
-            'parentsName' => Yii::t('app', 'Nama Parent'),
         ];
     }
 

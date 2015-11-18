@@ -137,7 +137,7 @@ class BackPostingController extends Controller
           // $data = Grandchild::getProdList($cat_id, $subcat_id);
             $model = Grandchild::find()->asArray()->where(['PARENT_ID'=>$cat_id,'CHILD_ID'=>$subcat_id])->all();
            foreach ($model as $key => $value) {
-                   $out[] = ['id'=>$value['GRANDCHILD_ID'],'name'=> $value['GRANDCHILD']];
+                   $out[] = ['id'=>$value['GRANDCHILD'],'name'=> $value['GRANDCHILD']];
                }
              
            
@@ -147,8 +147,6 @@ class BackPostingController extends Controller
     }
     echo Json::encode(['output'=>'', 'selected'=>'']);
 }
-
-
    public function actionCreated()
     {
        $model = new Posting;

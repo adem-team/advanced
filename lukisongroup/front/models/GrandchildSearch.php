@@ -6,7 +6,6 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use lukisongroup\front\models\Grandchild;
-use lukisongroup\front\models\Child;
 
 /**
  * GrandchildSearch represents the model behind the search form about `lukisongroup\grandchild\models\Grandchild`.
@@ -16,15 +15,11 @@ class GrandchildSearch extends Grandchild
     /**
      * @inheritdoc
      */
-    public $ParentsName;
-    public $ChildName;
     public function rules()
     {
         return [
             [['GRANDCHILD_ID', 'CHILD_ID', 'PARENT_ID'], 'integer'],
             [['GRANDCHILD'], 'safe'],
-            [['ParentsName'], 'safe'],
-            [['ChildName'], 'safe'],
         ];
     }
 
@@ -44,54 +39,30 @@ class GrandchildSearch extends Grandchild
      *
      * @return ActiveDataProvider
      */
-     public function search($params) {
-    $query = Grandchild::find();
-    $dataProvider = new ActiveDataProvider([
-        'query' => $query,
-    ]);
- 
-    /**
-     * Setup your sorting attributes
-     * Note: This is setup before the $this->load($params) 
-     * statement below
-     */
-     $dataProvider->setSort([
-        'attributes' => [
-            'parent_id',
-            'ParentsName' => [
-                'asc' => ['fr001.parent' => SORT_ASC],
-                'desc' => ['fr001.parent' => SORT_DESC],
-                'label' => 'Parent Name'
-            ],
-            'ChildName' => [
-                'asc' => ['fr000.CHILD_NAME' => SORT_ASC],
-                'desc' => ['fr000.CHILD_NAME' => SORT_DESC],
-                'label' => 'Child Name'
-            ],
+    public function search($params)
+    {
+        $query = Grandchild::find();
 
-        ]
-    ]);
- 
-    if (!($this->load($params) && $this->validate())) {
-        /**
-         * The following line will allow eager loading with country data 
-         * to enable sorting by country on initial loading of the grid.
-         */ 
-        $query->joinWith(['parents']);
-        $query->joinWith(['child']);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'GRANDCHILD_ID' => $this->GRANDCHILD_ID,
+            'CHILD_ID' => $this->CHILD_ID,
+            'PARENT_ID' => $this->PARENT_ID,
+        ]);
+
+        $query->andFilterWhere(['like', 'GRANDCHILD', $this->GRANDCHILD]);
+
         return $dataProvider;
     }
- 
-   
-  
-    /* Add your filtering criteria */
- 
-
-    // filter by parent name
-    $query->joinWith(['parents' => function ($q) {
-        $q->where('fr001.parent LIKE "%' . $this->ParentsName . '%"');
-    }]);
- 
-    return $dataProvider;
-}
 }

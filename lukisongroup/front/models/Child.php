@@ -1,7 +1,6 @@
 <?php
 
 namespace lukisongroup\front\models;
-use lukisongroup\front\models\Parents;
 
 use Yii;
 
@@ -41,18 +40,6 @@ class Child extends \yii\db\ActiveRecord
         ];
     }
 
-     public function getParents()
-    {
-        return $this->hasOne(Parents::className(), ['parent_id' => 'PARENT_ID']);
-    }
- 
-/* Getter for country name */
-    public function getParentsName()
-     {
-        return $this->parents->parent;
-     }
-
-
     /**
      * @inheritdoc
      */
@@ -62,7 +49,6 @@ class Child extends \yii\db\ActiveRecord
             'CHILD_ID' => 'Child  ID',
             'PARENT_ID' => 'Parent  ID',
             'CHILD_NAME' => 'Child  Name',
-            'parentsName' => Yii::t('app', 'Nama Parent'),
         ];
     }
 
