@@ -6,6 +6,7 @@ use kartik\widgets\ActiveField;
 use kartik\widgets\ActiveForm;
 use lukisongroup\assets\AppAssetQr;  	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
 AppAssetQr::register($this);
+$coba="sync wawan";
 	/*
 	$attribute = [
 		[
