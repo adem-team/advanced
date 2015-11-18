@@ -39,7 +39,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 					<?php
 					echo Html::panel(
 						[
-							'heading' => '<div></div>',
+							'heading' => '<div>User Profile</div>',
 							'body'=>$prof,
 						],
 						Html::TYPE_DANGER
@@ -144,7 +144,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									],
 									[
 										'content' => 'Request Order',
-										'url' => '/esm/requestorder',
+										'url' => '/purchasing/request-order',
 										'badge' => '14'
 									],	
 									[

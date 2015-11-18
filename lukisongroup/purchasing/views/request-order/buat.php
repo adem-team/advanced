@@ -7,7 +7,7 @@ use lukisongroup\purchasing\models\RequestorderSearch;
 
 
 use yii\helpers\ArrayHelper;
-use lukisongroup\models\master\Perusahaan;
+//use lukisongroup\models\master\Perusahaan;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\purchasing\models\Requestorder */

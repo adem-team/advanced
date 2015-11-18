@@ -17,11 +17,11 @@ use kartik\widgets\FileInput;
 
 use lukisongroup\purchasing\models\Requestorder;
 use lukisongroup\purchasing\models\Rodetail;
-use lukisongroup\models\master\Barangumum;
-use lukisongroup\models\master\Unitbarang;
+use lukisongroup\master\models\Barangumum;
+use lukisongroup\master\models\Unitbarang;
 
 
-use lukisongroup\models\esm\Barang;
+use lukisongroup\esm\models\Barang;
 
 
 use lukisongroup\models\hrd\Employe;
