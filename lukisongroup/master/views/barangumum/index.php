@@ -5,6 +5,7 @@ use kartik\grid\GridView;
 use kartik\export\ExportMenu;
 use yii\bootstrap\Modal;
 
+
 $this->sideCorp = 'Master Data Umum';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'umum_datamaster';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Umum - Barang ');
@@ -61,7 +62,7 @@ $gridColumns = [
                                                                     ['update','ID'=>$model->ID,'KD_BARANG'=>$model->KD_BARANG],
                                                                         [
                                                                             'data-toggle'=>"modal",
-                                                                            'data-target'=>"#modal-Umum",													
+                                                                            'data-target'=>"#modal-barangumum",													
                                                                             'data-title'=> $model->ID,
 									]);
                                                                 },
@@ -171,13 +172,12 @@ $gridColumns = [
 
 //js
 $this->registerJs("
-           $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+     
         $('#modal-Umum').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
             var title = button.data('title') 
             var href = button.attr('href') 
-            //modal.find('.modal-title').html(title)
             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
             $.post(href)
                 .done(function( data ) {
@@ -187,7 +187,6 @@ $this->registerJs("
     ",$this::POS_READY);
 
 $this->registerJs("
-        
         $('#modal-bumum').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
@@ -204,8 +203,9 @@ $this->registerJs("
 
 
 $this->registerJs("
-         $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+       $.fn.modal.Constructor.prototype.enforceFocus = function(){};
         $('#modal-barangumum').on('show.bs.modal', function (event) {
+            
             var button = $(event.relatedTarget)
           
             var modal = $(this)
@@ -219,6 +219,7 @@ $this->registerJs("
                     
                 });
             })
+             
     ",$this::POS_READY);
 
 
@@ -230,10 +231,7 @@ $this->registerJs("
                   Modal::begin([
                             'id' => 'modal-barangumum',
                             'header' => '<h4 class="modal-title">LukisonGroup</h4> ',
-                            'options'=>[
-                                   'tabindex' => false,
-                                    'hideSearch' => true,
-                            ],
+                        
                            
                             'headerOptions'=>[
                                     'style'=>'background-color:blue;'

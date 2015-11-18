@@ -15,11 +15,13 @@ class PostingSearch extends Posting
     /**
      * @inheritdoc
      */
+    public $ParentsName;
     public function rules()
     {
         return [
             [['ID'], 'integer'],
             [['PARENT','CHILD','GRANDCHILD','JUDUL', 'RESUME_EN', 'RESUME_ID', 'IMAGE', 'CREATEBY', 'UPDATEBY'], 'safe'],
+            [['ParentsName'], 'safe'],
         ];
     }
 
@@ -39,36 +41,47 @@ class PostingSearch extends Posting
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
-        $query = Posting::find();
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
-        $this->load($params);
-
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
-
-        $query->andFilterWhere([
-            'ID' => $this->ID,
-            'CREATEBY' => $this->CREATEBY,
-            'UPDATEBY' => $this->UPDATEBY,
-        ]);
-
-        $query->andFilterWhere(['like', 'PARENT', $this->PARENT])
-            ->andFilterWhere(['like', 'CHILD', $this->CHILD])
-            ->andFilterWhere(['like', 'GRANDCHILD', $this->GRANDCHILD])
-            ->andFilterWhere(['like', 'JUDUL', $this->JUDUL])
-            ->andFilterWhere(['like', 'RESUME_EN', $this->RESUME_EN])
-            ->andFilterWhere(['like', 'RESUME_ID', $this->RESUME_ID])
-            ->andFilterWhere(['like', 'IMAGE', $this->IMAGE]);
-
+     public function search($params) {
+    $query = Posting::find();
+    $dataProvider = new ActiveDataProvider([
+        'query' => $query,
+    ]);
+ 
+    /**
+     * Setup your sorting attributes
+     * Note: This is setup before the $this->load($params) 
+     * statement below
+     */
+     $dataProvider->setSort([
+        'attributes' => [
+            'parent_id',
+            'ParentsName' => [
+                'asc' => ['fr001.parent' => SORT_ASC],
+                'desc' => ['fr001.parent' => SORT_DESC],
+                'label' => 'Parent Name'
+            ]
+        ]
+    ]);
+ 
+    if (!($this->load($params) && $this->validate())) {
+        /**
+         * The following line will allow eager loading with country data 
+         * to enable sorting by country on initial loading of the grid.
+         */ 
+        $query->joinWith(['parents']);
         return $dataProvider;
     }
+ 
+   
+  
+    /* Add your filtering criteria */
+ 
+
+    // filter by parent name
+    $query->joinWith(['parents' => function ($q) {
+        $q->where('fr001.parent LIKE "%' . $this->ParentsName . '%"');
+    }]);
+ 
+    return $dataProvider;
+}
 }
