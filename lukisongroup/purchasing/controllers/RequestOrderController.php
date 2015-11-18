@@ -14,7 +14,7 @@ use lukisongroup\models\hrd\Employe;
 
 
 use lukisongroup\models\esm\Barang;
-use lukisongroup\models\master\Barangumum;
+use lukisongroup\master\models\Barangumum;
 
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
