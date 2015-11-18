@@ -93,6 +93,8 @@ class BackPostingController extends Controller
  
         if ($model->load(Yii::$app->request->post())) {
             // process uploaded image file instance
+               $model->STATUS=1;
+
                $imagename=$model->JUDUL; 
                $model->file=UploadedFile::getInstance($model,'file');
                if($model->file<>'')
@@ -131,11 +133,14 @@ class BackPostingController extends Controller
     $out = [];
     if (isset($_POST['depdrop_parents'])) {
         $ids = $_POST['depdrop_parents'];
-        $cat_id = $ids[0];
-        $subcat_id =$ids[0];
+      //  $cat_id =7;
+       // $subcat_id =4;
+        $cat_id =$ids[0];
+        $subcat_id=$ids[1];
         if ($cat_id != null) {
           // $data = Grandchild::getProdList($cat_id, $subcat_id);
-            $model = Grandchild::find()->asArray()->where(['PARENT_ID'=>$cat_id,'CHILD_ID'=>$subcat_id])->all();
+        //    $model = Grandchild::find()->asArray()->where(['CHILD_ID'=>$subcat_id,'PARENT_ID'=>$cat_id])->all();
+            $model = Grandchild::find()->asArray()->where(['CHILD_ID'=>$cat_id,'PARENT_ID'=>$subcat_id])->all();
            foreach ($model as $key => $value) {
                    $out[] = ['id'=>$value['GRANDCHILD_ID'],'name'=> $value['GRANDCHILD']];
                }
@@ -203,10 +208,12 @@ class BackPostingController extends Controller
      */
     public function actionDelete($ID)
     {
-        $this->findModel($ID)->delete();
-
-        //return $this->redirect(['/posting/posting']);
-        return $this->redirect(['index']);
+      //  $this->findModel($ID)->delete();
+      $data=Yii::$app->request->post();
+      $model = $this->findModel($ID);
+      $model->STATUS =2;
+      $model->save();
+      return $this->redirect(['index']);
     }
 
     /**

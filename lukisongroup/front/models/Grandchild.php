@@ -44,7 +44,7 @@ class Grandchild extends \yii\db\ActiveRecord
     }
     public function getParents()
     {
-        return $this->hasOne(Parents::className(), ['parent_id' => 'PARENT_ID']);
+        return $this->hasOne(Parents::className(), ['parent_id' => 'CHILD_ID']);
     }
  
 /* Getter for country name */
