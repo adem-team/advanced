@@ -22,15 +22,9 @@ $this->params['breadcrumbs'][] = $this->title;
             $gridColumns = [
 
             ['class' => 'yii\grid\SerialColumn'], 
-          [
-              'label' => 'Parents',
-              'attribute' => 'PARENT_ID',
-              'value' => 'PARENT_ID',
-               'filter' => ArrayHelper::map(Parents::find()->all(), 'parent_id', 'parent'),
-              'enableSorting' => false,
-
-            ],
- 
+        
+            'ParentsName',
+            'ChildName', 
             'GRANDCHILD', 
            
              [
