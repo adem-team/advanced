@@ -30,29 +30,6 @@ class RegulasiController extends Controller
      * Lists all Regulasi models.
      * @return mixed
      */
-     public function beforeAction(){
-			if (Yii::$app->user->isGuest)  {
-				 Yii::$app->user->logout();
-                   $this->redirect(array('/site/login'));  //
-			}
-            // Check only when the user is logged in
-            if (!Yii::$app->user->isGuest)  {
-               if (Yii::$app->session['userSessionTimeout']< time() ) {
-                   // timeout
-                   Yii::$app->user->logout();
-                   $this->redirect(array('/site/login'));  //
-               } else {
-                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
-				   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
-                   return true; 
-               }
-            } else {
-                return true;
-            }
-    }
-    
-    
-    
     public function actionIndex()
     {
         $searchModel = new RegulasiSearch();
@@ -66,12 +43,12 @@ class RegulasiController extends Controller
 
     /**
      * Displays a single Regulasi model.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      */
     public function actionView($id)
     {
-        return $this->renderAjax('view', [
+        return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -85,18 +62,10 @@ class RegulasiController extends Controller
     {
         $model = new Regulasi();
 
-        if ($model->load(Yii::$app->request->post())) {
-				
-            if($model->validate())
-           {
-                $model->CREATED_BY = Yii::$app->user->identity->username;
-                $model->save();
-				
-			
-            }
-            return $this->redirect(['index']);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->ID]);
         } else {
-             return $this->renderAjax('create', [
+            return $this->render('create', [
                 'model' => $model,
             ]);
         }
@@ -105,23 +74,17 @@ class RegulasiController extends Controller
     /**
      * Updates an existing Regulasi model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) ) {
-           if($model->validate())
-           {
-            $model->UPDATED_BY = Yii::$app->user->identity->username;
-            $model->UPDATED_TIME = date('Y-m-d H:i:s');
-            $model->save();
-           }
-            return $this->redirect(['index']);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->ID]);
         } else {
-            return $this->renderAjax('update', [
+            return $this->render('update', [
                 'model' => $model,
             ]);
         }
@@ -130,24 +93,20 @@ class RegulasiController extends Controller
     /**
      * Deletes an existing Regulasi model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      */
     public function actionDelete($id)
     {
-//        $this->findModel($id)->delete();
-        
-        $data = Regulasi::find()->where(['ID'=>$id])->one();
-        $data->STATUS = 3;
-        $data->save();
-        
+        $this->findModel($id)->delete();
+
         return $this->redirect(['index']);
     }
 
     /**
      * Finds the Regulasi model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
+     * @param integer $id
      * @return Regulasi the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */

@@ -41,7 +41,7 @@ class RegulasiSearch extends Regulasi
      */
     public function search($params)
     {
-        $query = Regulasi::find()->where('STATUS <>3');
+        $query = Regulasi::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -65,15 +65,15 @@ class RegulasiSearch extends Regulasi
             'STATUS' => $this->STATUS,
         ]);
 
-//        $query->andFilterWhere(['like', 'RGTR_TITEL', $this->RGTR_TITEL])
-//            ->andFilterWhere(['like', 'RGTR_ISI', $this->RGTR_ISI])
-//            ->andFilterWhere(['like', 'RGTR_DCRPT', $this->RGTR_DCRPT])
-//            ->andFilterWhere(['like', 'CORP_ID', $this->CORP_ID])
-//            ->andFilterWhere(['like', 'DEP_ID', $this->DEP_ID])
-//            ->andFilterWhere(['like', 'DEP_SUB_ID', $this->DEP_SUB_ID])
-//            ->andFilterWhere(['like', 'JOBGRADE_ID', $this->JOBGRADE_ID])
-//            ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
-//            ->andFilterWhere(['like', 'UPDATED_BY', $this->UPDATED_BY]);
+        $query->andFilterWhere(['like', 'RGTR_TITEL', $this->RGTR_TITEL])
+            ->andFilterWhere(['like', 'RGTR_ISI', $this->RGTR_ISI])
+            ->andFilterWhere(['like', 'RGTR_DCRPT', $this->RGTR_DCRPT])
+            ->andFilterWhere(['like', 'CORP_ID', $this->CORP_ID])
+            ->andFilterWhere(['like', 'DEP_ID', $this->DEP_ID])
+            ->andFilterWhere(['like', 'DEP_SUB_ID', $this->DEP_SUB_ID])
+            ->andFilterWhere(['like', 'JOBGRADE_ID', $this->JOBGRADE_ID])
+            ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
+            ->andFilterWhere(['like', 'UPDATED_BY', $this->UPDATED_BY]);
 
         return $dataProvider;
     }
