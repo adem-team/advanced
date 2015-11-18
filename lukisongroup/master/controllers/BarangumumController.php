@@ -264,7 +264,7 @@ class BarangumumController extends Controller
 //                                die();
           return $this->redirect(['index']);
         } else {
-            return $this->renderAjax('update', [
+            return $this->renderAjax('_update', [
                 'model' => $model,
             ]);
         }
