@@ -208,12 +208,11 @@ class BackPostingController extends Controller
      */
     public function actionDelete($ID)
     {
-      //  $this->findModel($ID)->delete();
-      $data=Yii::$app->request->post();
       $model = $this->findModel($ID);
-      $model->STATUS =2;
-      $model->save();
+      $data=$model->STATUS=2;
+      $model->update();
       return $this->redirect(['index']);
+        
     }
 
     /**
