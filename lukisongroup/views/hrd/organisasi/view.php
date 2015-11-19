@@ -3,6 +3,9 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
+//
+
+
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\models\hrd\organisasi */
 
@@ -56,7 +59,7 @@ $sts = $model->STATUS;
               [
 				
                'attribute' => 'photo',
-              'value'=>Yii::$app->urlManager->baseUrl.'/upload/hrd/orgimage/'.$gmbr,
+              'value'=>Yii::$app->urlManager->baseUrl.'/upload/image/'.$gmbr,
 			'format' => ['image',['width'=>'150','height'=>'150']],
             ],  
            

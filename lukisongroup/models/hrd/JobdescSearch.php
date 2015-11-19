@@ -41,7 +41,7 @@ class JobdescSearch extends Jobdesc
      */
     public function search($params)
     {
-        $query = Jobdesc::find()->where('STATUS<>3');
+        $query = Jobdesc::find()->where('STATUS <>3');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

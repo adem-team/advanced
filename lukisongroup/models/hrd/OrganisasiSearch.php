@@ -7,6 +7,8 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use lukisongroup\models\hrd\Organisasi;
 
+//
+
 /**
  * OrganisasiSearch represents the model behind the search form about `lukisongroup\models\hrd\Organisasi`.
  */
@@ -41,7 +43,7 @@ class OrganisasiSearch extends Organisasi
      */
     public function search($params)
     {
-       $query = organisasi::find()->where('STATUS <> 3')
+        $query = organisasi::find()->where('STATUS <> 3')
                 ->orderBy('parent','title');
 
         $dataProvider = new ActiveDataProvider([

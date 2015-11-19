@@ -48,6 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'DEP_SUB_ID',
             'GF_ID',
             'SEQ_ID',
+			
             'JOBGRADE_ID',
             'CREATED_BY',
             'UPDATED_BY',

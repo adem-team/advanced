@@ -10,7 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * OrganisasiController implements the CRUD actions for organisasi model.
+ * OrganisasiController implements the CRUD actions for Organisasi model.
  */
 class OrganisasiController extends Controller
 {
@@ -27,10 +27,9 @@ class OrganisasiController extends Controller
     }
 
     /**
-     * Lists all organisasi models.
+     * Lists all Organisasi models.
      * @return mixed
      */
-    
     public function beforeAction(){
 			if (Yii::$app->user->isGuest)  {
 				 Yii::$app->user->logout();
@@ -102,9 +101,9 @@ class OrganisasiController extends Controller
 		}
             }
              
-            //  print_r($model);
-                 //die();
-            return $this->redirect(['/hrd/organisasi/']);
+//                 print_r($model);
+//                    die();
+            return $this->redirect(['index']);
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,
@@ -139,13 +138,14 @@ class OrganisasiController extends Controller
             }
 //                print_r($model);
 //                die();
-            return $this->redirect(['/hrd/organisasi/']);
+            return $this->redirect(['index']);
         } else {
             return $this->renderAjax('update', [
                 'model' => $model,
             ]);
         }
     }
+	/////////
 
     /**
      * Deletes an existing organisasi model.
@@ -155,10 +155,10 @@ class OrganisasiController extends Controller
      */
     public function actionDelete($id)
     {
-      $model = \lukisongroup\models\hrd\Organisasi::find()->where(['id'=>$id])->one();
-		$model->STATUS = 3;
-		$model->UPDATED_BY = Yii::$app->user->identity->username;
-		$model->save();
+		$data = \lukisongroup\models\hrd\Organisasi::find()->where(['id'=>$id])->one();
+		$data->STATUS = 3;
+		$data->UPDATED_BY = Yii::$app->user->identity->username;
+		$data->save();
 //   $this->findModel($ID, $KD_BARANG)->delete();
 
         return $this->redirect(['/hrd/organisasi/']);

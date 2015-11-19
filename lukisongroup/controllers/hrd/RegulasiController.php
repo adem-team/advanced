@@ -134,9 +134,10 @@ class RegulasiController extends Controller
     {
 //        $this->findModel($id)->delete();
         
-        $data = \lukisongroup\models\hrd\Regulasi::find()->where(['ID'=>$id]);
+        $data = \lukisongroup\models\hrd\Regulasi::find()->where(['ID'=>$id])->one();
         $data->STATUS = 3;
         $data->save();
+		
         
         return $this->redirect(['index']);
     }
