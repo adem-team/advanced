@@ -30,7 +30,7 @@ class JobdescController extends Controller
      * Lists all Jobdesc models.
      * @return mixed
      */
-    public function beforeAction(){
+     public function beforeAction(){
 			if (Yii::$app->user->isGuest)  {
 				 Yii::$app->user->logout();
                    $this->redirect(array('/site/login'));  //
@@ -84,9 +84,24 @@ class JobdescController extends Controller
     {
         $model = new Jobdesc();
 
-        if ($model->load(Yii::$app->request->post())  ) {
-            $model->CREATED_BY = Yii::$app->user->identity->username;  
-            $model->save();
+        if ($model->load(Yii::$app->request->post()) ) {
+			if($model->validate())
+			{
+				    $model->CREATED_BY = Yii::$app->user->identity->username;  
+					$image = $model->uploadImage();
+		if ($model->save()) {
+			// upload only if valid uploaded file instance found
+			if ($image !== false) {
+				$path = $model->getImageFile();
+				$image->saveAs($path);
+			}
+                        
+		
+                }
+				
+                }
+			
+        
 //            print_r($model);
 //            die();
             return $this->redirect(['/hrd/jobdesc/']);
@@ -111,12 +126,27 @@ class JobdescController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) ) {
-            $model->UPDATED_BY = Yii::$app->user->identity->username;
-            $model->UPDATED_TIME = date('Y-m-d H:i:s');
-            $model->save();
+			if($model->validate())
+			{
+				     $model->UPDATED_BY = Yii::$app->user->identity->username;
+					$model->UPDATED_TIME = date('Y-m-d H:i:s');
+						$image = $model->uploadImage();
+					if ($model->save()) {
+			// upload only if valid uploaded file instance found
+			if ($image !== false) {
+				$path = $model->getImageFile();
+				$image->saveAs($path);
+			}
+                        
+		
+                }
+                }
+			
+       
+         
             return $this->redirect(['/hrd/jobdesc/']);
         } else {
-            return $this->renderAjax('_update', [
+            return $this->renderAjax('update', [
                 'model' => $model,
             ]);
         }
@@ -130,13 +160,11 @@ class JobdescController extends Controller
      */
     public function actionDelete($id)
     {
-        //$this->findModel($id)->delete();
-		
-		$data = Jobdesc::find()->where(['ID'=>$id])->one();
-		$data -> STATUS = 3;
+       $data = \lukisongroup\models\hrd\Jobdesc::find()->where(['ID'=>$id])->one();
+		$data->STATUS = 3;
+		$data->UPDATED_BY = Yii::$app->user->identity->username;
 		$data->save();
-		print_r($data);
-		die();
+
         return $this->redirect(['index']);
     }
 

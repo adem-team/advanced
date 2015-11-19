@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use lukisongroup\models\hrd\Seq;
 use kartik\widgets\FileInput;
+use kartik\widgets\DateTimePicker;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\models\hrd\Visi */
@@ -38,18 +39,31 @@ $datastatus = ['0'=>'Tidak aktif',
 
     <?php $form = ActiveForm::begin([
                     'id'=>'form',
-                     'enableClientValidation'=> true
+                     'enableClientValidation'=> true,
+					 'options' => ['enctype' => 'multipart/form-data']
     ]); ?>
 
     <?= $form->field($model, 'VISIMISI_TITEL')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'TGL')->textInput() ?>
+     <?= $form->field($model, 'TGL')->widget(DateTimePicker::classname(), [
+	'options' => ['placeholder' => 'pilih tanggal dan waktu ...'],
+	'pluginOptions' => [
+		'autoclose' => true
+	],
+        'pluginEvents'=>[
+                            'show' => "function(e) {show}",
+                            ],
+]);?>
 
     <?= $form->field($model, 'VISIMISI_ISI')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'VISIMISI_DCRPT')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'VISIMISI_IMG')->textInput(['maxlength' => true]) ?>
+    <?php echo $form->field($model, 'image')->widget(FileInput::classname(), [
+    'options'=>['accept'=>'image/*'],
+    'pluginOptions'=>['allowedFileExtensions'=>['jpg','gif','png']]
+	]);
+	?>
 
     <?= $form->field($model, 'SET_ACTIVE')->textInput() ?>
 

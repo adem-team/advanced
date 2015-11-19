@@ -54,7 +54,7 @@ $datastatus = ['0'=>'Tidak aktif',
 
    
     
-    <?=$form->field($model, 'JOBSDESK_IMG')->widget(FileInput::classname(), [
+    <?=$form->field($model, 'image')->widget(FileInput::classname(), [
     'options'=>['accept'=>'image/*'],
     'pluginOptions'=>['allowedFileExtensions'=>['jpg','gif','png']]
 	]);

@@ -3,7 +3,7 @@
 namespace lukisongroup\controllers\hrd;
 
 use Yii;
-use lukisongroup\hrd\models\Visi;
+use lukisongroup\models\hrd\Visi;
 use lukisongroup\models\hrd\VisiSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -88,7 +88,16 @@ class VisiController extends Controller
             if($model->validate())
             {
                   $model->CREATED_BY = Yii::$app->user->identity->username;
-                  $model->save();
+				  $image = $model->uploadImage();
+              	if ($model->save()) {
+			// upload only if valid uploaded file instance found
+			if ($image !== false) {
+				$path = $model->getImageFile();
+				$image->saveAs($path);
+			}
+                        
+		
+                }
             }
           
            
@@ -116,7 +125,16 @@ class VisiController extends Controller
             {
                  $model->UPDATED_BY = Yii::$app->user->identity->username;
                  $model->UPDATED_TIME = date('Y-m-d H:i:s');
-                 $model->save();
+              $image = $model->uploadImage();
+              	if ($model->save()) {
+			// upload only if valid uploaded file instance found
+			if ($image !== false) {
+				$path = $model->getImageFile();
+				$image->saveAs($path);
+			}
+                        
+		
+                }
             }
            
             return $this->redirect(['index']);
@@ -136,9 +154,11 @@ class VisiController extends Controller
     public function actionDelete($id)
     {
 //        $this->findModel($id)->delete();
-        $data = Visi::find()->where(['ID'=>$id])->one();
+        $data = Visi::find()->where(['id'=>$id])->one();
         $data->STATUS = 3;
         $data->save();
+		// print_r($data);
+		// die();
 
         return $this->redirect(['index']);
     }

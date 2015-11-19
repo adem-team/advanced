@@ -31,7 +31,19 @@ $this->params['breadcrumbs'][] = $this->title;
 		$stat = 'Aktif';
 	} else {
 		$stat = 'Tidak Aktif';
-	}
+        }
+                
+	
+	 if($model-> VISIMISI_IMG == null)
+			{ 			
+				$gmbr = "df.jpg";
+
+			} 
+			else { 
+				
+				$gmbr = $model-> VISIMISI_IMG;
+
+				 }  
         ?>
 
     <?= DetailView::widget([
@@ -42,7 +54,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'TGL',
             'VISIMISI_ISI:ntext',
             'VISIMISI_DCRPT:ntext',
-            'VISIMISI_IMG',
+          	[
+				'attribute'=>'photo',
+				// 'value'=>Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$model->IMAGE,
+				'value'=>Yii::$app->urlManager->baseUrl.'/upload/image/'.$gmbr,
+				'format' => ['image',['width'=>'150','height'=>'150']],
+			],
             'SET_ACTIVE',
             'CORP_ID',
             'DEP_ID',
@@ -61,3 +78,6 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
 
 </div>
+
+
+

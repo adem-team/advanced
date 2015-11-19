@@ -3,7 +3,6 @@
 namespace lukisongroup\models\hrd;
 
 use Yii;
-use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "c0006".
@@ -21,16 +20,36 @@ use yii\web\UploadedFile;
  * @property string $UPDATED_TIME
  * @property integer $STATUS
  */
- 
- 
-Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/upload/hrd/orgimage/';
-Yii::$app->params['uploadUrl'] = Yii::$app->urlManager->baseUrl . '/web/upload/hrd/orgimage/';
+use yii\web\UploadedFile;
+
+/**
+ * This is the model class for table "c0006".
+ *
+ * @property string $id
+ * @property string $parent
+ * @property string $title
+ * @property string $description
+ * @property string $phone
+ * @property string $email
+ * @property string $image
+ * @property integer $itemType
+ * @property string $CREATED_BY
+ * @property string $UPDATED_BY
+ * @property string $UPDATED_TIME
+ * @property integer $STATUS
+ */
+ ///
+
+Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/upload/image/';
+Yii::$app->params['uploadUrl'] = Yii::$app->urlManager->baseUrl . '/web/upload/image/';
+
 class Organisasi extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
-     */  
-	 public $gambar;
+     */
+    public $gambar;
+    
     public static function tableName()
     {
         return 'c0006';
@@ -50,17 +69,18 @@ class Organisasi extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'title'], 'required'],
+            [['title','parent'], 'required'],
+            ['email','email'],
+            [['description'],'match','pattern'=> '/^[A-Za-z0-9_ ]+$/u','message'=> 'only [a-zA-Z0-9_].'],
             [['id', 'parent', 'itemType', 'STATUS'], 'integer'],
             [['UPDATED_TIME'], 'safe'],
             [['title', 'phone', 'email', 'image'], 'string', 'max' => 120],
             [['description'], 'string', 'max' => 300],
-			 [['gambar'], 'file', 'extensions'=>'jpg, gif, png'],
+            [['gambar'], 'file', 'extensions'=>'jpg, gif, png'],
             [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 50]
         ];
     }
-	
-	 public function getImageFile() 
+     public function getImageFile() 
     {
         return isset($this->image) ? Yii::$app->params['uploadPath'] . $this->image : null;
     }
@@ -93,7 +113,6 @@ class Organisasi extends \yii\db\ActiveRecord
         // the uploaded image instance
         return $image;
     }
-
 
     /**
      * @inheritdoc

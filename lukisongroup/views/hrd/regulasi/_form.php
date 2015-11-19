@@ -4,10 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use lukisongroup\models\hrd\Seq;
-use kartik\widgets\FileInput;
- use kartik\datecontrol\DateControl;
- use kartik\widgets\DatePicker;
- use kartik\daterange\DateRangePicker;
+use kartik\widgets\DateTimePicker;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\models\hrd\Regulasi */
@@ -51,16 +48,15 @@ $datastatus = ['0'=>'Tidak aktif',
     <?= $form->field($model, 'RGTR_TITEL')->textInput(['maxlength' => true]) ?>
 
 
-<?=$form->field($model, 'TGL')->widget(DatePicker::classname(), [
-    'options' => ['placeholder' => 'Enter birth date ...'],
-    'pluginOptions' => [
-        'autoclose'=>true
-    ],
-	'pluginEvents'=>[
-									'show' => "function(e) {show}",
-								],
+    <?= $form->field($model, 'TGL')->widget(DateTimePicker::classname(), [
+	'options' => ['placeholder' => 'pilih tanggal dan waktu ...'],
+	'pluginOptions' => [
+		'autoclose' => true
+	],
+        'pluginEvents'=>[
+                            'show' => "function(e) {show}",
+                            ],
 ]);?>
-
 
 
 
@@ -135,13 +131,7 @@ $datastatus = ['0'=>'Tidak aktif',
     ],
 ]); ?>
 
-     <!--$form->field($model, 'JOBGRADE_ID')->textInput(['maxlength' => true]) ?>-->
-
-<!--     $form->field($model, 'CREATED_BY')->textInput(['maxlength' => true]) ?>
-
-     $form->field($model, 'UPDATED_BY')->textInput(['maxlength' => true]) ?>
-
-     $form->field($model, 'UPDATED_TIME')->textInput() ?>-->
+  
 
     
 

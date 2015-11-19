@@ -30,6 +30,14 @@ $gridColumns = [
             'TGL',
             'VISIMISI_ISI:ntext',
             'VISIMISI_DCRPT:ntext',
+			   [
+				
+               'attribute' => 'VISIMISI_IMG',
+               'format' => 'html',
+               'value'=>function($data){
+                            return Html::img(Yii::$app->urlManager->baseUrl.'/upload/image/' . $data->VISIMISI_IMG, ['width'=>'100']);
+                        },
+            ],  
             // 'VISIMISI_IMG',
             // 'SET_ACTIVE',
             // 'CORP_ID',
