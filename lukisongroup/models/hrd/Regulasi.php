@@ -48,10 +48,9 @@ class Regulasi extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['ID'], 'required'],
-            [['ID', 'SET_ACTIVE', 'GF_ID', 'SEQ_ID', 'STATUS'], 'integer'],
             [['TGL', 'UPDATED_TIME'], 'safe'],
             [['RGTR_ISI', 'RGTR_DCRPT'], 'string'],
+            [['SET_ACTIVE', 'GF_ID', 'SEQ_ID', 'STATUS'], 'integer'],
             [['RGTR_TITEL'], 'string', 'max' => 255],
             [['CORP_ID'], 'string', 'max' => 5],
             [['DEP_ID', 'DEP_SUB_ID', 'JOBGRADE_ID'], 'string', 'max' => 6],
