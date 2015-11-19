@@ -12,7 +12,7 @@ namespace lukisongroup\dashboard\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter; 	
+use yii\filters\VerbFilter;
 /* VARIABLE PRIMARY JOIN/SEARCH/FILTER/SORT Author: -ptr.nov- */
 //use app\models\hrd\Dept;			/* TABLE CLASS JOIN */
 //use app\models\hrd\DeptSearch;		/* TABLE CLASS SEARCH */
@@ -20,13 +20,14 @@ use yii\filters\VerbFilter;
 /**
  * HRD | CONTROLLER EMPLOYE .
  */
-class EsmPurchasingController extends Controller
+class HrmAbsensiController extends Controller
 {
-    public function behaviors()
+    
+	public function behaviors()
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(['prodak']),
+                'class' => VerbFilter::className(['dashboard']),
                 'actions' => [
                     //'delete' => ['post'],
 					'save' => ['post'],
@@ -34,7 +35,7 @@ class EsmPurchasingController extends Controller
             ],
         ];
     }
-
+	
 	/**
      * ACTION INDEX | Session Login
      * @author ptrnov  <piter@lukison.com>
@@ -82,7 +83,7 @@ class EsmPurchasingController extends Controller
 		//$this->getView()->registerJs($js);
 		return $this->render('/widget/chat/index',[
 			//'model' => $model,
-			'ctrl_chat'=>'esm_purchasing',
+			'ctrl_chat'=>'hrd_personalia',
 		]);
        
     }

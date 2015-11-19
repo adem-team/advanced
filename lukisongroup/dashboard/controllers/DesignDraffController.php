@@ -20,7 +20,7 @@ use yii\filters\VerbFilter;
 /**
  * HRD | CONTROLLER EMPLOYE .
  */
-class EsmPurchasingController extends Controller
+class DesignDraffController extends Controller
 {
     public function behaviors()
     {
@@ -82,7 +82,7 @@ class EsmPurchasingController extends Controller
 		//$this->getView()->registerJs($js);
 		return $this->render('/widget/chat/index',[
 			//'model' => $model,
-			'ctrl_chat'=>'esm_purchasing',
+			'ctrl_chat'=>'alg_sales',
 		]);
        
     }

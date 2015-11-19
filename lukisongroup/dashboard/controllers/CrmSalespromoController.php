@@ -12,7 +12,7 @@ namespace lukisongroup\dashboard\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter; 	
+use yii\filters\VerbFilter;
 /* VARIABLE PRIMARY JOIN/SEARCH/FILTER/SORT Author: -ptr.nov- */
 //use app\models\hrd\Dept;			/* TABLE CLASS JOIN */
 //use app\models\hrd\DeptSearch;		/* TABLE CLASS SEARCH */
@@ -20,7 +20,7 @@ use yii\filters\VerbFilter;
 /**
  * HRD | CONTROLLER EMPLOYE .
  */
-class EsmPurchasingController extends Controller
+class CrmSalespromoController extends Controller
 {
     public function behaviors()
     {
@@ -82,7 +82,7 @@ class EsmPurchasingController extends Controller
 		//$this->getView()->registerJs($js);
 		return $this->render('/widget/chat/index',[
 			//'model' => $model,
-			'ctrl_chat'=>'esm_purchasing',
+			'ctrl_chat'=>'crm_spg',
 		]);
        
     }

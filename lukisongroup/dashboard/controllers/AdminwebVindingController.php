@@ -19,14 +19,15 @@ use yii\filters\VerbFilter;
 	
 /**
  * HRD | CONTROLLER EMPLOYE .
+ *
  */
-class EsmPurchasingController extends Controller
+class AdminwebKremaController extends Controller
 {
     public function behaviors()
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(['prodak']),
+                'class' => VerbFilter::className(['barang']),
                 'actions' => [
                     //'delete' => ['post'],
 					'save' => ['post'],
@@ -34,7 +35,7 @@ class EsmPurchasingController extends Controller
             ],
         ];
     }
-
+	
 	/**
      * ACTION INDEX | Session Login
      * @author ptrnov  <piter@lukison.com>
@@ -60,7 +61,6 @@ class EsmPurchasingController extends Controller
                 return true;
             }
     }
-	
     /**
      * ACTION INDEX
      */
@@ -72,7 +72,6 @@ class EsmPurchasingController extends Controller
 		
 		return $this->render('index');
     }
-	
 	public function actionChat()
     {
         //$model = new LoginForm();
@@ -82,7 +81,7 @@ class EsmPurchasingController extends Controller
 		//$this->getView()->registerJs($js);
 		return $this->render('/widget/chat/index',[
 			//'model' => $model,
-			'ctrl_chat'=>'esm_purchasing',
+			'ctrl_chat'=>'umum_datamaster',
 		]);
        
     }
