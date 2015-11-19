@@ -5,7 +5,7 @@ namespace lukisongroup\models\hrd;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use lukisongroup\hrd\models\Visi;
+use lukisongroup\models\hrd\Visi;
 
 /**
  * VisiSearch represents the model behind the search form about `lukisongroup\hrd\models\Visi`.
@@ -42,6 +42,7 @@ class VisiSearch extends Visi
     public function search($params)
     {
        $query = Visi::find()->where('STATUS <>3');
+	
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

@@ -8,6 +8,8 @@ use kartik\tabs\TabsX;
 use lukisongroup\assets\AppAssetOrg1; 		/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
 AppAssetOrg1::register($this);	
 
+//
+
 /* @var $this yii\web\View */
 /* @var $searchModel lukisongroup\models\hrd\OrganisasiSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -20,7 +22,6 @@ $this->title = Yii::t('app', 'HRM - Organization');
 
   
 <?php
-
 $tabcrud = \kartik\grid\GridView::widget([
   'dataProvider' => $dataProvider,
   'filterModel' => $searchModel,
@@ -36,7 +37,7 @@ $tabcrud = \kartik\grid\GridView::widget([
                'attribute' => 'image',
                'format' => 'html',
                'value'=>function($data){
-                            return Html::img(Yii::$app->urlManager->baseUrl.'/upload/hrd/orgimage/' . $data->image, ['width'=>'100']);
+                            return Html::img(Yii::$app->urlManager->baseUrl.'/upload/image/' . $data->image, ['width'=>'100']);
                         },
             ],  
    
@@ -57,7 +58,7 @@ $tabcrud = \kartik\grid\GridView::widget([
                                     return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px ">Update </button>',
                                                                 ['update','id'=>$model->id],[
                                                                 'data-toggle'=>"modal",
-                                                                'data-target'=>"#org1",
+                                                                'data-target'=>"#organ1",
                                                                 'data-title'=> $model->title,
                                                                 ]);
                             },
@@ -223,7 +224,7 @@ $this->registerJs("
 		Modal::end();
                 
 $this->registerJs("
-                 
+                     $.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		    $('#organ1').on('show.bs.modal', function (event) {
 		        var button = $(event.relatedTarget)
 		        var modal = $(this)

@@ -5,6 +5,8 @@ use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use kartik\widgets\FileInput;
 
+//
+
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\models\hrd\organisasi */
 /* @var $form yii\widgets\ActiveForm */

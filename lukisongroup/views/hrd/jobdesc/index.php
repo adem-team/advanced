@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
+//
 
 
 /* @var $this yii\web\View */
@@ -23,12 +24,20 @@ $this->params['breadcrumbs'][] = $this->title;
    'columns'=>[
        ['class'=>'yii\grid\SerialColumn'],
        
-            'ID',
+        
             'JOBSDESK_TITLE',
             'JOBGRADE_NM',
             'JOBGRADE_DCRP:ntext',
             'JOBGRADE_STS',
-             'JOBSDESK_IMG',
+			   [
+				
+               'attribute' => 'JOBSDESK_IMG',
+               'format' => 'html',
+               'value'=>function($data){
+                            return Html::img(Yii::$app->urlManager->baseUrl.'/upload/image/' . $data-> JOBSDESK_IMG, ['width'=>'100']);
+                        },
+            ],  
+            
              'JOBSDESK_PATH',
              'SORT',
              'CORP_ID',
@@ -54,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px">View </button>',
                                                                 ['view','id'=>$model->ID],[
                                                                 'data-toggle'=>"modal",
-                                                                'data-target'=>"#job",
+                                                                'data-target'=>"#modal-view",
                                                                 'data-title'=> $this->title,
                                                                 ]);
                             },
@@ -63,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px ">Update </button>',
                                                                 ['update','id'=>$model->ID],[
                                                                 'data-toggle'=>"modal",
-                                                                'data-target'=>"#job1",
+                                                                'data-target'=>"#modal-form",
                                                                 'data-title'=> $this->title,
                                                                 ]);
                             },
@@ -91,7 +100,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
 						['modelClass' => 'organisasi',]),'/hrd/jobdesc/create',
                                                                 [   'data-toggle'=>"modal",
-                                                                    'data-target'=>"#job1",
+                                                                    'data-target'=>"#modal-form",
                                                                     'class' => 'btn btn-success'
 															
 									])
@@ -133,7 +142,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php
 $this->registerJs("
-        $('#job').on('show.bs.modal', function (event) {
+ $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+        $('#modal-form').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
             var title = button.data('title') 
@@ -148,9 +158,7 @@ $this->registerJs("
     ",$this::POS_READY);
 
 $this->registerJs("
-$.fn.modal.Constructor.prototype.enforceFocus = function(){};$.fn.modal.Constructor.prototype.enforceFocus = function () {
-};
-        $('#job1').on('show.bs.modal', function (event) {
+        $('#modal-view').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
             var title = button.data('title') 
@@ -164,23 +172,7 @@ $.fn.modal.Constructor.prototype.enforceFocus = function(){};$.fn.modal.Construc
             })
     ",$this::POS_READY);
 
-$this->registerJs("
- 
-        $('#jobs').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-          
-            var modal = $(this)
-            var title = button.data('title') 
-            var href = button.attr('href') 
-            //modal.find('.modal-title').html(title)
-            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-            $.post(href)
-                .done(function( data ) {
-                    modal.find('.modal-body').html(data)
-                    
-                });
-            })
-    ",$this::POS_READY);
+
 ?>
    
             <!--modal-->
@@ -188,14 +180,9 @@ $this->registerJs("
                <?php
               
                 Modal::begin([
-                            'id' => 'job',
+                            'id' => 'modal-form',
                             'header' => '<h4 class="modal-title">LukisonGroup</h4> ',
-                      
-                           
-                            'headerOptions'=>[
-                                    'style'=>'background-color:blue;'
-                            ],
-                   
+               
                                  
                              ]);
                 
@@ -204,16 +191,11 @@ $this->registerJs("
                 
              
                   Modal::begin([
-                            'id' => 'job1',
+                            'id' => 'modal-view',
                             'header' => '<h4 class="modal-title">LukisonGroup</h4>',
                              ]);
                 Modal::end();
                 
-                
-                 Modal::begin([
-                            'id' => 'jobs',
-                            'header' => '<h4 class="modal-title">LukisonGroup</h4>',
-                             ]);
-                Modal::end();
+              
                 
                 ?>

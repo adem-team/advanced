@@ -2,21 +2,21 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+//
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\models\hrd\Jobdesc */
 
-//$this->title = $model->ID;
-//$this->params['breadcrumbs'][] = ['label' => 'Jobdescs', 'url' => ['index']];
-//$this->params['breadcrumbs'][] = $this->title;
+$this->title = $model->ID;
+$this->params['breadcrumbs'][] = ['label' => 'Jobdescs', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
-<!--<div class="jobdesc-view">-->
-  <div class="row"> 
-        <div class="col-md-8" style="margin:10px;"> 
+<div class="jobdesc-view">
+
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-       
+      
         <?= Html::a('Delete', ['delete', 'id' => $model->ID], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -25,16 +25,44 @@ use yii\widgets\DetailView;
             ],
         ]) ?>
     </p>
+	
+	<?php
+	
+		$sts = $model->STATUS;
+	if($sts == 1){
+		$stat = 'Aktif';
+	} else {
+		$stat = 'Tidak Aktif';
+	}
+	
+	if($model->JOBSDESK_IMG == null)
+			{ 			
+				$gmbr = "df.jpg";
+
+			} 
+			else { 
+				
+				$gmbr = $model->JOBSDESK_IMG;
+
+				 }  
+	
+	?>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'ID',
+            // 'ID',
             'JOBSDESK_TITLE',
             'JOBGRADE_NM',
             'JOBGRADE_DCRP:ntext',
             'JOBGRADE_STS',
-            'JOBSDESK_IMG',
+            // 'JOBSDESK_IMG',
+				[
+				'attribute'=>'photo',
+				// 'value'=>Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$model->IMAGE,
+				'value'=>Yii::$app->urlManager->baseUrl.'/upload/image/'.$gmbr,
+				'format' => ['image',['width'=>'150','height'=>'150']],
+			],
             'JOBSDESK_PATH',
             'SORT',
             'CORP_ID',
@@ -51,4 +79,3 @@ use yii\widgets\DetailView;
     ]) ?>
 
 </div>
-  </div>

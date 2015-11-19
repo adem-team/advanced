@@ -6,16 +6,15 @@ use Yii;
 use yii\web\UploadedFile;
 
 /**
- * This is the model class for table "u0006m".
+ * This is the model class for table "u0004m".
  *
  * @property integer $ID
- * @property string $JOBSDESK_TITLE
- * @property string $JOBGRADE_NM
- * @property string $JOBGRADE_DCRP
- * @property integer $JOBGRADE_STS
- * @property string $JOBSDESK_IMG
- * @property string $JOBSDESK_PATH
- * @property integer $SORT
+ * @property string $VISIMISI_TITEL
+ * @property string $TGL
+ * @property string $VISIMISI_ISI
+ * @property string $VISIMISI_DCRPT
+ * @property string $VISIMISI_IMG
+ * @property integer $SET_ACTIVE
  * @property string $CORP_ID
  * @property string $DEP_ID
  * @property string $DEP_SUB_ID
@@ -29,15 +28,14 @@ use yii\web\UploadedFile;
  */
  Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/upload/image/';
 Yii::$app->params['uploadUrl'] = Yii::$app->urlManager->baseUrl . '/web/upload/image/';
-class Jobdesc extends \yii\db\ActiveRecord
+class Visi extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
-     */
-	 public $image;
+     */public $image;
     public static function tableName()
     {
-        return 'u0006m';
+        return 'u0004m';
     }
 
     /**
@@ -51,31 +49,34 @@ class Jobdesc extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+	 
     public function rules()
     {
         return [
-			[['SEQ_ID','GF_ID','JOBGRADE_ID','DEP_SUB_ID','DEP_ID','CORP_ID','JOBGRADE_NM','JOBGRADE_STS', 'SORT','JOBSDESK_TITLE'], 'required'],
-            [['JOBGRADE_DCRP'], 'string'],
-            [['JOBGRADE_STS', 'SORT', 'GF_ID', 'SEQ_ID', 'STATUS'], 'integer'],
-            [['UPDATED_TIME'], 'safe'],
-            [['JOBSDESK_TITLE'], 'string', 'max' => 255],
-            [['JOBGRADE_NM', 'JOBSDESK_IMG', 'JOBSDESK_PATH'], 'string', 'max' => 100],
+			[['TGL', 'VISIMISI_ISI','VISIMISI_DCRPT','SET_ACTIVE', 'GF_ID', 'SEQ_ID', 'STATUS','VISIMISI_TITEL','DEP_ID', 'DEP_SUB_ID', 'JOBGRADE_ID'], 'required'],
+            [['TGL', 'UPDATED_TIME'], 'safe'],
+            [['VISIMISI_ISI', 'VISIMISI_DCRPT'], 'string'],
+            [['SET_ACTIVE', 'GF_ID', 'SEQ_ID', 'STATUS'], 'integer'],
+            [['VISIMISI_TITEL'], 'string', 'max' => 255],
+            [['VISIMISI_IMG', 'CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 50],
             [['CORP_ID'], 'string', 'max' => 5],
             [['DEP_ID', 'DEP_SUB_ID', 'JOBGRADE_ID'], 'string', 'max' => 6],
-            [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 50],
-			   [['image'], 'file', 'extensions'=>'jpg, gif, png'],
+			     [['image'], 'file', 'extensions'=>'jpg, gif, png']
         ];
     }
-	
-	 public function getImageFile() 
+
+    /**
+     * @inheritdoc
+     */
+	  public function getImageFile() 
     {
-        return isset($this->JOBSDESK_IMG) ? Yii::$app->params['uploadPath'] . $this->JOBSDESK_IMG : null;
+        return isset($this->VISIMISI_IMG) ? Yii::$app->params['uploadPath'] . $this->VISIMISI_IMG : null;
     }
 	
     public function getImageUrl() 
     {
         // return a default image placeholder if your source IMAGE is not found
-        $IMAGE = isset($this->JOBSDESK_IMG) ? $this->JOBSDESK_IMG : 'default_user.jpg';
+        $IMAGE = isset($this->VISIMISI_IMG) ? $this->VISIMISI_IMG : 'default_user.jpg';
         return Yii::$app->params['uploadUrl'] . $IMAGE;
     }
 	
@@ -95,26 +96,22 @@ class Jobdesc extends \yii\db\ActiveRecord
         $ext = end((explode(".", $image->name)));
  
         // generate a unique file name
-        $this->JOBSDESK_IMG = 'lukison-'.date('ymdHis').".{$ext}"; //$image->name;//Yii::$app->security->generateRandomString().".{$ext}";
+        $this->VISIMISI_IMG= 'lukison-'.date('ymdHis').".{$ext}"; //$image->name;//Yii::$app->security->generateRandomString().".{$ext}";
  
         // the uploaded image instance
         return $image;
     }
-
-    /**
-     * @inheritdoc
-     */
+	
     public function attributeLabels()
     {
         return [
             'ID' => 'ID',
-            'JOBSDESK_TITLE' => 'Jobsdesk  Title',
-            'JOBGRADE_NM' => 'Jobgrade  Nm',
-            'JOBGRADE_DCRP' => 'Jobgrade  Dcrp',
-            'JOBGRADE_STS' => 'Jobgrade  Sts',
-            'JOBSDESK_IMG' => 'Jobsdesk  Img',
-            'JOBSDESK_PATH' => 'Jobsdesk  Path',
-            'SORT' => 'Sort',
+            'VISIMISI_TITEL' => 'Visimisi  Titel',
+            'TGL' => 'Tgl',
+            'VISIMISI_ISI' => 'Visimisi  Isi',
+            'VISIMISI_DCRPT' => 'Visimisi  Dcrpt',
+            'VISIMISI_IMG' => 'Visimisi  Img',
+            'SET_ACTIVE' => 'Set  Active',
             'CORP_ID' => 'Corp  ID',
             'DEP_ID' => 'Dep  ID',
             'DEP_SUB_ID' => 'Dep  Sub  ID',
