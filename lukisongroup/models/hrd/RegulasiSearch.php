@@ -41,7 +41,7 @@ class RegulasiSearch extends Regulasi
      */
     public function search($params)
     {
-        $query = Regulasi::find();
+      $query = Regulasi::find()->where('STATUS <>3');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

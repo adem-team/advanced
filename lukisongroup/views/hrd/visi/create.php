@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model lukisongroup\models\hrd\Visi */
+/* @var $model lukisongroup\hrd\models\Visi */
 
 $this->title = 'Create Visi';
 $this->params['breadcrumbs'][] = ['label' => 'Visis', 'url' => ['index']];

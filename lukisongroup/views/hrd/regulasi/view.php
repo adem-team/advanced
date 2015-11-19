@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->ID], ['class' => 'btn btn-primary']) ?>
+      
         <?= Html::a('Delete', ['delete', 'id' => $model->ID], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -24,11 +24,20 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
+    
+    <?php
+	$sts = $model->STATUS;
+	if($sts == 1){
+		$stat = 'Aktif';
+	} else {
+		$stat = 'Tidak Aktif';
+	}
+?>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'ID',
+//            'ID',
             'RGTR_TITEL',
             'TGL',
             'RGTR_ISI:ntext',
@@ -43,7 +52,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'CREATED_BY',
             'UPDATED_BY',
             'UPDATED_TIME',
-            'STATUS',
+            [
+				'label' => 'Status',
+				'value' => $stat,
+			],
         ],
     ]) ?>
 

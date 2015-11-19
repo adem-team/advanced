@@ -1,31 +1,31 @@
+
+
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
+use yii\bootstrap\Modal;
 
-/* @var $this yii\web\View */
-/* @var $searchModel lukisongroup\models\hrd\VisiSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Visis';
-$this->params['breadcrumbs'][] = $this->title;
+
+//$this->sideCorp = 'Master Data Umum';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+//$this->sideMenu = 'umum_datamaster';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'VisiMisi');
+
+    
+
+
+
+
 ?>
-<div class="visi-index">
+  
+     <?php
+     
+$gridColumns = [
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a('Create Visi', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'ID',
+                       
+//                    'ID',
             'VISIMISI_TITEL',
             'TGL',
             'VISIMISI_ISI:ntext',
@@ -42,9 +42,183 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'UPDATED_BY',
             // 'UPDATED_TIME',
             // 'STATUS',
+          
+			
+			['class' => 'yii\grid\ActionColumn', 
+					'template' => '{view}{update}',
+                                        'contentOptions'=>[
+                                            'style'=>'width:200px'
+                                        ],
+					'header'=>'Action',
+					'buttons' => [
+						'view'=>function($url, $model, $key){
+								return Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px;">View </button>',
+                                                                       
+                                                                    ['view','id'=>$model->ID],
+                                                                        [   
+                                                                            'data-toggle'=>"modal",
+                                                                            'data-target'=>"#modal-view",													
+                                                                            'data-title'=> $model->ID,
+									]);
+                                                                },
+                                                'update'=>function($url, $model, $key){
+								return Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px;  margin-left:10px">Update </button>',
+                                                                    ['update','id'=>$model->ID],
+                                                                        [
+                                                                            'data-toggle'=>"modal",
+                                                                            'data-target'=>"#modal-form",
+                                                                              'id'=>'modl2',
+                                                                            'data-title'=> $model->ID,
+									]);
+                                                                },
+                                                  
+                                                    ],
+                                                                            
+			],
+            
+        ];
+      
+                                                
+                                          
+?>
+        
+      
 
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+<div class="barangumum-index" style="padding:10px;">
+    
+
+  <?= $grid = GridView::widget([
+                        
+			'dataProvider'=> $dataProvider,
+			'filterModel' => $searchModel,
+			'columns' => $gridColumns,
+			'responsive'=>true,
+                        'resizableColumns'=>true,
+			'pjax'=>true,
+                        'pjaxSettings'=>[
+                        'options'=>[
+	                'enablePushState'=>false,
+	                'id'=>'active',
+	                ],
+	        ],
+			'toolbar' => [
+				'{export}',
+			],
+			'panel' => [
+				'heading'=>'<h3 class="panel-title">'. Html::encode($this->title).'</h3>',
+				'type'=>'warning',
+				'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
+						['modelClass' => 'Visi',]),'/hrd/visi/create',[
+							'data-toggle'=>"modal",
+								'data-target'=>"#modal-form",
+                                                                     'id'=>'modl',
+									'class' => 'btn btn-success'						
+												]),								
+                            
+                            
+				'showFooter'=>false,
+			],		
+			
+			'export' =>['target' => GridView::TARGET_BLANK,
+                                    ],
+                                      
+			'exportConfig' => [
+                        
+				GridView::PDF => [
+                                    'filename' => 'Visi'.'-'.date('ymdHis'),
+                                 
+//                                    'columns'=>$column,
+                                 
+                                           
+          
+          ],
+				GridView::EXCEL => [ 'filename' => 'Visi'.'-'.date('ymdHis') ],
+			],
+		]);
+       
+
+?>
+
 
 </div>
+<?php
+
+//js
+$this->registerJs("
+      
+        $('#modal-view').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+
+
+
+
+$this->registerJs("
+       $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+        $('#modal-form').on('show.bs.modal', function (event) {
+            
+            var button = $(event.relatedTarget)
+          
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                    
+                });
+            })
+             
+    ",$this::POS_READY);
+
+
+?>
+   
+            <!--modal-->
+            
+               <?php
+                  Modal::begin([
+                            'id' => 'modal-view',
+                            'header' => '<h4 class="modal-title">LukisonGroup</h4> ',     
+                             ]);
+                
+               
+                    Modal::end();
+            
+                
+             
+                 Modal::begin([
+                            'id' => 'modal-form',
+                            'header' => '<h4 class="modal-title">LukisonGroup</h4>',
+                             ]);
+                Modal::end();
+                
+                ?>
+             
+         </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
