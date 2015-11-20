@@ -3,12 +3,12 @@
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use yii\helpers\ArrayHelper;
-use lukisongroup\models\esm\Unitbarang;
-use lukisongroup\models\esm\Distributor;
-use lukisongroup\models\esm\Barangmaxi;
+use lukisongroup\esm\models\Unitbarang;
+use lukisongroup\esm\models\Distributor;
+use lukisongroup\esm\models\Barangmaxi;
 
-use lukisongroup\models\master\Kategori;
-use lukisongroup\models\master\Tipebarang;
+use lukisongroup\master\models\Kategori;
+use lukisongroup\master\models\Tipebarang;
 
 use kartik\widgets\FileInput;
 

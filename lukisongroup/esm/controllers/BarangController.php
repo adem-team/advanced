@@ -3,8 +3,8 @@
 namespace lukisongroup\esm\controllers;
 
 use Yii;
-use lukisongroup\models\master\Tipebarang;
-use lukisongroup\models\master\Unitbarang;
+use lukisongroup\master\models\Tipebarang;
+use lukisongroup\master\models\Unitbarang;
 use lukisongroup\esm\models\Barang;
 use lukisongroup\esm\models\BarangSearch;
 use yii\web\Controller;

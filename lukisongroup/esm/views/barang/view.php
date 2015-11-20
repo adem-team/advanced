@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use lukisongroup\models\esm\Barang;
+use lukisongroup\esm\models\Barang;
 
 $this->sideCorp = 'ESM Prodak';                       	/* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_datamaster';                   	/* kd_menu untuk list menu pada sidemenu, get from table of database */
