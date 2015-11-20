@@ -5,8 +5,8 @@ namespace lukisongroup\esm\models;
 use Yii;
 use yii\web\UploadedFile;
 
-use lukisongroup\models\master\Tipebarang;
-use lukisongroup\models\master\Kategori;
+use lukisongroup\master\models\Tipebarang;
+use lukisongroup\master\models\Kategori;
 /**
  * This is the model class for table "b0001".
  *
