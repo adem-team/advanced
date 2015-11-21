@@ -12,15 +12,15 @@ use yii\bootstrap\Modal;
 use yii\widgets\Pjax;
 
 /* TABLE CLASS DEVELOPE -> |DROPDOWN,PRIMARYKEY-> ATTRIBUTE */
-use lukisongroup\models\hrd\Employe;
-use lukisongroup\models\hrd\Corp;
-use lukisongroup\models\hrd\Dept;
-//use lukisongroup\models\hrd\Jabatan;
-use lukisongroup\models\hrd\Status;
-use lukisongroup\models\hrd\Jobgrade;
-use lukisongroup\models\hrd\Groupseqmen;
-use lukisongroup\models\hrd\Groupfunction;
-use lukisongroup\models\hrd\Deptsub;
+use lukisongroup\hrd\models\Employe;
+use lukisongroup\hrd\models\Corp;
+use lukisongroup\hrd\models\Dept;
+//use lukisongroup\hrd\models\Jabatan;
+use lukisongroup\hrd\models\Status;
+use lukisongroup\hrd\models\Jobgrade;
+use lukisongroup\hrd\models\Groupseqmen;
+use lukisongroup\hrd\models\Groupfunction;
+use lukisongroup\hrd\models\Deptsub;
 use lukisongroup\models\system\side_menu\M1000;
 
 /*	KARTIK WIDGET -> Penambahan componen dari yii2 dan nampak lebih cantik*/

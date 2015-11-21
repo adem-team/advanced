@@ -1,7 +1,7 @@
 <?php
 
 namespace lukisongroup\models\system\user;
-use lukisongroup\models\hrd\Employe;
+use lukisongroup\hrd\models\Employe;
 use lukisongroup\models\system\erpmodul\Mdlpermission;
 use kartik\builder\Form;
 use Yii;

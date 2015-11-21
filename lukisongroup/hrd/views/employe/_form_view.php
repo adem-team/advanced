@@ -1,10 +1,10 @@
 <?php 
 use yii\helpers\Html;
-use app\models\hrd\Corp;
-use app\models\hrd\Dept;
-use app\models\hrd\Jabatan;
-use app\models\hrd\Status;
-use app\models\hrd\Employe;
+use app\hrd\models\Corp;
+use app\hrd\models\Dept;
+use app\hrd\models\Jabatan;
+use app\hrd\models\Status;
+use app\hrd\models\Employe;
 use kartik\widgets\ActiveForm;
 use kartik\builder\Form;
 use kartik\builder\FormGrid;

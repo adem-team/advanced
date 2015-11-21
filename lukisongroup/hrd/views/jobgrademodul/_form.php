@@ -7,9 +7,9 @@ use kartik\builder\FormGrid;
 use yii\helpers\ArrayHelper;
 use kartik\markdown\Markdown;
 
-use lukisongroup\models\hrd\Groupfunction;
-use lukisongroup\models\hrd\Groupseqmen;
-use lukisongroup\models\hrd\Jobgrade;
+use lukisongroup\hrd\models\Groupfunction;
+use lukisongroup\hrd\models\Groupseqmen;
+use lukisongroup\hrd\models\Jobgrade;
 
 
 $form = ActiveForm::begin(['id' => 'grading-form-id','type' => ActiveForm::TYPE_HORIZONTAL]);

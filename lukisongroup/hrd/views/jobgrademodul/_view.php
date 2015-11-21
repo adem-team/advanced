@@ -4,9 +4,9 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use kartik\detail\DetailView;
 use kartik\widgets\ActiveForm;
-use lukisongroup\models\hrd\Groupfunction;
-use lukisongroup\models\hrd\Groupseqmen;
-use lukisongroup\models\hrd\Jobgrade;
+use lukisongroup\hrd\models\Groupfunction;
+use lukisongroup\hrd\models\Groupseqmen;
+use lukisongroup\hrd\models\Jobgrade;
 
 $this->sideCorp = 'Modul HRM';                            		/* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'hrd_modul';                            		/* kd_menu untuk list menu pada sidemenu, get from table of database */

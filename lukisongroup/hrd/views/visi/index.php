@@ -7,10 +7,10 @@ use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 
 
+$this->sideCorp = 'Modul HRM';                     		/* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'hrd_modul';                     		/* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Visi Misi');     			/* title pada header page */
 
-//$this->sideCorp = 'Master Data Umum';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-//$this->sideMenu = 'umum_datamaster';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'VisiMisi');
 
     
 

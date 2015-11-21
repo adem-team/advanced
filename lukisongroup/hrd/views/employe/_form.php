@@ -8,14 +8,14 @@ use kartik\widgets\FileInput;
 use yii\helpers\ArrayHelper;
 use kartik\markdown\Markdown;
 
-use lukisongroup\models\hrd\Corp;
-use lukisongroup\models\hrd\Dept;
-use lukisongroup\models\hrd\Deptsub;
-use lukisongroup\models\hrd\Groupfunction;
-use lukisongroup\models\hrd\Groupseqmen;
-use lukisongroup\models\hrd\Jobgrade;
-use lukisongroup\models\hrd\Status;
-use lukisongroup\models\hrd\Employe;
+use lukisongroup\hrd\models\Corp;
+use lukisongroup\hrd\models\Dept;
+use lukisongroup\hrd\models\Deptsub;
+use lukisongroup\hrd\models\Groupfunction;
+use lukisongroup\hrd\models\Groupseqmen;
+use lukisongroup\hrd\models\Jobgrade;
+use lukisongroup\hrd\models\Status;
+use lukisongroup\hrd\models\Employe;
 use yii\helpers\Url;
 use kartik\widgets\DepDrop;
 
