@@ -1,0 +1,19 @@
+﻿.page-head-line {
+    font-weight: 900;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #F0677C;
+    text-transform: uppercase;
+    color: #F0677C;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.page-head-line1 {
+    font-weight: 400;
+    padding-bottom: 20px;
+    border-bottom: 2px solid black;
+    #text-transform: uppercase;
+    color: Blue;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
