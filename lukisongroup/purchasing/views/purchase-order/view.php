@@ -9,7 +9,7 @@ use lukisongroup\master\models\Nmperusahaan;
 use lukisongroup\purchasing\models\Purchasedetail;
 use lukisongroup\esm\models\Barang;
 
-use lukisongroup\models\hrd\Employe;
+use lukisongroup\hrd\models\Employe;
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\models\esm\po\Purchaseorder */
 

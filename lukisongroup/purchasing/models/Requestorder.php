@@ -5,7 +5,7 @@ namespace lukisongroup\purchasing\models;
 use Yii;
 //use lukisongroup\purchasing\models\Rodetail;
 //use lukisongroup\purchasing\models\Tes;
-use lukisongroup\models\hrd\Employe;
+use lukisongroup\hrd\models\Employe;
 
 /**
  * This is the model class for table "r0001".

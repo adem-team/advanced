@@ -6,7 +6,7 @@ use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 use kartik\form\ActiveForm;
 use lukisongroup\master\models\Suplier;
-use lukisongroup\models\hrd\Employe;
+use lukisongroup\hrd\models\Employe;
 
 /* @var $this yii\web\View */
 /* @var $searchModel lukisongroup\models\esm\po\PurchaseorderSearch */

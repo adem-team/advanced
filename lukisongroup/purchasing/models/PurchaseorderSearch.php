@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use lukisongroup\purchasing\models\Purchaseorder;
-use lukisongroup\models\hrd\Employe;
+use lukisongroup\hrd\models\Employe;
 
 /**
  * PurchaseorderSearch represents the model behind the search form about `lukisongroup\models\esm\po\Purchaseorder`.

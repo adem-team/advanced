@@ -4,7 +4,7 @@ namespace lukisongroup\purchasing\models;
 
 use Yii;
 
-use lukisongroup\models\hrd\Employe;
+use lukisongroup\hrd\models\Employe;
 
 /**
  * This is the model class for table "p0001".

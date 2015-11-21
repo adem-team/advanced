@@ -3,7 +3,7 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
-use lukisongroup\models\hrd\Employe;
+use lukisongroup\hrd\models\Employe;
 use lukisongroup\purchasing\models\Requestorderstatus;
 use lukisongroup\purchasing\models\Rodetail;
 

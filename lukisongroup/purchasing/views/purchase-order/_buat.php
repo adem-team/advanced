@@ -20,7 +20,7 @@ use lukisongroup\master\models\Nmperusahaan;
 
 use lukisongroup\purchasing\models\Podetail;
 
-use lukisongroup\models\hrd\Employe;
+use lukisongroup\hrd\models\Employe;
 
 
 $idEmp = Yii::$app->user->identity->EMP_ID;

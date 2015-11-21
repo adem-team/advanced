@@ -24,7 +24,7 @@ use lukisongroup\master\models\Unitbarang;
 use lukisongroup\models\esm\Barang;
 
 
-use lukisongroup\models\hrd\Employe;
+use lukisongroup\hrd\models\Employe;
 
 use yii\grid\GridView;
 use yii\data\ActiveDataProvider;

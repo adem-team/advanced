@@ -10,11 +10,11 @@ use lukisongroup\purchasing\models\Requestorderstatus;
 
 use lukisongroup\purchasing\models\Rodetail;
 use lukisongroup\purchasing\models\RodetailSearch;
-use lukisongroup\models\hrd\Employe;
+use lukisongroup\hrd\models\Employe;
 
 
-use lukisongroup\models\esm\Barang;
-use lukisongroup\models\master\Barangumum;
+use lukisongroup\esm\models\Barang;
+use lukisongroup\master\models\Barangumum;
 
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
