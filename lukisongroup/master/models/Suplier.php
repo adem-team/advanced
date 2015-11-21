@@ -3,7 +3,7 @@
 namespace lukisongroup\master\models;
 
 use Yii;
-use lukisongroup\models\hrd\Corp;
+use lukisongroup\hrd\models\Corp;
 
 /**
  * This is the model class for table "s1000".

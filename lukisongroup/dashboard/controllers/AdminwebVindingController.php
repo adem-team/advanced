@@ -21,7 +21,7 @@ use yii\filters\VerbFilter;
  * HRD | CONTROLLER EMPLOYE .
  *
  */
-class AdminwebKremaController extends Controller
+class AdminwebVindingController extends Controller
 {
     public function behaviors()
     {

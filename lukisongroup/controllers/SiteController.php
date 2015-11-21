@@ -9,7 +9,7 @@ use Yii\web\User;
 use yii\filters\VerbFilter;
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\hrd\models\EmployeSearch;
-use lukisongroup\models\system\user\UserloginSearch;
+use lukisongroup\sistem\models\UserloginSearch;
 /**
  * Site controller
  */
