@@ -11,7 +11,7 @@ use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\master\models\Suplier;
 use lukisongroup\master\models\Tipebarang;
-use lukisongroup\models\hrd\Corp;
+use lukisongroup\hrd\models\Corp;
 //use kartik\widgets\DatePicker;
 
 use kartik\widgets\FileInput;

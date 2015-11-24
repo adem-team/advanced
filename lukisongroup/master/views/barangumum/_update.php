@@ -8,7 +8,7 @@ use lukisongroup\master\models\Unitbarang;
 use lukisongroup\master\models\Suplier;
 //use lukisongroup\master\models\Perusahaan;
 use lukisongroup\master\models\Tipebarang;
-use lukisongroup\models\hrd\Corp;
+use lukisongroup\hrd\models\Corp;
 use kartik\widgets\Select2;
 
 use kartik\widgets\FileInput;
