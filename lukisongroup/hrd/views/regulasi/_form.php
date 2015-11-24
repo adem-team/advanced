@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use lukisongroup\hrd\models\Seq;
 use kartik\widgets\DateTimePicker;
+use kartik\label\LabelInPlace;
 
 
 
@@ -69,8 +70,11 @@ $datastatus = ['0'=>'Tidak aktif',
     <?= $form->field($model, 'RGTR_ISI')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'RGTR_DCRPT')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'SET_ACTIVE')->textInput() ?>
+	
+	<?php $config = ['template'=>"{input}\n{error}\n{hint}"]; ?>
+	
+	
+	<?=$form->field($model, 'SET_ACTIVE', $config)->widget(LabelInPlace::classname()); ?>
 
     
     

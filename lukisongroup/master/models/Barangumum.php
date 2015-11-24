@@ -9,7 +9,7 @@ use lukisongroup\master\models\Unitbarang;
 use lukisongroup\master\models\Suplier;
 use lukisongroup\master\models\Tipebarang;
 use yii\web\UploadedFile;
-use lukisongroup\models\hrd\Corp;
+use lukisongroup\hrd\models\Corp;
 //use lukisongroup\models\master\Perusahaan;
 
 /**
