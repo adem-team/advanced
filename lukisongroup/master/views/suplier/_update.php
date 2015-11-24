@@ -4,8 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 use yii\helpers\ArrayHelper;
-use lukisongroup\models\master\Perusahaan;
-use lukisongroup\models\hrd\Corp;
+use lukisongroup\master\models\Perusahaan;
+use lukisongroup\hrd\models\Corp;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\models\esm\Suplier */
