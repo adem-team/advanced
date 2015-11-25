@@ -23,10 +23,11 @@ $this->params['breadcrumbs'][] = $this->title;                          	/* belu
 ?>
 
 
-<div id="dasboard-item" ng-app="ChartAllDashboardHrmPersonalia"  class="row">
-
+<div id="dasboard-item" ng-app="ChartAllDashboardHrmPersonalia" ng-controller="CtrlChart" class="row">
+ 
 	<div class="col-md-12" style="padding-left:25px; padding-right:25px">
 		<div class="row">
+		
 			<div class="col-lg-3 col-md-6">
 				<!-- Panel Bootstrap 1!-->
 				<div class="panel panel-red">
@@ -37,7 +38,8 @@ $this->params['breadcrumbs'][] = $this->title;                          	/* belu
 							</div>
 							
 							<div class="col-xs-9 text-right">
-								<div class="huge">26</div>
+								<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>
+								
 								<div>Total Employee</div>
 							</div>
 						</div>
@@ -57,10 +59,10 @@ $this->params['breadcrumbs'][] = $this->title;                          	/* belu
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-xs-3">
-								<i class="fa fa-file-photo-o   fa-5x"></i>
+								<i class="fa fa-file-photo-o fa-5x"></i>
 							</div>
 							<div class="col-xs-9 text-right">
-								<div class="huge">12</div>
+								<div class="huge" ng-repeat="nilai in Employe_Summary">{{nilai.emp_probation}}</div>
 								<div>Probation</div>
 							</div>
 						</div>
@@ -83,7 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;                          	/* belu
 								<i class="fa fa-shopping-cart fa-5x"></i>
 							</div>
 							<div class="col-xs-9 text-right">
-								<div class="huge">124</div>
+								<div class="huge" ng-repeat="nilai in Employe_Summary">{{nilai.emp_contract}}</div>
 								<div>Contract</div>
 							</div>
 						</div>
@@ -106,7 +108,7 @@ $this->params['breadcrumbs'][] = $this->title;                          	/* belu
 								<i class="fa fa-support fa-5x"></i>
 							</div>
 							<div class="col-xs-9 text-right">
-								<div class="huge">13</div>
+								<div class="huge" ng-repeat="nilai in Employe_Summary">{{nilai.emp_tetap}}</div>
 								<div>Tetap</div>
 							</div>
 						</div>
@@ -122,11 +124,11 @@ $this->params['breadcrumbs'][] = $this->title;                          	/* belu
 			</div>
 		</div>
 	</div>
-	<div  ng-controller="CtrlChart" class="col-md-12" style="padding-left:25px; padding-right:20px">
+	<div class="col-md-12" style="padding-left:25px; padding-right:20px">
 		<div class="row">
 			<!-- Chart Line Sektor Support !-->
 			<!--<div class="col-sm-6"  ng-init="load()">	!-->
-			<div class="col-sm-6" >	
+			<div class="col-sm-6" >			
 <!--
 			 {{7+7}}
 						 
@@ -157,7 +159,7 @@ $this->params['breadcrumbs'][] = $this->title;                          	/* belu
 
 		</div>
     </div>
-	<div ng-controller="CtrlChart" class="col-md-12" style="padding-left:25px; padding-right:20px">
+	<div class="col-md-12" style="padding-left:25px; padding-right:20px">
 		<div class="row">
 			<!--Chart Type Pie PT.Sarana Sinar Surya !-->
 			<div class="col-sm-4">
