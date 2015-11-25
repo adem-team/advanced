@@ -18,11 +18,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'ISI')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'KD_CORP')->textInput(['maxlength' => true]) ?>
+
 
     <?= $form->field($model, 'KD_CAB')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'KD_DEP')->textInput(['maxlength' => true]) ?>
+  
 
     <?= $form->field($model, 'DATA_PICT')->textarea(['rows' => 6]) ?>
 

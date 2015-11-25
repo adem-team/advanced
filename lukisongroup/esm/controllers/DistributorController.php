@@ -48,7 +48,7 @@ class DistributorController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        return $this->renderAjax('view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -58,7 +58,7 @@ class DistributorController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actioncreatea()
     {
         $model = new Distributor();	
 		
@@ -73,6 +73,37 @@ class DistributorController extends Controller
         }
 		
     }
+	
+	  public function actionCreate()
+    {
+        $model = new Distributor();	
+		
+        if ($model->load(Yii::$app->request->post()))
+			{
+			
+		
+				$kd = Yii::$app->esmcode->kdDbtr();
+        
+				$model->KD_DISTRIBUTOR = $kd;
+				if($model->validate())
+				{
+				$model->CREATED_BY = Yii::$app->user->identity->username;
+				$model->CREATED_AT =  date('Y-m-d H:i:s');
+				$model->save();
+					}
+				
+		
+            return $this->redirect(['index']);
+		}
+		else {
+            return $this->renderAjax('create', [
+                'model' => $model,
+            ]);
+        }
+	}
+		
+	
+	
 
     public function actionSimpan()
     {
@@ -92,7 +123,29 @@ class DistributorController extends Controller
      * @param string $id
      * @return mixed
      */
-    public function actionUpdate($id)
+
+	  public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) ) {
+			  
+			if($model->validate())
+			{
+				$model->UPDATED_AT = Yii::$app->user->identity->username;
+					$model->save();
+			}
+		
+            return $this->redirect(['index']);
+        } else {
+            return $this->renderAjax('update', [
+                'model' => $model,
+            ]);
+        }
+    }
+	
+	
+    public function actionapdate($id)
     {
         $model = $this->findModel($id);
 
@@ -101,7 +154,7 @@ class DistributorController extends Controller
             return $this->redirect(['view', 'id' => $model->ID]);
             } 
         } else {
-            return $this->render('update', [
+            return $this->renderAjax('update', [
                 'model' => $model,
             ]);
         }

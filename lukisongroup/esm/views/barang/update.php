@@ -13,7 +13,7 @@ $this->title = Yii::t('app', 'ESM - Prodak Update');           /* title pada hea
 ?>
 <div class="barang-update">
 
-    <?= $this->render('_update', [
+    <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
 

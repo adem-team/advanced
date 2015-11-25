@@ -68,7 +68,7 @@ WHERE db2.NM_TYPE = 'FDSFDG'
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'querys' => $querys,
+             'querys' => $querys,
         ]);
     }
 
@@ -79,7 +79,7 @@ WHERE db2.NM_TYPE = 'FDSFDG'
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        return $this->renderAjax('view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -93,10 +93,32 @@ WHERE db2.NM_TYPE = 'FDSFDG'
     {
         $model = new Barang();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
+        if ($model->load(Yii::$app->request->post()) ) {
+				$kdDbtr = $model->KD_DISTRIBUTOR;	
+				$kdType = $model->KD_TYPE;	
+				$kdKategori = $model->KD_KATEGORI;	
+				$kdUnit = $model->KD_UNIT;	
+		
+				$kd = Yii::$app->esmcode->kdbarang($kdDbtr,$kdType,$kdKategori,$kdUnit);
+
+				$model->KD_BARANG = $kd;
+		if($model->validate())
+		{
+		
+				$model->CREATED_BY = Yii::$app->user->identity->username;
+		
+				$image = $model->uploadImage();
+		if ($model->save()) {
+			// upload only if valid uploaded file instance found
+			if ($image !== false) {
+				$path = $model->getImageFile();
+				$image->saveAs($path);
+			}
+		}
+	}
+            return $this->redirect(['index']);
         } else {
-            return $this->render('create', [
+            return $this->renderAjax('create', [
                 'model' => $model,
             ]);
         }
@@ -115,6 +137,10 @@ WHERE db2.NM_TYPE = 'FDSFDG'
         $kd = Yii::$app->esmcode->kdbarang($kdDbtr,$kdType,$kdKategori,$kdUnit);
 
 		$model->KD_BARANG = $kd;
+		if($model->validate())
+		{
+		
+		$model->CREATED_BY = Yii::$app->user->identity->username;
 		
 		$image = $model->uploadImage();
 		if ($model->save()) {
@@ -124,7 +150,8 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 				$image->saveAs($path);
 			}
 		}
-		return $this->redirect(['view', 'id' => $model->ID]);
+		}
+		return $this->redirect(['index']);
     }
 
     /**
@@ -146,9 +173,9 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 					$image->saveAs($path);
 				}
 			}
-            return $this->redirect(['view', 'id' => $model->ID]);
+            return $this->redirect(['index']);
         } else {
-            return $this->render('update', [
+            return $this->renderAjax('update', [
                 'model' => $model,
             ]);
         }

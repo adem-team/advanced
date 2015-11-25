@@ -54,7 +54,7 @@ $this->title = Yii::t('app', 'ESM - Prodak View');       /* title pada header pa
 
 
     <p>
-        <?= Html::a('<i class="fa fa-pencil"></i>&nbsp;&nbsp;Ubah', ['update', 'id' => $model->ID], ['class' => 'btn btn-primary']) ?>
+     
         <?= Html::a('<i class="fa fa-trash-o"></i>&nbsp;&nbsp;Hapus', ['delete', 'id' => $model->ID], [
 			'class' => 'btn btn-danger',
 			'data' => [
