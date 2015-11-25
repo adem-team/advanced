@@ -12,8 +12,10 @@ use kartik\form\ActiveForm;
 
     <?php $form = ActiveForm::begin([
 			'type' => ActiveForm::TYPE_HORIZONTAL,
+			'id'=>'form-umum',
+            'enableClientValidation' => true,
 			'method' => 'post',
-			'action' => ['esm/unitbarang/simpan'],
+		
 		]);
 	?>
 
@@ -33,8 +35,7 @@ use kartik\form\ActiveForm;
 
     <?php //= $form->field($model, 'STATUS')->textInput() ?>
 
-    <?= $form->field($model, 'CREATED_BY')->hiddenInput(['value'=>Yii::$app->user->identity->username])->label(false) ?>
-    <?= $form->field($model, 'CREATED_AT')->hiddenInput(['value'=>date('Y-m-d H:i:s')])->label(false) ?>
+     
 	
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">

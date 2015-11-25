@@ -95,13 +95,12 @@ class BeritaController extends Controller
 		
 		$kode = 'B.'. date('Y.m.d').'.'.$kd;
 		$model->KD_BERITA = $kode;
-		$model->KD_CORP =  Yii::$app->user->identity->EMP_CORP_ID;
-		$model->KD_CAB = 
-		$model->KD_DEP = Yii::$app->user->identity->DEP_ID
+	
+		$model->KD_CORP =  	Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;;
+		$model->KD_DEP = 	 Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
 		
 		
 		
-		;
 			// $db = \Yii::$app->db_sss;
 			// $sql ="select count(KD_BERITA) from a1000";
 			// $baris = $db->createCommand($sql)->queryScalar();
@@ -122,6 +121,8 @@ class BeritaController extends Controller
 
 
 			$model->save();
+			print_r($model->save());
+			die();
 			
 		
 
