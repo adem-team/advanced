@@ -13,7 +13,8 @@ use kartik\form\ActiveForm;
     <?php $form = ActiveForm::begin([
 			'type' => ActiveForm::TYPE_HORIZONTAL,
 			'method' => 'post',
-			'action' => ['esm/distributor/simpan'],
+			 'id'=>'form-',
+             'enableClientValidation' => true,
 		]);
 	?>
 
@@ -37,8 +38,7 @@ use kartik\form\ActiveForm;
 
     <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>
 	
-    <?= $form->field($model, 'CREATED_BY')->hiddenInput(['value'=>Yii::$app->user->identity->username])->label(false) ?>
-    <?= $form->field($model, 'CREATED_AT')->hiddenInput(['value'=>date('Y-m-d H:i:s')])->label(false) ?>
+ 
 
 	
 

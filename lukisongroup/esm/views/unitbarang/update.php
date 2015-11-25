@@ -9,7 +9,7 @@ $this->title = Yii::t('app', 'ESM - Unit Prodak Update');   /* title pada header
 ?>
 <div class="unitbarang-update">
 
-    <?= $this->render('_update', [
+    <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
 

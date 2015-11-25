@@ -26,10 +26,10 @@ class BarangSearch extends Barang
     public function rules()
     {
         return [
-            [['ID', 'HPP', 'HARGA', 'BARCODE', 'NOTE', 'STATUS', 'CREATED_BY', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
+            [['ID', 'HPP', 'HARGA', 'BARCODE', 'NOTE', 'STATUS', 'CREATED_BY', 'CREATED_AT', 'UPDATED_AT','nmsuplier','unitbrg','tipebrg','nmkategori'], 'safe'],
             [['ID', 'HPP', 'HARGA'], 'integer'],
             [['KD_BARANG', 'KD_TYPE', 'KD_KATEGORI', 'NM_BARANG', 'KD_SUPPLIER', 'KD_DISTRIBUTOR', 'DATA_ALL'], 'safe'],
-            [['nmsuplier','unitbrg','tipebrg','nmkategori'], 'safe'],
+            // [['nmsuplier','unitbrg','tipebrg','nmkategori'], 'safe'],
         ];
     }
 
@@ -114,6 +114,7 @@ class BarangSearch extends Barang
 
         $query->andFilterWhere(['like', 'HPP', $this->HPP])
             ->andFilterWhere(['like', 'HARGA', $this->HARGA])
+			   ->andFilterWhere(['like', 'NM_BARANG', $this->NM_BARANG])
             ->andFilterWhere(['like', 'b0001.KD_BARANG', $this->KD_BARANG]);
         return $dataProvider;
 		/*

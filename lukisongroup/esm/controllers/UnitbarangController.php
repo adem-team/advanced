@@ -3,8 +3,8 @@
 namespace lukisongroup\esm\controllers;
 
 use Yii;
-use lukisongroup\models\esm\Unitbarang;
-use lukisongroup\models\esm\UnitbarangSearch;
+use lukisongroup\esm\models\Unitbarang;
+use lukisongroup\esm\models\UnitbarangSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -48,7 +48,7 @@ class UnitbarangController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        return $this->renderAjax('view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -62,26 +62,26 @@ class UnitbarangController extends Controller
     {
         $model = new Unitbarang();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
+        if ($model->load(Yii::$app->request->post())) {
+			 $kd = Yii::$app->esmcode->kdUnit();
+			$model->KD_UNIT = $kd;
+			if($model->validate())
+			{
+				$model->CREATED_BY = Yii::$app->user->identity->username;
+				$model->CREATED_AT = date('Y-m-d H:i:s');
+				 $model->save();
+			}
+			
+			
+            return $this->redirect(['index']);
         } else {
-            return $this->render('create', [
+            return $this->renderAjax('create', [
                 'model' => $model,
             ]);
         }
     }
 
-    public function actionSimpan()
-    {
-        $model = new Unitbarang();
-		$model->load(Yii::$app->request->post());
-		
-        $kd = Yii::$app->esmcode->kdUnit();
-
-		$model->KD_UNIT = $kd;
-		$model->save();
-		return $this->redirect(['view', 'id' => $model->ID]);
-    }
+  
 
     /**
      * Updates an existing Unitbarang model.
@@ -93,10 +93,16 @@ class UnitbarangController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
+        if ($model->load(Yii::$app->request->post()) ) {
+			
+			if($model->validate())
+			{
+					$model->save();
+			}
+		
+            return $this->redirect(['index']);
         } else {
-            return $this->render('update', [
+            return $this->renderAjax('update', [
                 'model' => $model,
             ]);
         }
@@ -110,7 +116,10 @@ class UnitbarangController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        // $this->findModel($id)->delete();
+		$data = Unitbarang::find()->where(['ID'=>$id])->one();
+		$data->STATUS = 3;
+		$data->save();
 
         return $this->redirect(['index']);
     }
