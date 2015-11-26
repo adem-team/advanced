@@ -59,9 +59,9 @@ class Unitbarang extends \yii\db\ActiveRecord
     {
         return [
             'ID' => 'ID',
-            'KD_UNIT' => 'Kode Unit',
-            'NM_UNIT' => 'Nama Unit',
-            'QTY' => 'Jumlah',
+            'KD_UNIT' => 'Kode.Unit',
+            'NM_UNIT' => 'Nama.Unit',
+            'QTY' => 'Qty',
             'SIZE' => 'Ukuran',
             'WEIGHT' => 'Berat',
             'COLOR' => 'Warna',

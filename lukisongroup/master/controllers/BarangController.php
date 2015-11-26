@@ -5,8 +5,8 @@ namespace lukisongroup\esm\controllers;
 use Yii;
 use lukisongroup\master\models\Tipebarang;
 use lukisongroup\master\models\Unitbarang;
-use lukisongroup\esm\models\Barang;
-use lukisongroup\esm\models\BarangSearch;
+use lukisongroup\master\models\Barang;
+use lukisongroup\master\models\BarangSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -40,7 +40,7 @@ class BarangController extends Controller
 	
 	
         $model = new Barang();
-		$querys = Barang::find()->from('dbc002.b0001 AS db1')->leftJoin('dbc002.b1001 AS db2', 'db1.KD_BARANG = db2.KD_TYPE')->where(['NM_TYPE' => 'FDSFDG'])->all();
+		$querys = Barang::find()->from('dbc002.b0001 AS db1')->leftJoin('dbm000.b1001 AS db2', 'db1.KD_BARANG = db2.KD_TYPE')->where(['NM_TYPE' => 'FDSFDG'])->all();
 		
 		
 /*	

@@ -8,12 +8,12 @@ class Nmperusahaan extends \yii\db\ActiveRecord
 {
     public static function tableName()
     {
-        return 'dbm000.p1001';
+        return 'dbm002.p1001';
     }
 
     public static function getDb()
     {
-        return Yii::$app->get('db4');
+        return Yii::$app->get('db2'); /*HRD database dbm002*/
     }
     
 

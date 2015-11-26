@@ -18,6 +18,7 @@ $this->title = Yii::t('app', 'ESM - Unit Prodak');      /* title pada header pag
             'KD_UNIT',
             'NM_UNIT',
             'QTY',
+			'WEIGHT',
             'SIZE',
         	 [
             'class' => 'yii\grid\ActionColumn',

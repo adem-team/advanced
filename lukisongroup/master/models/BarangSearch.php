@@ -5,11 +5,11 @@ namespace lukisongroup\esm\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-//use lukisongroup\master\models\Barang;
+use lukisongroup\esm\models\Barang;
 //use lukisongroup\models\esm\Barangmaxi;
 
-use lukisongroup\master\models\Tipebarang;
-use lukisongroup\master\models\Kategori;
+use lukisongroup\models\master\Tipebarang;
+use lukisongroup\models\master\Kategori;
 
 /**
  * BarangSearch represents the model behind the search form about `app\models\esm\Barang`.
@@ -90,8 +90,8 @@ class BarangSearch extends Barang
                 ],
                 
                 'tipebrg' => [
-                    'asc' => ['dbc002.b1001.NM_TYPE' => SORT_ASC],
-                    'desc' => ['dbc002.b1001.NM_TYPE' => SORT_DESC],
+                    'asc' => ['dbm002.b1001.NM_TYPE' => SORT_ASC],
+                    'desc' => ['dbm002.b1001.NM_TYPE' => SORT_DESC],
                     'label' => 'Tipe Barang',
                 ],
                 

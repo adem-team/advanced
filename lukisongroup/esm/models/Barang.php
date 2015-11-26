@@ -107,7 +107,8 @@ class Barang extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['KD_BARANG', 'KD_TYPE', 'KD_KATEGORI', 'NM_BARANG', 'HPP', 'HARGA', 'STATUS', 'KD_UNIT','KD_DISTRIBUTOR'], 'required'],
+            //[['KD_BARANG', 'KD_TYPE', 'KD_KATEGORI', 'NM_BARANG', 'HPP', 'HARGA', 'STATUS', 'KD_UNIT','KD_DISTRIBUTOR'], 'required'],
+            [['KD_BARANG', 'KD_TYPE', 'KD_KATEGORI', 'NM_BARANG', 'HPP', 'HARGA', 'STATUS', 'KD_UNIT'], 'required'],
             [['HPP', 'HARGA', 'BARCODE'], 'integer'],
             [['CREATED_BY', 'UPDATED_AT', 'KD_SUPPLIER', 'KD_DISTRIBUTOR'], 'string'],
 			[['image'], 'file', 'extensions'=>'jpg, gif, png'],

@@ -3,51 +3,21 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
-use lukisongroup\esm\models\Barang;
 
-$this->sideCorp = 'ESM Prodak';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideCorp = 'ESM Distributor';                  /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_datamaster';                   /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'ESM - Prodak');           /* title pada header page */
-
+$this->title = Yii::t('app', 'ESM - Distributor');    /* title pada header page */
 ?>
 
-
-<div class="barang-index">
-
-
-    <?php
-		$gridColumns = [
+<div class="distributor-index">
+    <?php $gridColumns = [
             ['class' => 'yii\grid\SerialColumn'],
-			[
-				/*Author -ptr.nov- image*/
-               'attribute' => 'Gambar',
-               'format' => 'html', //'format' => 'image',
-               'value'=>function($data){
-                            return Html::img(Yii::$app->urlManager->baseUrl.'/upload/barangesm/' . $data->IMAGE, ['width'=>'40']);
-                        },
-            ],  
-			
-            'KD_BARANG',
-			'NM_BARANG',
-			//'nmsuplier',
-			'unitbrg',
-			'HPP', 
-			'HARGA',
-			'tipebrg', 
-			'nmkategori', 
-		
-		
-			[
-				'format' => 'raw',
-				'value' => function ($model) {
-					if ($model->STATUS == 1) {
-						return '<i class="fa fa-check fa-lg ya" style="color:blue;" title="Aktif"></i>';
-					} else if ($model->STATUS == 0) {
-						return '<i class="fa fa-times fa-lg no" style="color:red;" title="Tidak Aktif" ></i>';
-					} 
-				},
-			], 
-			 [
+
+            'KD_DISTRIBUTOR',
+            'NM_DISTRIBUTOR',
+            'ALAMAT:ntext',
+            'PIC',
+       	 [
             'class' => 'yii\grid\ActionColumn',
                 'template' => '{view}{update}',
                         'header'=>'Action',
@@ -57,15 +27,15 @@ $this->title = Yii::t('app', 'ESM - Prodak');           /* title pada header pag
                                                                 ['view','id'=>$model->ID],[
                                                                 'data-toggle'=>"modal",
                                                                 'data-target'=>"#modal-view",
-                                                                'data-title'=> $model->KD_BARANG,
+                                                                'data-title'=> $model->KD_DISTRIBUTOR,
                                                                 ]);
                             },
                             'update' =>function($url, $model, $key){
-                                    return  Html::a('<button type="button" class="btn btn-success btn-xs" style="width:50px; margin-top:2px">update </button>',
+                                    return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px; margin-left:25px">update </button>',
                                                                 ['update','id'=>$model->ID],[
                                                                 'data-toggle'=>"modal",
                                                                 'data-target'=>"#modal-form",
-                                                                'data-title'=> $model->KD_BARANG,
+                                                                'data-title'=> $model->KD_DISTRIBUTOR,
                                                                 ]);
                             },
                         
@@ -73,10 +43,12 @@ $this->title = Yii::t('app', 'ESM - Prodak');           /* title pada header pag
                       
                 
             ],
-    
-        ]; 
+        ];
+		
 		?>
-		<?= $grid = GridView::widget([
+	
+	
+<?= $grid = GridView::widget([
 			'dataProvider'=> $dataProvider,
 			'filterModel' => $searchModel,
 			'columns' => $gridColumns,
@@ -93,15 +65,14 @@ $this->title = Yii::t('app', 'ESM - Prodak');           /* title pada header pag
 			'panel' => [
 				'heading'=>'<h3 class="panel-title">'. Html::encode($this->title).'</h3>',
 				'type'=>'warning',
-				'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Tambah Barang ',
-						['modelClass' => 'Kategori',]),'/esm/barang/create',[
+				'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Tambah  Distributor ',
+						['modelClass' => 'Kategori',]),'/esm/distributor/create',[
 							'data-toggle'=>"modal",
 								'data-target'=>"#modal-form",							
 									'class' => 'btn btn-success'						
 												]),
 				'showFooter'=>false,
 			],		
-			
 			'export' =>['target' => GridView::TARGET_BLANK],
 			'exportConfig' => [
 				GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
@@ -109,22 +80,8 @@ $this->title = Yii::t('app', 'ESM - Prodak');           /* title pada header pag
 			],
 		]);
 ?>
-	
-	
-	
-	
-	
-</div>
-
-<p>
-<i class="fa fa-check fa-sm" style="color:blue;" title="Aktif"></i> Aktif  &nbsp;&nbsp;&nbsp;&nbsp;
-<i class="fa fa-times fa-sm" style="color:red;" title="Tidak Aktif" ></i> Tidak Aktif
-</p>
-
-
 
 <?php
-
 
 $this->registerJs("
          $('#modal-view').on('show.bs.modal', function (event) {
@@ -140,8 +97,9 @@ $this->registerJs("
                 });
             })
     ",$this::POS_READY);
+	
 $this->registerJs("
-		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		
          $('#modal-form').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
@@ -167,3 +125,9 @@ $this->registerJs("
         'header' => '<h4 class="modal-title">LukisonGroup</h4>',
     ]);
     Modal::end();
+
+
+?>
+</div>
+
+</div>

@@ -24,7 +24,7 @@ class Kategori extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'dbm000.b1002';
+        return 'dbc002.b1002';
     }
 
     /**
@@ -32,7 +32,7 @@ class Kategori extends \yii\db\ActiveRecord
      */
     public static function getDb()
     {
-        return Yii::$app->get('db4');
+        return Yii::$app->get('db_esm');
     }
 
     /**

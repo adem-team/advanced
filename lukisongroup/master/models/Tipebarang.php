@@ -27,7 +27,7 @@ class Tipebarang extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'dbm000.b1001';
+        return 'dbc002.b1001';
     }
 
     /**
@@ -35,7 +35,7 @@ class Tipebarang extends \yii\db\ActiveRecord
      */
     public static function getDb()
     {
-        return Yii::$app->get('db4');
+        return Yii::$app->get('db_esm');
     }
 
     /**
