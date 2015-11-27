@@ -1,6 +1,6 @@
 <?php
 
-namespace lukisongroup\purchasing\models;
+namespace lukisongroup\sales\models;
 
 use Yii;
 

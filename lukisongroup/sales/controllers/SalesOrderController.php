@@ -1,20 +1,20 @@
 <?php
 
-namespace lukisongroup\purchasing\controllers;
+namespace lukisongroup\sales\controllers;
 
 use Yii;
-use lukisongroup\purchasing\models\Requestorder;
-use lukisongroup\purchasing\models\RequestorderSearch;
-use lukisongroup\purchasing\models\Roatribute;
-use lukisongroup\purchasing\models\Requestorderstatus;
+use lukisongroup\sales\models\Salesorder;
+use lukisongroup\sales\models\SalesorderSearch;
+use lukisongroup\sales\models\Soatribute;
+use lukisongroup\sales\models\Salesorderstatus;
 
-use lukisongroup\purchasing\models\Rodetail;
-use lukisongroup\purchasing\models\RodetailSearch;
+use lukisongroup\sales\models\Sodetail;
+use lukisongroup\sales\models\SodetailSearch;
 use lukisongroup\hrd\models\Employe;
 
 
-use lukisongroup\purchasing\models\Barang;
-use lukisongroup\purchasing\models\Barangumum;
+use lukisongroup\sales\models\Barang;
+use lukisongroup\sales\models\Barangumum;
 
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -27,7 +27,7 @@ use mPDF;
 /**
  * RequestorderController implements the CRUD actions for Requestorder model.
  */
-class RequestOrderController extends Controller
+class SalesOrderController extends Controller
 {
     public function behaviors()
     {
@@ -69,7 +69,7 @@ class RequestOrderController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new RequestorderSearch();
+        $searchModel = new SalesorderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		
         return $this->render('index', [
@@ -86,8 +86,8 @@ class RequestOrderController extends Controller
      */
     public function actionView($kd)
     {
-    	$ro = new Requestorder();
-		$reqro = Requestorder::find()->where(['KD_RO' => $kd])->one();
+    	$ro = new Salesorder();
+		$reqro = Salesorder::find()->where(['KD_RO' => $kd])->one();
 		$detro = $reqro->detro;
         $employ = $reqro->employe;
     	
@@ -110,16 +110,16 @@ class RequestOrderController extends Controller
 		$connection = \Yii::$app->db2;
 		$cons = \Yii::$app->db_esm;
 		
-        $model = new Requestorder();
-        $reqorder = new Roatribute();
-        $rodetail = new Rodetail();
-        $rostatus = new Requestorderstatus();
+        $model = new Salesorder();
+        $reqorder = new Soatribute();
+        $rodetail = new Sodetail();
+        $rostatus = new Salesorderstatus();
 		
 		$empId = Yii::$app->user->identity->EMP_ID;
 		$dt = Employe::find()->where(['EMP_ID'=>$empId])->all();
 		
 //			------------ TAHUN.BULAN.TANGGAL.RO.NO URUT (4DIGIT)   == > 2015.06.30.RO.0001				
-		$qwe = Requestorder::find()->select('ID')->orderBy(['ID' => SORT_DESC])->limit(1)->all();
+		$qwe = Salesorder::find()->select('ID')->orderBy(['ID' => SORT_DESC])->limit(1)->all();
 		if(count($qwe) == 0){ $lastKd = 0; } else { $lastKd = $qwe[0]['ID']; }
 		
 		$nKD = $lastKd +1;
@@ -129,7 +129,7 @@ class RequestOrderController extends Controller
 		else if($pnjg == 3){ $kd = "0".$nKD; }
 		else if($pnjg >= 4 ){ $kd = $nKD; }
 		
-		$kode = date('Y.m.d').'.RO.'.$kd;
+		$kode = date('Y.m.d').'.SO.'.$kd;
 		
 		$model->KD_RO = $kode;
 		$model->ID_USER = $empId;
@@ -149,7 +149,7 @@ class RequestOrderController extends Controller
             }
 
             $model->save(); 
-    		$cons->createCommand()->batchInsert( Requestorderstatus::tableName(), ['KD_RO', 'ID_USER', 'STATUS'], $isi )->execute();	
+    		$cons->createCommand()->batchInsert( Salesorderstatus::tableName(), ['KD_RO', 'ID_USER', 'STATUS'], $isi )->execute();	
             return $this->redirect(['buatro','id'=>$kode]);
 		}
 		
@@ -159,37 +159,36 @@ class RequestOrderController extends Controller
 	
 	public function actionBuatro()	
     {
-        $model = new Requestorder();
-        $reqorder = new Roatribute();
-        $rodetail = new Rodetail();
+        $model = new Salesorder();
+        $reqorder = new Soatribute();
+        $sodetail = new Sodetail();
 		
 		return $this->render('create', [
 			'model' => $model,
 			'reqorder' => $reqorder,
-			'rodetail' => $rodetail,
+			'sodetail' => $sodetail,
 		]);
     }
 	
     public function actionSimpan($id)
     {
-        $rodetail = new Rodetail();
+        $sodetail = new Sodetail();
 		$hsl = Yii::$app->request->post();
+        $created = $hsl['Sodetail']['CREATED_AT'];
+        $nmBarang = $hsl['Sodetail']['NM_BARANG'];
+        $kdRo = $hsl['Sodetail']['KD_RO'];
+        $kdBarang = $hsl['Sodetail']['KD_BARANG'];
+        $qty = $hsl['Sodetail']['QTY'];
+        $note = $hsl['Sodetail']['NOTE'];
 
-        $created = $hsl['Rodetail']['CREATED_AT'];
-        $nmBarang = $hsl['Rodetail']['NM_BARANG'];
-        $kdRo = $hsl['Rodetail']['KD_RO'];
-        $kdBarang = $hsl['Rodetail']['KD_BARANG'];
-        $qty = $hsl['Rodetail']['QTY'];
-        $note = $hsl['Rodetail']['NOTE'];
-
-        $ck = Rodetail::find()->where(['KD_BARANG'=>$kdBarang, 'KD_RO'=>$kdRo])->andWhere('STATUS <> 3')->one();
+        $ck = Sodetail::find()->where(['KD_BARANG'=>$kdBarang, 'KD_RO'=>$kdRo])->andWhere('STATUS <> 3')->one();
 
         if(count($ck) == 1){
             \Yii::$app->getSession()->setFlash('error', '<br/><br/><p class="bg-danger" style="padding:15px"><b>Barang Sudah di Masukkan</b></p>');
             return $this->redirect(['buatro','id'=>$id]);
         } else {
 
-            $kdBrg = $hsl['Rodetail']['KD_BARANG'];
+            $kdBrg = $hsl['Sodetail']['KD_BARANG'];
             $ckBrg = explode('.', $kdBrg);
             if($ckBrg[0] == 'BRG'){
                 $kdUnit = Barang::find('KD_UNIT')->where(['KD_BARANG'=>$kdBrg])->one();
@@ -197,15 +196,15 @@ class RequestOrderController extends Controller
                 $kdUnit = Barangumum::find('KD_UNIT')->where(['KD_BARANG'=>$kdBrg])->one();
             }
 
-            $rodetail->UNIT = $kdUnit->KD_UNIT;
-            $rodetail->CREATED_AT = $created;
-            $rodetail->NM_BARANG = $nmBarang;
-            $rodetail->KD_RO = $kdRo;
-            $rodetail->KD_BARANG = $kdBarang;
-            $rodetail->QTY = $qty;
-            $rodetail->NOTE = $note;
+            $sodetail->UNIT = $kdUnit->KD_UNIT;
+            $sodetail->CREATED_AT = $created;
+            $sodetail->NM_BARANG = $nmBarang;
+            $sodetail->KD_RO = $kdRo;
+            $sodetail->KD_BARANG = $kdBarang;
+            $sodetail->QTY = $qty;
+            $sodetail->NOTE = $note;
 
-    		$rodetail->save();
+    		$sodetail->save();
 
             \Yii::$app->getSession()->setFlash('error', '<br/><br/><p class="bg-success" style="padding:15px"><b>Barang berhasil di Masukkan</b></p>');
     		return $this->redirect(['buatro','id'=>$id]);
@@ -214,8 +213,8 @@ class RequestOrderController extends Controller
 	
     public function actionHapus($kode,$id)
     {
-		new Rodetail();
-		$ro = Rodetail::findOne($id);
+		new Sodetail();
+		$ro = Sodetail::findOne($id);
 		$ro->STATUS = 3;
 		$ro->save();
 
@@ -231,14 +230,14 @@ class RequestOrderController extends Controller
 
 		if($dt[0]['GF_ID'] != '3'){ return $this->redirect(['/purchasing/request-order/']); }
 
-        $rostat = Requestorderstatus::find()->where(['KD_RO' => $kd,'ID_USER' => $empId])->one();
+        $rostat = Salesorderstatus::find()->where(['KD_RO' => $kd,'ID_USER' => $empId])->one();
 
         if(count($rostat) == 1){
             $rostat->delete();
         }
 		
-    	$ro = new Requestorder();
-		$reqro = Requestorder::find()->where(['KD_RO' => $kd])->one();
+    	$ro = new Salesorder();
+		$reqro = Salesorder::find()->where(['KD_RO' => $kd])->one();
 		$detro = $reqro->detro;
         $employ = $reqro->employe;
     	
@@ -258,10 +257,10 @@ class RequestOrderController extends Controller
 		$kd = $ts['kd'];
 		
 		foreach($ts['ck'] as $ts){
-			$rodetail  = Rodetail::findOne($ts);
+			$rodetail  = Sodetail::findOne($ts);
 			$rodetail->STATUS = 1;
 			if($rodetail->save()){
-				$reqro = Requestorder::find()->where(['KD_RO' => $kd])->one();
+				$reqro = Salesorder::find()->where(['KD_RO' => $kd])->one();
 				$reqro->STATUS = 1;
 				$reqro->save();
 			}
@@ -308,7 +307,7 @@ class RequestOrderController extends Controller
     public function actionHapusro($id)
     {
         \Yii::$app->db_esm->createCommand()
-            ->update('r0001', ['status'=>3], ['KD_RO'=>$id])
+            ->update('s0001', ['status'=>3], ['KD_RO'=>$id])
             ->execute();
 
 //		Rodetail::findModel($id)->delete();
@@ -339,8 +338,8 @@ class RequestOrderController extends Controller
 	
 	
 	public function actionCetakpdf($kd){
-    	$ro = new Requestorder();
-		$reqro = Requestorder::find()->where(['KD_RO' => $kd])->one();
+    	$ro = new Salesorder();
+		$reqro = Salesorder::find()->where(['KD_RO' => $kd])->one();
 		$detro = $reqro->detro;
         $employ = $reqro->employe;
     	
@@ -366,7 +365,7 @@ class RequestOrderController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Requestorder::findOne($id)) !== null) {
+        if (($model = Salesorder::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

@@ -15,13 +15,13 @@ use kartik\widgets\FileInput;
 
 */
 
-use lukisongroup\purchasing\models\Requestorder;
-use lukisongroup\purchasing\models\Rodetail;
-use lukisongroup\purchasing\models\Barangumum;
-use lukisongroup\purchasing\models\Unitbarang;
+use lukisongroup\sales\models\Salesorder;
+use lukisongroup\sales\models\Sodetail;
+use lukisongroup\sales\models\Barangumum;
+use lukisongroup\sales\models\Unitbarang;
 
 
-use lukisongroup\purchasing\models\Barang;
+use lukisongroup\sales\models\Barang;
 
 
 use lukisongroup\hrd\models\Employe;
@@ -66,7 +66,7 @@ echo FormGrid::widget([
 
 
 $id=$_GET['id'];	
-$ros = Requestorder::find()->joinWith('employe')->where(['KD_RO' => $id])->asArray()->all(); 
+$ros = Salesorder::find()->joinWith('employe')->where(['KD_RO' => $id])->asArray()->all(); 
 
 ?>
 
@@ -113,24 +113,24 @@ $ros = Requestorder::find()->joinWith('employe')->where(['KD_RO' => $id])->asArr
 
 $form = ActiveForm::begin([
     'method' => 'post',
-    'action' => ['/purchasing/request-order/simpan?id='.$id],
+    'action' => ['/sales/sales-order/simpan?id='.$id],
 ]);
 
 
-	$brgar['Barang Umum'] = $brg = ArrayHelper::map(Barangumum::find()->all(), 'KD_BARANG', 'NM_BARANG');
+	
 	$brgar['Barang ESM'] = $brgs = ArrayHelper::map(Barang::find()->all(), 'KD_BARANG', 'NM_BARANG');
 
 	$unit = ArrayHelper::map(Unitbarang::find()->all(), 'KD_UNIT', 'NM_UNIT');
 ?>
-<?php echo $form->field($rodetail, 'CREATED_AT')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false); ?>	
-<?php echo $form->field($rodetail, 'NM_BARANG')->hiddenInput(['value' => ''])->label(false); ?>	
+<?php echo $form->field($sodetail, 'CREATED_AT')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false); ?>	
+<?php echo $form->field($sodetail, 'NM_BARANG')->hiddenInput(['value' => ''])->label(false); ?>	
 
-<?php echo $form->field($rodetail, 'KD_RO')->textInput(['value' => $id, 'readonly' => true])->label('Kode Request Order'); ?>
+<?php echo $form->field($sodetail, 'KD_RO')->textInput(['value' => $id, 'readonly' => true])->label('Kode Request Order'); ?>
 
 <div class="row">
-  <div class="col-xs-3"><?php echo $form->field($rodetail, 'KD_BARANG')->dropDownList($brgar, ['prompt'=>' -- Pilih Salah Satu --','onchange' => '$("#rodetail-nm_barang").val($(this).find("option:selected").text())'])->label('Nama Barang'); ?></div>
-  <div class="col-xs-3"><?php echo $form->field($rodetail, 'QTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']); ?></div>
-  <div class="col-xs-3"><?php echo $form->field($rodetail, 'NOTE')->textInput(['maxlength' => true, 'placeholder'=>'Catatan Barang']); ?></div>
+  <div class="col-xs-3"><?php echo $form->field($sodetail, 'KD_BARANG')->dropDownList($brgar, ['prompt'=>' -- Pilih Salah Satu --','onchange' => '$("#sodetail-nm_barang").val($(this).find("option:selected").text())'])->label('Nama Barang'); ?></div>
+  <div class="col-xs-3"><?php echo $form->field($sodetail, 'QTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']); ?></div>
+  <div class="col-xs-3"><?php echo $form->field($sodetail, 'NOTE')->textInput(['maxlength' => true, 'placeholder'=>'Catatan Barang']); ?></div>
 </div>
 
 <div class="row">
@@ -145,7 +145,7 @@ $form = ActiveForm::begin([
 
 <?= Yii::$app->session->getFlash('error'); ?>
 <?php
-$que = Rodetail::find()->where(['KD_RO' => $id])->andWhere('STATUS <> 3');;  
+$que = Sodetail::find()->where(['KD_RO' => $id])->andWhere('STATUS <> 3');;  
 echo "<br/><br/>";
 
         $dataProvider = new ActiveDataProvider([
