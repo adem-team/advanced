@@ -34,6 +34,7 @@ class Customer extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+	 public $parent;
     public static function tableName()
     {
         return 'c0001';
