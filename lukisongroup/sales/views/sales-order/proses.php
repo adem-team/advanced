@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\models\esm\ro\Requestorder */
 
-$this->sideCorp = 'ESM Request Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideCorp = 'ESM Sales Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_esm';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Data Master');         /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
     ]) ? -->
 <br/>
 
-		<form action="/purchasing/request-order/simpanproses" method="post">
+		<form action="/sales/sales-order/simpanproses" method="post">
     <table class="table table-striped" style="background-color:#fff; border:1px solid #7D7DB2; ">
         <thead style="background-color:#A1A1E6; ">
             <th>No.</th>
@@ -95,7 +95,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	</div -->
 	
 	<div style="text-align:right;">
-		<?php if($sts == 0){ ?><button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;&nbsp;Terima RO</button><?php } ?>
+		<?php if($sts == 0){ ?><button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;&nbsp;Terima SO</button><?php } ?>
 	</div>
 	<div style="clear:both;"></div>
 <br/>

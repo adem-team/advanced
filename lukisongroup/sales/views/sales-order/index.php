@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 
 <div class="requestorder-index" style="padding:10px;">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+   
     <hr/>
 
     <?php 

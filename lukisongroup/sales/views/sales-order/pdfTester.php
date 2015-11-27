@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </tr>
         </thead>
 		
-        <?php $no=0; foreach($detro as $ro){ $sts = $ro->STATUS; if($sts == 0 OR $sts == 3 ){ } else { $no=$no+1; ?>
+        <?php $no=0; foreach($reqro as $ro){ $sts = $ro->STATUS; if($sts == 0 OR $sts == 3 ){ } else { $no=$no+1; ?>
             <tr>
                 <td><?php echo $no; ?></td>
                 <td><?php echo $ro->NM_BARANG; ?></td>
