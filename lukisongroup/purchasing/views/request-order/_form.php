@@ -21,7 +21,7 @@ use lukisongroup\master\models\Barangumum;
 use lukisongroup\master\models\Unitbarang;
 
 
-use lukisongroup\models\esm\Barang;
+use lukisongroup\esm\models\Barang;
 
 
 use lukisongroup\hrd\models\Employe;

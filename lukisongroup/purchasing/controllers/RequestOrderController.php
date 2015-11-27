@@ -15,7 +15,7 @@ use lukisongroup\hrd\models\Employe;
 
 use lukisongroup\esm\models\Barang;
 use lukisongroup\master\models\Barangumum;
-
+use lukisongroup\master\models\Unitbarang;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
