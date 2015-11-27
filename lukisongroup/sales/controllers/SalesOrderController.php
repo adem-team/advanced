@@ -228,7 +228,7 @@ class SalesOrderController extends Controller
 		$empId = Yii::$app->user->identity->EMP_ID;
 		$dt = Employe::find()->where(['EMP_ID'=>$empId])->all();
 
-		if($dt[0]['GF_ID'] != '3'){ return $this->redirect(['/purchasing/request-order/']); }
+		if($dt[0]['GF_ID'] != '3'){ return $this->redirect(['/sales/sales-order/']); }
 
         $rostat = Salesorderstatus::find()->where(['KD_RO' => $kd,'ID_USER' => $empId])->one();
 
@@ -238,6 +238,9 @@ class SalesOrderController extends Controller
 		
     	$ro = new Salesorder();
 		$reqro = Salesorder::find()->where(['KD_RO' => $kd])->one();
+      //  echo "<pre>";
+      //  print_r($reqro);
+      //  exit();
 		$detro = $reqro->detro;
         $employ = $reqro->employe;
     	
@@ -342,7 +345,6 @@ class SalesOrderController extends Controller
 		$reqro = Salesorder::find()->where(['KD_RO' => $kd])->one();
 		$detro = $reqro->detro;
         $employ = $reqro->employe;
-    	
 		$mpdf=new mPDF();
 		$mpdf->WriteHTML($this->renderPartial( 'pdfTester', [
             'reqro' => $reqro,

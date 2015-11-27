@@ -71,7 +71,7 @@ $ros = Salesorder::find()->joinWith('employe')->where(['KD_RO' => $id])->asArray
 ?>
 
 <div class="requestorder-form" style="margin:0px 20px;">
-<form class="form-horizontal">
+<!--<form class="form-horizontal">
 
 	<div class="form-group">
 		<div class="col-sm-12">
@@ -106,42 +106,70 @@ $ros = Salesorder::find()->joinWith('employe')->where(['KD_RO' => $id])->asArray
 		</div>
 	</div>
 
- </form>
+ </form>-->
  
- 
-<?php
+ <div class="container">
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info fa fa-plus " data-toggle="modal" data-target="#myModal">&nbsp;Pembelian Produk</button>
 
-$form = ActiveForm::begin([
-    'method' => 'post',
-    'action' => ['/sales/sales-order/simpan?id='.$id],
-]);
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">List Product</h4>
+        </div>
+        <div class="modal-body">
+          
+			<?php
+
+			$form = ActiveForm::begin([
+			'method' => 'post',
+			'action' => ['/sales/sales-order/simpan?id='.$id],
+			]);
 
 
-	
-	$brgar['Barang ESM'] = $brgs = ArrayHelper::map(Barang::find()->all(), 'KD_BARANG', 'NM_BARANG');
 
-	$unit = ArrayHelper::map(Unitbarang::find()->all(), 'KD_UNIT', 'NM_UNIT');
-?>
-<?php echo $form->field($sodetail, 'CREATED_AT')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false); ?>	
-<?php echo $form->field($sodetail, 'NM_BARANG')->hiddenInput(['value' => ''])->label(false); ?>	
+			$brgar['Barang ESM'] = $brgs = ArrayHelper::map(Barang::find()->all(), 'KD_BARANG', 'NM_BARANG');
 
-<?php echo $form->field($sodetail, 'KD_RO')->textInput(['value' => $id, 'readonly' => true])->label('Kode Request Order'); ?>
+			$unit = ArrayHelper::map(Unitbarang::find()->all(), 'KD_UNIT', 'NM_UNIT');
+			?>
+			<?php echo $form->field($sodetail, 'CREATED_AT')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false); ?>	
+			<?php echo $form->field($sodetail, 'NM_BARANG')->hiddenInput(['value' => ''])->label(false); ?>	
 
-<div class="row">
-  <div class="col-xs-3"><?php echo $form->field($sodetail, 'KD_BARANG')->dropDownList($brgar, ['prompt'=>' -- Pilih Salah Satu --','onchange' => '$("#sodetail-nm_barang").val($(this).find("option:selected").text())'])->label('Nama Barang'); ?></div>
-  <div class="col-xs-3"><?php echo $form->field($sodetail, 'QTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']); ?></div>
-  <div class="col-xs-3"><?php echo $form->field($sodetail, 'NOTE')->textInput(['maxlength' => true, 'placeholder'=>'Catatan Barang']); ?></div>
+			<?php echo $form->field($sodetail, 'KD_RO')->hiddenInput(['value' => $id, 'readonly' => true])->label(false); ?>
+
+			<div class="row">
+			<div class="col-xs-6"><?php echo $form->field($sodetail, 'KD_BARANG')->dropDownList($brgar, ['prompt'=>' -- Pilih Salah Satu --','onchange' => '$("#sodetail-nm_barang").val($(this).find("option:selected").text())'])->label('Nama Barang'); ?></div>
+			<div class="col-xs-3"><?php echo $form->field($sodetail, 'QTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']); ?></div>
+			<div class="col-xs-3"><?php echo $form->field($sodetail, 'NOTE')->textInput(['maxlength' => true, 'placeholder'=>'Catatan Barang']); ?></div>
+			</div>
+
+			<div class="row">
+			<div class="col-xs-6">
+			<?php echo Html::submitButton( '<i class="fa fa-floppy-o fa-fw"></i>  Simpan', ['class' => 'btn btn-success']); ?>  
+			<?php // echo Html::a('<i class="fa fa-print fa-fw"></i> Cetak', ['cetakpdf','kd'=>$id], ['target' => '_blank', 'class' => 'btn btn-warning']); ?>
+			</div>
+			</div>
+			<?php
+			ActiveForm::end(); 
+			?>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
 </div>
 
-<div class="row">
-  <div class="col-xs-6">
-	  <?php echo Html::submitButton( '<i class="fa fa-floppy-o fa-fw"></i>  Simpan', ['class' => 'btn btn-success']); ?>  
-	  <?php echo Html::a('<i class="fa fa-print fa-fw"></i> Cetak', ['cetakpdf','kd'=>$id], ['target' => '_blank', 'class' => 'btn btn-warning']); ?>
-</div>
-</div>
-<?php
- ActiveForm::end(); 
- ?>
+
 
 <?= Yii::$app->session->getFlash('error'); ?>
 <?php
