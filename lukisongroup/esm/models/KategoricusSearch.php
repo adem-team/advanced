@@ -41,7 +41,7 @@ class KategoricusSearch extends Kategoricus
      */
     public function search($params)
     {
-        $query = Kategoricus::find();
+        $query = Kategoricus::find()->where('STATUS <> 3');;
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

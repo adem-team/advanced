@@ -22,7 +22,7 @@ class AppAssetOrg1 extends AssetBundle
 		'angular/chartorg/orgchart1/src/jquerylayout/layout-default-latest.css',
 		'angular/chartorg/orgchart1/src/css/primitives.latest.css?2100',		
    ];
-    public $js = [    			
+    public $js = [ 
 		'angular/chartorg/orgchart1/src/js/jquery/jquery-1.9.1.js',	
 		'angular/chartorg/orgchart1/src/js/jquery/jquery-ui-1.10.2.custom.js',
 		'angular/chartorg/orgchart1/src/jquerylayout/jquery.layout-latest.min.js',		        

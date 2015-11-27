@@ -59,7 +59,7 @@ class Customerskat extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['CUST_KD', 'CUST_NM'], 'required'],
+            [['CUST_KD', 'CUST_NM','STATUS'], 'required'],
             [['CUST_KTG', 'TLP1', 'TLP2', 'FAX', 'STT_TOKO', 'STATUS'], 'integer'],
             [['JOIN_DATE', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['ALAMAT', 'NOTE'], 'string'],
