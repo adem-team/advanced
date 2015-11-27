@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use kartik\tabs\TabsX;
+use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
 /* @var $searchModel lukisongroup\esm\models\KategoriSearch */
@@ -42,7 +43,7 @@ $tabcrud = \kartik\grid\GridView::widget([
                                     return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px">View </button>',
                                                                 ['view','id'=> $model->CUST_KTG],[
                                                                 'data-toggle'=>"modal",
-                                                                'data-target'=>"#org",
+                                                                'data-target'=>"#view1",
                                                                 'data-title'=> $model->CUST_KTG_NM,
                                                                 ]);
                             },
@@ -51,7 +52,7 @@ $tabcrud = \kartik\grid\GridView::widget([
                                     return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px ">Update </button>',
                                                                 ['update','id'=>$model->CUST_KTG],[
                                                                 'data-toggle'=>"modal",
-                                                                'data-target'=>"#organ1",
+                                                                'data-target'=>"#form1",
                                                                 'data-title'=> $model->CUST_KTG_NM,
                                                                 ]);
                             },
@@ -78,13 +79,13 @@ $tabcrud = \kartik\grid\GridView::widget([
 					['modelClass' => 'Employe',]),
 					['create'], ['class' => 'btn btn-success']),
 			*/
-			'before'=>
-                                    Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create Parent ',
-						['modelClass' => 'Kategori',]),'/esm/kategoricus/createparent',
-                                                                [   
-                                                                    'class' => 'btn btn-success'
-															
-									]),
+			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
+						['modelClass' => 'Barangumum',]),'/esm/kategoricus/create',[
+							'data-toggle'=>"modal",
+								'data-target'=>"#form1",
+                                    'id'=>'modl',
+									'class' => 'btn btn-success'						
+												]),
                               
   
                               
@@ -143,18 +144,18 @@ $tabcrud = \kartik\grid\GridView::widget([
                         'buttons' => [
                             'view' =>function($url, $model, $key){
                                     return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px">View </button>',
-                                                                ['view','id'=> $model->CUST_KD],[
+                                                                ['viewcust','id'=> $model->CUST_KD],[
                                                                 'data-toggle'=>"modal",
-                                                                'data-target'=>"#org",
+                                                                'data-target'=>"#view",
                                                                 'data-title'=> $model->CUST_KD,
                                                                 ]);
                             },
                                
                              'update' =>function($url, $model, $key){
                                     return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px ">Update </button>',
-                                                                ['update','id'=>$model->CUST_KD],[
+                                                                ['updatecus','id'=>$model->CUST_KD],[
                                                                 'data-toggle'=>"modal",
-                                                                'data-target'=>"#organ1",
+                                                                'data-target'=>"#form",
                                                                 'data-title'=> $model->CUST_KD,
                                                                 ]);
                             },
@@ -181,12 +182,14 @@ $tabcrud = \kartik\grid\GridView::widget([
 					['modelClass' => 'Employe',]),
 					['create'], ['class' => 'btn btn-success']),
 			*/
-			'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
-						['modelClass' => 'organisasi',]),'/esm/kategoricus/createcustomers',
-                                                                [  
-                                                                    'class' => 'btn btn-success'
-															
-									])
+									
+		'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
+						['modelClass' => 'Barangumum',]),'/esm/kategoricus/createcustomers',[
+							'data-toggle'=>"modal",
+								'data-target'=>"#form",
+                                    'id'=>'modl2',
+									'class' => 'btn btn-success'						
+												]),
                               
 
                     
@@ -249,4 +252,94 @@ echo TabsX::widget([
 	]);
                             
                             ?>
+							<?php
+							
+							$this->registerJs("
+    $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+        $('#form1').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+
+$this->registerJs("
+        
+        $('#view1').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+							
+$this->registerJs("
+    $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+        $('#form').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+
+$this->registerJs("
+        
+        $('#view').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+	
+	  Modal::begin([
+                            'id' => 'form',
+                            'header' => '<h4 class="modal-title">LukisonGroup</h4>',
+                             ]);
+                Modal::end();
+                
+                 Modal::begin([
+                            'id' => 'view',
+                            'header' => '<h4 class="modal-title">LukisonGroup</h4>',
+                             ]);
+                Modal::end();
+				
+				 Modal::begin([
+                            'id' => 'form1',
+                            'header' => '<h4 class="modal-title">LukisonGroup</h4>',
+                             ]);
+                Modal::end();
+                
+                 Modal::begin([
+                            'id' => 'view1',
+                            'header' => '<h4 class="modal-title">LukisonGroup</h4>',
+                             ]);
+                Modal::end();
+
 

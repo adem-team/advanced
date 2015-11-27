@@ -41,7 +41,7 @@ class CustomerskatSearch extends Customerskat
      */
     public function searchcus($params)
     {
-        $query = Customerskat::find();
+        $query = Customerskat::find()->where('STATUS <> 3');
 
         $dataProvider1 = new ActiveDataProvider([
             'query' => $query,
