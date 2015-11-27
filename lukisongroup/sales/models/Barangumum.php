@@ -1,13 +1,13 @@
 <?php
 
-namespace lukisongroup\purchasing\models;
+namespace lukisongroup\sales\models;
  
 use Yii;
 
-use lukisongroup\purchasing\models\Kategori;
-use lukisongroup\purchasing\models\Unitbarang;
-use lukisongroup\purchasing\models\Suplier;
-use lukisongroup\purchasing\models\Tipebarang;
+use lukisongroup\sales\models\Kategori;
+use lukisongroup\sales\models\Unitbarang;
+use lukisongroup\sales\models\Suplier;
+use lukisongroup\sales\models\Tipebarang;
 use yii\web\UploadedFile;
 use lukisongroup\hrd\models\Corp;
 //use lukisongroup\models\master\Perusahaan;
