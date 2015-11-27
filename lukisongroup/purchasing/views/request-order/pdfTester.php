@@ -3,6 +3,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
+use lukisongroup\master\models\Unitbarang;
+
 
 
 $this->title = $reqro->KD_RO;
@@ -67,7 +69,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 <td><?php echo $ro->NM_BARANG; ?></td>
                 <td><?php echo $ro->KD_BARANG; ?></td>
                 <td><?php echo $ro->QTY; ?></td>
-                <td><?php echo $ro->UNIT; ?></td>
+				<?php
+					$model=Unitbarang::find()->where('KD_UNIT="'.$ro->UNIT. '"')->one();
+					if (count($model)!=0){
+						$UnitNm=$model->NM_UNIT;
+					}else{
+						$UnitNm='Not Set';
+					}
+				?>
+                <td><?php echo $UnitNm;//$ro->UNIT; ?></td>
                 <td><?php echo $ro->NOTE; ?></td>
             </tr>
         <?php } } ?>

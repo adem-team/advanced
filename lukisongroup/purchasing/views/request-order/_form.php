@@ -21,7 +21,11 @@ use lukisongroup\purchasing\models\Barangumum;
 use lukisongroup\purchasing\models\Unitbarang;
 
 
+<<<<<<< HEAD
 use lukisongroup\purchasing\models\Barang;
+=======
+use lukisongroup\esm\models\Barang;
+>>>>>>> 40f7fa4c5fd4af522cdf08d5d646aeee045dd3b3
 
 
 use lukisongroup\hrd\models\Employe;
