@@ -56,9 +56,17 @@ class KategoricusController extends Controller
      * @param string $id
      * @return mixed
      */
+	 
+	  public function actionViewcust($id)
+    {
+        return $this->renderAjax('viewcus', [
+            'model' => $this->findModel1($id),
+        ]);
+    }
+	
     public function actionView($id)
     {
-        return $this->render('view', [
+        return $this->renderAjax('view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -68,30 +76,49 @@ class KategoricusController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreateparent()
+    public function actionCreate()
     {
         $model = new Kategoricus();
 
         if ($model->load(Yii::$app->request->post()) ) {
-                
-            if($model->validate())
+			$chk = Yii::$app->request->post('parentid');
+			if($chk == 1)
+			{
+				    if($model->validate())
             {
                 $model->CUST_KTG_PARENT = 0;
                 $model->CREATED_BY =  Yii::$app->user->identity->username;
                 $model->CREATED_AT = date("Y-m-d H:i:s");
                 $model->save();
             }
+			}
+			else{
+				
+				if($model->validate())
+				{
+					    $model->CREATED_BY =  Yii::$app->user->identity->username;
+						$model->CREATED_AT = date("Y-m-d H:i:s");
+						$model->save();
+				}
+			
+				
+				
+				
+			}
+		
+                
+        
           
             return $this->redirect(['index']);
         } else {
-            return $this->render('_formparent', [
+            return $this->renderAjax('_form', [
                 'model' => $model,
             ]);
         }
     }
 	
 	
-    public function actionLiscus($id)
+    public function actionLis($id)
     {
  
         
@@ -101,6 +128,7 @@ class KategoricusController extends Controller
  
         $job = Kategoricus::find()
                  ->where(['CUST_KTG_PARENT' =>$id])
+				 ->andwhere('CUST_KTG_PARENT <> 0')
                 ->all();
         
         
@@ -120,27 +148,27 @@ class KategoricusController extends Controller
     
     
     
-     public function actionCreate()
-    {
-        $model = new Kategoricus();
+     // public function actionCreate()
+    // {
+        // $model = new Kategoricus();
 
-        if ($model->load(Yii::$app->request->post()) ) {
+        // if ($model->load(Yii::$app->request->post()) ) {
             
-                if($model->validate())
-            {
+                // if($model->validate())
+            // {
                
-                $model->CREATED_BY =  Yii::$app->user->identity->username;
-                $model->CREATED_AT = date("Y-m-d H:i:s");
-                $model->save();
-            }
+                // $model->CREATED_BY =  Yii::$app->user->identity->username;
+                // $model->CREATED_AT = date("Y-m-d H:i:s");
+                // $model->save();
+            // }
             
-            return $this->redirect(['index']);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
+            // return $this->redirect(['index']);
+        // } else {
+            // return $this->render('create', [
+                // 'model' => $model,
+            // ]);
+        // }
+    // }
     
     
      public function actionCreatecustomers()
@@ -175,7 +203,7 @@ class KategoricusController extends Controller
             
             return $this->redirect(['index']);
         } else {
-            return $this->render('_formcustomer', [
+            return $this->renderAjax('_formcustomer', [
                 'model' => $model,
             ]);
         }
@@ -191,10 +219,56 @@ class KategoricusController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->CUST_KTG]);
+        if ($model->load(Yii::$app->request->post()) ) {
+			
+			$chk = Yii::$app->request->post('parentid');
+			if($chk == 1)
+			{
+				    if($model->validate())
+            {
+                $model->CUST_KTG_PARENT = 0;
+				$model->UPDATED_AT = date("Y-m-d H:i:s");
+				$model->UPDATED_BY = Yii::$app->user->identity->username;
+                $model->save();
+            }
+			}
+			else{
+				
+				if($model->validate())
+				{
+					   $model->UPDATED_AT = date("Y-m-d H:i:s");
+						$model->UPDATED_BY = Yii::$app->user->identity->username;
+						$model->save();
+				}
+				
+				
+			}
+			
+           return $this->redirect(['index']);
         } else {
-            return $this->render('update', [
+            return $this->renderAjax('update', [
+                'model' => $model,
+            ]);
+        }
+    }
+	
+	 public function actionUpdatecus($id)
+    {
+        $model = $this->findModel1($id);
+
+        if ($model->load(Yii::$app->request->post()) ) {
+			
+			    if($model->validate())
+                    {
+                         $model->UPDATED_AT = date("Y-m-d H:i:s");
+						$model->UPDATED_BY = Yii::$app->user->identity->username;
+                        
+                        $model->save();
+                    }
+		
+             return $this->redirect(['index']);
+        } else {
+            return $this->renderAjax('_formcustomer', [
                 'model' => $model,
             ]);
         }
@@ -208,14 +282,19 @@ class KategoricusController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+     	$model = Kategoricus::find()->where(['CUST_KTG'=>$id])->one();
+		$model->STATUS = 3;
+		$model->save();
         return $this->redirect(['index']);
     }
 	
 	public function actionDeletecus($id)
     {
-        $this->findModel($id)->delete();
+    
+		
+		$model = Customerskat::find()->where(['CUST_KD'=>$Id])->one();
+		$model->STATUS = 3;
+		$model->save();
 
         return $this->redirect(['index']);
     }
@@ -228,6 +307,14 @@ class KategoricusController extends Controller
      * @return Kategoricus the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
+	 protected function findModel1($id)
+    {
+        if (($model = Customerskat::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
     protected function findModel($id)
     {
         if (($model = Kategoricus::findOne($id)) !== null) {

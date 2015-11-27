@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\esm\models\Customerskat */
 
-$this->title = $model->CUST_KD;
+$this->title = $model->CUST_NM;
 $this->params['breadcrumbs'][] = ['label' => 'Customerskats', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
