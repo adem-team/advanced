@@ -7,6 +7,8 @@ use yii\helpers\ArrayHelper;
 use kartik\widgets\DatePicker;
 use kartik\label\LabelInPlace;
 use lukisongroup\esm\models\Kategoricus;
+use lukisongroup\esm\models\Province;
+use lukisongroup\esm\models\Kota;
 
 
 /* @var $this yii\web\View */
@@ -20,6 +22,8 @@ use lukisongroup\esm\models\Kategoricus;
    $dropparentkategori = ArrayHelper::map(Kategoricus::find()
                                                                 ->where(['CUST_KTG_PARENT'=>$no])
                                                                 ->all(),'CUST_KTG', 'CUST_KTG_NM');
+	$droppro = ArrayHelper::map(Province::find()->all(),'PROVINCE_ID','PROVINCE');
+	$dropcity = ArrayHelper::map(Kota::find()->all(),'POSTAL_CODE','CITY_NAME');
 // print_r( $dropparentkategori);
 // die();
  
@@ -27,7 +31,12 @@ use lukisongroup\esm\models\Kategoricus;
 
 <div class="customerskat-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+	'id'=>'createkat',
+	'enableClientValidation' => true
+	
+	
+	]); ?>
 
 
 
@@ -36,9 +45,6 @@ use lukisongroup\esm\models\Kategoricus;
     <?= $form->field($model, 'CUST_NM')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'CUST_GRP')->textInput(['maxlength' => true]) ?>
-
-
-    <?= $form->field($model, 'CUST_NM')->textInput(['maxlength' => true]) ?>
     
     <?= $form->field($model, 'TLP2', $config)->widget(LabelInPlace::classname());?>
     
@@ -59,8 +65,8 @@ use lukisongroup\esm\models\Kategoricus;
 
         
     ]);?>
-    
-     <?= $form->field($model, 'CUST_KTG')->widget(Select2::classname(), [
+	
+	   <?= $form->field($model, 'CUST_KTG')->widget(Select2::classname(), [
 
         'options' => [
 //            'id'=>'parent',
@@ -70,6 +76,30 @@ use lukisongroup\esm\models\Kategoricus;
              ],
         
     ]);?>
+	
+	<?= $form->field($model, 'PROVINCE_ID')->widget(Select2::classname(), [
+        'data' => $droppro,
+        'options' => [
+        'placeholder' => 'Pilih Provinci ...'],
+        'pluginOptions' => [
+            'allowClear' => true,
+             ],
+
+        
+    ]);?>
+	
+	<?= $form->field($model, 'CITY_ID')->widget(Select2::classname(), [
+        'data' => $dropcity,
+        'options' => [
+        'placeholder' => 'Pilih kota ...'],
+        'pluginOptions' => [
+            'allowClear' => true,
+             ],
+
+        
+    ]);?>
+    
+  
     
      <?= $form->field($model, 'PIC', $config)->widget(LabelInPlace::classname());?>
 
@@ -83,11 +113,21 @@ use lukisongroup\esm\models\Kategoricus;
 	],
 ]);?>
 
+
+  <?= $form->field($model, 'KD_DISTRIBUTOR')->widget(Select2::classname(), [
+		     'data' => $dropdis,
+        'options' => [
+//            'id'=>'parent',
+        'placeholder' => 'Pilih Distributor ...'],
+        'pluginOptions' => [
+            'allowClear' => true
+             ],
+        
+    ]);?>
  
 
     <?= $form->field($model, 'ALAMAT')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'FAX')->textInput() ?>
 
 
     <?= $form->field($model, 'WEBSITE')->textInput(['maxlength' => true]) ?>
@@ -100,14 +140,7 @@ use lukisongroup\esm\models\Kategoricus;
 
     <?= $form->field($model, 'DATA_ALL')->textInput(['maxlength' => true]) ?>
    
-     <?= Select2::widget([
-    'name' => 'dis',
-    'data' => $dropdis,
-    'options' => [
-        'placeholder' => 'Select Distrubutor ...',
-      
-    ],
-]);?>
+ 
 
    <?= $form->field($model, 'MAP_LAT')->textInput(['maxlength' => true,'readonly'=>true]) ?>
     
