@@ -76,7 +76,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									],
 									[
 										'content' => 'email',
-										'url' => '/widget/email',
+										'url' => '/email/mail-box',
 										'badge' => '2'
 									],
 									[

@@ -16,7 +16,21 @@ $this->sideMenu = 'esm_sales';                                      /* kd_menu u
 $this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 ?>
-
+<div class="form-group">
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+<?php
+ $this->registerJs("
+	 $(function () {
+                $('#datetimepicker1').datetimepicker();
+            });
+",$this::POS_READY);
+?>
 <div id="dasboard-item"  ng-app="ChartAllDashboardEsmSales" ng-controller="CtrlChart"class="row">
 
 	<div class="col-md-12" style="padding-left:25px; padding-right:25px">
@@ -121,7 +135,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			<div class="col-sm-6">	
 				<fusioncharts 
 					width= 100%
-					type="column2d"
+					type="bar2d"
 					datasource="{{SalesItem_Mt}}"
 				>
 				</fusioncharts>				   

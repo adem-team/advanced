@@ -2023,6 +2023,14 @@ var components = {
         {
             "name": "ui-select",
             "main": "ui-select-built.js"
+        },
+        {
+            "name": "jquery",
+            "main": "jquery-built.js"
+        },
+        {
+            "name": "moment",
+            "main": "moment-built.js"
         }
     ],
     "baseUrl": "components"
