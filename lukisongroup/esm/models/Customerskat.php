@@ -63,7 +63,7 @@ class Customerskat extends \yii\db\ActiveRecord
             [['CUST_KTG', 'TLP1', 'TLP2', 'FAX', 'STT_TOKO', 'STATUS'], 'integer'],
             [['JOIN_DATE', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['ALAMAT', 'NOTE'], 'string'],
-            [['CUST_KD', 'CUST_KD_ALIAS', 'CUST_GRP', 'MAP_LAT', 'MAP_LNG', 'NPWP'], 'string', 'max' => 50],
+            [['CUST_KD', 'CUST_KD_ALIAS', 'CUST_GRP', 'MAP_LAT', 'MAP_LNG', 'NPWP','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID'], 'string', 'max' => 50],
             [['CUST_NM', 'PIC', 'EMAIL', 'WEBSITE', 'DATA_ALL'], 'string', 'max' => 255],
             [['CAB_ID', 'CORP_ID'], 'string', 'max' => 6],
             [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 100]

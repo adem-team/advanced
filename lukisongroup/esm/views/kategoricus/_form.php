@@ -10,9 +10,6 @@ use yii\helpers\ArrayHelper;
 /* @var $form yii\widgets\ActiveForm */
 
 $dropparent = ArrayHelper::map(\lukisongroup\esm\models\Kategoricus::find()->all(), 'CUST_KTG', 'CUST_KTG_NM'); 
-
-
-
 ?>
 
 

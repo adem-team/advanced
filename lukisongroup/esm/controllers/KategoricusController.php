@@ -6,6 +6,10 @@ use Yii;
 use lukisongroup\esm\models\Kategoricus;
 use lukisongroup\esm\models\Customerskat;
 use lukisongroup\esm\models\KategoricusSearch;
+use lukisongroup\esm\models\KotaSearch;
+use lukisongroup\esm\models\Kota;
+use lukisongroup\esm\models\ProvinceSearch;
+use lukisongroup\esm\models\Province;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -40,12 +44,25 @@ class KategoricusController extends Controller
 //        kategori data
         $searchModel = new KategoricusSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		
+		// city data
+		$searchmodelkota = new KotaSearch();
+		$dataproviderkota = $searchmodelkota->search(Yii::$app->request->queryParams);
+		
+		// province data
+		$searchmodelpro = new ProvinceSearch();
+		$dataproviderpro = $searchmodelpro->search(Yii::$app->request->queryParams);
+		
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'searchModelcus' => $searchModelcus,
+			'searchmodelkota' => $searchmodelkota,
+			'searchmodelpro' => $searchmodelpro,
+			'dataproviderpro' =>  $dataproviderpro,
             'dataProvider1' => $dataProvider1,
+			'dataproviderkota' => $dataproviderkota,
         ]);
     }
     
@@ -56,6 +73,20 @@ class KategoricusController extends Controller
      * @param string $id
      * @return mixed
      */
+	 
+	  public function actionViewkota($id)
+    {
+        return $this->renderAjax('viewkota', [
+            'model' => $this->findModelkota($id),
+        ]);
+    }
+	 
+	 public function actionViewpro($id)
+    {
+        return $this->renderAjax('viewpro', [
+            'model' => $this->findModelpro($id),
+        ]);
+    }
 	 
 	  public function actionViewcust($id)
     {
@@ -76,6 +107,28 @@ class KategoricusController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
+	   public function actionCreateprovnce()
+    {
+        $model = new Province();
+
+        if ($model->load(Yii::$app->request->post()) ) {
+				
+				if($model->validate())
+				{
+				
+						$model->save();
+				}
+          
+            return $this->redirect(['index']);
+		}
+         else {
+            return $this->renderAjax('_formprovince', [
+                'model' => $model,
+            ]);
+        }
+    }
+	
+	
     public function actionCreate()
     {
         $model = new Kategoricus();
@@ -176,10 +229,14 @@ class KategoricusController extends Controller
         $model = new Customerskat();
 
         if ($model->load(Yii::$app->request->post()) ) {
-            $kddis = Yii::$app->request->post('dis');
+			$kdpro = $model->PROVINCE_ID;
+			$kdcity =  $model->CITY_ID;
+			$kddis = $model->KD_DISTRIBUTOR;
              $kdis = explode('.',$kddis);
+		
             
-            $query = Customers::find()->select('CUST_KD')->where('STATUS <> 3')->orderBy(['CUST_KD'=>SORT_DESC])->one();
+            $query = Customerskat::find()->select('CUST_KD')->where('STATUS <> 3')->orderBy(['CUST_KD'=>SORT_DESC])->one();
+			
                     if(count($query) == 0)
                  { 
                         $nomerkd= 1; 
@@ -188,13 +245,17 @@ class KategoricusController extends Controller
                       $nomerkd = $kd[3]+1;
                 
                      }
+					 
+					 // print_r( str_pad( $nomerkd, "6", "0", STR_PAD_LEFT ));
+			// die();
                      $tgl = date('Y.m.d');
-                     $kode = "CUS.".$kdis[1]."."."CGK.".$tgl.".".str_pad( $nomerkd, "4", "0", STR_PAD_LEFT );
+                     $kode = "CUS.".$kdis[1]."."."CGK.".$tgl."."."-"."0".$kdpro."-".$kdcity.".".str_pad( $nomerkd, "9", "0", STR_PAD_LEFT );
 		$model->CUST_KD = $kode;
+		
               
                 if($model->validate())
             {
-               
+				$model->CORP_ID = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
                 $model->CREATED_BY =  Yii::$app->user->identity->username;
                 $model->CREATED_AT = date("Y-m-d H:i:s");
                 $model->save();
@@ -273,6 +334,48 @@ class KategoricusController extends Controller
             ]);
         }
     }
+	
+	public function actionUpdatekota($id)
+    {
+        $model = $this->findModelkota($id);
+
+        if ($model->load(Yii::$app->request->post()) ) {
+			
+			    if($model->validate())
+                    {
+                    
+                        
+                        $model->save();
+                    }
+		
+             return $this->redirect(['index']);
+        } else {
+            return $this->renderAjax('_formkota', [
+                'model' => $model,
+            ]);
+        }
+    }
+	
+	public function actionUpdatepro($id)
+    {
+        $model = $this->findModelpro($id);
+
+        if ($model->load(Yii::$app->request->post()) ) {
+			
+			    if($model->validate())
+                    {
+                 
+                        
+                        $model->save();
+                    }
+		
+             return $this->redirect(['index']);
+        } else {
+            return $this->renderAjax('_formprovince', [
+                'model' => $model,
+            ]);
+        }
+    }
 
     /**
      * Deletes an existing Kategori model.
@@ -280,6 +383,22 @@ class KategoricusController extends Controller
      * @param string $id
      * @return mixed
      */
+	  // public function actionDeletepro($id)
+    // {
+     	// $model = Province::find()->where(['PROVINCE_ID'=>$id])->one();
+		// $model->STATUS = 3;
+		// $model->save();
+        // return $this->redirect(['index']);
+    // }
+	 
+	  // public function actionDeletekota($id)
+    // {
+     	// $model = Kota::find()->where(['CITY_ID'=>$id])->one();
+		// $model->STATUS = 3;
+		// $model->save();
+        // return $this->redirect(['index']);
+    // }
+	
     public function actionDelete($id)
     {
      	$model = Kategoricus::find()->where(['CUST_KTG'=>$id])->one();
@@ -307,6 +426,23 @@ class KategoricusController extends Controller
      * @return Kategoricus the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
+	  protected function findModelpro($id)
+    {
+        if (($model = Province::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+	  protected function findModelkota($id)
+    {
+        if (($model = Kota::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+	
 	 protected function findModel1($id)
     {
         if (($model = Customerskat::findOne($id)) !== null) {
