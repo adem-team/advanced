@@ -6,10 +6,6 @@ use kartik\grid\GridView;
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\sales\models\Salesorderstatus;
 use lukisongroup\sales\models\Sodetail;
-use kartik\widgets\ActiveForm;
-use yii\helpers\ArrayHelper;
-use lukisongroup\sales\models\Barang;
-use lukisongroup\sales\models\Unitbarang;
 
 /* @var $this yii\web\View */
 /* @var $searchModel lukisongroup\models\esm\ro\RequestorderSearch */
@@ -43,69 +39,6 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		};
     ?>
 </aside -->
- <div class="container">
-  <!-- Trigger the modal with a button -->
-  <button type="button" class="btn btn-info fa fa-plus " data-toggle="modal" data-target="#myModal">&nbsp;Permintaan Barang (SO)</button>
-
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">List Product</h4>
-        </div>
-        <div class="modal-body">
-          
-			<?php
-			$empId = Yii::$app->user->identity->EMP_ID;
-			$dt = Employe::find()->where(['EMP_ID'=>$empId])->all();
-			$jbtan = $dt[0]['JOBGRADE_ID'];
-
-			$form = ActiveForm::begin([
-			'method' => 'post',
-			'action' => ['/sales/sales-order/create'],
-			]);
-
-
-
-			$brgar['Barang ESM'] = $brgs = ArrayHelper::map(Barang::find()->all(), 'KD_BARANG', 'NM_BARANG');
-
-			$unit = ArrayHelper::map(Unitbarang::find()->all(), 'KD_UNIT', 'NM_UNIT');
-			?>
-			<?php echo $form->field($sodetail, 'CREATED_AT')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false); ?>	
-			<?php echo $form->field($sodetail, 'NM_BARANG')->hiddenInput(['value' => ''])->label(false); ?>	
-
-			
-		
-			<?php echo $form->field($sodetail, 'KD_BARANG')->dropDownList($brgar, ['prompt'=>' -- Pilih Salah Satu --','onchange' => '$("#sodetail-nm_barang").val($(this).find("option:selected").text())'])->label('Nama Barang'); ?>
-			<?php echo $form->field($sodetail, 'QTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']); ?>
-			<?php echo $form->field($sodetail, 'NOTE')->textarea(array('rows'=>2,'cols'=>5))->label('Informasi'); ?>
-			
-	
-
-			<div class="row">
-			<div class="col-xs-6">
-			<?php echo Html::submitButton( '<i class="fa fa-floppy-o fa-fw"></i>  Simpan', ['class' => 'btn btn-success']); ?>  
-			<?php // echo Html::a('<i class="fa fa-print fa-fw"></i> Cetak', ['cetakpdf','kd'=>$id], ['target' => '_blank', 'class' => 'btn btn-warning']); ?>
-			</div>
-			</div>
-			<?php
-			ActiveForm::end(); 
-			?>
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
-  
-</div>
 
 <div class="requestorder-index" style="padding:10px;">
 
@@ -113,7 +46,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
     <hr/>
 
     <?php 
-	
+	$empId = Yii::$app->user->identity->EMP_ID;
+	$dt = Employe::find()->where(['EMP_ID'=>$empId])->all();
+	$jbtan = $dt[0]['JOBGRADE_ID'];
 	
 	
 	$gridColumns = [
