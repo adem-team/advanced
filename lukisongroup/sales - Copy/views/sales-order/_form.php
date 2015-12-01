@@ -139,6 +139,10 @@ $ros = Salesorder::find()->joinWith('employe')->where(['KD_RO' => $id])->asArray
 			?>
 			<?php echo $form->field($sodetail, 'CREATED_AT')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false); ?>	
 			<?php echo $form->field($sodetail, 'NM_BARANG')->hiddenInput(['value' => ''])->label(false); ?>	
+
+			<?php echo $form->field($sodetail, 'KD_RO')->hiddenInput(['value' => $id, 'readonly' => true])->label(false); ?>
+
+		
 			<?php echo $form->field($sodetail, 'KD_BARANG')->dropDownList($brgar, ['prompt'=>' -- Pilih Salah Satu --','onchange' => '$("#sodetail-nm_barang").val($(this).find("option:selected").text())'])->label('Nama Barang'); ?>
 			<?php echo $form->field($sodetail, 'QTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']); ?>
 			<?php echo $form->field($sodetail, 'NOTE')->textarea(array('rows'=>2,'cols'=>5))->label('Informasi'); ?>
