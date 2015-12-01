@@ -3,7 +3,7 @@
 namespace lukisongroup\purchasing\models;
 
 use Yii;
-
+use lukisongroup\purchasing\models\Requestorder;
 /**
  * This is the model class for table "r0003".
  *
@@ -43,15 +43,20 @@ class Rodetail extends \yii\db\ActiveRecord
     {
         return [
  //           [['ID','KD_RO', 'KD_BARANG', 'NM_BARANG', 'QTY', 'NO_URUT', 'NOTE', 'STATUS', 'CREATED_AT', 'UPDATED_AT'], 'required'],
-			[['KD_RO', 'QTY','UNIT','KD_BARANG'], 'required'],
-            [['QTY', 'STATUS'], 'integer'],
+			[['KD_RO', 'RQTY','SQTY','UNIT','KD_BARANG'], 'required'],
+            [['STATUS'], 'integer'],
             [['NOTE'], 'string'],
-            [['CREATED_AT', 'UPDATED_AT'], 'safe'],
+            [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['KD_RO', 'KD_BARANG'], 'string', 'max' => 50],
             [['NM_BARANG', 'NO_URUT'], 'string', 'max' => 255]
         ];
     }
 
+	public function getParentro()
+    {
+        return $this->hasOne(Requestorder::className(), ['KD_RO' => 'KD_RO']);
+    }
+	
     /**
      * @inheritdoc
      */
@@ -63,7 +68,8 @@ class Rodetail extends \yii\db\ActiveRecord
             'KD_RO' => 'Kd  Ro',
             'KD_BARANG' => 'Kode  Barang',
             'NM_BARANG' => 'Nm  Barang',
-            'QTY' => 'Quantity',
+            'RQTY' => 'Request Quantity',
+            'SQTY' => 'Submit Quantity',
             'NO_URUT' => 'No  Urut',
             'NOTE' => 'Catatan',
             'STATUS' => 'Status',

@@ -18,8 +18,9 @@ class RodetailSearch extends Rodetail
     public function rules()
     {
         return [
-            [['ID', 'QTY', 'STATUS'], 'integer'],
-            [['KD_RO', 'KD_BARANG', 'NM_BARANG', 'NO_URUT', 'NOTE', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
+            [['ID','STATUS'], 'integer'],
+			[['RQTY','SQTY'], 'safe'],
+            [['parentro.KD_RO','KD_RO', 'KD_BARANG', 'NM_BARANG', 'NO_URUT', 'NOTE', 'CREATED_AT', 'UPDATED_AT'], 'safe']
         ];
     }
 
@@ -32,6 +33,34 @@ class RodetailSearch extends Rodetail
         return Model::scenarios();
     }
 
+	
+	public function searchChildRo($params)
+    {
+		$profile=Yii::$app->getUserOpt->Profile_user();
+        //$query = Pilotproject::find()->Where('sc0001.STATUS<>3 AND DEP_ID="'.$profile->emp->DEP_ID .'"');
+		
+		if($profile->emp->JOBGRADE_ID == 'M' OR $profile->emp->JOBGRADE_ID == 'SM' ){
+			$query = Rodetail::find()
+						->JoinWith('parentro',true,'INNER JOIN')
+						->where("(r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."') OR (r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.KD_DEP = '".$profile->emp->DEP_ID."')");
+        }else{
+			$query = Rodetail::find()
+					->JoinWith('parentro',true,'INNER JOIN')
+					->where("r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."'");
+		}
+		$dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+			//if (!$this->validate()) {
+				//return $dataProvider;
+			//}
+        
+        return $dataProvider;
+		
+    }
+	
     /**
      * Creates data provider instance with search query applied
      *

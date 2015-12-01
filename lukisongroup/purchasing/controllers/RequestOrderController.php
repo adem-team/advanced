@@ -70,13 +70,13 @@ class RequestOrderController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new RequestorderSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-		
-        return $this->render('index', [
+        $searchModel = new RodetailSearch();
+        $dataProvider = $searchModel->searchChildRo(Yii::$app->request->queryParams);
+		  return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+		
     }
 
 	
