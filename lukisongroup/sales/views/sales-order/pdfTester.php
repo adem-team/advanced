@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
-
+use lukisongroup\sales\models\Sodetail;
 
 $this->title = $reqro->KD_RO;
 $this->params['breadcrumbs'][] = ['label' => 'Sales Order', 'url' => ['index']];
@@ -61,10 +61,13 @@ $this->params['breadcrumbs'][] = $this->title;
             </tr>
         </thead>
 		
-        <?php $no=0; foreach($reqro as $ro){
-       //  $sts = $ro->STATUS; if($sts == 0 OR $sts == 3 ){ } else 
-      //   { 
-         	$no=$no+1; ?>
+        <?php 
+           $no=1; 
+			$id=$reqro->KD_RO;
+			//$reqro = Sodetail::find()->where(['KD_RO' => $kd])->asArray()->all();
+			$model = Sodetail::find()->where(['KD_RO' => $id])->all();
+			foreach($model as $ro){
+         	?>
             <tr>
                 <td><?php echo $no; ?></td>
                 <td><?php echo $ro->NM_BARANG; ?></td>
@@ -73,7 +76,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <td><?php echo $ro->UNIT; ?></td>
                 <td><?php echo $ro->NOTE; ?></td>
             </tr>
-        <?php }
+        <?php 
+      $no++;
+    }
         // } ?>
     </table>
 
@@ -95,3 +100,7 @@ $this->params['breadcrumbs'][] = $this->title;
   </div>
 
 
+<?php 
+
+
+?>

@@ -137,6 +137,7 @@ $ros = Salesorder::find()->joinWith('employe')->where(['KD_RO' => $id])->asArray
 
 			$unit = ArrayHelper::map(Unitbarang::find()->all(), 'KD_UNIT', 'NM_UNIT');
 			?>
+			<?php echo $form->field($sodetail, 'KD_RO')->hiddenInput(['value' => $id, 'readonly' => true])->label(false); ?>
 			<?php echo $form->field($sodetail, 'CREATED_AT')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false); ?>	
 			<?php echo $form->field($sodetail, 'NM_BARANG')->hiddenInput(['value' => ''])->label(false); ?>	
 			<?php echo $form->field($sodetail, 'KD_BARANG')->dropDownList($brgar, ['prompt'=>' -- Pilih Salah Satu --','onchange' => '$("#sodetail-nm_barang").val($(this).find("option:selected").text())'])->label('Nama Barang'); ?>

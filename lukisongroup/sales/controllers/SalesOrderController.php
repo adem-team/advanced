@@ -207,55 +207,45 @@ class SalesOrderController extends Controller
         ]);
     }
     
-    public function actionSimpan()
+    public function actionSimpan($id)
     { 
-       $connection = \Yii::$app->db2;
-        $cons = \Yii::$app->db_esm;
-        
-        $model = new Salesorder();
-        $reqorder = new Soatribute();
-        $rodetail = new Sodetail();
-        $rostatus = new Salesorderstatus();
-        
-        $empId = Yii::$app->user->identity->EMP_ID;
-        $dt = Employe::find()->where(['EMP_ID'=>$empId])->all();
-        
-//          ------------ TAHUN.BULAN.TANGGAL.RO.NO URUT (4DIGIT)   == > 2015.06.30.RO.0001              
-        $qwe = Salesorder::find()->select('ID')->orderBy(['ID' => SORT_DESC])->limit(1)->all();
-        if(count($qwe) == 0){ $lastKd = 0; } else { $lastKd = $qwe[0]['ID']; }
-        
-        $nKD = $lastKd +1;
-        $pnjg = strlen($nKD);
-        if($pnjg == 1){ $kd = "000".$nKD; }
-        else if($pnjg == 2){ $kd = "00".$nKD; }
-        else if($pnjg == 3){ $kd = "0".$nKD; }
-        else if($pnjg >= 4 ){ $kd = $nKD; }
-        
-        $kode = date('Y.m.d').'.SO.'.$kd;
-        
-        $model->KD_RO = $kode;
-        $model->ID_USER = $empId;
-        $model->KD_DEP = $dt[0]['DEP_ID'];
-        $model->KD_CORP = $dt[0]['EMP_CORP_ID'];
-        $model->CREATED_AT = date("Y-m-d H:i:s");
-        
+        $sodetail = new Sodetail();
+        $hsl = Yii::$app->request->post();
+        $created = $hsl['Sodetail']['CREATED_AT'];
+        $nmBarang = $hsl['Sodetail']['NM_BARANG'];
+        $kdRo = $hsl['Sodetail']['KD_RO'];
+        $kdBarang = $hsl['Sodetail']['KD_BARANG'];
+        $qty = $hsl['Sodetail']['QTY'];
+        $note = $hsl['Sodetail']['NOTE'];
 
-        $jab = $dt[0]['DEP_ID'];
-        $que = "SELECT EMP_ID FROM a0001 WHERE (DEP_ID='$jab' ) AND (GF_ID='3') AND EMP_STS<>'3'";
-        $modelss = $connection->createCommand($que);
-        $users = $modelss->queryAll();
+        $ck = Sodetail::find()->where(['KD_BARANG'=>$kdBarang, 'KD_RO'=>$kdRo])->andWhere('STATUS <> 3')->one();
 
-        if(count($users) != 0){
-            foreach($users as $usr){ 
-                $isi[] = ['KD_RO'=>$kode,'ID_USER'=>$usr['EMP_ID'],'STATUS'=>'0'];
+        if(count($ck) == 1){
+            \Yii::$app->getSession()->setFlash('error', '<br/><br/><p class="bg-danger" style="padding:15px"><b>Barang Sudah di Masukkan</b></p>');
+            return $this->redirect(['buatro','id'=>$id]);
+        } else {
+
+            $kdBrg = $hsl['Sodetail']['KD_BARANG'];
+            $ckBrg = explode('.', $kdBrg);
+            if($ckBrg[0] == 'BRG'){
+                $kdUnit = Barang::find('KD_UNIT')->where(['KD_BARANG'=>$kdBrg])->one();
+            } else if($ckBrg[0] == 'BRGU') {
+                $kdUnit = Barangumum::find('KD_UNIT')->where(['KD_BARANG'=>$kdBrg])->one();
             }
 
-            $model->save(); 
-            $cons->createCommand()->batchInsert( Salesorderstatus::tableName(), ['KD_RO', 'ID_USER', 'STATUS'], $isi )->execute();  
-            return $this->redirect(['buatro','id'=>$kode]);
+            $sodetail->UNIT = $kdUnit->KD_UNIT;
+            $sodetail->CREATED_AT = $created;
+            $sodetail->NM_BARANG = $nmBarang;
+            $sodetail->KD_RO = $kdRo;
+            $sodetail->KD_BARANG = $kdBarang;
+            $sodetail->QTY = $qty;
+            $sodetail->NOTE = $note;
+
+            $sodetail->save();
+
+            \Yii::$app->getSession()->setFlash('error', '<br/><br/><p class="bg-success" style="padding:15px"><b>Barang berhasil di Masukkan</b></p>');
+            return $this->redirect(['buatro','id'=>$id]);
         }
-        
-        return $this->redirect([' ']);
         
     }
     
@@ -391,7 +381,6 @@ class SalesOrderController extends Controller
     public function actionCetakpdf($kd){
         $ro = new Salesorder();
         $reqro = Salesorder::find()->where(['KD_RO' => $kd])->one();
-      
         $detro = $reqro->detro;
         $employ = $reqro->employe;
         $mpdf=new mPDF();
