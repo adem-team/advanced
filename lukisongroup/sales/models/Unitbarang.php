@@ -27,7 +27,7 @@ class Unitbarang extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'b1003';
+        return 'dbc002.ub0001';
     }
 
     /**

@@ -149,7 +149,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									],	
 									[
 										'content' => 'Sales Order',
-										'url' => '/widget/rso',
+										'url' => '/sales/sales-order',
 										'badge' => '14'
 									],											
 									[
