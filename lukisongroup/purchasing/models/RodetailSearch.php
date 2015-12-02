@@ -5,7 +5,7 @@ namespace lukisongroup\purchasing\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use lukisongroup\purchasing\models\Rodetail;
+//use lukisongroup\purchasing\models\Rodetail;
 
 /**
  * RodetailSearch represents the model behind the search form about `app\models\esm\ro\Rodetail`.
@@ -15,12 +15,21 @@ class RodetailSearch extends Rodetail
     /**
      * @inheritdoc
      */
+	public $parentro;
+	
+	public function attributes()
+	{
+		/*Author -ptr.nov- add related fields to searchable attributes */
+		return array_merge(parent::attributes(), ['parentro.KD_RO','parentro.CREATED_AT']);
+	}
+	
+	
     public function rules()
     {
         return [
             [['ID','STATUS'], 'integer'],
-			[['RQTY','SQTY'], 'safe'],
-            [['parentro.KD_RO','KD_RO', 'KD_BARANG', 'NM_BARANG', 'NO_URUT', 'NOTE', 'CREATED_AT', 'UPDATED_AT'], 'safe']
+			[['parentro','RQTY','SQTY'], 'safe'],
+            [['parentro.KD_RO','parentro.CREATED_AT','KD_RO', 'KD_BARANG', 'NM_BARANG', 'NO_URUT', 'NOTE', 'CREATED_AT', 'UPDATED_AT'], 'safe']
         ];
     }
 
@@ -53,10 +62,31 @@ class RodetailSearch extends Rodetail
         ]);
 
         $this->load($params);
-			//if (!$this->validate()) {
-				//return $dataProvider;
-			//}
-        
+			if (!$this->validate()) {
+				return $dataProvider;
+			}
+        $query->andFilterWhere([
+            'RQTY' => $this->RQTY,
+			'SQTY' => $this->SQTY,
+            'STATUS' => $this->STATUS,
+            'CREATED_AT' => $this->CREATED_AT,
+            'UPDATED_AT' => $this->UPDATED_AT,
+        ]);
+		
+		$query->andFilterWhere(['like', 'r0001.KD_RO', $this->getAttribute('parentro.KD_RO')])
+			//->andFilterWhere(['like', 'r0001.CREATED_AT',$this->getAttribute('parentro.CREATED_AT')])
+            ->andFilterWhere(['like', 'KD_BARANG', $this->KD_BARANG])
+            ->andFilterWhere(['like', 'NM_BARANG', $this->NM_BARANG])
+            ->andFilterWhere(['like', 'NO_URUT', $this->NO_URUT])
+            ->andFilterWhere(['like', 'NOTE', $this->NOTE]);
+			
+		if($this->getAttribute('parentro.CREATED_AT')!=''){
+            $date_explode = explode(" - ", $this->getAttribute('parentro.CREATED_AT'));
+            $date1 = trim($date_explode[0]);
+            $date2= trim($date_explode[1]);
+            $query->andFilterWhere(['between','r0001.CREATED_AT', $date1,$date2]);
+        } 
+		
         return $dataProvider;
 		
     }
