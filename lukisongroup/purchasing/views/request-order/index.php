@@ -3,13 +3,14 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
+use yii\widgets\Pjax;
+use yii\helpers\ArrayHelper;
 use lukisongroup\master\models\Unitbarang;
-
+use kartik\daterange\DateRangePicker;
 
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\purchasing\models\Requestorderstatus;
 use lukisongroup\purchasing\models\Rodetail;
-use yii\widgets\ListView;
 /* @var $this yii\web\View */
 /* @var $searchModel lukisongroup\models\esm\ro\RequestorderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -26,65 +27,6 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 //$empId = Yii::$app->user->identity->EMP_ID;
 			/* $dt = Employe::find()->where(['EMP_ID'=>$empId])->all();
 			$jbtan = $dt[0]['JOBGRADE_ID'];		 */	
-			$gridColumns = [
-				[
-					'attribute'=>'parentro.KD_RO',
-					//'mergeHeader'=>true,
-					'group'=>true,
-				],
-				[
-					'label'=>'Tanggal Pembuatan',
-					'attribute'=>'parentro.CREATED_AT',
-					//'mergeHeader'=>true,
-					'group'=>true,
-				],				
-				[
-					'label'=>'Nama Barang',
-					'attribute'=>'NM_BARANG',
-					//'mergeHeader'=>true,
-				],
-				[
-					'label'=>'Jumlah Permintaan',
-					'attribute'=>'RQTY',
-					//'mergeHeader'=>true,
-				],
-				[
-					'attribute'=>'UNIT',
-					'value'=>function ($model, $key, $index, $widget) { 
-						$masterUnit = Unitbarang::find()->where(['KD_UNIT'=>$model->UNIT])->one();
-						return $masterUnit->NM_UNIT;
-					},
-				],
-				
-				[
-					'format' => 'raw',
-					'mergeHeader'=>true,
-					'hAlign'=>'center',
-					'value' => function ($model) {
-						//$rodetail = new Rodetail();
-						$dt = Rodetail::find()->where(['KD_RO'=>$model->KD_RO])->andWhere('STATUS <> 3')->count(); //ptr.nov Count RO
-						$cn = Rodetail::find()->where(['KD_RO'=>$model->KD_RO, 'STATUS'=>1])->count(); //ptr.nov Count RO Disetujui
-						
-						if ($model->STATUS == 1) {
-							return Html::a('<i class="fa fa-check"></i> &nbsp;&nbsp;&nbsp;'.$cn.' Dari '.$dt, ['proses','kd'=>$model->KD_RO],['class'=>'btn btn-success btn-sm', 'title'=>'Detail']);
-						} else if ($model->STATUS == 0) {
-							return Html::a('<i class="fa fa-navicon"></i> &nbsp;&nbsp;&nbsp;&nbsp;Proses', ['proses','kd'=>$model->KD_RO],['class'=>'btn btn-danger btn-sm', 'title'=>'Detail']);
-						} 
-					},
-				],  
-				[
-					'class' => 'yii\grid\ActionColumn',
-					'template' => '{tambah} {link} {edit} {delete} {cetak}',
-					'buttons' => [
-						'tambah' => function ($url,$model) { return Html::a('', ['add','kd'=>$model->KD_RO],['class'=>'fa fa-plus fa-fw', 'title'=>'Add']);},
-						'link' => function ($url,$model) { return Html::a('', ['view','kd'=>$model->KD_RO],['class'=>'fa fa-info-circle fa-lg', 'title'=>'Detail']);},
-						'edit' => function ($url,$model) { return Html::a('', ['buatro','id'=>$model->KD_RO],['class'=>'fa fa-pencil-square-o fa-lg', 'title'=>'Ubah RO']); },
-						'delete' => function ($url,$model) { if($model->STATUS == 0){ return Html::a('', ['hapusro','id'=>$model->KD_RO],['class'=>'fa fa-trash-o fa-lg', 'title'=>'Hapus RO','data-confirm'=>'Anda yakin ingin menghapus RO ini?']); } },
-						'cetak' => function ($url,$model) { return Html::a('', ['cetakpdf','kd'=>$model->KD_RO],[ 'class'=>'fa fa-print fa-lg', 'target' => '_blank', 'title'=>'Cetak RO', 'data-pjax' => '0',]);},
-				],
-		],	
-				
-			];
 
 ?>
 
@@ -96,9 +38,94 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 
 			<?php 		
 				echo GridView::widget([
+					'id'=>'ro',
 					'dataProvider'=> $dataProvider,
-					//'filterModel' => $searchModel,
-					'columns' => $gridColumns,
+					'filterModel' => $searchModel,
+					'beforeHeader'=>[
+						[
+							'columns'=>[
+								['content'=>'Request Order', 'options'=>['colspan'=>2, 'class'=>'text-center success']], 
+								['content'=>'List Details', 'options'=>['colspan'=>6, 'class'=>'text-center warning']], 
+							],
+							'options'=>['class'=>'skip-export'] // remove this row from export
+						]
+					],
+					'columns' => [
+							[
+								'attribute'=>'parentro.KD_RO',
+								//'mergeHeader'=>true,
+								'group'=>true,
+							],
+							[
+								'label'=>'Tanggal Pembuatan',
+								'attribute'=>'parentro.CREATED_AT',
+								//'mergeHeader'=>true,
+								'group'=>true,								
+								'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
+								'filterWidgetOptions' =>([
+									'attribute' =>'parentro.CREATED_AT',
+									'presetDropdown'=>TRUE,
+									'convertFormat'=>true,
+									'pluginOptions'=>[
+										'id'=>'tglro',
+										'format'=>'Y/m/d',
+										'separator' => 'TO',
+										'opens'=>'left'
+									]									
+								]),
+							],			
+							[
+								'class' => 'yii\grid\SerialColumn'
+							],					
+							[
+								'label'=>'Nama Barang',
+								'attribute'=>'NM_BARANG',
+								//'mergeHeader'=>true,
+							],
+							[
+								'label'=>'Qty',
+								'attribute'=>'RQTY',
+								//'mergeHeader'=>true,
+							],
+							[
+								'attribute'=>'UNIT',
+								'mergeHeader'=>true,
+								'value'=>function ($model, $key, $index, $widget) { 
+									$masterUnit = Unitbarang::find()->where(['KD_UNIT'=>$model->UNIT])->one();
+									return $masterUnit->NM_UNIT;
+								},
+							],							
+							[
+								'label'=>'Status',
+								'format' => 'raw',
+								'mergeHeader'=>true,
+								'hAlign'=>'center',
+								'value' => function ($model) {
+									//$rodetail = new Rodetail();
+									$dt = Rodetail::find()->where(['KD_RO'=>$model->KD_RO])->andWhere('STATUS <> 3')->count(); //ptr.nov Count RO
+									$cn = Rodetail::find()->where(['KD_RO'=>$model->KD_RO, 'STATUS'=>1])->count(); //ptr.nov Count RO Disetujui
+									
+									if ($model->STATUS == 1) {
+										return Html::a('<i class="fa fa-check"></i> &nbsp;&nbsp;&nbsp;'.$cn.' Dari '.$dt, ['proses','kd'=>$model->KD_RO],['class'=>'btn btn-success btn-sm', 'title'=>'Detail']);
+									} else if ($model->STATUS == 0) {
+										return Html::a('<i class="fa fa-navicon"></i> &nbsp;&nbsp;&nbsp;&nbsp;Proses', ['proses','kd'=>$model->KD_RO],['class'=>'btn btn-danger btn-sm', 'title'=>'Detail']);
+									} 
+								},
+							],  
+							[
+								'header'=>'Action',	
+								'class' =>'yii\grid\ActionColumn',
+								'template' => '{tambah} {link} {edit} {delete} {cetak}',
+								'buttons' => [									
+									'tambah' => function ($url,$model) { return Html::a('', ['add','kd'=>$model->KD_RO],['class'=>'fa fa-plus fa-fw', 'title'=>'Add']);},
+									'link' => function ($url,$model) { return Html::a('', ['view','kd'=>$model->KD_RO],['class'=>'fa fa-info-circle fa-lg', 'title'=>'Detail']);},
+									'edit' => function ($url,$model) { return Html::a('', ['buatro','id'=>$model->KD_RO],['class'=>'fa fa-pencil-square-o fa-lg', 'title'=>'Ubah RO']); },
+									'delete' => function ($url,$model) { if($model->STATUS == 0){ return Html::a('', ['hapusro','id'=>$model->KD_RO],['class'=>'fa fa-trash-o fa-lg', 'title'=>'Hapus RO','data-confirm'=>'Anda yakin ingin menghapus RO ini?']); } },
+									'cetak' => function ($url,$model) { return Html::a('', ['cetakpdf','kd'=>$model->KD_RO],[ 'class'=>'fa fa-print fa-lg', 'target' => '_blank', 'title'=>'Cetak RO', 'data-pjax' => '0',]);},
+								],
+							],	
+							
+					],
 					/* 'rowOptions' => function ($model, $index, $widget, $grid) use($empId){
 						
 						$ro = new Requestorderstatus();
@@ -112,11 +139,23 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 							}
 						}
 					},			 */
-					
 					'pjax'=>true,
-					'toolbar' => [
-						'{export}',
+					'pjaxSettings'=>[
+						'options'=>[
+							'enablePushState'=>false,
+							'id'=>'ro',
+						   ],						  
 					],
+					'hover'=>true, //cursor select
+					'responsive'=>true,
+					'responsiveWrap'=>true,
+					'bordered'=>true,
+					'striped'=>'4px',
+					'autoXlFormat'=>true,
+					'export' => false,
+					/* 'toolbar' => [
+						'{export}',
+					], */
 					'panel' => [
 						'heading'=>'<h3 class="panel-title">'. Html::encode($this->title).'</h3>',
 						'type'=>'warning',
@@ -126,16 +165,16 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 								'method' => 'post',
 							],
 						]),
-						'showFooter'=>false,
+						//'showFooter'=>false,
 					],		
 					
-					'export' =>['target' => GridView::TARGET_BLANK],
+					/* 'export' =>['target' => GridView::TARGET_BLANK],
 					'exportConfig' => [
 						GridView::PDF => [ 'filename' => 'permintaan-barang-'.date('ymdHis') ],
 						GridView::EXCEL => [ 'filename' => 'permintaan-barang-'.date('ymdHis') ],
 					],
 					
-					'options'=>['enableRowClick'=>true],
+					'options'=>['enableRowClick'=>true] */
 				]);
 				
 			?>

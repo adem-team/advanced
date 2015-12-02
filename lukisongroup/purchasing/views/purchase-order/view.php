@@ -116,11 +116,11 @@ $this->params['breadcrumbs'][] = $this->title;
             $a=0; foreach ($pod as $key => $val) { $a=$a+1;
 
             $ckBrg = explode('.', $val->KD_BARANG);
-            if($ckBrg[0] == 'BRG'){
+            /* if($ckBrg[0] == 'BRG'){
                 $nmBrg = Barang::find('NM_BARANG')->where(['KD_BARANG'=>$val->KD_BARANG])->one();
-            } else if($ckBrg[0] == 'BRGU') {
+            } else if($ckBrg[0] == 'BRGU') { */
                 $nmBrg = Barangumum::find('NM_BARANG')->where(['KD_BARANG'=>$val->KD_BARANG])->one();
-            }
+           // }
 
             $ckUnit = preg_replace("/[^A-Z\']/", '', $val->UNIT);
             if($ckUnit == 'U'){
