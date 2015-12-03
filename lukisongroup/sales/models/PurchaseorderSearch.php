@@ -1,11 +1,11 @@
 <?php
 
-namespace lukisongroup\purchasing\models;
+namespace lukisongroup\sales\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use lukisongroup\purchasing\models\Purchaseorder;
+use lukisongroup\sales\models\Purchaseorder;
 use lukisongroup\hrd\models\Employe;
 
 /**
@@ -28,11 +28,7 @@ class PurchaseorderSearch extends Purchaseorder
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function scenarios()
-    {
+    /**S
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }

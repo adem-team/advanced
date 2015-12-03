@@ -32,10 +32,10 @@ function submitform()
 </script>
 
     <!-- h1>< ?= Html::encode($this->title) ?></h1 -->
-<?php if( $kr == 'HR-02'){ ?>
+<?php //if( $kr == 'HR-02'){ ?>
 	<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus fa-fw"></i> Buat PO</button>
-	<br/><br/>
-<?php } ?>
+	<!--<br/><br/>-->
+<?php //} ?>
 
 <?php 
 	$gridColumns = [
@@ -132,7 +132,7 @@ function submitform()
     			<?php $form = ActiveForm::begin([
 					'type' => ActiveForm::TYPE_HORIZONTAL,
 					'method' => 'post',
-					'action' => ['/purchasing/purchase-order/simpanpo'],
+					'action' => ['/sales/purchase-order/simpanpo'],
 				]); ?>
 				  <div class="modal-body">
 					
