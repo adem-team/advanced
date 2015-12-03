@@ -131,7 +131,7 @@ class PurchaseOrderController extends Controller
 
                 $command->insert('p0002', [
                     'KD_PO'=> $kdpo, 
-                    'QTY'=> $rd->QTY, 
+                    'QTY'=> $rd->SQTY, 
                     'UNIT'=> $rd->UNIT,
                     'STATUS'=> 0,
                     'KD_BARANG'=> $rd->KD_BARANG,
@@ -143,7 +143,7 @@ class PurchaseOrderController extends Controller
                     'KD_RO'=> $tes['kdro'], 
                     'ID_DET_RO'=> $pp[1],
                     'ID_DET_PO'=> $id,
-                    'QTY'=> $rd->QTY, 
+                    'QTY'=> $rd->SQTY, 
                     'UNIT'=> $rd->UNIT,
                     'STATUS'=>1,
                     ]
@@ -162,13 +162,13 @@ class PurchaseOrderController extends Controller
                         'KD_RO'=> $tes['kdro'], 
                         'ID_DET_RO'=> $pp[1],
                         'ID_DET_PO'=> $ckpo->ID,
-                        'QTY'=> $rd->QTY, 
+                        'QTY'=> $rd->SQTY, 
                         'UNIT'=> $rd->UNIT,
                         'STATUS'=>1,
                         ]
                     )->execute();
                     
-                    $ttl = $rd->QTY + $ckpo->QTY;
+                    $ttl = $rd->SQTY + $ckpo->QTY;
                     $idpo = $ckpo->ID;
                     $command->update('p0002', ['QTY'=>$ttl], "ID='$idpo'")->execute();
                 }
@@ -188,7 +188,7 @@ class PurchaseOrderController extends Controller
         $hsl = 0;
         $idpo = $post['idpo'];
         for($a=0; $a<=$ttl-1; $a++){
-            $qty = $post['qty'][$a];
+            $qty = $post['sqty'][$a];
             $ket = $post['ket'][$a];
             $id = $post['id'][$a];
 
