@@ -51,7 +51,7 @@ $form = ActiveForm::begin([
 	    <tr>
 	    	<td><?php echo $a; ?></td>
 	      	<td><?php echo $isipo->NM_BARANG; ?></td>
-	      	<td><?php echo $isipo->QTY; ?></td>
+	      	<td><?php echo $isipo->SQTY; ?></td>
 	      	<td>
 		      	<?php 
 		      		$ckUnit = preg_replace("/[^A-Z\']/", '', $isipo->UNIT);
