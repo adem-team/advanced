@@ -39,7 +39,10 @@ class Customerskat extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+	 public $PROVINCE_ID;
+	 public $CITY_ID;
 	  public $parent;
+	  public $coordinate;
     public static function tableName()
     {
         return 'c0001';
@@ -59,7 +62,7 @@ class Customerskat extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['CUST_KD', 'CUST_NM','STATUS'], 'required'],
+            [[ 'CUST_NM','JOIN_DATE'], 'required'],
             [['CUST_KTG', 'TLP1', 'TLP2', 'FAX', 'STT_TOKO', 'STATUS'], 'integer'],
             [['JOIN_DATE', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['ALAMAT', 'NOTE'], 'string'],
@@ -76,11 +79,14 @@ class Customerskat extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+		'KD_DISTRIBUTOR' => 'DISTRIBUTOR',
+			'CITY_ID' => 'CITY',
+			'PROVINCE_ID' => 'PROVINCE',
             'CUST_KD' => 'Cust  Kd',
             'CUST_KD_ALIAS' => 'Cust  Kd  Alias',
             'CUST_NM' => 'Cust  Nm',
             'CUST_GRP' => 'Cust  Grp',
-            'CUST_KTG' => 'Cust  Ktg',
+            'CUST_KTG' => 'Customer Kategory',
             'JOIN_DATE' => 'Join  Date',
             'MAP_LAT' => 'Map  Lat',
             'MAP_LNG' => 'Map  Lng',

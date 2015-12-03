@@ -39,9 +39,42 @@ class KategoricusSearch extends Kategoricus
      *
      * @return ActiveDataProvider
      */
+	 
+	    public function searchparent($params)
+    {
+		
+        $queryp = Kategoricus::find()->where('STATUS <> 0')
+														 ->andwhere('CUST_KTG_PARENT = 0');
+        $dataProviderparent= new ActiveDataProvider([
+            'query' => $queryp,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProviderparent;
+        }
+
+           $queryp->andFilterWhere([
+            'CUST_KTG' => $this->CUST_KTG,
+            'CUST_KTG_PARENT' => $this->CUST_KTG_PARENT,
+            'CREATED_AT' => $this->CREATED_AT,
+            'UPDATED_AT' => $this->UPDATED_AT,
+            'STATUS' => $this->STATUS,
+        ]);
+
+        $queryp->andFilterWhere(['like', 'CUST_KTG_NM', $this->CUST_KTG_NM])
+            ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
+            ->andFilterWhere(['like', 'UPDATED_BY', $this->UPDATED_BY]);
+
+        return $dataProviderparent;
+    }
+	
     public function search($params)
     {
-        $query = Kategoricus::find()->where('STATUS <> 3');;
+        $query = Kategoricus::find()->where('STATUS <> 3');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
