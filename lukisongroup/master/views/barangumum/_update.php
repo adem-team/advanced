@@ -73,14 +73,6 @@ use kartik\widgets\FileInput;
     ],
 ]);?>
      
-    <?=$form->field($model, 'KD_SUPPLIER')->widget(Select2::classname(), [
-    'data' => $dropsuplier,
-    'options' => ['placeholder' => 'Pilih KD SUPPLIER ...'],
-    'pluginOptions' => [
-        'allowClear' => true
-    ],
-]);?>
-
     <?= $form->field($model, 'PARENT')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'HPP')->textInput() ?>

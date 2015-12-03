@@ -20,26 +20,24 @@ $this->title = Yii::t('app', 'Umum - Barang ');
      <?php
      
 $gridColumns = [
-
-            ['class' => 'yii\grid\SerialColumn'],
-                          'KD_BARANG',
-            ['class'=>'kartik\grid\EditableColumn',
-                'attribute' => 'NM_BARANG'],    
-                          'HARGA',
-                          'HPP',
-                         'BARCODE',
-     [
-				
+			['class' => 'yii\grid\SerialColumn'],
+			[				
                'attribute' => 'IMAGE',
                'format' => 'html',
+			   'mergeHeader'=>true,
                'value'=>function($data){
                             return Html::img(Yii::$app->urlManager->baseUrl.'/upload/barangumum/' . $data->IMAGE, ['width'=>'100']);
                         },
             ],  
-   
-                         'NOTE',
-          
-			
+            'KD_BARANG',
+            [
+				'class'=>'kartik\grid\EditableColumn',
+                'attribute' => 'NM_BARANG'
+			],    
+		    'HARGA',
+		    'HPP',
+		//  'BARCODE',
+		    'NOTE',
 			['class' => 'yii\grid\ActionColumn', 
 					'template' => '{view}{update}{delete}',
                                         'contentOptions'=>[
@@ -233,9 +231,9 @@ $this->registerJs("
                             'header' => '<h4 class="modal-title">LukisonGroup</h4> ',
                         
                            
-                            'headerOptions'=>[
+                            /* 'headerOptions'=>[
                                     'style'=>'background-color:blue;'
-                            ],
+                            ], */
                    
                                  
                              ]);

@@ -102,7 +102,7 @@ class Barangumum extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['KD_BARANG','HPP','HARGA','NM_BARANG','STATUS','KD_TYPE','KD_KATEGORI','KD_UNIT', 'KD_SUPPLIER','KD_CORP'], 'required'],
+            [['KD_BARANG','NM_BARANG','STATUS','KD_TYPE','KD_KATEGORI','KD_UNIT','KD_CORP'], 'required'],
             [['NM_BARANG','NOTE'],'match','pattern'=> '/^[A-Za-z0-9_ ]+$/u','message'=> 'only [a-zA-Z0-9_].'],
             [['HPP', 'HARGA'], 'number'],
             [['NOTE', 'DATA_ALL'], 'string'],

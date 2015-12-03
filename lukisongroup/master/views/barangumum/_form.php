@@ -73,24 +73,15 @@ use kartik\widgets\FileInput;
     ],
 ]);?>
      
-    <?=$form->field($model, 'KD_SUPPLIER')->widget(Select2::classname(), [
-    'data' => $dropsuplier,
-    'options' => ['placeholder' => 'Pilih KD SUPPLIER ...'],
-    'pluginOptions' => [
-        'allowClear' => true
-    ],
-]);?>
+   <?php //$form->field($model, 'PARENT')->textInput(['maxlength' => true]) ?>
 
+    <?php // $form->field($model, 'HPP')->textInput() ?>
 
-    <?= $form->field($model, 'PARENT')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'HPP')->textInput() ?>
-
-    <?= $form->field($model, 'HARGA')->textInput() ?>
+    <?php // $form->field($model, 'HARGA')->textInput() ?>
                  
                
 
-    <?= $form->field($model, 'BARCODE')->textInput(['maxlength' => true]) ?>
+    <?php // $form->field($model, 'BARCODE')->textInput(['maxlength' => true]) ?>
 
     <?php echo $form->field($model, 'image')->widget(FileInput::classname(), [
     'options'=>['accept'=>'image/*'],
@@ -100,9 +91,9 @@ use kartik\widgets\FileInput;
               
     <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'KD_CAB')->textInput(['maxlength' => true]) ?>
+    <?php // $form->field($model, 'KD_CAB')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'KD_DEP')->textInput(['maxlength' => true]) ?>
+    <?php // $form->field($model, 'KD_DEP')->textInput(['maxlength' => true]) ?>
     
     <?= $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']) ?>
 

@@ -88,10 +88,10 @@ $this->title = Yii::t('app', 'Umum - Barang Detail ');  /* title pada header pag
 				'value' => $model->unit->NM_UNIT,
 			],
 			
-			[
+			/* [
 				'label' => 'Suplier',
 				'value' => $model->suplier->NM_SUPPLIER,
-			],
+			], */
 			
 //			'KD_DISTRIBUTOR',
 			'PARENT',
