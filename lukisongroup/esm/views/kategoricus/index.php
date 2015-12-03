@@ -25,7 +25,101 @@ $this->params['breadcrumbs'][] = $this->title;
 
 </div>
 <?php
+$tabparent = 
+\kartik\grid\GridView::widget([
+  'dataProvider' =>$dataProviderparent,
+  'filterModel' =>$searchModel,
+   'columns'=>[
+       ['class'=>'yii\grid\SerialColumn'],
+       
+		     'CUST_KTG_NM',
+   
+     [ 'class' => 'yii\grid\ActionColumn',
+                'template' => '{view}{update}',
+                        'header'=>'Action',
+                        'buttons' => [
+                            'view' =>function($url, $model, $key){
+                                    return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px">View </button>',
+                                                                ['viewkota','id'=> $model->CUST_KTG],[
+                                                                'data-toggle'=>"modal",
+                                                                'data-target'=>"#viewparent",
+                                                                'data-title'=> $model->CUST_KTG_NM,
+                                                                ]);
+                            },
+                               
+                             'update' =>function($url, $model, $key){
+                                    return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px ">Update </button>',
+                                                                ['updatekota','id'=>$model->CUST_KTG],[
+                                                                'data-toggle'=>"modal",
+                                                                'data-target'=>"#formparent",
+                                                                'data-title'=> $model->CUST_KTG_NM,
+                                                                ]);
+                            },
+                              
+                ],
+            ],
+                                    ],
+                                    
+                                    
+	 
+		
+        
 
+    
+    'panel'=>[
+          
+            'type' =>GridView::TYPE_SUCCESS,//TYPE_WARNING, //TYPE_DANGER, 
+                                         //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
+            //'after'=> Html::a('<i class="glyphicon glyphicon-plus"></i> Add', '#', ['class'=>'btn btn-success']) . ' ' .
+                //Html::submitButton('<i class="glyphicon glyphicon-floppy-disk"></i> Save', ['class'=>'btn btn-primary']) . ' ' .
+            //    Html::a('<i class="glyphicon glyphicon-remove"></i> Delete  ', '#', ['class'=>'btn btn-danger'])
+			/*
+			'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create {modelClass}',
+					['modelClass' => 'Employe',]),
+					['create'], ['class' => 'btn btn-success']),
+			*/
+			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
+						['modelClass' => 'Barangumum',]),'/esm/kategoricus/createparent',[
+							'data-toggle'=>"modal",
+								'data-target'=>"#formparent",
+                                    'id'=>'modlparent',
+									'class' => 'btn btn-success'						
+												]),
+                              
+  
+                              
+                    
+        ],
+        'pjax'=>true,
+        'pjaxSettings'=>[
+            'options'=>[
+                'enablePushState'=>false,
+                'id'=>'active8',
+                //'formSelector'=>'ddd1',
+                //'options'=>[
+                //    'id'=>'active'
+               // ],
+        ],
+        'hover'=>true, //cursor select
+        'responsive'=>true,
+        'responsiveWrap'=>true,
+        'bordered'=>true,
+        'striped'=>'4px',
+        'autoXlFormat'=>true,
+        'export'=>[//export like view grid --ptr.nov-
+            'fontAwesome'=>true,
+            'showConfirmAlert'=>false,
+            'target'=>GridView::TARGET_BLANK
+        ],
+
+    ],
+       // 'floatHeaderOptions' => ['scrollingTop' => $scrollingTop],
+       // 'containerOptions' => ['style' => 'overflow: auto'],
+    //'persistResize'=>true,
+        //'responsiveWrap'=>true,
+        //'floatHeaderOptions'=>['scrollContainer'=>'25'],
+
+    ]);
 $tabkota = 
 
 \kartik\grid\GridView::widget([
@@ -228,8 +322,8 @@ $tabcrud = \kartik\grid\GridView::widget([
    'columns'=>[
        ['class'=>'yii\grid\SerialColumn'],
        
-            'CUST_KTG',
-            'CUST_KTG_PARENT',
+            // 'CUST_KTG',
+            // 'CUST_KTG_PARENT',
             'CUST_KTG_NM',
    
      [ 'class' => 'yii\grid\ActionColumn',
@@ -382,9 +476,9 @@ $tabcrud = \kartik\grid\GridView::widget([
 									
 		'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
 						['modelClass' => 'Barangumum',]),'/esm/kategoricus/createcustomers',[
-							'data-toggle'=>"modal",
-								'data-target'=>"#form",
-                                    'id'=>'modl2',
+							// 'data-toggle'=>"modal",
+								// 'data-target'=>"#form",
+                                    // 'id'=>'modl2',
 									'class' => 'btn btn-success'						
 												]),
                               
@@ -424,25 +518,41 @@ $tabcrud = \kartik\grid\GridView::widget([
                             
     $items=[
 		[
-			'label'=>'<i class="glyphicon glyphicon-home"></i> New Customers ','content'=> $tabcustomers,
+			'label'=>'<i class="glyphicon glyphicon-user"></i> New Customers ','content'=> $tabcustomers,
 			//'active'=>true,
 
 		],
 		
 		[
-			'label'=>'<i class="glyphicon glyphicon-home"></i> MAP'//$tab_profile,
+			'label'=>'<i class="glyphicon glyphicon-map-marker"></i> MAP'//$tab_profile,
 		],
                 [
-			'label'=>'<i class="glyphicon glyphicon-home"></i> DATA'//$tab_profile,
+			'label'=>'<i class="glyphicon glyphicon-folder-open"></i> DATA'//$tab_profile,
 		],
 			[
-			'label'=>'<i class="glyphicon glyphicon-home"></i> Kategori Customers','content'=>  $tabcrud,//$tab_profile,
+			'label'=>'<i class="glyphicon glyphicon-user"></i> Kategori Customers',//$tab_profile,
+		
+		        'items'=>[
+             [
+                 'label'=>'<i class="glyphicon glyphicon-chevron-right"></i> PARENT',
+                 'encode'=>false,
+                 'content'=>$tabparent,
+                 // 'linkOptions'=>['data-url'=>Url::to(['/site/fetch-tab?tab=3'])]
+             ],
+             [
+                 'label'=>'<i class="glyphicon glyphicon-chevron-right"></i> KATEGORI',
+                 'encode'=>false,
+                  'content'=>$tabcrud,
+                 // 'linkOptions'=>['data-url'=>Url::to(['/site/fetch-tab?tab=4'])]
+             ],
+        ],
 		],
+		
 			[
-			'label'=>'<i class="glyphicon glyphicon-home"></i> Province ','content'=> $tabprovince//$tab_profile,
+			'label'=>'<i class="glyphicon glyphicon-globe"></i> Province ','content'=> $tabprovince//$tab_profile,
 		],
 				[
-			'label'=>'<i class="glyphicon glyphicon-home"></i> Kota','content'=>  $tabkota,//$tab_profile,
+			'label'=>'<i class="glyphicon glyphicon-globe"></i> Kota','content'=>  $tabkota,//$tab_profile,
 		],
     ];
 
@@ -459,6 +569,38 @@ echo TabsX::widget([
                             
                             ?>
 							<?php
+							
+									$this->registerJs("
+    $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+        $('#formparent').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+
+$this->registerJs("
+        
+        $('#viewparent').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
 							
 										$this->registerJs("
     $.fn.modal.Constructor.prototype.enforceFocus = function(){};
@@ -563,6 +705,7 @@ $this->registerJs("
             var modal = $(this)
             var title = button.data('title') 
             var href = button.attr('href') 
+			
             //modal.find('.modal-title').html(title)
             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
             $.post(href)
@@ -636,5 +779,18 @@ $this->registerJs("
                             'header' => '<h4 class="modal-title">LukisonGroup</h4>',
                              ]);
                 Modal::end();
+				
+				 Modal::begin([
+                            'id' => 'formparent',
+                            'header' => '<h4 class="modal-title">LukisonGroup</h4>',
+                             ]);
+                Modal::end();
+                
+                 Modal::begin([
+                            'id' => 'viewparent',
+                            'header' => '<h4 class="modal-title">LukisonGroup</h4>',
+                             ]);
+                Modal::end();
+
 
 
