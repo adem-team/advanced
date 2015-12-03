@@ -9,6 +9,7 @@ use kartik\label\LabelInPlace;
 use lukisongroup\esm\models\Kategoricus;
 use lukisongroup\esm\models\Province;
 use lukisongroup\esm\models\Kota;
+use yii\web\JsExpression;
 
 
 /* @var $this yii\web\View */
@@ -23,7 +24,7 @@ use lukisongroup\esm\models\Kota;
                                                                 ->where(['CUST_KTG_PARENT'=>$no])
                                                                 ->all(),'CUST_KTG', 'CUST_KTG_NM');
 	$droppro = ArrayHelper::map(Province::find()->all(),'PROVINCE_ID','PROVINCE');
-	$dropcity = ArrayHelper::map(Kota::find()->all(),'POSTAL_CODE','CITY_NAME');
+	// $dropcity = ArrayHelper::map(Kota::find()->all(),'POSTAL_CODE','CITY_NAME');
 // print_r( $dropparentkategori);
 // die();
  
@@ -42,7 +43,7 @@ use lukisongroup\esm\models\Kota;
 
     <?= $form->field($model, 'CUST_KD_ALIAS')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'CUST_NM')->textInput(['maxlength' => true]) ?>
+	  <?= $form->field($model, 'CUST_NM', $config)->widget(LabelInPlace::classname());?>
 
     <?= $form->field($model, 'CUST_GRP')->textInput(['maxlength' => true]) ?>
     
@@ -89,7 +90,7 @@ use lukisongroup\esm\models\Kota;
     ]);?>
 	
 	<?= $form->field($model, 'CITY_ID')->widget(Select2::classname(), [
-        'data' => $dropcity,
+        // 'data' => $dropcity,
         'options' => [
         'placeholder' => 'Pilih kota ...'],
         'pluginOptions' => [
@@ -126,36 +127,82 @@ use lukisongroup\esm\models\Kota;
     ]);?>
  
 
-    <?= $form->field($model, 'ALAMAT')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'ALAMAT', $config)->widget(LabelInPlace::classname());?>
 
+    <?= $form->field($model, 'WEBSITE', $config)->widget(LabelInPlace::classname());?>
 
+    <?= $form->field($model, 'NOTE', $config)->widget(LabelInPlace::classname());?>
 
-    <?= $form->field($model, 'WEBSITE')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'NPWP')->textInput(['maxlength' => true]) ?>
+      <?= $form->field($model, 'NPWP', $config)->widget(LabelInPlace::classname());?>
+	  
+	  
 
     <?= $form->field($model, 'STT_TOKO')->textInput() ?>
 
     <?= $form->field($model, 'DATA_ALL')->textInput(['maxlength' => true]) ?>
+	
+	<?php
+	if(!$model->isNewRecord )
+	{
+		echo $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']) ;
+	}
+	
+	
+	?>
+	
+	<?= $form->field($model, 'MAP_LNG')->textInput(['maxlength' => true,'readonly'=>true]) ?>
+	<?= $form->field($model, 'MAP_LAT')->textInput(['maxlength' => true,'readonly'=>true]) ?>
+   <?php
    
- 
+    echo \pigolab\locationpicker\LocationPickerWidget::widget([
+       // 'key' => 'http://maps.google.com/maps/api/js?sensor=false&libraries=places', // optional , Your can also put your google map api key
+       'options' => [
+            'style' => 'width: 100%; height: 400px', // map canvas width and height
+        ] ,
+        'clientOptions' => [
+            'location' => [
+                'latitude'  => -6.214620,
+                'longitude' => 106.845130 ,
+			
+            ],
+            'radius'    => 300,
+            'inputBinding' => [
+                'latitudeInput'     => new JsExpression("$('#customerskat-map_lat')"),
+                 'longitudeInput'    => new JsExpression("$('#customerskat-map_lng')"),
+                // 'radiusInput'       => new JsExpression("$('#us2-radius')"),
+                // 'locationNameInput' => new JsExpression("$('#us2-address')")
+            ]
+        ]        
+    ]);
+?>
 
-   <?= $form->field($model, 'MAP_LAT')->textInput(['maxlength' => true,'readonly'=>true]) ?>
-    
-     <?= $form->field($model, 'MAP_LNG')->textInput(['maxlength' => true,'readonly'=>true]) ?>
+     
     
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+		
     </div>
 
     <?php ActiveForm::end(); ?>
 
 </div>
+
+
 <?php
+
 $script = <<<SKRIPT
+	
+	 $('select#customerskat-province_id').change(function(){
+        var id = $(this).val();
+		
+         $.get('/esm/kategoricus/lisarea',{id : id},
+             function( data ) {
+     $( 'select#customerskat-city_id' ).html( data );
+           // alert(data);
+                        });
+                    });
+	
         
     $('#slect').change(function(){
         var id = $(this).val();

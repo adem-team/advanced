@@ -44,6 +44,9 @@ class KategoricusController extends Controller
 //        kategori data
         $searchModel = new KategoricusSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		// parent data
+		$searchparent = new KategoricusSearch();
+        $dataProviderparent = $searchparent->searchparent(Yii::$app->request->queryParams);
 		
 		// city data
 		$searchmodelkota = new KotaSearch();
@@ -63,6 +66,8 @@ class KategoricusController extends Controller
 			'dataproviderpro' =>  $dataproviderpro,
             'dataProvider1' => $dataProvider1,
 			'dataproviderkota' => $dataproviderkota,
+			'searchparent ' => $searchparent,
+			'dataProviderparent' =>   $dataProviderparent
         ]);
     }
     
@@ -134,18 +139,6 @@ class KategoricusController extends Controller
         $model = new Kategoricus();
 
         if ($model->load(Yii::$app->request->post()) ) {
-			$chk = Yii::$app->request->post('parentid');
-			if($chk == 1)
-			{
-				    if($model->validate())
-            {
-                $model->CUST_KTG_PARENT = 0;
-                $model->CREATED_BY =  Yii::$app->user->identity->username;
-                $model->CREATED_AT = date("Y-m-d H:i:s");
-                $model->save();
-            }
-			}
-			else{
 				
 				if($model->validate())
 				{
@@ -153,21 +146,41 @@ class KategoricusController extends Controller
 						$model->CREATED_AT = date("Y-m-d H:i:s");
 						$model->save();
 				}
-			
-				
-				
-				
-			}
 		
-                
-        
-          
             return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_form', [
                 'model' => $model,
             ]);
         }
+    }
+	
+	 public function actionLisarea($id)
+    {
+ 
+        
+        $countJob = Kota::find()
+                ->where(['PROVINCE_ID' =>$id])
+                ->count();
+ 
+        $job = Kota::find()
+                 ->where(['PROVINCE_ID' =>$id])
+				 // ->andwhere('CUST_KTG_PARENT <> 0')
+                ->all();
+        
+        
+        
+        if($countJob>0){
+            echo "<option> Select  </option>";
+            foreach($job as $post){
+                
+                echo "<option value='".$post->POSTAL_CODE."'>".$post->CITY_NAME."</option>";
+            }
+        }
+        else{
+            echo "<option> - </option>";
+        }
+  
     }
 	
 	
@@ -201,27 +214,27 @@ class KategoricusController extends Controller
     
     
     
-     // public function actionCreate()
-    // {
-        // $model = new Kategoricus();
+     public function actionCreateparent()
+    {
+        $model = new Kategoricus();
 
-        // if ($model->load(Yii::$app->request->post()) ) {
+        if ($model->load(Yii::$app->request->post()) ) {
             
-                // if($model->validate())
-            // {
-               
-                // $model->CREATED_BY =  Yii::$app->user->identity->username;
-                // $model->CREATED_AT = date("Y-m-d H:i:s");
-                // $model->save();
-            // }
+       	    if($model->validate())
+            {
+                $model->CUST_KTG_PARENT = 0;
+                $model->CREATED_BY =  Yii::$app->user->identity->username;
+                $model->CREATED_AT = date("Y-m-d H:i:s");
+                $model->save();
+            }
             
-            // return $this->redirect(['index']);
-        // } else {
-            // return $this->render('create', [
-                // 'model' => $model,
-            // ]);
-        // }
-    // }
+            return $this->redirect(['index']);
+        } else {
+            return $this->renderAjax('_formparent', [
+                'model' => $model,
+            ]);
+        }
+    }
     
     
      public function actionCreatecustomers()
@@ -248,23 +261,24 @@ class KategoricusController extends Controller
 					 
 					 // print_r( str_pad( $nomerkd, "6", "0", STR_PAD_LEFT ));
 			// die();
-                     $tgl = date('Y.m.d');
+                     $tgl = date('Y.m');
                      $kode = "CUS.".$kdis[1]."."."CGK.".$tgl."."."-"."0".$kdpro."-".$kdcity.".".str_pad( $nomerkd, "9", "0", STR_PAD_LEFT );
 		$model->CUST_KD = $kode;
 		
-              
+           
                 if($model->validate())
-            {
+				{
 				$model->CORP_ID = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
                 $model->CREATED_BY =  Yii::$app->user->identity->username;
                 $model->CREATED_AT = date("Y-m-d H:i:s");
                 $model->save();
-            }
-           
+				}
+			
+		
             
             return $this->redirect(['index']);
         } else {
-            return $this->renderAjax('_formcustomer', [
+            return $this->render('_formcustomer', [
                 'model' => $model,
             ]);
         }
@@ -411,9 +425,11 @@ class KategoricusController extends Controller
     {
     
 		
-		$model = Customerskat::find()->where(['CUST_KD'=>$Id])->one();
+		$model = Customerskat::find()->where(['CUST_KD'=>$id])->one();
+	
 		$model->STATUS = 3;
 		$model->save();
+		
 
         return $this->redirect(['index']);
     }
