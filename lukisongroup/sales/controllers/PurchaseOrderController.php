@@ -1,24 +1,24 @@
 <?php
 
-namespace lukisongroup\purchasing\controllers;
+namespace lukisongroup\sales\controllers;
 
 use Yii;
-use lukisongroup\purchasing\models\Purchaseorder;
-use lukisongroup\purchasing\models\PurchaseorderSearch;
+use lukisongroup\sales\models\Purchaseorder;
+use lukisongroup\sales\models\PurchaseorderSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 
-use lukisongroup\purchasing\models\Purchasedetail;
-use lukisongroup\purchasing\models\Podetail;
+use lukisongroup\sales\models\Purchasedetail;
+use lukisongroup\sales\models\Podetail;
 
-use lukisongroup\purchasing\models\Requestorder;
-use lukisongroup\purchasing\models\RequestorderSearch;
-use lukisongroup\purchasing\models\Rodetail;
-use lukisongroup\purchasing\models\RodetailSearch;
+use lukisongroup\sales\models\Requestorder;
+use lukisongroup\sales\models\RequestorderSearch;
+use lukisongroup\sales\models\Rodetail;
+use lukisongroup\sales\models\RodetailSearch;
 
-use lukisongroup\purchasing\models\Statuspo;
+use lukisongroup\sales\models\Statuspo;
 
 use lukisongroup\esm\models\Barang;
 use lukisongroup\master\models\Barangumum;
@@ -77,9 +77,9 @@ class PurchaseOrderController extends Controller
         if($kdpo == null){ return $this->redirect([' ']); }
 
 
-        $que = Requestorder::find()->where('STATUS <> 3 and STATUS <> 0')->all();
+        $que = Salesorder::find()->where('STATUS <> 3 and STATUS <> 0')->all();
 
-        $searchModel = new RequestorderSearch();
+        $searchModel = new SalesorderSearch();
         $dataProvider = $searchModel->caripo(Yii::$app->request->queryParams);
 
         $podet = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->andWhere('STATUS <> 3')->all();

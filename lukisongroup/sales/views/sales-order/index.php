@@ -43,6 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		};
     ?>
 </aside -->
+
  <div class="container">
   <!-- Trigger the modal with a button -->
   <button type="button" class="btn btn-info fa fa-plus " data-toggle="modal" data-target="#myModal">&nbsp;Permintaan Barang (SO)</button>
@@ -120,7 +121,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		['class' => 'yii\grid\SerialColumn'],
 		'KD_RO',
 		'nmemp',
-		'KD_CORP',
+		'CREATED_AT',
 		
 			[
 				'format' => 'raw',

@@ -1,6 +1,6 @@
 <?php
 
-namespace lukisongroup\purchasing\models;
+namespace lukisongroup\sales\models;
 
 use Yii;
 
@@ -26,7 +26,7 @@ class Purchaseorder extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'p0001';
+        return 'sp001';
     }
 
     /**
