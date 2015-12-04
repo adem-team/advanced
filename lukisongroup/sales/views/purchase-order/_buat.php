@@ -9,16 +9,17 @@ use yii\widgets\Pjax;
 use yii\bootstrap\Modal;
 
 use lukisongroup\esm\models\Barang;
-use lukisongroup\purchasing\models\Requestorder;
-use lukisongroup\purchasing\models\Rodetail;
-use lukisongroup\purchasing\models\RodetailSearch;
+use lukisongroup\sales\models\Salesorder;
+use lukisongroup\sales\models\Sodetail;
+use lukisongroup\sales\models\Podetail;
+use lukisongroup\sales\models\SodetailSearch;
 
 use lukisongroup\master\models\Barangumum;
 use lukisongroup\master\models\Suplier;
 
 use lukisongroup\master\models\Nmperusahaan;
 
-use lukisongroup\purchasing\models\Podetail;
+//use lukisongroup\sales\models\Sodetail;
 
 use lukisongroup\hrd\models\Employe;
 
@@ -42,7 +43,7 @@ $kr = $emp->DEP_SUB_ID;
 			[
 	            'format'=>'raw',
 	            'value' => function ($data){
-	                $count = Rodetail::find()
+	                $count = Sodetail::find()
 	                    ->where([
 	                        'KD_RO'=>$data->KD_RO,
 	                    ])
@@ -226,7 +227,7 @@ $kr = $emp->DEP_SUB_ID;
 					<?php
 						$form = ActiveForm::begin([
 						    'method' => 'post',
-						    'action' => ['purchasing/purchase-order/spo?kdpo='.$kdpo],
+						    'action' => ['sales/purchase-order/spo?kdpo='.$kdpo],
 						    'id' => 'detpo'.$a,
 						]);
 					?>
@@ -245,7 +246,7 @@ $kr = $emp->DEP_SUB_ID;
 							$pod = Podetail::find()->where(['ID_DET_PO'=>$rows->ID])->andWhere('STATUS <> 3')->all(); 
 							$b=0; foreach ($pod as $pods => $pode) { $b=$b+1; 
 
-							$ro_dep = Requestorder::find('KD_DEP')->where(['KD_RO'=> $pode->KD_RO])->one(); 
+							$ro_dep = Salesorder::find('KD_DEP')->where(['KD_RO'=> $pode->KD_RO])->one(); 
 						?>
 						<tr>
 							<td><?php echo $pode->KD_RO; ?></td>

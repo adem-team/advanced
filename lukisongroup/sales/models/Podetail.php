@@ -1,6 +1,6 @@
 <?php
 
-namespace lukisongroup\purchasing\models;
+namespace lukisongroup\sales\models;
 
 use Yii;
 
@@ -21,7 +21,7 @@ class Podetail extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'p0021';
+        return 'sp021';
     }
 
     /**

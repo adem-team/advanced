@@ -1,6 +1,6 @@
 <?php
 
-namespace lukisongroup\purchasing\models;
+namespace lukisongroup\sales\models;
 
 use Yii;
 
@@ -25,7 +25,7 @@ class Purchasedetail extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'p0002';
+        return 'sp002';
     }
 
     /**
