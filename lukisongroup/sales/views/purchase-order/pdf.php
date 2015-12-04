@@ -5,7 +5,7 @@ use yii\widgets\DetailView;
 use lukisongroup\master\models\Suplier;
 use lukisongroup\master\models\Barangumum;
 use lukisongroup\master\models\Nmperusahaan;
-use lukisongroup\purchasing\models\Purchasedetail;
+use lukisongroup\sales\models\Purchasedetail;
 use lukisongroup\esm\models\Barang;
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\models\esm\po\Purchaseorder */
