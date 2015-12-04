@@ -4,9 +4,9 @@ namespace lukisongroup\purchasing\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use lukisongroup\purchasing\models\Requestorder;
+//use lukisongroup\purchasing\models\Requestorder;
 
-use lukisongroup\hrd\models\Employe;
+//use lukisongroup\hrd\models\Employe;
 /**
  * RequestorderSearch represents the model behind the search form about `app\models\esm\ro\Requestorder`.
  */
@@ -14,6 +14,15 @@ class RequestorderSearch extends Requestorder
 {
 	
 	public $nmemp;
+	//public $detro=[];
+	
+	public function attributes()
+	{
+		/*Author -ptr.nov- add related fields to searchable attributes */
+		return array_merge(parent::attributes(), ['detro.KD_RO','detro.NM_BARANG','detro.QTY']);
+		//return array_merge(parent::attributes(), ['detro.KD_RO','detro.NM_BARANG','detro.QTY']);
+	}
+	
     /**
      * @inheritdoc
      */
@@ -22,7 +31,9 @@ class RequestorderSearch extends Requestorder
         return [
             [['ID', 'STATUS'], 'integer'],
             [['KD_RO', 'NOTE', 'ID_USER', 'KD_CORP', 'KD_CAB', 'KD_DEP', 'CREATED_AT', 'UPDATED_ALL', 'DATA_ALL'], 'safe'],
-            [['nmemp'], 'safe'],
+            [['detro'], 'safe'],
+			[['detro.KD_RO','detro.NM_BARANG','detro.QTY'], 'safe']
+			//[['NM_BARANG','QTY'], 'safe']
         ];
     }
 
@@ -35,6 +46,32 @@ class RequestorderSearch extends Requestorder
         return Model::scenarios();
     }
 
+	public function searchRo($params)
+    {
+		$profile=Yii::$app->getUserOpt->Profile_user();
+        //$query = Pilotproject::find()->Where('sc0001.STATUS<>3 AND DEP_ID="'.$profile->emp->DEP_ID .'"');
+		
+		if($profile->emp->JOBGRADE_ID == 'M' OR $profile->emp->JOBGRADE_ID == 'SM' ){
+			$query = Requestorder::find()
+						->where("(r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."') OR (r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.KD_DEP = '".$profile->emp->DEP_ID."')");
+        }else{
+			$query = Requestorder::find()
+					->where("r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."'");
+		}
+		$dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+		$this->load($params);
+		if (!$this->validate()) {
+			//return $dataProvider;
+			//$dataProvider->query->where('0=1');
+			return $dataProvider;
+		} 
+		return $dataProvider;
+    }
+	
+	
     /**
      * Creates data provider instance with search query applied
      *

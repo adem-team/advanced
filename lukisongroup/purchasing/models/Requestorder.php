@@ -3,10 +3,8 @@
 namespace lukisongroup\purchasing\models;
 
 use Yii;
-//use lukisongroup\purchasing\models\Rodetail;
-//use lukisongroup\purchasing\models\Tes;
 use lukisongroup\hrd\models\Employe;
-
+use lukisongroup\purchasing\models\Rodetail;
 /**
  * This is the model class for table "r0001".
  *
@@ -48,17 +46,17 @@ class Requestorder extends \yii\db\ActiveRecord
     public function getEmploye()
     {
         return $this->hasOne(Employe::className(), ['EMP_ID' => 'ID_USER']);
-    }
+    } 
 	
-    public function getNmemp()
+   /*  public function getNmemp()
     {
         return $this->employe->EMP_NM;
-    }
+    } */
 	
-    public function getTess()
+    /* public function getTess()
     {
         return $this->hasOne(Tes::className(), ['KD_RO' => 'KD_RO']);
-    }
+    } */
 	
 	
     /**
@@ -73,7 +71,7 @@ class Requestorder extends \yii\db\ActiveRecord
             [['CREATED_AT'], 'safe'],
             [['KD_RO'], 'safe'],
             [['KD_RO', 'KD_CORP', 'KD_CAB', 'KD_DEP'], 'string', 'max' => 50],
-            [['UPDATED_ALL', 'ID_USER'], 'string', 'max' => 255]
+            [['UPDATED_ALL', 'ID_USER'], 'string', 'max' => 255],
         ];
     }
 
@@ -94,7 +92,8 @@ class Requestorder extends \yii\db\ActiveRecord
             'CREATED_AT' => 'Created  At',
             'UPDATED_ALL' => 'Updated  All',
             'DATA_ALL' => 'Data  All',
-			'nmemp' => Yii::t('app', 'Pembuat'),
+			
+			//'nmemp' => Yii::t('app', 'Pembuat'),
         ];
     }
 }

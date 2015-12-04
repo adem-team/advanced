@@ -5,6 +5,8 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\ArrayHelper;
+use yii\bootstrap\Modal;
+
 use lukisongroup\master\models\Unitbarang;
 use kartik\daterange\DateRangePicker;
 
@@ -28,6 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 			/* $dt = Employe::find()->where(['EMP_ID'=>$empId])->all();
 			$jbtan = $dt[0]['JOBGRADE_ID'];		 */	
 
+			
 ?>
 
 <div class="" style="padding:10px;>
@@ -45,56 +48,15 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 						[
 							'columns'=>[
 								['content'=>'Request Order', 'options'=>['colspan'=>2, 'class'=>'text-center success']], 
-								['content'=>'List Details', 'options'=>['colspan'=>6, 'class'=>'text-center warning']], 
+								['content'=>'List Request Order', 'options'=>['colspan'=>6, 'class'=>'text-center warning']], 
 							],
 							'options'=>['class'=>'skip-export'] // remove this row from export
 						]
 					],
 					'columns' => [
 							[
-								'attribute'=>'parentro.KD_RO',
-								//'mergeHeader'=>true,
-								'group'=>true,
-							],
-							[
-								'label'=>'Tanggal Pembuatan',
-								'attribute'=>'parentro.CREATED_AT',
-								//'mergeHeader'=>true,
-								'group'=>true,								
-								'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
-								'filterWidgetOptions' =>([
-									'attribute' =>'parentro.CREATED_AT',
-									'presetDropdown'=>TRUE,
-									'convertFormat'=>true,
-									'pluginOptions'=>[
-										'id'=>'tglro',
-										'format'=>'Y/m/d',
-										'separator' => 'TO',
-										'opens'=>'left'
-									]									
-								]),
-							],			
-							[
 								'class' => 'yii\grid\SerialColumn'
-							],					
-							[
-								'label'=>'Nama Barang',
-								'attribute'=>'NM_BARANG',
-								//'mergeHeader'=>true,
 							],
-							[
-								'label'=>'Qty',
-								'attribute'=>'RQTY',
-								//'mergeHeader'=>true,
-							],
-							[
-								'attribute'=>'UNIT',
-								'mergeHeader'=>true,
-								'value'=>function ($model, $key, $index, $widget) { 
-									$masterUnit = Unitbarang::find()->where(['KD_UNIT'=>$model->UNIT])->one();
-									return $masterUnit->NM_UNIT;
-								},
-							],							
 							[
 								'label'=>'Status',
 								'format' => 'raw',
@@ -113,11 +75,65 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 								},
 							],  
 							[
+								'attribute'=>'KD_RO',
+								//'mergeHeader'=>true,
+								'group'=>true,
+							],
+							[
+								'label'=>'Tanggal Pembuatan',
+								'attribute'=>'CREATED_AT',
+								//'mergeHeader'=>true,
+								'group'=>true,								
+								'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
+								'filterWidgetOptions' =>([
+									'attribute' =>'parentro.CREATED_AT',
+									'presetDropdown'=>TRUE,
+									'convertFormat'=>true,
+									'pluginOptions'=>[
+										'id'=>'tglro',
+										'format'=>'Y/m/d',
+										'separator' => 'TO',
+										'opens'=>'left'
+									]									
+								]),
+							],			
+												
+							[
+								'label'=>'CREATED_BY',
+								'attribute'=>'EMP_NM',
+								'mergeHeader'=>true,
+							],
+							/*
+							[
+								'label'=>'Qty',
+								'attribute'=>'RQTY',
+								//'mergeHeader'=>true,
+							],
+							[
+								'attribute'=>'UNIT',
+								'mergeHeader'=>true,
+								'value'=>function ($model, $key, $index, $widget) { 
+									$masterUnit = Unitbarang::find()->where(['KD_UNIT'=>$model->UNIT])->one();
+									if(count($masterUnit)!=0){
+										return $masterUnit->NM_UNIT;
+									}else{
+										return 'none';
+									}
+								},
+							],	
+							*/							
+							
+							[
 								'header'=>'Action',	
 								'class' =>'yii\grid\ActionColumn',
 								'template' => '{tambah} {link} {edit} {delete} {cetak}',
 								'buttons' => [									
-									'tambah' => function ($url,$model) { return Html::a('', ['add','kd'=>$model->KD_RO],['class'=>'fa fa-plus fa-fw', 'title'=>'Add']);},
+									'tambah' => function ($url,$model) { 
+												return  Html::a('<i class="fa fa-plus fa-lg"></i> ','/purchasing/request-order/tambah',[
+																'data-toggle'=>"modal",
+																'data-target'=>"#add-ro"						
+														]);
+									},
 									'link' => function ($url,$model) { return Html::a('', ['view','kd'=>$model->KD_RO],['class'=>'fa fa-info-circle fa-lg', 'title'=>'Detail']);},
 									'edit' => function ($url,$model) { return Html::a('', ['buatro','id'=>$model->KD_RO],['class'=>'fa fa-pencil-square-o fa-lg', 'title'=>'Ubah RO']); },
 									'delete' => function ($url,$model) { if($model->STATUS == 0){ return Html::a('', ['hapusro','id'=>$model->KD_RO],['class'=>'fa fa-trash-o fa-lg', 'title'=>'Hapus RO','data-confirm'=>'Anda yakin ingin menghapus RO ini?']); } },
@@ -159,12 +175,20 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 					'panel' => [
 						'heading'=>'<h3 class="panel-title">'. Html::encode($this->title).'</h3>',
 						'type'=>'warning',
-						'before'=>Html::a('<i class="fa fa-plus fa-fw"></i> Permintaan Barang (RO)', ['create'], ['class' => 'btn btn-warning',
+						/* 'before'=>Html::a('<i class="fa fa-plus fa-fw"></i> Permintaan Barang (RO)', ['create'], ['class' => 'btn btn-warning',
 							'data' => [
 								'confirm' => 'Anda yakin ingin membuat permintaan barang baru?',
 								'method' => 'post',
-							],
-						]),
+							], */
+						'before'=> Html::a('<i class="fa fa-plus fa-lg"></i> '.Yii::t('app', 'Permintaan Barang (RO)',
+						['modelClass' => 'customer',]),'/purchasing/request-order/create',[
+							'data-toggle'=>"modal",
+								'data-target'=>"#new-ro",							
+									'class' => 'btn btn-warning'						
+												])
+							
+							
+						
 						//'showFooter'=>false,
 					],		
 					
@@ -175,9 +199,55 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 					],
 					
 					'options'=>['enableRowClick'=>true] */
-				]);
-				
+				]);				
 			?>
 
+	<?php
+		$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#new-ro').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+		",$this::POS_READY);
+		
+		Modal::begin([
+			'id' => 'new-ro',
+			'header' => '<h4 class="modal-title">Entry Request Order</h4>',
+			'size' => 'modal-md',
+		]);
+		Modal::end();
+		
+		$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#add-ro').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+		",$this::POS_READY);
+		
+		Modal::begin([
+			'id' => 'add-ro',
+			'header' => '<h4 class="modal-title">Entry Request Order</h4>',
+			'size' => 'modal-lg',
+		]);
+		Modal::end();
 	
+	?>
 </div>

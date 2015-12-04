@@ -589,7 +589,7 @@ echo TabsX::widget([
             ?>
                              
                         <?php        
-		$this->registerJs("
+		/* $this->registerJs("
 		
                       var locations = [
             <?php  
@@ -601,13 +601,13 @@ echo TabsX::widget([
                                        
                                    }
             		 ?>
-            ]; 
+            ];  */
       
 		
 		
   
 
-    var map = new google.maps.Map(document.getElementById('map'), {
+   /*  var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 12,
       center: new google.maps.LatLng(-6.229191531958687,106.65994325550469),
       mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -629,12 +629,12 @@ echo TabsX::widget([
           infowindow.open(map, marker);
         }
       })(marker, i));
-    };
+    }; 
                                             
     
 							
 						
-    ",$this::POS_READY);
+    ",$this::POS_READY);*/
 							
     $this->registerJs("
     $.fn.modal.Constructor.prototype.enforceFocus = function(){};

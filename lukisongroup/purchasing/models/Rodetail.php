@@ -43,7 +43,8 @@ class Rodetail extends \yii\db\ActiveRecord
     {
         return [
  //           [['ID','KD_RO', 'KD_BARANG', 'NM_BARANG', 'QTY', 'NO_URUT', 'NOTE', 'STATUS', 'CREATED_AT', 'UPDATED_AT'], 'required'],
-			[['KD_RO', 'RQTY','SQTY','UNIT','KD_BARANG'], 'required'],
+			//[['KD_RO', 'RQTY','SQTY','UNIT','KD_BARANG'], 'required'],
+			[['KD_RO', 'RQTY','SQTY','UNIT','KD_BARANG'], 'safe'],
             [['STATUS'], 'integer'],
             [['NOTE'], 'string'],
             [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT'], 'safe'],

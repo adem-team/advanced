@@ -2,7 +2,7 @@
 
 namespace lukisongroup\purchasing\controllers;
 
-use Yii;
+use yii;
 use lukisongroup\purchasing\models\Requestorder;
 use lukisongroup\purchasing\models\RequestorderSearch;
 use lukisongroup\purchasing\models\Roatribute;
@@ -70,12 +70,20 @@ class RequestOrderController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new RodetailSearch();
-        $dataProvider = $searchModel->searchChildRo(Yii::$app->request->queryParams);
+        $searchModel = new RequestorderSearch();
+		/*  if (isset($_GET['param'])){
+			  $dataProvider = $searchModel->searchChildRo(Yii::$app->request->queryParams,$_GET['param']);
+		}else{
+			$dataProvider = $searchModel->searchChildRo(Yii::$app->request->queryParams);
+		}  */
+        
+		//$searchModel->KD_RO ='2015.12.04.RO.0070';
+		$dataProvider = $searchModel->searchRo(Yii::$app->request->queryParams);
 		  return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+		
 		
     }
 
@@ -108,56 +116,25 @@ class RequestOrderController extends Controller
    
     public function actionCreate()
     {
-		$connection = \Yii::$app->db2;
-		$cons = \Yii::$app->db_esm;
+		$roDetail = new Rodetail();	
+		$roHeader = new Requestorder();
+            return $this->renderAjax('_form', [
+                'roDetail' => $roDetail,
+				'roHeader' => $roHeader,
+            ]);	
 		
-        $model = new Requestorder();
-        $reqorder = new Roatribute();
-        $rodetail = new Rodetail();
-        $rostatus = new Requestorderstatus();
-		
-		$empId = Yii::$app->user->identity->EMP_ID;
-		$dt = Employe::find()->where(['EMP_ID'=>$empId])->all();
-		
-//			------------ TAHUN.BULAN.TANGGAL.RO.NO URUT (4DIGIT)   == > 2015.06.30.RO.0001				
-		$qwe = Requestorder::find()->select('ID')->orderBy(['ID' => SORT_DESC])->limit(1)->all();
-		if(count($qwe) == 0){ $lastKd = 0; } else { $lastKd = $qwe[0]['ID']; }
-		
-		$nKD = $lastKd +1;
-		$pnjg = strlen($nKD);
-		if($pnjg == 1){ $kd = "000".$nKD; }
-		else if($pnjg == 2){ $kd = "00".$nKD; }
-		else if($pnjg == 3){ $kd = "0".$nKD; }
-		else if($pnjg >= 4 ){ $kd = $nKD; }
-		
-		$kode = date('Y.m.d').'.RO.'.$kd;
-		
-		$model->KD_RO = $kode;
-		$model->ID_USER = $empId;
-		$model->KD_DEP = $dt[0]['DEP_ID'];
-		$model->KD_CORP = $dt[0]['EMP_CORP_ID'];
-		$model->CREATED_AT = date("Y-m-d H:i:s");
-		
-
-		$jab = $dt[0]['DEP_ID'];
-        $que = "SELECT EMP_ID FROM a0001 WHERE (DEP_ID='$jab' ) AND (GF_ID='3') AND EMP_STS<>'3'";
-        $modelss = $connection->createCommand($que);
-        $users = $modelss->queryAll();
-
-        if(count($users) != 0){
-    		foreach($users as $usr){ 
-                $isi[] = ['KD_RO'=>$kode,'ID_USER'=>$usr['EMP_ID'],'STATUS'=>'0'];
-            }
-
-            $model->save(); 
-    		$cons->createCommand()->batchInsert( Requestorderstatus::tableName(), ['KD_RO', 'ID_USER', 'STATUS'], $isi )->execute();	
-            return $this->redirect(['buatro','id'=>$kode]);
-		}
-		
-        return $this->redirect([' ']);
-	//	print_r(Yii::$app->user->identity);
     }
 	
+	public function actionTambah()
+    {
+		$roDetail = new Rodetail();	
+		$roHeader = new Requestorder();
+            return $this->renderAjax('_update', [
+                'roDetail' => $roDetail,
+				'roHeader' => $roHeader,
+            ]);	
+		
+    }
 	public function actionBuatro()	
     {
         $model = new Requestorder();
@@ -171,6 +148,72 @@ class RequestOrderController extends Controller
 		]);
     }
 	
+	public function actionSimpanfirst(){				
+						
+				$cons = \Yii::$app->db_esm;				
+				$roHeader = new Requestorder();				
+				//$reqorder = new Roatribute();
+				$roDetail = new Rodetail();
+				$profile= Yii::$app->getUserOpt->Profile_user();
+				
+				$hsl = \Yii::$app->request->post();				
+				//$created = $hsl['roDetail']['CREATED_AT'];
+				//$nmBarang = $hsl['roDetail']['NM_BARANG'];
+				$kdBarang = $hsl['Rodetail']['KD_BARANG'];
+				$rqty = $hsl['Rodetail']['RQTY'];
+				$note = $hsl['Rodetail']['NOTE'];
+				
+				/*
+				 * Detail Request Order
+				**/
+				$roDetail->KD_RO = \Yii::$app->ambilkonci->getRoCode();
+				//$roDetail->UNIT = $kdUnit->KD_UNIT;
+				$roDetail->CREATED_AT = date('Y-m-d H:i:s');
+				//$roDetail->NM_BARANG = $nmBarang;
+				$roDetail->KD_BARANG = $kdBarang;
+				$roDetail->RQTY = $rqty;
+				$roDetail->NOTE = $note;
+				$roDetail->STATUS = 0;
+				
+				/*
+				 * Header Request Order
+				**/
+				$getkdro=\Yii::$app->ambilkonci->getRoCode();
+				$roHeader->KD_RO =$getkdro;
+				$roHeader->CREATED_AT = date('Y-m-d H:i:s');
+				$roHeader->TGL = date('Y-m-d H:i:s');
+				$roHeader->ID_USER = $profile->emp->EMP_ID;
+				$roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
+				$roHeader->KD_CORP = $profile->emp->EMP_CORP_ID;
+				$roHeader->KD_DEP = $profile->emp->DEP_ID;
+				$roHeader->STATUS = 0;
+				
+					$transaction = $cons->beginTransaction();
+					try {
+						if (!$roDetail->save()) {
+								$transaction->rollback();
+								return false;
+						}
+						
+						if (!$roHeader->save()) {
+								$transaction->rollback();
+								return false;
+						}
+						
+						$transaction->commit();						
+							/* return $this->render('index', [
+								'searchModel' => $searchModel,
+								'dataProvider' => $dataProvider,
+							]); */
+					} catch (Exception $ex) {
+						$transaction->rollback();
+						return false;						   
+					}
+					//return $this->redirect(['index','param'=>$getkdro]);			
+					return $this->redirect(['index?RodetailSearch[parentro.KD_RO]='.$getkdro]);			
+				
+	}
+				
     public function actionSimpan($id)
     {
         $rodetail = new Rodetail();

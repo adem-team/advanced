@@ -1,242 +1,110 @@
 <?php
 
-use yii\helpers\Html;
+use \Yii;
+use kartik\helpers\Html;
+use kartik\grid\GridView;
+use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
-
-//use yii\widgets\ActiveForm;
-/*
-use lukisongroup\purchasing\models\RequestorderSearch;
-use lukisongroup\purchasing\models\Roatribute;
-
-use kartik\builder\Form;
-use kartik\builder\FormGrid;
-use kartik\widgets\FileInput;
-
-
-*/
-
-use lukisongroup\purchasing\models\Requestorder;
-use lukisongroup\purchasing\models\Rodetail;
-use lukisongroup\master\models\Barangumum;
-use lukisongroup\master\models\Unitbarang;
-
-
-use lukisongroup\esm\models\Barang;
-
-
-use lukisongroup\hrd\models\Employe;
-
-use yii\grid\GridView;
-use yii\data\ActiveDataProvider;
-
-use kartik\widgets\ActiveForm;
+use kartik\widgets\Select2;
 use kartik\widgets\DepDrop;
+use kartik\builder\Form;
+use kartik\widgets\TouchSpin;
+use lukisongroup\master\models\Barangumum;
+use lukisongroup\esm\models\Barang;
+use yii\web\JsExpression;
+use yii\data\ActiveDataProvider;
+$brgUmum = ArrayHelper::map(Barangumum::find()->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG'); 
 
+/* $this->registerJs("
+        $.fn.modal.Constructor.prototype.enforceFocus = function() {};			
+    ",$this::POS_HEAD);
+ */
 
-/* @var $this yii\web\View */
-/* @var $model lukisongroup\models\esm\ro\Requestorder */
-/* @var $form yii\widgets\ActiveForm */
-
-/*
-$form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,  'action' => ['controller/action'],]);
-
-//$customers = Rodetail::find()->where('KD_RO = 1')->all();
-//$reqorder->rodet->NO_URUT;
-//$customers = Rodetail::find()->where(['KD_RO = 1' ])->all();
-
-
-echo FormGrid::widget([
-	'model'=>$rodetail,
-	'form'=>$form,
-	'autoGenerateColumns'=>true,
-	'rows'=>[
-        [
-            'contentBefore'=>'<legend class="text-info"><small>Buat Permintaan Barang</small></legend>',
-            'attributes'=>[       // 2 column layout
-				'NO_URUT' => ['type' => Form::INPUT_TEXT],
-				'KD_BARANG' => ['type' => Form::INPUT_TEXT],
-//				'NM_BARANG' => ['type' => Form::INPUT_TEXT],
-				'QTY' => ['type' => Form::INPUT_TEXT],
-            ]
-        ],
-		
-	],		
-]);
-*/
-
-
-$id=$_GET['id'];	
-$ros = Requestorder::find()->joinWith('employe')->where(['KD_RO' => $id])->asArray()->all(); 
-
+ 
 ?>
 
-<div class="requestorder-form" style="margin:0px 20px;">
-<form class="form-horizontal">
 
-	<div class="form-group">
-		<div class="col-sm-12">
-			<br/>
-		</div>
-	</div>
-	
-	<div class="form-group">
-		<label class="col-sm-2 control-label">Nama User</label>
-		<div class="col-sm-5">
-			<input type="email" class="form-control" id="inputEmail3" value="<?php echo $ros[0]['employe']['EMP_NM'].' '.$ros[0]['employe']['EMP_NM_BLK']; ?>" readonly >
-		</div>
-	</div>
-	
-	<div class="form-group">
-		<label class="col-sm-2 control-label">Perusahaan</label>
-		<div class="col-sm-5">
-			<input type="email" class="form-control" id="inputEmail3" value="<?php echo $ros[0]['employe']['EMP_CORP_ID']; ?>" readonly >
-		</div>
-	</div>
-
-	<div class="form-group">
-		<label class="col-sm-2 control-label">Departement</label>
-		<div class="col-sm-5">
-			<input type="email" class="form-control" id="inputEmail3" value="<?php echo $ros[0]['employe']['DEP_ID']; ?>" readonly >
-		</div>
-	</div>
-
-	<div class="form-group">
-		<div class="col-sm-12">
-			<br/>
-		</div>
-	</div>
-
- </form>
- 
- 
-<?php
-
-$form = ActiveForm::begin([
-    'method' => 'post',
-    'action' => ['/purchasing/request-order/simpan?id='.$id],
-]);
-
-
-	$brgar['Barang Umum'] = $brg = ArrayHelper::map(Barangumum::find()->all(), 'KD_BARANG', 'NM_BARANG');
-	$brgar['Barang ESM'] = $brgs = ArrayHelper::map(Barang::find()->all(), 'KD_BARANG', 'NM_BARANG');
-
-	$unit = ArrayHelper::map(Unitbarang::find()->all(), 'KD_UNIT', 'NM_UNIT');
-?>
-<?php echo $form->field($rodetail, 'CREATED_AT')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false); ?>	
-<?php echo $form->field($rodetail, 'NM_BARANG')->hiddenInput(['value' => ''])->label(false); ?>	
-
-<?php echo $form->field($rodetail, 'KD_RO')->textInput(['value' => $id, 'readonly' => true])->label('Kode Request Order'); ?>
-
-<div class="row">
-  <div class="col-xs-3"><?php echo $form->field($rodetail, 'KD_BARANG')->dropDownList($brgar, ['prompt'=>' -- Pilih Salah Satu --','onchange' => '$("#rodetail-nm_barang").val($(this).find("option:selected").text())'])->label('Nama Barang'); ?></div>
-  <div class="col-xs-3"><?php echo $form->field($rodetail, 'QTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']); ?></div>
-  <div class="col-xs-3"><?php echo $form->field($rodetail, 'NOTE')->textInput(['maxlength' => true, 'placeholder'=>'Catatan Barang']); ?></div>
-</div>
-
-<div class="row">
-  <div class="col-xs-6">
-	  <?php echo Html::submitButton( '<i class="fa fa-floppy-o fa-fw"></i>  Simpan', ['class' => 'btn btn-success']); ?>  
-	  <?php echo Html::a('<i class="fa fa-print fa-fw"></i> Cetak', ['cetakpdf','kd'=>$id], ['target' => '_blank', 'class' => 'btn btn-warning']); ?>
-</div>
-</div>
-<?php
- ActiveForm::end(); 
- ?>
-
-<?= Yii::$app->session->getFlash('error'); ?>
-<?php
-$que = Rodetail::find()->where(['KD_RO' => $id])->andWhere('STATUS <> 3');;  
-echo "<br/><br/>";
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $que,
-        ]);
-		
-		
-		echo GridView::widget([
-        'dataProvider' => $dataProvider,
-		
-        'columns' => [
-         //specify the colums you wanted here
-			//'KD_BARANG', 
-			'NM_BARANG', 'QTY', 'UNIT',  'NOTE', 
-			
-			
-			[
-				'class' => 'yii\grid\ActionColumn',
-				'template' => '{hapus}',
-				'buttons' => [
-/*
-					'hapus' => function ($url,$model,$key) {
-							return Html::a('<span class="glyphicon glyphicon-trash"></span>', [$url, 'kode' =>$_GET['id'] ]);
-					},
-					*/
-					
-					'hapus' => function ($model,$key) {
-						if($key->STATUS == 0){
-							return Html::a( '<span class="glyphicon glyphicon-trash"></span>',['hapus','kode'=>$_GET['id'], 'id'=>$key->ID], ['data-confirm'=>'Anda yakin ingin menghapus barang ini?','title'=>'Hapus']  );
-						}
-					},
-				],
-
-				//'botton'=>[
-				//	'delete'=> function()
-				//],
-			],
-			
-        ],
+    <?php $form = ActiveForm::begin([
+			'id'=>'roInput',
+			'enableClientValidation' => true,
+			'method' => 'post',
+			'action' => ['/purchasing/request-order/simpanfirst'],
 		]);
+	?>
+	<?php //= $form->errorSummary($model); ?>
+	
+    <?= $form->field($roDetail, 'CREATED_AT',['template' => "{input}"])->textInput(['value'=>date('Y-m-d H:i:s'),'readonly' => true]) ?>
+
+    <?php
+		 echo $form->field($roDetail, 'KD_BARANG')->widget(Select2::classname(), [		
+			'data' => $brgUmum,
+			'options' => ['placeholder' => 'Search for a barang umum ...'],
+			'pluginOptions' => [
+				'id'=>'id-brg',
+				//'multiple' => true
+				//'allowClear' => true
+				//'maximumInputLength' => 3
+			], 		
+		]);
+	?>
+
+    <?php 
+		//echo  $form->field($roDetail, 'UNIT')->textInput(['placeholder'=>'Unit Barang'])->label('Unit Barang'); 
 		
-/*
-    'dataProvider'=> $dataProvider,
-    'filterModel' => $searchModel,
-    'columns' => $gridColumns,
-    'responsive'=>true,
-    'hover'=>true
-]);*/
-?>
+	?>
+    <?php echo  $form->field($roDetail, 'RQTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']); ?>
 
-<!-- div class="requestorder-form">
+    <?php echo $form->field($roDetail, 'NOTE')->textarea(array('rows'=>2,'cols'=>5))->label('Informasi');?>
 
-    <?php // $form = ActiveForm::begin(); 
-	
-	
+    <?php //= $form->field($roDetail, 'NM_BARANG')->textInput(['maxlength' => true]) ?>
+
+    <?php
+
+		/* $form->field($model, 'STOCK_GUDANG_UNIT')->widget(TouchSpin::classname(), [
+			'name' => 't4',
+			'options' => ['placeholder' => 'Entry Jumlah Stok per Item Barang ...'],			
+			'pluginOptions' => [
+				'buttonup_class' => 'btn btn-primary', 
+				'buttondown_class' => 'btn btn-info', 
+				'buttonup_txt' => '<i class="glyphicon glyphicon-plus-sign"></i>', 
+				'buttondown_txt' => '<i class="glyphicon glyphicon-minus-sign"></i>'
+			]
+		]) */
 	?>
 	<?php
-$form = ActiveForm::begin([
-    'method' => 'post',
-    'action' => ['/purchasing/request-order/create'],
-]);
+		
+		/* $form->field($model, 'STOCK_GUDANG_PCS')->widget(TouchSpin::classname(), [
+			'name' => 't5',
+			'options' => ['placeholder' => 'Entry Jumlah Stok per Item Barang ...'],			
+			'pluginOptions' => [
+				'buttonup_class' => 'btn btn-primary', 
+				'buttondown_class' => 'btn btn-info', 
+				'buttonup_txt' => '<i class="glyphicon glyphicon-plus-sign"></i>', 
+				'buttondown_txt' => '<i class="glyphicon glyphicon-minus-sign"></i>'
+			]
+		]) */
 	?>
 
-    <?= $form->field($model, 'KD_RO')->textInput(['maxlength' => true]) ?>
+    <?php //= $form->field($model, 'PRODAK_LINE')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'ID_USER')->textInput(['maxlength' => true]) ?>
+    <?php //= $form->field($model, 'CORP_ID')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'KD_CORP')->textInput(['maxlength' => true]) ?>
+    <?php //= $form->field($model, 'KD_DISTRIBUTOR')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'KD_CAB')->textInput(['maxlength' => true]) ?>
+    <?php //= $form->field($model, 'KD_SUBDIST')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'KD_DEP')->textInput(['maxlength' => true]) ?>
+    <?php //= $form->field($model, 'CREATED_BY')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'STATUS')->textInput() ?>
+    <?php //= $form->field($model, 'UPDATED_BY')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'CREATED_AT')->textInput() ?>
+    <?php //= $form->field($model, 'UPDATED_TIME')->textInput() ?>
 
-    <?= $form->field($model, 'UPDATED_ALL')->textInput(['maxlength' => true]) ?>
+    <?php // echo  Yii::$app->ambilkonci->getRoCode();?>
 
-    <?= $form->field($model, 'DATA_ALL')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>
-	
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Simpan' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($roDetail->isNewRecord ? 'Create' : 'Update', ['class' => $roDetail->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
-    <?php ActiveForm::end(); ?>
+    
+	<?php ActiveForm::end(); ?>	
 
-</div -->
-
-
-<br/><br/><br/>
-</div>

@@ -1,6 +1,6 @@
 <?php
 
-namespace lukisongroup\master\models\Unitbarang;
+namespace lukisongroup\master\models;
 
 use Yii;
 

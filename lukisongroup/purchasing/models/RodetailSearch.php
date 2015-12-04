@@ -43,28 +43,42 @@ class RodetailSearch extends Rodetail
     }
 
 	
-	public function searchChildRo($params)
+	public function searchChildRo($params,$kdro='')
     {
+		
+		/* if($kdro!=''){
+			$getkdro=" and r0001.KD_RO='".$kdro."'";
+		}else{
+			$getkdro='';
+		} */
+		
 		$profile=Yii::$app->getUserOpt->Profile_user();
         //$query = Pilotproject::find()->Where('sc0001.STATUS<>3 AND DEP_ID="'.$profile->emp->DEP_ID .'"');
 		
 		if($profile->emp->JOBGRADE_ID == 'M' OR $profile->emp->JOBGRADE_ID == 'SM' ){
 			$query = Rodetail::find()
-						->JoinWith('parentro',true,'INNER JOIN')
+						->JoinWith('parentro',false,'RIGHT JOIN')
 						->where("(r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."') OR (r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.KD_DEP = '".$profile->emp->DEP_ID."')");
         }else{
 			$query = Rodetail::find()
-					->JoinWith('parentro',true,'INNER JOIN')
-					->where("r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."'");
+					->JoinWith('parentro',false,'RIGHT JOIN')
+					->where("r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."' " . $getkdro);
 		}
 		$dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
-        $this->load($params);
+         $this->load($params);
 			if (!$this->validate()) {
+				//return $dataProvider;
+				//$dataProvider->query->where('0=1');
 				return $dataProvider;
-			}
+			} 
+		/* if (isset($_GET['RodetailSearch']) && !($this->load($params) && $this->validate())) {
+			return $dataProvider;
+		} */	
+			
+			
         $query->andFilterWhere([
             'RQTY' => $this->RQTY,
 			'SQTY' => $this->SQTY,
@@ -90,6 +104,30 @@ class RodetailSearch extends Rodetail
         return $dataProvider;
 		
     }
+	
+	
+	/*
+	 * RO DataProvider Select By KD_RO
+	*/
+	public function search_listbyro($kd_ro)
+    {
+		$query = Rodetail::find()
+					->JoinWith('parentro',true,'INNER JOIN')
+					->where("r0001.status <> 3 and r0001.KD_RO = '".$kd_ro."'");
+		
+		$dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        /* $this->load($params);
+		 	if (!$this->validate()) {
+				return $dataProvider;
+			}  */
+			
+        return $dataProvider;
+		
+    }
+	
 	
     /**
      * Creates data provider instance with search query applied
