@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model lukisongroup\esm\models\Province */
+/* @var $model lukisongroup\esm\models\Kategoricus */
 
-$this->title = 'Create Province';
-$this->params['breadcrumbs'][] = ['label' => 'Provinces', 'url' => ['index']];
+$this->title = 'Create Kategoricus';
+$this->params['breadcrumbs'][] = ['label' => 'Kategoricuses', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="province-create">
+<div class="kategoricus-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

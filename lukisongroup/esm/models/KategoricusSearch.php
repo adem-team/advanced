@@ -43,10 +43,10 @@ class KategoricusSearch extends Kategoricus
 	    public function searchparent($params)
     {
 		
-        $queryp = Kategoricus::find()->where('STATUS <> 0')
+        $query = Kategoricus::find()->where('STATUS <> 0')
 														 ->andwhere('CUST_KTG_PARENT = 0');
         $dataProviderparent= new ActiveDataProvider([
-            'query' => $queryp,
+            'query' => $query,
         ]);
 
         $this->load($params);
@@ -57,7 +57,7 @@ class KategoricusSearch extends Kategoricus
             return $dataProviderparent;
         }
 
-           $queryp->andFilterWhere([
+           $query->andFilterWhere([
             'CUST_KTG' => $this->CUST_KTG,
             'CUST_KTG_PARENT' => $this->CUST_KTG_PARENT,
             'CREATED_AT' => $this->CREATED_AT,
@@ -65,7 +65,7 @@ class KategoricusSearch extends Kategoricus
             'STATUS' => $this->STATUS,
         ]);
 
-        $queryp->andFilterWhere(['like', 'CUST_KTG_NM', $this->CUST_KTG_NM])
+        $query->andFilterWhere(['like', 'CUST_KTG_NM', $this->CUST_KTG_NM])
             ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
             ->andFilterWhere(['like', 'UPDATED_BY', $this->UPDATED_BY]);
 
@@ -76,7 +76,7 @@ class KategoricusSearch extends Kategoricus
     {
         $query = Kategoricus::find()->where('STATUS <> 3');
 
-        $dataProvider = new ActiveDataProvider([
+        $dataProviderkat = new ActiveDataProvider([
             'query' => $query,
         ]);
 
@@ -85,7 +85,7 @@ class KategoricusSearch extends Kategoricus
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
-            return $dataProvider;
+            return $dataProviderkat;
         }
 
         $query->andFilterWhere([
@@ -100,6 +100,6 @@ class KategoricusSearch extends Kategoricus
             ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
             ->andFilterWhere(['like', 'UPDATED_BY', $this->UPDATED_BY]);
 
-        return $dataProvider;
+        return $dataProviderkat;
     }
 }
