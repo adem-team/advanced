@@ -3,14 +3,14 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\db\ActiveQuery;
 
-use lukisongroup\purchasing\models\Podetail;
-use lukisongroup\purchasing\models\Purchasedetail;
+use lukisongroup\sales\models\Sodetail;
+use lukisongroup\sales\models\Purchasedetail;
 ?>
 
 <?php 
 $form = ActiveForm::begin([
     'method' => 'post',
-    'action' => ['/purchasing/purchase-order/simpan'],
+    'action' => ['/sales/purchase-order/simpan'],
 ]);
 ?>
 

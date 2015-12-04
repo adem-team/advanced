@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 use lukisongroup\master\models\Suplier;
 use lukisongroup\master\models\Barangumum;
 use lukisongroup\master\models\Nmperusahaan;
-use lukisongroup\purchasing\models\Purchasedetail;
+use lukisongroup\sales\models\Purchasedetail;
 use lukisongroup\esm\models\Barang;
 
 use lukisongroup\hrd\models\Employe;
@@ -31,11 +31,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php 
         $sup = Suplier::find()->where(['KD_SUPPLIER'=>$model->KD_SUPPLIER])->one(); 
         $pod = Purchasedetail::find()->where(['KD_PO'=>$model->KD_PO])->all(); 
+      //  echo "<pre>";
+       // print_r($model);
+
     ?>
 
     <center>
-        <h3 style="margin:0px;"><u>Purchase Order</u></h3>
-        <h4 style="margin:0px;">No. <?= $model->KD_PO; ?></h4>
+       <!-- <h3 style="margin:0px;"><u>Purchase Order</u></h3>
+        <h4 style="margin:0px;">No. <?= $model->KD_PO; ?></h4>-->
     </center>
 
     <br/>
@@ -101,7 +104,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <table class="tbl">
         <tr>
             <td class="head">No.</td>
-            <td class="head">Kode Barang</td>
+            <td class="head">Kodek Barang</td>
             <td class="head">Nama Barang</td>
             <td class="head">Quantity</td>
             <td class="head">Satuan Barang</td>

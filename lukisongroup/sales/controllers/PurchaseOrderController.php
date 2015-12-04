@@ -13,10 +13,10 @@ use yii\filters\VerbFilter;
 use lukisongroup\sales\models\Purchasedetail;
 use lukisongroup\sales\models\Podetail;
 
-use lukisongroup\sales\models\Requestorder;
-use lukisongroup\sales\models\RequestorderSearch;
-use lukisongroup\sales\models\Rodetail;
-use lukisongroup\sales\models\RodetailSearch;
+use lukisongroup\sales\models\Salesorder;
+use lukisongroup\sales\models\SalesorderSearch;
+use lukisongroup\sales\models\Sodetail;
+use lukisongroup\sales\models\SodetailSearch;
 
 use lukisongroup\sales\models\Statuspo;
 
@@ -122,14 +122,14 @@ class PurchaseOrderController extends Controller
         $status = '';
         foreach ($tes['selection'] as $key => $isi) {
             $pp = explode('_',$isi);
-            $rd = Rodetail::find()->where(['ID'=>$pp[1]])->one();
+            $rd = Sodetail::find()->where(['ID'=>$pp[1]])->one();
             $ckpo = Purchasedetail::find()->where(['KD_BARANG'=> $rd->KD_BARANG, 'KD_PO'=>$kdpo, 'UNIT'=>$rd->UNIT])->andWhere('STATUS <> 3')->one();
 
 
             if(count($ckpo) == 0){
                 $command = $cons->createCommand();
 
-                $command->insert('p0002', [
+                $command->insert('sp002', [
                     'KD_PO'=> $kdpo, 
                     'QTY'=> $rd->QTY, 
                     'UNIT'=> $rd->UNIT,
@@ -138,7 +138,7 @@ class PurchaseOrderController extends Controller
                 ] )->execute();
 
                 $id = $cons->getLastInsertID();
-                $command->insert('p0021', [
+                $command->insert('sp021', [
                     'KD_PO'=> $kdpo, 
                     'KD_RO'=> $tes['kdro'], 
                     'ID_DET_RO'=> $pp[1],
@@ -150,14 +150,14 @@ class PurchaseOrderController extends Controller
                 )->execute();
             } else {
 
-                $dpo = Podetail::find()->where(['ID_DET_PO'=>$ckpo->ID, 'KD_RO'=>$kdro])->andWhere('STATUS <> 3')->one();
+                $dpo = Sodetail::find()->where(['ID_DET_PO'=>$ckpo->ID, 'KD_RO'=>$kdro])->andWhere('STATUS <> 3')->one();
 
                 if(count($dpo) == 1){ 
                     $status .= '<p class="bg-danger" style="padding:15px;" >RO "<b>'.$kdro.'</b>" dengan kode barang " <b>'.$rd->KD_BARANG.'</b> " Sudah ada di dalam list.<br/> silahkan ubah jumlah Quantity barangnya.</p>';
                 } else {
 
                     $command = $cons->createCommand();
-                    $command->insert('p0021', [
+                    $command->insert('sp021', [
                         'KD_PO'=> $kdpo, 
                         'KD_RO'=> $tes['kdro'], 
                         'ID_DET_RO'=> $pp[1],
@@ -170,7 +170,7 @@ class PurchaseOrderController extends Controller
                     
                     $ttl = $rd->QTY + $ckpo->QTY;
                     $idpo = $ckpo->ID;
-                    $command->update('p0002', ['QTY'=>$ttl], "ID='$idpo'")->execute();
+                    $command->update('sp002', ['QTY'=>$ttl], "ID='$idpo'")->execute();
                 }
             }
         }
@@ -195,16 +195,16 @@ class PurchaseOrderController extends Controller
             $hsl = $hsl + $qty;
 
            $command = $cons->createCommand();
-           $command->update('p0021', ['QTY'=>$qty, 'NOTE'=>$ket], "ID='$id'")->execute();
+           $command->update('sp021', ['QTY'=>$qty, 'NOTE'=>$ket], "ID='$id'")->execute();
         }
-        $command->update('p0002', ['QTY'=>$hsl], "ID='$idpo'")->execute();
+        $command->update('sp002', ['QTY'=>$hsl], "ID='$idpo'")->execute();
 
         return $this->redirect(['create','kdpo'=>$kdpo]);
     }
 
     public function actionDetail($kd_ro,$kdpo)
     {
-        $podet = Rodetail::find()->where(['KD_RO'=>$kd_ro, 'STATUS'=>1])->all();
+        $podet = Sodetail::find()->where(['KD_RO'=>$kd_ro, 'STATUS'=>1])->all();
         return $this->renderAjax('_detail', [  // ubah ini
             'po' => $podet,
             'kdpo' => $kdpo,
@@ -214,15 +214,15 @@ class PurchaseOrderController extends Controller
 
     public function actionDelpo($idpo,$kdpo)
     {
-        $podet = Podetail::find()->where(['KD_PO'=>$kdpo, 'ID'=>$idpo])->one();
+        $podet = Sodetail::find()->where(['KD_PO'=>$kdpo, 'ID'=>$idpo])->one();
         $po = Purchasedetail::find()->where(['KD_PO'=>$kdpo, 'ID'=>$podet->ID_DET_PO])->one();
 
         $sisa = $po->QTY - $podet->QTY;
           
         if($sisa == '0'){
-            \Yii::$app->db_esm->createCommand()->update('p0002', ['QTY'=>$sisa, 'STATUS'=>'3'], "ID='$po->ID'")->execute();
+            \Yii::$app->db_esm->createCommand()->update('sp002', ['QTY'=>$sisa, 'STATUS'=>'3'], "ID='$po->ID'")->execute();
         } else {
-            \Yii::$app->db_esm->createCommand()->update('p0002', ['QTY'=>$sisa], "ID='$po->ID'")->execute();
+            \Yii::$app->db_esm->createCommand()->update('sp002', ['QTY'=>$sisa], "ID='$po->ID'")->execute();
         }
 
         $podet->STATUS = '3';
@@ -259,7 +259,7 @@ class PurchaseOrderController extends Controller
 
             $cons = \Yii::$app->db_esm;
             $command = $cons->createCommand();
-            $command->update('p0002', ['HARGA'=>$harga], "ID='$detpo->ID'")->execute();
+            $command->update('sp002', ['HARGA'=>$harga], "ID='$detpo->ID'")->execute();
 
         }
 
