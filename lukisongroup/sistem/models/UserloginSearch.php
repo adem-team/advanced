@@ -75,7 +75,9 @@ class UserloginSearch extends Userlogin
     {
 		$model = Userlogin::find()->select('*')
 				->joinWith('emp',true,'LEFT JOIN')
-				->Where(['dbm001.user.id' => $id]);
+				//->Where(['dbm001.user.id' => $id]);
+				->Where("dbm001.user.id=".$id." AND EMP_STS<>'3'");
+				
 				//->one();
 		if ($model !== null) {
             return $model;
@@ -94,7 +96,7 @@ class UserloginSearch extends Userlogin
 		$model = Userlogin::find()->select('*')
 					->joinWith('emp',true,'LEFT JOIN')
 					->joinWith('mdlpermission',true,'LEFT JOIN')
-					->Where('dbm001.user.id='. $id .' AND modul_permission.MODUL_ID=' .$modul_id);				
+					->Where("dbm001.user.id=". $id ." AND modul_permission.MODUL_ID=" .$modul_id ." AND EMP_STS<>'3'");				
 		if ($model !== null) {
             return $model;
         } else {
