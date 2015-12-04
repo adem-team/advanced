@@ -34,12 +34,34 @@ class CustomerController extends Controller
     {
         $searchModel = new CustomerSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+	   // kategori data
+        $searchModelkat = new KategoricusSearch();
+        $dataProviderkat  = $searchModelkat->search(Yii::$app->request->queryParams);
+		// parent data
+		 $searchModelkatp = new KategoricusSearch();
+        $dataProviderparent =  $searchModelkatp->searchparent(Yii::$app->request->queryParams);
+		
+		// city data
+		$searchmodelkota = new KotaSearch();
+		$dataproviderkota = $searchmodelkota->search(Yii::$app->request->queryParams);
+		
+		// province data
+		$searchmodelpro = new ProvinceSearch();
+		$dataproviderpro = $searchmodelpro->search(Yii::$app->request->queryParams);
+		
 
         return $this->render('index', [
+		  'dataProviderkat'  =>   $dataProviderkat ,
             'searchModel' => $searchModel,
+			'searchModelkat ' => $searchModelkat,
+			'searchModelkatp ' => $searchModelkatp,
             'dataProvider' => $dataProvider,
+			'searchmodelkota' => $searchmodelkota,
+			'searchmodelpro' => $searchmodelpro,
+			'dataproviderpro' =>  $dataproviderpro,
+			'dataproviderkota' => $dataproviderkota,
+			'dataProviderparent' =>   $dataProviderparent
         ]);
-    }
 
     /**
      * Displays a single Customer model.
