@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-
+use lukisongroup\master\models\Unitbarang;
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\purchasing\models\Requestorder */
 
@@ -54,9 +54,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 
     <table class="table table-striped" style="background-color:#fff; border:1px solid #7D7DB2; ">
         <thead style="background-color:#A1A1E6; ">
-            <th>No.</th>
-            <th>Nama Barang</th>
+            <th>No.</th>           
             <th>Kode Barang</th>
+			<th>Nama Barang</th>
             <th>Quantity</th>
             <th>Satuan Barang</th>
             <th>Catatan</th>
@@ -68,11 +68,21 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
         <?php $no=0; foreach($detro as $ro){ 
 			if($ro->STATUS == 3) {} else { $no=$no+1; ?>
             <tr>
-                <td><?php echo $no; ?></td>
-                <td><?php echo $ro->NM_BARANG; ?></td>
+                <td><?php echo $no; ?></td>                
                 <td><?php echo $ro->KD_BARANG; ?></td>
-                <td><?php echo $ro->QTY; ?></td>
-                <td><?php echo $ro->UNIT; ?></td>
+				<td><?php echo $ro->NM_BARANG; ?></td>
+                <td><?php echo $ro->RQTY; ?></td>
+                <td>
+					<?php
+						$unitBarang = Unitbarang::findOne(['KD_UNIT' => $ro->UNIT]);					
+						//$unitBarang=Unitbarang::find()->where('KD_UNIT="'.$ro->UNIT. '"')->one();
+						if (count($unitBarang)!=0){
+							echo $unitBarang->NM_UNIT;
+						}else{
+							$UnitNm='Not Set';
+						}
+					?>
+				</td>
                 <td><?php echo $ro->NOTE; ?></td>
                 <td><?php if($ro->STATUS == 1){ echo '<i class="fa fa-check fa-fw" style="color:blue;"></i>';  } else { echo '<i class="fa fa-question fa-fw" style="color:red;"></i>'; }; ?></td>
             </tr>

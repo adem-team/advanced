@@ -20,6 +20,7 @@ use lukisongroup\purchasing\models\Requestorder;
  */
 class Rodetail extends \yii\db\ActiveRecord
 {
+	public $KD_KATEGORI;
     /**
      * @inheritdoc
      */

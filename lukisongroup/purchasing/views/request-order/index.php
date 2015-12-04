@@ -101,7 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 							[
 								'label'=>'CREATED_BY',
 								'attribute'=>'EMP_NM',
-								'mergeHeader'=>true,
+								//'mergeHeader'=>true,
 							],
 							/*
 							[

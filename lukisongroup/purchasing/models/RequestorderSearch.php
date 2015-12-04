@@ -32,7 +32,7 @@ class RequestorderSearch extends Requestorder
             [['ID', 'STATUS'], 'integer'],
             [['KD_RO', 'NOTE', 'ID_USER', 'KD_CORP', 'KD_CAB', 'KD_DEP', 'CREATED_AT', 'UPDATED_ALL', 'DATA_ALL'], 'safe'],
             [['detro'], 'safe'],
-			[['detro.KD_RO','detro.NM_BARANG','detro.QTY'], 'safe']
+			[['detro.KD_RO','detro.NM_BARANG','detro.QTY','EMP_NM'], 'safe']
 			//[['NM_BARANG','QTY'], 'safe']
         ];
     }
@@ -68,6 +68,17 @@ class RequestorderSearch extends Requestorder
 			//$dataProvider->query->where('0=1');
 			return $dataProvider;
 		} 
+			
+		$query->andFilterWhere(['like', 'KD_RO', $this->KD_RO])
+			  ->andFilterWhere(['like', 'EMP_NM', $this->EMP_NM]);
+			
+		if($this->CREATED_AT!=''){
+            $date_explode = explode(" - ", $this->CREATED_AT);
+            $date1 = trim($date_explode[0]);
+            $date2= trim($date_explode[1]);
+            $query->andFilterWhere(['between','CREATED_AT', $date1,$date2]);
+        } 
+		
 		return $dataProvider;
     }
 	

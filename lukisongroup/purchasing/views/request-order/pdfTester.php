@@ -54,9 +54,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <thead>
             <tr>
-				<th>No.</th>
-				<th>Nama Barang</th>
+				<th>No.</th>				
 				<th>Kode Barang</th>
+				<th>Nama Barang</th>
 				<th>Quantity</th>
 				<th>Satuan Barang</th>
 				<th>Catatan</th>
@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <td><?php echo $no; ?></td>
                 <td><?php echo $ro->NM_BARANG; ?></td>
                 <td><?php echo $ro->KD_BARANG; ?></td>
-                <td><?php echo $ro->QTY; ?></td>
+                <td><?php echo $ro->RQTY; ?></td>
 				<?php
 					$model=Unitbarang::find()->where('KD_UNIT="'.$ro->UNIT. '"')->one();
 					if (count($model)!=0){
