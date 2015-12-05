@@ -10,12 +10,14 @@ use kartik\widgets\DepDrop;
 use yii\helpers\Url;
 use kartik\builder\Form;
 use kartik\widgets\TouchSpin;
+use yii\web\JsExpression;
+use yii\data\ActiveDataProvider;
+
 use lukisongroup\master\models\Barangumum;
 use lukisongroup\esm\models\Barang;
 use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
-use yii\web\JsExpression;
-use yii\data\ActiveDataProvider;
+
 $brgUnit = ArrayHelper::map(Unitbarang::find()->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT');
 $brgKtg = ArrayHelper::map(Kategori::find()->orderBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI');
 $brgUmum = ArrayHelper::map(Barangumum::find()->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG'); 
@@ -62,64 +64,15 @@ $brgUmum = ArrayHelper::map(Barangumum::find()->orderBy('NM_BARANG')->all(), 'KD
 			'pluginOptions' => [
 				'depends'=>['kat-id','brg-id'],
 				'url'=>Url::to(['/purchasing/request-order/brgunit']),
-				'initialize'=>true, 
+				//'initialize'=>true, 
 				'placeholder' => false,
 			], 		
 		]); 
 	?>
 
-    <?php 
-		//echo  $form->field($roDetail, 'UNIT')->textInput(['placeholder'=>'Unit Barang'])->label('Unit Barang'); 
-		
-	?>
     <?php echo  $form->field($roDetail, 'RQTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']); ?>
 
     <?php echo $form->field($roDetail, 'NOTE')->textarea(array('rows'=>2,'cols'=>5))->label('Informasi');?>
-
-    <?php //= $form->field($roDetail, 'NM_BARANG')->textInput(['maxlength' => true]) ?>
-
-    <?php
-
-		/* $form->field($model, 'STOCK_GUDANG_UNIT')->widget(TouchSpin::classname(), [
-			'name' => 't4',
-			'options' => ['placeholder' => 'Entry Jumlah Stok per Item Barang ...'],			
-			'pluginOptions' => [
-				'buttonup_class' => 'btn btn-primary', 
-				'buttondown_class' => 'btn btn-info', 
-				'buttonup_txt' => '<i class="glyphicon glyphicon-plus-sign"></i>', 
-				'buttondown_txt' => '<i class="glyphicon glyphicon-minus-sign"></i>'
-			]
-		]) */
-	?>
-	<?php
-		
-		/* $form->field($model, 'STOCK_GUDANG_PCS')->widget(TouchSpin::classname(), [
-			'name' => 't5',
-			'options' => ['placeholder' => 'Entry Jumlah Stok per Item Barang ...'],			
-			'pluginOptions' => [
-				'buttonup_class' => 'btn btn-primary', 
-				'buttondown_class' => 'btn btn-info', 
-				'buttonup_txt' => '<i class="glyphicon glyphicon-plus-sign"></i>', 
-				'buttondown_txt' => '<i class="glyphicon glyphicon-minus-sign"></i>'
-			]
-		]) */
-	?>
-
-    <?php //= $form->field($model, 'PRODAK_LINE')->textInput(['maxlength' => true]) ?>
-
-    <?php //= $form->field($model, 'CORP_ID')->textInput(['maxlength' => true]) ?>
-
-    <?php //= $form->field($model, 'KD_DISTRIBUTOR')->textInput(['maxlength' => true]) ?>
-
-    <?php //= $form->field($model, 'KD_SUBDIST')->textInput(['maxlength' => true]) ?>
-
-    <?php //= $form->field($model, 'CREATED_BY')->textInput(['maxlength' => true]) ?>
-
-    <?php //= $form->field($model, 'UPDATED_BY')->textInput(['maxlength' => true]) ?>
-
-    <?php //= $form->field($model, 'UPDATED_TIME')->textInput() ?>
-
-    <?php // echo  Yii::$app->ambilkonci->getRoCode();?>
 
     <div class="form-group">
         <?= Html::submitButton($roDetail->isNewRecord ? 'Create' : 'Update', ['class' => $roDetail->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

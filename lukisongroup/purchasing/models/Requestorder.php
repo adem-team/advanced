@@ -43,6 +43,11 @@ class Requestorder extends \yii\db\ActiveRecord
         return $this->hasMany(Rodetail::className(), ['KD_RO' => 'KD_RO']);
     }
 	
+	public function getCunit()
+    {
+        return $this->hasOne(Unitbarang::className(), ['KD_UNIT' => 'detro.UNIT']);
+    }
+	
     public function getEmploye()
     {
         return $this->hasOne(Employe::className(), ['EMP_ID' => 'ID_USER']);

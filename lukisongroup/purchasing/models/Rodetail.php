@@ -4,6 +4,7 @@ namespace lukisongroup\purchasing\models;
 
 use Yii;
 use lukisongroup\purchasing\models\Requestorder;
+use lukisongroup\master\models\Unitbarang;
 /**
  * This is the model class for table "r0003".
  *
@@ -44,10 +45,10 @@ class Rodetail extends \yii\db\ActiveRecord
     {
         return [
  //           [['ID','KD_RO', 'KD_BARANG', 'NM_BARANG', 'QTY', 'NO_URUT', 'NOTE', 'STATUS', 'CREATED_AT', 'UPDATED_AT'], 'required'],
-			//[['KD_RO', 'RQTY','SQTY','UNIT','KD_BARANG'], 'required'],
-			[['KD_RO', 'RQTY','SQTY','UNIT','KD_BARANG'], 'safe'],
+			[['KD_RO','RQTY','UNIT','KD_BARANG'], 'required'],
+			//[['KD_RO','RQTY','SQTY','UNIT','KD_BARANG'], 'safe'],
             [['STATUS'], 'integer'],
-            [['NOTE'], 'string'],
+            [['NOTE','UNIT','KD_BARANG'], 'string'],
             [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['KD_RO', 'KD_BARANG'], 'string', 'max' => 50],
             [['NM_BARANG', 'NO_URUT'], 'string', 'max' => 255]
@@ -57,6 +58,11 @@ class Rodetail extends \yii\db\ActiveRecord
 	public function getParentro()
     {
         return $this->hasOne(Requestorder::className(), ['KD_RO' => 'KD_RO']);
+    }
+	
+	public function getCunit()
+    {
+        return $this->hasOne(Unitbarang::className(), ['KD_UNIT' => 'UNIT']);
     }
 	
     /**

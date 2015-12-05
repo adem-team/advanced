@@ -174,6 +174,7 @@ class RequestOrderController extends Controller
 				$roDetail = new Rodetail();
 				$profile= Yii::$app->getUserOpt->Profile_user();
 				
+		if($roDetail->load(Yii::$app->request->post()) && $roDetail->validate()){		
 				$hsl = \Yii::$app->request->post();				
 				$kdUnit = $hsl['Rodetail']['UNIT'];
 				$kdBarang = $hsl['Rodetail']['KD_BARANG'];
@@ -228,24 +229,72 @@ class RequestOrderController extends Controller
 						return false;						   
 					}
 					//return $this->redirect(['index','param'=>$getkdro]);			
-					return $this->redirect(['index?RequestorderSearch[KD_RO]='.$getkdro]);			
+					return $this->redirect(['index?RequestorderSearch[KD_RO]='.$getkdro]);
+		}else{
+			return $this->redirect(['index']);
+		}
 				
 	}
-	
+		
 	/**
      * Add Request Detail
      * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
-	public function actionTambah()
-    {
+	public function actionTambah($kd)
+    {		
+		$searchModel = new RodetailSearch();
+        $dataProvider = $searchModel->searchChildRo(Yii::$app->request->queryParams,$kd);
+		$roHeader = Requestorder::find()->where(['KD_RO' => $kd])->one();
 		$roDetail = new Rodetail();	
-		$roHeader = new Requestorder();
-            return $this->renderAjax('_update', [
-                'roDetail' => $roDetail,
-				'roHeader' => $roHeader,
-            ]);			
+            return $this->renderAjax('_update', [                
+						'roHeader' => $roHeader,
+						'roDetail' => $roDetail,
+						'detro' => $roHeader->detro,						
+						'searchModel'=>$searchModel,
+						'dataProvider'=>$dataProvider
+					]);			
     }	
+	
+	/*
+	 * actionSimpansecondt() <- actionTambah($kd)
+	 * First Create RO |Rodetail
+	 * Add: component Yii::$app->getUserOpt->Profile_user()
+	 * Add: component \Yii::$app->ambilkonci->getRoCode();
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+	**/
+	public function actionSimpantambah(){
+		$roDetail = new Rodetail();
+		if($roDetail->load(Yii::$app->request->post()) && $roDetail->validate()){
+			$hsl = \Yii::$app->request->post();	
+			$kdro = $hsl['Rodetail']['KD_RO'];				
+			$kdBarang = $hsl['Rodetail']['KD_BARANG'];
+			$nmBarang = Barangumum::findOne(['KD_BARANG' => $kdBarang]);
+			$kdUnit = $hsl['Rodetail']['UNIT'];
+			$rqty = $hsl['Rodetail']['RQTY'];
+			$note = $hsl['Rodetail']['NOTE'];
+			
+			/*
+			 * Detail Request Order
+			**/
+			$roDetail->KD_RO = $kdro;
+			$roDetail->CREATED_AT = date('Y-m-d H:i:s');				
+			$roDetail->NM_BARANG = $nmBarang->NM_BARANG;
+			$roDetail->KD_BARANG = $kdBarang;
+			$roDetail->UNIT = $kdUnit;
+			$roDetail->RQTY = $rqty;
+			$roDetail->NOTE = $note;
+			$roDetail->STATUS = 0;
+			$roDetail->save();
+			
+			return $this->redirect(['index?RequestorderSearch[KD_RO]='.$kdro]);
+		}else{
+			return $this->redirect(['index']);
+		}
+	}
+	
+	
 	
 	 /**
      * View Requestorder

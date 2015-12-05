@@ -46,11 +46,11 @@ class RodetailSearch extends Rodetail
 	public function searchChildRo($params,$kdro='')
     {
 		
-		/* if($kdro!=''){
+		 if($kdro!=''){
 			$getkdro=" and r0001.KD_RO='".$kdro."'";
 		}else{
 			$getkdro='';
-		} */
+		} 
 		
 		$profile=Yii::$app->getUserOpt->Profile_user();
         //$query = Pilotproject::find()->Where('sc0001.STATUS<>3 AND DEP_ID="'.$profile->emp->DEP_ID .'"');

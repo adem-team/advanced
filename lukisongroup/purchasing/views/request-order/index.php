@@ -66,11 +66,15 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 									//$rodetail = new Rodetail();
 									$dt = Rodetail::find()->where(['KD_RO'=>$model->KD_RO])->andWhere('STATUS <> 3')->count(); //ptr.nov Count RO
 									$cn = Rodetail::find()->where(['KD_RO'=>$model->KD_RO, 'STATUS'=>1])->count(); //ptr.nov Count RO Disetujui
-									
-									if ($model->STATUS == 1) {
+									$profile=Yii::$app->getUserOpt->Profile_user();			
+									if ($model->STATUS == 1) {											
 										return Html::a('<i class="fa fa-check"></i> &nbsp;&nbsp;&nbsp;'.$cn.' Dari '.$dt, ['proses','kd'=>$model->KD_RO],['class'=>'btn btn-success btn-sm', 'title'=>'Detail']);
 									} else if ($model->STATUS == 0) {
-										return Html::a('<i class="fa fa-navicon"></i> &nbsp;&nbsp;&nbsp;&nbsp;Proses', ['proses','kd'=>$model->KD_RO],['class'=>'btn btn-danger btn-sm', 'title'=>'Detail']);
+										if($profile->emp->JOBGRADE_ID == 'M' OR $profile->emp->JOBGRADE_ID == 'SM' ){
+											return Html::a('<i class="fa fa-navicon"></i> &nbsp;&nbsp;&nbsp;&nbsp;Proses', ['proses','kd'=>$model->KD_RO],['class'=>'btn btn-danger btn-sm', 'title'=>'Detail']);
+										}else{
+											return Html::a('<i class="fa fa-navicon"></i> &nbsp;&nbsp;&nbsp;&nbsp;Proses', ['#'],['class'=>'btn btn-danger btn-sm', 'title'=>'Detail','data-confirm'=>'Permission Confirm !, Contact your Leader?']);
+										}
 									} 
 								},
 							],  
@@ -100,44 +104,31 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 												
 							[
 								'label'=>'CREATED_BY',
-								'attribute'=>'EMP_NM',
-								//'mergeHeader'=>true,
-							],
-							/*
-							[
-								'label'=>'Qty',
-								'attribute'=>'RQTY',
-								//'mergeHeader'=>true,
-							],
-							[
-								'attribute'=>'UNIT',
-								'mergeHeader'=>true,
-								'value'=>function ($model, $key, $index, $widget) { 
-									$masterUnit = Unitbarang::find()->where(['KD_UNIT'=>$model->UNIT])->one();
-									if(count($masterUnit)!=0){
-										return $masterUnit->NM_UNIT;
-									}else{
-										return 'none';
-									}
-								},
-							],	
-							*/							
-							
+								'attribute'=>'EMP_NM'
+							],							
 							[
 								'header'=>'Action',	
 								'class' =>'yii\grid\ActionColumn',
-								'template' => '{tambah} {link} {edit} {delete} {cetak}',
+								'template' => '{tambah} {link} {edit} {cetak} {delete}',
 								'buttons' => [									
 									'tambah' => function ($url,$model) { 
-												return  Html::a('<i class="fa fa-plus fa-lg"></i> ','/purchasing/request-order/tambah',[
+												return  Html::a('<i class="fa fa-plus fa-lg"></i> ','/purchasing/request-order/tambah?kd='. $model->KD_RO,[
 																'data-toggle'=>"modal",
 																'data-target'=>"#add-ro"						
 														]);
 									},
-									'link' => function ($url,$model) { return Html::a('', ['view','kd'=>$model->KD_RO],['class'=>'fa fa-info-circle fa-lg', 'title'=>'Detail']);},
-									'edit' => function ($url,$model) { return Html::a('', ['buatro','id'=>$model->KD_RO],['class'=>'fa fa-pencil-square-o fa-lg', 'title'=>'Ubah RO']); },
-									'delete' => function ($url,$model) { if($model->STATUS == 0){ return Html::a('', ['hapusro','id'=>$model->KD_RO],['class'=>'fa fa-trash-o fa-lg', 'title'=>'Hapus RO','data-confirm'=>'Anda yakin ingin menghapus RO ini?']); } },
-									'cetak' => function ($url,$model) { return Html::a('', ['cetakpdf','kd'=>$model->KD_RO],[ 'class'=>'fa fa-print fa-lg', 'target' => '_blank', 'title'=>'Cetak RO', 'data-pjax' => '0',]);},
+									'link' => function ($url,$model) { 
+												return Html::a('', ['view','kd'=>$model->KD_RO],['class'=>'fa fa-info-circle fa-lg', 'title'=>'Detail']);
+											},
+									//'edit' => function ($url,$model) { return Html::a('', ['buatro','id'=>$model->KD_RO],['class'=>'fa fa-pencil-square-o fa-lg', 'title'=>'Ubah RO']); },
+									'cetak' => function ($url,$model) {
+											    return Html::a('', ['cetakpdf','kd'=>$model->KD_RO],[ 'class'=>'fa fa-print fa-lg', 'target' => '_blank', 'title'=>'Cetak RO', 'data-pjax' => '0',]);
+											},
+									'delete' => function ($url,$model) { 
+													if($model->STATUS == 0){ 
+														return Html::a('', ['hapusro','id'=>$model->KD_RO],['class'=>'fa fa-trash-o fa-lg', 'title'=>'Hapus RO','data-confirm'=>'Anda yakin ingin menghapus RO ini?']); 
+													} 
+												},
 								],
 							],	
 							
@@ -185,11 +176,8 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 							'data-toggle'=>"modal",
 								'data-target'=>"#new-ro",							
 									'class' => 'btn btn-warning'						
-												])
-							
-							
-						
-						//'showFooter'=>false,
+												]),					
+						'showFooter'=>false,
 					],		
 					
 					/* 'export' =>['target' => GridView::TARGET_BLANK],
