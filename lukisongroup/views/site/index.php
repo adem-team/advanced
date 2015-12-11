@@ -80,8 +80,8 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										'badge' => '2'
 									],	
 									[
-										'content' => 'Signature',
-										'url' => '/email/mail-box',
+										'content' => 'Profile',
+										'url' => '/sistem/user-profile',
 										
 									],										
 
@@ -148,7 +148,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									[
 										'content' => 'Request Order',
 										'url' => '/purchasing/request-order',
-										'badge' => '14'
+										'badge' => '1'
 									],	
 									[
 										'content' => 'Sales Order',
