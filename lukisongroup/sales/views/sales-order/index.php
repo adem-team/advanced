@@ -216,4 +216,8 @@ if($jbtan == 'MGR'){
 	?>
 
 </div>
-<?php //// ?>
+<?php ////
+
+
+ECHO "TES";
+ ?>
