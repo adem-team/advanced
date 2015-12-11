@@ -10,6 +10,8 @@ use lukisongroup\esm\models\Kategoricus;
 use lukisongroup\esm\models\Province;
 use lukisongroup\esm\models\Kota;
 use yii\web\JsExpression;
+use yii\bootstrap\Modal;
+use yii\helpers\Url;
 
 
 /* @var $this yii\web\View */
@@ -27,6 +29,13 @@ use yii\web\JsExpression;
 	// $dropcity = ArrayHelper::map(Kota::find()->all(),'POSTAL_CODE','CITY_NAME');
 // print_r( $dropparentkategori);
 // die();
+    Modal::begin([
+             'header'=>'<h4>Vlookup</h4>',
+             'id'=> 'modal',
+             'size'=>'modal-lg',
+         ]);
+         echo"<div id='modalcalon'></div>";
+         modal::end();
  
 ?>
 
@@ -55,10 +64,10 @@ use yii\web\JsExpression;
     
     <?= $form->field($model, 'TLP1', $config)->widget(LabelInPlace::classname());?>
     
-     <?= $form->field($model, 'parent')->widget(Select2::classname(), [
+     <?= $form->field($model, 'PARENT')->widget(Select2::classname(), [
         'data' => $dropparentkategori,
         'options' => [
-         'id'=>"slect",
+         // 'id'=>"slect",
         'placeholder' => 'Pilih Parent ...'],
         'pluginOptions' => [
             'allowClear' => true,
@@ -127,7 +136,7 @@ use yii\web\JsExpression;
     ]);?>
  
 
-    <?= $form->field($model, 'ALAMAT', $config)->widget(LabelInPlace::classname());?>
+     <!-- $form->field($model, 'ALAMAT', $config)->widget(LabelInPlace::classname());?> -->
 
     <?= $form->field($model, 'WEBSITE', $config)->widget(LabelInPlace::classname());?>
 
@@ -135,9 +144,10 @@ use yii\web\JsExpression;
 
       <?= $form->field($model, 'NPWP', $config)->widget(LabelInPlace::classname());?>
 	  
-	  
+	<?=$form->field($model, 'STT_TOKO')->dropDownList(['' => ' -- Silahkan Pilih --',
+                                                     '0' => 'sewa',
+                                                     '1' => 'hak milik']) ; ?>
 
-    <?= $form->field($model, 'STT_TOKO')->textInput() ?>
 
     <?= $form->field($model, 'DATA_ALL')->textInput(['maxlength' => true]) ?>
 	
@@ -152,13 +162,81 @@ use yii\web\JsExpression;
 	
 	<?= $form->field($model, 'MAP_LNG')->textInput(['maxlength' => true,'readonly'=>true]) ?>
 	<?= $form->field($model, 'MAP_LAT')->textInput(['maxlength' => true,'readonly'=>true]) ?>
-   <?php
-   
-    echo \pigolab\locationpicker\LocationPickerWidget::widget([
+       <!-- Html::button('...', ['value'=>Url::to('/esm/customers/lokasi'),'class' => 'btn btn-success','id'=>'modalcp']);?> --> -->
+
+   <button type="button" class="btn btn-info btn-lg" id="myBtn">Open Modal</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+      
+    <?= $form->field($model, 'ALAMAT')->textInput(['maxlength' => true]) ?> 
+
+     <?php echo \pigolab\locationpicker\LocationPickerWidget::widget([
        // 'key' => 'http://maps.google.com/maps/api/js?sensor=false&libraries=places', // optional , Your can also put your google map api key
        'options' => [
-            'style' => 'width: 100%; height: 400px', // map canvas width and height
+       // 'id'=>'tes',
+        // 'enableSearchBox' => true,
+            'style' => 'width: 100%; height: 400px',
+            'enableSearchBox' => true, // Optional , default is true
+        'searchBoxOptions' => [ // searchBox html attributes
+            'style' => 'width: 300px;', // Optional , default width and height defined in css coordinates-picker.css
+                    ], // map canvas width and height
         ] ,
+          
+
+        'clientOptions' => [
+            'location' => [
+                'latitude'  => -6.214620,
+                'longitude' => 106.845130 ,
+            
+            ],
+            'radius'    => 300,
+            'inputBinding' => [
+                'latitudeInput'     => new JsExpression("$('#customers-map_lat')"),
+                 'longitudeInput'    => new JsExpression("$('#customers-map_lng')"),
+                // 'radiusInput'       => new JsExpression("$('#us2-radius')"),
+                'locationNameInput' => new JsExpression("$('#customers-alamat')")
+            ],
+            'enableAutocomplete' => true,
+        ]        
+    ]);
+ 
+?>
+   
+
+ 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+ 
+  
+    <!--  \pigolab\locationpicker\LocationPickerWidget::widget([
+       // 'key' => 'http://maps.google.com/maps/api/js?sensor=false&libraries=places', // optional , Your can also put your google map api key
+       'options' => [
+       'id'=>'tes1',
+        // 'enableSearchBox' => true,
+            'style' => 'width: 100%; height: 400px',
+            'enableSearchBox' => true, // Optional , default is true
+        'searchBoxOptions' => [ // searchBox html attributes
+            'style' => 'width: 300px;', // Optional , default width and height defined in css coordinates-picker.css
+                    ], // map canvas width and height
+        ] ,
+          
+
         'clientOptions' => [
             'location' => [
                 'latitude'  => -6.214620,
@@ -170,18 +248,19 @@ use yii\web\JsExpression;
                 'latitudeInput'     => new JsExpression("$('#customers-map_lat')"),
                  'longitudeInput'    => new JsExpression("$('#customers-map_lng')"),
                 // 'radiusInput'       => new JsExpression("$('#us2-radius')"),
-                // 'locationNameInput' => new JsExpression("$('#us2-address')")
-            ]
+                'locationNameInput' => new JsExpression("$('#customers-alamat')")
+            ],
+            'enableAutocomplete' => true,
         ]        
     ]);
-?>
+?> -->
 
      
     
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-		
+		  <?= Html::a('Back', ['index'], ['class' => 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -192,6 +271,24 @@ use yii\web\JsExpression;
 <?php
 
 $script = <<<SKRIPT
+$(document).ready(function(){
+   
+    $("#myBtn").click(function(){
+        $('#tes').locationpicker('autosize')
+        $("#myModal").modal()
+
+    }); 
+});
+
+$(function(){
+     $('#tes').locationpicker('autosize');
+$('#modalcp').click(function() {
+    $('#modal').modal('show')
+        .find('#modalcalon')
+        .load($(this).attr('value'));
+
+    })
+        });
 	
 	 $('select#customers-province_id').change(function(){
         var id = $(this).val();
@@ -205,7 +302,7 @@ $script = <<<SKRIPT
                     });
 	
         
-    $('#slect').change(function(){
+    $('select#customers-parent').change(function(){
         var id = $(this).val();
         $.get('/esm/customers/lis',{id : id},
             function( data ) {

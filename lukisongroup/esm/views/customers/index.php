@@ -5,6 +5,8 @@ use kartik\grid\GridView;
 use kartik\tabs\TabsX;
 use yii\bootstrap\Modal;
 use lukisongroup\esm\models\Customers;
+use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
+MapAsset::register($this);  
 
 /* @var $this yii\web\View */
 /* @var $searchModel lukisongroup\esm\models\KategoriSearch */
@@ -427,8 +429,31 @@ $tabcrud = \kartik\grid\GridView::widget([
             'TLP1', 
             'TLP2', 
             'FAX', 
-            'STT_TOKO', 
-            'STATUS',
+            // 'STT_TOKO',
+             [   
+                'label' =>'Status Toko',
+                'value' => function ($model) {
+                    if ($model->STATUS == 1) {
+                        return 'Hak Milik';
+                    } else if ($model->STATUS == 0) {
+                        return 'Sewa';
+                    } 
+                },
+
+            ], 
+            // 'STATUS',
+            [   
+                'label' =>'STATUS',
+                'value' => function ($model) {
+                    if ($model->STATUS == 1) {
+                        return 'Aktif';
+                    } else if ($model->STATUS == 0) {
+                        return 'Tidak Aktif';
+                    } 
+                },
+
+            ],
+                
    
      [ 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view}{update}',
@@ -437,18 +462,18 @@ $tabcrud = \kartik\grid\GridView::widget([
                             'view' =>function($url, $model, $key){
                                     return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px">View </button>',
                                                                 ['viewcust','id'=> $model->CUST_KD],[
-                                                                'data-toggle'=>"modal",
-                                                                'data-target'=>"#view",
-                                                                'data-title'=> $model->CUST_KD,
+                                                                // 'data-toggle'=>"modal",
+                                                                // 'data-target'=>"#view",
+                                                                // 'data-title'=> $model->CUST_KD,
                                                                 ]);
                             },
                                
                              'update' =>function($url, $model, $key){
                                     return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px ">Update </button>',
                                                                 ['updatecus','id'=>$model->CUST_KD],[
-                                                                'data-toggle'=>"modal",
-                                                                'data-target'=>"#form",
-                                                                'data-title'=> $model->CUST_KD,
+                                                                // 'data-toggle'=>"modal",
+                                                                // 'data-target'=>"#form",
+                                                                // 'data-title'=> $model->CUST_KD,
                                                                 ]);
                             },
                               
@@ -486,7 +511,7 @@ $tabcrud = \kartik\grid\GridView::widget([
 
                     
         ],
-        'pjax'=>true,
+        // 'pjax'=>true,
         'pjaxSettings'=>[
             'options'=>[
                 'enablePushState'=>false,
@@ -516,19 +541,20 @@ $tabcrud = \kartik\grid\GridView::widget([
         //'floatHeaderOptions'=>['scrollContainer'=>'25'],
 
     ]);
+ 
                             
     $items=[
 		[
-			'label'=>'<i class="glyphicon glyphicon-user"></i> New Customers ','content'=> $tabcustomers,
-			//'active'=>true,
+			'label'=>'<i class="glyphicon glyphicon-user"></i> New Customers ','content'=> $tabcustomers, //   $tabcustomers,
+			'active'=>true,
 
 		],
 		
 		[
-			'label'=>'<i class="glyphicon glyphicon-map-marker"></i> MAP'//$tab_profile,
+			'label'=>'<i class="glyphicon glyphicon-map-marker"></i> MAP',//'content'=> //$tab_profile,
 		],
-                [
-			'label'=>'<i class="glyphicon glyphicon-folder-open"></i> DATA'//$tab_profile,
+        [
+			'label'=>'<i class="glyphicon glyphicon-folder-open"></i> DATA','content'=>$tabparent,//$tab_profile,
 		],
 			[
 			'label'=>'<i class="glyphicon glyphicon-user"></i> Kategori Customers',//$tab_profile,
@@ -537,13 +563,13 @@ $tabcrud = \kartik\grid\GridView::widget([
              [
                  'label'=>'<i class="glyphicon glyphicon-chevron-right"></i> PARENT',
                  'encode'=>false,
-                 'content'=>$tabparent,
+                  'content'=>$tabprovince,
                  // 'linkOptions'=>['data-url'=>Url::to(['/site/fetch-tab?tab=3'])]
              ],
              [
                  'label'=>'<i class="glyphicon glyphicon-chevron-right"></i> KATEGORI',
                  'encode'=>false,
-                  'content'=>$tabcrud,
+                  'content'=>$tabkota,
                  // 'linkOptions'=>['data-url'=>Url::to(['/site/fetch-tab?tab=4'])]
              ],
         ],
@@ -553,7 +579,7 @@ $tabcrud = \kartik\grid\GridView::widget([
 			'label'=>'<i class="glyphicon glyphicon-globe"></i> Province ','content'=> $tabprovince//$tab_profile,
 		],
 				[
-			'label'=>'<i class="glyphicon glyphicon-globe"></i> Kota','content'=>  $tabkota,//$tab_profile,
+			'label'=>'<i class="glyphicon glyphicon-globe"></i> Kota','content'=>   $map = "<div id = 'map' style = 'width:100%;height:500px;></div>" ,//$tab_profile,
 		],
     ];
 
@@ -567,235 +593,228 @@ echo TabsX::widget([
 		//'align'=>TabsX::ALIGN_LEFT,
 
 	]);
-                            
-                            ?>
-							<?php
-                                          
-                                                   
-                                  
-                                     
-                                    
-                                     
-                                             
-                                     
-                                     
-                                     
-                                              
-                                           
-                                             
-                                   
-                                             
-                                 
             ?>
+							
                              
                         <?php        
-		/* $this->registerJs("
-		
-                      var locations = [
-            <?php  
-                 $sql = Customers::find()->all();
-            	  foreach($sql as $post){
-                         
-                           echo [$post->CUST_NM,$post->MAP_LAT,$post->MAP_LNG],
-                               ;
-                                       
-                                   }
-            		 ?>
-            ];  */
-      
-		
-		
-  
+		 $this->registerJs("
 
-   /*  var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 12,
-      center: new google.maps.LatLng(-6.229191531958687,106.65994325550469),
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+// nampilin MAP
+ var map = new google.maps.Map(document.getElementById('map'),
+      {
+        zoom: 12,
+        center: new google.maps.LatLng(-6.229191531958687,106.65994325550469),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+
     });
 
+
+		
+    var public_markers = [];
     var infowindow = new google.maps.InfoWindow();
 
-    var marker, i;
+//data
+ $.getJSON('/esm/customers/map', function(json) { 
 
-    for (i = 0; i < locations.length; i++) {  
-      marker = new google.maps.Marker({
-        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-        map: map
-      });
+    for (var i in public_markers)
+    {
+        public_markers[i].setMap(null);
+    }
 
-      google.maps.event.addListener(marker, 'click', (function(marker, i) {
-        return function() {
-          infowindow.setContent(locations[i][0]);
-          infowindow.open(map, marker);
-        }
-      })(marker, i));
-    }; 
-                                            
+    $.each(json, function (i, point) {
+        // alert(point.MAP_LAT);
+ 
+// //set the icon 
+//     if(point.CUST_NM == 'asep')
+//         {
+//             icon = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
+//         }
+
+            var marker = new google.maps.Marker({
+            // icon: icon,
+            position: new google.maps.LatLng(point.MAP_LAT, point.MAP_LNG),
+            animation:google.maps.Animation.BOUNCE,
+            map: map,
+             icon : 'http://labs.google.com/ridefinder/images/mm_20_red.png'
+        });
+
+         public_markers[i] = marker;
+
+        google.maps.event.addListener(public_markers[i], 'mouseover', function () {
+            infowindow.setContent('<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>');
+            infowindow.open(map, public_markers[i]);
+        });
+
+
+    });
+
+ 
+ });
     
-							
-						
-    ",$this::POS_READY);*/
-							
-    $this->registerJs("
-    $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-        $('#formparent').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-            var modal = $(this)
-            var title = button.data('title') 
-            var href = button.attr('href') 
-            //modal.find('.modal-title').html(title)
-            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-            $.post(href)
-                .done(function( data ) {
-                    modal.find('.modal-body').html(data)
-                });
-            })
-    ",$this::POS_READY);
+//     // console.trace();
 
-$this->registerJs("
-        
-        $('#viewparent').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-            var modal = $(this)
-            var title = button.data('title') 
-            var href = button.attr('href') 
-            //modal.find('.modal-title').html(title)
-            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-            $.post(href)
-                .done(function( data ) {
-                    modal.find('.modal-body').html(data)
-                });
-            })
-    ",$this::POS_READY);
+     ",$this::POS_READY);
 							
-										$this->registerJs("
-    $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-        $('#form3').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-            var modal = $(this)
-            var title = button.data('title') 
-            var href = button.attr('href') 
-            //modal.find('.modal-title').html(title)
-            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-            $.post(href)
-                .done(function( data ) {
-                    modal.find('.modal-body').html(data)
-                });
-            })
-    ",$this::POS_READY);
+//     $this->registerJs("
+//     $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+//         $('#formparent').on('show.bs.modal', function (event) {
+//             var button = $(event.relatedTarget)
+//             var modal = $(this)
+//             var title = button.data('title') 
+//             var href = button.attr('href') 
+//             //modal.find('.modal-title').html(title)
+//             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+//             $.post(href)
+//                 .done(function( data ) {
+//                     modal.find('.modal-body').html(data)
+//                 });
+//             })
+//     ",$this::POS_READY);
 
-$this->registerJs("
+// $this->registerJs("
         
-        $('#view3').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-            var modal = $(this)
-            var title = button.data('title') 
-            var href = button.attr('href') 
-            //modal.find('.modal-title').html(title)
-            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-            $.post(href)
-                .done(function( data ) {
-                    modal.find('.modal-body').html(data)
-                });
-            })
-    ",$this::POS_READY);
+//         $('#viewparent').on('show.bs.modal', function (event) {
+//             var button = $(event.relatedTarget)
+//             var modal = $(this)
+//             var title = button.data('title') 
+//             var href = button.attr('href') 
+//             //modal.find('.modal-title').html(title)
+//             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+//             $.post(href)
+//                 .done(function( data ) {
+//                     modal.find('.modal-body').html(data)
+//                 });
+//             })
+//     ",$this::POS_READY);
 							
-									$this->registerJs("
-    $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-        $('#form2').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-            var modal = $(this)
-            var title = button.data('title') 
-            var href = button.attr('href') 
-            //modal.find('.modal-title').html(title)
-            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-            $.post(href)
-                .done(function( data ) {
-                    modal.find('.modal-body').html(data)
-                });
-            })
-    ",$this::POS_READY);
+// $this->registerJs("
+//     $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+//         $('#form3').on('show.bs.modal', function (event) {
+//             var button = $(event.relatedTarget)
+//             var modal = $(this)
+//             var title = button.data('title') 
+//             var href = button.attr('href') 
+//             //modal.find('.modal-title').html(title)
+//             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+//             $.post(href)
+//                 .done(function( data ) {
+//                     modal.find('.modal-body').html(data)
+//                 });
+//             })
+//     ",$this::POS_READY);
 
-$this->registerJs("
+// $this->registerJs("
         
-        $('#view2').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-            var modal = $(this)
-            var title = button.data('title') 
-            var href = button.attr('href') 
-            //modal.find('.modal-title').html(title)
-            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-            $.post(href)
-                .done(function( data ) {
-                    modal.find('.modal-body').html(data)
-                });
-            })
-    ",$this::POS_READY);
+//         $('#view3').on('show.bs.modal', function (event) {
+//             var button = $(event.relatedTarget)
+//             var modal = $(this)
+//             var title = button.data('title') 
+//             var href = button.attr('href') 
+//             //modal.find('.modal-title').html(title)
+//             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+//             $.post(href)
+//                 .done(function( data ) {
+//                     modal.find('.modal-body').html(data)
+//                 });
+//             })
+//     ",$this::POS_READY);
 							
-							$this->registerJs("
-    $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-        $('#form1').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-            var modal = $(this)
-            var title = button.data('title') 
-            var href = button.attr('href') 
-            //modal.find('.modal-title').html(title)
-            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-            $.post(href)
-                .done(function( data ) {
-                    modal.find('.modal-body').html(data)
-                });
-            })
-    ",$this::POS_READY);
+				// 					$this->registerJs("
+    // $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+    //     $('#form2').on('show.bs.modal', function (event) {
+    //         var button = $(event.relatedTarget)
+    //         var modal = $(this)
+    //         var title = button.data('title') 
+    //         var href = button.attr('href') 
+    //         //modal.find('.modal-title').html(title)
+    //         modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+    //         $.post(href)
+    //             .done(function( data ) {
+    //                 modal.find('.modal-body').html(data)
+    //             });
+    //         })
+    // ",$this::POS_READY);
 
-$this->registerJs("
+// $this->registerJs("
         
-        $('#view1').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-            var modal = $(this)
-            var title = button.data('title') 
-            var href = button.attr('href') 
-            //modal.find('.modal-title').html(title)
-            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-            $.post(href)
-                .done(function( data ) {
-                    modal.find('.modal-body').html(data)
-                });
-            })
-    ",$this::POS_READY);
+//         $('#view2').on('show.bs.modal', function (event) {
+//             var button = $(event.relatedTarget)
+//             var modal = $(this)
+//             var title = button.data('title') 
+//             var href = button.attr('href') 
+//             //modal.find('.modal-title').html(title)
+//             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+//             $.post(href)
+//                 .done(function( data ) {
+//                     modal.find('.modal-body').html(data)
+//                 });
+//             })
+//     ",$this::POS_READY);
 							
-$this->registerJs("
-    $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-        $('#form').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-            var modal = $(this)
-            var title = button.data('title') 
-            var href = button.attr('href') 
+				// 			$this->registerJs("
+    // $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+    //     $('#form1').on('show.bs.modal', function (event) {
+    //         var button = $(event.relatedTarget)
+    //         var modal = $(this)
+    //         var title = button.data('title') 
+    //         var href = button.attr('href') 
+    //         //modal.find('.modal-title').html(title)
+    //         modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+    //         $.post(href)
+    //             .done(function( data ) {
+    //                 modal.find('.modal-body').html(data)
+    //             });
+    //         })
+    // ",$this::POS_READY);
+
+// $this->registerJs("
+        
+//         $('#view1').on('show.bs.modal', function (event) {
+//             var button = $(event.relatedTarget)
+//             var modal = $(this)
+//             var title = button.data('title') 
+//             var href = button.attr('href') 
+//             //modal.find('.modal-title').html(title)
+//             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+//             $.post(href)
+//                 .done(function( data ) {
+//                     modal.find('.modal-body').html(data)
+//                 });
+//             })
+//     ",$this::POS_READY);
+							
+// $this->registerJs("
+//     $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+//         $('#form').on('show.bs.modal', function (event) {
+//             var button = $(event.relatedTarget)
+//             var modal = $(this)
+//             var title = button.data('title') 
+//             var href = button.attr('href') 
 			
-            //modal.find('.modal-title').html(title)
-            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-            $.post(href)
-                .done(function( data ) {
-                    modal.find('.modal-body').html(data)
-                });
-            })
-    ",$this::POS_READY);
+//             //modal.find('.modal-title').html(title)
+//             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+//             $.post(href)
+//                 .done(function( data ) {
+//                     modal.find('.modal-body').html(data)
+//                 });
+//             })
+//     ",$this::POS_READY);
 
-$this->registerJs("
+// $this->registerJs("
         
-        $('#view').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-            var modal = $(this)
-            var title = button.data('title') 
-            var href = button.attr('href') 
-            //modal.find('.modal-title').html(title)
-            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-            $.post(href)
-                .done(function( data ) {
-                    modal.find('.modal-body').html(data)
-                });
-            })
-    ",$this::POS_READY);
+//         $('#view').on('show.bs.modal', function (event) {
+//             var button = $(event.relatedTarget)
+//             var modal = $(this)
+//             var title = button.data('title') 
+//             var href = button.attr('href') 
+//             //modal.find('.modal-title').html(title)
+//             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+//             $.post(href)
+//                 .done(function( data ) {
+//                     modal.find('.modal-body').html(data)
+//                 });
+//             })
+//     ",$this::POS_READY);
 	
 	 Modal::begin([
                             'id' => 'form3',

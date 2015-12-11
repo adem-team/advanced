@@ -42,8 +42,8 @@ class Customers extends \yii\db\ActiveRecord
      */
    	 public $PROVINCE_ID;
 	 public $CITY_ID;
-	  public $parent;
-	  public $coordinate;
+	 public $PARENT;
+	 public $coordinate;
     public static function tableName()
     {
         return 'c0001';
@@ -63,7 +63,7 @@ class Customers extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'CUST_NM','JOIN_DATE'], 'required'],
+            [['CUST_NM','JOIN_DATE','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID','PARENT'], 'required'],
             [['CUST_KTG', 'TLP1', 'TLP2', 'FAX', 'STT_TOKO', 'STATUS'], 'integer'],
             [['JOIN_DATE', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['ALAMAT', 'NOTE'], 'string'],
@@ -80,16 +80,19 @@ class Customers extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+            'PARENT' => 'Parent Customer',
+            'CITY_ID' => 'KOTA',
+            'PROVINCE_ID' => 'PROVINCE',
             'CUST_KD' => 'Cust  Kd',
             'CUST_KD_ALIAS' => 'Cust  Kd  Alias',
-            'CUST_NM' => 'Cust  Nm',
+            'CUST_NM' => 'Nama Customer',
             'CUST_GRP' => 'Cust  Grp',
-            'CUST_KTG' => 'Cust  Ktg',
-            'JOIN_DATE' => 'Join  Date',
+            'CUST_KTG' => 'Kategori Customer',
+            'JOIN_DATE' => 'Tanggal Gabung',
             'MAP_LAT' => 'Map  Lat',
             'MAP_LNG' => 'Map  Lng',
-            'KD_DISTRIBUTOR' => 'Kd  Distributor',
-            'PIC' => 'Pic',
+            'KD_DISTRIBUTOR' => 'Nama Distributor',
+            'PIC' => 'PIC Customer',
             'ALAMAT' => 'Alamat',
             'TLP1' => 'Tlp1',
             'TLP2' => 'Tlp2',
@@ -97,8 +100,8 @@ class Customers extends \yii\db\ActiveRecord
             'EMAIL' => 'Email',
             'WEBSITE' => 'Website',
             'NOTE' => 'Note',
-            'NPWP' => 'Npwp',
-            'STT_TOKO' => 'Stt  Toko',
+            'NPWP' => 'NPWP',
+            'STT_TOKO' => 'Status Toko',
             'DATA_ALL' => 'Data  All',
             'CAB_ID' => 'Cab  ID',
             'CORP_ID' => 'Corp  ID',

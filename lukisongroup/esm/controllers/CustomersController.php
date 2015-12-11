@@ -40,7 +40,7 @@ class CustomersController extends Controller
         $searchModel = new CustomersSearch();
         $dataProvider = $searchModel->searchcus(Yii::$app->request->queryParams);
 		
-			// parent data
+		// parent data
 		 $searchModelkatp = new KategoricusSearch();
         $dataProviderparent =  $searchModelkatp->searchparent(Yii::$app->request->queryParams);
 	   // kategori data
@@ -59,7 +59,7 @@ class CustomersController extends Controller
 		
 
         return $this->render('index', [
-		  'dataProviderkat'  =>   $dataProviderkat ,
+		    'dataProviderkat'  =>   $dataProviderkat ,
             'searchModel' => $searchModel,
 			'searchModelkat ' => $searchModelkat,
 			'searchModelkatp ' => $searchModelkatp,
@@ -90,20 +90,30 @@ class CustomersController extends Controller
             'model' => $this->findModelpro($id),
         ]);
     }
+
+
+    public function actionViewlokasi($id)
+    {
+        return $this->render('viewlokasi', [
+            'model' => $this->findModelcust($id),
+        ]);
+    }
 	 
 	  public function actionViewcust($id)
     {
-        return $this->renderAjax('viewcus', [
-            'model' => $this->findModel1($id),
+        return $this->render('viewcus', [
+            'model' => $this->findModelcust($id),
         ]);
     }
 	
     public function actionView($id)
     {
-        return $this->renderAjax('view', [
+        return $this->renderAjax('viewkat', [
             'model' => $this->findModel($id),
         ]);
     }
+
+   
 
     /**
      * Creates a new Customer model.
@@ -152,6 +162,25 @@ class CustomersController extends Controller
             ]);
         }
     }
+
+    public function actionMap()
+    {
+            $conn = Yii::$app->db3;
+            $hasil = $conn->createCommand("SELECT ALAMAT, CUST_NM,MAP_LAT,MAP_LNG from c0001")->queryAll();
+            echo json_encode($hasil); 
+            
+    }
+
+
+     public function actionLokasi()
+    {
+          return $this ->renderAjax('formlokasi');
+            
+    }
+
+
+
+                         
 	
 	 public function actionLisarea($id)
     {
@@ -253,15 +282,17 @@ class CustomersController extends Controller
                         $nomerkd= 1; 
                 } else { 
                       $kd = explode('.',$query->CUST_KD); 
-                      $nomerkd = $kd[3]+1;
+                      $nomerkd = $kd[6]+1;
                 
                      }
+                     // print_r($nomerkd);
+                     // die();
 					 
 					 // print_r( str_pad( $nomerkd, "6", "0", STR_PAD_LEFT ));
 			// die();
                      $tgl = date('Y.m');
                      $kode = "CUS.".$kdis[1]."."."CGK.".$tgl."."."-"."0".$kdpro."-".$kdcity.".".str_pad( $nomerkd, "9", "0", STR_PAD_LEFT );
-		$model->CUST_KD = $kode;
+		              $model->CUST_KD = $kode;
 		
            
                 if($model->validate())
@@ -274,7 +305,7 @@ class CustomersController extends Controller
 			
 		
             
-            return $this->redirect(['index']);
+            return $this->redirect(['viewcust','id'=>$model->CUST_KD]);
         } else {
             return $this->render('_formcustomer', [
                 'model' => $model,
@@ -328,7 +359,7 @@ class CustomersController extends Controller
 		
              return $this->redirect(['index']);
         } else {
-            return $this->renderAjax('_formcustomer', [
+            return $this->render('_formcustomer', [
                 'model' => $model,
             ]);
         }
