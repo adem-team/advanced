@@ -50,7 +50,11 @@ class JobgrademodulSearch extends Jobgrademodul
         $query = Jobgrademodul::find()
 						 ->JoinWith('groupfunction',true,'left JOIN')						 
 						 ->JoinWith('groupseqmen',true,'left JOIN')
-						 ->andWhere(['u0003m.JOBGRADE_STS'=> !3]);
+						 ->andWhere(['u0003m.JOBGRADE_STS'=> !3])
+						  ->orderBy([
+									'u0003b.SEQ_ID'=>SORT_ASC,
+									'u0003a.GF_ID' => SORT_ASC,
+							]);
 						 //->Where('u0003m.JOBGRADE_STS<>3');
 
         $dataProvider = new ActiveDataProvider([

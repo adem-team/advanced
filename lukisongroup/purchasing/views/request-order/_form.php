@@ -44,14 +44,14 @@ $brgUmum = ArrayHelper::map(Barangumum::find()->orderBy('NM_BARANG')->all(), 'KD
 
     <?php
 		 echo $form->field($roDetail, 'NM_BARANG')->hiddenInput(['value' => ''])->label(false);
-		 echo $form->field($roDetail, 'KD_KATEGORI')->dropDownList($brgKtg, ['id'=>'kat-id']);
+		 echo $form->field($roDetail, 'KD_KATEGORI')->dropDownList($brgKtg, ['id'=>'rodetail-kd_kategori']);
 		 
 		 echo $form->field($roDetail, 'KD_BARANG')->widget(DepDrop::classname(), [
 			'type'=>DepDrop::TYPE_SELECT2,
 			'data' => $brgUmum,
-			'options' => ['id'=>'brg-id'],
+			'options' => ['id'=>'rodetail-kd_barang'],
 			'pluginOptions' => [
-				'depends'=>['kat-id'],
+				'depends'=>['rodetail-kd_kategori'],
 				'url'=>Url::to(['/purchasing/request-order/brgkat']),
 				'initialize'=>true,
 			], 		
@@ -60,9 +60,9 @@ $brgUmum = ArrayHelper::map(Barangumum::find()->orderBy('NM_BARANG')->all(), 'KD
 		echo $form->field($roDetail, 'UNIT')->widget(DepDrop::classname(), [
 			'type'=>DepDrop::TYPE_DEFAULT,
 			'data' => $brgUnit,
-			'options' => ['id'=>'unit-id','readonly'=>true,'selected'=>false],
+			'options' => ['id'=>'rodetail-unit','readonly'=>true,'selected'=>false],
 			'pluginOptions' => [
-				'depends'=>['kat-id','brg-id'],
+				'depends'=>['rodetail-kd_kategori','rodetail-kd_barang'],
 				'url'=>Url::to(['/purchasing/request-order/brgunit']),
 				//'initialize'=>true, 
 				'placeholder' => false,

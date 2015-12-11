@@ -59,12 +59,14 @@ $Combo_Jab = ArrayHelper::map(Jobgrade::find()->orderBy('SORT')->asArray()->all(
 					'label'=>'Group Seqmen',
 					'attribute' =>'groupseqmen.SEQ_NM',
 					'filter' => ArrayHelper::map(Groupseqmen::find()->orderBy('SEQ_NM')->asArray()->all(), 'SEQ_NM','SEQ_NM'),
+					'group'=>true,
 				],			
 				/*Author -ptr.nov- GROUP FINCTION */
 				[				
 					'label'=>'Group Function',
 					'attribute' =>'groupfunction.GF_NM',
 					'filter' => ArrayHelper::map(Groupfunction::find()->orderBy('SORT')->asArray()->all(), 'GF_NM','GF_NM'),
+					'group'=>true,
 				],
 				/*Author -ptr.nov- GRADIND ID */
 				[				
