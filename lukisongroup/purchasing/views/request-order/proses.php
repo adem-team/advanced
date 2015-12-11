@@ -1,8 +1,10 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
-
+//use yii\widgets\DetailView;
+use yii\helpers\Json;
+use lukisongroup\assets\AppAssetJquerySignature_1_1_2;
+AppAssetJquerySignature_1_1_2::register($this); 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\models\esm\ro\Requestorder */
 
@@ -11,48 +13,54 @@ $this->sideMenu = 'esm_esm';                                 /* kd_menu untuk li
 $this->title = Yii::t('app', 'Data Master');         /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
+	$this->registerJs("
+			var  jsonData= $.ajax({
+			  url: 'http://api.lukisongroup.com/login/signatures?id=2',
+			  type: 'GET',
+			  dataType:'json',			
+			  async: false
+			  }).responseText;		  
+			  var myData = jsonData;
+			  sig = myData;
+			  //alert(sig);
+	",$this::POS_BEGIN) ; 
+
 ?>
 
-
+<?php
+	 $this->registerJs('
+		$(document).ready(function($) {	 
+				$("#redrawSignature").signature();
+				$("#redrawSignature").signature({disabled: true});				
+				$("#redrawSignature").signature({
+					change: function(event, ui) { 
+						$("#redrawSignature").signature("draw", sig);											
+					}
+				});
+				
+				/* $("#SVGSignature").signature();
+				$("#redrawSignature").signature();
+				$("#redrawSignature").signature({disabled: true});				
+				$("#SVGSignature").signature({
+					change: function(event, ui) { 
+						$("#redrawSignature").signature("draw", sig);
+						var coba=$("#redrawSignature").signature("toSVG");	
+						 document.getElementById("ptrSvg").innerHTML = coba;							
+					}
+				}); */
+				
+		});					   
+	',$this::POS_BEGIN); 
+	?>
 
 
 <div class="requestorder-view" style="margin:0px 20px;">
-
     <center>
 		<h2 style="margin-bottom:0px;"><b>Form Permintaan Barang</b></h2>
 		<h3 style="margin-top:0px;">Nomor : <?php echo $reqro->KD_RO; ?></h3>
 	</center>
 
-    <!-- p>
-        < ?= Html::a('Update', ['update', 'id' => $reqro->ID], ['class' => 'btn btn-primary']) ?>
-        < ?= Html::a('Delete', ['delete', 'id' => $reqro->ID], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p -->
-
-    <!-- ?= DetailView::widget([
-        'model' => $reqro,
-        'attributes' => [
-            'ID',
-            'KD_RO',
-            'NOTE:ntext',
-            'ID_USER',
-            'KD_CORP',
-            'KD_CAB',
-            'KD_DEP',
-            'STATUS',
-            'CREATED_AT',
-            'UPDATED_ALL',
-            'DATA_ALL:ntext',
-        ],
-    ]) ? -->
-<br/>
-
-		<form action="/purchasing/request-order/simpanproses" method="post">
+    <form action="/purchasing/request-order/simpanproses" method="post">
     <table class="table table-striped" style="background-color:#fff; border:1px solid #7D7DB2; ">
         <thead style="background-color:#A1A1E6; ">
             <th>No.</th>            
@@ -98,26 +106,30 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		<?php if($sts == 0){ ?><button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;&nbsp;Terima RO</button><?php } ?>
 	</div>
 	<div style="clear:both;"></div>
-<br/>
-<?php 
+
+	<?php 
+		$tgl = explode(' ',$reqro->CREATED_AT);
+		$awl = explode('-',$tgl[0]); 
+		$blnAwl = date("F", mktime(0, 0, 0, $awl[1], 1));
+	?>
+	<div class="row">
+	  <div class="col-md-8"></div>
+	  <div class="col-md-4">
+		  <b>Tanggerang, <?php echo $awl[2].' - '.$blnAwl.' - '.$awl[0];  ?></b><br/>
+			yang mengajukan,
+		  <br/>
+		  
+	  
+	  <div  id="redrawSignature"></div> 
+	 <!--
+	  <div  id="SVGSignature"></div>
+	  <div  id="ptrSvg"></div> !-->
+	  
+		<?php echo $employ->EMP_NM.' '.$employ->EMP_NM_BLK; ?>
+	  </div>
+	</div>
 
 
-    $tgl = explode(' ',$reqro->CREATED_AT);
-    $awl = explode('-',$tgl[0]); 
-    $blnAwl = date("F", mktime(0, 0, 0, $awl[1], 1));
-?>
-<div class="row">
-  <div class="col-md-8">
-</div>
-  <div class="col-md-4">
-  <b>Tanggerang, <?php echo $awl[2].' - '.$blnAwl.' - '.$awl[0];  ?></b><br/>
-  yang mengajukan,
-  <br/><br/><br/><br/>
-  <?php echo $employ->EMP_NM.' '.$employ->EMP_NM_BLK; ?>
-  </div>
-</div>
-
-		</form>
 
 </div>
 

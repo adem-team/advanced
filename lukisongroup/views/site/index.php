@@ -78,12 +78,12 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										'content' => 'email',
 										'url' => '/email/mail-box',
 										'badge' => '2'
-									],
+									],	
 									[
-										'content' => 'Documentation',
-										'url' => '/widget/docdba',
-										'badge' => '2'
-									],
+										'content' => 'Signature',
+										'url' => '/email/mail-box',
+										
+									],										
 
 								]),
 						],
@@ -122,8 +122,12 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										'content' => 'Arsip File',
 										'url' => '/widget/arsip',
 										'badge' => '2'
-									]
-									
+									],
+									[
+										'content' => 'Documentation',
+										'url' => '/widget/docdba',
+										'badge' => '2'
+									],									
 
 								]),
 						],
@@ -139,8 +143,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 							'postBody' => Html::listGroup([
 									[
 										'content' => 'Administration ',
-										'url' => '/widget/adm',
-										'badge' => '14'
+										'url' => '/widget/adm'
 									],
 									[
 										'content' => 'Request Order',
@@ -230,9 +233,9 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 
  </div>
 
-    <script src="js/jquery.min.js"></script>
+   <!-- <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/scripts.js"></script>
+    <script src="js/scripts.js"></script>!-->
     </body>
     </html>
 <?php ActiveForm::end(); ?>

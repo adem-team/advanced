@@ -2,15 +2,49 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
+use yii\helpers\Json;
 use yii\widgets\DetailView;
 use lukisongroup\master\models\Unitbarang;
-
-
+/* use lukisongroup\assets\AppAssetJquerySignature_1_1_2;
+AppAssetJquerySignature_1_1_2::register($this);  */
 
 $this->title = $reqro->KD_RO;
 $this->params['breadcrumbs'][] = ['label' => 'Request Order', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-?>
+$this->registerJsFile('http://lukisongroup.com/angular/signature/js/jquery.min.js',['position' => \yii\web\View::POS_HEAD],1); 
+$mpdf=new mPDF();
+$mpdf->SetJS("print(
+			var  jsonData= $.ajax({
+			  url: 'http://api.lukisongroup.com/login/signatures?id=2',
+			  type: 'GET',
+			  dataType:'json',			
+			  async: false
+			  }).responseText;		  
+			  var myData1 = jsonData;
+			  sig1 = myData1;
+			  //alert(sig);
+	)") ; 
+
+	$mpdf->SetJS('print(
+		$(document).ready(function() {	 
+				$("#svgsignature1").signature();
+				$("#redrawsignature1").signature();
+				$("#redrawsignature1").signature({disabled: true});				
+				$("#svgsignature1").signature({
+					change: function(event, ui) { 
+						$("#redrawsignature1").signature("draw", sig1);
+						var coba1=$("#redrawsignature1").signature("toSVG");	
+						 document.getElementById("ptrsvg1").innerHTML = coba1;							
+					}
+				});
+				
+				
+		});					   
+	)'); 
+	?>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+</head>
 <style>
 @media print {
 	body { font-family: verdana, arial, sans-serif ; }
@@ -84,20 +118,28 @@ $this->params['breadcrumbs'][] = $this->title;
     </table>
 
 </div>
-<br/><br/>
-<br/>
-<?php 
+<div>
+	<br/><br/><br/>
+	<?php 
 
 
-    $tgl = explode(' ',$reqro->CREATED_AT);
-    $awl = explode('-',$tgl[0]); 
-    $blnAwl = date("F", mktime(0, 0, 0, $awl[1], 1));
-?>
-  <div style="width:300px; float:right; ">
-  <b>Tanggerang, <?php echo $awl[2].' - '.$blnAwl.' - '.$awl[0];  ?></b><br/>
-  yang mengajukan,
-  <br/><br/><br/><br/>
-  <?php echo $employ->EMP_NM.' '.$employ->EMP_NM_BLK; ?>
+		$tgl = explode(' ',$reqro->CREATED_AT);
+		$awl = explode('-',$tgl[0]); 
+		$blnAwl = date("F", mktime(0, 0, 0, $awl[1], 1));
+	?>
+	  <div style="width:300px; float:right; ">
+		  <b>Tanggerang, <?php echo $awl[2].' - '.$blnAwl.' - '.$awl[0];  ?></b><br/>
+		  yang mengajukan,
+		  <br/>	 
+	  
+		<?php echo $svgTest;?>		
+	  <div>
+		
+
+	  <?php 		
+	  echo $employ->EMP_NM.' '.$employ->EMP_NM_BLK; ?></b><br/></b><br/></b><br/>
+	  
   </div>
+
 
 
