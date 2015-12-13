@@ -6,30 +6,31 @@ use yii\widgets\Breadcrumbs;
 use kartik\detail\DetailView;
 use yii\bootstrap\Modal;
 use yii\widgets\Pjax;
-use lukisongroup\assets\AppAssetJquerySignature_1_1_2create;
-AppAssetJquerySignature_1_1_2create::register($this); 
+
 
 	$signatureFrm=$this->render('_signature');
+	$EmpProfile=$this->render('_profile');
 	$items=[
-		[
-			'label'=>'<i class="glyphicon glyphicon-home"></i> Profile','content'=>'',
-			//'active'=>true,
-		],
-		
 		[
 			'label'=>'<i class="glyphicon glyphicon-home"></i> Signature','content'=>$signatureFrm,
 			'id'=>'siq',
+			'active'=>true,
 		],
+		[
+			'label'=>'<i class="glyphicon glyphicon-home"></i> Profile','content'=>$EmpProfile,
+			//'active'=>true,
+		],
+		
+		
 	];
 
-	
 	echo TabsX::widget([
-		'id'=>'tab-emp',
-		'items'=>$items,
-		'position'=>TabsX::POS_ABOVE,
-		//'height'=>'tab-height-xs',
-		'bordered'=>true,
-		'encodeLabels'=>false,
-		//'align'=>TabsX::ALIGN_LEFT,
+			'id'=>'tab-sig',
+			'items'=>$items,
+			'position'=>TabsX::POS_ABOVE,
+			'bordered'=>true,
+			'encodeLabels'=>false,
+			//'align'=>TabsX::ALIGN_LEFT,
 
-	]);
+		]);
+	?>

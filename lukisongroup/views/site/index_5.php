@@ -39,7 +39,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 					<?php
 					echo Html::panel(
 						[
-							'heading' => '<div>Employee Dashboard</div>',
+							'heading' => '<div>User Profile</div>',
 							'body'=>$prof,
 						],
 						Html::TYPE_DANGER
@@ -56,7 +56,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 							'postBody' => Html::listGroup([
 									[
 										'content' => 'Berita Acara ',
-										'url' => '/widget/berita',
+										'url' => '/widget/bt',
 										'badge' => '14'
 									],
 									[
@@ -96,23 +96,23 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 				<?php
 					echo Html::panel([
 							'id'=>'home1',
-							'heading' => '<b>TASK MANAGE </b>',
+							'heading' => '<b>TASK MANAGER </b>',
 							'postBody' => Html::listGroup([
 									[
 										'content' => 'Pilot Project',
 										'url' => '/widget/pilotproject',
 										'badge' => '2'
-									],	
-									[
-										'content' => 'Daily Jobs',
-										'url' => '/widget/jobsdaily',
-										'badge' => '14'
 									],									
 									[
 										'content' => 'Head Jobs ',
 										'url' => '/widget/headjob',
 										'badge' => '14'
-									],									
+									],
+									[
+										'content' => 'Jobsdesk ',
+										'url' => '/widget/jobsdsk',
+										'badge' => '14'
+									],
 									[
 										'content' => 'Additional Jobs',
 										'url' => '/widget/addjob',
@@ -139,11 +139,11 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 			<?php
 					echo Html::panel([
 							'id'=>'home1',
-							'heading' => '<b>REQUEST AND APPROVAL</b>',
+							'heading' => '<b>APPROVAL</b>',
 							'postBody' => Html::listGroup([
 									[
 										'content' => 'Administration ',
-										'url' => '/hrd/administrasi'
+										'url' => '/widget/adm'
 									],
 									[
 										'content' => 'Request Order',
@@ -161,12 +161,12 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										'badge' => '2'
 									],
 									[
-										'content' => 'Reimburse',
+										'content' => 'Invoice',
 										'url' => '/widget/inv',
 										'badge' => '2'
 									],
 									[
-										'content' => 'SPJD',
+										'content' => 'Surat Jalan',
 										'url' => '/widget/sj',
 										'badge' => '2'
 									],
@@ -180,14 +180,8 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 		</div>
 		<div class="row" >
 			<div class="col-xs-12 col-sm-12 col-dm-12  col-lg-12" >
-				<div class="pre-scrollable alert alert-info" style="height:75px">				  
-				  <strong>Info ! </strong> Let's try to use ERP (Enterprise resource planning), hopefully this can !, remember, simplify, speed up and tidying your work.
-					Erp first launched with ver 0.1, probably still a lot of homework, but we've tried to set the foundation for the next update. We need feedback for the next version
-				</div>
 				<?php
-			
-				
-				/* $items=[
+				$items=[
 					[
 						'label'=>'<i class="glyphicon glyphicon-home"></i>Jobsdesk','content'=>'asdasdasd',
 					],
@@ -218,7 +212,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 					'encodeLabels'=>false,
 					//'align'=>TabsX::ALIGN_LEFT,
 
-				]); */
+				]);
 				?>
 				
 			</div>
