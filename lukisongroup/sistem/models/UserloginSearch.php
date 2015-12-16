@@ -28,6 +28,8 @@ class UserloginSearch extends Userlogin
             [['username','EMP_ID','email'], 'string'],
             [['email','avatar','avatarImage'], 'string'],
 			[['id','status','created_at','updated_at'],'integer'],
+			[['SIGSVGBASE64','SIGSVGBASE30'], 'safe'],
+			[['SIG1_SVGBASE64','SIG1_SVGBASE30','SIG2_SVGBASE64','SIG2_SVGBASE30'], 'safe'],
         ];
     }
 	

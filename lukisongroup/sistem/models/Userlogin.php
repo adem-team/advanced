@@ -53,7 +53,7 @@ class Userlogin extends \yii\db\ActiveRecord
 	
 	public function getMdlpermission()
 	{
-		return $this->hasMany(Mdlpermission::className(), ['USER_ID' => 'id']);
+		return $this->hasOne(Mdlpermission::className(), ['USER_ID' => 'id']);
 	}
 	
      

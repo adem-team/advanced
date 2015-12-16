@@ -32,7 +32,9 @@ class RequestorderSearch extends Requestorder
             [['ID', 'STATUS'], 'integer'],
             [['KD_RO', 'NOTE', 'ID_USER', 'KD_CORP', 'KD_CAB', 'KD_DEP', 'CREATED_AT', 'UPDATED_ALL', 'DATA_ALL'], 'safe'],
             [['detro'], 'safe'],
-			[['detro.KD_RO','detro.NM_BARANG','detro.QTY','EMP_NM'], 'safe']
+			[['detro.KD_RO','detro.NM_BARANG','detro.QTY','EMP_NM'], 'safe'],
+			[['SIG2_NM'], 'string', 'max' => 255],
+			[['SIG1_SVGBASE64','SIG1_SVGBASE30','SIG2_SVGBASE64','SIG2_SVGBASE30','SIG2_TGL'], 'safe'],
 			//[['NM_BARANG','QTY'], 'safe']
         ];
     }

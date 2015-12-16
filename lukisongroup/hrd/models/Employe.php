@@ -51,6 +51,7 @@ class Employe extends \yii\db\ActiveRecord
             [['EMP_IMG'], 'string', 'max' => 50],    
 			[['upload_file'], 'file', 'skipOnEmpty' => true,'extensions'=>'jpg,png', 'mimeTypes'=>'image/jpeg, image/png',],
 			[['CREATED_BY','UPDATED_BY'], 'string', 'max' => 50],
+			[['SIGSVGBASE64','SIGSVGBASE30'], 'safe'], 
 			//[['UPDATED_TIME'], 'date'], errot message bool false
         ];
     }

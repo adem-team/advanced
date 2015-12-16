@@ -8,7 +8,9 @@ use yii\bootstrap\Modal;
 use yii\widgets\Pjax;
 
 
-	$signatureFrm=$this->render('_signature');
+	$signatureFrm=$this->render('_signature',[
+		'model'=> $model,
+	]);
 	$EmpProfile=$this->render('_profile');
 	$items=[
 		[

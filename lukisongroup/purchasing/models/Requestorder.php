@@ -4,6 +4,7 @@ namespace lukisongroup\purchasing\models;
 
 use Yii;
 use lukisongroup\hrd\models\Employe;
+use lukisongroup\hrd\models\Dept;
 use lukisongroup\purchasing\models\Rodetail;
 /**
  * This is the model class for table "r0001".
@@ -22,6 +23,12 @@ use lukisongroup\purchasing\models\Rodetail;
  */
 class Requestorder extends \yii\db\ActiveRecord
 {
+	const STATUS_PROCESS = 0;
+	const STATUS_APPROVED = 1;
+	const STATUS_DELETE = 3;
+	const STATUS_REJECT = 4;
+	
+   
     /**
      * @inheritdoc
      */
@@ -36,7 +43,27 @@ class Requestorder extends \yii\db\ActiveRecord
     public static function getDb()
     {
         return Yii::$app->get('db_esm');
-    }
+    }	
+	
+	/**
+	 * @return array
+	 */
+	public static function getStatusesList()
+	{
+		return [
+			self::STATUS_PROCESS => 'PROCESS',
+			self::STATUS_APPROVED => 'APPROVED',	
+			self::STATUS_REJECT => 'REJECT',
+			self::STATUS_DELETE => 'DELETE',
+		];
+	}
+	/**
+	 * @return string
+	 */
+	public function getStatusLabel()
+	{
+		return static::getStatusesList()[$this->STATUS];
+	}
 	
     public function getDetro()
     {
@@ -53,6 +80,10 @@ class Requestorder extends \yii\db\ActiveRecord
         return $this->hasOne(Employe::className(), ['EMP_ID' => 'ID_USER']);
     } 
 	
+	public function getDept()
+    {
+        return $this->hasOne(Dept::className(), ['DEP_ID' => 'KD_DEP']);
+    } 
    /*  public function getNmemp()
     {
         return $this->employe->EMP_NM;
@@ -70,13 +101,14 @@ class Requestorder extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-//            [['KD_RO', 'NOTE', 'ID_USER', 'KD_CORP', 'KD_CAB', 'KD_DEP', 'STATUS', 'CREATED_AT', 'UPDATED_ALL', 'DATA_ALL'], 'required'],
+//          [['KD_RO', 'NOTE', 'ID_USER', 'KD_CORP', 'KD_CAB', 'KD_DEP', 'STATUS', 'CREATED_AT', 'UPDATED_ALL', 'DATA_ALL'], 'required'],
             [['NOTE', 'DATA_ALL'], 'string'],
             [['STATUS'], 'integer'],
             [['CREATED_AT'], 'safe'],
             [['KD_RO'], 'safe'],
             [['KD_RO', 'KD_CORP', 'KD_CAB', 'KD_DEP'], 'string', 'max' => 50],
-            [['UPDATED_ALL', 'ID_USER'], 'string', 'max' => 255],
+            [['UPDATED_ALL', 'ID_USER','SIG1_NM'], 'string', 'max' => 255],
+			[['SIG1_SVGBASE64','SIG1_SVGBASE30','SIG2_SVGBASE64','SIG2_SVGBASE30','SIG2_TGL'], 'safe'],
         ];
     }
 

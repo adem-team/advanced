@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 use yii\helpers\Json;
 use yii\bootstrap\Modal;
 use lukisongroup\assets\AppAssetJqueryJSignature;
@@ -39,72 +40,20 @@ $this->registerCss("
 					  var sigDataBase30 = $("#sig-disply-input").jSignature("getData","base30");
 					  var sigDataiSvgbase64 = $("#sig-disply-input").jSignature("getData","svgbase64");
 					  $("#sig-disply-old").jSignature("setData","data:" + sigDataBase30[0] + "," + sigDataBase30[1]);					
-					  $("#txtSvgbase64").val(sigDataiSvgbase64);
-					  $("#txtBase30").val(sigDataBase30);
+					  $("#txtSvgbase64").val("data:" + sigDataiSvgbase64);
+					  $("#txtBase30").val("data:" + sigDataBase30);
 					  //alert(sigDataiSvgbase64)
+					 
 				})		
 				 
-				/* $("#btnambil").click(function(){
-					var sigDatax = $("#sig-disply-input").jSignature("getData","base30");
-						//$("#sig-disply-old").jSignature("clear");	
-						//var imgInput = new Image();
-						//imgInput.src = "data:" + sigDatax[0] + "," + sigDatax[1]
-						$("#sig-disply-old").jSignature("setData","data:" + sigDatax[0] + "," + sigDatax[1]);
-						//alert(imgInput)
-						//$(imgInput).appendTo($("#sig-disply-old"));
-					
-				}) */
-				/* $("#btnclear").click(function(){
-						$("#sig-disply-old").jSignature("reset");	
-						
-					
-				}) */
+				$("#btnBersihkan").click(function(){
+					$("#sig-disply-input").jSignature("clear");				
+					$("#sig-disply-old").jSignature("clear");
+				});
 				
-				/* $("#sig-disply-input").bind("change", function(e){											
-						var sigDatax = $("#sig-disply-input").jSignature("getData","svgbase64");
-						var imgInput = new Image();
-						imgInput.src = "data:" + sigDatax[0] + "," + sigDatax[1]						
-						//alert(imgInput)
-							//$("#sig-disply-old").jSignature("importData",data);
-						$(imgInput).appendTo($("#sig-disply-old"));
-						//$("#sig-disply-old").jSignature("reset");
-				})	 */
-				
-				/* $("#sig-disply-input").bind("change", function(e){ 					
-						var sigData = $("#sig-disply-input").jSignature("getData","svgbase64");
-						$("#hiddenSigData").val(sigData);
-						//alert(sigData);
-				 })	 
-					 */ 
-					 
-				//var i = new Image();							
-				//i.src = "data:" + "image/svg+xml;base64" + "," + "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmVyc2lvbj0iMS4xIiB3aWR0aD0iMjYiIGhlaWdodD0iNDUiPjxwYXRoIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2U9InJnYigwLCAwLCAxMzkpIiBmaWxsPSJub25lIiBkPSJNIDEgNDQgYyAwLjA5IC0wLjE2IDMuNiAtNS44OCA1IC05IGMgMS42IC0zLjU1IDIuNDMgLTcuMzggNCAtMTEgYyAxLjggLTQuMTUgMy43NiAtOC4wOCA2IC0xMiBjIDEuOCAtMy4xNiAzLjkgLTYuNDQgNiAtOSBsIDMgLTIiLz48L3N2Zz4="; 
-					$(i).appendTo($("#signature2"));
-						
-						
-						
-				//$("#signature1").bind("change", function(e){ 
-					//alert("teset"); 
-					//var data="image/jsignature;base30,1B4_1EZ7_2P00376553_1I55300Z102_5xZ4735_1yZ1020"
-					//var datapair =("image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmVyc2lvbj0iMS4xIiB3aWR0aD0iMjYiIGhlaWdodD0iNDUiPjxwYXRoIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2U9InJnYigwLCAwLCAxMzkpIiBmaWxsPSJub25lIiBkPSJNIDEgNDQgYyAwLjA5IC0wLjE2IDMuNiAtNS44OCA1IC05IGMgMS42IC0zLjU1IDIuNDMgLTcuMzggNCAtMTEgYyAxLjggLTQuMTUgMy43NiAtOC4wOCA2IC0xMiBjIDEuOCAtMy4xNiAzLjkgLTYuNDQgNiAtOSBsIDMgLTIiLz48L3N2Zz4=")
-					//var datapair = $("#signature1").jSignature("getData","svgbase64");
-					//try{
-						//var i = new Image();							
-						//i.src = "data:" + "image/svg+xml;base64" + "," + "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmVyc2lvbj0iMS4xIiB3aWR0aD0iMjYiIGhlaWdodD0iNDUiPjxwYXRoIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2U9InJnYigwLCAwLCAxMzkpIiBmaWxsPSJub25lIiBkPSJNIDEgNDQgYyAwLjA5IC0wLjE2IDMuNiAtNS44OCA1IC05IGMgMS42IC0zLjU1IDIuNDMgLTcuMzggNCAtMTEgYyAxLjggLTQuMTUgMy43NiAtOC4wOCA2IC0xMiBjIDEuOCAtMy4xNiAzLjkgLTYuNDQgNiAtOSBsIDMgLTIiLz48L3N2Zz4="; 
-						//$(i).appendTo($("#signature2"));
-						
-						//var j = new Image();
-						//j.src = "data:" + "image/svg+xml;base64" + "," + "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmVyc2lvbj0iMS4xIiB3aWR0aD0iNjgiIGhlaWdodD0iMzUiPjxwYXRoIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2U9InJnYigwLCAwLCAxMzkpIiBmaWxsPSJub25lIiBkPSJNIDEgMTggYyAwLjAzIDAuMDcgMS4xMyAzLjI3IDIgNCBjIDAuOCAwLjY3IDIuODIgMC40MSA0IDEgYyA1LjkxIDIuOTUgMTIuMTcgNy41MyAxOCAxMCBjIDIuMjggMC45NyA1LjMzIDEgOCAxIGMgNi42MiAwIDEzLjkgMC4wNSAyMCAtMSBjIDMgLTAuNTIgNi42IC0yLjI5IDkgLTQgYyAxLjkgLTEuMzYgNC41NSAtMy45MiA1IC02IGMgMC45OCAtNC41MyAwLjQ4IC0xMi4xOSAwIC0xNyBjIC0wLjEgLTEuMDIgLTEuMjIgLTIuMjIgLTIgLTMgbCAtMyAtMiIvPjwvc3ZnPg==",
-						//$(j).appendTo($("#signature3"));
-						
-						//$("#signature2").jSignature("setData", "data:" + datapair.join(","));
-					//} catch (ex) {
-
-					//}
-				//})
-				
-				
-				
+				/* Data Signature from DB */
+				var datadb =\''. $model->SIGSVGBASE30 . '\'
+				$("#sig-disply-db").jSignature("setData",datadb);
 			});
 		
 	 ',$this::POS_BEGIN);
@@ -143,20 +92,36 @@ $this->registerCss("
 			<div id="sig-disply-old" readonly></div> 
 		</div>
 	</div>
-	<!--BUTTON SAVED!-->
+	<!--FORM SAVED!-->
 	<div class="row">
-	<div class="col-md-4" style="padding-top:15px"> </div>
+		<div class="col-md-4" style="padding-top:15px"> </div>
 		<div class="col-md-4" style="padding-top:15px" > 
-			<?php echo Html::a('<i class="fa fa-plus fa-lg"></i> '.Yii::t('app', 'SAVED',
+			<button id="btnBersihkan" type="button">Clear</button>
+			<?php $form = ActiveForm::begin([
+						'id'=>'roInput',
+						'enableClientValidation' => true,
+						'method' => 'post',
+						'action' => ['/sistem/user-profile/simpan-signature'],
+					]);
+					 echo $form->field($model, 'EMP_ID')->hiddenInput(['value'=>$model->EMP_ID])->label(false);
+					 echo $form->field($model, 'SIGSVGBASE30')->hiddenInput(['id'=>'txtBase30'])->label(false);
+					 echo $form->field($model, 'SIGSVGBASE64')->hiddenInput(['id'=>'txtSvgbase64'])->label(false);
+			?>
+				<div class="form-group">
+				<?= Html::submitButton($model->isNewRecord ? 'SimpanSignature' : 'SAVED', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary','title'=>'Detail','data-confirm'=>'Anda Yakin Akan di Simpan ?']) ?>
+				</div>
+			<?php ActiveForm::end(); ?>		
+			<?php /* echo Html::a('<i class="fa fa-plus fa-lg"></i> '.Yii::t('app', 'SAVED',
 									['modelClass' => 'customer',]),'/sistem/user-profile/create',[
 										'data-toggle'=>"modal",
 											'data-target'=>"#Sig-New",							
 											'class' => 'btn btn-warning',
 											"modal-size"=>"large",											
-														]);
-			?>
+														]); */
+			?>			
 		</div>
 	</div>
+	
 	<div class="row">
 		<div class="col-md-4" style="padding-top:15px"> </div>
 		<div class="col-md-4" style="padding-top:15px" >
@@ -181,7 +146,11 @@ $this->registerCss("
 		<div class="col-md-4" style="padding-top:15px">
 			<div name="hide" style="height:150px; display:none;">Decode encription Base30</div>		
 			<div>
-				<textarea id="txtBase30" class="col-lg-12" name="hide" style="height:150px; display:none;"></textarea> 
+				<!--
+					<textarea id="txtBase30" class="col-lg-12" name="hide" style="height:150px; display:none;"></textarea> 
+				
+				<textarea id="txtBase30" class="col-lg-12"style="height:150px;"></textarea> 
+				!-->				
 			</div>
 		</div>
 	</div>

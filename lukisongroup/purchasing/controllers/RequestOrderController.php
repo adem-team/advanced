@@ -3,6 +3,10 @@
 namespace lukisongroup\purchasing\controllers;
 
 use yii;
+use yii\db\Query;
+//use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
+use yii\helpers\ArrayHelper;
 use lukisongroup\purchasing\models\Requestorder;
 use lukisongroup\purchasing\models\RequestorderSearch;
 use lukisongroup\purchasing\models\Roatribute;
@@ -22,10 +26,10 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
 
-use yii\db\Query;
-use lukisongroup\assets\AppAssetJquerySignature_1_1_2;
-use mPDF;
 
+
+
+use kartik\mpdf\Pdf;
 /**
  * RequestorderController implements the CRUD actions for Requestorder model.
  */
@@ -67,14 +71,20 @@ class RequestOrderController extends Controller
                 return true;
             }
     }
-    /**
+	
+   /**
      * Index 
      * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
     public function actionIndex()
     {
-        $searchModel = new RequestorderSearch();
+		//function getPermission(){
+			//return Yii::$app->getUserOpt->Modul_akses(1); 
+			
+		//}
+		//$getPermission=Yii::$app->getUserOpt->Modul_akses(1); 
+		$searchModel = new RequestorderSearch();
 		/*  if (isset($_GET['param'])){
 			  $dataProvider = $searchModel->searchChildRo(Yii::$app->request->queryParams,$_GET['param']);
 		}else{
@@ -86,6 +96,7 @@ class RequestOrderController extends Controller
 		  return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+			//'getPermission'=> $getPermission,
         ]);
 		
 		
@@ -206,6 +217,8 @@ class RequestOrderController extends Controller
 				$roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
 				$roHeader->KD_CORP = $profile->emp->EMP_CORP_ID;
 				$roHeader->KD_DEP = $profile->emp->DEP_ID;
+				$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
+				$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
 				$roHeader->STATUS = 0;
 				
 					$transaction = $cons->beginTransaction();
@@ -295,8 +308,6 @@ class RequestOrderController extends Controller
 		}
 	}
 	
-	
-	
 	 /**
      * View Requestorder
      * @param string $id
@@ -310,13 +321,14 @@ class RequestOrderController extends Controller
 		$reqro = Requestorder::find()->where(['KD_RO' => $kd])->one();
 		$detro = $reqro->detro;
         $employ = $reqro->employe;
+		$dept = $reqro->dept;
     	
         return $this->render('view', [
             'reqro' => $reqro,
             'detro' => $detro,
             'employ' => $employ,
-        ]);
-        
+			'dept' => $reqro->dept,
+        ]);        
     }
 	
 	/**
@@ -328,12 +340,46 @@ class RequestOrderController extends Controller
      */
 	public function actionCetakpdf($kd){
     	$ro = new Requestorder();
-		$reqro = Requestorder::find()->where(['KD_RO' => $kd])->one();
+		$reqro = Requestorder::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
 		$detro = $reqro->detro;
         $employ = $reqro->employe;
+		$dept = $reqro->dept;
     	
+		$content = $this->renderPartial( 'pdfTester', [
+            'reqro' => $reqro,
+            'detro' => $detro,
+            'employ' => $employ,
+			'dept' => $dept,
+        ]);
 		
-		$svgTest='
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE, 
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4, 
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_PORTRAIT, 
+			// stream to browser inline
+			'destination' => Pdf::DEST_BROWSER, 
+			// your html content input
+			'content' => $content,  
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting 
+			//D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+			'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			'cssInline' => '.kv-heading-1{font-size:12px}', 
+			 // set mPDF properties on the fly
+			'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+			 // call mPDF methods on the fly
+			'methods' => [ 
+				'SetHeader'=>['Copyright@LukisonGroup '.date("r")], 
+				'SetFooter'=>['{PAGENO}'],
+			]
+		]);
+		
+		return $pdf->render(); 		
+		/* $svgTest='
 		<svg xmlns="http://www.w3.org/2000/svg" width="5cm" height="3cm">
 			<g fill="#ffffff">
 				
@@ -346,16 +392,12 @@ class RequestOrderController extends Controller
 				</g>
 			</g>
 		</svg>		
-		';
+		'; */
 		
-		
-		
-		
-		
-		
-		
-		
-		$mpdf=new mPDF();
+		//$svgTest="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmVyc2lvbj0iMS4xIiB3aWR0aD0iMTg3IiBoZWlnaHQ9IjcxIj48cGF0aCBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlPSJyZ2IoNTEsIDUxLCA1MSkiIGZpbGw9Im5vbmUiIGQ9Ik0gMzAgNzAgYyAwLjA5IC0wLjE2IDMuMDMgLTYuMTggNSAtOSBjIDUuMDYgLTcuMjIgMTAuNCAtMTQuNyAxNiAtMjEgYyAyLjEyIC0yLjM5IDUuNzUgLTMuNzUgOCAtNiBjIDIuMjUgLTIuMjUgMy42OCAtNS44IDYgLTggYyAzLjgxIC0zLjYxIDkgLTYuMzYgMTMgLTEwIGMgMy4yOCAtMi45OCA1Ljc2IC03LjMgOSAtMTAgYyAyLjQ4IC0yLjA2IDYuMDUgLTQuMzMgOSAtNSBjIDMuNzIgLTAuODUgMTAuNDcgLTAuNzIgMTMgMCBjIDAuOCAwLjIzIDAuOTEgMi42NyAxIDQgYyAwLjI0IDMuNTQgMC4yNCA3LjQ2IDAgMTEgYyAtMC4wOSAxLjMzIC0wLjM5IDMuMDggLTEgNCBjIC0wLjU0IDAuOCAtMS45NiAxLjcyIC0zIDIgYyAtMi4zMiAwLjYzIC01LjU2IDAuMzkgLTggMSBjIC0xLjM1IDAuMzQgLTIuNjcgMS45NiAtNCAyIGMgLTE4Ljc5IDAuNTYgLTYzIDAgLTYzIDAiLz48cGF0aCBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlPSJyZ2IoNTEsIDUxLCA1MSkiIGZpbGw9Im5vbmUiIGQ9Ik0gMjMgMTIgYyAtMC4xMiAwIC01LjEyIC0wLjUxIC03IDAgYyAtMS4zNCAwLjM3IC0yLjU3IDIuMjggLTQgMyBjIC0zLjA5IDEuNTQgLTcuODcgMi40NSAtMTAgNCBjIC0wLjgyIDAuNTkgLTAuODcgMi42OCAtMSA0IGMgLTAuMTkgMS45MyAtMC40MyA0LjE4IDAgNiBjIDAuODMgMy41NSAyLjQ2IDcuNDggNCAxMSBjIDAuNzcgMS43NiAxLjc1IDMuNjUgMyA1IGMgMi41OCAyLjggNi4wNyA1Ljk3IDkgOCBjIDEgMC43IDIuNjcgMC45NiA0IDEgYyA5LjAzIDAuMjggMTkuMzUgMS4zNiAyOCAwIGMgNy41MiAtMS4xOCAxNS4zIC01LjYxIDIzIC04IGMgMS45MiAtMC42IDQuMjggLTAuMjUgNiAtMSBjIDMuMjkgLTEuNDQgNi42OSAtNC44NCAxMCAtNiBsIDEwIC0xIi8+PHBhdGggc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0icmdiKDUxLCA1MSwgNTEpIiBmaWxsPSJub25lIiBkPSJNIDExMSAyNiBjIC0wLjE2IDAuMDMgLTcuMjcgMC41NCAtOSAyIGMgLTEuODUgMS41NiAtMy40NyA2LjA2IC00IDkgYyAtMC43MSAzLjg4IC0wLjg5IDkuNDYgMCAxMyBjIDAuNTkgMi4zNCAzLjAxIDYuMzQgNSA3IGMgMy43MSAxLjI0IDEwLjk4IDAuNjkgMTYgMCBjIDQuMjcgLTAuNTkgOC44OSAtMi4yMiAxMyAtNCBjIDUuODEgLTIuNTIgMTIuMjEgLTUuOTcgMTcgLTkgYyAwLjkgLTAuNTcgMS4xOCAtMi4yOSAyIC0zIGMgMS4zMyAtMS4xNCA0IC0xLjg0IDUgLTMgYyAwLjcgLTAuODIgMS4xOCAtNCAxIC00IGMgLTAuMjIgMCAtMi4yNCAyLjU2IC0zIDQgYyAtMi4xOSA0LjEzIC00LjYzIDguOSAtNiAxMyBjIC0wLjQ4IDEuNDMgLTAuMzkgNC42MSAwIDUgYyAwLjI4IDAuMjggMi4xOSAtMS4xOSAzIC0yIGMgMS43NiAtMS43NiAzLjYzIC0zLjg3IDUgLTYgYyAxLjU3IC0yLjQ0IDIuMzggLTUuODQgNCAtOCBjIDEuMTYgLTEuNTUgMy45MyAtMi41OCA1IC00IGMgMC42OSAtMC45MiAwLjM5IC0zLjA4IDEgLTQgYyAwLjU0IC0wLjggMi44NiAtMi4zNyAzIC0yIGMgMC4zOCAxLjAzIDAuMjMgNi43OCAwIDEwIGMgLTAuMDkgMS4zMyAtMC40MSAyLjk2IC0xIDQgYyAtMC42MSAxLjA3IC0xLjkgMi4zMSAtMyAzIGMgLTEuMzkgMC44NyAtMy41IDEuODMgLTUgMiBjIC0xLjE1IDAuMTMgLTMuODggLTAuNjQgLTQgLTEgYyAtMC4xMSAtMC4zMiAxLjk4IC0xLjkgMyAtMiBjIDQuODEgLTAuNDggMTEuNjQgLTAuNiAxNyAwIGwgMTAgMyIvPjwvc3ZnPg==";
+		//$svgTest="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCAuLi4=";
+		/* $mpdf=new mPDF();
+		$mpdf->SetFont('serif', '', 6);
 		$mpdf->WriteHTML($this->renderPartial( 'pdfTester', [
             'reqro' => $reqro,
             'detro' => $detro,
@@ -363,7 +405,7 @@ class RequestOrderController extends Controller
 			'svgTest'=> $svgTest,
         ]));
         $mpdf->Output();
-        exit;
+        exit; */
 		//return $this->renderPartial('mpdf');
 	}
 	
@@ -398,8 +440,7 @@ class RequestOrderController extends Controller
 			'rodetail' => $rodetail,
 		]);
     }
-	
-	
+		
 	/**
      * Prosess Persetujuan Manager
      * @param string $id
@@ -410,28 +451,28 @@ class RequestOrderController extends Controller
 	public function actionProses($kd)
     {
 		
-		$empId = Yii::$app->user->identity->EMP_ID;
-		$dt = Employe::find()->where(['EMP_ID'=>$empId])->all();
-
-		if($dt[0]['GF_ID'] != '3'){ return $this->redirect(['/purchasing/request-order/']); }
-
-        $rostat = Requestorderstatus::find()->where(['KD_RO' => $kd,'ID_USER' => $empId])->one();
-
-        if(count($rostat) == 1){
-            $rostat->delete();
-        }
-		
-    	$ro = new Requestorder();
+		$ro = new Requestorder();
 		$reqro = Requestorder::find()->where(['KD_RO' => $kd])->one();
 		$detro = $reqro->detro;
         $employ = $reqro->employe;
+		$dept = $reqro->dept;
     	
-
-        return $this->render('proses', [
+		$detroProvider = new ArrayDataProvider([
+			'allModels'=>$detro,			
+			'pagination' => [
+				'pageSize' => 10,
+			],
+		]);
+		
+		return $this->render('proses', [
             'reqro' => $reqro,
             'detro' => $detro,
             'employ' => $employ,
+			'dept' => $dept,
+			'dataProvider'=>$detroProvider,
         ]);
+		
+		
     }
 	
 	
