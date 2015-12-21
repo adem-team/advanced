@@ -5,7 +5,7 @@ use yii\helpers\Url;
 use yii\helpers\Json;
 use yii\widgets\DetailView;
 use lukisongroup\master\models\Unitbarang;
-$this->title = $reqro->KD_RO;
+$this->title = $roHeader->KD_RO;
 $this->params['breadcrumbs'][] = ['label' => 'Request Order', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -78,11 +78,11 @@ $this->params['breadcrumbs'][] = $this->title;
 	
 	<div>
 		<?php 
-			$tgl1 = explode(' ',$reqro->CREATED_AT);
+			$tgl1 = explode(' ',$roHeader->CREATED_AT);
 			$awl1 = explode('-',$tgl1[0]); 
 			$blnAwl1 = date("F", mktime(0, 0, 0, $awl1[1], 1));
 			
-			$tgl2 = explode(' ',$reqro->SIG2_TGL);
+			$tgl2 = explode(' ',$roHeader->SIG2_TGL);
 			$awl2 = explode('-',$tgl2[0]); 
 			$blnAwl2 = date("F", mktime(0, 0, 0, $awl2[1], 1));		
 			
@@ -116,22 +116,22 @@ $this->params['breadcrumbs'][] = $this->title;
 			<!-- Signature !-->
 			 <tr>
 				<th style="text-align: center; vertical-align:middle;width:180; height:60px">
-					<img src="<?php echo $reqro->SIG1_SVGBASE64;?> height='120' width='150'"></img>
+					<img src="<?php echo $roHeader->SIG1_SVGBASE64;?> height='120' width='150'"></img>
 				</th>								
 				<th style="text-align: center; vertical-align:middle;width:180">
-					<img src="<?php echo $reqro->SIG2_SVGBASE64;?> height='120' width='150'"></img>
+					<img src="<?php echo $roHeader->SIG2_SVGBASE64;?> height='120' width='150'"></img>
 				</th>
 			</tr>
 			<!--Nama !-->
 			 <tr>
 				<th style="text-align: center; vertical-align:middle;height:20">
 					<div>		
-						<b><?php  echo $reqro->EMP_NM; ?></b>
+						<b><?php  echo $roHeader->EMP_NM; ?></b>
 					</div>
 				</th>								
 				<th style="text-align: center; vertical-align:middle;height:20">
 					<div>		
-						<b><?php  echo $reqro->SIG2_NM; ?></b>
+						<b><?php  echo $roHeader->SIG2_NM; ?></b>
 					</div>
 				</th>
 			</tr>

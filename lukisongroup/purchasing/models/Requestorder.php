@@ -23,10 +23,10 @@ use lukisongroup\purchasing\models\Rodetail;
  */
 class Requestorder extends \yii\db\ActiveRecord
 {
-	const STATUS_PROCESS = 0;
-	const STATUS_APPROVED = 1;
-	const STATUS_DELETE = 3;
-	const STATUS_REJECT = 4;
+	//const STATUS_PROCESS = 0;
+	//const STATUS_APPROVED = 10;
+	//const STATUS_DELETE = 3;
+	//const STATUS_REJECT = 4;
 	
    
     /**
@@ -48,7 +48,7 @@ class Requestorder extends \yii\db\ActiveRecord
 	/**
 	 * @return array
 	 */
-	public static function getStatusesList()
+	/* public static function getStatusesList()
 	{
 		return [
 			self::STATUS_PROCESS => 'PROCESS',
@@ -56,14 +56,14 @@ class Requestorder extends \yii\db\ActiveRecord
 			self::STATUS_REJECT => 'REJECT',
 			self::STATUS_DELETE => 'DELETE',
 		];
-	}
+	} */
 	/**
 	 * @return string
 	 */
-	public function getStatusLabel()
+	/* public function getStatusLabel()
 	{
 		return static::getStatusesList()[$this->STATUS];
-	}
+	} */
 	
     public function getDetro()
     {
@@ -102,12 +102,13 @@ class Requestorder extends \yii\db\ActiveRecord
     {
         return [
 //          [['KD_RO', 'NOTE', 'ID_USER', 'KD_CORP', 'KD_CAB', 'KD_DEP', 'STATUS', 'CREATED_AT', 'UPDATED_ALL', 'DATA_ALL'], 'required'],
+			[['KD_RO'], 'required'],          
             [['NOTE', 'DATA_ALL'], 'string'],
             [['STATUS'], 'integer'],
             [['CREATED_AT'], 'safe'],
             [['KD_RO'], 'safe'],
             [['KD_RO', 'KD_CORP', 'KD_CAB', 'KD_DEP'], 'string', 'max' => 50],
-            [['UPDATED_ALL', 'ID_USER','SIG1_NM'], 'string', 'max' => 255],
+            [['UPDATED_ALL', 'ID_USER','SIG2_NM'], 'string', 'max' => 255],
 			[['SIG1_SVGBASE64','SIG1_SVGBASE30','SIG2_SVGBASE64','SIG2_SVGBASE30','SIG2_TGL'], 'safe'],
         ];
     }
@@ -118,17 +119,17 @@ class Requestorder extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'ID' => 'ID',
             'KD_RO' => 'Kode RO',
+			'TGL'  => 'Tanggal',
             'NOTE' => 'Note',
-            'ID_USER' => 'Id  User',
-            'KD_CORP' => 'Kd  Corp',
-            'KD_CAB' => 'Kd  Cab',
-            'KD_DEP' => 'Kd  Dep',
+            'ID_USER' => 'Id.User',
+            'KD_CORP' => 'Kd.Corp',
+            'KD_CAB' => 'Kd.Cab',
+            'KD_DEP' => 'Kd.Dep',
             'STATUS' => 'Status',
-            'CREATED_AT' => 'Created  At',
-            'UPDATED_ALL' => 'Updated  All',
-            'DATA_ALL' => 'Data  All',
+            'CREATED_AT' => 'Created.At',
+            'UPDATED_ALL' => 'Updated.All',
+            'DATA_ALL' => 'Data.All',
 			
 			//'nmemp' => Yii::t('app', 'Pembuat'),
         ];

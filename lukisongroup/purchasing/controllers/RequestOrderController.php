@@ -3,10 +3,12 @@
 namespace lukisongroup\purchasing\controllers;
 
 use yii;
+use yii\web\Request;
 use yii\db\Query;
 //use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
+use lukisongroup\purchasing\models\LoginSignatureValidasi;
 use lukisongroup\purchasing\models\Requestorder;
 use lukisongroup\purchasing\models\RequestorderSearch;
 use lukisongroup\purchasing\models\Roatribute;
@@ -79,6 +81,10 @@ class RequestOrderController extends Controller
      */
     public function actionIndex()
     {
+		//Check componen generate kode RO
+		//print_r(\Yii::$app->ambilkonci->getRoCode());
+		
+		
 		//function getPermission(){
 			//return Yii::$app->getUserOpt->Modul_akses(1); 
 			
@@ -118,6 +124,73 @@ class RequestOrderController extends Controller
             ]);	
 		
     }
+	
+	/**
+     * Edit Form - Add Item Barang | Tambah Barang
+     * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */   
+    public function actionAdditem($kd)
+    {
+			$roDetail = new Rodetail();
+			$roHeader = Requestorder::find()->where(['KD_RO' => $kd])->one();		
+			$detro = $roHeader->detro;
+			$employ = $roHeader->employe;
+			$dept = $roHeader->dept;
+			
+			/*
+			 * Convert $roHeader->detro to ArrayDataProvider | Identity 'key' => 'ID',
+			 * @author ptrnov  <piter@lukison.com>
+			 * @since 1.1    
+			**/
+			 $detroProvider = new ArrayDataProvider([
+				'key' => 'ID',
+				'allModels'=>$detro,			
+				'pagination' => [
+					'pageSize' => 10,
+				],
+			]);
+			
+			return $this->renderAjax('additem', [         
+				'roHeader' => $roHeader, 
+				'roDetail' => $roDetail,			
+				'dataProvider'=>$detroProvider,
+			]); 
+			
+    }
+	/**
+     * Add Item Barang to SAVED | AJAX
+     * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionAdditem_saved(){
+		$roDetail = new Rodetail();	
+		if($roDetail->load(Yii::$app->request->post())){
+			/*Request Result*/
+			$hsl = \Yii::$app->request->post();
+			$kdRo = $hsl['Rodetail']['KD_RO'];
+			$kdBarang = $hsl['Rodetail']['KD_BARANG'];
+			$nmBarang = Barangumum::findOne(['KD_BARANG' => $kdBarang]);
+			$kdUnit = $hsl['Rodetail']['UNIT'];
+			$rqty = $hsl['Rodetail']['RQTY'];			
+			$note = $hsl['Rodetail']['NOTE'];
+			
+				/*Request Put*/
+				$roDetail->CREATED_AT = date('Y-m-d H:i:s');
+				$roDetail->KD_RO = $kdRo;
+				$roDetail->KD_BARANG = $kdBarang;
+				$roDetail->NM_BARANG = $nmBarang->NM_BARANG;
+				$roDetail->UNIT = $kdUnit;			
+				$roDetail->RQTY = $rqty;
+				$roDetail->NOTE = $note;
+				$roDetail->STATUS = 0;
+				$roDetail->save();				
+			return $this->redirect(['/purchasing/request-order/edit?kd='.$kdRo]);
+		}
+	}
+   
+	
+	
 	
 	/**
      * actionBrgkat() select2 Kategori mendapatkan barang
@@ -186,7 +259,8 @@ class RequestOrderController extends Controller
 				$roDetail = new Rodetail();
 				$profile= Yii::$app->getUserOpt->Profile_user();
 				
-		if($roDetail->load(Yii::$app->request->post()) && $roDetail->validate()){		
+				//if($roDetail->load(Yii::$app->request->post()) && $roDetail->validate()){		
+			if($roDetail->load(Yii::$app->request->post())){		
 				$hsl = \Yii::$app->request->post();				
 				$kdUnit = $hsl['Rodetail']['UNIT'];
 				$kdBarang = $hsl['Rodetail']['KD_BARANG'];
@@ -212,7 +286,7 @@ class RequestOrderController extends Controller
 				$getkdro=\Yii::$app->ambilkonci->getRoCode();
 				$roHeader->KD_RO =$getkdro;
 				$roHeader->CREATED_AT = date('Y-m-d H:i:s');
-				$roHeader->TGL = date('Y-m-d H:i:s');
+				$roHeader->TGL = date('Y-m-d');
 				$roHeader->ID_USER = $profile->emp->EMP_ID;
 				$roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
 				$roHeader->KD_CORP = $profile->emp->EMP_CORP_ID;
@@ -220,7 +294,6 @@ class RequestOrderController extends Controller
 				$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
 				$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
 				$roHeader->STATUS = 0;
-				
 					$transaction = $cons->beginTransaction();
 					try {
 						if (!$roDetail->save()) {
@@ -232,20 +305,17 @@ class RequestOrderController extends Controller
 								$transaction->rollback();
 								return false;
 						}
-						
-						$transaction->commit();						
-							/* return $this->render('index', [
-								'searchModel' => $searchModel,
-								'dataProvider' => $dataProvider,
-							]); */
+						$transaction->commit();
 					} catch (Exception $ex) {
+						print_r("error");
 						$transaction->rollback();
 						return false;						   
 					}
-					//return $this->redirect(['index','param'=>$getkdro]);			
-					return $this->redirect(['index?RequestorderSearch[KD_RO]='.$getkdro]);
-		}else{
-			return $this->redirect(['index']);
+					//return $this->redirect(['index','param'=>$getkdro]); 		
+					//return $this->redirect(['index?RequestorderSearch[KD_RO]='.$getkdro]);
+					return $this->redirect(['/purchasing/request-order/view?kd='.$getkdro]);
+			}else{
+				return $this->redirect(['index']);
 		}
 				
 	}
@@ -309,26 +379,124 @@ class RequestOrderController extends Controller
 	}
 	
 	 /**
-     * View Requestorder
+     * View Requestorder & Detail
      * @param string $id
-     * @return mixed
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
     public function actionView($kd)
     {
     	$ro = new Requestorder();
-		$reqro = Requestorder::find()->where(['KD_RO' => $kd])->one();
-		$detro = $reqro->detro;
-        $employ = $reqro->employe;
-		$dept = $reqro->dept;
-    	
-        return $this->render('view', [
-            'reqro' => $reqro,
-            'detro' => $detro,
-            'employ' => $employ,
-			'dept' => $reqro->dept,
-        ]);        
+		$roHeader = Requestorder::find()->where(['KD_RO' => $kd])->one();
+		if(count($roHeader['KD_RO'])<>0){
+			$detro = $roHeader->detro;
+			$employ = $roHeader->employe;
+			$dept = $roHeader->dept;
+			
+			/*
+			 * Convert $roHeader->detro to ArrayDataProvider | Identity 'key' => 'ID',
+			 * @author ptrnov  <piter@lukison.com>
+			 * @since 1.1    
+			**/
+			$detroProvider = new ArrayDataProvider([
+				'key' => 'ID',
+				'allModels'=>$detro,			
+				'pagination' => [
+					'pageSize' => 10,
+				],
+			]);
+			
+			return $this->render('view', [
+				'roHeader' => $roHeader,
+				'detro' => $detro,
+				'employ' => $employ,
+				'dept' => $dept,
+				'dataProvider'=>$detroProvider,
+			]);   
+		}else{
+			return $this->redirect('index');
+		}
+    }
+	
+	/**
+     * Prosess Edit RO | Change Colomn Row | Tambah Row
+     * @param string $id
+     * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionEdit($kd)
+    {
+		/*
+		 * Init Models
+		 * @author ptrnov  <piter@lukison.com>
+		 * @since 1.1    
+		**/
+		$roHeader = Requestorder::find()->where(['KD_RO' =>$kd])->one();
+		if(count($roHeader['KD_RO'])<>0){
+			$detro = $roHeader->detro;
+			$employ = $roHeader->employe;
+			$dept = $roHeader->dept;
+			
+			/*
+			 * Convert $roHeader->detro to ArrayDataProvider | Identity 'key' => 'ID',
+			 * @author ptrnov  <piter@lukison.com>
+			 * @since 1.1    
+			**/
+			$detroProvider = new ArrayDataProvider([
+				'key' => 'ID',
+				'allModels'=>$detro,			
+				'pagination' => [
+					'pageSize' => 10,
+				],
+			]);
+			
+			/*
+			 * Process Editable Row [Columm SQTY]
+			 * @author ptrnov  <piter@lukison.com>
+			 * @since 1.1    
+			**/
+			if (Yii::$app->request->post('hasEditable')) {
+				$id = Yii::$app->request->post('editableKey');
+				$model = Rodetail::findOne($id);
+				$out = Json::encode(['output'=>'', 'message'=>'']);
+				$post = [];
+				$posted = current($_POST['Rodetail']);
+				$post['Rodetail'] = $posted;
+				if ($model->load($post)) {
+					$model->save();
+					$output = '';
+					if (isset($posted['RQTY'])) {
+						$output = $model->RQTY;
+					}
+					if (isset($posted['SQTY'])) {
+						$output = $model->SQTY;
+					}
+					if (isset($posted['NOTE'])) {
+					   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
+						$output = $model->NOTE;
+					}
+					$out = Json::encode(['output'=>$output, 'message'=>'']);
+				}
+				// return ajax json encoded response and exit
+				echo $out;
+				return;
+			}
+			
+			/*
+			 * Render Approved View
+			 * @author ptrnov  <piter@lukison.com>
+			 * @since 1.1    
+			**/
+			return $this->render('edit', [
+				'roHeader' => $roHeader,
+				'detro' => $detro,
+				'employ' => $employ,
+				'dept' => $dept,
+				'dataProvider'=>$detroProvider,
+			]);		
+		}else{
+			return $this->redirect('index');
+		}
     }
 	
 	/**
@@ -339,14 +507,13 @@ class RequestOrderController extends Controller
      * @since 1.1
      */
 	public function actionCetakpdf($kd){
-    	$ro = new Requestorder();
-		$reqro = Requestorder::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
-		$detro = $reqro->detro;
-        $employ = $reqro->employe;
-		$dept = $reqro->dept;
+    	$roHeader = Requestorder::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
+		$detro = $roHeader->detro;
+        $employ = $roHeader->employe;
+		$dept = $roHeader->dept;
     	
-		$content = $this->renderPartial( 'pdfTester', [
-            'reqro' => $reqro,
+		$content = $this->renderPartial( 'pdfview', [
+            'roHeader' => $roHeader,
             'detro' => $detro,
             'employ' => $employ,
 			'dept' => $dept,
@@ -376,39 +543,68 @@ class RequestOrderController extends Controller
 				'SetHeader'=>['Copyright@LukisonGroup '.date("r")], 
 				'SetFooter'=>['{PAGENO}'],
 			]
-		]);
-		
+		]);		
 		return $pdf->render(); 		
-		/* $svgTest='
-		<svg xmlns="http://www.w3.org/2000/svg" width="5cm" height="3cm">
-			<g fill="#ffffff">
-				
-				<g fill="none" stroke="#000000" stroke-width="2">
-					<polyline points="9,77.13 9,76.13 9,75.13 10,73.13 12,71.13 15,67.13 17,63.13 20,57.13 23,51.13 28,45.13 35,40.13 46,34.13 56,29.13 69,24.13 80,20.13 85,18.13 88,17.13 89,17.13 90,17.13 91,19.13 91,22.13 91,24.13 91,25.13 91,26.13 91,29.13 87,34.13 82,37.13 75,39.13 70,42.13 66,42.13 63,44.13 60,44.13 58,44.13 56,43.13 52,41.13 48,38.13 46,37.13 45,36.13 43,35.13 42,34.13 41,33.13 40,33.13 39,33.13 38,33.13"></polyline>
-					<polyline points="30,19.13 29,20.13 26,24.13 24,27.13 23,29.13 23,32.13 23,35.13 24,38.13 27,42.13 29,45.13 32,49.13 38,52.13 46,55.13 56,59.13 60,59.13 70,60.13 82,60.13 91,60.13 99,59.13 104,57.13 107,56.13 109,55.13 110,55.13 111,54.13 111,53.13"></polyline>
-					<polyline points="116,37.13 113,37.13 107,37.13 101,37.13 98,40.13 94,44.13 92,46.13 91,49.13 90,51.13 90,53.13 90,55.13 91,56.13 92,58.13 95,61.13 97,63.13 99,64.13 101,65.13 104,65.13 108,65.13 112,65.13 120,63.13 128,59.13 136,55.13 139,52.13 142,48.13 143,42.13 144,38.13 144,35.13 144,34.13 144,35.13 143,39.13 139,47.13 136,56.13 135,63.13 135,69.13 134,73.13 134,74.13 134,75.13 134,73.13 134,67.13 136,58.13 140,49.13 143,43.13 145,37.13 147,35.13 148,33.13 149,32.13 151,32.13 152,32.13 152,33.13 153,34.13 153,37.13 153,40.13 149,44.13 144,47.13 138,49.13 140,49.13 143,49.13 146,49.13 150,49.13 153,49.13 154,49.13"></polyline>
-					<polyline points="159,43.13 159,45.13 159,47.13 159,49.13 159,51.13 159,53.13 159,54.13 159,55.13 159,53.13 159,51.13 160,46.13 161,45.13 161,43.13 162,42.13 164,42.13 165,44.13 167,45.13 168,47.13 169,48.13 169,49.13 171,49.13 172,49.13 173,49.13 177,47.13 180,44.13 181,43.13 182,42.13 182,41.13"></polyline>
-					<polyline points="193,50.13 193,51.13 193,53.13 193,54.13 193,55.13 193,56.13 193,58.13 195,59.13 196,61.13 197,61.13 198,61.13 199,61.13 200,61.13 201,61.13 203,58.13 204,56.13 204,54.13 204,51.13 204,50.13 204,49.13 204,48.13 204,47.13 203,46.13 201,46.13 197,46.13 195,46.13 188,46.13 182,46.13 180,46.13 177,46.13 176,47.13 176,48.13 177,49.13 178,50.13 178,51.13 179,52.13 180,52.13 181,53.13 182,53.13 186,53.13 191,53.13 195,53.13 199,53.13 201,53.13 202,53.13 203,53.13 204,53.13 205,53.13 206,53.13 209,53.13 212,53.13 213,53.13 214,53.13 215,52.13 216,51.13 217,50.13 218,49.13 218,48.13 218,49.13 218,51.13 218,54.13 219,57.13 219,58.13 220,59.13 220,60.13 221,60.13 222,60.13 223,60.13 226,60.13 227,59.13 229,57.13 230,56.13 232,54.13 234,51.13 235,49.13 237,47.13 239,46.13 239,45.13"></polyline>
-				</g>
-			</g>
-		</svg>		
-		'; */
-		
-		//$svgTest="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmVyc2lvbj0iMS4xIiB3aWR0aD0iMTg3IiBoZWlnaHQ9IjcxIj48cGF0aCBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlPSJyZ2IoNTEsIDUxLCA1MSkiIGZpbGw9Im5vbmUiIGQ9Ik0gMzAgNzAgYyAwLjA5IC0wLjE2IDMuMDMgLTYuMTggNSAtOSBjIDUuMDYgLTcuMjIgMTAuNCAtMTQuNyAxNiAtMjEgYyAyLjEyIC0yLjM5IDUuNzUgLTMuNzUgOCAtNiBjIDIuMjUgLTIuMjUgMy42OCAtNS44IDYgLTggYyAzLjgxIC0zLjYxIDkgLTYuMzYgMTMgLTEwIGMgMy4yOCAtMi45OCA1Ljc2IC03LjMgOSAtMTAgYyAyLjQ4IC0yLjA2IDYuMDUgLTQuMzMgOSAtNSBjIDMuNzIgLTAuODUgMTAuNDcgLTAuNzIgMTMgMCBjIDAuOCAwLjIzIDAuOTEgMi42NyAxIDQgYyAwLjI0IDMuNTQgMC4yNCA3LjQ2IDAgMTEgYyAtMC4wOSAxLjMzIC0wLjM5IDMuMDggLTEgNCBjIC0wLjU0IDAuOCAtMS45NiAxLjcyIC0zIDIgYyAtMi4zMiAwLjYzIC01LjU2IDAuMzkgLTggMSBjIC0xLjM1IDAuMzQgLTIuNjcgMS45NiAtNCAyIGMgLTE4Ljc5IDAuNTYgLTYzIDAgLTYzIDAiLz48cGF0aCBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlPSJyZ2IoNTEsIDUxLCA1MSkiIGZpbGw9Im5vbmUiIGQ9Ik0gMjMgMTIgYyAtMC4xMiAwIC01LjEyIC0wLjUxIC03IDAgYyAtMS4zNCAwLjM3IC0yLjU3IDIuMjggLTQgMyBjIC0zLjA5IDEuNTQgLTcuODcgMi40NSAtMTAgNCBjIC0wLjgyIDAuNTkgLTAuODcgMi42OCAtMSA0IGMgLTAuMTkgMS45MyAtMC40MyA0LjE4IDAgNiBjIDAuODMgMy41NSAyLjQ2IDcuNDggNCAxMSBjIDAuNzcgMS43NiAxLjc1IDMuNjUgMyA1IGMgMi41OCAyLjggNi4wNyA1Ljk3IDkgOCBjIDEgMC43IDIuNjcgMC45NiA0IDEgYyA5LjAzIDAuMjggMTkuMzUgMS4zNiAyOCAwIGMgNy41MiAtMS4xOCAxNS4zIC01LjYxIDIzIC04IGMgMS45MiAtMC42IDQuMjggLTAuMjUgNiAtMSBjIDMuMjkgLTEuNDQgNi42OSAtNC44NCAxMCAtNiBsIDEwIC0xIi8+PHBhdGggc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0icmdiKDUxLCA1MSwgNTEpIiBmaWxsPSJub25lIiBkPSJNIDExMSAyNiBjIC0wLjE2IDAuMDMgLTcuMjcgMC41NCAtOSAyIGMgLTEuODUgMS41NiAtMy40NyA2LjA2IC00IDkgYyAtMC43MSAzLjg4IC0wLjg5IDkuNDYgMCAxMyBjIDAuNTkgMi4zNCAzLjAxIDYuMzQgNSA3IGMgMy43MSAxLjI0IDEwLjk4IDAuNjkgMTYgMCBjIDQuMjcgLTAuNTkgOC44OSAtMi4yMiAxMyAtNCBjIDUuODEgLTIuNTIgMTIuMjEgLTUuOTcgMTcgLTkgYyAwLjkgLTAuNTcgMS4xOCAtMi4yOSAyIC0zIGMgMS4zMyAtMS4xNCA0IC0xLjg0IDUgLTMgYyAwLjcgLTAuODIgMS4xOCAtNCAxIC00IGMgLTAuMjIgMCAtMi4yNCAyLjU2IC0zIDQgYyAtMi4xOSA0LjEzIC00LjYzIDguOSAtNiAxMyBjIC0wLjQ4IDEuNDMgLTAuMzkgNC42MSAwIDUgYyAwLjI4IDAuMjggMi4xOSAtMS4xOSAzIC0yIGMgMS43NiAtMS43NiAzLjYzIC0zLjg3IDUgLTYgYyAxLjU3IC0yLjQ0IDIuMzggLTUuODQgNCAtOCBjIDEuMTYgLTEuNTUgMy45MyAtMi41OCA1IC00IGMgMC42OSAtMC45MiAwLjM5IC0zLjA4IDEgLTQgYyAwLjU0IC0wLjggMi44NiAtMi4zNyAzIC0yIGMgMC4zOCAxLjAzIDAuMjMgNi43OCAwIDEwIGMgLTAuMDkgMS4zMyAtMC40MSAyLjk2IC0xIDQgYyAtMC42MSAxLjA3IC0xLjkgMi4zMSAtMyAzIGMgLTEuMzkgMC44NyAtMy41IDEuODMgLTUgMiBjIC0xLjE1IDAuMTMgLTMuODggLTAuNjQgLTQgLTEgYyAtMC4xMSAtMC4zMiAxLjk4IC0xLjkgMyAtMiBjIDQuODEgLTAuNDggMTEuNjQgLTAuNiAxNyAwIGwgMTAgMyIvPjwvc3ZnPg==";
-		//$svgTest="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCAuLi4=";
-		/* $mpdf=new mPDF();
-		$mpdf->SetFont('serif', '', 6);
-		$mpdf->WriteHTML($this->renderPartial( 'pdfTester', [
-            'reqro' => $reqro,
-            'detro' => $detro,
-            'employ' => $employ,
-			'svgTest'=> $svgTest,
-        ]));
-        $mpdf->Output();
-        exit; */
-		//return $this->renderPartial('mpdf');
 	}
 	
+	/**
+	 * On Approval View
+	 * Approved_rodetail | Rodetail->ID |  $roDetail->STATUS = 101;
+	 * Approved = 101
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionApproved_rodetail()
+    {
+		if (Yii::$app->request->isAjax) {
+			$request= Yii::$app->request;
+			$id=$request->post('id');
+			//\Yii::$app->response->format = Response::FORMAT_JSON;
+			$roDetail = Rodetail::findOne($id);
+			$roDetail->STATUS = 101;
+			//$ro->NM_BARANG=''
+			$roDetail->save();
+			return true;
+		}
+   }
+	
+	/**
+	 * On Approval View
+	 * Reject_rodetail | Rodetail->ID |  $roDetail->STATUS = 4;
+	 * Reject = 4
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionReject_rodetail()
+    {
+		if (Yii::$app->request->isAjax) {
+			$request= Yii::$app->request;
+			$id=$request->post('id');
+			$roDetail = Rodetail::findOne($id);
+			$roDetail->STATUS = 4;
+			$roDetail->save();
+			return true;
+		}
+     }
+	
+	/**
+	 * On Approval View
+	 * Canclet_rodetail | Rodetail->ID |  $roDetail->STATUS = 4;
+	 * Cancel = 0
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionCancel_rodetail()
+    {
+		if (Yii::$app->request->isAjax) {
+			$request= Yii::$app->request;
+			$id=$request->post('id');
+			$roDetail = Rodetail::findOne($id);
+			$roDetail->STATUS = 0;
+			$roDetail->save();
+			return true;
+		}
+     }
 	/**
      * Hapus Ro
      * @param string $id
@@ -416,7 +612,7 @@ class RequestOrderController extends Controller
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
-	public function actionHapus($kode,$id)
+	public function actionHapus_item($kode,$id)
     {
 		new Rodetail();
 		$ro = Rodetail::findOne($id);
@@ -427,65 +623,106 @@ class RequestOrderController extends Controller
 		return $this->redirect(['buatro','id'=>$kode]);
     }
 	
-
-	public function actionBuatro()	
-    {
-        $model = new Requestorder();
-        $reqorder = new Roatribute();
-        $rodetail = new Rodetail();
-		
-		return $this->render('create', [
-			'model' => $model,
-			'reqorder' => $reqorder,
-			'rodetail' => $rodetail,
-		]);
-    }
-		
 	/**
-     * Prosess Persetujuan Manager
+     * Action Prosess Approval Colomn Row
      * @param string $id
-     * @return mixed
-	 * @author ptrnov  <piter@lukison.com>
+     * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
-	public function actionProses($kd)
+	public function actionApproved($kd)
     {
+		/*
+		 * Init Models
+		 * @author ptrnov  <piter@lukison.com>
+		 * @since 1.1    
+		**/
+		//$ro = new Requestorder();
+		$roHeader = Requestorder::find()->where(['KD_RO' =>$kd])->one();
+		$detro = $roHeader->detro;
+		$employ = $roHeader->employe;
+		$dept = $roHeader->dept;
 		
-		$ro = new Requestorder();
-		$reqro = Requestorder::find()->where(['KD_RO' => $kd])->one();
-		$detro = $reqro->detro;
-        $employ = $reqro->employe;
-		$dept = $reqro->dept;
-    	
+		/*
+		 * Convert $roHeader->detro to ArrayDataProvider | Identity 'key' => 'ID',
+		 * @author ptrnov  <piter@lukison.com>
+		 * @since 1.1    
+		**/
 		$detroProvider = new ArrayDataProvider([
+			'key' => 'ID',
 			'allModels'=>$detro,			
 			'pagination' => [
 				'pageSize' => 10,
 			],
 		]);
 		
-		return $this->render('proses', [
-            'reqro' => $reqro,
+		/*
+		 * Process Editable Row [Columm SQTY]
+		 * @author ptrnov  <piter@lukison.com>
+		 * @since 1.1    
+		**/
+		if (Yii::$app->request->post('hasEditable')) {
+            $id = Yii::$app->request->post('editableKey');
+            $model = Rodetail::findOne($id);
+			$out = Json::encode(['output'=>'', 'message'=>'']);
+            $post = [];
+            $posted = current($_POST['Rodetail']);
+            $post['Rodetail'] = $posted;
+            if ($model->load($post)) {
+                $model->save();
+				$output = '';
+                if (isset($posted['RQTY'])) {
+                    $output = $model->RQTY;
+                }
+				if (isset($posted['SQTY'])) {
+					$output = $model->SQTY;
+                }
+				if (isset($posted['NOTE'])) {
+                   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
+					$output = $model->NOTE;
+                }
+                $out = Json::encode(['output'=>$output, 'message'=>'']);
+            }
+            // return ajax json encoded response and exit
+            echo $out;
+            return;
+        }
+		
+		/*
+		 * Render Approved View
+		 * @author ptrnov  <piter@lukison.com>
+		 * @since 1.1    
+		**/
+		return $this->render('approved', [
+            'roHeader' => $roHeader,
             'detro' => $detro,
             'employ' => $employ,
 			'dept' => $dept,
 			'dataProvider'=>$detroProvider,
-        ]);
-		
+        ]);		
 		
     }
 	
+	public function actionApproved_authorize($kd){		
+		//$model = new LoginSignatureValidasi();
+		$roHeader = Requestorder::find()->where(['KD_RO' =>$kd])->one();
+		$employe = $roHeader->employe;
+		return $this->renderAjax('login_signature', [
+            'roHeader' => $roHeader,
+            'employe' => $employe,
+			//'model'=>$model,
+        ]);		
+	}
 	
-	/**
-     * Prosess Agree Manager
-     * @param string $id
-     * @return mixed
+	/*
+	 * Sign Approval Status = 101
+	 * Class Model Requestorder->Status = 101 [Approvad]
+	 * Class Model Rodetail->Status 	= 101 [Approvad]
 	 * @author ptrnov  <piter@lukison.com>
-     * @since 1.1
-     */
-	public function actionSimpanproses()
-    {
-        //$rodetails = new Rodetail();
+	 * @since 1.1    
+	**/
+	//public function actionApproved_sign(){
+	public function actionApproved_authorize_save(){
+		 //$rodetails = new Rodetail();
 		$ts = Yii::$app->request->post();
 		if(count($ts) == 0){ return $this->redirect([' ']); }
 		$kd = $ts['kd'];
@@ -494,80 +731,18 @@ class RequestOrderController extends Controller
 			$rodetail  = Rodetail::findOne($ts);
 			$rodetail->STATUS = 1;
 			if($rodetail->save()){
-				$reqro = Requestorder::find()->where(['KD_RO' => $kd])->one();
-				$reqro->STATUS = 1;
-				$reqro->save();
+				$roHeader = Requestorder::find()->where(['KD_RO' => $kd])->one();
+				$roHeader->STATUS = 1;
+				$roHeader->save();
 			}
 		}
 		return $this->redirect(['proses', 'kd' => $kd]);
 	
 		//$rodetail->save();
-    }
+		
+	}
 	
-	
-				
-    /* public function actionSimpan($id)
-    {
-        $rodetail = new Rodetail();
-		$hsl = Yii::$app->request->post();
-
-        $created = $hsl['Rodetail']['CREATED_AT'];
-        $nmBarang = $hsl['Rodetail']['NM_BARANG'];
-        $kdRo = $hsl['Rodetail']['KD_RO'];
-        $kdBarang = $hsl['Rodetail']['KD_BARANG'];
-        $qty = $hsl['Rodetail']['QTY'];
-        $note = $hsl['Rodetail']['NOTE'];
-
-        $ck = Rodetail::find()->where(['KD_BARANG'=>$kdBarang, 'KD_RO'=>$kdRo])->andWhere('STATUS <> 3')->one();
-
-        if(count($ck) == 1){
-            \Yii::$app->getSession()->setFlash('error', '<br/><br/><p class="bg-danger" style="padding:15px"><b>Barang Sudah di Masukkan</b></p>');
-            return $this->redirect(['buatro','id'=>$id]);
-        } else {
-
-            $kdBrg = $hsl['Rodetail']['KD_BARANG'];
-            $ckBrg = explode('.', $kdBrg);
-            if($ckBrg[0] == 'BRG'){
-                $kdUnit = Barang::find('KD_UNIT')->where(['KD_BARANG'=>$kdBrg])->one();
-            } else if($ckBrg[0] == 'BRGU') {
-                $kdUnit = Barangumum::find('KD_UNIT')->where(['KD_BARANG'=>$kdBrg])->one();
-            }
-
-            $rodetail->UNIT = $kdUnit->KD_UNIT;
-            $rodetail->CREATED_AT = $created;
-            $rodetail->NM_BARANG = $nmBarang;
-            $rodetail->KD_RO = $kdRo;
-            $rodetail->KD_BARANG = $kdBarang;
-            $rodetail->QTY = $qty;
-            $rodetail->NOTE = $note;
-
-    		$rodetail->save();
-
-            \Yii::$app->getSession()->setFlash('error', '<br/><br/><p class="bg-success" style="padding:15px"><b>Barang berhasil di Masukkan</b></p>');
-    		return $this->redirect(['buatro','id'=>$id]);
-        }
-    } */
-	
-    
-
-	
-	
-	/*
-    public function actionSimpan()
-    {
-        $model = new Requestorder();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-	
-*/
-    /**
+	/**
      * Updates an existing Requestorder model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id

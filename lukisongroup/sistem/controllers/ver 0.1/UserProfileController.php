@@ -9,6 +9,15 @@ use lukisongroup\hrd\models\EmployeSearch;	/* TABLE CLASS SEARCH */
 
 class UserProfileController extends Controller
 {
+    public function actionIndex()
+    {
+		$model = $this->findModel(Yii::$app->user->identity->EMP_ID);
+		//print_r($model->SIGSVGBASE30);
+        return $this->render('index',[
+			'model'=> $model,
+		]);
+    }
+	
 	/**
      * Before Action Index
 	 * @author ptrnov  <piter@lukison.com>
@@ -34,36 +43,6 @@ class UserProfileController extends Controller
                 return true;
             }
     }
-	
-    public function actionIndex()
-    {
-		$model = $this->findModel(Yii::$app->user->identity->EMP_ID);
-		//print_r($model->SIGSVGBASE30);
-        return $this->render('index',[
-			'model'=> $model,
-		]);
-    }
-	
-	
-	public function actionSignature()
-    {
-		$model = $this->findModel(Yii::$app->user->identity->EMP_ID);
-		//print_r($model->SIGSVGBASE30);
-        return $this->render('_signature',[
-			'model'=> $model,
-		]);
-    }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	public function actionCreate()
     {		

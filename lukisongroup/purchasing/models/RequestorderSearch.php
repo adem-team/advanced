@@ -19,7 +19,7 @@ class RequestorderSearch extends Requestorder
 	public function attributes()
 	{
 		/*Author -ptr.nov- add related fields to searchable attributes */
-		return array_merge(parent::attributes(), ['detro.KD_RO','detro.NM_BARANG','detro.QTY']);
+		return array_merge(parent::attributes(), ['detro.KD_RO','detro.NM_BARANG','detro.QTY','dept.DEP_NM']);
 		//return array_merge(parent::attributes(), ['detro.KD_RO','detro.NM_BARANG','detro.QTY']);
 	}
 	
@@ -29,10 +29,10 @@ class RequestorderSearch extends Requestorder
     public function rules()
     {
         return [
-            [['ID', 'STATUS'], 'integer'],
+            [['STATUS'], 'integer'],
             [['KD_RO', 'NOTE', 'ID_USER', 'KD_CORP', 'KD_CAB', 'KD_DEP', 'CREATED_AT', 'UPDATED_ALL', 'DATA_ALL'], 'safe'],
             [['detro'], 'safe'],
-			[['detro.KD_RO','detro.NM_BARANG','detro.QTY','EMP_NM'], 'safe'],
+			[['detro.KD_RO','detro.NM_BARANG','detro.QTY','dept.DEP_NM','EMP_NM',], 'safe'],
 			[['SIG2_NM'], 'string', 'max' => 255],
 			[['SIG1_SVGBASE64','SIG1_SVGBASE30','SIG2_SVGBASE64','SIG2_SVGBASE30','SIG2_TGL'], 'safe'],
 			//[['NM_BARANG','QTY'], 'safe']
@@ -55,9 +55,11 @@ class RequestorderSearch extends Requestorder
 		
 		if($profile->emp->JOBGRADE_ID == 'M' OR $profile->emp->JOBGRADE_ID == 'SM' ){
 			$query = Requestorder::find()
+						->JoinWith('dept',true,'left JOIN')	
 						->where("(r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."') OR (r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.KD_DEP = '".$profile->emp->DEP_ID."')");
         }else{
 			$query = Requestorder::find()
+					->JoinWith('dept',true,'left JOIN')	
 					->where("r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."'");
 		}
 		$dataProvider = new ActiveDataProvider([
@@ -72,7 +74,9 @@ class RequestorderSearch extends Requestorder
 		} 
 			
 		$query->andFilterWhere(['like', 'KD_RO', $this->KD_RO])
-			  ->andFilterWhere(['like', 'EMP_NM', $this->EMP_NM]);
+			  ->andFilterWhere(['like', 'EMP_NM', $this->EMP_NM])
+			  ->andFilterWhere(['like', 'u0002a.DEP_NM', $this->getAttribute('dept.DEP_NM')]);
+			  
 			
 		if($this->CREATED_AT!=''){
             $date_explode = explode(" - ", $this->CREATED_AT);

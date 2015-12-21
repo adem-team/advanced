@@ -44,7 +44,7 @@ class Rodetail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
- //           [['ID','KD_RO', 'KD_BARANG', 'NM_BARANG', 'QTY', 'NO_URUT', 'NOTE', 'STATUS', 'CREATED_AT', 'UPDATED_AT'], 'required'],
+ //         [['ID','KD_RO', 'KD_BARANG', 'NM_BARANG', 'QTY', 'NO_URUT', 'NOTE', 'STATUS', 'CREATED_AT', 'UPDATED_AT'], 'required'],
 			[['KD_RO','RQTY','UNIT','KD_BARANG'], 'required'],
 			//[['KD_RO','RQTY','SQTY','UNIT','KD_BARANG'], 'safe'],
             [['STATUS'], 'integer'],
@@ -54,7 +54,12 @@ class Rodetail extends \yii\db\ActiveRecord
             [['NM_BARANG', 'NO_URUT'], 'string', 'max' => 255]
         ];
     }
-
+	
+/* 	public static function primaryKey()
+    {
+      return ['ID'];
+    } */
+	
 	public function getParentro()
     {
         return $this->hasOne(Requestorder::className(), ['KD_RO' => 'KD_RO']);

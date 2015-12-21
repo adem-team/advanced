@@ -133,9 +133,9 @@ $this->params['breadcrumbs'][] = $this->title;
             <tr>
                 <td><?= $a ?></td>
                 <td><?= $val->KD_BARANG ?></td>
-                <td><?= $nmBrg->NM_BARANG ?></td>
+                <td><?php //= $nmBrg->NM_BARANG ?></td>
                 <td><?= $val->QTY ?></td>
-                <td><?= $brg->NM_UNIT ?></td>
+                <td><?php //= $brg->NM_UNIT ?></td>
                 <td>
                     <?= Yii::$app->mastercode->Rupiah($val->HARGA) ?>
                 </td>

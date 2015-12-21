@@ -204,7 +204,7 @@ class PurchaseOrderController extends Controller
 
     public function actionDetail($kd_ro,$kdpo)
     {
-        $podet = Rodetail::find()->where(['KD_RO'=>$kd_ro, 'STATUS'=>1])->all();
+        $podet = Rodetail::find()->where(['KD_RO'=>$kd_ro, 'STATUS'=>101])->all();
         return $this->renderAjax('_detail', [  // ubah ini
             'po' => $podet,
             'kdpo' => $kdpo,

@@ -111,7 +111,7 @@
         </div>
     </div>
     <div class="col-md-4">
-		<div class="panel panel-danger">
+		<div class="panel panel-primary">
 			<div class="panel-heading">
                ROOMS		
 			</div>
@@ -155,9 +155,7 @@
 							</div>
 						</div>
 					</li>
-			</div>			
-		</div>   
-		<div class="panel panel-info">
+			</div>
 			<div class="panel-heading">
                ONLINE USERS		
 			</div>
@@ -269,7 +267,8 @@
 					</li>
 				</ul>
 			</div>
-		</div>
+		</div>        
+    </div>
 </div>
   </div>
 </body>

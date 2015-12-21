@@ -203,14 +203,16 @@ $kr = $emp->DEP_SUB_ID;
 
 				<td class=" accordion-toggle" data-toggle="collapse" data-target="#demo<?php echo $a; ?>"><?php echo $a; ?></td>
 				<td class=" accordion-toggle" data-toggle="collapse" data-target="#demo<?php echo $a; ?>"><?php echo $rows->KD_BARANG; ?> </td>
-				<td class=" accordion-toggle" data-toggle="collapse" data-target="#demo<?php echo $a; ?>"><?php echo $nmBrg->NM_BARANG; ?></td>
+				<td class=" accordion-toggle" data-toggle="collapse" data-target="#demo<?php echo $a; ?>"><?php //echo $nmBrg->NM_BARANG; ?></td>
 				<td class=" accordion-toggle" data-toggle="collapse" data-target="#demo<?php echo $a; ?>">
 					<?php echo $rows->QTY; ?>
 					<input type="hidden" name="dqty" id="dqty<?php echo $a; ?>" value="<?php echo $rows->QTY; ?>" />
 				</td>
-				<td class=" accordion-toggle" data-toggle="collapse" data-target="#demo<?php echo $a; ?>"><?php echo $brg->NM_UNIT; ?></td>
+				<td class=" accordion-toggle" data-toggle="collapse" data-target="#demo<?php echo $a; ?>"><?php //echo $brg->NM_UNIT; ?></td>
 				<td>
-					<input type="text" name="hargaBarang[]" id="hargaBarang<?php echo $a; ?>" value="<?php echo $nmBrg->HARGA; ?>"  onchange="hrga()" onkeypress="hrga()" onkeyup="hrga()" required />
+					<!--
+					<input type="text" name="hargaBarang[]" id="hargaBarang<?php echo $a; ?>" value="<?php //echo $nmBrg->HARGA; ?>"  onchange="hrga()" onkeypress="hrga()" onkeyup="hrga()" required />
+					!-->
 					<input type="hidden" name="kdBarang[]" id="kdBarang[]" value="<?php echo $rows->KD_BARANG; ?>"  required />
 				</td>
 				<td>
@@ -249,7 +251,7 @@ $kr = $emp->DEP_SUB_ID;
 						?>
 						<tr>
 							<td><?php echo $pode->KD_RO; ?></td>
-							<td><?php echo $ro_dep->KD_DEP; ?></td>
+							<td><?php //echo $ro_dep->KD_DEP; ?></td>
 							<td id="<?php echo 'a'.$a.''.$b; ?>" onclick="edit(<?php echo $a.''.$b; ?>)">
 								<?php echo $pode->QTY; ?>
 							</td>
