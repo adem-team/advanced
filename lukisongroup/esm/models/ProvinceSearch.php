@@ -15,6 +15,7 @@ class ProvinceSearch extends Province
     /**
      * @inheritdoc
      */
+   
     public function rules()
     {
         return [
@@ -39,6 +40,8 @@ class ProvinceSearch extends Province
      *
      * @return ActiveDataProvider
      */
+    
+
     public function search($params)
     {
         $query = Province::find();

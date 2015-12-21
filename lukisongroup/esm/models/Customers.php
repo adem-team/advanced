@@ -43,7 +43,7 @@ class Customers extends \yii\db\ActiveRecord
    	 public $PROVINCE_ID;
 	 public $CITY_ID;
 	 public $PARENT;
-	 public $coordinate;
+	
     public static function tableName()
     {
         return 'c0001';
@@ -63,7 +63,7 @@ class Customers extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['CUST_NM','JOIN_DATE','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID','PARENT'], 'required'],
+            [['CUST_NM','CUST_KTG','JOIN_DATE','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID','ALAMAT','NPWP', 'TLP1', 'TLP2','STT_TOKO'], 'required'],
             [['CUST_KTG', 'TLP1', 'TLP2', 'FAX', 'STT_TOKO', 'STATUS'], 'integer'],
             [['JOIN_DATE', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['ALAMAT', 'NOTE'], 'string'],
@@ -74,17 +74,24 @@ class Customers extends \yii\db\ActiveRecord
         ];
     }
 
+        public function getCus()
+        {
+            return $this->hasOne(Kategoricus::className(), ['CUST_KTG' => 'CUST_KTG']);
+          
+        }
+
     /**
      * @inheritdoc
      */
     public function attributeLabels()
     {
         return [
+            'CUST_KTG_NM' => 'Kategori Customers',
             'PARENT' => 'Parent Customer',
             'CITY_ID' => 'KOTA',
             'PROVINCE_ID' => 'PROVINCE',
-            'CUST_KD' => 'Cust  Kd',
-            'CUST_KD_ALIAS' => 'Cust  Kd  Alias',
+            'CUST_KD' => 'Kode Customers',
+            'CUST_KD_ALIAS' => 'Kode Customers Alias',
             'CUST_NM' => 'Nama Customer',
             'CUST_GRP' => 'Cust  Grp',
             'CUST_KTG' => 'Kategori Customer',
@@ -94,8 +101,8 @@ class Customers extends \yii\db\ActiveRecord
             'KD_DISTRIBUTOR' => 'Nama Distributor',
             'PIC' => 'PIC Customer',
             'ALAMAT' => 'Alamat',
-            'TLP1' => 'Tlp1',
-            'TLP2' => 'Tlp2',
+            'TLP1' => ' Nomer Telepon 1',
+            'TLP2' => 'Nomer Telepon 2',
             'FAX' => 'Fax',
             'EMAIL' => 'Email',
             'WEBSITE' => 'Website',

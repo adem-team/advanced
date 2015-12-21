@@ -12,6 +12,7 @@ use lukisongroup\esm\models\Kota;
 use yii\web\JsExpression;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
+use kartik\widgets\DepDrop;
 
 
 /* @var $this yii\web\View */
@@ -22,20 +23,24 @@ use yii\helpers\Url;
          $config = ['template'=>"{input}\n{error}\n{hint}"];  
 // $dropparent = ArrayHelper::map(\lukisongroup\esm\models\Kategori::find()->all(),'CUST_KTG_PARENT', 'CUST_KTG_NM'); 
    $no = 0;
-   $dropparentkategori = ArrayHelper::map(Kategoricus::find()
-                                                                ->where(['CUST_KTG_PARENT'=>$no])
-                                                                ->all(),'CUST_KTG', 'CUST_KTG_NM');
-	$droppro = ArrayHelper::map(Province::find()->all(),'PROVINCE_ID','PROVINCE');
+   $dropparentkategori = ArrayHelper::map(Kategoricus::find()->where(['CUST_KTG_PARENT'=>$no])
+                                                             ->asArray()  
+                                                             ->all(),'CUST_KTG', 'CUST_KTG_NM');
+
+                                                             
+     
+	$droppro = ArrayHelper::map(Province::find()->asArray() 
+                                              ->all(),'PROVINCE_ID','PROVINCE');
 	// $dropcity = ArrayHelper::map(Kota::find()->all(),'POSTAL_CODE','CITY_NAME');
 // print_r( $dropparentkategori);
 // die();
-    Modal::begin([
-             'header'=>'<h4>Vlookup</h4>',
-             'id'=> 'modal',
-             'size'=>'modal-lg',
-         ]);
-         echo"<div id='modalcalon'></div>";
-         modal::end();
+    // Modal::begin([
+    //          'header'=>'<h4>Vlookup</h4>',
+    //          'id'=> 'modal',
+    //          'size'=>'modal-lg',
+    //      ]);
+    //      echo"<div id='modalcalon'></div>";
+    //      modal::end();
  
 ?>
 
@@ -50,7 +55,7 @@ use yii\helpers\Url;
 
 
 
-    <?= $form->field($model, 'CUST_KD_ALIAS')->textInput(['maxlength' => true]) ?>
+    
 
 	  <?= $form->field($model, 'CUST_NM', $config)->widget(LabelInPlace::classname());?>
 
@@ -64,41 +69,55 @@ use yii\helpers\Url;
     
     <?= $form->field($model, 'TLP1', $config)->widget(LabelInPlace::classname());?>
     
-     <?= $form->field($model, 'PARENT')->widget(Select2::classname(), [
-        'data' => $dropparentkategori,
-        'options' => [
-         // 'id'=>"slect",
-        'placeholder' => 'Pilih Parent ...'],
-        'pluginOptions' => [
-            'allowClear' => true,
-             ],
 
-        
-    ]);?>
-	
-	   <?= $form->field($model, 'CUST_KTG')->widget(Select2::classname(), [
+   <?=  $form->field($model, 'PARENT')->widget(Select2::classname(), 
 
-        'options' => [
-//            'id'=>'parent',
-        'placeholder' => 'Pilih customer kategory ...'],
-        'pluginOptions' => [
-            'allowClear' => true
-             ],
-        
-    ]);?>
-	
-	<?= $form->field($model, 'PROVINCE_ID')->widget(Select2::classname(), [
-        'data' => $droppro,
-        'options' => [
-        'placeholder' => 'Pilih Provinci ...'],
-        'pluginOptions' => [
-            'allowClear' => true,
-             ],
+    [
+    'options'=>[  'placeholder' => 'Select Customers parent ...'
+    ],
+    'data' => $dropparentkategori
 
-        
-    ]);?>
+
+]);?>
+  
+
+   <?= $form->field($model, 'CUST_KTG')->widget(DepDrop::classname(), [
+    'options' => [//'id'=>'customers-cust_ktg',
+    'placeholder' => 'Select Customers kategory'],
+    'type' => DepDrop::TYPE_SELECT2,
+    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+    'pluginOptions'=>[
+        'depends'=>['customers-parent'],
+        'url' => Url::to(['/esm/customers/lisdata']),
+      'loadingText' => 'Loading data ...',
+    ]
+]);?>
 	
-	<?= $form->field($model, 'CITY_ID')->widget(Select2::classname(), [
+	   <?=  $form->field($model, 'PROVINCE_ID')->widget(Select2::classname(), 
+
+    [
+    'options'=>[  'placeholder' => 'Select provinsi ...'
+    ],
+    'data' => $droppro
+
+
+]);?>
+	
+
+
+   <?= $form->field($model, 'CITY_ID')->widget(DepDrop::classname(), [
+    'options' => [//'id'=>'customers-cust_ktg',
+    'placeholder' => 'Select Kota'],
+    'type' => DepDrop::TYPE_SELECT2,
+    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+    'pluginOptions'=>[
+        'depends'=>['customers-province_id'],
+        'url' => Url::to(['/esm/customers/lisarea']),
+      'loadingText' => 'Loading data ...',
+    ]
+]);?>
+	
+	<!-- $form->field($model, 'CITY_ID')->widget(Select2::classname(), [
         // 'data' => $dropcity,
         'options' => [
         'placeholder' => 'Pilih kota ...'],
@@ -108,7 +127,7 @@ use yii\helpers\Url;
 
         
     ]);?>
-    
+     -->
   
     
      <?= $form->field($model, 'PIC', $config)->widget(LabelInPlace::classname());?>
@@ -160,27 +179,31 @@ use yii\helpers\Url;
 	
 	?>
 	
-	<?= $form->field($model, 'MAP_LNG')->textInput(['maxlength' => true,'readonly'=>true]) ?>
-	<?= $form->field($model, 'MAP_LAT')->textInput(['maxlength' => true,'readonly'=>true]) ?>
-       <!-- Html::button('...', ['value'=>Url::to('/esm/customers/lokasi'),'class' => 'btn btn-success','id'=>'modalcp']);?> --> -->
+    <?= $form->field($model, 'ALAMAT')->textInput(['maxlength' => true]) ?> 
 
-   <button type="button" class="btn btn-info btn-lg" id="myBtn">Open Modal</button>
+   <?= $form->field($model, 'MAP_LNG')->hiddenInput()->label(false) ?>
+    <?= $form->field($model, 'MAP_LAT')->hiddenInput()->label(false) ?>
+	<!-- $form->field($model, 'MAP_LNG')->textInput(['maxlength' => true,'readonly'=>true]) ?> -->
+	 <!-- $form->field($model, 'MAP_LAT')->textInput(['maxlength' => true,'readonly'=>true]) ?> -->
+       <!-- Html::button('...', ['value'=>Url::to('/esm/customers/lokasi'),'class' => 'btn btn-success','id'=>'modalcp']);?> -->
+
+   <!-- <button type="button" class="btn btn-info btn-lg" id="myBtn">Open Modal</button> -->
 
   <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
+  <!-- <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog modal-lg">
     
-      <!-- Modal content-->
-      <div class="modal-content">
+      <!-Modal content-->
+     <!--  <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Modal Header</h4>
-        </div>
-        <div class="modal-body">
+        </div> -->
+        <!-- <div class="modal-body"> --> 
       
-    <?= $form->field($model, 'ALAMAT')->textInput(['maxlength' => true]) ?> 
+    <!-- $form->field($model, 'ALAMAT')->textInput(['maxlength' => true]) ?>  -->
 
-     <?php echo \pigolab\locationpicker\LocationPickerWidget::widget([
+    <!--  echo \pigolab\locationpicker\LocationPickerWidget::widget([
        // 'key' => 'http://maps.google.com/maps/api/js?sensor=false&libraries=places', // optional , Your can also put your google map api key
        'options' => [
        // 'id'=>'tes',
@@ -210,9 +233,9 @@ use yii\helpers\Url;
         ]        
     ]);
  
-?>
+?> -->
    
-
+<!-- 
  
         </div>
         <div class="modal-footer">
@@ -222,12 +245,15 @@ use yii\helpers\Url;
       
     </div>
   </div>
- 
+  -->
+
   
-    <!--  \pigolab\locationpicker\LocationPickerWidget::widget([
+  
+   <?php echo \pigolab\locationpicker\LocationPickerWidget::widget([
        // 'key' => 'http://maps.google.com/maps/api/js?sensor=false&libraries=places', // optional , Your can also put your google map api key
        'options' => [
-       'id'=>'tes1',
+
+            
         // 'enableSearchBox' => true,
             'style' => 'width: 100%; height: 400px',
             'enableSearchBox' => true, // Optional , default is true
@@ -235,6 +261,10 @@ use yii\helpers\Url;
             'style' => 'width: 300px;', // Optional , default width and height defined in css coordinates-picker.css
                     ], // map canvas width and height
         ] ,
+        // 'ClientEvents' =>
+        // [
+        //      $('#us6').locationpicker('autosize')
+        // ],
           
 
         'clientOptions' => [
@@ -253,10 +283,31 @@ use yii\helpers\Url;
             'enableAutocomplete' => true,
         ]        
     ]);
+?>
+ <!-- $form->field($model, 'ALAMAT')->widget('\pigolab\locationpicker\CoordinatesPicker' , [
+        // 'key' => 'abcabcabc...' ,   // optional , Your can also put your google map api key
+        'valueTemplate' => '{latitude},{longitude}' , // Optional , this is default result format
+        'options' => [
+            'style' => 'width: 100%; height: 400px',  // map canvas width and height
+        ] ,
+        'enableSearchBox' => true , // Optional , default is true
+        'searchBoxOptions' => [ // searchBox html attributes
+            'style' => 'width: 300px;', // Optional , default width and height defined in css coordinates-picker.css
+        ],
+        'enableMapTypeControl' => true , // Optional , default is true
+        'clientOptions' => [
+            'radius'    => 300,
+            'location' => [
+                'latitude'  => -6.214620,
+                'longitude' => 106.845130 
+        ],
+        ]
+    ]);
 ?> -->
 
-     
+
     
+
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
@@ -271,45 +322,42 @@ use yii\helpers\Url;
 <?php
 
 $script = <<<SKRIPT
-$(document).ready(function(){
+
+ // $('#form').on('shown.bs.modal', function () {
+ //                $('#tes').locationpicker('autosize');
+ //            });
+// $(document).ready(function(){
    
-    $("#myBtn").click(function(){
-        $('#tes').locationpicker('autosize')
-        $("#myModal").modal()
+//     $("#myBtn").click(function(){
+//         $('#tes').locationpicker('autosize')
+//         $("#myModal").modal()
 
-    }); 
-});
+//     }); 
+// });
 
-$(function(){
-     $('#tes').locationpicker('autosize');
-$('#modalcp').click(function() {
-    $('#modal').modal('show')
-        .find('#modalcalon')
-        .load($(this).attr('value'));
+// $(function(){
+//      $('#tes').locationpicker('autosize');
+// $('#modalcp').click(function() {
+//     $('#modal').modal('show')
+//         .find('#modalcalon')
+//         .load($(this).attr('value'));
 
-    })
-        });
+//     })
+//         });
 	
-	 $('select#customers-province_id').change(function(){
-        var id = $(this).val();
+	 // $('select#customers-province_id').change(function(){
+  //       var id = $(this).val();
 	
 		
-         $.get('/esm/customers/lisarea',{id : id},
-             function( data ) {
-     $( 'select#customers-city_id' ).html( data );
-           // alert(data);
-                        });
-                    });
+  //        $.get('/esm/customers/lisarea',{id : id},
+  //            function( data ) {
+  //    $( 'select#customers-city_id' ).html( data );
+  //          // alert(data);
+  //                       });
+  //                   });
 	
         
-    $('select#customers-parent').change(function(){
-        var id = $(this).val();
-        $.get('/esm/customers/lis',{id : id},
-            function( data ) {
-     $( 'select#customers-cust_ktg' ).html( data );
- 
-                        });
-                    });
+   
 SKRIPT;
 
 $this->registerJs($script);

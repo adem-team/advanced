@@ -22,6 +22,12 @@ class Kategoricus extends \yii\db\ActiveRecord
      * @inheritdoc
      */
 	 
+    // public function getKtdetail()
+    // {
+    //     return $this->hasMany(Kategoricus::className(), ['CUST_KTG_PARENT' => 'CUST_KTG']);
+    // }   
+    public $PRN_NM;
+    public $customers_Kategori;
     public static function tableName()
     {
         return 'c0001k';
@@ -34,6 +40,12 @@ class Kategoricus extends \yii\db\ActiveRecord
     {
         return Yii::$app->get('db3');
     }
+
+         public function getParent()
+        {
+            return $this->hasMany(Customers::className(), ['CUST_KTG' => 'CUST_KTG']);
+          
+        }
 
     /**
      * @inheritdoc
@@ -56,7 +68,7 @@ class Kategoricus extends \yii\db\ActiveRecord
     {
         return [
             'CUST_KTG' => 'Cust  Ktg',
-            'CUST_KTG_PARENT' => 'Cust  Ktg  Parent',
+            'CUST_KTG_PARENT' => 'Customer Kategori Parent',
             'CUST_KTG_NM' => 'Cust  Ktg  Nm',
             'CREATED_BY' => 'Created  By',
             'CREATED_AT' => 'Created  At',

@@ -25,7 +25,7 @@ use yii\helpers\ArrayHelper;
 
   
 
-    <?= $form->field($model, 'CUST_KTG_NM')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'CUST_KTG_NM')->textInput(['maxlength' => true])->label('Nama Parent') ?>
 	
 	
 	  <?= $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']) ?>

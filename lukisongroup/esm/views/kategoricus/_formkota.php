@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\esm\models\Kota */
@@ -18,8 +19,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'PROVINCE_ID')->widget(Select2::classname(), [
         'data' => $prov,
-        'options' => [
-         'id'=>"slect",
         'placeholder' => 'Pilih Province..'],
         'pluginOptions' => [
             'allowClear' => true,
