@@ -66,7 +66,7 @@ $tab_employe= GridView::widget([
             ],  
 				'EMP_ID',
             [
-                //'class' => 'kartik\grid\EditableColumn',
+                'class' => 'kartik\grid\EditableColumn',
                 'attribute' =>'EMP_NM',
 				/*
                 'readonly'=>function($model, $key, $index, $widget) {

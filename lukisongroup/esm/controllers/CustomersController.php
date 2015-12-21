@@ -4,12 +4,15 @@ namespace lukisongroup\esm\controllers;
 
 use Yii;
 use lukisongroup\esm\models\KategoricusSearch;
+use lukisongroup\esm\models\DistributorSearch;
 use lukisongroup\esm\models\Kategoricus;
 use lukisongroup\esm\models\KotaSearch;
 use lukisongroup\esm\models\Kota;
 use lukisongroup\esm\models\ProvinceSearch;
+use lukisongroup\esm\models\Province;
 use lukisongroup\esm\models\Customers;
 use lukisongroup\esm\models\CustomersSearch;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -35,40 +38,122 @@ class CustomersController extends Controller
      * Lists all Customers models.
      * @return mixed
      */
+
+    public function beforeAction(){
+            if (Yii::$app->user->isGuest)  {
+                 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+            }
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+                   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true; 
+               }
+            } else {
+                return true;
+            }
+    }
+
      public function actionIndex()
     {
-        $searchModel = new CustomersSearch();
-        $dataProvider = $searchModel->searchcus(Yii::$app->request->queryParams);
-		
-		// parent data
-		 $searchModelkatp = new KategoricusSearch();
-        $dataProviderparent =  $searchModelkatp->searchparent(Yii::$app->request->queryParams);
-	   // kategori data
-	   
+       // city data
+        $searchmodelkota = new KotaSearch();
+        $dataproviderkota = $searchmodelkota->search(Yii::$app->request->queryParams);
+        
+        // province data
+        $searchmodelpro = new ProvinceSearch();
+        $dataproviderpro = $searchmodelpro->search(Yii::$app->request->queryParams);
+
         $searchModelkat = new KategoricusSearch();
         $dataProviderkat  = $searchModelkat->search(Yii::$app->request->queryParams);
+      
+        $searchModel = new CustomersSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+           if(Yii::$app->request->post('hasEditable'))
+        {
+            $ID = \Yii::$app->request->post('editableKey');
+            $model = Customers::findOne($ID);
+
+           
+            
+            
+            $out = Json::encode(['output'=>'', 'message'=>'']);
+
+            // fetch the first entry in posted data (there should
+            // only be one entry anyway in this array for an
+            // editable submission)
+            // - $posted is the posted data for Book without any indexes
+            // - $post is the converted array for single model validation
+            $post = [];
+            $posted = current($_POST['Customers']);
+            $post['Customers'] = $posted;
+
+            // load model like any single model validation
+            if ($model->load($post)) {
+                // can save model or do something before saving model
+                $model->save();
+
+                // custom output to return to be displayed as the editable grid cell
+                // data. Normally this is empty - whereby whatever value is edited by
+                // in the input by user is updated automatically.
+                $output = '';
+
+                // specific use case where you need to validate a specific
+                // editable column posted when you have more than one
+                // EditableColumn in the grid view. We evaluate here a
+                // check to see if buy_amount was posted for the Book model
+                if (isset($posted['CUST_KD_ALIAS'])) {
+                   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
+                    $output =$model->CUST_KD_ALIAS;
+                }
+
+                // similarly you can check if the name attribute was posted as well
+                // if (isset($posted['name'])) {
+                //   $output =  ''; // process as you need
+                // }
+                $out = Json::encode(['output'=>$output, 'message'=>'']);
+            }
+            // return ajax json encoded response and exit
+            echo $out;
+            return;
+        
+            
+        }
+		
+		// parent data
+		 // $searchModelpar = new CustomersSearch();
+   //      $dataProviderparent =  $searchModel->search_parent(Yii::$app->request->queryParams);
+	   // kategori data
+	   // print_r($searchmodelkota);
+    //    die();
+
+        
 	
 		
-		// city data
-		$searchmodelkota = new KotaSearch();
-		$dataproviderkota = $searchmodelkota->search(Yii::$app->request->queryParams);
 		
-		// province data
-		$searchmodelpro = new ProvinceSearch();
-		$dataproviderpro = $searchmodelpro->search(Yii::$app->request->queryParams);
+
+       
 		
 
         return $this->render('index', [
 		    'dataProviderkat'  =>   $dataProviderkat ,
+            //'searchModelpar ' => $searchModelpar,
             'searchModel' => $searchModel,
+			
 			'searchModelkat ' => $searchModelkat,
-			'searchModelkatp ' => $searchModelkatp,
             'dataProvider' => $dataProvider,
 			'searchmodelkota' => $searchmodelkota,
 			'searchmodelpro' => $searchmodelpro,
 			'dataproviderpro' =>  $dataproviderpro,
 			'dataproviderkota' => $dataproviderkota,
-			'dataProviderparent' =>   $dataProviderparent
+			//'dataProviderparent' =>   $dataProviderparent
         ]);
 	}
 
@@ -140,6 +225,27 @@ class CustomersController extends Controller
             ]);
         }
     }
+
+     public function actionCreatekota()
+    {
+        $model = new Kota();
+
+        if ($model->load(Yii::$app->request->post()) ) {
+                
+                if($model->validate())
+                {
+                
+                        $model->save();
+                }
+          
+            return $this->redirect(['index']);
+        }
+         else {
+            return $this->renderAjax('_formkota', [
+                'model' => $model,
+            ]);
+        }
+    }
 	
 	
     public function actionCreate()
@@ -171,73 +277,130 @@ class CustomersController extends Controller
             
     }
 
+   
+   public function actionLisdata() {
+    $out = [];
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+        if ($parents != null) {
+            $id = $parents[0];
 
-     public function actionLokasi()
-    {
-          return $this ->renderAjax('formlokasi');
-            
-    }
+            $model = Kategoricus::find()->asArray()->where(['CUST_KTG_PARENT'=>$id])
+                                                     ->andwhere('CUST_KTG_PARENT <> 0')
+                                                    ->all();
+                                                    // print_r($model);
+                                                    // die();
+            //$out = self::getSubCatList($cat_id); 
+            // the getSubCatList function will query the database based on the
+            // cat_id and return an array like below:
+            // [
+            //    ['id'=>'<sub-cat-id-1>', 'name'=>'<sub-cat-name1>'],
+            //    ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
+            // ]
+            foreach ($model as $key => $value) {
+                   $out[] = ['id'=>$value['CUST_KTG'],'name'=> $value['CUST_KTG_NM']];
+               }
+ 
+               echo json_encode(['output'=>$out, 'selected'=>'']);
+               return;
+           }
+       }
+       echo Json::encode(['output'=>'', 'selected'=>'']);
+   }
+
+
+    public function actionLisarea() {
+    $out = [];
+
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+        if ($parents != null) {
+            $id = $parents[0];
+
+            $model = Kota::find()->asArray()->where(['PROVINCE_ID'=>$id])
+                                                    // ->andwhere('CUST_KTG_PARENT <> 0')
+                                                    ->all();
+                                                    // print_r($model);
+                                                    // die();
+            //$out = self::getSubCatList($cat_id); 
+            // the getSubCatList function will query the database based on the
+            // cat_id and return an array like below:
+            // [
+            //    ['id'=>'<sub-cat-id-1>', 'name'=>'<sub-cat-name1>'],
+            //    ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
+            // ]
+            foreach ($model as $key => $value) {
+                   $out[] = ['id'=>$value['POSTAL_CODE'],'name'=> $value['CITY_NAME']];
+               }
+ 
+               echo json_encode(['output'=>$out, 'selected'=>'']);
+               return;
+           }
+       }
+       echo Json::encode(['output'=>'', 'selected'=>'']);
+   }
+
 
 
 
                          
 	
-	 public function actionLisarea($id)
-    {
+	 // public function actionLisarea($id)
+  //   {
  
         
-        $countJob = Kota::find()
-                ->where(['PROVINCE_ID' =>$id])
-                ->count();
+  //       $countJob = Kota::find()
+  //               ->where(['PROVINCE_ID' =>$id])
+  //               ->count();
  
-        $job = Kota::find()
-                 ->where(['PROVINCE_ID' =>$id])
-				 // ->andwhere('CUST_KTG_PARENT <> 0')
-                ->all();
+  //       $job = Kota::find()
+  //                ->where(['PROVINCE_ID' =>$id])
+		// 		 // ->andwhere('CUST_KTG_PARENT <> 0')
+  //               ->all();
         
         
         
-        if($countJob>0){
-            echo "<option> Select  </option>";
-            foreach($job as $post){
+  //       if($countJob>0){
+  //           echo "<option> Select  </option>";
+  //           foreach($job as $post){
                 
-                echo "<option value='".$post->POSTAL_CODE."'>".$post->CITY_NAME."</option>";
-            }
-        }
-        else{
-            echo "<option> - </option>";
-        }
+  //               echo "<option value='".$post->POSTAL_CODE."'>".$post->CITY_NAME."</option>";
+  //           }
+  //       }
+  //       else{
+  //           echo "<option> - </option>";
+  //       }
   
-    }
+  //   }
 	
 	
-    public function actionLis($id)
-    {
+  //   public function actionLis($id)
+  //   {
  
         
-        $countJob = Kategoricus::find()
-                ->where(['CUST_KTG_PARENT' =>$id])
-                ->count();
+  //       $countJob = Kategoricus::find()
+  //               ->where(['CUST_KTG_PARENT' =>$id])
+  //               ->count();
  
-        $job = Kategoricus::find()
-                 ->where(['CUST_KTG_PARENT' =>$id])
-				 ->andwhere('CUST_KTG_PARENT <> 0')
-                ->all();
+  //       $job = Kategoricus::find()
+  //                ->where(['CUST_KTG_PARENT' =>$id])
+		// 		 ->andwhere('CUST_KTG_PARENT <> 0')
+  //               ->all();
         
         
         
-        if($countJob>0){
-            echo "<option> Select  </option>";
-            foreach($job as $post){
+  //       if($countJob>0){
+  //           echo "<option> Select  </option>";
+  //           foreach($job as $post){
                 
-                echo "<option value='".$post->CUST_KTG."'>".$post->CUST_KTG_NM."</option>";
-            }
-        }
-        else{
-            echo "<option> - </option>";
-        }
+  //               echo "<option value='".$post->CUST_KTG."'>".$post->CUST_KTG_NM."</option>";
+  //           }
+  //       }
+  //       else{
+  //           echo "<option> - </option>";
+  //       }
   
-    }
+  //   }
     
     
     
@@ -319,6 +482,9 @@ class CustomersController extends Controller
      * @param string $id
      * @return mixed
      */
+
+     
+
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
@@ -337,7 +503,7 @@ class CustomersController extends Controller
 			
            return $this->redirect(['index']);
         } else {
-            return $this->renderAjax('update', [
+            return $this->render('update', [
                 'model' => $model,
             ]);
         }
@@ -445,6 +611,9 @@ class CustomersController extends Controller
 	
 		$model->STATUS = 3;
 		$model->save();
+      // print_r($model);
+      // die();
+        
 		
 
         return $this->redirect(['index']);

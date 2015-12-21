@@ -38,7 +38,7 @@ class Kota extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['CITY_ID'], 'required'],
+            [['PROVINCE_ID'], 'required'],
             [['CITY_ID', 'POSTAL_CODE'], 'integer'],
             [['PROVINCE_ID', 'PROVINCE', 'TYPE', 'CITY_NAME'], 'string', 'max' => 50]
         ];
@@ -51,11 +51,11 @@ class Kota extends \yii\db\ActiveRecord
     {
         return [
             'CITY_ID' => 'City  ID',
-            'PROVINCE_ID' => 'Province  ID',
+            'PROVINCE_ID' => ' Nama Province ',
             'PROVINCE' => 'Province',
             'TYPE' => 'Type',
             'CITY_NAME' => 'City  Name',
-            'POSTAL_CODE' => 'Postal  Code',
+            'POSTAL_CODE' => 'Kode Pos',
         ];
     }
 }

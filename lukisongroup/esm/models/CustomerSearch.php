@@ -15,10 +15,11 @@ class CustomerSearch extends Customer
     /**
      * @inheritdoc
      */
+    public $CUST_KTG_NM;
     public function rules()
     {
         return [
-            [['CUST_KD', 'CUST_NM', 'ALAMAT', 'PIC', 'EMAIL', 'WEBSITE', 'NOTE', 'NPWP', 'CREATED_BY', 'CREATED_AT', 'UPDATED_AT', 'UPDATED_BY', 'DATA_ALL', 'EMP_ID', 'PARRENT', 'GEO_KOORDINAT'], 'safe'],
+            [['CUST_KD', 'CUST_NM','CUST_KTG_NM', 'ALAMAT', 'PIC', 'EMAIL', 'WEBSITE', 'NOTE', 'NPWP', 'CREATED_BY', 'CREATED_AT', 'UPDATED_AT', 'UPDATED_BY', 'DATA_ALL', 'EMP_ID', 'PARRENT', 'GEO_KOORDINAT'], 'safe'],
             [['TLP1', 'TLP2', 'FAX', 'STATUS', 'STT_TOKO'], 'integer'],
         ];
     }
@@ -39,6 +40,37 @@ class CustomerSearch extends Customer
      *
      * @return ActiveDataProvider
      */
+       public function searchparent($params)
+    {
+        
+        $query3 = Kategoricus::find()->where('STATUS <> 0')->andwhere('CUST_KTG_PARENT = 0');
+        $dataProviderparent= new ActiveDataProvider([
+            'query' => $query3,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProviderparent;
+        }
+
+           $query3->andFilterWhere([
+            'CUST_KTG' => $this->CUST_KTG,
+            'CUST_KTG_PARENT' => $this->CUST_KTG_PARENT,
+            // 'CREATED_AT' => $this->CREATED_AT,
+            // 'UPDATED_AT' => $this->UPDATED_AT,
+            'STATUS' => $this->STATUS,
+        ]);
+
+        $query3->andFilterWhere(['like', 'CUST_KTG_NM', $this->CUST_KTG_NM]);
+            // ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
+            // ->andFilterWhere(['like', 'UPDATED_BY', $this->UPDATED_BY]);
+
+        return $dataProviderparent;
+    }
+    
     public function search($params)
     {
         $query = Customer::find();
@@ -56,13 +88,15 @@ class CustomerSearch extends Customer
         }
 
         $query->andFilterWhere([
-            'TLP1' => $this->TLP1,
+            //'TLP1' => $this->TLP1,
             'TLP2' => $this->TLP2,
             'FAX' => $this->FAX,
             'STATUS' => $this->STATUS,
             'STT_TOKO' => $this->STT_TOKO,
+             'CUST_KTG_NM' => $this->CUST_KTG_NM,
             'CREATED_AT' => $this->CREATED_AT,
             'UPDATED_AT' => $this->UPDATED_AT,
+
         ]);
 
         $query->andFilterWhere(['like', 'CUST_KD', $this->CUST_KD])

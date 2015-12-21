@@ -15,12 +15,12 @@ use kartik\label\LabelInPlace;
 <div class="province-form">
 
     <?php $form = ActiveForm::begin([
-	'id'=>'createproas',
+	'id'=>'updatealias',
 	'enableClientValidation'=>true
 	
 	]); ?>
 
-	<?= $form->field($model, 'PROVINCE', $config)->widget(LabelInPlace::classname());?>
+	<?= $form->field($model, 'CUST_KD_ALIAS', $config)->widget(LabelInPlace::classname());?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

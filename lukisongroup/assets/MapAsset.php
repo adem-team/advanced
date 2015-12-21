@@ -27,9 +27,8 @@ class MapAsset extends AssetBundle
     public $js = [
         //'addasset/orgChart/jquery.orgchart.css', 
 	    'http://maps.google.com/maps/api/js',
-	
-    ];
-    
+	];
+    public $jsOptions = ['position' => \yii\web\View::POS_BEGIN];
     public $depends = [
         //'yii\web\YiiAsset',
        // 'yii\bootstrap\BootstrapAsset',

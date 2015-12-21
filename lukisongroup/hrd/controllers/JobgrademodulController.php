@@ -55,6 +55,7 @@ class JobgrademodulController extends Controller
 		 $model = new Jobgrademodul(); //create
         $searchModel = new JobgrademodulSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+     
 		
         return $this->render('index', [
             'searchModel' => $searchModel,

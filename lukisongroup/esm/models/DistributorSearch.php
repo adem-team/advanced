@@ -15,6 +15,7 @@ class DistributorSearch extends Distributor
     /**
      * @inheritdoc
      */
+   
     public function rules()
     {
         return [
@@ -39,6 +40,8 @@ class DistributorSearch extends Distributor
      *
      * @return ActiveDataProvider
      */
+  
+
     public function search($params)
     {
         $query = Distributor::find()->where('d0001.STATUS <> 3');

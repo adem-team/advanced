@@ -4,7 +4,9 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use kartik\tabs\TabsX;
 use yii\bootstrap\Modal;
+use yii\helpers\ArrayHelper;
 use lukisongroup\esm\models\Customers;
+use lukisongroup\esm\models\Kategoricus;
 use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
 MapAsset::register($this);  
 
@@ -27,11 +29,16 @@ $this->params['breadcrumbs'][] = $this->title;
    
 
 </div>
+
+
 <?php
+// print_r($dataProviderparent );
+// die();
+
 $tabparent = 
 \kartik\grid\GridView::widget([
-  'dataProvider' => $dataProviderparent ,
-  // 'filterModel' =>$searchModelkat,
+  'dataProvider' => $dataProviderkat ,
+   'filterModel' => $searchModel ,
    'columns'=>[
        ['class'=>'yii\grid\SerialColumn'],
        
@@ -43,7 +50,7 @@ $tabparent =
                         'buttons' => [
                             'view' =>function($url, $model, $key){
                                     return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px">View </button>',
-                                                                ['viewkota','id'=> $model->CUST_KTG],[
+                                                                ['viewparent','id'=> $model->CUST_KTG],[
                                                                 'data-toggle'=>"modal",
                                                                 'data-target'=>"#viewparent",
                                                                 'data-title'=> $model->CUST_KTG_NM,
@@ -52,7 +59,7 @@ $tabparent =
                                
                              'update' =>function($url, $model, $key){
                                     return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px ">Update </button>',
-                                                                ['updatekota','id'=>$model->CUST_KTG],[
+                                                                ['updateparent','id'=>$model->CUST_KTG],[
                                                                 'data-toggle'=>"modal",
                                                                 'data-target'=>"#formparent",
                                                                 'data-title'=> $model->CUST_KTG_NM,
@@ -82,7 +89,7 @@ $tabparent =
 					['create'], ['class' => 'btn btn-success']),
 			*/
 			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
-						['modelClass' => 'Barangumum',]),'/esm/kategoricus/createparent',[
+						['modelClass' => 'Barangumum',]),'/esm/customers/createparent',[
 							'data-toggle'=>"modal",
 								'data-target'=>"#formparent",
                                     'id'=>'modlparent',
@@ -123,6 +130,7 @@ $tabparent =
         //'floatHeaderOptions'=>['scrollContainer'=>'25'],
 
     ]);
+
 $tabkota = 
 
 \kartik\grid\GridView::widget([
@@ -134,6 +142,7 @@ $tabkota =
             'PROVINCE',
             'TYPE',
             'CITY_NAME',
+            'POSTAL_CODE',
    
      [ 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view}{update}',
@@ -180,7 +189,7 @@ $tabkota =
 					['create'], ['class' => 'btn btn-success']),
 			*/
 			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
-						['modelClass' => 'Barangumum',]),'/esm/kategoricus/create',[
+						['modelClass' => 'Barangumum',]),'/esm/customers/createkota',[
 							'data-toggle'=>"modal",
 								'data-target'=>"#form1",
                                     'id'=>'modl',
@@ -195,7 +204,7 @@ $tabkota =
         'pjaxSettings'=>[
             'options'=>[
                 'enablePushState'=>false,
-                'id'=>'active1',
+                'id'=>'xactive20',
                 //'formSelector'=>'ddd1',
                 //'options'=>[
                 //    'id'=>'active'
@@ -221,6 +230,8 @@ $tabkota =
         //'floatHeaderOptions'=>['scrollContainer'=>'25'],
 
     ]);
+
+
 
 $tabprovince = \kartik\grid\GridView::widget([
   'dataProvider' => $dataproviderpro,
@@ -275,10 +286,10 @@ $tabprovince = \kartik\grid\GridView::widget([
 					['create'], ['class' => 'btn btn-success']),
 			*/
 			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
-						['modelClass' => 'Barangumum',]),'/esm/kategoricus/createprovnce',[
+						['modelClass' => 'Barangumum',]),'/esm/customers/createprovnce',[
 							'data-toggle'=>"modal",
 								'data-target'=>"#form3",
-                                    'id'=>'modl',
+                                    'id'=>'modl22',
 									'class' => 'btn btn-success'						
 												]),
                               
@@ -286,11 +297,11 @@ $tabprovince = \kartik\grid\GridView::widget([
                               
                     
         ],
-        'pjax'=>true,
+         'pjax'=>true,
         'pjaxSettings'=>[
             'options'=>[
                 'enablePushState'=>false,
-                'id'=>'active2',
+                'id'=>'active209',
                 //'formSelector'=>'ddd1',
                 //'options'=>[
                 //    'id'=>'active'
@@ -319,41 +330,89 @@ $tabprovince = \kartik\grid\GridView::widget([
 
 ?>
 <?php
-$tabcrud = \kartik\grid\GridView::widget([
-  'dataProvider' => $dataProviderkat,
-  // 'filterModel' => $searchModelkat,
-   'columns'=>[
-       ['class'=>'yii\grid\SerialColumn'],
-       
-            // 'CUST_KTG',
-            // 'CUST_KTG_PARENT',
-            'CUST_KTG_NM',
-   
-     [ 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view}{update}',
-                        'header'=>'Action',
-                        'buttons' => [
-                            'view' =>function($url, $model, $key){
-                                    return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px">View </button>',
-                                                                ['view','id'=> $model->CUST_KTG],[
-                                                                'data-toggle'=>"modal",
-                                                                'data-target'=>"#view1",
-                                                                'data-title'=> $model->CUST_KTG_NM,
-                                                                ]);
-                            },
-                               
-                             'update' =>function($url, $model, $key){
-                                    return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px ">Update </button>',
-                                                                ['update','id'=>$model->CUST_KTG],[
-                                                                'data-toggle'=>"modal",
-                                                                'data-target'=>"#form1",
-                                                                'data-title'=> $model->CUST_KTG_NM,
-                                                                ]);
-                            },
-                              
-                ],
+
+
+$tabcrud = 
+
+
+
+ GridView::widget([
+    'dataProvider'=>$dataProviderkat,
+    'filterModel'=>$searchModel,
+    'showPageSummary'=>true,
+    'pjax'=>true,
+    'striped'=>true,
+    'hover'=>true,
+    //'panel'=>['type'=>'primary', 'heading'=>'Grid Grouping Example'],
+    'columns'=>[
+        ['class'=>'kartik\grid\SerialColumn'],
+
+          
+     
+        
+        [               
+                    'label'=>'Group',
+                    'attribute' =>'PRN_NM',
+                   // 'filter' => ArrayHelper::map(Groupseqmen::find()->orderBy('SEQ_NM')->asArray()->all(), 'SEQ_NM','SEQ_NM'),
+                    'group'=>true,
+                ],      
+         [
+           'label' =>'Customers kategori',
+            'attribute' =>'customers_Kategori',
+          
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter'=>ArrayHelper::map(Kategoricus::find()->orderBy('CUST_KTG_NM')->asArray()->all(), 'id', 'category_name'), 
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
             ],
-                                    ],
+            'filterInputOptions'=>['placeholder'=>'Any category'],
+             'group'=>true,  // enable grouping
+             'subGroupOf'=>4 // supplier column index is the parent group
+        ],
+
+          
+       
+    ],
+]);
+
+// <!-- kategori  -->
+
+
+// $tabcrud = \kartik\grid\GridView::widget([
+//   'dataProvider' => $dataProviderkat,
+//   'filterModel' =>   $searchModel,
+//    'columns'=>[
+//        ['class'=>'yii\grid\SerialColumn'],
+       
+//             // 'CUST_KTG',
+//             // 'CUST_KTG_PARENT',
+//             'CUST_KTG_NM',
+   
+//      [ 'class' => 'yii\grid\ActionColumn',
+//                 'template' => '{view}{update}',
+//                         'header'=>'Action',
+//                         'buttons' => [
+//                             'view' =>function($url, $model, $key){
+//                                     return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px">View </button>',
+//                                                                 ['view','id'=> $model->CUST_KTG],[
+//                                                                 'data-toggle'=>"modal",
+//                                                                 'data-target'=>"#view1",
+//                                                                 'data-title'=> $model->CUST_KTG_NM,
+//                                                                 ]);
+//                             },
+                               
+//                              'update' =>function($url, $model, $key){
+//                                     return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px ">Update </button>',
+//                                                                 ['update','id'=>$model->CUST_KTG],[
+//                                                                 'data-toggle'=>"modal",
+//                                                                 'data-target'=>"#form1",
+//                                                                 'data-title'=> $model->CUST_KTG_NM,
+//                                                                 ]);
+//                             },
+                              
+//                 ],
+//             ],
+//                                     ],
                                     
                                     
 	 
@@ -361,74 +420,91 @@ $tabcrud = \kartik\grid\GridView::widget([
         
 
     
-    'panel'=>[
+//     'panel'=>[
           
-            'type' =>GridView::TYPE_SUCCESS,//TYPE_WARNING, //TYPE_DANGER, 
-                                         //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
-            //'after'=> Html::a('<i class="glyphicon glyphicon-plus"></i> Add', '#', ['class'=>'btn btn-success']) . ' ' .
-                //Html::submitButton('<i class="glyphicon glyphicon-floppy-disk"></i> Save', ['class'=>'btn btn-primary']) . ' ' .
-            //    Html::a('<i class="glyphicon glyphicon-remove"></i> Delete  ', '#', ['class'=>'btn btn-danger'])
-			/*
-			'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create {modelClass}',
-					['modelClass' => 'Employe',]),
-					['create'], ['class' => 'btn btn-success']),
-			*/
-			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
-						['modelClass' => 'Barangumum',]),'/esm/kategoricus/create',[
-							'data-toggle'=>"modal",
-								'data-target'=>"#form1",
-                                    'id'=>'modl',
-									'class' => 'btn btn-success'						
-												]),
+//             'type' =>GridView::TYPE_SUCCESS,//TYPE_WARNING, //TYPE_DANGER, 
+//                                          //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
+//             //'after'=> Html::a('<i class="glyphicon glyphicon-plus"></i> Add', '#', ['class'=>'btn btn-success']) . ' ' .
+//                 //Html::submitButton('<i class="glyphicon glyphicon-floppy-disk"></i> Save', ['class'=>'btn btn-primary']) . ' ' .
+//             //    Html::a('<i class="glyphicon glyphicon-remove"></i> Delete  ', '#', ['class'=>'btn btn-danger'])
+// 			/*
+// 			'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create {modelClass}',
+// 					['modelClass' => 'Employe',]),
+// 					['create'], ['class' => 'btn btn-success']),
+// 			*/
+// 			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
+// 						['modelClass' => 'Barangumum',]),'/esm/customers/create',[
+// 							'data-toggle'=>"modal",
+// 								'data-target'=>"#form1",
+//                                     'id'=>'modl',
+// 									'class' => 'btn btn-success'						
+// 												]),
                               
   
                               
                     
-        ],
-        'pjax'=>true,
-        'pjaxSettings'=>[
-            'options'=>[
-                'enablePushState'=>false,
-                'id'=>'active3',
-                //'formSelector'=>'ddd1',
-                //'options'=>[
-                //    'id'=>'active'
-               // ],
-        ],
-        'hover'=>true, //cursor select
-        'responsive'=>true,
-        'responsiveWrap'=>true,
-        'bordered'=>true,
-        'striped'=>'4px',
-        'autoXlFormat'=>true,
-        'export'=>[//export like view grid --ptr.nov-
-            'fontAwesome'=>true,
-            'showConfirmAlert'=>false,
-            'target'=>GridView::TARGET_BLANK
-        ],
+//         ],
+//         'pjax'=>true,
+//         'pjaxSettings'=>[
+//             'options'=>[
+//                 'enablePushState'=>false,
+//                 'id'=>'dsactive3',
+//                 //'formSelector'=>'ddd1',
+//                 //'options'=>[
+//                 //    'id'=>'active'
+//                // ],
+//         ],
+//         'hover'=>true, //cursor select
+//         'responsive'=>true,
+//         'responsiveWrap'=>true,
+//         'bordered'=>true,
+//         'striped'=>'4px',
+//         'autoXlFormat'=>true,
+//         'export'=>[//export like view grid --ptr.nov-
+//             'fontAwesome'=>true,
+//             'showConfirmAlert'=>false,
+//             'target'=>GridView::TARGET_BLANK
+//         ],
 
-    ],
-       // 'floatHeaderOptions' => ['scrollingTop' => $scrollingTop],
-       // 'containerOptions' => ['style' => 'overflow: auto'],
-    //'persistResize'=>true,
-        //'responsiveWrap'=>true,
-        //'floatHeaderOptions'=>['scrollContainer'=>'25'],
+//     ],
+//        // 'floatHeaderOptions' => ['scrollingTop' => $scrollingTop],
+//        // 'containerOptions' => ['style' => 'overflow: auto'],
+//     //'persistResize'=>true,
+//         //'responsiveWrap'=>true,
+//         //'floatHeaderOptions'=>['scrollContainer'=>'25'],
 
-    ]);
-                            
+//     ]);
+           // print_r($searchparent);
+           // die();                 
                             
  $tabcustomers = GridView::widget([
+     // 'id'=>'axctive224',
   'dataProvider' => $dataProvider,
-  'filterModel' => $searchModel,
+  'filterModel' => $searchModel ,
    'columns'=>[
        ['class'=>'yii\grid\SerialColumn'],
        
             'CUST_KD',
+             [
+                'class'=>'kartik\grid\EditableColumn',
+                'attribute' => 'CUST_KD_ALIAS'
+            ],    
+             
             'CUST_NM',
-            'CUST_KTG', 
+             [
+                'label'=>'Customer Kategori',
+                'attribute' =>'cus.CUST_KTG_NM',
+               // 'filter' => $Combo_Dept,
+            ],
+            
+            // 'CUST_KTG', 
             'TLP1', 
             'TLP2', 
-            'FAX', 
+            'FAX',
+             'ALAMAT',
+             'JOIN_DATE',
+             'EMAIL',
+             'WEBSITE',
             // 'STT_TOKO',
              [   
                 'label' =>'Status Toko',
@@ -442,25 +518,26 @@ $tabcrud = \kartik\grid\GridView::widget([
 
             ], 
             // 'STATUS',
-            [   
-                'label' =>'STATUS',
+            [
+
+                'format' => 'raw',
+                'label'=> 'Status Customers',
                 'value' => function ($model) {
                     if ($model->STATUS == 1) {
-                        return 'Aktif';
+                        return '<i class="fa fa-check fa-lg ya" style="color:blue;" title="Aktif">aktif</i>';
                     } else if ($model->STATUS == 0) {
-                        return 'Tidak Aktif';
+                        return '<i class="fa fa-times fa-lg no" style="color:red;" title="Tidak Aktif" >Tidak Aktif</i>';
                     } 
                 },
-
-            ],
+            ], 
                 
    
      [ 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view}{update}',
+                'template' => '{view}{update}{delete}',
                         'header'=>'Action',
                         'buttons' => [
                             'view' =>function($url, $model, $key){
-                                    return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px">View </button>',
+                                    return  Html::a('<span class="glyphicon glyphicon-eye-open"></span> ',
                                                                 ['viewcust','id'=> $model->CUST_KD],[
                                                                 // 'data-toggle'=>"modal",
                                                                 // 'data-target'=>"#view",
@@ -469,13 +546,26 @@ $tabcrud = \kartik\grid\GridView::widget([
                             },
                                
                              'update' =>function($url, $model, $key){
-                                    return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px ">Update </button>',
+                                    return  Html::a('<span class="glyphicon glyphicon-user"></span>   
+                                                                ',
                                                                 ['updatecus','id'=>$model->CUST_KD],[
                                                                 // 'data-toggle'=>"modal",
                                                                 // 'data-target'=>"#form",
                                                                 // 'data-title'=> $model->CUST_KD,
                                                                 ]);
                             },
+
+                            
+                              'delete' =>function($url, $model, $key){
+                                    return  Html::a('<i class="glyphicon glyphicon-trash"></i>',
+                                                                ['deletecus','id'=>$model->CUST_KD],[
+                                                                // 'data-toggle'=>"modal",
+                                                                // 'data-target'=>"#form",
+                                                                // 'data-title'=> $model->CUST_KD,
+                                                                ]);
+                            },
+
+
                               
                 ],
             ],
@@ -503,19 +593,19 @@ $tabcrud = \kartik\grid\GridView::widget([
 		'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
 						['modelClass' => 'Barangumum',]),'/esm/customers/createcustomers',[
 							// 'data-toggle'=>"modal",
-								// 'data-target'=>"#form",
-                                    // 'id'=>'modl2',
+							// 	'data-target'=>"#form",
+       //                              'id'=>'modl2',
 									'class' => 'btn btn-success'						
 												]),
                               
 
                     
         ],
-        // 'pjax'=>true,
+         'pjax'=>true,
         'pjaxSettings'=>[
             'options'=>[
                 'enablePushState'=>false,
-                'id'=>'active4',
+                'id'=>'axctive224',
                 //'formSelector'=>'ddd1',
                 //'options'=>[
                 //    'id'=>'active'
@@ -541,20 +631,23 @@ $tabcrud = \kartik\grid\GridView::widget([
         //'floatHeaderOptions'=>['scrollContainer'=>'25'],
 
     ]);
+  
  
-                            
+          $map = '<div id ="map" style="width:100%;height:400px"></div>';    
+                 
     $items=[
 		[
 			'label'=>'<i class="glyphicon glyphicon-user"></i> New Customers ','content'=> $tabcustomers, //   $tabcustomers,
-			'active'=>true,
+		   
 
 		],
 		
 		[
-			'label'=>'<i class="glyphicon glyphicon-map-marker"></i> MAP',//'content'=> //$tab_profile,
+			'label'=>'<i class="glyphicon glyphicon-map-marker"></i> MAP','content'=> $map, //$tab_profile,
+             'active'=>true,
 		],
         [
-			'label'=>'<i class="glyphicon glyphicon-folder-open"></i> DATA','content'=>$tabparent,//$tab_profile,
+			'label'=>'<i class="glyphicon glyphicon-folder-open"></i> DATA',//'content'=>$tabparent,//$tab_profile,
 		],
 			[
 			'label'=>'<i class="glyphicon glyphicon-user"></i> Kategori Customers',//$tab_profile,
@@ -563,13 +656,13 @@ $tabcrud = \kartik\grid\GridView::widget([
              [
                  'label'=>'<i class="glyphicon glyphicon-chevron-right"></i> PARENT',
                  'encode'=>false,
-                  'content'=>$tabprovince,
+                  'content'=>$tabparent,
                  // 'linkOptions'=>['data-url'=>Url::to(['/site/fetch-tab?tab=3'])]
              ],
              [
                  'label'=>'<i class="glyphicon glyphicon-chevron-right"></i> KATEGORI',
                  'encode'=>false,
-                  'content'=>$tabkota,
+                  'content'=>$tabcrud,
                  // 'linkOptions'=>['data-url'=>Url::to(['/site/fetch-tab?tab=4'])]
              ],
         ],
@@ -579,12 +672,18 @@ $tabcrud = \kartik\grid\GridView::widget([
 			'label'=>'<i class="glyphicon glyphicon-globe"></i> Province ','content'=> $tabprovince//$tab_profile,
 		],
 				[
-			'label'=>'<i class="glyphicon glyphicon-globe"></i> Kota','content'=>   $map = "<div id = 'map' style = 'width:100%;height:500px;></div>" ,//$tab_profile,
+			'label'=>'<i class="glyphicon glyphicon-globe"></i> KOTA',
+            
+            //'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['/esm/customers/maptampil'])]
+            'content'=>$tabkota,//$tab_profile,
+           
 		],
     ];
 
+    
+
 echo TabsX::widget([
-		'id'=>'tab',
+		'id'=>'tab1',
 		'items'=>$items,
 		'position'=>TabsX::POS_ABOVE,
 		//'height'=>'tab-height-xs',
@@ -595,210 +694,164 @@ echo TabsX::widget([
 	]);
             ?>
 							
-                             
-                        <?php        
-		 $this->registerJs("
+           
+              
+                        <?php
 
-// nampilin MAP
- var map = new google.maps.Map(document.getElementById('map'),
-      {
-        zoom: 12,
-        center: new google.maps.LatLng(-6.229191531958687,106.65994325550469),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+$this->registerJs("
+     $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+        $('#form3').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
 
-    });
-
-
+$this->registerJs("
+        
+        $('#view3').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_LOAD);        
 		
-    var public_markers = [];
-    var infowindow = new google.maps.InfoWindow();
 
-//data
- $.getJSON('/esm/customers/map', function(json) { 
 
-    for (var i in public_markers)
-    {
-        public_markers[i].setMap(null);
-    }
+							
+    $this->registerJs("
+    $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+        $('#formparent').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
 
-    $.each(json, function (i, point) {
-        // alert(point.MAP_LAT);
+$this->registerJs("
+        
+        $('#viewparent').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+							
+
+							
+$this->registerJs("
+    $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+        $('#form2').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+
+$this->registerJs("       
+         $('#view2').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+							
+$this->registerJs("
+      
+    $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+
+        $('#form1').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+
+$this->registerJs("
+        
+        $('#view1').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+							
+$this->registerJs("
+
+    $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+       
+        $('#form').on('show.bs.modal', function (event) {
+
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
  
-// //set the icon 
-//     if(point.CUST_NM == 'asep')
-//         {
-//             icon = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
-//         }
+            })
 
-            var marker = new google.maps.Marker({
-            // icon: icon,
-            position: new google.maps.LatLng(point.MAP_LAT, point.MAP_LNG),
-            animation:google.maps.Animation.BOUNCE,
-            map: map,
-             icon : 'http://labs.google.com/ridefinder/images/mm_20_red.png'
-        });
-
-         public_markers[i] = marker;
-
-        google.maps.event.addListener(public_markers[i], 'mouseover', function () {
-            infowindow.setContent('<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>');
-            infowindow.open(map, public_markers[i]);
-        });
-
-
-    });
-
- 
- });
-    
-//     // console.trace();
-
-     ",$this::POS_READY);
-							
-//     $this->registerJs("
-//     $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-//         $('#formparent').on('show.bs.modal', function (event) {
-//             var button = $(event.relatedTarget)
-//             var modal = $(this)
-//             var title = button.data('title') 
-//             var href = button.attr('href') 
-//             //modal.find('.modal-title').html(title)
-//             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-//             $.post(href)
-//                 .done(function( data ) {
-//                     modal.find('.modal-body').html(data)
-//                 });
-//             })
-//     ",$this::POS_READY);
-
-// $this->registerJs("
-        
-//         $('#viewparent').on('show.bs.modal', function (event) {
-//             var button = $(event.relatedTarget)
-//             var modal = $(this)
-//             var title = button.data('title') 
-//             var href = button.attr('href') 
-//             //modal.find('.modal-title').html(title)
-//             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-//             $.post(href)
-//                 .done(function( data ) {
-//                     modal.find('.modal-body').html(data)
-//                 });
-//             })
-//     ",$this::POS_READY);
-							
-// $this->registerJs("
-//     $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-//         $('#form3').on('show.bs.modal', function (event) {
-//             var button = $(event.relatedTarget)
-//             var modal = $(this)
-//             var title = button.data('title') 
-//             var href = button.attr('href') 
-//             //modal.find('.modal-title').html(title)
-//             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-//             $.post(href)
-//                 .done(function( data ) {
-//                     modal.find('.modal-body').html(data)
-//                 });
-//             })
-//     ",$this::POS_READY);
-
-// $this->registerJs("
-        
-//         $('#view3').on('show.bs.modal', function (event) {
-//             var button = $(event.relatedTarget)
-//             var modal = $(this)
-//             var title = button.data('title') 
-//             var href = button.attr('href') 
-//             //modal.find('.modal-title').html(title)
-//             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-//             $.post(href)
-//                 .done(function( data ) {
-//                     modal.find('.modal-body').html(data)
-//                 });
-//             })
-//     ",$this::POS_READY);
-							
-				// 					$this->registerJs("
-    // $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-    //     $('#form2').on('show.bs.modal', function (event) {
-    //         var button = $(event.relatedTarget)
-    //         var modal = $(this)
-    //         var title = button.data('title') 
-    //         var href = button.attr('href') 
-    //         //modal.find('.modal-title').html(title)
-    //         modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-    //         $.post(href)
-    //             .done(function( data ) {
-    //                 modal.find('.modal-body').html(data)
-    //             });
-    //         })
-    // ",$this::POS_READY);
-
-// $this->registerJs("
-        
-//         $('#view2').on('show.bs.modal', function (event) {
-//             var button = $(event.relatedTarget)
-//             var modal = $(this)
-//             var title = button.data('title') 
-//             var href = button.attr('href') 
-//             //modal.find('.modal-title').html(title)
-//             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-//             $.post(href)
-//                 .done(function( data ) {
-//                     modal.find('.modal-body').html(data)
-//                 });
-//             })
-//     ",$this::POS_READY);
-							
-				// 			$this->registerJs("
-    // $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-    //     $('#form1').on('show.bs.modal', function (event) {
-    //         var button = $(event.relatedTarget)
-    //         var modal = $(this)
-    //         var title = button.data('title') 
-    //         var href = button.attr('href') 
-    //         //modal.find('.modal-title').html(title)
-    //         modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-    //         $.post(href)
-    //             .done(function( data ) {
-    //                 modal.find('.modal-body').html(data)
-    //             });
-    //         })
-    // ",$this::POS_READY);
-
-// $this->registerJs("
-        
-//         $('#view1').on('show.bs.modal', function (event) {
-//             var button = $(event.relatedTarget)
-//             var modal = $(this)
-//             var title = button.data('title') 
-//             var href = button.attr('href') 
-//             //modal.find('.modal-title').html(title)
-//             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-//             $.post(href)
-//                 .done(function( data ) {
-//                     modal.find('.modal-body').html(data)
-//                 });
-//             })
-//     ",$this::POS_READY);
-							
-// $this->registerJs("
-//     $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-//         $('#form').on('show.bs.modal', function (event) {
-//             var button = $(event.relatedTarget)
-//             var modal = $(this)
-//             var title = button.data('title') 
-//             var href = button.attr('href') 
-			
-//             //modal.find('.modal-title').html(title)
-//             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-//             $.post(href)
-//                 .done(function( data ) {
-//                     modal.find('.modal-body').html(data)
-//                 });
-//             })
-//     ",$this::POS_READY);
+    ",$this::POS_LOAD);
 
 // $this->registerJs("
         
@@ -877,5 +930,59 @@ echo TabsX::widget([
                              ]);
                 Modal::end();
 
+$this->registerJs("
+//nampilin MAP
+ var map = new google.maps.Map(document.getElementById('map'),
+      {
+        zoom: 12,
+        center: new google.maps.LatLng(-6.229191531958687,106.65994325550469),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+
+    });
 
 
+        
+    var public_markers = [];
+    var infowindow = new google.maps.InfoWindow();
+
+//data
+ $.getJSON('/esm/customers/map', function(json) { 
+
+    for (var i in public_markers)
+    {
+        public_markers[i].setMap(null);
+    }
+
+    $.each(json, function (i, point) {
+        // alert(point.MAP_LAT);
+ 
+//set the icon 
+//     if(point.CUST_NM == 'asep')
+//         {
+//             icon = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
+//         }
+
+            var marker = new google.maps.Marker({
+            // icon: icon,
+            position: new google.maps.LatLng(point.MAP_LAT, point.MAP_LNG),
+            animation:google.maps.Animation.BOUNCE,
+            map: map,
+             icon : 'http://labs.google.com/ridefinder/images/mm_20_red.png'
+        });
+
+         public_markers[i] = marker;
+
+         google.maps.event.addListener(public_markers[i], 'mouseover', function () {
+             infowindow.setContent('<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>');
+             infowindow.open(map, public_markers[i]);
+         });
+
+
+    });
+
+ 
+ });
+    
+    // console.trace();
+
+     ",$this::POS_READY);
