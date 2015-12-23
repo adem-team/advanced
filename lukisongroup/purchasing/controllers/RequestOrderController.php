@@ -13,7 +13,7 @@ use lukisongroup\purchasing\models\Requestorder;
 use lukisongroup\purchasing\models\RequestorderSearch;
 use lukisongroup\purchasing\models\Roatribute;
 use lukisongroup\purchasing\models\Requestorderstatus;
-
+use lukisongroup\purchasing\models\LoginForm;
 use lukisongroup\purchasing\models\Rodetail;
 use lukisongroup\purchasing\models\RodetailSearch;
 use lukisongroup\hrd\models\Employe;
@@ -706,10 +706,11 @@ class RequestOrderController extends Controller
 		//$model = new LoginSignatureValidasi();
 		$roHeader = Requestorder::find()->where(['KD_RO' =>$kd])->one();
 		$employe = $roHeader->employe;
+		$loginSigForm = new LoginForm();
 		return $this->renderAjax('login_signature', [
             'roHeader' => $roHeader,
-            'employe' => $employe,
-			//'model'=>$model,
+            'employee' => $employe,
+			'loginSigForm'=>$loginSigForm,
         ]);		
 	}
 	
@@ -721,7 +722,7 @@ class RequestOrderController extends Controller
 	 * @since 1.1    
 	**/
 	//public function actionApproved_sign(){
-	public function actionApproved_authorize_save(){
+	public function actionApprovedAauthorizeSave(){
 		 //$rodetails = new Rodetail();
 		$ts = Yii::$app->request->post();
 		if(count($ts) == 0){ return $this->redirect([' ']); }

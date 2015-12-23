@@ -3,6 +3,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\Json;
 use yii\bootstrap\Modal;
+use yii\helpers\Url;
 use lukisongroup\assets\AppAssetJqueryJSignature;
 AppAssetJqueryJSignature::register($this); 
 
@@ -16,8 +17,28 @@ $this->registerCss("
 		border: 2px dotted black;
 		background-color:lightgrey;
 	}	
-	
 ");
+	/*
+	 * Tombol Modal to Signature Form
+	 * permission 
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+	 */
+	function tombolSigLoginForm($emp_id){		
+		$title1 = Yii::t('app', 'Set Signature Secure Password');
+		$options1 = [ 'id'=>'signature-signup',	
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#sig-signup-password",											
+					  'class' => 'btn btn-warning',
+		]; 
+		$icon1 = '<span class="fa fa-plus fa-lg"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/sistem/user-profile/password-signature-form']);
+		//$options1['tabindex'] = '-1';
+		$content = Html::a($label1,$url1, $options1);
+		return $content;	
+	};
+
 
 	/* $this->registerJs("
 			var  jsonData= $.ajax({
@@ -62,21 +83,12 @@ $this->registerCss("
 <div class="container-fluid text-center" style="padding-left: 20px; padding-right: 20px" >
 <div style="font-style: italic;"><u><h1>Sign Your Sinature</h1></u></div>
 	<div class="row">
-		<div class="col-md-4" name="hide" style="height:150px; display:none;"> 
-			<?php echo Html::a('<i class="fa fa-plus fa-lg"></i> '.Yii::t('app', 'Create New Signature',
-									['modelClass' => 'customer',]),'/sistem/user-profile/create',[
-										'data-toggle'=>"modal",
-											'data-target'=>"#Sig-New",							
-											'class' => 'btn btn-warning',
-											"modal-size"=>"large",											
-														]);
-			?>
-		</div>
-	</div>
-	<div class="row">
 		<div class="col-md-4" style="padding-top:15px"> </div>
-		<div class="col-md-4" style="padding-top:15px" > 
-			<div>Fill your Signature</div>
+		<div class="col-md-4" style="padding-top:15px" > 			
+			<div >Fill your Signature</div>
+			<div style="float:right">
+				<button id="btnBersihkan" type="button">Clear</button>
+			</div>
 			<div id="sig-disply-input"></div> 
 			
 		</div>
@@ -96,12 +108,12 @@ $this->registerCss("
 	<div class="row">
 		<div class="col-md-4" style="padding-top:15px"> </div>
 		<div class="col-md-4" style="padding-top:15px" > 
-			<button id="btnBersihkan" type="button">Clear</button>
+			
 			<?php $form = ActiveForm::begin([
 						'id'=>'roInput',
 						'enableClientValidation' => true,
 						'method' => 'post',
-						'action' => ['/sistem/user-profile/simpan-signature'],
+						'action' => ['/sistem/user-profile/signature-saved'],
 					]);
 					 echo $form->field($model, 'EMP_ID')->hiddenInput(['value'=>$model->EMP_ID])->label(false);
 					 echo $form->field($model, 'SIGSVGBASE30')->hiddenInput(['id'=>'txtBase30'])->label(false);
@@ -109,6 +121,7 @@ $this->registerCss("
 			?>
 				<div class="form-group">
 				<?= Html::submitButton($model->isNewRecord ? 'SimpanSignature' : 'SAVED', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary','title'=>'Detail','data-confirm'=>'Anda Yakin Akan di Simpan ?']) ?>
+				
 				</div>
 			<?php ActiveForm::end(); ?>		
 			<?php /* echo Html::a('<i class="fa fa-plus fa-lg"></i> '.Yii::t('app', 'SAVED',
@@ -131,6 +144,7 @@ $this->registerCss("
 		!-->
 			<div>Exist Signature</div>
 			<div id="sig-disply-db" readonly></div> 
+			<?php echo tombolSigLoginForm($model->EMP_ID); ?>
 		</div>
 	</div>
 	
@@ -157,11 +171,9 @@ $this->registerCss("
 </div>	
 	
 <?php
-	$this->registerJs("		
-			/* var bsModal = $.fn.modal.noConflict(); */
-			/* jQuery('a.first').pageslide(); */
-			//$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
-			$('#Sig-New').on('show.bs.modal', function (event) {
+	$this->registerJs("					
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#sig-signup-password').on('show.bs.modal', function (event) {
 				var button = $(event.relatedTarget)
 				var modal = $(this)
 				var title = button.data('title') 
@@ -172,17 +184,13 @@ $this->registerCss("
 					.done(function( data ) {
 						modal.find('.modal-body').html(data)											
 					});
-				}),	
-				/*By Case reload page-> conflict js Auth:-ptr.nov-*/
-				 $('#Sig-New').on('hidden.bs.modal', function () {
-					location.reload();
-				}); 
-		",$this::POS_END);
+				})
+	",$this::POS_END);
 		
-		Modal::begin([
-			'id' => 'Sig-New',
-			'header' => '<h4 class="modal-title">Entry Request Order</h4>',
-			//'size' => 'modal-md',
-		]);
-		Modal::end();
+	Modal::begin([
+		'id' => 'sig-signup-password',
+		'header' => '<h4 class="modal-title">Set Signature Password</h4>',
+		'size' => Modal::SIZE_SMALL,
+	]);
+	Modal::end();
 ?>

@@ -16,6 +16,7 @@ use yii\web\UploadedFile;
 class Employe extends \yii\db\ActiveRecord
 {
 	public $upload_file;
+	//public $oldpassmd5;
 	
 	/* [1] SOURCE DB */
     public static function getDb()
@@ -51,12 +52,12 @@ class Employe extends \yii\db\ActiveRecord
             [['EMP_IMG'], 'string', 'max' => 50],    
 			[['upload_file'], 'file', 'skipOnEmpty' => true,'extensions'=>'jpg,png', 'mimeTypes'=>'image/jpeg, image/png',],
 			[['CREATED_BY','UPDATED_BY'], 'string', 'max' => 50],
-			[['SIGSVGBASE64','SIGSVGBASE30','SIGPASSWORD'], 'safe'], 
+			[['SIGSVGBASE64','SIGSVGBASE30'], 'safe'], 
+			[['SIGPASSWORD'], 'string'], 
 			//[['UPDATED_TIME'], 'date'], errot message bool false
         ];
-    }
-
-
+    }	
+	
 	/* [4] ATRIBUTE LABEL  -> DetailView/GridView */
     public function attributeLabels()
     {
@@ -106,7 +107,7 @@ class Employe extends \yii\db\ActiveRecord
 			//'jabOne.JAB_NM' => Yii::t('app', 'Position'),
 			//UMUM
             'sttOne.STS_NM' => Yii::t('app', 'Status'), 
-			
+			'SIGPASSWORD' => Yii::t('app', 'Siqnature password')
         ];
     }
 	 
@@ -190,6 +191,31 @@ class Employe extends \yii\db\ActiveRecord
    // {
     //    return ['EMP_ID'];
    // }
+   
+   /**
+     * Generates password hash from password signature
+     *
+     * @param string $SIGPASSWORD
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+    public function setPassword_signature($password)
+    {
+        $this->SIGPASSWORD = Yii::$app->security->generatePasswordHash($password);
+    }
+	
+	/**
+     * return Password Signature
+     *
+     * @param string $SIGPASSWORD
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	public function validateOldPasswordCheck($password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->SIGPASSWORD);
+		
+    } 
 
 }
 

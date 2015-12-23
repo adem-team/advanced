@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿<?php
+use \yii;
+use kartik\helpers\Html;
+?>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
@@ -10,7 +14,7 @@
         <![endif]-->
     <title>BOOTSTRAP CHAT EXAMPLE</title>
     <!-- BOOTSTRAP CORE STYLE CSS -->
-    <link href="http://lukisongroup.int/widget/bootstrap-chat/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="@web/widget/bootstrap-chat/assets/css/bootstrap.css" rel="stylesheet" />
 
 </head>
 <body style="font-family:Verdana">
@@ -27,7 +31,7 @@
 						<div class="media-body">
 							<div class="media">
 								<a class="pull-left" href="#">
-									<img class="media-object img-circle " src="http://lukisongroup.int/upload/hrd/orgimage/piter.png" />
+									<img class="media-object img-circle " src="<?php echo Yii::$app->urlManager->baseUrl.'/upload/hrd/orgimage/piter.png'; ?>"/>
 								</a>
 								<div class="media-body" >
 									Donec sit amet ligula enim. Duis vel condimentum massa.              
@@ -46,7 +50,7 @@
 						<div class="media-body">
 							<div class="media">
 								<a class="pull-left" href="#">
-									<img class="media-object img-circle " src="http://lukisongroup.int/upload/hrd/orgimage/ailey.png" />
+									<img class="media-object img-circle " src="<?php echo Yii::$app->urlManager->baseUrl.'/upload/hrd/orgimage/ailey.png'; ?>"/>
 								</a>
 								<div class="media-body" >
 									Donec sit amet ligula enim. Duis vel condimentum massa.              
@@ -65,7 +69,7 @@
 						<div class="media-body">
 							<div class="media">
 								<a class="pull-left" href="#">
-									<img class="media-object img-circle " src="http://lukisongroup.int/upload/hrd/orgimage/stephen.png"/>
+									<img class="media-object img-circle " src="<?php echo Yii::$app->urlManager->baseUrl.'/upload/hrd/orgimage/stephen.png'; ?>"/>
 								</a>
 								<div class="media-body" >
 									Donec sit amet ligula enim. Duis vel condimentum massa.              
@@ -83,7 +87,7 @@
 						<div class="media-body">
 							<div class="media">
 								<a class="pull-left" href="#">
-									<img class="media-object img-circle " src="http://lukisongroup.int/upload/hrd/orgimage/tano.png" />
+									<img class="media-object img-circle " src="<?php echo Yii::$app->urlManager->baseUrl.'/upload/hrd/orgimage/tano.png'; ?>" />
 								</a>
 								<div class="media-body" >
 									Donec sit amet ligula enim. Duis vel condimentum massa.              
@@ -120,7 +124,7 @@
 						<div class="media-body">
 							<div class="media">
 								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="http://lukisongroup.int/upload/hrd/orgimage/piter.png" />
+									<img class="media-object img-circle" style="max-height:40px;" src="<?php echo Yii::$app->urlManager->baseUrl.'/upload/hrd/orgimage/piter.png'; ?>" />
 								</a>
 								<div class="media-body" >
 									<h5>Alex Deo | User </h5>                                                    
@@ -133,7 +137,7 @@
 						<div class="media-body">
 							<div class="media">
 								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="http://lukisongroup.int/upload/hrd/orgimage/ailey.png" />
+									<img class="media-object img-circle" style="max-height:40px;" src="<?php echo Yii::$app->urlManager->baseUrl.'/upload/hrd/orgimage/ailey.png'; ?>"/>
 								</a>
 								<div class="media-body" >
 									<h5>Jhon Rexa | User </h5>                                                    
@@ -146,7 +150,7 @@
 						<div class="media-body">
 							<div class="media">
 								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="http://lukisongroup.int/upload/hrd/orgimage/stephen.png" />
+									<img class="media-object img-circle" style="max-height:40px;" src="<?php echo Yii::$app->urlManager->baseUrl.'/upload/hrd/orgimage/stephen.png'; ?>" />
 								</a>
 								<div class="media-body" >
 									<h5>Alex Deo | User </h5>                                                    
@@ -167,7 +171,7 @@
 						<div class="media-body">
 							<div class="media">
 								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="http://lukisongroup.int/upload/hrd/orgimage/piter.png" />
+									<img class="media-object img-circle" style="max-height:40px;" src="<?php echo Yii::$app->urlManager->baseUrl.'/upload/hrd/orgimage/piter.png'; ?>" />
 								</a>
 								<div class="media-body" >
 									<h5>Alex Deo | User </h5>                                                    
@@ -180,7 +184,7 @@
 						<div class="media-body">
 							<div class="media">
 								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="http://lukisongroup.int/upload/hrd/orgimage/ailey.png" />
+									<img class="media-object img-circle" style="max-height:40px;" src="<?php echo Yii::$app->urlManager->baseUrl.'/upload/hrd/orgimage/ailey.png'; ?>"/>
 								</a>
 								<div class="media-body" >
 									<h5>Jhon Rexa | User </h5>                                                    
@@ -193,7 +197,7 @@
 						<div class="media-body">
 							<div class="media">
 								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="http://lukisongroup.int/upload/hrd/orgimage/stephen.png" />
+									<img class="media-object img-circle" style="max-height:40px;" src="<?php echo Yii::$app->urlManager->baseUrl.'/upload/hrd/orgimage/stephen.png'; ?>"/>
 								</a>
 								<div class="media-body" >
 									<h5>Alex Deo | User </h5>                                                    
@@ -206,7 +210,7 @@
 						<div class="media-body">
 							<div class="media">
 								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="http://lukisongroup.int/upload/hrd/orgimage/tano.png" />
+									<img class="media-object img-circle" style="max-height:40px;"  src="<?php echo Yii::$app->urlManager->baseUrl.'/upload/hrd/orgimage/tano.png'; ?>" />
 								</a>
 								<div class="media-body" >
 									<h5>Jhon Rexa | User </h5>                                                    
@@ -219,7 +223,7 @@
 						<div class="media-body">
 							<div class="media">
 								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="assets/img/user.png" />
+									<img class="media-object img-circle" style="max-height:40px;"  src="<?php echo Yii::$app->urlManager->baseUrl.'/upload/hrd/orgimage/piter.png'; ?>" src="assets/img/user.png" />
 								</a>
 								<div class="media-body" >
 									<h5>Alex Deo | User </h5>                                                    
@@ -232,7 +236,7 @@
 						<div class="media-body">
 							<div class="media">
 								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="assets/img/user.gif" />
+									<img class="media-object img-circle" style="max-height:40px;" src="<?php echo Yii::$app->urlManager->baseUrl.'/upload/hrd/orgimage/piter.png'; ?>" src="assets/img/user.gif" />
 								</a>
 								<div class="media-body" >
 									<h5>Jhon Rexa | User </h5>                                                    
@@ -245,7 +249,7 @@
 						<div class="media-body">
 							<div class="media">
 								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="assets/img/user.png" />
+									<img class="media-object img-circle" style="max-height:40px;" src="<?php echo Yii::$app->urlManager->baseUrl.'/upload/hrd/orgimage/piter.png'; ?>" src="assets/img/user.png" />
 								</a>
 								<div class="media-body" >
 									<h5>Alex Deo | User </h5>                                                    
@@ -258,7 +262,7 @@
 						<div class="media-body">
 							<div class="media">
 								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="assets/img/user.gif" />
+									<img class="media-object img-circle" style="max-height:40px;" src="<?php echo Yii::$app->urlManager->baseUrl.'/upload/hrd/orgimage/piter.png'; ?>" src="assets/img/user.gif" />
 								</a>
 								<div class="media-body" >
 									<h5>Jhon Rexa | User </h5>                                                    

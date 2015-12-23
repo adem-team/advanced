@@ -26,8 +26,7 @@ class Userlogin extends \yii\db\ActiveRecord
             [['id','username','auth_key','password_hash'], 'required'],
 			[['username','auth_key','password_hash','password_reset_token','EMP_ID'], 'string'],
             [['email','avatar','avatarImage'], 'string'],
-			[['id','status','created_at','updated_at'],'integer'],
-        ];
+			[['id','status','created_at','updated_at'],'integer'],        ];
     }
 
     public function attributeLabels()
