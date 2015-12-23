@@ -10,10 +10,11 @@ use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
 use lukisongroup\purchasing\models\LoginSignatureValidasi;
 use lukisongroup\purchasing\models\Requestorder;
+use lukisongroup\purchasing\models\LoginForm;
 use lukisongroup\purchasing\models\RequestorderSearch;
 use lukisongroup\purchasing\models\Roatribute;
 use lukisongroup\purchasing\models\Requestorderstatus;
-use lukisongroup\purchasing\models\LoginForm;
+
 use lukisongroup\purchasing\models\Rodetail;
 use lukisongroup\purchasing\models\RodetailSearch;
 use lukisongroup\hrd\models\Employe;
@@ -27,7 +28,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
-
+use yii\helpers\Url;
+use yii\widgets\Pjax;
 
 
 
@@ -307,7 +309,7 @@ class RequestOrderController extends Controller
 						}
 						$transaction->commit();
 					} catch (Exception $ex) {
-						print_r("error");
+						//print_r("error");
 						$transaction->rollback();
 						return false;						   
 					}
@@ -703,15 +705,14 @@ class RequestOrderController extends Controller
     }
 	
 	public function actionApproved_authorize($kd){		
-		//$model = new LoginSignatureValidasi();
+		$loginSig = new LoginForm();					
 		$roHeader = Requestorder::find()->where(['KD_RO' =>$kd])->one();
-		$employe = $roHeader->employe;
-		$loginSigForm = new LoginForm();
-		return $this->renderAjax('login_signature', [
-            'roHeader' => $roHeader,
-            'employee' => $employe,
-			'loginSigForm'=>$loginSigForm,
-        ]);		
+		$employe = $roHeader->employe;			
+			return $this->renderAjax('login_signature', [
+				'roHeader' => $roHeader,
+				'employe' => $employe,
+				'loginSig' => $loginSig,
+			]);
 	}
 	
 	/*
@@ -722,8 +723,41 @@ class RequestOrderController extends Controller
 	 * @since 1.1    
 	**/
 	//public function actionApproved_sign(){
-	public function actionApprovedAauthorizeSave(){
-		 //$rodetails = new Rodetail();
+	public function actionApprovedAuthorizeSave(){
+		$loginSig = new LoginForm();
+		
+		/*Ajax Load*/
+		if(Yii::$app->request->isAjax){
+			$loginSig->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($loginSig));
+		}else{	/*Normal Load*/	
+			if($loginSig->load(Yii::$app->request->post())){
+				$hsl = \Yii::$app->request->post();	
+				$kdro = $hsl['LoginForm']['kd_ro'];	
+					$cons = \Yii::$app->db_esm;	
+					$roHeader = Requestorder::find()->where(['KD_RO' =>$kdro])->one();
+					$profile=Yii::$app->getUserOpt->Profile_user();
+					$roHeader->STATUS = 101;					
+					$roHeader->SIG2_SVGBASE64 = $profile->emp->SIGSVGBASE64;
+					$roHeader->SIG2_SVGBASE30 = $profile->emp->SIGSVGBASE30;
+					$roHeader->SIG2_NM = $profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;
+					$roHeader->SIG2_TGL = date('Y-m-d');
+					$roHeader->save();
+				return $this->redirect(['approved','kd'=>$kdro]);						
+			}
+		}
+		
+		
+		//return $this->render('approved');
+				//return actionApproved('RO.2015.12.000004');
+				//return $this->home();
+				//$request=Yii::$app->request;
+				//$test= $request->post('empNm');
+				//print_r($test);
+				//return "sucess";
+		
+		
+		/*  //$rodetails = new Rodetail();
 		$ts = Yii::$app->request->post();
 		if(count($ts) == 0){ return $this->redirect([' ']); }
 		$kd = $ts['kd'];
@@ -739,7 +773,7 @@ class RequestOrderController extends Controller
 		}
 		return $this->redirect(['proses', 'kd' => $kd]);
 	
-		//$rodetail->save();
+		//$rodetail->save(); */
 		
 	}
 	

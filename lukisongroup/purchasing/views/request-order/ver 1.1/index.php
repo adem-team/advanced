@@ -39,12 +39,6 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 			return false;
 		}	 
 	}
-	
-	/*
-	 * Declaration Componen User Permission
-	 * Function getPermission
-	 * Modul Name[1=RO]
-	*/
 	function getPermissionEmployee(){
 		if (Yii::$app->getUserOpt->Modul_akses(1)){
 			return Yii::$app->getUserOpt->Modul_akses(1)->emp;
