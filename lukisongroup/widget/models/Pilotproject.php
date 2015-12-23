@@ -17,7 +17,8 @@ class Pilotproject extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['PARENT','PILOT_ID', 'STATUS','SORT','BOBOT'], 'integer'],
+            [['PILOT_NM','STATUS'], 'required'],
+            [['PARENT', 'STATUS','SORT','BOBOT'], 'integer'],
             [['PLAN_DATE1','PLAN_DATE2','ACTUAL_DATE1', 'ACTUAL_DATE2','UPDATED_TIME'], 'safe'],
             [['PILOT_NM'], 'string', 'max' => 255],
 			[['DSCRP'], 'string'],
