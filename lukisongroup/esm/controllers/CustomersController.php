@@ -60,6 +60,7 @@ class CustomersController extends Controller
             }
     }
 
+
      public function actionIndex()
     {
        // city data
@@ -177,12 +178,12 @@ class CustomersController extends Controller
     }
 
 
-    public function actionViewlokasi($id)
-    {
-        return $this->render('viewlokasi', [
-            'model' => $this->findModelcust($id),
-        ]);
-    }
+    // public function actionViewlokasi($id)
+    // {
+    //     return $this->render('viewlokasi', [
+    //         'model' => $this->findModelcust($id),
+    //     ]);
+    // }
 	 
 	  public function actionViewcust($id)
     {
@@ -193,8 +194,10 @@ class CustomersController extends Controller
 	
     public function actionView($id)
     {
+      // print_r($id);
+      // die();
         return $this->renderAjax('viewkat', [
-            'model' => $this->findModel($id),
+            'model' => $this->findModelv($id),
         ]);
     }
 
@@ -248,17 +251,24 @@ class CustomersController extends Controller
     }
 	
 	
-    public function actionCreate()
+    public function actionCreate($id)
     {
+        
         $model = new Kategoricus();
 
+        $cus = Kategoricus::find()->where(['CUST_KTG'=> $id ])->one();
+        $par = $cus['CUST_KTG'];
+
         if ($model->load(Yii::$app->request->post()) ) {
+
+          $model->CUST_KTG_PARENT = $par;
 				
 				if($model->validate())
 				{
-					    $model->CREATED_BY =  Yii::$app->user->identity->username;
+					  $model->CREATED_BY =  Yii::$app->user->identity->username;
 						$model->CREATED_AT = date("Y-m-d H:i:s");
 						$model->save();
+
 				}
 		
             return $this->redirect(['index']);
@@ -344,7 +354,8 @@ class CustomersController extends Controller
 
 
                          
-	
+	/* create controller dropdown out extension*/
+
 	 // public function actionLisarea($id)
   //   {
  
@@ -374,6 +385,7 @@ class CustomersController extends Controller
   //   }
 	
 	
+  
   //   public function actionLis($id)
   //   {
  
@@ -409,6 +421,7 @@ class CustomersController extends Controller
         $model = new Kategoricus();
 
         if ($model->load(Yii::$app->request->post()) ) {
+
             
        	    if($model->validate())
             {
@@ -416,8 +429,10 @@ class CustomersController extends Controller
                 $model->CREATED_BY =  Yii::$app->user->identity->username;
                 $model->CREATED_AT = date("Y-m-d H:i:s");
                 $model->save();
+
             }
-            
+              // print_r($model);
+              //   die();
             return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_formparent', [
@@ -598,12 +613,13 @@ class CustomersController extends Controller
     public function actionDelete($id)
     {
      	$model = Kategoricus::find()->where(['CUST_KTG'=>$id])->one();
-		$model->STATUS = 3;
-		$model->save();
+		  $model->STATUS = 3;
+		  $model->save();
         return $this->redirect(['index']);
     }
+
 	
-	public function actionDeletecus($id)
+	   public function actionDeletecus($id)
     {
     
 		
@@ -611,11 +627,7 @@ class CustomersController extends Controller
 	
 		$model->STATUS = 3;
 		$model->save();
-      // print_r($model);
-      // die();
-        
-		
-
+     
         return $this->redirect(['index']);
     }
 
@@ -652,12 +664,37 @@ class CustomersController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    protected function findModel($id)
+
+    
+
+        // $query = Kategoricus::findBySql($sql);
+
+         protected function findModelv($id)
     {
-        if (($model = Kategoricus::findOne($id)) !== null) {
+
+        $sql1 = "SELECT b.CUST_KTG as CUST_KTG, b.CUST_KTG_NM as PRN_NM,a.CUST_KTG as CUS_ID, 
+                                            a.CUST_KTG_NM as customers_Kategori, a.CUST_KTG_PARENT as CUS_Prn, b.CUST_KTG_NM as NAMA_CUSTOMERS  from 
+                                            (select * FROM c0001k WHERE CUST_KTG_PARENT<>0) a INNER JOIN
+                                            (select * FROM c0001k WHERE CUST_KTG_PARENT= 0) b on a.CUST_KTG_PARENT=b.CUST_KTG
+                                            where a.CUST_KTG = $id 
+                                            ORDER BY b.CUST_KTG";
+                                            // print_r($sql);
+                                            // die();
+
+                                            
+        if (($model = Kategoricus::findBySql($sql1)->one()) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+    // protected function findModel($id)
+    // {
+    //     if (($model = Kategoricus::findOne($id)) !== null) {
+    //         return $model;
+    //     } else {
+    //         throw new NotFoundHttpException('The requested page does not exist.');
+    //     }
+    // }
 }

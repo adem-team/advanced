@@ -132,9 +132,11 @@ AppAssetChart::register($this);
 				 'vAlign'=>'middle',
 				 'value'=>function ($model, $key, $index, $widget) { 
 					$Proj_sort = Pilotproject::find()->where(['ID'=>$model->SORT])->one();
+					// print_r($Proj_sort);
+					// die();
 					return $Proj_sort->PILOT_NM;
 				},
-				'filter'=>ArrayHelper::map(Pilotproject::find()->where('ID=SORT')->asArray()->all(), 'ID', 'PILOT_NM'),
+				'filter'=>ArrayHelper::map(Pilotproject::find()->where('ID = SORT')->asArray()->all(), 'ID', 'PILOT_NM'),
 				'group'=>true,
 			],
 			[
@@ -215,7 +217,7 @@ AppAssetChart::register($this);
 						},
 						
 						'create' =>function($url, $model, $key){
-								return  Html::a('<button type="button" class="btn btn-success btn-xs" style="width:50px">Create</button>',['/widget/pilotproject/create'],[
+								return  Html::a('<button type="button" class="btn btn-success btn-xs" style="width:50px">Create</button>',['create','id'=>$model->ID],[
 															'data-toggle'=>"modal",
 															'data-target'=>"#gv-pilotp-create",
 															'data-title'=> $model->PILOT_ID,
@@ -247,8 +249,23 @@ AppAssetChart::register($this);
         ],
 		'toolbar'=> [
 			['content'=>
-				Html::button('<i class="glyphicon glyphicon-plus"></i>', ['type'=>'button', '', 'class'=>'btn btn-success', 'onclick'=>'alert("This will launch the book creation form.\n\nDisabled for this demo!");']) .' ' .
-				Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['grid-demo'], ['data-pjax'=>0, 'class'=>'btn btn-default', ''])
+				Html::a('<i class="glyphicon glyphicon-plus"></i>',['createparent'],[
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#gv-pilotp-create",
+					   'type'=>'button',
+					   'class'=>'btn btn-success',
+					  //'data-title'=> $model->PILOT_ID,
+					  ] 
+					// ['
+					// type'=>'button',
+					// '', 
+					// 'class'=>'btn btn-success', 
+				 //]
+				 ) .' ' .												
+				Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['grid-demo'], [
+					// 'data-pjax'=>0, 
+					'class'=>'btn btn-default', 
+					''])
 			],
 			'{export}',
 			'{toggleData}',

@@ -33,9 +33,11 @@ class PilotprojectSearch extends Pilotproject
 	  * @author ptrnov  <piter@lukison.com>
 	  * @since 1.1
 	*/
+
     public function searchDept($params)
     {
 		$profile=Yii::$app->getUserOpt->Profile_user();
+		
         $query = Pilotproject::find()->Where('sc0001.STATUS<>3 AND DEP_ID="'.$profile->emp->DEP_ID .'"');
 
         $dataProvider = new ActiveDataProvider([

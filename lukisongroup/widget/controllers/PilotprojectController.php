@@ -4,6 +4,7 @@ namespace lukisongroup\widget\controllers;
 
 use Yii;
 use lukisongroup\widget\models\Pilotproject;
+use lukisongroup\esm\models\Kategoricus;
 use lukisongroup\widget\models\PilotprojectSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -30,6 +31,27 @@ class PilotprojectController extends Controller
      * Lists all Pilotproject models.
      * @return mixed
      */
+     public function beforeAction(){
+            if (Yii::$app->user->isGuest)  {
+                 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+            }
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+                   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true; 
+               }
+            } else {
+                return true;
+            }
+    }
+
     public function actionIndex()
     {
         $searchModel = new PilotprojectSearch();
@@ -76,35 +98,65 @@ class PilotprojectController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($id)
     {
-		/*
-        $model = new Pilotproject();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-		*/
+		
 		$model = new Pilotproject();
 		
-		if ($model->load(Yii::$app->request->post())){		
-				$model->CREATED_BY=Yii::$app->user->identity->username;		
-				$model->UPDATED_TIME=date('Y-m-d h:i:s'); 				
+		if ($model->load(Yii::$app->request->post())){
+                $model->PARENT = $id;
+                $model->SORT = $id;
+                $model->PILOT_ID = '';
+                $model->DEP_ID =  Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;		
+				$model->CREATED_BY= Yii::$app->user->identity->username;		
+				$model->UPDATED_TIME= date('Y-m-d h:i:s'); 				
 				$model->save();
 				if($model->save()){
-					 //return $this->redirect(['view', 'id' => $model->ID]);	
-					 return $this->redirect('index');
+					
+				return $this->redirect('index');
 				} 
 		}else {
-            //return $this->render('_form', [ 
+           
 			return $this->renderAjax('_form', [
                 'model' => $model,
             ]);
         }	
+    }
+
+     
+    public function actionCreateparent()
+    {
+       
+        $model = new Pilotproject();
+        
+        if ($model->load(Yii::$app->request->post())){
+
+                $sql = Pilotproject::find()->count();
+                                                
+                $model->SORT = $sql+1;
+                $model->PARENT = 0;
+                $model->DEP_ID =  Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+                $dep_id = $model->DEP_ID;
+                $pilot_id = Yii::$app->esmcode->getpilot($dep_id);
+                   // print_r($pilot_id );
+                   // die();
+                $model->PILOT_ID = $pilot_id;              
+                $model->CREATED_BY=Yii::$app->user->identity->username;     
+                $model->UPDATED_TIME=date('Y-m-d h:i:s');               
+                $model->save();
+                // print_r($model);
+                // die();
+
+           
+                    
+                     return $this->redirect('index');
+                
+        }else {
+           
+            return $this->renderAjax('_form', [
+                'model' => $model,
+            ]);
+        }   
     }
 
     /**

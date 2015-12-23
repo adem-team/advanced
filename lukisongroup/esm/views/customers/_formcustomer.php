@@ -171,6 +171,7 @@ use kartik\widgets\DepDrop;
     <?= $form->field($model, 'DATA_ALL')->textInput(['maxlength' => true]) ?>
 	
 	<?php
+
 	if(!$model->isNewRecord )
 	{
 		echo $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']) ;
@@ -182,6 +183,7 @@ use kartik\widgets\DepDrop;
     <?= $form->field($model, 'ALAMAT')->textInput(['maxlength' => true]) ?> 
 
    <?= $form->field($model, 'MAP_LNG')->hiddenInput()->label(false) ?>
+   
     <?= $form->field($model, 'MAP_LAT')->hiddenInput()->label(false) ?>
 	<!-- $form->field($model, 'MAP_LNG')->textInput(['maxlength' => true,'readonly'=>true]) ?> -->
 	 <!-- $form->field($model, 'MAP_LAT')->textInput(['maxlength' => true,'readonly'=>true]) ?> -->

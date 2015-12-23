@@ -22,6 +22,8 @@ class KategoricusSearch extends Kategoricus
      */
     public $PRN_NM;
     public $customers_Kategori;
+    public $CUST_KTGB;
+    public $CUS_Prn;
     public function rules()
     {
         return [
@@ -86,16 +88,17 @@ class KategoricusSearch extends Kategoricus
 	
     public function search($params)
     {
-        $sql = "SELECT b.CUST_KTG as CUST_KTG, b.CUST_KTG_NM as PRN_NM,a.CUST_KTG as CUS_ID, 
+        $sql = "SELECT  b.CUST_KTG as CUST_KTGB, b.CUST_KTG_NM as PRN_NM,a.CUST_KTG as CUS_ID, 
                                             a.CUST_KTG_NM as customers_Kategori, a.CUST_KTG_PARENT as CUS_Prn  from 
-                                            (select * FROM c0001k WHERE CUST_KTG_PARENT<>0) a INNER JOIN
+                                            (select  * FROM c0001k  WHERE CUST_KTG_PARENT<> 0 ) a RIGHT JOIN
                                             (select * FROM c0001k WHERE CUST_KTG_PARENT= 0) b on a.CUST_KTG_PARENT=b.CUST_KTG
-                                            ORDER BY b.CUST_KTG";
+                                            Order BY b.CUST_KTG";
 
         $query = Kategoricus::findBySql($sql);
         // print_r($query);
         // die();
                                             //->where('STATUS <> 3');
+        // $query = Kategoricus::find()->where('STATUS <> 3');
              
 
         $dataProviderkat = new ActiveDataProvider([
@@ -103,8 +106,8 @@ class KategoricusSearch extends Kategoricus
         ]);
 
          $dataProviderkat->sort->attributes['customers_Kategori'] = [
-                'asc' => ['a.CUST_KTG_NM ' => SORT_ASC],
-                'desc' => ['a.CUST_KTG_NM ' => SORT_DESC],
+                'asc' => ['customers_Kategori' => SORT_ASC],
+                'desc' => ['customers_Kategori' => SORT_DESC],
             ];
 
         $this->load($params);
@@ -123,7 +126,7 @@ class KategoricusSearch extends Kategoricus
         //     // 'STATUS' => $this->STATUS,
         // ]);
 
-        $query->andFilterWhere(['like', 'a.CUST_KTG_NM', $this->getAttribute('customers_Kategori')]);
+        $query->andFilterWhere(['like', 'customers_Kategori', $this->getAttribute('customers_Kategori')]);
              // ->andFilterWhere(['like', 'c0001k.CUST_KTG_NM', $this->getAttribute('cus.CUST_KTG_NM')])
             // ->andFilterWhere(['like', 'UPDATED_BY', $this->UPDATED_BY]);
 
