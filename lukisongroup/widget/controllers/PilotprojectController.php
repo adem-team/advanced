@@ -126,7 +126,7 @@ class PilotprojectController extends Controller
      
     public function actionCreateparent()
     {
-       
+      
         $model = new Pilotproject();
         
         if ($model->load(Yii::$app->request->post())){
@@ -137,12 +137,12 @@ class PilotprojectController extends Controller
                 $model->PARENT = 0;
                 $model->DEP_ID =  Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
                 $dep_id = $model->DEP_ID;
-                $pilot_id = Yii::$app->esmcode->getpilot($dep_id);
+                $pilot_id = Yii::$app->ambilkonci->getpilot($dep_id);
                    // print_r($pilot_id );
                    // die();
                 $model->PILOT_ID = $pilot_id;              
-                $model->CREATED_BY=Yii::$app->user->identity->username;     
-                $model->UPDATED_TIME=date('Y-m-d h:i:s');               
+                $model->CREATED_BY= Yii::$app->user->identity->username;     
+                $model->UPDATED_TIME = date('Y-m-d h:i:s');               
                 $model->save();
                 // print_r($model);
                 // die();

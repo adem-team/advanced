@@ -2,11 +2,13 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use lukisongroup\esm\models\Kategoricus;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\esm\models\Kategoricus */
-
- $this->title = $model->PRN_NM;
+$data = Kategoricus::find()->where(['CUST_KTG'=>$model->CUST_KTG_PARENT])->one();
+$hasil = $data['CUST_KTG_NM'];
+  $this->title = $hasil;
 $this->params['breadcrumbs'][] = ['label' => 'Kategoricuses', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -14,10 +16,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?php
-    // print_r($model);
-    // die();
-    ?>
 
     <?= DetailView::widget([
         'model' => $model,
@@ -25,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'CUST_KTG',
             // 'CUST_KTG_PARENT',
            
-            'customers_Kategori',
+          'CUST_KTG_NM'
             // 'CREATED_BY',
             // 'CREATED_AT',
             // 'UPDATED_BY',
