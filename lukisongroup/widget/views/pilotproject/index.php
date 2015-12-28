@@ -120,6 +120,8 @@ AppAssetChart::register($this);
 	  * @link https://github.com/C12D/advanced/blob/master/lukisongroup/view/widget/pilotp/index.php
 	  * @see https://github.com/C12D/advanced/blob/master/lukisongroup/view/widget/pilotp/index.php
 	 */	
+	// print_r($dataProviderEmp);
+	// die();
 	$gv_pilotDept= GridView::widget([
 		'id'=>'gv-pilot-dept',
         'dataProvider' => $dataProviderDept,
@@ -367,11 +369,34 @@ AppAssetChart::register($this);
                         },
 				'filter'=>['0'=>'Open','1'=>'Close'],	 //Author -ptr.nov Manual Filter value			
 			],
-            [
-				'class' => 'yii\grid\ActionColumn',
-				'header'=>'Action',			
+			
+			  [
+				'class' => 'yii\grid\ActionColumn', 
+					'template' => '{view} {create}',
+					'header'=>'Action',
+					'buttons' => [
+						'view' =>function($url, $model, $key){
+								return  Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px">View </button>',['/widget/pilotproject/view','id'=>$model->ID,'PILOT_ID'=>$model->PILOT_ID],[
+															'data-toggle'=>"modal",
+															'data-target'=>"#gv-pilotp-view",
+															'data-title'=> $model->PILOT_ID,
+															]);
+						},
+						
+						'create' =>function($url, $model, $key){
+								return  Html::a('<button type="button" class="btn btn-success btn-xs" style="width:50px">Create</button>',['create','id'=>$model->ID],[
+															'data-toggle'=>"modal",
+															'data-target'=>"#gv-pilotp-create",
+															'data-title'=> $model->PILOT_ID,
+															]);
+						}
+						
+					],		
 			],
         ],
+            
+      
+       
 		/*
 		'beforeHeader'=>[
 			[
@@ -394,7 +419,11 @@ AppAssetChart::register($this);
         ],
 		'toolbar'=> [
 			['content'=>
-				Html::button('<i class="glyphicon glyphicon-plus"></i>', ['type'=>'button', '', 'class'=>'btn btn-success', 'onclick'=>'alert("This will launch the book creation form.\n\nDisabled for this demo!");']) .' ' .
+				Html::a('<i class="glyphicon glyphicon-plus"></i>',['createparent'],[
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#gv-pilotp-create",
+					   'type'=>'button',
+					   'class'=>'btn btn-success']) .' ' .
 				Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['grid-demo'], ['data-pjax'=>0, 'class'=>'btn btn-default', ''])
 			],
 			'{export}',

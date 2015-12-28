@@ -21,17 +21,8 @@ class Kategoricus extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-	 
-    // public function getKtdetail()
-    // {
-    //     return $this->hasMany(Kategoricus::className(), ['CUST_KTG_PARENT' => 'CUST_KTG']);
-    // }   
-    public $PRN_NM;
-    public $customers_Kategori;
-    public $CUS_ID;
-       public $CUST_KTGB;
-       public $CUS_Prn;
-    // public $NAMA_CUSTOMERS;
+	
+ 
     public static function tableName()
     {
         return 'c0001k';
@@ -45,11 +36,7 @@ class Kategoricus extends \yii\db\ActiveRecord
         return Yii::$app->get('db3');
     }
 
-         public function getParent()
-        {
-            return $this->hasMany(Customers::className(), ['CUST_KTG' => 'CUST_KTG']);
-          
-        }
+       
 
     /**
      * @inheritdoc
@@ -57,7 +44,7 @@ class Kategoricus extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-			[[ 'CUST_KTG_NM','STATUS'], 'required'],
+			[['CUST_KTG_NM','STATUS'], 'required'],
             [['CUST_KTG_PARENT', 'STATUS'], 'integer'],
             [['CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['CUST_KTG_NM'], 'string', 'max' => 255],
@@ -73,7 +60,7 @@ class Kategoricus extends \yii\db\ActiveRecord
         return [
             'CUST_KTG' => 'Cust  Ktg',
             'CUST_KTG_PARENT' => 'Customer Kategori Parent',
-            'CUST_KTG_NM' => 'Cust  Ktg  Nm',
+            'CUST_KTG_NM' => 'Customers Kategori',
             'CREATED_BY' => 'Created  By',
             'CREATED_AT' => 'Created  At',
             'UPDATED_BY' => 'Updated  By',

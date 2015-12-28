@@ -71,8 +71,8 @@ class CustomersController extends Controller
         $searchmodelpro = new ProvinceSearch();
         $dataproviderpro = $searchmodelpro->search(Yii::$app->request->queryParams);
 
-        $searchModelkat = new KategoricusSearch();
-        $dataProviderkat  = $searchModelkat->search(Yii::$app->request->queryParams);
+        $searchModel1 = new KategoricusSearch();
+        $dataProviderkat  = $searchModel1->searchparent(Yii::$app->request->queryParams);
       
         $searchModel = new CustomersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -81,12 +81,14 @@ class CustomersController extends Controller
         {
             $ID = \Yii::$app->request->post('editableKey');
             $model = Customers::findOne($ID);
+        
+
 
            
             
             
             $out = Json::encode(['output'=>'', 'message'=>'']);
-
+      
             // fetch the first entry in posted data (there should
             // only be one entry anyway in this array for an
             // editable submission)
@@ -95,6 +97,8 @@ class CustomersController extends Controller
             $post = [];
             $posted = current($_POST['Customers']);
             $post['Customers'] = $posted;
+
+      
 
             // load model like any single model validation
             if ($model->load($post)) {
@@ -120,41 +124,82 @@ class CustomersController extends Controller
                 //   $output =  ''; // process as you need
                 // }
                 $out = Json::encode(['output'=>$output, 'message'=>'']);
-            }
+              
+         
             // return ajax json encoded response and exit
             echo $out;
+
             return;
+          }
+           
+        }
+
+        //      if(Yii::$app->request->post('hasEditable'))
+        // {
+        //     $ID = \Yii::$app->request->post('editableKey');
+        //     $model = Kategoricus::findOne($ID);
+
+           
+            
+            
+        //     $out = Json::encode(['output'=>'', 'message'=>'']);
+
+        //     // fetch the first entry in posted data (there should
+        //     // only be one entry anyway in this array for an
+        //     // editable submission)
+        //     // - $posted is the posted data for Book without any indexes
+        //     // - $post is the converted array for single model validation
+        //     $post = [];
+        //     $posted = current($_POST['Kategoricus']);
+        //     $post['Kategoricus'] = $posted;
+
+        //     // load model like any single model validation
+        //     if ($model->load($post)) {
+        //         // can save model or do something before saving model
+        //         $model->save();
+
+        //         // custom output to return to be displayed as the editable grid cell
+        //         // data. Normally this is empty - whereby whatever value is edited by
+        //         // in the input by user is updated automatically.
+        //         $output = '';
+
+        //         // specific use case where you need to validate a specific
+        //         // editable column posted when you have more than one
+        //         // EditableColumn in the grid view. We evaluate here a
+        //         // check to see if buy_amount was posted for the Book model
+        //         if (isset($posted['CUST_KTG_NM'])) {
+        //            // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
+        //             $output = $model->CUST_KTG_NM;
+        //         }
+
+        //         // similarly you can check if the name attribute was posted as well
+        //         // if (isset($posted['name'])) {
+        //         //   $output =  ''; // process as you need
+        //         // }
+        //         $out = Json::encode(['output'=>$output, 'message'=>'']);
+        //     }
+        //     // return ajax json encoded response and exit
+        //     echo $out;
+        //     return;
+        
         
             
-        }
-		
-		// parent data
-		 // $searchModelpar = new CustomersSearch();
-   //      $dataProviderparent =  $searchModel->search_parent(Yii::$app->request->queryParams);
-	   // kategori data
-	   // print_r($searchmodelkota);
-    //    die();
-
-        
-	
-		
-		
-
-       
-		
+        // }
+      
 
         return $this->render('index', [
-		    'dataProviderkat'  =>   $dataProviderkat ,
-            //'searchModelpar ' => $searchModelpar,
-            'searchModel' => $searchModel,
+           'searchModel1' => $searchModel1,
+		       'dataProviderkat'  =>   $dataProviderkat ,
+          
+              'searchModel' => $searchModel,
+			        'dataProvider' => $dataProvider,
+              'searchmodelkota' => $searchmodelkota,
+               'searchmodelpro' => $searchmodelpro,
+              'dataproviderpro' =>  $dataproviderpro,
+              'dataproviderkota' => $dataproviderkota,
 			
-			'searchModelkat ' => $searchModelkat,
-            'dataProvider' => $dataProvider,
-			'searchmodelkota' => $searchmodelkota,
-			'searchmodelpro' => $searchmodelpro,
-			'dataproviderpro' =>  $dataproviderpro,
-			'dataproviderkota' => $dataproviderkota,
-			//'dataProviderparent' =>   $dataProviderparent
+     
+	
         ]);
 	}
 
@@ -197,7 +242,7 @@ class CustomersController extends Controller
       // print_r($id);
       // die();
         return $this->renderAjax('viewkat', [
-            'model' => $this->findModelv($id),
+            'model' => $this->findModel($id),
         ]);
     }
 
@@ -447,35 +492,18 @@ class CustomersController extends Controller
         $model = new Customers();
 
         if ($model->load(Yii::$app->request->post()) ) {
-			$kdpro = $model->PROVINCE_ID;
-			$kdcity =  $model->CITY_ID;
-			$kddis = $model->KD_DISTRIBUTOR;
-             $kdis = explode('.',$kddis);
-		
-            
-            $query = Customers::find()->select('CUST_KD')->where('STATUS <> 3')->orderBy(['CUST_KD'=>SORT_DESC])->one();
-			
-                    if(count($query) == 0)
-                 { 
-                        $nomerkd= 1; 
-                } else { 
-                      $kd = explode('.',$query->CUST_KD); 
-                      $nomerkd = $kd[6]+1;
-                
-                     }
-                     // print_r($nomerkd);
-                     // die();
-					 
-					 // print_r( str_pad( $nomerkd, "6", "0", STR_PAD_LEFT ));
-			// die();
-                     $tgl = date('Y.m');
-                     $kode = "CUS.".$kdis[1]."."."CGK.".$tgl."."."-"."0".$kdpro."-".$kdcity.".".str_pad( $nomerkd, "9", "0", STR_PAD_LEFT );
-		              $model->CUST_KD = $kode;
+
+              
+			       $kdpro = $model->PROVINCE_ID;
+			       $kdcity = $model->CITY_ID;
+			       $kddis = $model->KD_DISTRIBUTOR;
+             $kode = Yii::$app->ambilkonci->getkeycustomers($kddis,$kdpro,$kdcity);
+		         $model->CUST_KD = $kode;
 		
            
                 if($model->validate())
 				{
-				$model->CORP_ID = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
+				        $model->CORP_ID = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
                 $model->CREATED_BY =  Yii::$app->user->identity->username;
                 $model->CREATED_AT = date("Y-m-d H:i:s");
                 $model->save();
@@ -518,7 +546,7 @@ class CustomersController extends Controller
 			
            return $this->redirect(['index']);
         } else {
-            return $this->render('update', [
+            return $this->renderAjax('update', [
                 'model' => $model,
             ]);
         }
@@ -667,34 +695,12 @@ class CustomersController extends Controller
 
     
 
-        // $query = Kategoricus::findBySql($sql);
-
-         protected function findModelv($id)
+    protected function findModel($id)
     {
-
-        $sql1 = "SELECT b.CUST_KTG as CUST_KTG, b.CUST_KTG_NM as PRN_NM,a.CUST_KTG as CUS_ID, 
-                                            a.CUST_KTG_NM as customers_Kategori, a.CUST_KTG_PARENT as CUS_Prn, b.CUST_KTG_NM as NAMA_CUSTOMERS  from 
-                                            (select * FROM c0001k WHERE CUST_KTG_PARENT<>0) a INNER JOIN
-                                            (select * FROM c0001k WHERE CUST_KTG_PARENT= 0) b on a.CUST_KTG_PARENT=b.CUST_KTG
-                                            where a.CUST_KTG = $id 
-                                            ORDER BY b.CUST_KTG";
-                                            // print_r($sql);
-                                            // die();
-
-                                            
-        if (($model = Kategoricus::findBySql($sql1)->one()) !== null) {
+        if (($model = Kategoricus::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-
-    // protected function findModel($id)
-    // {
-    //     if (($model = Kategoricus::findOne($id)) !== null) {
-    //         return $model;
-    //     } else {
-    //         throw new NotFoundHttpException('The requested page does not exist.');
-    //     }
-    // }
 }
