@@ -13,10 +13,10 @@ use yii\filters\VerbFilter;
 use lukisongroup\purchasing\models\Purchasedetail;
 use lukisongroup\purchasing\models\Podetail;
 
-use lukisongroup\purchasing\models\Requestorder;
-use lukisongroup\purchasing\models\RequestorderSearch;
-use lukisongroup\purchasing\models\Rodetail;
-use lukisongroup\purchasing\models\RodetailSearch;
+use lukisongroup\purchasing\models\ro\Requestorder;
+use lukisongroup\purchasing\models\ro\RequestorderSearch;
+use lukisongroup\purchasing\models\ro\Rodetail;
+use lukisongroup\purchasing\models\ro\RodetailSearch;
 
 use lukisongroup\purchasing\models\Statuspo;
 

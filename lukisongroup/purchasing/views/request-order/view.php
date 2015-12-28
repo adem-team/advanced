@@ -4,6 +4,7 @@ use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\assets\AppAssetJqueryJSignature;
+
 AppAssetJqueryJSignature::register($this); 
 $this->sideCorp = 'ESM Request Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_esm';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -80,7 +81,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			<?php echo Html::img('@web/upload/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>	
 		</div>
 		<div class="col-md-9" style="padding-top:15px;">
-			<h3 class="text-center"><b>Form Permintaan Barang & Jasa</b></h3>				
+			<!--<h3 class="text-center"><b>Form Permintaan Barang & Jasa</b></h3>!-->
+			<h3 class="text-center"><b>REQUEST ORDER</b></h3>
 		</div>
 		<div class="col-md-11">
 			<hr>

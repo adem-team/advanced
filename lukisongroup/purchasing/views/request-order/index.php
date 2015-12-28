@@ -9,14 +9,15 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 use yii\helpers\Json;
 use yii\web\Request;
-
-use lukisongroup\master\models\Unitbarang;
 use kartik\daterange\DateRangePicker;
 
+use lukisongroup\purchasing\models\ro\Requestorderstatus;
+use lukisongroup\purchasing\models\ro\Rodetail;
+
+use lukisongroup\master\models\Unitbarang;
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\hrd\models\Dept;
-use lukisongroup\purchasing\models\Requestorderstatus;
-use lukisongroup\purchasing\models\Rodetail;
+
 
 $this->title = 'Request Order';
 $this->params['breadcrumbs'][] = $this->title;
@@ -224,7 +225,7 @@ function tombolKategori(){
 			//if(getPermissionEmployee()->JOBGRADE_ID == 'S' OR getPermissionEmployee()->JOBGRADE_ID == 'M' OR getPermissionEmployee()->JOBGRADE_ID == 'SM' AND getPermission()->BTN_SIGN1==1 ){
 			if($a == 'SEVP' OR $a == 'EVP' OR $a == 'SVP' OR $a == 'VP' OR $a == 'AVP' OR $a == 'SM' OR $a == 'M' OR $a == 'AM' OR $a == 'S' AND $b==1 ){
 				 if($model->STATUS == 0 || $model->STATUS == 1 ){ // 0=process 101=Approved
-					$title = Yii::t('app', 'approved');
+					$title = Yii::t('app', 'Review');
 					$options = [ //'id'=>'ro-approved',
 								//'data-method' => 'post',
 								 //'data-pjax'=>true,

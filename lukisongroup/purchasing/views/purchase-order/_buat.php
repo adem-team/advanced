@@ -9,9 +9,9 @@ use yii\widgets\Pjax;
 use yii\bootstrap\Modal;
 
 use lukisongroup\esm\models\Barang;
-use lukisongroup\purchasing\models\Requestorder;
-use lukisongroup\purchasing\models\Rodetail;
-use lukisongroup\purchasing\models\RodetailSearch;
+use lukisongroup\purchasing\models\ro\Requestorder;
+use lukisongroup\purchasing\models\ro\Rodetail;
+use lukisongroup\purchasing\models\ro\RodetailSearch;
 
 use lukisongroup\master\models\Barangumum;
 use lukisongroup\master\models\Suplier;

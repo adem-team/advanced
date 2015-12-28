@@ -2,6 +2,7 @@ PR
 1. RodetailSearch | Department -> permission GM/Owner dapat liah semua
 2. Input Barang dan Kategori
 3. Additional -> Forwarding/ CC ke ? untuik RO
+4. Gridview status=3 tetap nampil | view,approved,edit
 
 
 /**
