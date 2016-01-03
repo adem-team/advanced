@@ -20,7 +20,7 @@ $y=4;
 
  <?php 
         $sup = Suplier::find()->where(['KD_SUPPLIER'=>$poHeader->KD_SUPPLIER])->one(); 
-        //$pod = Purchasedetail::find()->where(['KD_PO'=>$poHeader->KD_PO])->all(); 
+        $pod = Purchasedetail::find()->where(['KD_PO'=>$poHeader->KD_PO])->all(); 
 
         $ship = Nmperusahaan::find()->where(['ID' => $poHeader->SHIPPING])->one(); 
         $bill = Nmperusahaan::find()->where(['ID' => $poHeader->BILLING])->one(); 
@@ -39,9 +39,63 @@ $y=4;
 						<div>100,0</div>
 						<div><b>10000,0</b></div>'; 
 		}; */
+
+ ?>
+
+<div class="container" style="font-family: tahoma ;font-size: 8pt;">
+	<!-- Header !-->
+	<div>
+		<div style="width:240px; float:left;">
+			<?php echo Html::img('@web/img_setting/kop/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>	
+		</div>
+		<div style="padding-top:40px;">
+			<!-- <h5 class="text-left"><b>FORM PERMINTAAN BARANG & JASA</b></h5> !-->				
+			<h4 class="text-left"><b>PURCHASE ORDER</b></h4>				
+		</div>
+		<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
+		<hr style="height:1px;margin-top: 1px; margin-bottom: 10px;">
 		
+	</div>
+	<!-- Title HEADER Descript !-->	
+	<div>
+		<div style="width:250px; float:left">
+			<dl>
+				<dt><b><?= $sup->NM_SUPPLIER; ?></b></dt>				
+				<dt><?= $sup->ALAMAT; ?></dt>				
+				<dt><?= $sup->KOTA; ?></dt>
+				<dt style="width:80px; float:left;">Telp / Fax</dt>
+				<dd>: <?= $sup->TLP; ?> / <?= $sup->FAX; ?></dd>     	  
+				
+				<dt style="width:80px; float:left;">Email</dt>
+				<dd>: <?= $sup->EMAIL; ?></dd>     	  
+				
+			</dl>
+		</div>
+		<div style="float:left; margin-left:160px">
+			<dl>
+				<!-- Date !-->
+				<dt style="width:80px; float:left;">Date</dt>
+				<dd>: <?php echo date('d-M-Y'); ?></dd>
+				<!-- PO NO !-->
+				<dt style="width:80px; float:left;">No. Order</dt>
+				<dd>: <?= $poHeader->KD_PO; ?></dd>  
+				<!-- Purchese Order Created !-->
+				<dt style="width:80px; float:left;">Order By</dt>
+				<dd>: <?php echo "alam@lukison.com"; ?></dd>     
+				<!-- Estimasi Time Arrival!-->
+				<dt style="width:80px; float:left;">ETA</dt>
+				<dd>: <?= $poHeader->ETD; ?></dd>   
+				<!-- Estimasi Time Delevery !-->
+				<dt style="width:80px; float:left;">ETD</dt>
+				<dd>: <?= $poHeader->ETA; ?></dd> 				
+			</dl>
+		</div>
+	</div>
+	<!-- Title GRID PO Detail !-->	
+	<div>
+		<?php 
 		
-		$gridColumns = [
+			$gridColumns = [
 					[
 						/* Attribute Serial No */
 						'class'=>'kartik\grid\SerialColumn',
@@ -274,11 +328,11 @@ $y=4;
 						'pageSummary'=>function ($summary, $data, $widget) use ($poHeader)	{	
 								/*Definition*/
 								$subtotal=$summary;
-								$discount=($poHeader->DISCOUNT)/100;
+								$discount=($poHeader->DISC)/100;
 								$tax=($poHeader->PAJAK)/100;
 								$delevery=$poHeader->DELIVERY_COST;
 								/*Calculate ptr.nov*/
-								$ttlDiscount=$poHeader->DISCOUNT!=0 ? $discount*$subtotal:0.00;
+								$ttlDiscount=$poHeader->DISC!=0 ? $discount*$subtotal:0.00;
 								$ttlTax = $poHeader->PAJAK!=0 ? $tax*$subtotal :0.00;
 								$ttlDelevery=$poHeader->DELIVERY_COST!=0 ? $ttlDelevery:0.00;
 								$grandTotal=$subtotal + $ttlDiscount + $ttlTax + $ttlDelevery;					
@@ -345,7 +399,7 @@ $y=4;
 				] */
 			];
 			
-			$viewGrid= GridView::widget([
+			echo GridView::widget([
 				'id'=>'po-process',
 				'dataProvider'=> $dataProvider,				
 				/* 'footerRowOptions'=>[
@@ -407,13 +461,13 @@ $y=4;
 					'id'=>'ro-process',
 				   ],						  
 				],
-				/* 'panel' => [
+				'panel' => [
 					'footer'=>false,
 					'heading'=>false,						
 				],
 				'toolbar'=> [
 					//'{items}',
-				], */
+				],
 				'hover'=>true, //cursor select
 				'responsive'=>true,
 				'responsiveWrap'=>true,
@@ -423,233 +477,130 @@ $y=4;
 				'export' => false, 
 			]);				
 			
-
- ?>
-<div class="container" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
-	<div  class="row">
-	<!-- HEADER !-->
-		<div class="col-md-12">
-			<div class="col-md-1" style="float:left;">
-				<?php echo Html::img('@web/upload/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>	
-			</div>
-			<div class="col-md-9" style="padding-top:15px;">
-				<h3 class="text-center"><b>PURCHASE ORDER</b></h3>
-			</div>			
-			<div class="col-md-11">
-				<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
-			</div>
-			
-		</div>
-	</div>
-	<!-- Title HEADER Descript !-->	
-	<div  class="row">
-		<div class="col-md-11">
-			<div class="col-md-4">
-				<dl>
-					<dt><b><?= $sup->NM_SUPPLIER; ?></b></dt>				
-					<dt><?= $sup->ALAMAT; ?></dt>				
-					<dt><?= $sup->KOTA; ?></dt>
-					<dt style="width:80px; float:left;">Telp / Fax</dt>
-					<dd>: <?= $sup->TLP; ?> / <?= $sup->FAX; ?></dd>    				
-					<dt style="width:80px; float:left;">Email</dt>
-					<dd>: <?= $sup->EMAIL; ?></dd>   					
-				</dl>
-			</div>
-			<div class="col-md-4"></div>
-			<div class="col-md-4">
-				<dl>
-					<!-- Date !-->
-					<dt style="width:80px; float:left;">Date</dt>
-					<dd>: <?php echo date('d-M-Y'); ?></dd>
-					<!-- PO NO !-->
-					<dt style="width:80px; float:left;">No. Order</dt>
-					<dd>: <?= $poHeader->KD_PO; ?></dd>  
-					<!-- Purchese Order Created !-->
-					<dt style="width:80px; float:left;">Order By</dt>
-					<dd>: <?php echo "alam@lukison.com"; ?></dd>     
-					<!-- Estimasi Time Arrival!-->
-					<dt style="width:80px; float:left;">ETA</dt>
-					<dd>: <?= $poHeader->ETD; ?></dd>   
-					<!-- Estimasi Time Delevery !-->
-					<dt style="width:80px; float:left;">ETD</dt>
-					<dd>: <?= $poHeader->ETA; ?></dd> 				
-				</dl>
-			</div>
-		</div>
-	</div>
-	<!-- Title GRID PO Detail !-->
-	<div  class="row">	
-		<div class="col-md-11"  style="float:none">
-			
-			<div class="col-md-12">
-				
-				<?php echo $viewGrid;?>	
-			</div>
-		</div>
+		?>
 	</div>
 	<!-- Title BOTTEM Descript !-->	
-	<div  class="row">
-		<div class="col-md-11">		
-			<div class="col-md-4" style="float:left;">
-				<dl>
-					<dt><h6><u><b>Shipping Address :</b></u></h6></dt>
-					<dt><?php echo '<b>'.$ship->NM_ALAMAT.'</b>'; ?></dt> 				
-					<dt><?php echo $ship->ALAMAT_LENGKAP; ?></dt>				
-					<dt><?php echo $sup->KOTA; ?></dt>
+	<div>
+		<div style="width:290px;float:left;">
+			<dl>
+				<dt><h6><u><b>Shipping Address :</b></u></h6></dt>
+				<dt><?php echo '<b>'.$ship->NM_ALAMAT.'</b>'; ?></dt> 				
+				<dt><?php echo $ship->ALAMAT_LENGKAP; ?></dt>				
+				<dt><?php echo $sup->KOTA; ?></dt>
 
-					<dt style="width:80px; float:left;">Tlp</dt>
-					<dd>:	<?php echo $ship->TLP;?></dd>     	  
-					
-					<dt style="width:80px; float:left;">FAX</dt>
-					<dd>:	<?php echo $ship->FAX; ?></dd>     	  
-					
-					<dt style="width:80px; float:left;">CP</dt>
-					<dd>:	<?php echo $ship->CP; ?></dd> 
-				</dl>
-			</div>
-			<div class="col-md-3"></div>
-			<div class="col-md-4" style="float:left;">
-				<dl>
-					<dt><h6><u><b>Billing Address :</b></u></h6></dt>
-					<dt><?php echo '<b>'.$ship->NM_ALAMAT.'</b>'; ?></dt>				
-					<dt><?php echo $ship->ALAMAT_LENGKAP; ?></dt>				
-					<dt><?= $sup->KOTA; ?></dt>
-
-					<dt style="width:80px; float:left;">Tlp</dt>
-					<dd>:	<?php echo $ship->TLP;?></dd>     	  
-					
-					<dt style="width:80px; float:left;">FAX</dt>
-					<dd>:	<?php echo $ship->FAX; ?></dd>     	  
-					
-					<dt style="width:80px; float:left;">CP</dt>
-					<dd>:	<?php echo $ship->CP; ?></dd> 
-				</dl>
-			</div>		
-		</div>	
-	</div>	
-	<!-- PO Note !-->
-	<div  class="row">
-		<div  class="col-md-11" style="font-family: tahoma ;font-size: 8pt;">	
-			<div  class="col-md-12">
-				<dt><b>General Notes :</b></dt>
-				<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;">	
-				<dd><?php echo $poHeader->NOTE; ?></dd><br/><br/><br/><br/>     
-				<hr style="height:1px;margin-top: 1px;">
-			</div>
+				<dt style="width:80px; float:left;">Tlp</dt>
+				<dd>:	<?php echo $ship->TLP;?></dd>     	  
+				
+				<dt style="width:80px; float:left;">FAX</dt>
+				<dd>:	<?php echo $ship->FAX; ?></dd>     	  
+				
+				<dt style="width:80px; float:left;">CP</dt>
+				<dd>:	<?php echo $ship->CP; ?></dd> 
+			</dl>
 		</div>
+		<div style="float:left; margin-left:60px">
+			<dl>
+				<dt><h6><u><b>Billing Address :</b></u></h6></dt>
+				<dt><?php echo '<b>'.$ship->NM_ALAMAT.'</b>'; ?></dt>				
+				<dt><?php echo $ship->ALAMAT_LENGKAP; ?></dt>				
+				<dt><?= $sup->KOTA; ?></dt>
+
+				<dt style="width:80px; float:left;">Tlp</dt>
+				<dd>:	<?php echo $ship->TLP;?></dd>     	  
+				
+				<dt style="width:80px; float:left;">FAX</dt>
+				<dd>:	<?php echo $ship->FAX; ?></dd>     	  
+				
+				<dt style="width:80px; float:left;">CP</dt>
+				<dd>:	<?php echo $ship->CP; ?></dd> 
+			</dl>
+		</div>		
+	</div>	
+	<!-- PO Note !-->	
+	<div style="font-family: tahoma ;font-size: 8pt;">
+		<dt><b>General Notes :</b></dt>
+		<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;">	
+		<dd><?php echo 'Input Note grid' .	$poHeader->NOTE; ?></dd><br/><br/><br/><br/>     
+		<hr style="height:1px;margin-top: 1px;">
 	</div>
 	<!-- Signature PO !-->	
-	<div  class="row">
-		<div class="col-md-11">
-			<div class="col-md-9">
-				<table id="tblRo" class="table table-bordered" style="width:360px;font-family: tahoma ;font-size: 8pt;">
-					<!-- Tanggal!-->
-					 <tr>
-						<!-- Tanggal Pembuat RO!-->
-						<th style="text-align: center; height:20px">
-							<div style="text-align:center;">
-								<?php
-									$placeTgl1=$poHeader->SIG1_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG1_TGL,'date') :'';
-									echo '<b>Tanggerang</b>,' . $placeTgl1;  
-								?>
-							</div> 
-						
-						</th>		
-						<!-- Tanggal Pembuat RO!-->
-						<th style="text-align: center; height:20px">
-							<div style="text-align:center;">
-								<?php
-									$placeTgl2=$poHeader->SIG2_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG2_TGL,'date') :'';
-									echo '<b>Tanggerang</b>,' . $placeTgl2;  
-								?>
-							</div> 
-						
-						</th>		
-						<!-- Tanggal PO Approved!-->				
-						<th style="text-align: center; height:20px">
-							<div style="text-align:center;">
-								<?php
-									$placeTgl3=$poHeader->SIG3_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG3_TGL,'date') :'';
-									echo '<b>Tanggerang</b>,' . $placeTgl3;  
-								?>
-							</div> 				
-						</th>	
-						
-					</tr>
-					<!-- Signature !-->
-					 <tr>
-						<th style="text-align: center; vertical-align:middle;width:180; height:60px">
-							<?php 
-								$ttd1 = $poHeader->SIG1_SVGBASE64!=0 ?  '<img src="'.$poHeader->SIG1_SVGBASE64.'" height="120" width="150"></img>' : '';
-								echo $ttd1;
-							?> 	
-						</th>								
-						<th style="text-align: center; vertical-align:middle;width:180">
-							<?php 
-								$ttd2 = $poHeader->SIG2_SVGBASE64!=0 ?  '<img src="'.$poHeader->SIG2_SVGBASE64.'" height="120" width="150"></img>' : '';
-								echo $ttd2;
-							?> 
-						</th>
-						<th style="text-align: center; vertical-align:middle;width:180">
-							<?php 
-								$ttd3 = $poHeader->SIG3_SVGBASE64!=0 ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="120" width="150"></img>' : '';
-								echo $ttd3;
-							?> 
-						</th>
-					</tr>
-					<!--Nama !-->
-					 <tr>
-						<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
-							<div>		
-								<?php
-									$sigNm1=$poHeader->SIG1_NM!='none' ? '<b>'.$poHeader->SIG1_NM.'</b>' : 'none';
-									echo $sigNm1;
-								?>
-							</div>
-						</th>								
-						<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
-							<div>		
-								<?php
-									$sigNm2=$poHeader->SIG2_NM!='none' ? '<b>'.$poHeader->SIG2_NM.'</b>' : 'none';
-									echo $sigNm2;
-								?>
-							</div>
-						</th>
-						<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
-							<div>		
-								<?php
-									$sigNm3=$poHeader->SIG3_NM!='none' ? '<b>'.$poHeader->SIG3_NM.'</b>' : 'none';
-									echo $sigNm3;
-								?>
-							</div>
-						</th>
-					</tr>
-					<!-- Department|Jbatan !-->
-					 <tr>
-						<th style="text-align: center; vertical-align:middle;height:20">
-							<div>		
-								<b><?php  echo 'Purchaser'; ?></b>
-							</div>
-						</th>								
-						<th style="text-align: center; vertical-align:middle;height:20">
-							<div>		
-								<b><?php  echo 'F & A'; ?></b>
-							</div>
-						</th>
-						<th style="text-align: center; vertical-align:middle;height:20">
-							<div>		
-								<b><?php  echo 'Director'; ?></b>
-							</div>
-						</th>
-					</tr>
-				</table>				
-			</div>
-			<div  class="col-md-3" style="text-align:right;">
-				<a href="/purchasing/purchase-order/" class="btn btn-info btn-xs" role="button" style="width:90px">Kembali</a>
-				<?php echo Html::a('<i class="fa fa-print fa-fw"></i> PDF', ['cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
-			</div>
-		</div>
-	</div>
+	<div>
+		<table id="tblRo" class="table table-bordered" style="width:360px;font-family: tahoma ;font-size: 8pt;">
+			<!-- Tanggal!-->
+			 <tr>
+				<!-- Tanggal Pembuat RO!-->
+				<th style="text-align: center; height:20px">
+					<div style="margin-left:50px">
+						<b>Tanggerang</b>, <?php echo '28-12-2015';//' '.$awl1[2].'-'.$blnAwl1.'-'.$awl1[0];  ?>
+					</div> 
+				
+				</th>		
+				<!-- Tanggal Pembuat RO!-->
+				<th style="text-align: center; height:20px">
+					<div style="margin-left:50px">
+						<b>Tanggerang</b>, <?php echo '28-12-2015';//' '.$awl1[2].'-'.$blnAwl1.'-'.$awl1[0];  ?>
+					</div> 
+				
+				</th>		
+				<!-- Tanggal PO Approved!-->				
+				<th style="text-align: center; height:20px">
+					<div style="margin-left:50px">
+						<b>Tanggerang</b>, <?php echo '28-12-2015';//tgl2signature($roHeader->SIG2_TGL);  ?>
+					</div> 				
+				</th>	
+				
+			</tr>
+			<!-- Signature !-->
+			 <tr>
+				<th style="text-align: center; vertical-align:middle;width:180; height:60px">
+					
+					<img src="<?php echo 'test';//$roHeader->SIG1_SVGBASE64;?> height='120' width='150'"></img>
+				</th>								
+				<th style="text-align: center; vertical-align:middle;width:180">
+					<img src="<?php echo 'test';//$roHeader->SIG2_SVGBASE64;?> height='120' width='150'"></img>
+				</th>
+				<th style="text-align: center; vertical-align:middle;width:180">
+					<img src="<?php echo 'test';//$roHeader->SIG2_SVGBASE64;?> height='120' width='150'"></img>
+				</th>
+			</tr>
+			<!--Nama !-->
+			 <tr>
+				<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
+					<div>		
+						<b><?php  echo 'Mr. Alam M';//$roHeader->EMP_NM; ?></b>
+					</div>
+				</th>								
+				<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
+					<div>		
+						<b><?php  echo 'Mrs. Melissa';//$roHeader->SIG2_NM; ?></b>
+					</div>
+				</th>
+				<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
+					<div>		
+						<b><?php  echo 'Mr. Stephen Djaja';//$roHeader->SIG2_NM; ?></b>
+					</div>
+				</th>
+			</tr>
+			<!-- Department|Jbatan !-->
+			 <tr>
+				<th style="text-align: center; vertical-align:middle;height:20">
+					<div>		
+						<b><?php  echo 'Purchaser'; ?></b>
+					</div>
+				</th>								
+				<th style="text-align: center; vertical-align:middle;height:20">
+					<div>		
+						<b><?php  echo 'F & A'; ?></b>
+					</div>
+				</th>
+				<th style="text-align: center; vertical-align:middle;height:20">
+					<div>		
+						<b><?php  echo 'Director'; ?></b>
+					</div>
+				</th>
+			</tr>
+		</table>
+	</div>	
 </div>
 
 
