@@ -3,15 +3,27 @@
 namespace lukisongroup\purchasing\controllers;
 
 use Yii;
-use lukisongroup\purchasing\models\Purchaseorder;
-use lukisongroup\purchasing\models\PurchaseorderSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ArrayDataProvider;
+use yii\helpers\Json;
+use kartik\mpdf\Pdf;
 
+use lukisongroup\purchasing\models\pr\Purchaseorder;
+use lukisongroup\purchasing\models\pr\PurchaseorderSearch;
 
-use lukisongroup\purchasing\models\Purchasedetail;
-use lukisongroup\purchasing\models\Podetail;
+use lukisongroup\purchasing\models\pr\Purchasedetail;
+use lukisongroup\purchasing\models\pr\Podetail;
+use lukisongroup\purchasing\models\pr\DiscountValidation;
+use lukisongroup\purchasing\models\pr\PajakValidation;
+use lukisongroup\purchasing\models\pr\DeliveryValidation;
+use lukisongroup\purchasing\models\pr\EtdValidation;
+use lukisongroup\purchasing\models\pr\EtaValidation;
+use lukisongroup\purchasing\models\pr\SupplierValidation;
+use lukisongroup\purchasing\models\pr\ShippingValidation;
+use lukisongroup\purchasing\models\pr\BillingValidation;
+
 
 use lukisongroup\purchasing\models\ro\Requestorder;
 use lukisongroup\purchasing\models\ro\RequestorderSearch;
@@ -23,7 +35,7 @@ use lukisongroup\purchasing\models\Statuspo;
 use lukisongroup\esm\models\Barang;
 use lukisongroup\master\models\Barangumum;
 
-use mPDF;
+
 /**
  * PurchaseorderController implements the CRUD actions for Purchaseorder model.
  */
@@ -41,11 +53,12 @@ class PurchaseOrderController extends Controller
         ];
     }
 
-
-    /**
-     * Lists all Purchaseorder models.
-     * @return mixed
-     */
+    
+	/*
+	 * Index Po | Purchaseorder| Purchasedetail
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
     public function actionIndex()
     {
         $searchModel = new PurchaseorderSearch();
@@ -59,20 +72,50 @@ class PurchaseOrderController extends Controller
         ]);
     }
 
+	
+	/*
+	 * View Po | Purchaseorder| Purchasedetail
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
     public function actionView($kd)
     {
-        return $this->render('view', [
+        /* return $this->render('view', [
             'model' => Purchaseorder::find()->where(['KD_PO'=>$kd])->one(),
+        ]); */
+		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kd])->one();
+        $poDetail = Purchasedetail::find()->where(['KD_PO'=>$kd])->all(); 
+		$dataProvider = new ArrayDataProvider([
+			'key' => 'KD_PO',
+			'allModels'=>$poDetail,		
+			'pagination' => [
+				'pageSize' => 20,
+			],
+		]);
+		
+		return $this->render( 'view', [
+			'poHeader' => $poHeader,
+            'poDetail' => $poDetail,
+            //'detro' => $detro,
+            //'employ' => $employ,
+			//'dept' => $dept,
+			'dataProvider' => $dataProvider,
         ]);
     }
+	
 	
     public function actionCreate($kdpo)
     {
         $model = new Purchaseorder();
 
-        $qq = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->count();
-
-        if($qq == 0){ return $this->redirect([' ']); }
+        $poCnt = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->count();
+		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
+		$supplier = $poHeader->suplier;
+		$bill = $poHeader->bill;
+		$ship = $poHeader->ship;
+		
+		
+        if($poCnt == 0){ return $this->redirect([' ']); }
         if($kdpo == ''){ return $this->redirect([' ']); }
         if($kdpo == null){ return $this->redirect([' ']); }
 
@@ -82,19 +125,32 @@ class PurchaseOrderController extends Controller
         $searchModel = new RequestorderSearch();
         $dataProvider = $searchModel->caripo(Yii::$app->request->queryParams);
 
-        $podet = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->andWhere('STATUS <> 3')->all();
+        $poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->andWhere('STATUS <> 3')->all();
+		$poDetailProvider = new ArrayDataProvider([
+			'key' => 'KD_PO',
+			'allModels'=>$poDetail,		
+			'pagination' => [
+				'pageSize' => 20,
+			],
+		]);	
 
-        $quer = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();  
+        //$quer = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();  
         return $this->render('create', [
             'model' => $model,
             'que' => $que,
-            'quer' => $quer,
-            'podet' => $podet,
+            //'quer' => $quer,
+            'podet' => $poDetail,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+			'poDetailProvider'=>$poDetailProvider,
+			'poHeader'=> $poHeader,
+			'supplier'=>$supplier,
+			'bill' => $bill,
+			'ship' => $ship
         ]);
-    }
-    
+    }   
+	
+	
     public function actionSimpanpo()
     {
         $model = new Purchaseorder();
@@ -112,6 +168,7 @@ class PurchaseOrderController extends Controller
         return $this->redirect(['create', 'kdpo' => $model->KD_PO]);
     }
 
+	
     public function actionSimpan()
     {
         $cons = \Yii::$app->db_esm;
@@ -292,19 +349,319 @@ class PurchaseOrderController extends Controller
         }
     }
 
+	
+	/*
+	 * ALAMAT Supplier Edit
+	 * $roHeader->KD_SUPPLIER | Ajax Request $request->post('kD_SUPPLIER');
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionSupplierView($kdpo){
+		$poHeaderVal = new SupplierValidation;
+		$poHeader= Purchaseorder::findOne($kdpo);
+		return $this->renderAjax('_frmsupplier',[
+			'poHeaderVal'=>$poHeaderVal,
+			'poHeader'=>$poHeader,
+		]);
+	}
+	public function actionSupplierSave()
+    {
+		$poHeaderVal = new SupplierValidation;
+		if(Yii::$app->request->isAjax){
+			$poHeaderVal->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($poHeaderVal));
+		}else{		
+			if($poHeaderVal->load(Yii::$app->request->post())){
+				if ($poHeaderVal->supplier_saved()){
+					$hsl = \Yii::$app->request->post();
+					$kdPo = $hsl['SupplierValidation']['kD_PO'];
+					return $this->redirect(['create', 'kdpo'=>$kdPo]);
+				}														
+			}
+		}
+    }
+	
+	/*
+	 * ALAMAT Shipping Edit
+	 * $roHeader->SHIPPING | Ajax Request $request->post('sHIPPING');
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionShippingView($kdpo){
+		$poHeaderVal = new ShippingValidation;
+		$poHeader= Purchaseorder::findOne($kdpo);
+		return $this->renderAjax('_frmshipping',[
+			'poHeaderVal'=>$poHeaderVal,
+			'poHeader'=>$poHeader,
+		]);
+	}
+	public function actionShippingSave()
+    {
+		$poHeaderVal = new ShippingValidation;
+		if(Yii::$app->request->isAjax){
+			$poHeaderVal->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($poHeaderVal));
+		}else{		
+			if($poHeaderVal->load(Yii::$app->request->post())){
+				if ($poHeaderVal->shipping_saved()){
+					$hsl = \Yii::$app->request->post();
+					$kdPo = $hsl['ShippingValidation']['kD_PO'];
+					return $this->redirect(['create', 'kdpo'=>$kdPo]);
+				}														
+			}
+		}
+    }
+	
+	/*
+	 * ALAMAT BILLING Edit
+	 * $roHeader->SHIPPING | Ajax Request $request->post('sHIPPING');
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionBillingView($kdpo){
+		$poHeaderVal = new BillingValidation;
+		$poHeader= Purchaseorder::findOne($kdpo);
+		return $this->renderAjax('_frmbilling',[
+			'poHeaderVal'=>$poHeaderVal,
+			'poHeader'=>$poHeader,
+		]);
+	}
+	public function actionBillingSave()
+    {
+		$poHeaderVal = new BillingValidation;
+		if(Yii::$app->request->isAjax){
+			$poHeaderVal->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($poHeaderVal));
+		}else{		
+			if($poHeaderVal->load(Yii::$app->request->post())){
+				if ($poHeaderVal->billing_saved()){
+					$hsl = \Yii::$app->request->post();
+					$kdPo = $hsl['BillingValidation']['kD_PO'];
+					return $this->redirect(['create', 'kdpo'=>$kdPo]);
+				}														
+			}
+		}
+    }
+	
+	/*
+	 * Discount Edit
+	 * $roHeader->DISCOUNT | Ajax Request $request->post('disc');
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionDiscountView($kdpo){
+		$poHeaderVal = new DiscountValidation;
+		$poHeader= Purchaseorder::findOne($kdpo);
+		return $this->renderAjax('_frmdiscount',[
+			'poHeaderVal'=>$poHeaderVal,
+			'poHeader'=>$poHeader,
+		]);
+	}
+	public function actionDiscountSave()
+    {
+		$poHeaderVal = new DiscountValidation;
+		if(Yii::$app->request->isAjax){
+			$poHeaderVal->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($poHeaderVal));
+		}else{		
+			if($poHeaderVal->load(Yii::$app->request->post())){
+				if ($poHeaderVal->discount_saved()){
+					$hsl = \Yii::$app->request->post();
+					$kdPo = $hsl['DiscountValidation']['kD_PO'];
+					return $this->redirect(['create', 'kdpo'=>$kdPo]);
+				}														
+			}
+		}
+    }
+	
+	/*
+	 * Pajak Edit
+	 * $roHeader->PAJAK  | Ajax $request->post('tax');
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	 public function actionPajakView($kdpo){
+		$poHeaderVal = new PajakValidation;
+		$poHeader= Purchaseorder::findOne($kdpo);
+		return $this->renderAjax('_frmpajak',[
+			'poHeaderVal'=>$poHeaderVal,
+			'poHeader'=>$poHeader,
+		]);
+	}
+	public function actionPajakSave()
+    {
+		$poHeaderVal = new PajakValidation;
+		if(Yii::$app->request->isAjax){
+			$poHeaderVal->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($poHeaderVal));
+		}else{		
+			if($poHeaderVal->load(Yii::$app->request->post())){
+				if ($poHeaderVal->discount_saved()){
+					$hsl = \Yii::$app->request->post();
+					$kdPo = $hsl['PajakValidation']['kD_PO'];
+					return $this->redirect(['create', 'kdpo'=>$kdPo]);
+				}														
+			}
+		}
+    }	
+	
+	/*
+	 * DELIVERY_COST Edit
+	 * $roHeader->DELIVERY_COST  | Ajax $request->post('tax');
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	 public function actionDeliveryView($kdpo){
+		$poHeaderVal = new DeliveryValidation;
+		$poHeader= Purchaseorder::findOne($kdpo);
+		return $this->renderAjax('_frmdelivery',[
+			'poHeaderVal'=>$poHeaderVal,
+			'poHeader'=>$poHeader,
+		]);
+	}
+	public function actionDeliverySave(){
+		$poHeaderVal = new DeliveryValidation;
+		if(Yii::$app->request->isAjax){
+			$poHeaderVal->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($poHeaderVal));
+		}else{		
+			if($poHeaderVal->load(Yii::$app->request->post())){
+				if ($poHeaderVal->delevery_saved()){
+					$hsl = \Yii::$app->request->post();
+					$kdPo = $hsl['DeliveryValidation']['kD_PO'];
+					return $this->redirect(['create', 'kdpo'=>$kdPo]);
+				}														
+			}
+		}
+		
+    }	
+	
+	/*
+	 * ETD EDIT
+	 * $roHeader->ETD  | Ajax $request->post('eTD');
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	 public function actionEtdView($kdpo){
+		$poHeaderVal = new EtdValidation;
+		$poHeader= Purchaseorder::findOne($kdpo);
+		return $this->renderAjax('_frmetd',[
+			'poHeaderVal'=>$poHeaderVal,
+			'poHeader'=>$poHeader,
+		]);
+	}
+	public function actionEtdSave(){
+		$poHeaderVal = new EtdValidation;
+		if(Yii::$app->request->isAjax){
+			$poHeaderVal->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($poHeaderVal));
+		}else{		
+			if($poHeaderVal->load(Yii::$app->request->post())){
+				if ($poHeaderVal->etd_saved()){
+					$hsl = \Yii::$app->request->post();
+					$kdPo = $hsl['EtdValidation']['kD_PO'];
+					return $this->redirect(['create', 'kdpo'=>$kdPo]);
+				}														
+			}
+		}
+		
+    }	
+	
+	
+	/*
+	 * ETA EDIT
+	 * $roHeader->ETA  | Ajax $request->post('eTA');
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	 public function actionEtaView($kdpo){
+		$poHeaderVal = new EtaValidation;
+		$poHeader= Purchaseorder::findOne($kdpo);
+		return $this->renderAjax('_frmeta',[
+			'poHeaderVal'=>$poHeaderVal,
+			'poHeader'=>$poHeader,
+		]);
+	}
+	public function actionEtaSave(){
+		$poHeaderVal = new EtaValidation;
+		if(Yii::$app->request->isAjax){
+			$poHeaderVal->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($poHeaderVal));
+		}else{		
+			if($poHeaderVal->load(Yii::$app->request->post())){
+				if ($poHeaderVal->eta_saved()){
+					$hsl = \Yii::$app->request->post();
+					$kdPo = $hsl['EtaValidation']['kD_PO'];
+					return $this->redirect(['create', 'kdpo'=>$kdPo]);
+				}														
+			}
+		}
+		
+    }
+	/*
+	 * PDF | Purchaseorder| Purchasedetail
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
     public function actionCetakpdf($kdpo)
     {
-        $mpdf=new mPDF();
+		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
+        $poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->all(); 
+		$dataProvider = new ArrayDataProvider([
+			'key' => 'KD_PO',
+			'allModels'=>$poDetail,		
+			'pagination' => [
+				'pageSize' => 20,
+			],
+		]);
+		
+		$content = $this->renderPartial( 'pdf', [
+			'poHeader' => $poHeader,
+            //'roHeader' => $roHeader,
+            //'detro' => $detro,
+            //'employ' => $employ,
+			//'dept' => $dept,
+			'dataProvider' => $dataProvider,
+        ]);
+		
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE, 
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4, 
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_PORTRAIT, 
+			// stream to browser inline
+			'destination' => Pdf::DEST_BROWSER, 
+			// your html content input
+			'content' => $content,  
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting 
+			//D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+			'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			'cssInline' => '.kv-heading-1{font-size:12px}', 
+			 // set mPDF properties on the fly
+			'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+			 // call mPDF methods on the fly
+			'methods' => [ 
+				'SetHeader'=>['Copyright@LukisonGroup '.date("r")], 
+				'SetFooter'=>['{PAGENO}'],
+			]
+		]);		
+		return $pdf->render(); 	
+		
+		/* $mpdf=new mPDF();
         $mpdf->WriteHTML($this->renderPartial( 'pdf', [
             'model' => Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one(),
         ]));
         $mpdf->Output();
-        exit;
+        exit; */
     }
 
     public function actionConfirm($kdpo)
     {        
-        $hsl = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
+       /*  $hsl = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
         if($hsl->APPROVE_BY == ''){
             $hsl->APPROVE_BY = Yii::$app->user->identity->EMP_ID;
             $hsl->APPROVE_AT = date('Y-m-d H:i:s');
@@ -315,13 +672,13 @@ class PurchaseOrderController extends Controller
 
         } else {
             return $this->redirect(['view','kd'=>$kdpo]);
-        }
+        } */
     }
 
 
     public function actionConfirmdir($kdpo)
     {        
-        $hsl = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
+        /* $hsl = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
         if($hsl->APPROVE_DIR == ''){
             $hsl->APPROVE_DIR = Yii::$app->user->identity->EMP_ID;
             $hsl->TGL_APPROVE = date('Y-m-d H:i:s');
@@ -332,7 +689,7 @@ class PurchaseOrderController extends Controller
 
         } else {
             return $this->redirect(['view','kd'=>$kdpo]);
-        }
+        } */
     }
 
 
