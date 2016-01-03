@@ -7,6 +7,8 @@ use yii\bootstrap\Modal;
 use yii\helpers\ArrayHelper;
 use lukisongroup\esm\models\Customers;
 use lukisongroup\esm\models\Kategoricus;
+use yii\web\JsExpression;
+use kartik\form\ActiveForm;
 use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
 MapAsset::register($this);  
 
@@ -16,7 +18,13 @@ MapAsset::register($this);
 
 $this->title = 'Customers';
 $this->params['breadcrumbs'][] = $this->title;
+
+$this->registerCss("#map-canvas{
+  width:500px;
+	height:300px;
+  padding-bottom:5px}");
 ?>
+
 <div class="kategori-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
@@ -274,7 +282,7 @@ $tabcrud =  GridView::widget([
             ],
              
          [
-            'class'=>'kartik\grid\EditableColumn',
+          
             'attribute' =>'CUST_KTG_NM'
             
         ],
@@ -476,13 +484,26 @@ $tabcrud =  GridView::widget([
 					['create'], ['class' => 'btn btn-success']),
 			*/
 									
-		'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
-						['modelClass' => 'Barangumum',]),'/esm/customers/createcustomers',[
-							// 'data-toggle'=>"modal",
-							// 	'data-target'=>"#form",
-       //                              'id'=>'modl2',
-									'class' => 'btn btn-success'						
-												]),
+		'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create '),//['modelClass' => 'Barangumum',]
+							'/esm/customers/createcustomers',
+							[
+								//'data-toggle'=>"modal",
+								//'data-target'=>"#create-cus",
+								//'id'=>'create-cus-id',
+								'class' => 'btn btn-success'						
+							]
+						). 
+						
+				  Html::button('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Map '),//['modelClass' => 'Barangumum',]
+							//'/esm/customers/addmap',
+							[
+								'data-toggle'=>"modal",
+								'data-target'=>"#addmap",
+								'id'=>'addmap-cus-id',
+								'class' => 'btn btn-success'						
+							]
+						), 
+												
                               
 
                     
@@ -557,7 +578,7 @@ $tabcrud =  GridView::widget([
 
     
 
-echo TabsX::widget([
+	echo TabsX::widget([
 		'id'=>'tab1',
 		'items'=>$items,
 		'position'=>TabsX::POS_ABOVE,
@@ -567,11 +588,87 @@ echo TabsX::widget([
 		//'align'=>TabsX::ALIGN_LEFT,
 
 	]);
-            ?>
+           
+					
+
+	$mapActiveModal= \pigolab\locationpicker\LocationPickerWidget::widget([
+							   'options' => [
+									'style' => 'width: 100%; height: 300px',
+									'enableSearchBox' => true, 
+									'searchBoxOptions' => [ 
+										'style' => 'width: 300px;',
+									],
+								] ,						
+								'clientOptions' => [
+									'location' => [
+										'latitude'  => -6.214620,
+										'longitude' => 106.845130 ,
+									
+									],
+									'radius'    => 300,
+									 'inputBinding' => [
+										'latitudeInput'     => new JsExpression("$('#customers-map_lat')"),
+										 'longitudeInput'    => new JsExpression("$('#customers-map_lng')"),
+										// 'radiusInput'       => new JsExpression("$('#us2-radius')"),
+										'locationNameInput' => new JsExpression("$('#customers-alamat')")
+									], 
+									
+									'enableAutocomplete' => true,
+								]        
+							]);
+						
+	?>					
+	<!-- Modal -->
+	
+	<div class="modal fade" id="addmap" tabindex="-1" role="dialog" aria-labelledby="addmap1">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="create-poLabel">SET MAP CUSTOMER</h4>
+			  </div>
+			  
+			   <div id="map-canvas-modal"></div>
+			  
+			  <div class="modal-body">
+					 <?php $form = ActiveForm::begin([
+							'type' => ActiveForm::TYPE_HORIZONTAL,
+							'method' => 'post',
+							'action' => ['esm/customers/updatemap'],
+						]); 
+						//echo $mapActiveModal;	
+						
+					?>
+			 
+					<?= $form->field($model, 'ALAMAT')->textInput(['maxlength' => true]) ?> 
+				    <?= $form->field($model, 'MAP_LNG')->hiddenInput()->label(false) ?>   
+					<?= $form->field($model, 'MAP_LAT')->hiddenInput()->label(false) ?>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary" >Save changes</button>
+			  </div> 
+			  <?php ActiveForm::end(); ?>
+		</div>
+	  </div>
+	</div>								
+			<?php				
+					
+	$this->registerJs('
+		  
+		  google.maps.event.addDomListener(window, "load");
+
+		 $("#addmap").on("shown.bs.modal", function (e) {
+		  var mapNode = map.getDiv();
+		  $("#map-canvas-modal").append(mapNode);
+		}) 
+',$this::POS_READY); 	
+							
 							
            
               
-                        <?php
+                        
 
 $this->registerJs("
      $.fn.modal.Constructor.prototype.enforceFocus = function(){};
@@ -746,6 +843,88 @@ $this->registerJs("
 //             })
 //     ",$this::POS_READY);
 
+	/*
+	 * CREATE Customer JS
+	 * @ptrnov <piter@lukison.com>
+	 * @since 0.1 
+	*/
+	$this->registerJs("        
+		$('#create-cus').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title') 
+			var href = button.attr('href') 
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			})
+	",$this::POS_READY);
+	/*
+	 * CREATE Customer Modal
+	 * @ptrnov <piter@lukison.com>
+	 * @since 0.1 
+	*/
+	Modal::begin([
+		'id' => 'create-cus',
+		'header' => '<h4 class="modal-title">New Customer</h4>',
+	]);
+	Modal::end();
+	
+	/*
+	 * ADD MAP Customer JS
+	 * @ptrnov <piter@lukison.com>
+	 * @since 0.1 
+	*/
+	$this->registerJs("    
+//$.fn.modal.Constructor.prototype.enforceFocus = function(){};    
+		$('#addmap-cus').on('show.bs.modal', function (event) {		
+			var modal = $(this)
+			var title = button.data('title') 
+			var href = button.attr('href') 
+			modal.find('.modal-load-id')
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});				
+			})
+	",$this::POS_END);
+	/*
+	 * ADD MAP Customer Modal
+	 * @ptrnov <piter@lukison.com>
+	 * @since 0.1 
+	*/
+	Modal::begin([
+		'id' => 'addmap-cus',
+		'header' => '<h4 class="modal-title">New Customer</h4>',
+	]);
+	Modal::end();
+	
+	
+	
+	/* $this->registerJs("   
+			$('#us6').locationpicker({
+                location: {latitude: 46.15242437752303, longitude: 2.7470703125},
+                radius: 300,
+                inputBinding: {
+                    latitudeInput: $('#us6-lat'),
+                    longitudeInput: $('#us6-lon'),
+                    radiusInput: $('#us6-radius'),
+                    locationNameInput: $('#us6-address')
+                },
+                enableAutocomplete: true
+            });
+			
+            $('#us6-dialog').on('shown.bs.modal', function () {
+                $('#us6').locationpicker('autosize');
+            });
+    ",$this::POS_READY);     */
+	
+	
+	
 	
 	 Modal::begin([
                             'id' => 'form3',
@@ -864,3 +1043,10 @@ $this->registerJs("
     // console.trace();
 
      ",$this::POS_READY);
+	$this->registerJs("    
+		$('.modal').on('shown', function () {
+		  // also redefine center
+		  map.setCenter(new google.maps.LatLng(54, -2));
+		  google.maps.event.trigger(map, 'resize');
+		})
+	",$this::POS_READY);

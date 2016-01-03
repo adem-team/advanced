@@ -4,6 +4,7 @@ use kartik\tabs\TabsX;
 use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
+use yii\helpers\Url;
 use kartik\rating\StarRating;
 use kartik\builder\Form;
 use lukisongroup\widget\models\Pilotproject;
@@ -120,8 +121,35 @@ AppAssetChart::register($this);
 	  * @link https://github.com/C12D/advanced/blob/master/lukisongroup/view/widget/pilotp/index.php
 	  * @see https://github.com/C12D/advanced/blob/master/lukisongroup/view/widget/pilotp/index.php
 	 */	
-	// print_r($dataProviderEmp);
-	// die();
+   
+   
+	
+	// function getPermissionPilot(){
+	// 	return Yii::$app->getUserOpt->Profile_user()->emp;
+	// }
+    
+  
+   
+	function tombolClose($url,$model){
+    //    $dataseq = getPermissionPilot()->SEQ_ID;
+    //    $datajob = getPermissionPilot()->JOBGRADE_ID;
+       
+                    $title = Yii::t('app', 'Actual Date');
+					$options = [ 'id'=>'edit',
+								'data-toggle'=>"modal",
+								'data-target'=>"#gv-pilotp-create",
+								// 'data-confirm'=>'Anda yakin ingin ?',
+					]; 
+                    
+					$icon = '<span class="fa fa-pencil-square-o fa-lg"></span>';
+					$label = $icon . ' ' . $title;
+					$url = Url::toRoute(['/widget/pilotproject/actualclose','ID'=>$model->ID,'PILOT_ID'=>$model->PILOT_ID]);
+					// $options['tabindex'] = '-1';
+					return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL; 
+       }
+      
+
+
 	$gv_pilotDept= GridView::widget([
 		'id'=>'gv-pilot-dept',
         'dataProvider' => $dataProviderDept,
@@ -138,7 +166,12 @@ AppAssetChart::register($this);
 					// die();
 					return $Proj_sort->PILOT_NM;
 				},
+                'filterType'=>GridView::FILTER_SELECT2,
 				'filter'=>ArrayHelper::map(Pilotproject::find()->where('ID = SORT')->asArray()->all(), 'ID', 'PILOT_NM'),
+                  'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'Pilot Project'],
 				'group'=>true,
 			],
 			[
@@ -207,7 +240,7 @@ AppAssetChart::register($this);
 			],
             [
 				'class' => 'yii\grid\ActionColumn', 
-					'template' => '{view} {create}',
+					'template' => '{view} {create}{update}',
 					'header'=>'Action',
 					'buttons' => [
 						'view' =>function($url, $model, $key){
@@ -224,7 +257,10 @@ AppAssetChart::register($this);
 															'data-target'=>"#gv-pilotp-create",
 															'data-title'=> $model->PILOT_ID,
 															]);
-						}
+						},
+                        'update' => function ($url, $model) {
+											return tombolClose($url, $model);
+										},
 						
 					],		
 			],
@@ -309,6 +345,7 @@ AppAssetChart::register($this);
 					$Proj_sort = Pilotproject::find()->where(['ID'=>$model->SORT])->one();
 					return $Proj_sort->PILOT_NM;
 				},
+              
 				'filter'=>ArrayHelper::map(Pilotproject::find()->where('ID=SORT')->asArray()->all(), 'ID', 'PILOT_NM'),
 				'group'=>true,
 			],
@@ -372,7 +409,7 @@ AppAssetChart::register($this);
 			
 			  [
 				'class' => 'yii\grid\ActionColumn', 
-					'template' => '{view} {create}',
+					'template' => '{view} {create} {update}',
 					'header'=>'Action',
 					'buttons' => [
 						'view' =>function($url, $model, $key){
@@ -389,7 +426,10 @@ AppAssetChart::register($this);
 															'data-target'=>"#gv-pilotp-create",
 															'data-title'=> $model->PILOT_ID,
 															]);
-						}
+						},
+                         'update' => function ($url, $model) {
+											return tombolClose($url, $model);
+										},
 						
 					],		
 			],
@@ -424,7 +464,7 @@ AppAssetChart::register($this);
 					  'data-target'=>"#gv-pilotp-create",
 					   'type'=>'button',
 					   'class'=>'btn btn-success']) .' ' .
-				Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['grid-demo'], ['data-pjax'=>0, 'class'=>'btn btn-default', ''])
+				Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['grid-demo'], ['data-pjax'=>0, 'class'=>'btn btn-default', '#'])
 			],
 			'{export}',
 			'{toggleData}',
@@ -487,6 +527,7 @@ AppAssetChart::register($this);
 		'encodeLabels'=>false,
 		//'align'=>TabsX::ALIGN_LEFT,
 	]);	
+    
 	
 	 $this->registerJs("
 		    $('#gv-pilotp-view').on('show.bs.modal', function (event) {
@@ -512,6 +553,7 @@ AppAssetChart::register($this);
 	
 
 	$this->registerJs("
+        $.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		    $('#gv-pilotp-create').on('show.bs.modal', function (event) {
 		        var button = $(event.relatedTarget)
 		        var modal = $(this)
@@ -528,8 +570,11 @@ AppAssetChart::register($this);
 		
 	Modal::begin([
 		    'id' => 'gv-pilotp-create',
+             'size' => "modal-lg",
 		    'header' => '<h4 class="modal-title">LukisonGroup</h4>',
 	]);
 	Modal::end();
-?>
+    
+    
+     
 

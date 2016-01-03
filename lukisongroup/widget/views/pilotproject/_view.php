@@ -10,15 +10,14 @@ $this->title = $model->ID;
 $this->params['breadcrumbs'][] = ['label' => 'Pilotprojects', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-
-        <?= Html::a('Update', ['update', 'id' => $model->ID], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->ID], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
+  <?php
+	$sts = $model->STATUS;
+	if($sts == 1){
+		$stat = 'Aktif';
+	} else {
+		$stat = 'Tidak Aktif';
+	}
+?>
 
     <?= DetailView::widget([
         'model' => $model,
@@ -31,10 +30,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'PLAN_DATE2',
             'ACTUAL_DATE1',
             'ACTUAL_DATE2',
-            'STATUS',
-            'CORP_ID',
-            'DEP_ID',
-            'CREATED_BY',
+           [
+              'label' => 'Status',
+				'value' => $stat,
+           ],
+            // 'CORP_ID',
+            // 'DEP_ID',
+            // 'CREATED_BY',
         ],
     ]) ?>
 
