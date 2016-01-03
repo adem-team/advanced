@@ -93,7 +93,7 @@ class PilotprojectSearch extends Pilotproject
 		// $query = Pilotproject::find()
 				// ->andWhere('sc0001.STATUS<>3 AND DEP_ID="'.$profile->emp->DEP_ID .'" AND CREATED_BY='. Yii::$app->user->identity->id)
 				// ->orWhere('DESTINATION_TO='.$profile->emp->EMP_ID);
-		  $query = Pilotproject::find()->Where('sc0001.STATUS<>3 AND DESTINATION_TO="'.$profile->emp->EMP_ID .'"');
+		$query = Pilotproject::find()->Where('sc0001.STATUS<>3 AND DESTINATION_TO="'.$profile->emp->EMP_ID .'"');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

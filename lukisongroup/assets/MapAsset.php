@@ -18,17 +18,16 @@ class MapAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        // 'addasset/orgChart/jquery.orgchart.css', 
-		//'addasset/orgChart/jquery.orgchart.js',
-		//'addasset/orgChart/jquery-1.11.1.min.js',
-        
+       
 
     ];
     public $js = [
-        //'addasset/orgChart/jquery.orgchart.css', 
+        // 'https://code.jquery.com/jquery-1.10.2.min.js',
 	    'http://maps.google.com/maps/api/js',
+		'https://maps.googleapis.com/maps/api/js?sensor=false'
+         // 'mapjs/geo.js'
 	];
-    public $jsOptions = ['position' => \yii\web\View::POS_BEGIN];
+    public $jsOptions = ['position' => \yii\web\View::POS_READY];
     public $depends = [
         //'yii\web\YiiAsset',
        // 'yii\bootstrap\BootstrapAsset',

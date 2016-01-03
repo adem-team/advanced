@@ -98,6 +98,26 @@ class PilotprojectController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
+     
+     public function actionActualclose($ID,$PILOT_ID){
+         
+          $model = $this->findModel($ID,$PILOT_ID);
+         
+         if($model->load(Yii::$app->request->post()))
+         {
+            
+              $model->save();
+              return $this->redirect('index');
+         }
+         
+         else {
+            return $this->renderAjax('actual', [
+                'model' => $model,
+            ]);
+        }
+         
+     }
+     
     public function actionCreate($id)
     {
 		
@@ -107,9 +127,11 @@ class PilotprojectController extends Controller
                 $model->PARENT = $id;
                 $model->SORT = $id;
                 $model->PILOT_ID = '';
+                $model->ACTUAL_DATE1 = date('Y-m-d h:i:s');
+                // $model->ACTUAL_DATE2 = "";
                 $model->DEP_ID =  Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;		
 				$model->CREATED_BY= Yii::$app->user->identity->username;		
-				$model->UPDATED_TIME= date('Y-m-d h:i:s'); 				
+				$model->UPDATED_TIME = date('Y-m-d h:i:s'); 				
 				$model->save();
 				if($model->save()){
 					
@@ -137,6 +159,8 @@ class PilotprojectController extends Controller
                 $model->PARENT = 0;
                 $model->DEP_ID =  Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
                 $dep_id = $model->DEP_ID;
+                $model->ACTUAL_DATE1 = date('Y-m-d h:i:s');
+                // $model->ACTUAL_DATE2 = "";
                 $pilot_id = Yii::$app->ambilkonci->getpilot($dep_id);
                    // print_r($pilot_id );
                    // die();

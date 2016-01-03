@@ -49,7 +49,7 @@ use kartik\widgets\DatePicker;
 
     
 
-     <?= $form->field($model, 'ACTUAL_DATE1')->widget(DatePicker::classname(), [
+     <!--$form->field($model, 'ACTUAL_DATE1')->widget(DatePicker::classname(), [
     'options' => ['placeholder' => 'Enter date ...'],
     'pluginOptions' => [
         'autoclose'=>true
@@ -57,12 +57,12 @@ use kartik\widgets\DatePicker;
     'pluginEvents' => [
                       'show' => "function(e) {show}",
     ],
-]);?>
+]);?>-->
 
    
 
 
-     <?= $form->field($model, 'ACTUAL_DATE2')->widget(DatePicker::classname(), [
+      <!--$form->field($model, 'ACTUAL_DATE2')->widget(DatePicker::classname(), [
     'options' => ['placeholder' => 'Enter date ...'],
     'pluginOptions' => [
         'autoclose'=>true
@@ -70,7 +70,7 @@ use kartik\widgets\DatePicker;
     'pluginEvents' => [
                       'show' => "function(e) {show}",
     ],
-]);?>
+]);?>-->
 
     <?=  $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']) ; ?>
 

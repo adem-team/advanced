@@ -5,10 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\esm\models\Kategoricus */
 
-$this->title = 'Update Kategoricus: ' . ' ' . $model->CUST_KTG;
-$this->params['breadcrumbs'][] = ['label' => 'Kategoricuses', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->CUST_KTG, 'url' => ['view', 'id' => $model->CUST_KTG]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = $model->CUST_KTG_NM;
+// $this->params['breadcrumbs'][] = ['label' => 'Kategoricuses', 'url' => ['index']];
+// $this->params['breadcrumbs'][] = ['label' => $model->CUST_KTG, 'url' => ['view', 'id' => $model->CUST_KTG]];
+// $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="kategoricus-update">
 

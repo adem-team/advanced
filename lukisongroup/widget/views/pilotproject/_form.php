@@ -13,6 +13,7 @@ use yii\helpers\ArrayHelper;
 
  $dropemploy = ArrayHelper::map(\lukisongroup\hrd\models\Employe::find()->all(), 
                                                                       'EMP_ID', 'EMP_NM');
+ 
 ?>
 
 <div class="pilotproject-form">
@@ -24,7 +25,7 @@ use yii\helpers\ArrayHelper;
     ]); ?>
 	
 	
-	<?= $form->field($model, 'PILOT_NM')->textInput() ?>
+	 <?= $form->field($model, 'PILOT_NM')->textInput() ?>
 	
     <?= $form->field($model, 'DSCRP')->textInput() ?>
 	
@@ -55,28 +56,7 @@ use yii\helpers\ArrayHelper;
 
     
 
-     <?= $form->field($model, 'ACTUAL_DATE1')->widget(DatePicker::classname(), [
-    'options' => ['placeholder' => 'Enter date ...'],
-    'pluginOptions' => [
-        'autoclose'=>true
-    ],
-    'pluginEvents' => [
-                      'show' => "function(e) {show}",
-    ],
-]);?>
-
-   
-
-
-     <?= $form->field($model, 'ACTUAL_DATE2')->widget(DatePicker::classname(), [
-    'options' => ['placeholder' => 'Enter date ...'],
-    'pluginOptions' => [
-        'autoclose'=>true
-    ],
-    'pluginEvents' => [
-                      'show' => "function(e) {show}",
-    ],
-]);?>
+  
 
 <?= $form->field($model, 'DESTINATION_TO')->widget(Select2::classname(), [
          'data' => $dropemploy,

@@ -13,17 +13,16 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="pilotproject-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <?php
+	$sts = $model->STATUS;
+	if($sts == 1){
+		$stat = 'Aktif';
+	} else {
+		$stat = 'Tidak Aktif';
+	}
+?>
 
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->ID], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->ID], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+   
 
     <?= DetailView::widget([
         'model' => $model,
@@ -36,7 +35,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'PLAN_DATE2',
             'ACTUAL_DATE1',
             'ACTUAL_DATE2',
-            'STATUS',
+            [
+				'label' => 'Status',
+				'value' => $stat,
+			],
             'CORP_ID',
             'DEP_ID',
             'USER_CREATED',
