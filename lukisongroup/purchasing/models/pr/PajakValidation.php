@@ -21,7 +21,7 @@ class PajakValidation extends Model
         return [			
 			[['kD_PO'], 'findcheck'],		
 			[['kD_PO','pAJAK'], 'required'],					
-			[['pAJAK'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],			
+			[['pAJAK'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],			
 		];
     }
 	

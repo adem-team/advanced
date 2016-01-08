@@ -30,16 +30,17 @@ use yii\helpers\Html;
 
     <?php // $this->render('_form', [
 	 echo $this->render('_buat', [
-        'model' => $model,
-        'que' => $que,
-    	'podet' => $podet,
+        //'model' => $model,
+        //'que' => $que,
+    	//'podet' => $podet,
 		'searchModel' => $searchModel,
 		'dataProvider' => $dataProvider,
 		'poDetailProvider'=>$poDetailProvider,
 		'poHeader'=> $poHeader,
 		'supplier'=>$supplier,
 		'bill' => $bill,
-		'ship' => $ship
+		'ship' => $ship,
+		'employee'=>$employee,
     ]) ?>
 
 </div>

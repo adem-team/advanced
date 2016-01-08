@@ -61,7 +61,7 @@ class DeliveryValidation extends Model
 	public function attributeLabels()
     {
         return [
-            'dELIVERY' => 'Delivery.Cost',
+            'dELIVERY' => 'Delivery.Cost  [ex: 1,000,000.00]',
             'kD_PO' => 'Kode.PO'
         ];
     }

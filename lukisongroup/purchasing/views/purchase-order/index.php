@@ -11,6 +11,12 @@ use kartik\form\ActiveForm;
 use lukisongroup\master\models\Suplier;
 use lukisongroup\hrd\models\Employe;
 
+	$poGenerateArray= [
+		  ['ID' => 0, 'DESCRIP' => 'PO Normal'],		  
+		  ['ID' => 1, 'DESCRIP' => 'PO Plus'],
+	];	
+	$valGpo = ArrayHelper::map($poGenerateArray, 'ID', 'DESCRIP');
+
 $this->title = 'Purchaseorder';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -666,8 +672,8 @@ function submitform()
 		
 	</div>	
 	<!-- Modal -->
-	<div class="modal fade" id="new-po" tabindex="-1" role="dialog" aria-labelledby="create-poLabel">
-	  <div class="modal-dialog" role="document">
+	<div class="modal modal-wide fade" id="new-po" size="Modal::SIZE_SMALL" tabindex="-1" role="dialog" aria-labelledby="create-poLabel">
+	  <div class="modal-dialog modal-sm"  role="document">
 		<div class="modal-content">
 		
 			  <div class="modal-header">
@@ -676,18 +682,21 @@ function submitform()
 			  </div>
 			  
 			<?php $form = ActiveForm::begin([
-				'type' => ActiveForm::TYPE_HORIZONTAL,
+				'id'=>'po-generate',
+				'enableClientValidation' => true,
+				'enableAjaxValidation' => true,
+				//'type' => ActiveForm::TYPE_HORIZONTAL,
 				'method' => 'post',
 				'action' => ['/purchasing/purchase-order/simpanpo'],
 			]); ?>
-			  <div class="modal-body">
+			  <div class="modal-body" style="text-align:center">
 				
-			<?php $drop = ArrayHelper::map(Suplier::find()->where(['STATUS' => 1])->all(), 'KD_SUPPLIER', 'NM_SUPPLIER'); ?>
-			<?= $form->field($model, 'KD_SUPPLIER')->dropDownList($drop,['prompt'=>' -- Pilih Salah Satu --'])->label('Supplier'); ?>
+			<?php //$drop = ArrayHelper::map(Suplier::find()->where(['STATUS' => 1])->all(), 'KD_SUPPLIER', 'NM_SUPPLIER'); ?>
+			<?php echo $form->field($poHeaderVal,'PO_GNR')->dropDownList($valGpo)->label(false); ?>
 			  </div>
 			  <div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="submit" class="btn btn-primary" >Save changes</button>
+				<button type="submit" class="btn btn-primary" >Generate Kode</button>
 			  </div> 
 			<?php ActiveForm::end(); ?>
 		</div>

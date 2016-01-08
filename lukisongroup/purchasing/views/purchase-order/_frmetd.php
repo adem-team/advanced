@@ -18,8 +18,12 @@ use yii\helpers\ArrayHelper;
 		<?php //echo  $form->field($poHeaderVal, 'eTD')->textInput()->label('ETD (Estimete Time delivery)'); ?>
 		<?php echo $form->field($poHeaderVal, 'eTD')->widget(DatePicker::classname(), [
 					'options' => ['placeholder' => 'Estimate Time Delivery ...'],
-						'pluginOptions' => [
-							'autoclose'=>true
+						'pluginOptions' => [							
+							'todayHighlight' => true,
+							//'todayBtn' => true,
+							'format' => 'yyyy-mm-dd',
+							'autoclose'=>true,
+							
 						],
 						'pluginEvents'=>[
 							'show' => "function(e) {show}",

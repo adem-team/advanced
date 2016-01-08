@@ -22,7 +22,7 @@ class DiscountValidation extends Model
 			[['kD_PO'], 'findcheck'],		
 			[['kD_PO','dISC'], 'required'],				
 			//[['dISC'], 'safe'],	
-			[['dISC'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],			
+			[['dISC'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],			
 		];
     }
 	

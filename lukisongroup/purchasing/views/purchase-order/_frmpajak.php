@@ -25,7 +25,7 @@ use yii\helpers\ArrayHelper;
 				'action' => ['/purchasing/purchase-order/pajak-save'],
 		]);
 	?>	
-		<?php echo  $form->field($poHeaderVal, 'pAJAK')->textInput()->label('TAX'); ?>
+		<?php echo  $form->field($poHeaderVal, 'pAJAK')->textInput(['placeholder' => 'Entry Presentase Tax ...'])->label('TAX    [ ex: 2.33% ]'); ?>
 		<?php echo  $form->field($poHeaderVal, 'kD_PO')->hiddenInput(['value'=>$poHeader->KD_PO,'maxlength' => true, 'readonly' => true])->label(false); ?>		
 		<div style="text-align: right;"">
 			<?php echo Html::submitButton('simpan',['class' => 'btn btn-primary']); ?>

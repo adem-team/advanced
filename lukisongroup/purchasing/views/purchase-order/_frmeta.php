@@ -18,6 +18,7 @@ use yii\helpers\ArrayHelper;
 		<?php echo $form->field($poHeaderVal, 'eTA')->widget(DatePicker::classname(), [
 					'options' => ['placeholder' => 'Estimate Time Arrival ...'],
 						'pluginOptions' => [
+							'todayHighlight' => true,
 							'autoclose'=>true
 						],
 						'pluginEvents'=>[

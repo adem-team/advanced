@@ -25,7 +25,7 @@ use yii\helpers\ArrayHelper;
 				'action' => ['/purchasing/purchase-order/discount-save'],
 		]);
 	?>	
-		<?php echo  $form->field($poHeaderVal, 'dISC')->textInput()->label('Discount'); ?>
+		<?php echo  $form->field($poHeaderVal, 'dISC')->textInput(['placeholder' => 'Entry Presentase Discount ...'])->label('Discount    [ ex: 2.2% ]'); ?>
 		<?php echo  $form->field($poHeaderVal, 'kD_PO')->hiddenInput(['value'=>$poHeader->KD_PO,'maxlength' => true, 'readonly' => true])->label(false); ?>		
 		<div style="text-align: right;"">
 			<?php echo Html::submitButton('simpan',['class' => 'btn btn-primary']); ?>

@@ -49,8 +49,8 @@ class EtdValidation extends Model
     {         
 		if (!$this->hasErrors()) {
 			 $poHeader = Purchaseorder::findOne($this->kD_PO);
-			if (\Yii::$app->formatter->asDate($poHeader->CREATE_AT,'Y-M-d') > \Yii::$app->formatter->asDate($this->eTD,'Y-M-d')) {
-                $this->addError($attribute, 'Estimated Delivery Time, must be higher than the PO date made');				
+			if (Yii::$app->formatter->asDate($this->eTD,'Y-M-d') < Yii::$app->formatter->asDate($poHeader->CREATE_AT,'Y-M-d')) {
+				$this->addError($attribute, 'Estimated Delivery Time, must be higher than the PO date made');					
             } 
        }
     }

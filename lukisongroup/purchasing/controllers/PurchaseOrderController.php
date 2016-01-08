@@ -8,6 +8,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ArrayDataProvider;
 use yii\helpers\Json;
+use yii\helpers\ArrayHelper;
 use kartik\mpdf\Pdf;
 
 use lukisongroup\purchasing\models\pr\Purchaseorder;
@@ -23,7 +24,8 @@ use lukisongroup\purchasing\models\pr\EtaValidation;
 use lukisongroup\purchasing\models\pr\SupplierValidation;
 use lukisongroup\purchasing\models\pr\ShippingValidation;
 use lukisongroup\purchasing\models\pr\BillingValidation;
-
+use lukisongroup\purchasing\models\pr\LoginForm;
+use lukisongroup\purchasing\models\pr\NewPoValidation;
 
 use lukisongroup\purchasing\models\ro\Requestorder;
 use lukisongroup\purchasing\models\ro\RequestorderSearch;
@@ -36,9 +38,6 @@ use lukisongroup\esm\models\Barang;
 use lukisongroup\master\models\Barangumum;
 
 
-/**
- * PurchaseorderController implements the CRUD actions for Purchaseorder model.
- */
 class PurchaseOrderController extends Controller
 {
     public function behaviors()
@@ -64,11 +63,13 @@ class PurchaseOrderController extends Controller
         $searchModel = new PurchaseorderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $model = new Purchaseorder();
-
+		/*Model Validasi Generate Code*/
+		$poHeaderVal = new NewPoValidation();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'model' => $model,
+			'poHeaderVal'=>$poHeaderVal,
         ]);
     }
 
@@ -103,29 +104,23 @@ class PurchaseOrderController extends Controller
         ]);
     }
 	
-	
+	/*
+	 * Create PO
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
     public function actionCreate($kdpo)
     {
-        $model = new Purchaseorder();
-
-        $poCnt = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->count();
+        $searchModel = new RequestorderSearch();
+        $dataProvider = $searchModel->caripo(Yii::$app->request->queryParams);
+		
 		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
 		$supplier = $poHeader->suplier;
 		$bill = $poHeader->bill;
 		$ship = $poHeader->ship;
-		
-		
-        if($poCnt == 0){ return $this->redirect([' ']); }
-        if($kdpo == ''){ return $this->redirect([' ']); }
-        if($kdpo == null){ return $this->redirect([' ']); }
-
-
-        $que = Requestorder::find()->where('STATUS <> 3 and STATUS <> 0')->all();
-
-        $searchModel = new RequestorderSearch();
-        $dataProvider = $searchModel->caripo(Yii::$app->request->queryParams);
-
+		$employee= $poHeader->employe;
         $poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->andWhere('STATUS <> 3')->all();
+		
 		$poDetailProvider = new ArrayDataProvider([
 			'key' => 'KD_PO',
 			'allModels'=>$poDetail,		
@@ -134,40 +129,99 @@ class PurchaseOrderController extends Controller
 			],
 		]);	
 
-        //$quer = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();  
         return $this->render('create', [
-            'model' => $model,
-            'que' => $que,
-            //'quer' => $quer,
-            'podet' => $poDetail,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
 			'poDetailProvider'=>$poDetailProvider,
 			'poHeader'=> $poHeader,
 			'supplier'=>$supplier,
 			'bill' => $bill,
-			'ship' => $ship
+			'ship' => $ship,
+			'employee'=>$employee,
         ]);
     }   
 	
-	
+	/*
+	 * Create PO | Generate PO | 
+	 * PO PLUS ['POA.'.date('ymdhis')] -> POA DENGAN LIMIT HARGA
+	 * PO Normal ['PO.'.date('ymdhis')] -> PO Dengan Persetujuan orderby | RequestOrder|SalesOrder
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
     public function actionSimpanpo()
     {
-        $model = new Purchaseorder();
-        $model->load(Yii::$app->request->post());
-
-        $kdpo = 'POB-'.date('ymdhis');
-        $ck = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->count();  
-        if($ck == 0){
-            $model->KD_PO = $kdpo;
-            $model->STATUS = '100';
-            $model->CREATE_AT = date("Y-m-d H:i:s");
-            $model->CREATE_BY = Yii::$app->user->identity->EMP_ID;
-            $model->save();
-        }
-        return $this->redirect(['create', 'kdpo' => $model->KD_PO]);
+		$poHeaderVal = new NewPoValidation;
+		if(Yii::$app->request->isAjax){
+			$poHeaderVal->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($poHeaderVal));
+		}else{		
+			if($poHeaderVal->load(Yii::$app->request->post())){
+				if ($poHeaderVal->generatepo_saved()){
+					$hsl = \Yii::$app->request->post();
+					//$kdPo =$poHeaderVal->PO_RSLT
+					return $this->redirect(['create', 'kdpo'=>$poHeaderVal->PO_RSLT]);
+					//echo "test";
+				}														
+			}
+		}		
     }
-
+	
+	public function actionDetail($kd_ro,$kdpo)
+    {
+        
+		$roDetail = Rodetail::find()->where(['KD_RO'=>$kd_ro, 'STATUS'=>101])->all();
+		$roDetailProvider = new ArrayDataProvider([
+			'key' => 'ID',
+			'allModels'=>$roDetail,		
+			'pagination' => [
+				'pageSize' => 20,
+			],
+		]);	
+        return $this->renderAjax('_detail', [  // ubah ini
+            'roDetail' => $roDetail,
+			'roDetailProvider'=>$roDetailProvider,
+            'kdpo' => $kdpo,
+            'kd_ro' => $kd_ro,
+        ]);
+    }
+	public function actionCk() {
+		
+		if (Yii::$app->request->isAjax) {
+			$request= Yii::$app->request;
+			//$dataKeylist=$request->post('keylist');
+			//$dataKeyRslt=$request->post('keysRslt');
+			$kdRo=$request->post('kdRo');
+			$dataKeySelect=$request->post('keysSelect');
+			$dataKdRo=$request->post('kdRo');
+			
+			//$valueCk=$request->post('value');
+			//$roDetail = Rodetail::findOne($id);
+			//$roDetail->TMP_CK = 1;// valueCk;//$roDetail->TMP_CK==0 ? 1 :0;
+			//$roDetail->save();
+			print_r($dataKeySelect);
+			if ($dataKeySelect!=1){					
+					$AryKdRo = ArrayHelper::map	(Rodetail::find()->where(['KD_RO'=>$kdRo])->andWhere('STATUS=101')->all(),'ID','ID');
+					print_r($AryKdRo);
+				    foreach ($AryKdRo as $keyRo){
+						$roDetail = Rodetail::findOne($keyRo);
+						$roDetail->TMP_CK =0;
+						$roDetail->save();	
+					}
+					foreach ($dataKeySelect as $idx){
+							$roDetail = Rodetail::findOne($idx);
+							$roDetail->TMP_CK =1;
+							$roDetail->save();							
+					} 				
+			}
+			
+			return true;
+		}
+		
+		
+		
+  
+}
+	
 	
     public function actionSimpan()
     {
@@ -259,15 +313,7 @@ class PurchaseOrderController extends Controller
         return $this->redirect(['create','kdpo'=>$kdpo]);
     }
 
-    public function actionDetail($kd_ro,$kdpo)
-    {
-        $podet = Rodetail::find()->where(['KD_RO'=>$kd_ro, 'STATUS'=>101])->all();
-        return $this->renderAjax('_detail', [  // ubah ini
-            'po' => $podet,
-            'kdpo' => $kdpo,
-            'kd_ro' => $kd_ro,
-        ]);
-    }
+   
 
     public function actionDelpo($idpo,$kdpo)
     {
@@ -561,7 +607,11 @@ class PurchaseOrderController extends Controller
 					$hsl = \Yii::$app->request->post();
 					$kdPo = $hsl['EtdValidation']['kD_PO'];
 					return $this->redirect(['create', 'kdpo'=>$kdPo]);
-				}														
+				}else{
+					$hsl = \Yii::$app->request->post();
+					$kdPo = $hsl['EtdValidation']['kD_PO'];
+					return $this->redirect(['create', 'kdpo'=>$kdPo]);
+				}													
 			}
 		}
 		
@@ -598,6 +648,44 @@ class PurchaseOrderController extends Controller
 		}
 		
     }
+	
+	/*
+	 * PO FIRST SIGNATURE |ApprovedView | ApprovedSave
+	 * $poHeader->STATUS =1
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	 public function actionApprovedView($kdpo){
+		$loginform = new LoginForm();					
+		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
+		$employe = $poHeader->employe;			
+			return $this->renderAjax('login_signature', [
+				'poHeader' => $poHeader,
+				'employe' => $employe,
+				'loginform' => $loginform,
+			]);		 
+	}
+	public function actionApprovedSave(){
+		$loginform = new LoginForm();		
+		/*Ajax Load*/
+		if(Yii::$app->request->isAjax){
+			$loginform->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($loginform));
+		}else{	/*Normal Load*/	
+			if($loginform->load(Yii::$app->request->post())){
+				if ($loginform->loginform_saved()){
+					$hsl = \Yii::$app->request->post();
+					$kdpo = $hsl['LoginForm']['kdpo'];
+					return $this->redirect(['create', 'kdpo'=>$kdpo]);
+				}														
+			}
+		}		
+    }
+	
+	
+	
+	
+	
 	/*
 	 * PDF | Purchaseorder| Purchasedetail
 	 * @author ptrnov <piter@lukison.com>

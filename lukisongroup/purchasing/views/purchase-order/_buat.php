@@ -8,31 +8,39 @@ use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 //use kartik\editable\Editable;
 use kartik\grid\GridView;
+use kartik\tabs\TabsX;
+use kartik\money\MaskMoney;
 
-
-use lukisongroup\esm\models\Barang;
 use lukisongroup\purchasing\models\ro\Requestorder;
 use lukisongroup\purchasing\models\ro\Rodetail;
 use lukisongroup\purchasing\models\ro\RodetailSearch;
 
-use lukisongroup\master\models\Barangumum;
-use lukisongroup\purchasing\models\pr\Podetail;
-use lukisongroup\hrd\models\Employe;
-
-
-		
-$idEmp = Yii::$app->user->identity->EMP_ID;
-$emp = Employe::find()->where(['EMP_ID'=>$idEmp])->one();
-$kr = $emp->DEP_SUB_ID;
-
-
+/*  $this->registerJs('
+		$(document).ready(function($) {
+			// Data Signature1 from DB 
+			var po_datadb1 =\''. $poHeader->SIG1_SVGBASE64 . '\'
+				var h = new Image();							
+					h.src = ro_datadb1
+					$(h).appendTo($("#po-process-sig1"));
+			// Data Signature2 from DB 
+			var po_datadb2 =\''. $poHeader->SIG2_SVGBASE64 . '\'
+				var j = new Image();							
+					j.src = ro_datadb2
+					$(j).appendTo($("#po-process-sig2"));	
+			var po_datadb3 =\''. $poHeader->SIG2_SVGBASE64 . '\'
+				var j = new Image();							
+					j.src = ro_datadb3
+					$(j).appendTo($("#po-process-sig3"));
+		});		
+ ',$this::POS_BEGIN);		 */
 	/*
 	 * LINK ETD
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.2
 	*/
 	function link_etd($poHeader){
-		$title = Yii::t('app',$poHeader->ETD);
+		$ttlEtd=$poHeader->ETD!=0? $poHeader->ETD:'---- -- --';
+		$title = Yii::t('app',$ttlEtd);
 		$options = [ 'id'=>'po-etd',	
 					  'data-toggle'=>'modal',
 					  'data-target'=>'#frm-etd',				 
@@ -50,7 +58,8 @@ $kr = $emp->DEP_SUB_ID;
      * @since 1.2
 	*/
 	function link_eta($poHeader){
-		$title = Yii::t('app',$poHeader->ETA);
+		$ttlEta=$poHeader->ETA!=0? $poHeader->ETA:'---- -- --';
+		$title = Yii::t('app',$ttlEta);
 		$options = [ 'id'=>'po-eta',	
 					  'data-toggle'=>'modal',
 					  'data-target'=>'#frm-eta',				 
@@ -316,8 +325,7 @@ $kr = $emp->DEP_SUB_ID;
 				]
 			],			
 		],
-		[
-			/* Attribute Unit Barang */
+		[	/* Attribute Unit Barang */
 			'attribute'=>'HARGA',
 			'mergeHeader'=>true,
 			'label'=>'Price',										
@@ -395,38 +403,37 @@ $kr = $emp->DEP_SUB_ID;
 			],	
 			'pageSummaryFunc'=>GridView::F_SUM,
 			'pageSummary'=>true,
+			'format'=>['decimal', 2],
 			'pageSummary'=>function ($summary, $data, $widget) use ($poHeader)	{	
-					/*
-					 * Definition SUMMARY TOTAL
-					 * @author ptrnov  <piter@lukison.com>
-					 * @since 1.1
-					 */
-					$subtotal=$summary;
-					$discount=($poHeader->DISCOUNT)/100;
-					$tax=($poHeader->PAJAK)/100;
-					$delivery=$poHeader->DELIVERY_COST; 
-					
 					/*
 					 * Calculate SUMMARY TOTAL
 					 * @author ptrnov  <piter@lukison.com>
 					 * @since 1.1
 					 */
-					$ttlDiscount=$poHeader->DISCOUNT!=0 ? $discount*$subtotal:0.00;
-					$ttlTax = $poHeader->PAJAK!=0 ? $tax*$subtotal :0.00;
-					$ttlDelivery=$poHeader->DELIVERY_COST!=0 ? $delivery:0.00;
-					$grandTotal=$subtotal + $ttlDiscount + $ttlTax + $ttlDelivery;	
+					$subTotal=$summary!=''? $summary : 0.00; 
 					
+					$ttlDiscount=$poHeader->DISCOUNT!=0 ? ($poHeader->DISCOUNT/100) * $subTotal:0.00;
+					$ttlTax = $poHeader->PAJAK!=0 ? ($poHeader->PAJAK / 100) * $subTotal  :0.00;
+					$ttlDelivery=$poHeader->DELIVERY_COST!=0 ? $poHeader->DELIVERY_COST:0.00;
+					$grandTotal=$subTotal + $ttlDiscount + $ttlTax + $ttlDelivery;
+					
+					/*SEND TO DECIMAL*/
+					$ttlSubtotal=number_format($subTotal,2);
+					$ttlDiscountF=number_format($ttlDiscount,2);
+					$ttlTaxF=number_format($ttlTax,2);
+					$ttlDeliveryF=number_format($ttlDelivery,2);
+					$grandTotalF=number_format($grandTotal,2);
 					/*
 					 * DISPLAY SUMMARY TOTAL
 					 * LINK Modal Editing Discount | tax
 					 * @author ptrnov  <piter@lukison.com>
 					 * @since 1.1
 					 */
-					return '<div>'.$subtotal.',</div>
-						<div>'.$ttlDiscount.'</div>
-						<div>'.$ttlTax.'</div>
-						<div>'.Html::a($ttlDelivery,Url::toRoute(['/purchasing/purchase-order/delivery-view','kdpo'=>$poHeader->KD_PO]),['id'=>'delivery','data-toggle'=>'modal','data-target'=>'#frm-delivery']).'</div>	
-						<div><b>'.$grandTotal.'</b></div>';  
+					return '<div>'.$ttlSubtotal.'</div>
+						<div>'.$ttlDiscountF.'</div>
+						<div>'.$ttlTaxF.'</div>
+						<div>'.Html::a($ttlDeliveryF,Url::toRoute(['/purchasing/purchase-order/delivery-view','kdpo'=>$poHeader->KD_PO]),['id'=>'delivery','data-toggle'=>'modal','data-target'=>'#frm-delivery']).'</div>	
+						<div><b>'.$grandTotalF.'</b></div>';  
 			},
 			'pageSummaryOptions' => [
 				'style'=>[
@@ -478,17 +485,146 @@ $kr = $emp->DEP_SUB_ID;
 		'export' => false, 
 	]);	
 
+	
+	
+	
+	/*
+	 * Tombol Modul View
+	 * permission View [BTN_VIEW==1]
+	 * Check By User login
+	*/
+	function tombolView($url, $model){
+		//if(getPermission()){	
+			//if(getPermission()->BTN_VIEW==1){
+				$title = Yii::t('app', 'View');
+				$options = [ 'id'=>'ro-view']; 
+				$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
+				$label = $icon . ' ' . $title;
+				$url = Url::toRoute(['/purchasing/request-order/view','kd'=>$model->KD_RO]);
+				$options['tabindex'] = '-1';
+				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;	
+			//}
+		//}
+	} 
+	
+	/*
+	 * Tombol Modul View
+	 * permission View [BTN_VIEW==1]
+	 * Check By User login
+	*/
+	function tombolSendPo($url, $model){
+		//if(getPermission()){	
+			//if(getPermission()->BTN_VIEW==1){
+				$title = Yii::t('app', 'SendPo');
+				$options = [ 'id'=>'ro-sendpo-id',
+							 'data-toggle'=>'modal',
+							 'data-target'=>"#ro-sendpo",
+							 'data-title'=> $model->KD_RO,
+				]; 
+				$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
+				$label = $icon . ' ' . $title;
+				$url = Url::toRoute(['/purchasing/purchase-order/detail','kd_ro'=>$model->KD_RO,'kdpo'=>$_GET['kdpo']]);
+				$options['tabindex'] = '-1';
+				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;	
+			//}
+		//}
+	} 
+	
 	/*
 	 * GRID VIEW CREATE PO -> BY REQUEST ORDER
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
 	$gvROSendPO=GridView::widget([
+		'id'=>'gv-ro-detail',
 		'dataProvider' => $dataProvider,
 		'filterModel' => $searchModel,
 		'columns' => [
-			'KD_RO',
-			[
+			[/* Attribute KD RO */
+				'attribute'=>'KD_RO',
+				'label'=>'Kode RO',						
+				'hAlign'=>'left',	
+				'vAlign'=>'middle',
+				//'mergeHeader'=>true,
+				'format' => 'raw',	
+				'headerOptions'=>[
+					//'class'=>'kartik-sheet-style'							
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma',
+						'font-size'=>'8pt',
+						'background-color'=>'rgba(0, 95, 218, 0.3)',								
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'width'=>'150px',
+						'font-family'=>'tahoma',
+						'font-size'=>'8pt',								
+					]
+				], 
+				'pageSummaryOptions' => [
+					'style'=>[
+							'border-left'=>'0px',
+							'border-right'=>'0px',									
+					]
+				]
+			],
+			/* [// Attribute KD RO 
+				'attribute'=>'CREATED_AT',
+				'label'=>'Date',						
+				'hAlign'=>'left',	
+				'vAlign'=>'middle',
+				'value'=>function($model){
+					return  Yii::$app->formatter->asDate($model->CREATED_AT,'Y-M-d');
+				},
+				//'mergeHeader'=>true,
+				'format' => 'raw',	
+				'headerOptions'=>[
+					//'class'=>'kartik-sheet-style'							
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma',
+						'font-size'=>'8pt',
+						'background-color'=>'rgba(0, 95, 218, 0.3)',								
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'width'=>'150px',
+						'font-family'=>'tahoma',
+						'font-size'=>'8pt',								
+					]
+				], 
+				'pageSummaryOptions' => [
+					'style'=>[
+							'border-left'=>'0px',
+							'border-right'=>'0px',									
+					]
+				]
+			], */
+			 [
+				'class'=>'kartik\grid\ActionColumn',
+				'dropdown' => true,
+				'template' => '{view}{sendPo}',
+				'dropdownOptions'=>['class'=>'pull-right dropup'],									
+				//'headerOptions'=>['class'=>'kartik-sheet-style'],											
+				'buttons' => [
+					// View RO | Permissian All
+					'view' => function ($url, $model) {
+									return tombolView($url, $model);
+							  },
+							
+					// SEND RO TO PO | Permissian Status 0; 0=process | User created = user login  
+					'sendPo' => function ($url, $model) {
+									return tombolSendPo($url, $model);
+								},				
+				],
+				
+			],	 
+			/* [
 				'format'=>'raw',
 				'value' => function ($data){
 					$count = Rodetail::find()
@@ -500,16 +636,61 @@ $kr = $emp->DEP_SUB_ID;
 					if(!empty($count)){
 						return  Html::a('<button type="button" class="btn btn-primary btn-xs">View</button>',['detail','kd_ro'=>$data->KD_RO,'kdpo'=>$_GET['kdpo']],[
 									'data-toggle'=>"modal",
-									'data-target'=>"#myModal",
+									'data-target'=>"#ro-sendpo",
 									'data-title'=> $data->KD_RO,
 								]); // ubah ini
 					} else {
 						return '<button type="button" class="btn btn-danger btn-xs">No Data</button>';
 					}
 				}
-			],
+			], */
 		],
+		'pjax'=>true,
+		'pjaxSettings'=>[
+		 'options'=>[
+			'enablePushState'=>false,
+			'id'=>'gv-ro-detail',
+		   ],						  
+		],
+		'panel' => [
+			//'footer'=>false,
+			'heading'=>false,						
+		],
+		/* 'toolbar'=> [
+			//'{items}',
+		],  */				
+		'hover'=>true, //cursor select
+		'responsive'=>true,
+		'responsiveWrap'=>true,
+		'bordered'=>true,
+		'striped'=>'4px',
+		'autoXlFormat'=>true,
+		'export' => false, 
 	]); 
+		
+	//echo $gvROSendPO; 
+	$items=[
+		[
+			'label'=>'<div style="font-family: tahoma ;font-size:8pt;">Request Order</div>','content'=>$gvROSendPO,
+			'active'=>true,
+		],		
+		[
+			'label'=>'<div style="font-family: tahoma ;font-size:8pt;">Seles Order</div>','content'=>$gvROSendPO,
+			
+		],
+	];
+	
+	
+	$tabRoSo= TabsX::widget([
+		'id'=>'tab-emp',
+		'items'=>$items,
+		'position'=>TabsX::POS_ABOVE,
+		//'height'=>'tab-height-xs',
+		'bordered'=>true,
+		'encodeLabels'=>false,
+		//'align'=>TabsX::ALIGN_LEFT,
+	]);	
+		
 		
 	/*
 	 * MODAL SELECT REQUEST ORDER 
@@ -517,7 +698,8 @@ $kr = $emp->DEP_SUB_ID;
      * @since 1.1
      */
 	$this->registerJs("
-		$('#myModal').on('show.bs.modal', function (event) {
+		$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+		$('#ro-sendpo').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget)
 			var modal = $(this)
 			var title = button.data('title') 
@@ -531,11 +713,53 @@ $kr = $emp->DEP_SUB_ID;
 			});
 	",$this::POS_READY);
 	Modal::begin([
-		'id' => 'myModal',
+		'id' => 'ro-sendpo',
 		'header' => '<h4 class="modal-title">...</h4>',
+		'size' => Modal::SIZE_LARGE,
 	]);	 
 		echo '...';	 
 	Modal::end();
+	
+	
+	/*
+	 * Status Value Signature1 | PurchaseOrder
+	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
+	*/
+	function SignApproved($poHeader){
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'po-auth1',	
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#po-auth1-sign",											
+					  'class'=>'btn btn-warning btn-xs', 
+					  'style'=>['width'=>'100px'],
+					  'title'=>'Detail'
+		]; 
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/purchase-order/approved-view','kdpo'=>$poHeader->KD_PO]);
+		//$options1['tabindex'] = '-1';
+		$content = Html::a($label,$url, $options);
+		return $content;	
+	}
+	/*
+	 * Signature Waiting Approval
+	 * Signature Automaticly Show If ACTION APPROVAL
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+	*/
+	function SignApprovedStt(){
+		return Html::a('<i class="glyphicon glyphicon-retweet"></i> Waiting for approval', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
+	} 
+
+	/*
+	 * Signature Waiting sign
+	 * Signature Automaticly Show If ACTION APPROVAL
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+	*/
+	function SignStt(){
+		return Html::a('<i class="glyphicon glyphicon-retweet"></i> Waiting for Sign', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
+	} 
 
 ?>
 
@@ -543,7 +767,7 @@ $kr = $emp->DEP_SUB_ID;
 <div class="row">
 	<!-- SIDE LEFT | REQUEST ORDER | SALES ORDER !-->
 	<div class="col-xs-12 col-md-3">
-		<?php echo $gvROSendPO; ?>
+		<?php echo $tabRoSo;?>
 	</div>	
 	<div class="col-xs-12 col-md-9">
 		<div class="row">
@@ -662,7 +886,7 @@ $kr = $emp->DEP_SUB_ID;
 		</div>	
 		<div  class="row">
 			<div class="col-md-9">
-				<table id="tblRo" class="table table-bordered" style="width:360px;font-family: tahoma ;font-size: 8pt;">
+				<table id="tblRo" class="table table-bordered" style="width:500px;font-family: tahoma ;font-size: 8pt;">
 					<!-- Tanggal!-->
 					 <tr>
 						<!-- Tanggal Pembuat RO!-->
@@ -698,21 +922,21 @@ $kr = $emp->DEP_SUB_ID;
 					</tr>
 					<!-- Signature !-->
 					 <tr>
-						<th style="text-align: center; vertical-align:middle;width:180; height:60px">
+						<th style="text-align: center; vertical-align:middle;width:100; height:40px">
 							<?php 
-								$ttd1 = $poHeader->SIG1_SVGBASE64!=0 ?  '<img src="'.$poHeader->SIG1_SVGBASE64.'" height="120" width="150"></img>' : '';
+								$ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img style="width:100; height:40px" src='.$poHeader->SIG1_SVGBASE64.'></img>' : SignApproved($poHeader);
 								echo $ttd1;
-							?> 	
+							?> 
 						</th>								
-						<th style="text-align: center; vertical-align:middle;width:180">
+						<th style="text-align: center; vertical-align:middle;width:100">
 							<?php 
-								$ttd2 = $poHeader->SIG2_SVGBASE64!=0 ?  '<img src="'.$poHeader->SIG2_SVGBASE64.'" height="120" width="150"></img>' : '';
+								$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:100; height:40px" src='.$poHeader->SIG2_SVGBASE64.'></img>' : SignStt();
 								echo $ttd2;
 							?> 
 						</th>
-						<th style="text-align: center; vertical-align:middle;width:180">
+						<th style="text-align: center; vertical-align:middle;width:100">
 							<?php 
-								$ttd3 = $poHeader->SIG3_SVGBASE64!=0 ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="120" width="150"></img>' : '';
+								$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:100; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' : SignApprovedStt();
 								echo $ttd3;
 							?> 
 						</th>
@@ -1040,6 +1264,38 @@ $kr = $emp->DEP_SUB_ID;
 			'id' => 'search-bil',
 			'header' => '<h4 class="modal-title">Billing Address</h4>',
 			'size' => Modal::SIZE_SMALL,
+		]);
+	Modal::end();
+	
+	/*
+	 * JS Sign First Create PO | Status =1
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#po-auth1-sign').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'po-auth1-sign',
+			//'header' => '<h4 class="modal-title">Signature Authorize</h4>',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			//'size' => 'modal-xs'
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
 		]);
 	Modal::end();
 ?>

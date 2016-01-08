@@ -146,7 +146,8 @@ class Purchaseorder extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-			['KD_SUPPLIER', 'required', 'message' => 'Please choose a username.'],
+			//['KD_SUPPLIER', 'required', 'message' => 'Please choose a username.'],
+			[['KD_PO'], 'required'],
             [['KD_PO', 'CREATE_BY', 'CREATE_AT','STATUS', 'NOTE'], 'safe'],
             [['PAJAK','DISCOUNT', 'ETD', 'ETA', 'SHIPPING', 'BILLING', 'DELIVERY_COST'], 'safe'],
             [['STATUS'], 'integer'],

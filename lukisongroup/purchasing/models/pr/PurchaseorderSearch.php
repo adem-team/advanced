@@ -25,7 +25,7 @@ class PurchaseorderSearch extends Purchaseorder
     {
         return [
             [['STATUS'], 'integer'],
-            [['KD_PO', 'KD_SUPPLIER', 'CREATE_BY', 'CREATE_AT', 'NOTE','PAJAK','DISC','ETD', 'ETA', 'SHIPPING', 'BILLING', 'DELIVERY_COST', 'namasuplier'], 'safe'],
+            [['KD_PO', 'KD_SUPPLIER', 'CREATE_BY', 'CREATE_AT', 'NOTE','PAJAK','DISCOUNT','ETD', 'ETA', 'SHIPPING', 'BILLING', 'DELIVERY_COST', 'namasuplier'], 'safe'],
             [['SIG1_NM','SIG2_NM','SIG3_NM','SIG4_NM'], 'safe'],
         ];
     }

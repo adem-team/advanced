@@ -280,11 +280,11 @@ $y=4;
 								/*Calculate ptr.nov*/
 								$ttlDiscount=$poHeader->DISCOUNT!=0 ? $discount*$subtotal:0.00;
 								$ttlTax = $poHeader->PAJAK!=0 ? $tax*$subtotal :0.00;
-								$ttlDelevery=$poHeader->DELIVERY_COST!=0 ? $ttlDelevery:0.00;
+								$ttlDelevery=$poHeader->DELIVERY_COST!=0 ? $delevery:0.00;
 								$grandTotal=$subtotal + $ttlDiscount + $ttlTax + $ttlDelevery;					
 								
 								//return formulaAmount($summary, $data, $widget);
-								return '<div>'.$subtotal.',</div>
+								return '<div>'.$subtotal.'</div>
 									<div>'.$ttlDiscount.'</div>
 									<div>'.$ttlTax.'</div>
 									<div>'.$ttlDelevery.'</div>	
@@ -580,19 +580,20 @@ $y=4;
 					 <tr>
 						<th style="text-align: center; vertical-align:middle;width:180; height:60px">
 							<?php 
-								$ttd1 = $poHeader->SIG1_SVGBASE64!=0 ?  '<img src="'.$poHeader->SIG1_SVGBASE64.'" height="120" width="150"></img>' : '';
+								$ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG1_SVGBASE64.'" height="120" width="150"></img>' : '';
 								echo $ttd1;
+								
 							?> 	
 						</th>								
 						<th style="text-align: center; vertical-align:middle;width:180">
 							<?php 
-								$ttd2 = $poHeader->SIG2_SVGBASE64!=0 ?  '<img src="'.$poHeader->SIG2_SVGBASE64.'" height="120" width="150"></img>' : '';
+								$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG2_SVGBASE64.'" height="120" width="150"></img>' : '';
 								echo $ttd2;
 							?> 
 						</th>
 						<th style="text-align: center; vertical-align:middle;width:180">
 							<?php 
-								$ttd3 = $poHeader->SIG3_SVGBASE64!=0 ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="120" width="150"></img>' : '';
+								$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="120" width="150"></img>' : '';
 								echo $ttd3;
 							?> 
 						</th>

@@ -22,6 +22,7 @@ use lukisongroup\master\models\Unitbarang;
 class Rodetail extends \yii\db\ActiveRecord
 {
 	public $KD_KATEGORI;
+	public $STT_SEND_PO;
     /**
      * @inheritdoc
      */
@@ -49,7 +50,7 @@ class Rodetail extends \yii\db\ActiveRecord
 			//[['KD_RO','RQTY','SQTY','UNIT','KD_BARANG'], 'safe'],
             [['STATUS'], 'integer'],
             [['NOTE','UNIT','KD_BARANG'], 'string'],
-            [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT'], 'safe'],
+            [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT','TMP_CK'], 'safe'],
             [['KD_RO', 'KD_BARANG'], 'string', 'max' => 50],
             [['NM_BARANG', 'NO_URUT'], 'string', 'max' => 255]
         ];
