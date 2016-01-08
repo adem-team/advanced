@@ -147,8 +147,8 @@ use yii\helpers\Url;
         	<div class="col-md-12" style="font-family: tahoma ;font-size: 16pt;">
              		USER PROFILE
              		<br/>
-           	<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
-		<hr style="height:1px;margin-top: 1px; margin-bottom: 10px;">
+           	<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0" />
+		<hr style="height:1px;margin-top: 1px; margin-bottom: 10px;" />
            	</div>
         </div>
 	<div class="row ">
@@ -159,8 +159,7 @@ use yii\helpers\Url;
 		<div class="col-md-8" style="font-family: tahoma ;font-size: 10pt;">
 			<div class="alert alert-info">
 				Your profile is only 45% complete, to enjoy full feaures you have to complete it 100%. 
-				<br /><br />
-				<div class="progress" style="height:5px">
+				<div class="progress" style="height:3px">
 					<div class="progress-bar progress-bar-striped active progress-bar-danger"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%;">
 						<span class="sr-only">45% Complete</span>
 					</div>
