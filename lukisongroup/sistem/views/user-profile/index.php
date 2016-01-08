@@ -187,17 +187,17 @@ use yii\helpers\Url;
 				<dl>
 					<dt style="float:left">Name</dt>
 					<dd>:	<?=$profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;; ?></dd>
-					<dt style="float:left">Phone</dt>
+					<dt style="width:100px;float:left">Phone</dt>
 					<dd>:	<?=$profile->emp->EMP_NM; ?></dd>
-					<dt style="float:left">Registered On</dt>
+					<dt style="width:100px; float:left">Registered On</dt>
 					<dd>:	<?=$profile->emp->EMP_NM; ?></dd>
-					<dt style="float:left">Role</dt>
+					<dt style="width:100px; float:left">Role</dt>
 					<dd>:	<?=$profile->emp->EMP_NM; ?></dd>
-					<dt style="float:left">NPWP</dt>
+					<dt style="width:100px; float:left">NPWP</dt>
 					<dd>:	<?=$profile->emp->EMP_NM; ?></dd>
-					<dt style="float:left">Jamsostek</dt>
+					<dt style="width:100px; float:left">Jamsostek</dt>
 					<dd>:	<?=$profile->emp->EMP_NM; ?></dd>
-					<dt style="float:left">NoReg</dt>
+					<dt style="width:100px; float:left">NoReg</dt>
 			
 				</dl>
 				<h3><strong> Name:</strong> Alexa Chui Renamai</h3>                    
