@@ -186,7 +186,7 @@ use yii\helpers\Url;
 			<div >
 				<dl>
 					<dt>Name</dt>
-					<dd>:	<?=$profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;; ?></dd>
+					<dd style="float:left">:	<?=$profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;; ?></dd>
 					
 				</dl>
 				<h3><strong> Name:</strong> Alexa Chui Renamai</h3>                    
