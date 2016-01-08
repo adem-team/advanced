@@ -5,6 +5,7 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
 
+
 	/*
 	 * Declaration Componen User Permission
 	 * Function getPermission
@@ -24,7 +25,7 @@ use yii\helpers\Url;
 			return false;
 		}	 
 	}
-	
+	$profile=Yii::$app->getUserOpt->Profile_user();
 	/**
      * Setting 
 	 * @author ptrnov  <piter@lukison.com>
@@ -151,7 +152,7 @@ use yii\helpers\Url;
         </div>
 		<div class="row ">
 			<div class="col-md-3">
-				<img src="http://lukisongroup.com/upload/hrd/Employee/1436076377.jpg"  class="img-responsive img-thumbnail" />
+				<img src="http://lukisongroup.com/upload/hrd/Employee/".$profile->IMEMP_IMG  class="img-responsive img-thumbnail" />
               
 			</div>
 			<div class="col-md-8">
