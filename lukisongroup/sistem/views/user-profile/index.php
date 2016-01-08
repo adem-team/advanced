@@ -142,14 +142,14 @@ use yii\helpers\Url;
 	}
 	
 ?>
-<div class="container " >
+<div class="container">
 	<div class="row text-center">
         	<div class="col-md-12" style="font-family: tahoma ;font-size: 16pt;">
              		USER PROFILE
              		<br/>
-           	</div>
            	<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
 		<hr style="height:1px;margin-top: 1px; margin-bottom: 10px;">
+           	</div>
         </div>
 	<div class="row ">
 		<div class="col-md-3">
