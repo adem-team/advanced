@@ -147,7 +147,7 @@ use yii\helpers\Url;
         	<div class="col-md-12" style="font-family: tahoma ;font-size: 16pt;">
              		USER PROFILE
              		<br/>
-           	<hr/><br/>
+           	<hr/>
 		</div>
         </div>
 	<div class="row ">
