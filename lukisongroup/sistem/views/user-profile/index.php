@@ -144,17 +144,19 @@ use yii\helpers\Url;
 ?>
 <div class="container " >
 	<div class="row text-center">
-        	<div class="col-md-12">
+        	<div class="col-md-12" style="font-family: tahoma ;font-size: 16pt;">
              		<h1>  USER PROFILE</h1> 
                 	<br />
            	</div>
+           	<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
+		<hr style="height:1px;margin-top: 1px; margin-bottom: 10px;">
         </div>
 	<div class="row ">
 		<div class="col-md-3">
 			<img src="<?=Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$profile->emp->EMP_IMG; ?>" class="img-responsive img-thumbnail" />
       
 		</div>
-		<div class="col-md-8">
+		<div class="col-md-8" style="font-family: tahoma ;font-size: 12pt;">
 			<div class="alert alert-info">
 				Your profile is only 45% complete, to enjoy full feaures you have to complete it 100%. 
 				<br /><br />
