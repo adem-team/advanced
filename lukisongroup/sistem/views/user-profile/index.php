@@ -158,12 +158,12 @@ use yii\helpers\Url;
 		<div class="col-md-8" style="font-family: tahoma ;font-size: 10pt;">
 			<div class="alert alert-info">
 				Your profile is only 45% complete, to enjoy full feaures you have to complete it 100%. 
-				<div class="progress">
+				<div class="progress" style="height:10px">
 					<div class="progress-bar progress-bar-striped active progress-bar-danger"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%;">
 						<span class="sr-only">45% Complete</span>
 					</div>
 				</div>
-           			To complete your profile please <a href="#">click here</a> .
+           			<!--To complete your profile please <a href="#">click here</a> .!-->
 			</div>
 			<div class="btn-group pull-right">
 				<button type="button" class="btn btn-success">My Settings</button>
