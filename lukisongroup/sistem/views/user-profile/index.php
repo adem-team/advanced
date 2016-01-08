@@ -181,6 +181,7 @@ use yii\helpers\Url;
 					<li><?php echo tombolLogoff();?></li>
 				  </ul>
 			</div>
+			<br/>
 			<hr />
 			<div >
 				<dl>
