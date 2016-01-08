@@ -152,7 +152,7 @@ use yii\helpers\Url;
         </div>
 		<div class="row ">
 			<div class="col-md-3">
-				<img src="http://lukisongroup.com/upload/hrd/Employee/".<?php echo $profile->emp->EMP_IMG; ?> class="img-responsive img-thumbnail" />
+				<img src="<?=Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$profile->emp->EMP_IMG; ?>" class="img-responsive img-thumbnail" />
               
 			</div>
 			<div class="col-md-8">
