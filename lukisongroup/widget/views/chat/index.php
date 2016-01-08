@@ -1,276 +1,302 @@
-﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <!--[if IE]>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <![endif]-->
-    <title>BOOTSTRAP CHAT EXAMPLE</title>
-    <!-- BOOTSTRAP CORE STYLE CSS -->
-    <link href="http://lukisongroup.int/widget/bootstrap-chat/assets/css/bootstrap.css" rel="stylesheet" />
+﻿<?php
 
-</head>
-<body style="font-family:Verdana">
-  <div class="container">
-<div class="row">
-    <div class="col-md-8">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                RECENT CHAT HISTORY
-            </div>
-            <div class="pre-scrollableChatBase panel-body">
-				<ul class="media-list">
-					<li class="media">
-						<div class="media-body">
-							<div class="media">
-								<a class="pull-left" href="#">
-									<img class="media-object img-circle " src="http://lukisongroup.int/upload/hrd/orgimage/piter.png" />
-								</a>
-								<div class="media-body" >
-									Donec sit amet ligula enim. Duis vel condimentum massa.              
-									Donec sit amet ligula enim. Duis vel condimentum massa.Donec sit amet ligula enim. 
-									Duis vel condimentum massa.
-									Donec sit amet ligula enim. Duis vel condimentum massa.
-									<br />
-								   <small class="text-muted">Alex Deo | 23rd June at 5:00pm</small>
-									<hr />
-								</div>
-							</div>
 
-						</div>
-					</li>
-					<li class="media">
-						<div class="media-body">
-							<div class="media">
-								<a class="pull-left" href="#">
-									<img class="media-object img-circle " src="http://lukisongroup.int/upload/hrd/orgimage/ailey.png" />
-								</a>
-								<div class="media-body" >
-									Donec sit amet ligula enim. Duis vel condimentum massa.              
-									Donec sit amet ligula enim. Duis vel condimentum massa.Donec sit amet ligula enim. 
-									Duis vel condimentum massa.
-									Donec sit amet ligula enim. Duis vel condimentum massa.
-									<br />
-								   <small class="text-muted">Jhon Rexa | 23rd June at 5:00pm</small>
-									<hr />
-								</div>
-							</div>
+use kartik\grid\GridView;
+use yii\helpers\html;
+use yii\bootstrap\Modal;
 
-						</div>
-					</li>
-					<li class="media">
-						<div class="media-body">
-							<div class="media">
-								<a class="pull-left" href="#">
-									<img class="media-object img-circle " src="http://lukisongroup.int/upload/hrd/orgimage/stephen.png"/>
-								</a>
-								<div class="media-body" >
-									Donec sit amet ligula enim. Duis vel condimentum massa.              
-									Donec sit amet ligula enim. Duis vel condimentum massa.Donec sit amet ligula enim. 
-									Duis vel condimentum massa.
-									Donec sit amet ligula enim. Duis vel condimentum massa.
-									<br />
-								   <small class="text-muted">Alex Deo | 23rd June at 5:00pm</small>
-									<hr />
-								</div>
-							</div>
-						</div>
-					</li>
-					<li class="media">
-						<div class="media-body">
-							<div class="media">
-								<a class="pull-left" href="#">
-									<img class="media-object img-circle " src="http://lukisongroup.int/upload/hrd/orgimage/tano.png" />
-								</a>
-								<div class="media-body" >
-									Donec sit amet ligula enim. Duis vel condimentum massa.              
-									Donec sit amet ligula enim. Duis vel condimentum massa.Donec sit amet ligula enim. 
-									Duis vel condimentum massa.
-									Donec sit amet ligula enim. Duis vel condimentum massa.
-									<br />
-								   <small class="text-muted">Jhon Rexa | 23rd June at 5:00pm</small>
-									<hr />
-								</div>
-							</div>
 
-						</div>
-					</li>
-				</ul>
-            </div>
-            <div class="panel-footer">
-                <div class="input-group">
-					<input type="text" class="form-control" style="height:100px" placeholder="Enter Message" />
-					<span class="input-group-btn">
-						<button class="btn btn-info" style="height:100px" type="button">SEND</button>
-					</span>
-				</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-		<div class="panel panel-danger">
-			<div class="panel-heading">
-               ROOMS		
-			</div>
-			<div class="pre-scrollableRooms	 panel-body" id="room">
-				<li class="media">
-						<div class="media-body">
-							<div class="media">
-								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="http://lukisongroup.int/upload/hrd/orgimage/piter.png" />
-								</a>
-								<div class="media-body" >
-									<h5>Alex Deo | User </h5>                                                    
-								   <small class="text-muted">Active From 3 hours</small>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li class="media">
-						<div class="media-body">
-							<div class="media">
-								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="http://lukisongroup.int/upload/hrd/orgimage/ailey.png" />
-								</a>
-								<div class="media-body" >
-									<h5>Jhon Rexa | User </h5>                                                    
-								   <small class="text-muted">Active From 3 hours</small>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li class="media">
-						<div class="media-body">
-							<div class="media">
-								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="http://lukisongroup.int/upload/hrd/orgimage/stephen.png" />
-								</a>
-								<div class="media-body" >
-									<h5>Alex Deo | User </h5>                                                    
-								   <small class="text-muted">Active From 3 hours</small>
-								</div>
-							</div>
-						</div>
-					</li>
-			</div>			
-		</div>   
-		<div class="panel panel-info">
-			<div class="panel-heading">
-               ONLINE USERS		
-			</div>
-			<div class="pre-scrollableUser panel-body" id="user">
-				<ul class="media-list">
-					<li class="media">
-						<div class="media-body">
-							<div class="media">
-								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="http://lukisongroup.int/upload/hrd/orgimage/piter.png" />
-								</a>
-								<div class="media-body" >
-									<h5>Alex Deo | User </h5>                                                    
-								   <small class="text-muted">Active From 3 hours</small>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li class="media">
-						<div class="media-body">
-							<div class="media">
-								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="http://lukisongroup.int/upload/hrd/orgimage/ailey.png" />
-								</a>
-								<div class="media-body" >
-									<h5>Jhon Rexa | User </h5>                                                    
-								   <small class="text-muted">Active From 3 hours</small>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li class="media">
-						<div class="media-body">
-							<div class="media">
-								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="http://lukisongroup.int/upload/hrd/orgimage/stephen.png" />
-								</a>
-								<div class="media-body" >
-									<h5>Alex Deo | User </h5>                                                    
-								   <small class="text-muted">Active From 3 hours</small>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li class="media">
-						<div class="media-body">
-							<div class="media">
-								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="http://lukisongroup.int/upload/hrd/orgimage/tano.png" />
-								</a>
-								<div class="media-body" >
-									<h5>Jhon Rexa | User </h5>                                                    
-								   <small class="text-muted">Active From 3 hours</small>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li class="media">
-						<div class="media-body">
-							<div class="media">
-								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="assets/img/user.png" />
-								</a>
-								<div class="media-body" >
-									<h5>Alex Deo | User </h5>                                                    
-								   <small class="text-muted">Active From 3 hours</small>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li class="media">
-						<div class="media-body">
-							<div class="media">
-								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="assets/img/user.gif" />
-								</a>
-								<div class="media-body" >
-									<h5>Jhon Rexa | User </h5>                                                    
-								   <small class="text-muted">Active From 3 hours</small>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li class="media">
-						<div class="media-body">
-							<div class="media">
-								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="assets/img/user.png" />
-								</a>
-								<div class="media-body" >
-									<h5>Alex Deo | User </h5>                                                    
-								   <small class="text-muted">Active From 3 hours</small>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li class="media">
-						<div class="media-body">
-							<div class="media">
-								<a class="pull-left" href="#">
-									<img class="media-object img-circle" style="max-height:40px;" src="assets/img/user.gif" />
-								</a>
-								<div class="media-body" >
-									<h5>Jhon Rexa | User </h5>                                                    
-								   <small class="text-muted">Active From 3 hours</small>
-								</div>
-							</div>
-						</div>
-					</li>
-				</ul>
-			</div>
-		</div>
+
+
+
+/* @var $this yii\web\View */
+/* @var $searchModel lukisongroup\widget\models\ChatSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
+
+
+?>
+
+<!--message chat-->
+<div class="col-sm-8">         
+ <?= $gv_Chat = GridView::widget([
+    
+        'id'=>'gv-chat',
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+            
+	    'columns' => [ 
+                            [
+                                'attribute' => 'MESSAGE',
+                                'label' => 'Message',
+                                'value' => function($model) { return $model->MESSAGE_ATTACH. " " . $model->MESSAGE ;},
+                              ],
+         	
+                         ],
+        
+	'pjax'=>true,
+        'pjaxSettings'=>[
+            'options'=>[
+                'enablePushState'=>false,
+                'id'=>'gv-chat',                
+               ],
+        ],
+			
+		'panel'=>['type'=>'info', 'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-envelope"></i> Chat</h3>'],
+		'hover'=>true, //cursor select
+		'responsive'=>true,
+		//'responsiveWrap'=>true,
+		'bordered'=>true,
+		'striped'=>true,
+		'autoXlFormat'=>true,
+		
+    ])?>
+    
 </div>
-  </div>
-</body>
-</html>
+    
+   
+
+<!--chatting group-->
+
+    <div class="col-sm-4">
+    <?= $gv_Chat1 = GridView::widget([
+    
+        'id'=>'gv-chat2',
+        'dataProvider' => $dataprovider1,
+          'filterModel' => $searchmodel1,		
+	    'columns' => [
+                
+             /*     [
+                'label'=>'GroupChat',
+                'attribute'=>'GROUP_NM',
+                'format' => 'raw',
+                'value' => function($model){
+						$user = $model->GROUP_NM;
+						$icon1= '<span class="glyphicon glyphicon-user"></span>';
+                    return Html::button($user.''.$icon1,
+                                
+                                 [     
+                                       'class' => 'btn btn-default',
+                                       'id'=>'mod1',
+                                       'value' => $model->GROUP_ID,
+                                       'data-toggle'=>"modal",
+                                       'data-target'=>"#mymodal",													
+
+				]);
+                            
+                          
+                }
+            ], */
+			  
+                ['class' => 'yii\grid\ActionColumn', 
+					'template' => '{view}',
+                                        'contentOptions'=>[
+                                            'style'=>'width:200px'
+                                        ],
+					'header'=>'user',
+					'buttons' => [
+						'view'=>function($url, $model, $key){
+								$name1 = $model->GROUP_NM;
+								$icon1 = '<span class="glyphicon glyphicon-user"></span>';
+								return Html::a($name1.''.$icon1,
+                                                                       
+                                                                    ['createajax','id'=>$model->GROUP_ID],
+                                                                        [   
+                                                                            'data-toggle'=>"modal",
+                                                                            'data-target'=>"#modal-bumum",													
+//                                                                            'data-title'=> $model->username,
+									]
+                                                                        
+                                                                        
+                                                                        );
+                                                                },
+                                                                        ],
+                                                                        ],
+                
+
+         	
+            ],
+        
+	'pjax'=>true,
+        'pjaxSettings'=>[
+            'options'=>[
+                'enablePushState'=>false,
+                'id'=>'gv-chat2',                
+               ],
+        ],
+			
+		'panel'=>['type'=>'info', 'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-user"></i> Rooms</h3>'],
+		'hover'=>true, //cursor select
+		'responsive'=>true,
+		//'responsiveWrap'=>true,
+		'bordered'=>true,
+		'striped'=>true,
+		'autoXlFormat'=>true,
+		
+    ])?>
+	<?php
+	
+	$waktu = time();
+	$datawaktu = Yii::$app->session['userSessionTimeout'];
+
+	
+	
+	if($datawaktu<$waktu)
+	{
+		$icon = "ofline";
+	}
+	else{
+		$icon = 'online';
+	}
+	
+	
+	?>
+         <?= $gv_Chat1 = GridView::widget([
+    
+        'id'=>'gv-chat1',
+        'dataProvider' => $dataProvider1,
+//        'filterModel' => $searchModel,		
+	    'columns' => [
+		
+		
+		
+       
+                
+        /*     [
+                'label'=>'User',
+                 'attribute'=>'username',
+                'format' => 'raw',
+                'value' => function($model){
+					$name = $model->username;
+					$icon = '<span class="glyphicon glyphicon-user"></span>';
+                    return Html::button($icon.''.$name,
+                                
+                                 [     
+                                       'class' => 'btn btn-default',
+                                       'id'=>'mod1',
+                                       'value' => $model->id,
+                                       'data-toggle'=>"modal",
+                                       'data-target'=>"#mymodal",		
+                                        
+            ]);
+			
+				},
+          
+         	
+            ], */
+			     ['class' => 'yii\grid\ActionColumn', 
+					'template' => '{view}',
+                                        'contentOptions'=>[
+                                            'style'=>'width:200px'
+                                        ],
+					'header'=>'user',
+					'buttons' => [
+						'view'=>function($url, $model, $key){
+								$name = $model->username;
+								$icon = '<span class="glyphicon glyphicon-user"></span>';
+								return Html::a($icon.''.$name,
+                                                                       
+                                                                    ['createajax','id'=>$model->id],
+                                                                        [   
+                                                                            'data-toggle'=>"modal",
+                                                                            'data-target'=>"#modal-bumum",													
+//                                                                            'data-title'=> $model->username,
+									]
+                                                                        
+                                                                        
+                                                                        );
+                                                                },
+                                                                        ],
+                                                                        ],
+			],
+        
+	'pjax'=>true,
+        'pjaxSettings'=>[
+            'options'=>[
+                'enablePushState'=>false,
+                'id'=>'gv-chat1',                
+               ],
+        ],
+			
+		'panel'=>['type'=>'info', 'heading'=>'ONLINE USERS'],
+		'hover'=>true, //cursor select
+		'responsive'=>true,
+		//'responsiveWrap'=>true,
+		'bordered'=>true,
+		'striped'=>true,
+		'autoXlFormat'=>true,
+		
+    ])?>
+        
+        <?php
+        
+       
+        
+      /*  $this->registerJs("
+	    $('#tes').click(function(e) {
+		 $.ajax({
+       url: '/widget/chat/create',
+       type: 'POST',
+       data: {
+              id: $('#mod1').val(),
+			  mes: $('#mes').val()
+             },
+			async: false,
+			dataType: 'json',
+            success: function (result) {
+                if(result == 1 )
+                                          {
+                                             $(document).find('#mymodal').modal('hide')
+                                             $('#myform').trigger('reset');
+                                             $.pjax.reload({container:'#gv-chat'});
+                                          }
+                                        else{
+                                          
+                                        }
+            },
+          
+       
+       });
+	     e.preventDefault();
+  });
+  
+
+        
+        ",$this::POS_READY); */
+                        
+
+	
+		
+     
+        ?>
+    </div>
+	
+	<?php
+	
+	 $this->registerJs("
+        
+        $('#modal-bumum').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+	
+	 Modal::begin([
+                            'id' => 'modal-bumum',
+                            'header' => '<h4 class="modal-title">LukisonGroup</h4>',
+                             ]);
+                Modal::end();
+	
+	?>
+
+
+ 
+
+ 
