@@ -185,7 +185,7 @@ use yii\helpers\Url;
 			<hr />
 			<div >
 				<dl>
-					<dt style="float:left">Name</dt>
+					<dt style="width:100px; float:left">Name</dt>
 					<dd>:	<?=$profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;; ?></dd>
 					<dt style="width:100px;float:left">Phone</dt>
 					<dd>:	<?=$profile->emp->EMP_NM; ?></dd>
@@ -198,7 +198,7 @@ use yii\helpers\Url;
 					<dt style="width:100px; float:left">Jamsostek</dt>
 					<dd>:	<?=$profile->emp->EMP_NM; ?></dd>
 					<dt style="width:100px; float:left">NoReg</dt>
-			
+					<dd>:	<?=$profile->emp->EMP_NM; ?></dd>
 				</dl>
 				<h3><strong> Name:</strong> Alexa Chui Renamai</h3>                    
 				<h3> <strong> Registered On:</strong> 24th August 2014</h3>  
