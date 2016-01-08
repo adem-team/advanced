@@ -158,7 +158,7 @@ use yii\helpers\Url;
 		<div class="col-md-8" style="font-family: tahoma ;font-size: 10pt;">
 			<div class="alert alert-info">
 				Your profile is only 45% complete, to enjoy full feaures you have to complete it 100%. 
-				<div class="progress" style="height:5px">
+				<div class="progress">
 					<div class="progress-bar progress-bar-striped active progress-bar-danger"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%;">
 						<span class="sr-only">45% Complete</span>
 					</div>
