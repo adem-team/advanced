@@ -4,42 +4,38 @@ namespace lukisongroup\purchasing\models\pr;
 use Yii;
 use yii\base\Model;
 use lukisongroup\purchasing\models\pr\Purchaseorder;
-use lukisongroup\purchasing\models\pr\Purchasedetail;
-use lukisongroup\purchasing\models\ro\Requestorder;
-use lukisongroup\purchasing\models\ro\Rodetail;
 
-/*
-* Send PO validation | Transfer barang dari RO/SO ke PO
-* @author ptrnov  <piter@lukison.com>
-* @since 1.1
-*/
+	/*
+	*ShippingValidation
+	* @author ptrnov  <piter@lukison.com>
+	* @since 1.1
+	*/
 	
-class SendPoValidation extends Model
+class ShippingValidation extends Model
 {
     public $kD_PO;
-	public $kD_RO;
-	public $PQTY;
+	public $sHIPPING;
 	  
     public function rules()
     {
         return [			
-			[['kD_PO'], 'findcheck'],		
-			[['kD_PO','kD_RO'],'required','PQTY'],					
-			[['dELIVERY'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],			
+			[['kD_PO'], 'findcheck'],	
+			[['kD_PO','sHIPPING'], 'required'],					
+			[['sHIPPING'], 'safe'],			
 		];
     }
 	
 	/**
-     * Check KD_PO Purchasdetail 
+     * Check KD_PO Purchaseorder 
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
      */
 	public function findcheck($attribute, $params)
     {        
 		if (!$this->hasErrors()) {
-			 $cntDetailPo = Purchasedetail::find()->where(['KD_PO'=>$this->kD_PO])->count();
+			 $cntDetailPo = Purchaseorder::find()->where(['KD_PO'=>$this->kD_PO])->count();
 			if (!$cntDetailPo) {
-                $this->addError($attribute, 'Please, Input Item SKU First');				
+                $this->addError($attribute, 'PO Not Found, Please Generate PO the first');				
             } 
        }
     }
@@ -49,11 +45,11 @@ class SendPoValidation extends Model
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
      */
-	public function delevery_saved()
+	public function shipping_saved()
     {
 		if ($this->validate()) {
 			$poHeader = Purchaseorder::findOne($this->kD_PO);
-			$poHeader->DELIVERY_COST = $this->dELIVERY;			
+			$poHeader->SHIPPING =$this->sHIPPING;			
 			if ($poHeader->save()) {
                 return $poHeader;
             }
@@ -65,7 +61,7 @@ class SendPoValidation extends Model
 	public function attributeLabels()
     {
         return [
-            'dELIVERY' => 'Delivery.Cost  [ex: 1,000,000.00]',
+            'sHIPPING' => 'Shipping',
             'kD_PO' => 'Kode.PO'
         ];
     }

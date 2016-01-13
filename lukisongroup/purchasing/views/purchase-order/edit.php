@@ -154,7 +154,7 @@ $y=4;
 			]
 		],
 		[/* Attribute Request Quantity */
-			//'class'=>'kartik\grid\EditableColumn',
+			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'QTY',
 			'label'=>'Qty',						
 			'vAlign'=>'middle',
@@ -184,14 +184,14 @@ $y=4;
 						'border-right'=>'0px',									
 				]
 			],
-			/* 'editableOptions' => [
+			'editableOptions' => [
 				'header' => 'Update Quantity',
 				'inputType' => \kartik\editable\Editable::INPUT_TEXT,
 				'size' => 'sm',	
 				'options' => [
 				  'pluginOptions' => ['min'=>0, 'max'=>50000]
 				]
-			],	 */
+			],	
 		],					
 		[/* Attribute Unit Barang */
 			'attribute'=>'NM_UNIT',
@@ -241,7 +241,7 @@ $y=4;
 			],			
 		],
 		[	/* Attribute Unit Barang */
-			//'class'=>'kartik\grid\EditableColumn',
+			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'HARGA',
 			'mergeHeader'=>true,
 			'label'=>'Price',										
@@ -265,14 +265,14 @@ $y=4;
 						'font-size'=>'8pt',									
 				]
 			],
-			/* 'editableOptions' => [
+			'editableOptions' => [
 				'header' => 'Update Price',
 				'inputType' => \kartik\editable\Editable::INPUT_TEXT,
 				'size' => 'sm',	
 				 'options' => [
 				  'pluginOptions' => ['min'=>0, 'max'=>10000000000]
 				] 
-			],	 */
+			],	
 			'format'=>['decimal', 2],
 			'pageSummary'=>function ($summary, $data, $widget) use ($poHeader){ 
 							$discountModal=$poHeader->DISCOUNT!=0 ? $poHeader->DISCOUNT:'0.00';
@@ -528,7 +528,7 @@ $y=4;
 			<div  class="col-md-12">
 				<dt><b>General Notes :</b></dt>
 				<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;">	
-				<dd><?php echo $poHeader->NOTE; ?></dd><br/>
+				<dd><?php echo $poHeader->NOTE; ?></dd><br/><br/><br/><br/>     
 				<hr style="height:1px;margin-top: 1px;">
 			</div>
 		</div>
