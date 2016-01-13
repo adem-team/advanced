@@ -16,7 +16,6 @@ use yii\web\UploadedFile;
 class Employe extends \yii\db\ActiveRecord
 {
 	public $upload_file;
-	//public $oldpassmd5;
 	
 	/* [1] SOURCE DB */
     public static function getDb()
@@ -35,7 +34,7 @@ class Employe extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['EMP_ID'], 'required'],
+            // [['EMP_NM','EMP_KTP','EMP_ALAMAT'], 'required'],
             [['EMP_ID','EMP_ZIP','EMP_CORP_ID'], 'string', 'max' => 20],
             [['EMP_NM','EMP_NM_BLK','EMP_IMG','EMP_KTP','GRP_NM'], 'string', 'max' => 20], 
 			[['DEP_ID','JOBGRADE_ID'], 'string', 'max' => 5], 
@@ -48,15 +47,16 @@ class Employe extends \yii\db\ActiveRecord
 			[['EMP_TLP','EMP_HP'], 'string', 'max' => 15], 
 			[['EMP_GENDER'], 'string', 'max' => 6], 
 			[['EMP_EMAIL'], 'string', 'max' => 30],  			
-		    [['EMP_IMG'], 'string', 'max' => 50],    
+		    
+            [['EMP_IMG'], 'string', 'max' => 50],    
 			[['upload_file'], 'file', 'skipOnEmpty' => true,'extensions'=>'jpg,png', 'mimeTypes'=>'image/jpeg, image/png',],
 			[['CREATED_BY','UPDATED_BY'], 'string', 'max' => 50],
-			[['SIGSVGBASE64','SIGSVGBASE30'], 'safe'], 
-			[['SIGPASSWORD'], 'string'], 
+			[['SIGSVGBASE64','SIGSVGBASE30','SIGPASSWORD'], 'safe'], 
 			//[['UPDATED_TIME'], 'date'], errot message bool false
         ];
-    }	
-	
+    }
+
+
 	/* [4] ATRIBUTE LABEL  -> DetailView/GridView */
     public function attributeLabels()
     {
@@ -106,7 +106,7 @@ class Employe extends \yii\db\ActiveRecord
 			//'jabOne.JAB_NM' => Yii::t('app', 'Position'),
 			//UMUM
             'sttOne.STS_NM' => Yii::t('app', 'Status'), 
-			'SIGPASSWORD' => Yii::t('app', 'Siqnature password')
+			
         ];
     }
 	 
@@ -190,31 +190,6 @@ class Employe extends \yii\db\ActiveRecord
    // {
     //    return ['EMP_ID'];
    // }
-   
-   /**
-     * Generates password hash from password signature
-     *
-     * @param string $SIGPASSWORD
-	 * @author ptrnov  <piter@lukison.com>
-	 * @since 1.1
-     */
-    public function setPassword_signature($password)
-    {
-        $this->SIGPASSWORD = Yii::$app->security->generatePasswordHash($password);
-    }
-	
-	/**
-     * return Password Signature
-     *
-     * @param string $SIGPASSWORD
-	 * @author ptrnov  <piter@lukison.com>
-	 * @since 1.1
-     */
-	public function validateOldPasswordCheck($password)
-    {
-        return Yii::$app->security->validatePassword($password, $this->SIGPASSWORD);
-		
-    } 
 
 }
 
