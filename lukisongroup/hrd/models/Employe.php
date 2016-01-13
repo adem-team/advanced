@@ -34,7 +34,7 @@ class Employe extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['EMP_ID'], 'required'],
+            // [['EMP_NM','EMP_KTP','EMP_ALAMAT'], 'required'],
             [['EMP_ID','EMP_ZIP','EMP_CORP_ID'], 'string', 'max' => 20],
             [['EMP_NM','EMP_NM_BLK','EMP_IMG','EMP_KTP','GRP_NM'], 'string', 'max' => 20], 
 			[['DEP_ID','JOBGRADE_ID'], 'string', 'max' => 5], 
@@ -47,7 +47,7 @@ class Employe extends \yii\db\ActiveRecord
 			[['EMP_TLP','EMP_HP'], 'string', 'max' => 15], 
 			[['EMP_GENDER'], 'string', 'max' => 6], 
 			[['EMP_EMAIL'], 'string', 'max' => 30],  			
-		    [['EMP_ZIP'], 'integer', 'max' => 50],
+		    
             [['EMP_IMG'], 'string', 'max' => 50],    
 			[['upload_file'], 'file', 'skipOnEmpty' => true,'extensions'=>'jpg,png', 'mimeTypes'=>'image/jpeg, image/png',],
 			[['CREATED_BY','UPDATED_BY'], 'string', 'max' => 50],

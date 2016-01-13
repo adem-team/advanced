@@ -96,6 +96,7 @@ class ChatController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             $model->GROUP = $id;
+			$model->CREATED_BY = Yii::$app->user->identity->id;;
 			$model->MESSAGE_STS = 0;
 			$model->MESSAGE_SHOW = 0;
 //             $model->image = \yii\web\UploadedFile::getInstance($model, 'file');
@@ -201,6 +202,7 @@ class ChatController extends Controller
      * @param string $id
      * @return mixed
      */
+	
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);

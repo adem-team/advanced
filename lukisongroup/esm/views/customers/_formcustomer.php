@@ -180,11 +180,7 @@ use kartik\widgets\DepDrop;
 	
 	?>
 	
-    <?= $form->field($model, 'ALAMAT')->textInput(['maxlength' => true]) ?> 
-
-   <?= $form->field($model, 'MAP_LNG')->hiddenInput()->label(false) ?>
-   
-    <?= $form->field($model, 'MAP_LAT')->hiddenInput()->label(false) ?>
+    
 	<!-- $form->field($model, 'MAP_LNG')->textInput(['maxlength' => true,'readonly'=>true]) ?> -->
 	 <!-- $form->field($model, 'MAP_LAT')->textInput(['maxlength' => true,'readonly'=>true]) ?> -->
        <!-- Html::button('...', ['value'=>Url::to('/esm/customers/lokasi'),'class' => 'btn btn-success','id'=>'modalcp']);?> -->
@@ -251,40 +247,42 @@ use kartik\widgets\DepDrop;
 
   
   
-   <?php echo \pigolab\locationpicker\LocationPickerWidget::widget([
+   <?php 
+
+   // \pigolab\locationpicker\LocationPickerWidget::widget([
        // 'key' => 'http://maps.google.com/maps/api/js?sensor=false&libraries=places', // optional , Your can also put your google map api key
-       'options' => [
+       // 'options' => [
 
             
         // 'enableSearchBox' => true,
-            'style' => 'width: 100%; height: 400px',
-            'enableSearchBox' => true, // Optional , default is true
-        'searchBoxOptions' => [ // searchBox html attributes
-            'style' => 'width: 300px;', // Optional , default width and height defined in css coordinates-picker.css
-                    ], // map canvas width and height
-        ] ,
+            // 'style' => 'width: 100%; height: 400px',
+            // 'enableSearchBox' => true, // Optional , default is true
+        // 'searchBoxOptions' => [ // searchBox html attributes
+            // 'style' => 'width: 300px;', // Optional , default width and height defined in css coordinates-picker.css
+                    // ], // map canvas width and height
+        // ] ,
         // 'ClientEvents' =>
         // [
-        //      $('#us6').locationpicker('autosize')
+             // $('#us6').locationpicker('autosize')
         // ],
           
 
-        'clientOptions' => [
-            'location' => [
-                'latitude'  => -6.214620,
-                'longitude' => 106.845130 ,
+        // 'clientOptions' => [
+            // 'location' => [
+                // 'latitude'  => -6.214620,
+                // 'longitude' => 106.845130 ,
 			
-            ],
-            'radius'    => 300,
-            'inputBinding' => [
-                'latitudeInput'     => new JsExpression("$('#customers-map_lat')"),
-                 'longitudeInput'    => new JsExpression("$('#customers-map_lng')"),
+            // ],
+            // 'radius'    => 300,
+            // 'inputBinding' => [
+                // 'latitudeInput'     => new JsExpression("$('#customers-map_lat')"),
+                 // 'longitudeInput'    => new JsExpression("$('#customers-map_lng')"),
                 // 'radiusInput'       => new JsExpression("$('#us2-radius')"),
-                'locationNameInput' => new JsExpression("$('#customers-alamat')")
-            ],
-            'enableAutocomplete' => true,
-        ]        
-    ]);
+                // 'locationNameInput' => new JsExpression("$('#customers-alamat')")
+            // ],
+            // 'enableAutocomplete' => true,
+        // ]        
+    // ]);
 ?>
  <!-- $form->field($model, 'ALAMAT')->widget('\pigolab\locationpicker\CoordinatesPicker' , [
         // 'key' => 'abcabcabc...' ,   // optional , Your can also put your google map api key

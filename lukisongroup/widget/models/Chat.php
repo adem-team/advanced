@@ -33,6 +33,10 @@ class Chat extends \yii\db\ActiveRecord
     {
         return Yii::$app->get('db_widget');
     }
+	public function getChat()
+    {
+        return $this->hasOne(Chatroom::className(), ['GROUP_ID' => 'GROUP']);
+    }
 
     /**
      * @inheritdoc

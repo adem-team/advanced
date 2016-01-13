@@ -112,6 +112,7 @@ class ChatroomController extends Controller
         {
             $model->SORT = $id;
 			$model->PARENT = $id;
+			$model->GROUP_ID = $id;
             $model->save();
             
          return $this->redirect('index');

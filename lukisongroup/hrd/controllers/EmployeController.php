@@ -171,7 +171,8 @@ class EmployeController extends Controller
 				} 
 			}
 		}else {
-			 $js1="$('#view-emp').on('show.bs.modal', function (event) {
+			 $js1="$.fn.modal.Constructor.prototype.enforceFocus = function(){};
+			 $('#view-emp').on('show.bs.modal', function (event) {
 		        var button = $(event.relatedTarget)
 		        var modal = $(this)
 		        var title = button.data('title') 				

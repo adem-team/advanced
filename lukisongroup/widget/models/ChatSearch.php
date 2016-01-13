@@ -15,11 +15,12 @@ class ChatSearch extends Chat
     /**
      * @inheritdoc
      */
+	 public $SORT;
     public function rules()
     {
         return [
             [['ID', 'MESSAGE_STS', 'MESSAGE_SHOW', 'CREATED_BY'], 'integer'],
-            [['MESSAGE', 'MESSAGE_ATTACH', 'GROUP', 'UPDATED_TIME'], 'safe'],
+            [['MESSAGE','SORT', 'MESSAGE_ATTACH', 'GROUP', 'UPDATED_TIME'], 'safe'],
         ];
     }
 
@@ -41,7 +42,19 @@ class ChatSearch extends Chat
      */
     public function search($params)
     {
-        $query = Chat::find();
+		$id = Yii::$app->user->identity->id;
+		
+		$SORT = Chatroom::find()->one();
+		$data = $SORT->SORT;
+		// print_r($SORT);
+		// die();
+		
+		$query = Chat::find()->innerJoinWith('chat', false)
+											->Where(['GROUP'=>$id])
+											->orWhere('CREATED_BY = :CREATED_BY', [':CREATED_BY' => $id])
+											->orWhere('SORT = :SORT', [':SORT' => $data]);
+										
+											
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -69,6 +82,9 @@ class ChatSearch extends Chat
 
         return $dataProvider;
     }
+	
+	
+	  
 	
 	
 	

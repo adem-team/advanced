@@ -459,6 +459,34 @@ class CustomersController extends Controller
   //       }
   
   //   }
+  
+    public function actionCreatemap($id,$lat,$long,$address)
+    {
+		$model = Customers::find()->where(['CUST_KD'=>$id])->one();
+
+        if (Yii::$app->request->IsAjax) {
+			
+			$data = Yii::$app->request->get();
+			$lat  = $data['lat'];
+			
+			$long = $data['long'];
+			$address = $data['address'];
+			// $radius = $data['radius'];
+			 $model->ALAMAT = $address;
+			$model->MAP_LAT = $lat ;
+			$model->MAP_LNG = $long;
+               if($model->save())
+            {
+               echo 1; 
+            }
+		}
+			else {
+				echo  0;
+			}
+       	 
+             
+    
+    }
     
     
     
@@ -505,9 +533,9 @@ class CustomersController extends Controller
 				$model->CREATED_AT = date("Y-m-d H:i:s");
 				$model->save();
 			}	            
-            return $this->redirect(['viewcust','id'=>$model->CUST_KD]);
+            // return $this->redirect(['viewcust','id'=>$model->CUST_KD]);
         } else {
-            return $this->render('_formcustomer', [
+            return $this->renderAjax('_formcustomer', [
                 'model' => $model,
             ]);
         }

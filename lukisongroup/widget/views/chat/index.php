@@ -4,6 +4,7 @@
 use kartik\grid\GridView;
 use yii\helpers\html;
 use yii\bootstrap\Modal;
+use kartik\tabs\TabsX;
 
 
 
@@ -17,8 +18,9 @@ use yii\bootstrap\Modal;
 ?>
 
 <!--message chat-->
-<div class="col-sm-8">         
- <?= $gv_Chat = GridView::widget([
+<div class="col-sm-8">   
+<?php      
+  $gv_Chat = GridView::widget([
     
         'id'=>'gv-chat',
         'dataProvider' => $dataProvider,
@@ -49,16 +51,16 @@ use yii\bootstrap\Modal;
 		'striped'=>true,
 		'autoXlFormat'=>true,
 		
-    ])?>
-    
+    ])
+    ?>
 </div>
     
    
 
 <!--chatting group-->
 
-    <div class="col-sm-4">
-    <?= $gv_Chat1 = GridView::widget([
+	<?php
+    $gv_Chat1 = GridView::widget([
     
         'id'=>'gv-chat2',
         'dataProvider' => $dataprovider1,
@@ -135,22 +137,23 @@ use yii\bootstrap\Modal;
     ])?>
 	<?php
 	
-	$waktu = time();
-	$datawaktu = Yii::$app->session['userSessionTimeout'];
+	// $waktu = time();
+	// $datawaktu = Yii::$app->session['userSessionTimeout'];
 
 	
 	
-	if($datawaktu<$waktu)
-	{
-		$icon = "ofline";
-	}
-	else{
-		$icon = 'online';
-	}
+	// if($datawaktu<$waktu)
+	// {
+		// $icon = "ofline";
+	// }
+	// else{
+		// $icon = 'online';
+	// }
 	
 	
 	?>
-         <?= $gv_Chat1 = GridView::widget([
+          <?php 
+		  $gv_Chat2 = GridView::widget([
     
         'id'=>'gv-chat1',
         'dataProvider' => $dataProvider1,
@@ -226,6 +229,25 @@ use yii\bootstrap\Modal;
 		'autoXlFormat'=>true,
 		
     ])?>
+	
+	<?php
+	$items = [
+    [
+        'label'=>'<i class="glyphicon glyphicon-envelope"></i> Chatting',
+        'content'=>$gv_Chat,
+        'active'=>true
+    ],
+    [
+        'label'=>'<i class="glyphicon glyphicon-user"></i> GroupChat',
+        'content'=>$gv_Chat1,
+    ],
+	 [
+        'label'=>'<i class="glyphicon glyphicon-user"></i> ONLINE ',
+        'content'=>$gv_Chat2,
+    ],
+	];
+	
+	?>
         
         <?php
         
@@ -269,6 +291,15 @@ use yii\bootstrap\Modal;
      
         ?>
     </div>
+	<?php
+	
+	echo TabsX::widget([
+    'items'=>$items,
+    'position'=>TabsX::POS_RIGHT,
+    'encodeLabels'=>false
+]);
+	
+	?>
 	
 	<?php
 	
