@@ -1,9 +1,9 @@
 <?php
 
-namespace lukisongroup\purchasing\models\pr;
+namespace lukisongroup\purchasing\models;
 
 use Yii;
-use lukisongroup\master\models\Unitbarang;
+
 
 /**
  * This is the model class for table "p0002".
@@ -20,7 +20,6 @@ use lukisongroup\master\models\Unitbarang;
  */
 class Purchasedetail extends \yii\db\ActiveRecord
 {
-	public $KD_KATEGORI;
     /**
      * @inheritdoc
      */
@@ -37,22 +36,17 @@ class Purchasedetail extends \yii\db\ActiveRecord
         return Yii::$app->get('db_esm');
     }
 
-	
-	public function getCunit()
-    {
-        return $this->hasOne(Unitbarang::className(), ['KD_UNIT' => 'UNIT']);
-    }
-	
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['KD_PO','KD_RO','KD_BARANG','NM_BARANG','UNIT'], 'required'],
-            [['STATUS'], 'integer'],
-            [['KD_PO', 'KD_RO','KD_BARANG','NM_BARANG','UNIT','NM_UNIT','NOTE'], 'string'],
-			[['ID','UNIT_QTY','UNIT_WIGHT', 'HARGA','QTY','STATUS_DATE'], 'safe']
+            [['KD_PO', 'QTY', 'UNIT', 'STATUS', 'STATUS_DATE', 'NOTE'], 'required'],
+            [['KD_PO', 'QTY', 'STATUS'], 'integer'],
+            [['STATUS_DATE','KD_BARANG', 'HARGA'], 'safe'],
+            [['NOTE'], 'string'],
+            [['UNIT'], 'string', 'max' => 255]
         ];
     }
 
@@ -63,12 +57,9 @@ class Purchasedetail extends \yii\db\ActiveRecord
     {
         return [
             'ID' => 'ID',
-            'KD_PO' => 'Kode PO',
-            'KD_RO' => 'Kode RO',
+            'KD_PO' => 'Kd  Po',
             'QTY' => 'Qty',
             'UNIT' => 'Unit',
-			'NM_UNIT'=>'Unit Name',
-			'UNIT_WIGHT'=>'Unit Wight',
             'STATUS' => 'Status',
             'STATUS_DATE' => 'Status  Date',
             'NOTE' => 'Note',

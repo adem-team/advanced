@@ -199,9 +199,6 @@ class RequestOrderController extends Controller
 		}
 	}
    
-	
-	
-	
 	/**
      * actionBrgkat() select2 Kategori mendapatkan barang
      * @author ptrnov  <piter@lukison.com>

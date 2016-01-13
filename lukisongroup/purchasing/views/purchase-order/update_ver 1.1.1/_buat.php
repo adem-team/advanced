@@ -33,10 +33,8 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 					$(j).appendTo($("#po-process-sig3"));
 		});		
  ',$this::POS_BEGIN);		 */
-	
 	/*
 	 * LINK ETD
-	 * _Buat = GET permission ETD
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.2
 	*/
@@ -55,8 +53,7 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 	} 
 	
 	/*
-	 * LINK ETA
-	 * _Buat = GET permission ETA
+	 * LINK ETD
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.2
 	*/
@@ -135,91 +132,6 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 		$url = Url::toRoute(['/purchasing/purchase-order/billing-view','kdpo'=>$poHeader->KD_PO]);
 		$content = Html::a($label,$url, $options);
 		return $content;	
-	} 
-	
-	
-	/*
-	 * LINK PO PLUS
-	 * @author ptrnov  <piter@lukison.com>
-     * @since 1.2
-	*/
-	function PoPlus($poHeader){
-		$kdPo = explode('.',$poHeader->KD_PO);
-		if($kdPo[0]=='POA'){
-			$title = Yii::t('app','');
-			$options = [ 'id'=>'po-plus-id',	
-						  'data-toggle'=>"modal",
-						  'data-target'=>"#po-plus",											
-						  'class'=>'btn btn-info btn-xs', 
-						  //'style'=>['width'=>'150px'],
-						  'title'=>'PO PLUS'
-			]; 
-			$icon = '<span class="fa fa-plus fa-lg"></span>';
-			$label = $icon . ' ' . $title;
-			$url = Url::toRoute(['/purchasing/purchase-order/po-plus-additem-view','kdpo'=>$poHeader->KD_PO]);
-			$content = Html::a($label,$url, $options);
-			return $content;
-		}else{
-			$content = '';
-			return $content;
-		}
-	} 
-	
-	/*
-	 * LINK VIEW PO
-	 * @author ptrnov  <piter@lukison.com>
-     * @since 1.2
-	*/
-	function PoView($poHeader){
-			$title = Yii::t('app','View');
-			$options = [ 'id'=>'po-view-id',	
-						  'class'=>'btn btn-default btn-xs', 
-						  'title'=>'View PO'
-			]; 
-			$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
-			$label = $icon . ' ' . $title;
-			$url = Url::toRoute(['/purchasing/purchase-order/view','kd'=>$poHeader->KD_PO]);
-			$content = Html::a($label,$url, $options);
-			return $content;
-	} 
-	
-	/*
-	 * LINK PRINT PDF
-	 * @author ptrnov  <piter@lukison.com>
-     * @since 1.2
-	*/
-	function PrintPdf($poHeader){
-			$title = Yii::t('app','PDF');
-			$options = [ 'id'=>'pdf-print-id',	
-						  'class'=>'btn btn-default btn-xs', 
-						  'title'=>'Print PDF'
-			]; 
-			$icon = '<span class="fa fa-print fa-fw"></span>';
-			$label = $icon . ' ' . $title;
-			$url = Url::toRoute(['/purchasing/purchase-order/cetakpdf','kdpo'=>$poHeader->KD_PO]);
-			$content = Html::a($label,$url, $options);
-			return $content;
-	} 
-	
-	/*
-	 * LINK PO Note
-	 * @author ptrnov  <piter@lukison.com>
-     * @since 1.2
-	*/
-	function PoNote($poHeader){
-			$title = Yii::t('app','');
-			$options = [ 'id'=>'po-note-id',	
-						  'data-toggle'=>"modal",
-						  'data-target'=>"#po-note",											
-						  'class'=>'btn btn-info btn-xs', 
-						  //'style'=>['width'=>'150px'],
-						  'title'=>'PO PLUS'
-			]; 
-			$icon = '<span class="fa fa-plus fa-lg"></span>';
-			$label = $icon . ' ' . $title;
-			$url = Url::toRoute(['/purchasing/purchase-order/po-note','kdpo'=>$poHeader->KD_PO]);
-			$content = Html::a($label,$url, $options);
-			return $content;
 	} 
 	
 	/*
@@ -336,7 +248,6 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 			]
 		],
 		[/* Attribute Request Quantity */
-			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'QTY',
 			'label'=>'Qty',						
 			'vAlign'=>'middle',
@@ -365,15 +276,7 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 						'border-left'=>'0px',
 						'border-right'=>'0px',									
 				]
-			],
-			'editableOptions' => [
-				'header' => 'Update Quantity',
-				'inputType' => \kartik\editable\Editable::INPUT_TEXT,
-				'size' => 'sm',	
-				'options' => [
-				  'pluginOptions' => ['min'=>0, 'max'=>50000]
-				]
-			],	
+			]
 		],					
 		[/* Attribute Unit Barang */
 			'attribute'=>'NM_UNIT',
@@ -423,7 +326,6 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 			],			
 		],
 		[	/* Attribute Unit Barang */
-			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'HARGA',
 			'mergeHeader'=>true,
 			'label'=>'Price',										
@@ -447,24 +349,14 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 						'font-size'=>'8pt',									
 				]
 			],
-			'editableOptions' => [
-				'header' => 'Update Price',
-				'inputType' => \kartik\editable\Editable::INPUT_TEXT,
-				'size' => 'sm',	
-				 'options' => [
-				  'pluginOptions' => ['min'=>0, 'max'=>10000000000]
-				] 
-			],	
 			'format'=>['decimal', 2],
 			'pageSummary'=>function ($summary, $data, $widget) use ($poHeader){ 
-							$discountModal=$poHeader->DISCOUNT!=0 ? $poHeader->DISCOUNT:'0.00';
-							$pajakModal=$poHeader->PAJAK!=0 ? $poHeader->PAJAK:'0.00';							
 							return '<div>IDR</div >
 									<div>  
-									'.Html::a($discountModal,Url::toRoute(['/purchasing/purchase-order/discount-view','kdpo'=>$poHeader->KD_PO]),['id'=>'discount','data-toggle'=>'modal','data-target'=>'#frm-discount']).'
+									'.Html::a($poHeader->DISCOUNT,Url::toRoute(['/purchasing/purchase-order/discount-view','kdpo'=>$poHeader->KD_PO]),['id'=>'discount','data-toggle'=>'modal','data-target'=>'#frm-discount']).'
 									%</div >
 									<div>  
-									'.Html::a($pajakModal,Url::toRoute(['/purchasing/purchase-order/pajak-view','kdpo'=>$poHeader->KD_PO]),['id'=>'pajak','data-toggle'=>'modal','data-target'=>'#frm-pajak']).'
+									'.Html::a($poHeader->PAJAK,Url::toRoute(['/purchasing/purchase-order/pajak-view','kdpo'=>$poHeader->KD_PO]),['id'=>'pajak','data-toggle'=>'modal','data-target'=>'#frm-pajak']).'
 									%</div >
 									<div>IDR</div >									
 									<div>IDR</div >';								
@@ -523,7 +415,7 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 					$ttlDiscount=$poHeader->DISCOUNT!=0 ? ($poHeader->DISCOUNT/100) * $subTotal:0.00;
 					$ttlTax = $poHeader->PAJAK!=0 ? ($poHeader->PAJAK / 100) * $subTotal  :0.00;
 					$ttlDelivery=$poHeader->DELIVERY_COST!=0 ? $poHeader->DELIVERY_COST:0.00;
-					$grandTotal=($subTotal + $ttlTax + $ttlDelivery) - $ttlDiscount;
+					$grandTotal=$subTotal + $ttlDiscount + $ttlTax + $ttlDelivery;
 					
 					/*SEND TO DECIMAL*/
 					$ttlSubtotal=number_format($subTotal,2);
@@ -620,9 +512,9 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 	 * permission View [BTN_VIEW==1]
 	 * Check By User login
 	*/
-	function tombolSendPo($url, $model,$poHeader) {
-		$kdPo = explode('.',$poHeader->KD_PO);
-		if($kdPo[0]!='POA'){
+	function tombolSendPo($url, $model){
+		//if(getPermission()){	
+			//if(getPermission()->BTN_VIEW==1){
 				$title = Yii::t('app', 'SendPo');
 				$options = [ 'id'=>'ro-sendpo-id',
 							 'data-toggle'=>'modal',
@@ -634,7 +526,8 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 				$url = Url::toRoute(['/purchasing/purchase-order/detail','kd_ro'=>$model->KD_RO,'kdpo'=>$_GET['kdpo']]);
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;	
-			}
+			//}
+		//}
 	} 
 	
 	/*
@@ -725,8 +618,8 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 							  },
 							
 					// SEND RO TO PO | Permissian Status 0; 0=process | User created = user login  
-					'sendPo' => function ($url, $model) use ($poHeader) {
-									return tombolSendPo($url, $model,$poHeader);
+					'sendPo' => function ($url, $model) {
+									return tombolSendPo($url, $model);
 								},				
 				],
 				
@@ -757,9 +650,7 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 		 'options'=>[
 			'enablePushState'=>false,
 			'id'=>'gv-ro-detail',
-		   ],	
-			'refreshGrid' => true,
-			'neverTimeout'=>true,
+		   ],						  
 		],
 		'panel' => [
 			//'footer'=>false,
@@ -933,23 +824,13 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 				</div>
 				<div Style="margin-top:2px">
 					<?php echo BillingSearch($poHeader); ?>
-				</div>				
+				</div>
+				
 			</div>
 		</div>
-		<hr style="margin-top:0;margin-bottom:5px"></hr>
-		<div style="text-align:right;margin-bottom:5px">
-			<div style="text-align:right;float:right">
-				<?php echo PoPlus($poHeader); ?>			
-			</div>
-			<div style="text-align:right;float:right">
-				<?php echo PoView($poHeader); ?>
-			</div>
-			<div style="text-align:right;">
-				<?php echo PrintPdf($poHeader); ?>
-			</div>				
-		</div>		
-		<!-- GRID PO Detail !-->			
-		<div>			
+		<hr/>
+		<!-- GRID PO Detail !-->	
+		<div>
 			<?php  echo $gvPoDetail; ?>
 		</div>
 		<!-- Title BOTTEM Descript !-->	
@@ -1003,22 +884,6 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 					</dl>
 				</div>			
 		</div>	
-		<!-- PO Note !-->
-		<div  class="row">			
-			<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">	
-				<dt><b>General Notes :</b></dt>
-				<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">	
-				<div>
-					<div style="float:right;text-align:right;">
-						<?php echo PoNote($poHeader); ?>
-					</div>
-					<div style="margin-left:5px">
-						<dd><?php echo $poHeader->NOTE; ?></dd><br/>
-					</div>				
-				</div>
-				<hr style="height:1px;margin-top: 1px;">		
-			</div>
-		</div>
 		<div  class="row">
 			<div class="col-md-9">
 				<table id="tblRo" class="table table-bordered" style="width:500px;font-family: tahoma ;font-size: 8pt;">
@@ -1399,60 +1264,6 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 			'id' => 'search-bil',
 			'header' => '<h4 class="modal-title">Billing Address</h4>',
 			'size' => Modal::SIZE_SMALL,
-		]);
-	Modal::end();
-	
-	/*
-	 * PO PLUS MODAL AJAX | ADD Items
-	 * @author ptrnov <piter@lukison.com>
-	 * @since 1.2
-	*/
-	$this->registerJs("
-			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
-			$('#po-plus').on('show.bs.modal', function (event) {
-				var button = $(event.relatedTarget)
-				var modal = $(this)
-				var title = button.data('title') 
-				var href = button.attr('href') 
-				modal.find('.modal-title').html(title)
-				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-				$.post(href)
-					.done(function( data ) {
-						modal.find('.modal-body').html(data)					
-					});
-				}),			
-	",$this::POS_READY);
-	Modal::begin([
-			'id' => 'po-plus',
-			'header' => '<h4 class="modal-title">PO PLUS - Add Items</h4>',
-			'size' => 'modal-md',
-		]);
-	Modal::end();
-	
-	/*
-	 * PO Note MODAL AJAX | ADD Items
-	 * @author ptrnov <piter@lukison.com>
-	 * @since 1.2
-	*/
-	$this->registerJs("
-			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
-			$('#po-note').on('show.bs.modal', function (event) {
-				var button = $(event.relatedTarget)
-				var modal = $(this)
-				var title = button.data('title') 
-				var href = button.attr('href') 
-				modal.find('.modal-title').html(title)
-				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-				$.post(href)
-					.done(function( data ) {
-						modal.find('.modal-body').html(data)					
-					});
-				}),			
-	",$this::POS_READY);
-	Modal::begin([
-			'id' => 'po-note',
-			'header' => '<h4 class="modal-title">General Note</h4>',
-			'size' => 'modal-md',
 		]);
 	Modal::end();
 	

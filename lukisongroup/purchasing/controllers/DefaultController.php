@@ -2,6 +2,7 @@
 
 namespace lukisongroup\purchasing\controllers;
 
+use yii;
 use yii\web\Controller;
 
 class DefaultController extends Controller

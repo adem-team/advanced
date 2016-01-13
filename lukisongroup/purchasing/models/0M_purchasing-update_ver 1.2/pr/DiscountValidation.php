@@ -5,27 +5,24 @@ use Yii;
 use yii\base\Model;
 use lukisongroup\purchasing\models\pr\Purchaseorder;
 use lukisongroup\purchasing\models\pr\Purchasedetail;
-use lukisongroup\purchasing\models\ro\Requestorder;
-use lukisongroup\purchasing\models\ro\Rodetail;
-
-/*
-* Send PO validation | Transfer barang dari RO/SO ke PO
-* @author ptrnov  <piter@lukison.com>
-* @since 1.1
-*/
+	/*
+	* Discount Validation
+	* @author ptrnov  <piter@lukison.com>
+	* @since 1.1
+	*/
 	
-class SendPoValidation extends Model
+class DiscountValidation extends Model
 {
     public $kD_PO;
-	public $kD_RO;
-	public $PQTY;
+	public $dISC;
 	  
     public function rules()
     {
         return [			
 			[['kD_PO'], 'findcheck'],		
-			[['kD_PO','kD_RO'],'required','PQTY'],					
-			[['dELIVERY'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],			
+			[['kD_PO','dISC'], 'required'],				
+			//[['dISC'], 'safe'],	
+			[['dISC'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],			
 		];
     }
 	
@@ -49,11 +46,11 @@ class SendPoValidation extends Model
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
      */
-	public function delevery_saved()
+	public function discount_saved()
     {
 		if ($this->validate()) {
 			$poHeader = Purchaseorder::findOne($this->kD_PO);
-			$poHeader->DELIVERY_COST = $this->dELIVERY;			
+			$poHeader->DISCOUNT = $this->dISC;			
 			if ($poHeader->save()) {
                 return $poHeader;
             }
@@ -65,7 +62,7 @@ class SendPoValidation extends Model
 	public function attributeLabels()
     {
         return [
-            'dELIVERY' => 'Delivery.Cost  [ex: 1,000,000.00]',
+            'DISCOUNT' => 'Discount',
             'kD_PO' => 'Kode.PO'
         ];
     }

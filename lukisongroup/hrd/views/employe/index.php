@@ -66,11 +66,11 @@ $tab_employe= GridView::widget([
             ],  
 				'EMP_ID',
             [
-                'class' => 'kartik\grid\EditableColumn',
+                //'class' => 'kartik\grid\EditableColumn',
                 'attribute' =>'EMP_NM',
 				/*
                 'readonly'=>function($model, $key, $index, $widget) {
-                        return (10==$model->STATUS); // do not allow editing of inactive records
+                        // return (10==$model->STATUS); // do not allow editing of inactive records
                     },
 				
 					'editableOptions' => [
