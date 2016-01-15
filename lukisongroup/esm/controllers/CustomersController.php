@@ -188,19 +188,15 @@ class CustomersController extends Controller
       
 		$model = new Customers();
         return $this->render('index', [
-           'searchModel1' => $searchModel1,
-		       'dataProviderkat'  =>   $dataProviderkat ,
-          
+			'searchModel1' => $searchModel1,
+			'dataProviderkat'  =>   $dataProviderkat ,
               'searchModel' => $searchModel,
-			        'dataProvider' => $dataProvider,
+			  'dataProvider' => $dataProvider,
               'searchmodelkota' => $searchmodelkota,
                'searchmodelpro' => $searchmodelpro,
               'dataproviderpro' =>  $dataproviderpro,
               'dataproviderkota' => $dataproviderkota,
 			  'model'=>$model,
-			
-     
-	
         ]);
 	}
 
@@ -542,37 +538,8 @@ class CustomersController extends Controller
         }
     }
 	
-	/*
-	 * ADD MAP Customer Controller
-	 * @ptrnov <piter@lukison.com>
-	 * @since 0.1 
-	*/
-	public function actionAddmap()
-	//public function actionAddmap($id)
-    {
-		 // $mapCust = new Customers();
-   //      // $mapCust= $this->findModelcust($id);
 
-   //      if ($mapCust->load(Yii::$app->request->post()) ) {              
-			/* $kdpro = $model->PROVINCE_ID;
-			$kdcity = $model->CITY_ID;
-			$kddis = $model->KD_DISTRIBUTOR;
-			$kode = Yii::$app->ambilkonci->getkeycustomers($kddis,$kdpro,$kdcity);
-			$model->CUST_KD = $kode;
-			if($model->validate())
-			{
-				$model->CORP_ID = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
-				$model->CREATED_BY =  Yii::$app->user->identity->username;
-				$model->CREATED_AT = date("Y-m-d H:i:s");
-				$model->save();
-			}	             */
-            return $this->redirect(['_formaddmap']);
-        // } else {
-        //     return $this->renderAjax('_formaddmap', [
-        //         'model' => $mapCust,
-        //     ]);
-        // }
-    }
+	
 	
 
     /**
@@ -624,7 +591,7 @@ class CustomersController extends Controller
 		
              return $this->redirect(['index']);
         } else {
-            return $this->render('_formcustomer', [
+            return $this->renderAjax('_formcustomer', [
                 'model' => $model,
             ]);
         }

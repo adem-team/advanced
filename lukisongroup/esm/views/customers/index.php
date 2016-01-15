@@ -426,7 +426,7 @@ $tabcrud =  GridView::widget([
                                     return  Html::a('<span class="glyphicon glyphicon-eye-open"></span> ',
                                                                 ['viewcust','id'=>$model->CUST_KD],[
                                                                 // 'data-toggle'=>"modal",
-                                                                // 'data-target'=>"#view",
+                                                                // 'data-target'=>"#view3",
                                                                 'data-title'=> $model->CUST_KD,
                                                                 ]);
                             },
@@ -435,9 +435,9 @@ $tabcrud =  GridView::widget([
                                     return  Html::a('<span class="glyphicon glyphicon-user"></span>   
                                                                 ',
                                                                 ['updatecus','id'=>$model->CUST_KD],[
-                                                                // 'data-toggle'=>"modal",
-                                                                // 'data-target'=>"#form",
-                                                                // 'data-title'=> $model->CUST_KD,
+                                                                'data-toggle'=>"modal",
+                                                                'data-target'=>"#createcus",
+                                                                'data-title'=> $model->CUST_KD,
                                                                 ]);
                             },
 
@@ -454,8 +454,8 @@ $tabcrud =  GridView::widget([
                                     return  Html::button('<i class="glyphicon glyphicon-globe"></i>',
 								
                                                              [
-															       'class' => 'btn btn-default',
-																	'id'=>'mod2',
+															       // 'class' => 'btn btn-default',
+																	'class'=>'mo2',
 																	'value' => $model->CUST_KD,
                                                                    'data-toggle'=>"modal",
                                                                   'data-target'=>"#us6-dialog",
@@ -548,8 +548,7 @@ $tabcrud =  GridView::widget([
 		
 	
 
-          $map = '<input id="pac-input" class="controls" type="text" placeholder="Search Box">
-		  <div id ="map" style="width:100%;height:400px"></div>';    
+          $map = '<div id ="map" style="width:100%;height:400px"></div>';    
                  
     $items=[
 		[
@@ -919,15 +918,9 @@ $this->registerJs("
      ",$this::POS_READY);
 	 
 	 $this->registerJs('
-				$("#mod2").click(function(){
-					var id = $(this).val();
-					if(id == "")
-					{
-						alert("error");
-						
-					}
-					else{
-						var ID = $("#hide").val(id);
+				$(".mo2").click(function(){
+					var idm = $(this).val()
+					var ida = $("#hide").val(idm)
 						   $("#us3").locationpicker({
                             location: {latitude:  -6.214620, longitude:  106.845130 },
                             radius: 300,
@@ -947,9 +940,6 @@ $this->registerJs("
 					
                         });
 						
-					}
-				
-
 					
 					
 				});
@@ -966,7 +956,7 @@ $this->registerJs("
        data: {
 		
 		 
-              id : $('#hide').val(),
+              id : $('.mo2').val(),
 			  lat: $('#us3-lat').val(),
 			  long : $('#us3-lon').val(),
 			  address : $('#us3-address').val(),
@@ -980,6 +970,7 @@ $this->registerJs("
                                           {
                                              $(document).find('#us6-dialog').modal('hide');
                                              // $('#myform').trigger('reset');
+											 $('#hide').val('');
                                              $.pjax.reload({container:'#axctive224'});
                                           }
                                         else{
@@ -1007,8 +998,8 @@ $this->registerJs("
                 <div class="form-horizontal" style="width: 550px">
                     <div class="form-group">
 		<form id="myform">
-					<input  type="hidden" id="hide">
 					
+					<input type = "hidden" id="hide">
                         <label class="col-sm-2 control-label">Location:</label>
 
 	

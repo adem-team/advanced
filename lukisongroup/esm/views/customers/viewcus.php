@@ -23,14 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
 <p>
        <?= Html::a('BACK', ['index'], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Update', ['updatecus', 'id' => $model->CUST_KD], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['deletecus', 'id' => $model->CUST_KD], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
+  
         
     </p>
 

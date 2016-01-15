@@ -344,7 +344,7 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 				
 				
 				'deleteOptions'=>[
-					'url'=>['delete', 'id' => $model->EMP_NM],
+					'url'=>['delete', 'id' => $model->EMP_ID],
 					'data'=>[
 						'confirm'=>Yii::t('app', 'Are you sure to deleted this record Name =' . $model->EMP_NM .'?'),
 						'method'=>'post',
