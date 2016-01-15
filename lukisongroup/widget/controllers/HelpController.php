@@ -64,9 +64,14 @@ class HelpController extends Controller
 		$pur_penjelasan =$this->renderPartial('purchasing\CreatePo');
 		$pur_permission =$this->renderPartial('purchasing\Permission');
 		
+		$hrm_penjelasan =$this->renderPartial('hrm\penjelasan');
+		
 		return $this->render('index',[
+			/*Purchasing*/
 			'pur_penjelasan'=>$pur_penjelasan,
 			'pur_permission'=>$pur_permission,
+			/*HRM*/
+			'hrm_penjelasan'=>$hrm_penjelasan,
 		]);
     
     }

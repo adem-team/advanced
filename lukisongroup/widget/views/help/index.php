@@ -3,6 +3,20 @@
 	$content ='Progress';
 	$items = [[
 		'url' => '#Purchasing-1',
+		'label' => 'Human Resource Management',
+		'icon' => 'play-circle',
+		'content' => '',
+		'items' => [
+			['url' => '#sec-1-1', 'label' => 'Penjelasan', 'content' => $hrm_penjelasan],
+			['url' => '#sec-1-2', 'label' => 'Personalia', 'content' => $content],
+			['url' => '#sec-1-3', 'label' => 'Rekrutmen', 'content' => $content],
+			['url' => '#sec-1-4', 'label' => 'Absensi', 'content' => $content],
+			['url' => '#sec-1-5', 'label' => 'Payroll', 'content' => $content],
+			['url' => '#sec-1-6', 'label' => 'Modul HRM', 'content' => $content],
+		],
+	],
+	[
+		'url' => '#Purchasing-1',
 		'label' => 'PURCHASING',
 		'icon' => 'play-circle',
 		'content' => '',

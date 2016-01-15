@@ -14,6 +14,7 @@ use kartik\money\MaskMoney;
 use lukisongroup\purchasing\models\ro\Requestorder;
 use lukisongroup\purchasing\models\ro\Rodetail;
 use lukisongroup\purchasing\models\ro\RodetailSearch;
+use lukisongroup\master\models\Unitbarang;
 
 /*  $this->registerJs('
 		$(document).ready(function($) {
@@ -376,11 +377,41 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 			],	
 		],					
 		[/* Attribute Unit Barang */
-			'attribute'=>'NM_UNIT',
+			'class'=>'kartik\grid\EditableColumn',
+			'attribute'=>'UNIT',
 			'mergeHeader'=>true,
-			'label'=>'UoM',										
+			'label'=>'UoM',											
 			'vAlign'=>'middle',	
 			'hAlign'=>'right',	
+			'readonly'=>function($model, $key, $index, $widget) use ($poHeader) {
+				//return (102=$model->STATUS || 0<> $headerStatus); // Allow Status Process = 0;
+				return (102==$poHeader->STATUS); // Allow Status Process = 0;
+			},
+			'value'=>function($model){
+								$model=Unitbarang::find()->where('KD_UNIT="'.$model->UNIT. '"')->one();
+								if (count($model)!=0){
+									$UnitNm=$model->NM_UNIT;
+								}else{
+									$UnitNm='Not Set';
+								}
+								return $UnitNm;
+							},
+			'editableOptions' => [
+				'header' => 'Update Unit',
+				'inputType' => \kartik\editable\Editable::INPUT_SELECT2,		
+				'size' => 'md',								
+				'options' => [			
+					'data' => ArrayHelper::map(Unitbarang::find()->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT'),								
+					'pluginOptions' => [
+						//'min'=>0, 
+						//'max'=>5000,
+						'allowClear' => true,
+						'class'=>'pull-right dropup'
+					],
+				],
+				//Refresh Display 
+				'displayValueConfig' =>ArrayHelper::map(Unitbarang::find()->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT'),
+			],	
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
@@ -831,10 +862,11 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 	
 	
 	/*
+	 * SIGNATURE AUTH1 | CREATED
 	 * Status Value Signature1 | PurchaseOrder
 	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
 	*/
-	function SignApproved($poHeader){
+	function SignCreated($poHeader){
 		$title = Yii::t('app', 'Sign Hire');
 		$options = [ 'id'=>'po-auth1',	
 					  'data-toggle'=>"modal",
@@ -845,7 +877,7 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 		]; 
 		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/purchase-order/approved-view','kdpo'=>$poHeader->KD_PO]);
+		$url = Url::toRoute(['/purchasing/purchase-order/sign-created-view','kdpo'=>$poHeader->KD_PO]);
 		//$options1['tabindex'] = '-1';
 		$content = Html::a($label,$url, $options);
 		return $content;	
@@ -1013,7 +1045,7 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 						<?php echo PoNote($poHeader); ?>
 					</div>
 					<div style="margin-left:5px">
-						<dd><?php echo $poHeader->NOTE; ?></dd><br/>
+						<dd><?php echo $poHeader->NOTE; ?></dd><br/><br/>
 					</div>				
 				</div>
 				<hr style="height:1px;margin-top: 1px;">		
@@ -1059,7 +1091,7 @@ use lukisongroup\purchasing\models\ro\RodetailSearch;
 					 <tr>
 						<th style="text-align: center; vertical-align:middle;width:100; height:40px">
 							<?php 
-								$ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img style="width:100; height:40px" src='.$poHeader->SIG1_SVGBASE64.'></img>' : SignApproved($poHeader);
+								$ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img style="width:100; height:40px" src='.$poHeader->SIG1_SVGBASE64.'></img>' : SignCreated($poHeader);
 								echo $ttd1;
 							?> 
 						</th>								

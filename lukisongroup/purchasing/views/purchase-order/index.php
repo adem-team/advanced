@@ -33,27 +33,26 @@ function submitform()
 	 * Modul Name[3=PO]
 	*/
 	function getPermission(){
-		if (Yii::$app->getUserOpt->Modul_akses(3)){
-			return Yii::$app->getUserOpt->Modul_akses(3)->mdlpermission;
+		if (Yii::$app->getUserOpt->Modul_akses('3')){
+			return Yii::$app->getUserOpt->Modul_akses('3');
 		}else{		
 			return false;
 		}	 
 	}
-	
+	//print_r(getPermission());
 	/*
 	 * Declaration Componen User Permission
-	 * Function getPermission
+	 * Function profile_user
 	 * Modul Name[3=PO]
 	*/
-	function getPermissionEmployee(){
-		if (Yii::$app->getUserOpt->Modul_akses(3)){
-			return Yii::$app->getUserOpt->Modul_akses(3)->emp;
+	function getPermissionEmp(){
+		if (Yii::$app->getUserOpt->profile_user()){
+			return Yii::$app->getUserOpt->profile_user()->emp;
 		}else{		
 			return false;
 		}	 
 	}
-	
-	
+	//print_r(getPermissionEmp());
 	/*
 	 * Tombol Modul Create
 	 * permission crate PO
@@ -196,9 +195,9 @@ function submitform()
 	*/
 	function tombolEdit($url, $model){
 		if(getPermission()){								
-			if(getPermissionEmployee()->EMP_ID == $model->CREATE_BY AND getPermission()->BTN_EDIT==1){
-				 if($model->STATUS == 0){ // 0=process 101=Approved
-					$title = Yii::t('app', 'Edit Detail');
+			if(getPermissionEmp()->EMP_ID == $model->CREATE_BY OR getPermission()->BTN_EDIT==1){
+				if($model->STATUS == 0 OR $model->STATUS == 1 ){ // 0=process 101=Approved
+					$title = Yii::t('app','Edit Detail');
 					$options = [ //'id'=>'ro-edit',
 								//'data-toggle'=>"modal",
 								//'data-target'=>"#add-ro",
@@ -206,7 +205,7 @@ function submitform()
 					]; 
 					$icon = '<span class="fa fa-pencil-square-o fa-lg"></span>';
 					$label = $icon . ' ' . $title;
-					$url = Url::toRoute(['/purchasing/purchase-order/edit','kd'=>$model->KD_PO]);
+					$url = Url::toRoute(['/purchasing/purchase-order/create','kdpo'=>$model->KD_PO]);
 					$options['tabindex'] = '-1';
 					return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL; 
 				}
@@ -224,8 +223,8 @@ function submitform()
 	*/
 	function tombolDelete($url, $model){
 		if(getPermission()){
-			if(getPermissionEmployee()->EMP_ID == $model->CREATE_BY AND getPermission()->BTN_DELETE==1){
-				if($model->STATUS == 0){ // 0=process 101=Approved
+			if(getPermissionEmp()->EMP_ID == $model->CREATE_BY AND getPermission()->BTN_DELETE==1){
+				if($model->STATUS == 0){ //STATUS=0 ATAU STATUS=1 Available to delete
 					$title = Yii::t('app', 'Delete');
 					$options = [ 'id'=>'ro-delete',															
 								'data-confirm'=>'Anda yakin ingin menghapus RO ini?',
@@ -241,22 +240,24 @@ function submitform()
 	}	
 
 	/*
-	 * Tombol Modul Approval -> Check By User login
+	 * BUTTON "Review" FOR CHECKED AND APPROVAL -> Check By User login
 	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 101=Approved]
 	 * EMP_ID=UserLogin & BTN_SIGN1==1 &  Status 0 = Action Edit Show/bisa edit
 	 * EMP_ID=UserLogin & BTN_SIGN1==1 &  Status 0 = Action Edit Hide/tidak bisa edit
 	 * 1. Hanya User login dengan permission modul RO=1 dengan BTN_SIGN1==1 dan Permission Jabatan SVP keatas yang bisa melakukan Approval (Tanpa Kecuali)
 	 * 2. Action APPROVAL Akan close atau tidak bisa di lakukan jika sudah Approved | status Approved =101 | Permission sign1
 	*/
-	function tombolApproval($url, $model){
+	
+	function tombolReview($url, $model){
 		if(getPermission()){
 			//Permission Jabatan
-			$a=getPermissionEmployee()->JOBGRADE_ID;
-			$b=getPermission()->BTN_SIGN1;
-			//if(getPermissionEmployee()->JOBGRADE_ID == 'S' OR getPermissionEmployee()->JOBGRADE_ID == 'M' OR getPermissionEmployee()->JOBGRADE_ID == 'SM' AND getPermission()->BTN_SIGN1==1 ){
-			if($a == 'SEVP' OR $a == 'EVP' OR $a == 'SVP' OR $a == 'VP' OR $a == 'AVP' OR $a == 'SM' OR $a == 'M' OR $a == 'AM' OR $a == 'S' AND $b==1 ){
-				 if($model->STATUS == 0 || $model->STATUS == 1 ){ // 0=process 101=Approved
-					$title = Yii::t('app', 'approved');
+			$grd=getPermissionEmp()->JOBGRADE_ID;
+			$auth2=getPermission()->BTN_SIGN2;
+			$auth3=getPermission()->BTN_SIGN3;
+			//if(getPermissionEmp()->JOBGRADE_ID == 'S' OR getPermissionEmp()->JOBGRADE_ID == 'M' OR getPermissionEmp()->JOBGRADE_ID == 'SM' AND getPermission()->BTN_SIGN1==1 ){
+			if(getPermission()->BTN_REVIEW==1){ //($a == 'EVP' OR $a == 'SVP' OR $a == 'VP') OR
+				 if($model->STATUS == 1 | $model->STATUS != 0){ //STATUS!=0 ATAU STATUS=1 Available to Revview for Approved
+					$title = Yii::t('app','Review');
 					$options = [ //'id'=>'ro-approved',
 								//'data-method' => 'post',
 								 //'data-pjax'=>true,
@@ -267,9 +268,7 @@ function submitform()
 					]; 
 					$icon = '<span class="glyphicon glyphicon-ok"></span>';
 					$label = $icon . ' ' . $title;
-					$url = Url::toRoute(['/purchasing/purchase-order/approved','kd'=>$model->KD_PO]);
-					//$url = Url::toRoute(['/purchasing/purchase-order/approved']);
-					//$url = Url::toRoute(['/purchasing/purchase-order/approved']);
+					$url = Url::toRoute(['/purchasing/purchase-order/review','kdpo'=>$model->KD_PO]);
 					$options['tabindex'] = '-1';
 					return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
 				}
@@ -293,6 +292,8 @@ function submitform()
 		}elseif ($model->STATUS==1){
 			return Html::a('<i class="glyphicon glyphicon-time"></i> PENDING', '#',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif ($model->STATUS==101){
+			return Html::a('<i class="glyphicon glyphicon-ok"></i> PROCESS 1', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+		}elseif ($model->STATUS==102){
 			return Html::a('<i class="glyphicon glyphicon-ok"></i> APPROVED', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif ($model->STATUS==10){
 			return Html::a('<i class="glyphicon glyphicon-ok"></i> COMPLETED', '#',['class'=>'btn btn-info btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
@@ -304,7 +305,6 @@ function submitform()
 			return Html::a('<i class="glyphicon glyphicon-question-sign"></i> UNKNOWN', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);	
 		};		
 	}
-	
     $idEmp = Yii::$app->user->identity->EMP_ID;
     $emp = Employe::find()->where(['EMP_ID'=>$idEmp])->one();
     $kr = $emp->DEP_SUB_ID;
@@ -570,7 +570,7 @@ function submitform()
 				
 				/* Approved RO | Permissian Status 0; 0=process | Dept = Dept login | GF >= M */
 				'approved' => function ($url, $model) {
-								return tombolApproval($url, $model);
+								return tombolReview($url, $model);
 							},
 			],
 			'headerOptions'=>[				

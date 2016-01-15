@@ -42,7 +42,7 @@ use lukisongroup\purchasing\models\Statuspo;
 
 use lukisongroup\esm\models\Barang;
 use lukisongroup\master\models\Barangumum;
-
+use lukisongroup\master\models\Unitbarang;
 
 class PurchaseOrderController extends Controller
 {
@@ -93,13 +93,13 @@ class PurchaseOrderController extends Controller
     {
         $searchModel = new PurchaseorderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $model = new Purchaseorder();
+        $poHeader = new Purchaseorder();
 		/*Model Validasi Generate Code*/
 		$poHeaderVal = new NewPoValidation();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'model' => $model,
+            'poHeader' => $poHeader,
 			'poHeaderVal'=>$poHeaderVal,
         ]);
     }
@@ -116,7 +116,10 @@ class PurchaseOrderController extends Controller
             'model' => Purchaseorder::find()->where(['KD_PO'=>$kd])->one(),
         ]); */
 		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kd])->one();
-        $poDetail = Purchasedetail::find()->where(['KD_PO'=>$kd])->all(); 
+        //$poDetail = Purchasedetail::find()->where(['KD_PO'=>$kd])->all(); 
+		$poDetailQry= "SELECT ID,KD_PO,KD_RO,KD_BARANG,NM_BARANG,UNIT,NM_UNIT,UNIT_QTY,UNIT_WIGHT,SUM(QTY) AS QTY,HARGA,STATUS,STATUS_DATE,NOTE
+						FROM `p0002` WHERE KD_PO='" .$kd. "' GROUP BY KD_BARANG,UNIT,HARGA";
+		$poDetail=Purchasedetail::findBySql($poDetailQry)->all();		
 		$dataProvider = new ArrayDataProvider([
 			'key' => 'KD_PO',
 			'allModels'=>$poDetail,		
@@ -126,6 +129,137 @@ class PurchaseOrderController extends Controller
 		]);
 		
 		return $this->render( 'view', [
+			'poHeader' => $poHeader,
+            'poDetail' => $poDetail,
+            //'detro' => $detro,
+            //'employ' => $employ,
+			//'dept' => $dept,
+			'dataProvider' => $dataProvider,
+        ]);
+    }
+	
+	
+	/*
+	 * Review Po for Signature or  Approved |Purchaseorder| Purchasedetail
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
+    public function actionReview($kdpo)
+    {
+		/*
+		 * Edit PO Quantity | Validation max Jumlah RO/SA
+		 * @author ptrnov <piter@lukison.com>
+		 * @since 1.2
+		*/
+		if (Yii::$app->request->post('hasEditable')) {
+			$idx = Yii::$app->request->post('editableKey');
+			Yii::$app->response->format = Response::FORMAT_JSON;
+			$model = Purchasedetail::findOne($idx);						
+			$currentQty= $model->QTY;
+			$currentKdPo= $model->KD_PO;
+			$currentKdRo= $model->KD_RO;
+			$currentKdBrg= $model->KD_BARANG;
+			/* $iendPoQtyValidation = new SendPoQtyValidation();
+			$iendPoQtyValidation->findOne($id); */
+			$out = Json::encode(['output'=>'', 'message'=>'']);
+			$post = [];
+			$posted = current($_POST['Purchasedetail']);
+			$post['Purchasedetail'] = $posted; 
+			/* $posted = current($_POST['SendPoQtyValidation']);			
+			$post['SendPoQtyValidation'] = $posted; */
+			if ($model->load($post)) {				
+				$output = '';				
+				/*
+				 * Split PO Plus dan PO Normal 
+				 * PO Plus=POA.*
+				 * PO Plus=POB.*
+				 * @author ptrnov [piter@lukison]
+				 * @since 1.2
+				*/
+				$kdPo = explode('.',$currentKdPo); 
+				if($kdPo[0]!='POA'){
+					if (isset($posted['QTY'])) {
+						
+						/*
+						 * QTY RO-PO VALIDATION
+						 * QTY PO tidak boleh lebih dari SQTY Request Order
+						*/				
+						
+						/*Find SQTY RoDetail*/
+						$roDetail=Rodetail::find()->where(['KD_RO'=>$currentKdRo,'KD_BARANG'=>$currentKdBrg])->one();
+						//if(!$roDetail){
+						$roQty=$roDetail->SQTY!=0 ? $roDetail->SQTY :0;							
+						//}else{$roQty=0;}
+										
+						
+						/*Sum QTY PoDetail */
+						$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO='" .$roDetail->KD_RO. "' AND KD_BARANG='" .$roDetail->KD_BARANG ."' GROUP BY KD_BARANG";
+						//$pqtyTaken= 'SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO="RO.2015.12.000001" AND KD_BARANG="BRGU.LG.03.06.E07.0001"';
+						$poDetailQtySum=Purchasedetail::findBySql($pqtyTaken)->one();
+						$poQty=$poDetailQtySum->QTY!=0?$poDetailQtySum->QTY:0;
+						
+						/* Calculate SQTY RO - QTY PO + Current QTY | minus current record QTY */
+						$ttlPQTY=($roQty - $poQty)+$currentQty;					
+							
+							if ($posted['QTY'] <= $ttlPQTY){
+								$model->save();							
+								$output =Yii::$app->formatter->asDecimal($model->QTY,0);								
+							}else{
+								return ['output'=>'', 'message'=>'Request Order QTY Limited, Greater than RO QTY ! please insert free Qty, Check Request Order'];	
+							}
+					}
+					if (isset($posted['HARGA'])) {
+						 $model->save();
+						$output = Yii::$app->formatter->asDecimal($model->HARGA, 2);
+					} 
+					if (isset($posted['UNIT'])) {
+						$modelUnit=Unitbarang::find()->where('KD_UNIT="'.$posted['UNIT']. '"')->one();
+						$model->NM_UNIT=$modelUnit->NM_UNIT;
+						$model->UNIT_QTY=$modelUnit->QTY;
+						$model->UNIT_WIGHT=$modelUnit->WEIGHT;
+						$model->save();
+						$output =$model->UNIT;
+					} 
+					/*
+					if (isset($posted['NOTE'])) {
+					   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
+						$output = $model->NOTE;
+					} */
+				}
+				elseif($kdPo[0]!='PO'){
+					/* PO Plus=POB.*/
+					if (isset($posted['QTY'])) {
+						$model->save();							
+						$output = Yii::$app->formatter->asDecimal($model->QTY,0);
+					}
+					if (isset($posted['HARGA'])) {
+						$model->save();
+						$output = Yii::$app->formatter->asDecimal($model->HARGA, 2);
+					} 
+					if (isset($posted['UNIT'])) {
+						$model->save();
+						$output = $model->UNIT;
+					} 
+				}
+				
+				$out = Json::encode(['output'=>$output, 'message'=>'']);
+			}
+			// return ajax json encoded response and exit
+			echo $out;
+			return;
+		}
+		
+		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
+        $poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->andWhere('STATUS <> 3')->all(); 
+		$dataProvider = new ArrayDataProvider([
+			'key' => 'ID',
+			'allModels'=>$poDetail,		
+			'pagination' => [
+				'pageSize' => 20,
+			],
+		]);
+		
+		return $this->render( 'review', [
 			'poHeader' => $poHeader,
             'poDetail' => $poDetail,
             //'detro' => $detro,
@@ -210,13 +344,13 @@ class PurchaseOrderController extends Controller
 										
 						
 						/*Sum QTY PoDetail */
-						$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO='" .$roDetail->KD_RO. "' AND KD_BARANG='" .$roDetail->KD_BARANG ."'";
+						$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO='" .$roDetail->KD_RO. "' AND KD_BARANG='" .$roDetail->KD_BARANG."' GROUP BY KD_BARANG";
 						//$pqtyTaken= 'SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO="RO.2015.12.000001" AND KD_BARANG="BRGU.LG.03.06.E07.0001"';
 						$poDetailQtySum=Purchasedetail::findBySql($pqtyTaken)->one();
 						$poQty=$poDetailQtySum->QTY!=0?$poDetailQtySum->QTY:0;
 						
 						/* Calculate SQTY RO - QTY PO + Current QTY | minus current record QTY */
-						$ttlPQTY=($roQty - $poQty)+$currentQty;					
+						$ttlPQTY=($roQty - $poQty)+$currentQty;				
 							
 							if ($posted['QTY'] <= $ttlPQTY){
 								$model->save();							
@@ -228,6 +362,14 @@ class PurchaseOrderController extends Controller
 					if (isset($posted['HARGA'])) {
 						 $model->save();
 						$output = Yii::$app->formatter->asDecimal($model->HARGA, 2);
+					} 
+					if (isset($posted['UNIT'])) {
+						$modelUnit=Unitbarang::find()->where('KD_UNIT="'.$posted['UNIT']. '"')->one();
+						$model->NM_UNIT=$modelUnit->NM_UNIT;
+						$model->UNIT_QTY=$modelUnit->QTY;
+						$model->UNIT_WIGHT=$modelUnit->WEIGHT;
+						$model->save();
+						$output =$model->UNIT;
 					} 
 					/*
 					if (isset($posted['NOTE'])) {
@@ -244,6 +386,10 @@ class PurchaseOrderController extends Controller
 					if (isset($posted['HARGA'])) {
 						$model->save();
 						$output = Yii::$app->formatter->asDecimal($model->HARGA, 2);
+					} 
+					if (isset($posted['UNIT'])) {
+						$model->save();
+						$output = $model->UNIT;
 					} 
 				}
 				
@@ -415,7 +561,7 @@ class PurchaseOrderController extends Controller
 							$poBrgUmum=$roDetail->brgumum;							
 							if (!$poDetail){
 								//$roDetail = Rodetail::findOne($idx);
-								$roDetail->TMP_CK =1; /* Untuk testing Checkbook 1 | 0 */
+								$roDetail->TMP_CK =0; /* Untuk testing Checkbook 1 | 0 */
 								$roDetail->save();	
 								$res = array('status' => true); /* tidak ada Data pada Purchasedetail |KD_RO&KD_BARANG */	
 								/*Save To Purchase detail*/			
@@ -428,8 +574,22 @@ class PurchaseOrderController extends Controller
 										$poDetailModel->NM_UNIT=$poUnit->NM_UNIT;
 										$poDetailModel->UNIT_QTY=$poUnit->QTY;
 										$poDetailModel->UNIT_WIGHT=$poUnit->WEIGHT;
-										$poDetailModel->QTY=20;
-										$poDetailModel->HARGA=100000;
+											/*FORMULA*/
+											$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO='" .$dataKdRo. "' AND KD_BARANG='" .$roDetail->KD_BARANG."' GROUP BY KD_BARANG";	
+											$countQtyTaken=Purchasedetail::findBySql($pqtyTaken)->one();
+											if($countQtyTaken){
+												$qtyInPo=$countQtyTaken->QTY!=''? $countQtyTaken->QTY :0;
+											}else{
+												$qtyInPo=0;
+											}
+											//$qtyInPo=$countQtyTaken->QTY!=''? $countQtyTaken->QTY :0;
+											$actualQty=$roDetail->SQTY - $qtyInPo;
+											if($actualQty>0){
+												$poDetailModel->QTY=$actualQty;
+											}else{
+												$poDetailModel->QTY=0;
+											}									
+										$poDetailModel->HARGA=$roDetail->HARGA_SPL;
 										$poDetailModel->STATUS=0;  
 										//$poDetailModel->STATUS_DATE =date;//\Yii::$app->formatter->asDate(date,'Y-M-d hh:mm:ss');								
 									$poDetailModel->save();
@@ -874,22 +1034,22 @@ class PurchaseOrderController extends Controller
     }
 	
 	/*
-	 * PO FIRST SIGNATURE |ApprovedView | ApprovedSave
+	 * SIGNATURE AUTH1 | SIGN CREATED PO
 	 * $poHeader->STATUS =1
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
-	 public function actionApprovedView($kdpo){
+	 public function actionSignCreatedView($kdpo){
 		$loginform = new LoginForm();					
 		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
 		$employe = $poHeader->employe;			
-			return $this->renderAjax('login_signature', [
+			return $this->renderAjax('login_sig_created', [
 				'poHeader' => $poHeader,
 				'employe' => $employe,
 				'loginform' => $loginform,
 			]);		 
 	}
-	public function actionApprovedSave(){
+	public function actionSignCreatedSave(){
 		$loginform = new LoginForm();		
 		/*Ajax Load*/
 		if(Yii::$app->request->isAjax){
@@ -905,6 +1065,74 @@ class PurchaseOrderController extends Controller
 			}
 		}		
     }
+	
+	/*
+	 * SIGNATURE AUTH2 | SIGN CHECKED PO
+	 * $poHeader->STATUS =1
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	 public function actionSignCheckedView($kdpo){
+		$loginform = new LoginForm();					
+		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
+		$employe = $poHeader->employe;			
+			return $this->renderAjax('login_sig_checked', [
+				'poHeader' => $poHeader,
+				'employe' => $employe,
+				'loginform' => $loginform,
+			]);		 
+	}
+	public function actionSignCheckedSave(){
+		$loginform = new LoginForm();		
+		/*Ajax Load*/
+		if(Yii::$app->request->isAjax){
+			$loginform->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($loginform));
+		}else{	/*Normal Load*/	
+			if($loginform->load(Yii::$app->request->post())){
+				if ($loginform->loginform_saved()){
+					$hsl = \Yii::$app->request->post();
+					$kdpo = $hsl['LoginForm']['kdpo'];
+					return $this->redirect(['review', 'kdpo'=>$kdpo]);
+				}														
+			}
+		}		
+    }
+	
+	/*
+	 * SIGNATURE AUTH3 | SIGN APPROVED PO
+	 * $poHeader->STATUS =1
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	 public function actionSignApprovedView($kdpo){
+		$loginform = new LoginForm();					
+		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
+		$employe = $poHeader->employe;			
+			return $this->renderAjax('login_sig_approved', [
+				'poHeader' => $poHeader,
+				'employe' => $employe,
+				'loginform' => $loginform,
+			]);		 
+	}
+	public function actionSignApprovedSave(){
+		$loginform = new LoginForm();		
+		/*Ajax Load*/
+		if(Yii::$app->request->isAjax){
+			$loginform->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($loginform));
+		}else{	/*Normal Load*/	
+			if($loginform->load(Yii::$app->request->post())){
+				if ($loginform->loginform_saved()){
+					$hsl = \Yii::$app->request->post();
+					$kdpo = $hsl['LoginForm']['kdpo'];
+					return $this->redirect(['review', 'kdpo'=>$kdpo]);
+				}														
+			}
+		}		
+    }
+	
+	
 	
 	/*
 	 * PO Note
@@ -935,8 +1163,11 @@ class PurchaseOrderController extends Controller
     public function actionCetakpdf($kdpo)
     {
 		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
-        $poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->all(); 
-		$dataProvider = new ArrayDataProvider([
+		//$poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->all(); 
+		$poDetailQry= "SELECT ID,KD_PO,KD_RO,KD_BARANG,NM_BARANG,UNIT,NM_UNIT,UNIT_QTY,UNIT_WIGHT,SUM(QTY) AS QTY,HARGA,STATUS,STATUS_DATE,NOTE
+						FROM `p0002` WHERE KD_PO='" .$kdpo. "' GROUP BY KD_BARANG,NM_UNIT,HARGA";
+		$poDetail=Purchasedetail::findBySql($poDetailQry)->all();		
+        $dataProvider = new ArrayDataProvider([
 			'key' => 'KD_PO',
 			'allModels'=>$poDetail,		
 			'pagination' => [

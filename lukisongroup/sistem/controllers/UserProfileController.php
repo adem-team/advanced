@@ -49,6 +49,20 @@ class UserProfileController extends Controller
     }
 	
 	/*
+	 * FORM Change password Login Utama
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+	*/
+	public function actionPasswordUtamaView()
+    {	
+		$modelform = new SignatureForm();
+		return $this->renderAjax('_signupPassword',[
+					'modelform'=>$modelform,
+			]);	
+	}
+	
+	
+	/*
 	 * View | Create Signature Password
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1

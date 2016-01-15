@@ -154,10 +154,15 @@ use lukisongroup\master\models\Unitbarang;
 					//Purchasedetail::find()->where(['KD_RO'=>$dataKdRo,'KD_BARANG'=>$roDetail->KD_BARANG])->ALL();		
 					//$countQtyTaken=Purchasedetail::find(SUM('QTY'))->where(['KD_RO' => $model->KD_RO,'KD_BARANG' => $model->KD_BARANG])->all();
 					/*SUM QTY Dimana KD_RO DAN KD BARANG = jika requestorder->SQTY=Purchesedetail->QTY makan niali 0 => Hidden*/
-					$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO='" .$model->KD_RO. "' AND KD_BARANG='" .$model->KD_BARANG ."'";
+					$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO='" .$model->KD_RO. "' AND KD_BARANG='" .$model->KD_BARANG ."' GROUP BY KD_BARANG";	
 					$countQtyTaken=Purchasedetail::findBySql($pqtyTaken)->one();
 					//print_r($countQtyTaken->QTY);
-					$qtyInPo=$countQtyTaken->QTY!=''? $countQtyTaken->QTY :0;
+					if($countQtyTaken){
+						$qtyInPo=$countQtyTaken->QTY!=''? $countQtyTaken->QTY :0;
+					}else{
+						$qtyInPo=0;
+					}
+					
 					return $qtyInPo;
 				},  			 
 				'headerOptions'=>[
@@ -297,7 +302,21 @@ use lukisongroup\master\models\Unitbarang;
 						return ['checked' => $model->TMP_CK, 'hidden'=>true];
 						
 					}else{
-						return ['checked' => $model->TMP_CK];
+						/*FORMULA*/
+						$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO='".$model->KD_RO."' AND KD_BARANG='" .$model->KD_BARANG."' GROUP BY KD_BARANG";	
+						$countQtyTaken=Purchasedetail::findBySql($pqtyTaken)->one();
+						if($countQtyTaken){
+							$qtyInPo=$countQtyTaken->QTY!=''? $countQtyTaken->QTY :0;
+						}else{
+							$qtyInPo=0;
+						}
+						//$qtyInPo=$countQtyTaken!=''? $countQtyTaken->QTY :0;
+						$actualQty=$model->SQTY - $qtyInPo;
+						if($actualQty>0){
+							return ['checked' => $model->TMP_CK];
+						}else{
+							return ['checked' => $model->TMP_CK, 'hidden'=>true];
+						}						
 					}
 				}  
 			],
