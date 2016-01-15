@@ -544,8 +544,12 @@ $tabcrud =  GridView::widget([
     ]);
 
   
- 
-          $map = '<div id ="map" style="width:100%;height:400px"></div>';    
+		
+		
+	
+
+          $map = '<input id="pac-input" class="controls" type="text" placeholder="Search Box">
+		  <div id ="map" style="width:100%;height:400px"></div>';    
                  
     $items=[
 		[
