@@ -8,11 +8,11 @@ $profile=Yii::$app->getUserOpt->Profile_user();
 //echo $roEmpe->EMP_ID;
 //echo $profile->emp->EMP_NM;
 	$arrayStt= [
-		  ['status' => 0, 'DESCRIP' => 'PROCESS'],
-		  ['status' => 1, 'DESCRIP' => 'PENDING'],
-		  ['status' => 101, 'DESCRIP' => 'APPROVED'],
 		  ['status' => 4, 'DESCRIP' => 'REJECT'],
-	];
+		  ['status' => 1, 'DESCRIP' => 'PENDING'],		  
+		  ['status' => 0, 'DESCRIP' => 'REPROCESS'],
+		  ['status' => 101, 'DESCRIP' => 'APPROVED'],
+	];	
 	$valStt = ArrayHelper::map($arrayStt, 'status', 'DESCRIP');
 ?>
 

@@ -82,7 +82,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		</div>
 		<div class="col-md-9" style="padding-top:15px;">
 			<!--<h3 class="text-center"><b>Form Permintaan Barang & Jasa</b></h3>!-->
-			<h3 class="text-center"><b>FORM REQUEST ORDER</b></h3>
+			<h3 class="text-center"><b>REQUEST ORDER</b></h3>
 		</div>
 		<div class="col-md-11">
 			<hr>

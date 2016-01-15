@@ -225,7 +225,7 @@ function tombolKategori(){
 			//if(getPermissionEmployee()->JOBGRADE_ID == 'S' OR getPermissionEmployee()->JOBGRADE_ID == 'M' OR getPermissionEmployee()->JOBGRADE_ID == 'SM' AND getPermission()->BTN_SIGN1==1 ){
 			if($a == 'SEVP' OR $a == 'EVP' OR $a == 'SVP' OR $a == 'VP' OR $a == 'AVP' OR $a == 'SM' OR $a == 'M' OR $a == 'AM' OR $a == 'S' AND $b==1 ){
 				 if($model->STATUS == 0 || $model->STATUS == 1 ){ // 0=process 101=Approved
-					$title = Yii::t('app', 'approved');
+					$title = Yii::t('app', 'Review');
 					$options = [ //'id'=>'ro-approved',
 								//'data-method' => 'post',
 								 //'data-pjax'=>true,
