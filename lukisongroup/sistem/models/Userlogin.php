@@ -55,6 +55,32 @@ class Userlogin extends \yii\db\ActiveRecord
 		return $this->hasOne(Mdlpermission::className(), ['USER_ID' => 'id']);
 	}
 	
+	
+	
+	/**
+     * Generates password hash from password signature
+     *
+     * @param string $SIGPASSWORD
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+    public function setPassword_login($password)
+    {
+        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+    }
+	
+	/**
+     * return Password Signature
+     *
+     * @param string $SIGPASSWORD
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	public function validateOldPassword($password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->password_hash);
+		
+    }
      
 }
 

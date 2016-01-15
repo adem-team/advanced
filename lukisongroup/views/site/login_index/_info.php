@@ -25,7 +25,7 @@ AppAssetQr::register($this);
 			<dd>: <?php echo $dataProvider[0]['groupfunction']->GF_NM; ?></dd>
 			
 			<dt style="width:100px; float:left;"><b>Job Level</b></dt>
-			<dd>: <?php echo $dataProvider[0]['jobgrade']->JOBGRADE_ID . ' - ' . $dataProvider[0]['jobgrade']->JOBGRADE_NM; ?></dd>     	  
+			<dd>: <?php echo $dataProvider[0]['jobgrade']->JOBGRADE_ID;// . ' - ' . $dataProvider[0]['jobgrade']->JOBGRADE_NM; ?></dd>     	  
 			
 			<dt style="width:100px; float:left;"><b>Organization</b></dt>
 			<dd>: <?php echo str_replace('Department','',$dataProvider[0]['deptOne']->DEP_NM); ?></dd>     	  

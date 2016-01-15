@@ -66,7 +66,7 @@ AppAsset_style::register($this);
 				//print_r($ModelUserAttr);
 				//echo $ModelUserAttr->emp->EMP_IMG;
 				$MainAvatar =  $ModelUserAttr->emp->EMP_IMG;
-				$MainUserProfile = $ModelUserAttr->emp->EMP_NM . ' '. $ModelUserAttr->emp->EMP_NM_BLK;
+				$MainUserProfile = $ModelUserAttr->emp->EMP_NM;// . ' '. $ModelUserAttr->emp->EMP_NM_BLK;
 			
 			}
 			$corp="<p class='pull-left'>&copy; LukisonGroup <?= date('Y') ?></p>";
