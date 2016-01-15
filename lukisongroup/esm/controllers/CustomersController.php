@@ -532,8 +532,9 @@ class CustomersController extends Controller
 				$model->CREATED_BY =  Yii::$app->user->identity->username;
 				$model->CREATED_AT = date("Y-m-d H:i:s");
 				$model->save();
-			}	            
-            // return $this->redirect(['viewcust','id'=>$model->CUST_KD]);
+					
+			}            
+             return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_formcustomer', [
                 'model' => $model,

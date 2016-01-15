@@ -93,7 +93,7 @@ $tabkota = \kartik\grid\GridView::widget([
 			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
 						['modelClass' => 'Barangumum',]),'/esm/customers/createkota',[
 							'data-toggle'=>"modal",
-								'data-target'=>"#form1",
+								'data-target'=>"#form2",
                                     'id'=>'modl',
 									'class' => 'btn btn-success'						
 												]),
@@ -305,7 +305,7 @@ $tabcrud =  GridView::widget([
                          'update' =>function($url, $model, $key){
                                 return  Html::a('<span class="glyphicon glyphicon-pencil"></span>',['update','id'=>$model->CUST_KTG],[
                                                             'data-toggle'=>"modal",
-                                                            'data-target'=>"#viewparent",
+                                                            'data-target'=>"#formparent",
                                                             'data-title'=> $model->CUST_KTG_PARENT,
                                                             ]);
                         },
@@ -502,7 +502,7 @@ $tabcrud =  GridView::widget([
                         ['modelClass' => 'Customers',]),'/esm/customers/createcustomers',[  
                                                             'data-toggle'=>"modal",
 															'id'=>'modcus',
-                                                            'data-target'=>"#create-cus",
+                                                            'data-target'=>"#createcus",
                                                             'class' => 'btn btn-success'
                                                             ])
 		
@@ -633,7 +633,7 @@ $this->registerJs("
                     modal.find('.modal-body').html(data)
                 });
             })
-    ",$this::POS_LOAD);        
+    ",$this::POS_READY);        
 		
 
 
@@ -758,10 +758,11 @@ $this->registerJs("
             })
 
 
-    ",$this::POS_LOAD);
+    ",$this::POS_READY);
 
-	$this->registerJs("        
-		$('#create-cus').on('show.bs.modal', function (event) {
+	$this->registerJs("
+   $.fn.modal.Constructor.prototype.enforceFocus = function(){};	
+		$('#createcus').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget)
 			var modal = $(this)
 			var title = button.data('title') 
@@ -772,13 +773,19 @@ $this->registerJs("
 				.done(function( data ) {
 					modal.find('.modal-body').html(data)
 				});
+				
+	
 			})
+		
 	",$this::POS_READY);
 	
 	
 	
+	
+	
+	
 	Modal::begin([
-		'id' => 'create-cus',
+		'id' => 'createcus',
 		'header' => '<h4 class="modal-title">New Customer</h4>',
 	]);
 	Modal::end();
@@ -926,10 +933,14 @@ $this->registerJs("
                                 radiusInput: $("#us3-radius"),
                                 locationNameInput: $("#us3-address")
                             },
-                            enableAutocomplete: true
+                             enableAutocomplete: true
                         });
+				
+	
                         $("#us6-dialog").on("shown.bs.modal", function() {
                             $("#us3").locationpicker("autosize");
+						
+					
                         });
 						
 					}
@@ -963,8 +974,8 @@ $this->registerJs("
 				
                 if(result == 1 )
                                           {
-                                             $(document).find('#us6-dialog').modal('hide')
-                                             $('#myform').trigger('reset');
+                                             $(document).find('#us6-dialog').modal('hide');
+                                             // $('#myform').trigger('reset');
                                              $.pjax.reload({container:'#axctive224'});
                                           }
                                         else{
