@@ -190,7 +190,30 @@ class Employe extends \yii\db\ActiveRecord
    // {
     //    return ['EMP_ID'];
    // }
-
+	/**
+     * Generates password hash from password signature
+     *
+     * @param string $SIGPASSWORD
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+    public function setPassword_signature($password)
+    {
+        $this->SIGPASSWORD = Yii::$app->security->generatePasswordHash($password);
+    }
+	
+	/**
+     * return Password Signature
+     *
+     * @param string $SIGPASSWORD
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	public function validateOldPasswordCheck($password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->SIGPASSWORD);
+		
+    } 
 }
 
 
