@@ -2,14 +2,17 @@
 
 namespace lukisongroup\sistem\controllers;
 
-use \yii;
+use Yii;
+use yii\helpers\Html;
 use yii\web\Controller;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 use lukisongroup\sistem\models\SignatureForm;
+use lukisongroup\sistem\models\ValidationLoginForm;
 use lukisongroup\hrd\models\Employe;			/* TABLE CLASS JOIN */
 use lukisongroup\hrd\models\EmployeSearch;	/* TABLE CLASS SEARCH */
+use zyx\phpmailer\Mailer;
 
 class UserProfileController extends Controller
 {
@@ -47,6 +50,63 @@ class UserProfileController extends Controller
 			'model'=> $model,
 		]);
     }
+	
+	/*
+	 * FORM LOGIN UTAMA | FORM CHANGE PASSWORD
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+	*/
+	public function actionPasswordUtamaView()
+    {	
+		$validationFormLogin = new ValidationLoginForm();
+		return $this->renderAjax('_changePasswordUtama',[
+					'validationFormLogin'=>$validationFormLogin,
+			]);	
+	}
+	/*
+	 * FORM LOGIN UTAMA | SAVE PASSWORD
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+	*/
+	public function actionPasswordUtamaSave()
+    {	
+		$validationFormLogin = new ValidationLoginForm();
+		
+		/*
+		 * Ajax validate Old password Signature
+		 * @author ptrnov  <piter@lukison.com>
+		 * @since 1.1
+		*/
+		if(Yii::$app->request->isAjax){
+			$validationFormLogin->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($validationFormLogin));
+		}
+				
+		if($validationFormLogin->load(Yii::$app->request->post())){						
+			if ($validationFormLogin->addpassword()) {
+				$model = $this->findModel(Yii::$app->user->identity->EMP_ID);
+				$newPassword=$validationFormLogin->repassword;
+				$dataHtml =$this->renderPartial('NotifyChangePassword',[
+								//'model'=>$model,
+								'newPassword'=>$newPassword
+							]);
+				if($model->EMP_EMAIL!=''){			
+					 Yii::$app->mailer->compose()
+					 ->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
+					 //->setTo(['piter@lukison.com'])
+					 //->setTo(['it-dept@lukison.com'])
+					 ->setTo($model->EMP_EMAIL)
+					 ->setSubject('Change Login Password')
+					 ->setHtmlBody($dataHtml)
+					 ->send();
+				}
+				return $this->redirect('index');
+			}else{
+				 $model = $this->findModel(Yii::$app->user->identity->EMP_ID);
+				return $this->redirect('index'); 				
+			}			
+		}
+	}
 	
 	/*
 	 * View | Create Signature Password
@@ -124,6 +184,21 @@ class UserProfileController extends Controller
 		if($modelform->load(Yii::$app->request->post())){						
 			if ($modelform->addpassword()) {
 				$model = $this->findModel(Yii::$app->user->identity->EMP_ID);
+				$newPassword=$modelform->repassword;
+				$dataHtml =$this->renderPartial('NotifyChangePasswordSignature',[
+								//'model'=>$model,
+								'newPassword'=>$newPassword
+							]);
+				if($model->EMP_EMAIL!=''){			
+					 Yii::$app->mailer->compose()
+					 ->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
+					 //->setTo(['piter@lukison.com'])
+					 //->setTo(['it-dept@lukison.com'])
+					 ->setTo($model->EMP_EMAIL)
+					 ->setSubject('Change Signature Password')
+					 ->setHtmlBody($dataHtml)
+					 ->send();
+				}
 				return $this->redirect('signature',[
 					'model'=>$model,
 				]);

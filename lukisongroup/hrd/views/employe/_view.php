@@ -324,7 +324,11 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 		
 	];
 
-		$form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctype'=>'multipart/form-data']]);
+		$form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,
+		'id'=>'viewedit',
+		'enableClientValidation' => true,
+		
+		'options'=>['enctype'=>'multipart/form-data']]);
 			echo DetailView::widget([
 				'id'=>'dv-view-emp',
 				'model' => $model,
@@ -340,7 +344,7 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 				
 				
 				'deleteOptions'=>[
-					'url'=>['delete', 'id' => $model->EMP_NM],
+					'url'=>['delete', 'id' => $model->EMP_ID],
 					'data'=>[
 						'confirm'=>Yii::t('app', 'Are you sure to deleted this record Name =' . $model->EMP_NM .'?'),
 						'method'=>'post',

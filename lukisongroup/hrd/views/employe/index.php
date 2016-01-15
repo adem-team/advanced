@@ -55,7 +55,11 @@ $tab_employe= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'], 			
+            ['class' => 'yii\grid\SerialColumn'], 
+    [
+        'class' => 'yii\grid\CheckboxColumn',
+        // you may configure additional properties here
+    ],			
 			[
 				/*Author -ptr.nov- image*/
                'attribute' => 'PIC',
@@ -516,7 +520,8 @@ use kartik\alert\Alert;
 
 	]);
 	 
-	 $this->registerJs("			
+	 $this->registerJs("	
+			$.fn.modal.Constructor.prototype.enforceFocus = function(){};	 
 		    $('#activity-emp').on('show.bs.modal', function (event) {
 		        var button = $(event.relatedTarget)
 		        var modal = $(this)
@@ -542,6 +547,7 @@ use kartik\alert\Alert;
 		
 		/*ViewDelate
 		$this->registerJs("
+		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		    $('#view-emp').on('show.bs.modal', function (event) {
 		        var button = $(event.relatedTarget)
 		        var modal = $(this)

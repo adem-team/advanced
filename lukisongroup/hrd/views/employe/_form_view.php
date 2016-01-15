@@ -11,7 +11,11 @@ use kartik\builder\FormGrid;
 use kartik\widgets\FileInput;
 use yii\helpers\ArrayHelper;
 
-$form = ActiveForm::begin(['type'=>ActiveForm::TYPE_HORIZONTAL]);
+$form = ActiveForm::begin(['type'=>ActiveForm::TYPE_HORIZONTAL
+	'id'=>'emp-form1-view',
+		'enableClientValidation' => true,
+
+]);
 //$form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL]);
 $nlDigit= (Employe::find()->count())+1;
 $nl='LG'.$nlDigit;

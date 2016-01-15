@@ -185,6 +185,9 @@ class RequestorderSearch extends Requestorder
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+			'pagination' => [
+					'pageSize' => 15,
+				],
         ]);
 
          $dataProvider->setSort([

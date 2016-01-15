@@ -20,8 +20,10 @@ use lukisongroup\hrd\models\Employe;
 class SignatureForm extends Model
 {
     public $password;
+	public $repassword;
 	public $oldpassword;
 	public $findPasswords;
+	public $checkRePasswords;
 	private $_empid = false;
     /**
      * @inheritdoc
@@ -32,13 +34,27 @@ class SignatureForm extends Model
 			[['oldpassword'], 'required'],
 			['oldpassword', 'number','numberPattern' => '/^[0-9]*$/i'],
 			['oldpassword', 'string', 'min' => 8,  'message'=> 'Please enter 8 digit'],
-			['oldpassword', 'findPasswords'],						
-			['password', 'required'],
-			['password', 'number','numberPattern' => '/^[0-9]*$/i'],
-            ['password', 'string', 'min' => 8,'message'=> 'Please enter 8 digit'],
+			['oldpassword', 'findPasswords'],			
+			[['password','repassword'], 'required'],
+			[['password','repassword'], 'number','numberPattern' => '/^[0-9]*$/i'],
+            [['password','repassword'], 'string', 'min' => 8,'message'=> 'Please enter 8 digit'],
+			['password', 'checkRePasswords'],	
+			
 			
         ];
     }
+	
+	/**
+     * Password Find Oldpassword for validation
+     */
+	public function checkRePasswords($attribute, $params)
+    {  
+		if (!$this->hasErrors()) {
+			if ($this->password!=$this->repassword) {
+                $this->addError($attribute, 'New password Not Same, please correct password.');				
+            } 
+       }
+	} 
 	
 	/**
      * Password Find Oldpassword for validation

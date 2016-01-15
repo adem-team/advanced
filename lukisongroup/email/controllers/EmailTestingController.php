@@ -47,8 +47,9 @@ class EmailTestingController extends Controller
 		->send();
 		//return $this->render('index');
 		*/
+		$dataHtml =$this->renderPartial('Data');
 		
-		$form = ActiveForm::begin();
+		/* $form = ActiveForm::begin();
 		$model = new DynamicModel([
 			'TextBody', 'Subject'
 		]);
@@ -56,14 +57,14 @@ class EmailTestingController extends Controller
 		$ok='Test LG ERP FROM HOME .... GOOD NIGHT ALL, SEE U LATER ';
 		
 		 $form->field($model, 'Subject')->textInput();
-		  ActiveForm::end(); 
+		  ActiveForm::end();  */
 		  Yii::$app->mailer->compose()
 		 ->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
 		 //->setTo(['piter@lukison.com'])
 		 //->setTo(['it-dept@lukison.com'])
 		 ->setTo(['ptr.nov@gmail.com'])
 		 ->setSubject('ERP TEST EMAIL')
-		 ->setTextBody($ok)
+		 ->setHtmlBody($dataHtml)
 		 ->send();
 		 
 		

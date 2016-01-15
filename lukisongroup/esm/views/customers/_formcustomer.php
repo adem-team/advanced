@@ -47,8 +47,8 @@ use kartik\widgets\DepDrop;
 <div class="customerskat-form">
 
     <?php $form = ActiveForm::begin([
-	'id'=>'createkat',
-	'enableClientValidation' => true
+	'id'=>$model->formName(),
+	
 	
 	
 	]); ?>
@@ -180,135 +180,6 @@ use kartik\widgets\DepDrop;
 	
 	?>
 	
-    <?= $form->field($model, 'ALAMAT')->textInput(['maxlength' => true]) ?> 
-
-   <?= $form->field($model, 'MAP_LNG')->hiddenInput()->label(false) ?>
-   
-    <?= $form->field($model, 'MAP_LAT')->hiddenInput()->label(false) ?>
-	<!-- $form->field($model, 'MAP_LNG')->textInput(['maxlength' => true,'readonly'=>true]) ?> -->
-	 <!-- $form->field($model, 'MAP_LAT')->textInput(['maxlength' => true,'readonly'=>true]) ?> -->
-       <!-- Html::button('...', ['value'=>Url::to('/esm/customers/lokasi'),'class' => 'btn btn-success','id'=>'modalcp']);?> -->
-
-   <!-- <button type="button" class="btn btn-info btn-lg" id="myBtn">Open Modal</button> -->
-
-  <!-- Modal -->
-  <!-- <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog modal-lg">
-    
-      <!-Modal content-->
-     <!--  <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Modal Header</h4>
-        </div> -->
-        <!-- <div class="modal-body"> --> 
-      
-    <!-- $form->field($model, 'ALAMAT')->textInput(['maxlength' => true]) ?>  -->
-
-    <!--  echo \pigolab\locationpicker\LocationPickerWidget::widget([
-       // 'key' => 'http://maps.google.com/maps/api/js?sensor=false&libraries=places', // optional , Your can also put your google map api key
-       'options' => [
-       // 'id'=>'tes',
-        // 'enableSearchBox' => true,
-            'style' => 'width: 100%; height: 400px',
-            'enableSearchBox' => true, // Optional , default is true
-        'searchBoxOptions' => [ // searchBox html attributes
-            'style' => 'width: 300px;', // Optional , default width and height defined in css coordinates-picker.css
-                    ], // map canvas width and height
-        ] ,
-          
-
-        'clientOptions' => [
-            'location' => [
-                'latitude'  => -6.214620,
-                'longitude' => 106.845130 ,
-            
-            ],
-            'radius'    => 300,
-            'inputBinding' => [
-                'latitudeInput'     => new JsExpression("$('#customers-map_lat')"),
-                 'longitudeInput'    => new JsExpression("$('#customers-map_lng')"),
-                // 'radiusInput'       => new JsExpression("$('#us2-radius')"),
-                'locationNameInput' => new JsExpression("$('#customers-alamat')")
-            ],
-            'enableAutocomplete' => true,
-        ]        
-    ]);
- 
-?> -->
-   
-<!-- 
- 
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
-  -->
-
-  
-  
-   <?php echo \pigolab\locationpicker\LocationPickerWidget::widget([
-       // 'key' => 'http://maps.google.com/maps/api/js?sensor=false&libraries=places', // optional , Your can also put your google map api key
-       'options' => [
-
-            
-        // 'enableSearchBox' => true,
-            'style' => 'width: 100%; height: 400px',
-            'enableSearchBox' => true, // Optional , default is true
-        'searchBoxOptions' => [ // searchBox html attributes
-            'style' => 'width: 300px;', // Optional , default width and height defined in css coordinates-picker.css
-                    ], // map canvas width and height
-        ] ,
-        // 'ClientEvents' =>
-        // [
-        //      $('#us6').locationpicker('autosize')
-        // ],
-          
-
-        'clientOptions' => [
-            'location' => [
-                'latitude'  => -6.214620,
-                'longitude' => 106.845130 ,
-			
-            ],
-            'radius'    => 300,
-            'inputBinding' => [
-                'latitudeInput'     => new JsExpression("$('#customers-map_lat')"),
-                 'longitudeInput'    => new JsExpression("$('#customers-map_lng')"),
-                // 'radiusInput'       => new JsExpression("$('#us2-radius')"),
-                'locationNameInput' => new JsExpression("$('#customers-alamat')")
-            ],
-            'enableAutocomplete' => true,
-        ]        
-    ]);
-?>
- <!-- $form->field($model, 'ALAMAT')->widget('\pigolab\locationpicker\CoordinatesPicker' , [
-        // 'key' => 'abcabcabc...' ,   // optional , Your can also put your google map api key
-        'valueTemplate' => '{latitude},{longitude}' , // Optional , this is default result format
-        'options' => [
-            'style' => 'width: 100%; height: 400px',  // map canvas width and height
-        ] ,
-        'enableSearchBox' => true , // Optional , default is true
-        'searchBoxOptions' => [ // searchBox html attributes
-            'style' => 'width: 300px;', // Optional , default width and height defined in css coordinates-picker.css
-        ],
-        'enableMapTypeControl' => true , // Optional , default is true
-        'clientOptions' => [
-            'radius'    => 300,
-            'location' => [
-                'latitude'  => -6.214620,
-                'longitude' => 106.845130 
-        ],
-        ]
-    ]);
-?> -->
-
-
-    
 
 
     <div class="form-group">
@@ -322,6 +193,42 @@ use kartik\widgets\DepDrop;
 
 
 <?php
+
+
+// $this->registerJs("
+        
+   // $('form#{$model->formName()}').on('beforeSubmit',function(e)
+    // {
+        // var \$form = $(this);
+        // $.post(
+            // \$form.attr('action'),
+            // \$form.serialize()
+
+        // )
+        
+            // .done(function(result){
+				// alert(result)
+			        // if(result == 1 )
+                                          // {
+											    
+                                             // $(document).find('#createcus').modal('hide');
+                                             // $('form#customers').trigger('reset');
+                                             // $.pjax.reload({container:'#axctive224'});
+                                          // }
+                                        // else{
+                                           // console.log(result)
+                                        // }
+            
+            // });
+            
+// return false;
+
+
+// });
+
+ 
+ // ",$this::POS_END);
+ 
 
 $script = <<<SKRIPT
 

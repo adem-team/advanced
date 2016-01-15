@@ -50,18 +50,24 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 	*/
 	function getPermission(){
 		if (Yii::$app->getUserOpt->Modul_akses(1)){
-			return Yii::$app->getUserOpt->Modul_akses(1)->mdlpermission;
+			return Yii::$app->getUserOpt->Modul_akses(1);
 		}else{		
 			return false;
 		}	 
 	}
-	function getPermissionEmployee(){
-		if (Yii::$app->getUserOpt->Modul_akses(1)){
-			return Yii::$app->getUserOpt->Modul_akses(1)->emp;
+	//print_r(getPermission());
+	/*
+	 * Declaration Componen User Permission
+	 * Function profile_user
+	*/
+	function getPermissionEmp(){
+		if (Yii::$app->getUserOpt->profile_user()){
+			return Yii::$app->getUserOpt->profile_user()->emp;
 		}else{		
 			return false;
 		}	 
 	}
+	//print_r(getPermissionEmp());
 	
  
 	 /*
@@ -124,7 +130,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 	function tombolApproval($url, $model){
 		if(getPermission()){
 			//Permission Jabatan
-			$a=getPermissionEmployee()->JOBGRADE_ID;
+			$a=getPermissionEmp()->JOBGRADE_ID;
 			$b=getPermission()->BTN_SIGN1;
 			if($a == 'SEVP' OR $a == 'EVP' OR $a == 'SVP' OR $a == 'VP' OR $a == 'AVP' OR $a == 'SM' OR $a == 'M' OR $a == 'AM' OR $a == 'S' AND $b==1 ){
 				 if($model->STATUS == 0){ // 0=process 101=Approved
@@ -155,7 +161,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 	function tombolReject($url, $model) {
 		if(getPermission()){
 			//Permission Jabatan
-			$a=getPermissionEmployee()->JOBGRADE_ID;
+			$a=getPermissionEmp()->JOBGRADE_ID;
 			$b=getPermission()->BTN_SIGN1;
 			if($a == 'SEVP' OR $a == 'EVP' OR $a == 'SVP' OR $a == 'VP' OR $a == 'AVP' OR $a == 'SM' OR $a == 'M' OR $a == 'AM' OR $a == 'S' AND $b==1 ){
 				 if($model->STATUS == 0){ // 0=process 4= Reject
@@ -183,7 +189,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 	function tombolCancel($url, $model){
 		if(getPermission()){
 			//Permission Jabatan
-			$a=getPermissionEmployee()->JOBGRADE_ID;
+			$a=getPermissionEmp()->JOBGRADE_ID;
 			$b=getPermission()->BTN_SIGN1;
 			if($a == 'SEVP' OR $a == 'EVP' OR $a == 'SVP' OR $a == 'VP' OR $a == 'AVP' OR $a == 'SM' OR $a == 'M' OR $a == 'AM' OR $a == 'S' AND $b==1 ){
 				 if($model->STATUS !== 101 or $model->STATUS !== 4 or $model->STATUS !== 3 or $model->STATUS !== 0){ // 0=process 4= Reject

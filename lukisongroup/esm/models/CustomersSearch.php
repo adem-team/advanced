@@ -84,11 +84,12 @@ class CustomersSearch extends Customers
 
     public function search($params)
     {
-        $querya = Customers::find()->joinWith('cus',true,'LEFT JOIN')
+        $query = Customers::find()->joinWith('cus',true,'JOIN')
                                     ->where('c0001.STATUS <> 3');
+									// ->orderBy(['CUST_KD'=>SORT_ASC]);
 
         $dataProvider = new ActiveDataProvider([
-            'query' => $querya,
+            'query' => $query,
         ]);
 
 
@@ -117,7 +118,7 @@ class CustomersSearch extends Customers
         //     'STATUS' => $this->STATUS,
         // ]);
 
-        $querya->andFilterWhere(['like', 'CUST_KD', $this->CUST_KD])
+        $query->andFilterWhere(['like', 'CUST_KD', $this->CUST_KD])
             ->andFilterWhere(['like', 'CUST_KD_ALIAS', $this->CUST_KD_ALIAS])
             ->andFilterWhere(['like', 'TLP1', $this->TLP1])
             ->andFilterWhere(['like', 'TLP2', $this->TLP2])

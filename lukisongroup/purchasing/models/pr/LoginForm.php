@@ -71,11 +71,23 @@ class LoginForm extends Model
 		if ($this->validate()) {			
 			$roHeader = Purchaseorder::find()->where(['KD_PO' =>$this->kdpo])->one();
 				$profile=Yii::$app->getUserOpt->Profile_user();
-				$roHeader->STATUS = $this->status;					
-				$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
-				$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
-				$roHeader->SIG1_NM = $profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;
-				$roHeader->SIG1_TGL = date('Y-m-d');		
+				$roHeader->STATUS = $this->status;	
+				if ($this->status==1){
+					$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
+					$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
+					$roHeader->SIG1_NM = $profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;
+					$roHeader->SIG1_TGL = date('Y-m-d');	
+				}elseif($this->status==101){
+					$roHeader->SIG2_SVGBASE64 = $profile->emp->SIGSVGBASE64;
+					$roHeader->SIG2_SVGBASE30 = $profile->emp->SIGSVGBASE30;
+					$roHeader->SIG2_NM = $profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;
+					$roHeader->SIG2_TGL = date('Y-m-d');	
+				}elseif($this->status==102){
+					$roHeader->SIG3_SVGBASE64 = $profile->emp->SIGSVGBASE64;
+					$roHeader->SIG3_SVGBASE30 = $profile->emp->SIGSVGBASE30;
+					$roHeader->SIG3_NM = $profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;
+					$roHeader->SIG3_TGL = date('Y-m-d');	
+				}				
 			if ($roHeader->save()) {
                 return $roHeader;
             }
