@@ -28,7 +28,7 @@ AppAssetQr::register($this);
 			<dd>: <?php echo $dataProvider[0]['jobgrade']->JOBGRADE_ID . ' - ' . $dataProvider[0]['jobgrade']->JOBGRADE_NM; ?></dd>     	  
 			
 			<dt style="width:100px; float:left;"><b>Organization</b></dt>
-			<dd>: <?php echo $dataProvider[0]['deptOne']->DEP_NM; ?></dd>     	  
+			<dd>: <?php echo str_replace('Department','',$dataProvider[0]['deptOne']->DEP_NM); ?></dd>     	  
 			
 			<dt style="width:100px; float:left;"><b>Org Lavel</b></dt>
 			<dd>: <?php echo $dataProvider[0]['deptsub']->DEP_SUB_ID . ' - ' . $dataProvider[0]['deptsub']->DEP_SUB_NM; ?></dd>   		
@@ -51,8 +51,8 @@ AppAssetQr::register($this);
 			<dt style="width:100px; float:left;">Email</dt>
 			<dd>: <?php echo  $model->EMP_EMAIL; ?></dd>
 			
-			<dt style="width:100px; float:left;">Join Date</dt>
-			<dd>: <?php echo  $model->EMP_JOIN_DATE; ?></dd>
+			<!--<dt style="width:100px; float:left;">Join Date</dt>
+			<dd>: <?php //echo  $model->EMP_JOIN_DATE; ?></dd>!-->
 		</dl>
     </div>
 	<div class=" col-xs-12 col-sm-4 col-dm-3 col-lg-3"  style="padding-left:0;padding-top:10px;"  >

@@ -104,7 +104,7 @@ $EmployeeInput= FormGrid::widget([
 
                             ],
 
-                            'columnOptions'=>['colspan'=>1],
+                            'columnOptions'=>['colspan'=>3],
                         ],
 						/*
 						'EMP_ID'=>[

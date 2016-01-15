@@ -139,14 +139,14 @@ class EmployeController extends Controller
         }
 		//$generate_key_emp= Yii::$app->ambilkonci->getKey_Employe('GSN');
 		//print_r($generate_key_emp);
-		 $model = $this->findModel('ALG.2015.000056');
+		 //$model = $this->findModel('ALG.2015.000056');
 		return $this->render('index', [
 			//'side_menu'=>$side_menu,			/* Content variable Array -SideMenu- */
             'searchModel' => $searchModel, 		/* Content variable Array -Filter Search- */
             'dataProvider' => $dataProvider,	/* Content variable Array -Class Table Join- */
             'searchModel1' => $searchModel1,
             'dataProvider1' => $dataProvider1,  /* Content variable Array Aditional -Class Table Join- */
-			 'model' => $model,
+			 //'model' => $model,
         ]);
     }
 
