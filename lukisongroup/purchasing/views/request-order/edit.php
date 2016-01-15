@@ -49,16 +49,15 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * Declaration Componen User Permission
 	 * Function getPermission
 	 * Modul Name[1=RO]
-	 * @author ptrnov  <piter@lukison.com>
-	 * @since 1.1
 	*/
 	function getPermission(){
 		if (Yii::$app->getUserOpt->Modul_akses(1)){
-			return Yii::$app->getUserOpt->Modul_akses(1)->mdlpermission;
+			return Yii::$app->getUserOpt->Modul_akses(1);
 		}else{		
 			return false;
 		}	 
-	} 
+	}
+	//print_r(getPermission());
  
 	/*Not USED*/
 	$arrayStt= [
@@ -351,7 +350,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								return $UnitNm;
 							},
 							'editableOptions' => [
-								'header' => 'Update Quantity',
+								'header' => 'Update UNIT',
 								'inputType' => \kartik\editable\Editable::INPUT_SELECT2,		
 								'size' => 'md',								
 								'options' => [			

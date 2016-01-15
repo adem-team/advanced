@@ -26,33 +26,34 @@ $this->sideCorp = 'ESM Request Order';                       /* Title Select Com
 $this->sideMenu = 'esm_esm';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'List Permintaan Barang');      /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
-
-
-	/*
-	 * Declaration Componen User Permission
-	 * Function getPermission
-	 * Modul Name[1=RO]
-	*/
-	function getPermission(){
-		if (Yii::$app->getUserOpt->Modul_akses(1)){
-			return Yii::$app->getUserOpt->Modul_akses(1)->mdlpermission;
-		}else{		
-			return false;
-		}	 
-	}
 	
 	/*
 	 * Declaration Componen User Permission
 	 * Function getPermission
-	 * Modul Name[1=RO]
+	 * Modul Name[3=PO]
 	*/
-	function getPermissionEmployee(){
+	function getPermission(){
 		if (Yii::$app->getUserOpt->Modul_akses(1)){
-			return Yii::$app->getUserOpt->Modul_akses(1)->emp;
+			return Yii::$app->getUserOpt->Modul_akses(1);
 		}else{		
 			return false;
 		}	 
 	}
+	//print_r(getPermission());
+	/*
+	 * Declaration Componen User Permission
+	 * Function profile_user
+	 * Modul Name[3=PO]
+	*/
+	function getPermissionEmp(){
+		if (Yii::$app->getUserOpt->profile_user()){
+			return Yii::$app->getUserOpt->profile_user()->emp;
+		}else{		
+			return false;
+		}	 
+	}
+	//print_r(getPermissionEmp());
+	
 	/*
 	 * Tombol Modul Create
 	 * permission crate Ro
@@ -80,7 +81,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 				]; 
 				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
-				$url1 = Url::toRoute(['/purchasing/request-order/create']);
+				$url1 = Url::toRoute(['#']);
 				//$options1['tabindex'] = '-1';
 				$content = Html::a($label1,$url1, $options1);
 				return $content;
@@ -93,18 +94,18 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 				]; 
 				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
-				$url1 = Url::toRoute(['/purchasing/request-order/create']);
+				$url1 = Url::toRoute(['#']);
 				//$options1['tabindex'] = '-1';
 				$content = Html::a($label1,$url1, $options1);
 				return $content;
 		}				
 	}
 
-/*
- * Tombol Modul Barang
- * No Permission
-*/
-function tombolBarang(){
+	/*
+	 * Tombol Modul Barang
+	 * No Permission
+	*/
+	function tombolBarang(){
 	$title = Yii::t('app', 'Barang');
 	$options = ['id'=>'ro-barang',	
 				'data-toggle'=>"modal",
@@ -165,7 +166,7 @@ function tombolKategori(){
 	*/
 	function tombolEdit($url, $model){
 		if(getPermission()){								
-			if(getPermissionEmployee()->EMP_ID == $model->ID_USER AND getPermission()->BTN_EDIT==1){
+			if(getPermissionEmp()->EMP_ID == $model->ID_USER AND getPermission()->BTN_EDIT==1){
 				 if($model->STATUS == 0){ // 0=process 101=Approved
 					$title = Yii::t('app', 'Edit Detail');
 					$options = [ //'id'=>'ro-edit',
@@ -193,7 +194,7 @@ function tombolKategori(){
 	*/
 	function tombolDelete($url, $model){
 		if(getPermission()){
-			if(getPermissionEmployee()->EMP_ID == $model->ID_USER AND getPermission()->BTN_DELETE==1){
+			if(getPermissionEmp()->EMP_ID == $model->ID_USER AND getPermission()->BTN_DELETE==1){
 				if($model->STATUS == 0){ // 0=process 101=Approved
 					$title = Yii::t('app', 'Delete');
 					$options = [ 'id'=>'ro-delete',															
@@ -220,9 +221,9 @@ function tombolKategori(){
 	function tombolApproval($url, $model){
 		if(getPermission()){
 			//Permission Jabatan
-			$a=getPermissionEmployee()->JOBGRADE_ID;
+			$a=getPermissionEmp()->JOBGRADE_ID;
 			$b=getPermission()->BTN_SIGN1;
-			//if(getPermissionEmployee()->JOBGRADE_ID == 'S' OR getPermissionEmployee()->JOBGRADE_ID == 'M' OR getPermissionEmployee()->JOBGRADE_ID == 'SM' AND getPermission()->BTN_SIGN1==1 ){
+			//if(getPermissionEmp()->JOBGRADE_ID == 'S' OR getPermissionEmp()->JOBGRADE_ID == 'M' OR getPermissionEmp()->JOBGRADE_ID == 'SM' AND getPermission()->BTN_SIGN1==1 ){
 			if($a == 'SEVP' OR $a == 'EVP' OR $a == 'SVP' OR $a == 'VP' OR $a == 'AVP' OR $a == 'SM' OR $a == 'M' OR $a == 'AM' OR $a == 'S' AND $b==1 ){
 				 if($model->STATUS == 0 || $model->STATUS == 1 ){ // 0=process 101=Approved
 					$title = Yii::t('app', 'Review');
