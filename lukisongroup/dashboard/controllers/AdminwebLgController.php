@@ -13,14 +13,10 @@ use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter; 	
-/* VARIABLE PRIMARY JOIN/SEARCH/FILTER/SORT Author: -ptr.nov- */
-//use app\models\hrd\Dept;			/* TABLE CLASS JOIN */
-//use app\models\hrd\DeptSearch;		/* TABLE CLASS SEARCH */
-	
-/**
- * HRD | CONTROLLER EMPLOYE .
- *
- */
+use lukisongroup\widget\models\Chat;
+use lukisongroup\widget\models\ChatSearch;
+use lukisongroup\widget\models\ChatroomSearch;
+
 class AdminwebLgController extends Controller
 {
     public function behaviors()
@@ -74,15 +70,34 @@ class AdminwebLgController extends Controller
     }
 	public function actionChat()
     {
+        $searchmodel1 = new ChatroomSearch();
+        $dataprovider1 = $searchmodel1->search(Yii::$app->request->queryParams);
+        $dataprovider1->pagination->pageSize=2;
+         
+        $searchModel1 = new ChatSearch();
+        $dataProvider1 = $searchModel1->searchonline(Yii::$app->request->queryParams);
+        $dataProvider1->pagination->pageSize=2;
+        
+        $searchModel = new ChatSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->pagination->pageSize=5;
+       
+
+        
         //$model = new LoginForm();
 		//$this->sideMenu = 'alg_purchasing';
 		//$model = Employe::findOne('LG.2015.0000');
 		//$js='$("#chating").modal("show")';
 		//$this->getView()->registerJs($js);
-		return $this->render('/widget/chat/index',[
+		return $this->render('@lukisongroup/widget/views/chat/index',[
 			//'model' => $model,
+			'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'searchmodel1' => $searchmodel1,
+            'dataprovider1' => $dataprovider1,
+            'searchModel1' => $searchModel1,
+            'dataProvider1' => $dataProvider1,
 			'ctrl_chat'=>'umum_datamaster',
 		]);
-       
     }
 }

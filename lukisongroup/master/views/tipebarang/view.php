@@ -11,6 +11,13 @@ $this->title = Yii::t('app', 'Umum - Type Detail Barang ');	    /* title pada he
 <div class="tipebarang-view">
 
 <?php
+	/* PARENT */
+	if($model->PARENT == '1'){
+		$parent = "PRODAK";
+	} else {
+		$parent = "UMUM";
+	}
+	/* STATUS */
 	if($model->STATUS == '1'){
 		$stat = "Aktif";
 	} else {
@@ -21,6 +28,10 @@ $this->title = Yii::t('app', 'Umum - Type Detail Barang ');	    /* title pada he
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
+			[
+				'label' => 'Parent',
+				'value' => $parent,
+			],		
             'NM_TYPE',
             'NOTE:ntext',
 			[

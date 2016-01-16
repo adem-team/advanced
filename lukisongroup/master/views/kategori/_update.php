@@ -2,10 +2,13 @@
 
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
+use yii\helpers\ArrayHelper;
 
-/* @var $this yii\web\View */
-/* @var $model lukisongroup\models\master\Kategori */
-/* @var $form yii\widgets\ActiveForm */
+	$aryParent= [
+		  ['PARENT' => 0, 'PAREN_NM' => 'UMUM'],		  
+		  ['PARENT' => 1, 'PAREN_NM' => 'PRODAK'],
+	];	
+	$valParent = ArrayHelper::map($aryParent, 'PARENT', 'PAREN_NM');
 ?>
 
 
@@ -17,6 +20,7 @@ use kartik\form\ActiveForm;
 
     <?PHP //= $form->field($model, 'KD_KATEGORI')->textInput(['maxlength' => true]) ?>
 
+	<?= $form->field($model, 'PARENT')->dropDownList($valParent); ?>
     <?= $form->field($model, 'NM_KATEGORI')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>

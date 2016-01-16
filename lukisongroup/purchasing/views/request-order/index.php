@@ -22,15 +22,15 @@ use lukisongroup\hrd\models\Dept;
 $this->title = 'Request Order';
 $this->params['breadcrumbs'][] = $this->title;
 
-$this->sideCorp = 'ESM Request Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'esm_esm';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'List Permintaan Barang');      /* title pada header page */
-$this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+$this->sideCorp = 'Request Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'mdefault';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
+//$this->title = Yii::t('app', 'List Permintaan Barang');      /* title pada header page */
+//$this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 	
 	/*
 	 * Declaration Componen User Permission
 	 * Function getPermission
-	 * Modul Name[3=PO]
+	 * Modul Name[1=RO]
 	*/
 	function getPermission(){
 		if (Yii::$app->getUserOpt->Modul_akses(1)){
@@ -43,7 +43,6 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 	/*
 	 * Declaration Componen User Permission
 	 * Function profile_user
-	 * Modul Name[3=PO]
 	*/
 	function getPermissionEmp(){
 		if (Yii::$app->getUserOpt->profile_user()){

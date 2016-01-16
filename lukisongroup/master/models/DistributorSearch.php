@@ -1,11 +1,11 @@
 <?php
 
-namespace lukisongroup\esm\models;
+namespace lukisongroup\master\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use lukisongroup\esm\models\Distributor;
+use lukisongroup\master\models\Distributor;
 
 /**
  * DistributorSearch represents the model behind the search form about `app\models\esm\Distributor`.
@@ -15,6 +15,7 @@ class DistributorSearch extends Distributor
     /**
      * @inheritdoc
      */
+   
     public function rules()
     {
         return [
@@ -39,6 +40,8 @@ class DistributorSearch extends Distributor
      *
      * @return ActiveDataProvider
      */
+  
+
     public function search($params)
     {
         $query = Distributor::find()->where('d0001.STATUS <> 3');

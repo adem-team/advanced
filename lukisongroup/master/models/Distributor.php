@@ -1,6 +1,6 @@
 <?php
 
-namespace lukisongroup\esm\models;
+namespace lukisongroup\master\models;
 
 use Yii;
 

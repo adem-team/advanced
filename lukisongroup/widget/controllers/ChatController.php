@@ -62,9 +62,9 @@ class ChatController extends Controller
     /**
      * ACTION INDEX
      */
+	
     public function actionIndex()
     {
-      
         $searchmodel1 = new ChatroomSearch();
         $dataprovider1 = $searchmodel1->search(Yii::$app->request->queryParams);
          $dataprovider1->pagination->pageSize=2;
@@ -85,7 +85,7 @@ class ChatController extends Controller
             'dataprovider1' => $dataprovider1,
             'searchModel1' => $searchModel1,
             'dataProvider1' => $dataProvider1,
-        
+			'ctrl_chat'=>'mdefault',
         ]);
     }
 	

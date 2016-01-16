@@ -3,9 +3,9 @@
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use yii\helpers\ArrayHelper;
-use lukisongroup\esm\models\Unitbarang;
-use lukisongroup\esm\models\Distributor;
-use lukisongroup\esm\models\Barangmaxi;
+use lukisongroup\master\models\Unitbarang;
+use lukisongroup\master\models\Distributor;
+use lukisongroup\master\models\Barangmaxi;
 
 use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Tipebarang;
@@ -13,7 +13,7 @@ use lukisongroup\master\models\Tipebarang;
 use kartik\widgets\FileInput;
 
 /* @var $this yii\web\View */
-/* @var $model lukisongroup\models\esm\Barang */
+/* @var $model lukisongroup\models\master\Barang */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 

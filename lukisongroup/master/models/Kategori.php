@@ -41,7 +41,7 @@ class Kategori extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['KD_KATEGORI', 'NM_KATEGORI','STATUS'], 'required'],
+            [['KD_KATEGORI', 'NM_KATEGORI','PARENT','STATUS'], 'required'],
             [['NM_KATEGORI'],'match','pattern'=> '/^[A-Za-z0-9_ ]+$/u','message'=> 'only [a-zA-Z0-9_].'],
             [['NOTE'], 'string'],
             [['CREATED_AT', 'UPDATED_AT'], 'safe'],
@@ -60,13 +60,14 @@ class Kategori extends \yii\db\ActiveRecord
         return [
             'ID' => 'ID',
             'KD_KATEGORI' => 'Kode Kategori',
-            'NM_KATEGORI' => 'Nama Kategori',
+            'NM_KATEGORI' => 'Category',
+			'PARENT'=>'PARENT',
             'NOTE' => 'Catatan',
             'CREATED_BY' => 'Created By',
             'CREATED_AT' => 'Created At',
             'UPDATED_BY' => 'Updated By',
             'UPDATED_AT' => 'Updated At',
-            'STATUS' => 'status',
+            'STATUS' => 'Status',
         ];
     }
 }
