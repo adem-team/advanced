@@ -44,7 +44,7 @@ class Tipebarang extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['KD_TYPE', 'NM_TYPE','STATUS'], 'required'],
+            [['KD_TYPE', 'NM_TYPE','PARENT','STATUS'], 'required'],
             [['NOTE'], 'string'],
             [['CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['STATUS'], 'integer'],
@@ -61,8 +61,9 @@ class Tipebarang extends \yii\db\ActiveRecord
     {
         return [
             'ID' => 'ID',
-            'KD_TYPE' => 'Kode Type',
-            'NM_TYPE' => 'Nama Type',
+            'KD_TYPE' => 'Id.Type',
+            'NM_TYPE' => 'Type',
+			'PARENT'=>'Parent',
             'NOTE' => 'Catatan',
             'CREATED_BY' => 'Created By',
             'CREATED_AT' => 'Created At',

@@ -1,13 +1,17 @@
 ﻿<?php
 
-
 use kartik\grid\GridView;
 use yii\helpers\html;
 use yii\bootstrap\Modal;
 use kartik\tabs\TabsX;
 
-
-
+	/*
+	 * Jangan di Hapus ...
+	 * Chat Menu Select Dashboard
+	 * @author ptrnov [piter@lukison.com]
+	 * @since 1.0
+	*/
+	$this->sideMenu = $ctrl_chat!=''? $ctrl_chat:'mdefault';   
 
 
 /* @var $this yii\web\View */

@@ -3,11 +3,11 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
-use lukisongroup\esm\models\Barang;
+use lukisongroup\master\models\Barang;
 
-$this->sideCorp = 'ESM Prodak';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'esm_datamaster';                   /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'ESM - Prodak');           /* title pada header page */
+$this->sideCorp = 'Master Data';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'umum_datamaster';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Umum - Barang ');
 
 ?>
 
@@ -23,7 +23,7 @@ $this->title = Yii::t('app', 'ESM - Prodak');           /* title pada header pag
                'attribute' => 'Gambar',
                'format' => 'html', //'format' => 'image',
                'value'=>function($data){
-                            return Html::img(Yii::$app->urlManager->baseUrl.'/upload/barangesm/' . $data->IMAGE, ['width'=>'40']);
+                            return Html::img(Yii::$app->urlManager->baseUrl.'/upload/barang/' . $data->IMAGE, ['width'=>'40']);
                         },
             ],  
 			
@@ -94,7 +94,7 @@ $this->title = Yii::t('app', 'ESM - Prodak');           /* title pada header pag
 				'heading'=>'<h3 class="panel-title">'. Html::encode($this->title).'</h3>',
 				'type'=>'warning',
 				'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Tambah Barang ',
-						['modelClass' => 'Kategori',]),'/esm/barang/create',[
+						['modelClass' => 'Kategori',]),'/master/barang/create',[
 							'data-toggle'=>"modal",
 								'data-target'=>"#modal-form",							
 									'class' => 'btn btn-success'						

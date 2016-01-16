@@ -4,9 +4,9 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 
-$this->sideCorp = 'ESM Distributor';                  /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'esm_datamaster';                   /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'ESM - Distributor');    /* title pada header page */
+$this->sideCorp = 'Distributor';                  /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'umum_datamaster';                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Distributor');    /* title pada header page */
 ?>
 
 <div class="distributor-index">
@@ -66,7 +66,7 @@ $this->title = Yii::t('app', 'ESM - Distributor');    /* title pada header page 
 				'heading'=>'<h3 class="panel-title">'. Html::encode($this->title).'</h3>',
 				'type'=>'warning',
 				'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Tambah  Distributor ',
-						['modelClass' => 'Kategori',]),'/esm/distributor/create',[
+						['modelClass' => 'Kategori',]),'/master/distributor/create',[
 							'data-toggle'=>"modal",
 								'data-target'=>"#modal-form",							
 									'class' => 'btn btn-success'						
