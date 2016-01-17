@@ -6,7 +6,7 @@
  * Author: -ptr.nov-
 */
 
-namespace lukisongroup\dashboard\controllers;
+//namespace lukisongroup\dashboard\controllers;
 
 /* VARIABLE BASE YII2 Author: -YII2- */
 use Yii;

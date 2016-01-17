@@ -13,14 +13,15 @@ use kartik\widgets\TouchSpin;
 use yii\web\JsExpression;
 use yii\data\ActiveDataProvider;
 
-use lukisongroup\master\models\Barangumum;
-use lukisongroup\esm\models\Barang;
+use lukisongroup\master\models\Barang;
+use lukisongroup\master\models\Tipebarang;
 use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
 
 $brgUnit = ArrayHelper::map(Unitbarang::find()->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT');
-$brgKtg = ArrayHelper::map(Kategori::find()->orderBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI');
-$brgUmum = ArrayHelper::map(Barangumum::find()->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG'); 
+$brgType = ArrayHelper::map(Tipebarang::find()->where(['PARENT'=>0])->orderBy('NM_TYPE')->all(), 'KD_TYPE', 'NM_TYPE');
+$brgKtg  = ArrayHelper::map(Kategori::find()->where(['PARENT'=>0])->orderBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI');
+$brgUmum = ArrayHelper::map(Barang::find()->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG'); 
 
 /* $this->registerJs("
         $.fn.modal.Constructor.prototype.enforceFocus = function() {};			
@@ -44,6 +45,8 @@ $brgUmum = ArrayHelper::map(Barangumum::find()->orderBy('NM_BARANG')->all(), 'KD
 
     <?php
 		 echo $form->field($roDetail, 'NM_BARANG')->hiddenInput(['value' => ''])->label(false);
+		 echo $form->field($roDetail, 'KD_TYPE')->dropDownList($brgType, ['id'=>'rodetail-kd_type']);
+		
 		 echo $form->field($roDetail, 'KD_KATEGORI')->dropDownList($brgKtg, ['id'=>'rodetail-kd_kategori']);
 		 
 		 echo $form->field($roDetail, 'KD_BARANG')->widget(DepDrop::classname(), [

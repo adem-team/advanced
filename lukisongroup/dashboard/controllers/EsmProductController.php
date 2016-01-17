@@ -1,12 +1,12 @@
 <?php
 
-namespace lukisongroup\master\controllers;
+namespace lukisongroup\dashboard\controllers;
 
 use Yii;
 use lukisongroup\master\models\Tipebarang;
 use lukisongroup\master\models\Unitbarang;
-use lukisongroup\master\models\Barang;
-use lukisongroup\master\models\BarangSearch;
+use lukisongroup\dashboard\models\Barang;
+use lukisongroup\dashboard\models\BarangSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -15,7 +15,7 @@ use yii\filters\VerbFilter;
 /**
  * BarangController implements the CRUD actions for Barang model.
  */
-class BarangumumController extends Controller
+class EsmProductController extends Controller
 {
     public function behaviors()
     {
@@ -28,7 +28,7 @@ class BarangumumController extends Controller
             ],
         ];
     }
-	
+
 	/**
      * Before Action Index
 	 * @author ptrnov  <piter@lukison.com>
@@ -54,7 +54,7 @@ class BarangumumController extends Controller
                 return true;
             }
     }
-
+	
     /**
      * Lists all Barang models.
      * @return mixed
@@ -62,7 +62,7 @@ class BarangumumController extends Controller
     public function actionIndex()
     {
         $searchModel = new BarangSearch();
-        $dataProvider = $searchModel->searchBarangUmum(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->searchBarangESM(Yii::$app->request->queryParams);
 	
 	
         $model = new Barang();
@@ -124,10 +124,9 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 				$kdType = $model->KD_TYPE;	
 				$kdKategori = $model->KD_KATEGORI;	
 				$kdUnit = $model->KD_UNIT;	
+				$kdCorp = $model->KD_CORP;				
 				$kdPrn = $model->PARENT;
-		
-				//$kd = Yii::$app->esmcode->kdbarang($kdDbtr,$kdType,$kdKategori,$kdUnit);
-				$kd = Yii::$app->esmcode->kdbarangUmum($kdPrn,$kdType,$kdKategori,$kdUnit);
+				$kd = Yii::$app->esmcode->kdbarangProdak($kdPrn,$kdCorp,$kdType,$kdKategori,$kdUnit);
 
 				$model->KD_BARANG = $kd;
 		if($model->validate())

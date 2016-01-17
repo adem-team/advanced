@@ -24,8 +24,8 @@ use lukisongroup\purchasing\models\ro\LoginForm;
 use lukisongroup\purchasing\models\ro\AdditemValidation;
 
 use lukisongroup\hrd\models\Employe;
-use lukisongroup\esm\models\Barang;
-use lukisongroup\master\models\Barangumum;
+//use lukisongroup\master\models\Barang;
+use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\Kategori;
 
 
@@ -179,7 +179,7 @@ class RequestOrderController extends Controller
 			/*	$hsl = \Yii::$app->request->post();
 				$kdRo = $hsl['Rodetail']['KD_RO'];
 				$kdBarang = $hsl['Rodetail']['KD_BARANG'];
-				$nmBarang = Barangumum::findOne(['KD_BARANG' => $kdBarang]);
+				$nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
 				$kdUnit = $hsl['Rodetail']['UNIT'];
 				$rqty = $hsl['Rodetail']['RQTY'];			
 				$note = $hsl['Rodetail']['NOTE'];
@@ -210,7 +210,7 @@ class RequestOrderController extends Controller
 			$parents = $_POST['depdrop_parents'];
 			if ($parents != null) {
 				$kat_id = $parents[0];
-				$model = Barangumum::find()->asArray()->where(['KD_KATEGORI'=>$kat_id])->all();
+				$model = Barang::find()->asArray()->where(['KD_KATEGORI'=>$kat_id])->all();
 				foreach ($model as $key => $value) {
 					   $out[] = ['id'=>$value['KD_BARANG'],'name'=> $value['NM_BARANG']];
 				   }
@@ -234,8 +234,8 @@ class RequestOrderController extends Controller
 				$kat_id = empty($ids[0]) ? null : $ids[0];
 				$brg_id = empty($ids[1]) ? null : $ids[1];
 				if ($brg_id != null) {
-					$brgu = new Barangumum();
-					$model = Barangumum::find()->where("KD_BARANG='". $brg_id. "'")->one();
+					$brgu = new Barang();
+					$model = Barang::find()->where("KD_BARANG='". $brg_id. "'")->one();
 					$brgUnit = $model->unit;
 					//foreach ($brgUnit as $value) {
 						   //$out[] = ['id'=>$value['UNIT'],'name'=> $value['NM_UNIT']];
@@ -271,7 +271,7 @@ class RequestOrderController extends Controller
 				$hsl = \Yii::$app->request->post();				
 				$kdUnit = $hsl['Rodetail']['UNIT'];
 				$kdBarang = $hsl['Rodetail']['KD_BARANG'];
-				$nmBarang = Barangumum::findOne(['KD_BARANG' => $kdBarang]);
+				$nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
 				$rqty = $hsl['Rodetail']['RQTY'];
 				$note = $hsl['Rodetail']['NOTE'];
 				
@@ -361,7 +361,7 @@ class RequestOrderController extends Controller
 			$hsl = \Yii::$app->request->post();	
 			$kdro = $hsl['Rodetail']['KD_RO'];				
 			$kdBarang = $hsl['Rodetail']['KD_BARANG'];
-			$nmBarang = Barangumum::findOne(['KD_BARANG' => $kdBarang]);
+			$nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
 			$kdUnit = $hsl['Rodetail']['UNIT'];
 			$rqty = $hsl['Rodetail']['RQTY'];
 			$note = $hsl['Rodetail']['NOTE'];

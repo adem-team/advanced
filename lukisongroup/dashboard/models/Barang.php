@@ -1,11 +1,12 @@
 <?php
 
-namespace lukisongroup\master\models;
+namespace lukisongroup\dashboard\models;
 
 use Yii;
 use yii\web\UploadedFile;
 use lukisongroup\master\models\Tipebarang;
 use lukisongroup\master\models\Kategori;
+use lukisongroup\master\models\Unitbarang;
 /**
  * This is the model class for table "b0001".
  *

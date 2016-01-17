@@ -50,6 +50,9 @@ class SuplierSearch extends Suplier
 		
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+			'pagination' => [
+				'pageSize' => 20,
+			],
         ]);
 
 		 $dataProvider->setSort([

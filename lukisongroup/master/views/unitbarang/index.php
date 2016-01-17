@@ -26,7 +26,7 @@ $gridColumns = [
 				'width'=>'10px',
 				'font-family'=>'verdana, arial, sans-serif',
 				'font-size'=>'9pt',
-				'background-color'=>'rgba(126, 189, 188, 0.9)',
+				'background-color'=>'rgba(62, 0, 44, 0.2)',
 			]
 		],
 		'contentOptions'=>[
@@ -49,7 +49,7 @@ $gridColumns = [
 				'width'=>'200px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'9pt',
-				'background-color'=>'rgba(126, 189, 188, 0.9)',
+				'background-color'=>'rgba(62, 0, 44, 0.2)',
 			]
 		],
 		'contentOptions'=>[
@@ -72,7 +72,7 @@ $gridColumns = [
 				'width'=>'120px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'9pt',
-				'background-color'=>'rgba(126, 189, 188, 0.9)',
+				'background-color'=>'rgba(62, 0, 44, 0.2)',
 			]
 		],
 		'contentOptions'=>[
@@ -95,7 +95,7 @@ $gridColumns = [
 				'width'=>'120px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'9pt',
-				'background-color'=>'rgba(126, 189, 188, 0.9)',
+				'background-color'=>'rgba(62, 0, 44, 0.2)',
 			]
 		],
 		'contentOptions'=>[
@@ -118,7 +118,7 @@ $gridColumns = [
 				'width'=>'120px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'9pt',
-				'background-color'=>'rgba(126, 189, 188, 0.9)',
+				'background-color'=>'rgba(62, 0, 44, 0.2)',
 			]
 		],
 		'contentOptions'=>[
@@ -150,7 +150,7 @@ $gridColumns = [
 				'width'=>'80px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'9pt',
-				'background-color'=>'rgba(126, 189, 188, 0.9)',
+				'background-color'=>'rgba(62, 0, 44, 0.2)',
 			]
 		],
 		'contentOptions'=>[
@@ -191,7 +191,7 @@ $gridColumns = [
 				'width'=>'150px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'9pt',
-				'background-color'=>'rgba(126, 189, 188, 0.9)',
+				'background-color'=>'rgba(62, 0, 44, 0.2)',
 			]
 		],
 		'contentOptions'=>[
@@ -212,7 +212,7 @@ $gridColumns = [
 				'id'=>'unit-grd-index',
 				'dataProvider'=> $dataProvider,
 				'filterModel' => $searchModel,
-				'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.9); align:center'],
+				'filterRowOptions'=>['style'=>'background-color:rgba(62, 0, 44, 0.2); align:center'],
 				'columns' => $gridColumns,
 				'pjax'=>true,
 				'pjaxSettings'=>[
@@ -236,7 +236,7 @@ $gridColumns = [
 					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Unit ',
 							['modelClass' => 'Kategori',]),'/master/unitbarang/create',[
 								'data-toggle'=>"modal",
-									'data-target'=>"#modal-edit",							
+									'data-target'=>"#modal-create",							
 										'class' => 'btn btn-success'						
 													]),
 					'showFooter'=>false,
@@ -253,7 +253,30 @@ $gridColumns = [
 
 <?php
 
-$this->registerJs("
+	$this->registerJs("
+         $('#modal-create').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title') 
+            var href = button.attr('href') 
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+	Modal::begin([
+        'id' => 'modal-create',
+        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Item Unit</h4></div>',
+		'headerOptions'=>[								
+				'style'=> 'border-radius:5px; background-color: rgba(62, 0, 44, 0.2)',	
+		],
+    ]);
+    Modal::end();
+	
+	$this->registerJs("
          $('#modal-view').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
@@ -267,8 +290,16 @@ $this->registerJs("
                 });
             })
     ",$this::POS_READY);
+	Modal::begin([
+        'id' => 'modal-view',
+        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-eye"></div><div><h4 class="modal-title">View Item Unit</h4></div>',
+		'headerOptions'=>[								
+				'style'=> 'border-radius:5px; background-color: rgba(62, 0, 44, 0.2)',	
+		],
+    ]);
+    Modal::end();
 	
-$this->registerJs("
+	$this->registerJs("
 		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
          $('#modal-edit').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
@@ -283,16 +314,12 @@ $this->registerJs("
                 });
             })
     ",$this::POS_READY);
-	
-	  Modal::begin([
-        'id' => 'modal-view',
-        'header' => '<h4 class="modal-title">View Unit</h4>',
-    ]);
-    Modal::end();
-    
      Modal::begin([
         'id' => 'modal-edit',
-        'header' => '<h4 class="modal-title">Edit Unit</h4>',
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-edit"></div><div><h4 class="modal-title">Edit Item Unit</h4></div>',
+		'headerOptions'=>[								
+				'style'=> 'border-radius:5px; background-color: rgba(62, 0, 44, 0.2)',	
+		],
     ]);
     Modal::end();
 

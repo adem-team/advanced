@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
-use lukisongroup\master\models\Barang;
+use lukisongroup\dashboard\models\Barang;
 
 $this->sideCorp = 'Master Data';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'umum_datamaster';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -213,7 +213,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 				'buttons' => [
 						'view' =>function($url, $model, $key){
 								return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
-															['/master/barang/view','id'=>$model->ID],[
+															['/dashboard/esm-product/view','id'=>$model->ID],[
 															'data-toggle'=>"modal",
 															'data-target'=>"#modal-view",
 															'data-title'=> $model->KD_BARANG,
@@ -221,7 +221,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 						},
 						'update' =>function($url, $model, $key){
 								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Edit'),
-															['update','id'=>$model->ID],[
+															['/dashboard/esm-product/update','id'=>$model->ID],[
 															'data-toggle'=>"modal",
 															'data-target'=>"#modal-edit",
 															'data-title'=> $model->KD_BARANG,
@@ -229,7 +229,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 						},
                         'price' =>function($url, $model, $key){
 								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Price List'),
-															['/master/barang/update','id'=>$model->ID],[
+															['/dashboard/esm-product/update','id'=>$model->ID],[
 															'data-toggle'=>"modal",
 															'data-target'=>"#modal-price",
 															'data-title'=> $model->KD_BARANG,
@@ -281,10 +281,10 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 					'{export}',
 				],
 				'panel' => [
-					'heading'=>'<h3 class="panel-title">LIST ITEMS PRODUCTION</h3>',
+					'heading'=>'<h3 class="panel-title">LIST ITEMS PRODUCTION - Effembi Sukses Makmur</h3>',
 					'type'=>'warning',
 					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Sku Items ',
-							['modelClass' => 'Kategori',]),'/master/barang/create',[
+							['modelClass' => 'Kategori',]),'/dashboard/esm-product/create',[
 								'data-toggle'=>"modal",
 									'data-target'=>"#modal-create",							
 										'class' => 'btn btn-success'						
@@ -332,7 +332,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 	",$this::POS_READY);
 	Modal::begin([
         'id' => 'modal-view',
-       'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">View Items Sku</h4></div>',
+       'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">View Items Sku - Effembi Sukses Makmur</h4></div>',
 		'headerOptions'=>[								
 				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',	
 		],
@@ -357,7 +357,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 	",$this::POS_READY);
     Modal::begin([
         'id' => 'modal-edit',
-		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-edit"></div><div><h4 class="modal-title">Edit Items Sku</h4></div>',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-edit"></div><div><h4 class="modal-title">Edit Items Sku - Effembi Sukses Makmur</h4></div>',
 		'headerOptions'=>[								
 				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',	
 		],
@@ -382,7 +382,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 	",$this::POS_READY);
     Modal::begin([
         'id' => 'modal-create',
-		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku - Effembi Sukses Makmur</h4></div>',
 		'headerOptions'=>[								
 				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',	
 		],
@@ -407,7 +407,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 	",$this::POS_READY);
     Modal::begin([
         'id' => 'modal-price',
-        'header' => '<h4 class="modal-title">Prize Autorize</h4>',		
+        'header' => '<h4 class="modal-title">Prize Autorize  - Effembi Sukses Makmur</h4>',		
     ]);
     Modal::end();
 	    

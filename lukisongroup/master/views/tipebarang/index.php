@@ -35,7 +35,7 @@ $this->title = Yii::t('app', 'Umum - Type Barang');
 						'width'=>'10px',
 						'font-family'=>'verdana, arial, sans-serif',
 						'font-size'=>'9pt',
-						'background-color'=>'rgba(97, 211, 96, 0.3)',
+						'background-color'=>'rgba(62, 0, 44, 0.2)',
 					]
 				],
 				'contentOptions'=>[
@@ -68,7 +68,7 @@ $this->title = Yii::t('app', 'Umum - Type Barang');
 						'width'=>'150px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
-						'background-color'=>'rgba(97, 211, 96, 0.3)',
+						'background-color'=>'rgba(62, 0, 44, 0.2)',
 					]
 				],
 				'contentOptions'=>[
@@ -94,7 +94,7 @@ $this->title = Yii::t('app', 'Umum - Type Barang');
 						'width'=>'200px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
-						'background-color'=>'rgba(97, 211, 96, 0.3)',
+						'background-color'=>'rgba(62, 0, 44, 0.2)',
 					]
 				],
 				'contentOptions'=>[
@@ -117,7 +117,7 @@ $this->title = Yii::t('app', 'Umum - Type Barang');
 						'width'=>'600px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
-						'background-color'=>'rgba(97, 211, 96, 0.3)',
+						'background-color'=>'rgba(62, 0, 44, 0.2)',
 					]
 				],
 				'contentOptions'=>[
@@ -149,7 +149,7 @@ $this->title = Yii::t('app', 'Umum - Type Barang');
 						'width'=>'80px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
-						'background-color'=>'rgba(97, 211, 96, 0.3)',
+						'background-color'=>'rgba(62, 0, 44, 0.2)',
 					]
 				],
 				'contentOptions'=>[
@@ -198,7 +198,7 @@ $this->title = Yii::t('app', 'Umum - Type Barang');
 						'width'=>'150px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
-						'background-color'=>'rgba(97, 211, 96, 0.3)',
+						'background-color'=>'rgba(62, 0, 44, 0.2)',
 					]
 				],
 				'contentOptions'=>[
@@ -223,7 +223,7 @@ $this->title = Yii::t('app', 'Umum - Type Barang');
 			'id'=>'type-grd-index',
 			'dataProvider'=> $dataProvider,
 			'filterModel' => $searchModel,
-			'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+			'filterRowOptions'=>['style'=>'background-color:rgba(62, 0, 44, 0.2); align:center'],
 			'columns' => $gridColumns,
 			'pjax'=>true,
 			'pjaxSettings'=>[
@@ -325,25 +325,34 @@ $this->registerJs("
     
     Modal::begin([
         'id' => 'modal-create',
-        'header' => '<h4 class="modal-title">Create Items Type</h4>',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Type</h4></div>',
+		'headerOptions'=>[								
+				'style'=> 'border-radius:5px; background-color: rgba(62, 0, 44, 0.2)',	
+		],
     ]);
     Modal::end();
     
-      Modal::begin([
+    Modal::begin([
         'id' => 'modal-del',
         'header' => '<h4 class="modal-title">Delete Items Type</h4>',
     ]);
     Modal::end();
     
-      Modal::begin([
+    Modal::begin([
         'id' => 'modal-view',
-        'header' => '<h4 class="modal-title">View Type</h4>',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-eye"></div><div><h4 class="modal-title">View Type</h4></div>',
+		'headerOptions'=>[								
+				'style'=> 'border-radius:5px; background-color: rgba(62, 0, 44, 0.2)',	
+		],		
     ]);
     Modal::end();
     
       Modal::begin([
         'id' => 'modal-edit',
-        'header' => '<h4 class="modal-title">Edit Items Type</h4>',
+        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-edit"></div><div><h4 class="modal-title">View Type</h4></div>',
+		'headerOptions'=>[								
+				'style'=> 'border-radius:5px; background-color: rgba(62, 0, 44, 0.2)',	
+		],
     ]);
     Modal::end();
 ?>

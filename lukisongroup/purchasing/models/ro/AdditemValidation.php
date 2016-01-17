@@ -4,7 +4,7 @@ namespace lukisongroup\purchasing\models\ro;
 use Yii;
 use yii\base\Model;
 use lukisongroup\purchasing\models\ro\Rodetail;
-use lukisongroup\master\models\Barangumum;
+use lukisongroup\master\models\Barang;
 
 	/*
 	 * DESCRIPTION FORM AddItem -> Model Additem validation
@@ -113,7 +113,7 @@ class AdditemValidation extends Model
     }
 	
 	protected function namaBarang($kdBarang){
-		$nmBarang = Barangumum::findOne(['KD_BARANG' => $kdBarang]);
+		$nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
 		return $nmBarang->NM_BARANG;
 	}
 }

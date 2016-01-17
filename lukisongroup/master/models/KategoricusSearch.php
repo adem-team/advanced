@@ -60,6 +60,9 @@ class KategoricusSearch extends Kategoricus
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+			'pagination' => [
+				'pageSize' => 20,
+			],
         ]);
 
         

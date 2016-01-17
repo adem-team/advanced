@@ -45,6 +45,9 @@ class KotaSearch extends Kota
 
         $dataproviderkota = new ActiveDataProvider([
             'query' => $query,
+			'pagination' => [
+				'pageSize' => 20,
+			],
         ]);
 
         $this->load($params);

@@ -1,228 +1,433 @@
 <?php
-use yii\helpers\Html;
-use kartik\grid\GridView;
-use kartik\export\ExportMenu;
-use yii\bootstrap\Modal;
 
-$this->sideCorp = 'Master Data Umum';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
+use kartik\grid\GridView;
+use yii\bootstrap\Modal;
+use lukisongroup\master\models\Barang;
+
+$this->sideCorp = 'Master Data';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'umum_datamaster';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Umum - Barang ');
+	$aryStt= [
+		  ['STATUS' => 0, 'STT_NM' => 'DISABLE'],		  
+		  ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
+	];	
+	$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
 
-?>
-  
-	<?php     
-		$gridColumns = [
-			[
-				/* Attribute Serial No */
+	$gridColumns = [
+            [
 				'class'=>'kartik\grid\SerialColumn',
 				'contentOptions'=>['class'=>'kartik-sheet-style'],
 				'width'=>'10px',
 				'header'=>'No.',
-				'headerOptions'=>['class'=>'kartik-sheet-style']
-			],		
-			[				
-               'attribute' => 'IMAGE',
-               'format' => 'html',
-			   'mergeHeader'=>true,
-               'value'=>function($data){
-                            return Html::img(Yii::$app->urlManager->baseUrl.'/upload/barangumum/' . $data->IMAGE, ['width'=>'100']);
-                        },
-            ],  
-            'KD_BARANG',
-            [
-				'class'=>'kartik\grid\EditableColumn',
-                'attribute' => 'NM_BARANG'
-			],    
-		    'HARGA',
-		    'HPP',
-		//  'BARCODE',
-		    'NOTE',
-			[
-				'class' => 'yii\grid\ActionColumn', 
-				'template' => '{view}{update}{delete}',
-				'contentOptions'=>[
-					'style'=>'width:200px'
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
 				],
-				'header'=>'Action',
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 		
+			],
+			/*IMAGE ATTRIBUTE*/
+			[
+				/*Author -ptr.nov- image*/
+               'attribute' => 'Image',
+			   'mergeHeader'=>true,
+               'format' => 'html', //'format' => 'image',
+               'value'=>function($data){
+                            return Html::img(Yii::$app->urlManager->baseUrl.'/upload/barang/' . $data->IMAGE, ['width'=>'40']);
+                },
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'40px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+            ],  
+			[
+				'attribute' => 'KD_BARANG',
+				'label'=>'SKU',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'attribute' => 'NM_BARANG',
+				'label'=>'Item Name',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'200px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'200px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'attribute' => 'unitbrg',
+				'label'=>'Item Unit',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'attribute' => 'tipebrg', 
+				'label'=>'Type',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'attribute' => 'nmkategori',
+				'label'=>'Category',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'attribute' => 'HARGA_SPL', 
+				'label'=>'Price',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'attribute' => 'STATUS',
+				'filter' => $valStt,	
+				'format' => 'raw',						
+				'hAlign'=>'center',
+				'value'=>function($model){
+				   if ($model->STATUS == 1) {
+						return Html::a('<i class="fa fa-check"></i> &nbsp;Enable', '',['class'=>'btn btn-success btn-xs', 'title'=>'Aktif']);
+					} else if ($model->STATUS == 0) {
+						return Html::a('<i class="fa fa-close"></i> &nbsp;Disable', '',['class'=>'btn btn-danger btn-xs', 'title'=>'Deactive']);
+					} 
+				},
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'80px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'80px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 	
+			],
+			[
+				'class'=>'kartik\grid\ActionColumn',
+				'dropdown' => true,
+				'template' => '{view}{update}{price}',
+				'dropdownOptions'=>['class'=>'pull-right dropup'],									
 				'buttons' => [
-					'view'=>function($url, $model, $key){
-							return Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px;">View </button>',                                                                       
-										['view','ID'=>$model->ID,'KD_BARANG'=>$model->KD_BARANG],
-										[   
-											'data-toggle'=>"modal",
-											'data-target'=>"#modal-bumum",													
-											'data-title'=> $model->ID,
-										]
-					);
-															},
-					'update'=>function($url, $model, $key){
-							return Html::a('<button type="button" class="btn btn-primary btn-xs" style="width:50px;  margin-left:10px">Update </button>',
-										['update','ID'=>$model->ID,'KD_BARANG'=>$model->KD_BARANG],
-										[
-											'data-toggle'=>"modal",
-											'data-target'=>"#modal-barangumum",													
-											'data-title'=> $model->ID,
-										]
-								);
-					},
-					
-					'delete'=>function($url, $model, $key){
-							return Html::a('<button type="button" class="btn btn-danger btn-xs" style="width:50px; margin-left:10px">Delete </button>',
-									['delete','ID'=>$model->ID,'KD_BARANG'=>$model->KD_BARANG],
-									[
-										'data-toggle'=>"modal",
-										'data-target'=>"#modal-Umum",													
-										'data-title'=> $model->ID,
-									]
-								);
-					},
-				],                                                                            
-			],            
-        ];      
-        
-		/* echo ExportMenu::widget([
-			'dataProvider' => $dataProvider,
-			'columns' => $gridColumns,
-			 'dropdownOptions' => ['class' => 'btn btn-warning'],
-			 'columnSelectorOptions' => ['attribute'=>'HARGA'],
-			 'filename' => 'barangumum'.'-'.date('ymdHis'),
-			  'target' => ExportMenu::TARGET_BLANK,
-		]);      */                         
+						'view' =>function($url, $model, $key){
+								return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
+															['/master/barangumum/view','id'=>$model->ID],[
+															'data-toggle'=>"modal",
+															'data-target'=>"#modal-view",
+															'data-title'=> $model->KD_BARANG,
+															]). '</li>' . PHP_EOL;
+						},
+						'update' =>function($url, $model, $key){
+								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Edit'),
+															['/master/barangumum/update','id'=>$model->ID],[
+															'data-toggle'=>"modal",
+															'data-target'=>"#modal-edit",
+															'data-title'=> $model->KD_BARANG,
+															]). '</li>' . PHP_EOL;
+						},                        
+                        
+                ],
+                'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'height'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 			     
+                
+            ],
+    
+        ]; 
 	?>
-        
-	<div class="barangumum-index" style="padding:10px;"> 
-		<?= $grid = GridView::widget([                        
+
+		
+<div class="container-full">
+	<div style="padding-left:15px; padding-right:15px">			
+		<?= $grid = GridView::widget([
+				'id'=>'gv-brg-prodak',
 				'dataProvider'=> $dataProvider,
 				'filterModel' => $searchModel,
+				'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
 				'columns' => $gridColumns,
-				'rowOptions' => function($data) { 
-						 if($data->STATUS == 'tidak aktif'){
-							 return ['class'=>'danger'];
-						 }else {
-							return ['class'=>'success'];
-						}				
-				},
-				'responsive'=>true,
-				'resizableColumns'=>true,
 				'pjax'=>true,
-				'pjaxSettings'=>[
-					'options'=>[
-						'enablePushState'=>false,
-						'id'=>'active',
-					],
-				],
-				/* 'toolbar' => [
+					'pjaxSettings'=>[
+						'options'=>[
+							'enablePushState'=>false,
+							'id'=>'gv-brg-prodak',
+						],
+					 ],
+				'toolbar' => [
 					'{export}',
-				], */
+				],
 				'panel' => [
-					'heading'=>'<h3 class="panel-title">'. Html::encode($this->title).'</h3>',
+					'heading'=>'<h3 class="panel-title">LIST ITEMS UMUM</h3>',
 					'type'=>'warning',
-					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
-							['modelClass' => 'Barangumum',]),'/master/barangumum/create',[
+					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Sku Items ',
+							['modelClass' => 'Kategori',]),'/master/barangumum/create',[
 								'data-toggle'=>"modal",
-									'data-target'=>"#modal-barangumum",
-																		 'id'=>'modl',
+									'data-target'=>"#modal-create",							
 										'class' => 'btn btn-success'						
-													]),								
-								
-								
+													]),
 					'showFooter'=>false,
-				],	
-				'hover'=>true,				
-				/* 'export' =>[
-					'target' => GridView::TARGET_BLANK,
-				], */                                      
-				/* 'exportConfig' => [                        
-					GridView::PDF => [
-						'filename' => 'barangumum'.'-'.date('ymdHis'),
-					],
-					GridView::EXCEL => [ 'filename' => 'barangumum'.'-'.date('ymdHis') ],
-				], */
-			]); 
+				],		
+				
+				'export' =>['target' => GridView::TARGET_BLANK],
+				'exportConfig' => [
+					GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
+					GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
+				],
+			]);
 		?>
 	</div>
+</div>	
+	
+	
+	
+	
+<!--
 
-	<?php
-		//js
-		$this->registerJs("		 
-			$('#modal-Umum').on('show.bs.modal', function (event) {
-				var button = $(event.relatedTarget)
-				var modal = $(this)
-				var title = button.data('title') 
-				var href = button.attr('href') 
-				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-				$.post(href)
-					.done(function( data ) {
-						modal.find('.modal-body').html(data)
-					});
-				})
-		",$this::POS_READY);
+<p>
+<i class="fa fa-check fa-sm" style="color:blue;" title="Aktif"></i> Aktif  &nbsp;&nbsp;&nbsp;&nbsp;
+<i class="fa fa-times fa-sm" style="color:red;" title="Tidak Aktif" ></i> Tidak Aktif
+</p>
+!-->
 
-		$this->registerJs("
-			$('#modal-bumum').on('show.bs.modal', function (event) {
-				var button = $(event.relatedTarget)
-				var modal = $(this)
-				var title = button.data('title') 
-				var href = button.attr('href') 
-				//modal.find('.modal-title').html(title)
-				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-				$.post(href)
-					.done(function( data ) {
-						modal.find('.modal-body').html(data)
-					});
+
+<?php
+	/*View*/
+	$this->registerJs("
+		 $('#modal-view').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title') 
+			var href = button.attr('href') 
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
 			})
-		",$this::POS_READY);
-
-
-		$this->registerJs("
-			$.fn.modal.Constructor.prototype.enforceFocus = function(){};
-			$('#modal-barangumum').on('show.bs.modal', function (event) {            
-				var button = $(event.relatedTarget)			  
-				var modal = $(this)
-				var title = button.data('title') 
-				var href = button.attr('href') 
-				//modal.find('.modal-title').html(title)
-				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-				$.post(href)
-					.done(function( data ) {
-						modal.find('.modal-body').html(data)
-						
-					});
-            })             
-		",$this::POS_READY);
-	?>
-   
-    <!--modal-->            
-	<?php
-		Modal::begin([
-			'id' => 'modal-barangumum',
-			//'header' => '<h4 class="modal-title">LukisonGroup</h4> ',
-			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Items Barang Umum</h4></div>',
-			'headerOptions'=>[								
-				'style'=> 'border-radius:5px; background-color: rgba(131, 160, 245, 0.2)',	
-			],
-		]);
-		Modal::end();
-
-		Modal::begin([
-			'id' => 'modal-bumum',
-			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-eye"></div><div><h4 class="modal-title">View Item Barang</h4></div>',			
-			'headerOptions'=>[								
-				'style'=> 'border-radius:5px; background-color: rgba(131, 160, 245, 0.2)',	
-			],
-		]);
-		Modal::end();
-		
-		Modal::begin([
-			'id' => 'modal-Umum',
-			'header' => '<h4 class="modal-title">LukisonGroup</h4>',
-			'headerOptions'=>[								
-				'style'=> 'border-radius:5px; background-color: rgba(131, 160, 245, 0.2)',	
-			],
-		 ]);
-		Modal::end();
-	?>
-
-    
-
-
+	",$this::POS_READY);
+	Modal::begin([
+        'id' => 'modal-view',
+       'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">View Items Sku</h4></div>',
+		'headerOptions'=>[								
+				'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.3)',	
+		],
+    ]);
+    Modal::end();
+	
+	/*Edit*/
+	$this->registerJs("
+		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		 $('#modal-edit').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title') 
+			var href = button.attr('href') 
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			})
+	",$this::POS_READY);
+    Modal::begin([
+        'id' => 'modal-edit',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-edit"></div><div><h4 class="modal-title">Edit Items Sku</h4></div>',
+		'headerOptions'=>[								
+				'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.3)',	
+		],
+    ]);
+	
+	/*Create*/
+    Modal::end();
+	$this->registerJs("
+		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		 $('#modal-create').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title') 
+			var href = button.attr('href') 
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			})
+	",$this::POS_READY);
+    Modal::begin([
+        'id' => 'modal-create',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+		'headerOptions'=>[								
+				'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.3)',	
+		],
+    ]);
+    Modal::end();
+	
+	/*Price Author*/
+	$this->registerJs("
+		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		 $('#modal-price').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title') 
+			var href = button.attr('href') 
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-dolar fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			})
+	",$this::POS_READY);
+    Modal::begin([
+        'id' => 'modal-price',
+        'header' => '<h4 class="modal-title">Prize Autorize</h4>',		
+    ]);
+    Modal::end();
+	    
+	
+	
+	
+	
+	

@@ -31,7 +31,7 @@ $gridColumns = [
 				'width'=>'10px',
 				'font-family'=>'verdana, arial, sans-serif',
 				'font-size'=>'9pt',
-				'background-color'=>'rgba(97, 211, 96, 0.3)',
+				'background-color'=>'rgba(62, 0, 44, 0.2)',
 			]
 		],
 		'contentOptions'=>[
@@ -64,7 +64,7 @@ $gridColumns = [
 				'width'=>'150px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'9pt',
-				'background-color'=>'rgba(97, 211, 96, 0.3)',
+				'background-color'=>'rgba(62, 0, 44, 0.2)',
 			]
 		],
 		'contentOptions'=>[
@@ -87,7 +87,7 @@ $gridColumns = [
 				'width'=>'200px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'9pt',
-				'background-color'=>'rgba(97, 211, 96, 0.3)',
+				'background-color'=>'rgba(62, 0, 44, 0.2)',
 			]
 		],
 		'contentOptions'=>[
@@ -110,7 +110,7 @@ $gridColumns = [
 				'width'=>'600px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'9pt',
-				'background-color'=>'rgba(97, 211, 96, 0.3)',
+				'background-color'=>'rgba(62, 0, 44, 0.2)',
 			]
 		],
 		'contentOptions'=>[
@@ -142,7 +142,7 @@ $gridColumns = [
 				'width'=>'80px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'9pt',
-				'background-color'=>'rgba(97, 211, 96, 0.3)',
+				'background-color'=>'rgba(62, 0, 44, 0.2)',
 			]
 		],
 		'contentOptions'=>[
@@ -191,7 +191,7 @@ $gridColumns = [
 					'width'=>'150px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
-					'background-color'=>'rgba(97, 211, 96, 0.3)',
+					'background-color'=>'rgba(62, 0, 44, 0.2)',
 				]
 		],
 		'contentOptions'=>[
@@ -213,7 +213,7 @@ $gridColumns = [
 				'id'=>'cat-grd-index',
 				'dataProvider'=> $dataProvider,
 				'filterModel' => $searchModel,
-				'filterRowOptions'=>['style'=>'background-color:	rgba(97, 211, 96, 0.3); align:center'],
+				'filterRowOptions'=>['style'=>'background-color:	rgba(62, 0, 44, 0.2); align:center'],
 				'columns' => $gridColumns,
 				'pjax'=>true,
 				'pjaxSettings'=>[
@@ -316,19 +316,28 @@ $this->registerJs("
     
     Modal::begin([
         'id' => 'modal-ktg-create',
-        'header' => '<h4 class="modal-title">Category Create</h4>',
+      	'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Category Create</h4></div>',
+		'headerOptions'=>[								
+				'style'=> 'border-radius:5px; background-color: rgba(62, 0, 44, 0.2)',	
+		],
     ]);
     Modal::end();
     
-     Modal::begin([
+    Modal::begin([
         'id' => 'modal-ktg-edit',
-        'header' => '<h4 class="modal-title">Category Edit</h4>',
+       'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-edit"></div><div><h4 class="modal-title">Category Edit</h4></div>',
+		'headerOptions'=>[								
+				'style'=> 'border-radius:5px; background-color: rgba(62, 0, 44, 0.2)',	
+		],
     ]);
     Modal::end();
     
        Modal::begin([
         'id' => 'modal-ktg-view',
-        'header' => '<h4 class="modal-title">Category Views</h4>',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-eye"></div><div><h4 class="modal-title">Category Views</h4></div>',
+		'headerOptions'=>[								
+				'style'=> 'border-radius:5px; background-color: rgba(62, 0, 44, 0.2)',	
+		],
     ]);
     Modal::end();
       Modal::begin([

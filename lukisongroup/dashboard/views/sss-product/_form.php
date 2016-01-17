@@ -16,7 +16,7 @@ use lukisongroup\master\models\Barangmaxi;
 use lukisongroup\hrd\models\Corp;
 
 
-$drop = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM');
+$valCorp = ArrayHelper::map(Corp::find()->Where(['CORP_ID'=>'SSS'])->all(), 'CORP_ID', 'CORP_NM');
 $droptype = ArrayHelper::map(Tipebarang::find()->where(['STATUS' => 1,'PARENT'=>1])->all(), 'KD_TYPE', 'NM_TYPE');
 //$dropdistrubutor = ArrayHelper::map(Distributor::find()->all(), 'KD_DISTRIBUTOR', 'NM_DISTRIBUTOR');
 $dropkat = ArrayHelper::map(Kategori::find()->where(['STATUS' => 1,'PARENT'=>1])->all(), 'KD_KATEGORI', 'NM_KATEGORI'); 
@@ -28,13 +28,13 @@ $dropunit = ArrayHelper::map(Unitbarang::find()->all(), 'KD_UNIT', 'NM_UNIT');
     <?php $form = ActiveForm::begin([
 			'type' => ActiveForm::TYPE_HORIZONTAL,
 			'method' => 'post',
-			'id'=>'form-umum',
-            'enableClientValidation' => true,
+			 'id'=>'form-umum',
+             'enableClientValidation' => true,
 			'options' => ['enctype' => 'multipart/form-data']
 		]);
 	?>
 		<?= $form->field($model, 'PARENT')->hiddenInput(['value'=>1,'maxlength' => true])->label(false) ?>
-		<?= $form->field($model, 'KD_CORP')->dropDownList($drop,['prompt'=>' -- Pilih Salah Satu --'])->label('Kode Perusahaan') ?>
+		<?= $form->field($model, 'KD_CORP')->dropDownList($valCorp,['readonly'=>true])->label('Kode Perusahaan') ?>
 		<?= $form->field($model, 'KD_TYPE')->widget(Select2::classname(), [
 			'data' => $droptype,
 			'options' => ['placeholder' => 'Pilih KD TYPE ...'],
