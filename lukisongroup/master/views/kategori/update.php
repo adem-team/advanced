@@ -8,9 +8,6 @@ $this->title = Yii::t('app', 'Umum - Update Kategori Barang');	    /* title pada
 ?>
 <div class="kategori-update">
 
-    <h2><?= Html::encode($this->title) ?></h2>
-	<div style="border-top:1px solid #c6c6c6; ">&nbsp;</div>
-
     <?= $this->render('_update', [
         'model' => $model,
     ]) ?>

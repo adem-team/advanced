@@ -18,7 +18,7 @@ class TipebarangSearch extends Tipebarang
     public function rules()
     {
         return [
-            [['ID', 'STATUS'], 'integer'],
+            [['ID', 'STATUS','PARENT'], 'integer'],
             [['KD_TYPE', 'NM_TYPE', 'NOTE', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT'], 'safe'],
         ];
     }
@@ -41,10 +41,13 @@ class TipebarangSearch extends Tipebarang
      */
     public function search($params)
     {
-        $query = Tipebarang::find()->where('STATUS <> 3');
+        $query = Tipebarang::find()->where('STATUS <> 3')->groupBy(['PARENT','KD_TYPE']);;
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+			'pagination' => [
+				'pageSize' => 20,
+			],
         ]);
 
         $this->load($params);
@@ -59,7 +62,8 @@ class TipebarangSearch extends Tipebarang
 //            'id' => $this->id,
             'CREATED_AT' => $this->CREATED_AT,
             'UPDATED_AT' => $this->UPDATED_AT,
-//            'STATUS' => $this->status,
+			'STATUS' => $this->STATUS,
+			'PARENT' => $this->PARENT,
         ]);
 
         $query->andFilterWhere(['like', 'KD_TYPE', $this->KD_TYPE])

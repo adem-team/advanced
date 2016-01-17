@@ -9,7 +9,10 @@ use app\models\dashboard\CorpSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use lukisongroup\widget\models\Chat;
+use lukisongroup\widget\models\ChatSearch;
+use lukisongroup\widget\models\ChatroomSearch;
+	
 /**
  * DashboardController implements the CRUD actions for Dashboard model.
  */

@@ -5,7 +5,7 @@ namespace lukisongroup\purchasing\models\ro;
 use Yii;
 use lukisongroup\purchasing\models\ro\Requestorder;
 use lukisongroup\master\models\Unitbarang;
-use lukisongroup\master\models\Barangumum; /* Barang Pembelian untuk Operatioal | Inventaris*/
+//use lukisongroup\master\models\Barang; /* Barang Pembelian untuk Operatioal | Inventaris*/
 use lukisongroup\master\models\Barang; /* Barang Pembelian/barang Produksi untuk dijual kembali*/
 /**
  * This is the model class for table "r0003".
@@ -24,6 +24,7 @@ use lukisongroup\master\models\Barang; /* Barang Pembelian/barang Produksi untuk
 class Rodetail extends \yii\db\ActiveRecord
 {
 	public $KD_KATEGORI;
+	public $KD_TYPE;
 	public $STT_SEND_PO;
 	public $PQTY=0;
 	//Public $PQTY;
@@ -84,7 +85,7 @@ class Rodetail extends \yii\db\ActiveRecord
 	
 	public function getBrgumum()
     {
-        return $this->hasOne(Barangumum::className(), ['KD_BARANG' => 'KD_BARANG']);
+        return $this->hasOne(Barang::className(), ['KD_BARANG' => 'KD_BARANG']);
     }
 	
 	public function getBrgproduksi()

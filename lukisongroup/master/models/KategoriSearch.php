@@ -19,7 +19,7 @@ class KategoriSearch extends Kategori
     {
         return [
             [['ID', 'STATUS'], 'integer'],
-            [['KD_KATEGORI', 'NM_KATEGORI', 'NOTE', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT'], 'safe'],
+            [['KD_KATEGORI', 'NM_KATEGORI', 'NOTE','PARENT', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT'], 'safe'],
         ];
     }
 
@@ -41,10 +41,13 @@ class KategoriSearch extends Kategori
      */
     public function search($params)
     {
-        $query = Kategori::find()->where('STATUS <> 3');
+        $query = Kategori::find()->where('STATUS <> 3')->groupBy(['PARENT','KD_KATEGORI']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+			'pagination' => [
+				'pageSize' => 20,
+			],
         ]);
 
         $this->load($params);
@@ -60,6 +63,7 @@ class KategoriSearch extends Kategori
             'NM_KATEGORI' => $this->NM_KATEGORI,
             'UPDATED_AT' => $this->UPDATED_AT,
             'STATUS' => $this->STATUS,
+			'PARENT' => $this->PARENT,
         ]);
 
         $query->andFilterWhere(['like', 'KD_KATEGORI', $this->KD_KATEGORI])

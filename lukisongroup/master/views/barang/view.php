@@ -2,11 +2,11 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use lukisongroup\esm\models\Barang;
+use lukisongroup\master\models\Barang;
 
-$this->sideCorp = 'ESM Prodak';                       	/* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'esm_datamaster';                   	/* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'ESM - Prodak View');       /* title pada header page */
+$this->sideCorp = 'Prodak';                       	/* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'master_datamaster';                   	/* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Prodak View');       /* title pada header page */
 
 ?>
 <div class="barang-view">
@@ -27,7 +27,7 @@ $this->title = Yii::t('app', 'ESM - Prodak View');       /* title pada header pa
 		'attributes' => [
 			[
 				'attribute'=>'Gambar',
-				'value'=>Yii::$app->urlManager->baseUrl.'/upload/barangesm/'.$gmbr,
+				'value'=>Yii::$app->urlManager->baseUrl.'/upload/barang/'.$gmbr,
 				'format' => ['image',['width'=>'150','height'=>'150']],
 			],	
 			'KD_BARANG',
@@ -37,8 +37,8 @@ $this->title = Yii::t('app', 'ESM - Prodak View');       /* title pada header pa
 				'value' => $model->unitb->NM_UNIT,
 			],	
 			
-			'HPP',
-			'HARGA',
+			//'HPP',
+			//'HARGA',
 			//'BARCODE',
 			/* [
 				'label' => 'Nama Distributor',
