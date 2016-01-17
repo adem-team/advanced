@@ -27,7 +27,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 						'width'=>'10px',
 						'font-family'=>'verdana, arial, sans-serif',
 						'font-size'=>'9pt',
-						'background-color'=>'rgba(126, 189, 188, 0.3)',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
 					]
 				],
 				'contentOptions'=>[
@@ -39,25 +39,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 					]
 				], 		
 			],
-			/*IMAGE ATTRIBUTE*/
-			[
-				/*Author -ptr.nov- image*/
-               'attribute' => 'Image',
-			   'mergeHeader'=>true,
-               'format' => 'html', //'format' => 'image',
-               'value'=>function($data){
-                            return Html::img(Yii::$app->urlManager->baseUrl.'/upload/barang/' . $data->IMAGE, ['width'=>'40']);
-                },
-				'headerOptions'=>[				
-					'style'=>[
-						'text-align'=>'center',
-						'width'=>'40px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-						'background-color'=>'rgba(126, 189, 188, 0.3)',
-					]
-				],
-            ],  
+			
 			[
 				'attribute' => 'KD_BARANG',
 				'label'=>'SKU',
@@ -66,16 +48,16 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 				'headerOptions'=>[				
 					'style'=>[
 						'text-align'=>'center',
-						'width'=>'150px',
+						'width'=>'100px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
-						'background-color'=>'rgba(126, 189, 188, 0.3)',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
 					]
 				],
 				'contentOptions'=>[
 					'style'=>[
 						'text-align'=>'left',
-						'width'=>'150px',
+						'width'=>'100px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
@@ -89,16 +71,16 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 				'headerOptions'=>[				
 					'style'=>[
 						'text-align'=>'center',
-						'width'=>'200px',
+						'width'=>'400px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
-						'background-color'=>'rgba(126, 189, 188, 0.3)',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
 					]
 				],
 				'contentOptions'=>[
 					'style'=>[
 						'text-align'=>'left',
-						'width'=>'200px',
+						'width'=>'400px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
@@ -112,45 +94,122 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 				'headerOptions'=>[				
 					'style'=>[
 						'text-align'=>'center',
-						'width'=>'150px',
+						'width'=>'80px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
-						'background-color'=>'rgba(126, 189, 188, 0.3)',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
 					]
 				],
 				'contentOptions'=>[
 					'style'=>[
 						'text-align'=>'left',
-						'width'=>'150px',
+						'width'=>'80px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
 				], 				
 			],
 			[
-				'attribute' => 'tipebrg', 
-				'label'=>'Type',
+				'class'=>'kartik\grid\EditableColumn',
+				'attribute' => 'HARGA_PABRIK', 
+				'label'=>'Pabrik',
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
+				'format'=>['decimal', 2],
 				'headerOptions'=>[				
 					'style'=>[
 						'text-align'=>'center',
-						'width'=>'150px',
+						'width'=>'50px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
-						'background-color'=>'rgba(126, 189, 188, 0.3)',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
 					]
 				],
 				'contentOptions'=>[
 					'style'=>[
-						'text-align'=>'left',
-						'width'=>'150px',
+						'text-align'=>'right',
+						'width'=>'50px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
 				], 				
 			],
 			[
+				'class'=>'kartik\grid\EditableColumn',
+				'attribute' => 'HARGA_LG', 
+				'label'=>'Lukison',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'format'=>['decimal', 2],
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'50px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'right',
+						'width'=>'50px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'class'=>'kartik\grid\EditableColumn',
+				'attribute' => 'HARGA_DIST', 
+				'label'=>'Distributor',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'format'=>['decimal', 2],
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'50px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'right',
+						'width'=>'50px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'class'=>'kartik\grid\EditableColumn',
+				'attribute' => 'HARGA_SALES', 
+				'label'=>'Sales LG',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'format'=>['decimal', 2],
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'80px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'right',
+						'width'=>'80px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			/* [
 				'attribute' => 'nmkategori',
 				'label'=>'Category',
 				'hAlign'=>'left',
@@ -161,7 +220,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 						'width'=>'150px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
-						'background-color'=>'rgba(126, 189, 188, 0.3)',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
 					]
 				],
 				'contentOptions'=>[
@@ -172,31 +231,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 						'font-size'=>'9pt',
 					]
 				], 				
-			],
-			[
-				'attribute' => 'HARGA_SPL', 
-				'label'=>'Price',
-				'hAlign'=>'left',
-				'vAlign'=>'middle',
-				'format'=>['decimal', 2],
-				'headerOptions'=>[				
-					'style'=>[
-						'text-align'=>'center',
-						'width'=>'150px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-						'background-color'=>'rgba(126, 189, 188, 0.3)',
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>'right',
-						'width'=>'150px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-					]
-				], 				
-			],
+			], */
 			[
 				'attribute' => 'STATUS',
 				'filter' => $valStt,	
@@ -217,7 +252,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 						'width'=>'80px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
-						'background-color'=>'rgba(126, 189, 188, 0.3)',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
 					]
 				],
 				'contentOptions'=>[
@@ -229,7 +264,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 					]
 				], 	
 			],
-			[
+			/* [
 				'class'=>'kartik\grid\ActionColumn',
 				'dropdown' => true,
 				'template' => '{view}{update}{price}',
@@ -237,7 +272,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 				'buttons' => [
 						'view' =>function($url, $model, $key){
 								return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
-															['/master/barangumum/view','id'=>$model->ID],[
+															['/master/barang/view','id'=>$model->ID],[
 															'data-toggle'=>"modal",
 															'data-target'=>"#modal-view",
 															'data-title'=> $model->KD_BARANG,
@@ -245,12 +280,20 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 						},
 						'update' =>function($url, $model, $key){
 								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Edit'),
-															['/master/barangumum/update','id'=>$model->ID],[
+															['update','id'=>$model->ID],[
 															'data-toggle'=>"modal",
 															'data-target'=>"#modal-edit",
 															'data-title'=> $model->KD_BARANG,
 															]). '</li>' . PHP_EOL;
-						},                        
+						},
+                        'price' =>function($url, $model, $key){
+								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Price List'),
+															['/master/barang/update','id'=>$model->ID],[
+															'data-toggle'=>"modal",
+															'data-target'=>"#modal-price",
+															'data-title'=> $model->KD_BARANG,
+															]). '</li>' . PHP_EOL;
+						},
                         
                 ],
                 'headerOptions'=>[				
@@ -259,7 +302,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 						'width'=>'150px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
-						'background-color'=>'rgba(126, 189, 188, 0.3)',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
 					]
 				],
 				'contentOptions'=>[
@@ -272,7 +315,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 					]
 				], 			     
                 
-            ],
+            ], */
     
         ]; 
 	?>
@@ -284,7 +327,16 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 				'id'=>'gv-brg-prodak',
 				'dataProvider'=> $dataProvider,
 				'filterModel' => $searchModel,
-				'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
+				'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+				'beforeHeader'=>[
+					[
+						'columns'=>[
+							['content'=>'Details Barang', 'options'=>['colspan'=>4,'class'=>'text-center info',]], 
+							['content'=>'Harga / Pcs', 'options'=>['colspan'=>5, 'class'=>'text-center info']], 
+							//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']], 
+						],
+					]
+				], 
 				'columns' => $gridColumns,
 				'pjax'=>true,
 					'pjaxSettings'=>[
@@ -297,14 +349,14 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 					'{export}',
 				],
 				'panel' => [
-					'heading'=>'<h3 class="panel-title">LIST ITEMS UMUM</h3>',
+					'heading'=>'<h3 class="panel-title">PRICE LIST ITEMS PRODUCTION</h3>',
 					'type'=>'warning',
-					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Items ',
-							['modelClass' => 'Kategori',]),'/master/barangumum/create',[
-								'data-toggle'=>"modal",
-									'data-target'=>"#modal-create",							
+					'before'=> Html::a('<i class="fa fa-power-off fa-lg"></i> '.Yii::t('app', 'logout ',
+							['modelClass' => 'Kategori',]),'#',[
+								//'data-toggle'=>"modal",
+								//	'data-target'=>"#modal-create",							
 										'class' => 'btn btn-success'						
-													]),
+													]), 
 					'showFooter'=>false,
 				],		
 				
@@ -350,7 +402,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
         'id' => 'modal-view',
        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">View Items Sku</h4></div>',
 		'headerOptions'=>[								
-				'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.3)',	
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',	
 		],
     ]);
     Modal::end();
@@ -375,7 +427,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
         'id' => 'modal-edit',
 		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-edit"></div><div><h4 class="modal-title">Edit Items Sku</h4></div>',
 		'headerOptions'=>[								
-				'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.3)',	
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',	
 		],
     ]);
 	
@@ -400,7 +452,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
         'id' => 'modal-create',
 		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
 		'headerOptions'=>[								
-				'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.3)',	
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',	
 		],
     ]);
     Modal::end();

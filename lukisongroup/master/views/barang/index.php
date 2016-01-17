@@ -228,11 +228,10 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 															]). '</li>' . PHP_EOL;
 						},
                         'price' =>function($url, $model, $key){
-								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Price List'),
-															['/master/barang/update','id'=>$model->ID],[
+								return  '<li>' . Html::a('<span class="fa fa-money fa-dm"></span>'.Yii::t('app', 'Price List Items'),
+															['/master/barang/login-price-view'],[
 															'data-toggle'=>"modal",
 															'data-target'=>"#modal-price",
-															'data-title'=> $model->KD_BARANG,
 															]). '</li>' . PHP_EOL;
 						},
                         
@@ -283,7 +282,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 				'panel' => [
 					'heading'=>'<h3 class="panel-title">LIST ITEMS PRODUCTION</h3>',
 					'type'=>'warning',
-					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Sku Items ',
+					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Items ',
 							['modelClass' => 'Kategori',]),'/master/barang/create',[
 								'data-toggle'=>"modal",
 									'data-target'=>"#modal-create",							
@@ -407,7 +406,11 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 	",$this::POS_READY);
     Modal::begin([
         'id' => 'modal-price',
-        'header' => '<h4 class="modal-title">Prize Autorize</h4>',		
+        'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Price Login Autorize</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
     ]);
     Modal::end();
 	    

@@ -58,6 +58,7 @@ $dropunit = ArrayHelper::map(Unitbarang::find()->all(), 'KD_UNIT', 'NM_UNIT');
 				'allowClear' => true
 				 ],
 		]);?>
+		<?= $form->field($model, 'HARGA_SPL')->textInput(['maxlength' => true])->label('Harga Supplier') ?>
 		<?php /* $form->field($model, 'KD_DISTRIBUTOR')->widget(Select2::classname(), [
 			'data' => $dropdistrubutor,
 			'options' => ['placeholder' => 'Pilih KD DISTRIBUTOR  ...'],
