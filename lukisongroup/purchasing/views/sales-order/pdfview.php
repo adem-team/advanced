@@ -6,6 +6,7 @@ use yii\helpers\Json;
 use yii\widgets\DetailView;
 use kartik\grid\GridView;
 use lukisongroup\master\models\Unitbarang;
+
 $this->title = $roHeader->KD_RO;
 $this->params['breadcrumbs'][] = ['label' => 'Request Order', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
@@ -30,17 +31,19 @@ $this->params['breadcrumbs'][] = $this->title;
 	}
 ?>
 
-<div class="container" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
+<div class="container" style="font-family: tahoma;font-size: 8pt;">
 	<!-- Header !-->
 	<div>
-		<div style="width:250px; float:left;">
+		<div style="width:240px; float:left;">
 			<?php echo Html::img('@web/img_setting/kop/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>	
 		</div>
 		<div style="padding-top:40px;">
 			<!-- <h5 class="text-left"><b>FORM PERMINTAAN BARANG & JASA</b></h5> !-->				
-			<h5 class="text-left"><b>FORM REQUEST ORDER</b></h5>				
+			<h4 class="text-left"><b>SALES ORDER</b></h4>				
 		</div>
-		<hr>
+		
+		<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
+		<hr style="height:1px;margin-top: 1px; margin-bottom: 10px;">
 	</div>
 	<!-- Title Descript !-->
 	<div>
@@ -79,7 +82,7 @@ $this->params['breadcrumbs'][] = $this->title;
 									'class'=>'text-center info',
 									'style'=>[
 										'width'=>'10px',
-										'font-family'=>'verdana, arial, sans-serif',
+										'font-family'=>'tahoma, arial, sans-serif',
 										'font-size'=>'8pt',										
 									]
 								]
@@ -89,7 +92,7 @@ $this->params['breadcrumbs'][] = $this->title;
 									'class'=>'text-center info',
 									'style'=>[
 										'width'=>'10px',
-										'font-family'=>'verdana, arial, sans-serif',
+										'font-family'=>'tahoma, arial, sans-serif',
 										'font-size'=>'8pt',
 									]
 								]
@@ -111,7 +114,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'10px',
-								'font-family'=>'verdana, arial, sans-serif',
+								'font-family'=>'tahoma, arial, sans-serif',
 								'font-size'=>'8pt',
 								'background-color'=>'rgba(0, 95, 218, 0.3)',
 							]
@@ -120,7 +123,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'10px',
-								'font-family'=>'verdana, arial, sans-serif',
+								'font-family'=>'tahoma, arial, sans-serif',
 								'font-size'=>'8pt',
 							]
 						], 
@@ -139,7 +142,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'200px',
-								'font-family'=>'verdana, arial, sans-serif',
+								'font-family'=>'tahoma, arial, sans-serif',
 								'font-size'=>'8pt',
 								'background-color'=>'rgba(0, 95, 218, 0.3)',
 							]
@@ -147,7 +150,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						'contentOptions'=>[
 							'style'=>[
 								'width'=>'200px',
-								'font-family'=>'verdana, arial, sans-serif',
+								'font-family'=>'tahoma, arial, sans-serif',
 								'font-size'=>'8pt',
 							]
 						], 
@@ -164,7 +167,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'40px',
-								'font-family'=>'verdana, arial, sans-serif',
+								'font-family'=>'tahoma, arial, sans-serif',
 								'font-size'=>'8pt',
 								'background-color'=>'rgba(0, 95, 218, 0.3)',
 							]
@@ -172,7 +175,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						'contentOptions'=>[
 							'style'=>[
 									'width'=>'40px',
-									'font-family'=>'verdana, arial, sans-serif',
+									'font-family'=>'tahoma, arial, sans-serif',
 									'font-size'=>'8pt',
 							]
 						]									
@@ -189,7 +192,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'40px',
-								'font-family'=>'verdana, arial, sans-serif',
+								'font-family'=>'tahoma, arial, sans-serif',
 								'font-size'=>'8pt',
 								'background-color'=>'rgba(0, 95, 218, 0.3)',
 							]
@@ -197,7 +200,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						'contentOptions'=>[
 							'style'=>[
 									'width'=>'40px',
-									'font-family'=>'verdana, arial, sans-serif',
+									'font-family'=>'tahoma, arial, sans-serif',
 									'font-size'=>'8pt',
 							]
 						]							
@@ -214,7 +217,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'150px',
-								'font-family'=>'verdana, arial, sans-serif',
+								'font-family'=>'tahoma, arial, sans-serif',
 								'font-size'=>'8pt',
 								'background-color'=>'rgba(0, 95, 218, 0.3)',
 							]
@@ -223,7 +226,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							'style'=>[
 									//'text-align'=>'left',		
 									'width'=>'150px',
-									'font-family'=>'verdana, arial, sans-serif',
+									'font-family'=>'tahoma, arial, sans-serif',
 									'font-size'=>'8pt',
 							]
 						],		
@@ -248,7 +251,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'200px',
-								'font-family'=>'verdana, arial, sans-serif',
+								'font-family'=>'tahoma, arial, sans-serif',
 								'font-size'=>'8pt',
 								'background-color'=>'rgba(0, 95, 218, 0.3)',
 							]
@@ -256,7 +259,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						'contentOptions'=>[
 							'style'=>[
 									'width'=>'200px',
-									'font-family'=>'verdana, arial, sans-serif',
+									'font-family'=>'tahoma, arial, sans-serif',
 									'font-size'=>'8pt',
 							]
 						],		
@@ -278,7 +281,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'10px',
-								'font-family'=>'verdana, arial, sans-serif',
+								'font-family'=>'tahoma, arial, sans-serif',
 								'font-size'=>'8pt',
 								'background-color'=>'rgba(0, 15, 118, 0.3)', 
 							]
@@ -287,7 +290,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'10px',
-								'font-family'=>'verdana, arial, sans-serif',
+								'font-family'=>'tahoma, arial, sans-serif',
 								'font-size'=>'8pt',
 							]
 						], 										
@@ -303,7 +306,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				'hover'=>true, //cursor select
 				'responsive'=>true,
 				'responsiveWrap'=>true,
-				'bordered'=>true,
+				'bordered'=>true,				
 				'striped'=>'4px',
 				'autoXlFormat'=>true,
 				'export' => false, 
@@ -329,20 +332,20 @@ $this->params['breadcrumbs'][] = $this->title;
 			}
 			
 		?>
-		<table id="tblRo" class="table table-bordered" style="width:360px;font-family: verdana, arial, sans-serif ;font-size: 8pt;">
+		<table id="tblRo" class="table table-bordered" style="width:360px;font-family: tahoma;font-size: 8pt;">
 			<!-- Tanggal!-->
 			 <tr>
 				<!-- Tanggal Pembuat RO!-->
 				<th style="text-align: center; height:20px">
 					<div style="margin-left:50px">
-						<b>Tanggerang</b>, <?php echo ' '.$awl1[2].'-'.$blnAwl1.'-'.$awl1[0];  ?>
+						Tanggerang, <?php echo ' '.$awl1[2].'-'.$blnAwl1.'-'.$awl1[0];  ?>
 					</div> 
 				
 				</th>		
 				<!-- Tanggal PO Approved!-->				
 				<th style="text-align: center; height:20px">
 					<div style="margin-left:50px">
-						<b>Tanggerang</b>, <?php echo tgl2signature($roHeader->SIG2_TGL);  ?>
+						Tanggerang, <?php echo tgl2signature($roHeader->SIG2_TGL);  ?>
 					</div> 				
 				</th>	
 			</tr>
@@ -380,8 +383,13 @@ $this->params['breadcrumbs'][] = $this->title;
 		</table>
 	</div>
 	</th>
-	<hr>
-	General Notes :
+	<!-- RO Note !-->	
+	<div  style="font-family: tahoma;font-size: 8pt;">
+		<dt><b>General Notes :</b></dt>
+		<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;">	
+		<dd><?php echo 'Input Note grid'; ?></dd><br/><br/><br/><br/>     
+		<hr style="height:1px;margin-top: 1px;">
+	</div>
 </div>
 
 		

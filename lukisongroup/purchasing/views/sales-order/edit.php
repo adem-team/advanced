@@ -7,13 +7,14 @@ use yii\helpers\Url;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\assets\AppAssetJqueryJSignature;
 AppAssetJqueryJSignature::register($this); 
-$this->sideCorp = 'ESM Request Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'esm_esm';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
+
+$this->sideCorp = 'Request Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'mDefault';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Data Master');         /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 	
 	/* LOCK STATUS TOMBOL */
-	 $headerStatus=$saHeader->STATUS;
+	 $headerStatus=$roHeader->STATUS;
 	 
 	/*
 	 * DESCRIPTION FORM EDIT
@@ -32,12 +33,12 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 $this->registerJs('
 			$(document).ready(function($) {
 				/* Data Signature1 from DB */
-				var ro_datadb1 =\''. $saHeader->SIG1_SVGBASE64 . '\'
+				var ro_datadb1 =\''. $roHeader->SIG1_SVGBASE64 . '\'
 					var i = new Image();							
 						i.src = ro_datadb1
 						$(i).appendTo($("#ro-view-approval-sig1"));
 				/* Data Signature2 from DB */
-				var ro_datadb2 =\''. $saHeader->SIG2_SVGBASE64 . '\'
+				var ro_datadb2 =\''. $roHeader->SIG2_SVGBASE64 . '\'
 					var j = new Image();							
 						j.src = ro_datadb2
 						$(j).appendTo($("#ro-view-approval-sig2"));				
@@ -48,16 +49,15 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * Declaration Componen User Permission
 	 * Function getPermission
 	 * Modul Name[1=RO]
-	 * @author ptrnov  <piter@lukison.com>
-	 * @since 1.1
 	*/
 	function getPermission(){
 		if (Yii::$app->getUserOpt->Modul_akses(1)){
-			return Yii::$app->getUserOpt->Modul_akses(1)->mdlpermission;
+			return Yii::$app->getUserOpt->Modul_akses(1);
 		}else{		
 			return false;
 		}	 
-	} 
+	}
+	//print_r(getPermission());
  
 	/*Not USED*/
 	$arrayStt= [
@@ -124,7 +124,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				]; 
 				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
-				$url1 = Url::toRoute(['/purchasing/request-order/additem','kd'=>$kd]);
+				$url1 = Url::toRoute(['/purchasing/sales-order/additem','kd'=>$kd]);
 				$content = Html::a($label1,$url1, $options1);
 				return $content;								
 			}else{
@@ -174,7 +174,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			  <dt style="width:100px; float:left;">Date</dt>
 			  <dd>: <?php echo date('d-M-Y'); ?></dd>
 			  <dt style="width:100px; float:left;">Nomor</dt>
-			  <dd>: <?php echo $saHeader->KD_SA; ?></dd>     	  
+			  <dd>: <?php echo $roHeader->KD_RO; ?></dd>     	  
 			  <dt style="width:100px; float:left;">Departement</dt>	 
 			  <dd>: 
 				<?php 
@@ -191,9 +191,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	<div class="col-md-11">		
 		<div style="align:right;">
 			<?php
-				//echo Html::a('<i class="fa fa-print fa-fw"></i> Cetak', ['cetakpdf','kd'=>$saHeader->KD_SA], ['target' => '_blank', 'class' => 'btn btn-success']);
-				echo tombolAddItem($saHeader->KD_SA,$saHeader->STATUS);
-				//print_r($saHeader->KD_SA);
+				//echo Html::a('<i class="fa fa-print fa-fw"></i> Cetak', ['cetakpdf','kd'=>$roHeader->KD_RO], ['target' => '_blank', 'class' => 'btn btn-success']);
+				echo tombolAddItem($roHeader->KD_RO,$roHeader->STATUS);
+				//print_r($roHeader->KD_RO);
 			?>
 		</div>			
 		<div>
@@ -275,7 +275,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							'hAlign'=>'center',	
 							'mergeHeader'=>true,
 							'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
-								//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $saHeader->STATUS);
+								//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
 								return (0 <> $model->STATUS || 0<> $headerStatus); // Allow Status Process = 0);
 							},
 							'editableOptions' => [
@@ -350,7 +350,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								return $UnitNm;
 							},
 							'editableOptions' => [
-								'header' => 'Update Quantity',
+								'header' => 'Update UNIT',
 								'inputType' => \kartik\editable\Editable::INPUT_SELECT2,		
 								'size' => 'md',								
 								'options' => [			
@@ -471,11 +471,11 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	<!-- Signature !-->
 	<div  class="col-md-11">
 		<?php 
-			$tgl1 = explode(' ',$saHeader->CREATED_AT);
+			$tgl1 = explode(' ',$roHeader->CREATED_AT);
 			$awl1 = explode('-',$tgl1[0]); 
 			$blnAwl1 = date("F", mktime(0, 0, 0, $awl1[1], 1));
 			
-			$tgl2 = explode(' ',$saHeader->SIG2_TGL);
+			$tgl2 = explode(' ',$roHeader->SIG2_TGL);
 			$awl2 = explode('-',$tgl2[0]); 
 			$blnAwl2 = date("F", mktime(0, 0, 0, $awl2[1], 1));		
 			
@@ -514,7 +514,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					</th>								
 					<th style="text-align: center; vertical-align:middle;width:180; height:80px">
 						<?php 
-							if ($saHeader->STATUS==101){
+							if ($roHeader->STATUS==101){
 								echo '<div id="ro-view-approval-sig2">';
 							}else{
 								echo SignApproved();
@@ -526,12 +526,12 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				 <tr>
 					<th style="text-align: center; vertical-align:middle;height:20">
 						<div>		
-							<b><?php  echo $saHeader->EMP_NM; ?></b>
+							<b><?php  echo $roHeader->EMP_NM; ?></b>
 						</div>
 					</th>								
 					<th style="text-align: center; vertical-align:middle;height:20">
 						<div>		
-							<b><?php  echo $saHeader->SIG2_NM; ?></b>
+							<b><?php  echo $roHeader->SIG2_NM; ?></b>
 						</div>
 					</th>
 				</tr>
@@ -540,10 +540,10 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		<!-- Button Submit!-->
 		<div style="text-align:right; margin-top:80px">
 			<!-- Button Back!-->
-			<a href="/purchasing/request-order" class="btn btn-info" role="button" style="width:90px">Kembali</a>
+			<a href="/purchasing/sales-order" class="btn btn-info" role="button" style="width:90px">Kembali</a>
 			<!-- Button Cetak!-->
 			<?php 
-				echo Html::a('<i class="fa fa-print fa-fw"></i> Cetak', ['cetakpdf','kd'=>$saHeader->KD_SA,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success','style'=>['width'=>'90px']]);
+				echo Html::a('<i class="fa fa-print fa-fw"></i> Cetak', ['cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success','style'=>['width'=>'90px']]);
 			?>				
 		</div>
 	</div>	

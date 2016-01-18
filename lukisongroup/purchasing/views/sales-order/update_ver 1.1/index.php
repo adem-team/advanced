@@ -9,24 +9,24 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 use yii\helpers\Json;
 use yii\web\Request;
-use kartik\daterange\DateRangePicker;
-
-//use lukisongroup\purchasing\models\so\Requestorderstatus;
-use lukisongroup\purchasing\models\so\Sodetail;
 
 use lukisongroup\master\models\Unitbarang;
+use kartik\daterange\DateRangePicker;
+
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\hrd\models\Dept;
+use lukisongroup\purchasing\models\Requestorderstatus;
+use lukisongroup\purchasing\models\Rodetail;
 
-
-$this->title = 'Sales Order';
+$this->title = 'Request Order';
 $this->params['breadcrumbs'][] = $this->title;
 
-$this->sideCorp = 'Sales Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'mdefault';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
-//$this->title = Yii::t('app', 'List Permintaan Barang');      /* title pada header page */
-//$this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
-	
+$this->sideCorp = 'ESM Request Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'esm_esm';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'List Permintaan Barang');      /* title pada header page */
+$this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+
+
 	/*
 	 * Declaration Componen User Permission
 	 * Function getPermission
@@ -34,25 +34,24 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 	*/
 	function getPermission(){
 		if (Yii::$app->getUserOpt->Modul_akses(1)){
-			return Yii::$app->getUserOpt->Modul_akses(1);
+			return Yii::$app->getUserOpt->Modul_akses(1)->mdlpermission;
 		}else{		
 			return false;
 		}	 
 	}
-	//print_r(getPermission());
+	
 	/*
 	 * Declaration Componen User Permission
-	 * Function profile_user
+	 * Function getPermission
+	 * Modul Name[1=RO]
 	*/
-	function getPermissionEmp(){
-		if (Yii::$app->getUserOpt->profile_user()){
-			return Yii::$app->getUserOpt->profile_user()->emp;
+	function getPermissionEmployee(){
+		if (Yii::$app->getUserOpt->Modul_akses(1)){
+			return Yii::$app->getUserOpt->Modul_akses(1)->emp;
 		}else{		
 			return false;
 		}	 
 	}
-	//print_r(getPermissionEmp());
-	
 	/*
 	 * Tombol Modul Create
 	 * permission crate Ro
@@ -61,59 +60,59 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 		if(getPermission()){
 			if(getPermission()->BTN_CREATE==1){
 				$title1 = Yii::t('app', 'New');
-				$options1 = [ 'id'=>'so-create',	
+				$options1 = [ 'id'=>'ro-create',	
 							  'data-toggle'=>"modal",
-							  'data-target'=>"#new-so",											
-							  'class' => 'btn btn-warning  btn-sm',
+							  'data-target'=>"#new-ro",											
+							  'class' => 'btn btn-warning',
 				]; 
 				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
-				$url1 = Url::toRoute(['/purchasing/sales-order/create']);
+				$url1 = Url::toRoute(['/purchasing/request-order/create']);
 				//$options1['tabindex'] = '-1';
 				$content = Html::a($label1,$url1, $options1);
 				return $content;								
 			}else{
 				$title1 = Yii::t('app', 'New');
-				$options1 = [ 'id'=>'so-create',						  									
+				$options1 = [ 'id'=>'ro-create',						  									
 							  'class' => 'btn btn-warning',										  
 							  'data-confirm'=>'Permission Failed !',
 				]; 
 				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
-				$url1 = Url::toRoute(['#']);
+				$url1 = Url::toRoute(['/purchasing/request-order/create']);
 				//$options1['tabindex'] = '-1';
 				$content = Html::a($label1,$url1, $options1);
 				return $content;
 			}; 
 		}else{
 				$title1 = Yii::t('app', 'New');
-				$options1 = [ 'id'=>'so-create',						  									
-							  'class' => 'btn btn-warning  btn-sm',										  
+				$options1 = [ 'id'=>'ro-create',						  									
+							  'class' => 'btn btn-warning',										  
 							  'data-confirm'=>'Permission Failed !',
 				]; 
 				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
-				$url1 = Url::toRoute(['#']);
+				$url1 = Url::toRoute(['/purchasing/request-order/create']);
 				//$options1['tabindex'] = '-1';
 				$content = Html::a($label1,$url1, $options1);
 				return $content;
 		}				
 	}
 
-	/*
-	 * Tombol Modul Barang
-	 * No Permission
-	*/
-	function tombolBarang(){
+/*
+ * Tombol Modul Barang
+ * No Permission
+*/
+function tombolBarang(){
 	$title = Yii::t('app', 'Barang');
 	$options = ['id'=>'ro-barang',	
 				'data-toggle'=>"modal",
 				'data-target'=>"#check-barang",							
-				'class' => 'btn btn-default  btn-sm'
+				'class' => 'btn btn-default'
 	]; 
 	$icon = '<span class="glyphicon glyphicon-search"></span>';
 	$label = $icon . ' ' . $title;
-	$url = Url::toRoute(['/purchasing/sales-order/create']);
+	$url = Url::toRoute(['/purchasing/request-order/create']);
 	$content = Html::a($label,$url, $options);
 	return $content;		
 }
@@ -127,11 +126,11 @@ function tombolKategori(){
 	$options = ['id'=>'ro-kategori',	
 				'data-toggle'=>"modal",
 				'data-target'=>"#check-kategori",							
-				'class' => 'btn btn-default  btn-sm'
+				'class' => 'btn btn-default'
 	]; 
 	$icon = '<span class="glyphicon glyphicon-search"></span>';
 	$label = $icon . ' ' . $title;
-	$url = Url::toRoute(['/purchasing/sales-order/create']);
+	$url = Url::toRoute(['/purchasing/request-order/create']);
 	$content = Html::a($label,$url, $options);
 	return $content;		
 }
@@ -148,7 +147,7 @@ function tombolKategori(){
 				$options = [ 'id'=>'ro-view']; 
 				$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
 				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/sales-order/view','kd'=>$model->KD_RO]);
+				$url = Url::toRoute(['/purchasing/request-order/view','kd'=>$model->KD_RO]);
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;	
 			}
@@ -165,7 +164,7 @@ function tombolKategori(){
 	*/
 	function tombolEdit($url, $model){
 		if(getPermission()){								
-			if(getPermissionEmp()->EMP_ID == $model->ID_USER AND getPermission()->BTN_EDIT==1){
+			if(getPermissionEmployee()->EMP_ID == $model->ID_USER AND getPermission()->BTN_EDIT==1){
 				 if($model->STATUS == 0){ // 0=process 101=Approved
 					$title = Yii::t('app', 'Edit Detail');
 					$options = [ //'id'=>'ro-edit',
@@ -175,7 +174,7 @@ function tombolKategori(){
 					]; 
 					$icon = '<span class="fa fa-pencil-square-o fa-lg"></span>';
 					$label = $icon . ' ' . $title;
-					$url = Url::toRoute(['/purchasing/sales-order/edit','kd'=>$model->KD_RO]);
+					$url = Url::toRoute(['/purchasing/request-order/edit','kd'=>$model->KD_RO]);
 					$options['tabindex'] = '-1';
 					return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL; 
 				}
@@ -193,7 +192,7 @@ function tombolKategori(){
 	*/
 	function tombolDelete($url, $model){
 		if(getPermission()){
-			if(getPermissionEmp()->EMP_ID == $model->ID_USER AND getPermission()->BTN_DELETE==1){
+			if(getPermissionEmployee()->EMP_ID == $model->ID_USER AND getPermission()->BTN_DELETE==1){
 				if($model->STATUS == 0){ // 0=process 101=Approved
 					$title = Yii::t('app', 'Delete');
 					$options = [ 'id'=>'ro-delete',															
@@ -201,7 +200,7 @@ function tombolKategori(){
 					]; 
 					$icon = '<span class="fa fa-trash-o fa-lg"></span>';
 					$label = $icon . ' ' . $title;
-					$url = Url::toRoute(['/purchasing/sales-order/hapusro','kd'=>$model->KD_RO]);
+					$url = Url::toRoute(['/purchasing/request-order/hapusro','kd'=>$model->KD_RO]);
 					$options['tabindex'] = '-1';
 					return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
 				}
@@ -220,12 +219,12 @@ function tombolKategori(){
 	function tombolApproval($url, $model){
 		if(getPermission()){
 			//Permission Jabatan
-			$a=getPermissionEmp()->JOBGRADE_ID;
+			$a=getPermissionEmployee()->JOBGRADE_ID;
 			$b=getPermission()->BTN_SIGN1;
-			//if(getPermissionEmp()->JOBGRADE_ID == 'S' OR getPermissionEmp()->JOBGRADE_ID == 'M' OR getPermissionEmp()->JOBGRADE_ID == 'SM' AND getPermission()->BTN_SIGN1==1 ){
-			/* if($a == 'SEVP' OR $a == 'EVP' OR $a == 'SVP' OR $a == 'VP' OR $a == 'AVP' OR $a == 'SM' OR $a == 'M' OR $a == 'AM' OR $a == 'S' AND $b==1 ){ */
-				 if($model->STATUS == 0 || $model->STATUS == 1 ){ // 0=process 101=Approved
-					$title = Yii::t('app', 'Review');
+			//if(getPermissionEmployee()->JOBGRADE_ID == 'S' OR getPermissionEmployee()->JOBGRADE_ID == 'M' OR getPermissionEmployee()->JOBGRADE_ID == 'SM' AND getPermission()->BTN_SIGN1==1 ){
+			if($a == 'SEVP' OR $a == 'EVP' OR $a == 'SVP' OR $a == 'VP' OR $a == 'AVP' OR $a == 'SM' OR $a == 'M' OR $a == 'AM' OR $a == 'S' AND $b==1 ){
+				 if($model->STATUS == 0){ // 0=process 101=Approved
+					$title = Yii::t('app', 'approved');
 					$options = [ //'id'=>'ro-approved',
 								//'data-method' => 'post',
 								 //'data-pjax'=>true,
@@ -236,36 +235,29 @@ function tombolKategori(){
 					]; 
 					$icon = '<span class="glyphicon glyphicon-ok"></span>';
 					$label = $icon . ' ' . $title;
-					$url = Url::toRoute(['/purchasing/sales-order/approved','kd'=>$model->KD_RO]);
-					//$url = Url::toRoute(['/purchasing/sales-order/approved']);
-					//$url = Url::toRoute(['/purchasing/sales-order/approved']);
+					$url = Url::toRoute(['/purchasing/request-order/approved','kd'=>$model->KD_RO]);
+					//$url = Url::toRoute(['/purchasing/request-order/approved']);
+					//$url = Url::toRoute(['/purchasing/request-order/approved']);
 					$options['tabindex'] = '-1';
 					return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
 				}
-			/* } */
+			}
 		}	
 	}
-	
 	//Pjax::end();
 	/*
 	 * STATUS Prosess Request Order
 	 * 1. PROCESS	=0 		| Pertama RO di buat
-	 * 2. PENDING	=1		| Ro Tertunda
-	 * 3. APPROVED	=101	| Ro Sudah Di Approved
-	 * 4. COMPLETED	=10		| Ro Sudah selesai | RO->PO->RCVD
-	 * 5. DELETE	=3 		| Ro Di hapus oleh pembuat petama, jika belum di Approved
-	 * 6. REJECT	=4		| Ro tidak di setujui oleh Atasan manager keatas
-	 * 7. UNKNOWN	<>		| Ro tidak valid
+	 * 2. APPROVED	=101	| Ro Sudah Di Approved
+	 * 3. DELETE	=3 		| Ro Di hapus oleh pembuat petama, jika belum di Approved
+	 * 4. REJECT	=4		| Ro tidak di setujui oleh Atasan manager keatas
+	 * 5. UNKNOWN	<>		| Ro tidak valid
 	*/
 	function statusProcessRo($model){
 		if($model->STATUS==0){
 			return Html::a('<i class="glyphicon glyphicon-retweet"></i> PROCESS', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
-		}elseif ($model->STATUS==1){
-			return Html::a('<i class="glyphicon glyphicon-time"></i> PENDING', '#',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif ($model->STATUS==101){
 			return Html::a('<i class="glyphicon glyphicon-ok"></i> APPROVED', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==10){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> COMPLETED', '#',['class'=>'btn btn-info btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif ($model->STATUS==3){
 			return Html::a('<i class="glyphicon glyphicon-remove"></i> DELETE', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);						
 		}elseif ($model->STATUS==4){
@@ -284,7 +276,6 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			'id'=>'ro-grd-index',
 			'dataProvider'=> $dataProvider,
 			'filterModel' => $searchModel,
-			'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
 			/* 
 				'beforeHeader'=>[
 					[
@@ -297,200 +288,54 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 				], 
 			*/
 			'columns' => [
-					/*No Urut*/
 					[
 						'class'=>'kartik\grid\SerialColumn',
 						'contentOptions'=>['class'=>'kartik-sheet-style'],
-						'width'=>'10px',
+						'width'=>'20px',
 						'header'=>'No.',
-						'headerOptions'=>[				
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'10px',
-								'font-family'=>'verdana, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'10px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'8pt',
-							]
-						], 		
-					],
-					/*KD_RO*/
+						'headerOptions'=>['class'=>'kartik-sheet-style']
+					],							 
 					[
 						'attribute'=>'KD_RO',
-						'label'=>'Kode SO',
+						//'mergeHeader'=>true,
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
-						//'group'=>true,
-						'headerOptions'=>[				
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'130px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'left',
-								'width'=>'130px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						], 		
+						'group'=>true
 					],
-					/*CREATE_AT Tanggal Pembuatan*/
 					[
+						'label'=>'Tanggal Pembuatan',
 						'attribute'=>'CREATED_AT',
-						'label'=>'Create At',
-						'hAlign'=>'left',			
+						'hAlign'=>'left',
 						'vAlign'=>'middle',
-						'value'=>function($model){
-							/*
-							 * max String Disply
-							 * @author ptrnov <piter@lukison.com>
-							*/
-							return substr($model->CREATED_AT, 0, 10);
-						},
+						'group'=>true,								
 						'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
-									'filterWidgetOptions' =>([
-										'attribute' =>'CREATED_AT',
-										'presetDropdown'=>TRUE,
-										'convertFormat'=>true,
-										'pluginOptions'=>[
-											'id'=>'tglpo',
-											'format'=>'Y/m/d',
-											'separator' => ' - ',
-											'opens'=>'right'
-										]									
-						]),
-						'headerOptions'=>[				
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'90px',
-								'font-family'=>'verdana, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'left',
-								'width'=>'90px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt'	
-							]
-						], 		
-					],	
-					/*Department*/	
+						'filterWidgetOptions' =>([
+							'attribute' =>'parentro.CREATED_AT',
+							'presetDropdown'=>TRUE,
+							'convertFormat'=>true,
+							'pluginOptions'=>[
+								'id'=>'tglro',
+								'format'=>'Y/m/d',
+								'separator' => 'TO',
+								'opens'=>'left'
+							]									
+						])
+					],													
 					[
-						'attribute'=>'dept.DEP_NM',
-						'label'=>'Department',
-						'filter' => $Combo_Dept,
-						'hAlign'=>'left',
-						'vAlign'=>'middle',
-						//'group'=>true,
-						'headerOptions'=>[				
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'200px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'left',
-								'width'=>'200px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						], 		
-					],					
-					/*DIBUAT*/	
-					[
+						'label'=>'Pengajuan',
+						'group'=>true,
 						'attribute'=>'EMP_NM',
-						'label'=>'Created',
 						'hAlign'=>'left',
-						'vAlign'=>'middle',
-						//'group'=>true,
-						'headerOptions'=>[				
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'130px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'left',
-								'width'=>'130px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						], 		
-					],					
-					/*DIPERIKSA*/	
+						'vAlign'=>'middle'							
+					],	
 					[
-						'attribute'=>'SIG2_NM',
-						'label'=>'Checked',
+						'label'=>'Department',
+						'group'=>true,
+						'attribute'=>'dept.DEP_NM',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
-						//'group'=>true,
-						'headerOptions'=>[				
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'130px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'left',
-								'width'=>'130px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						], 		
-					],
-					/*DISETUJUI*/	
-					[
-						'attribute'=>'ID_USER',
-						'label'=>'Approved',
-						'hAlign'=>'left',
-						'vAlign'=>'middle',
-						//'group'=>true,
-						'headerOptions'=>[				
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'130px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'left',
-								'width'=>'130px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						], 		
-					],
-					/*Action*/					
+						'filter' => $Combo_Dept,						
+					],						
 					[
 						'class'=>'kartik\grid\ActionColumn',
 						'dropdown' => true,
@@ -518,24 +363,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 											return tombolApproval($url, $model);
 										},
 						],
-						'headerOptions'=>[				
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'150px',
-								'font-family'=>'verdana, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'150px',
-								'height'=>'10px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						],						
+						
 					],								
 					[
 						'label'=>'Notification',
@@ -544,25 +372,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 						'hAlign'=>'center',
 						'value' => function ($model) {
 										return statusProcessRo($model);
-						},
-						'headerOptions'=>[				
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'150px',
-								'font-family'=>'verdana, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'150px',
-								'height'=>'10px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						],								
+									}							
 					], 							
 					
 			],			
@@ -587,7 +397,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 				],
 			'panel'=>[
 				'type'=>GridView::TYPE_DANGER,
-				'heading'=>"<span class='fa fa-cart-plus fa-xs'><b> LIST SALES ORDER</b></span>",				
+				'heading'=>"List Request Order",
 			],				
 		]);				
 	?>
@@ -596,7 +406,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 	<?php
 		$this->registerJs("
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
-			$('#new-so').on('show.bs.modal', function (event) {
+			$('#new-ro').on('show.bs.modal', function (event) {
 				var button = $(event.relatedTarget)
 				var modal = $(this)
 				var title = button.data('title') 
@@ -611,9 +421,9 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 		",$this::POS_READY);
 		
 		Modal::begin([
-			'id' => 'new-so',
+			'id' => 'new-ro',
 			//'header' => '<h4 class="modal-title">Entry Request Order</h4>',
-			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Entry Items Sales Order</h4></div>',
+			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Entry Request Order</h4></div>',
 			'size' => 'modal-md',
 			'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color: rgba(131, 160, 245, 0.5)',
@@ -654,7 +464,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			var id = $(this).data('toggle-active');
 
 			$.ajax({
-				url: '/purchasing/sales-order/approved&id=' + id,
+				url: '/purchasing/request-order/approved&id=' + id,
 				type: 'POST',
 				success: function(result) {
 

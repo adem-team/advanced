@@ -9,18 +9,20 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 use yii\helpers\Json;
 use yii\web\Request;
-
-use lukisongroup\master\models\Unitbarang;
 use kartik\daterange\DateRangePicker;
 
+use lukisongroup\purchasing\models\ro\Requestorderstatus;
+use lukisongroup\purchasing\models\ro\Rodetail;
+
+use lukisongroup\master\models\Unitbarang;
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\hrd\models\Dept;
-use lukisongroup\purchasing\models\sa\Sadetail;
 
-$this->title = 'Sales Order';
+
+$this->title = 'Request Order';
 $this->params['breadcrumbs'][] = $this->title;
 
-$this->sideCorp = 'ESM Sales Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideCorp = 'ESM Request Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_esm';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'List Permintaan Barang');      /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
@@ -59,39 +61,39 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 		if(getPermission()){
 			if(getPermission()->BTN_CREATE==1){
 				$title1 = Yii::t('app', 'New');
-				$options1 = [ 'id'=>'sa-create',	
+				$options1 = [ 'id'=>'ro-create',	
 							  'data-toggle'=>"modal",
-							  'data-target'=>"#new-sa",											
+							  'data-target'=>"#new-ro",											
 							  'class' => 'btn btn-warning',
 				]; 
 				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
-				$url1 = Url::toRoute(['/purchasing/sales-order/create']);
+				$url1 = Url::toRoute(['/purchasing/request-order/create']);
 				//$options1['tabindex'] = '-1';
 				$content = Html::a($label1,$url1, $options1);
 				return $content;								
 			}else{
 				$title1 = Yii::t('app', 'New');
-				$options1 = [ 'id'=>'sa-create',						  									
+				$options1 = [ 'id'=>'ro-create',						  									
 							  'class' => 'btn btn-warning',										  
 							  'data-confirm'=>'Permission Failed !',
 				]; 
 				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
-				$url1 = Url::toRoute(['/purchasing/sales-order/create']);
+				$url1 = Url::toRoute(['/purchasing/request-order/create']);
 				//$options1['tabindex'] = '-1';
 				$content = Html::a($label1,$url1, $options1);
 				return $content;
 			}; 
 		}else{
 				$title1 = Yii::t('app', 'New');
-				$options1 = [ 'id'=>'sa-create',						  									
+				$options1 = [ 'id'=>'ro-create',						  									
 							  'class' => 'btn btn-warning',										  
 							  'data-confirm'=>'Permission Failed !',
 				]; 
 				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
-				$url1 = Url::toRoute(['/purchasing/sales-order/create']);
+				$url1 = Url::toRoute(['/purchasing/request-order/create']);
 				//$options1['tabindex'] = '-1';
 				$content = Html::a($label1,$url1, $options1);
 				return $content;
@@ -104,14 +106,14 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 */
 function tombolBarang(){
 	$title = Yii::t('app', 'Barang');
-	$options = ['id'=>'sa-barang',	
+	$options = ['id'=>'ro-barang',	
 				'data-toggle'=>"modal",
 				'data-target'=>"#check-barang",							
 				'class' => 'btn btn-default'
 	]; 
 	$icon = '<span class="glyphicon glyphicon-search"></span>';
 	$label = $icon . ' ' . $title;
-	$url = Url::toRoute(['/purchasing/sales-order/create']);
+	$url = Url::toRoute(['/purchasing/request-order/create']);
 	$content = Html::a($label,$url, $options);
 	return $content;		
 }
@@ -122,14 +124,14 @@ function tombolBarang(){
 */
 function tombolKategori(){
 	$title = Yii::t('app', 'Kategori');
-	$options = ['id'=>'sa-kategori',	
+	$options = ['id'=>'ro-kategori',	
 				'data-toggle'=>"modal",
 				'data-target'=>"#check-kategori",							
 				'class' => 'btn btn-default'
 	]; 
 	$icon = '<span class="glyphicon glyphicon-search"></span>';
 	$label = $icon . ' ' . $title;
-	$url = Url::toRoute(['/purchasing/sales-order/create']);
+	$url = Url::toRoute(['/purchasing/request-order/create']);
 	$content = Html::a($label,$url, $options);
 	return $content;		
 }
@@ -143,10 +145,10 @@ function tombolKategori(){
 		if(getPermission()){	
 			if(getPermission()->BTN_VIEW==1){
 				$title = Yii::t('app', 'View');
-				$options = [ 'id'=>'sa-view']; 
+				$options = [ 'id'=>'ro-view']; 
 				$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
 				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/sales-order/view','kd'=>$model->KD_SA]);
+				$url = Url::toRoute(['/purchasing/request-order/view','kd'=>$model->KD_RO]);
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;	
 			}
@@ -173,7 +175,7 @@ function tombolKategori(){
 					]; 
 					$icon = '<span class="fa fa-pencil-square-o fa-lg"></span>';
 					$label = $icon . ' ' . $title;
-					$url = Url::toRoute(['/purchasing/sales-order/edit','kd'=>$model->KD_SA]);
+					$url = Url::toRoute(['/purchasing/request-order/edit','kd'=>$model->KD_RO]);
 					$options['tabindex'] = '-1';
 					return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL; 
 				}
@@ -194,12 +196,12 @@ function tombolKategori(){
 			if(getPermissionEmployee()->EMP_ID == $model->ID_USER AND getPermission()->BTN_DELETE==1){
 				if($model->STATUS == 0){ // 0=process 101=Approved
 					$title = Yii::t('app', 'Delete');
-					$options = [ 'id'=>'sa-delete',															
+					$options = [ 'id'=>'ro-delete',															
 								'data-confirm'=>'Anda yakin ingin menghapus RO ini?',
 					]; 
 					$icon = '<span class="fa fa-trash-o fa-lg"></span>';
 					$label = $icon . ' ' . $title;
-					$url = Url::toRoute(['/purchasing/sales-order/hapussa','kd'=>$model->KD_SA]);
+					$url = Url::toRoute(['/purchasing/request-order/hapusro','kd'=>$model->KD_RO]);
 					$options['tabindex'] = '-1';
 					return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
 				}
@@ -223,20 +225,20 @@ function tombolKategori(){
 			//if(getPermissionEmployee()->JOBGRADE_ID == 'S' OR getPermissionEmployee()->JOBGRADE_ID == 'M' OR getPermissionEmployee()->JOBGRADE_ID == 'SM' AND getPermission()->BTN_SIGN1==1 ){
 			if($a == 'SEVP' OR $a == 'EVP' OR $a == 'SVP' OR $a == 'VP' OR $a == 'AVP' OR $a == 'SM' OR $a == 'M' OR $a == 'AM' OR $a == 'S' AND $b==1 ){
 				 if($model->STATUS == 0 || $model->STATUS == 1 ){ // 0=process 101=Approved
-					$title = Yii::t('app', 'approved');
-					$options = [ //'id'=>'sa-approved',
+					$title = Yii::t('app', 'Review');
+					$options = [ //'id'=>'ro-approved',
 								//'data-method' => 'post',
 								 //'data-pjax'=>true,
-								 //'data'=>$model->KD_SA,
+								 //'data'=>$model->KD_RO,
 								 //'data-pjax' => '0',
-								 //'data-toggle-active' => $model->KD_SA
+								 //'data-toggle-active' => $model->KD_RO
 								//'data-confirm'=>'Anda yakin ingin menghapus RO ini?',
 					]; 
 					$icon = '<span class="glyphicon glyphicon-ok"></span>';
 					$label = $icon . ' ' . $title;
-					$url = Url::toRoute(['/purchasing/sales-order/approved','kd'=>$model->KD_SA]);
-					//$url = Url::toRoute(['/purchasing/sales-order/approved']);
-					//$url = Url::toRoute(['/purchasing/sales-order/approved']);
+					$url = Url::toRoute(['/purchasing/request-order/approved','kd'=>$model->KD_RO]);
+					//$url = Url::toRoute(['/purchasing/request-order/approved']);
+					//$url = Url::toRoute(['/purchasing/request-order/approved']);
 					$options['tabindex'] = '-1';
 					return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
 				}
@@ -246,7 +248,7 @@ function tombolKategori(){
 	
 	//Pjax::end();
 	/*
-	 * STATUS Prosess Sales Order
+	 * STATUS Prosess Request Order
 	 * 1. PROCESS	=0 		| Pertama RO di buat
 	 * 2. PENDING	=1		| Ro Tertunda
 	 * 3. APPROVED	=101	| Ro Sudah Di Approved
@@ -302,7 +304,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 						'headerOptions'=>['class'=>'kartik-sheet-style']
 					],							 
 					[
-						'attribute'=>'KD_SA',
+						'attribute'=>'KD_RO',
 						//'mergeHeader'=>true,
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
@@ -386,7 +388,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			'pjaxSettings'=>[
 				'options'=>[
 					'enablePushState'=>false,
-					'id'=>'sa-grd-index',
+					'id'=>'ro-grd-index',
 				   ],						  
 			],
 			'hover'=>true, //cursor select
@@ -402,8 +404,8 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 					'{toggleData}',
 				],
 			'panel'=>[
-				'type'=>GridView::TYPE_INFO,
-				'heading'=>"List Sales Order",
+				'type'=>GridView::TYPE_DANGER,
+				'heading'=>"List Request Order",
 			],				
 		]);				
 	?>
@@ -412,7 +414,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 	<?php
 		$this->registerJs("
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
-			$('#new-sa').on('show.bs.modal', function (event) {
+			$('#new-ro').on('show.bs.modal', function (event) {
 				var button = $(event.relatedTarget)
 				var modal = $(this)
 				var title = button.data('title') 
@@ -427,9 +429,9 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 		",$this::POS_READY);
 		
 		Modal::begin([
-			'id' => 'new-sa',
+			'id' => 'new-ro',
 			//'header' => '<h4 class="modal-title">Entry Request Order</h4>',
-			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Entry Sales Order</h4></div>',
+			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Entry Request Order</h4></div>',
 			'size' => 'modal-md',
 			'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color: rgba(131, 160, 245, 0.5)',
@@ -439,7 +441,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 		
 		$this->registerJs("
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
-			$('#add-sa').on('show.bs.modal', function (event) {
+			$('#add-ro').on('show.bs.modal', function (event) {
 				var button = $(event.relatedTarget)
 				var modal = $(this)
 				var title = button.data('title') 
@@ -454,8 +456,8 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 		",$this::POS_READY);
 		
 		Modal::begin([
-			'id' => 'add-sa',
-			'header' => '<h4 class="modal-title">Entry Sales Order</h4>',
+			'id' => 'add-ro',
+			'header' => '<h4 class="modal-title">Entry Request Order</h4>',
 			'size' => 'modal-lg',
 			'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1);'
@@ -470,7 +472,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			var id = $(this).data('toggle-active');
 
 			$.ajax({
-				url: '/purchasing/sales-order/approved&id=' + id,
+				url: '/purchasing/request-order/approved&id=' + id,
 				type: 'POST',
 				success: function(result) {
 

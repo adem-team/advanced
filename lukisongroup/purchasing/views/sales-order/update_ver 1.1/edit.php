@@ -7,15 +7,11 @@ use yii\helpers\Url;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\assets\AppAssetJqueryJSignature;
 AppAssetJqueryJSignature::register($this); 
-
 $this->sideCorp = 'ESM Request Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_esm';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Data Master');         /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 	
-	/* LOCK STATUS TOMBOL */
-	 $headerStatus=$roHeader->STATUS;
-	 
 	/*
 	 * DESCRIPTION FORM EDIT
 	 * Form EDIT RO, dapat dibuka untuk prosess Edit [RQTY|UNIT|NOTE] | RQTY = Request Quantity
@@ -72,22 +68,20 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 /*
 	 * STATUS Prosess Request Order
 	 * 1. PROCESS	=0 		| Pertama RO di buat
-	 * 2. PENDING	=1		| Ro Tertunda
-	 * 3. APPROVED	=101	| Ro Sudah Di Approved
-	 * 4. COMPLETED	=10		| Ro Sudah selesai | RO->PO->RCVD
-	 * 5. DELETE	=3 		| Ro Di hapus oleh pembuat petama, jika belum di Approved
-	 * 6. REJECT	=4		| Ro tidak di setujui oleh Atasan manager keatas
-	 * 7. UNKNOWN	<>		| Ro tidak valid
+	 * 2. APPROVED	=101	| Ro Sudah Di Approved
+	 * 3. DELETE	=3 		| Ro Di hapus oleh pembuat petama, jika belum di Approved
+	 * 4. REJECT	=4		| Ro tidak di setujui oleh Atasan manager keatas
+	 * 5. UNKNOWN	<>		| Ro tidak valid
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
 	*/
 	function statusProcessRo($model){
 		if($model->STATUS==0){
 			return Html::a('<i class="glyphicon glyphicon-retweet"></i> PROCESS', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
-		}elseif ($model->STATUS==1){
-			return Html::a('<i class="glyphicon glyphicon-time"></i> PENDING', '#',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif ($model->STATUS==101){
 			return Html::a('<i class="glyphicon glyphicon-ok"></i> APPROVED', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif ($model->STATUS==10){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> COMPLETED', '#',['class'=>'btn btn-info btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+			return Html::a('<i class="glyphicon glyphicon-ok"></i> COMPLETE', '#',['class'=>'btn btn-info btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif ($model->STATUS==3){
 			return Html::a('<i class="glyphicon glyphicon-remove"></i> DELETE', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);						
 		}elseif ($model->STATUS==4){
@@ -162,8 +156,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			<?php echo Html::img('@web/upload/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>	
 		</div>
 		<div class="col-md-9" style="padding-top:15px;">
-			<!--<h3 class="text-center"><b>Form Permintaan Barang & Jasa</b></h3>!-->
-			<h3 class="text-center"><b>FORM REQUEST ORDER</b></h3>			
+			<h3 class="text-center"><b>Form Permintaan Barang & Jasa</b></h3>				
 		</div>
 		<div class="col-md-11">
 			<hr>
@@ -203,7 +196,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					'id'=>'ro-process',
 					'dataProvider'=> $dataProvider,
 					'filterModel' => '',
-					//'headerRowOptions'=>['style'=>'background-color:rgba(0, 95, 218, 0.3); align:center'],
+					'headerRowOptions'=>['style'=>'background-color:rgba(0, 95, 218, 0.3); align:center'],
 					'filterRowOptions'=>['style'=>'background-color:rgba(0, 95, 218, 0.3); align:center'],
 					'beforeHeader'=>[
 						[
@@ -222,23 +215,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							'contentOptions'=>['class'=>'kartik-sheet-style'],
 							'width'=>'10px',
 							'header'=>'No.',
-							'headerOptions'=>[				
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'10px',
-								'font-family'=>'verdana, arial, sans-serif',
-								'font-size'=>'8pt',
-								'background-color'=>'rgba(0, 95, 218, 0.3)',
-							]
-							],
-							'contentOptions'=>[
-								'style'=>[
-									'text-align'=>'center',
-									'width'=>'10px',
-									'font-family'=>'verdana, arial, sans-serif',
-									'font-size'=>'8pt',
-								]
-							],
+							'headerOptions'=>['class'=>'kartik-sheet-style']
 						],						
 						/* ['attribute'=>'ID',], */
 						[		
@@ -249,23 +226,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							'vAlign'=>'middle',
 							'mergeHeader'=>true,
 							'format' => 'raw',	
-							'headerOptions'=>[				
-								'style'=>[
-									'text-align'=>'center',
-									'width'=>'200px',
-									'font-family'=>'verdana, arial, sans-serif',
-									'font-size'=>'8pt',
-									'background-color'=>'rgba(0, 95, 218, 0.3)',
-								]
-							],
-							'contentOptions'=>[
-								'style'=>[
-									'text-align'=>'left',
-									'width'=>'200px',
-									'font-family'=>'verdana, arial, sans-serif',
-									'font-size'=>'8pt',
-								]
-							], 
+							'contentOptions'=>['style'=>'width: 200px'], 
 						],
 						[
 							/* Attribute Request Quantity */
@@ -275,35 +236,18 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							'vAlign'=>'middle',
 							'hAlign'=>'center',	
 							'mergeHeader'=>true,
-							'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+							'contentOptions'=>['style'=>'width: 60px'],
+							'readonly'=>function($model, $key, $index, $widget) {
 								//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
-								return (0 <> $model->STATUS || 0<> $headerStatus); // Allow Status Process = 0);
+								return (0 <> $model->STATUS); // Allow Status Process = 0);
 							},
 							'editableOptions' => [
 								'header' => 'Update Quantity',
 								'inputType' => \kartik\editable\Editable::INPUT_TEXT,
-								'size' => 'sm',	
 								'options' => [
 								  'pluginOptions' => ['min'=>0, 'max'=>50000]
 								]
-							],	
-							'headerOptions'=>[				
-								'style'=>[
-									'text-align'=>'center',
-									'width'=>'60px',
-									'font-family'=>'verdana, arial, sans-serif',
-									'font-size'=>'8pt',
-									'background-color'=>'rgba(0, 95, 218, 0.3)',
-								]
-							],
-							'contentOptions'=>[
-								'style'=>[
-									'text-align'=>'left',
-									'width'=>'60px',
-									'font-family'=>'verdana, arial, sans-serif',
-									'font-size'=>'8pt',
-								]
-							],
+							],						
 						],
 						[
 							/* Attribute Submit Quantity */						
@@ -312,34 +256,19 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							'mergeHeader'=>true,											
 							'vAlign'=>'middle',	
 							'hAlign'=>'center',
-							'headerOptions'=>[				
-								'style'=>[
-									'text-align'=>'center',
-									'width'=>'60px',
-									'font-family'=>'verdana, arial, sans-serif',
-									'font-size'=>'8pt',
-									'background-color'=>'rgba(0, 95, 218, 0.3)',
-								]
-							],
-							'contentOptions'=>[
-								'style'=>[
-									'text-align'=>'left',
-									'width'=>'60px',
-									'font-family'=>'verdana, arial, sans-serif',
-									'font-size'=>'8pt',
-								]
-							],  
+							'contentOptions'=>['style'=>'width: 60px'],
 						],
 						[
 							/* Attribute Unit Barang */
 							'class'=>'kartik\grid\EditableColumn',
 							'attribute'=>'UNIT',
-							'label'=>'Unit',
+							'label'=>'pcs',
 							'hAlign'=>'left',						
 							'vAlign'=>'middle',
 							'mergeHeader'=>true,
-							'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
-								return (0 <> $model->STATUS || 0<> $headerStatus); // Allow Status Process = 0;
+							'contentOptions'=>['style'=>'width: 100px'], 
+							'readonly'=>function($model, $key, $index, $widget) {
+								return (0 <> $model->STATUS); // Allow Status Process = 0;
 							},
 							'value'=>function($model){
 								$model=Unitbarang::find()->where('KD_UNIT="'.$model->UNIT. '"')->one();
@@ -349,75 +278,19 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 									$UnitNm='Not Set';
 								}
 								return $UnitNm;
-							},
-							'editableOptions' => [
-								'header' => 'Update Quantity',
-								'inputType' => \kartik\editable\Editable::INPUT_SELECT2,		
-								'size' => 'md',								
-								'options' => [			
-									'data' => ArrayHelper::map(Unitbarang::find()->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT'),								
-									'pluginOptions' => [
-										'min'=>0, 
-										'max'=>50000,
-										'allowClear' => true
-									],
-								],
-								//Refresh Display 
-								'displayValueConfig' =>ArrayHelper::map(Unitbarang::find()->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT'),
-							],	 
-							'headerOptions'=>[				
-								'style'=>[
-									'text-align'=>'center',
-									'width'=>'120px',
-									'font-family'=>'verdana, arial, sans-serif',
-									'font-size'=>'8pt',
-									'background-color'=>'rgba(0, 95, 218, 0.3)',
-								]
-							],
-							'contentOptions'=>[
-								'style'=>[
-									'text-align'=>'left',
-									'width'=>'120px',
-									'font-family'=>'verdana, arial, sans-serif',
-									'font-size'=>'8pt',
-								]
-							],
+							}
 						],
 						[
 							/* Attribute Unit Barang */
 							'class'=>'kartik\grid\EditableColumn',
 							'attribute'=>'NOTE',
-							'label'=>'Notes',
+							'label'=>'Noted',
 							'hAlign'=>'left',						
 							'mergeHeader'=>true,
-							'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
-								return (0 <> $model->STATUS || 0<> $headerStatus); // Allow Status Process = 0;
+							'contentOptions'=>[ 'style'=>'width: 200px'], 
+							'readonly'=>function($model, $key, $index, $widget) {
+								return (0 <> $model->STATUS); // Allow Status Process = 0;
 							},
-							'editableOptions' => [
-								'header' => 'Update Quantity',
-								'inputType' => \kartik\editable\Editable::INPUT_TEXTAREA,
-								'size' => 'md',	
-								'options' => [
-								  'pluginOptions' => ['min'=>0, 'max'=>50000]
-								]
-							],
-							'headerOptions'=>[				
-								'style'=>[
-									'text-align'=>'center',
-									'width'=>'200px',
-									'font-family'=>'verdana, arial, sans-serif',
-									'font-size'=>'8pt',
-									'background-color'=>'rgba(0, 95, 218, 0.3)',
-								]
-							],
-							'contentOptions'=>[
-								'style'=>[
-									'text-align'=>'left',
-									'width'=>'200px',
-									'font-family'=>'verdana, arial, sans-serif',
-									'font-size'=>'8pt',
-								]
-							], 								
 						], 
 						[
 							/* Attribute Status Detail RO */
@@ -430,24 +303,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							'format' => 'html', 
 							'value'=>function ($model, $key, $index, $widget) { 
 										return statusProcessRo($model);
-							},
-							'headerOptions'=>[				
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'100px',
-								'font-family'=>'verdana, arial, sans-serif',
-								'font-size'=>'8pt',
-								'background-color'=>'rgba(0, 15, 118, 0.3)', 
-							]
-							],
-							'contentOptions'=>[
-								'style'=>[
-									'text-align'=>'center',
-									'width'=>'100px',
-									'font-family'=>'verdana, arial, sans-serif',
-									'font-size'=>'8pt',
-								]
-							], 	
+									}	
 						],
 					],
 					'pjax'=>true,
@@ -541,10 +397,10 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		<!-- Button Submit!-->
 		<div style="text-align:right; margin-top:80px">
 			<!-- Button Back!-->
-			<a href="/purchasing/request-order" class="btn btn-info" role="button" style="width:90px">Kembali</a>
+			<a href="/purchasing/request-order" class="btn btn-info" role="button">Kembali</a>
 			<!-- Button Cetak!-->
 			<?php 
-				echo Html::a('<i class="fa fa-print fa-fw"></i> Cetak', ['cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success','style'=>['width'=>'90px']]);
+				echo Html::a('<i class="fa fa-print fa-fw"></i> Cetak', ['cetakpdf','kd'=>$roHeader->KD_RO], ['target' => '_blank', 'class' => 'btn btn-success']);
 			?>				
 		</div>
 	</div>	

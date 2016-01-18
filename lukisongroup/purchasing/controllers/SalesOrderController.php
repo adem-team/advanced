@@ -8,30 +8,27 @@ use yii\db\Query;
 //use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
-use lukisongroup\purchasing\models\sa\Salesorder;
-use lukisongroup\purchasing\models\sa\SalesorderSearch;
-
-use lukisongroup\purchasing\models\sa\Sadetail;
-use lukisongroup\purchasing\models\sa\SadetailSearch;
-
-
-use lukisongroup\purchasing\models\sa\LoginForm;
-use lukisongroup\purchasing\models\sa\AdditemValidation;
-
-use lukisongroup\hrd\models\Employe;
-use lukisongroup\esm\models\Barang;
-use lukisongroup\master\models\Kategori;
-
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
-
-
-
 use kartik\mpdf\Pdf;
+
+use lukisongroup\purchasing\models\so\Salesorder;
+use lukisongroup\purchasing\models\so\SalesorderSearch;
+use lukisongroup\purchasing\models\so\Sodetail;
+use lukisongroup\purchasing\models\so\SodetailSearch;
+use lukisongroup\purchasing\models\so\LoginForm;
+use lukisongroup\purchasing\models\so\AdditemValidation;
+
+use lukisongroup\hrd\models\Employe;
+//use lukisongroup\master\models\Barang;
+use lukisongroup\master\models\Barang;
+use lukisongroup\master\models\Kategori;
+
+
 /**
  * SalesorderController implements the CRUD actions for Salesorder model.
  */
@@ -97,8 +94,8 @@ class SalesOrderController extends Controller
 			$dataProvider = $searchModel->searchChildRo(Yii::$app->request->queryParams);
 		}  */
         
-		//$searchModel->KD_SA ='2015.12.04.RO.0070';
-		$dataProvider = $searchModel->searchSa(Yii::$app->request->queryParams);
+		//$searchModel->KD_RO ='2015.12.04.RO.0070';
+		$dataProvider = $searchModel->searchRo(Yii::$app->request->queryParams);
 		  return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -116,11 +113,11 @@ class SalesOrderController extends Controller
      */   
     public function actionCreate()
     {
-		$Detailsa = new Sadetail();	
-		$saHeader = new Salesorder();
+		$roDetail = new Sodetail();	
+		$roHeader = new Salesorder();
             return $this->renderAjax('_form', [
-                'Detailsa' => $Detailsa,
-				'saHeader' => $saHeader,
+                'roDetail' => $roDetail,
+				'roHeader' => $roHeader,
             ]);	
 		
     }
@@ -132,30 +129,30 @@ class SalesOrderController extends Controller
      */   
     public function actionAdditem($kd)
     {
-			//$Detailsa = new Sadetail();
-			$Detailsa = new AdditemValidation();
-			$saHeader = Salesorder::find()->where(['KD_SA' => $kd])->one();		
-			$detsa = $saHeader->detsa;
-			$employ = $saHeader->employe;
-			$dept = $saHeader->dept;
+			//$roDetail = new Sodetail();
+			$roDetail = new AdditemValidation();
+			$roHeader = Salesorder::find()->where(['KD_RO' => $kd])->one();		
+			$detro = $roHeader->detro;
+			$employ = $roHeader->employe;
+			$dept = $roHeader->dept;
 			
 			/*
-			 * Convert $saHeader->detsa to ArrayDataProvider | Identity 'key' => 'ID',
+			 * Convert $roHeader->detro to ArrayDataProvider | Identity 'key' => 'ID',
 			 * @author ptrnov  <piter@lukison.com>
 			 * @since 1.1    
 			**/
-			 $detsaProvider = new ArrayDataProvider([
+			 $detroProvider = new ArrayDataProvider([
 				'key' => 'ID',
-				'allModels'=>$detsa,			
+				'allModels'=>$detro,			
 				'pagination' => [
 					'pageSize' => 10,
 				],
 			]);
 			
 			return $this->renderAjax('additem', [         
-				'saHeader' => $saHeader, 
-				'Detailsa' => $Sadetail,			
-				'dataProvider'=>$detsaProvider,
+				'roHeader' => $roHeader, 
+				'roDetail' => $roDetail,			
+				'dataProvider'=>$detroProvider,
 			]); 
 			
     }
@@ -165,46 +162,43 @@ class SalesOrderController extends Controller
      * @since 1.1
      */
 	public function actionAdditem_saved(){
-		//$Detailsa = new Sadetail();	
-		$Detailsa = new AdditemValidation();
+		//$roDetail = new Sodetail();	
+		$roDetail = new AdditemValidation();
 		
 		if(Yii::$app->request->isAjax){
-			$Detailsa->load(Yii::$app->request->post());
-			return Json::encode(\yii\widgets\ActiveForm::validate($Detailsa));
+			$roDetail->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($roDetail));
 		}else{
-			if($Detailsa->load(Yii::$app->request->post())){
-				if($Detailsa->additem_saved()){
+			if($roDetail->load(Yii::$app->request->post())){
+				if($roDetail->additem_saved()){
 					$hsl = \Yii::$app->request->post();	
 					$kdro = $hsl['AdditemValidation']['kD_RO'];					
-					return $this->redirect(['/purchasing/sales-order/edit?kd='.$kdro]);
+					return $this->redirect(['/purchasing/request-order/edit?kd='.$kdro]);
 				}
 				//Request Result
 			/*	$hsl = \Yii::$app->request->post();
-				$kdRo = $hsl['Sadetail']['KD_SA'];
-				$kdBarang = $hsl['Sadetail']['KD_BARANG'];
+				$kdRo = $hsl['Sodetail']['KD_RO'];
+				$kdBarang = $hsl['Sodetail']['KD_BARANG'];
 				$nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
-				$kdUnit = $hsl['Sadetail']['UNIT'];
-				$rqty = $hsl['Sadetail']['RQTY'];			
-				$note = $hsl['Sadetail']['NOTE'];
+				$kdUnit = $hsl['Sodetail']['UNIT'];
+				$rqty = $hsl['Sodetail']['RQTY'];			
+				$note = $hsl['Sodetail']['NOTE'];
 				
 					//Request Put
-					$Detailsa->CREATED_AT = date('Y-m-d H:i:s');
-					$Detailsa->KD_SA = $kdRo;
-					$Detailsa->KD_BARANG = $kdBarang;
-					$Detailsa->NM_BARANG = $nmBarang->NM_BARANG;
-					$Detailsa->UNIT = $kdUnit;			
-					$Detailsa->RQTY = $rqty;
-					$Detailsa->NOTE = $note;
-					$Detailsa->STATUS = 0;
-					$Detailsa->save();				
-				return $this->redirect(['/purchasing/sales-order/edit?kd='.$kdRo]);*/
+					$roDetail->CREATED_AT = date('Y-m-d H:i:s');
+					$roDetail->KD_RO = $kdRo;
+					$roDetail->KD_BARANG = $kdBarang;
+					$roDetail->NM_BARANG = $nmBarang->NM_BARANG;
+					$roDetail->UNIT = $kdUnit;			
+					$roDetail->RQTY = $rqty;
+					$roDetail->NOTE = $note;
+					$roDetail->STATUS = 0;
+					$roDetail->save();				
+				return $this->redirect(['/purchasing/request-order/edit?kd='.$kdRo]);*/
 			} 
 		}
 	}
    
-	
-	
-	
 	/**
      * actionBrgkat() select2 Kategori mendapatkan barang
      * @author ptrnov  <piter@lukison.com>
@@ -216,7 +210,7 @@ class SalesOrderController extends Controller
 			$parents = $_POST['depdrop_parents'];
 			if ($parents != null) {
 				$kat_id = $parents[0];
-				$model = Barang::find()->asArray()->where(['KD_KATEGORI'=>$kat_id])->all();
+				$model = Barang::find()->asArray()->where(['KD_KATEGORI'=>$kat_id,'PARENT'=>1])->all();
 				foreach ($model as $key => $value) {
 					   $out[] = ['id'=>$value['KD_BARANG'],'name'=> $value['NM_BARANG']];
 				   }
@@ -258,7 +252,7 @@ class SalesOrderController extends Controller
 	
 	/*
 	 * actionSimpanfirst() <- actionCreate()
-	 * First Create RO |  Salesorder | Sadetail
+	 * First Create RO |  Salesorder | Sodetail
 	 * Add: component Yii::$app->getUserOpt->Profile_user()
 	 * Add: component \Yii::$app->ambilkonci->getRoCode();
 	 * @author ptrnov  <piter@lukison.com>
@@ -267,54 +261,54 @@ class SalesOrderController extends Controller
 	public function actionSimpanfirst(){				
 						
 				$cons = \Yii::$app->db_esm;				
-				$saHeader = new Salesorder();				
+				$roHeader = new Salesorder();				
 				//$reqorder = new Roatribute();
-				$Detailsa = new Sadetail();
+				$roDetail = new Sodetail();
 				$profile= Yii::$app->getUserOpt->Profile_user();
 				
-				//if($Detailsa->load(Yii::$app->request->post()) && $Detailsa->validate()){		
-			if($Detailsa->load(Yii::$app->request->post())){		
+				//if($roDetail->load(Yii::$app->request->post()) && $roDetail->validate()){		
+			if($roDetail->load(Yii::$app->request->post())){		
 				$hsl = \Yii::$app->request->post();				
-				$kdUnit = $hsl['Sadetail']['UNIT'];
-				$kdBarang = $hsl['Sadetail']['KD_BARANG'];
+				$kdUnit = $hsl['Sodetail']['UNIT'];
+				$kdBarang = $hsl['Sodetail']['KD_BARANG'];
 				$nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
-				$rqty = $hsl['Sadetail']['RQTY'];
-				$note = $hsl['Sadetail']['NOTE'];
+				$rqty = $hsl['Sodetail']['RQTY'];
+				$note = $hsl['Sodetail']['NOTE'];
 				
 				/*
-				 * Detail Request Order
+				 * Detail Sales Order
 				**/
-				$Detailsa->KD_SA = \Yii::$app->ambilkonci->getRoCode();
-				$Detailsa->UNIT = $kdUnit;
-				$Detailsa->CREATED_AT = date('Y-m-d H:i:s');
-				$Detailsa->NM_BARANG = $nmBarang->NM_BARANG;
-				$Detailsa->KD_BARANG = $kdBarang;
-				$Detailsa->RQTY = $rqty;
-				$Detailsa->NOTE = $note;
-				$Detailsa->STATUS = 0;
+				$roDetail->KD_RO = \Yii::$app->ambilkonci->getSoCode(); //Sales Order Kode
+				$roDetail->UNIT = $kdUnit;
+				$roDetail->CREATED_AT = date('Y-m-d H:i:s');
+				$roDetail->NM_BARANG = $nmBarang->NM_BARANG;
+				$roDetail->KD_BARANG = $kdBarang;
+				$roDetail->RQTY = $rqty;
+				$roDetail->NOTE = $note;
+				$roDetail->STATUS = 0;
 				
 				/*
 				 * Header Request Order
 				**/
-				$getkdro=\Yii::$app->ambilkonci->getRoCode();
-				$saHeader->KD_SA =$getkdro;
-				$saHeader->CREATED_AT = date('Y-m-d H:i:s');
-				$saHeader->TGL = date('Y-m-d');
-				$saHeader->ID_USER = $profile->emp->EMP_ID;
-				$saHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
-				$saHeader->KD_CORP = $profile->emp->EMP_CORP_ID;
-				$saHeader->KD_DEP = $profile->emp->DEP_ID;
-				$saHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
-				$saHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
-				$saHeader->STATUS = 0;
+				$getkdro=\Yii::$app->ambilkonci->getSoCode();
+				$roHeader->KD_RO =$getkdro;
+				$roHeader->CREATED_AT = date('Y-m-d H:i:s');
+				$roHeader->TGL = date('Y-m-d');
+				$roHeader->ID_USER = $profile->emp->EMP_ID;
+				$roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
+				$roHeader->KD_CORP = $profile->emp->EMP_CORP_ID;
+				$roHeader->KD_DEP = $profile->emp->DEP_ID;
+				$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
+				$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
+				$roHeader->STATUS = 0;
 					$transaction = $cons->beginTransaction();
 					try {
-						if (!$Detailsa->save()) {
+						if (!$roDetail->save()) {
 								$transaction->rollback();
 								return false;
 						}
 						
-						if (!$saHeader->save()) {
+						if (!$roHeader->save()) {
 								$transaction->rollback();
 								return false;
 						}
@@ -325,8 +319,8 @@ class SalesOrderController extends Controller
 						return false;						   
 					}
 					//return $this->redirect(['index','param'=>$getkdro]); 		
-					//return $this->redirect(['index?SalesorderSearch[KD_SA]='.$getkdro]);
-					return $this->redirect(['/purchasing/sales-order/view?kd='.$getkdro]);
+					//return $this->redirect(['index?SalesorderSearch[KD_RO]='.$getkdro]);
+					return $this->redirect(['/purchasing/request-order/view?kd='.$getkdro]);
 			}else{
 				return $this->redirect(['index']);
 		}
@@ -340,14 +334,14 @@ class SalesOrderController extends Controller
      */
 	public function actionTambah($kd)
     {		
-		$searchModel = new SadetailSearch();
+		$searchModel = new SodetailSearch();
         $dataProvider = $searchModel->searchChildRo(Yii::$app->request->queryParams,$kd);
-		$saHeader = Salesorder::find()->where(['KD_SA' => $kd])->one();
-		$Detailsa = new Sadetail();	
+		$roHeader = Salesorder::find()->where(['KD_RO' => $kd])->one();
+		$roDetail = new Sodetail();	
             return $this->renderAjax('_update', [                
-						'saHeader' => $saHeader,
-						'Detailsa' => $Sadetail,
-						'detsa' => $saHeader->detsa,						
+						'roHeader' => $roHeader,
+						'roDetail' => $roDetail,
+						'detro' => $roHeader->detro,						
 						'searchModel'=>$searchModel,
 						'dataProvider'=>$dataProvider
 					]);			
@@ -355,37 +349,37 @@ class SalesOrderController extends Controller
 	
 	/*
 	 * actionSimpansecondt() <- actionTambah($kd)
-	 * First Create RO |Sadetail
+	 * First Create RO |Sodetail
 	 * Add: component Yii::$app->getUserOpt->Profile_user()
 	 * Add: component \Yii::$app->ambilkonci->getRoCode();
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
 	**/
 	public function actionSimpantambah(){
-		$Detailsa = new Sadetail();
-		if($Detailsa->load(Yii::$app->request->post()) && $Detailsa->validate()){
+		$roDetail = new Sodetail();
+		if($roDetail->load(Yii::$app->request->post()) && $roDetail->validate()){
 			$hsl = \Yii::$app->request->post();	
-			$kdro = $hsl['Sadetail']['KD_SA'];				
-			$kdBarang = $hsl['Sadetail']['KD_BARANG'];
+			$kdro = $hsl['Sodetail']['KD_RO'];				
+			$kdBarang = $hsl['Sodetail']['KD_BARANG'];
 			$nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
-			$kdUnit = $hsl['Sadetail']['UNIT'];
-			$rqty = $hsl['Sadetail']['RQTY'];
-			$note = $hsl['Sadetail']['NOTE'];
+			$kdUnit = $hsl['Sodetail']['UNIT'];
+			$rqty = $hsl['Sodetail']['RQTY'];
+			$note = $hsl['Sodetail']['NOTE'];
 			
 			/*
 			 * Detail Request Order
 			**/
-			$Detailsa->KD_SA = $kdro;
-			$Detailsa->CREATED_AT = date('Y-m-d H:i:s');				
-			$Detailsa->NM_BARANG = $nmBarang->NM_BARANG;
-			$Detailsa->KD_BARANG = $kdBarang;
-			$Detailsa->UNIT = $kdUnit;
-			$Detailsa->RQTY = $rqty;
-			$Detailsa->NOTE = $note;
-			$Detailsa->STATUS = 0;
-			$Detailsa->save();
+			$roDetail->KD_RO = $kdro;
+			$roDetail->CREATED_AT = date('Y-m-d H:i:s');				
+			$roDetail->NM_BARANG = $nmBarang->NM_BARANG;
+			$roDetail->KD_BARANG = $kdBarang;
+			$roDetail->UNIT = $kdUnit;
+			$roDetail->RQTY = $rqty;
+			$roDetail->NOTE = $note;
+			$roDetail->STATUS = 0;
+			$roDetail->save();
 			
-			return $this->redirect(['index?SalesorderSearch[KD_SA]='.$kdro]);
+			return $this->redirect(['index?SalesorderSearch[KD_RO]='.$kdro]);
 		}else{
 			return $this->redirect(['index']);
 		}
@@ -400,31 +394,31 @@ class SalesOrderController extends Controller
     public function actionView($kd)
     {
     	$ro = new Salesorder();
-		$saHeader = Salesorder::find()->where(['KD_SA' => $kd])->one();
-		if(count($saHeader['KD_SA'])<>0){
-			$detsa = $saHeader->detsa;
-			$employ = $saHeader->employe;
-			$dept = $saHeader->dept;
+		$roHeader = Salesorder::find()->where(['KD_RO' => $kd])->one();
+		if(count($roHeader['KD_RO'])<>0){
+			$detro = $roHeader->detro;
+			$employ = $roHeader->employe;
+			$dept = $roHeader->dept;
 			
 			/*
-			 * Convert $saHeader->detsa to ArrayDataProvider | Identity 'key' => 'ID',
+			 * Convert $roHeader->detro to ArrayDataProvider | Identity 'key' => 'ID',
 			 * @author ptrnov  <piter@lukison.com>
 			 * @since 1.1    
 			**/
-			$detsaProvider = new ArrayDataProvider([
+			$detroProvider = new ArrayDataProvider([
 				'key' => 'ID',
-				'allModels'=>$detsa,			
+				'allModels'=>$detro,			
 				'pagination' => [
 					'pageSize' => 10,
 				],
 			]);
 			
 			return $this->render('view', [
-				'saHeader' => $saHeader,
-				'detsa' => $detsa,
+				'roHeader' => $roHeader,
+				'detro' => $detro,
 				'employ' => $employ,
 				'dept' => $dept,
-				'dataProvider'=>$detsaProvider,
+				'dataProvider'=>$detroProvider,
 			]);   
 		}else{
 			return $this->redirect('index');
@@ -444,20 +438,20 @@ class SalesOrderController extends Controller
 		 * @author ptrnov  <piter@lukison.com>
 		 * @since 1.1    
 		**/
-		$saHeader = Salesorder::find()->where(['KD_SA' =>$kd])->one();
-		if(count($saHeader['KD_SA'])<>0){
-			$detsa = $saHeader->detsa;
-			$employ = $saHeader->employe;
-			$dept = $saHeader->dept;
+		$roHeader = Salesorder::find()->where(['KD_RO' =>$kd])->one();
+		if(count($roHeader['KD_RO'])<>0){
+			$detro = $roHeader->detro;
+			$employ = $roHeader->employe;
+			$dept = $roHeader->dept;
 			
 			/*
-			 * Convert $saHeader->detsa to ArrayDataProvider | Identity 'key' => 'ID',
+			 * Convert $roHeader->detro to ArrayDataProvider | Identity 'key' => 'ID',
 			 * @author ptrnov  <piter@lukison.com>
 			 * @since 1.1    
 			**/
-			$detsaProvider = new ArrayDataProvider([
+			$detroProvider = new ArrayDataProvider([
 				'key' => 'ID',
-				'allModels'=>$detsa,			
+				'allModels'=>$detro,			
 				'pagination' => [
 					'pageSize' => 10,
 				],
@@ -470,11 +464,11 @@ class SalesOrderController extends Controller
 			**/
 			if (Yii::$app->request->post('hasEditable')) {
 				$id = Yii::$app->request->post('editableKey');
-				$model = Sadetail::findOne($id);
+				$model = Sodetail::findOne($id);
 				$out = Json::encode(['output'=>'', 'message'=>'']);
 				$post = [];
-				$posted = current($_POST['Sadetail']);
-				$post['Sadetail'] = $posted;
+				$posted = current($_POST['Sodetail']);
+				$post['Sodetail'] = $posted;
 				if ($model->load($post)) {
 					$model->save();
 					$output = '';
@@ -501,11 +495,11 @@ class SalesOrderController extends Controller
 			 * @since 1.1    
 			**/
 			return $this->render('edit', [
-				'saHeader' => $saHeader,
-				'detsa' => $detsa,
+				'roHeader' => $roHeader,
+				'detro' => $detro,
 				'employ' => $employ,
 				'dept' => $dept,
-				'dataProvider'=>$detsaProvider,
+				'dataProvider'=>$detroProvider,
 			]);		
 		}else{
 			return $this->redirect('index');
@@ -520,21 +514,21 @@ class SalesOrderController extends Controller
      * @since 1.1
      */
 	public function actionCetakpdf($kd,$v){
-    	$saHeader = Salesorder::find()->where(['KD_SA' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
-		$detsa = $saHeader->detsa;
-        $employ = $saHeader->employe;
-		$dept = $saHeader->dept;
+    	$roHeader = Salesorder::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
+		$detro = $roHeader->detro;
+        $employ = $roHeader->employe;
+		$dept = $roHeader->dept;
 		if ($v==101){
-			$filterPdf="KD_SA='".$kd."' AND (STATUS='101' OR STATUS='10')";
+			$filterPdf="KD_RO='".$kd."' AND (STATUS='101' OR STATUS='10')";
 		}elseif($v!=101){
-			$filterPdf="KD_SA='".$kd."' AND STATUS<>'3'";
+			$filterPdf="KD_RO='".$kd."' AND STATUS<>'3'";
 		}
-		$Detailsa = Sadetail::find()->where($filterPdf)->all();
+		$roDetail = Sodetail::find()->where($filterPdf)->all();
 		
 		/* PR Filter Status Output to Grid print*/
 		$dataProvider = new ArrayDataProvider([
 			'key' => 'ID',
-			'allModels'=>$Detailsa,//$detsa,			
+			'allModels'=>$roDetail,//$detro,			
 			'pagination' => [
 				'pageSize' => 20,
 			],
@@ -550,8 +544,8 @@ class SalesOrderController extends Controller
 		print_r($test1); */
 		
 		$content = $this->renderPartial( 'pdfview', [
-            'saHeader' => $saHeader,
-            'detsa' => $detsa,
+            'roHeader' => $roHeader,
+            'detro' => $detro,
             'employ' => $employ,
 			'dept' => $dept,
 			'dataProvider' => $dataProvider,
@@ -587,59 +581,59 @@ class SalesOrderController extends Controller
 	
 	/**
 	 * On Approval View
-	 * Approved_Sadetail | Sadetail->ID |  $Detailsa->STATUS = 101;
+	 * Approved_rodetail | Sodetail->ID |  $roDetail->STATUS = 101;
 	 * Approved = 101
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
-	public function actionApproved_sadetail()
+	public function actionApproved_rodetail()
     {
 		if (Yii::$app->request->isAjax) {
 			$request= Yii::$app->request;
 			$id=$request->post('id');
 			//\Yii::$app->response->format = Response::FORMAT_JSON;
-			$Detailsa = Sadetail::findOne($id);
-			$Detailsa->STATUS = 101;
+			$roDetail = Sodetail::findOne($id);
+			$roDetail->STATUS = 101;
 			//$ro->NM_BARANG=''
-			$Detailsa->save();
+			$roDetail->save();
 			return true;
 		}
    }
 	
 	/**
 	 * On Approval View
-	 * Reject_Sadetail | Sadetail->ID |  $Sadetail->STATUS = 4;
+	 * Reject_rodetail | Sodetail->ID |  $roDetail->STATUS = 4;
 	 * Reject = 4
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
-	public function actionReject_sadetail()
+	public function actionReject_rodetail()
     {
 		if (Yii::$app->request->isAjax) {
 			$request= Yii::$app->request;
 			$id=$request->post('id');
-			$Detailsa = Sadetail::findOne($id);
-			$Detailsa->STATUS = 4;
-			$Detailsa->save();
+			$roDetail = Sodetail::findOne($id);
+			$roDetail->STATUS = 4;
+			$roDetail->save();
 			return true;
 		}
      }
 	
 	/**
 	 * On Approval View
-	 * Canclet_Sadetail | Sadetail->ID |  $Sadetail->STATUS = 4;
+	 * Canclet_rodetail | Sodetail->ID |  $roDetail->STATUS = 4;
 	 * Cancel = 0
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
-	public function actionCancel_sadetail()
+	public function actionCancel_rodetail()
     {
 		if (Yii::$app->request->isAjax) {
 			$request= Yii::$app->request;
 			$id=$request->post('id');
-			$Detailsa = Sadetail::findOne($id);
-			$Detailsa->STATUS = 0;
-			$Detailsa->save();
+			$roDetail = Sodetail::findOne($id);
+			$roDetail->STATUS = 0;
+			$roDetail->save();
 			return true;
 		}
      }
@@ -652,8 +646,8 @@ class SalesOrderController extends Controller
      */
 	public function actionHapus_item($kode,$id)
     {
-		new Sadetail();
-		$ro = Sadetail::findOne($id);
+		new Sodetail();
+		$ro = Sodetail::findOne($id);
 		$ro->STATUS = 3;
 		$ro->save();
 
@@ -675,19 +669,19 @@ class SalesOrderController extends Controller
 		 * @since 1.1    
 		**/
 		//$ro = new Salesorder();
-		$saHeader = Salesorder::find()->where(['KD_SA' =>$kd])->one();
-		$detsa = $saHeader->detsa;
-		$employ = $saHeader->employe;
-		$dept = $saHeader->dept;
+		$roHeader = Salesorder::find()->where(['KD_RO' =>$kd])->one();
+		$detro = $roHeader->detro;
+		$employ = $roHeader->employe;
+		$dept = $roHeader->dept;
 		
 		/*
-		 * Convert $saHeader->detsa to ArrayDataProvider | Identity 'key' => 'ID',
+		 * Convert $roHeader->detro to ArrayDataProvider | Identity 'key' => 'ID',
 		 * @author ptrnov  <piter@lukison.com>
 		 * @since 1.1    
 		**/
-		$detsaProvider = new ArrayDataProvider([
+		$detroProvider = new ArrayDataProvider([
 			'key' => 'ID',
-			'allModels'=>$detsa,			
+			'allModels'=>$detro,			
 			'pagination' => [
 				'pageSize' => 10,
 			],
@@ -700,11 +694,11 @@ class SalesOrderController extends Controller
 		**/
 		if (Yii::$app->request->post('hasEditable')) {
             $id = Yii::$app->request->post('editableKey');
-            $model = Sadetail::findOne($id);
+            $model = Sodetail::findOne($id);
 			$out = Json::encode(['output'=>'', 'message'=>'']);
             $post = [];
-            $posted = current($_POST['Sadetail']);
-            $post['Sadetail'] = $posted;
+            $posted = current($_POST['Sodetail']);
+            $post['Sodetail'] = $posted;
             if ($model->load($post)) {
                 $model->save();
 				$output = '';
@@ -731,46 +725,46 @@ class SalesOrderController extends Controller
 		 * @since 1.1    
 		**/
 		return $this->render('approved', [
-            'saHeader' => $saHeader,
-            'detsa' => $detsa,
+            'roHeader' => $roHeader,
+            'detro' => $detro,
             'employ' => $employ,
 			'dept' => $dept,
-			'dataProvider'=>$detsaProvider,
+			'dataProvider'=>$detroProvider,
         ]);		
 		
     }
 	
 	public function actionApproved_authorize($kd){		
-		$saFormlogin = new LoginForm();					
-		$saHeader = Salesorder::find()->where(['KD_SA' =>$kd])->one();
-		$employe = $saHeader->employe;			
+		$loginform = new LoginForm();					
+		$roHeader = Salesorder::find()->where(['KD_RO' =>$kd])->one();
+		$employe = $roHeader->employe;			
 			return $this->renderAjax('login_signature', [
-				'saHeader' => $saHeader,
+				'roHeader' => $roHeader,
 				'employe' => $employe,
-				'saFormlogin' => $saFormlogin,
+				'loginform' => $loginform,
 			]);
 	}
 	
 	/*
 	 * Sign Approval Status = 101
 	 * Class Model Salesorder->Status = 101 [Approvad]
-	 * Class Model Sadetail->Status 	= 101 [Approvad]
+	 * Class Model Sodetail->Status 	= 101 [Approvad]
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1    
 	**/
 	//public function actionApproved_sign(){
 	public function actionApprovedAuthorizeSave(){
-		$saFormlogin = new LoginForm();		
+		$loginform = new LoginForm();		
 		/*Ajax Load*/
 		if(Yii::$app->request->isAjax){
-			$saFormlogin->load(Yii::$app->request->post());
-			return Json::encode(\yii\widgets\ActiveForm::validate($saFormlogin));
+			$loginform->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($loginform));
 		}else{	/*Normal Load*/	
-			if($saFormlogin->load(Yii::$app->request->post())){
-				if ($saFormlogin->loginformsa_saved()){
+			if($loginform->load(Yii::$app->request->post())){
+				if ($loginform->loginform_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['LoginForm']['kdro'];
-					return $this->redirect(['/purchasing/sales-order/approved','kd'=>$kdro]);
+					return $this->redirect(['/purchasing/request-order/approved','kd'=>$kdro]);
 				}														
 			}
 		}
@@ -803,14 +797,14 @@ class SalesOrderController extends Controller
 	**/
     public function actionHapusro($kd)
     {
-		$model =Salesorder::find()->where(['KD_SA' =>$kd])->one();
+		$model =Salesorder::find()->where(['KD_RO' =>$kd])->one();
 		$model->STATUS=3;
 		$model->save();
 		
-		$model =Sadetail::find()->where(['KD_SA' =>$kd])->one();
+		$model =Sodetail::find()->where(['KD_RO' =>$kd])->one();
 		$model->STATUS=3;
 		$model->save();
-		return Yii::$app->getResponse()->redirect(['/purchasing/sales-order/index']);
+		return Yii::$app->getResponse()->redirect(['/purchasing/request-order/index']);
     }
 
     /**

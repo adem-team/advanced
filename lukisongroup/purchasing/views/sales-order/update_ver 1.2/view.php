@@ -14,12 +14,12 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 $this->registerJs('
 			$(document).ready(function($) {
 				/* Data Signature1 from DB */
-				var ro_datadb1 =\''. $saHeader->SIG1_SVGBASE64 . '\'
+				var ro_datadb1 =\''. $roHeader->SIG1_SVGBASE64 . '\'
 					var i = new Image();							
 						i.src = ro_datadb1
 						$(i).appendTo($("#ro-view-approval-sig1"));
 				/* Data Signature2 from DB */
-				var ro_datadb2 =\''. $saHeader->SIG2_SVGBASE64 . '\'
+				var ro_datadb2 =\''. $roHeader->SIG2_SVGBASE64 . '\'
 					var j = new Image();							
 						j.src = ro_datadb2
 						$(j).appendTo($("#ro-view-approval-sig2"));				
@@ -81,7 +81,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			<?php echo Html::img('@web/upload/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>	
 		</div>
 		<div class="col-md-9" style="padding-top:15px;">
-			<h3 class="text-center"><b>FORM SALES ORDER</b></h3>
+			<!--<h3 class="text-center"><b>Form Permintaan Barang & Jasa</b></h3>!-->
+			<h3 class="text-center"><b>REQUEST ORDER</b></h3>
 		</div>
 		<div class="col-md-11">
 			<hr>
@@ -93,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			  <dt style="width:100px; float:left;">Date</dt>
 			  <dd>: <?php echo date('d-M-Y'); ?></dd>
 			  <dt style="width:100px; float:left;">Nomor</dt>
-			  <dd>: <?php echo $saHeader->KD_SA; ?></dd>     	  
+			  <dd>: <?php echo $roHeader->KD_RO; ?></dd>     	  
 			  <dt style="width:100px; float:left;">Departement</dt>	 
 			  <dd>: 
 				<?php 
@@ -336,7 +337,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	<!-- Signature !-->
 	<div  class="col-md-11">
 		<?php 
-			$tgl1 = explode(' ',$saHeader->CREATED_AT);
+			$tgl1 = explode(' ',$roHeader->CREATED_AT);
 			$awl1 = explode('-',$tgl1[0]); 
 			$blnAwl1 = date("F", mktime(0, 0, 0, $awl1[1], 1));
 		
@@ -366,7 +367,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					<!-- Tanggal PO Approved!-->				
 					<th style="text-align: center; height:20px">
 						<div style="margin-left:50px">
-							<b>Tanggerang</b>, <?php echo tgl2signature($saHeader->SIG2_TGL);  ?>
+							<b>Tanggerang</b>, <?php echo tgl2signature($roHeader->SIG2_TGL);  ?>
 						</div> 				
 					</th>	
 				</tr>
@@ -387,7 +388,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					<th style="text-align: center; vertical-align:middle;width:180; height:80px">
 						<div>
 							<?php 
-								if ($saHeader->STATUS==101){
+								if ($roHeader->STATUS==101){
 									echo '<div id="ro-view-approval-sig2">';
 								}else{
 									echo SignApproved();
@@ -400,12 +401,12 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				 <tr>
 					<th style="text-align: center; vertical-align:middle;height:20">
 						<div>		
-							<b><?php  echo $saHeader->EMP_NM; ?></b>
+							<b><?php  echo $roHeader->EMP_NM; ?></b>
 						</div>
 					</th>								
 					<th style="text-align: center; vertical-align:middle;height:20">
 						<div>		
-							<b><?php  echo $saHeader->SIG2_NM; ?></b>
+							<b><?php  echo $roHeader->SIG2_NM; ?></b>
 						</div>
 					</th>
 				</tr>
@@ -417,7 +418,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			<a href="/purchasing/request-order" class="btn btn-info" role="button" style="width:90px">Kembali</a>
 			<!-- Button Cetak!-->
 			<?php 
-				echo Html::a('<i class="fa fa-print fa-fw"></i> Cetak', ['cetakpdf','kd'=>$saHeader->KD_SA,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success','style'=>['width'=>'90px']]);
+				echo Html::a('<i class="fa fa-print fa-fw"></i> Cetak', ['cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success','style'=>['width'=>'90px']]);
 			?>				
 		</div>
 	</div>	
