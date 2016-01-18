@@ -223,7 +223,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Edit'),
 															['/dashboard/gsn-product/update','id'=>$model->ID],[
 															'data-toggle'=>"modal",
-															'data-target'=>"#modal-edit",
+															'data-target'=>"#modal-create",
 															'data-title'=> $model->KD_BARANG,
 															]). '</li>' . PHP_EOL;
 						},
@@ -330,6 +330,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 				});
 			})
 	",$this::POS_READY);
+
 	Modal::begin([
         'id' => 'modal-view',
        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">View Items Sku - Gosend</h4></div>',
@@ -339,32 +340,12 @@ $this->title = Yii::t('app', 'Umum - Barang ');
     ]);
     Modal::end();
 	
-	/*Edit*/
-	$this->registerJs("
-		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-		 $('#modal-edit').on('show.bs.modal', function (event) {
-			var button = $(event.relatedTarget)
-			var modal = $(this)
-			var title = button.data('title') 
-			var href = button.attr('href') 
-			//modal.find('.modal-title').html(title)
-			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-			$.post(href)
-				.done(function( data ) {
-					modal.find('.modal-body').html(data)
-				});
-			})
-	",$this::POS_READY);
-    Modal::begin([
-        'id' => 'modal-edit',
-		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-edit"></div><div><h4 class="modal-title">Edit Items Sku - Gosend</h4></div>',
-		'headerOptions'=>[								
-				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',	
-		],
-    ]);
 	
-	/*Create*/
-    Modal::end();
+	
+   
+	
+	/*Create and Edit*/
+   
 	$this->registerJs("
 		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		 $('#modal-create').on('show.bs.modal', function (event) {
