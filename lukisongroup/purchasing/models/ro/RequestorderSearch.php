@@ -180,9 +180,9 @@ class RequestorderSearch extends Requestorder
         return $dataProvider;
     }
     
-    public function caripo($params)
+    public function cariRO($params)
     {
-        $query = Requestorder::find()->where("r0001.status <> 3 and r0001.status <> 0");
+        $query = Requestorder::find()->where("r0001.KD_RO LIKE 'RO%' and r0001.status <> 3 and r0001.status <> 0");
         
 
         $dataProvider = new ActiveDataProvider([

@@ -173,7 +173,7 @@ class SalesOrderController extends Controller
 				if($roDetail->additem_saved()){
 					$hsl = \Yii::$app->request->post();	
 					$kdro = $hsl['AdditemValidation']['kD_RO'];					
-					return $this->redirect(['/purchasing/request-order/edit?kd='.$kdro]);
+					return $this->redirect(['/purchasing/sales-order/edit?kd='.$kdro]);
 				}
 				//Request Result
 			/*	$hsl = \Yii::$app->request->post();
@@ -194,7 +194,7 @@ class SalesOrderController extends Controller
 					$roDetail->NOTE = $note;
 					$roDetail->STATUS = 0;
 					$roDetail->save();				
-				return $this->redirect(['/purchasing/request-order/edit?kd='.$kdRo]);*/
+				return $this->redirect(['/purchasing/sales-order/edit?kd='.$kdRo]);*/
 			} 
 		}
 	}
@@ -279,12 +279,14 @@ class SalesOrderController extends Controller
 				 * Detail Sales Order
 				**/
 				$roDetail->KD_RO = \Yii::$app->ambilkonci->getSoCode(); //Sales Order Kode
-				$roDetail->PARENT_ROSO=1; // SO=1
+				$roDetail->PARENT_ROSO=1; // SO=1 //required
 				$roDetail->UNIT = $kdUnit;
 				$roDetail->CREATED_AT = date('Y-m-d H:i:s');
 				$roDetail->NM_BARANG = $nmBarang->NM_BARANG;
 				$roDetail->KD_BARANG = $kdBarang;
 				$roDetail->RQTY = $rqty;
+				$roDetail->SQTY = $rqty;
+				$roDetail->HARGA= $nmBarang->HARGA_PABRIK;
 				$roDetail->NOTE = $note;
 				$roDetail->STATUS = 0;
 				
@@ -301,8 +303,8 @@ class SalesOrderController extends Controller
 				//$roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
 				$roHeader->KD_CORP = $profile->emp->EMP_CORP_ID;
 				$roHeader->KD_DEP = $profile->emp->DEP_ID;
-				$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
-				$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
+				//$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
+				//$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
 				$roHeader->STATUS = 0;
 					$transaction = $cons->beginTransaction();
 					try {
@@ -323,7 +325,7 @@ class SalesOrderController extends Controller
 					}
 					//return $this->redirect(['index','param'=>$getkdro]); 		
 					//return $this->redirect(['index?SalesorderSearch[KD_RO]='.$getkdro]);
-					return $this->redirect(['/purchasing/request-order/view?kd='.$getkdro]);
+					return $this->redirect(['/purchasing/sales-order/edit?kd='.$getkdro]);
 			}else{
 				return $this->redirect(['index']);
 		}
@@ -480,6 +482,9 @@ class SalesOrderController extends Controller
 					}
 					if (isset($posted['SQTY'])) {
 						$output = $model->SQTY;
+					}
+					if (isset($posted['HARGA'])) {
+					   $output =  Yii::$app->formatter->asDecimal($model->HARGA, 2);
 					}
 					if (isset($posted['NOTE'])) {
 					   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
@@ -659,12 +664,12 @@ class SalesOrderController extends Controller
     }
 	
 	/**
-     * Action Prosess Approval Colomn Row
+     * Action REVIEW | Prosess Checked and Approval 
      * @param string $id
      * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
-	public function actionApproved($kd)
+	public function actionReview($kd)
     {
 		/*
 		 * Init Models
@@ -711,6 +716,9 @@ class SalesOrderController extends Controller
 				if (isset($posted['SQTY'])) {
 					$output = $model->SQTY;
                 }
+				if (isset($posted['HARGA'])) {
+					   $output =  Yii::$app->formatter->asDecimal($model->HARGA, 2);
+				}
 				if (isset($posted['NOTE'])) {
                    // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
 					$output = $model->NOTE;
@@ -727,7 +735,7 @@ class SalesOrderController extends Controller
 		 * @author ptrnov  <piter@lukison.com>
 		 * @since 1.1    
 		**/
-		return $this->render('approved', [
+		return $this->render('review', [
             'roHeader' => $roHeader,
             'detro' => $detro,
             'employ' => $employ,
@@ -767,7 +775,7 @@ class SalesOrderController extends Controller
 				if ($loginform->loginform_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['LoginForm']['kdro'];
-					return $this->redirect(['/purchasing/request-order/approved','kd'=>$kdro]);
+					return $this->redirect(['/purchasing/sales-order/approved','kd'=>$kdro]);
 				}														
 			}
 		}
@@ -807,7 +815,7 @@ class SalesOrderController extends Controller
 		$model =Sodetail::find()->where(['KD_RO' =>$kd])->one();
 		$model->STATUS=3;
 		$model->save();
-		return Yii::$app->getResponse()->redirect(['/purchasing/request-order/index']);
+		return Yii::$app->getResponse()->redirect(['/purchasing/sales-order/index']);
     }
 
     /**

@@ -217,7 +217,7 @@ function tombolKategori(){
 	 * 1. Hanya User login dengan permission modul RO=1 dengan BTN_SIGN1==1 dan Permission Jabatan SVP keatas yang bisa melakukan Approval (Tanpa Kecuali)
 	 * 2. Action APPROVAL Akan close atau tidak bisa di lakukan jika sudah Approved | status Approved =101 | Permission sign1
 	*/
-	function tombolApproval($url, $model){
+	function tombolReview($url, $model){
 		if(getPermission()){
 			//Permission Jabatan
 			$a=getPermissionEmp()->JOBGRADE_ID;
@@ -236,7 +236,7 @@ function tombolKategori(){
 					]; 
 					$icon = '<span class="glyphicon glyphicon-ok"></span>';
 					$label = $icon . ' ' . $title;
-					$url = Url::toRoute(['/purchasing/sales-order/approved','kd'=>$model->KD_RO]);
+					$url = Url::toRoute(['/purchasing/sales-order/review','kd'=>$model->KD_RO]);
 					//$url = Url::toRoute(['/purchasing/sales-order/approved']);
 					//$url = Url::toRoute(['/purchasing/sales-order/approved']);
 					$options['tabindex'] = '-1';
@@ -494,7 +494,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 					[
 						'class'=>'kartik\grid\ActionColumn',
 						'dropdown' => true,
-						'template' => '{view}{tambahEdit}{delete}{approved}',
+						'template' => '{view}{tambahEdit}{delete}{review}',
 						'dropdownOptions'=>['class'=>'pull-right dropup'],									
 						//'headerOptions'=>['class'=>'kartik-sheet-style'],											
 						'buttons' => [
@@ -514,8 +514,8 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 										},
 							
 							/* Approved RO | Permissian Status 0; 0=process | Dept = Dept login | GF >= M */
-							'approved' => function ($url, $model) {
-											return tombolApproval($url, $model);
+							'review' => function ($url, $model) {
+											return tombolReview($url, $model);
 										},
 						],
 						'headerOptions'=>[				

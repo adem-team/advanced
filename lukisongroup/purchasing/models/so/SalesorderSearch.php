@@ -185,9 +185,9 @@ class SalesorderSearch extends Salesorder
         return $dataProvider;
     }
     
-    public function caripo($params)
+    public function cariSO($params)
     {
-        $query = Salesorder::find()->where("r0001.status <> 3 and r0001.status <> 0");
+        $query = Salesorder::find()->where("r0001.KD_RO LIKE 'SO%' and r0001.status <> 3 and r0001.status <> 0");
         
 
         $dataProvider = new ActiveDataProvider([

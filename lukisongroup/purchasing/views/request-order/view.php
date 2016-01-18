@@ -120,7 +120,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					[
 						'columns'=>[
 							['content'=>'', 'options'=>['colspan'=>2,'class'=>'text-center info',]], 
-							['content'=>'Quantity', 'options'=>['colspan'=>3, 'class'=>'text-center info']], 
+							['content'=>'Quantity', 'options'=>['colspan'=>4, 'class'=>'text-center info']], 
 							['content'=>'Remark', 'options'=>['colspan'=>2, 'class'=>'text-center info']], 
 							//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']], 
 						],
@@ -227,9 +227,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								'font-size'=>'8pt',
 							]
 						],  						
-					],
-					[
-						/* Attribute Unit Barang */
+					],					
+					[	/* Attribute Unit Barang */
 						'attribute'=>'UNIT',
 						'label'=>'Unit',
 						'hAlign'=>'left',						
@@ -262,8 +261,32 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							]
 						], 
 					],
+					[	/* Attribute HARGA SUPPLIER */
+						'attribute'=>'HARGA',
+						'label'=>'Price/Pcs',						
+						'vAlign'=>'middle',
+						'hAlign'=>'center',	
+						'mergeHeader'=>true,						
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'100px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'right',
+								'width'=>'100px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+							]
+						],
+					],
 					[
-						/* Attribute Unit Barang */
+						/* Attribute Notes Barang */
 						'attribute'=>'NOTE',
 						'label'=>'Notes',
 						'hAlign'=>'left',						

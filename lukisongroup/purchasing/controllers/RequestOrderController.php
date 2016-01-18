@@ -273,7 +273,7 @@ class RequestOrderController extends Controller
 				$kdBarang = $hsl['Rodetail']['KD_BARANG'];
 				$nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
 				$rqty = $hsl['Rodetail']['RQTY'];
-				$note = $hsl['Rodetail']['NOTE'];
+				$note = $hsl['Rodetail']['NOTE'];				
 				
 				/*
 				 * Detail Request Order
@@ -285,6 +285,8 @@ class RequestOrderController extends Controller
 				$roDetail->NM_BARANG = $nmBarang->NM_BARANG;
 				$roDetail->KD_BARANG = $kdBarang;
 				$roDetail->RQTY = $rqty;
+				$roDetail->SQTY = $rqty;
+				$roDetail->HARGA= $nmBarang->HARGA_SPL;
 				$roDetail->NOTE = $note;
 				$roDetail->STATUS = 0;
 				
@@ -292,7 +294,7 @@ class RequestOrderController extends Controller
 				 * Header Request Order
 				**/
 				$getkdro=\Yii::$app->ambilkonci->getRoCode();
-				$roHeader->PARENT_ROSO=0; // RO=0
+				$roHeader->PARENT_ROSO=0; // RO=0 
 				$roHeader->KD_RO =$getkdro;
 				$roHeader->CREATED_AT = date('Y-m-d H:i:s');
 				$roHeader->TGL = date('Y-m-d');
@@ -300,8 +302,8 @@ class RequestOrderController extends Controller
 				$roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
 				$roHeader->KD_CORP = $profile->emp->EMP_CORP_ID;
 				$roHeader->KD_DEP = $profile->emp->DEP_ID;
-				$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
-				$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
+				//$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
+				//$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
 				$roHeader->STATUS = 0;
 					$transaction = $cons->beginTransaction();
 					try {
@@ -322,7 +324,7 @@ class RequestOrderController extends Controller
 					}
 					//return $this->redirect(['index','param'=>$getkdro]); 		
 					//return $this->redirect(['index?RequestorderSearch[KD_RO]='.$getkdro]);
-					return $this->redirect(['/purchasing/request-order/view?kd='.$getkdro]);
+					return $this->redirect(['/purchasing/request-order/edit?kd='.$getkdro]);
 			}else{
 				return $this->redirect(['index']);
 		}
@@ -479,6 +481,9 @@ class RequestOrderController extends Controller
 					}
 					if (isset($posted['SQTY'])) {
 						$output = $model->SQTY;
+					}
+					if (isset($posted['HARGA'])) {
+					   $output =  Yii::$app->formatter->asDecimal($model->HARGA, 2);
 					}
 					if (isset($posted['NOTE'])) {
 					   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
@@ -663,7 +668,7 @@ class RequestOrderController extends Controller
      * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
-	public function actionApproved($kd)
+	public function actionReview($kd)
     {
 		/*
 		 * Init Models
@@ -710,6 +715,9 @@ class RequestOrderController extends Controller
 				if (isset($posted['SQTY'])) {
 					$output = $model->SQTY;
                 }
+				if (isset($posted['HARGA'])) {
+                   $output =  Yii::$app->formatter->asDecimal($model->HARGA, 2);					
+                }
 				if (isset($posted['NOTE'])) {
                    // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
 					$output = $model->NOTE;
@@ -726,7 +734,7 @@ class RequestOrderController extends Controller
 		 * @author ptrnov  <piter@lukison.com>
 		 * @since 1.1    
 		**/
-		return $this->render('approved', [
+		return $this->render('review', [
             'roHeader' => $roHeader,
             'detro' => $detro,
             'employ' => $employ,
@@ -827,10 +835,6 @@ class RequestOrderController extends Controller
     {
         return $this->render('createpo');
     }
-
-	
-	
-	
 	
     /**
      * Finds the Requestorder model based on its primary key value.

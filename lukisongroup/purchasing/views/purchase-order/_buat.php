@@ -519,7 +519,7 @@ use lukisongroup\master\models\Unitbarang;
 			//'width'=>'7%',					
 			'value'=>function ($model, $key, $index, $widget) { 
 				$p = compact('model', 'key', 'index');
-				return $widget->col(3, $p) != 0 ? $widget->col(3, $p) * $widget->col(5, $p) : 0;
+				return $widget->col(3, $p) != 0 ? $widget->col(3, $p) * $model->UNIT_QTY  * $widget->col(5, $p) : 0;
 				//return $widget->col(3, $p) != 0 ? $widget->col(5 ,$p) * 100 / $widget->col(3, $p) : 0;
 			},						
 			'headerOptions'=>[
@@ -669,13 +669,13 @@ use lukisongroup\master\models\Unitbarang;
 	} 
 	
 	/*
-	 * GRID VIEW CREATE PO -> BY REQUEST ORDER
+	 * GRID VIEW CREATE PO -> BY SALES ORDER
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
-	$gvROSendPO=GridView::widget([
-		'id'=>'gv-ro-detail',
-		'dataProvider' => $dataProvider,
+	$gvSOSendPO=GridView::widget([
+		'id'=>'gv-so-detail',
+		'dataProvider' =>$dataProviderSo,
 		'filterModel' => $searchModel,
 		'columns' => [
 			[/* Attribute KD RO */
@@ -709,14 +709,65 @@ use lukisongroup\master\models\Unitbarang;
 					]
 				]
 			],
-			/* [// Attribute KD RO 
-				'attribute'=>'CREATED_AT',
-				'label'=>'Date',						
+			[
+				'class'=>'kartik\grid\ActionColumn',
+				'dropdown' => true,
+				'template' => '{view}{sendPo}',
+				'dropdownOptions'=>['class'=>'pull-right dropup'],									
+				//'headerOptions'=>['class'=>'kartik-sheet-style'],											
+				'buttons' => [
+					// View RO | Permissian All
+					'view' => function ($url, $model) {
+									return tombolView($url, $model);
+							  },
+							
+					// SEND RO TO PO | Permissian Status 0; 0=process | User created = user login  
+					'sendPo' => function ($url, $model) use ($poHeader) {
+									return tombolSendPo($url, $model,$poHeader);
+								},				
+				],				
+			],	 
+		],
+		'pjax'=>true,
+		'pjaxSettings'=>[
+		 'options'=>[
+			'enablePushState'=>false,
+			'id'=>'gv-so-detail',
+		   ],	
+			'refreshGrid' => true,
+			'neverTimeout'=>true,
+		],
+		'panel' => [
+			//'footer'=>false,
+			'heading'=>false,						
+		],
+		/* 'toolbar'=> [
+			//'{items}',
+		],  */				
+		'hover'=>true, //cursor select
+		'responsive'=>true,
+		'responsiveWrap'=>true,
+		'bordered'=>true,
+		'striped'=>'4px',
+		'autoXlFormat'=>true,
+		'export' => false, 
+	]); 
+	
+	/*
+	 * GRID VIEW CREATE PO -> BY REQUEST ORDER
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	$gvROSendPO=GridView::widget([
+		'id'=>'gv-ro-detail',
+		'dataProvider' => $dataProviderRo,
+		'filterModel' => $searchModel,
+		'columns' => [
+			[/* Attribute KD RO */
+				'attribute'=>'KD_RO',
+				'label'=>'Kode RO',						
 				'hAlign'=>'left',	
 				'vAlign'=>'middle',
-				'value'=>function($model){
-					return  Yii::$app->formatter->asDate($model->CREATED_AT,'Y-M-d');
-				},
 				//'mergeHeader'=>true,
 				'format' => 'raw',	
 				'headerOptions'=>[
@@ -742,8 +793,8 @@ use lukisongroup\master\models\Unitbarang;
 							'border-right'=>'0px',									
 					]
 				]
-			], */
-			 [
+			],
+			[
 				'class'=>'kartik\grid\ActionColumn',
 				'dropdown' => true,
 				'template' => '{view}{sendPo}',
@@ -759,29 +810,8 @@ use lukisongroup\master\models\Unitbarang;
 					'sendPo' => function ($url, $model) use ($poHeader) {
 									return tombolSendPo($url, $model,$poHeader);
 								},				
-				],
-				
+				],				
 			],	 
-			/* [
-				'format'=>'raw',
-				'value' => function ($data){
-					$count = Rodetail::find()
-						->where([
-							'KD_RO'=>$data->KD_RO,
-						])
-						->count();
-	 
-					if(!empty($count)){
-						return  Html::a('<button type="button" class="btn btn-primary btn-xs">View</button>',['detail','kd_ro'=>$data->KD_RO,'kdpo'=>$_GET['kdpo']],[
-									'data-toggle'=>"modal",
-									'data-target'=>"#ro-sendpo",
-									'data-title'=> $data->KD_RO,
-								]); // ubah ini
-					} else {
-						return '<button type="button" class="btn btn-danger btn-xs">No Data</button>';
-					}
-				}
-			], */
 		],
 		'pjax'=>true,
 		'pjaxSettings'=>[
@@ -806,8 +836,7 @@ use lukisongroup\master\models\Unitbarang;
 		'striped'=>'4px',
 		'autoXlFormat'=>true,
 		'export' => false, 
-	]); 
-		
+	]); 	
 	//echo $gvROSendPO; 
 	$items=[
 		[
@@ -815,7 +844,7 @@ use lukisongroup\master\models\Unitbarang;
 			'active'=>true,
 		],		
 		[
-			'label'=>'<div style="font-family: tahoma ;font-size:8pt;">Seles Order</div>','content'=>$gvROSendPO,
+			'label'=>'<div style="font-family: tahoma ;font-size:8pt;">Seles Order</div>','content'=>$gvSOSendPO,
 			
 		],
 	];

@@ -264,7 +264,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						[
 							'columns'=>[
 								['content'=>'', 'options'=>['colspan'=>2,'class'=>'text-center info',]], 
-								['content'=>'Quantity', 'options'=>['colspan'=>3, 'class'=>'text-center info']], 
+								['content'=>'Quantity', 'options'=>['colspan'=>4, 'class'=>'text-center info']], 
 								['content'=>'Remark', 'options'=>['colspan'=>2, 'class'=>'text-center info']], 
 								//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']], 
 							],
@@ -387,15 +387,11 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						],
 						[
 							/* Attribute Unit Barang */
-							'class'=>'kartik\grid\EditableColumn',
 							'attribute'=>'UNIT',
 							'label'=>'Unit',
 							'hAlign'=>'left',						
 							'vAlign'=>'middle',
 							'mergeHeader'=>true,
-							'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
-								return (0 <> $model->STATUS || 0<> $headerStatus); // Allow Status Process = 0;
-							},
 							'value'=>function($model){
 								$model=Unitbarang::find()->where('KD_UNIT="'.$model->UNIT. '"')->one();
 								if (count($model)!=0){
@@ -405,21 +401,6 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								}
 								return $UnitNm;
 							},
-							'editableOptions' => [
-								'header' => 'Update UNIT',
-								'inputType' => \kartik\editable\Editable::INPUT_SELECT2,		
-								'size' => 'md',								
-								'options' => [			
-									'data' => ArrayHelper::map(Unitbarang::find()->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT'),								
-									'pluginOptions' => [
-										'min'=>0, 
-										'max'=>50000,
-										'allowClear' => true
-									],
-								],
-								//Refresh Display 
-								'displayValueConfig' =>ArrayHelper::map(Unitbarang::find()->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT'),
-							],	 
 							'headerOptions'=>[				
 								'style'=>[
 									'text-align'=>'center',
@@ -436,10 +417,48 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 									'font-family'=>'verdana, arial, sans-serif',
 									'font-size'=>'8pt',
 								]
-							],
+							], 
 						],
 						[
-							/* Attribute Unit Barang */
+							/* Attribute HARGA SUPPLIER */
+							'class'=>'kartik\grid\EditableColumn',
+							'attribute'=>'HARGA',
+							'label'=>'Price/Pcs',						
+							'vAlign'=>'middle',
+							'hAlign'=>'center',	
+							'mergeHeader'=>true,
+							'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+								//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
+								return (0 <> $model->STATUS || 0<> $headerStatus); // Allow Status Process = 0);
+							},
+							'editableOptions' => [
+								'header' => 'Update Price',
+								'inputType' => \kartik\editable\Editable::INPUT_TEXT,
+								'size' => 'sm',	
+								'options' => [
+								  'pluginOptions' => ['min'=>0, 'max'=>50000]
+								]
+							],	
+							'headerOptions'=>[				
+								'style'=>[
+									'text-align'=>'center',
+									'width'=>'100px',
+									'font-family'=>'verdana, arial, sans-serif',
+									'font-size'=>'8pt',
+									'background-color'=>'rgba(126, 189, 188, 0.3)',
+								]
+							],
+							'contentOptions'=>[
+								'style'=>[
+									'text-align'=>'right',
+									'width'=>'100px',
+									'font-family'=>'verdana, arial, sans-serif',
+									'font-size'=>'8pt',
+								]
+							],
+						],	
+						[
+							/* Attribute NOTE Barang */
 							'class'=>'kartik\grid\EditableColumn',
 							'attribute'=>'NOTE',
 							'label'=>'Notes',
@@ -473,7 +492,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 									'font-size'=>'8pt',
 								]
 							], 								
-						], 
+						],
+											
 						[
 							/* Attribute Status Detail RO */
 							'attribute'=>'STATUS',

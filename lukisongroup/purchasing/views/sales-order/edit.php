@@ -4,6 +4,7 @@ use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
+
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\assets\AppAssetJqueryJSignature;
 AppAssetJqueryJSignature::register($this); 
@@ -109,7 +110,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				$title1 = Yii::t('app', 'AddItem');
 				$options1 = [ 'id'=>'add-item',	
 							  'data-toggle'=>"modal",
-							  'data-target'=>"#additem-ro",											
+							  'data-target'=>"#additem-so",											
 							  'class' => 'btn btn-info btn-xs',
 				]; 
 				$icon1 = '<span class="fa fa-plus fa-xs"></span>';
@@ -153,7 +154,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		$options = [ 'id'=>'po-auth1',	
 					  'data-toggle'=>"modal",
 					  'data-target'=>"#po-auth1-sign",											
-					  'class'=>'btn btn-danger btn-xs', 
+					  'class'=>'btn btn-warning btn-xs', 
 					  'style'=>['width'=>'100px'],
 					  'title'=>'Detail'
 		]; 
@@ -265,7 +266,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						[
 							'columns'=>[
 								['content'=>'', 'options'=>['colspan'=>2,'class'=>'text-center info',]], 
-								['content'=>'Quantity', 'options'=>['colspan'=>3, 'class'=>'text-center info']], 
+								['content'=>'Quantity', 'options'=>['colspan'=>4, 'class'=>'text-center info']], 
 								['content'=>'Remark', 'options'=>['colspan'=>2, 'class'=>'text-center info']], 
 								//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']], 
 							],
@@ -327,7 +328,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							/* Attribute Request Quantity */
 							'class'=>'kartik\grid\EditableColumn',
 							'attribute'=>'RQTY',
-							'label'=>'Qty.Request',						
+							'label'=>'Qty.Order',						
 							'vAlign'=>'middle',
 							'hAlign'=>'center',	
 							'mergeHeader'=>true,
@@ -440,7 +441,45 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							],
 						],
 						[
-							/* Attribute Unit Barang */
+							/* Attribute HARGA SUPPLIER */
+							'class'=>'kartik\grid\EditableColumn',
+							'attribute'=>'HARGA',
+							'label'=>'Price/Pcs',						
+							'vAlign'=>'middle',
+							'hAlign'=>'center',	
+							'mergeHeader'=>true,
+							'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+								//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
+								return (0 <> $model->STATUS || 0<> $headerStatus); // Allow Status Process = 0);
+							},
+							'editableOptions' => [
+								'header' => 'Update Price',
+								'inputType' => \kartik\editable\Editable::INPUT_TEXT,
+								'size' => 'sm',	
+								'options' => [
+								  'pluginOptions' => ['min'=>0, 'max'=>50000]
+								]
+							],	
+							'headerOptions'=>[				
+								'style'=>[
+									'text-align'=>'center',
+									'width'=>'100px',
+									'font-family'=>'verdana, arial, sans-serif',
+									'font-size'=>'8pt',
+									'background-color'=>'rgba(97, 211, 96, 0.3)',
+								]
+							],
+							'contentOptions'=>[
+								'style'=>[
+									'text-align'=>'right',
+									'width'=>'100px',
+									'font-family'=>'verdana, arial, sans-serif',
+									'font-size'=>'8pt',
+								]
+							],
+						],
+						[
+							/* Attribute Note Barang */
 							'class'=>'kartik\grid\EditableColumn',
 							'attribute'=>'NOTE',
 							'label'=>'Notes',
@@ -652,7 +691,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	*/
 	$this->registerJs("
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
-			$('#additem-ro').on('show.bs.modal', function (event) {
+			$('#additem-so').on('show.bs.modal', function (event) {
 				var button = $(event.relatedTarget)
 				var modal = $(this)
 				var title = button.data('title') 
@@ -667,8 +706,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		",$this::POS_READY);
 		
 	Modal::begin([
-		'id' => 'additem-ro',
-		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-pencil-square-o"></div><div><h4 class="modal-title">Add New Item</h4></div>',
+		'id' => 'additem-so',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-pencil-square-o"></div><div><h4 class="modal-title">SO - Add Item</h4></div>',
 		//'size' => 'modal-lg',
 		'headerOptions'=>[				
 				//'style'=> 'border-radius:5px; background-color: rgba(0, 255, 52, 0.1)',

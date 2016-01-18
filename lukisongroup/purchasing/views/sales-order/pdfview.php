@@ -158,7 +158,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					[
 						/* Attribute Request Quantity */
 						'attribute'=>'RQTY',
-						'label'=>'R.Qty',						
+						'label'=>'Order.Qty',						
 						'vAlign'=>'middle',
 						'hAlign'=>'center',	
 						'mergeHeader'=>true,
@@ -183,7 +183,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					[
 						/* Attribute Submit Quantity */
 						'attribute'=>'SQTY',	
-						'label'=>'S.Qty',
+						'label'=>'Submit.Qty',
 						'mergeHeader'=>true,											
 						'vAlign'=>'middle',	
 						'hAlign'=>'center',
