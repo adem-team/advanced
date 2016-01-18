@@ -458,8 +458,9 @@ $tabcrud =  GridView::widget([
 								
                                                              [
 															       // 'class' => 'btn btn-default',
-																	'class'=>'mo2',
-																	'value' => $model->CUST_KD,
+																	'class'=>'mo2 btn btn-default',
+																	// 'value' => $model->CUST_KD,
+                                                                    'data-id'=> $model->CUST_KD,
                                                                    'data-toggle'=>"modal",
                                                                   'data-target'=>"#us6-dialog",
                                                                 // 'data-title'=> $model->CUST_KD,
@@ -921,11 +922,10 @@ $this->registerJs("
      ",$this::POS_READY);
 	 
 	 $this->registerJs('
-        var j = $.noConflict();
-				$(".mo2").click(function(){
-					var idm = $(this).val()
-					var ida = $("#hide").val(idm)
-						   $("#us3").locationpicker({
+        $(document).ready(function(){
+                        var j = $.noConflict();
+                   
+						   j("#us3").locationpicker({
                             location: {latitude:  -6.214620, longitude:  106.845130 },
                             radius: 300,
                             inputBinding: {
@@ -943,24 +943,32 @@ $this->registerJs("
 						
 					
                         });
-						
-					
-					
+
 				});
+					
+					
+			
 				
 		      ',$this::POS_READY); 
 			  
 	 $this->registerJs("
-	    $('#save').click(function(e) {
+    
+      // var jq = $.noConflict();
+$('#save').click(function(e) {
 	
+    $('#mo2').change(function() {
+		var id =  $('.mo2').data('id');
+	})
+    
+   
+
  $.ajax({
-	 	
+
+	 
        url: '/master/customers/createmap',
        type: 'GET',
        data: {
-		
-		 
-              id : $('.mo2').val(),
+              id : id,
 			  lat: $('#us3-lat').val(),
 			  long : $('#us3-lon').val(),
 			  address : $('#us3-address').val(),
@@ -969,12 +977,13 @@ $this->registerJs("
 		
 			dataType: 'json',
             success: function (result) {
+                alert(result)
 				
                 if(result == 1 )
                                           {
                                              $(document).find('#us6-dialog').modal('hide');
                                              // $('#myform').trigger('reset');
-											 $('#hide').val('');
+											 // $('#hide').val('');
                                              $.pjax.reload({container:'#axctive224'});
                                           }
                                         else{
@@ -1003,7 +1012,7 @@ $this->registerJs("
                     <div class="form-group">
 		<form id="myform">
 					
-					<input type = "hidden" id="hide">
+					 <input type="text" name="bookId" id="bookId" value=""/>
                         <label class="col-sm-2 control-label">Location:</label>
 
 	

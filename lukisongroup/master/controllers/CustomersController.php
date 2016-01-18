@@ -186,17 +186,17 @@ class CustomersController extends Controller
             
         // }
       
-		$model = new Customers();
+		// $model = new Customers();
         return $this->render('index', [
 			'searchModel1' => $searchModel1,
 			'dataProviderkat'  =>   $dataProviderkat ,
-              'searchModel' => $searchModel,
-			  'dataProvider' => $dataProvider,
-              'searchmodelkota' => $searchmodelkota,
-               'searchmodelpro' => $searchmodelpro,
-              'dataproviderpro' =>  $dataproviderpro,
-              'dataproviderkota' => $dataproviderkota,
-			  'model'=>$model,
+      'searchModel' => $searchModel,
+			'dataProvider' => $dataProvider,
+      'searchmodelkota' => $searchmodelkota,
+      'searchmodelpro' => $searchmodelpro,
+      'dataproviderpro' =>  $dataproviderpro,
+      'dataproviderkota' => $dataproviderkota,
+			  // 'model'=>$model,
         ]);
 	}
 
@@ -458,29 +458,25 @@ class CustomersController extends Controller
   
     public function actionCreatemap($id,$lat,$long,$address)
     {
-		$model = Customers::find()->where(['CUST_KD'=>$id])->one();
+		    $model = Customers::find()->where(['CUST_KD'=>$id])->one();
 
         if (Yii::$app->request->IsAjax) {
 			
-			$data = Yii::$app->request->get();
-			$lat  = $data['lat'];
-			
-			$long = $data['long'];
-			$address = $data['address'];
-			// $radius = $data['radius'];
-			 $model->ALAMAT = $address;
-			$model->MAP_LAT = $lat ;
-			$model->MAP_LNG = $long;
-               if($model->save())
-            {
-               echo 1; 
-            }
-		}
-			else {
-				echo  0;
-			}
-       	 
-             
+			       $data = Yii::$app->request->get();
+			       $lat  = $data['lat'];
+			       $long = $data['long'];
+			       $address = $data['address'];
+			       // $radius = $data['radius'];
+			       $model->ALAMAT = $address;
+			       $model->MAP_LAT = $lat ;
+			       $model->MAP_LNG = $long;
+        if($model->save())
+        {
+          echo 1; 
+        }
+		  }else {
+				  echo  0;
+			}         
     
     }
     
