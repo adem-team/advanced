@@ -921,6 +921,7 @@ $this->registerJs("
      ",$this::POS_READY);
 	 
 	 $this->registerJs('
+        var j = $.noConflict();
 				$(".mo2").click(function(){
 					var idm = $(this).val()
 					var ida = $("#hide").val(idm)
@@ -937,8 +938,8 @@ $this->registerJs("
                         });
 				
 	
-                        $("#us6-dialog").on("shown.bs.modal", function() {
-                            $("#us3").locationpicker("autosize");
+                        j("#us6-dialog").on("shown.bs.modal", function() {
+                            j("#us3").locationpicker("autosize");
 						
 					
                         });
