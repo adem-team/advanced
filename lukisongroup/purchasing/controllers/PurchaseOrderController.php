@@ -36,6 +36,7 @@ use lukisongroup\purchasing\models\ro\RequestorderSearch;
 use lukisongroup\purchasing\models\ro\Rodetail;
 use lukisongroup\purchasing\models\ro\RodetailSearch;
 
+use lukisongroup\purchasing\models\so\SalesorderSearch;
 
 
 use lukisongroup\purchasing\models\Statuspo;
@@ -280,8 +281,11 @@ class PurchaseOrderController extends Controller
     public function actionCreate($kdpo)
     {
         $searchModel = new RequestorderSearch();
-        $dataProvider = $searchModel->caripo(Yii::$app->request->queryParams);
-		
+        $dataProviderRo = $searchModel->cariRO(Yii::$app->request->queryParams);
+		 
+		$searchModel = new SalesorderSearch();
+        $dataProviderSo = $searchModel->cariSO(Yii::$app->request->queryParams);
+	
 		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
 		$supplier = $poHeader->suplier;
 		$bill = $poHeader->bill;
@@ -402,7 +406,8 @@ class PurchaseOrderController extends Controller
 		
         return $this->render('create', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'dataProviderRo' => $dataProviderRo,
+			'dataProviderSo'=>$dataProviderSo,
 			'poDetailProvider'=>$poDetailProvider,
 			'poHeader'=> $poHeader,
 			'supplier'=>$supplier,
@@ -555,14 +560,14 @@ class PurchaseOrderController extends Controller
 			if ($dataKeySelect!=0){						
 					//$foreaceGvRoToPo=$dataKeySelect!=0? $dataKeySelect:'Array([0]=>"0")';
 					 foreach ($dataKeySelect as $idx){
-							$roDetail=Rodetail::find()->where(['KD_RO'=>$dataKdRo,'ID'=>$idx])->andWhere('STATUS=101')->one();							
+							$roDetail=Rodetail::find()->where(['KD_RO'=>$dataKdRo,'ID'=>$idx])->andWhere('STATUS=101')->one();	//STT =202						
 							$poDetail=Purchasedetail::find()->where(['KD_PO'=>$dataKdPo,'KD_RO'=>$dataKdRo,'KD_BARANG'=>$roDetail->KD_BARANG])->one();
 							$poUnit=$roDetail->cunit;
 							$poBrgUmum=$roDetail->brgumum;							
 							if (!$poDetail){
 								//$roDetail = Rodetail::findOne($idx);
 								$roDetail->TMP_CK =0; /* Untuk testing Checkbook 1 | 0 */
-								$roDetail->save();	
+								//$roDetail->save();	
 								$res = array('status' => true); /* tidak ada Data pada Purchasedetail |KD_RO&KD_BARANG */	
 								/*Save To Purchase detail*/			
 									$poDetailModel = new Purchasedetail;
@@ -588,10 +593,15 @@ class PurchaseOrderController extends Controller
 												$poDetailModel->QTY=$actualQty;
 											}else{
 												$poDetailModel->QTY=0;
-											}									
-										$poDetailModel->HARGA=$roDetail->HARGA_SPL;
+											}
+											//if($roDetail->PARENT_ROSO==0){
+												$poDetailModel->HARGA=$roDetail->HARGA;  //RO
+											//}elseif($roDetail->PARENT_ROSO==1){
+											//	$poDetailModel->HARGA=$roDetail->HARGA_PABRIK; //SO 
+											//}
 										$poDetailModel->STATUS=0;  
-										//$poDetailModel->STATUS_DATE =date;//\Yii::$app->formatter->asDate(date,'Y-M-d hh:mm:ss');								
+										//$poDetailModel->STATUS_DATE =date;//\Yii::$app->formatter->asDate(date,'Y-M-d hh:mm:ss');	
+										$roDetail->save();											
 									$poDetailModel->save();
 								
 							}else{

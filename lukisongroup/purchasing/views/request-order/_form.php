@@ -19,9 +19,9 @@ use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
 
 $brgUnit = ArrayHelper::map(Unitbarang::find()->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT');
-$brgType = ArrayHelper::map(Tipebarang::find()->where(['PARENT'=>0])->orderBy('NM_TYPE')->all(), 'KD_TYPE', 'NM_TYPE');
-$brgKtg  = ArrayHelper::map(Kategori::find()->where(['PARENT'=>0])->orderBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI');
-$brgUmum = ArrayHelper::map(Barang::find()->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG'); 
+$brgType = ArrayHelper::map(Tipebarang::find()->where(['PARENT'=>0,'STATUS'=>1])->orderBy('NM_TYPE')->all(), 'KD_TYPE', 'NM_TYPE');
+$brgKtg  = ArrayHelper::map(Kategori::find()->where(['PARENT'=>0,'STATUS'=>1])->orderBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI');
+$brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0 ,'STATUS'=>1])->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG'); 
 
 /* $this->registerJs("
         $.fn.modal.Constructor.prototype.enforceFocus = function() {};			

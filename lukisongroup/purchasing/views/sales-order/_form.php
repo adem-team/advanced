@@ -13,10 +13,10 @@ use kartik\widgets\TouchSpin;
 use yii\web\JsExpression;
 use yii\data\ActiveDataProvider;
 
-use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\Tipebarang;
 use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
+use lukisongroup\master\models\Barang;
 
 $brgUnit = ArrayHelper::map(Unitbarang::find()->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT');
 $brgType = ArrayHelper::map(Tipebarang::find()->where(['PARENT'=>1])->orderBy('NM_TYPE')->all(), 'KD_TYPE', 'NM_TYPE');

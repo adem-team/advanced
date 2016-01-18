@@ -24,7 +24,7 @@ class SodetailSearch extends Sodetail
     public function rules()
     {
         return [
-            [['ID','STATUS'], 'integer'],
+            [['ID','PARENT_ROSO','STATUS'], 'integer'],
 			[['parentro','RQTY','SQTY'], 'safe'],
             [['parentro.KD_RO','parentro.CREATED_AT','KD_RO', 'KD_BARANG', 'NM_BARANG', 'NO_URUT', 'NOTE', 'CREATED_AT', 'UPDATED_AT'], 'safe']
         ];

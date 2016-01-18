@@ -24,13 +24,15 @@ class RequestorderSearch extends Requestorder
     public function rules()
     {
         return [
-            [['STATUS'], 'integer'],
+            [['STATUS','PARENT_ROSO'], 'integer'],
             [['KD_RO', 'NOTE', 'ID_USER', 'KD_CORP', 'KD_CAB', 'KD_DEP', 'CREATED_AT', 'UPDATED_ALL', 'DATA_ALL'], 'safe'],
             [['detro'], 'safe'],
 			[['detro.KD_RO','detro.NM_BARANG','detro.QTY','dept.DEP_NM','EMP_NM',], 'safe'],
-			[['SIG2_NM'], 'string', 'max' => 255],
-			[['SIG1_SVGBASE64','SIG1_SVGBASE30','SIG2_SVGBASE64','SIG2_SVGBASE30','SIG2_TGL'], 'safe'],
-			//[['NM_BARANG','QTY'], 'safe']
+			[['SIG1_ID','SIG2_ID','SIG3_ID'], 'string'],
+			[['SIG1_NM','SIG2_NM','SIG3_NM'], 'string'],
+			[['SIG1_TGL','SIG2_TGL', 'SIG3_TGL'], 'safe'],
+			[['SIG1_SVGBASE64','SIG2_SVGBASE64', 'SIG3_SVGBASE64'], 'safe'],
+			[['SIG1_SVGBASE30','SIG2_SVGBASE30', 'SIG3_SVGBASE30'], 'safe'],
         ];
     }
 
@@ -51,11 +53,11 @@ class RequestorderSearch extends Requestorder
 		if($profile->emp->JOBGRADE_ID == 'M' OR $profile->emp->JOBGRADE_ID == 'SM' ){
 			$query = Requestorder::find()
 						->JoinWith('dept',true,'left JOIN')	
-						->where("(r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."') OR (r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.KD_DEP = '".$profile->emp->DEP_ID."')");
+						->where("(r0001.PARENT_ROSO=0) AND (r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."') OR (r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.KD_DEP = '".$profile->emp->DEP_ID."')");
         }else{
 			$query = Requestorder::find()
 					->JoinWith('dept',true,'left JOIN')	
-					->where("r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."'");
+					->where("(r0001.PARENT_ROSO=0) AND r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."'");
 		}
 		$dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -178,9 +180,9 @@ class RequestorderSearch extends Requestorder
         return $dataProvider;
     }
     
-    public function caripo($params)
+    public function cariRO($params)
     {
-        $query = Requestorder::find()->where("r0001.status <> 3 and r0001.status <> 0");
+        $query = Requestorder::find()->where("r0001.KD_RO LIKE 'RO%' and r0001.status <> 3 and r0001.status <> 0");
         
 
         $dataProvider = new ActiveDataProvider([

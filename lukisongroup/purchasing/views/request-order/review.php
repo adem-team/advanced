@@ -96,8 +96,8 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 		}else{
 			return Html::a('<i class="glyphicon glyphicon-question-sign"></i> UNKNOWN', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);	
 		};		
-	} 
-	
+	}
+ 
 	/*
 	 * SIGNATURE AUTH1 | CREATED
 	 * Status Value Signature1 | PurchaseOrder
@@ -114,7 +114,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 		]; 
 		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/sales-order/sign-created-view','kdpo'=>$roHeader->KD_RO]);
+		$url = Url::toRoute(['/purchasing/request-order/sign-created-view','kdpo'=>$roHeader->KD_RO]);
 		//$options1['tabindex'] = '-1';
 		$content = Html::a($label,$url, $options);
 		return $content;	
@@ -136,7 +136,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 		]; 
 		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/sales-order/sign-created-view','kdpo'=>$roHeader->KD_RO]);
+		$url = Url::toRoute(['/purchasing/request-order/sign-created-view','kdpo'=>$roHeader->KD_RO]);
 		//$options1['tabindex'] = '-1';
 		$content = Html::a($label,$url, $options);
 		return $content;	
@@ -158,12 +158,11 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 		]; 
 		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/sales-order/approved_authorize','kd'=>$roHeader->KD_RO]);
+		$url = Url::toRoute(['/purchasing/request-order/approved_authorize','kd'=>$roHeader->KD_RO]);
 		//$options1['tabindex'] = '-1';
 		$content = Html::a($label,$url, $options);
-		return $content;			
-	}
-	
+		return $content;	
+	} 
 	
 	/*
 	 * Tombol Modul Approval -> Check By User login
@@ -189,9 +188,9 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 					]; 
 					$icon = '<span class="glyphicon glyphicon-ok"></span>';
 					$label = $icon . ' ' . $title;
-					//$url = Url::toRoute(['/purchasing/sales-order/approved_rodetail','kd'=>$model->KD_RO]);
-					//$url = Url::toRoute(['/purchasing/sales-order/approved']);
-					//$url = Url::toRoute(['/purchasing/sales-order/approved_rodetail']);
+					//$url = Url::toRoute(['/purchasing/request-order/approved_rodetail','kd'=>$model->KD_RO]);
+					//$url = Url::toRoute(['/purchasing/request-order/approved']);
+					//$url = Url::toRoute(['/purchasing/request-order/approved_rodetail']);
 					//$options['tabindex'] = '-1';
 					return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
 				}
@@ -218,9 +217,9 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 					]; 
 					$icon = '<span class="glyphicon glyphicon-ok"></span>';
 					$label = $icon . ' ' . $title;
-					//$url = Url::toRoute(['/purchasing/sales-order/approved','kd'=>$model->KD_RO]);
-					//$url = Url::toRoute(['/purchasing/sales-order/approved']);
-					//$url = Url::toRoute(['/purchasing/sales-order/approved']);
+					//$url = Url::toRoute(['/purchasing/request-order/approved','kd'=>$model->KD_RO]);
+					//$url = Url::toRoute(['/purchasing/request-order/approved']);
+					//$url = Url::toRoute(['/purchasing/request-order/approved']);
 					$options['tabindex'] = '-1';
 					return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
 				}
@@ -275,9 +274,9 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 		</div>
 		<div class="col-md-9" style="padding-top:15px;">
 			<!--<h3 class="text-center"><b>Form Permintaan Barang & Jasa</b></h3>!-->
-			<h3 class="text-center"><b>FORM REVIEW SALES ORDER</b></h3>			
+			<h3 class="text-center"><b>REVIEW REQUEST ORDER</b></h3>			
 		</div>
-		<div class="col-md-12" style="padding-left:0px;">
+		<div class="col-md-12"  style="padding-left:0px;">
 			<hr>
 		</div>
 	</div>
@@ -325,13 +324,13 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 				'id'=>'ro-process',
 				'dataProvider'=> $dataProvider,
 				'filterModel' => '',
-				//'headerRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
-				'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+				//'headerRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
+				'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
 				'beforeHeader'=>[
 					[
 						'columns'=>[
 							['content'=>'', 'options'=>['colspan'=>2,'class'=>'text-center info',]], 
-							['content'=>'Quantity', 'options'=>['colspan'=>3, 'class'=>'text-center info']], 
+							['content'=>'Quantity', 'options'=>['colspan'=>4, 'class'=>'text-center info']], 
 							['content'=>'Remark', 'options'=>['colspan'=>3, 'class'=>'text-center info']], 
 							//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']], 
 						],
@@ -350,7 +349,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 								'width'=>'10px',
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -377,7 +376,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 								'width'=>'200px',
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -402,7 +401,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 								'width'=>'60px',
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -441,7 +440,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 								'width'=>'60px',
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -476,7 +475,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 								'width'=>'120px',
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -489,7 +488,45 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 						], 
 					],
 					[
-						/* Attribute Unit Barang */
+						/* Attribute HARGA SUPPLIER */
+						'class'=>'kartik\grid\EditableColumn',
+						'attribute'=>'HARGA',
+						'label'=>'Price/Pcs',						
+						'vAlign'=>'middle',
+						'hAlign'=>'center',	
+						'mergeHeader'=>true,
+						'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+							//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
+							return (0 <> $model->STATUS || 0<> $headerStatus); // Allow Status Process = 0);
+						},
+						'editableOptions' => [
+							'header' => 'Update Price',
+							'inputType' => \kartik\editable\Editable::INPUT_TEXT,
+							'size' => 'sm',	
+							'options' => [
+							  'pluginOptions' => ['min'=>0, 'max'=>50000]
+							]
+						],	
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'100px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'right',
+								'width'=>'100px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+							]
+						],
+					],
+					[
+						/* Attribute NOTE Barang */
 						'class'=>'kartik\grid\EditableColumn',
 						'attribute'=>'NOTE',
 						'label'=>'Notes',
@@ -512,7 +549,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 								'width'=>'200px',
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -543,7 +580,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 								'width'=>'100px',
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)', 
+								'background-color'=>'rgba(126, 189, 188, 0.3)', 
 							]
 						],
 						'contentOptions'=>[
@@ -594,7 +631,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 								'width'=>'100px',
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)', 
+								'background-color'=>'rgba(126, 189, 188, 0.3)', 
 							]
 						],
 						'contentOptions'=>[
@@ -627,10 +664,10 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 	</div>
 	
 	<!-- Signature !-->
-	<div  class="col-md-12">		
+	<div  class="col-md-12">
 		<div  class="row" >
 			<div class="col-md-6">
-				<table id="tblRo" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">
+				<table id="tblRo" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">					
 					<!-- Tanggal!-->
 					 <tr>
 						<!-- Tanggal Pembuat RO!-->
@@ -664,6 +701,24 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 						</th>	
 						
 					</tr>
+					<!-- Department|Jbatan !-->
+					 <tr>
+						<th  class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+							<div>		
+								<b><?php  echo 'Created'; ?></b>
+							</div>
+						</th>								
+						<th class="col-md-1"  style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+							<div>		
+								<b><?php  echo 'Checked'; ?></b>
+							</div>
+						</th>
+						<th class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+							<div>		
+								<b><?php  echo 'Approved'; ?></b>
+							</div>
+						</th>
+					</tr>
 					<!-- Signature !-->
 					 <tr>
 						<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
@@ -681,13 +736,15 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 						<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 							<?php 
 								$ttd3 = $roHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$roHeader->SIG3_SVGBASE64.'></img>' : SignApproved($roHeader);
-								echo $ttd3;
+								//if ($roHeader->STATUS==101 OR $roHeader->STATUS==10){
+									echo $ttd3;
+								//}
 							?> 
 						</th>
 					</tr>
 					<!--Nama !-->
 					 <tr>
-						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(97, 211, 96, 0.3);text-align: center;">
+						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 							<div>		
 								<?php
 									$sigNm1=$roHeader->SIG1_NM!='none' ? '<b>'.$roHeader->SIG1_NM.'</b>' : 'none';
@@ -695,7 +752,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 								?>
 							</div>
 						</th>								
-						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(97, 211, 96, 0.3);text-align: center;">
+						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 							<div>		
 								<?php
 									$sigNm2=$roHeader->SIG2_NM!='none' ? '<b>'.$roHeader->SIG2_NM.'</b>' : 'none';
@@ -703,7 +760,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 								?>
 							</div>
 						</th>
-						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(97, 211, 96, 0.3);text-align: center;">
+						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 							<div>		
 								<?php
 									$sigNm3=$roHeader->SIG3_NM!='none' ? '<b>'.$roHeader->SIG3_NM.'</b>' : 'none';
@@ -711,38 +768,19 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 								?>
 							</div>
 						</th>
-					</tr>
-					<!-- Department|Jbatan !-->
-					 <tr>
-						<th  class="col-md-1" style="text-align: center; vertical-align:middle;height:20">
-							<div>		
-								<b><?php  echo 'Created'; ?></b>
-							</div>
-						</th>								
-						<th class="col-md-1"  style="text-align: center; vertical-align:middle;height:20">
-							<div>		
-								<b><?php  echo 'Checked'; ?></b>
-							</div>
-						</th>
-						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20">
-							<div>		
-								<b><?php  echo 'Approved'; ?></b>
-							</div>
-						</th>
-					</tr>
+					</tr>					
 				</table>				
 			</div>
 			<!-- Button Submit!-->
 			<div style="text-align:right; margin-top:80px; margin-right:15px">
 				<!-- Button Back!-->
-				<a href="/purchasing/sales-order" class="btn btn-info btn-xs" role="button" style="width:90px">Back</a>
+				<a href="/purchasing/request-order" class="btn btn-info btn-xs" role="button" style="width:90px">Kembali</a>
 				<!-- Button Cetak!-->
 				<?php 
-					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print', ['cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'101'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
+					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print', ['cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
 				?>				
 			</div>
 		</div>
-		
 	</div>	
 </div>
 <?php
@@ -751,8 +789,8 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 			e.preventDefault();
 			var idx = $(this).data('toggle-approved');
 			$.ajax({
-					//url: '/purchasing/sales-order/approved_rodetail?id=' + idx,
-					url: '/purchasing/sales-order/approved_rodetail',
+					//url: '/purchasing/request-order/approved_rodetail?id=' + idx,
+					url: '/purchasing/request-order/approved_rodetail',
 					type: 'POST',
 					//contentType: 'application/json; charset=utf-8',
 					data:'id='+idx,
@@ -760,7 +798,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 					success: function(result) {
 						if (result == 1){
 							// Success
-							$.pjax.reload({container-fluid:'#ro-process'});
+							$.pjax.reload({container:'#ro-process'});
 						} else {
 							// Fail
 						}
@@ -772,14 +810,14 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 			e.preventDefault();
 			var idx = $(this).data('toggle-reject');
 			$.ajax({
-					url: '/purchasing/sales-order/reject_rodetail',
+					url: '/purchasing/request-order/reject_rodetail',
 					type: 'POST',
 					//contentType: 'application/json; charset=utf-8',
 					data:'id='+idx,
 					dataType: 'json',
 					success: function(result) {
 						if (result == 1){
-							$.pjax.reload({container-fluid:'#ro-process'});
+							$.pjax.reload({container:'#ro-process'});
 						} 
 					}
 				});
@@ -789,14 +827,14 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 			e.preventDefault();
 			var idx = $(this).data('toggle-cancel');
 			$.ajax({
-					url: '/purchasing/sales-order/cancel_rodetail',
+					url: '/purchasing/request-order/cancel_rodetail',
 					type: 'POST',
 					//contentType: 'application/json; charset=utf-8',
 					data:'id='+idx,
 					dataType: 'json',
 					success: function(result) {
 						if (result == 1){
-							$.pjax.reload({container-fluid:'#ro-process'});
+							$.pjax.reload({container:'#ro-process'});
 						} 
 					}
 				});

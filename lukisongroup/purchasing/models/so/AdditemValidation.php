@@ -31,11 +31,12 @@ use lukisongroup\master\models\Barang;
 class AdditemValidation extends Model
 {
     public $kD_RO;
+	public $kD_TYPE;
 	public $kD_KATEGORI;
-	public $kD_BARANG;	
-	//public $nmBarang;
 	public $uNIT;
+	public $kD_BARANG;
 	public $rQTY;
+	public $hARGA;
 	//public $submitQty; //Kondisi Approved
 	public $nOTE;
 	public $sTATUS;
@@ -49,7 +50,7 @@ class AdditemValidation extends Model
 			//[['nmBarang','nOTE'], 'string'],			
         	[['nOTE'], 'string'],			
         	['sTATUS','integer'],			
-        	[['rQTY','cREATED_AT','kD_KATEGORI'], 'safe'],			
+        	[['rQTY','cREATED_AT','kD_KATEGORI','kD_TYPE','hARGA'], 'safe'],			
 		];
     }
 	
@@ -79,12 +80,15 @@ class AdditemValidation extends Model
 		if ($this->validate()) {
 			$rodetail = new Sodetail();
 			$rodetail->CREATED_AT = date('Y-m-d H:i:s');
-			$rodetail->KD_RO = $this->kD_RO;
+			$rodetail->KD_RO = $this->kD_RO; //required
+			$rodetail->PARENT_ROSO=1; //required
 			$rodetail->KD_BARANG = $this->kD_BARANG;
-			$rodetail->NM_BARANG = $this->namaBarang($this->kD_BARANG);
+			$rodetail->NM_BARANG = $this->valuesBarang($this->kD_BARANG)->NM_BARANG;
 			$rodetail->UNIT = $this->uNIT;
 			$rodetail->RQTY = $this->rQTY;
-			$rodetail->NOTE = $this->nOTE;
+			$rodetail->SQTY = $this->rQTY;
+			$rodetail->HARGA= $this->valuesBarang($this->kD_BARANG)->HARGA_PABRIK;
+			$rodetail->NOTE = $this->nOTE;			
 			$rodetail->STATUS = 0;
 			if ($rodetail->save()) {
                 return $rodetail;
@@ -112,8 +116,8 @@ class AdditemValidation extends Model
         ];
     }
 	
-	protected function namaBarang($kdBarang){
-		$nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
-		return $nmBarang->NM_BARANG;
+	protected function valuesBarang($kdBarang){
+		$valuesBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
+		return $valuesBarang;
 	}
 }

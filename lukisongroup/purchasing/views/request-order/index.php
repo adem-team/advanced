@@ -64,9 +64,9 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 				$options1 = [ 'id'=>'ro-create',	
 							  'data-toggle'=>"modal",
 							  'data-target'=>"#new-ro",											
-							  'class' => 'btn btn-warning',
+							  'class' => 'btn btn-warning btn-xs',
 				]; 
-				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
+				$icon1 = '<span class="fa fa-plus fa-xs"></span>';
 				$label1 = $icon1 . ' ' . $title1;
 				$url1 = Url::toRoute(['/purchasing/request-order/create']);
 				//$options1['tabindex'] = '-1';
@@ -108,8 +108,8 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 	$title = Yii::t('app', 'Barang');
 	$options = ['id'=>'ro-barang',	
 				'data-toggle'=>"modal",
-				'data-target'=>"#check-barang",							
-				'class' => 'btn btn-default'
+				'data-target'=>"#check-barang ",							
+				'class' => 'btn btn-default  btn-xs'
 	]; 
 	$icon = '<span class="glyphicon glyphicon-search"></span>';
 	$label = $icon . ' ' . $title;
@@ -127,7 +127,7 @@ function tombolKategori(){
 	$options = ['id'=>'ro-kategori',	
 				'data-toggle'=>"modal",
 				'data-target'=>"#check-kategori",							
-				'class' => 'btn btn-default'
+				'class' => 'btn btn-default  btn-xs'
 	]; 
 	$icon = '<span class="glyphicon glyphicon-search"></span>';
 	$label = $icon . ' ' . $title;
@@ -217,7 +217,7 @@ function tombolKategori(){
 	 * 1. Hanya User login dengan permission modul RO=1 dengan BTN_SIGN1==1 dan Permission Jabatan SVP keatas yang bisa melakukan Approval (Tanpa Kecuali)
 	 * 2. Action APPROVAL Akan close atau tidak bisa di lakukan jika sudah Approved | status Approved =101 | Permission sign1
 	*/
-	function tombolApproval($url, $model){
+	function tombolReview($url, $model){
 		if(getPermission()){
 			//Permission Jabatan
 			$a=getPermissionEmp()->JOBGRADE_ID;
@@ -236,9 +236,7 @@ function tombolKategori(){
 					]; 
 					$icon = '<span class="glyphicon glyphicon-ok"></span>';
 					$label = $icon . ' ' . $title;
-					$url = Url::toRoute(['/purchasing/request-order/approved','kd'=>$model->KD_RO]);
-					//$url = Url::toRoute(['/purchasing/request-order/approved']);
-					//$url = Url::toRoute(['/purchasing/request-order/approved']);
+					$url = Url::toRoute(['/purchasing/request-order/review','kd'=>$model->KD_RO]);
 					$options['tabindex'] = '-1';
 					return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
 				}
@@ -284,6 +282,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			'id'=>'ro-grd-index',
 			'dataProvider'=> $dataProvider,
 			'filterModel' => $searchModel,
+			'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
 			/* 
 				'beforeHeader'=>[
 					[
@@ -296,58 +295,203 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 				], 
 			*/
 			'columns' => [
+					/*No Urut*/
 					[
 						'class'=>'kartik\grid\SerialColumn',
 						'contentOptions'=>['class'=>'kartik-sheet-style'],
-						'width'=>'20px',
+						'width'=>'10px',
 						'header'=>'No.',
-						'headerOptions'=>['class'=>'kartik-sheet-style']
-					],							 
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'10px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'10px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'8pt',
+							]
+						], 		
+					],
+					/*KD_RO*/
 					[
 						'attribute'=>'KD_RO',
-						//'mergeHeader'=>true,
+						'label'=>'Kode SO',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
-						'group'=>true
+						//'group'=>true,
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'130px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'130px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						], 		
 					],
+					/*CREATE_AT Tanggal Pembuatan*/
 					[
-						'label'=>'Tanggal Pembuatan',
 						'attribute'=>'CREATED_AT',
-						'hAlign'=>'left',
+						'label'=>'Create At',
+						'hAlign'=>'left',			
 						'vAlign'=>'middle',
-						'group'=>true,								
+						'value'=>function($model){
+							/*
+							 * max String Disply
+							 * @author ptrnov <piter@lukison.com>
+							*/
+							return substr($model->CREATED_AT, 0, 10);
+						},
 						'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
-						'filterWidgetOptions' =>([
-							'attribute' =>'parentro.CREATED_AT',
-							'presetDropdown'=>TRUE,
-							'convertFormat'=>true,
-							'pluginOptions'=>[
-								'id'=>'tglro',
-								'format'=>'Y/m/d',
-								'separator' => 'TO',
-								'opens'=>'left'
-							]									
-						])
-					],													
-					[
-						'label'=>'Pengajuan',
-						'group'=>true,
-						'attribute'=>'EMP_NM',
-						'hAlign'=>'left',
-						'vAlign'=>'middle'							
+									'filterWidgetOptions' =>([
+										'attribute' =>'CREATED_AT',
+										'presetDropdown'=>TRUE,
+										'convertFormat'=>true,
+										'pluginOptions'=>[
+											'id'=>'tglpo',
+											'format'=>'Y/m/d',
+											'separator' => ' - ',
+											'opens'=>'right'
+										]									
+						]),
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'90px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'90px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt'	
+							]
+						], 		
 					],	
+					/*Department*/	
 					[
-						'label'=>'Department',
-						'group'=>true,
 						'attribute'=>'dept.DEP_NM',
+						'label'=>'Department',
+						'filter' => $Combo_Dept,
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
-						'filter' => $Combo_Dept,						
-					],						
+						//'group'=>true,
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'200px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'200px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						], 		
+					],					
+					/*DIBUAT*/	
+					[
+						'attribute'=>'SIG1_NM',
+						'label'=>'Created',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						//'group'=>true,
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'130px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'130px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						], 		
+					],					
+					/*DIPERIKSA*/	
+					[
+						'attribute'=>'SIG2_NM',
+						'label'=>'Checked',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						//'group'=>true,
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'130px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'130px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						], 		
+					],
+					/*DISETUJUI*/	
+					[
+						'attribute'=>'SIG2_NM',
+						'label'=>'Approved',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						//'group'=>true,
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'130px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'130px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						], 		
+					],					
 					[
 						'class'=>'kartik\grid\ActionColumn',
 						'dropdown' => true,
-						'template' => '{view}{tambahEdit}{delete}{approved}',
+						'template' => '{view}{tambahEdit}{delete}{review}',
 						'dropdownOptions'=>['class'=>'pull-right dropup'],									
 						//'headerOptions'=>['class'=>'kartik-sheet-style'],											
 						'buttons' => [
@@ -367,11 +511,28 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 										},
 							
 							/* Approved RO | Permissian Status 0; 0=process | Dept = Dept login | GF >= M */
-							'approved' => function ($url, $model) {
-											return tombolApproval($url, $model);
+							'review' => function ($url, $model) {
+											return tombolReview($url, $model);
 										},
 						],
-						
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'150px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'150px',
+								'height'=>'10px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						],
 					],								
 					[
 						'label'=>'Notification',
@@ -380,7 +541,25 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 						'hAlign'=>'center',
 						'value' => function ($model) {
 										return statusProcessRo($model);
-									}							
+						},
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'150px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'150px',
+								'height'=>'10px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						],							
 					], 							
 					
 			],			
@@ -405,7 +584,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 				],
 			'panel'=>[
 				'type'=>GridView::TYPE_DANGER,
-				'heading'=>"List Request Order",
+				'heading'=>"<span class='fa fa-cart-arrow-down fa-md'><b> LIST REQUEST ORDER</b></span>",
 			],				
 		]);				
 	?>

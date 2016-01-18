@@ -66,7 +66,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 							  'data-target'=>"#new-so",											
 							  'class' => 'btn btn-warning  btn-sm',
 				]; 
-				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
+				$icon1 = '<span class="fa fa-plus fa-sm"></span>';
 				$label1 = $icon1 . ' ' . $title1;
 				$url1 = Url::toRoute(['/purchasing/sales-order/create']);
 				//$options1['tabindex'] = '-1';
@@ -217,7 +217,7 @@ function tombolKategori(){
 	 * 1. Hanya User login dengan permission modul RO=1 dengan BTN_SIGN1==1 dan Permission Jabatan SVP keatas yang bisa melakukan Approval (Tanpa Kecuali)
 	 * 2. Action APPROVAL Akan close atau tidak bisa di lakukan jika sudah Approved | status Approved =101 | Permission sign1
 	*/
-	function tombolApproval($url, $model){
+	function tombolReview($url, $model){
 		if(getPermission()){
 			//Permission Jabatan
 			$a=getPermissionEmp()->JOBGRADE_ID;
@@ -236,7 +236,7 @@ function tombolKategori(){
 					]; 
 					$icon = '<span class="glyphicon glyphicon-ok"></span>';
 					$label = $icon . ' ' . $title;
-					$url = Url::toRoute(['/purchasing/sales-order/approved','kd'=>$model->KD_RO]);
+					$url = Url::toRoute(['/purchasing/sales-order/review','kd'=>$model->KD_RO]);
 					//$url = Url::toRoute(['/purchasing/sales-order/approved']);
 					//$url = Url::toRoute(['/purchasing/sales-order/approved']);
 					$options['tabindex'] = '-1';
@@ -417,7 +417,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 					],					
 					/*DIBUAT*/	
 					[
-						'attribute'=>'EMP_NM',
+						'attribute'=>'SIG1_NM',
 						'label'=>'Created',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
@@ -467,7 +467,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 					],
 					/*DISETUJUI*/	
 					[
-						'attribute'=>'ID_USER',
+						'attribute'=>'SIG2_NM',
 						'label'=>'Approved',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
@@ -494,7 +494,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 					[
 						'class'=>'kartik\grid\ActionColumn',
 						'dropdown' => true,
-						'template' => '{view}{tambahEdit}{delete}{approved}',
+						'template' => '{view}{tambahEdit}{delete}{review}',
 						'dropdownOptions'=>['class'=>'pull-right dropup'],									
 						//'headerOptions'=>['class'=>'kartik-sheet-style'],											
 						'buttons' => [
@@ -514,8 +514,8 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 										},
 							
 							/* Approved RO | Permissian Status 0; 0=process | Dept = Dept login | GF >= M */
-							'approved' => function ($url, $model) {
-											return tombolApproval($url, $model);
+							'review' => function ($url, $model) {
+											return tombolReview($url, $model);
 										},
 						],
 						'headerOptions'=>[				
@@ -616,7 +616,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Entry Items Sales Order</h4></div>',
 			'size' => 'modal-md',
 			'headerOptions'=>[
-				'style'=> 'border-radius:5px; background-color: rgba(131, 160, 245, 0.5)',
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
 			]
 		]);
 		Modal::end();
@@ -642,7 +642,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			'header' => '<h4 class="modal-title">Entry Request Order</h4>',
 			'size' => 'modal-lg',
 			'headerOptions'=>[
-				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1);'
+				'style'=> 'border-radius:5px; background-color:rgba(97, 211, 96, 0.3);'
 			]
 		]);
 		Modal::end();
