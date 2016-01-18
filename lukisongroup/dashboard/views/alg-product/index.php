@@ -229,9 +229,9 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 						},
                         'price' =>function($url, $model, $key){
 								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Price List'),
-															['/dashboard/alg-product/update','id'=>$model->ID],[
+															['/dashboard/alg-product/login-price-view'],[
 															'data-toggle'=>"modal",
-															'data-target'=>"#modal-create",
+															'data-target'=>"#modal-price",
 															'data-title'=> $model->KD_BARANG,
 															]). '</li>' . PHP_EOL;
 						},
@@ -366,6 +366,33 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 		],
     ]);
     Modal::end();
+
+    /*Price Author*/
+	$this->registerJs("
+		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		 $('#modal-price').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title') 
+			var href = button.attr('href') 
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-dolar fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			})
+	",$this::POS_READY);
+    Modal::begin([
+        'id' => 'modal-price',
+        'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Price Login Autorize</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+    ]);
+    Modal::end();
+	    
 	
 	
 	    
