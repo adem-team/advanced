@@ -13,15 +13,14 @@ use kartik\widgets\TouchSpin;
 use yii\web\JsExpression;
 use yii\data\ActiveDataProvider;
 
-use lukisongroup\master\models\Barang;
-use lukisongroup\master\models\Tipebarang;
+use lukisongroup\master\models\Barangumum;
+use lukisongroup\esm\models\Barang;
 use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
 
 $brgUnit = ArrayHelper::map(Unitbarang::find()->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT');
-$brgType = ArrayHelper::map(Tipebarang::find()->where(['PARENT'=>1])->orderBy('NM_TYPE')->all(), 'KD_TYPE', 'NM_TYPE');
-$brgKtg  = ArrayHelper::map(Kategori::find()->where(['PARENT'=>1])->orderBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI');
-$brgUmum = ArrayHelper::map(Barang::find()->where('PARENT=1')->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG'); 
+$brgKtg = ArrayHelper::map(Kategori::find()->orderBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI');
+$brgUmum = ArrayHelper::map(Barangumum::find()->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG'); 
 
 /* $this->registerJs("
         $.fn.modal.Constructor.prototype.enforceFocus = function() {};			
@@ -36,7 +35,7 @@ $brgUmum = ArrayHelper::map(Barang::find()->where('PARENT=1')->orderBy('NM_BARAN
 			'id'=>'roInput',
 			'enableClientValidation' => true,
 			'method' => 'post',
-			'action' => ['/purchasing/sales-order/simpanfirst'],
+			'action' => ['/purchasing/request-order/simpanfirst'],
 		]);
 	?>
 	<?php //= $form->errorSummary($model); ?>
@@ -45,8 +44,6 @@ $brgUmum = ArrayHelper::map(Barang::find()->where('PARENT=1')->orderBy('NM_BARAN
 
     <?php
 		 echo $form->field($roDetail, 'NM_BARANG')->hiddenInput(['value' => ''])->label(false);
-		 echo $form->field($roDetail, 'KD_TYPE')->dropDownList($brgType, ['id'=>'rodetail-kd_type']);
-		
 		 echo $form->field($roDetail, 'KD_KATEGORI')->dropDownList($brgKtg, ['id'=>'rodetail-kd_kategori']);
 		 
 		 echo $form->field($roDetail, 'KD_BARANG')->widget(DepDrop::classname(), [
@@ -55,28 +52,22 @@ $brgUmum = ArrayHelper::map(Barang::find()->where('PARENT=1')->orderBy('NM_BARAN
 			'options' => ['id'=>'rodetail-kd_barang'],
 			'pluginOptions' => [
 				'depends'=>['rodetail-kd_kategori'],
-				'url'=>Url::to(['/purchasing/sales-order/brgkat']),
+				'url'=>Url::to(['/purchasing/request-order/brgkat']),
 				'initialize'=>true,
 			], 		
-		]);		
-		/* echo $form->field($roDetail, 'UNIT')->widget(DepDrop::classname(), [
+		]);
+		
+		echo $form->field($roDetail, 'UNIT')->widget(DepDrop::classname(), [
 			'type'=>DepDrop::TYPE_DEFAULT,
 			'data' => $brgUnit,
 			'options' => ['id'=>'rodetail-unit','readonly'=>true,'selected'=>false],
 			'pluginOptions' => [
 				'depends'=>['rodetail-kd_kategori','rodetail-kd_barang'],
-				'url'=>Url::to(['/purchasing/sales-order/brgunit']),
+				'url'=>Url::to(['/purchasing/request-order/brgunit']),
 				//'initialize'=>true, 
 				'placeholder' => false,
 			], 		
-		]);  */
-		echo $form->field($roDetail, 'UNIT')->widget(Select2::classname(), [
-				'data' => $brgUnit,
-				'options' => ['placeholder' => 'Pilih Unit Barang ...'],
-				'pluginOptions' => [
-					'allowClear' => true
-				],
-		]);
+		]); 
 	?>
 
     <?php echo  $form->field($roDetail, 'RQTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']); ?>
