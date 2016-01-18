@@ -210,7 +210,7 @@ class RequestOrderController extends Controller
 			$parents = $_POST['depdrop_parents'];
 			if ($parents != null) {
 				$kat_id = $parents[0];
-				$model = Barang::find()->asArray()->where(['KD_KATEGORI'=>$kat_id])->all();
+				$model = Barang::find()->asArray()->where(['KD_KATEGORI'=>$kat_id,'PARENT'=>0])->all();
 				foreach ($model as $key => $value) {
 					   $out[] = ['id'=>$value['KD_BARANG'],'name'=> $value['NM_BARANG']];
 				   }
@@ -278,7 +278,8 @@ class RequestOrderController extends Controller
 				/*
 				 * Detail Request Order
 				**/
-				$roDetail->KD_RO = \Yii::$app->ambilkonci->getRoCode();
+				$roDetail->KD_RO = \Yii::$app->ambilkonci->getRoCode(); //Requst Order Kode
+				$roDetail->PARENT_ROSO=0; // RO=0
 				$roDetail->UNIT = $kdUnit;
 				$roDetail->CREATED_AT = date('Y-m-d H:i:s');
 				$roDetail->NM_BARANG = $nmBarang->NM_BARANG;
@@ -291,6 +292,7 @@ class RequestOrderController extends Controller
 				 * Header Request Order
 				**/
 				$getkdro=\Yii::$app->ambilkonci->getRoCode();
+				$roHeader->PARENT_ROSO=0; // RO=0
 				$roHeader->KD_RO =$getkdro;
 				$roHeader->CREATED_AT = date('Y-m-d H:i:s');
 				$roHeader->TGL = date('Y-m-d');

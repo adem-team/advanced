@@ -492,7 +492,7 @@ $y=4;
 	
 
  ?>
-<div class="container" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
+<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
 	<div  class="row">
 	<!-- HEADER !-->
 		<div class="col-md-12">
@@ -502,7 +502,7 @@ $y=4;
 			<div class="col-md-9" style="padding-top:15px;">
 				<h3 class="text-center"><b>PURCHASE ORDER</b></h3>
 			</div>			
-			<div class="col-md-11">
+			<div class="col-md-12" style="padding-left:0px;">
 				<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
 			</div>
 			
@@ -546,7 +546,7 @@ $y=4;
 	</div>
 	<!-- Title GRID PO Detail !-->
 	<div  class="row">	
-		<div class="col-md-11"  style="float:none">
+		<div class="ccol-md-12"  style="float:none">
 			
 			<div class="col-md-12">
 				
@@ -556,7 +556,7 @@ $y=4;
 	</div>
 	<!-- Title BOTTEM Descript !-->	
 	<div  class="row">
-		<div class="col-md-11" style="font-family: tahoma ;font-size: 9pt;float:left;">		
+		<div class="col-md-12" style="font-family: tahoma ;font-size: 9pt;float:left;">		
 			<div class="col-md-4" style="float:left;">
 				<dl>
 					<?php
@@ -609,7 +609,7 @@ $y=4;
 	</div>	
 	<!-- PO Note !-->
 	<div  class="row">
-		<div  class="col-md-11" style="font-family: tahoma ;font-size: 8pt;">	
+		<div  class="ccol-md-12" style="font-family: tahoma ;font-size: 8pt;">	
 			<div  class="col-md-12">
 				<dt><b>General Notes :</b></dt>
 				<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;">	
@@ -620,7 +620,7 @@ $y=4;
 	</div>
 	<!-- Signature PO !-->	
 	<div  class="row">
-		<div class="col-md-11">
+		<div class="ccol-md-12">
 			<div class="col-md-9">
 				<table id="tblRo" class="table table-bordered" style="width:360px;font-family: tahoma ;font-size: 8pt;">
 					<!-- Tanggal!-->

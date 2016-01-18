@@ -284,6 +284,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			'id'=>'ro-grd-index',
 			'dataProvider'=> $dataProvider,
 			'filterModel' => $searchModel,
+			'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
 			/* 
 				'beforeHeader'=>[
 					[
@@ -296,54 +297,199 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 				], 
 			*/
 			'columns' => [
+					/*No Urut*/
 					[
 						'class'=>'kartik\grid\SerialColumn',
 						'contentOptions'=>['class'=>'kartik-sheet-style'],
-						'width'=>'20px',
+						'width'=>'10px',
 						'header'=>'No.',
-						'headerOptions'=>['class'=>'kartik-sheet-style']
-					],							 
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'10px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'10px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'8pt',
+							]
+						], 		
+					],
+					/*KD_RO*/
 					[
 						'attribute'=>'KD_RO',
-						//'mergeHeader'=>true,
+						'label'=>'Kode SO',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
-						'group'=>true
+						//'group'=>true,
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'130px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'130px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						], 		
 					],
+					/*CREATE_AT Tanggal Pembuatan*/
 					[
-						'label'=>'Tanggal Pembuatan',
 						'attribute'=>'CREATED_AT',
-						'hAlign'=>'left',
+						'label'=>'Create At',
+						'hAlign'=>'left',			
 						'vAlign'=>'middle',
-						'group'=>true,								
+						'value'=>function($model){
+							/*
+							 * max String Disply
+							 * @author ptrnov <piter@lukison.com>
+							*/
+							return substr($model->CREATED_AT, 0, 10);
+						},
 						'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
-						'filterWidgetOptions' =>([
-							'attribute' =>'parentro.CREATED_AT',
-							'presetDropdown'=>TRUE,
-							'convertFormat'=>true,
-							'pluginOptions'=>[
-								'id'=>'tglro',
-								'format'=>'Y/m/d',
-								'separator' => 'TO',
-								'opens'=>'left'
-							]									
-						])
-					],													
-					[
-						'label'=>'Pengajuan',
-						'group'=>true,
-						'attribute'=>'EMP_NM',
-						'hAlign'=>'left',
-						'vAlign'=>'middle'							
+									'filterWidgetOptions' =>([
+										'attribute' =>'CREATED_AT',
+										'presetDropdown'=>TRUE,
+										'convertFormat'=>true,
+										'pluginOptions'=>[
+											'id'=>'tglpo',
+											'format'=>'Y/m/d',
+											'separator' => ' - ',
+											'opens'=>'right'
+										]									
+						]),
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'90px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'90px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt'	
+							]
+						], 		
 					],	
+					/*Department*/	
 					[
-						'label'=>'Department',
-						'group'=>true,
 						'attribute'=>'dept.DEP_NM',
+						'label'=>'Department',
+						'filter' => $Combo_Dept,
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
-						'filter' => $Combo_Dept,						
-					],						
+						//'group'=>true,
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'200px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'200px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						], 		
+					],					
+					/*DIBUAT*/	
+					[
+						'attribute'=>'SIG1_NM',
+						'label'=>'Created',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						//'group'=>true,
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'130px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'130px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						], 		
+					],					
+					/*DIPERIKSA*/	
+					[
+						'attribute'=>'SIG2_NM',
+						'label'=>'Checked',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						//'group'=>true,
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'130px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'130px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						], 		
+					],
+					/*DISETUJUI*/	
+					[
+						'attribute'=>'SIG2_NM',
+						'label'=>'Approved',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						//'group'=>true,
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'130px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'130px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						], 		
+					],					
 					[
 						'class'=>'kartik\grid\ActionColumn',
 						'dropdown' => true,
@@ -371,7 +517,24 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 											return tombolApproval($url, $model);
 										},
 						],
-						
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'150px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'150px',
+								'height'=>'10px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						],
 					],								
 					[
 						'label'=>'Notification',
@@ -380,7 +543,25 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 						'hAlign'=>'center',
 						'value' => function ($model) {
 										return statusProcessRo($model);
-									}							
+						},
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'150px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'150px',
+								'height'=>'10px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						],							
 					], 							
 					
 			],			
@@ -405,7 +586,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 				],
 			'panel'=>[
 				'type'=>GridView::TYPE_DANGER,
-				'heading'=>"List Request Order",
+				'heading'=>"<span class='fa fa-cart-arrow-down fa-md'><b> LIST REQUEST ORDER</b></span>",
 			],				
 		]);				
 	?>

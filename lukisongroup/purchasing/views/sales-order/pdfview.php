@@ -71,8 +71,8 @@ $this->params['breadcrumbs'][] = $this->title;
 				'id'=>'ro-process',
 				'dataProvider'=> $dataProvider,
 				//'filterModel' => ['STATUS'=>'10'],
-				'headerRowOptions'=>['style'=>'background-color:rgba(0, 95, 218, 0.3); align:center'],
-				'filterRowOptions'=>['style'=>'background-color:rgba(0, 95, 218, 0.3); align:center'],
+				'headerRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+				'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
 				'beforeHeader'=>[
 					[
 						'columns'=>[
@@ -116,7 +116,7 @@ $this->params['breadcrumbs'][] = $this->title;
 								'width'=>'10px',
 								'font-family'=>'tahoma, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(0, 95, 218, 0.3)',
+								'background-color'=>'rgba(97, 211, 96, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -144,7 +144,7 @@ $this->params['breadcrumbs'][] = $this->title;
 								'width'=>'200px',
 								'font-family'=>'tahoma, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(0, 95, 218, 0.3)',
+								'background-color'=>'rgba(97, 211, 96, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -169,7 +169,7 @@ $this->params['breadcrumbs'][] = $this->title;
 								'width'=>'40px',
 								'font-family'=>'tahoma, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(0, 95, 218, 0.3)',
+								'background-color'=>'rgba(97, 211, 96, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -194,7 +194,7 @@ $this->params['breadcrumbs'][] = $this->title;
 								'width'=>'40px',
 								'font-family'=>'tahoma, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(0, 95, 218, 0.3)',
+								'background-color'=>'rgba(97, 211, 96, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -219,7 +219,7 @@ $this->params['breadcrumbs'][] = $this->title;
 								'width'=>'150px',
 								'font-family'=>'tahoma, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(0, 95, 218, 0.3)',
+								'background-color'=>'rgba(97, 211, 96, 0.3)',
 							]
 						],						
 						'contentOptions'=>[
@@ -253,7 +253,7 @@ $this->params['breadcrumbs'][] = $this->title;
 								'width'=>'200px',
 								'font-family'=>'tahoma, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(0, 95, 218, 0.3)',
+								'background-color'=>'rgba(97, 211, 96, 0.3)',
 							]
 						],			
 						'contentOptions'=>[
@@ -283,7 +283,7 @@ $this->params['breadcrumbs'][] = $this->title;
 								'width'=>'10px',
 								'font-family'=>'tahoma, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(0, 15, 118, 0.3)', 
+								'background-color'=>'rgba(97, 211, 96, 0.3)', 
 							]
 						],
 						'contentOptions'=>[
@@ -338,7 +338,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				<!-- Tanggal Pembuat RO!-->
 				<th style="text-align: center; height:20px">
 					<div style="margin-left:50px">
-						Tanggerang, <?php echo ' '.$awl1[2].'-'.$blnAwl1.'-'.$awl1[0];  ?>
+						Tanggerang, <?php echo tgl2signature($roHeader->SIG1_TGL);  ?>
 					</div> 
 				
 				</th>		
@@ -347,36 +347,53 @@ $this->params['breadcrumbs'][] = $this->title;
 					<div style="margin-left:50px">
 						Tanggerang, <?php echo tgl2signature($roHeader->SIG2_TGL);  ?>
 					</div> 				
-				</th>	
+				</th>
+				<!-- Tanggal PO Approved!-->				
+				<th style="text-align: center; height:20px">
+					<div style="margin-left:50px">
+						Tanggerang, <?php echo tgl2signature($roHeader->SIG3_TGL);  ?>
+					</div> 				
+				</th>					
 			</tr>
 			<!--Keterangan !-->
 			 <tr>
-				<th style="background-color:rgba(0, 95, 218, 0.3);text-align: center; height:20px">
-					  Mengajukan,
+				<th style="background-color:rgba(97, 211, 96, 0.3);text-align: center; height:20px">
+					  Created
 				</th>								
-				<th style="background-color:rgba(0, 95, 218, 0.3);text-align: center; height:20px">
-					  Menyetujui,
-				</th>	
+				<th style="background-color:rgba(97, 211, 96, 0.3);text-align: center; height:20px">
+					  Checked
+				</th>
+				<th style="background-color:rgba(97, 211, 96, 0.3);text-align: center; height:20px">
+					  Approved
+				</th>					
 			</tr>
 			<!-- Signature !-->
 			 <tr>
-				<th style="text-align: center; vertical-align:middle;width:180; height:60px">
-					<img src="<?php echo $roHeader->SIG1_SVGBASE64;?> height='120' width='150'"></img>
+				<th style="text-align: center; vertical-align:middle;width:120; height:60px">
+					<img src="<?php echo $roHeader->SIG1_SVGBASE64;?> height='120' width='120'"></img>
 				</th>								
-				<th style="text-align: center; vertical-align:middle;width:180">
-					<img src="<?php echo $roHeader->SIG2_SVGBASE64;?> height='120' width='150'"></img>
+				<th style="text-align: center; vertical-align:middle;width:120">
+					<img src="<?php echo $roHeader->SIG2_SVGBASE64;?> height='120' width='120'"></img>
+				</th>
+				<th style="text-align: center; vertical-align:middle;width:120">
+					<img src="<?php echo $roHeader->SIG3_SVGBASE64;?> height='120' width='120'"></img>
 				</th>
 			</tr>
 			<!--Nama !-->
 			 <tr>
 				<th style="text-align: center; vertical-align:middle;height:20">
 					<div>		
-						<b><?php  echo $roHeader->EMP_NM; ?></b>
+						<b><?php  echo $roHeader->SIG1_NM; ?></b>
 					</div>
 				</th>								
 				<th style="text-align: center; vertical-align:middle;height:20">
 					<div>		
 						<b><?php  echo $roHeader->SIG2_NM; ?></b>
+					</div>
+				</th>
+				<th style="text-align: center; vertical-align:middle;height:20">
+					<div>		
+						<b><?php  echo $roHeader->SIG3_NM; ?></b>
 					</div>
 				</th>
 			</tr>

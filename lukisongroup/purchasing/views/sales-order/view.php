@@ -2,6 +2,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\assets\AppAssetJqueryJSignature;
 
@@ -63,18 +64,75 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	}
 	
 	/*
-	 * Signature Waiting Approval
-	 * Signature Automaticly Show If ACTION APPROVAL
-	 * @author ptrnov  <piter@lukison.com>
-	 * @since 1.1
+	 * SIGNATURE AUTH1 | CREATED
+	 * Status Value Signature1 | PurchaseOrder
+	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
 	*/
-	function SignApproved(){
-		return Html::a('<i class="glyphicon glyphicon-retweet"></i> Waiting for approval', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
-	} 
+	function SignCreated($poHeader){
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'po-auth1',	
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#po-auth1-sign",											
+					  'class'=>'btn btn-danger btn-xs', 
+					  'style'=>['width'=>'100px'],
+					  'title'=>'Detail'
+		]; 
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/sales-order/sign-created-view','kdpo'=>$poHeader->KD_RO]);
+		//$options1['tabindex'] = '-1';
+		$content = Html::a($label,$url, $options);
+		return $content;	
+	}
+	
+	/*
+	 * SIGNATURE AUTH2 | CHECKED
+	 * Status Value Signature1 | PurchaseOrder
+	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
+	*/
+	function SignChecked($poHeader){
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'po-auth1',	
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#po-auth1-sign",											
+					  'class'=>'btn btn-danger btn-xs', 
+					  'style'=>['width'=>'100px'],
+					  'title'=>'Detail'
+		]; 
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/sales-order/sign-created-view','kdpo'=>$poHeader->KD_RO]);
+		//$options1['tabindex'] = '-1';
+		$content = Html::a($label,$url, $options);
+		return $content;	
+	}
+	
+	/*
+	 * SIGNATURE AUTH3 | Approved
+	 * Status Value Signature1 | PurchaseOrder
+	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
+	*/
+	function SignApproved($poHeader){
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'po-auth1',	
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#po-auth1-sign",											
+					  'class'=>'btn btn-danger btn-xs', 
+					  'style'=>['width'=>'100px'],
+					  'title'=>'Detail'
+		]; 
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/sales-order/sign-created-view','kdpo'=>$poHeader->KD_RO]);
+		//$options1['tabindex'] = '-1';
+		$content = Html::a($label,$url, $options);
+		return $content;
+		
+	}
  
 ?>
 
-<div class="container" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
+<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
 	<!-- HEADER !-->
 	<div class="col-md-12">
 		<div class="col-md-1" style="float:left;">
@@ -82,14 +140,14 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		</div>
 		<div class="col-md-9" style="padding-top:15px;">
 			<!--<h3 class="text-center"><b>Form Permintaan Barang & Jasa</b></h3>!-->
-			<h3 class="text-center"><b>SALES ORDER</b></h3>
+			<h3 class="text-center"><b>VIEWS SALES ORDER</b></h3>
 		</div>
-		<div class="col-md-11">
+		<div class="col-md-12" style="padding-left:0px;">
 			<hr>
 		</div>
 	</div>
 	<!-- Title Descript !-->
-	<div class="col-md-11">
+	<div class="col-md-12">
 		<dl>
 			  <dt style="width:100px; float:left;">Date</dt>
 			  <dd>: <?php echo date('d-M-Y'); ?></dd>
@@ -108,14 +166,14 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		</dl>
 	</div>
 	<!-- Table Grid List RO Detail !-->
-	<div class="col-md-11">
+	<div class="col-md-12">
 		<?php 
 			echo GridView::widget([
 				'id'=>'ro-process',
 				'dataProvider'=> $dataProvider,
 				'filterModel' => '',
-				//'headerRowOptions'=>['style'=>'background-color:rgba(0, 95, 218, 0.3); align:center'],
-				'filterRowOptions'=>['style'=>'background-color:rgba(0, 95, 218, 0.3); align:center'],
+				//'headerRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+				'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
 				'beforeHeader'=>[
 					[
 						'columns'=>[
@@ -139,7 +197,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								'width'=>'10px',
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(0, 95, 218, 0.3)',
+								'background-color'=>'rgba(97, 211, 96, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -166,7 +224,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								'width'=>'200px',
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(0, 95, 218, 0.3)',
+								'background-color'=>'rgba(97, 211, 96, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -191,7 +249,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								'width'=>'60px',
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(0, 95, 218, 0.3)',
+								'background-color'=>'rgba(97, 211, 96, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -216,7 +274,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								'width'=>'60px',
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(0, 95, 218, 0.3)',
+								'background-color'=>'rgba(97, 211, 96, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -250,7 +308,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								'width'=>'120px',
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(0, 95, 218, 0.3)',
+								'background-color'=>'rgba(97, 211, 96, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -274,7 +332,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								'width'=>'200px',
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(0, 95, 218, 0.3)',
+								'background-color'=>'rgba(97, 211, 96, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -303,7 +361,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								'width'=>'100px',
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(0, 15, 118, 0.3)', 
+								'background-color'=>'rgba(97, 211, 96, 0.3)', 
 							]
 						],
 						'contentOptions'=>[
@@ -335,91 +393,120 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	</div>
 	
 	<!-- Signature !-->
-	<div  class="col-md-11">
-		<?php 
-			$tgl1 = explode(' ',$roHeader->CREATED_AT);
-			$awl1 = explode('-',$tgl1[0]); 
-			$blnAwl1 = date("F", mktime(0, 0, 0, $awl1[1], 1));
-		
-			function tgl2signature($tgl){
-				if($tgl<>0){
-					$tgl2 = explode(' ',$tgl);
-					$awl2 = explode('-',$tgl2[0]); 
-					$blnAwl2 = date("F", mktime(0, 0, 0, $awl2[1], 1));
-					$TglSign=' '.$awl2[2].'-'.$blnAwl2.'-'.$awl2[0];
-					return $TglSign;
-				}
-				return '';				
-			}
-			
-		?>
-		<div style="float:left;">
-			<table id="tblRo" class="table table-bordered" style="width:550px;font-family: verdana, arial, sans-serif ;font-size: 8pt;">
-				<!-- Tanggal!-->
-				 <tr>
-					<!-- Tanggal Pembuat RO!-->
-					<th style="text-align: center; height:20px">
-						<div style="margin-left:50px">
-							<b>Tanggerang</b>, <?php echo ' '.$awl1[2].'-'.$blnAwl1.'-'.$awl1[0];  ?>
-						</div> 
-					
-					</th>		
-					<!-- Tanggal PO Approved!-->				
-					<th style="text-align: center; height:20px">
-						<div style="margin-left:50px">
-							<b>Tanggerang</b>, <?php echo tgl2signature($roHeader->SIG2_TGL);  ?>
-						</div> 				
-					</th>	
-				</tr>
-				<!--Keterangan !-->
-				 <tr>
-					<th style="background-color:rgba(0, 95, 218, 0.3);text-align: center; height:20px">
-						  Mengajukan,
-					</th>								
-					<th style="background-color:rgba(0, 95, 218, 0.3);text-align: center; height:20px">
-						  Menyetujui,
-					</th>	
-				</tr>
-				<!-- Signature !-->
-				 <tr>
-					<th style="text-align: center; vertical-align:middle;width:180; height:80px">
-						<div id="ro-view-approval-sig1"><div>
-					</th>								
-					<th style="text-align: center; vertical-align:middle;width:180; height:80px">
-						<div>
+	<div  class="col-md-12">
+		<div  class="row" >
+			<div class="col-md-6">
+				<table id="tblRo" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">
+					<!-- Tanggal!-->
+					 <tr>
+						<!-- Tanggal Pembuat RO!-->
+						<th  class="col-md-1" style="text-align: center; height:20px">
+							<div style="text-align:center;">
+								<?php
+									$placeTgl1=$roHeader->SIG1_TGL!=0 ? Yii::$app->ambilKonvesi->convert($roHeader->SIG1_TGL,'date') :'';
+									echo '<b>Tanggerang</b>,' . $placeTgl1;  
+								?>
+							</div> 
+						
+						</th>		
+						<!-- Tanggal Pembuat RO!-->
+						<th class="col-md-1" style="text-align: center; height:20px">
+							<div style="text-align:center;">
+								<?php
+									$placeTgl2=$roHeader->SIG2_TGL!=0 ? Yii::$app->ambilKonvesi->convert($roHeader->SIG2_TGL,'date') :'';
+									echo '<b>Tanggerang</b>,' . $placeTgl2;  
+								?>
+							</div> 
+						
+						</th>		
+						<!-- Tanggal PO Approved!-->				
+						<th class="col-md-1" style="text-align: center; height:20px">
+							<div style="text-align:center;">
+								<?php
+									$placeTgl3=$roHeader->SIG3_TGL!=0 ? Yii::$app->ambilKonvesi->convert($roHeader->SIG3_TGL,'date') :'';
+									echo '<b>Tanggerang</b>,' . $placeTgl3;  
+								?>
+							</div> 				
+						</th>	
+						
+					</tr>
+					<!-- Signature !-->
+					 <tr>
+						<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
 							<?php 
-								if ($roHeader->STATUS==101){
-									echo '<div id="ro-view-approval-sig2">';
-								}else{
-									echo SignApproved();
-								}
-							?>	
-						</div>
-					</th>
-				</tr>
-				<!--Nama !-->
-				 <tr>
-					<th style="text-align: center; vertical-align:middle;height:20">
-						<div>		
-							<b><?php  echo $roHeader->EMP_NM; ?></b>
-						</div>
-					</th>								
-					<th style="text-align: center; vertical-align:middle;height:20">
-						<div>		
-							<b><?php  echo $roHeader->SIG2_NM; ?></b>
-						</div>
-					</th>
-				</tr>
-			</table>
-		</div>
-		<!-- Button Submit!-->
-		<div style="text-align:right; margin-top:80px">
-			<!-- Button Back!-->
-			<a href="/purchasing/sales-order" class="btn btn-info" role="button" style="width:90px">Kembali</a>
-			<!-- Button Cetak!-->
-			<?php 
-				echo Html::a('<i class="fa fa-print fa-fw"></i> Cetak', ['cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success','style'=>['width'=>'90px']]);
-			?>				
+								$ttd1 = $roHeader->SIG1_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$roHeader->SIG1_SVGBASE64.'></img>' :SignCreated($roHeader);
+								echo $ttd1;
+							?> 
+						</th>								
+						<th class="col-md-1" style="text-align: center; vertical-align:middle">
+							<?php 
+								$ttd2 = $roHeader->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$roHeader->SIG2_SVGBASE64.'></img>' : SignChecked($roHeader);
+								echo $ttd2;
+							?> 
+						</th>
+						<th  class="col-md-1" style="text-align: center; vertical-align:middle">
+							<?php 
+								$ttd3 = $roHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$roHeader->SIG3_SVGBASE64.'></img>' : SignApproved($roHeader);
+								echo $ttd3;
+							?> 
+						</th>
+					</tr>
+					<!--Nama !-->
+					 <tr>
+						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(97, 211, 96, 0.3);text-align: center;">
+							<div>		
+								<?php
+									$sigNm1=$roHeader->SIG1_NM!='none' ? '<b>'.$roHeader->SIG1_NM.'</b>' : 'none';
+									echo $sigNm1;
+								?>
+							</div>
+						</th>								
+						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(97, 211, 96, 0.3);text-align: center;">
+							<div>		
+								<?php
+									$sigNm2=$roHeader->SIG2_NM!='none' ? '<b>'.$roHeader->SIG2_NM.'</b>' : 'none';
+									echo $sigNm2;
+								?>
+							</div>
+						</th>
+						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(97, 211, 96, 0.3);text-align: center;">
+							<div>		
+								<?php
+									$sigNm3=$roHeader->SIG3_NM!='none' ? '<b>'.$roHeader->SIG3_NM.'</b>' : 'none';
+									echo $sigNm3;
+								?>
+							</div>
+						</th>
+					</tr>
+					<!-- Department|Jbatan !-->
+					 <tr>
+						<th  class="col-md-1" style="text-align: center; vertical-align:middle;height:20">
+							<div>		
+								<b><?php  echo 'Created'; ?></b>
+							</div>
+						</th>								
+						<th class="col-md-1"  style="text-align: center; vertical-align:middle;height:20">
+							<div>		
+								<b><?php  echo 'Checked'; ?></b>
+							</div>
+						</th>
+						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20">
+							<div>		
+								<b><?php  echo 'Approved'; ?></b>
+							</div>
+						</th>
+					</tr>
+				</table>				
+			</div>
+			<!-- Button Submit!-->
+			<div style="text-align:right; margin-top:80px; margin-right:15px">
+				<!-- Button Back!-->
+				<a href="/purchasing/sales-order" class="btn btn-info btn-xs" role="button" style="width:90px">Kembali</a>
+				<!-- Button Cetak!-->
+				<?php 
+					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print', ['cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
+				?>				
+			</div>
 		</div>
 	</div>	
 </div>

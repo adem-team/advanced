@@ -51,10 +51,10 @@ class Sodetail extends \yii\db\ActiveRecord
     {
         return [
  //         [['ID','KD_RO', 'KD_BARANG', 'NM_BARANG', 'QTY', 'NO_URUT', 'NOTE', 'STATUS', 'CREATED_AT', 'UPDATED_AT'], 'required'],
-			[['KD_RO','RQTY','UNIT','KD_BARANG'], 'required'],
+			[['KD_RO','PARENT_ROSO','RQTY','UNIT','KD_BARANG'], 'required'],
 			//[['KD_RO','RQTY','SQTY','UNIT','KD_BARANG'], 'safe'],			
             [['PQTY'], 'safe'],
-			[['STATUS'], 'integer'],
+			[['STATUS','PARENT_ROSO'], 'integer'],
             [['NOTE','UNIT','KD_BARANG'], 'string'],
             [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT','TMP_CK'], 'safe'],
             [['KD_RO', 'KD_BARANG'], 'string', 'max' => 50],

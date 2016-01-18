@@ -95,7 +95,7 @@ class SalesOrderController extends Controller
 		}  */
         
 		//$searchModel->KD_RO ='2015.12.04.RO.0070';
-		$dataProvider = $searchModel->searchRo(Yii::$app->request->queryParams);
+		$dataProvider = $searchModel->searchSo(Yii::$app->request->queryParams);
 		  return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -279,6 +279,7 @@ class SalesOrderController extends Controller
 				 * Detail Sales Order
 				**/
 				$roDetail->KD_RO = \Yii::$app->ambilkonci->getSoCode(); //Sales Order Kode
+				$roDetail->PARENT_ROSO=1; // SO=1
 				$roDetail->UNIT = $kdUnit;
 				$roDetail->CREATED_AT = date('Y-m-d H:i:s');
 				$roDetail->NM_BARANG = $nmBarang->NM_BARANG;
@@ -291,11 +292,13 @@ class SalesOrderController extends Controller
 				 * Header Request Order
 				**/
 				$getkdro=\Yii::$app->ambilkonci->getSoCode();
+				$roHeader->PARENT_ROSO=1; // SO=1
 				$roHeader->KD_RO =$getkdro;
 				$roHeader->CREATED_AT = date('Y-m-d H:i:s');
 				$roHeader->TGL = date('Y-m-d');
 				$roHeader->ID_USER = $profile->emp->EMP_ID;
 				$roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
+				//$roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
 				$roHeader->KD_CORP = $profile->emp->EMP_CORP_ID;
 				$roHeader->KD_DEP = $profile->emp->DEP_ID;
 				$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
