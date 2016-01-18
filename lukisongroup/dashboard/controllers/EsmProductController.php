@@ -10,8 +10,9 @@ use lukisongroup\dashboard\models\BarangSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
-	use yii\web\UploadedFile;
+use yii\web\UploadedFile;
+use yii\helpers\Json;
+use lukisongroup\master\models\ValidationLoginPrice;
 /**
  * BarangController implements the CRUD actions for Barang model.
  */
@@ -225,6 +226,79 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 		$model->save();
 		
         return $this->redirect(['index']);
+    }
+
+     public function actionLoginPriceView(){     
+        $ValidationLoginPrice = new ValidationLoginPrice();         
+        return $this->renderAjax('_price_login', [              
+            'ValidationLoginPrice' => $ValidationLoginPrice,
+        ]);
+    }
+    
+    public function actionLoginPriceCheck(){
+        $ValidationLoginPrice = new ValidationLoginPrice();         
+        /*Ajax Load*/
+        if(Yii::$app->request->isAjax){
+            $ValidationLoginPrice->load(Yii::$app->request->post());
+            return Json::encode(\yii\widgets\ActiveForm::validate($ValidationLoginPrice));
+        }else{  /*Normal Load*/ 
+            if($ValidationLoginPrice->load(Yii::$app->request->post())){
+                if ($ValidationLoginPrice->Validationlogin()){                  
+                    return $this->redirect(['/dashboard/esm-product/barang-price']);
+                }                                                       
+            }
+        }
+    }
+
+
+    public function actionBarangPrice(){
+        
+        if (Yii::$app->request->post('hasEditable')) {
+            $idx = Yii::$app->request->post('editableKey');
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $modelPrice = Barang::findOne($idx);                        
+            $out = Json::encode(['output'=>'', 'message'=>'']);
+            $post = [];
+            $posted = current($_POST['Barang']);
+            $post['Barang'] = $posted; 
+            if ($modelPrice->load($post)) {             
+                $output = '';   
+                $modelPrice->save();        
+                    /* HARGA PABRIK */
+                    if (isset($posted['HARGA_PABRIK'])) {
+                        $output = Yii::$app->formatter->asDecimal($modelPrice->HARGA_PABRIK,0);
+                    }
+                    /* HARGA LG */                  
+                    if (isset($posted['HARGA_LG'])) {
+                        $output = Yii::$app->formatter->asDecimal($modelPrice->HARGA_LG, 2);
+                    } 
+                    /* HARGA SUPPLIER */
+                    if (isset($posted['HARGA_DIST'])) {
+                        $output = $modelPrice->HARGA_DIST;
+                    } 
+                    /* HARGA SALES LG */
+                    if (isset($posted['HARGA_SALES'])) {
+                        $output = $modelPrice->HARGA_SALES;
+                    }   
+                
+                $out = Json::encode(['output'=>$output, 'message'=>'']);
+            }
+            // return ajax json encoded response and exit
+            echo $out;
+            return;
+        }
+        
+        $searchModel = new BarangSearch();
+        $dataProvider = $searchModel->searchBarangESM(Yii::$app->request->queryParams);
+        
+        $model = new Barang();
+        $querys = Barang::find()->from('dbc002.b0001 AS db1')->leftJoin('dbc002.b1001 AS db2', 'db1.KD_BARANG = db2.KD_TYPE')->where(['NM_TYPE' => 'FDSFDG'])->all();
+        
+        return $this->render('price', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+             'querys' => $querys,
+        ]);     
     }
 
     /**

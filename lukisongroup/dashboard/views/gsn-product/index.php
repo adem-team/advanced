@@ -229,7 +229,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 						},
                         'price' =>function($url, $model, $key){
 								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Price List'),
-															['/dashboard/gsn-product/update','id'=>$model->ID],[
+															['/dashboard/gsn-product/login-price-view'],[
 															'data-toggle'=>"modal",
 															'data-target'=>"#modal-price",
 															'data-title'=> $model->KD_BARANG,
@@ -371,7 +371,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
     Modal::end();
 	
 	/*Price Author*/
-	$this->registerJs("
+$this->registerJs("
 		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		 $('#modal-price').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget)
@@ -388,7 +388,11 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 	",$this::POS_READY);
     Modal::begin([
         'id' => 'modal-price',
-        'header' => '<h4 class="modal-title">Prize Autorize</h4>',		
+        'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Price Login Autorize</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
     ]);
     Modal::end();
 	    
