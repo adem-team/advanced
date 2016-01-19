@@ -64,8 +64,8 @@ class Suplier extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['KD_SUPPLIER', 'NM_SUPPLIER','KD_CORP', 'ALAMAT','STATUS'], 'required'],
-            [['NM_SUPPLIER','NOTE'],'match','pattern'=> '/^[A-Za-z0-9_ ]+$/u','message'=> 'only [a-zA-Z0-9_].'],
+            [[ 'NM_SUPPLIER','KD_CORP', 'ALAMAT','STATUS'], 'required'],
+            [['NM_SUPPLIER','NOTE'],'match','pattern'=> '/^[A-Za-z0-9_ .]+$/u','message'=> 'only [a-zA-Z0-9_].'],
             [['ALAMAT', 'NOTE', 'DATA_ALL'], 'string'],
             [['STATUS'], 'integer'],
             [['CREATED_AT', 'UPDATED_AT'], 'safe'],
