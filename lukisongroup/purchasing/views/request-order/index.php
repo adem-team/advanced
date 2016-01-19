@@ -589,8 +589,8 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 		]);				
 	?>
 
-
 	<?php
+		/* Button New RO*/
 		$this->registerJs("
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
 			$('#new-ro').on('show.bs.modal', function (event) {
@@ -610,41 +610,15 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 		Modal::begin([
 			'id' => 'new-ro',
 			//'header' => '<h4 class="modal-title">Entry Request Order</h4>',
-			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Entry Request Order</h4></div>',
+			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">RO - New RO</h4></div>',
 			'size' => 'modal-md',
 			'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color: rgba(131, 160, 245, 0.5)',
 			]
 		]);
 		Modal::end();
-		
-		$this->registerJs("
-			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
-			$('#add-ro').on('show.bs.modal', function (event) {
-				var button = $(event.relatedTarget)
-				var modal = $(this)
-				var title = button.data('title') 
-				var href = button.attr('href') 
-				modal.find('.modal-title').html(title)
-				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-				$.post(href)
-					.done(function( data ) {
-						modal.find('.modal-body').html(data)					
-					});
-				}),			
-		",$this::POS_READY);
-		
-		Modal::begin([
-			'id' => 'add-ro',
-			'header' => '<h4 class="modal-title">Entry Request Order</h4>',
-			'size' => 'modal-lg',
-			'headerOptions'=>[
-				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1);'
-			]
-		]);
-		Modal::end();
-		
-		$this->registerJs("
+			
+		/* $this->registerJs("
 			$(document).on('click', '[data-toggle-active]', function(e){
 			e.preventDefault();
 
@@ -666,7 +640,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 				});
 
 			});
-		",$this::POS_READY);
+		",$this::POS_READY); */
 		 
 	?>
 </div>

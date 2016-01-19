@@ -63,13 +63,18 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	}
 	
 	/*
-	 * Signature Waiting Approval
-	 * Signature Automaticly Show If ACTION APPROVAL
+	 * Signature Notify
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
 	*/
+	function SignCreated(){
+		return Html::a('<i class="fa fa-edit fa-xs"></i> wait Signature', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
+	}	
+	function SignChecked(){
+		return Html::a('<i class="fa fa-edit fa-xs"></i> wait Signature', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
+	}
 	function SignApproved(){
-		return Html::a('<i class="glyphicon glyphicon-retweet"></i> Waiting for approval', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
+		return Html::a('<i class="fa fa-edit fa-xs"></i> wait Signature', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
 	} 
  
 ?>
@@ -417,19 +422,19 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					 <tr>
 						<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
 							<?php 
-								$ttd1 = $roHeader->SIG1_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$roHeader->SIG1_SVGBASE64.'></img>' :'';
+								$ttd1 = $roHeader->SIG1_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$roHeader->SIG1_SVGBASE64.'></img>' : SignCreated();
 								echo $ttd1;
 							?> 
 						</th>								
 						<th class="col-md-1" style="text-align: center; vertical-align:middle">
 							<?php 
-								$ttd2 = $roHeader->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$roHeader->SIG2_SVGBASE64.'></img>' : '';
+								$ttd2 = $roHeader->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$roHeader->SIG2_SVGBASE64.'></img>' : SignChecked();
 								echo $ttd2;
 							?> 
 						</th>
 						<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 							<?php 
-								$ttd3 = $roHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$roHeader->SIG3_SVGBASE64.'></img>' : '';
+								$ttd3 = $roHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$roHeader->SIG3_SVGBASE64.'></img>' : SignApproved();
 								echo $ttd3;
 							?> 
 						</th>
@@ -470,7 +475,10 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				<!-- Button Cetak!-->
 				<?php 
 					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print', ['cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
-				?>				
+				?>	
+				<?php 
+					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print Tmp', ['temp-cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
+				?>	
 			</div>
 		</div>
 	</div>	

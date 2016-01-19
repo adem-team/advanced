@@ -1229,6 +1229,71 @@ class PurchaseOrderController extends Controller
         exit; */
     }
 
+	
+	/*
+	 * TMP PDF | Purchaseorder| Purchasedetail
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
+    public function actionTempCetakpdf($kdpo)
+    {
+		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
+		//$poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->all(); 
+		$poDetailQry= "SELECT ID,KD_PO,KD_RO,KD_BARANG,NM_BARANG,UNIT,NM_UNIT,UNIT_QTY,UNIT_WIGHT,SUM(QTY) AS QTY,HARGA,STATUS,STATUS_DATE,NOTE
+						FROM `p0002` WHERE KD_PO='" .$kdpo. "' GROUP BY KD_BARANG,NM_UNIT,HARGA";
+		$poDetail=Purchasedetail::findBySql($poDetailQry)->all();		
+        $dataProvider = new ArrayDataProvider([
+			'key' => 'KD_PO',
+			'allModels'=>$poDetail,		
+			'pagination' => [
+				'pageSize' => 20,
+			],
+		]);
+		
+		$content = $this->renderPartial( 'pdf_tmp', [
+			'poHeader' => $poHeader,
+            //'roHeader' => $roHeader,
+            //'detro' => $detro,
+            //'employ' => $employ,
+			//'dept' => $dept,
+			'dataProvider' => $dataProvider,
+        ]);
+		
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE, 
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4, 
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_PORTRAIT, 
+			// stream to browser inline
+			'destination' => Pdf::DEST_BROWSER, 
+			// your html content input
+			'content' => $content,  
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting 
+			//D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+			'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			'cssInline' => '.kv-heading-1{font-size:12px}', 
+			 // set mPDF properties on the fly
+			'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+			 // call mPDF methods on the fly
+			'methods' => [ 
+				'SetHeader'=>['Copyright@LukisonGroup '.date("r")], 
+				'SetFooter'=>['{PAGENO}'],
+			]
+		]);		
+		return $pdf->render(); 	
+		
+		/* $mpdf=new mPDF();
+        $mpdf->WriteHTML($this->renderPartial( 'pdf', [
+            'model' => Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one(),
+        ]));
+        $mpdf->Output();
+        exit; */
+    }
+	
     public function actionConfirm($kdpo)
     {        
        /*  $hsl = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();

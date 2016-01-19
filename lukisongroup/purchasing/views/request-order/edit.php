@@ -103,16 +103,16 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	*/
 	function SignCreated($roHeader){
 		$title = Yii::t('app', 'Sign Hire');
-		$options = [ 'id'=>'po-auth1',	
+		$options = [ 'id'=>'ro-auth1-id',	
 					  'data-toggle'=>"modal",
-					  'data-target'=>"#po-auth1-sign",											
+					  'data-target'=>"#ro-auth1-sign",											
 					  'class'=>'btn btn-danger btn-xs', 
 					  'style'=>['width'=>'100px'],
-					  'title'=>'Detail'
+					  'title'=>'Signature'
 		]; 
 		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/request-order/sign-created-view','kdpo'=>$roHeader->KD_RO]);
+		$url = Url::toRoute(['/purchasing/request-order/sign-auth1-view','kd'=>$roHeader->KD_RO]);
 		//$options1['tabindex'] = '-1';
 		$content = Html::a($label,$url, $options);
 		return $content;	
@@ -125,16 +125,16 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	*/
 	function SignChecked($roHeader){
 		$title = Yii::t('app', 'Sign Hire');
-		$options = [ 'id'=>'po-auth1',	
+		$options = [ 'id'=>'ro-auth2-id',	
 					  'data-toggle'=>"modal",
-					  'data-target'=>"#po-auth1-sign",											
-					  'class'=>'btn btn-danger btn-xs', 
+					  'data-target'=>"#ro-auth2-sign",											
+					  'class'=>'btn btn-warning btn-xs', 
 					  'style'=>['width'=>'100px'],
-					  'title'=>'Detail'
+					  'title'=>'Signature'
 		]; 
 		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/request-order/sign-created-view','kdpo'=>$roHeader->KD_RO]);
+		$url = Url::toRoute(['/purchasing/request-order/sign-auth2-view','kd'=>$roHeader->KD_RO]);
 		//$options1['tabindex'] = '-1';
 		$content = Html::a($label,$url, $options);
 		return $content;	
@@ -147,16 +147,16 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	*/
 	function SignApproved($roHeader){
 		$title = Yii::t('app', 'Sign Hire');
-		$options = [ 'id'=>'emp-auth',	
+		$options = [ 'id'=>'ro-auth3-id',	
 					  'data-toggle'=>"modal",
-					  'data-target'=>"#emp-auth-sign",											
+					  'data-target'=>"#ro-auth3-sign",											
 					  'class'=>'btn btn-warning btn-xs', 
-					  'style'=>['width'=>'150px'],
-					  'title'=>'Detail'
+					  'style'=>['width'=>'100px'],
+					  'title'=>'Signature'
 		]; 
 		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/request-order/approved_authorize','kd'=>$roHeader->KD_RO]);
+		$url = Url::toRoute(['/purchasing/request-order/sign-auth3-view','kd'=>$roHeader->KD_RO]);
 		//$options1['tabindex'] = '-1';
 		$content = Html::a($label,$url, $options);
 		return $content;	
@@ -659,7 +659,10 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				<!-- Button Cetak!-->
 				<?php 
 					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print', ['cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
-				?>				
+				?>	
+				<?php 
+					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print Tmp', ['temp-cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
+				?>					
 			</div>
 		</div>
 	</div>	
@@ -705,4 +708,84 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			]
 	]);
 	Modal::end();
+	
+	/*SIGN AUTHOR1*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#ro-auth1-sign').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'ro-auth1-sign',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+	
+	/*SIGN AUTHOR2*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#ro-auth2-sign').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'ro-auth2-sign',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+	
+	/*SIGN AUTHOR3*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#ro-auth3-sign').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'ro-auth3-sign',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+	
+	
 ?>

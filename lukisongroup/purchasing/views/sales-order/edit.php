@@ -149,18 +149,18 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * Status Value Signature1 | PurchaseOrder
 	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
 	*/
-	function SignCreated($poHeader){
+	function SignCreated($roHeader){
 		$title = Yii::t('app', 'Sign Hire');
-		$options = [ 'id'=>'po-auth1',	
+		$options = [ 'id'=>'so-auth1-id',	
 					  'data-toggle'=>"modal",
-					  'data-target'=>"#po-auth1-sign",											
-					  'class'=>'btn btn-warning btn-xs', 
+					  'data-target'=>"#so-auth1-sign",											
+					  'class'=>'btn btn-danger btn-xs', 
 					  'style'=>['width'=>'100px'],
-					  'title'=>'Detail'
+					  'title'=>'Signature'
 		]; 
 		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/sales-order/sign-created-view','kdpo'=>$poHeader->KD_RO]);
+		$url = Url::toRoute(['/purchasing/sales-order/sign-auth1-view','kd'=>$roHeader->KD_RO]);
 		//$options1['tabindex'] = '-1';
 		$content = Html::a($label,$url, $options);
 		return $content;	
@@ -171,18 +171,18 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * Status Value Signature1 | PurchaseOrder
 	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
 	*/
-	function SignChecked($poHeader){
+	function SignChecked($roHeader){
 		$title = Yii::t('app', 'Sign Hire');
-		$options = [ 'id'=>'po-auth1',	
+		$options = [ 'id'=>'so-auth2-id',	
 					  'data-toggle'=>"modal",
-					  'data-target'=>"#po-auth1-sign",											
-					  'class'=>'btn btn-danger btn-xs', 
+					  'data-target'=>"#so-auth2-sign",											
+					  'class'=>'btn btn-warning btn-xs', 
 					  'style'=>['width'=>'100px'],
-					  'title'=>'Detail'
+					  'title'=>'Signature'
 		]; 
 		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/sales-order/sign-created-view','kdpo'=>$poHeader->KD_RO]);
+		$url = Url::toRoute(['/purchasing/sales-order/sign-auth2-view','kd'=>$roHeader->KD_RO]);
 		//$options1['tabindex'] = '-1';
 		$content = Html::a($label,$url, $options);
 		return $content;	
@@ -191,25 +191,24 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	/*
 	 * SIGNATURE AUTH3 | Approved
 	 * Status Value Signature1 | PurchaseOrder
-	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
+	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 101=Approved]
 	*/
-	function SignApproved($poHeader){
+	function SignApproved($roHeader){
 		$title = Yii::t('app', 'Sign Hire');
-		$options = [ 'id'=>'po-auth1',	
+		$options = [ 'id'=>'so-auth3-id',	
 					  'data-toggle'=>"modal",
-					  'data-target'=>"#po-auth1-sign",											
-					  'class'=>'btn btn-danger btn-xs', 
+					  'data-target'=>"#so-auth3-sign",											
+					  'class'=>'btn btn-warning btn-xs', 
 					  'style'=>['width'=>'100px'],
-					  'title'=>'Detail'
+					  'title'=>'Signature'
 		]; 
 		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/sales-order/sign-created-view','kdpo'=>$poHeader->KD_RO]);
+		$url = Url::toRoute(['/purchasing/sales-order/sign-auth3-view','kd'=>$roHeader->KD_RO]);
 		//$options1['tabindex'] = '-1';
 		$content = Html::a($label,$url, $options);
-		return $content;
-		
-	}
+		return $content;	
+	} 
 ?>
 
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
@@ -678,6 +677,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				<!-- Button Cetak!-->
 				<?php 
 					echo Html::a('<i class="fa fa-print fa-xs"></i> Print', ['cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
+				?>
+				<?php 
+					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print Tmp', ['temp-cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
 				?>				
 			</div>
 		</div>
@@ -709,19 +711,90 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		'id' => 'additem-so',
 		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-pencil-square-o"></div><div><h4 class="modal-title">SO - Add Item</h4></div>',
 		//'size' => 'modal-lg',
-		'headerOptions'=>[				
-				//'style'=> 'border-radius:5px; background-color: rgba(0, 255, 52, 0.1)',
-				//'style'=> 'border-radius:5px; background-color: rgba(45, 184, 255, 0.4)',
-				//'style'=> 'border-radius:5px; background-color: rgba(215, 190, 203, 0.6)',
-				//'style'=> 'border-radius:5px; background-color: rgba(215, 40, 40, 0.1)',
-				//'style'=> 'border-radius:5px; background-color: rgba(215, 72, 30, 0.6)',
-				//'style'=> 'border-radius:5px; background-color: rgba(215, 120, 30, 0.3)',
-				//'style'=> 'border-radius:5px; background-color: rgba(255, 106, 0, 0.8)',
+		'headerOptions'=>[								
 				'style'=> 'border-radius:5px; background-color: rgba(131, 160, 245, 0.5)',
 				
 				
 				
 			]
 	]);
+	Modal::end();
+	
+	/*SIGN AUTHOR1*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#so-auth1-sign').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'so-auth1-sign',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+	
+	/*SIGN AUTHOR2*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#so-auth2-sign').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'so-auth2-sign',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+	
+	/*SIGN AUTHOR3*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#so-auth3-sign').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'so-auth3-sign',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
 	Modal::end();
 ?>
