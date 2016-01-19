@@ -6,6 +6,7 @@ use Yii;
 use yii\web\UploadedFile;
 use lukisongroup\master\models\Tipebarang;
 use lukisongroup\master\models\Kategori;
+use lukisongroup\master\models\Suplier ;
 /**
  * This is the model class for table "b0001".
  *
@@ -81,14 +82,14 @@ class Barang extends \yii\db\ActiveRecord
 	
 
 
-	/* public function getSup()
+	 public function getSup()
     {
-        return $this->hasOne(Distributor::className(), ['KD_DISTRIBUTOR' => 'KD_DISTRIBUTOR']);
-    } */
-	/* public function getNmsuplier()
+        return $this->hasOne(Suplier::className(), ['KD_SUPPLIER' => 'KD_SUPPLIER']);
+    } 
+	 public function getNmsuplier()
     {
-        return $this->sup->NM_DISTRIBUTOR;
-    } */
+        return $this->sup->NM_SUPPLIER;
+    } 
 	
 	public function getBrg()
     {
@@ -106,7 +107,7 @@ class Barang extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['KD_CORP', 'KD_TYPE', 'KD_KATEGORI','KD_BARANG', 'NM_BARANG', 'KD_UNIT','STATUS'], 'required'],
+            [['KD_CORP','KD_SUPPLIER', 'KD_TYPE', 'KD_KATEGORI','KD_BARANG', 'NM_BARANG', 'KD_UNIT','STATUS'], 'required'],
             [['HARGA_SPL','HARGA_PABRIK', 'HARGA_LG','HARGA_DIST','HARGA_SALES'], 'safe'],
 			[['PARENT', 'STATUS'], 'integer'],
 			[['BARCODE64BASE','KD_CAB','KD_DEP','DATA_ALL'], 'safe'],
@@ -158,6 +159,7 @@ class Barang extends \yii\db\ActiveRecord
             'ID' => 'ID',
             'KD_TYPE' => 'Type',
             'KD_BARANG' => 'SKU',
+            'KD_SUPPLIER' => 'Nama Supplier',
             'KD_KATEGORI' => 'Category',
             'NM_BARANG' => 'Nama Barang',
             'KD_UNIT' => 'Unit',

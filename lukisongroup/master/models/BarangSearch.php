@@ -23,7 +23,7 @@ class BarangSearch extends Barang
     public function rules()
     {
         return [
-            [['KD_CORP', 'KD_TYPE', 'KD_KATEGORI','KD_BARANG', 'NM_BARANG', 'KD_UNIT'], 'safe'],
+            [['KD_CORP','KD_SUPPLIER', 'KD_TYPE', 'KD_KATEGORI','KD_BARANG', 'NM_BARANG', 'KD_UNIT'], 'safe'],
             [['nmsuplier','unitbrg','tipebrg','nmkategori'], 'safe'],
             [['HARGA_SPL','HARGA_PABRIK', 'HARGA_LG','HARGA_DIST','HARGA_SALES'], 'safe'],			
 			[['PARENT', 'STATUS'], 'integer'],
