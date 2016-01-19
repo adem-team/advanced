@@ -20,8 +20,11 @@ use lukisongroup\purchasing\models\so\Salesorder;
 use lukisongroup\purchasing\models\so\SalesorderSearch;
 use lukisongroup\purchasing\models\so\Sodetail;
 use lukisongroup\purchasing\models\so\SodetailSearch;
-use lukisongroup\purchasing\models\so\LoginForm;
 use lukisongroup\purchasing\models\so\AdditemValidation;
+
+use lukisongroup\purchasing\models\so\Auth1Model;
+use lukisongroup\purchasing\models\so\Auth2Model;
+use lukisongroup\purchasing\models\so\Auth3Model;
 
 use lukisongroup\hrd\models\Employe;
 //use lukisongroup\master\models\Barang;
@@ -588,6 +591,80 @@ class SalesOrderController extends Controller
 	}
 	
 	/**
+     * Tmp Cetak PDF Approvad
+     * @param string $id
+     * @return mixed
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionTempCetakpdf($kd,$v){
+    	$roHeader = Salesorder::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
+		$detro = $roHeader->detro;
+        $employ = $roHeader->employe;
+		$dept = $roHeader->dept;
+		/* if ($v==101){
+			$filterPdf="KD_RO='".$kd."' AND (STATUS='101' OR STATUS='10')";
+		}elseif($v!=101){
+			$filterPdf="KD_RO='".$kd."' AND STATUS<>'3'";
+		} */
+		//$roDetail = Sodetail::find()->where($filterPdf)->all();
+		$roDetail = Sodetail::find()->where(['KD_RO'=>$kd])->all();
+		
+		/* PR Filter Status Output to Grid print*/
+		$dataProvider = new ArrayDataProvider([
+			'key' => 'ID',
+			'allModels'=>$roDetail,//$detro,			
+			'pagination' => [
+				'pageSize' => 20,
+			],
+		]);
+		
+		//PR
+		//$dataProviderFilter = $dataProvider->getModels();
+		
+		/* $StatusFilter = ["101","10"];
+        $test1 = ArrayHelper::where($dataProviderFilter, function($key, $StatusFilter) {
+             return is_string($value);
+        });
+		print_r($test1); */
+		
+		$content = $this->renderPartial( 'pdfview_tmp', [
+            'roHeader' => $roHeader,
+            'detro' => $detro,
+            'employ' => $employ,
+			'dept' => $dept,
+			'dataProvider' => $dataProvider,
+        ]);
+		
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE, 
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4, 
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_PORTRAIT, 
+			// stream to browser inline
+			'destination' => Pdf::DEST_BROWSER, 
+			// your html content input
+			'content' => $content,  
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting 
+			//D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+			'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			'cssInline' => '.kv-heading-1{font-size:12px}', 
+			 // set mPDF properties on the fly
+			'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+			 // call mPDF methods on the fly
+			'methods' => [ 
+				'SetHeader'=>['Copyright@LukisonGroup '.date("r")], 
+				'SetFooter'=>['{PAGENO}'],
+			]
+		]);		
+		return $pdf->render(); 		
+	}
+	
+	/**
 	 * On Approval View
 	 * Approved_rodetail | Sodetail->ID |  $roDetail->STATUS = 101;
 	 * Approved = 101
@@ -745,37 +822,109 @@ class SalesOrderController extends Controller
 		
     }
 	
-	public function actionApproved_authorize($kd){		
-		$loginform = new LoginForm();					
-		$roHeader = Salesorder::find()->where(['KD_RO' =>$kd])->one();
-		$employe = $roHeader->employe;			
-			return $this->renderAjax('login_signature', [
-				'roHeader' => $roHeader,
-				'employe' => $employe,
-				'loginform' => $loginform,
-			]);
-	}
-	
 	/*
-	 * Sign Approval Status = 101
-	 * Class Model Salesorder->Status = 101 [Approvad]
-	 * Class Model Sodetail->Status 	= 101 [Approvad]
+	 * SIGNARURE AUTH1 | VIEW CREATED 
+	 * Status = 101
+	 * Class Model Requestorder->Status = 101 [Approvad]
+	 * Class Model Rodetail->Status 	= 101 [Approvad]
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1    
 	**/
-	//public function actionApproved_sign(){
-	public function actionApprovedAuthorizeSave(){
-		$loginform = new LoginForm();		
+	public function actionSignAuth1View($kd){		
+		$auth1Mdl = new Auth1Model();					
+		$roHeader = Salesorder::find()->where(['KD_RO' =>$kd])->one();
+		$employe = $roHeader->employe;			
+			return $this->renderAjax('sign-auth1', [
+				'roHeader' => $roHeader,
+				'employe' => $employe,
+				'auth1Mdl' => $auth1Mdl,
+			]);
+	}	
+	/*SIGNARURE AUTH1 | SAVE */
+	public function actionSignAuth1Save(){
+		$auth1Mdl = new Auth1Model();		
 		/*Ajax Load*/
 		if(Yii::$app->request->isAjax){
-			$loginform->load(Yii::$app->request->post());
-			return Json::encode(\yii\widgets\ActiveForm::validate($loginform));
+			$auth1Mdl->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($auth1Mdl));
 		}else{	/*Normal Load*/	
-			if($loginform->load(Yii::$app->request->post())){
-				if ($loginform->loginform_saved()){
+			if($auth1Mdl->load(Yii::$app->request->post())){
+				if ($auth1Mdl->auth1_saved()){
 					$hsl = \Yii::$app->request->post();
-					$kdro = $hsl['LoginForm']['kdro'];
-					return $this->redirect(['/purchasing/sales-order/approved','kd'=>$kdro]);
+					$kdro = $hsl['Auth1Model']['kdro'];
+					return $this->redirect(['/purchasing/sales-order/review','kd'=>$kdro]);
+				}														
+			}
+		}
+	}
+	
+	/*
+	 * SIGNARURE AUTH2 | VIEW CREATED 
+	 * Status = 102
+	 * Class Model Requestorder->Status = 102 [Approvad]
+	 * Class Model Rodetail->Status 	= 102 [Approvad]
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1    
+	**/
+	public function actionSignAuth2View($kd){		
+		$auth2Mdl = new Auth2Model();					
+		$roHeader = Salesorder::find()->where(['KD_RO' =>$kd])->one();
+		$employe = $roHeader->employe;			
+			return $this->renderAjax('sign-auth2', [
+				'roHeader' => $roHeader,
+				'employe' => $employe,
+				'auth2Mdl' => $auth2Mdl,
+			]);
+	}	
+	/*SIGNARURE AUTH2 | SAVE */
+	public function actionSignAuth2Save(){
+		$auth2Mdl = new Auth2Model();		
+		/*Ajax Load*/
+		if(Yii::$app->request->isAjax){
+			$auth2Mdl->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($auth2Mdl));
+		}else{	/*Normal Load*/	
+			if($auth2Mdl->load(Yii::$app->request->post())){
+				if ($auth2Mdl->loginform_saved()){
+					$hsl = \Yii::$app->request->post();
+					$kdro = $hsl['Auth2Model']['kdro'];
+					return $this->redirect(['/purchasing/sales-order/review','kd'=>$kdro]);
+				}														
+			}
+		}
+	}
+	
+	/*
+	 * SIGNARURE AUTH3 | VIEW APPROVED 
+	 * Status = 103
+	 * Class Model Requestorder->Status = 103 [Approvad]
+	 * Class Model Rodetail->Status 	= 103 [Approvad]
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1    
+	**/
+	public function actionSignAuth3View($kd){		
+		$auth3Mdl = new Auth3Model();					
+		$roHeader = Salesorder::find()->where(['KD_RO' =>$kd])->one();
+		$employe = $roHeader->employe;			
+			return $this->renderAjax('sign-auth3', [
+				'roHeader' => $roHeader,
+				'employe' => $employe,
+				'auth3Mdl' => $auth3Mdl,
+			]);
+	}	
+	/*SIGNARURE AUTH3 | SAVE */
+	public function actionSignAuth3Save(){
+		$auth3Mdl = new Auth3Model();		
+		/*Ajax Load*/
+		if(Yii::$app->request->isAjax){
+			$auth3Mdl->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($auth3Mdl));
+		}else{	/*Normal Load*/	
+			if($auth3Mdl->load(Yii::$app->request->post())){
+				if ($auth3Mdl->loginform_saved()){
+					$hsl = \Yii::$app->request->post();
+					$kdro = $hsl['Auth3Model']['kdro'];
+					return $this->redirect(['/purchasing/sales-order/review','kd'=>$kdro]);
 				}														
 			}
 		}
@@ -836,9 +985,6 @@ class SalesOrderController extends Controller
     {
         return $this->render('createpo');
     }
-
-	
-	
 	
 	
     /**

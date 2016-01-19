@@ -621,7 +621,7 @@ $y=4;
 	<!-- Signature PO !-->	
 	<div  class="row">
 		<div class="ccol-md-12">
-			<div class="col-md-9">
+			<div class="col-md-8">
 				<table id="tblRo" class="table table-bordered" style="width:360px;font-family: tahoma ;font-size: 8pt;">
 					<!-- Tanggal!-->
 					 <tr>
@@ -725,9 +725,12 @@ $y=4;
 					</tr>
 				</table>				
 			</div>
-			<div  class="col-md-3" style="text-align:right;">
-				<a href="/purchasing/purchase-order/" class="btn btn-info btn-xs" role="button" style="width:90px">Kembali</a>
+			<div  class="col-md-4" style="text-align:right;">
+				<a href="/purchasing/purchase-order/" class="btn btn-info btn-xs" role="button" style="width:90px">Back</a>
 				<?php echo Html::a('<i class="fa fa-print fa-fw"></i> PDF', ['cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
+				<?php 
+					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print Tmp', ['temp-cetakpdf','kdpo'=>$poHeader->KD_PO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
+				?>
 			</div>
 		</div>
 	</div>

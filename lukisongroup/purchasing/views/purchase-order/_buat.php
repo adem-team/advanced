@@ -190,7 +190,7 @@ use lukisongroup\master\models\Unitbarang;
      * @since 1.2
 	*/
 	function PrintPdf($poHeader){
-			$title = Yii::t('app','PDF');
+			$title = Yii::t('app','Print');
 			$options = [ 'id'=>'pdf-print-id',	
 						  'class'=>'btn btn-default btn-xs', 
 						  'title'=>'Print PDF'
@@ -202,6 +202,23 @@ use lukisongroup\master\models\Unitbarang;
 			return $content;
 	} 
 	
+	/*
+	 * LINK PRINT PDF
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.2
+	*/
+	function PrintPdf_TMP($poHeader){
+			$title = Yii::t('app','Temp Print');
+			$options = [ 'id'=>'pdf-print-id',	
+						  'class'=>'btn btn-default btn-xs', 
+						  'title'=>'Print PDF'
+			]; 
+			$icon = '<span class="fa fa-print fa-fw"></span>';
+			$label = $icon . ' ' . $title;
+			$url = Url::toRoute(['/purchasing/purchase-order/temp-cetakpdf','kdpo'=>$poHeader->KD_PO]);
+			$content = Html::a($label,$url, $options);
+			return $content;
+	} 
 	/*
 	 * LINK PO Note
 	 * @author ptrnov  <piter@lukison.com>
@@ -1005,9 +1022,13 @@ use lukisongroup\master\models\Unitbarang;
 			<div style="text-align:right;float:right">
 				<?php echo PoView($poHeader); ?>
 			</div>
-			<div style="text-align:right;">
+			<div style="text-align:right;float:right"">
 				<?php echo PrintPdf($poHeader); ?>
+			</div>
+			<div style="text-align:right;">
+				<?php echo PrintPdf_TMP($poHeader); ?>
 			</div>				
+			
 		</div>		
 		<!-- GRID PO Detail !-->			
 		<div>			

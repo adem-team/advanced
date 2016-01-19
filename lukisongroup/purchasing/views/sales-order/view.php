@@ -64,71 +64,19 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	}
 	
 	/*
-	 * SIGNATURE AUTH1 | CREATED
-	 * Status Value Signature1 | PurchaseOrder
-	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
+	 * Signature Notify
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
 	*/
-	function SignCreated($poHeader){
-		$title = Yii::t('app', 'Sign Hire');
-		$options = [ 'id'=>'po-auth1',	
-					  'data-toggle'=>"modal",
-					  'data-target'=>"#po-auth1-sign",											
-					  'class'=>'btn btn-danger btn-xs', 
-					  'style'=>['width'=>'100px'],
-					  'title'=>'Detail'
-		]; 
-		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/sales-order/sign-created-view','kdpo'=>$poHeader->KD_RO]);
-		//$options1['tabindex'] = '-1';
-		$content = Html::a($label,$url, $options);
-		return $content;	
+	function SignCreated(){
+		return Html::a('<i class="fa fa-edit fa-xs"></i> wait Signature', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
+	}	
+	function SignChecked(){
+		return Html::a('<i class="fa fa-edit fa-xs"></i> wait Signature', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
 	}
-	
-	/*
-	 * SIGNATURE AUTH2 | CHECKED
-	 * Status Value Signature1 | PurchaseOrder
-	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
-	*/
-	function SignChecked($poHeader){
-		$title = Yii::t('app', 'Sign Hire');
-		$options = [ 'id'=>'po-auth1',	
-					  'data-toggle'=>"modal",
-					  'data-target'=>"#po-auth1-sign",											
-					  'class'=>'btn btn-danger btn-xs', 
-					  'style'=>['width'=>'100px'],
-					  'title'=>'Detail'
-		]; 
-		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/sales-order/sign-created-view','kdpo'=>$poHeader->KD_RO]);
-		//$options1['tabindex'] = '-1';
-		$content = Html::a($label,$url, $options);
-		return $content;	
-	}
-	
-	/*
-	 * SIGNATURE AUTH3 | Approved
-	 * Status Value Signature1 | PurchaseOrder
-	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
-	*/
-	function SignApproved($poHeader){
-		$title = Yii::t('app', 'Sign Hire');
-		$options = [ 'id'=>'po-auth1',	
-					  'data-toggle'=>"modal",
-					  'data-target'=>"#po-auth1-sign",											
-					  'class'=>'btn btn-danger btn-xs', 
-					  'style'=>['width'=>'100px'],
-					  'title'=>'Detail'
-		]; 
-		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/sales-order/sign-created-view','kdpo'=>$poHeader->KD_RO]);
-		//$options1['tabindex'] = '-1';
-		$content = Html::a($label,$url, $options);
-		return $content;
-		
-	}
+	function SignApproved(){
+		return Html::a('<i class="fa fa-edit fa-xs"></i> wait Signature', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
+	} 
  
 ?>
 
@@ -529,7 +477,10 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				<!-- Button Cetak!-->
 				<?php 
 					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print', ['cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
-				?>				
+				?>	
+				<?php 
+					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print Tmp', ['temp-cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
+				?>	
 			</div>
 		</div>
 	</div>	
