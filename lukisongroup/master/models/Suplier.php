@@ -64,7 +64,7 @@ class Suplier extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'NM_SUPPLIER','KD_CORP', 'ALAMAT','STATUS'], 'required'],
+            [[ 'NM_SUPPLIER','KD_CORP', 'ALAMAT','STATUS','PIC'], 'required'],
             [['NM_SUPPLIER','NOTE'],'match','pattern'=> '/^[A-Za-z0-9_ .]+$/u','message'=> 'only [a-zA-Z0-9_].'],
             [['ALAMAT', 'NOTE', 'DATA_ALL'], 'string'],
             [['STATUS'], 'integer'],
@@ -82,6 +82,7 @@ class Suplier extends \yii\db\ActiveRecord
     {
         return [
             'ID' => 'ID',
+            'PIC' => 'PIC',
             'KD_SUPPLIER' => 'Kode Supplier',
             'NM_SUPPLIER' => 'Nama Supplier',
             'ALAMAT' => 'Alamat',
