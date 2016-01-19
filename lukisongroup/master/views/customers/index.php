@@ -752,11 +752,11 @@ $this->registerJs("
 	 
 	 $this->registerJs('
         // $(document).ready(function(){
-            // $(".mo2").on("click",function(){
-            //       var myBookId = $(this).data("id");
-            //         $(".modal-body #bookId").val( myBookId );
+            $(".mo2").on("click",function(){
+                  var myBookId = $(this).attr("data-id");
+                    $(".modal-body #bookId").val( myBookId );
 
-            // })
+            })
            
                         var j = $.noConflict();
                    
@@ -782,14 +782,13 @@ $this->registerJs("
 				// });
 
             $("#save").click(function(e) {
-                 var id = $(".mo2").attr("data-id");
  $.ajax({ 
-   
+
        url: "/master/customers/createmap",
        type: "GET",
         dataType: "json",
        data: {
-              id : id,
+              id : $("#bookId").val(),
               lat: $("#us3-lat").val(),
               long : $("#us3-lon").val(),
               address : $("#us3-address").val(),

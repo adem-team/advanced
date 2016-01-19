@@ -21,6 +21,7 @@ $droptype = ArrayHelper::map(Tipebarang::find()->where(['STATUS' => 1,'PARENT'=>
 //$dropdistrubutor = ArrayHelper::map(Distributor::find()->all(), 'KD_DISTRIBUTOR', 'NM_DISTRIBUTOR');
 $dropkat = ArrayHelper::map(Kategori::find()->where(['STATUS' => 1,'PARENT'=>1])->all(), 'KD_KATEGORI', 'NM_KATEGORI'); 
 $dropunit = ArrayHelper::map(Unitbarang::find()->all(), 'KD_UNIT', 'NM_UNIT');
+$dropsup = ArrayHelper::map(Suplier::find()->all(), 'KD_SUPPLIER', 'NM_SUPPLIER');
 ?>
 
 <div class="barang-form">
@@ -45,6 +46,14 @@ $dropunit = ArrayHelper::map(Unitbarang::find()->all(), 'KD_UNIT', 'NM_UNIT');
 		<?= $form->field($model, 'KD_KATEGORI')->widget(Select2::classname(), [
 			'data' => $dropkat,
 			'options' => ['placeholder' => 'Pilih  KD_KATEGORI ...'],
+			'pluginOptions' => [
+				'allowClear' => true
+				 ],
+		]);?>
+
+		<?= $form->field($model, 'KD_SUPPLIER')->widget(Select2::classname(), [
+			'data' => $dropsup,
+			'options' => ['placeholder' => 'Pilih  Nama Supplier ...'],
 			'pluginOptions' => [
 				'allowClear' => true
 				 ],
