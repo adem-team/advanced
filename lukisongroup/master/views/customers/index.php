@@ -460,7 +460,7 @@ $tabcrud =  GridView::widget([
 															       // 'class' => 'btn btn-default',
 																	'class'=>'mo2 btn btn-default',
 																	// 'value' => $model->CUST_KD,
-                                                                    'data-id'=> $model->CUST_KD,
+                                                                    'data-id'=> $key,
                                                                    'data-toggle'=>"modal",
                                                                   'data-target'=>"#us6-dialog",
                                                                 // 'data-title'=> $model->CUST_KD,
@@ -923,6 +923,12 @@ $this->registerJs("
 	 
 	 $this->registerJs('
         $(document).ready(function(){
+            $(".mo2").click(function(){
+                  var myBookId = $(this).data("id");
+                    $(".modal-body #bookId").val( myBookId );
+
+            })
+           
                         var j = $.noConflict();
                    
 						   j("#us3").locationpicker({
@@ -955,13 +961,6 @@ $this->registerJs("
     
       // var jq = $.noConflict();
 $('#save').click(function(e) {
-	
-    $('#mo2').change(function() {
-		var id =  $('.mo2').data('id');
-	})
-    
-   
-
  $.ajax({
 
 	 
@@ -1011,8 +1010,12 @@ $('#save').click(function(e) {
                 <div class="form-horizontal" style="width: 550px">
                     <div class="form-group">
 		<form id="myform">
+          <div class="form-group">
+                <label class="col-sm-2 control-label">Kode Customers:</label>
+                <div class="col-sm-10"><input type="text" class="form-control" name="bookId" id="bookId" value=""/></div>
+                    </div>
 					
-					 <input type="text" name="bookId" id="bookId" value=""/>
+					  <div class="form-group">
                         <label class="col-sm-2 control-label">Location:</label>
 
 	
