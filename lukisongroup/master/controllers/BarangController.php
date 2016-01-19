@@ -35,6 +35,32 @@ class BarangController extends Controller
         ];
     }
 
+	/**
+     * Before Action Index
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	public function beforeAction(){
+			if (Yii::$app->user->isGuest)  {
+				 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+			}
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+				   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true; 
+               }
+            } else {
+                return true;
+            }
+    }
+	
     /**
      * Lists all Barang models.
      * @return mixed
@@ -103,10 +129,10 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 				//$kdDbtr = $model->KD_DISTRIBUTOR;	
 				$kdType = $model->KD_TYPE;	
 				$kdKategori = $model->KD_KATEGORI;	
-				$kdUnit = $model->KD_UNIT;	
-		
-				//$kd = Yii::$app->esmcode->kdbarang($kdDbtr,$kdType,$kdKategori,$kdUnit);
-				$kd = Yii::$app->esmcode->kdbarang($kdType,$kdKategori,$kdUnit);
+				$kdUnit = $model->KD_UNIT;		
+				$kdPrn = $model->PARENT;
+				$kdCorp=  $model->KD_CORP;
+				$kd = Yii::$app->esmcode->kdbarangProdak($kdPrn,$kdCorp,$kdType,$kdKategori,$kdUnit);
 
 				$model->KD_BARANG = $kd;
 		if($model->validate())
@@ -140,9 +166,9 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 		$kdType = $model->KD_TYPE;	
 		$kdKategori = $model->KD_KATEGORI;	
 		$kdUnit = $model->KD_UNIT;	
-		
-        //$kd = Yii::$app->esmcode->kdbarang($kdDbtr,$kdType,$kdKategori,$kdUnit);
-		$kd = Yii::$app->esmcode->kdbarang($kdType,$kdKategori,$kdUnit);
+		$kdPrn = $model->PARENT;
+        $kdCorp=  $model->KD_CORP;
+		$kd = Yii::$app->esmcode->kdbarangProdak($kdPrn,$kdCorp,$kdType,$kdKategori,$kdUnit);
 
 		$model->KD_BARANG = $kd;
 		if($model->validate())
