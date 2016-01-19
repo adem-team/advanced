@@ -125,8 +125,6 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 				$kdKategori = $model->KD_KATEGORI;	
 				$kdUnit = $model->KD_UNIT;	
 				$kdPrn = $model->PARENT;
-		
-				//$kd = Yii::$app->esmcode->kdbarang($kdDbtr,$kdType,$kdKategori,$kdUnit);
 				$kd = Yii::$app->esmcode->kdbarangUmum($kdPrn,$kdType,$kdKategori,$kdUnit);
 
 				$model->KD_BARANG = $kd;
@@ -161,9 +159,8 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 		$kdType = $model->KD_TYPE;	
 		$kdKategori = $model->KD_KATEGORI;	
 		$kdUnit = $model->KD_UNIT;	
-		
-        //$kd = Yii::$app->esmcode->kdbarang($kdDbtr,$kdType,$kdKategori,$kdUnit);
-		$kd = Yii::$app->esmcode->kdbarang($kdType,$kdKategori,$kdUnit);
+		$kdPrn = $model->PARENT;
+		$kd = Yii::$app->esmcode->kdbarangUmum($kdPrn,$kdType,$kdKategori,$kdUnit);
 
 		$model->KD_BARANG = $kd;
 		if($model->validate())
