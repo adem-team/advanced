@@ -230,44 +230,44 @@ use kartik\widgets\DepDrop;
  // ",$this::POS_END);
  
 
-$script = <<<SKRIPT
+// $script = <<<SKRIPT
 
- // $('#form').on('shown.bs.modal', function () {
- //                $('#tes').locationpicker('autosize');
- //            });
-// $(document).ready(function(){
+//  // $('#form').on('shown.bs.modal', function () {
+//  //                $('#tes').locationpicker('autosize');
+//  //            });
+// // $(document).ready(function(){
    
-//     $("#myBtn").click(function(){
-//         $('#tes').locationpicker('autosize')
-//         $("#myModal").modal()
+// //     $("#myBtn").click(function(){
+// //         $('#tes').locationpicker('autosize')
+// //         $("#myModal").modal()
 
-//     }); 
-// });
+// //     }); 
+// // });
 
-// $(function(){
-//      $('#tes').locationpicker('autosize');
-// $('#modalcp').click(function() {
-//     $('#modal').modal('show')
-//         .find('#modalcalon')
-//         .load($(this).attr('value'));
+// // $(function(){
+// //      $('#tes').locationpicker('autosize');
+// // $('#modalcp').click(function() {
+// //     $('#modal').modal('show')
+// //         .find('#modalcalon')
+// //         .load($(this).attr('value'));
 
-//     })
-//         });
+// //     })
+// //         });
 	
-	 // $('select#customers-province_id').change(function(){
-  //       var id = $(this).val();
+// 	 // $('select#customers-province_id').change(function(){
+//   //       var id = $(this).val();
 	
 		
-  //        $.get('/master/customers/lisarea',{id : id},
-  //            function( data ) {
-  //    $( 'select#customers-city_id' ).html( data );
-  //          // alert(data);
-  //                       });
-  //                   });
+//   //        $.get('/master/customers/lisarea',{id : id},
+//   //            function( data ) {
+//   //    $( 'select#customers-city_id' ).html( data );
+//   //          // alert(data);
+//   //                       });
+//   //                   });
 	
         
    
-SKRIPT;
+// SKRIPT;
 
-$this->registerJs($script);
+// $this->registerJs($script);
 

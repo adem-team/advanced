@@ -80,13 +80,7 @@ class CustomersController extends Controller
            if(Yii::$app->request->post('hasEditable'))
         {
             $ID = \Yii::$app->request->post('editableKey');
-            $model = Customers::findOne($ID);
-        
-
-
-           
-            
-            
+            $model = Customers::findOne($ID); 
             $out = Json::encode(['output'=>'', 'message'=>'']);
       
             // fetch the first entry in posted data (there should
@@ -134,59 +128,6 @@ class CustomersController extends Controller
            
         }
 
-        //      if(Yii::$app->request->post('hasEditable'))
-        // {
-        //     $ID = \Yii::$app->request->post('editableKey');
-        //     $model = Kategoricus::findOne($ID);
-
-           
-            
-            
-        //     $out = Json::encode(['output'=>'', 'message'=>'']);
-
-        //     // fetch the first entry in posted data (there should
-        //     // only be one entry anyway in this array for an
-        //     // editable submission)
-        //     // - $posted is the posted data for Book without any indexes
-        //     // - $post is the converted array for single model validation
-        //     $post = [];
-        //     $posted = current($_POST['Kategoricus']);
-        //     $post['Kategoricus'] = $posted;
-
-        //     // load model like any single model validation
-        //     if ($model->load($post)) {
-        //         // can save model or do something before saving model
-        //         $model->save();
-
-        //         // custom output to return to be displayed as the editable grid cell
-        //         // data. Normally this is empty - whereby whatever value is edited by
-        //         // in the input by user is updated automatically.
-        //         $output = '';
-
-        //         // specific use case where you need to validate a specific
-        //         // editable column posted when you have more than one
-        //         // EditableColumn in the grid view. We evaluate here a
-        //         // check to see if buy_amount was posted for the Book model
-        //         if (isset($posted['CUST_KTG_NM'])) {
-        //            // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-        //             $output = $model->CUST_KTG_NM;
-        //         }
-
-        //         // similarly you can check if the name attribute was posted as well
-        //         // if (isset($posted['name'])) {
-        //         //   $output =  ''; // process as you need
-        //         // }
-        //         $out = Json::encode(['output'=>$output, 'message'=>'']);
-        //     }
-        //     // return ajax json encoded response and exit
-        //     echo $out;
-        //     return;
-        
-        
-            
-        // }
-      
-		// $model = new Customers();
         return $this->render('index', [
 			'searchModel1' => $searchModel1,
 			'dataProviderkat'  =>   $dataProviderkat ,
@@ -196,7 +137,7 @@ class CustomersController extends Controller
       'searchmodelpro' => $searchmodelpro,
       'dataproviderpro' =>  $dataproviderpro,
       'dataproviderkota' => $dataproviderkota,
-			  // 'model'=>$model,
+			
         ]);
 	}
 
@@ -219,13 +160,6 @@ class CustomersController extends Controller
         ]);
     }
 
-
-    // public function actionViewlokasi($id)
-    // {
-    //     return $this->render('viewlokasi', [
-    //         'model' => $this->findModelcust($id),
-    //     ]);
-    // }
 	 
 	  public function actionViewcust($id)
     {
@@ -236,8 +170,6 @@ class CustomersController extends Controller
 	
     public function actionView($id)
     {
-      // print_r($id);
-      // die();
         return $this->renderAjax('viewkat', [
             'model' => $this->findModel($id),
         ]);
@@ -329,7 +261,7 @@ class CustomersController extends Controller
             
     }
 
-   
+   // action depdrop
    public function actionLisdata() {
     $out = [];
     if (isset($_POST['depdrop_parents'])) {
