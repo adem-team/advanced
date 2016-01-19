@@ -359,7 +359,7 @@ $tabcrud = GridView::widget([
                         'dropdownOptions'=>['class'=>'pull-right dropup'],
                         'buttons' => [
                             'view' =>function($url, $model, $key){
-                                    return'<li>'.  Html::a('<span class="glyphicon glyphicon-eye-open"></span> ',
+                                    return'<li>'.  Html::a('<span class="glyphicon glyphicon-eye-open"></span> '.Yii::t('app', 'View'),
                                                                 ['viewcust','id'=>$model->CUST_KD],[
                                                                 // 'data-toggle'=>"modal",
                                                                 // 'data-target'=>"#view3",
@@ -368,8 +368,7 @@ $tabcrud = GridView::widget([
                             },
                                
                              'update' =>function($url, $model, $key){
-                                    return '<li>'. Html::a('<span class="glyphicon glyphicon-user"></span>   
-                                                                ',
+                                    return '<li>'. Html::a('<span class="glyphicon glyphicon-user"></span>'.Yii::t('app', 'Update'),
                                                                 ['updatecus','id'=>$model->CUST_KD],[
                                                                 'data-toggle'=>"modal",
                                                                 'data-target'=>"#createcus",
@@ -379,7 +378,7 @@ $tabcrud = GridView::widget([
 
                             
                               'delete' =>function($url, $model, $key){
-                                    return '<li>'. Html::a('<i class="glyphicon glyphicon-trash"></i>',
+                                    return '<li>'. Html::a('<i class="glyphicon glyphicon-trash"></i>'.Yii::t('app', 'Delete'),
                                                                 ['deletecus','id'=>$model->CUST_KD],[
                                                                 // 'data-toggle'=>"modal",
                                                                 // 'data-target'=>"#form",
@@ -387,7 +386,7 @@ $tabcrud = GridView::widget([
                                                                 ]).'</li>';
                             },
 							    'edit' =>function($url, $model, $key){
-                                    return '<li>'. Html::button('<i class="glyphicon glyphicon-globe"></i>',
+                                    return '<li>'. Html::a('<i class="glyphicon glyphicon-globe"></i>'.Yii::t('app', 'Create Map'),'#',
 								
                                                              [
 															       // 'class' => 'btn btn-default',
@@ -753,11 +752,11 @@ $this->registerJs("
 	 
 	 $this->registerJs('
         // $(document).ready(function(){
-            $(".mo2").click(function(){
-                  var myBookId = $(this).data("id");
-                    $(".modal-body #bookId").val( myBookId );
+            // $(".mo2").on("click",function(){
+            //       var myBookId = $(this).data("id");
+            //         $(".modal-body #bookId").val( myBookId );
 
-            })
+            // })
            
                         var j = $.noConflict();
                    
@@ -783,12 +782,14 @@ $this->registerJs("
 				// });
 
             $("#save").click(function(e) {
+                 var id = $(".mo2").attr("data-id");
  $.ajax({ 
+   
        url: "/master/customers/createmap",
        type: "GET",
         dataType: "json",
        data: {
-              id : $("#bookId").val(),
+              id : id,
               lat: $("#us3-lat").val(),
               long : $("#us3-lon").val(),
               address : $("#us3-address").val(),

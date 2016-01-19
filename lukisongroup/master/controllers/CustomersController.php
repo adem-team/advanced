@@ -252,7 +252,8 @@ class CustomersController extends Controller
             ]);
         }
     }
-
+ 
+ // data json map
     public function actionMap()
     {
             $conn = Yii::$app->db3;
