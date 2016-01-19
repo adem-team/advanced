@@ -961,13 +961,11 @@ $this->registerJs("
     
       // var jq = $.noConflict();
 $('#save').click(function(e) {
- $.ajax({
-
-	 
+ $.ajax({ 
        url: '/master/customers/createmap',
        type: 'GET',
        data: {
-              id : id,
+              id : $('#bookId').val(),
 			  lat: $('#us3-lat').val(),
 			  long : $('#us3-lon').val(),
 			  address : $('#us3-address').val(),
@@ -981,7 +979,7 @@ $('#save').click(function(e) {
                 if(result == 1 )
                                           {
                                              $(document).find('#us6-dialog').modal('hide');
-                                             // $('#myform').trigger('reset');
+                                             $('#myform').trigger('reset');
 											 // $('#hide').val('');
                                              $.pjax.reload({container:'#axctive224'});
                                           }

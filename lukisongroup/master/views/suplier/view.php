@@ -22,6 +22,7 @@ $this->title = Yii::t('app', 'Umum - Supplier Detail');	    /* title pada header
         'attributes' => [
 //			'ID',
 			'KD_SUPPLIER',
+			'PIC',
 			'NM_SUPPLIER',
 			'ALAMAT:ntext',
 			'KOTA',
