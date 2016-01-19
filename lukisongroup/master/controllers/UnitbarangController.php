@@ -89,7 +89,7 @@ class UnitbarangController extends Controller
         $model = new Unitbarang();
 
         if ($model->load(Yii::$app->request->post())) {
-			 $kd = Yii::$app->mastercode->kdUnit();
+			 $kd = Yii::$app->esmcode->kdUnit();
 			$model->KD_UNIT = $kd;
 			if($model->validate())
 			{
