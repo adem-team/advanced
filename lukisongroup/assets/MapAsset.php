@@ -32,7 +32,8 @@ class MapAsset extends AssetBundle
 		
          // 'mapjs/geo.js'
 	];
-     // public $jsOptions = ['position' => \yii\web\View::POS_READY];
+
+    public $jsOptions = ['position' => \yii\web\View::POS_BEGIN];
     public $depends = [
         'yii\web\YiiAsset',
        'yii\bootstrap\BootstrapAsset',

@@ -385,18 +385,22 @@ $tabcrud = GridView::widget([
                                                                 // 'data-title'=> $model->CUST_KD,
                                                                 ]).'</li>';
                             },
-							    'edit' =>function($url, $model, $key){
+							    'edit' =>function($url, $model,$key){
                                     return '<li>'. Html::a('<i class="glyphicon glyphicon-globe"></i>'.Yii::t('app', 'Create Map'),'#',
 								
-                                                             [
-															       // 'class' => 'btn btn-default',
-																	'class'=>'mo2 btn btn-default',
-																	// 'value' => $model->CUST_KD,
-                                                                    'data-id'=> $key,
-                                                                   'data-toggle'=>"modal",
-                                                                  'data-target'=>"#us6-dialog",
-                                                                // 'data-title'=> $model->CUST_KD,
-                                                                ]).'</li>';
+                                                             [ 'class'=>'btn btn-default',
+									                                              //'data-id' => $key,
+                                                                'id'=>'approved',
+                                                                'data-pjax' => true,
+                                                                'data-toggle-approved'=>$key,
+																	                             // 'data-toggle'=>"modal",
+                                              //                  'data-target'=>"#us6-dialog",
+
+															                                ]).'</li>';
+                                                                  
+                                                                  
+                                                              
+                                                               
                             },
 
 
@@ -418,8 +422,8 @@ $tabcrud = GridView::widget([
 	 'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create  ',
                         ['modelClass' => 'Customers',]),'/master/customers/createcustomers',[  
                                                             'data-toggle'=>"modal",
-															'id'=>'modcus',
-                                                            'data-pjax'=>0,
+															                               'id'=>'modcus',
+                                                        
                                                             'data-target'=>"#createcus",
                                                             'class' => 'btn btn-success'
                                                             ])
@@ -429,10 +433,10 @@ $tabcrud = GridView::widget([
 
                     
         ],
-         'pjax'=>true,
+        'pjax'=>true,
         'pjaxSettings'=>[
             'options'=>[
-                'enablePushState'=>false,
+                'enablePushState'=>true,
                 'id'=>'gv-cus',
             
         ],
@@ -442,11 +446,11 @@ $tabcrud = GridView::widget([
         'bordered'=>true,
         'striped'=>'4px',
         'autoXlFormat'=>true,
-        'export'=>[
-            'fontAwesome'=>true,
-            'showConfirmAlert'=>false,
-            'target'=>GridView::TARGET_BLANK
-        ],
+        // 'export'=>[
+        //     'fontAwesome'=>true,
+        //     'showConfirmAlert'=>false,
+        //     'target'=>GridView::TARGET_BLANK
+        // ],
 
     ],
 
@@ -749,72 +753,86 @@ $this->registerJs("
 
 
 
+$this->registerJs("
+    $(document).on('click', '[data-toggle-approved]', function(e){
+      e.preventDefault();
+
+      var idx = $(this).data('toggle-approved');
+
+      alert(idx);
+    });
+  ",$this::POS_READY);
+
+
+
 	 
 	 $this->registerJs('
         // $(document).ready(function(){
             $(".mo2").on("click",function(){
-                  var myBookId = $(this).attr("data-id");
-                    $(".modal-body #bookId").val( myBookId );
+                  // var myBookId = $(this).attr("data-id");
+                  //   $(".modal-body #bookId").val( myBookId );
+                    var fID = $(this).closest("tr").data("key");
+                    alert(fID);
 
             })
            
-                        var j = $.noConflict();
+ //                        var j = $.noConflict();
                    
-						   j("#us3").locationpicker({
-                            location: {latitude:  -6.214620, longitude:  106.845130 },
-                            radius: 300,
-                            inputBinding: {
-                                latitudeInput: $("#us3-lat"),
-                                longitudeInput: $("#us3-lon"),
-                                radiusInput: $("#us3-radius"),
-                                locationNameInput: $("#us3-address")
-                            },
-                             enableAutocomplete: true
-                        });
+	// 					   j("#us3").locationpicker({
+ //                            location: {latitude:  -6.214620, longitude:  106.845130 },
+ //                            radius: 300,
+ //                            inputBinding: {
+ //                                latitudeInput: $("#us3-lat"),
+ //                                longitudeInput: $("#us3-lon"),
+ //                                radiusInput: $("#us3-radius"),
+ //                                locationNameInput: $("#us3-address")
+ //                            },
+ //                             enableAutocomplete: true
+ //                        });
 				
 	
-                        j("#us6-dialog").on("shown.bs.modal", function() {
-                            j("#us3").locationpicker("autosize");
+ //                        j("#us6-dialog").on("shown.bs.modal", function() {
+ //                            j("#us3").locationpicker("autosize");
 						
 					
-                        });
+ //                        });
 
-				// });
+	// 			// });
 
-            $("#save").click(function(e) {
- $.ajax({ 
+ //            $("#save").click(function(e) {
+ // $.ajax({ 
 
-       url: "/master/customers/createmap",
-       type: "GET",
-        dataType: "json",
-       data: {
-              id : $("#bookId").val(),
-              lat: $("#us3-lat").val(),
-              long : $("#us3-lon").val(),
-              address : $("#us3-address").val(),
+ //       url: "/master/customers/createmap",
+ //       type: "GET",
+ //        dataType: "json",
+ //       data: {
+ //              id : $("#bookId").val(),
+ //              lat: $("#us3-lat").val(),
+ //              long : $("#us3-lon").val(),
+ //              address : $("#us3-address").val(),
               
-             },
+ //             },
         
          
-            success: function (result) {
-                // alert(result)
+ //            success: function (result) {
+ //                // alert(result)
                 
-                if(result == 1 )
-                {
-                     $(document).find("#us6-dialog").modal("hide");
-                     $("#myform").trigger("reset");
-                     $.pjax.reload({container:"#axctive224"});                     
+ //                if(result == 1 )
+ //                {
+ //                     $(document).find("#us6-dialog").modal("hide");
+ //                     $("#myform").trigger("reset");
+ //                     $.pjax.reload({container:"#axctive224"});                     
                                              
-                }
-                else{
-                         alert("error")                 
-                }
-            },
+ //                }
+ //                else{
+ //                         alert("error")                 
+ //                }
+ //            },
           
        
-       });
-         e.preventDefault();
-  });
+ //       });
+ //         e.preventDefault();
+ //  });
 
         ',$this::POS_READY); 
 			  
