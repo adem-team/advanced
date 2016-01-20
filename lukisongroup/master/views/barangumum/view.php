@@ -31,6 +31,11 @@ $this->title = Yii::t('app', 'Prodak View');       /* title pada header page */
 				'format' => ['image',['width'=>'150','height'=>'150']],
 			],	
 			'KD_BARANG',
+			// 'Nmsuplier',
+			[
+				'label' => 'Nama Supplier',
+				'attribute' =>'Nmsuplier',
+			],
 			'NM_BARANG',
 			[
 				'label' => 'Total Barang',
