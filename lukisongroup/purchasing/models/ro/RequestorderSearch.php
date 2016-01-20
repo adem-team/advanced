@@ -45,6 +45,95 @@ class RequestorderSearch extends Requestorder
         return Model::scenarios();
     }
 
+	/*
+	 * OUTBOX RO
+	 * ACTION CREATE
+	 * @author ptrnov [piter@lukison]
+	 * @since 1.2
+	*/
+	public function searchRoOutbox($params)
+    {
+		$profile=Yii::$app->getUserOpt->Profile_user();
+       
+		$query = Requestorder::find()
+				->JoinWith('dept',true,'left JOIN')	
+				->where("(r0001.PARENT_ROSO=0) AND r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."'");
+		
+		$dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+		$this->load($params);
+		if (!$this->validate()) {
+			//return $dataProvider;
+			//$dataProvider->query->where('0=1');
+			return $dataProvider;
+		} 
+			
+		$query->andFilterWhere(['like', 'KD_RO', $this->KD_RO])
+			  ->andFilterWhere(['like', 'EMP_NM', $this->EMP_NM])
+			  ->andFilterWhere(['like', 'u0002a.DEP_NM', $this->getAttribute('dept.DEP_NM')]);
+			  
+			
+		if($this->CREATED_AT!=''){
+            $date_explode = explode(" - ", $this->CREATED_AT);
+            $date1 = trim($date_explode[0]);
+            $date2= trim($date_explode[1]);
+            $query->andFilterWhere(['between','CREATED_AT', $date1,$date2]);
+        } 
+		
+		return $dataProvider;
+    }
+	
+	/*
+	 * INBOX RO
+	 * ACTION CHECKED | APPROVAL
+	 * @author ptrnov [piter@lukison]
+	 * @since 1.2
+	*/
+	public function searchRoInbox($params)
+    {
+		$profile=Yii::$app->getUserOpt->Profile_user();
+        //$query = Pilotproject::find()->Where('sc0001.STATUS<>3 AND DEP_ID="'.$profile->emp->DEP_ID .'"');
+		
+		if($profile->emp->GF_ID<=4){
+			$query = Requestorder::find()
+						->JoinWith('dept',true,'left JOIN')	
+						->where("(r0001.PARENT_ROSO=0) AND (r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."') OR (r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.KD_DEP = '".$profile->emp->DEP_ID."') OR (r0001.USER_CC='".$profile->emp->EMP_ID."')");
+        }else{
+			$query = Requestorder::find()
+					->JoinWith('dept',true,'left JOIN')	
+					->where("(r0001.PARENT_ROSO=0) AND r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."' OR (r0001.USER_CC='".$profile->emp->EMP_ID."')");
+		}
+		
+		$dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+		$this->load($params);
+		if (!$this->validate()) {
+			//return $dataProvider;
+			//$dataProvider->query->where('0=1');
+			return $dataProvider;
+		} 
+			
+		$query->andFilterWhere(['like', 'KD_RO', $this->KD_RO])
+			  ->andFilterWhere(['like', 'EMP_NM', $this->EMP_NM])
+			  ->andFilterWhere(['like', 'u0002a.DEP_NM', $this->getAttribute('dept.DEP_NM')]);
+			  
+			
+		if($this->CREATED_AT!=''){
+            $date_explode = explode(" - ", $this->CREATED_AT);
+            $date1 = trim($date_explode[0]);
+            $date2= trim($date_explode[1]);
+            $query->andFilterWhere(['between','CREATED_AT', $date1,$date2]);
+        } 
+		
+		return $dataProvider;
+    }
+	
+	
+	
 	public function searchRo($params)
     {
 		$profile=Yii::$app->getUserOpt->Profile_user();
@@ -53,11 +142,11 @@ class RequestorderSearch extends Requestorder
 		if($profile->emp->JOBGRADE_ID == 'M' OR $profile->emp->JOBGRADE_ID == 'SM' ){
 			$query = Requestorder::find()
 						->JoinWith('dept',true,'left JOIN')	
-						->where("(r0001.PARENT_ROSO=0) AND (r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."') OR (r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.KD_DEP = '".$profile->emp->DEP_ID."')");
+						->where("(r0001.PARENT_ROSO=0) AND (r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."') OR (r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.KD_DEP = '".$profile->emp->DEP_ID."') OR (r0001.USER_CC='".$profile->emp->EMP_ID."')");
         }else{
 			$query = Requestorder::find()
 					->JoinWith('dept',true,'left JOIN')	
-					->where("(r0001.PARENT_ROSO=0) AND r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."'");
+					->where("(r0001.PARENT_ROSO=0) AND r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."' OR (r0001.USER_CC='".$profile->emp->EMP_ID."')");
 		}
 		$dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -180,15 +269,15 @@ class RequestorderSearch extends Requestorder
         return $dataProvider;
     }
     
-    public function cariRO($params)
+    public function cariHeaderRO_SendPO($params)
     {
-        $query = Requestorder::find()->where("r0001.KD_RO LIKE 'RO%' and r0001.status <> 3 and r0001.status <> 0");
+        $query = Requestorder::find()->where("r0001.KD_RO LIKE 'RO%' and r0001.status <> 3 and r0001.status =103 ");
         
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
 			'pagination' => [
-					'pageSize' => 15,
+					'pageSize' => 20,
 				],
         ]);
 

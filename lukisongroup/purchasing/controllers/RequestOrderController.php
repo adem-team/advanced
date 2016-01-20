@@ -100,9 +100,14 @@ class RequestOrderController extends Controller
         
 		//$searchModel->KD_RO ='2015.12.04.RO.0070';
 		$dataProvider = $searchModel->searchRo(Yii::$app->request->queryParams);
+		$dataProviderInbox = $searchModel->searchRoInbox(Yii::$app->request->queryParams);
+		$dataProviderOutbox = $searchModel->searchRoOutbox(Yii::$app->request->queryParams);
+		
 		  return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+			'dataProviderInbox' =>$dataProviderInbox,
+			'dataProviderOutbox' =>$dataProviderOutbox,
 			//'getPermission'=> $getPermission,
         ]);
 		
@@ -666,7 +671,7 @@ class RequestOrderController extends Controller
 	/**
 	 * On Approval View
 	 * Approved_rodetail | Rodetail->ID |  $roDetail->STATUS = 101;
-	 * Approved = 101
+	 * Approved = 1
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
@@ -677,7 +682,7 @@ class RequestOrderController extends Controller
 			$id=$request->post('id');
 			//\Yii::$app->response->format = Response::FORMAT_JSON;
 			$roDetail = Rodetail::findOne($id);
-			$roDetail->STATUS = 101;
+			$roDetail->STATUS = 1;
 			//$ro->NM_BARANG=''
 			$roDetail->save();
 			return true;
@@ -885,7 +890,7 @@ class RequestOrderController extends Controller
 			return Json::encode(\yii\widgets\ActiveForm::validate($auth2Mdl));
 		}else{	/*Normal Load*/	
 			if($auth2Mdl->load(Yii::$app->request->post())){
-				if ($auth2Mdl->loginform_saved()){
+				if ($auth2Mdl->auth2_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth2Model']['kdro'];
 					return $this->redirect(['/purchasing/request-order/review','kd'=>$kdro]);
@@ -921,7 +926,7 @@ class RequestOrderController extends Controller
 			return Json::encode(\yii\widgets\ActiveForm::validate($auth3Mdl));
 		}else{	/*Normal Load*/	
 			if($auth3Mdl->load(Yii::$app->request->post())){
-				if ($auth3Mdl->loginform_saved()){
+				if ($auth3Mdl->auth3_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth3Model']['kdro'];
 					return $this->redirect(['/purchasing/request-order/review','kd'=>$kdro]);

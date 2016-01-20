@@ -26,9 +26,10 @@ $profile=Yii::$app->getUserOpt->Profile_user();
 		]);
 	?>	
 	
-		<?php echo  $form->field($auth2Mdl, 'empNm')->hiddenInput(['value' => $profile->emp->EMP_NM .' '. $profile->emp->EMP_NM_BLK ,'maxlength' => true, 'readonly' => true])->label('Employee Name')->label(false); ?>
+		<?php echo  $form->field($auth2Mdl, 'empNm')->textInput(['value' => $profile->emp->EMP_NM .' '. $profile->emp->EMP_NM_BLK ,'maxlength' => true, 'readonly' => true])->label('Employee Name')->label(false); ?>
 		<?php echo  $form->field($auth2Mdl, 'kdro')->hiddenInput(['value' => $roHeader->KD_RO,'maxlength' => true, 'readonly' => true])->label(false); ?>
-		<?php echo  $form->field($auth2Mdl, 'status')->dropDownList($valStt); ?>
+		<?php //echo  $form->field($auth2Mdl, 'status')->dropDownList($valStt); ?>
+		<?php echo  $form->field($auth2Mdl, 'status')->hiddenInput(['value'=>102])->label(false); ?>
 		<?php echo  $form->field($auth2Mdl, 'password')->textInput(['type'=>'password','maxlength' => true])->label('Password'); ?>
 		<div style="text-align: right;"">
 			<?php echo Html::submitButton('login',['class' => 'btn btn-primary']); ?>

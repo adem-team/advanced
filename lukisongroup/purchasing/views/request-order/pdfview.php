@@ -21,9 +21,9 @@ $this->params['breadcrumbs'][] = $this->title;
 	 * 7. UNKNOWN	<>		| Ro tidak valid
 	*/
 	function statusProcessRo($model){
-		if($model->STATUS==0 or $model->STATUS==1){
+		if($model->STATUS==0 ){
 			return Html::img('@web/img_setting/kop/check_box_normal-20.png',  ['style'=>'width:12px;height:12px;']);
-		}elseif ($model->STATUS==101 or  $model->STATUS==10){
+		}elseif ($model->STATUS==1){
 			return Html::img('@web/img_setting/kop/check_box_true-20.png',  ['class' => 'pnjg', 'style'=>'width:12px;height:12px;']);
 		}else{
 			return Html::img('@web/img_setting/kop/check_box_false-20.png',  ['class' => 'pnjg', 'style'=>'width:12px;height:12px;']);
@@ -376,7 +376,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					<img src="<?php echo $roHeader->SIG2_SVGBASE64;?> height='120' width='150'"></img>
 				</th>
 				<th style="text-align: center; vertical-align:middle;width:120">
-					<img src="<?php echo $roHeader->SIG3_SVGBASE64;?> height='120' width='150'"></img>
+					<img src="<?=$roHeader->SIG3_SVGBASE64;?> height='120' width='150'"></img>
 				</th>
 			</tr>
 			<!--Nama !-->

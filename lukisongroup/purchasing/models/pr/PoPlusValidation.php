@@ -5,7 +5,7 @@ use Yii;
 use yii\base\Model;
 use lukisongroup\purchasing\models\pr\Purchaseorder;
 use lukisongroup\purchasing\models\pr\Purchasedetail;
-use lukisongroup\master\models\Barangumum;
+use lukisongroup\master\models\Barang;
 /*
 * PO PLUS validation | PO Details
 * @author ptrnov  <piter@lukison.com>
@@ -15,6 +15,7 @@ use lukisongroup\master\models\Barangumum;
 class PoPlusValidation extends Model
 {
     public $kD_PO;
+	public $pARENT_BRG;
 	public $nM_BARANG;
 	public $kD_KATEGORI;
 	public $kD_BARANG;
@@ -51,9 +52,11 @@ class PoPlusValidation extends Model
 			if ($cntDetailPo) {
                 $this->addError($attribute, 'SKU Alrady Exist,Please Update Quantity or Price');				
             }else{
-				$brgUmum=Barangumum::find()->where(['KD_BARANG'=>$this->kD_BARANG])->one();				
-				$brgUnit= $brgUmum->unit;
-				$this->nM_BARANG=$brgUmum->NM_BARANG;
+				$brg=Barang::find()->where(['KD_BARANG'=>$this->kD_BARANG])->one();	
+				//$roDetail = Rodetail::find()->where(['KD_RO'=>$kD_RO,'KD_BARANG'=>$this->kD_BARANG])->all();				
+				$brgUnit= $brg->unitb;
+				$this->nM_BARANG=$brg->NM_BARANG;
+				$this->hARGA=$brg->PARENT==1?$brg->HARGA_PABRIK:$brg->HARGA_SPL;
 				$this->nM_UNIT=$brgUnit->NM_UNIT;
 				$this->qTY_UNIT=$brgUnit->QTY;
 				$this->wEIGHT_UNIT=$brgUnit->WEIGHT;

@@ -55,10 +55,14 @@ class Auth2Model extends Model
 		 * @since 1.1
 		*/
 		if (!$this->hasErrors()) {
-			 $empid = $this->getEmpid();
+			$roHeaderCheck = Requestorder::find()->where(['KD_RO' =>$this->kdro])->one();
+			 $empid = $this->getEmpid(Yii::$app->user->identity->EMP_ID);
 			if (!$empid || !$empid->validateOldPasswordCheck($this->password)) {
                 $this->addError($attribute, 'Incorrect password.');				
-            } 
+            }elseif($this->status!=102 || $roHeaderCheck->USER_CC!=$this->getProfile()->EMP_ID){
+				 $getUserCc=Employe::find()->where(['EMP_ID' => $roHeaderCheck->USER_CC])->one();
+				 $this->addError($attribute, 'Wrong Permission,the undersigned is checked by '.$getUserCc->EMP_NM. ' '.$getUserCc->EMP_NM_BLK);		
+			}
        }
     }
 	
@@ -67,16 +71,28 @@ class Auth2Model extends Model
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
 	*/
-	public function auth1_saved(){
+	public function auth2_saved(){
 		if ($this->validate()) {			
 			$roHeader = Requestorder::find()->where(['KD_RO' =>$this->kdro])->one();
-				$profile=Yii::$app->getUserOpt->Profile_user();
+			$roSignStt = Requestorderstatus::find()->where(['KD_RO'=>$this->kdro,'ID_USER'=>$this->getProfile()->EMP_ID])->one();			
 				$roHeader->STATUS = $this->status;					
-				$roHeader->SIG2_SVGBASE64 = $profile->emp->SIGSVGBASE64;
-				$roHeader->SIG2_SVGBASE30 = $profile->emp->SIGSVGBASE30;
-				$roHeader->SIG2_NM = $profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;
+				$roHeader->SIG2_SVGBASE64 = $this->getProfile()->SIGSVGBASE64;
+				$roHeader->SIG2_SVGBASE30 = $this->getProfile()->SIGSVGBASE30;
+				$roHeader->SIG2_NM = $this->getProfile()->EMP_NM . ' ' . $this->getProfile()->EMP_NM_BLK;
+				$roHeader->SIG2_ID = $this->getProfile()->EMP_ID;
 				$roHeader->SIG2_TGL = date('Y-m-d');		
 			if ($roHeader->save()) {
+					if (!$roSignStt){
+						$roHeaderStt = new Requestorderstatus;						
+						$roHeaderStt->KD_RO = $this->kdro;
+						$roHeaderStt->ID_USER = $this->getProfile()->EMP_ID;
+						//$roHeaderStt->TYPE
+						$roHeaderStt->STATUS = 1;
+						$roHeaderStt->UPDATED_AT = date('Y-m-d H:m:s');
+						if ($roHeaderStt->save()) {
+							
+						}
+					}
                 return $roHeader;
             }
 			return $roHeader;
@@ -91,11 +107,16 @@ class Auth2Model extends Model
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
      */
-    public function getEmpid()
+    public function getEmpid($empIdIdentity)
     {
         if ($this->_empid === false) {
-            $this->_empid = Employe::find()->where(['EMP_ID' => Yii::$app->user->identity->EMP_ID])->one();
+            $this->_empid = Employe::find()->where(['EMP_ID' => $empIdIdentity])->one();
         }
         return $this->_empid;
-    }	
+    }
+	
+	public function getProfile(){
+		$profile=Yii::$app->getUserOpt->Profile_user();	
+		return $profile->emp;
+	}
 }
