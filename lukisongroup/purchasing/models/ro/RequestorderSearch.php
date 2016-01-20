@@ -30,7 +30,7 @@ class RequestorderSearch extends Requestorder
 			[['detro.KD_RO','detro.NM_BARANG','detro.QTY','dept.DEP_NM','EMP_NM',], 'safe'],
 			[['SIG1_ID','SIG2_ID','SIG3_ID'], 'string'],
 			[['SIG1_NM','SIG2_NM','SIG3_NM'], 'string'],
-			[['SIG1_TGL','SIG2_TGL', 'SIG3_TGL'], 'safe'],
+			[['SIG1_TGL','SIG2_TGL', 'SIG3_TGL','USER_CC'], 'safe'],
 			[['SIG1_SVGBASE64','SIG2_SVGBASE64', 'SIG3_SVGBASE64'], 'safe'],
 			[['SIG1_SVGBASE30','SIG2_SVGBASE30', 'SIG3_SVGBASE30'], 'safe'],
         ];
