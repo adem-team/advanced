@@ -11,7 +11,6 @@ use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\master\models\Suplier;
 use lukisongroup\master\models\Distributor;
-
 use lukisongroup\master\models\Barangmaxi;
 use lukisongroup\hrd\models\Corp;
 
@@ -21,6 +20,7 @@ $droptype = ArrayHelper::map(Tipebarang::find()->where(['STATUS' => 1,'PARENT'=>
 //$dropdistrubutor = ArrayHelper::map(Distributor::find()->all(), 'KD_DISTRIBUTOR', 'NM_DISTRIBUTOR');
 $dropkat = ArrayHelper::map(Kategori::find()->where(['STATUS' => 1,'PARENT'=>0])->all(), 'KD_KATEGORI', 'NM_KATEGORI'); 
 $dropunit = ArrayHelper::map(Unitbarang::find()->all(), 'KD_UNIT', 'NM_UNIT');
+$dropsup = ArrayHelper::map(Suplier::find()->all(), 'KD_SUPPLIER', 'NM_SUPPLIER');
 ?>
 
 <div class="barang-form">
@@ -58,6 +58,14 @@ $dropunit = ArrayHelper::map(Unitbarang::find()->all(), 'KD_UNIT', 'NM_UNIT');
 				'allowClear' => true
 				 ],
 		]);?>
+		<?= $form->field($model, 'KD_SUPPLIER')->widget(Select2::classname(), [
+			'data' => $dropsup,
+			'options' => ['placeholder' => 'Pilih  Nama Supplier ...'],
+			'pluginOptions' => [
+				'allowClear' => true
+				 ],
+		]);?>
+
 		<?= $form->field($model, 'HARGA_SPL')->textInput(['maxlength' => true])->label('Harga Supplier') ?>
 		<?php /* $form->field($model, 'KD_DISTRIBUTOR')->widget(Select2::classname(), [
 			'data' => $dropdistrubutor,
