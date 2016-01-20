@@ -83,15 +83,15 @@ class Rodetail extends \yii\db\ActiveRecord
         return $this->hasOne(Unitbarang::className(), ['KD_UNIT' => 'UNIT']);
     }
 	
-	public function getBrgumum()
+	public function getBarangumum()
     {
         return $this->hasOne(Barang::className(), ['KD_BARANG' => 'KD_BARANG']);
     }
 	
-	public function getBrgproduksi()
+	/* public function getBrgproduksi()
     {
         return $this->hasOne(Barang::className(), ['KD_BARANG' => 'KD_BARANG']);
-    }
+    } */
     /**
      * @inheritdoc
      */

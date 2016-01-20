@@ -41,8 +41,8 @@ use lukisongroup\purchasing\models\so\SalesorderSearch;
 
 use lukisongroup\purchasing\models\Statuspo;
 
-use lukisongroup\esm\models\Barang;
-use lukisongroup\master\models\Barangumum;
+use lukisongroup\master\models\Barang;
+use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
 
 class PurchaseOrderController extends Controller
@@ -281,7 +281,7 @@ class PurchaseOrderController extends Controller
     public function actionCreate($kdpo)
     {
         $searchModel = new RequestorderSearch();
-        $dataProviderRo = $searchModel->cariRO(Yii::$app->request->queryParams);
+        $dataProviderRo = $searchModel->cariHeaderRO_SendPO(Yii::$app->request->queryParams);
 		 
 		$searchModel = new SalesorderSearch();
         $dataProviderSo = $searchModel->cariSO(Yii::$app->request->queryParams);
@@ -469,8 +469,31 @@ class PurchaseOrderController extends Controller
 		if (isset($_POST['depdrop_parents'])) {
 			$parents = $_POST['depdrop_parents'];
 			if ($parents != null) {
+				$prn_id = $parents[0];
+				$model = Kategori::find()->asArray()->where(['PARENT'=>$prn_id])->all();
+				foreach ($model as $key => $value) {
+					   $out[] = ['id'=>$value['KD_KATEGORI'],'name'=> $value['NM_KATEGORI']];
+				   }
+	 
+				   echo json_encode(['output'=>$out, 'selected'=>'']);
+				   return;
+			   }
+		   }
+		   echo Json::encode(['output'=>'', 'selected'=>'']);
+	}
+	
+	/**
+     * actionBrgkat() select2 Kategori mendapatkan barang
+     * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionCariBrg() {
+		$out = [];
+		if (isset($_POST['depdrop_parents'])) {
+			$parents = $_POST['depdrop_parents'];
+			if ($parents != null) {
 				$kat_id = $parents[0];
-				$model = Barangumum::find()->asArray()->where(['KD_KATEGORI'=>$kat_id])->all();
+				$model = Barang::find()->asArray()->where(['KD_KATEGORI'=>$kat_id])->all();
 				foreach ($model as $key => $value) {
 					   $out[] = ['id'=>$value['KD_BARANG'],'name'=> $value['NM_BARANG']];
 				   }
@@ -480,7 +503,8 @@ class PurchaseOrderController extends Controller
 			   }
 		   }
 		   echo Json::encode(['output'=>'', 'selected'=>'']);
-	}		
+	}
+
 	/*
 	 * PO PLUS SAVE | Add Item
 	 * @author ptrnov <piter@lukison.com>
@@ -513,7 +537,7 @@ class PurchaseOrderController extends Controller
 	*/
 	public function actionDetail($kd_ro,$kdpo)
     {        
-		$roDetail = Rodetail::find()->where(['KD_RO'=>$kd_ro, 'STATUS'=>101])->all();
+		$roDetail = Rodetail::find()->where(['KD_RO'=>$kd_ro, 'STATUS'=>1])->all();
 		$roDetailProvider = new ArrayDataProvider([
 			'key' => 'ID',
 			'allModels'=>$roDetail,		
@@ -560,10 +584,10 @@ class PurchaseOrderController extends Controller
 			if ($dataKeySelect!=0){						
 					//$foreaceGvRoToPo=$dataKeySelect!=0? $dataKeySelect:'Array([0]=>"0")';
 					 foreach ($dataKeySelect as $idx){
-							$roDetail=Rodetail::find()->where(['KD_RO'=>$dataKdRo,'ID'=>$idx])->andWhere('STATUS=101')->one();	//STT =202						
+							$roDetail=Rodetail::find()->where(['KD_RO'=>$dataKdRo,'ID'=>$idx])->andWhere('STATUS=1')->one();	//STT =202						
 							$poDetail=Purchasedetail::find()->where(['KD_PO'=>$dataKdPo,'KD_RO'=>$dataKdRo,'KD_BARANG'=>$roDetail->KD_BARANG])->one();
 							$poUnit=$roDetail->cunit;
-							$poBrgUmum=$roDetail->brgumum;							
+							//$poBarangUmum=$roDetail->barangumum;							
 							if (!$poDetail){
 								//$roDetail = Rodetail::findOne($idx);
 								$roDetail->TMP_CK =0; /* Untuk testing Checkbook 1 | 0 */
@@ -574,7 +598,7 @@ class PurchaseOrderController extends Controller
 										$poDetailModel->KD_PO=$dataKdPo;
 										$poDetailModel->KD_RO=$dataKdRo;
 										$poDetailModel->KD_BARANG= $roDetail->KD_BARANG;
-										$poDetailModel->NM_BARANG=$poBrgUmum->NM_BARANG;
+										$poDetailModel->NM_BARANG=$roDetail->NM_BARANG;
 										$poDetailModel->UNIT=$poUnit->KD_UNIT;
 										$poDetailModel->NM_UNIT=$poUnit->NM_UNIT;
 										$poDetailModel->UNIT_QTY=$poUnit->QTY;
@@ -747,7 +771,7 @@ class PurchaseOrderController extends Controller
                 $nmBrg->HARGA = $harga;
                 $nmBrg->save();
             } else if($ckBrg[0] == 'BRGU') {
-                $nmBrg = Barangumum::find('NM_BARANG')->where(['KD_BARANG'=>$kdBrg])->one();
+                $nmBrg = Barang::find('NM_BARANG')->where(['KD_BARANG'=>$kdBrg])->one();
                 $nmBrg->HARGA = $harga;
                 $nmBrg->save();
             }

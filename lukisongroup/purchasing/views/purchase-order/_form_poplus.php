@@ -14,7 +14,7 @@ use yii\web\JsExpression;
 use yii\data\ActiveDataProvider;
 
 //use lukisongroup\master\models\Barangumum;
-use lukisongroup\esm\models\Barang;
+use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
 
@@ -26,7 +26,11 @@ $brgAll = ArrayHelper::map(Barang::find()->orderBy('NM_BARANG')->all(), 'KD_BARA
         $.fn.modal.Constructor.prototype.enforceFocus = function() {};			
     ",$this::POS_HEAD);
  */
-
+	$aryParent= [
+		  ['PARENT' => 0, 'PAREN_NM' => 'UMUM'],		  
+		  ['PARENT' => 1, 'PAREN_NM' => 'PRODAK'],
+	];	
+	$valParent = ArrayHelper::map($aryParent, 'PARENT', 'PAREN_NM');
  
 ?>
 
@@ -46,7 +50,20 @@ $brgAll = ArrayHelper::map(Barang::find()->orderBy('NM_BARANG')->all(), 'KD_BARA
     <?php
 		 echo $form->field($poDetailValidation, 'kD_PO')->hiddenInput(['value' =>$kdpo])->label(false);
 		 //echo $form->field($poDetailValidation, 'nM_BARANG')->hiddenInput(['value' =>$brgAll->NM_BARANG])->label(false);
-		 echo $form->field($poDetailValidation, 'kD_KATEGORI')->dropDownList($brgKtg, ['id'=>'poplusvalidation-kd_kategori']);
+		 echo $form->field($poDetailValidation, 'pARENT_BRG')->dropDownList($valParent, ['id'=>'poplusvalidation-parent_brg'])->label('Parent Barang');
+		 
+		 //echo $form->field($poDetailValidation, 'kD_KATEGORI')->dropDownList($brgKtg, ['id'=>'poplusvalidation-kd_kategori']);
+		 
+		 echo $form->field($poDetailValidation, 'kD_KATEGORI')->widget(DepDrop::classname(), [
+			'type'=>DepDrop::TYPE_SELECT2,
+			'data' => $brgKtg,
+			'options' => ['id'=>'poplusvalidation-kd_kategori'],
+			'pluginOptions' => [
+				'depends'=>['poplusvalidation-parent_brg'],
+				'url'=>Url::to(['/purchasing/purchase-order/brgkat']),
+				'initialize'=>true,
+			], 		
+		]);
 		 
 		 echo $form->field($poDetailValidation, 'kD_BARANG')->widget(DepDrop::classname(), [
 			'type'=>DepDrop::TYPE_SELECT2,
@@ -54,11 +71,11 @@ $brgAll = ArrayHelper::map(Barang::find()->orderBy('NM_BARANG')->all(), 'KD_BARA
 			'options' => ['id'=>'poplusvalidation-kd_barang'],
 			'pluginOptions' => [
 				'depends'=>['poplusvalidation-kd_kategori'],
-				'url'=>Url::to(['/purchasing/purchase-order/brgkat']),
+				'url'=>Url::to(['/purchasing/purchase-order/cari-brg']),
 				'initialize'=>true,
 			], 		
 		]);
-		
+				
 		echo $form->field($poDetailValidation, 'uNIT')->widget(Select2::classname(), [
 				'data' => $brgUnit,
 				'options' => ['placeholder' => 'Pilih Unit Barang ...'],

@@ -76,4 +76,18 @@ class HelpController extends Controller
     
     }
 	
+	 /**
+     * ACTION INDEX
+     */
+    public function actionDbHelp()
+    {		
+		$dbStatus =$this->renderPartial('database\status');
+		
+		
+		return $this->render('conten_db',[
+			'dbStatus'=>$dbStatus,
+			
+		]);
+    
+    }
 }
