@@ -128,7 +128,7 @@ class CustomersController extends Controller
            
         }
 
-        return $this->render('index', [
+      return $this->render('index', [
 			'searchModel1' => $searchModel1,
 			'dataProviderkat'  =>   $dataProviderkat ,
       'searchModel' => $searchModel,
@@ -445,7 +445,7 @@ class CustomersController extends Controller
     {
         $model = new Customers();
 
-        if ($model->load(Yii::$app->request->post()) ) {              
+    if ($model->load(Yii::$app->request->post()) ) {              
 			$kdpro = $model->PROVINCE_ID;
 			$kdcity = $model->CITY_ID;
 			$kddis = $model->KD_DISTRIBUTOR;
@@ -459,13 +459,14 @@ class CustomersController extends Controller
 				$model->save();
 					
 			}            
-             return $this->redirect(['index']);
+        return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_formcustomer', [
                 'model' => $model,
             ]);
         }
-    }
+        }
+    
 	
 
 	

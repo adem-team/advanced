@@ -280,6 +280,7 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 					/* HARGA PABRIK */
 					if (isset($posted['HARGA_PABRIK'])) {
 						$output = Yii::$app->formatter->asDecimal($modelPrice->HARGA_PABRIK,0);
+						
 					}
 					/* HARGA LG */					
 					if (isset($posted['HARGA_LG'])) {
