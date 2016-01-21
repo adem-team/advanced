@@ -23,20 +23,18 @@ class MapAsset extends AssetBundle
     public $js = [
       
 	    'http://maps.google.com/maps/api/js',
-		// 'https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places',
 		 'https://code.jquery.com/jquery-1.10.2.min.js',
-		// ' http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js',
-		// 'https://maps.googleapis.com/maps/api/js?sensor=false',
 		'mapjs/locationpicker.jquery.js',
 		'mapjs/locationpicker.jquery.min.js',
 		
          // 'mapjs/geo.js'
 	];
-
-    public $jsOptions = ['position' => \yii\web\View::POS_BEGIN];
+ public $jsOptions = ['position' => \yii\web\View::POS_BEGIN];
+  
     public $depends = [
         'yii\web\YiiAsset',
        'yii\bootstrap\BootstrapAsset',
     ];
+     
     
 }

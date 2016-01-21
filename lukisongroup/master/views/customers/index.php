@@ -9,6 +9,7 @@ use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Kategoricus;
 use yii\web\JsExpression;
 use kartik\form\ActiveForm;
+use yii\widgets\Pjax;
 use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
 MapAsset::register($this);  
 
@@ -41,7 +42,7 @@ $tabkota = \kartik\grid\GridView::widget([
   'dataProvider' => $dataproviderkota,
   'filterModel' => $searchmodelkota,
    'columns'=>[
-       ['class'=>'yii\grid\SerialColumn'],
+       ['class'=>'kartik\grid\SerialColumn'],
        
             'PROVINCE',
             'TYPE',
@@ -72,17 +73,17 @@ $tabkota = \kartik\grid\GridView::widget([
                                                                 ]).'</li>';
                                                             },
                               
-                                    ],
+                                               ],
 
-     ],
+                                       ],
                                     
 
 
-],
+                              ],
                                       
     'panel'=>[
           
-            'type' =>GridView::TYPE_SUCCESS,
+      'type' =>GridView::TYPE_SUCCESS,
 			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
 						['modelClass' => 'Barangumum',]),'/master/customers/createkota',[
 							'data-toggle'=>"modal",
@@ -123,7 +124,7 @@ $tabprovince = \kartik\grid\GridView::widget([
   'dataProvider' => $dataproviderpro,
   'filterModel' => $searchmodelpro,
    'columns'=>[
-       ['class'=>'yii\grid\SerialColumn'],
+       ['class'=>'kartik\grid\SerialColumn'],
        
              'PROVINCE',
    
@@ -149,26 +150,21 @@ $tabprovince = \kartik\grid\GridView::widget([
                                                                 'data-target'=>"#form3",
                                                                 'data-title'=> $model->PROVINCE,
                                                                 ]).'</li>';
-                            },
+                                                      },
                               
-                ],
-            ],
-                                    ],
+                                               ],
+                                       ],
+                              ],
                                     
-                                    
-	 
-		
-        
-
     
     'panel'=>[
           
-            'type' =>GridView::TYPE_SUCCESS,
+      'type' =>GridView::TYPE_SUCCESS,
 			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
 						['modelClass' => 'Barangumum',]),'/master/customers/createprovnce',[
 							'data-toggle'=>"modal",
 								'data-target'=>"#form3",
-                                    'id'=>'modl22',
+                  'id'=>'modl22',
 									'class' => 'btn btn-success'						
 												]),
                               
@@ -204,7 +200,7 @@ $tabprovince = \kartik\grid\GridView::widget([
 <?php
 
 
-$tabcrud = GridView::widget([
+$tabcrud = \kartik\grid\GridView::widget([
     'id'=>'gv-kat',
     'dataProvider'=>$dataProviderkat,
     'filterModel'=>$searchModel1,
@@ -268,19 +264,18 @@ $tabcrud = GridView::widget([
                                                             'data-target'=>"#formparent",
                                                             'data-title'=> $model->CUST_KTG_PARENT,
                                                             ]).'</li>';
-                        },
+                                                            
+                                                            },
                         
                       
                         
-                    ],
+                                              ],
 
-        ],
+                                         ],
 
-          
-       
-    ],
+                               ],
 
-'panel'=>[
+           'panel'=>[
               
                 'type' =>GridView::TYPE_SUCCESS,
                 'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create Parent ',
@@ -289,7 +284,8 @@ $tabcrud = GridView::widget([
                                                             'data-target'=>"#formparent",
                                                             'class' => 'btn btn-success'
                                                             ])
-        ], 
+                    ], 
+
             'pjax'=>true,
             'pjaxSettings'=>[
                 'options'=>[
@@ -314,12 +310,12 @@ $tabcrud = GridView::widget([
         
 // grid customers
 
- $tabcustomers = GridView::widget([
-   'id'=>'gv-cus',
+ $tabcustomers = \kartik\grid\GridView::widget([
+  'id'=>'gv-cus',
   'dataProvider' => $dataProvider,
   'filterModel' => $searchModel ,
    'columns'=>[
-       ['class'=>'yii\grid\SerialColumn'],
+       ['class'=>'kartik\grid\SerialColumn'],
        
             'CUST_KD',
              [
@@ -365,7 +361,7 @@ $tabcrud = GridView::widget([
                                                                 // 'data-target'=>"#view3",
                                                                 'data-title'=> $model->CUST_KD,
                                                                 ]).'</li>';
-                            },
+                                                           },
                                
                              'update' =>function($url, $model, $key){
                                     return '<li>'. Html::a('<span class="glyphicon glyphicon-user"></span>'.Yii::t('app', 'Update'),
@@ -374,7 +370,7 @@ $tabcrud = GridView::widget([
                                                                 'data-target'=>"#createcus",
                                                                 'data-title'=> $model->CUST_KD,
                                                                 ]).'</li>';
-                            },
+                                                             },
 
                             
                               'delete' =>function($url, $model, $key){
@@ -385,35 +381,28 @@ $tabcrud = GridView::widget([
                                                                 // 'data-title'=> $model->CUST_KD,
                                                                 ]).'</li>';
                             },
-							    'edit' =>function($url, $model,$key){
-                                    return '<li>'. Html::a('<i class="glyphicon glyphicon-globe"></i>'.Yii::t('app', 'Create Map'),'#',
+							               'edit' =>function($url, $model,$key){
+                                    return '<li>'. Html::a('<i class="glyphicon glyphicon-globe"></i>'.Yii::t('app', 'Create Map'),'',
 								
                                                              [ 'class'=>'btn btn-default',
-									                                              //'data-id' => $key,
-                                                                'id'=>'approved',
+									                                             
+                                                                'id'=>'Cmap',
                                                                 'data-pjax' => true,
                                                                 'data-toggle-approved'=>$key,
-																	                             // 'data-toggle'=>"modal",
-                                              //                  'data-target'=>"#us6-dialog",
-
 															                                ]).'</li>';
                                                                   
-                                                                  
+                                                           },        
                                                               
                                                                
-                            },
+                           
+                                                     ],
 
-
-                              
-                ],
-    ],
+                                                ],
+               
+                                            
                                     ],
                                     
                                     
-	 
-		
-        
-
     
    'panel'=>[
           
@@ -423,9 +412,8 @@ $tabcrud = GridView::widget([
                         ['modelClass' => 'Customers',]),'/master/customers/createcustomers',[  
                                                             'data-toggle'=>"modal",
 															                               'id'=>'modcus',
-                                                        
-                                                            'data-target'=>"#createcus",
-                                                            'class' => 'btn btn-success'
+                                                             'data-target'=>"#createcus",
+                                                             'class' => 'btn btn-success'
                                                             ])
 		
 												
@@ -435,8 +423,10 @@ $tabcrud = GridView::widget([
         ],
         'pjax'=>true,
         'pjaxSettings'=>[
+         'neverTimeout'=>true,
             'options'=>[
-                'enablePushState'=>true,
+
+                'enablePushState'=>false,
                 'id'=>'gv-cus',
             
         ],
@@ -446,11 +436,11 @@ $tabcrud = GridView::widget([
         'bordered'=>true,
         'striped'=>'4px',
         'autoXlFormat'=>true,
-        // 'export'=>[
-        //     'fontAwesome'=>true,
-        //     'showConfirmAlert'=>false,
-        //     'target'=>GridView::TARGET_BLANK
-        // ],
+        'export'=>[
+            'fontAwesome'=>true,
+            'showConfirmAlert'=>false,
+            'target'=>GridView::TARGET_BLANK
+        ],
 
     ],
 
@@ -459,11 +449,11 @@ $tabcrud = GridView::widget([
   
 		
 		
-	// display map
+	/*Display MAP*/
 
           $map = '<div id ="map" style="width:100%;height:400px"></div>'; 
 
-// all tab           
+/*All Tab*/        
     $items=[
 		[
 			'label'=>'<i class="glyphicon glyphicon-user"></i> New Customers ','content'=> $tabcustomers, //   $tabcustomers,
@@ -515,7 +505,12 @@ $tabcrud = GridView::widget([
 	
 	
 	
-			<?php				
+			<?php	
+
+  
+
+
+
 			             
 // create and update via modal province
 
@@ -533,7 +528,7 @@ $this->registerJs("
                     modal.find('.modal-body').html(data)
                 });
             })
-    ",$this::POS_READY);
+    ",$this::POS_LOAD);
 
 
     Modal::begin([
@@ -559,6 +554,8 @@ $this->registerJs("
                 });
             })
     ",$this::POS_READY); 
+
+
 
 Modal::begin([
                 'id' => 'view3',
@@ -690,7 +687,76 @@ Modal::end();
 		'header' => '<h4 class="modal-title">New Customer</h4>',
 	]);
 	Modal::end();
-	
+
+
+ 
+$this->registerJs("
+ 
+    var j = $.noConflict();
+    j(document).on('click', '[data-toggle-approved]', function(e){
+    
+     
+        var idx = j(this).data('toggle-approved');
+        j('#Kode').val( idx );
+        
+      j('#modal-location').modal('show')
+                        
+      j('#location-map').locationpicker({
+                            location: {latitude: 46.15242437752303, longitude: 2.7470703125},
+                            radius: 300,
+                            inputBinding: {
+                                latitudeInput:j('#us3-lat'),
+                                longitudeInput:j('#us3-lon'),
+                                radiusInput: j('#us3-radius'),
+                                locationNameInput:j('#us3-address')
+                            },
+                             enableAutocomplete: true
+                        });
+   j('#location-map').locationpicker('autosize');
+     e.preventDefault();
+                           
+});
+  ",$this::POS_LOAD);
+
+
+  $this->registerJs('
+ // var jq = $.noConflict();
+$("#save").click(function(e) {
+
+ $.ajax({ 
+       url: "/master/customers/createmap",
+       type: "GET",
+       dataType: "json",
+       data: {
+              id : $("#Kode").val(),
+              lat: $("#us3-lat").val(),
+              long : $("#us3-lon").val(),
+              address : $("#us3-address").val(),
+              
+             },
+       success: function (response) {
+                // alert(result)
+                if(response == 1 )
+                {
+                      $.pjax.reload({container:"#gv-cus"}); 
+                     // jq(document).find("#modal-location").modal("hide");
+                     // $("#myform").trigger("reset");
+                                       
+                                             
+                }
+                else{
+                         alert("error")
+                          $(document).find("#us6-dialog").modal("hide");                 
+                }
+            },
+          
+       
+       });
+         e.preventDefault();
+  });
+
+',$this::POS_READY);
+   
 	
 /*js mapping */            
 
@@ -709,7 +775,7 @@ $this->registerJs("
     var public_markers = [];
     var infowindow = new google.maps.InfoWindow();
 
-//data
+/*data json*/
  $.getJSON('/master/customers/map', function(json) { 
 
     for (var i in public_markers)
@@ -751,90 +817,7 @@ $this->registerJs("
 
      ",$this::POS_READY);
 
-
-
-$this->registerJs("
-    $(document).on('click', '[data-toggle-approved]', function(e){
-      e.preventDefault();
-
-      var idx = $(this).data('toggle-approved');
-
-      alert(idx);
-    });
-  ",$this::POS_READY);
-
-
-
 	 
-	 $this->registerJs('
-        // $(document).ready(function(){
-            $(".mo2").on("click",function(){
-                  // var myBookId = $(this).attr("data-id");
-                  //   $(".modal-body #bookId").val( myBookId );
-                    var fID = $(this).closest("tr").data("key");
-                    alert(fID);
-
-            })
-           
- //                        var j = $.noConflict();
-                   
-	// 					   j("#us3").locationpicker({
- //                            location: {latitude:  -6.214620, longitude:  106.845130 },
- //                            radius: 300,
- //                            inputBinding: {
- //                                latitudeInput: $("#us3-lat"),
- //                                longitudeInput: $("#us3-lon"),
- //                                radiusInput: $("#us3-radius"),
- //                                locationNameInput: $("#us3-address")
- //                            },
- //                             enableAutocomplete: true
- //                        });
-				
-	
- //                        j("#us6-dialog").on("shown.bs.modal", function() {
- //                            j("#us3").locationpicker("autosize");
-						
-					
- //                        });
-
-	// 			// });
-
- //            $("#save").click(function(e) {
- // $.ajax({ 
-
- //       url: "/master/customers/createmap",
- //       type: "GET",
- //        dataType: "json",
- //       data: {
- //              id : $("#bookId").val(),
- //              lat: $("#us3-lat").val(),
- //              long : $("#us3-lon").val(),
- //              address : $("#us3-address").val(),
-              
- //             },
-        
-         
- //            success: function (result) {
- //                // alert(result)
-                
- //                if(result == 1 )
- //                {
- //                     $(document).find("#us6-dialog").modal("hide");
- //                     $("#myform").trigger("reset");
- //                     $.pjax.reload({container:"#axctive224"});                     
-                                             
- //                }
- //                else{
- //                         alert("error")                 
- //                }
- //            },
-          
-       
- //       });
- //         e.preventDefault();
- //  });
-
-        ',$this::POS_READY); 
 			  
 	 // $this->registerJs("
     
@@ -879,7 +862,7 @@ $this->registerJs("
 
 
 <!-- modal Location map -->
-<div id="us6-dialog" class="modal fade">
+<div id="modal-location" class="modal fade"  >
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -892,7 +875,7 @@ $this->registerJs("
 		<form id="myform">
           <div class="form-group">
                 <label class="col-sm-2 control-label">Kode Customers:</label>
-                <div class="col-sm-10"><input type="text" class="form-control" name="bookId" id="bookId" value=""/></div>
+                <div class="col-sm-10"><input type="text" class="form-control" name="kode" id="Kode" value=""/></div>
                     </div>
 					
 					  <div class="form-group">
@@ -906,7 +889,9 @@ $this->registerJs("
 
                         <div class="col-sm-5"><input type="text" class="form-control" id="us3-radius"/></div>
                     </div>
-                    <div id="us3" style="width: 100%; height: 400px;"></div>
+                    <!-- location map -->
+                    <div id="location-map" style="width: 100%; height: 400px;"></div>
+
                     <div class="clearfix">&nbsp;</div>
                     <div class="m-t-small">
                         <label class="p-r-small col-sm-1 control-label">Lat.:</label>
@@ -925,7 +910,7 @@ $this->registerJs("
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-?>
+
 	 
 	 
 	 

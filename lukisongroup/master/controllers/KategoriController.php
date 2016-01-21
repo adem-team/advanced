@@ -156,9 +156,7 @@ class KategoriController extends Controller
 		if($model->load(Yii::$app->request->post())){
                   
                     
-                    $ck = Kategori::find()->where('STATUS <> 3')->max('KD_KATEGORI');
-                    $nwa = $ck+1;
-                    $nw = str_pad( $nwa, "2", "0", STR_PAD_LEFT );
+                    $nw = Yii::$app->esmcode->kdKategori();
                     $model->KD_KATEGORI = $nw;
                     $model->CREATED_BY = Yii::$app->user->identity->username;
                     $model->CREATED_AT = date('Y-m-d H:i:s');
