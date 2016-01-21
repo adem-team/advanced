@@ -156,7 +156,7 @@ class KategoriController extends Controller
 		if($model->load(Yii::$app->request->post())){
                   
                     
-                    $ck = Kategori::find()->where('STATUS <> 3')->max('KD_KATEGORI');
+                    $ck = Kategori::find()->max('KD_KATEGORI');
                     $nwa = $ck+1;
                     $nw = str_pad( $nwa, "2", "0", STR_PAD_LEFT );
                     $model->KD_KATEGORI = $nw;

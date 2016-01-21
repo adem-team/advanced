@@ -156,9 +156,7 @@ class TipebarangController extends Controller
         $model = new Tipebarang();
         
 		$model->load(Yii::$app->request->post());
-		$ck = Tipebarang::find()->where('STATUS <> 3')->max('KD_TYPE');
-		$nwa = $ck+1;
-		$nw = str_pad( $nwa, "2", "0", STR_PAD_LEFT );
+        $nw = Yii::$app->esmcode->kdTipe();
 		$model->KD_TYPE = $nw;
              if($model->validate())
              {

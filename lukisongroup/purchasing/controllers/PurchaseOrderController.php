@@ -20,12 +20,18 @@ use lukisongroup\purchasing\models\pr\Podetail;
 use lukisongroup\purchasing\models\pr\DiscountValidation;
 use lukisongroup\purchasing\models\pr\PajakValidation;
 use lukisongroup\purchasing\models\pr\DeliveryValidation;
+
 use lukisongroup\purchasing\models\pr\EtdValidation;
 use lukisongroup\purchasing\models\pr\EtaValidation;
+
 use lukisongroup\purchasing\models\pr\SupplierValidation;
 use lukisongroup\purchasing\models\pr\ShippingValidation;
 use lukisongroup\purchasing\models\pr\BillingValidation;
-use lukisongroup\purchasing\models\pr\LoginForm;
+
+use lukisongroup\purchasing\models\pr\Auth1Model;
+use lukisongroup\purchasing\models\pr\Auth2Model;
+use lukisongroup\purchasing\models\pr\Auth3Model;
+
 use lukisongroup\purchasing\models\pr\NewPoValidation;
 use lukisongroup\purchasing\models\pr\SendPoValidation;
 use lukisongroup\purchasing\models\pr\PoPlusValidation;
@@ -1069,31 +1075,64 @@ class PurchaseOrderController extends Controller
 	
 	/*
 	 * SIGNATURE AUTH1 | SIGN CREATED PO
-	 * $poHeader->STATUS =1
+	 * $poHeader->STATUS =101
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
-	 public function actionSignCreatedView($kdpo){
-		$loginform = new LoginForm();					
+	 public function actionSignAuth1View($kdpo){
+		$auth1Mdl = new Auth1Model();					
 		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
 		$employe = $poHeader->employe;			
-			return $this->renderAjax('login_sig_created', [
+			return $this->renderAjax('sign-auth1', [
 				'poHeader' => $poHeader,
 				'employe' => $employe,
-				'loginform' => $loginform,
+				'auth1Mdl' => $auth1Mdl,
 			]);		 
 	}
-	public function actionSignCreatedSave(){
-		$loginform = new LoginForm();		
+	public function actionSignAuth1Save(){
+		$auth1Mdl = new Auth1Model();		
 		/*Ajax Load*/
 		if(Yii::$app->request->isAjax){
-			$loginform->load(Yii::$app->request->post());
-			return Json::encode(\yii\widgets\ActiveForm::validate($loginform));
+			$auth1Mdl->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($auth1Mdl));
 		}else{	/*Normal Load*/	
-			if($loginform->load(Yii::$app->request->post())){
-				if ($loginform->loginform_saved()){
+			if($auth1Mdl->load(Yii::$app->request->post())){
+				if ($auth1Mdl->auth1_saved()){
 					$hsl = \Yii::$app->request->post();
-					$kdpo = $hsl['LoginForm']['kdpo'];
+					$kdpo = $hsl['Auth1Model']['kdpo'];
+					return $this->redirect(['create', 'kdpo'=>$kdpo]);
+				}														
+			}
+		}		
+    }	
+	
+	/*
+	 * SIGNATURE AUTH2 | SIGN CHECKED PO
+	 * $poHeader->STATUS =102
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	 public function actionSignAuth2View($kdpo){
+		$auth2Mdl = new Auth2Model();					
+		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
+		$employe = $poHeader->employe;			
+			return $this->renderAjax('sign-auth2', [
+				'poHeader' => $poHeader,
+				'employe' => $employe,
+				'auth2Mdl' => $auth2Mdl,
+			]);		 
+	}
+	public function actionSignAuth2Save(){
+		$auth2Mdl = new Auth2Model();		
+		/*Ajax Load*/
+		if(Yii::$app->request->isAjax){
+			$auth2Mdl->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($auth2Mdl));
+		}else{	/*Normal Load*/	
+			if($auth2Mdl->load(Yii::$app->request->post())){
+				if ($auth2Mdl->auth2_saved()){
+					$hsl = \Yii::$app->request->post();
+					$kdpo = $hsl['Auth2Model']['kdpo'];
 					return $this->redirect(['create', 'kdpo'=>$kdpo]);
 				}														
 			}
@@ -1101,72 +1140,37 @@ class PurchaseOrderController extends Controller
     }
 	
 	/*
-	 * SIGNATURE AUTH2 | SIGN CHECKED PO
-	 * $poHeader->STATUS =1
+	 * SIGNATURE AUTH3 | SIGN APPROVAL PO
+	 * $poHeader->STATUS =103
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
-	 public function actionSignCheckedView($kdpo){
-		$loginform = new LoginForm();					
+	 public function actionSignAuth3View($kdpo){
+		$auth3Mdl = new Auth3Model();					
 		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
 		$employe = $poHeader->employe;			
-			return $this->renderAjax('login_sig_checked', [
+			return $this->renderAjax('sign-auth3', [
 				'poHeader' => $poHeader,
 				'employe' => $employe,
-				'loginform' => $loginform,
+				'auth3Mdl' => $auth3Mdl,
 			]);		 
 	}
-	public function actionSignCheckedSave(){
-		$loginform = new LoginForm();		
+	public function actionSignAuth3Save(){
+		$auth3Mdl = new Auth3Model();		
 		/*Ajax Load*/
 		if(Yii::$app->request->isAjax){
-			$loginform->load(Yii::$app->request->post());
-			return Json::encode(\yii\widgets\ActiveForm::validate($loginform));
+			$auth3Mdl->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($auth3Mdl));
 		}else{	/*Normal Load*/	
-			if($loginform->load(Yii::$app->request->post())){
-				if ($loginform->loginform_saved()){
+			if($auth3Mdl->load(Yii::$app->request->post())){
+				if ($auth3Mdl->auth3_saved()){
 					$hsl = \Yii::$app->request->post();
-					$kdpo = $hsl['LoginForm']['kdpo'];
-					return $this->redirect(['review', 'kdpo'=>$kdpo]);
+					$kdpo = $hsl['Auth3Model']['kdpo'];
+					return $this->redirect(['create', 'kdpo'=>$kdpo]);
 				}														
 			}
 		}		
     }
-	
-	/*
-	 * SIGNATURE AUTH3 | SIGN APPROVED PO
-	 * $poHeader->STATUS =1
-	 * @author ptrnov  <piter@lukison.com>
-     * @since 1.1
-     */
-	 public function actionSignApprovedView($kdpo){
-		$loginform = new LoginForm();					
-		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
-		$employe = $poHeader->employe;			
-			return $this->renderAjax('login_sig_approved', [
-				'poHeader' => $poHeader,
-				'employe' => $employe,
-				'loginform' => $loginform,
-			]);		 
-	}
-	public function actionSignApprovedSave(){
-		$loginform = new LoginForm();		
-		/*Ajax Load*/
-		if(Yii::$app->request->isAjax){
-			$loginform->load(Yii::$app->request->post());
-			return Json::encode(\yii\widgets\ActiveForm::validate($loginform));
-		}else{	/*Normal Load*/	
-			if($loginform->load(Yii::$app->request->post())){
-				if ($loginform->loginform_saved()){
-					$hsl = \Yii::$app->request->post();
-					$kdpo = $hsl['LoginForm']['kdpo'];
-					return $this->redirect(['review', 'kdpo'=>$kdpo]);
-				}														
-			}
-		}		
-    }
-	
-	
 	
 	/*
 	 * PO Note
