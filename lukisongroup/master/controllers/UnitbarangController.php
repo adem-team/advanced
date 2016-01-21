@@ -29,6 +29,7 @@ class UnitbarangController extends Controller
 	/**
      * Lists all Tipebarang models.
      * @return mixed
+	 * 
      */
     
     public function beforeAction(){
