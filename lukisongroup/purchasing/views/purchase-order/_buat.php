@@ -923,20 +923,66 @@ use lukisongroup\master\models\Unitbarang;
 		]; 
 		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/purchase-order/sign-created-view','kdpo'=>$poHeader->KD_PO]);
+		$url = Url::toRoute(['/purchasing/purchase-order/sign-auth1-view','kdpo'=>$poHeader->KD_PO]);
 		//$options1['tabindex'] = '-1';
 		$content = Html::a($label,$url, $options);
 		return $content;	
 	}
+	
+	/*
+	 * SIGNATURE AUTH2 | CHECKED
+	 * Status Value Signature1 | PurchaseOrder
+	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
+	*/
+	function SignChecked($poHeader){
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'po-auth2',	
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#po-auth2-sign",											
+					  'class'=>'btn btn-warning btn-xs', 
+					  'style'=>['width'=>'100px'],
+					  'title'=>'Detail'
+		]; 
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/purchase-order/sign-auth2-view','kdpo'=>$poHeader->KD_PO]);
+		//$options1['tabindex'] = '-1';
+		$content = Html::a($label,$url, $options);
+		return $content;	
+	}
+	
+	/*
+	 * SIGNATURE AUTH3 | APPROVED
+	 * Status Value Signature1 | PurchaseOrder
+	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
+	*/
+	function SignApproved($poHeader){
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'po-auth3',	
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#po-auth3-sign",											
+					  'class'=>'btn btn-warning btn-xs', 
+					  'style'=>['width'=>'100px'],
+					  'title'=>'Detail'
+		]; 
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/purchase-order/sign-auth3-view','kdpo'=>$poHeader->KD_PO]);
+		//$options1['tabindex'] = '-1';
+		$content = Html::a($label,$url, $options);
+		return $content;	
+	}
+	
+	
 	/*
 	 * Signature Waiting Approval
 	 * Signature Automaticly Show If ACTION APPROVAL
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
 	*/
-	function SignApprovedStt(){
-		return Html::a('<i class="glyphicon glyphicon-retweet"></i> Waiting for approval', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
-	} 
+	//function SignApprovedStt(){
+	//	return Html::a('<i class="glyphicon glyphicon-retweet"></i> Waiting for approval', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
+	// } 
 
 	/*
 	 * Signature Waiting sign
@@ -944,9 +990,9 @@ use lukisongroup\master\models\Unitbarang;
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
 	*/
-	function SignStt(){
-		return Html::a('<i class="glyphicon glyphicon-retweet"></i> Waiting for Sign', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
-	} 
+	// function SignStt(){
+		// return Html::a('<i class="glyphicon glyphicon-retweet"></i> Waiting for Sign', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
+	// } 
 
 ?>
 
@@ -1147,13 +1193,13 @@ use lukisongroup\master\models\Unitbarang;
 						</th>								
 						<th style="text-align: center; vertical-align:middle;width:100">
 							<?php 
-								$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:100; height:40px" src='.$poHeader->SIG2_SVGBASE64.'></img>' : SignStt();
+								$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:100; height:40px" src='.$poHeader->SIG2_SVGBASE64.'></img>' : SignChecked($poHeader);
 								echo $ttd2;
 							?> 
 						</th>
 						<th style="text-align: center; vertical-align:middle;width:100">
 							<?php 
-								$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:100; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' : SignApprovedStt();
+								$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:100; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' : SignApproved($poHeader);
 								echo $ttd3;
 							?> 
 						</th>
@@ -1539,7 +1585,7 @@ use lukisongroup\master\models\Unitbarang;
 	Modal::end();
 	
 	/*
-	 * JS Sign First Create PO | Status =1
+	 * JS AUTH1 | CREATED
 	 * @author ptrnov <piter@lukison.com>
 	 * @since 1.2
 	*/
@@ -1568,6 +1614,105 @@ use lukisongroup\master\models\Unitbarang;
 				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
 			]
 		]);
+	Modal::end();
+	
+	/*
+	 * JS AUTH2 | CHECKED
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#po-auth2-sign').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'po-auth2-sign',
+			//'header' => '<h4 class="modal-title">Signature Authorize</h4>',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			//'size' => 'modal-xs'
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+	
+	/*
+	 * JS AUTH3 | APPROVED
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#po-auth3-sign').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'po-auth3-sign',
+			//'header' => '<h4 class="modal-title">Signature Authorize</h4>',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			//'size' => 'modal-xs'
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+	
+	/*
+	 * Button Modal Confirm PERMISION DENAID
+	 * @author ptrnov [piter@lukison]
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#confirm-permission-alert').on('show.bs.modal', function (event) {
+				//var button = $(event.relatedTarget)
+				//var modal = $(this)
+				//var title = button.data('title') 
+				//var href = button.attr('href') 
+				//modal.find('.modal-title').html(title)
+				//modal.find('.modal-body').html('')
+				/* $.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					}); */
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'confirm-permission-alert',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/warning/denied.png',  ['class' => 'pnjg', 'style'=>'width:40px;height:40px;']).'</div><div style="margin-top:10px;"><h4><b>Permmission Confirm !</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+			]
+		]);
+		echo "<div>You do not have permission for this module.
+				<dl>				
+					<dt>Contact : itdept@lukison.com</dt>
+				</dl>
+			</div>";
 	Modal::end();
 ?>
 
