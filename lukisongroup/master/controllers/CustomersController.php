@@ -397,10 +397,12 @@ class CustomersController extends Controller
 			
 			       $data = Yii::$app->request->get();
 			       $lat  = $data['lat'];
+            
 			       $long = $data['long'];
 			       $address = $data['address'];
 			       // $radius = $data['radius'];
 			       $model->ALAMAT = $address;
+
 			       $model->MAP_LAT = $lat ;
 			       $model->MAP_LNG = $long;
         if($model->save())
@@ -409,7 +411,8 @@ class CustomersController extends Controller
         }
 		  }else {
 				  echo  0;
-			}         
+			}    
+      // print_r($model->getErrors());     
     
     }
     
