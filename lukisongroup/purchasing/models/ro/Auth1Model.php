@@ -86,7 +86,7 @@ class Auth1Model extends Model
 						$roHeaderStt = new Requestorderstatus;						
 						$roHeaderStt->KD_RO = $this->kdro;
 						$roHeaderStt->ID_USER = $this->getProfile()->EMP_ID;
-						//$roHeaderStt->TYPE
+						$roHeaderStt->TYPE=101;
 						$roHeaderStt->STATUS = 1;
 						$roHeaderStt->UPDATED_AT = date('Y-m-d H:m:s');
 						if ($roHeaderStt->save()) {
