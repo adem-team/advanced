@@ -119,11 +119,11 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 	return $content;		
 }
 
-/*
- * Tombol Modul Barang Kategori
- * No Permission
-*/
-function tombolKategori(){
+	/*
+	 * Tombol Modul Barang Kategori
+	 * No Permission
+	*/
+	function tombolKategori(){
 	$title = Yii::t('app', 'Kategori');
 	$options = ['id'=>'ro-kategori',	
 				'data-toggle'=>"modal",
@@ -225,7 +225,7 @@ function tombolKategori(){
 			$Auth2=getPermission()->BTN_SIGN2; // Auth2
 			$Auth3=getPermission()->BTN_SIGN3; // Auth3
 			$BtnReview=getPermission()->BTN_REVIEW;			
-			if (($Auth2==1 or $Auth3==1) AND ($gF<=4) AND $BtnReview=1 AND (getPermissionEmp()->EMP_ID ==$model->USER_CC)){
+			if ((($Auth2==1 or $Auth3==1) AND $gF<=4 AND $BtnReview=1) OR (getPermissionEmp()->EMP_ID ==$model->USER_CC)){
 				//if(getPermissionEmp()->EMP_ID ==$model->USER_CC){ 
 					$title = Yii::t('app', 'Review');
 					$options = [ //'id'=>'ro-approved',
@@ -477,7 +477,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 					],
 					/*DISETUJUI*/	
 					[
-						'attribute'=>'SIG2_NM',
+						'attribute'=>'SIG3_NM',
 						'label'=>'Approved',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
@@ -794,7 +794,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 					],
 					/*DISETUJUI*/	
 					[
-						'attribute'=>'SIG2_NM',
+						'attribute'=>'SIG3_NM',
 						'label'=>'Approved',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',

@@ -219,7 +219,58 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	} 
 	
  	/*
-	 * Tombol Modul add new item
+	 * Tombol add Item Barang baru
+	 * permission crate Ro
+	 * RenderAjak to file : additem.php
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+	*/
+	function tombolNewItem($kd,$status) {
+		if(getPermission()){
+			if((getPermission()->BTN_EDIT==1 AND $status<>102) ){
+				$title1 = Yii::t('app', 'NewItem');
+				$options1 = [ 'id'=>'add-item',	
+							  'data-toggle'=>"modal",
+							  'data-target'=>"#additem-ro",											
+							  'class' => 'btn btn-warning btn-xs',
+				]; 
+				$icon1 = '<span class="fa fa-edit fa-xs"></span>';
+				$label1 = $icon1 . ' ' . $title1;
+				$url1 = Url::toRoute(['/purchasing/request-order/additem','kd'=>$kd]);
+				$content = Html::a($label1,$url1, $options1);
+				return $content;								
+			}else{
+				$title1 = Yii::t('app', 'NewItem');
+				$options1 = [ 'id'=>'ro-tambah-detail',	
+							  'data-toggle'=>"modal",
+							  'data-target'=>"#confirm-permission-alert",					
+							  'class' => 'btn btn-warning btn-xs',										  
+							  //'data-confirm'=>'Permission ! You do not have permission for this module.',
+				]; 
+				$icon1 = '<span class="fa fa-plus fa-xs"></span>';
+				$label1 = $icon1 . ' ' . $title1;
+				$url1 = Url::toRoute(['#']);
+				$content = Html::a($label1,$url1, $options1);
+				return $content;
+			}; 
+		}else{
+				$title1 = Yii::t('app', 'AddItem');
+				$options1 = [ 'id'=>'ro-tambah-detail',
+							  'data-toggle'=>"modal",
+							  'data-target'=>"#confirm-permission-alert",				
+							  'class' => 'btn btn-warning btn-xs',										  
+							  //'data-confirm'=>'Permission ! You do not have permission for this module.',
+				]; 
+				$icon1 = '<span class="fa fa-plus fa-xs"></span>';
+				$label1 = $icon1 . ' ' . $title1;
+				$url1 = Url::toRoute(['#']);
+				$content = Html::a($label1,$url1, $options1);
+				return $content;
+		}				
+	}
+
+	/*
+	 * Tombol add Item Barang yang suda ada
 	 * permission crate Ro
 	 * RenderAjak to file : additem.php
 	 * @author ptrnov  <piter@lukison.com>
@@ -227,7 +278,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	*/
 	function tombolAddItem($kd,$status) {
 		if(getPermission()){
-			if(getPermission()->BTN_EDIT==1 AND $status==101 ){
+			if(getPermission()->BTN_EDIT==1 AND ($status<>102 or $status<>103) ){
 				$title1 = Yii::t('app', 'AddItem');
 				$options1 = [ 'id'=>'add-item',	
 							  'data-toggle'=>"modal",
@@ -267,7 +318,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				$content = Html::a($label1,$url1, $options1);
 				return $content;
 		}				
-	}  
+	}  	
 ?>
 
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
@@ -308,11 +359,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	<!-- Table Grid List RO Detail !-->
 	<div class="col-md-12">		
 		<div style="align:right;">
-			<?php
-				//echo Html::a('<i class="fa fa-print fa-fw"></i> Cetak', ['cetakpdf','kd'=>$roHeader->KD_RO], ['target' => '_blank', 'class' => 'btn btn-success']);
-				echo tombolAddItem($roHeader->KD_RO,$roHeader->STATUS);
-				//print_r($roHeader->KD_RO);
-			?>
+			<div style="float:left;margin-right:5px"><?=tombolAddItem($roHeader->KD_RO,$roHeader->STATUS);?></div>
+			<div><?=tombolNewItem($roHeader->KD_RO,$roHeader->STATUS);?></div>
 		</div>			
 		<div>
 			<?php 				
@@ -326,13 +374,46 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						[
 							'columns'=>[
 								['content'=>'', 'options'=>['colspan'=>2,'class'=>'text-center info',]], 
-								['content'=>'Quantity', 'options'=>['colspan'=>4, 'class'=>'text-center info']], 
+								['content'=>'Quantity', 'options'=>['colspan'=>5, 'class'=>'text-center info']], 
 								['content'=>'Remark', 'options'=>['colspan'=>2, 'class'=>'text-center info']], 
 								//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']], 
 							],
 						]
 					], 
-					'columns' => [
+					'columns' => [						
+						[
+							/* View detail Item */
+							'class'=>'kartik\grid\ActionColumn',
+							'header'=>'#',
+							'template' => '{view}',
+							'buttons' => [						
+								/* Approved RO | Permissian Status 101 | Dept = Dept login | GF >= M ($roHeader->STATUS!=101 or $roHeader->STATUS!=10)*/
+								// 'view' => function ($url, $model) use ($headerStatus) {
+												// if ($headerStatus!==103) {
+													// return tombolApproval($url, $model);
+												// }else{
+												// }
+											// },
+							],
+							'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'5px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+							],
+							'contentOptions'=>[
+								'style'=>[
+									'text-align'=>'center',
+									'width'=>'5px',
+									'font-family'=>'verdana, arial, sans-serif',
+									'font-size'=>'8pt',
+								]
+							],
+							
+						],
 						[
 							/* Attribute Serial No */
 							'class'=>'kartik\grid\SerialColumn',
@@ -356,7 +437,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 									'font-size'=>'8pt',
 								]
 							],
-						],						
+						],
 						/* ['attribute'=>'ID',], */
 						[		
 							/* Attribute Items Barang */
@@ -369,7 +450,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							'headerOptions'=>[				
 								'style'=>[
 									'text-align'=>'center',
-									'width'=>'200px',
+									'width'=>'300px',
 									'font-family'=>'verdana, arial, sans-serif',
 									'font-size'=>'8pt',
 									'background-color'=>'rgba(126, 189, 188, 0.3)',
@@ -378,7 +459,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							'contentOptions'=>[
 								'style'=>[
 									'text-align'=>'left',
-									'width'=>'200px',
+									'width'=>'300px',
 									'font-family'=>'verdana, arial, sans-serif',
 									'font-size'=>'8pt',
 								]

@@ -99,11 +99,30 @@ class RequestorderSearch extends Requestorder
 		if($profile->emp->GF_ID<=4){
 			$query = Requestorder::find()
 						->JoinWith('dept',true,'left JOIN')	
-						->where("(r0001.PARENT_ROSO=0) AND (r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."') OR (r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.KD_DEP = '".$profile->emp->DEP_ID."') OR (r0001.USER_CC='".$profile->emp->EMP_ID."')");
+						->where("(r0001.status <> 3 and 
+									r0001.PARENT_ROSO=0 AND 
+									r0001.SIG1_NM<>'none' AND
+									r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and 
+									r0001.ID_USER = '".$profile->emp->EMP_ID."') OR
+								 (r0001.status <> 3 and
+									r0001.PARENT_ROSO=0 AND 
+									r0001.SIG2_NM<>'none' AND
+									r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and 
+									r0001.KD_DEP = '".$profile->emp->DEP_ID."') OR 
+								 (r0001.status <> 3 and 
+									r0001.PARENT_ROSO=0 AND 
+									r0001.SIG1_NM<>'none' AND
+									r0001.USER_CC='".$profile->emp->EMP_ID."')"
+							);
         }else{
 			$query = Requestorder::find()
 					->JoinWith('dept',true,'left JOIN')	
-					->where("(r0001.PARENT_ROSO=0) AND r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."' OR (r0001.USER_CC='".$profile->emp->EMP_ID."')");
+					//->where("(r0001.PARENT_ROSO=0) AND r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."' OR (r0001.USER_CC='".$profile->emp->EMP_ID."')");
+					->where("r0001.PARENT_ROSO=0 AND 
+							r0001.SIG1_NM<>'none' AND
+							r0001.USER_CC='".$profile->emp->EMP_ID."' AND 
+							r0001.status <> 3 AND 
+							r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."'");
 		}
 		
 		$dataProvider = new ActiveDataProvider([

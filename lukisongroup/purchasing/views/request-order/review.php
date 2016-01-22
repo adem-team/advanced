@@ -7,7 +7,7 @@ use yii\helpers\ArrayHelper;
 
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\assets\AppAssetJqueryJSignature;
-
+use lukisongroup\purchasing\models\ro\Requestorderstatus;
 AppAssetJqueryJSignature::register($this); 
 $this->sideCorp = 'Request Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'mDefault';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -311,10 +311,23 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 	*/ 
 	function tombolKonci($url, $model){
 		$title = Yii::t('app', 'LOCKED');
-		$options = [ 'id'=>'closed']; 
-		$icon = '<span class="glyphicon glyphicon-lock "></span>';
+		$options = [ 'id'=>'confirm-permission-id',	
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#confirm-permission-alert",											
+					  'class'=>'btn btn-info btn-xs', 
+					  'style'=>['width'=>'100px','text-align'=>'center'],
+					  'title'=>'Signature'
+		]; 
+		$icon = '<span class="glyphicon glyphicon-retweet" style="text-align:center"></span>';
 		$label = $icon . ' ' . $title;
-		return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;	
+		$content = Html::button($label, $options);
+		return $content;
+		
+		// $title = Yii::t('app', 'LOCKED');
+		// $options = [ 'id'=>'closed']; 
+		// $icon = '<span class="glyphicon glyphicon-lock "></span>';
+		// $label = $icon . ' ' . $title;
+		// return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;	
 	}
 										
 ?>
@@ -656,7 +669,13 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 											}
 										},
 							'closed' => function ($url, $model) use ($headerStatus){
-											if ($headerStatus==103) {
+											/*Check Status Checked on Requestorderstatus TYPE=102*/
+											$checkedMdl=Requestorderstatus::find()->where([
+												'KD_RO'=>$model->KD_RO,
+												'TYPE'=>102,
+												'ID_USER'=>getPermissionEmp()->EMP_ID,
+											])->one();											
+											if ($headerStatus==103 or $checkedMdl<>''  ) {
 												//return Html::label('<i class="glyphicon glyphicon-lock dm"></i> LOCKED','',['class'=>'label label-danger','style'=>['align'=>'center']]);
 												return  tombolKonci($url, $model);
 											}
