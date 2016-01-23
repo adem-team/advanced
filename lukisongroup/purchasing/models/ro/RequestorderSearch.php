@@ -14,7 +14,7 @@ class RequestorderSearch extends Requestorder
 	public function attributes()
 	{
 		/*Author -ptr.nov- add related fields to searchable attributes */
-		return array_merge(parent::attributes(), ['detro.KD_RO','detro.NM_BARANG','detro.QTY','dept.DEP_NM']);
+		return array_merge(parent::attributes(), ['detro.KD_RO','detro.NM_BARANG','detro.QTY','dept.DEP_NM','corp.CORP_NM']);
 		//return array_merge(parent::attributes(), ['detro.KD_RO','detro.NM_BARANG','detro.QTY']);
 	}
 	
@@ -27,7 +27,7 @@ class RequestorderSearch extends Requestorder
             [['STATUS','PARENT_ROSO'], 'integer'],
             [['KD_RO', 'NOTE', 'ID_USER', 'KD_CORP', 'KD_CAB', 'KD_DEP', 'CREATED_AT', 'UPDATED_ALL', 'DATA_ALL'], 'safe'],
             [['detro'], 'safe'],
-			[['detro.KD_RO','detro.NM_BARANG','detro.QTY','dept.DEP_NM','EMP_NM',], 'safe'],
+			[['detro.KD_RO','detro.NM_BARANG','detro.QTY','dept.DEP_NM','EMP_NM','corp.CORP_NM'], 'safe'],
 			[['SIG1_ID','SIG2_ID','SIG3_ID'], 'string'],
 			[['SIG1_NM','SIG2_NM','SIG3_NM'], 'string'],
 			[['SIG1_TGL','SIG2_TGL', 'SIG3_TGL','USER_CC'], 'safe'],
@@ -57,7 +57,7 @@ class RequestorderSearch extends Requestorder
        
 		$query = Requestorder::find()
 				->JoinWith('dept',true,'left JOIN')	
-				->where("(r0001.PARENT_ROSO=0) AND r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."'");
+				->where("r0001.PARENT_ROSO=0 AND r0001.status <> 3 AND r0001.ID_USER = '".$profile->emp->EMP_ID."'");
 		
 		$dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -71,8 +71,9 @@ class RequestorderSearch extends Requestorder
 		} 
 			
 		$query->andFilterWhere(['like', 'KD_RO', $this->KD_RO])
-			  ->andFilterWhere(['like', 'EMP_NM', $this->EMP_NM])
-			  ->andFilterWhere(['like', 'u0002a.DEP_NM', $this->getAttribute('dept.DEP_NM')]);
+				->andFilterWhere(['like', 'r0001.KD_CORP', $this->getAttribute('corp.CORP_NM')])		
+				->andFilterWhere(['like', 'EMP_NM', $this->EMP_NM])
+				->andFilterWhere(['like', 'u0002a.DEP_NM', $this->getAttribute('dept.DEP_NM')]);
 			  
 			
 		if($this->CREATED_AT!=''){
@@ -94,20 +95,12 @@ class RequestorderSearch extends Requestorder
 	public function searchRoInbox($params)
     {
 		$profile=Yii::$app->getUserOpt->Profile_user();
-        //$query = Pilotproject::find()->Where('sc0001.STATUS<>3 AND DEP_ID="'.$profile->emp->DEP_ID .'"');
-		
 		if($profile->emp->GF_ID<=4){
 			$query = Requestorder::find()
 						->JoinWith('dept',true,'left JOIN')	
-						->where("(r0001.status <> 3 and 
+						->where("(r0001.status <> 3 and
 									r0001.PARENT_ROSO=0 AND 
-									r0001.SIG1_NM<>'none' AND
-									r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and 
-									r0001.ID_USER = '".$profile->emp->EMP_ID."') OR
-								 (r0001.status <> 3 and
-									r0001.PARENT_ROSO=0 AND 
-									r0001.SIG2_NM<>'none' AND
-									r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and 
+									r0001.SIG2_NM<>'none' AND									
 									r0001.KD_DEP = '".$profile->emp->DEP_ID."') OR 
 								 (r0001.status <> 3 and 
 									r0001.PARENT_ROSO=0 AND 
@@ -117,12 +110,10 @@ class RequestorderSearch extends Requestorder
         }else{
 			$query = Requestorder::find()
 					->JoinWith('dept',true,'left JOIN')	
-					//->where("(r0001.PARENT_ROSO=0) AND r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."' OR (r0001.USER_CC='".$profile->emp->EMP_ID."')");
 					->where("r0001.PARENT_ROSO=0 AND 
 							r0001.SIG1_NM<>'none' AND
 							r0001.USER_CC='".$profile->emp->EMP_ID."' AND 
-							r0001.status <> 3 AND 
-							r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."'");
+							r0001.status <> 3 ");
 		}
 		
 		$dataProvider = new ActiveDataProvider([
@@ -137,8 +128,9 @@ class RequestorderSearch extends Requestorder
 		} 
 			
 		$query->andFilterWhere(['like', 'KD_RO', $this->KD_RO])
-			  ->andFilterWhere(['like', 'EMP_NM', $this->EMP_NM])
-			  ->andFilterWhere(['like', 'u0002a.DEP_NM', $this->getAttribute('dept.DEP_NM')]);
+				->andFilterWhere(['like', 'r0001.KD_CORP', $this->getAttribute('corp.CORP_NM')])	
+				->andFilterWhere(['like', 'EMP_NM', $this->EMP_NM])
+				->andFilterWhere(['like', 'u0002a.DEP_NM', $this->getAttribute('dept.DEP_NM')]);
 			  
 			
 		if($this->CREATED_AT!=''){
@@ -156,12 +148,18 @@ class RequestorderSearch extends Requestorder
 	public function searchRo($params)
     {
 		$profile=Yii::$app->getUserOpt->Profile_user();
-        //$query = Pilotproject::find()->Where('sc0001.STATUS<>3 AND DEP_ID="'.$profile->emp->DEP_ID .'"');
-		
+      	
 		if($profile->emp->JOBGRADE_ID == 'M' OR $profile->emp->JOBGRADE_ID == 'SM' ){
 			$query = Requestorder::find()
 						->JoinWith('dept',true,'left JOIN')	
-						->where("(r0001.PARENT_ROSO=0) AND (r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."') OR (r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.KD_DEP = '".$profile->emp->DEP_ID."') OR (r0001.USER_CC='".$profile->emp->EMP_ID."')");
+						->where("(r0001.PARENT_ROSO=0 and r0001.status <> 3 and r0001.ID_USER = '".$profile->emp->EMP_ID."') OR 
+								(r0001.PARENT_ROSO=0 and r0001.status <> 3 and r0001.KD_DEP = '".$profile->emp->DEP_ID."') OR 
+								(r0001.PARENT_ROSO=0 and r0001.status <> 3 and r0001.USER_CC='".$profile->emp->EMP_ID."')");
+								
+						/* ->where("(r0001.PARENT_ROSO=0) AND 
+								(r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."') OR 
+								(r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.KD_DEP = '".$profile->emp->DEP_ID."') OR 
+								(r0001.USER_CC='".$profile->emp->EMP_ID."')"); */
         }else{
 			$query = Requestorder::find()
 					->JoinWith('dept',true,'left JOIN')	

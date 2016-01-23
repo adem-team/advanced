@@ -18,6 +18,7 @@ use lukisongroup\purchasing\models\ro\Rodetail;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\hrd\models\Dept;
+use lukisongroup\hrd\models\Corp;
 
 
 $this->title = 'Request Order';
@@ -28,6 +29,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 //$this->title = Yii::t('app', 'List Permintaan Barang');      /* title pada header page */
 //$this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 	
+	$AryCorp = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM');
 	/*
 	 * Declaration Componen User Permission
 	 * Function getPermission
@@ -291,7 +293,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 		 * @since 1.2
 		*/
 		$outboxRo= GridView::widget([
-			'id'=>'ro-grd-index',
+			'id'=>'ro-grd-index-outbox',
 			'dataProvider'=> $dataProviderOutbox,
 			'filterModel' => $searchModel,
 			'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
@@ -355,6 +357,58 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 								'font-size'=>'9pt',
 							]
 						], 		
+					],					
+					/*Corp*/	
+					[
+						'attribute'=>'corp.CORP_NM',
+						'label'=>'Corporation',
+						'filter' => $AryCorp,
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						//'group'=>true,
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'200px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'200px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						], 		
+					],
+					/*Department*/	
+					[
+						'attribute'=>'dept.DEP_NM',
+						'label'=>'Department',
+						'filter' => $Combo_Dept,
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						//'group'=>true,
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'200px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'200px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						], 		
 					],
 					/*CREATE_AT Tanggal Pembuatan*/
 					[
@@ -398,37 +452,11 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 								'font-size'=>'9pt'	
 							]
 						], 		
-					],	
-					/*Department*/	
-					[
-						'attribute'=>'dept.DEP_NM',
-						'label'=>'Department',
-						'filter' => $Combo_Dept,
-						'hAlign'=>'left',
-						'vAlign'=>'middle',
-						//'group'=>true,
-						'headerOptions'=>[				
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'200px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(126, 189, 188, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'left',
-								'width'=>'200px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						], 		
-					],					
+					],						
 					/*DIBUAT*/	
 					[
 						'attribute'=>'SIG1_NM',
-						'label'=>'Created',
+						'label'=>'Created By',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
 						//'group'=>true,
@@ -579,7 +607,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			'pjaxSettings'=>[
 				'options'=>[
 					'enablePushState'=>false,
-					'id'=>'ro-grd-index',
+					'id'=>'ro-grd-index-outbox',
 				   ],						  
 			],
 			'hover'=>true, //cursor select
@@ -608,7 +636,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 		 * @since 1.2
 		*/
 		$inboxRo= GridView::widget([
-			'id'=>'ro-grd-index',
+			'id'=>'ro-grd-index-inbox',
 			'dataProvider'=> $dataProviderInbox,
 			'filterModel' => $searchModel,
 			'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
@@ -673,8 +701,60 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 							]
 						], 		
 					],
-					/*CREATE_AT Tanggal Pembuatan*/
+					/*Corp*/	
 					[
+						'attribute'=>'corp.CORP_NM',
+						'label'=>'Corporation',
+						'filter' => $AryCorp,
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						//'group'=>true,
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'200px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'200px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						], 		
+					],					
+					/*Department*/	
+					[
+						'attribute'=>'dept.DEP_NM',
+						'label'=>'Department',
+						'filter' => $Combo_Dept,
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						//'group'=>true,
+						'headerOptions'=>[				
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'200px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'200px',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						], 		
+					],					
+					/*CREATE_AT Tanggal Pembuatan*/
+					[						
 						'attribute'=>'CREATED_AT',
 						'label'=>'Create At',
 						'hAlign'=>'left',			
@@ -715,37 +795,11 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 								'font-size'=>'9pt'	
 							]
 						], 		
-					],	
-					/*Department*/	
-					[
-						'attribute'=>'dept.DEP_NM',
-						'label'=>'Department',
-						'filter' => $Combo_Dept,
-						'hAlign'=>'left',
-						'vAlign'=>'middle',
-						//'group'=>true,
-						'headerOptions'=>[				
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'200px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(126, 189, 188, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'left',
-								'width'=>'200px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						], 		
 					],					
 					/*DIBUAT*/	
 					[
 						'attribute'=>'SIG1_NM',
-						'label'=>'Created',
+						'label'=>'Create By',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
 						//'group'=>true,
@@ -896,7 +950,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			'pjaxSettings'=>[
 				'options'=>[
 					'enablePushState'=>false,
-					'id'=>'ro-grd-index',
+					'id'=>'ro-grd-index-inbox',
 				   ],						  
 			],
 			'hover'=>true, //cursor select

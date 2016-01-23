@@ -9,20 +9,19 @@ $profile=Yii::$app->getUserOpt->Profile_user();
 //echo $profile->emp->EMP_NM;
 	$arrayStt= [
 		  ['status' => 4, 'DESCRIP' => 'REJECT'],
-		  ['status' => 1, 'DESCRIP' => 'PENDING'],		  
-		  ['status' => 0, 'DESCRIP' => 'REPROCESS'],
-		  ['status' => 101, 'DESCRIP' => 'APPROVED'],
+		  ['status' => 1, 'DESCRIP' => 'PENDING'],
+		  ['status' => 103, 'DESCRIP' => 'APPROVED'],
 	];	
 	$valStt = ArrayHelper::map($arrayStt, 'status', 'DESCRIP');
 ?>
 
 	<?php
 		$form = ActiveForm::begin([
-				'id'=>'auth3Mdl-so',
+				'id'=>'auth3Mdl-ro',
 				'enableClientValidation' => true,
 				'enableAjaxValidation' => true,
 				'method' => 'post',
-				'action' => ['/purchasing/sales-order/sign-auth3-save'],
+				'action' => ['/purchasing/request-order/sign-auth3-save'],
 		]);
 	?>	
 	

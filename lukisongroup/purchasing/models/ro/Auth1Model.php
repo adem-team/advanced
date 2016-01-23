@@ -56,10 +56,10 @@ class Auth1Model extends Model
 		 * @since 1.1
 		*/
 		if (!$this->hasErrors()) {
-			 $empid = $this->getEmpid();
-			if (!$empid || !$empid->validateOldPasswordCheck($this->password)) {
+			 $emp_data = $this->getEmpid(Yii::$app->user->identity->EMP_ID);
+			if (!$emp_data || !$emp_data->validateOldPasswordCheck($this->password)) {
                 $this->addError($attribute, 'Incorrect password.');				
-            } elseif($this->status!=101){
+            } elseif($this->getPermission()->BTN_SIGN1!=1){
 				 $this->addError($attribute, 'Wrong Permission');		
 			}
        }
@@ -73,14 +73,19 @@ class Auth1Model extends Model
 	public function auth1_saved(){
 		if ($this->validate()) {				
 			$roHeader = Requestorder::find()->where(['KD_RO' =>$this->kdro])->one();
-			$roSignStt = Requestorderstatus::find()->where(['KD_RO'=>$this->kdro,'ID_USER'=>$this->getProfile()->EMP_ID])->one();				
-				$roHeader->STATUS = $this->status;	
-				$roHeader->USER_CC = $this->empID;					
+			$empAuth2= Employe::find()->where(['EMP_ID' =>$this->empID])->one();
+			$roSignStt = Requestorderstatus::find()->where(['KD_RO'=>$this->kdro,'ID_USER'=>$this->getProfile()->EMP_ID])->one();
+				//Auth1|Create Destination
+				$roHeader->STATUS = $this->status;										
 				$roHeader->SIG1_SVGBASE64 = $this->getProfile()->SIGSVGBASE64;
 				$roHeader->SIG1_SVGBASE30 = $this->getProfile()->SIGSVGBASE30;
 				$roHeader->SIG1_NM = $this->getProfile()->EMP_NM . ' ' . $this->getProfile()->EMP_NM_BLK;
 				$roHeader->SIG1_ID = $this->getProfile()->EMP_ID;
-				$roHeader->SIG1_TGL = date('Y-m-d');		
+				$roHeader->SIG1_TGL = date('Y-m-d');
+				//Auth2|Checked Destination								
+				$roHeader->USER_CC = $this->empID;
+				$roHeader->SIG2_NM = $empAuth2->EMP_NM . ' ' . $empAuth2->EMP_NM_BLK;
+				
 			if ($roHeader->save()) {
 					if (!$roSignStt){
 						$roHeaderStt = new Requestorderstatus;						
@@ -97,8 +102,8 @@ class Auth1Model extends Model
             }
 			return $roHeader;
 		}		
-		return null;			
-	}
+		return null;				
+	}	
 		
 	/**
      * Finds record by EMP_ID
@@ -107,10 +112,10 @@ class Auth1Model extends Model
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
      */
-    public function getEmpid()
+    public function getEmpid($empIdIdentity)
     {
         if ($this->_empid === false) {
-            $this->_empid = Employe::find()->where(['EMP_ID' => Yii::$app->user->identity->EMP_ID])->one();
+            $this->_empid = Employe::find()->where(['EMP_ID' =>$empIdIdentity])->one();
         }
         return $this->_empid;
     }
@@ -118,5 +123,17 @@ class Auth1Model extends Model
 	public function getProfile(){
 		$profile=Yii::$app->getUserOpt->Profile_user();	
 		return $profile->emp;
+	}
+	/*
+	 * Declaration Componen User Permission
+	 * Function getPermission
+	 * Modul Name[1=RO]
+	*/	
+	function getPermission(){
+		if (Yii::$app->getUserOpt->Modul_akses(1)){
+			return Yii::$app->getUserOpt->Modul_akses(1);
+		}else{		
+			return false;
+		}	 
 	}
 }

@@ -56,10 +56,14 @@ class Auth2Model extends Model
 		*/
 		if (!$this->hasErrors()) {
 			$roHeaderCheck = Requestorder::find()->where(['KD_RO' =>$this->kdro])->one();
-			 $empid = $this->getEmpid(Yii::$app->user->identity->EMP_ID);
+			$empid = $this->getEmpid(Yii::$app->user->identity->EMP_ID);
+			$roAuth1Check = Requestorderstatus::find()->where(['KD_RO' =>$this->kdro,'TYPE'=>101])->one();
+			$roAuth1CheckStt=$roAuth1Check!=''?$roAuth1Check->TYPE:0;
 			if (!$empid || !$empid->validateOldPasswordCheck($this->password)) {
                 $this->addError($attribute, 'Incorrect password.');				
-            }elseif($this->status!=102 || $roHeaderCheck->USER_CC!=$this->getProfile()->EMP_ID){
+            }elseif((!$roAuth1CheckStt==101)){	
+				 $this->addError($attribute, 'Needed Signature created, then signature approved Available'.$roAuth1CheckStt);
+			}elseif(!$this->getPermission()->BTN_SIGN2==1 || $roHeaderCheck->USER_CC!=$this->getProfile()->EMP_ID){
 				 $getUserCc=Employe::find()->where(['EMP_ID' => $roHeaderCheck->USER_CC])->one();
 				 $this->addError($attribute, 'Wrong Permission,the undersigned is checked by '.$getUserCc->EMP_NM. ' '.$getUserCc->EMP_NM_BLK);		
 			}
@@ -118,5 +122,18 @@ class Auth2Model extends Model
 	public function getProfile(){
 		$profile=Yii::$app->getUserOpt->Profile_user();	
 		return $profile->emp;
+	}
+	
+	/*
+	 * Declaration Componen User Permission
+	 * Function getPermission
+	 * Modul Name[1=RO]
+	*/
+	function getPermission(){
+		if (Yii::$app->getUserOpt->Modul_akses(1)){
+			return Yii::$app->getUserOpt->Modul_akses(1);
+		}else{		
+			return false;
+		}	 
 	}
 }

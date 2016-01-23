@@ -188,7 +188,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 	*/
 	function SignApproved($roHeader){
 		if(getPermission()){
-			if(getPermission()->BTN_REVIEW==1 AND ($roHeader->STATUS==101 or $roHeader->STATUS==102) ){
+			if(getPermission()->BTN_REVIEW==1 AND ($roHeader->STATUS==101 or $roHeader->STATUS==102 or  $roHeader->STATUS==4 or  $roHeader->STATUS==5) ){
 				$title = Yii::t('app', 'Sign Hire');
 				$options = [ 'id'=>'ro-auth3-id',	
 							  'data-toggle'=>"modal",

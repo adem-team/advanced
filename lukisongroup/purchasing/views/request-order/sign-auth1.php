@@ -14,7 +14,7 @@ use lukisongroup\hrd\models\employe;
 	*/
 	$profile=Yii::$app->getUserOpt->Profile_user();
 	/* GF_ID>=4 Group Function[Director|GM|M|S] */ 
-	$userData = ArrayHelper::map(employe::find()->where('(GF_ID<=4) and (STATUS<>3 or EMP_STS=3)' )->all(),'EMP_ID','EMP_NM');
+	$userData = ArrayHelper::map(employe::find()->where('(GF_ID<=4 and STATUS<>3)' )->all(),'EMP_ID','EMP_NM');
 ?>
 
 	<?php

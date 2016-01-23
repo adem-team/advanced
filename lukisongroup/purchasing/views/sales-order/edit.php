@@ -52,8 +52,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * Modul Name[1=RO]
 	*/
 	function getPermission(){
-		if (Yii::$app->getUserOpt->Modul_akses(1)){
-			return Yii::$app->getUserOpt->Modul_akses(1);
+		if (Yii::$app->getUserOpt->Modul_akses(2)){
+			return Yii::$app->getUserOpt->Modul_akses(2);
 		}else{		
 			return false;
 		}	 
@@ -69,31 +69,36 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	];
 	$valStt = ArrayHelper::map($arrayStt, 'id', 'name');
 
-	 /*
-	 * STATUS Prosess Request Order
-	 * 1. PROCESS	=0 		| Pertama RO di buat
-	 * 2. PENDING	=1		| Ro Tertunda
-	 * 3. APPROVED	=101	| Ro Sudah Di Approved
-	 * 4. COMPLETED	=10		| Ro Sudah selesai | RO->PO->RCVD
-	 * 5. DELETE	=3 		| Ro Di hapus oleh pembuat petama, jika belum di Approved
-	 * 6. REJECT	=4		| Ro tidak di setujui oleh Atasan manager keatas
-	 * 7. UNKNOWN	<>		| Ro tidak valid
+	/*
+	 * STATUS FLOW DATA
+	 * 1. NEW		= 0 	| Create First
+	 * 2. APPROVED	= 1 	| Item Approved
+	 * 3. PROCESS	= 101	| Sign Auth1 | Data Sudah di buat dan di tanda tangani
+	 * 4. CHECKED	= 102	| Sign Auth2 | Data Sudah Di Check  dan di tanda tangani
+	 * 5. APPROVED	= 103	| Sign Auth3 | Data Sudah Di disetujui dan di tanda tangani
+	 * 6. DELETE	= 3 	| Data Hidden | Data Di hapus oleh pembuat petama, jika belum di Approved
+	 * 7. REJECT	= 4		| Data tidak di setujui oleh manager atau Atasan  lain
+	 * 8. UNKNOWN	<>		| Data Tidak valid atau tidak sah
 	*/
 	function statusProcessRo($model){
 		if($model->STATUS==0){
-			return Html::a('<i class="glyphicon glyphicon-retweet"></i> PROCESS', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
-		}elseif ($model->STATUS==1){
-			return Html::a('<i class="glyphicon glyphicon-time"></i> PENDING', '#',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==101){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> APPROVED', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==10){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> COMPLETED', '#',['class'=>'btn btn-info btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+			return Html::a('<i class="glyphicon glyphicon-retweet"></i> New', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
+		}elseif($model->STATUS==1){
+			return Html::a('<i class="glyphicon glyphicon-ok"></i> Approved', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif ($model->STATUS==3){
 			return Html::a('<i class="glyphicon glyphicon-remove"></i> DELETE', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);						
 		}elseif ($model->STATUS==4){
 			return Html::a('<i class="glyphicon glyphicon-thumbs-down"></i> REJECT', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+		}elseif($model->STATUS==5){
+			return Html::a('<i class="glyphicon glyphicon-retweet"></i> Pending', '#',['class'=>'btn btn-danger btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
+		}elseif ($model->STATUS==101){
+			return Html::a('<i class="glyphicon glyphicon-time"></i> Proccess', '#',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+		}elseif ($model->STATUS==102){
+			return Html::a('<i class="glyphicon glyphicon-ok"></i> Checked', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+		}elseif ($model->STATUS==103){
+			return Html::a('<i class="glyphicon glyphicon-ok"></i> Approved', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}else{
-			return Html::a('<i class="glyphicon glyphicon-question-sign"></i> UNKNOWN', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);	
+			return Html::a('<i class="glyphicon glyphicon-question-sign"></i> Unknown', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);	
 		};		
 	}
 
@@ -108,7 +113,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		if(getPermission()){
 			if(getPermission()->BTN_EDIT==1 AND $status==0 ){
 				$title1 = Yii::t('app', 'AddItem');
-				$options1 = [ 'id'=>'add-item',	
+				$options1 = [ 'id'=>'so-add-item',	
 							  'data-toggle'=>"modal",
 							  'data-target'=>"#additem-so",											
 							  'class' => 'btn btn-info btn-xs',
@@ -120,11 +125,13 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				return $content;								
 			}else{
 				$title1 = Yii::t('app', 'AddItem');
-				$options1 = [ 'id'=>'ro-tambah-detail',						  									
-							  'class' => 'btn btn-warning',										  
-							  'data-confirm'=>'Permission Failed, The data can not be changed !',
+				$options1 = [ 'id'=>'confirm-permission-id',	
+							  'data-toggle'=>"modal",
+							  'data-target'=>"#confirm-permission-alert",					
+							  'class' => 'btn btn-warning btn-xs',										  
+							  //'data-confirm'=>'Permission ! You do not have permission for this module.',
 				]; 
-				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
+				$icon1 = '<span class="fa fa-plus fa-xs"></span>';
 				$label1 = $icon1 . ' ' . $title1;
 				$url1 = Url::toRoute(['#']);
 				$content = Html::a($label1,$url1, $options1);
@@ -132,11 +139,13 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			}; 
 		}else{
 				$title1 = Yii::t('app', 'AddItem');
-				$options1 = [ 'id'=>'ro-tambah-detail',						  									
-							  'class' => 'btn btn-warning',										  
-							  'data-confirm'=>'Permission Failed, The data can not be changed  !',
+				$options1 = [ 'id'=>'confirm-permission-id',	
+							  'data-toggle'=>"modal",
+							  'data-target'=>"#confirm-permission-alert",					
+							  'class' => 'btn btn-warning btn-xs',										  
+							  //'data-confirm'=>'Permission ! You do not have permission for this module.',
 				]; 
-				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
+				$icon1 = '<span class="fa fa-plus fa-xs"></span>';
 				$label1 = $icon1 . ' ' . $title1;
 				$url1 = Url::toRoute(['#']);
 				$content = Html::a($label1,$url1, $options1);
@@ -150,20 +159,37 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
 	*/
 	function SignCreated($roHeader){
-		$title = Yii::t('app', 'Sign Hire');
-		$options = [ 'id'=>'so-auth1-id',	
-					  'data-toggle'=>"modal",
-					  'data-target'=>"#so-auth1-sign",											
-					  'class'=>'btn btn-danger btn-xs', 
-					  'style'=>['width'=>'100px'],
-					  'title'=>'Signature'
-		]; 
-		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/sales-order/sign-auth1-view','kd'=>$roHeader->KD_RO]);
-		//$options1['tabindex'] = '-1';
-		$content = Html::a($label,$url, $options);
-		return $content;	
+		if(getPermission()){
+			if(getPermission()->BTN_EDIT==1 AND $roHeader->STATUS==0 ){
+				$title = Yii::t('app', 'Sign Hire');
+				$options = [ 'id'=>'so-auth1-id',	
+							  'data-toggle'=>"modal",
+							  'data-target'=>"#so-auth1-sign",											
+							  'class'=>'btn btn-danger btn-xs', 
+							  'style'=>['width'=>'100px'],
+							  'title'=>'Signature'
+				]; 
+				$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+				$label = $icon . ' ' . $title;
+				$url = Url::toRoute(['/purchasing/sales-order/sign-auth1-view','kd'=>$roHeader->KD_RO]);
+				//$options1['tabindex'] = '-1';
+				$content = Html::a($label,$url, $options);
+				return $content;	
+			}else{
+				$title = Yii::t('app', 'Sign Hire');
+				$options = [ 'id'=>'confirm-permission-id',	
+							  'data-toggle'=>"modal",
+							  'data-target'=>"#confirm-permission-alert",											
+							  'class'=>'btn btn-info btn-xs', 
+							  'style'=>['width'=>'100px'],
+							  'title'=>'Signature'
+				]; 
+				$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+				$label = $icon . ' ' . $title;
+				$content = Html::button($label, $options);
+				return $content;
+			}
+		}
 	}
 	
 	/*
@@ -172,20 +198,37 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
 	*/
 	function SignChecked($roHeader){
-		$title = Yii::t('app', 'Sign Hire');
-		$options = [ 'id'=>'so-auth2-id',	
-					  'data-toggle'=>"modal",
-					  'data-target'=>"#so-auth2-sign",											
-					  'class'=>'btn btn-warning btn-xs', 
-					  'style'=>['width'=>'100px'],
-					  'title'=>'Signature'
-		]; 
-		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/sales-order/sign-auth2-view','kd'=>$roHeader->KD_RO]);
-		//$options1['tabindex'] = '-1';
-		$content = Html::a($label,$url, $options);
-		return $content;	
+		if(getPermission()){
+			if(getPermission()->BTN_EDIT==1 AND ($roHeader->STATUS==101 OR $roHeader->STATUS==103) ){
+				$title = Yii::t('app', 'Sign Hire');
+				$options = [ 'id'=>'so-auth2-id',	
+							  'data-toggle'=>"modal",
+							  'data-target'=>"#so-auth2-sign",											
+							  'class'=>'btn btn-warning btn-xs', 
+							  'style'=>['width'=>'100px'],
+							  'title'=>'Signature'
+				]; 
+				$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+				$label = $icon . ' ' . $title;
+				$url = Url::toRoute(['/purchasing/sales-order/sign-auth2-view','kd'=>$roHeader->KD_RO]);
+				//$options1['tabindex'] = '-1';
+				$content = Html::a($label,$url, $options);
+				return $content;
+			}else{
+				$title = Yii::t('app', 'Sign Hire');
+				$options = [ 'id'=>'confirm-permission-id',	
+							  'data-toggle'=>"modal",
+							  'data-target'=>"#confirm-permission-alert",											
+							  'class'=>'btn btn-info btn-xs', 
+							  'style'=>['width'=>'100px'],
+							  'title'=>'Signature'
+				]; 
+				$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+				$label = $icon . ' ' . $title;
+				$content = Html::button($label, $options);
+				return $content;
+			}
+		}	
 	}
 	
 	/*
@@ -194,20 +237,37 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 101=Approved]
 	*/
 	function SignApproved($roHeader){
-		$title = Yii::t('app', 'Sign Hire');
-		$options = [ 'id'=>'so-auth3-id',	
-					  'data-toggle'=>"modal",
-					  'data-target'=>"#so-auth3-sign",											
-					  'class'=>'btn btn-warning btn-xs', 
-					  'style'=>['width'=>'100px'],
-					  'title'=>'Signature'
-		]; 
-		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/sales-order/sign-auth3-view','kd'=>$roHeader->KD_RO]);
-		//$options1['tabindex'] = '-1';
-		$content = Html::a($label,$url, $options);
-		return $content;	
+		if(getPermission()){
+			if(getPermission()->BTN_EDIT==1 AND ($roHeader->STATUS==101 or $roHeader->STATUS==102)){
+				$title = Yii::t('app', 'Sign Hire');
+				$options = [ 'id'=>'so-auth3-id',	
+							  'data-toggle'=>"modal",
+							  'data-target'=>"#so-auth3-sign",											
+							  'class'=>'btn btn-warning btn-xs', 
+							  'style'=>['width'=>'100px'],
+							  'title'=>'Signature'
+				]; 
+				$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+				$label = $icon . ' ' . $title;
+				$url = Url::toRoute(['/purchasing/sales-order/sign-auth3-view','kd'=>$roHeader->KD_RO]);
+				//$options1['tabindex'] = '-1';
+				$content = Html::a($label,$url,$options);
+				return $content;
+			}else{
+				$title = Yii::t('app', 'Sign Hire');
+				$options = [ 'id'=>'confirm-permission-id',	
+							  'data-toggle'=>"modal",
+							  'data-target'=>"#confirm-permission-alert",											
+							  'class'=>'btn btn-info btn-xs', 
+							  'style'=>['width'=>'100px'],
+							  'title'=>'Signature'
+				]; 
+				$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+				$label = $icon . ' ' . $title;
+				$content = Html::button($label, $options);
+				return $content;
+			}
+		}	
 	} 
 ?>
 
@@ -796,5 +856,42 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
 			]
 		]);
+	Modal::end();
+	
+	/*
+	 * Button Modal Confirm Popup
+	 * @author ptrnov [piter@lukison]
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#confirm-permission-alert').on('show.bs.modal', function (event) {
+				//var button = $(event.relatedTarget)
+				//var modal = $(this)
+				//var title = button.data('title') 
+				//var href = button.attr('href') 
+				//modal.find('.modal-title').html(title)
+				//modal.find('.modal-body').html('')
+				/* $.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					}); */
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'confirm-permission-alert',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/warning/denied.png',  ['class' => 'pnjg', 'style'=>'width:40px;height:40px;']).'</div><div style="margin-top:10px;"><h4><b>Permmission Confirm !</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+			]
+		]);
+		echo "<div>You do not have permission for this module.
+				<dl>					
+					<dt>Contact : itdept@lukison.com</dt>
+					<dt style='width:70px; float:left;'>Status RO</dt>				
+					<dd>:".statusProcessRo($roHeader)."</dd>
+				</dl>
+			</div>";
 	Modal::end();
 ?>

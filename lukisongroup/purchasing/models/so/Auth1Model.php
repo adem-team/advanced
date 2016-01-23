@@ -4,8 +4,8 @@ namespace lukisongroup\purchasing\models\so;
 use Yii;
 use yii\base\Model;
 use lukisongroup\hrd\models\Employe;
-use lukisongroup\purchasing\models\so\Requestorder;
-
+use lukisongroup\purchasing\models\ro\Requestorder;
+use lukisongroup\purchasing\models\ro\Requestorderstatus;
 /**
  * @author ptrnov  <piter@lukison.com>
  * @since 1.1
@@ -20,6 +20,7 @@ use lukisongroup\purchasing\models\so\Requestorder;
 class Auth1Model extends Model
 {
     public $empNm;
+	public $empID;
     public $kdro;
 	public $status;	
 	public $password;
@@ -32,14 +33,14 @@ class Auth1Model extends Model
     public function rules()
     {
         return [						
-			[['password'], 'required'],
+			[['password','empID'], 'required'],
 			['password', 'number','numberPattern' => '/^[0-9]*$/i'],
 			['password', 'string', 'min' => 8,  'message'=> 'Please enter 8 digit'],
 			['password', 'findPasswords'],	
 			['status', 'required'],
 			['status', 'integer'],
 			[['kdro'], 'required'],
-			[['kdro','empNm'], 'string']		
+			[['kdro','empNm','empID'], 'string']		
         ];
     }
 	
@@ -58,7 +59,9 @@ class Auth1Model extends Model
 			 $empid = $this->getEmpid();
 			if (!$empid || !$empid->validateOldPasswordCheck($this->password)) {
                 $this->addError($attribute, 'Incorrect password.');				
-            } 
+            } elseif($this->status!=101){
+				 $this->addError($attribute, 'Wrong Permission');		
+			}
        }
     }
 	
@@ -68,15 +71,28 @@ class Auth1Model extends Model
 	 * @since 1.1
 	*/
 	public function auth1_saved(){
-		if ($this->validate()) {			
+		if ($this->validate()) {				
 			$roHeader = Requestorder::find()->where(['KD_RO' =>$this->kdro])->one();
-				$profile=Yii::$app->getUserOpt->Profile_user();
-				$roHeader->STATUS = $this->status;					
-				$roHeader->SIG2_SVGBASE64 = $profile->emp->SIGSVGBASE64;
-				$roHeader->SIG2_SVGBASE30 = $profile->emp->SIGSVGBASE30;
-				$roHeader->SIG2_NM = $profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;
-				$roHeader->SIG2_TGL = date('Y-m-d');		
+			$roSignStt = Requestorderstatus::find()->where(['KD_RO'=>$this->kdro,'ID_USER'=>$this->getProfile()->EMP_ID])->one();				
+				$roHeader->STATUS = $this->status;	
+				$roHeader->USER_CC = $this->empID;					
+				$roHeader->SIG1_SVGBASE64 = $this->getProfile()->SIGSVGBASE64;
+				$roHeader->SIG1_SVGBASE30 = $this->getProfile()->SIGSVGBASE30;
+				$roHeader->SIG1_NM = $this->getProfile()->EMP_NM . ' ' . $this->getProfile()->EMP_NM_BLK;
+				$roHeader->SIG1_ID = $this->getProfile()->EMP_ID;
+				$roHeader->SIG1_TGL = date('Y-m-d');		
 			if ($roHeader->save()) {
+					if (!$roSignStt){
+						$roHeaderStt = new Requestorderstatus;						
+						$roHeaderStt->KD_RO = $this->kdro;
+						$roHeaderStt->ID_USER = $this->getProfile()->EMP_ID;
+						//$roHeaderStt->TYPE
+						$roHeaderStt->STATUS = 1;
+						$roHeaderStt->UPDATED_AT = date('Y-m-d H:m:s');
+						if ($roHeaderStt->save()) {
+							
+						}
+					}
                 return $roHeader;
             }
 			return $roHeader;
@@ -97,5 +113,10 @@ class Auth1Model extends Model
             $this->_empid = Employe::find()->where(['EMP_ID' => Yii::$app->user->identity->EMP_ID])->one();
         }
         return $this->_empid;
-    }	
+    }
+	
+	public function getProfile(){
+		$profile=Yii::$app->getUserOpt->Profile_user();	
+		return $profile->emp;
+	}
 }

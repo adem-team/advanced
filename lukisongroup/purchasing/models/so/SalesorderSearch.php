@@ -50,6 +50,113 @@ class SalesorderSearch extends Salesorder
         return Model::scenarios();
     }
 
+	
+	/*
+	 * OUTBOX SO
+	 * ACTION CREATE
+	 * @author ptrnov [piter@lukison]
+	 * @since 1.2
+	*/
+	public function searchSoOutbox($params)
+    {
+		$profile=Yii::$app->getUserOpt->Profile_user();
+       
+		$query = Salesorder::find()
+				->JoinWith('dept',true,'left JOIN')	
+				->where("(r0001.PARENT_ROSO=1) AND r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."'");
+		
+		$dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+		$this->load($params);
+		if (!$this->validate()) {
+			//return $dataProvider;
+			//$dataProvider->query->where('0=1');
+			return $dataProvider;
+		} 
+			
+		$query->andFilterWhere(['like', 'KD_RO', $this->KD_RO])
+			  ->andFilterWhere(['like', 'EMP_NM', $this->EMP_NM])
+			  ->andFilterWhere(['like', 'u0002a.DEP_NM', $this->getAttribute('dept.DEP_NM')]);
+			  
+			
+		if($this->CREATED_AT!=''){
+            $date_explode = explode(" - ", $this->CREATED_AT);
+            $date1 = trim($date_explode[0]);
+            $date2= trim($date_explode[1]);
+            $query->andFilterWhere(['between','CREATED_AT', $date1,$date2]);
+        } 
+		
+		return $dataProvider;
+    }
+	
+	/*
+	 * INBOX SO
+	 * ACTION CHECKED | APPROVAL
+	 * @author ptrnov [piter@lukison]
+	 * @since 1.2
+	*/
+	public function searchSoInbox($params)
+    {
+		$profile=Yii::$app->getUserOpt->Profile_user();
+        //$query = Pilotproject::find()->Where('sc0001.STATUS<>3 AND DEP_ID="'.$profile->emp->DEP_ID .'"');
+		
+		if($profile->emp->GF_ID<=4){
+			$query = Salesorder::find()
+						->JoinWith('dept',true,'left JOIN')	
+						->where("(r0001.status <> 3 and 
+									r0001.PARENT_ROSO=1 AND 
+									r0001.SIG1_NM<>'none' AND
+									r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and 
+									r0001.ID_USER = '".$profile->emp->EMP_ID."') OR
+								 (r0001.status <> 3 and
+									r0001.PARENT_ROSO=1 AND 
+									r0001.SIG2_NM<>'none' AND
+									r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and 
+									r0001.KD_DEP = '".$profile->emp->DEP_ID."') OR 
+								 (r0001.status <> 3 and 
+									r0001.PARENT_ROSO=1 AND 
+									r0001.SIG1_NM<>'none' AND
+									r0001.USER_CC='".$profile->emp->EMP_ID."')"
+							);
+        }else{
+			$query = Salesorder::find()
+					->JoinWith('dept',true,'left JOIN')	
+					//->where("(r0001.PARENT_ROSO=1) AND r0001.status <> 3 and r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."' and r0001.ID_USER = '".$profile->emp->EMP_ID."' OR (r0001.USER_CC='".$profile->emp->EMP_ID."')");
+					->where("r0001.PARENT_ROSO=1 AND 
+							r0001.SIG1_NM<>'none' AND
+							r0001.USER_CC='".$profile->emp->EMP_ID."' AND 
+							r0001.status <> 3 AND 
+							r0001.KD_CORP = '" .$profile->emp->EMP_CORP_ID ."'");
+		}
+		
+		$dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+		$this->load($params);
+		if (!$this->validate()) {
+			//return $dataProvider;
+			//$dataProvider->query->where('0=1');
+			return $dataProvider;
+		} 
+			
+		$query->andFilterWhere(['like', 'KD_RO', $this->KD_RO])
+			  ->andFilterWhere(['like', 'EMP_NM', $this->EMP_NM])
+			  ->andFilterWhere(['like', 'u0002a.DEP_NM', $this->getAttribute('dept.DEP_NM')]);
+			  
+			
+		if($this->CREATED_AT!=''){
+            $date_explode = explode(" - ", $this->CREATED_AT);
+            $date1 = trim($date_explode[0]);
+            $date2= trim($date_explode[1]);
+            $query->andFilterWhere(['between','CREATED_AT', $date1,$date2]);
+        } 
+		
+		return $dataProvider;
+    }
+	
 	public function searchSo($params)
     {
 		$profile=Yii::$app->getUserOpt->Profile_user();

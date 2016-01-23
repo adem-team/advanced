@@ -90,7 +90,7 @@ class SalesOrderController extends Controller
 			
 		//}
 		//$getPermission=Yii::$app->getUserOpt->Modul_akses(1); 
-		$searchModel = new SalesorderSearch();
+		
 		/*  if (isset($_GET['param'])){
 			  $dataProvider = $searchModel->searchChildRo(Yii::$app->request->queryParams,$_GET['param']);
 		}else{
@@ -98,13 +98,27 @@ class SalesOrderController extends Controller
 		}  */
         
 		//$searchModel->KD_RO ='2015.12.04.RO.0070';
+		
+		// $dataProvider = $searchModel->searchSo(Yii::$app->request->queryParams);
+		  // return $this->render('index', [
+            // 'searchModel' => $searchModel,
+            // 'dataProvider' => $dataProvider,
+			//'getPermission'=> $getPermission,
+        // ]);
+		
+		$searchModel = new SalesorderSearch();
+		
 		$dataProvider = $searchModel->searchSo(Yii::$app->request->queryParams);
+		$dataProviderInbox = $searchModel->searchSoInbox(Yii::$app->request->queryParams);
+		$dataProviderOutbox = $searchModel->searchSoOutbox(Yii::$app->request->queryParams);
+		
 		  return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+			'dataProviderInbox' =>$dataProviderInbox,
+			'dataProviderOutbox' =>$dataProviderOutbox,
 			//'getPermission'=> $getPermission,
         ]);
-		
 		
     }	
 	
@@ -271,17 +285,20 @@ class SalesOrderController extends Controller
 				
 				//if($roDetail->load(Yii::$app->request->post()) && $roDetail->validate()){		
 			if($roDetail->load(Yii::$app->request->post())){		
-				$hsl = \Yii::$app->request->post();				
+				$hsl = \Yii::$app->request->post();	
+				$userCorp = $hsl['Sodetail']['KD_CORP'];				
 				$kdUnit = $hsl['Sodetail']['UNIT'];
 				$kdBarang = $hsl['Sodetail']['KD_BARANG'];
 				$nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
 				$rqty = $hsl['Sodetail']['RQTY'];
 				$note = $hsl['Sodetail']['NOTE'];
 				
+				$GneratekodeSo=\Yii::$app->ambilkonci->getSoCode($userCorp);
+				
 				/*
 				 * Detail Sales Order
 				**/
-				$roDetail->KD_RO = \Yii::$app->ambilkonci->getSoCode(); //Sales Order Kode
+				$roDetail->KD_RO = $GneratekodeSo; //Sales Order Kode
 				$roDetail->PARENT_ROSO=1; // SO=1 //required
 				$roDetail->UNIT = $kdUnit;
 				$roDetail->CREATED_AT = date('Y-m-d H:i:s');
@@ -296,15 +313,15 @@ class SalesOrderController extends Controller
 				/*
 				 * Header Request Order
 				**/
-				$getkdro=\Yii::$app->ambilkonci->getSoCode();
+				//$getkdro=\Yii::$app->ambilkonci->getSoCode();
 				$roHeader->PARENT_ROSO=1; // SO=1
-				$roHeader->KD_RO =$getkdro;
+				$roHeader->KD_RO =$GneratekodeSo;
 				$roHeader->CREATED_AT = date('Y-m-d H:i:s');
 				$roHeader->TGL = date('Y-m-d');
 				$roHeader->ID_USER = $profile->emp->EMP_ID;
 				$roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
 				//$roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
-				$roHeader->KD_CORP = $profile->emp->EMP_CORP_ID;
+				$roHeader->KD_CORP = $userCorp;
 				$roHeader->KD_DEP = $profile->emp->DEP_ID;
 				//$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
 				//$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
@@ -328,7 +345,7 @@ class SalesOrderController extends Controller
 					}
 					//return $this->redirect(['index','param'=>$getkdro]); 		
 					//return $this->redirect(['index?SalesorderSearch[KD_RO]='.$getkdro]);
-					return $this->redirect(['/purchasing/sales-order/edit?kd='.$getkdro]);
+					return $this->redirect(['/purchasing/sales-order/edit?kd='.$GneratekodeSo]);
 			}else{
 				return $this->redirect(['index']);
 		}
@@ -667,7 +684,7 @@ class SalesOrderController extends Controller
 	/**
 	 * On Approval View
 	 * Approved_rodetail | Sodetail->ID |  $roDetail->STATUS = 101;
-	 * Approved = 101
+	 * Approved = 1
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
@@ -678,7 +695,7 @@ class SalesOrderController extends Controller
 			$id=$request->post('id');
 			//\Yii::$app->response->format = Response::FORMAT_JSON;
 			$roDetail = Sodetail::findOne($id);
-			$roDetail->STATUS = 101;
+			$roDetail->STATUS = 1;
 			//$ro->NM_BARANG=''
 			$roDetail->save();
 			return true;
@@ -825,8 +842,7 @@ class SalesOrderController extends Controller
 	/*
 	 * SIGNARURE AUTH1 | VIEW CREATED 
 	 * Status = 101
-	 * Class Model Requestorder->Status = 101 [Approvad]
-	 * Class Model Rodetail->Status 	= 101 [Approvad]
+	 * Class Model Salesorder->Status = 101 [Approvad]
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1    
 	**/
@@ -852,7 +868,7 @@ class SalesOrderController extends Controller
 				if ($auth1Mdl->auth1_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth1Model']['kdro'];
-					return $this->redirect(['/purchasing/sales-order/review','kd'=>$kdro]);
+					return $this->redirect(['/purchasing/request-order/review','kd'=>$kdro]);
 				}														
 			}
 		}
@@ -861,8 +877,7 @@ class SalesOrderController extends Controller
 	/*
 	 * SIGNARURE AUTH2 | VIEW CREATED 
 	 * Status = 102
-	 * Class Model Requestorder->Status = 102 [Approvad]
-	 * Class Model Rodetail->Status 	= 102 [Approvad]
+	 * Class Model Salesorder->Status = 102 [Approvad]
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1    
 	**/
@@ -885,10 +900,10 @@ class SalesOrderController extends Controller
 			return Json::encode(\yii\widgets\ActiveForm::validate($auth2Mdl));
 		}else{	/*Normal Load*/	
 			if($auth2Mdl->load(Yii::$app->request->post())){
-				if ($auth2Mdl->loginform_saved()){
+				if ($auth2Mdl->auth2_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth2Model']['kdro'];
-					return $this->redirect(['/purchasing/sales-order/review','kd'=>$kdro]);
+					return $this->redirect(['/purchasing/request-order/review','kd'=>$kdro]);
 				}														
 			}
 		}
@@ -897,8 +912,7 @@ class SalesOrderController extends Controller
 	/*
 	 * SIGNARURE AUTH3 | VIEW APPROVED 
 	 * Status = 103
-	 * Class Model Requestorder->Status = 103 [Approvad]
-	 * Class Model Rodetail->Status 	= 103 [Approvad]
+	 * Class Model Salesorder->Status = 103 [Approvad]
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1    
 	**/
@@ -921,14 +935,15 @@ class SalesOrderController extends Controller
 			return Json::encode(\yii\widgets\ActiveForm::validate($auth3Mdl));
 		}else{	/*Normal Load*/	
 			if($auth3Mdl->load(Yii::$app->request->post())){
-				if ($auth3Mdl->loginform_saved()){
+				if ($auth3Mdl->auth3_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth3Model']['kdro'];
-					return $this->redirect(['/purchasing/sales-order/review','kd'=>$kdro]);
+					return $this->redirect(['/purchasing/request-order/review','kd'=>$kdro]);
 				}														
 			}
 		}
 	}
+	
 	
 	/**
      * Updates an existing Salesorder model.

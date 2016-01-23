@@ -6,6 +6,8 @@ use Yii;
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\hrd\models\Dept;
 use lukisongroup\purchasing\models\ro\Rodetail;
+use lukisongroup\hrd\models\Corp;
+
 /**
  * This is the model class for table "r0001".
  *
@@ -84,10 +86,10 @@ class Requestorder extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Dept::className(), ['DEP_ID' => 'KD_DEP']);
     } 
-   /*  public function getNmemp()
+    public function getCorp()
     {
-        return $this->employe->EMP_NM;
-    } */
+       return $this->hasOne(Corp::className(), ['CORP_ID' => 'KD_CORP']);
+    }
 	
     /* public function getTess()
     {

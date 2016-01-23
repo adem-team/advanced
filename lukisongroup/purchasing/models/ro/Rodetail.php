@@ -56,8 +56,8 @@ class Rodetail extends \yii\db\ActiveRecord
             [['PQTY','HARGA'], 'safe'],
 			[['STATUS','PARENT_ROSO'], 'integer'],
             [['NOTE','UNIT','KD_BARANG'], 'string'],
-            [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT','TMP_CK','HARGA'], 'safe'],
-            [['KD_RO', 'KD_BARANG'], 'string', 'max' => 50],
+            [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT','TMP_CK','HARGA','KD_CORP'], 'safe'],
+            [['KD_RO','KD_CORP', 'KD_BARANG'], 'string', 'max' => 50],
             [['NM_BARANG', 'NO_URUT'], 'string', 'max' => 255]
         ];
     }

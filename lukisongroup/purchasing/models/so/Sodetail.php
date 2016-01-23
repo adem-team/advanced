@@ -57,7 +57,7 @@ class Sodetail extends \yii\db\ActiveRecord
 			[['STATUS','PARENT_ROSO'], 'integer'],
             [['NOTE','UNIT','KD_BARANG'], 'string'],
             [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT','TMP_CK'], 'safe'],
-            [['KD_RO', 'KD_BARANG'], 'string', 'max' => 50],
+            [['KD_RO','KD_CORP','KD_BARANG'], 'string', 'max' => 50],
             [['NM_BARANG', 'NO_URUT'], 'string', 'max' => 255]
         ];
     }

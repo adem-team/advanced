@@ -227,7 +227,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	*/
 	function tombolNewItem($kd,$status) {
 		if(getPermission()){
-			if((getPermission()->BTN_EDIT==1 AND $status<>102) ){
+			if((getPermission()->BTN_EDIT==1 AND ($status==0)) ){
 				$title1 = Yii::t('app', 'NewItem');
 				$options1 = [ 'id'=>'add-item',	
 							  'data-toggle'=>"modal",
@@ -278,7 +278,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	*/
 	function tombolAddItem($kd,$status) {
 		if(getPermission()){
-			if(getPermission()->BTN_EDIT==1 AND ($status<>102 or $status<>103) ){
+			if(getPermission()->BTN_EDIT==1 AND ($status==0)){
 				$title1 = Yii::t('app', 'AddItem');
 				$options1 = [ 'id'=>'add-item',	
 							  'data-toggle'=>"modal",
@@ -747,22 +747,35 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					 <tr>
 						<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
 							<?php 
+								/*
+								 * STATUS AUTH3=101 CURRENT SIGNATURE 
+								 * @author ptrnov [piter@lukison]
+								 * @since 1.2
+								*/
 								$ttd1 = $roHeader->SIG1_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$roHeader->SIG1_SVGBASE64.'></img>' :SignCreated($roHeader);
 								echo $ttd1;
 							?> 
 						</th>								
 						<th class="col-md-1" style="text-align: center; vertical-align:middle">
 							<?php 
+								/*
+								 * STATUS AUTH3=103 CURRENT SIGNATURE
+								 * @author ptrnov [piter@lukison]
+								 * @since 1.2
+								*/
 								$ttd2 = $roHeader->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$roHeader->SIG2_SVGBASE64.'></img>' : SignChecked($roHeader);
 								echo $ttd2;
 							?> 
 						</th>
 						<th  class="col-md-1" style="text-align: center; vertical-align:middle">
-							<?php 
+							<?php
+								/*
+								 * STATUS AUTH3=103 CURRENT SIGNATURE
+								 * @author ptrnov [piter@lukison]
+								 * @since 1.2
+								*/
 								$ttd3 = $roHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$roHeader->SIG3_SVGBASE64.'></img>' : SignApproved($roHeader);
-								//if ($roHeader->STATUS==101){
-									echo $ttd3;
-								//}
+								echo $ttd3;
 							?> 
 						</th>
 					</tr>
