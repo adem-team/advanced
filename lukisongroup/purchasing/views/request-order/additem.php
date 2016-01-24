@@ -19,12 +19,13 @@ use lukisongroup\master\models\Tipebarang;
 use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
+use lukisongroup\hrd\models\Corp;
 
+$userCorp = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM');
 $brgType = ArrayHelper::map(Tipebarang::find()->where(['PARENT'=>0])->orderBy('NM_TYPE')->all(), 'KD_TYPE', 'NM_TYPE');
 $brgUnit = ArrayHelper::map(Unitbarang::find()->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT');
 $brgKtg = ArrayHelper::map(Kategori::find()->where(['PARENT'=>0,'STATUS'=>1])->orderBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI');
 $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1])->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG'); 
-echo $roHeader->KD_RO;
 ?>
 	<?php
 	/*
@@ -52,16 +53,39 @@ echo $roHeader->KD_RO;
 					'action' => ['/purchasing/request-order/additem_saved'],
 				]);
 				
-			?>
 			
-			<?php  echo $form->field($roDetail, 'cREATED_AT',['template' => "{input}"])->textInput(['value'=>date('Y-m-d H:i:s'),'readonly' => true]) ?>
+			echo $form->field($roDetail, 'kD_CORP')->dropDownList($userCorp,[
+				'id'=>'additemvalidation-kd_corp',
+				'prompt'=>' -- Pilih Salah Satu --',
+			])->label('Perusahaan'); 
+			
+			echo $form->field($roDetail, 'kD_TYPE')->widget(DepDrop::classname(), [
+				'type'=>DepDrop::TYPE_SELECT2,
+				'data' => $brgType,
+				'options' => ['id'=>'additemvalidation-kd_type'],
+				'pluginOptions' => [
+					'depends'=>['additemvalidation-kd_corp'],
+					'url'=>Url::to(['/purchasing/request-order/corp-type']), /*Parent=0 barang Umum*/
+					'initialize'=>true,
+				], 		
+			]);
+			
+			echo $form->field($roDetail, 'kD_KATEGORI')->widget(DepDrop::classname(), [
+				'type'=>DepDrop::TYPE_SELECT2,
+				'data' => $brgKtg,
+				'options' => ['id'=>'additemvalidation-kd_kategori'],
+				'pluginOptions' => [
+					'depends'=>['additemvalidation-kd_corp','additemvalidation-kd_type'],
+					'url'=>Url::to(['/purchasing/request-order/type-kat']),
+					'initialize'=>true,
+				], 		
+			]);
+			?>
+			<?php  echo $form->field($roDetail, 'cREATED_AT',['template' => "{input}"])->hiddenInput(['value'=>date('Y-m-d H:i:s'),'readonly' => true]) ?>
 			<?php  echo $form->field($roDetail, 'kD_RO',['template' => "{input}"])->textInput(['value'=>$roHeader->KD_RO,'type' =>'hidden']) ?>
 
 			<?php
 				echo $form->field($roDetail, 'hARGA')->hiddenInput(['value' => ''])->label(false);
-				echo $form->field($roDetail, 'kD_TYPE')->dropDownList($brgType, ['id'=>'rodetail-kd_type']);
-				echo $form->field($roDetail, 'kD_KATEGORI')->dropDownList($brgKtg, ['id'=>'additemvalidation-kd_kategori']);
-				 
 				echo $form->field($roDetail, 'kD_BARANG')->widget(DepDrop::classname(), [
 					'type'=>DepDrop::TYPE_SELECT2,
 					'data' => $brgUmum,

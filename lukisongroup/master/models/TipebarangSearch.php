@@ -12,6 +12,12 @@ use lukisongroup\master\models\Tipebarang;
  */
 class TipebarangSearch extends Tipebarang
 {
+	
+	public function attributes()
+	{
+		/*Author -ptr.nov- add related fields to searchable attributes */
+		return array_merge(parent::attributes(), ['corp.CORP_NM']);
+	}
     /**
      * @inheritdoc
      */
@@ -19,7 +25,7 @@ class TipebarangSearch extends Tipebarang
     {
         return [
             [['ID', 'STATUS','PARENT'], 'integer'],
-            [['KD_TYPE', 'NM_TYPE', 'NOTE', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT'], 'safe'],
+            [['corp.CORP_NM','KD_TYPE', 'NM_TYPE', 'NOTE', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT'], 'safe'],
         ];
     }
 
@@ -41,7 +47,7 @@ class TipebarangSearch extends Tipebarang
      */
     public function search($params)
     {
-        $query = Tipebarang::find()->where('STATUS <> 3')->groupBy(['PARENT','KD_TYPE']);;
+        $query = Tipebarang::find()->where('STATUS <> 3')->groupBy(['PARENT','CORP_ID','KD_TYPE']);;
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -64,6 +70,7 @@ class TipebarangSearch extends Tipebarang
             'UPDATED_AT' => $this->UPDATED_AT,
 			'STATUS' => $this->STATUS,
 			'PARENT' => $this->PARENT,
+			'CORP_ID' => $this->getAttribute('corp.CORP_NM'),
         ]);
 
         $query->andFilterWhere(['like', 'KD_TYPE', $this->KD_TYPE])

@@ -48,6 +48,14 @@ $this->title = Yii::t('app', 'Umum - Detail Kategori Barang ');	    /* title pad
 				'label' => 'Parent',
 				'value' => $parent,
 			],
+			[
+				'label' => 'Corporation',
+				'attribute'=>'corp.CORP_NM',
+			],
+			[
+				'label' => 'Type Barang',
+				'attribute'=>'typebrg.NM_TYPE',
+			],
 			'NM_KATEGORI',
 			'NOTE:ntext',
 			[

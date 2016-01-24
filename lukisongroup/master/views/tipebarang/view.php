@@ -31,7 +31,11 @@ $this->title = Yii::t('app', 'Umum - Type Detail Barang ');	    /* title pada he
 			[
 				'label' => 'Parent',
 				'value' => $parent,
-			],		
+			],
+			[
+				'label' => 'Corporation',
+				'attribute'=>'corp.CORP_NM',
+			],
             'NM_TYPE',
             'NOTE:ntext',
 			[

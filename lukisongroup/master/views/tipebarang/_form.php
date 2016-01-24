@@ -4,6 +4,9 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use kartik\form\ActiveForm;
 use kartik\widgets\SwitchInput;
+use lukisongroup\hrd\models\Corp;
+
+$userCorp = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM');
 
 	$aryParent= [
 		  ['PARENT' => 0, 'PAREN_NM' => 'UMUM'],		  
@@ -22,6 +25,7 @@ use kartik\widgets\SwitchInput;
 		'action' => ['tipebarang/simpan'],
 		]); 
 	?>
+	<?= $form->field($model, 'CORP_ID')->dropDownList($userCorp, ['id'=>'rodetail-kd_type'])->label('Type'); ?>
 	<?= $form->field($model, 'PARENT')->dropDownList($valParent); ?>
     <?= $form->field($model, 'NM_TYPE')->textInput(['maxlength' => true]) ?>
 

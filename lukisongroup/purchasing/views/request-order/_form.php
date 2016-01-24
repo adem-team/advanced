@@ -43,16 +43,41 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0 ,'STATUS'=>1])->o
 	?>
 	<?php //= $form->errorSummary($model); ?>
 	
-    <?= $form->field($roDetail, 'CREATED_AT',['template' => "{input}"])->textInput(['value'=>date('Y-m-d H:i:s'),'readonly' => true]) ?>
-	<?= $form->field($roDetail, 'KD_CORP')->dropDownList($userCorp,['prompt'=>' -- Pilih Salah Satu --'])->label('Perusahaan') ?>		
+    <?= $form->field($roDetail, 'CREATED_AT',['template' => "{input}"])->hiddenInput(['value'=>date('Y-m-d H:i:s'),'readonly' => true]) ?>
+	
 
     <?php
-		 echo $form->field($roDetail, 'NM_BARANG')->hiddenInput(['value' => ''])->label(false);
-		 echo $form->field($roDetail, 'KD_TYPE')->dropDownList($brgType, ['id'=>'rodetail-kd_type'])->label('Type');
+		echo $form->field($roDetail, 'KD_CORP')->dropDownList($userCorp,[
+			'id'=>'rodetail-kd_corp',
+			'prompt'=>' -- Pilih Salah Satu --',
+			])->label('Perusahaan'); 
+		//echo $form->field($roDetail, 'KD_TYPE')->dropDownList($brgType, ['id'=>'rodetail-kd_type'])->label('Type');
+		echo $form->field($roDetail, 'KD_TYPE')->widget(DepDrop::classname(), [
+			'type'=>DepDrop::TYPE_SELECT2,
+			'data' => $brgType,
+			'options' => ['id'=>'rodetail-kd_type'],
+			'pluginOptions' => [
+				'depends'=>['rodetail-kd_corp'],
+				'url'=>Url::to(['/purchasing/request-order/corp-type']), /*Parent=0 barang Umum*/
+				'initialize'=>true,
+			], 		
+		]);
 		
-		 echo $form->field($roDetail, 'KD_KATEGORI')->dropDownList($brgKtg, ['id'=>'rodetail-kd_kategori']);
+		echo $form->field($roDetail, 'KD_KATEGORI')->widget(DepDrop::classname(), [
+			'type'=>DepDrop::TYPE_SELECT2,
+			'data' => $brgKtg,
+			'options' => ['id'=>'rodetail-kd_kategori'],
+			'pluginOptions' => [
+				'depends'=>['rodetail-kd_corp','rodetail-kd_type'],
+				'url'=>Url::to(['/purchasing/request-order/type-kat']),
+				'initialize'=>true,
+			], 		
+		]);
+
+
 		 
-		 echo $form->field($roDetail, 'KD_BARANG')->widget(DepDrop::classname(), [
+		//echo $form->field($roDetail, 'KD_KATEGORI')->dropDownList($brgKtg, ['id'=>'rodetail-kd_kategori']);		 
+		echo $form->field($roDetail, 'KD_BARANG')->widget(DepDrop::classname(), [
 			'type'=>DepDrop::TYPE_SELECT2,
 			'data' => $brgUmum,
 			'options' => ['id'=>'rodetail-kd_barang'],
@@ -62,7 +87,7 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0 ,'STATUS'=>1])->o
 				'initialize'=>true,
 			], 		
 		]);
-		
+		echo $form->field($roDetail, 'NM_BARANG')->hiddenInput(['value' => ''])->label(false);
 		/* echo $form->field($roDetail, 'UNIT')->widget(DepDrop::classname(), [
 			'type'=>DepDrop::TYPE_DEFAULT,
 			'data' => $brgUnit,
@@ -81,12 +106,10 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0 ,'STATUS'=>1])->o
 					'allowClear' => true
 				],
 		]);
-	?>
-
-    <?php echo  $form->field($roDetail, 'RQTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']); ?>
-
-    <?php echo $form->field($roDetail, 'NOTE')->textarea(array('rows'=>2,'cols'=>5))->label('Informasi');?>
-
+		
+		echo  $form->field($roDetail, 'RQTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']);
+		echo $form->field($roDetail, 'NOTE')->textarea(array('rows'=>2,'cols'=>5))->label('Informasi');		
+?>
     <div class="form-group">
         <?= Html::submitButton($roDetail->isNewRecord ? 'Create' : 'Update', ['class' => $roDetail->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

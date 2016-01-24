@@ -3,6 +3,9 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
+
+use lukisongroup\hrd\models\Corp;
+
 $this->sideCorp = 'Master Data Umum';                  	/* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'umum_datamaster';                   	/* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Umum - Type Barang');
@@ -17,6 +20,7 @@ $this->title = Yii::t('app', 'Umum - Type Barang');
 		  ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
 	];	
 	$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
+	$userCorp = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM');
 //$Combo_Corp = ArrayHelper::map(Corp::find()->orderBy('SORT')->asArray()->all(), 'CORP_NM','CORP_NM');
 ?>   
 
@@ -46,7 +50,7 @@ $this->title = Yii::t('app', 'Umum - Type Barang');
 						'font-size'=>'9pt',
 					]
 				], 		
-			],	        
+			],				        
             [
 				'attribute' =>'PARENT',
 				'label'=>'Parent',
@@ -79,7 +83,32 @@ $this->title = Yii::t('app', 'Umum - Type Barang');
 						'font-size'=>'9pt',
 					]
 				], 
-			], 
+			],
+			[
+				'attribute' =>'corp.CORP_NM',
+				'label'=>'Corporation',
+				'filter' => $userCorp,				
+				'group'=>true,
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(62, 0, 44, 0.2)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 
+			],			
 			 /*  [
 				'attribute' =>'KD_TYPE',
 			], */     

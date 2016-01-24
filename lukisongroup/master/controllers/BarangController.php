@@ -13,6 +13,7 @@ use yii\widgets\Pjax;
 use yii\web\Response;
 
 use lukisongroup\master\models\Tipebarang;
+use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\BarangSearch;
@@ -313,6 +314,62 @@ WHERE db2.NM_TYPE = 'FDSFDG'
             'dataProvider' => $dataProvider,
              'querys' => $querys,
         ]);		
+	}
+	
+	/*
+	 * Logout Price
+	 * @author ptrnov [piter@lukison.com]
+	 * @since 1.2
+	*/
+	public function actionPriceLogout(){	
+		$this->redirect('index');
+	}
+	
+	/**
+     * DepDrop Barang Prodak | CORP-TYPE
+     * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionProdakCorpType() {
+		$out = [];
+		if (isset($_POST['depdrop_parents'])) {
+			$parents = $_POST['depdrop_parents'];
+			if ($parents != null) {
+				$corp_id = $parents[0];
+				$model = Tipebarang::find()->asArray()->where(['CORP_ID'=>$corp_id,'PARENT'=>1])->all();
+				foreach ($model as $key => $value) {
+					   $out[] = ['id'=>$value['KD_TYPE'],'name'=> $value['NM_TYPE']];
+				   }
+	 
+				   echo json_encode(['output'=>$out, 'selected'=>'']);
+				   return;
+			   }
+		   }
+		   echo Json::encode(['output'=>'', 'selected'=>'']);
+	}	
+		
+	/**
+	* DepDrop Barang Prodak | TYPE - KAT
+	* @author ptrnov  <piter@lukison.com>
+	* @since 1.1
+	*/
+	public function actionProdakTypeKat() {
+		$out = [];
+		if (isset($_POST['depdrop_parents'])) {
+			$parents = $_POST['depdrop_parents'];
+			if ($parents != null) {
+				$corp_id = $parents[0];
+				$type_id = $parents[1];
+				$model = Kategori::find()->asArray()->where(['CORP_ID'=>$corp_id,'KD_TYPE'=>$type_id,'PARENT'=>1])->all();
+				foreach ($model as $key => $value) {
+					   $out[] = ['id'=>$value['KD_KATEGORI'],'name'=> $value['NM_KATEGORI']];
+				   }
+	 
+				   echo json_encode(['output'=>$out, 'selected'=>'']);
+				   return;
+			   }
+		   }
+		   echo Json::encode(['output'=>'', 'selected'=>'']);
 	}
 	
 	

@@ -3,15 +3,19 @@
 namespace lukisongroup\master\controllers;
 
 use Yii;
-use lukisongroup\master\models\Tipebarang;
-use lukisongroup\master\models\Unitbarang;
-use lukisongroup\master\models\Barang;
-use lukisongroup\master\models\BarangSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
-	use yii\web\UploadedFile;
+use lukisongroup\master\models\Tipebarang;
+use lukisongroup\master\models\Kategori;
+use lukisongroup\master\models\Unitbarang;
+use lukisongroup\master\models\Barang;
+use lukisongroup\master\models\BarangSearch;
+
+
+	
 /**
  * BarangController implements the CRUD actions for Barang model.
  */
@@ -125,7 +129,10 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 				$kdKategori = $model->KD_KATEGORI;	
 				$kdUnit = $model->KD_UNIT;	
 				$kdPrn = $model->PARENT;
-				$kd = Yii::$app->esmcode->kdbarangUmum($kdPrn,$kdType,$kdKategori,$kdUnit);
+				$kdCorp=  $model->KD_CORP;
+				$kd = Yii::$app->esmcode->kdbarangUmum($kdPrn,$kdCorp,$kdType,$kdKategori,$kdUnit);
+				
+				//$kd = Yii::$app->esmcode->kdbarangUmum($kdPrn,$kdType,$kdKategori,$kdUnit);
 
 				$model->KD_BARANG = $kd;
 		if($model->validate())
@@ -160,7 +167,10 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 		$kdKategori = $model->KD_KATEGORI;	
 		$kdUnit = $model->KD_UNIT;	
 		$kdPrn = $model->PARENT;
-		$kd = Yii::$app->esmcode->kdbarangUmum($kdPrn,$kdType,$kdKategori,$kdUnit);
+		$kdCorp=  $model->KD_CORP;
+		$kd = Yii::$app->esmcode->kdbarangUmum($kdPrn,$kdCorp,$kdType,$kdKategori,$kdUnit);
+		
+		//$kd = Yii::$app->esmcode->kdbarangUmum($kdPrn,$kdType,$kdKategori,$kdUnit);
 
 		$model->KD_BARANG = $kd;
 		if($model->validate())
@@ -225,6 +235,54 @@ WHERE db2.NM_TYPE = 'FDSFDG'
         return $this->redirect(['index']);
     }
 
+	
+	/**
+     * DepDrop Barang Umum | CORP-TYPE
+     * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionUmumCorpType() {
+		$out = [];
+		if (isset($_POST['depdrop_parents'])) {
+			$parents = $_POST['depdrop_parents'];
+			if ($parents != null) {
+				$corp_id = $parents[0];
+				$model = Tipebarang::find()->asArray()->where(['CORP_ID'=>$corp_id,'PARENT'=>0])->all();
+				foreach ($model as $key => $value) {
+					   $out[] = ['id'=>$value['KD_TYPE'],'name'=> $value['NM_TYPE']];
+				   }
+	 
+				   echo json_encode(['output'=>$out, 'selected'=>'']);
+				   return;
+			   }
+		   }
+		   echo Json::encode(['output'=>'', 'selected'=>'']);
+	}
+	
+	/**
+	* DepDrop Barang Umum | TYPE - KAT
+	* @author ptrnov  <piter@lukison.com>
+	* @since 1.1
+	*/
+	public function actionUmumTypeKat() {
+		$out = [];
+		if (isset($_POST['depdrop_parents'])) {
+			$parents = $_POST['depdrop_parents'];
+			if ($parents != null) {
+				$corp_id = $parents[0];
+				$type_id = $parents[1];
+				$model = Kategori::find()->asArray()->where(['CORP_ID'=>$corp_id,'KD_TYPE'=>$type_id,'PARENT'=>0])->all();
+				foreach ($model as $key => $value) {
+					   $out[] = ['id'=>$value['KD_KATEGORI'],'name'=> $value['NM_KATEGORI']];
+				   }
+	 
+				   echo json_encode(['output'=>$out, 'selected'=>'']);
+				   return;
+			   }
+		   }
+		   echo Json::encode(['output'=>'', 'selected'=>'']);
+	}
+	
     /**
      * Finds the Barang model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

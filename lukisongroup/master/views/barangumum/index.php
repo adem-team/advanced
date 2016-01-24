@@ -6,6 +6,14 @@ use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use lukisongroup\master\models\Barang;
 
+use lukisongroup\hrd\models\Corp;
+use lukisongroup\master\models\Tipebarang;
+use lukisongroup\master\models\Kategori;
+
+$userCorp = ArrayHelper::map(Corp::find()->where('CORP_STS<>3')->all(), 'CORP_ID', 'CORP_NM');
+$typeBrg = ArrayHelper::map(Tipebarang::find()->where('STATUS<>3 and PARENT=0')->all(),'KD_TYPE', 'NM_TYPE');
+$kat = ArrayHelper::map(Kategori::find()->where('STATUS<>3 and PARENT=0')->groupBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI'); 
+
 $this->sideCorp = 'Master Data';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'umum_datamaster';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Umum - Barang ');
@@ -128,52 +136,6 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 				], 				
 			],
 			[
-				'attribute' => 'tipebrg', 
-				'label'=>'Type',
-				'hAlign'=>'left',
-				'vAlign'=>'middle',
-				'headerOptions'=>[				
-					'style'=>[
-						'text-align'=>'center',
-						'width'=>'150px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-						'background-color'=>'rgba(126, 189, 188, 0.3)',
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>'left',
-						'width'=>'150px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-					]
-				], 				
-			],
-			[
-				'attribute' => 'nmkategori',
-				'label'=>'Category',
-				'hAlign'=>'left',
-				'vAlign'=>'middle',
-				'headerOptions'=>[				
-					'style'=>[
-						'text-align'=>'center',
-						'width'=>'150px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-						'background-color'=>'rgba(126, 189, 188, 0.3)',
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>'left',
-						'width'=>'150px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-					]
-				], 				
-			],
-			[
 				'attribute' => 'HARGA_SPL', 
 				'label'=>'Price',
 				'hAlign'=>'left',
@@ -197,6 +159,88 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 					]
 				], 				
 			],
+			[
+				'attribute' =>'nmcorp',
+				'label'=>'Corporation',
+				'filter' => $userCorp,
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 
+			],
+			[
+				'attribute' => 'tipebrg', 
+				'label'=>'Type',
+				'filterType'=>GridView::FILTER_SELECT2,
+				'filter' => $typeBrg,	
+				'filterWidgetOptions'=>[
+					'pluginOptions'=>['allowClear'=>true],
+				],
+				'filterInputOptions'=>['placeholder'=>'Any author'],
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'attribute' => 'nmkategori',
+				'label'=>'Category',
+				'filterType'=>GridView::FILTER_SELECT2,
+				'filter' => $kat,	
+				'filterWidgetOptions'=>[
+					'pluginOptions'=>['allowClear'=>true],
+				],
+				'filterInputOptions'=>['placeholder'=>'Any author'],
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],			
 			[
 				'attribute' => 'STATUS',
 				'filter' => $valStt,	
@@ -281,7 +325,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 <div class="container-full">
 	<div style="padding-left:15px; padding-right:15px">			
 		<?= $grid = GridView::widget([
-				'id'=>'gv-brg-prodak',
+				'id'=>'gv-brg-umum',
 				'dataProvider'=> $dataProvider,
 				'filterModel' => $searchModel,
 				'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
@@ -290,7 +334,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 					'pjaxSettings'=>[
 						'options'=>[
 							'enablePushState'=>false,
-							'id'=>'gv-brg-prodak',
+							'id'=>'gv-brg-umum',
 						],
 					 ],
 				'toolbar' => [

@@ -31,6 +31,7 @@ use lukisongroup\master\models\Barang;
 class AdditemValidation extends Model
 {
     public $kD_RO;
+	public $kD_CORP;
 	public $kD_TYPE;
 	public $kD_KATEGORI;
 	public $kD_BARANG;
@@ -52,6 +53,7 @@ class AdditemValidation extends Model
         	[['nOTE'], 'string'],			
         	['sTATUS','integer'],			
         	[['rQTY','cREATED_AT','kD_KATEGORI','kD_TYPE','hARGA'], 'safe'],			
+			[['kD_CORP'], 'safe'],			
 		];
     }
 	

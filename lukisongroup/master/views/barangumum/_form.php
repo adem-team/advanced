@@ -5,19 +5,18 @@ use kartik\form\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\Select2;
 use kartik\widgets\FileInput;
+use kartik\widgets\DepDrop;
+use yii\helpers\Url;
 
 use lukisongroup\master\models\Tipebarang;
 use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\master\models\Suplier;
-use lukisongroup\master\models\Distributor;
-use lukisongroup\master\models\Barangmaxi;
 use lukisongroup\hrd\models\Corp;
 
 
 $drop = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM');
 $droptype = ArrayHelper::map(Tipebarang::find()->where(['STATUS' => 1,'PARENT'=>0])->all(), 'KD_TYPE', 'NM_TYPE');
-//$dropdistrubutor = ArrayHelper::map(Distributor::find()->all(), 'KD_DISTRIBUTOR', 'NM_DISTRIBUTOR');
 $dropkat = ArrayHelper::map(Kategori::find()->where(['STATUS' => 1,'PARENT'=>0])->all(), 'KD_KATEGORI', 'NM_KATEGORI'); 
 $dropunit = ArrayHelper::map(Unitbarang::find()->all(), 'KD_UNIT', 'NM_UNIT');
 $dropsup = ArrayHelper::map(Suplier::find()->all(), 'KD_SUPPLIER', 'NM_SUPPLIER');
@@ -34,22 +33,34 @@ $dropsup = ArrayHelper::map(Suplier::find()->all(), 'KD_SUPPLIER', 'NM_SUPPLIER'
 		]);
 	?>
 		<?= $form->field($model, 'PARENT')->hiddenInput(['value'=>0,'maxlength' => true])->label(false) ?>
-		<?= $form->field($model, 'KD_CORP')->hiddenInput(['value'=>'LG','maxlength' => true])->label(false) ?>
-		<?= $form->field($model, 'KD_TYPE')->widget(Select2::classname(), [
-			'data' => $droptype,
-			'options' => ['placeholder' => 'Pilih KD TYPE ...'],
-			'pluginOptions' => [
-				'allowClear' => true
-				 ],
-		]);?>
-		<?= $form->field($model, 'KD_KATEGORI')->widget(Select2::classname(), [
-			'data' => $dropkat,
-			'options' => ['placeholder' => 'Pilih  KD_KATEGORI ...'],
-			'pluginOptions' => [
-				'allowClear' => true
-				 ],
-		]);?>
+		<?php 			
+			echo $form->field($model, 'KD_CORP')->dropDownList($drop,[
+				'id'=>'barang-kd_corp',
+				'prompt'=>' -- Pilih Salah Satu --',
+			])->label('Perusahaan'); 
 		
+			echo $form->field($model, 'KD_TYPE')->widget(DepDrop::classname(), [
+				'type'=>DepDrop::TYPE_SELECT2,
+				'data' => $droptype,
+				'options' => ['id'=>'barang-kd_type'],
+				'pluginOptions' => [
+					'depends'=>['barang-kd_corp'],
+					'url'=>Url::to(['/master/barangumum/umum-corp-type']), /*Parent=0 barang Umum*/
+					'initialize'=>true,
+				], 		
+			]);
+			
+			echo $form->field($model, 'KD_KATEGORI')->widget(DepDrop::classname(), [
+				'type'=>DepDrop::TYPE_SELECT2,
+				'data' => $dropkat,
+				'options' => ['id'=>'barang-kd_kategori'],
+				'pluginOptions' => [
+					'depends'=>['barang-kd_corp','barang-kd_type'],
+					'url'=>Url::to(['/master/barangumum/umum-type-kat']),
+					'initialize'=>true,
+				], 				
+			]);
+		?>
 		<?= $form->field($model, 'NM_BARANG')->textInput(['maxlength' => true]) ?>
 		<?= $form->field($model, 'KD_UNIT')->widget(Select2::classname(), [
 			'data' => $dropunit,

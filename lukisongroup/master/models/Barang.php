@@ -4,6 +4,7 @@ namespace lukisongroup\master\models;
 
 use Yii;
 use yii\web\UploadedFile;
+use lukisongroup\hrd\models\Corp;
 use lukisongroup\master\models\Tipebarang;
 use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Suplier ;
@@ -99,6 +100,17 @@ class Barang extends \yii\db\ActiveRecord
 	public function getTbesm()
     {
         return $this->hasMany(Barang::className(), ['KD_BARANG' => 'KD_TYPE']);
+    }
+	
+	
+	public function getCorp()
+    {
+       return $this->hasOne(Corp::className(), ['CORP_ID' => 'KD_CORP']);
+    }
+	
+	public function getNmcorp()
+    {
+        return $this->corp->CORP_NM;
     }
 	
     /**

@@ -3,7 +3,8 @@
 namespace lukisongroup\master\models;
 
 use Yii;
-
+use lukisongroup\hrd\models\Corp;
+use lukisongroup\master\models\Tipebarang;
 /**
  * This is the model class for table "b1002".
  *
@@ -35,6 +36,15 @@ class Kategori extends \yii\db\ActiveRecord
         return Yii::$app->get('db_esm');
     }
 
+	public function getCorp()
+    {
+       return $this->hasOne(Corp::className(), ['CORP_ID' => 'CORP_ID']);
+    }
+	
+	public function getTypebrg()
+    {
+       return $this->hasOne(Tipebarang::className(), ['KD_TYPE' => 'KD_TYPE']);
+    }
     /**
      * @inheritdoc
      */
@@ -44,7 +54,7 @@ class Kategori extends \yii\db\ActiveRecord
             [['KD_KATEGORI', 'NM_KATEGORI','PARENT','STATUS'], 'required'],
             [['NM_KATEGORI'],'match','pattern'=> '/^[A-Za-z0-9_ ]+$/u','message'=> 'only [a-zA-Z0-9_].'],
             [['NOTE'], 'string'],
-            [['CREATED_AT', 'UPDATED_AT'], 'safe'],
+            [['CREATED_AT', 'UPDATED_AT','KD_TYPE','CORP_ID'], 'safe'],
             [['STATUS'], 'integer'],
             [['KD_KATEGORI'], 'string', 'max' => 5],
             [['NM_KATEGORI'], 'string', 'max' => 200],

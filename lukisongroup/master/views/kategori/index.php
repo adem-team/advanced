@@ -2,8 +2,18 @@
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
+use kartik\widgets\Select2;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
+
+use lukisongroup\hrd\models\Corp;
+use lukisongroup\master\models\Tipebarang;
+use lukisongroup\master\models\Kategori;
+
+$userCorp = ArrayHelper::map(Corp::find()->where('CORP_STS<>3')->all(), 'CORP_ID', 'CORP_NM');
+$typeBrg = ArrayHelper::map(Tipebarang::find()->where('STATUS<>3')->groupBy('NM_TYPE')->all(), 'KD_TYPE', 'NM_TYPE');
+$kat = ArrayHelper::map(Kategori::find()->where('STATUS<>3')->groupBy('NM_KATEGORI')->all(), 'NM_KATEGORI', 'NM_KATEGORI'); 
+
 $this->sideCorp = 'Master Data Umum';                  		/* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'umum_datamaster';                   		/* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Umum - Kategori Barang');
@@ -77,8 +87,69 @@ $gridColumns = [
 		], 
 	],
 	[
+		'attribute' =>'corp.CORP_NM',
+		'label'=>'Corporation',
+		'filter' => $userCorp,
+		'group'=>true,
+		'hAlign'=>'left',
+		'vAlign'=>'middle',
+		'headerOptions'=>[				
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'150px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'9pt',
+				'background-color'=>'rgba(62, 0, 44, 0.2)',
+			]
+		],
+		'contentOptions'=>[
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'150px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'9pt',
+			]
+		], 
+	],
+	[
+		'attribute' =>'typebrg.NM_TYPE',
+		'label'=>'Type',
+		'filterType'=>GridView::FILTER_SELECT2,
+		'filter' => $typeBrg,	
+		'filterWidgetOptions'=>[
+			'pluginOptions'=>['allowClear'=>true],
+		],
+		'filterInputOptions'=>['placeholder'=>'Any author'],		
+		'hAlign'=>'left',
+		'vAlign'=>'middle',
+		'group'=>true,
+		'headerOptions'=>[				
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'200px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'9pt',
+				'background-color'=>'rgba(62, 0, 44, 0.2)',
+			]
+		],
+		'contentOptions'=>[
+			'style'=>[
+				'text-align'=>'left',
+				'width'=>'200px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'9pt',
+			]
+		], 				
+	],
+	[
 		'attribute' =>'NM_KATEGORI',
 		'label'=>'Category',
+		'filterType'=>GridView::FILTER_SELECT2,
+		'filter' => $kat,	
+		'filterWidgetOptions'=>[
+			'pluginOptions'=>['allowClear'=>true],
+		],
+		'filterInputOptions'=>['placeholder'=>'Any author'],
 		'hAlign'=>'left',
 		'vAlign'=>'middle',
 		'headerOptions'=>[				
