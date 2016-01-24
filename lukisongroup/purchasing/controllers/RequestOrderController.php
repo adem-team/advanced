@@ -22,6 +22,7 @@ use lukisongroup\purchasing\models\ro\Rodetail;
 use lukisongroup\purchasing\models\ro\RodetailSearch;
 
 use lukisongroup\purchasing\models\ro\AdditemValidation;
+use lukisongroup\purchasing\models\ro\AddNewitemValidation;
 
 use lukisongroup\purchasing\models\ro\Auth1Model;
 use lukisongroup\purchasing\models\ro\Auth2Model;
@@ -165,6 +166,8 @@ class RequestOrderController extends Controller
 			]); 
 			
     }
+	
+		
 	/**
      * Add Item Barang to SAVED | AJAX
      * @author ptrnov  <piter@lukison.com>
@@ -208,7 +211,77 @@ class RequestOrderController extends Controller
 		}
 	}
    
-   
+	/**
+	 * Edit Form - Add New Item Barang | Tambah Barang
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+	 */   
+    public function actionAddNewItem($kd)
+    {
+			$roDetail = new AddNewitemValidation();
+			$roHeader = Requestorder::find()->where(['KD_RO' => $kd])->one();		
+			$detro = $roHeader->detro;
+			$employ = $roHeader->employe;
+			$dept = $roHeader->dept;
+			
+			/*
+			 * Convert $roHeader->detro to ArrayDataProvider | Identity 'key' => 'ID',
+			 * @author ptrnov  <piter@lukison.com>
+			 * @since 1.1    
+			**/
+			 $detroProvider = new ArrayDataProvider([
+				'key' => 'ID',
+				'allModels'=>$detro,			
+				'pagination' => [
+					'pageSize' => 10,
+				],
+			]);
+			
+			return $this->renderAjax('addnewitem', [         
+				'roHeader' => $roHeader, 
+				'roDetail' => $roDetail,			
+				'dataProvider'=>$detroProvider,
+			]); 
+			
+    }
+	
+	public function actionItemDetailView($kdro,$kdbrg){
+		
+		$brgDetail = Barang::find()->where(['KD_BARANG'=>$kdbrg])->One();
+		$roHeader = Requestorder::find()->where(['KD_RO' => $kdro])->one();		
+		$roDetail = $roHeader->detro;
+		return $this->renderAjax('detailviewitem', [         
+				'brgDetail' => $brgDetail, 
+				'roDetail' => $roDetail,			
+		]);
+	}
+	
+	
+	
+	/**
+     * Add Item Barang to SAVED | AJAX
+     * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionAddNewItem_saved(){
+		//$roDetail = new Rodetail();	
+		$roDetail = new AddNewitemValidation();
+		
+		if(Yii::$app->request->isAjax){
+			$roDetail->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($roDetail));
+		}else{
+			if($roDetail->load(Yii::$app->request->post())){
+				if($roDetail->addnewitem_saved()){
+					$hsl = \Yii::$app->request->post();	
+					$kdro = $hsl['AddNewitemValidation']['kD_RO'];					
+					return $this->redirect(['/purchasing/request-order/edit?kd='.$kdro]);
+				}			
+			} 
+		}
+	}
+	
+	
    /**
      * DepDrop | CORP-TYPE - KAT
      * @author ptrnov  <piter@lukison.com>
