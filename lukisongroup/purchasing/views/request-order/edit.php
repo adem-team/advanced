@@ -219,57 +219,6 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	} 
 	
  	/*
-	 * Tombol add Item Barang baru
-	 * permission crate Ro
-	 * RenderAjak to file : additem.php
-	 * @author ptrnov  <piter@lukison.com>
-	 * @since 1.1
-	*/
-	function tombolNewItem($kd,$status) {
-		if(getPermission()){
-			if((getPermission()->BTN_EDIT==1 AND ($status==0)) ){
-				$title1 = Yii::t('app', 'NewItem');
-				$options1 = [ 'id'=>'add-item',	
-							  'data-toggle'=>"modal",
-							  'data-target'=>"#additem-ro",											
-							  'class' => 'btn btn-warning btn-xs',
-				]; 
-				$icon1 = '<span class="fa fa-edit fa-xs"></span>';
-				$label1 = $icon1 . ' ' . $title1;
-				$url1 = Url::toRoute(['/purchasing/request-order/additem','kd'=>$kd]);
-				$content = Html::a($label1,$url1, $options1);
-				return $content;								
-			}else{
-				$title1 = Yii::t('app', 'NewItem');
-				$options1 = [ 'id'=>'ro-tambah-detail',	
-							  'data-toggle'=>"modal",
-							  'data-target'=>"#confirm-permission-alert",					
-							  'class' => 'btn btn-warning btn-xs',										  
-							  //'data-confirm'=>'Permission ! You do not have permission for this module.',
-				]; 
-				$icon1 = '<span class="fa fa-plus fa-xs"></span>';
-				$label1 = $icon1 . ' ' . $title1;
-				$url1 = Url::toRoute(['#']);
-				$content = Html::a($label1,$url1, $options1);
-				return $content;
-			}; 
-		}else{
-				$title1 = Yii::t('app', 'AddItem');
-				$options1 = [ 'id'=>'ro-tambah-detail',
-							  'data-toggle'=>"modal",
-							  'data-target'=>"#confirm-permission-alert",				
-							  'class' => 'btn btn-warning btn-xs',										  
-							  //'data-confirm'=>'Permission ! You do not have permission for this module.',
-				]; 
-				$icon1 = '<span class="fa fa-plus fa-xs"></span>';
-				$label1 = $icon1 . ' ' . $title1;
-				$url1 = Url::toRoute(['#']);
-				$content = Html::a($label1,$url1, $options1);
-				return $content;
-		}				
-	}
-
-	/*
 	 * Tombol add Item Barang yang suda ada
 	 * permission crate Ro
 	 * RenderAjak to file : additem.php
@@ -318,7 +267,80 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				$content = Html::a($label1,$url1, $options1);
 				return $content;
 		}				
-	}  	
+	}
+
+	/*
+	 * Tombol add Item Barang baru
+	 * permission crate Ro
+	 * RenderAjak to file : additem.php
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+	*/
+	function tombolNewItem($kd,$status) {
+		if(getPermission()){
+			if((getPermission()->BTN_EDIT==1 AND ($status==0)) ){
+				$title1 = Yii::t('app', 'NewItem');
+				$options1 = [ 'id'=>'add-new-item-id',	
+							  'data-toggle'=>"modal",
+							  'data-target'=>"#add-new-item",											
+							  'class' => 'btn btn-warning btn-xs',
+				]; 
+				$icon1 = '<span class="fa fa-edit fa-xs"></span>';
+				$label1 = $icon1 . ' ' . $title1;
+				$url1 = Url::toRoute(['/purchasing/request-order/add-new-item','kd'=>$kd]);
+				$content = Html::a($label1,$url1, $options1);
+				return $content;								
+			}else{
+				$title1 = Yii::t('app', 'NewItem');
+				$options1 = [ 'id'=>'ro-tambah-detail',	
+							  'data-toggle'=>"modal",
+							  'data-target'=>"#confirm-permission-alert",					
+							  'class' => 'btn btn-warning btn-xs',										  
+							  //'data-confirm'=>'Permission ! You do not have permission for this module.',
+				]; 
+				$icon1 = '<span class="fa fa-plus fa-xs"></span>';
+				$label1 = $icon1 . ' ' . $title1;
+				$url1 = Url::toRoute(['#']);
+				$content = Html::a($label1,$url1, $options1);
+				return $content;
+			}; 
+		}else{
+				$title1 = Yii::t('app', 'AddItem');
+				$options1 = [ 'id'=>'ro-tambah-detail',
+							  'data-toggle'=>"modal",
+							  'data-target'=>"#confirm-permission-alert",				
+							  'class' => 'btn btn-warning btn-xs',										  
+							  //'data-confirm'=>'Permission ! You do not have permission for this module.',
+				]; 
+				$icon1 = '<span class="fa fa-plus fa-xs"></span>';
+				$label1 = $icon1 . ' ' . $title1;
+				$url1 = Url::toRoute(['#']);
+				$content = Html::a($label1,$url1, $options1);
+				return $content;
+		}				
+	}
+
+	
+	/*
+	 * Tombol View Detail Barang
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+	*/
+	function tombolViewDetail($url, $model) {
+		$title1 = Yii::t('app', '');
+		$options1 = [ 'id'=>'item-detail-id',	
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#item-detailview",											
+					  //'class' => 'btn btn-warning btn-xs',
+		]; 
+		$icon1 = '<span class="fa fa-eye fa-lg"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/purchasing/request-order/item-detail-view','kdro'=>$model->KD_RO,'kdbrg'=>$model->KD_BARANG]);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
+	
+  	
 ?>
 
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
@@ -385,15 +407,12 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							/* View detail Item */
 							'class'=>'kartik\grid\ActionColumn',
 							'header'=>'#',
-							'template' => '{view}',
+							'template' => '{detail}',
 							'buttons' => [						
 								/* Approved RO | Permissian Status 101 | Dept = Dept login | GF >= M ($roHeader->STATUS!=101 or $roHeader->STATUS!=10)*/
-								// 'view' => function ($url, $model) use ($headerStatus) {
-												// if ($headerStatus!==103) {
-													// return tombolApproval($url, $model);
-												// }else{
-												// }
-											// },
+								'detail' => function ($url, $model){
+												return tombolViewDetail($url, $model);
+											 },
 							],
 							'headerOptions'=>[				
 							'style'=>[
@@ -825,7 +844,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 </div>
 <?php
 	/*
-	 * JS Modal New Add Items
+	 * JS Modal Add Items
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
 	*/
@@ -847,20 +866,72 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		
 	Modal::begin([
 		'id' => 'additem-ro',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-pencil-square-o"></div><div><h4 class="modal-title">Add Item</h4></div>',
+		//'size' => 'modal-lg',
+		'headerOptions'=>[				
+				'style'=> 'border-radius:5px; background-color: rgba(131, 160, 245, 0.5)',
+			]
+	]);
+	Modal::end();
+	
+	/* 
+	 * JS Modal New Add Items
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#add-new-item').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+		",$this::POS_READY);
+		
+	Modal::begin([
+		'id' => 'add-new-item',
 		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-pencil-square-o"></div><div><h4 class="modal-title">Add New Item</h4></div>',
 		//'size' => 'modal-lg',
 		'headerOptions'=>[				
-				//'style'=> 'border-radius:5px; background-color: rgba(0, 255, 52, 0.1)',
-				//'style'=> 'border-radius:5px; background-color: rgba(45, 184, 255, 0.4)',
-				//'style'=> 'border-radius:5px; background-color: rgba(215, 190, 203, 0.6)',
-				//'style'=> 'border-radius:5px; background-color: rgba(215, 40, 40, 0.1)',
-				//'style'=> 'border-radius:5px; background-color: rgba(215, 72, 30, 0.6)',
-				//'style'=> 'border-radius:5px; background-color: rgba(215, 120, 30, 0.3)',
-				//'style'=> 'border-radius:5px; background-color: rgba(255, 106, 0, 0.8)',
 				'style'=> 'border-radius:5px; background-color: rgba(131, 160, 245, 0.5)',
-				
-				
-				
+			]
+	]);
+	Modal::end();
+	
+	/* Items Detail View
+	 * JS Modal New Add Items
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#item-detailview').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+		",$this::POS_READY);
+		
+	Modal::begin([
+		'id' => 'item-detailview',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-pencil-square-o"></div><div><h4 class="modal-title">Card Detal Items</h4></div>',
+		//'size' => 'modal-lg',
+		'headerOptions'=>[				
+				'style'=> 'border-radius:5px; background-color: rgba(131, 160, 245, 0.5)',
 			]
 	]);
 	Modal::end();
