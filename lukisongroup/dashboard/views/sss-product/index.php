@@ -4,11 +4,31 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
-use lukisongroup\dashboard\models\Barang;
+use lukisongroup\master\models\Barang;
+use lukisongroup\hrd\models\Corp;
+use lukisongroup\master\models\Tipebarang;
+use lukisongroup\master\models\Kategori;
+
+$userCorp = ArrayHelper::map(Corp::find()->where('CORP_STS<>3')->andWhere('CORP_ID="SSS" OR CORP_ID="MM"')->all(), 'CORP_ID', 'CORP_NM');
+$typeBrg = ArrayHelper::map(Tipebarang::find()->where('STATUS<>3 and PARENT=1')->groupBy('NM_TYPE')->all(), 'KD_TYPE', 'NM_TYPE');
+$kat = ArrayHelper::map(Kategori::find()->where('STATUS<>3 and PARENT=1')->groupBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI'); 
+
+	/*
+	 * Declaration Componen User Permission
+	 * Function profile_user
+	*/
+	function getPermissionEmp(){
+		if (Yii::$app->getUserOpt->profile_user()){
+			return Yii::$app->getUserOpt->profile_user()->emp;
+		}else{		
+			return false;
+		}	 
+	}
 
 $this->sideCorp = 'Master Data';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'umum_datamaster';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Umum - Barang ');
+
 	$aryStt= [
 		  ['STATUS' => 0, 'STT_NM' => 'DISABLE'],		  
 		  ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
@@ -128,8 +148,38 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 				], 				
 			],
 			[
+				'attribute' =>'nmcorp',
+				'label'=>'Corporation',
+				'filter' => $userCorp,
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 
+			], 
+			[
 				'attribute' => 'tipebrg', 
 				'label'=>'Type',
+				'filterType'=>GridView::FILTER_SELECT2,
+				'filter' => $typeBrg,	
+				'filterWidgetOptions'=>[
+					'pluginOptions'=>['allowClear'=>true],
+				],
+				'filterInputOptions'=>['placeholder'=>'Any author'],
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
 				'headerOptions'=>[				
@@ -153,6 +203,12 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 			[
 				'attribute' => 'nmkategori',
 				'label'=>'Category',
+				'filterType'=>GridView::FILTER_SELECT2,
+				'filter' => $kat,	
+				'filterWidgetOptions'=>[
+					'pluginOptions'=>['allowClear'=>true],
+				],
+				'filterInputOptions'=>['placeholder'=>'Any author'],
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
 				'headerOptions'=>[				
@@ -227,13 +283,15 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 															'data-title'=> $model->KD_BARANG,
 															]). '</li>' . PHP_EOL;
 						},
-                        'price' =>function($url, $model, $key){
-								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Price List'),
+                        'price' =>function($url, $model, $key) {
+								$gF=getPermissionEmp()->GF_ID;
+								if ($gF<=4){
+									return  '<li>' . Html::a('<span class="fa fa-money fa-dm"></span>'.Yii::t('app', 'Price List Items'),
 															['/dashboard/sss-product/login-price-view'],[
 															'data-toggle'=>"modal",
 															'data-target'=>"#modal-price",
-															'data-title'=> $model->KD_BARANG,
 															]). '</li>' . PHP_EOL;
+								}
 						},
                         
                 ],
@@ -265,7 +323,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 <div class="container-full">
 	<div style="padding-left:15px; padding-right:15px">			
 		<?= $grid = GridView::widget([
-				'id'=>'gv-brg-prodak',
+				'id'=>'gv-sss-prodak',
 				'dataProvider'=> $dataProvider,
 				'filterModel' => $searchModel,
 				'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
@@ -281,9 +339,9 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 					'{export}',
 				],
 				'panel' => [
-					'heading'=>'<h3 class="panel-title">LIST ITEMS PRODUCTION - Sarana Sinar Surya</h3>',
+					'heading'=>'<h3 class="panel-title">List Items Production, PT.Sarana Sinar Surya</h3>',
 					'type'=>'warning',
-					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Sku Items ',
+					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Items ',
 							['modelClass' => 'Kategori',]),'/dashboard/sss-product/create',[
 								'data-toggle'=>"modal",
 									'data-target'=>"#modal-create",							
@@ -332,7 +390,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 	",$this::POS_READY);
 	Modal::begin([
         'id' => 'modal-view',
-       'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">View Items Sku</h4></div>',
+       'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">View Items, PT. Sarana Sinara Surya</h4></div>',
 		'headerOptions'=>[								
 				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',	
 		],
@@ -341,7 +399,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 	
 	
 	
-	/*Create && edit*/
+	/*Create and edit*/
    
 	$this->registerJs("
 		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
@@ -360,7 +418,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 	",$this::POS_READY);
     Modal::begin([
         'id' => 'modal-create',
-		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku - Sarana Sinar Surya</h4></div>',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items, PT. Sarana Sinara Surya</h4></div>',
 		'headerOptions'=>[								
 				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',	
 		],
@@ -383,7 +441,6 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 				});
 			})
 	",$this::POS_READY);
-	
     Modal::begin([
         'id' => 'modal-price',
         'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Price Login Autorize</b></h4></div>',
@@ -393,7 +450,6 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 			]
     ]);
     Modal::end();
-	    
 	    
 	
 	

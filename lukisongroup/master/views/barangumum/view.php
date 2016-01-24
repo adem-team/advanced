@@ -31,29 +31,28 @@ $this->title = Yii::t('app', 'Prodak View');       /* title pada header page */
 				'format' => ['image',['width'=>'150','height'=>'150']],
 			],	
 			'KD_BARANG',
-			// 'Nmsuplier',
 			[
-				'label' => 'Nama Supplier',
-				'attribute' =>'Nmsuplier',
-			],
-			'NM_BARANG',
+				'attribute' =>'NM_BARANG',
+				'label' =>'Item Name',
+			],			
 			[
-				'label' => 'Total Barang',
+				'label' => 'Unit Item',
 				'value' => $model->unitb->NM_UNIT,
 			],	
-			
-			//'HPP',
-			//'HARGA',
-			//'BARCODE',
-			/* [
-				'label' => 'Nama Distributor',
-				'value' => $model->sup->NM_DISTRIBUTOR,
-			], */
-			'NOTE',
+			[
+				'attribute' => 'nmcorp',
+				'label' =>'Corporate',
+			],
+			[
+				'attribute' => 'CREATED_BY',
+				'label' =>'Register By',
+			],
 			[
 				'label' => 'Status',
 				'value' => $stat,
 			],
+			'NOTE',
+			
         ],
     ]) ?>
 

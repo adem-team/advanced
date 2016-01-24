@@ -5,6 +5,13 @@ use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use lukisongroup\master\models\Barang;
+use lukisongroup\hrd\models\Corp;
+use lukisongroup\master\models\Tipebarang;
+use lukisongroup\master\models\Kategori;
+
+$userCorp = ArrayHelper::map(Corp::find()->where('CORP_STS<>3')->andWhere('CORP_ID="SSS" OR CORP_ID="MM"')->all(), 'CORP_ID', 'CORP_NM');
+$typeBrg = ArrayHelper::map(Tipebarang::find()->where('STATUS<>3 and PARENT=1')->groupBy('NM_TYPE')->all(), 'KD_TYPE', 'NM_TYPE');
+$kat = ArrayHelper::map(Kategori::find()->where('STATUS<>3 and PARENT=1')->groupBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI'); 
 
 $this->sideCorp = 'Master Data';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'umum_datamaster';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -39,7 +46,107 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 					]
 				], 		
 			],
-			
+			[
+				'attribute' =>'nmcorp',
+				'label'=>'Corporation',
+				'filter' => $userCorp,
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 
+			],
+			[
+				'attribute' => 'tipebrg', 
+				'label'=>'Type',
+				'filterType'=>GridView::FILTER_SELECT2,
+				'filter' => $typeBrg,	
+				'filterWidgetOptions'=>[
+					'pluginOptions'=>['allowClear'=>true],
+				],
+				'filterInputOptions'=>['placeholder'=>'Any author'],
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'attribute' => 'nmkategori',
+				'label'=>'Category',
+				'filterType'=>GridView::FILTER_SELECT2,
+				'filter' => $kat,
+				'group'=>true,				
+				'filterWidgetOptions'=>[
+					'pluginOptions'=>['allowClear'=>true],
+				],
+				'filterInputOptions'=>['placeholder'=>'Any author'],
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'groupFooter'=>function($model, $key, $index, $widget){ 
+					return [
+						'mergeColumns'=>[[1,11]], 
+						'content'=>[             // content to show in each summary cell
+							4=>'Group ' . $model->nmkategori,
+							//6=>'100',
+							// 5=>GridView::F_SUM,
+							// 6=>GridView::F_SUM,
+						],
+						'contentOptions'=>[      // content html attributes for each summary cell
+							4=>['style'=>'font-variant:small-caps'],
+							4=>['style'=>'text-align:left'],
+							//5=>['style'=>'text-align:right'],
+							//6=>['style'=>'text-align:right'],
+						],
+						'options'=>['class'=>'danger','style'=>'font-weight:bold;']
+					];
+				},
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
 			[
 				'attribute' => 'KD_BARANG',
 				'label'=>'SKU',
@@ -328,10 +435,12 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 				'dataProvider'=> $dataProvider,
 				'filterModel' => $searchModel,
 				'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+				'showPageSummary' => true,
 				'beforeHeader'=>[
 					[
 						'columns'=>[
-							['content'=>'Details Barang', 'options'=>['colspan'=>4,'class'=>'text-center info',]], 
+							['content'=>'Option Barang', 'options'=>['colspan'=>4,'class'=>'text-center info',]], 
+							['content'=>'Details Barang', 'options'=>['colspan'=>3,'class'=>'text-center info',]], 
 							['content'=>'Harga / Pcs', 'options'=>['colspan'=>5, 'class'=>'text-center info']], 
 							//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']], 
 						],
@@ -349,10 +458,10 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 					'{export}',
 				],
 				'panel' => [
-					'heading'=>'<h3 class="panel-title">PRICE LIST ITEMS PRODUCTION</h3>',
+					'heading'=>'<h3 class="panel-title">Price List Production, PT.Sarana Sinar Surya</h3>',
 					'type'=>'warning',
 					'before'=> Html::a('<i class="fa fa-power-off fa-lg"></i> '.Yii::t('app', 'logout ',
-							['modelClass' => 'Kategori',]),'#',[
+							['modelClass' => 'Kategori',]),'/master/barang/price-logout',[
 								//'data-toggle'=>"modal",
 								//	'data-target'=>"#modal-create",							
 										'class' => 'btn btn-success'						

@@ -122,7 +122,7 @@ class Barang extends \yii\db\ActiveRecord
             [['KD_CORP','KD_SUPPLIER', 'KD_TYPE', 'KD_KATEGORI','KD_BARANG', 'NM_BARANG', 'KD_UNIT','STATUS'], 'required'],
             [['HARGA_SPL','HARGA_PABRIK', 'HARGA_LG','HARGA_DIST','HARGA_SALES'], 'safe'],
 			[['PARENT', 'STATUS'], 'integer'],
-			[['BARCODE64BASE','KD_CAB','KD_DEP','DATA_ALL'], 'safe'],
+			[['nmcorp','BARCODE64BASE','KD_CAB','KD_DEP','DATA_ALL'], 'safe'],
             [['CREATED_BY','CREATED_AT','UPDATED_BY','UPDATED_AT'], 'safe'],
 			[['image'], 'file', 'extensions'=>'jpg, gif, png'],
         ];
