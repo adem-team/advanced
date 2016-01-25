@@ -82,8 +82,9 @@ class AddNewitemValidation extends Model
 					$barangNew->save();
 					$rodetail = new Rodetail();
 					$rodetail->CREATED_AT = date('Y-m-d H:i:s');
-					$rodetail->KD_RO = $this->kD_RO; //required
-					$rodetail->PARENT_ROSO=0; // RO=1 //required
+					$rodetail->KD_RO = $this->kD_RO; 		//required
+					$rodetail->KD_CORP = $this->kD_CORP; 	//required
+					$rodetail->PARENT_ROSO=0; // RO=1 		//required
 					$rodetail->KD_BARANG = $this->kD_BARANG;
 					$rodetail->NM_BARANG = $this->nM_BARANG;
 					$rodetail->UNIT = $this->uNIT;

@@ -440,8 +440,8 @@ class PurchaseOrderController extends Controller
 			if($poHeaderVal->load(Yii::$app->request->post())){
 				if ($poHeaderVal->generatepo_saved()){
 					$hsl = \Yii::$app->request->post();
-					//$kdPo =$poHeaderVal->PO_RSLT
-					return $this->redirect(['create', 'kdpo'=>$poHeaderVal->PO_RSLT]);
+					//$kdPo =$poHeaderVal->poRSLT
+					return $this->redirect(['create', 'kdpo'=>$poHeaderVal->poRSLT]);
 					//echo "test";
 				}														
 			}

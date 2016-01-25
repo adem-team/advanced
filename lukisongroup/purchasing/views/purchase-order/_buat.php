@@ -423,7 +423,7 @@ use lukisongroup\master\models\Unitbarang;
 						//'min'=>0, 
 						//'max'=>5000,
 						'allowClear' => true,
-						'class'=>'pull-right dropup'
+						'class'=>'pull-top dropup'
 					],
 				],
 				//Refresh Display 

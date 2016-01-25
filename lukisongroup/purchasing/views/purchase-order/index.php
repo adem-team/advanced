@@ -10,12 +10,18 @@ use yii\bootstrap\Modal;
 use kartik\form\ActiveForm;
 use lukisongroup\master\models\Suplier;
 use lukisongroup\hrd\models\Employe;
+use lukisongroup\hrd\models\Corp;
 
-	$poGenerateArray= [
-		  ['ID' => 0, 'DESCRIP' => 'PO Normal'],		  
-		  ['ID' => 1, 'DESCRIP' => 'PO Plus'],
+	$selectCorp = ArrayHelper::map(Corp::find()->where('CORP_STS<>3')->all(), 'CORP_ID', 'CORP_NM');
+	
+	$poParentArray= [
+		  ['ID' => 'POA', 'DESCRIP' => 'PO Plus'],		  
+		  ['ID' => 'POB', 'DESCRIP' => 'PO General'],		  
+		  ['ID' => 'POC', 'DESCRIP' => 'PO Product'],
 	];	
-	$valGpo = ArrayHelper::map($poGenerateArray, 'ID', 'DESCRIP');
+	$poParent = ArrayHelper::map($poParentArray, 'ID', 'DESCRIP');
+	
+	
 
 $this->title = 'Purchaseorder';
 $this->params['breadcrumbs'][] = $this->title;
@@ -732,11 +738,15 @@ function submitform()
 			  <div class="modal-body" style="text-align:center">
 				
 			<?php //$drop = ArrayHelper::map(Suplier::find()->where(['STATUS' => 1])->all(), 'KD_SUPPLIER', 'NM_SUPPLIER'); ?>
-			<?php echo $form->field($poHeaderVal,'PO_GNR')->dropDownList($valGpo)->label(false); ?>
+			
+			<?php echo $form->field($poHeaderVal,'kD_CORP')->dropDownList($selectCorp)->label(false); ?>
+			<?php echo $form->field($poHeaderVal,'pARENT_PO')->dropDownList($poParent)->label(false); ?>
+			
+			
 			  </div>
 			  <div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="submit" class="btn btn-primary" >Generate Kode</button>
+				<button type="submit" class="btn btn-primary" >Generate PO</button>
 			  </div> 
 			<?php ActiveForm::end(); ?>
 		</div>

@@ -31,6 +31,7 @@ use lukisongroup\master\models\Barang;
 class AdditemValidation extends Model
 {
     public $kD_RO;
+	public $kD_CORP;
 	public $kD_TYPE;
 	public $kD_KATEGORI;
 	public $uNIT;
@@ -46,7 +47,7 @@ class AdditemValidation extends Model
     {
         return [			
 			[['kD_BARANG'], 'findcheck'],		
-			[['kD_RO','kD_BARANG','uNIT','rQTY'], 'required'],				
+			[['kD_CORP','kD_KATEGORI','kD_TYPE','kD_RO','kD_BARANG','uNIT','rQTY'], 'required'],				
 			//[['nmBarang','nOTE'], 'string'],			
         	[['nOTE'], 'string'],			
         	['sTATUS','integer'],			
@@ -80,9 +81,10 @@ class AdditemValidation extends Model
 		if ($this->validate()) {
 			$rodetail = new Sodetail();
 			$rodetail->CREATED_AT = date('Y-m-d H:i:s');
-			$rodetail->KD_RO = $this->kD_RO; //required
-			$rodetail->PARENT_ROSO=1; //required
-			$rodetail->KD_BARANG = $this->kD_BARANG;
+			$rodetail->KD_RO = $this->kD_RO; 	//required
+			$rodetail->kD_CORP= $this->kD_CORP; //required
+			$rodetail->PARENT_ROSO=1; 			//required
+			$rodetail->KD_BARANG = $this->kD_BARANG; //required
 			$rodetail->NM_BARANG = $this->valuesBarang($this->kD_BARANG)->NM_BARANG;
 			$rodetail->UNIT = $this->uNIT;
 			$rodetail->RQTY = $this->rQTY;

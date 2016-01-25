@@ -30,6 +30,7 @@ use lukisongroup\hrd\models\Employe;
 //use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\Kategori;
+use lukisongroup\master\models\Tipebarang;
 
 
 /**
@@ -216,6 +217,54 @@ class SalesOrderController extends Controller
 		}
 	}
    
+   
+	/**
+     * DepDrop | CORP-TYPE - KAT
+     * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionCorpType() {
+		$out = [];
+		if (isset($_POST['depdrop_parents'])) {
+			$parents = $_POST['depdrop_parents'];
+			if ($parents != null) {
+				$corp_id = $parents[0];
+				$model = Tipebarang::find()->asArray()->where(['CORP_ID'=>$corp_id,'PARENT'=>1])->all();
+				foreach ($model as $key => $value) {
+					   $out[] = ['id'=>$value['KD_TYPE'],'name'=> $value['NM_TYPE']];
+				   }
+	 
+				   echo json_encode(['output'=>$out, 'selected'=>'']);
+				   return;
+			   }
+		   }
+		   echo Json::encode(['output'=>'', 'selected'=>'']);
+	}	
+	
+	 /**
+     * DepDrop |TYPE - KAT
+     * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionTypeKat() {
+		$out = [];
+		if (isset($_POST['depdrop_parents'])) {
+			$parents = $_POST['depdrop_parents'];
+			if ($parents != null) {
+				$corp_id = $parents[0];
+				$type_id = $parents[1];
+				$model = Kategori::find()->asArray()->where(['CORP_ID'=>$corp_id,'KD_TYPE'=>$type_id,'PARENT'=>1])->all();
+				foreach ($model as $key => $value) {
+					   $out[] = ['id'=>$value['KD_KATEGORI'],'name'=> $value['NM_KATEGORI']];
+				   }
+	 
+				   echo json_encode(['output'=>$out, 'selected'=>'']);
+				   return;
+			   }
+		   }
+		   echo Json::encode(['output'=>'', 'selected'=>'']);
+	}
+	
 	/**
      * actionBrgkat() select2 Kategori mendapatkan barang
      * @author ptrnov  <piter@lukison.com>
@@ -507,8 +556,7 @@ class SalesOrderController extends Controller
 					   $output =  Yii::$app->formatter->asDecimal($model->HARGA, 2);
 					}
 					if (isset($posted['NOTE'])) {
-					   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-						$output = $model->NOTE;
+					 	$output = $model->NOTE;
 					}
 					$out = Json::encode(['output'=>$output, 'message'=>'']);
 				}

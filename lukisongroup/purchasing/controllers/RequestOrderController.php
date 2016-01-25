@@ -400,21 +400,21 @@ class RequestOrderController extends Controller
 				//if($roDetail->load(Yii::$app->request->post()) && $roDetail->validate()){		
 			if($roDetail->load(Yii::$app->request->post())){		
 				$hsl = \Yii::$app->request->post();									
-				$userCorp = $hsl['Rodetail']['KD_CORP'];
+				$selectCorp = $hsl['Rodetail']['KD_CORP'];
 				$kdUnit = $hsl['Rodetail']['UNIT'];
 				$kdBarang = $hsl['Rodetail']['KD_BARANG'];
 				$nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
 				$rqty = $hsl['Rodetail']['RQTY'];
 				$note = $hsl['Rodetail']['NOTE'];				
 				
-				$GneratekodeRo=\Yii::$app->ambilkonci->getRoCode($userCorp); //Requst Order Kode;
+				$GneratekodeRo=\Yii::$app->ambilkonci->getRoCode($selectCorp); //Requst Order Kode;
 				
 				/*
 				 * Detail Request Order
 				**/
 				$roDetail->KD_RO = $GneratekodeRo;
 				$roDetail->PARENT_ROSO=0; // RO=0
-				$roDetail->KD_CORP = $userCorp;
+				$roDetail->KD_CORP = $selectCorp;
 				$roDetail->UNIT = $kdUnit;
 				$roDetail->CREATED_AT = date('Y-m-d H:i:s');
 				$roDetail->NM_BARANG = $nmBarang->NM_BARANG;
@@ -435,7 +435,7 @@ class RequestOrderController extends Controller
 				$roHeader->TGL = date('Y-m-d');
 				$roHeader->ID_USER = $profile->emp->EMP_ID;
 				$roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
-				$roHeader->KD_CORP = $userCorp;
+				$roHeader->KD_CORP = $selectCorp;
 				$roHeader->KD_DEP = $profile->emp->DEP_ID;
 				//$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
 				//$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
