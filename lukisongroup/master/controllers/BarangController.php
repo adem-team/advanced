@@ -11,6 +11,7 @@ use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 use lukisongroup\master\models\Tipebarang;
 use lukisongroup\master\models\Kategori;
@@ -18,6 +19,7 @@ use lukisongroup\master\models\Unitbarang;
 use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\BarangSearch;
 use lukisongroup\master\models\ValidationLoginPrice;
+use lukisongroup\master\models\Barangalias;
 
 /**
  * BarangController implements the CRUD actions for Barang model.
@@ -55,13 +57,13 @@ class BarangController extends Controller
                } else {
                    //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
 				   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
-                   return true; 
+                   return true;
                }
             } else {
                 return true;
             }
     }
-	
+
     /**
      * Lists all Barang models.
      * @return mixed
@@ -70,34 +72,34 @@ class BarangController extends Controller
     {
         $searchModel = new BarangSearch();
         $dataProvider = $searchModel->searchBarang(Yii::$app->request->queryParams);
-	
-	
+
+
         $model = new Barang();
 		$querys = Barang::find()->from('dbc002.b0001 AS db1')->leftJoin('dbc002.b1001 AS db2', 'db1.KD_BARANG = db2.KD_TYPE')->where(['NM_TYPE' => 'FDSFDG'])->all();
-		
-		
-/*	
+
+
+/*
 	var_dump($querys);
-		
-		
+
+
 		$query= new Query;
 		$query->select('*')
 				->from('dbc002.b0001 AS db1')
-				->leftJoin('dbm000.b1001 AS db2', 'db1.KD_BARANG = db2.KD_TYPE')  
+				->leftJoin('dbm000.b1001 AS db2', 'db1.KD_BARANG = db2.KD_TYPE')
 				->where(['db2.NM_TYPE' =>'FDSFDG']);
 		$command = $query->createCommand();
 		$resp = $command->queryAll();
 	*/
 	/*
-	select * 
-from dbc002.b0001 AS db1 
+	select *
+from dbc002.b0001 AS db1
 LEFT JOIN dbm000.b1001 AS db2
 on db1.KD_BARANG = db2.KD_TYPE
 WHERE db2.NM_TYPE = 'FDSFDG'
-	
+
 		$querys = Barang::find()->with('tbesm')->where(['tbesm.NM_TYPE' => 'FDSFDG'])->asArray()->all();
 		*/
-		
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -122,15 +124,41 @@ WHERE db2.NM_TYPE = 'FDSFDG'
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
+     public function actionCreatealias($id)
+     {
+         $model = new Barangalias();
+         $id = Barang::find()->where(['KD_BARANG'=>$id])->one();
+         $nama = $id->NM_BARANG;
+
+         if(Yii::$app->request->isAjax && $model->load($_POST))
+         {
+           Yii::$app->response->format = 'json';
+           return ActiveForm::validate($model);
+         }
+
+         if ($model->load(Yii::$app->request->post()) ) {
+           $model->CREATED_AT = date('Y-m-d');
+           $model->CREATED_BY = Yii::$app->user->identity->username;
+           $model->save();
+             return $this->redirect(['index']);
+         } else {
+             return $this->renderAjax('_alias', [
+                 'model' => $model,
+                 'id'=>$id,
+                 'nama'=>$nama
+             ]);
+         }
+     }
+
     public function actionCreate()
     {
         $model = new Barang();
 
         if ($model->load(Yii::$app->request->post()) ) {
-				//$kdDbtr = $model->KD_DISTRIBUTOR;	
-				$kdType = $model->KD_TYPE;	
-				$kdKategori = $model->KD_KATEGORI;	
-				$kdUnit = $model->KD_UNIT;		
+				//$kdDbtr = $model->KD_DISTRIBUTOR;
+				$kdType = $model->KD_TYPE;
+				$kdKategori = $model->KD_KATEGORI;
+				$kdUnit = $model->KD_UNIT;
 				$kdPrn = $model->PARENT;
 				$kdCorp=  $model->KD_CORP;
 				$kd = Yii::$app->esmcode->kdbarangProdak($kdPrn,$kdCorp,$kdType,$kdKategori,$kdUnit);
@@ -138,9 +166,9 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 				$model->KD_BARANG = $kd;
 		if($model->validate())
 		{
-		
+
 				$model->CREATED_BY = Yii::$app->user->identity->username;
-		
+
 				$image = $model->uploadImage();
 		if ($model->save()) {
 			// upload only if valid uploaded file instance found
@@ -162,11 +190,11 @@ WHERE db2.NM_TYPE = 'FDSFDG'
     {
         $model = new Barang();
 		$model->load(Yii::$app->request->post());
-		
-		//$kdDbtr = $model->KD_DISTRIBUTOR;	
-		$kdType = $model->KD_TYPE;	
-		$kdKategori = $model->KD_KATEGORI;	
-		$kdUnit = $model->KD_UNIT;	
+
+		//$kdDbtr = $model->KD_DISTRIBUTOR;
+		$kdType = $model->KD_TYPE;
+		$kdKategori = $model->KD_KATEGORI;
+		$kdUnit = $model->KD_UNIT;
 		$kdPrn = $model->PARENT;
         $kdCorp=  $model->KD_CORP;
 		$kd = Yii::$app->esmcode->kdbarangProdak($kdPrn,$kdCorp,$kdType,$kdKategori,$kdUnit);
@@ -174,9 +202,9 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 		$model->KD_BARANG = $kd;
 		if($model->validate())
 		{
-		
+
 		$model->CREATED_BY = Yii::$app->user->identity->username;
-		
+
 		$image = $model->uploadImage();
 		if ($model->save()) {
 			// upload only if valid uploaded file instance found
@@ -225,12 +253,12 @@ WHERE db2.NM_TYPE = 'FDSFDG'
     public function actionDelete($id)
     {
      //   $this->findModel($ID)->delete();
-	 
+
 		$model = Barang::find()->where(['ID'=>$id])->one();
 		$model->STATUS = 3;
 		$model->UPDATED_BY = Yii::$app->user->identity->username;
 		$model->save();
-		
+
         return $this->redirect(['index']);
     }
 
@@ -239,92 +267,92 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 	 * @author ptrnov [piter@lukison.com]
 	 * @since 1.2
 	*/
-	public function actionLoginPriceView(){		
-		$ValidationLoginPrice = new ValidationLoginPrice();			
-		return $this->renderAjax('_price_login', [				
+	public function actionLoginPriceView(){
+		$ValidationLoginPrice = new ValidationLoginPrice();
+		return $this->renderAjax('_price_login', [
 			'ValidationLoginPrice' => $ValidationLoginPrice,
 		]);
 	}
 	public function actionLoginPriceCheck(){
-		$ValidationLoginPrice = new ValidationLoginPrice();			
+		$ValidationLoginPrice = new ValidationLoginPrice();
 		/*Ajax Load*/
 		if(Yii::$app->request->isAjax){
 			$ValidationLoginPrice->load(Yii::$app->request->post());
 			return Json::encode(\yii\widgets\ActiveForm::validate($ValidationLoginPrice));
-		}else{	/*Normal Load*/	
+		}else{	/*Normal Load*/
 			if($ValidationLoginPrice->load(Yii::$app->request->post())){
-				if ($ValidationLoginPrice->Validationlogin()){					
+				if ($ValidationLoginPrice->Validationlogin()){
 					return $this->redirect(['/master/barang/barang-price']);
-				}														
+				}
 			}
 		}
 	}
-	
+
 	/*
 	 * Index Price
 	 * @author ptrnov [piter@lukison.com]
 	 * @since 1.2
 	*/
 	public function actionBarangPrice(){
-		
+
 		if (Yii::$app->request->post('hasEditable')) {
 			$idx = Yii::$app->request->post('editableKey');
 			Yii::$app->response->format = Response::FORMAT_JSON;
-			$modelPrice = Barang::findOne($idx);						
+			$modelPrice = Barang::findOne($idx);
 			$out = Json::encode(['output'=>'', 'message'=>'']);
 			$post = [];
 			$posted = current($_POST['Barang']);
-			$post['Barang'] = $posted; 
-			if ($modelPrice->load($post)) {				
-				$output = '';	
-				$modelPrice->save();		
+			$post['Barang'] = $posted;
+			if ($modelPrice->load($post)) {
+				$output = '';
+				$modelPrice->save();
 					/* HARGA PABRIK */
 					if (isset($posted['HARGA_PABRIK'])) {
 						$output = Yii::$app->formatter->asDecimal($modelPrice->HARGA_PABRIK,0);
-						
+
 					}
-					/* HARGA LG */					
+					/* HARGA LG */
 					if (isset($posted['HARGA_LG'])) {
 						$output = Yii::$app->formatter->asDecimal($modelPrice->HARGA_LG, 2);
-					} 
+					}
 					/* HARGA SUPPLIER */
 					if (isset($posted['HARGA_DIST'])) {
 						$output = $modelPrice->HARGA_DIST;
-					} 
+					}
 					/* HARGA SALES LG */
 					if (isset($posted['HARGA_SALES'])) {
 						$output = $modelPrice->HARGA_SALES;
-					} 	
-				
+					}
+
 				$out = Json::encode(['output'=>$output, 'message'=>'']);
 			}
 			// return ajax json encoded response and exit
 			echo $out;
 			return;
 		}
-		
+
 		$searchModel = new BarangSearch();
         $dataProvider = $searchModel->searchBarang(Yii::$app->request->queryParams);
-		
+
         $model = new Barang();
 		$querys = Barang::find()->from('dbc002.b0001 AS db1')->leftJoin('dbc002.b1001 AS db2', 'db1.KD_BARANG = db2.KD_TYPE')->where(['NM_TYPE' => 'FDSFDG'])->all();
-		
+
 		return $this->render('price', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
              'querys' => $querys,
-        ]);		
+        ]);
 	}
-	
+
 	/*
 	 * Logout Price
 	 * @author ptrnov [piter@lukison.com]
 	 * @since 1.2
 	*/
-	public function actionPriceLogout(){	
+	public function actionPriceLogout(){
 		$this->redirect('index');
 	}
-	
+
 	/**
      * DepDrop Barang Prodak | CORP-TYPE
      * @author ptrnov  <piter@lukison.com>
@@ -340,14 +368,14 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 				foreach ($model as $key => $value) {
 					   $out[] = ['id'=>$value['KD_TYPE'],'name'=> $value['NM_TYPE']];
 				   }
-	 
+
 				   echo json_encode(['output'=>$out, 'selected'=>'']);
 				   return;
 			   }
 		   }
 		   echo Json::encode(['output'=>'', 'selected'=>'']);
-	}	
-		
+	}
+
 	/**
 	* DepDrop Barang Prodak | TYPE - KAT
 	* @author ptrnov  <piter@lukison.com>
@@ -364,16 +392,16 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 				foreach ($model as $key => $value) {
 					   $out[] = ['id'=>$value['KD_KATEGORI'],'name'=> $value['NM_KATEGORI']];
 				   }
-	 
+
 				   echo json_encode(['output'=>$out, 'selected'=>'']);
 				   return;
 			   }
 		   }
 		   echo Json::encode(['output'=>'', 'selected'=>'']);
 	}
-	
-	
-	
+
+
+
     /**
      * Finds the Barang model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
