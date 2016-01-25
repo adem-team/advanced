@@ -11,11 +11,19 @@ $this->title = Yii::t('app', 'Umum - Detail Kategori Barang ');	    /* title pad
 <div class="kategori-view">
 
 <?php
+	/* PARENT */
+	if($model->PARENT == '1'){
+		$parent = "PRODAK";
+	} else {
+		$parent = "UMUM";
+	}
+	/* STATUS */
 	if($model->STATUS == '1'){
 		$stat = "Aktif";
 	} else {
 		$stat = "Tidak Aktif";
 	}
+	
  ?>
     <p>
 <!--         Html::a('<i class="fa fa-pencil"></i>&nbsp;&nbsp;Ubah', ['update', 'ID' => $model->ID,
@@ -36,6 +44,18 @@ $this->title = Yii::t('app', 'Umum - Detail Kategori Barang ');	    /* title pad
 	<?= DetailView::widget([
         'model' => $model,
         'attributes' => [
+			[
+				'label' => 'Parent',
+				'value' => $parent,
+			],
+			[
+				'label' => 'Corporation',
+				'attribute'=>'corp.CORP_NM',
+			],
+			[
+				'label' => 'Type Barang',
+				'attribute'=>'typebrg.NM_TYPE',
+			],
 			'NM_KATEGORI',
 			'NOTE:ntext',
 			[

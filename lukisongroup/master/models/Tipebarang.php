@@ -3,7 +3,7 @@
 namespace lukisongroup\master\models;
 
 use Yii;
-
+use lukisongroup\hrd\models\Corp;
 //use lukisongroup\master\models\Barang;
 
 
@@ -37,16 +37,21 @@ class Tipebarang extends \yii\db\ActiveRecord
     {
         return Yii::$app->get('db_esm');
     }
-
+	
+	public function getCorp()
+    {
+       return $this->hasOne(Corp::className(), ['CORP_ID' => 'CORP_ID']);
+    }
+	
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['KD_TYPE', 'NM_TYPE','STATUS'], 'required'],
+            [['KD_TYPE', 'NM_TYPE','PARENT','STATUS'], 'required'],
             [['NOTE'], 'string'],
-            [['CREATED_AT', 'UPDATED_AT'], 'safe'],
+            [['CREATED_AT', 'UPDATED_AT','CORP_ID'], 'safe'],
             [['STATUS'], 'integer'],
             [['KD_TYPE'], 'string', 'max' => 5],
             [['NM_TYPE'], 'string', 'max' => 200],
@@ -61,8 +66,9 @@ class Tipebarang extends \yii\db\ActiveRecord
     {
         return [
             'ID' => 'ID',
-            'KD_TYPE' => 'Kode Type',
-            'NM_TYPE' => 'Nama Type',
+            'KD_TYPE' => 'Id.Type',
+            'NM_TYPE' => 'Type',
+			'PARENT'=>'Parent',
             'NOTE' => 'Catatan',
             'CREATED_BY' => 'Created By',
             'CREATED_AT' => 'Created At',

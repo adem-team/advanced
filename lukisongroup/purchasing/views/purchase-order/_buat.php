@@ -190,7 +190,7 @@ use lukisongroup\master\models\Unitbarang;
      * @since 1.2
 	*/
 	function PrintPdf($poHeader){
-			$title = Yii::t('app','PDF');
+			$title = Yii::t('app','Print');
 			$options = [ 'id'=>'pdf-print-id',	
 						  'class'=>'btn btn-default btn-xs', 
 						  'title'=>'Print PDF'
@@ -202,6 +202,23 @@ use lukisongroup\master\models\Unitbarang;
 			return $content;
 	} 
 	
+	/*
+	 * LINK PRINT PDF
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.2
+	*/
+	function PrintPdf_TMP($poHeader){
+			$title = Yii::t('app','Temp Print');
+			$options = [ 'id'=>'pdf-print-id',	
+						  'class'=>'btn btn-default btn-xs', 
+						  'title'=>'Print PDF'
+			]; 
+			$icon = '<span class="fa fa-print fa-fw"></span>';
+			$label = $icon . ' ' . $title;
+			$url = Url::toRoute(['/purchasing/purchase-order/temp-cetakpdf','kdpo'=>$poHeader->KD_PO]);
+			$content = Html::a($label,$url, $options);
+			return $content;
+	} 
 	/*
 	 * LINK PO Note
 	 * @author ptrnov  <piter@lukison.com>
@@ -406,7 +423,7 @@ use lukisongroup\master\models\Unitbarang;
 						//'min'=>0, 
 						//'max'=>5000,
 						'allowClear' => true,
-						'class'=>'pull-right dropup'
+						'class'=>'pull-top dropup'
 					],
 				],
 				//Refresh Display 
@@ -519,7 +536,7 @@ use lukisongroup\master\models\Unitbarang;
 			//'width'=>'7%',					
 			'value'=>function ($model, $key, $index, $widget) { 
 				$p = compact('model', 'key', 'index');
-				return $widget->col(3, $p) != 0 ? $widget->col(3, $p) * $widget->col(5, $p) : 0;
+				return $widget->col(3, $p) != 0 ? $widget->col(3, $p) * $model->UNIT_QTY  * $widget->col(5, $p) : 0;
 				//return $widget->col(3, $p) != 0 ? $widget->col(5 ,$p) * 100 / $widget->col(3, $p) : 0;
 			},						
 			'headerOptions'=>[
@@ -669,13 +686,13 @@ use lukisongroup\master\models\Unitbarang;
 	} 
 	
 	/*
-	 * GRID VIEW CREATE PO -> BY REQUEST ORDER
+	 * GRID VIEW CREATE PO -> BY SALES ORDER
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
-	$gvROSendPO=GridView::widget([
-		'id'=>'gv-ro-detail',
-		'dataProvider' => $dataProvider,
+	$gvSOSendPO=GridView::widget([
+		'id'=>'gv-so-detail',
+		'dataProvider' =>$dataProviderSo,
 		'filterModel' => $searchModel,
 		'columns' => [
 			[/* Attribute KD RO */
@@ -709,14 +726,65 @@ use lukisongroup\master\models\Unitbarang;
 					]
 				]
 			],
-			/* [// Attribute KD RO 
-				'attribute'=>'CREATED_AT',
-				'label'=>'Date',						
+			[
+				'class'=>'kartik\grid\ActionColumn',
+				'dropdown' => true,
+				'template' => '{view}{sendPo}',
+				'dropdownOptions'=>['class'=>'pull-right dropup'],									
+				//'headerOptions'=>['class'=>'kartik-sheet-style'],											
+				'buttons' => [
+					// View RO | Permissian All
+					'view' => function ($url, $model) {
+									return tombolView($url, $model);
+							  },
+							
+					// SEND RO TO PO | Permissian Status 0; 0=process | User created = user login  
+					'sendPo' => function ($url, $model) use ($poHeader) {
+									return tombolSendPo($url, $model,$poHeader);
+								},				
+				],				
+			],	 
+		],
+		'pjax'=>true,
+		'pjaxSettings'=>[
+		 'options'=>[
+			'enablePushState'=>false,
+			'id'=>'gv-so-detail',
+		   ],	
+			'refreshGrid' => true,
+			'neverTimeout'=>true,
+		],
+		'panel' => [
+			//'footer'=>false,
+			'heading'=>false,						
+		],
+		/* 'toolbar'=> [
+			//'{items}',
+		],  */				
+		'hover'=>true, //cursor select
+		'responsive'=>true,
+		'responsiveWrap'=>true,
+		'bordered'=>true,
+		'striped'=>'4px',
+		'autoXlFormat'=>true,
+		'export' => false, 
+	]); 
+	
+	/*
+	 * GRID VIEW CREATE PO -> BY REQUEST ORDER
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	$gvROSendPO=GridView::widget([
+		'id'=>'gv-ro-detail',
+		'dataProvider' => $dataProviderRo,
+		'filterModel' => $searchModel,
+		'columns' => [
+			[/* Attribute KD RO */
+				'attribute'=>'KD_RO',
+				'label'=>'Kode RO',						
 				'hAlign'=>'left',	
 				'vAlign'=>'middle',
-				'value'=>function($model){
-					return  Yii::$app->formatter->asDate($model->CREATED_AT,'Y-M-d');
-				},
 				//'mergeHeader'=>true,
 				'format' => 'raw',	
 				'headerOptions'=>[
@@ -742,8 +810,8 @@ use lukisongroup\master\models\Unitbarang;
 							'border-right'=>'0px',									
 					]
 				]
-			], */
-			 [
+			],
+			[
 				'class'=>'kartik\grid\ActionColumn',
 				'dropdown' => true,
 				'template' => '{view}{sendPo}',
@@ -759,29 +827,8 @@ use lukisongroup\master\models\Unitbarang;
 					'sendPo' => function ($url, $model) use ($poHeader) {
 									return tombolSendPo($url, $model,$poHeader);
 								},				
-				],
-				
+				],				
 			],	 
-			/* [
-				'format'=>'raw',
-				'value' => function ($data){
-					$count = Rodetail::find()
-						->where([
-							'KD_RO'=>$data->KD_RO,
-						])
-						->count();
-	 
-					if(!empty($count)){
-						return  Html::a('<button type="button" class="btn btn-primary btn-xs">View</button>',['detail','kd_ro'=>$data->KD_RO,'kdpo'=>$_GET['kdpo']],[
-									'data-toggle'=>"modal",
-									'data-target'=>"#ro-sendpo",
-									'data-title'=> $data->KD_RO,
-								]); // ubah ini
-					} else {
-						return '<button type="button" class="btn btn-danger btn-xs">No Data</button>';
-					}
-				}
-			], */
 		],
 		'pjax'=>true,
 		'pjaxSettings'=>[
@@ -806,8 +853,7 @@ use lukisongroup\master\models\Unitbarang;
 		'striped'=>'4px',
 		'autoXlFormat'=>true,
 		'export' => false, 
-	]); 
-		
+	]); 	
 	//echo $gvROSendPO; 
 	$items=[
 		[
@@ -815,7 +861,7 @@ use lukisongroup\master\models\Unitbarang;
 			'active'=>true,
 		],		
 		[
-			'label'=>'<div style="font-family: tahoma ;font-size:8pt;">Seles Order</div>','content'=>$gvROSendPO,
+			'label'=>'<div style="font-family: tahoma ;font-size:8pt;">Seles Order</div>','content'=>$gvSOSendPO,
 			
 		],
 	];
@@ -877,20 +923,66 @@ use lukisongroup\master\models\Unitbarang;
 		]; 
 		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/purchase-order/sign-created-view','kdpo'=>$poHeader->KD_PO]);
+		$url = Url::toRoute(['/purchasing/purchase-order/sign-auth1-view','kdpo'=>$poHeader->KD_PO]);
 		//$options1['tabindex'] = '-1';
 		$content = Html::a($label,$url, $options);
 		return $content;	
 	}
+	
+	/*
+	 * SIGNATURE AUTH2 | CHECKED
+	 * Status Value Signature1 | PurchaseOrder
+	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
+	*/
+	function SignChecked($poHeader){
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'po-auth2',	
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#po-auth2-sign",											
+					  'class'=>'btn btn-warning btn-xs', 
+					  'style'=>['width'=>'100px'],
+					  'title'=>'Detail'
+		]; 
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/purchase-order/sign-auth2-view','kdpo'=>$poHeader->KD_PO]);
+		//$options1['tabindex'] = '-1';
+		$content = Html::a($label,$url, $options);
+		return $content;	
+	}
+	
+	/*
+	 * SIGNATURE AUTH3 | APPROVED
+	 * Status Value Signature1 | PurchaseOrder
+	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
+	*/
+	function SignApproved($poHeader){
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'po-auth3',	
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#po-auth3-sign",											
+					  'class'=>'btn btn-warning btn-xs', 
+					  'style'=>['width'=>'100px'],
+					  'title'=>'Detail'
+		]; 
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/purchase-order/sign-auth3-view','kdpo'=>$poHeader->KD_PO]);
+		//$options1['tabindex'] = '-1';
+		$content = Html::a($label,$url, $options);
+		return $content;	
+	}
+	
+	
 	/*
 	 * Signature Waiting Approval
 	 * Signature Automaticly Show If ACTION APPROVAL
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
 	*/
-	function SignApprovedStt(){
-		return Html::a('<i class="glyphicon glyphicon-retweet"></i> Waiting for approval', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
-	} 
+	//function SignApprovedStt(){
+	//	return Html::a('<i class="glyphicon glyphicon-retweet"></i> Waiting for approval', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
+	// } 
 
 	/*
 	 * Signature Waiting sign
@@ -898,9 +990,9 @@ use lukisongroup\master\models\Unitbarang;
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
 	*/
-	function SignStt(){
-		return Html::a('<i class="glyphicon glyphicon-retweet"></i> Waiting for Sign', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
-	} 
+	// function SignStt(){
+		// return Html::a('<i class="glyphicon glyphicon-retweet"></i> Waiting for Sign', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
+	// } 
 
 ?>
 
@@ -976,9 +1068,13 @@ use lukisongroup\master\models\Unitbarang;
 			<div style="text-align:right;float:right">
 				<?php echo PoView($poHeader); ?>
 			</div>
-			<div style="text-align:right;">
+			<div style="text-align:right;float:right"">
 				<?php echo PrintPdf($poHeader); ?>
+			</div>
+			<div style="text-align:right;">
+				<?php echo PrintPdf_TMP($poHeader); ?>
 			</div>				
+			
 		</div>		
 		<!-- GRID PO Detail !-->			
 		<div>			
@@ -1097,13 +1193,13 @@ use lukisongroup\master\models\Unitbarang;
 						</th>								
 						<th style="text-align: center; vertical-align:middle;width:100">
 							<?php 
-								$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:100; height:40px" src='.$poHeader->SIG2_SVGBASE64.'></img>' : SignStt();
+								$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:100; height:40px" src='.$poHeader->SIG2_SVGBASE64.'></img>' : SignChecked($poHeader);
 								echo $ttd2;
 							?> 
 						</th>
 						<th style="text-align: center; vertical-align:middle;width:100">
 							<?php 
-								$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:100; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' : SignApprovedStt();
+								$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:100; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' : SignApproved($poHeader);
 								echo $ttd3;
 							?> 
 						</th>
@@ -1489,7 +1585,7 @@ use lukisongroup\master\models\Unitbarang;
 	Modal::end();
 	
 	/*
-	 * JS Sign First Create PO | Status =1
+	 * JS AUTH1 | CREATED
 	 * @author ptrnov <piter@lukison.com>
 	 * @since 1.2
 	*/
@@ -1518,6 +1614,105 @@ use lukisongroup\master\models\Unitbarang;
 				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
 			]
 		]);
+	Modal::end();
+	
+	/*
+	 * JS AUTH2 | CHECKED
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#po-auth2-sign').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'po-auth2-sign',
+			//'header' => '<h4 class="modal-title">Signature Authorize</h4>',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			//'size' => 'modal-xs'
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+	
+	/*
+	 * JS AUTH3 | APPROVED
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#po-auth3-sign').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'po-auth3-sign',
+			//'header' => '<h4 class="modal-title">Signature Authorize</h4>',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			//'size' => 'modal-xs'
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+	
+	/*
+	 * Button Modal Confirm PERMISION DENAID
+	 * @author ptrnov [piter@lukison]
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#confirm-permission-alert').on('show.bs.modal', function (event) {
+				//var button = $(event.relatedTarget)
+				//var modal = $(this)
+				//var title = button.data('title') 
+				//var href = button.attr('href') 
+				//modal.find('.modal-title').html(title)
+				//modal.find('.modal-body').html('')
+				/* $.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					}); */
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'confirm-permission-alert',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/warning/denied.png',  ['class' => 'pnjg', 'style'=>'width:40px;height:40px;']).'</div><div style="margin-top:10px;"><h4><b>Permmission Confirm !</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+			]
+		]);
+		echo "<div>You do not have permission for this module.
+				<dl>				
+					<dt>Contact : itdept@lukison.com</dt>
+				</dl>
+			</div>";
 	Modal::end();
 ?>
 

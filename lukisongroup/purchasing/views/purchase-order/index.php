@@ -5,17 +5,23 @@ use kartik\grid\GridView;
 use yii\helpers\Url;
 //use yii\widgets\Pjax;
 use yii\helpers\ArrayHelper;
-//use yii\bootstrap\Modal;
+use yii\bootstrap\Modal;
 //use yii\helpers\Json;
 use kartik\form\ActiveForm;
 use lukisongroup\master\models\Suplier;
 use lukisongroup\hrd\models\Employe;
+use lukisongroup\hrd\models\Corp;
 
-	$poGenerateArray= [
-		  ['ID' => 0, 'DESCRIP' => 'PO Normal'],		  
-		  ['ID' => 1, 'DESCRIP' => 'PO Plus'],
+	$selectCorp = ArrayHelper::map(Corp::find()->where('CORP_STS<>3')->all(), 'CORP_ID', 'CORP_NM');
+	
+	$poParentArray= [
+		  ['ID' => 'POA', 'DESCRIP' => 'PO Plus'],		  
+		  ['ID' => 'POB', 'DESCRIP' => 'PO General'],		  
+		  ['ID' => 'POC', 'DESCRIP' => 'PO Product'],
 	];	
-	$valGpo = ArrayHelper::map($poGenerateArray, 'ID', 'DESCRIP');
+	$poParent = ArrayHelper::map($poParentArray, 'ID', 'DESCRIP');
+	
+	
 
 $this->title = 'Purchaseorder';
 $this->params['breadcrumbs'][] = $this->title;
@@ -74,7 +80,9 @@ function submitform()
 				$title1 = Yii::t('app', 'CREATE NEW PO');
 				$options1 = [ 'id'=>'po-create',						  									
 							  'class' => 'btn btn-warning btn-sm',										  
-							  'data-confirm'=>'Permission Failed !',
+							  //'data-confirm'=>'Permission Failed !',
+							  'data-toggle'=>"modal",
+							  'data-target'=>"#confirm-permission-alert",	
 				]; 
 				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
@@ -85,7 +93,8 @@ function submitform()
 				$title1 = Yii::t('app', 'CREATE NEW PO');
 				$options1 = [ 'id'=>'ro-create',						  									
 							  'class' => 'btn btn-warning btn-sm',										  
-							  'data-confirm'=>'Permission Failed !',
+							  'data-toggle'=>"modal",
+							  'data-target'=>"#confirm-permission-alert",
 				]; 
 				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
@@ -246,8 +255,7 @@ function submitform()
 	 * EMP_ID=UserLogin & BTN_SIGN1==1 &  Status 0 = Action Edit Hide/tidak bisa edit
 	 * 1. Hanya User login dengan permission modul RO=1 dengan BTN_SIGN1==1 dan Permission Jabatan SVP keatas yang bisa melakukan Approval (Tanpa Kecuali)
 	 * 2. Action APPROVAL Akan close atau tidak bisa di lakukan jika sudah Approved | status Approved =101 | Permission sign1
-	*/
-	
+	*/	
 	function tombolReview($url, $model){
 		if(getPermission()){
 			//Permission Jabatan
@@ -256,7 +264,7 @@ function submitform()
 			$auth3=getPermission()->BTN_SIGN3;
 			//if(getPermissionEmp()->JOBGRADE_ID == 'S' OR getPermissionEmp()->JOBGRADE_ID == 'M' OR getPermissionEmp()->JOBGRADE_ID == 'SM' AND getPermission()->BTN_SIGN1==1 ){
 			if(getPermission()->BTN_REVIEW==1){ //($a == 'EVP' OR $a == 'SVP' OR $a == 'VP') OR
-				 if($model->STATUS == 1 | $model->STATUS != 0){ //STATUS!=0 ATAU STATUS=1 Available to Revview for Approved
+				 //if($model->STATUS == 1 | $model->STATUS != 0){ //STATUS!=0 ATAU STATUS=1 Available to Revview for Approved
 					$title = Yii::t('app','Review');
 					$options = [ //'id'=>'ro-approved',
 								//'data-method' => 'post',
@@ -271,10 +279,45 @@ function submitform()
 					$url = Url::toRoute(['/purchasing/purchase-order/review','kdpo'=>$model->KD_PO]);
 					$options['tabindex'] = '-1';
 					return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
-				}
+				//}
 			}
 		}	
 	}
+	/*Button Action | Permission Denaid*/
+	function tombolDenaid($url, $model){
+		if(getPermission()){		
+			$permitView = getPermission()->BTN_VIEW;
+			$permitEdit = getPermission()->BTN_EDIT;
+			$permitReview = getPermission()->BTN_REVIEW;
+			$permitDelete = getPermission()->BTN_DELETE;
+			$auth2=getPermission()->BTN_SIGN2;
+			$auth3=getPermission()->BTN_SIGN3;
+			if($model->STATUS > 0 and ($auth2==0 or $auth3==0) and ($permitView==0 and $permitEdit==0 and $permitReview==0 and $permitDelete==0) ){
+				$title1 = Yii::t('app', 'Permit Access ');
+				$options1 = [ 'id'=>'action-denied-id',						  									
+							  'data-toggle'=>"modal",
+							  'data-target'=>"#confirm-permission-alert",
+				]; 
+				$icon1 = '<span class="fa fa-remove fa-lg"></span>';
+				$label1 = $icon1 . ' ' . $title1;
+				$content = Html::a($label1,'',$options1);
+				return $content;
+			}
+		}else{
+			$title1 = Yii::t('app', 'Permit Access ');
+			$options1 = [ 'id'=>'action-denied-id',						  									
+						  'data-toggle'=>"modal",
+						  'data-target'=>"#confirm-permission-alert",
+			]; 
+			$icon1 = '<span class="fa fa-remove fa-lg"></span>';
+			$label1 = '<div style="text-align:center">'.$icon1 . ' ' . $title1.'</div>';
+			$content = Html::a($label1,'',$options1);
+			return $content;
+		}
+	}
+	
+	
+	
 
 	/*
 	 * STATUS Prosess Request Order
@@ -550,7 +593,7 @@ function submitform()
 		[
 			'class'=>'kartik\grid\ActionColumn',
 			'dropdown' => true,
-			'template' => '{view}{tambahEdit}{delete}{approved}',
+			'template' => '{view}{tambahEdit}{delete}{approved}{no_akses}',
 			'dropdownOptions'=>['class'=>'pull-right dropup'],									
 			'buttons' => [
 				/* View RO | Permissian All */
@@ -572,6 +615,9 @@ function submitform()
 				'approved' => function ($url, $model) {
 								return tombolReview($url, $model);
 							},
+				'no_akses' => function ($url, $model) {
+								return tombolDenaid($url, $model);
+				},
 			],
 			'headerOptions'=>[				
 				'style'=>[
@@ -692,11 +738,15 @@ function submitform()
 			  <div class="modal-body" style="text-align:center">
 				
 			<?php //$drop = ArrayHelper::map(Suplier::find()->where(['STATUS' => 1])->all(), 'KD_SUPPLIER', 'NM_SUPPLIER'); ?>
-			<?php echo $form->field($poHeaderVal,'PO_GNR')->dropDownList($valGpo)->label(false); ?>
+			
+			<?php echo $form->field($poHeaderVal,'kD_CORP')->dropDownList($selectCorp)->label(false); ?>
+			<?php echo $form->field($poHeaderVal,'pARENT_PO')->dropDownList($poParent)->label(false); ?>
+			
+			
 			  </div>
 			  <div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="submit" class="btn btn-primary" >Generate Kode</button>
+				<button type="submit" class="btn btn-primary" >Generate PO</button>
 			  </div> 
 			<?php ActiveForm::end(); ?>
 		</div>
@@ -704,3 +754,40 @@ function submitform()
 	</div>	
   
 </div>
+
+<?php
+	/*
+	 * Button Modal Confirm PERMISION DENAID
+	 * @author ptrnov [piter@lukison]
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#confirm-permission-alert').on('show.bs.modal', function (event) {
+				//var button = $(event.relatedTarget)
+				//var modal = $(this)
+				//var title = button.data('title') 
+				//var href = button.attr('href') 
+				//modal.find('.modal-title').html(title)
+				//modal.find('.modal-body').html('')
+				/* $.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					}); */
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'confirm-permission-alert',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/warning/denied.png',  ['class' => 'pnjg', 'style'=>'width:40px;height:40px;']).'</div><div style="margin-top:10px;"><h4><b>Permmission Confirm !</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+			]
+		]);
+		echo "<div>You do not have permission for this module.
+				<dl>				
+					<dt>Contact : itdept@lukison.com</dt>
+				</dl>
+			</div>";
+	Modal::end();
+?>

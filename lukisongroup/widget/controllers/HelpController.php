@@ -76,4 +76,32 @@ class HelpController extends Controller
     
     }
 	
+	 /**
+     * ACTION INDEX
+     */
+    public function actionDbHelp()
+    {		
+		$dbStatus =$this->renderPartial('doc-db\status');
+		
+		
+		return $this->render('conten_db',[
+			'dbStatus'=>$dbStatus,
+			
+		]);
+    
+    }
+	
+	 /**
+     * ACTION Tips
+     */
+    public function actionDocTip()
+    {		
+		$erp_introduction =$this->renderPartial('doc-tip\erp_introduction');
+		
+		return $this->render('conten_tips',[
+			'erp_introduction'=>$erp_introduction, 	
+			
+		]);
+    
+    }
 }

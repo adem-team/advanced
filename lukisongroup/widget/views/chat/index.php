@@ -1,13 +1,17 @@
 ﻿<?php
 
-
 use kartik\grid\GridView;
 use yii\helpers\html;
 use yii\bootstrap\Modal;
 use kartik\tabs\TabsX;
 
-
-
+	/*
+	 * Jangan di Hapus ...
+	 * Chat Menu Select Dashboard
+	 * @author ptrnov [piter@lukison.com]
+	 * @since 1.0
+	*/
+	$this->sideMenu = $ctrl_chat!=''? $ctrl_chat:'mdefault';   
 
 
 /* @var $this yii\web\View */
@@ -18,9 +22,8 @@ use kartik\tabs\TabsX;
 ?>
 
 <!--message chat-->
-<div class="col-sm-8">   
-<?php      
-  $gv_Chat = GridView::widget([
+<div class="col-sm-8">         
+ <?= $gv_Chat = GridView::widget([
     
         'id'=>'gv-chat',
         'dataProvider' => $dataProvider,
@@ -52,15 +55,15 @@ use kartik\tabs\TabsX;
 		'autoXlFormat'=>true,
 		
     ])
-    ?>
+?>
 </div>
     
    
 
 <!--chatting group-->
 
-	<?php
-    $gv_Chat1 = GridView::widget([
+	<div class="col-sm-4">
+   <?= $gv_Chat1 = GridView::widget([
     
         'id'=>'gv-chat2',
         'dataProvider' => $dataprovider1,
@@ -135,6 +138,7 @@ use kartik\tabs\TabsX;
 		'autoXlFormat'=>true,
 		
     ])?>
+    
 	<?php
 	
 	// $waktu = time();
@@ -152,8 +156,8 @@ use kartik\tabs\TabsX;
 	
 	
 	?>
-          <?php 
-		  $gv_Chat2 = GridView::widget([
+        
+		<?= $gv_Chat2 = GridView::widget([
     
         'id'=>'gv-chat1',
         'dataProvider' => $dataProvider1,
@@ -229,25 +233,8 @@ use kartik\tabs\TabsX;
 		'autoXlFormat'=>true,
 		
     ])?>
+	</div>
 	
-	<?php
-	$items = [
-    [
-        'label'=>'<i class="glyphicon glyphicon-envelope"></i> Chatting',
-        'content'=>$gv_Chat,
-        'active'=>true
-    ],
-    [
-        'label'=>'<i class="glyphicon glyphicon-user"></i> GroupChat',
-        'content'=>$gv_Chat1,
-    ],
-	 [
-        'label'=>'<i class="glyphicon glyphicon-user"></i> ONLINE ',
-        'content'=>$gv_Chat2,
-    ],
-	];
-	
-	?>
         
         <?php
         
@@ -291,15 +278,7 @@ use kartik\tabs\TabsX;
      
         ?>
     </div>
-	<?php
 	
-	echo TabsX::widget([
-    'items'=>$items,
-    'position'=>TabsX::POS_RIGHT,
-    'encodeLabels'=>false
-]);
-	
-	?>
 	
 	<?php
 	

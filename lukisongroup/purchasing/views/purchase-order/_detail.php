@@ -246,6 +246,38 @@ use lukisongroup\master\models\Unitbarang;
 					]
 				],			
 			],
+			[/* Attribute Harga */
+				'attribute'=>'HARGA',
+				'label'=>'Price',						
+				'vAlign'=>'middle',
+				'hAlign'=>'center',	
+				'mergeHeader'=>true,
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'100px',
+						'font-family'=>'tahoma',
+						'font-size'=>'8pt',
+						'background-color'=>'rgba(0, 95, 218, 0.3)',								
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+							'text-align'=>'right',
+							'width'=>'100px',
+							'font-family'=>'tahoma',
+							'font-size'=>'8pt',
+							//'border-right'=>'0px',
+					]
+				],
+				'pageSummaryOptions' => [
+					'style'=>[
+							'border-left'=>'0px',
+							'border-right'=>'0px',									
+					]
+				]
+			],
+			
           	[/* Attribute TMP_CK CheckboxColumn */
 				'class'=>'kartik\grid\CheckboxColumn',
 				'headerOptions'=>[

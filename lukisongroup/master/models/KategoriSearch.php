@@ -12,6 +12,12 @@ use lukisongroup\master\models\Kategori;
  */
 class KategoriSearch extends Kategori
 {
+	
+	public function attributes()
+	{
+		/*Author -ptr.nov- add related fields to searchable attributes */
+		return array_merge(parent::attributes(), ['corp.CORP_NM','typebrg.NM_TYPE']);
+	}
     /**
      * @inheritdoc
      */
@@ -19,7 +25,7 @@ class KategoriSearch extends Kategori
     {
         return [
             [['ID', 'STATUS'], 'integer'],
-            [['KD_KATEGORI', 'NM_KATEGORI', 'NOTE', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT'], 'safe'],
+            [['KD_KATEGORI', 'KD_TYPE','NM_KATEGORI', 'NOTE','PARENT', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT','corp.CORP_NM','typebrg.NM_TYPE'], 'safe'],
         ];
     }
 
@@ -32,6 +38,7 @@ class KategoriSearch extends Kategori
         return Model::scenarios();
     }
 
+	
     /**
      * Creates data provider instance with search query applied
      *
@@ -41,10 +48,13 @@ class KategoriSearch extends Kategori
      */
     public function search($params)
     {
-        $query = Kategori::find()->where('STATUS <> 3');
+        $query = Kategori::find()->where('STATUS <> 3')->groupBy(['PARENT','CORP_ID','KD_TYPE','KD_KATEGORI']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+			'pagination' => [
+				'pageSize' => 20,
+			],
         ]);
 
         $this->load($params);
@@ -60,6 +70,9 @@ class KategoriSearch extends Kategori
             'NM_KATEGORI' => $this->NM_KATEGORI,
             'UPDATED_AT' => $this->UPDATED_AT,
             'STATUS' => $this->STATUS,
+			'PARENT' => $this->PARENT,
+			'CORP_ID' => $this->getAttribute('corp.CORP_NM'),
+			'KD_TYPE' => $this->getAttribute('typebrg.NM_TYPE')			
         ]);
 
         $query->andFilterWhere(['like', 'KD_KATEGORI', $this->KD_KATEGORI])

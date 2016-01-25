@@ -336,7 +336,7 @@ $y=4;
 			//'width'=>'7%',					
 			'value'=>function ($model, $key, $index, $widget) { 
 				$p = compact('model', 'key', 'index');
-				return $widget->col(3, $p) != 0 ? $widget->col(3, $p) * $widget->col(5, $p) : 0;
+				return $widget->col(3, $p) != 0 ? $widget->col(3, $p) * $model->UNIT_QTY * $widget->col(5, $p) : 0;
 				//return $widget->col(3, $p) != 0 ? $widget->col(5 ,$p) * 100 / $widget->col(3, $p) : 0;
 			},						
 			'headerOptions'=>[
@@ -436,63 +436,74 @@ $y=4;
 	]);				
 
 	/*
-	 * SIGNATURE AUTH2 | CHECKED/ MENGETAHUI
+	 * SIGNATURE AUTH1 | CREATED
+	 * Status Value Signature1 | PurchaseOrder
+	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
+	*/
+	function SignCreated($poHeader){
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'po-auth1',	
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#po-auth1-sign",											
+					  'class'=>'btn btn-warning btn-xs', 
+					  'style'=>['width'=>'100px'],
+					  'title'=>'Detail'
+		]; 
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/purchase-order/sign-auth1-view','kdpo'=>$poHeader->KD_PO]);
+		//$options1['tabindex'] = '-1';
+		$content = Html::a($label,$url, $options);
+		return $content;	
+	}
+	
+	/*
+	 * SIGNATURE AUTH2 | CHECKED
 	 * Status Value Signature1 | PurchaseOrder
 	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
 	*/
 	function SignChecked($poHeader){
-		if(getPermission()){
-			/*Permission DEPARTMENT[DEP_ID] AND MODUL PO BTN_SIGN2=1 */
-			if(getPermissionEmp()->DEP_ID =='ACT' AND getPermission()->BTN_SIGN2==1 ){
-				$title = Yii::t('app', 'Sign Hire');
-				$options = [ 'id'=>'po-auth2',	
-							  'data-toggle'=>"modal",
-							  'data-target'=>"#po-auth2-sign",											
-							  'class'=>'btn btn-warning btn-xs', 
-							  'style'=>['width'=>'100px'],
-							  'title'=>'Tanda Tangan F&A'
-				]; 
-				$icon = '<span class="glyphicon glyphicon-retweet"></span>';
-				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/purchase-order/sign-checked-view','kdpo'=>$poHeader->KD_PO]);
-				//$options1['tabindex'] = '-1';
-				$content = Html::a($label,$url, $options);
-				return $content;	
-			}
-		}
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'po-auth2',	
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#po-auth2-sign",											
+					  'class'=>'btn btn-warning btn-xs', 
+					  'style'=>['width'=>'100px'],
+					  'title'=>'Detail'
+		]; 
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/purchase-order/sign-auth2-view','kdpo'=>$poHeader->KD_PO]);
+		//$options1['tabindex'] = '-1';
+		$content = Html::a($label,$url, $options);
+		return $content;	
 	}
-
+	
 	/*
 	 * SIGNATURE AUTH3 | APPROVED
 	 * Status Value Signature1 | PurchaseOrder
 	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
 	*/
-	
 	function SignApproved($poHeader){
-		if(getPermission()){
-			/*Permission DEPARTMENT[DEP_ID] AND MODUL PO BTN_SIGN2=1 */
-			if(getPermissionEmp()->DEP_ID =='ACT' AND getPermission()->BTN_SIGN3==1 ){
-				$title = Yii::t('app', 'Sign Hire');
-				$options = [ 'id'=>'po-auth3',	
-							  'data-toggle'=>"modal",
-							  'data-target'=>"#po-auth3-sign",											
-							  'class'=>'btn btn-warning btn-xs', 
-							  'style'=>['width'=>'100px'],
-							  'title'=>'Tanda Tangan Director'
-				]; 
-				$icon = '<span class="glyphicon glyphicon-retweet"></span>';
-				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/purchase-order/sign-approved-view','kdpo'=>$poHeader->KD_PO]);
-				//$options1['tabindex'] = '-1';
-				$content = Html::a($label,$url, $options);
-				return $content;
-			}
-		}
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'po-auth3',	
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#po-auth3-sign",											
+					  'class'=>'btn btn-warning btn-xs', 
+					  'style'=>['width'=>'100px'],
+					  'title'=>'Detail'
+		]; 
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/purchase-order/sign-auth3-view','kdpo'=>$poHeader->KD_PO]);
+		//$options1['tabindex'] = '-1';
+		$content = Html::a($label,$url, $options);
+		return $content;	
 	}
 	
 
  ?>
-<div class="container" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
+<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
 	<div  class="row">
 	<!-- HEADER !-->
 		<div class="col-md-12">
@@ -502,7 +513,7 @@ $y=4;
 			<div class="col-md-9" style="padding-top:15px;">
 				<h3 class="text-center"><b>PURCHASE ORDER</b></h3>
 			</div>			
-			<div class="col-md-11">
+			<div class="col-md-12" style="padding-left:0px;">
 				<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
 			</div>
 			
@@ -546,7 +557,7 @@ $y=4;
 	</div>
 	<!-- Title GRID PO Detail !-->
 	<div  class="row">	
-		<div class="col-md-11"  style="float:none">
+		<div class="ccol-md-12"  style="float:none">
 			
 			<div class="col-md-12">
 				
@@ -556,7 +567,7 @@ $y=4;
 	</div>
 	<!-- Title BOTTEM Descript !-->	
 	<div  class="row">
-		<div class="col-md-11" style="font-family: tahoma ;font-size: 9pt;float:left;">		
+		<div class="col-md-12" style="font-family: tahoma ;font-size: 9pt;float:left;">		
 			<div class="col-md-4" style="float:left;">
 				<dl>
 					<?php
@@ -609,7 +620,7 @@ $y=4;
 	</div>	
 	<!-- PO Note !-->
 	<div  class="row">
-		<div  class="col-md-11" style="font-family: tahoma ;font-size: 8pt;">	
+		<div  class="ccol-md-12" style="font-family: tahoma ;font-size: 8pt;">	
 			<div  class="col-md-12">
 				<dt><b>General Notes :</b></dt>
 				<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;">	
@@ -620,8 +631,8 @@ $y=4;
 	</div>
 	<!-- Signature PO !-->	
 	<div  class="row">
-		<div class="col-md-11">
-			<div class="col-md-9">
+		<div class="ccol-md-12">
+			<div class="col-md-8">
 				<table id="tblRo" class="table table-bordered" style="width:360px;font-family: tahoma ;font-size: 8pt;">
 					<!-- Tanggal!-->
 					 <tr>
@@ -660,7 +671,7 @@ $y=4;
 					 <tr>
 						<th style="text-align: center; vertical-align:middle;width:180; height:60px">
 							<?php 
-								$ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG1_SVGBASE64.'" height="120" width="150"></img>' : '';
+								$ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG1_SVGBASE64.'" height="120" width="150"></img>' : SignCreated($poHeader);
 								echo $ttd1;
 								
 							?> 	
@@ -725,16 +736,51 @@ $y=4;
 					</tr>
 				</table>				
 			</div>
-			<div  class="col-md-3" style="text-align:right;">
-				<a href="/purchasing/purchase-order/" class="btn btn-info btn-xs" role="button" style="width:90px">Kembali</a>
+			<div  class="col-md-4" style="text-align:right;">
+				<a href="/purchasing/purchase-order/" class="btn btn-info btn-xs" role="button" style="width:90px">Back</a>
 				<?php echo Html::a('<i class="fa fa-print fa-fw"></i> PDF', ['cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
+				<?php 
+					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print Tmp', ['temp-cetakpdf','kdpo'=>$poHeader->KD_PO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
+				?>
 			</div>
 		</div>
 	</div>
 </div>
 <?php
 	/*
-	 * SIGNATURE AUTH2 | CHECKED
+	 * JS AUTH1 | CREATED
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#po-auth1-sign').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'po-auth1-sign',
+			//'header' => '<h4 class="modal-title">Signature Authorize</h4>',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			//'size' => 'modal-xs'
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+	
+	/*
+	 * JS AUTH2 | CHECKED
 	 * @author ptrnov <piter@lukison.com>
 	 * @since 1.2
 	*/
@@ -755,7 +801,9 @@ $y=4;
 	",$this::POS_READY);
 	Modal::begin([
 			'id' => 'po-auth2-sign',
-			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize F&A</b></h4></div>',
+			//'header' => '<h4 class="modal-title">Signature Authorize</h4>',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			//'size' => 'modal-xs'
 			'size' => Modal::SIZE_SMALL,
 			'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
@@ -763,9 +811,8 @@ $y=4;
 		]);
 	Modal::end();
 	
-	
 	/*
-	 * SIGNATURE AUTH3 | APPROVED
+	 * JS AUTH3 | APPROVED
 	 * @author ptrnov <piter@lukison.com>
 	 * @since 1.2
 	*/
@@ -786,13 +833,52 @@ $y=4;
 	",$this::POS_READY);
 	Modal::begin([
 			'id' => 'po-auth3-sign',
-			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize Director</b></h4></div>',
+			//'header' => '<h4 class="modal-title">Signature Authorize</h4>',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			//'size' => 'modal-xs'
 			'size' => Modal::SIZE_SMALL,
 			'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
 			]
 		]);
 	Modal::end();
+	
+	/*
+	 * Button Modal Confirm PERMISION DENAID
+	 * @author ptrnov [piter@lukison]
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#confirm-permission-alert').on('show.bs.modal', function (event) {
+				//var button = $(event.relatedTarget)
+				//var modal = $(this)
+				//var title = button.data('title') 
+				//var href = button.attr('href') 
+				//modal.find('.modal-title').html(title)
+				//modal.find('.modal-body').html('')
+				/* $.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					}); */
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'confirm-permission-alert',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/warning/denied.png',  ['class' => 'pnjg', 'style'=>'width:40px;height:40px;']).'</div><div style="margin-top:10px;"><h4><b>Permmission Confirm !</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+			]
+		]);
+		echo "<div>You do not have permission for this module.
+				<dl>				
+					<dt>Contact : itdept@lukison.com</dt>
+				</dl>
+			</div>";
+	Modal::end();
+	
+	
 ?>
 
 

@@ -13,20 +13,24 @@ use kartik\widgets\TouchSpin;
 use yii\web\JsExpression;
 use yii\data\ActiveDataProvider;
 
-use lukisongroup\master\models\Barangumum;
-use lukisongroup\esm\models\Barang;
+//use lukisongroup\master\models\Barangumum;
+use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
 
 $brgUnit = ArrayHelper::map(Unitbarang::find()->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT');
 $brgKtg = ArrayHelper::map(Kategori::find()->orderBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI');
-$brgUmum = ArrayHelper::map(Barangumum::find()->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG'); 
+$brgAll = ArrayHelper::map(Barang::find()->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG'); 
 
 /* $this->registerJs("
         $.fn.modal.Constructor.prototype.enforceFocus = function() {};			
     ",$this::POS_HEAD);
  */
-
+	$aryParent= [
+		  ['PARENT' => 0, 'PAREN_NM' => 'UMUM'],		  
+		  ['PARENT' => 1, 'PAREN_NM' => 'PRODAK'],
+	];	
+	$valParent = ArrayHelper::map($aryParent, 'PARENT', 'PAREN_NM');
  
 ?>
 
@@ -45,20 +49,33 @@ $brgUmum = ArrayHelper::map(Barangumum::find()->orderBy('NM_BARANG')->all(), 'KD
 
     <?php
 		 echo $form->field($poDetailValidation, 'kD_PO')->hiddenInput(['value' =>$kdpo])->label(false);
-		 //echo $form->field($poDetailValidation, 'nM_BARANG')->hiddenInput(['value' =>$brgUmum->NM_BARANG])->label(false);
-		 echo $form->field($poDetailValidation, 'kD_KATEGORI')->dropDownList($brgKtg, ['id'=>'poplusvalidation-kd_kategori']);
+		 //echo $form->field($poDetailValidation, 'nM_BARANG')->hiddenInput(['value' =>$brgAll->NM_BARANG])->label(false);
+		 echo $form->field($poDetailValidation, 'pARENT_BRG')->dropDownList($valParent, ['id'=>'poplusvalidation-parent_brg'])->label('Parent Barang');
 		 
-		 echo $form->field($poDetailValidation, 'kD_BARANG')->widget(DepDrop::classname(), [
+		 //echo $form->field($poDetailValidation, 'kD_KATEGORI')->dropDownList($brgKtg, ['id'=>'poplusvalidation-kd_kategori']);
+		 
+		 echo $form->field($poDetailValidation, 'kD_KATEGORI')->widget(DepDrop::classname(), [
 			'type'=>DepDrop::TYPE_SELECT2,
-			'data' => $brgUmum,
-			'options' => ['id'=>'poplusvalidation-kd_barang'],
+			'data' => $brgKtg,
+			'options' => ['id'=>'poplusvalidation-kd_kategori'],
 			'pluginOptions' => [
-				'depends'=>['poplusvalidation-kd_kategori'],
+				'depends'=>['poplusvalidation-parent_brg'],
 				'url'=>Url::to(['/purchasing/purchase-order/brgkat']),
 				'initialize'=>true,
 			], 		
 		]);
-		
+		 
+		 echo $form->field($poDetailValidation, 'kD_BARANG')->widget(DepDrop::classname(), [
+			'type'=>DepDrop::TYPE_SELECT2,
+			'data' => $brgAll,
+			'options' => ['id'=>'poplusvalidation-kd_barang'],
+			'pluginOptions' => [
+				'depends'=>['poplusvalidation-kd_kategori'],
+				'url'=>Url::to(['/purchasing/purchase-order/cari-brg']),
+				'initialize'=>true,
+			], 		
+		]);
+				
 		echo $form->field($poDetailValidation, 'uNIT')->widget(Select2::classname(), [
 				'data' => $brgUnit,
 				'options' => ['placeholder' => 'Pilih Unit Barang ...'],

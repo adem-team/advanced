@@ -20,12 +20,18 @@ use lukisongroup\purchasing\models\pr\Podetail;
 use lukisongroup\purchasing\models\pr\DiscountValidation;
 use lukisongroup\purchasing\models\pr\PajakValidation;
 use lukisongroup\purchasing\models\pr\DeliveryValidation;
+
 use lukisongroup\purchasing\models\pr\EtdValidation;
 use lukisongroup\purchasing\models\pr\EtaValidation;
+
 use lukisongroup\purchasing\models\pr\SupplierValidation;
 use lukisongroup\purchasing\models\pr\ShippingValidation;
 use lukisongroup\purchasing\models\pr\BillingValidation;
-use lukisongroup\purchasing\models\pr\LoginForm;
+
+use lukisongroup\purchasing\models\pr\Auth1Model;
+use lukisongroup\purchasing\models\pr\Auth2Model;
+use lukisongroup\purchasing\models\pr\Auth3Model;
+
 use lukisongroup\purchasing\models\pr\NewPoValidation;
 use lukisongroup\purchasing\models\pr\SendPoValidation;
 use lukisongroup\purchasing\models\pr\PoPlusValidation;
@@ -36,12 +42,13 @@ use lukisongroup\purchasing\models\ro\RequestorderSearch;
 use lukisongroup\purchasing\models\ro\Rodetail;
 use lukisongroup\purchasing\models\ro\RodetailSearch;
 
+use lukisongroup\purchasing\models\so\SalesorderSearch;
 
 
 use lukisongroup\purchasing\models\Statuspo;
 
-use lukisongroup\esm\models\Barang;
-use lukisongroup\master\models\Barangumum;
+use lukisongroup\master\models\Barang;
+use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
 
 class PurchaseOrderController extends Controller
@@ -280,8 +287,11 @@ class PurchaseOrderController extends Controller
     public function actionCreate($kdpo)
     {
         $searchModel = new RequestorderSearch();
-        $dataProvider = $searchModel->caripo(Yii::$app->request->queryParams);
-		
+        $dataProviderRo = $searchModel->cariHeaderRO_SendPO(Yii::$app->request->queryParams);
+		 
+		$searchModel = new SalesorderSearch();
+        $dataProviderSo = $searchModel->cariHeaderSO_SendPO(Yii::$app->request->queryParams);
+	
 		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
 		$supplier = $poHeader->suplier;
 		$bill = $poHeader->bill;
@@ -402,7 +412,8 @@ class PurchaseOrderController extends Controller
 		
         return $this->render('create', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'dataProviderRo' => $dataProviderRo,
+			'dataProviderSo'=>$dataProviderSo,
 			'poDetailProvider'=>$poDetailProvider,
 			'poHeader'=> $poHeader,
 			'supplier'=>$supplier,
@@ -429,8 +440,8 @@ class PurchaseOrderController extends Controller
 			if($poHeaderVal->load(Yii::$app->request->post())){
 				if ($poHeaderVal->generatepo_saved()){
 					$hsl = \Yii::$app->request->post();
-					//$kdPo =$poHeaderVal->PO_RSLT
-					return $this->redirect(['create', 'kdpo'=>$poHeaderVal->PO_RSLT]);
+					//$kdPo =$poHeaderVal->poRSLT
+					return $this->redirect(['create', 'kdpo'=>$poHeaderVal->poRSLT]);
 					//echo "test";
 				}														
 			}
@@ -464,8 +475,31 @@ class PurchaseOrderController extends Controller
 		if (isset($_POST['depdrop_parents'])) {
 			$parents = $_POST['depdrop_parents'];
 			if ($parents != null) {
+				$prn_id = $parents[0];
+				$model = Kategori::find()->asArray()->where(['PARENT'=>$prn_id])->all();
+				foreach ($model as $key => $value) {
+					   $out[] = ['id'=>$value['KD_KATEGORI'],'name'=> $value['NM_KATEGORI']];
+				   }
+	 
+				   echo json_encode(['output'=>$out, 'selected'=>'']);
+				   return;
+			   }
+		   }
+		   echo Json::encode(['output'=>'', 'selected'=>'']);
+	}
+	
+	/**
+     * actionBrgkat() select2 Kategori mendapatkan barang
+     * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionCariBrg() {
+		$out = [];
+		if (isset($_POST['depdrop_parents'])) {
+			$parents = $_POST['depdrop_parents'];
+			if ($parents != null) {
 				$kat_id = $parents[0];
-				$model = Barangumum::find()->asArray()->where(['KD_KATEGORI'=>$kat_id])->all();
+				$model = Barang::find()->asArray()->where(['KD_KATEGORI'=>$kat_id])->all();
 				foreach ($model as $key => $value) {
 					   $out[] = ['id'=>$value['KD_BARANG'],'name'=> $value['NM_BARANG']];
 				   }
@@ -475,7 +509,8 @@ class PurchaseOrderController extends Controller
 			   }
 		   }
 		   echo Json::encode(['output'=>'', 'selected'=>'']);
-	}		
+	}
+
 	/*
 	 * PO PLUS SAVE | Add Item
 	 * @author ptrnov <piter@lukison.com>
@@ -508,7 +543,7 @@ class PurchaseOrderController extends Controller
 	*/
 	public function actionDetail($kd_ro,$kdpo)
     {        
-		$roDetail = Rodetail::find()->where(['KD_RO'=>$kd_ro, 'STATUS'=>101])->all();
+		$roDetail = Rodetail::find()->where(['KD_RO'=>$kd_ro, 'STATUS'=>1])->all();
 		$roDetailProvider = new ArrayDataProvider([
 			'key' => 'ID',
 			'allModels'=>$roDetail,		
@@ -555,21 +590,21 @@ class PurchaseOrderController extends Controller
 			if ($dataKeySelect!=0){						
 					//$foreaceGvRoToPo=$dataKeySelect!=0? $dataKeySelect:'Array([0]=>"0")';
 					 foreach ($dataKeySelect as $idx){
-							$roDetail=Rodetail::find()->where(['KD_RO'=>$dataKdRo,'ID'=>$idx])->andWhere('STATUS=101')->one();							
+							$roDetail=Rodetail::find()->where(['KD_RO'=>$dataKdRo,'ID'=>$idx])->andWhere('STATUS=1')->one();	//STT =202						
 							$poDetail=Purchasedetail::find()->where(['KD_PO'=>$dataKdPo,'KD_RO'=>$dataKdRo,'KD_BARANG'=>$roDetail->KD_BARANG])->one();
 							$poUnit=$roDetail->cunit;
-							$poBrgUmum=$roDetail->brgumum;							
+							//$poBarangUmum=$roDetail->barangumum;							
 							if (!$poDetail){
 								//$roDetail = Rodetail::findOne($idx);
 								$roDetail->TMP_CK =0; /* Untuk testing Checkbook 1 | 0 */
-								$roDetail->save();	
+								//$roDetail->save();	
 								$res = array('status' => true); /* tidak ada Data pada Purchasedetail |KD_RO&KD_BARANG */	
 								/*Save To Purchase detail*/			
 									$poDetailModel = new Purchasedetail;
 										$poDetailModel->KD_PO=$dataKdPo;
 										$poDetailModel->KD_RO=$dataKdRo;
 										$poDetailModel->KD_BARANG= $roDetail->KD_BARANG;
-										$poDetailModel->NM_BARANG=$poBrgUmum->NM_BARANG;
+										$poDetailModel->NM_BARANG=$roDetail->NM_BARANG;
 										$poDetailModel->UNIT=$poUnit->KD_UNIT;
 										$poDetailModel->NM_UNIT=$poUnit->NM_UNIT;
 										$poDetailModel->UNIT_QTY=$poUnit->QTY;
@@ -588,10 +623,15 @@ class PurchaseOrderController extends Controller
 												$poDetailModel->QTY=$actualQty;
 											}else{
 												$poDetailModel->QTY=0;
-											}									
-										$poDetailModel->HARGA=$roDetail->HARGA_SPL;
+											}
+											//if($roDetail->PARENT_ROSO==0){
+												$poDetailModel->HARGA=$roDetail->HARGA;  //RO
+											//}elseif($roDetail->PARENT_ROSO==1){
+											//	$poDetailModel->HARGA=$roDetail->HARGA_PABRIK; //SO 
+											//}
 										$poDetailModel->STATUS=0;  
-										//$poDetailModel->STATUS_DATE =date;//\Yii::$app->formatter->asDate(date,'Y-M-d hh:mm:ss');								
+										//$poDetailModel->STATUS_DATE =date;//\Yii::$app->formatter->asDate(date,'Y-M-d hh:mm:ss');	
+										$roDetail->save();											
 									$poDetailModel->save();
 								
 							}else{
@@ -737,7 +777,7 @@ class PurchaseOrderController extends Controller
                 $nmBrg->HARGA = $harga;
                 $nmBrg->save();
             } else if($ckBrg[0] == 'BRGU') {
-                $nmBrg = Barangumum::find('NM_BARANG')->where(['KD_BARANG'=>$kdBrg])->one();
+                $nmBrg = Barang::find('NM_BARANG')->where(['KD_BARANG'=>$kdBrg])->one();
                 $nmBrg->HARGA = $harga;
                 $nmBrg->save();
             }
@@ -1035,31 +1075,64 @@ class PurchaseOrderController extends Controller
 	
 	/*
 	 * SIGNATURE AUTH1 | SIGN CREATED PO
-	 * $poHeader->STATUS =1
+	 * $poHeader->STATUS =101
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
-	 public function actionSignCreatedView($kdpo){
-		$loginform = new LoginForm();					
+	 public function actionSignAuth1View($kdpo){
+		$auth1Mdl = new Auth1Model();					
 		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
 		$employe = $poHeader->employe;			
-			return $this->renderAjax('login_sig_created', [
+			return $this->renderAjax('sign-auth1', [
 				'poHeader' => $poHeader,
 				'employe' => $employe,
-				'loginform' => $loginform,
+				'auth1Mdl' => $auth1Mdl,
 			]);		 
 	}
-	public function actionSignCreatedSave(){
-		$loginform = new LoginForm();		
+	public function actionSignAuth1Save(){
+		$auth1Mdl = new Auth1Model();		
 		/*Ajax Load*/
 		if(Yii::$app->request->isAjax){
-			$loginform->load(Yii::$app->request->post());
-			return Json::encode(\yii\widgets\ActiveForm::validate($loginform));
+			$auth1Mdl->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($auth1Mdl));
 		}else{	/*Normal Load*/	
-			if($loginform->load(Yii::$app->request->post())){
-				if ($loginform->loginform_saved()){
+			if($auth1Mdl->load(Yii::$app->request->post())){
+				if ($auth1Mdl->auth1_saved()){
 					$hsl = \Yii::$app->request->post();
-					$kdpo = $hsl['LoginForm']['kdpo'];
+					$kdpo = $hsl['Auth1Model']['kdpo'];
+					return $this->redirect(['create', 'kdpo'=>$kdpo]);
+				}														
+			}
+		}		
+    }	
+	
+	/*
+	 * SIGNATURE AUTH2 | SIGN CHECKED PO
+	 * $poHeader->STATUS =102
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	 public function actionSignAuth2View($kdpo){
+		$auth2Mdl = new Auth2Model();					
+		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
+		$employe = $poHeader->employe;			
+			return $this->renderAjax('sign-auth2', [
+				'poHeader' => $poHeader,
+				'employe' => $employe,
+				'auth2Mdl' => $auth2Mdl,
+			]);		 
+	}
+	public function actionSignAuth2Save(){
+		$auth2Mdl = new Auth2Model();		
+		/*Ajax Load*/
+		if(Yii::$app->request->isAjax){
+			$auth2Mdl->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($auth2Mdl));
+		}else{	/*Normal Load*/	
+			if($auth2Mdl->load(Yii::$app->request->post())){
+				if ($auth2Mdl->auth2_saved()){
+					$hsl = \Yii::$app->request->post();
+					$kdpo = $hsl['Auth2Model']['kdpo'];
 					return $this->redirect(['create', 'kdpo'=>$kdpo]);
 				}														
 			}
@@ -1067,72 +1140,37 @@ class PurchaseOrderController extends Controller
     }
 	
 	/*
-	 * SIGNATURE AUTH2 | SIGN CHECKED PO
-	 * $poHeader->STATUS =1
+	 * SIGNATURE AUTH3 | SIGN APPROVAL PO
+	 * $poHeader->STATUS =103
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
-	 public function actionSignCheckedView($kdpo){
-		$loginform = new LoginForm();					
+	 public function actionSignAuth3View($kdpo){
+		$auth3Mdl = new Auth3Model();					
 		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
 		$employe = $poHeader->employe;			
-			return $this->renderAjax('login_sig_checked', [
+			return $this->renderAjax('sign-auth3', [
 				'poHeader' => $poHeader,
 				'employe' => $employe,
-				'loginform' => $loginform,
+				'auth3Mdl' => $auth3Mdl,
 			]);		 
 	}
-	public function actionSignCheckedSave(){
-		$loginform = new LoginForm();		
+	public function actionSignAuth3Save(){
+		$auth3Mdl = new Auth3Model();		
 		/*Ajax Load*/
 		if(Yii::$app->request->isAjax){
-			$loginform->load(Yii::$app->request->post());
-			return Json::encode(\yii\widgets\ActiveForm::validate($loginform));
+			$auth3Mdl->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($auth3Mdl));
 		}else{	/*Normal Load*/	
-			if($loginform->load(Yii::$app->request->post())){
-				if ($loginform->loginform_saved()){
+			if($auth3Mdl->load(Yii::$app->request->post())){
+				if ($auth3Mdl->auth3_saved()){
 					$hsl = \Yii::$app->request->post();
-					$kdpo = $hsl['LoginForm']['kdpo'];
-					return $this->redirect(['review', 'kdpo'=>$kdpo]);
+					$kdpo = $hsl['Auth3Model']['kdpo'];
+					return $this->redirect(['create', 'kdpo'=>$kdpo]);
 				}														
 			}
 		}		
     }
-	
-	/*
-	 * SIGNATURE AUTH3 | SIGN APPROVED PO
-	 * $poHeader->STATUS =1
-	 * @author ptrnov  <piter@lukison.com>
-     * @since 1.1
-     */
-	 public function actionSignApprovedView($kdpo){
-		$loginform = new LoginForm();					
-		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
-		$employe = $poHeader->employe;			
-			return $this->renderAjax('login_sig_approved', [
-				'poHeader' => $poHeader,
-				'employe' => $employe,
-				'loginform' => $loginform,
-			]);		 
-	}
-	public function actionSignApprovedSave(){
-		$loginform = new LoginForm();		
-		/*Ajax Load*/
-		if(Yii::$app->request->isAjax){
-			$loginform->load(Yii::$app->request->post());
-			return Json::encode(\yii\widgets\ActiveForm::validate($loginform));
-		}else{	/*Normal Load*/	
-			if($loginform->load(Yii::$app->request->post())){
-				if ($loginform->loginform_saved()){
-					$hsl = \Yii::$app->request->post();
-					$kdpo = $hsl['LoginForm']['kdpo'];
-					return $this->redirect(['review', 'kdpo'=>$kdpo]);
-				}														
-			}
-		}		
-    }
-	
-	
 	
 	/*
 	 * PO Note
@@ -1219,6 +1257,71 @@ class PurchaseOrderController extends Controller
         exit; */
     }
 
+	
+	/*
+	 * TMP PDF | Purchaseorder| Purchasedetail
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
+    public function actionTempCetakpdf($kdpo)
+    {
+		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
+		//$poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->all(); 
+		$poDetailQry= "SELECT ID,KD_PO,KD_RO,KD_BARANG,NM_BARANG,UNIT,NM_UNIT,UNIT_QTY,UNIT_WIGHT,SUM(QTY) AS QTY,HARGA,STATUS,STATUS_DATE,NOTE
+						FROM `p0002` WHERE KD_PO='" .$kdpo. "' GROUP BY KD_BARANG,NM_UNIT,HARGA";
+		$poDetail=Purchasedetail::findBySql($poDetailQry)->all();		
+        $dataProvider = new ArrayDataProvider([
+			'key' => 'KD_PO',
+			'allModels'=>$poDetail,		
+			'pagination' => [
+				'pageSize' => 20,
+			],
+		]);
+		
+		$content = $this->renderPartial( 'pdf_tmp', [
+			'poHeader' => $poHeader,
+            //'roHeader' => $roHeader,
+            //'detro' => $detro,
+            //'employ' => $employ,
+			//'dept' => $dept,
+			'dataProvider' => $dataProvider,
+        ]);
+		
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE, 
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4, 
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_PORTRAIT, 
+			// stream to browser inline
+			'destination' => Pdf::DEST_BROWSER, 
+			// your html content input
+			'content' => $content,  
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting 
+			//D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+			'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			'cssInline' => '.kv-heading-1{font-size:12px}', 
+			 // set mPDF properties on the fly
+			'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+			 // call mPDF methods on the fly
+			'methods' => [ 
+				'SetHeader'=>['Copyright@LukisonGroup '.date("r")], 
+				'SetFooter'=>['{PAGENO}'],
+			]
+		]);		
+		return $pdf->render(); 	
+		
+		/* $mpdf=new mPDF();
+        $mpdf->WriteHTML($this->renderPartial( 'pdf', [
+            'model' => Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one(),
+        ]));
+        $mpdf->Output();
+        exit; */
+    }
+	
     public function actionConfirm($kdpo)
     {        
        /*  $hsl = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();

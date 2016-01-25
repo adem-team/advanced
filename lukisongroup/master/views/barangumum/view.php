@@ -1,21 +1,16 @@
 <?php
 
-//use yii;
-//use yii\helpers\Html;
+use yii\helpers\Html;
 use yii\widgets\DetailView;
-//use kartik\widgets\ActiveForm;
-//use kartik\detail\DetailView
-//use lukisongroup\master\models\Barangumum;
-//use lukisongroup\models\hrd\Corp;
-//use yii\bootstrap\Modal;
-//use yii\helpers\Url;
+use lukisongroup\master\models\Barang;
 
-$this->sideCorp = 'Master Data Umum';                  	/* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'umum_datamaster';                   	/* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'Umum - Barang Detail ');  /* title pada header page */
+$this->sideCorp = 'Prodak';                       	/* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'master_datamaster';                   	/* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Prodak View');       /* title pada header page */
 
 ?>
-<div class="barangumum-view">
+<div class="barang-view">
+
 <?php
 	$sts = $model->STATUS;
 	if($sts == 1){
@@ -23,115 +18,53 @@ $this->title = Yii::t('app', 'Umum - Barang Detail ');  /* title pada header pag
 	} else {
 		$stat = 'Tidak Aktif';
 	}
-?>
 
-	<?php if($model->IMAGE == null)
-			{ 			
-				$gmbr = "df.jpg";
+	if($model->IMAGE == null){ $gmbr = "df.jpg"; } else { $gmbr = $model->IMAGE; } 
+	?>
+	
+    <?= DetailView::widget([
+		'model' => $model,
+		'attributes' => [
+			[
+				'attribute'=>'Gambar',
+				'value'=>Yii::$app->urlManager->baseUrl.'/upload/barang/'.$gmbr,
+				'format' => ['image',['width'=>'150','height'=>'150']],
+			],	
+			'KD_BARANG',
+			[
+				'attribute' =>'NM_BARANG',
+				'label' =>'Item Name',
+			],			
+			[
+				'label' => 'Unit Item',
+				'value' => $model->unitb->NM_UNIT,
+			],	
+			[
+				'attribute' => 'nmcorp',
+				'label' =>'Corporate',
+			],
+			[
+				'attribute' => 'CREATED_BY',
+				'label' =>'Register By',
+			],
+			[
+				'label' => 'Status',
+				'value' => $stat,
+			],
+			'NOTE',
+			
+        ],
+    ]) ?>
 
-			} 
-			else { 
-				
-				$gmbr = $model->IMAGE;
 
-				 }  
-				?>
-            
-            
-            
-         
     <p>
-<!--        <Html::a('<i class="fa fa-pencil"></i>&nbsp;&nbsp;Ubah', ['update', 'ID' => $model->ID, 'KD_BARANG' => $model->KD_BARANG], 
-                                                                           ['class' => 'btn btn-primary'],
-                                                                                                        '') ?>-->
-<!--//                                                                                [
-//                                                                                    'data-toggle'=>"modal",
-//                                                                                    'data-target'=>"#barangumum",													
-//                                                                                    'data-title'=> $model->ID,-->
-                                                                                                              
-<!--         Html::a('<i class="fa fa-trash-o"></i>&nbsp;&nbsp;Hapus', ['delete', 'ID' => $model->ID, 'KD_BARANG' => $model->KD_BARANG], [
+     
+        <?= Html::a('<i class="fa fa-trash-o"></i>&nbsp;&nbsp;Hapus', ['delete', 'id' => $model->ID], [
 			'class' => 'btn btn-danger',
 			'data' => [
 			    'confirm' => 'Are you sure you want to delete this item?',
 			    'method' => 'post',
 			],
-        ]) ?>-->
+        ]) ?>
     </p>
-    <?= DetailView::widget([
-		'id'=>'dv-barangumum',
-        'model' => $model,
-		//'mode'=>DetailView::MODE_VIEW,
-        'attributes' => [
-			'KD_BARANG',
-			[
-				'label' => 'Group Perusahaan',
-				'value' => $model->corp->CORP_NM,
-			],
-			'NM_BARANG',
-			[
-				'label' => 'Type Barang',
-				'value' => $model->type->NM_TYPE,
-			],
-			[
-				'label' => 'Kategori',
-				'value' => $model->kategori->NM_KATEGORI,
-			],
-			
-			[
-				'attribute'=>'photo',
-				// 'value'=>Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$model->IMAGE,
-				'value'=>Yii::$app->urlManager->baseUrl.'/upload/barangumum/'.$gmbr,
-				'format' => ['image',['width'=>'150','height'=>'150']],
-			],
-			[
-				'label' => 'Unit',
-				'value' => $model->unit->NM_UNIT,
-			],
-			
-			/* [
-				'label' => 'Suplier',
-				'value' => $model->suplier->NM_SUPPLIER,
-			], */
-			
-//			'KD_DISTRIBUTOR',
-			'PARENT',
-			'HPP',
-			'HARGA',
-			'BARCODE',
-			'NOTE',
-			
-			[
-				'label' => 'Status',
-				'value' => $stat,
-			],
-        ],
-    ]) ?>
-
-
-    
 </div>
-<?php
-
-$this->registerJs("
-        $('#barangumum').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-            var modal = $(this)
-            var title = button.data('title') 
-            var href = button.attr('href') 
-            //modal.find('.modal-title').html(title)
-            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-            $.post(href)
-                .done(function( data ) {
-                    modal.find('.modal-body').html(data)
-                });
-            })
-    ",$this::POS_READY);
-    
-//    Modal::begin([
-//        'id' => 'barangumum',
-//        'header' => '<h4 class="modal-title">LukisonGroup</h4>',
-//    ]);
-//    Modal::end();
-            
-?>
-

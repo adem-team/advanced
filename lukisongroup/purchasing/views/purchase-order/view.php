@@ -306,7 +306,7 @@ $y=4;
 			//'width'=>'7%',					
 			'value'=>function ($model, $key, $index, $widget) { 
 				$p = compact('model', 'key', 'index');
-				return $widget->col(3, $p) != 0 ? $widget->col(3, $p) * $widget->col(5, $p) : 0;
+				return $widget->col(3, $p) != 0 ? $widget->col(3, $p) * $model->UNIT_QTY * $widget->col(5, $p) : 0;
 				//return $widget->col(3, $p) != 0 ? $widget->col(5 ,$p) * 100 / $widget->col(3, $p) : 0;
 			},						
 			'headerOptions'=>[
@@ -407,7 +407,7 @@ $y=4;
 			
 
  ?>
-<div class="container" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
+<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
 	<div  class="row">
 	<!-- HEADER !-->
 		<div class="col-md-12">
@@ -417,7 +417,7 @@ $y=4;
 			<div class="col-md-9" style="padding-top:15px;">
 				<h3 class="text-center"><b>PURCHASE ORDER</b></h3>
 			</div>			
-			<div class="col-md-11">
+			<div class="col-md-12">
 				<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
 			</div>
 			
@@ -425,7 +425,7 @@ $y=4;
 	</div>
 	<!-- Title HEADER Descript !-->	
 	<div  class="row">
-		<div class="col-md-11" style="font-family: tahoma ;font-size: 9pt;float:left;">
+		<div class="col-md-12" style="font-family: tahoma ;font-size: 9pt;float:left;">
 			<div class="col-md-4">
 				<dl>
 					<dt><b><?= $sup->NM_SUPPLIER; ?></b></dt>				
@@ -461,7 +461,7 @@ $y=4;
 	</div>
 	<!-- Title GRID PO Detail !-->
 	<div  class="row">	
-		<div class="col-md-11"  style="float:none">
+		<div class="col-md-12"  style="float:none">
 			
 			<div class="col-md-12">
 				
@@ -471,7 +471,7 @@ $y=4;
 	</div>
 	<!-- Title BOTTEM Descript !-->	
 	<div  class="row">
-		<div class="col-md-11" style="font-family: tahoma ;font-size: 9pt;float:left;">		
+		<div class="col-md-12" style="font-family: tahoma ;font-size: 9pt;float:left;">		
 			<div class="col-md-4" style="float:left;">
 				<dl>
 					<?php
@@ -524,7 +524,7 @@ $y=4;
 	</div>	
 	<!-- PO Note !-->
 	<div  class="row">
-		<div  class="col-md-11" style="font-family: tahoma ;font-size: 8pt;">	
+		<div  class="col-md-12" style="font-family: tahoma ;font-size: 8pt;">	
 			<div  class="col-md-12">
 				<dt><b>General Notes :</b></dt>
 				<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;">	
@@ -535,8 +535,8 @@ $y=4;
 	</div>
 	<!-- Signature PO !-->	
 	<div  class="row">
-		<div class="col-md-11">
-			<div class="col-md-9">
+		<div class="col-md-12">
+			<div class="col-md-8">
 				<table id="tblRo" class="table table-bordered" style="width:360px;font-family: tahoma ;font-size: 8pt;">
 					<!-- Tanggal!-->
 					 <tr>
@@ -640,9 +640,10 @@ $y=4;
 					</tr>
 				</table>				
 			</div>
-			<div  class="col-md-3" style="text-align:right;">
-				<a href="/purchasing/purchase-order/" class="btn btn-info btn-xs" role="button" style="width:90px">Kembali</a>
-				<?php echo Html::a('<i class="fa fa-print fa-fw"></i> PDF', ['cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
+			<div  class="col-md-4" style="text-align:right;">
+				<a href="/purchasing/purchase-order/" class="btn btn-info btn-xs" role="button" style="width:90px">Back</a>
+				<?php echo Html::a('<i class="fa fa-print fa-fw"></i> Print', ['cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
+				<?php echo Html::a('<i class="fa fa-print fa-fw"></i> tmp Print', ['cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
 			</div>
 		</div>
 	</div>

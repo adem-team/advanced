@@ -1,10 +1,10 @@
 <?php
 
-namespace lukisongroup\esm\controllers;
+namespace lukisongroup\master\controllers;
 
 use Yii;
-use lukisongroup\esm\models\Distributor;
-use lukisongroup\esm\models\DistributorSearch;
+use lukisongroup\master\models\Distributor;
+use lukisongroup\master\models\DistributorSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

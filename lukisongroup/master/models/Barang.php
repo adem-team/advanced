@@ -1,12 +1,13 @@
 <?php
 
-namespace lukisongroup\esm\models;
+namespace lukisongroup\master\models;
 
 use Yii;
 use yii\web\UploadedFile;
-
+use lukisongroup\hrd\models\Corp;
 use lukisongroup\master\models\Tipebarang;
 use lukisongroup\master\models\Kategori;
+use lukisongroup\master\models\Suplier ;
 /**
  * This is the model class for table "b0001".
  *
@@ -26,8 +27,8 @@ use lukisongroup\master\models\Kategori;
  * @property string $data_all
  */
  
-Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/upload/barangesm/';
-Yii::$app->params['uploadUrl'] = Yii::$app->urlManager->baseUrl . '/web/upload/barangesm/';
+Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/upload/barang/';
+Yii::$app->params['uploadUrl'] = Yii::$app->urlManager->baseUrl . '/web/upload/barang/';
  
 class Barang extends \yii\db\ActiveRecord
 {
@@ -82,14 +83,14 @@ class Barang extends \yii\db\ActiveRecord
 	
 
 
-	public function getSup()
+	 public function getSup()
     {
-        return $this->hasOne(Distributor::className(), ['KD_DISTRIBUTOR' => 'KD_DISTRIBUTOR']);
-    }
-	public function getNmsuplier()
+        return $this->hasOne(Suplier::className(), ['KD_SUPPLIER' => 'KD_SUPPLIER']);
+    } 
+	 public function getNmsuplier()
     {
-        return $this->sup->NM_DISTRIBUTOR;
-    }
+        return $this->sup->NM_SUPPLIER;
+    } 
 	
 	public function getBrg()
     {
@@ -101,16 +102,28 @@ class Barang extends \yii\db\ActiveRecord
         return $this->hasMany(Barang::className(), ['KD_BARANG' => 'KD_TYPE']);
     }
 	
+	
+	public function getCorp()
+    {
+       return $this->hasOne(Corp::className(), ['CORP_ID' => 'KD_CORP']);
+    }
+	
+	public function getNmcorp()
+    {
+        return $this->corp->CORP_NM;
+    }
+	
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            //[['KD_BARANG', 'KD_TYPE', 'KD_KATEGORI', 'NM_BARANG', 'HPP', 'HARGA', 'STATUS', 'KD_UNIT','KD_DISTRIBUTOR'], 'required'],
-            [['KD_BARANG', 'KD_TYPE', 'KD_KATEGORI', 'NM_BARANG', 'HPP', 'HARGA', 'STATUS', 'KD_UNIT'], 'required'],
-            [['HPP', 'HARGA', 'BARCODE'], 'integer'],
-            [['CREATED_BY', 'UPDATED_AT', 'KD_SUPPLIER', 'KD_DISTRIBUTOR'], 'string'],
+            [['KD_CORP','KD_SUPPLIER', 'KD_TYPE', 'KD_KATEGORI','KD_BARANG', 'NM_BARANG', 'KD_UNIT','STATUS'], 'required'],
+            [['HARGA_SPL','HARGA_PABRIK', 'HARGA_LG','HARGA_DIST','HARGA_SALES'], 'safe'],
+			[['PARENT', 'STATUS'], 'integer'],
+			[['nmcorp','BARCODE64BASE','KD_CAB','KD_DEP','DATA_ALL'], 'safe'],
+            [['CREATED_BY','CREATED_AT','UPDATED_BY','UPDATED_AT'], 'safe'],
 			[['image'], 'file', 'extensions'=>'jpg, gif, png'],
         ];
     }
@@ -156,22 +169,23 @@ class Barang extends \yii\db\ActiveRecord
     {
         return [
             'ID' => 'ID',
-            'KD_TYPE' => 'Tipe',
-            'KD_BARANG' => 'Kode Barang',
-            'KD_KATEGORI' => 'Kategori',
+            'KD_TYPE' => 'Type',
+            'KD_BARANG' => 'SKU',
+            'KD_SUPPLIER' => 'Nama Supplier',
+            'KD_KATEGORI' => 'Category',
             'NM_BARANG' => 'Nama Barang',
             'KD_UNIT' => 'Unit',
-            'KD_SUPPLIER' => 'Supplier',
-            'KD_DISTRIBUTOR' => 'Distributor',
-            'HPP' => 'HPP',
-            'HARGA' => 'Harga Jual',
-            'BARCODE' => 'Barcode',
             'NOTE' => 'Note',
             'STATUS' => 'Status',
+			'HARGA_PABRIK'=>'Factory Price',
+			'HARGA_LG'=>'LG Price',
+			'HARGA_DIST'=>'Distributor Price',
+			'HARGA_SALES'=>'Sales Price',
+            'BARCODE64BASE' => 'Barcode',
             'CREATED_BY' => 'Created By',
             'CREATED_AT' => 'Created At',
             'UPDATED_AT' => 'Update At',
-            'DATAA_ALL' => 'Data All',
+            'DATA_ALL' => 'Data All',
             'nmsuplier' => Yii::t('app', 'Supplier'),
             'unitbrg' => Yii::t('app', 'Unit'),
             'tipebrg' => Yii::t('app', 'Tipe Barang'),

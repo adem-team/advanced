@@ -1,13 +1,18 @@
 <?php
 
 use yii\helpers\Html;
-//use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
 use kartik\form\ActiveForm;
-use kartik\widgets\SwitchInput
+use kartik\widgets\SwitchInput;
+use lukisongroup\hrd\models\Corp;
 
-/* @var $this yii\web\View */
-/* @var $model lukisongroup\models\master\Tipebarang */
-/* @var $form yii\widgets\ActiveForm */
+$userCorp = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM');
+
+	$aryParent= [
+		  ['PARENT' => 0, 'PAREN_NM' => 'UMUM'],		  
+		  ['PARENT' => 1, 'PAREN_NM' => 'PRODAK'],
+	];	
+	$valParent = ArrayHelper::map($aryParent, 'PARENT', 'PAREN_NM');
 ?>
 
 <div class="tipebarang-form">
@@ -20,7 +25,8 @@ use kartik\widgets\SwitchInput
 		'action' => ['tipebarang/simpan'],
 		]); 
 	?>
-
+	<?= $form->field($model, 'CORP_ID')->dropDownList($userCorp, ['id'=>'rodetail-kd_type'])->label('Type'); ?>
+	<?= $form->field($model, 'PARENT')->dropDownList($valParent); ?>
     <?= $form->field($model, 'NM_TYPE')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>

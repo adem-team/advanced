@@ -21,7 +21,7 @@ class SuplierSearch extends Suplier
     {
         return [
             [['ID', 'STATUS'], 'integer'],
-            [['nmgroup', 'KD_SUPPLIER', 'NM_SUPPLIER', 'ALAMAT', 'KOTA', 'TLP', 'MOBILE', 'FAX', 'EMAIL', 'WEBSITE', 'IMAGE', 'NOTE', 'KD_CORP', 'KD_CAB', 'KD_DEP', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT', 'DATA_ALL'], 'safe'],
+            [['nmgroup', 'KD_SUPPLIER', 'NM_SUPPLIER','PIC', 'ALAMAT', 'KOTA', 'TLP', 'MOBILE', 'FAX', 'EMAIL', 'WEBSITE', 'IMAGE', 'NOTE', 'KD_CORP', 'KD_CAB', 'KD_DEP', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT', 'DATA_ALL'], 'safe'],
         ];
     }
 
@@ -50,6 +50,9 @@ class SuplierSearch extends Suplier
 		
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+			'pagination' => [
+				'pageSize' => 20,
+			],
         ]);
 
 		 $dataProvider->setSort([

@@ -3,12 +3,17 @@
 namespace lukisongroup\master\controllers;
 
 use Yii;
-use lukisongroup\master\models\Kategori;
-use lukisongroup\master\models\KategoriSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Request;
 use yii\helpers\Json;
+use yii\helpers\Url;
+use yii\widgets\Pjax;
+
+use lukisongroup\master\models\Kategori;
+use lukisongroup\master\models\KategoriSearch;
+use lukisongroup\master\models\Tipebarang;
 
 /**
  * KategoriController implements the CRUD actions for Kategori model.
@@ -155,10 +160,7 @@ class KategoriController extends Controller
 
 		if($model->load(Yii::$app->request->post())){
                   
-                    
-                    $ck = Kategori::find()->where('STATUS <> 3')->max('KD_KATEGORI');
-                    $nwa = $ck+1;
-                    $nw = str_pad( $nwa, "2", "0", STR_PAD_LEFT );
+                    $nw = Yii::$app->esmcode->kdKategori();
                     $model->KD_KATEGORI = $nw;
                     $model->CREATED_BY = Yii::$app->user->identity->username;
                     $model->CREATED_AT = date('Y-m-d H:i:s');
@@ -216,7 +218,30 @@ class KategoriController extends Controller
         
     }
     
-    
+    /**
+     * DepDrop | CORP TYPE - KAT - BRG
+     * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionKtgType() {
+		$out = [];
+		if (isset($_POST['depdrop_parents'])) {
+			$parents = $_POST['depdrop_parents'];
+			if ($parents != null) {
+				$prn_id = $parents[0];
+				$corp_id = $parents[1];
+				$model = Tipebarang::find()->asArray()->where(['CORP_ID'=>$corp_id,'PARENT'=>$prn_id])->all();
+				foreach ($model as $key => $value) {
+					   $out[] = ['id'=>$value['KD_TYPE'],'name'=> $value['NM_TYPE']];
+				   }
+	 
+				   echo json_encode(['output'=>$out, 'selected'=>'']);
+				   return;
+			   }
+		   }
+		   echo Json::encode(['output'=>'', 'selected'=>'']);
+	}	
+	
 
     /**
      * Deletes an existing Kategori model.

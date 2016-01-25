@@ -34,6 +34,8 @@ use lukisongroup\hrd\models\Corp;
     
     <?= $form->field($model, 'NM_SUPPLIER')->textInput(['maxlength' => true]) ?>
 
+     <?= $form->field($model, 'PIC')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'ALAMAT')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'KOTA')->textInput(['maxlength' => true]) ?>
