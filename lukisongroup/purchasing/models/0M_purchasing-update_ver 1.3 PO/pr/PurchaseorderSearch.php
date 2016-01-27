@@ -18,7 +18,6 @@ class PurchaseorderSearch extends Purchaseorder
     public $disetujui;
     public $approved;
 	public $namasuplier;
-	public $nmcorp;
     /**
      * @inheritdoc
      */
@@ -27,7 +26,7 @@ class PurchaseorderSearch extends Purchaseorder
         return [
             [['STATUS'], 'integer'],
             [['KD_PO', 'KD_SUPPLIER', 'CREATE_BY', 'CREATE_AT', 'NOTE','PAJAK','DISCOUNT','ETD', 'ETA', 'SHIPPING', 'BILLING', 'DELIVERY_COST', 'namasuplier'], 'safe'],
-            [['nmcorp','SIG1_NM','SIG2_NM','SIG3_NM','SIG4_NM'], 'safe'],
+            [['SIG1_NM','SIG2_NM','SIG3_NM','SIG4_NM'], 'safe'],
         ];
     }
 
@@ -113,8 +112,8 @@ class PurchaseorderSearch extends Purchaseorder
             ->andFilterWhere(['like', 'SIG2_NM', $this->SIG2_NM])
             ->andFilterWhere(['like', 'SIG3_NM', $this->SIG3_NM])
             ->andFilterWhere(['like', 'SIG4_NM', $this->SIG4_NM])
-            ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
-            ->andFilterWhere(['like', 'p0001.KD_CORP', $this->nmcorp]);
+            ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY]);
+            //->andFilterWhere(['like', 'NOTE', $this->NOTE]);
 			
 		if($this->CREATE_AT!=''){
             $date_explode = explode(' - ', $this->CREATE_AT);

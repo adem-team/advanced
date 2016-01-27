@@ -305,11 +305,11 @@ class RequestOrderController extends Controller
 		   echo Json::encode(['output'=>'', 'selected'=>'']);
 	}	
 	
-	 /**
+	/**
      * DepDrop |TYPE - KAT
      * @author ptrnov  <piter@lukison.com>
      * @since 1.1
-     */
+    */
 	public function actionTypeKat() {
 		$out = [];
 		if (isset($_POST['depdrop_parents'])) {

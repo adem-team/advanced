@@ -5,10 +5,9 @@ use kartik\grid\GridView;
 use yii\db\ActiveQuery;
 use yii\helpers\Url;
 use yii\bootstrap\Modal;
-use lukisongroup\purchasing\models\pr\Podetail;
-use lukisongroup\purchasing\models\pr\Purchasedetail;
+use lukisongroup\purchasing\models\Podetail;
+use lukisongroup\purchasing\models\Purchasedetail;
 use lukisongroup\master\models\Unitbarang;	
-
 ?>
 
 <?php 
@@ -115,57 +114,10 @@ use lukisongroup\master\models\Unitbarang;
 			],
 			[/* Attribute Request Quantity */
 				'attribute'=>'SQTY',
-				'label'=>'S.Qty',						
+				'label'=>'SQty',						
 				'vAlign'=>'middle',
 				'hAlign'=>'center',	
 				'mergeHeader'=>true,
-				'headerOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						'width'=>'60px',
-						'font-family'=>'tahoma',
-						'font-size'=>'8pt',
-						'background-color'=>'rgba(0, 95, 218, 0.3)',								
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-							'text-align'=>'right',
-							'width'=>'60px',
-							'font-family'=>'tahoma',
-							'font-size'=>'8pt',
-							//'border-right'=>'0px',
-					]
-				],
-				'pageSummaryOptions' => [
-					'style'=>[
-							'border-left'=>'0px',
-							'border-right'=>'0px',									
-					]
-				]
-			],	
-			[/* Attribute Request Quantity */
-				'attribute'=>'PQTY',
-				'label'=>'P.Qty',						
-				'vAlign'=>'middle',
-				'hAlign'=>'center',	
-				'mergeHeader'=>true,
-				'value'=>function($model, $key, $index, $column) {
-					// SUM QRY KD_RO AND KD_BARANG (HANYA Ada qty item barang pada RO)
-					//Purchasedetail::find()->where(['KD_RO'=>$dataKdRo,'KD_BARANG'=>$roDetail->KD_BARANG])->ALL();		
-					//$countQtyTaken=Purchasedetail::find(SUM('QTY'))->where(['KD_RO' => $model->KD_RO,'KD_BARANG' => $model->KD_BARANG])->all();
-					/*SUM QTY Dimana KD_RO DAN KD BARANG = jika requestorder->SQTY=Purchesedetail->QTY makan niali 0 => Hidden*/
-					$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE STATUS<>3 AND KD_RO='".$model->KD_RO. "' AND KD_BARANG='".$model->KD_BARANG ."' GROUP BY KD_BARANG";	
-					$countQtyTaken=Purchasedetail::findBySql($pqtyTaken)->one();
-					//print_r($countQtyTaken->QTY);
-					if($countQtyTaken){
-						$qtyInPo=$countQtyTaken->QTY!=''? $countQtyTaken->QTY :0;
-					}else{
-						$qtyInPo=0;
-					}
-					
-					return $qtyInPo;
-				},  			 
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -247,44 +199,12 @@ use lukisongroup\master\models\Unitbarang;
 					]
 				],			
 			],
-			[/* Attribute Harga */
-				'attribute'=>'HARGA',
-				'label'=>'Price',						
-				'vAlign'=>'middle',
-				'hAlign'=>'center',	
-				'mergeHeader'=>true,
-				'headerOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						'width'=>'100px',
-						'font-family'=>'tahoma',
-						'font-size'=>'8pt',
-						'background-color'=>'rgba(0, 95, 218, 0.3)',								
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-							'text-align'=>'right',
-							'width'=>'100px',
-							'font-family'=>'tahoma',
-							'font-size'=>'8pt',
-							//'border-right'=>'0px',
-					]
-				],
-				'pageSummaryOptions' => [
-					'style'=>[
-							'border-left'=>'0px',
-							'border-right'=>'0px',									
-					]
-				]
-			],
-			
           	[/* Attribute TMP_CK CheckboxColumn */
 				'class'=>'kartik\grid\CheckboxColumn',
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
-						'width'=>'20px',
+						'width'=>'150px',
 						'font-family'=>'tahoma',
 						'font-size'=>'8pt',
 						'background-color'=>'rgba(0, 95, 218, 0.3)',
@@ -295,7 +215,7 @@ use lukisongroup\master\models\Unitbarang;
 					'readonly'=>true, 
 					'style'=>[
 							'text-align'=>'center',		
-							'width'=>'20px',
+							'width'=>'150px',
 							'font-family'=>'tahoma',
 							'font-size'=>'8pt',	
 							'border-left'=>'0px',									
@@ -309,7 +229,7 @@ use lukisongroup\master\models\Unitbarang;
                     'class' => 'simple',
 					'style'=>[
 						'text-align'=>'left',		
-						'width'=>'20px',
+						'width'=>'150px',
 						'font-family'=>'tahoma',
 						'font-size'=>'8pt',	
 						'border-left'=>'0px',									
@@ -329,27 +249,13 @@ use lukisongroup\master\models\Unitbarang;
 					];
 				}, */
 				
-				'checkboxOptions' => function ($model, $key, $index, $column)use ($kdpo) {
-					$poDetail=Purchasedetail::find()->where('STATUS<>3 AND KD_PO="'.$kdpo.'" AND KD_RO="'.$model->KD_RO.'" AND KD_BARANG="'.$model->KD_BARANG.'"')->one();
+				'checkboxOptions' => function ($model, $key, $index, $column) {
+					$poDetail=Purchasedetail::find()->where(['KD_RO'=>$model->KD_RO,'KD_BARANG'=>$model->KD_BARANG])->one();
 					if ($poDetail){
 						return ['checked' => $model->TMP_CK, 'hidden'=>true];
 						
 					}else{
-						/*FORMULA*/
-						$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE STATUS<>3 AND KD_RO='".$model->KD_RO."' AND KD_BARANG='" .$model->KD_BARANG."' GROUP BY KD_BARANG";	
-						$countQtyTaken=Purchasedetail::findBySql($pqtyTaken)->one();
-						if($countQtyTaken){
-							$qtyInPo=$countQtyTaken->QTY!=''? $countQtyTaken->QTY :0;
-						}else{
-							$qtyInPo=0;
-						}
-						//$qtyInPo=$countQtyTaken!=''? $countQtyTaken->QTY :0;
-						$actualQty=$model->SQTY - $qtyInPo;
-						if($actualQty>0){
-							return ['checked' => $model->TMP_CK];
-						}else{
-							return ['checked' => $model->TMP_CK, 'hidden'=>true];
-						}						
+						return ['checked' => $model->TMP_CK];
 					}
 				}  
 			],
@@ -385,34 +291,77 @@ use lukisongroup\master\models\Unitbarang;
 	</div>/ -->
 
 <?php
-	/*  ActiveForm::end();  */
+/*  ActiveForm::end();  */
 
 	/*
 	 * JS GRIDVIEW SEND_TO_PO | CheckboxColumn
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.2
 	*/
-	$this->registerJs("			
+	/* $this->registerJs("	
+		//$(document).ready(function(){
+				//var keysRslt = $('#gv-ropo').yiiGridView('getSelectedRows');
+			
+			$('#gv-ropo input[type=checkbox]').change(function(e){	
+				e.preventDefault();			
+				//var keys = $('#gv-ropo').yiiGridView('getSelectedRows');
+				//var roKode = $('input:checkbox:checked').val();
+				var roKode=\"".$kd_ro."\";
+				var keysSelect = $('#gv-ropo').yiiGridView('getSelectedRows');
+				//var keysKdBrg = $('#gv-ropo').yiiGridView('getSelectedRows');
+				//var kdBrg=$('#kd-brg input[type=text]').val();
+				$.ajax({
+					
+					url: '/purchasing/purchase-order/ck',
+                    //cache: true,
+					type: 'POST',
+					//data:{keylist: keys},//+'&value='+nilaick,
+					//data:{keyRslt: keysRslt,keysSelect:keysSelect,kdBrg:keysKdBrg[1],kdRo:roKode},//+'&value='+nilaick,
+					data:{keysSelect:keysSelect,kdRo:roKode},
+					dataType: 'json',
+					success: function(response) {
+						if (response.status==true){
+							$('#ck-gv').val();
+							 //location.reload();
+							//$.pjax.refresh('#ck-gv');
+							//$(url).modal('open');
+							alert(response.status);
+							//print_r(data);
+							 // $('#ro-sendpo .modal-body').load(target, function() { 
+							//	 $('#ro-sendpo').modal('show'); 
+							//});
+						}else {
+							alert(response.status);
+						}
+					} 
+				});
+			});
+		//});
+	",$this::POS_READY); */
+	
+	$this->registerJs("	
+		
 			var target = $(this).attr('href');
 				$('#gv-ropo input[type=checkbox]').change(function(){	
 					var roKode=\"".$kd_ro."\";
-					var poKode=\"".$kdpo."\";
 					var keysSelect = $('#gv-ropo').yiiGridView('getSelectedRows');		
 					$.ajax({					
 						url: '/purchasing/purchase-order/ck',
 						//cache: true,
 						type: 'POST',
-						data:{keysSelect:keysSelect,kdRo:roKode,kdpo:poKode},
+						//data:{keylist: keys},//+'&value='+nilaick,
+						//data:{keyRslt: keysRslt,keysSelect:keysSelect,kdBrg:keysKdBrg[1],kdRo:roKode},//+'&value='+nilaick,
+						data:{keysSelect:keysSelect,kdRo:roKode},
 						dataType: 'json',
 						success: function(response) {
 							if (response.status==true){
-									$.pjax.reload('#gv-po-detail');
+									//$.pjax.reload('#gv-ropo');
 									//$.reload({container:'#gv-ropo', timeout: 2000});
 									//alert(response.status);
 									
 							}else {
-								alert('SKU Item already exists ');							
-								$.pjax.reload('#gv-po-detail');
+								//alert(response.status);							
+								//$.pjax.reload('#gv-ropo');
 								//$('this').checked = false
 								//document.getElementById('gv-ropo').checked = false;
 								//$('#ck-gv').checked = false;
@@ -423,3 +372,93 @@ use lukisongroup\master\models\Unitbarang;
 				});			
 			
 	",$this::POS_READY);
+	
+	$this->registerJs("		
+	/* $('#gv-ropo').on('click', function(e){
+		e.preventDefault();
+		var keys = $('#gv-ropo').yiiGridView('getSelectedRows');
+		if (this.checked){
+					''var roKode = $('input:checkbox:checked').val();
+				 }; 
+		$.ajax({
+				url: '/purchasing/purchase-order/ck',
+				type: 'POST',
+				data:'keylist='+keys,
+				dataType: 'json',
+				success: function(respo) {
+					 if (result === true){
+						//$.pjax.reload({container:'#gv-ropo'});
+					} else {
+						 alert('I did it! Processed checked rows.')
+					} 
+				}
+			});
+	}); */
+	
+	
+	 /* $('#gv-ropo').on('click',function(){
+			var keys = $('#gv-ropo').yiiGridView('getSelectedRows');
+			$.post({
+			   url: '/purchasing/purchase-order/ck', // your controller action
+			   dataType: 'json',
+			   data: {keylist: keys},
+			   success: function(data) {
+				  alert('I did it! Processed checked rows.')
+			   },
+			});		
+	});  */
+	 
+	/* $(document).ready(function(){
+		$('#gv-ropo input[type=checkbox]').click(function(){
+			var keys = $('#gv-ropo').yiiGridView('getSelectedRows');
+			alert(keys[0]);
+		});
+	});   */
+	
+
+	
+	
+	/* var checkedVal = [];
+	$('input.new-module').each(function() {
+        // get only those not disabled
+        if(!$(this).prop('disabled'))
+        {      
+            console.log($(this).val() + ' checked is ' + $(this).prop('checked'));
+
+            if($(this).prop('checked') === true)
+            {
+                checkedVal.push($(this).val());
+            }
+            else // if the checkbox is not checked
+            {           
+                var indexInArray = $.inArray($(this).val(), checkedVal)
+
+                // if found in array
+                if (indexInArray >= 0){
+                    checkedVal.splice(indexInArray, 1); // remove ONE unchecked checkbox value in current page from the array using index of array
+                }
+
+            }
+        }
+        else if($(this).prop('disabled'))
+        {
+            console.log($(this).val() + ' disabled is ' + $(this).prop('disabled'));
+            console.log($(this).val() + ' checked is ' + $(this).prop('checked'));
+        }
+
+    }); */
+	",$this::POS_READY);
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ?>

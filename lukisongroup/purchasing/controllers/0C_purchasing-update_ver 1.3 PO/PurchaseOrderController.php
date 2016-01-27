@@ -3,7 +3,6 @@
 namespace lukisongroup\purchasing\controllers;
 
 use Yii;
-use yii\web\Request;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -12,13 +11,12 @@ use yii\helpers\Json;
 use yii\web\Response;
 use yii\helpers\ArrayHelper;
 use kartik\mpdf\Pdf;
-use yii\helpers\Url;
 
 use lukisongroup\purchasing\models\pr\Purchaseorder;
 use lukisongroup\purchasing\models\pr\PurchaseorderSearch;
-use lukisongroup\purchasing\models\pr\Purchasedetail;
 
-//use lukisongroup\purchasing\models\pr\Podetail;
+use lukisongroup\purchasing\models\pr\Purchasedetail;
+use lukisongroup\purchasing\models\pr\Podetail;
 use lukisongroup\purchasing\models\pr\DiscountValidation;
 use lukisongroup\purchasing\models\pr\PajakValidation;
 use lukisongroup\purchasing\models\pr\DeliveryValidation;
@@ -49,10 +47,9 @@ use lukisongroup\purchasing\models\so\SalesorderSearch;
 
 use lukisongroup\purchasing\models\Statuspo;
 
-use lukisongroup\master\models\Tipebarang;
+use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
-use lukisongroup\master\models\Barang;
 
 class PurchaseOrderController extends Controller
 {
@@ -114,34 +111,174 @@ class PurchaseOrderController extends Controller
         ]);
     }
 
+	
 	/*
-	 * Generate PO  
-	 * PO PLUS ['POA.CORP.'.date('ymdhis')] 	-> POA DENGAN LIMIT HARGA | AUTH1
-	 * PO Normal ['POB.CORP.'.date('ymdhis')] 	-> PO  DENGAN RO | AUTH1,AUTH2,AUTH3
-	 * PO Prodak ['POC.CORP.'.date('ymdhis')] 	-> PO  DENGAN RO | AUTH1,AUTH2,AUTH3
+	 * View Po | Purchaseorder| Purchasedetail
 	 * @author ptrnov <piter@lukison.com>
 	 * @since 1.2
 	*/
-    public function actionSimpanpo()
+    public function actionView($kd)
     {
-		$poHeaderVal = new NewPoValidation;
-		if(Yii::$app->request->isAjax){
-			$poHeaderVal->load(Yii::$app->request->post());
-			return Json::encode(\yii\widgets\ActiveForm::validate($poHeaderVal));
-		}else{		
-			if($poHeaderVal->load(Yii::$app->request->post())){
-				if ($poHeaderVal->generatepo_saved()){
-					$hsl = \Yii::$app->request->post();
-					//$kdPo =$poHeaderVal->poRSLT
-					return $this->redirect(['create', 'kdpo'=>$poHeaderVal->poRSLT]);
-					//echo "test";
-				}														
+        /* return $this->render('view', [
+            'model' => Purchaseorder::find()->where(['KD_PO'=>$kd])->one(),
+        ]); */
+		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kd])->one();
+        //$poDetail = Purchasedetail::find()->where(['KD_PO'=>$kd])->all(); 
+		$poDetailQry= "SELECT ID,KD_PO,KD_RO,KD_BARANG,NM_BARANG,UNIT,NM_UNIT,UNIT_QTY,UNIT_WIGHT,SUM(QTY) AS QTY,HARGA,STATUS,STATUS_DATE,NOTE
+						FROM `p0002` WHERE KD_PO='" .$kd. "' GROUP BY KD_BARANG,UNIT,HARGA";
+		$poDetail=Purchasedetail::findBySql($poDetailQry)->all();		
+		$dataProvider = new ArrayDataProvider([
+			'key' => 'KD_PO',
+			'allModels'=>$poDetail,		
+			'pagination' => [
+				'pageSize' => 20,
+			],
+		]);
+		
+		return $this->render( 'view', [
+			'poHeader' => $poHeader,
+            'poDetail' => $poDetail,
+            //'detro' => $detro,
+            //'employ' => $employ,
+			//'dept' => $dept,
+			'dataProvider' => $dataProvider,
+        ]);
+    }
+	
+	
+	/*
+	 * Review Po for Signature or  Approved |Purchaseorder| Purchasedetail
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
+    public function actionReview($kdpo)
+    {
+		/*
+		 * Edit PO Quantity | Validation max Jumlah RO/SA
+		 * @author ptrnov <piter@lukison.com>
+		 * @since 1.2
+		*/
+		if (Yii::$app->request->post('hasEditable')) {
+			$idx = Yii::$app->request->post('editableKey');
+			Yii::$app->response->format = Response::FORMAT_JSON;
+			$model = Purchasedetail::findOne($idx);						
+			$currentQty= $model->QTY;
+			$currentKdPo= $model->KD_PO;
+			$currentKdRo= $model->KD_RO;
+			$currentKdBrg= $model->KD_BARANG;
+			/* $iendPoQtyValidation = new SendPoQtyValidation();
+			$iendPoQtyValidation->findOne($id); */
+			$out = Json::encode(['output'=>'', 'message'=>'']);
+			$post = [];
+			$posted = current($_POST['Purchasedetail']);
+			$post['Purchasedetail'] = $posted; 
+			/* $posted = current($_POST['SendPoQtyValidation']);			
+			$post['SendPoQtyValidation'] = $posted; */
+			if ($model->load($post)) {				
+				$output = '';				
+				/*
+				 * Split PO Plus dan PO Normal 
+				 * PO Plus=POA.*
+				 * PO Plus=POB.*
+				 * @author ptrnov [piter@lukison]
+				 * @since 1.2
+				*/
+				$kdPo = explode('.',$currentKdPo); 
+				if($kdPo[0]!='POA'){
+					if (isset($posted['QTY'])) {
+						
+						/*
+						 * QTY RO-PO VALIDATION
+						 * QTY PO tidak boleh lebih dari SQTY Request Order
+						*/				
+						
+						/*Find SQTY RoDetail*/
+						$roDetail=Rodetail::find()->where(['KD_RO'=>$currentKdRo,'KD_BARANG'=>$currentKdBrg])->one();
+						//if(!$roDetail){
+						$roQty=$roDetail->SQTY!=0 ? $roDetail->SQTY :0;							
+						//}else{$roQty=0;}
+										
+						
+						/*Sum QTY PoDetail */
+						$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO='" .$roDetail->KD_RO. "' AND KD_BARANG='" .$roDetail->KD_BARANG ."' GROUP BY KD_BARANG";
+						//$pqtyTaken= 'SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO="RO.2015.12.000001" AND KD_BARANG="BRGU.LG.03.06.E07.0001"';
+						$poDetailQtySum=Purchasedetail::findBySql($pqtyTaken)->one();
+						$poQty=$poDetailQtySum->QTY!=0?$poDetailQtySum->QTY:0;
+						
+						/* Calculate SQTY RO - QTY PO + Current QTY | minus current record QTY */
+						$ttlPQTY=($roQty - $poQty)+$currentQty;					
+							
+							if ($posted['QTY'] <= $ttlPQTY){
+								$model->save();							
+								$output =Yii::$app->formatter->asDecimal($model->QTY,0);								
+							}else{
+								return ['output'=>'', 'message'=>'Request Order QTY Limited, Greater than RO QTY ! please insert free Qty, Check Request Order'];	
+							}
+					}
+					if (isset($posted['HARGA'])) {
+						 $model->save();
+						$output = Yii::$app->formatter->asDecimal($model->HARGA, 2);
+					} 
+					if (isset($posted['UNIT'])) {
+						$modelUnit=Unitbarang::find()->where('KD_UNIT="'.$posted['UNIT']. '"')->one();
+						$model->NM_UNIT=$modelUnit->NM_UNIT;
+						$model->UNIT_QTY=$modelUnit->QTY;
+						$model->UNIT_WIGHT=$modelUnit->WEIGHT;
+						$model->save();
+						$output =$model->UNIT;
+					} 
+					/*
+					if (isset($posted['NOTE'])) {
+					   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
+						$output = $model->NOTE;
+					} */
+				}
+				elseif($kdPo[0]!='PO'){
+					/* PO Plus=POB.*/
+					if (isset($posted['QTY'])) {
+						$model->save();							
+						$output = Yii::$app->formatter->asDecimal($model->QTY,0);
+					}
+					if (isset($posted['HARGA'])) {
+						$model->save();
+						$output = Yii::$app->formatter->asDecimal($model->HARGA, 2);
+					} 
+					if (isset($posted['UNIT'])) {
+						$model->save();
+						$output = $model->UNIT;
+					} 
+				}
+				
+				$out = Json::encode(['output'=>$output, 'message'=>'']);
 			}
-		}		
+			// return ajax json encoded response and exit
+			echo $out;
+			return;
+		}
+		
+		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
+        $poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->andWhere('STATUS <> 3')->all(); 
+		$dataProvider = new ArrayDataProvider([
+			'key' => 'ID',
+			'allModels'=>$poDetail,		
+			'pagination' => [
+				'pageSize' => 20,
+			],
+		]);
+		
+		return $this->render( 'review', [
+			'poHeader' => $poHeader,
+            'poDetail' => $poDetail,
+            //'detro' => $detro,
+            //'employ' => $employ,
+			//'dept' => $dept,
+			'dataProvider' => $dataProvider,
+        ]);
     }
 	
 	/*
-	 * CREATE & EDIT Data PO, berdasarkan Generate PO [POA,POB,POC]
+	 * Create PO
+	 * PO Generate | PO Normal | PO Plus
 	 * ID_SUPPLIER=null| SHIPPING=Null | BILLING=Null | ETD=Null | ETA=Null | SUMMARY [DISCOUNT|TAX|DELEVERY]
 	 * GRID | EDITING =[HARGA|QTY|UNIT] -> VALIDATION HARGA | QTY [Tidak boleh lebih dari SQTY], (RO to PO ->HARGA = Manual Input), SO(SO to PO -> Harga=Harga Otomatis dari SO) 
 	 * @author ptrnov <piter@lukison.com>
@@ -284,194 +421,34 @@ class PurchaseOrderController extends Controller
 			'ship' => $ship,
 			'employee'=>$employee,
         ]);
-    } 	
+    }   
 	
 	/*
-	 * View PO 
+	 * Create PO | Generate PO | 
+	 * PO PLUS ['POA.'.date('ymdhis')] -> POA DENGAN LIMIT HARGA
+	 * PO Normal ['PO.'.date('ymdhis')] -> PO Dengan Persetujuan orderby | RequestOrder|SalesOrder
 	 * @author ptrnov <piter@lukison.com>
 	 * @since 1.2
 	*/
-    public function actionView($kd)
+    public function actionSimpanpo()
     {
-        /* return $this->render('view', [
-            'model' => Purchaseorder::find()->where(['KD_PO'=>$kd])->one(),
-        ]); */
-		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kd])->one();
-        //$poDetail = Purchasedetail::find()->where(['KD_PO'=>$kd])->all(); 
-		$poDetailQry= "SELECT ID,KD_PO,KD_RO,KD_BARANG,NM_BARANG,UNIT,NM_UNIT,UNIT_QTY,UNIT_WIGHT,SUM(QTY) AS QTY,HARGA,STATUS,STATUS_DATE,NOTE
-						FROM `p0002` WHERE KD_PO='" .$kd. "' GROUP BY KD_BARANG,UNIT,HARGA";
-		$poDetail=Purchasedetail::findBySql($poDetailQry)->all();		
-		$dataProvider = new ArrayDataProvider([
-			'key' => 'KD_PO',
-			'allModels'=>$poDetail,		
-			'pagination' => [
-				'pageSize' => 20,
-			],
-		]);
-		$checkPOCode = explode('.',$kd);
-		if ($checkPOCode[0]=='POA'){
-			return $this->render( 'view_poa', [
-				'poHeader' => $poHeader,
-				'poDetail' => $poDetail,				
-				'dataProvider' => $dataProvider,
-			]);
-		}elseif($checkPOCode[0]=='POB'){
-			return $this->render( 'view_pob', [
-				'poHeader' => $poHeader,
-				'poDetail' => $poDetail,
-				'dataProvider' => $dataProvider,
-			]);
-		}elseif($checkPOCode[0]=='POC'){
-			return $this->render( 'view_poc', [
-				'poHeader' => $poHeader,
-				'poDetail' => $poDetail,
-				'dataProvider' => $dataProvider,
-			]);
-		}
-    }	
-	
-	/*
-	 * Review Po AUTH1,AUTH2,AUH3
-	 * @author ptrnov <piter@lukison.com>
-	 * @since 1.2
-	*/
-    public function actionReview($kdpo)
-    {
-		/*
-		 * Edit PO Quantity | Validation max Jumlah RO/SA
-		 * @author ptrnov <piter@lukison.com>
-		 * @since 1.2
-		*/
-		if (Yii::$app->request->post('hasEditable')) {
-			$idx = Yii::$app->request->post('editableKey');
-			Yii::$app->response->format = Response::FORMAT_JSON;
-			$model = Purchasedetail::findOne($idx);						
-			$currentQty= $model->QTY;
-			$currentKdPo= $model->KD_PO;
-			$currentKdRo= $model->KD_RO;
-			$currentKdBrg= $model->KD_BARANG;
-			/* $iendPoQtyValidation = new SendPoQtyValidation();
-			$iendPoQtyValidation->findOne($id); */
-			$out = Json::encode(['output'=>'', 'message'=>'']);
-			$post = [];
-			$posted = current($_POST['Purchasedetail']);
-			$post['Purchasedetail'] = $posted; 
-			/* $posted = current($_POST['SendPoQtyValidation']);			
-			$post['SendPoQtyValidation'] = $posted; */
-			if ($model->load($post)) {				
-				$output = '';				
-				/*
-				 * Split PO Plus dan PO Normal 
-				 * PO Plus=POA.*
-				 * PO Plus=POB.*
-				 * @author ptrnov [piter@lukison]
-				 * @since 1.2
-				*/
-				$kdPo = explode('.',$currentKdPo); 
-				if($kdPo[0]!='POA'){
-					if (isset($posted['QTY'])) {
-						
-						/*
-						 * QTY RO-PO VALIDATION
-						 * QTY PO tidak boleh lebih dari SQTY Request Order
-						*/				
-						
-						/*Find SQTY RoDetail*/
-						$roDetail=Rodetail::find()->where(['KD_RO'=>$currentKdRo,'KD_BARANG'=>$currentKdBrg])->one();
-						//if(!$roDetail){
-						$roQty=$roDetail->SQTY!=0 ? $roDetail->SQTY :0;							
-						//}else{$roQty=0;}
-										
-						
-						/*Sum QTY PoDetail */
-						$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO='" .$roDetail->KD_RO. "' AND KD_BARANG='" .$roDetail->KD_BARANG ."' GROUP BY KD_BARANG";
-						//$pqtyTaken= 'SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO="RO.2015.12.000001" AND KD_BARANG="BRGU.LG.03.06.E07.0001"';
-						$poDetailQtySum=Purchasedetail::findBySql($pqtyTaken)->one();
-						$poQty=$poDetailQtySum->QTY!=0?$poDetailQtySum->QTY:0;
-						
-						/* Calculate SQTY RO - QTY PO + Current QTY | minus current record QTY */
-						$ttlPQTY=($roQty - $poQty)+$currentQty;					
-							
-							if ($posted['QTY'] <= $ttlPQTY){
-								$model->save();							
-								$output =Yii::$app->formatter->asDecimal($model->QTY,0);								
-							}else{
-								return ['output'=>'', 'message'=>'Request Order QTY Limited, Greater than RO QTY ! please insert free Qty, Check Request Order'];	
-							}
-					}
-					if (isset($posted['HARGA'])) {
-						 $model->save();
-						$output = Yii::$app->formatter->asDecimal($model->HARGA, 2);
-					} 
-					if (isset($posted['UNIT'])) {
-						$modelUnit=Unitbarang::find()->where('KD_UNIT="'.$posted['UNIT']. '"')->one();
-						$model->NM_UNIT=$modelUnit->NM_UNIT;
-						$model->UNIT_QTY=$modelUnit->QTY;
-						$model->UNIT_WIGHT=$modelUnit->WEIGHT;
-						$model->save();
-						$output =$model->UNIT;
-					} 
-					/*
-					if (isset($posted['NOTE'])) {
-					   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-						$output = $model->NOTE;
-					} */
-				}
-				elseif($kdPo[0]!='POB' OR $kdPo[0]!='POC'){
-					/* PO Plus=POB.*/
-					if (isset($posted['QTY'])) {
-						$model->save();							
-						$output = Yii::$app->formatter->asDecimal($model->QTY,0);
-					}
-					if (isset($posted['HARGA'])) {
-						$model->save();
-						$output = Yii::$app->formatter->asDecimal($model->HARGA, 2);
-					} 
-					if (isset($posted['UNIT'])) {
-						$model->save();
-						$output = $model->UNIT;
-					} 
-				}
-				
-				$out = Json::encode(['output'=>$output, 'message'=>'']);
+		$poHeaderVal = new NewPoValidation;
+		if(Yii::$app->request->isAjax){
+			$poHeaderVal->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($poHeaderVal));
+		}else{		
+			if($poHeaderVal->load(Yii::$app->request->post())){
+				if ($poHeaderVal->generatepo_saved()){
+					$hsl = \Yii::$app->request->post();
+					//$kdPo =$poHeaderVal->poRSLT
+					return $this->redirect(['create', 'kdpo'=>$poHeaderVal->poRSLT]);
+					//echo "test";
+				}														
 			}
-			// return ajax json encoded response and exit
-			echo $out;
-			return;
-		}
-		
-		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
-        $poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->andWhere('STATUS <> 3')->all(); 
-		$dataProvider = new ArrayDataProvider([
-			'key' => 'ID',
-			'allModels'=>$poDetail,		
-			'pagination' => [
-				'pageSize' => 20,
-			],
-		]);
-		
-		$checkPOCode = explode('.',$kdpo);
-		if ($checkPOCode[0]=='POA'){
-			return $this->render( 'review_poa', [
-				'poHeader' => $poHeader,
-				'poDetail' => $poDetail,      
-				'dataProvider' => $dataProvider,
-			]);
-		}elseif($checkPOCode[0]=='POB'){
-			return $this->render( 'review_pob', [
-				'poHeader' => $poHeader,
-				'poDetail' => $poDetail,      
-				'dataProvider' => $dataProvider,
-			]);
-		}elseif($checkPOCode[0]=='POC'){
-			return $this->render( 'review_poc', [
-				'poHeader' => $poHeader,
-				'poDetail' => $poDetail,      
-				'dataProvider' => $dataProvider,
-			]);
-		}
-    }	
-	 
+		}		
+    }
+	
+	
 	/*
 	 * PO PLUS View | Add Item
 	 * @author ptrnov <piter@lukison.com>
@@ -488,56 +465,6 @@ class PurchaseOrderController extends Controller
                 'poDetailValidation' => $poDetailValidation,				
             ]);	
     }
-	
-	
-	/**
-     * DepDrop | CORP-TYPE - KAT
-     * @author ptrnov  <piter@lukison.com>
-     * @since 1.1
-     */
-	public function actionCorpType() {
-		$out = [];
-		if (isset($_POST['depdrop_parents'])) {
-			$parents = $_POST['depdrop_parents'];
-			if ($parents != null) {
-				$corp_id = $parents[0];
-				$prn_id = $parents[1];
-				$model = Tipebarang::find()->asArray()->where(['CORP_ID'=>$corp_id,'PARENT'=>$prn_id])->all();
-				foreach ($model as $key => $value) {
-					   $out[] = ['id'=>$value['KD_TYPE'],'name'=> $value['NM_TYPE']];
-				   }
-	 
-				   echo json_encode(['output'=>$out, 'selected'=>'']);
-				   return;
-			   }
-		   }
-		   echo Json::encode(['output'=>'', 'selected'=>'']);
-	}	
-	
-	/**
-     * DepDrop |TYPE - KAT
-     * @author ptrnov  <piter@lukison.com>
-     * @since 1.1
-    */
-	public function actionTypeKat() {
-		$out = [];
-		if (isset($_POST['depdrop_parents'])) {
-			$parents = $_POST['depdrop_parents'];
-			if ($parents != null) {
-				$corp_id = $parents[0];
-				$type_id = $parents[1];
-				$model = Kategori::find()->asArray()->where(['CORP_ID'=>$corp_id,'KD_TYPE'=>$type_id])->all();
-				foreach ($model as $key => $value) {
-					   $out[] = ['id'=>$value['KD_KATEGORI'],'name'=> $value['NM_KATEGORI']];
-				   }
-	 
-				   echo json_encode(['output'=>$out, 'selected'=>'']);
-				   return;
-			   }
-		   }
-		   echo Json::encode(['output'=>'', 'selected'=>'']);
-	}	
-	
 	/**
      * actionBrgkat() select2 Kategori mendapatkan barang
      * @author ptrnov  <piter@lukison.com>
@@ -548,10 +475,10 @@ class PurchaseOrderController extends Controller
 		if (isset($_POST['depdrop_parents'])) {
 			$parents = $_POST['depdrop_parents'];
 			if ($parents != null) {
-				$kat_id = $parents[0];
-				$model = Barang::find()->asArray()->where(['KD_KATEGORI'=>$kat_id,'PARENT'=>0])->all();
+				$prn_id = $parents[0];
+				$model = Kategori::find()->asArray()->where(['PARENT'=>$prn_id])->all();
 				foreach ($model as $key => $value) {
-					   $out[] = ['id'=>$value['KD_BARANG'],'name'=> $value['NM_BARANG']];
+					   $out[] = ['id'=>$value['KD_KATEGORI'],'name'=> $value['NM_KATEGORI']];
 				   }
 	 
 				   echo json_encode(['output'=>$out, 'selected'=>'']);
@@ -559,7 +486,7 @@ class PurchaseOrderController extends Controller
 			   }
 		   }
 		   echo Json::encode(['output'=>'', 'selected'=>'']);
-	}	
+	}
 	
 	/**
      * actionBrgkat() select2 Kategori mendapatkan barang
@@ -605,7 +532,8 @@ class PurchaseOrderController extends Controller
 				}														
 			}
 		}
-    }	
+    }
+	
 	
 	/*
 	 * Action View | _detail PO
@@ -631,14 +559,14 @@ class PurchaseOrderController extends Controller
             'kd_ro' => $kd_ro,
         ]);
     }
-	
 	/*
 	 * Action ChekBook Grid RO to PO | _detail
 	 * @author ptrnov <piter@lukison.com>
 	 * @since 1.2
 	 * @categoty : AJAX
 	*/
-	public function actionCk() {		
+	public function actionCk() {
+		
 		if (Yii::$app->request->isAjax) {
 			Yii::$app->response->format = Response::FORMAT_JSON;
 			$request= Yii::$app->request;
@@ -663,7 +591,7 @@ class PurchaseOrderController extends Controller
 					//$foreaceGvRoToPo=$dataKeySelect!=0? $dataKeySelect:'Array([0]=>"0")';
 					 foreach ($dataKeySelect as $idx){
 							$roDetail=Rodetail::find()->where(['KD_RO'=>$dataKdRo,'ID'=>$idx])->andWhere('STATUS=1')->one();	//STT =202						
-							$poDetail=Purchasedetail::find()->where('STATUS<>3 AND KD_PO="'.$dataKdPo.'" AND KD_RO="'.$dataKdRo.'" AND KD_BARANG="'.$roDetail->KD_BARANG.'"')->one();
+							$poDetail=Purchasedetail::find()->where(['KD_PO'=>$dataKdPo,'KD_RO'=>$dataKdRo,'KD_BARANG'=>$roDetail->KD_BARANG])->one();
 							$poUnit=$roDetail->cunit;
 							//$poBarangUmum=$roDetail->barangumum;							
 							if (!$poDetail){
@@ -682,7 +610,7 @@ class PurchaseOrderController extends Controller
 										$poDetailModel->UNIT_QTY=$poUnit->QTY;
 										$poDetailModel->UNIT_WIGHT=$poUnit->WEIGHT;
 											/*FORMULA*/
-											$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE STATUS<>3 AND KD_RO='" .$dataKdRo. "' AND KD_BARANG='" .$roDetail->KD_BARANG."' GROUP BY KD_BARANG";	
+											$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO='" .$dataKdRo. "' AND KD_BARANG='" .$roDetail->KD_BARANG."' GROUP BY KD_BARANG";	
 											$countQtyTaken=Purchasedetail::findBySql($pqtyTaken)->one();
 											if($countQtyTaken){
 												$qtyInPo=$countQtyTaken->QTY!=''? $countQtyTaken->QTY :0;
@@ -715,6 +643,182 @@ class PurchaseOrderController extends Controller
 			return $res; 
 		}	
 	}
+
+	
+	
+	
+    public function actionSimpan()
+    {
+        $cons = \Yii::$app->db_esm;
+		$tes = Yii::$app->request->post();
+        $kdpo = $tes['kdpo'];
+        $kdro = $tes['kdro'];
+
+        $status = '';
+        foreach ($tes['selection'] as $key => $isi) {
+            $pp = explode('_',$isi);
+            $rd = Rodetail::find()->where(['ID'=>$pp[1]])->one();
+            $ckpo = Purchasedetail::find()->where(['KD_BARANG'=> $rd->KD_BARANG, 'KD_PO'=>$kdpo, 'UNIT'=>$rd->UNIT])->andWhere('STATUS <> 3')->one();
+
+
+            if(count($ckpo) == 0){
+                $command = $cons->createCommand();
+
+                $command->insert('p0002', [
+                    'KD_PO'=> $kdpo, 
+                    'QTY'=> $rd->SQTY, 
+                    'UNIT'=> $rd->UNIT,
+                    'STATUS'=> 0,
+                    'KD_BARANG'=> $rd->KD_BARANG,
+                ] )->execute();
+
+                $id = $cons->getLastInsertID();
+                $command->insert('p0021', [
+                    'KD_PO'=> $kdpo, 
+                    'KD_RO'=> $tes['kdro'], 
+                    'ID_DET_RO'=> $pp[1],
+                    'ID_DET_PO'=> $id,
+                    'QTY'=> $rd->SQTY, 
+                    'UNIT'=> $rd->UNIT,
+                    'STATUS'=>1,
+                    ]
+                )->execute();
+            } else {
+
+                $dpo = Podetail::find()->where(['ID_DET_PO'=>$ckpo->ID, 'KD_RO'=>$kdro])->andWhere('STATUS <> 3')->one();
+
+                if(count($dpo) == 1){ 
+                    $status .= '<p class="bg-danger" style="padding:15px;" >RO "<b>'.$kdro.'</b>" dengan kode barang " <b>'.$rd->KD_BARANG.'</b> " Sudah ada di dalam list.<br/> silahkan ubah jumlah Quantity barangnya.</p>';
+                } else {
+
+                    $command = $cons->createCommand();
+                    $command->insert('p0021', [
+                        'KD_PO'=> $kdpo, 
+                        'KD_RO'=> $tes['kdro'], 
+                        'ID_DET_RO'=> $pp[1],
+                        'ID_DET_PO'=> $ckpo->ID,
+                        'QTY'=> $rd->SQTY, 
+                        'UNIT'=> $rd->UNIT,
+                        'STATUS'=>1,
+                        ]
+                    )->execute();
+                    
+                    $ttl = $rd->SQTY + $ckpo->QTY;
+                    $idpo = $ckpo->ID;
+                    $command->update('p0002', ['QTY'=>$ttl], "ID='$idpo'")->execute();
+                }
+            }
+        }
+
+        \Yii::$app->getSession()->setFlash('error', $status);
+        return $this->redirect(['create','kdpo'=>$kdpo]);
+    }
+
+    public function actionSpo($kdpo)
+    {
+        $cons = \Yii::$app->db_esm;
+        $post = Yii::$app->request->post();
+        $ttl = count($post['qty']);
+
+        $hsl = 0;
+        $idpo = $post['idpo'];
+        for($a=0; $a<=$ttl-1; $a++){
+            $qty = $post['sqty'][$a];
+            $ket = $post['ket'][$a];
+            $id = $post['id'][$a];
+
+            $hsl = $hsl + $qty;
+
+           $command = $cons->createCommand();
+           $command->update('p0021', ['QTY'=>$qty, 'NOTE'=>$ket], "ID='$id'")->execute();
+        }
+        $command->update('p0002', ['QTY'=>$hsl], "ID='$idpo'")->execute();
+
+        return $this->redirect(['create','kdpo'=>$kdpo]);
+    }
+
+   
+
+    public function actionDelpo($idpo,$kdpo)
+    {
+        $podet = Podetail::find()->where(['KD_PO'=>$kdpo, 'ID'=>$idpo])->one();
+        $po = Purchasedetail::find()->where(['KD_PO'=>$kdpo, 'ID'=>$podet->ID_DET_PO])->one();
+
+        $sisa = $po->QTY - $podet->QTY;
+          
+        if($sisa == '0'){
+            \Yii::$app->db_esm->createCommand()->update('p0002', ['QTY'=>$sisa, 'STATUS'=>'3'], "ID='$po->ID'")->execute();
+        } else {
+            \Yii::$app->db_esm->createCommand()->update('p0002', ['QTY'=>$sisa], "ID='$po->ID'")->execute();
+        }
+
+        $podet->STATUS = '3';
+        $podet->save();
+
+        return $this->redirect(['create', 'kdpo'=>$kdpo]);
+    }
+
+
+
+    public function actionCreatepo()
+    {
+        $post = Yii::$app->request->post();
+        $coall = count($post['hargaBarang']);
+
+        $kdpo = $post['kdpo'];
+
+        for ($i=0; $i < $coall ; $i++) { 
+            $kdBrg = $post['kdBarang'][$i];
+            $harga = $post['hargaBarang'][$i];
+
+            $ckBrg = explode('.', $kdBrg);
+            if($ckBrg[0] == 'BRG'){
+                $nmBrg = Barang::find('NM_BARANG')->where(['KD_BARANG'=>$kdBrg])->one();
+                $nmBrg->HARGA = $harga;
+                $nmBrg->save();
+            } else if($ckBrg[0] == 'BRGU') {
+                $nmBrg = Barang::find('NM_BARANG')->where(['KD_BARANG'=>$kdBrg])->one();
+                $nmBrg->HARGA = $harga;
+                $nmBrg->save();
+            }
+
+            $detpo = Purchasedetail::find('ID')->where(['KD_BARANG'=>$kdBrg, 'KD_PO'=>$kdpo])->one();
+
+            $cons = \Yii::$app->db_esm;
+            $command = $cons->createCommand();
+            $command->update('p0002', ['HARGA'=>$harga], "ID='$detpo->ID'")->execute();
+
+        }
+
+        $po = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();  
+        $po->STATUS = '101';
+        $po->PAJAK = $post['pajak'];
+        $po->DISC = $post['disc'];
+        $po->NOTE = $post['note'];
+        $po->ETA = $post['eta'];
+        $po->ETD = $post['etd'];
+        $po->SHIPPING = $post['shipping'];
+        $po->BILLING = $post['billing'];
+        $po->DELIVERY_COST = $post['delvCost'];
+        $po->save();
+
+        return $this->redirect([' ']);
+
+    }
+
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->ID]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
+    }
+
 	
 	/*
 	 * ALAMAT Supplier Edit
@@ -898,7 +1002,8 @@ class PurchaseOrderController extends Controller
 					return $this->redirect(['create', 'kdpo'=>$kdPo]);
 				}														
 			}
-		}		
+		}
+		
     }	
 	
 	/*
@@ -932,7 +1037,8 @@ class PurchaseOrderController extends Controller
 					return $this->redirect(['create', 'kdpo'=>$kdPo]);
 				}													
 			}
-		}		
+		}
+		
     }	
 	
 	
@@ -963,7 +1069,8 @@ class PurchaseOrderController extends Controller
 					return $this->redirect(['create', 'kdpo'=>$kdPo]);
 				}														
 			}
-		}		
+		}
+		
     }
 	
 	/*
@@ -1037,8 +1144,8 @@ class PurchaseOrderController extends Controller
 	 * $poHeader->STATUS =103
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
-    */
-	public function actionSignAuth3View($kdpo){
+     */
+	 public function actionSignAuth3View($kdpo){
 		$auth3Mdl = new Auth3Model();					
 		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
 		$employe = $poHeader->employe;			
@@ -1070,7 +1177,7 @@ class PurchaseOrderController extends Controller
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
-	public function actionPoNote($kdpo){
+	 public function actionPoNote($kdpo){
 		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();			
 		return $this->renderAjax('_form_ponote', [
 			'poHeader' => $poHeader,
@@ -1087,7 +1194,7 @@ class PurchaseOrderController extends Controller
     }	
 	
 	/*
-	 * Print PDF 
+	 * PDF | Purchaseorder| Purchasedetail
 	 * @author ptrnov <piter@lukison.com>
 	 * @since 1.2
 	*/
@@ -1215,7 +1322,40 @@ class PurchaseOrderController extends Controller
         exit; */
     }
 	
-   
+    public function actionConfirm($kdpo)
+    {        
+       /*  $hsl = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
+        if($hsl->APPROVE_BY == ''){
+            $hsl->APPROVE_BY = Yii::$app->user->identity->EMP_ID;
+            $hsl->APPROVE_AT = date('Y-m-d H:i:s');
+            $hsl->STATUS = 102;
+            $hsl->save();
+    
+            return $this->redirect(['view','kd'=>$kdpo]);
+
+        } else {
+            return $this->redirect(['view','kd'=>$kdpo]);
+        } */
+    }
+
+
+    public function actionConfirmdir($kdpo)
+    {        
+        /* $hsl = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
+        if($hsl->APPROVE_DIR == ''){
+            $hsl->APPROVE_DIR = Yii::$app->user->identity->EMP_ID;
+            $hsl->TGL_APPROVE = date('Y-m-d H:i:s');
+            $hsl->STATUS = 1;
+            $hsl->save();
+    
+            return $this->redirect(['view','kd'=>$kdpo]);
+
+        } else {
+            return $this->redirect(['view','kd'=>$kdpo]);
+        } */
+    }
+
+
 
     /**
      * Deletes an existing Purchaseorder model.
@@ -1223,132 +1363,13 @@ class PurchaseOrderController extends Controller
      * @param string $id
      * @return mixed
      */
-    /* public function actionDelete($id)
+    public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    } */
-
-	/**
-	 * On Approval View
-	 * Approved_podetail | Rodetail->ID |  $roDetail->STATUS = 101;
-	 * Approved = 1
-	 * @author ptrnov  <piter@lukison.com>
-     * @since 1.1
-     */
-	public function actionApproved_podetail()
-    {
-		if (Yii::$app->request->isAjax) {
-			$request= Yii::$app->request;
-			$id=$request->post('id');
-			//\Yii::$app->response->format = Response::FORMAT_JSON;
-			$roDetail = Purchasedetail::findOne($id);
-			$roDetail->STATUS = 1;
-			//$ro->NM_BARANG=''
-			$roDetail->save();
-			return true;
-		}
-    }
-	
-	/**
-	 * On Approval View
-	 * Reject_rodetail | Rodetail->ID |  $roDetail->STATUS = 4;
-	 * Reject = 4
-	 * @author ptrnov  <piter@lukison.com>
-     * @since 1.1
-     */
-	public function actionReject_podetail()
-    {
-		if (Yii::$app->request->isAjax) {
-			$request= Yii::$app->request;
-			$id=$request->post('id');
-			$roDetail = Purchasedetail::findOne($id);
-			$roDetail->STATUS = 4;
-			$roDetail->save();
-			return true;
-		}
-    }
-	
-	/**
-	 * On Approval View
-	 * Reject_rodetail | Rodetail->ID |  $roDetail->STATUS = 4;
-	 * Delete = 3
-	 * @author ptrnov  <piter@lukison.com>
-     * @since 1.1
-     */
-	public function actionDelete_podetail()
-    {
-		if (Yii::$app->request->isAjax) {
-			$request= Yii::$app->request;
-			$id=$request->post('id');
-			$roDetail = Purchasedetail::findOne($id);
-			$roDetail->STATUS = 3;
-			$roDetail->save();
-			return true;
-		}
-    }
-	
-	/**
-	 * On Approval View
-	 * Canclet_rodetail | Rodetail->ID |  $roDetail->STATUS = 4;
-	 * Cancel = 0
-	 * @author ptrnov  <piter@lukison.com>
-     * @since 1.1
-     */
-	public function actionCancel_podetail()
-    {
-		if (Yii::$app->request->isAjax) {
-			$request= Yii::$app->request;
-			$id=$request->post('id');
-			$roDetail = Purchasedetail::findOne($id);
-			$roDetail->STATUS = 0;
-			$roDetail->save();
-			return true;
-		}
-    }
-	
-	
-	
-	
-	
-	
-    public function actionDelpo($idpo,$kdpo)
-    {
-        $podet = Podetail::find()->where(['KD_PO'=>$kdpo, 'ID'=>$idpo])->one();
-        $po = Purchasedetail::find()->where(['KD_PO'=>$kdpo, 'ID'=>$podet->ID_DET_PO])->one();
-
-        $sisa = $po->QTY - $podet->QTY;
-          
-        if($sisa == '0'){
-            \Yii::$app->db_esm->createCommand()->update('p0002', ['QTY'=>$sisa, 'STATUS'=>'3'], "ID='$po->ID'")->execute();
-        } else {
-            \Yii::$app->db_esm->createCommand()->update('p0002', ['QTY'=>$sisa], "ID='$po->ID'")->execute();
-        }
-
-        $podet->STATUS = '3';
-        $podet->save();
-
-        return $this->redirect(['create', 'kdpo'=>$kdpo]);
     }
 
-
-
-    
-
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
-	
     /**
      * Finds the Purchaseorder model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

@@ -26,7 +26,12 @@ use lukisongroup\hrd\models\Corp;
 $this->title = 'Purchaseorder';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-
+<script type="text/javascript">
+function submitform()
+{
+  document.myform.submit();
+}
+</script>
 <?php
 	/*
 	 * Declaration Componen User Permission
@@ -567,35 +572,6 @@ function submitform()
 					return substr($model->SIG3_NM, 0, 14). '..';
 				}
 			},
-			'headerOptions'=>[				
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'125px',
-					'font-family'=>'verdana, arial, sans-serif',
-					'font-size'=>'9pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
-				]
-			],
-			'contentOptions'=>[
-				'style'=>[
-					'text-align'=>'left',
-					'width'=>'125px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'9pt',
-				]
-			], 		
-		],
-		[
-			'attribute'=>'nmcorp',
-			'label'=>'Corporation',
-			'filterType'=>GridView::FILTER_SELECT2,
-				'filter' => $selectCorp,	
-				'filterWidgetOptions'=>[
-					'pluginOptions'=>['allowClear'=>true],
-				],
-				'filterInputOptions'=>['placeholder'=>'Any author'],
-			'hAlign'=>'left',
-			'vAlign'=>'middle',
 			'headerOptions'=>[				
 				'style'=>[
 					'text-align'=>'center',

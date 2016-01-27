@@ -16,9 +16,7 @@ class PoPlusValidation extends Model
 {
     public $kD_PO;
 	public $pARENT_BRG;
-	public $kD_CORP;	
 	public $nM_BARANG;
-	public $kD_TYPE;
 	public $kD_KATEGORI;
 	public $kD_BARANG;
 	public $hARGA;
@@ -35,9 +33,9 @@ class PoPlusValidation extends Model
     public function rules()
     {
         return [			
-			[['kD_TYPE','kD_PO','kD_BARANG'],'required'],
+			[['kD_PO','kD_BARANG'],'required'],
 			[['kD_BARANG'], 'findcheck'],
-			[['nM_BARANG','kD_PO','kD_TYPE','kD_KATEGORI','uNIT','qTY','nOTE','wEIGHT_UNIT','qTY_UNIT','nM_UNIT'], 'safe'],
+			[['nM_BARANG','kD_PO','kD_KATEGORI','uNIT','qTY','nOTE','wEIGHT_UNIT','qTY_UNIT','nM_UNIT'], 'safe'],
 			[['hARGA'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],			
 		];
     }
@@ -50,7 +48,7 @@ class PoPlusValidation extends Model
 	public function findcheck($attribute, $params)
     {        
 		if (!$this->hasErrors()) {
-			 $cntDetailPo = Purchasedetail::find()->where('STATUS<>3 AND KD_PO="'.$this->kD_PO.'" AND KD_BARANG="'.$this->kD_BARANG.'"')->count();
+			 $cntDetailPo = Purchasedetail::find()->where(['KD_PO'=>$this->kD_PO,'KD_BARANG'=>$this->kD_BARANG])->count();
 			if ($cntDetailPo) {
                 $this->addError($attribute, 'SKU Alrady Exist,Please Update Quantity or Price');				
             }else{

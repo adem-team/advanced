@@ -5,10 +5,9 @@ use kartik\grid\GridView;
 use yii\db\ActiveQuery;
 use yii\helpers\Url;
 use yii\bootstrap\Modal;
-use lukisongroup\purchasing\models\pr\Podetail;
-use lukisongroup\purchasing\models\pr\Purchasedetail;
+use lukisongroup\purchasing\models\Podetail;
+use lukisongroup\purchasing\models\Purchasedetail;
 use lukisongroup\master\models\Unitbarang;	
-
 ?>
 
 <?php 
@@ -155,7 +154,7 @@ use lukisongroup\master\models\Unitbarang;
 					//Purchasedetail::find()->where(['KD_RO'=>$dataKdRo,'KD_BARANG'=>$roDetail->KD_BARANG])->ALL();		
 					//$countQtyTaken=Purchasedetail::find(SUM('QTY'))->where(['KD_RO' => $model->KD_RO,'KD_BARANG' => $model->KD_BARANG])->all();
 					/*SUM QTY Dimana KD_RO DAN KD BARANG = jika requestorder->SQTY=Purchesedetail->QTY makan niali 0 => Hidden*/
-					$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE STATUS<>3 AND KD_RO='".$model->KD_RO. "' AND KD_BARANG='".$model->KD_BARANG ."' GROUP BY KD_BARANG";	
+					$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO='" .$model->KD_RO. "' AND KD_BARANG='" .$model->KD_BARANG ."' GROUP BY KD_BARANG";	
 					$countQtyTaken=Purchasedetail::findBySql($pqtyTaken)->one();
 					//print_r($countQtyTaken->QTY);
 					if($countQtyTaken){
@@ -330,13 +329,13 @@ use lukisongroup\master\models\Unitbarang;
 				}, */
 				
 				'checkboxOptions' => function ($model, $key, $index, $column)use ($kdpo) {
-					$poDetail=Purchasedetail::find()->where('STATUS<>3 AND KD_PO="'.$kdpo.'" AND KD_RO="'.$model->KD_RO.'" AND KD_BARANG="'.$model->KD_BARANG.'"')->one();
+					$poDetail=Purchasedetail::find()->where(['KD_PO'=>$kdpo,'KD_RO'=>$model->KD_RO,'KD_BARANG'=>$model->KD_BARANG])->one();
 					if ($poDetail){
 						return ['checked' => $model->TMP_CK, 'hidden'=>true];
 						
 					}else{
 						/*FORMULA*/
-						$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE STATUS<>3 AND KD_RO='".$model->KD_RO."' AND KD_BARANG='" .$model->KD_BARANG."' GROUP BY KD_BARANG";	
+						$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO='".$model->KD_RO."' AND KD_BARANG='" .$model->KD_BARANG."' GROUP BY KD_BARANG";	
 						$countQtyTaken=Purchasedetail::findBySql($pqtyTaken)->one();
 						if($countQtyTaken){
 							$qtyInPo=$countQtyTaken->QTY!=''? $countQtyTaken->QTY :0;

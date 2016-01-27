@@ -7,7 +7,6 @@ use Yii;
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\master\models\Suplier;
 use lukisongroup\master\models\Nmperusahaan;
-use lukisongroup\hrd\models\Corp;
 /**
  * This is the model class for table "p0001".
  *
@@ -95,16 +94,6 @@ class Purchaseorder extends \yii\db\ActiveRecord
     {
         return $this->employe->EMP_NM.' '.$this->employe->EMP_NM_BLK;
     }
-	
-	public function getCorp()
-    {
-       return $this->hasOne(Corp::className(), ['CORP_ID' => 'KD_CORP']);
-    }
-	
-	public function getNmcorp()
-    {
-        return $this->corp->CORP_NM;
-    }
 
 	/*
 	 * Same above
@@ -160,7 +149,7 @@ class Purchaseorder extends \yii\db\ActiveRecord
 			//['KD_SUPPLIER', 'required', 'message' => 'Please choose a username.'],
 			[['KD_PO'], 'required'],
             [['KD_PO', 'CREATE_BY', 'CREATE_AT','STATUS', 'NOTE'], 'safe'],
-            [['KD_CORP','nmcorp','PAJAK','DISCOUNT', 'ETD', 'ETA', 'SHIPPING', 'BILLING', 'DELIVERY_COST'], 'safe'],
+            [['PAJAK','DISCOUNT', 'ETD', 'ETA', 'SHIPPING', 'BILLING', 'DELIVERY_COST'], 'safe'],
             [['STATUS'], 'integer'],
             [['NOTE'], 'string'],
             [['KD_PO'], 'string', 'max' => 30],
