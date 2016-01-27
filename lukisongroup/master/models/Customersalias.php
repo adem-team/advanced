@@ -1,6 +1,7 @@
 <?php
 
 namespace lukisongroup\master\models;
+use yii\helpers\ArrayHelper;
 
 use Yii;
 
@@ -44,10 +45,18 @@ class Customersalias extends \yii\db\ActiveRecord
             [['KD_PARENT'], 'integer'],
             [['CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['KD_CUSTOMERS', 'KD_ALIAS'], 'string', 'max' => 30],
+            [['KD_ALIAS'], 'unique','message'=>'duplicate code alias'],
             [['KD_DISTRIBUTOR'], 'string', 'max' => 50],
             [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 100]
         ];
     }
+
+    public function data($data,$to,$from)
+    {
+      # code...
+      return ArrayHelper::map($data, $to, $from);
+    }
+
 
     /**
      * @inheritdoc

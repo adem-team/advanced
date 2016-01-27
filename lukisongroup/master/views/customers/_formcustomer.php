@@ -209,15 +209,15 @@ $this->registerJs("
 
             .done(function(result){
 			        if(result == 1 )
-                                          {
+                {
+                  $(document).find('#createcus').modal('hide');
+                  $('form#customers').trigger('reset');
+                  $.pjax.reload({container:'#gv-cus'});
 
-                                             $(document).find('#createcus').modal('hide');
-                                             $('form#customers').trigger('reset');
-                                             $.pjax.reload({container:'#gv-cus'});
-                                          }
-                                        else{
-                                           console.log(result)
-                                        }
+                  }
+                else{
+                      console.log(result)
+                      }
 
             });
 
