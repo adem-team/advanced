@@ -337,6 +337,20 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 			}
 		}
 	}
+  public function actionLoginPriceCheck(){
+		$ValidationLoginPrice = new ValidationLoginPrice();
+		/*Ajax Load*/
+		if(Yii::$app->request->isAjax){
+			$ValidationLoginPrice->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($ValidationLoginPrice));
+		}else{	/*Normal Load*/
+			if($ValidationLoginPrice->load(Yii::$app->request->post())){
+				if ($ValidationLoginPrice->Validationlogin()){
+					return $this->redirect(['/master/barang/barang-price']);
+				}
+			}
+		}
+	}
 
 
   public function actionIndexAlias()

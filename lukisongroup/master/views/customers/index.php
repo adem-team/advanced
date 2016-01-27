@@ -239,7 +239,7 @@ $tabcrud = \kartik\grid\GridView::widget([
                                                             'data-target'=>"#formparent",
                                                             'data-title'=> $model->CUST_KTG_NM,
                                                             ]).'<li>';
-                        },
+                                                          },
 
                         'view' =>function($url, $model, $key){
                                 return  '<li>' . Html::a('<span class="glyphicon glyphicon-eye-open"></span>'.Yii::t('app', 'View'),['view','id'=>$model->CUST_KTG],[
@@ -247,7 +247,7 @@ $tabcrud = \kartik\grid\GridView::widget([
                                                             'data-target'=>"#viewparent",
                                                             'data-title'=> $model->CUST_KTG_PARENT,
                                                             ]).'</li>';
-                        },
+                                                          },
 
                          'update' =>function($url, $model, $key){
                                  return  '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Update'),['update','id'=>$model->CUST_KTG],[
@@ -257,6 +257,7 @@ $tabcrud = \kartik\grid\GridView::widget([
                                                             ]).'</li>';
 
                                                             },
+
                                               ],
 
                                          ],
@@ -336,7 +337,7 @@ $tabcrud = \kartik\grid\GridView::widget([
 
 
 [ 'class' => 'kartik\grid\ActionColumn',
-            'template' => '{view}{update}{delete}{edit}',
+            'template' => '{view}{update}{delete}{edit}{alias}',
                 'header'=>'Action',
                 'dropdown' => true,
                 'dropdownOptions'=>['class'=>'pull-right dropup'],
@@ -372,6 +373,14 @@ $tabcrud = \kartik\grid\GridView::widget([
                                                             ['create-map','id'=>$model->CUST_KD],
                                                              [ 'class'=>'btn btn-default',
 															                                ]).'</li>';
+
+                                                           },
+                           'alias' =>function($url, $model, $key){
+                                     return  '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Create alias'),['create-alias-customers','id'=>$model->CUST_KD],[
+                                                              'data-toggle'=>"modal",
+                                                              'data-target'=>"#formalias",
+                                                              'data-title'=> $model->CUST_KD,
+                                                                 ]).'</li>';
 
                                                            },
 
@@ -552,6 +561,30 @@ Modal::begin([
             'header' => '<h4 class="modal-title">LukisonGroup</h4>',
                 ]);
  Modal::end();
+
+// alias
+ $this->registerJs("
+ $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+     $('#formalias').on('show.bs.modal', function (event) {
+         var button = $(event.relatedTarget)
+         var modal = $(this)
+         var title = button.data('title')
+         var href = button.attr('href')
+         //modal.find('.modal-title').html(title)
+         modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+         $.post(href)
+             .done(function( data ) {
+                 modal.find('.modal-body').html(data)
+             });
+         })
+ ",$this::POS_READY);
+
+
+Modal::begin([
+         'id' => 'formalias',
+         'header' => '<h4 class="modal-title">LukisonGroup</h4>',
+             ]);
+Modal::end();
 
 
 // view kategori customers via modal

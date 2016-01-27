@@ -16,6 +16,8 @@ use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use lukisongroup\master\models\Customersalias;
+use yii\widgets\ActiveForm;
 
 /**
  * CustomersController implements the CRUD actions for Customers model.
@@ -174,6 +176,40 @@ class CustomersController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
+
+    public function actionCreateAliasCustomers($id)
+    {
+        $model = new Customersalias();
+        $id = Customers::find()->where(['CUST_KD'=>$id])->one();
+        $nama = $id->CUST_NM;
+
+        if(Yii::$app->request->isAjax && $model->load($_POST))
+        {
+          Yii::$app->response->format = 'json';
+          return ActiveForm::validate($model);
+        }
+
+        if ($model->load(Yii::$app->request->post()) ) {
+          $model->CREATED_AT = date('Y-m-d');
+          $model->CREATED_BY = Yii::$app->user->identity->username;
+          $model->KD_PARENT = 1;
+          if($model->save())
+          {
+            echo 1;
+          }
+          else{
+            echo 0;
+          }
+            // return $this->redirect(['index']);
+        } else {
+            return $this->renderAjax('alias_customers', [
+                'model' => $model,
+                'id'=>$id,
+                'nama'=>$nama,
+            ]);
+        }
+    }
+
 
 
 
@@ -437,10 +473,10 @@ class CustomersController extends Controller
         $model = new Customers();
 
     if ($model->load(Yii::$app->request->post()) ) {
-      $kdcity = $model->CITY_ID;
-			$kdpro = $model->PROVINCE_ID;
-			$kode = Yii::$app->ambilkonci->getkeycustomers($kdpro,$kdcity);
-			$model->CUST_KD = $kode;
+        $kdcity = $model->CITY_ID;
+			  $kdpro = $model->PROVINCE_ID;
+			  $kode = Yii::$app->ambilkonci->getkeycustomers($kdpro,$kdcity);
+			  $model->CUST_KD = $kode;
 			if($model->validate())
 			{
 				$model->CORP_ID = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
@@ -461,7 +497,7 @@ class CustomersController extends Controller
                 'model' => $model,
             ]);
         }
-        }
+      }
 
 
     /**
@@ -509,16 +545,16 @@ class CustomersController extends Controller
 
 			    if($model->validate())
             {
-            $model->UPDATED_AT = date("Y-m-d H:i:s");
-						$model->UPDATED_BY = Yii::$app->user->identity->username;
-            $model->UPDATED_BY = Yii::$app->user->identity->username;
-					if($model->save())
-          {
-            echo 1;
-          }
-          else{
-            echo 0;
-          }
+              $model->UPDATED_AT = date("Y-m-d H:i:s");
+						  $model->UPDATED_BY = Yii::$app->user->identity->username;
+              $model->UPDATED_BY = Yii::$app->user->identity->username;
+					         if($model->save())
+                   {
+                     echo 1;
+                    }
+                  else{
+                      echo 0;
+                    }
             }
 
             //  return $this->redirect(['index']);
@@ -536,9 +572,7 @@ class CustomersController extends Controller
         if ($model->load(Yii::$app->request->post()) ) {
 
 			    if($model->validate())
-                    {
-
-
+              {
                       if($model->save())
                       {
                         echo 1;
@@ -547,7 +581,7 @@ class CustomersController extends Controller
                         echo 0;
                       }
 
-                    }
+              }
 
             //  return $this->redirect(['index']);
         } else {
@@ -564,9 +598,7 @@ class CustomersController extends Controller
         if ($model->load(Yii::$app->request->post()) ) {
 
 			    if($model->validate())
-                    {
-
-
+              {
                       if($model->save())
                       {
                         echo 1;
@@ -574,7 +606,7 @@ class CustomersController extends Controller
                       else{
                         echo 0;
                       }
-                    }
+            }
 
             //  return $this->redirect(['index']);
         } else {

@@ -26,14 +26,13 @@ $config = ['template'=>"{input}\n{error}\n{hint}"]
     <?php $form = ActiveForm::begin([
       'id'=>$model->formName(),
       'enableClientValidation'=>true,
-      'enableAjaxValidation'=>true
+      'enableAjaxValidation'=>true,
+      'action'=>'/master/customers/create-alias'
     ]); ?>
 
-    <?= $form->field($model, 'KD_PARENT',['template' => "{input}"])->hiddenInput(['value'=>$parent,'readonly' => true]) ?>
+    <?= $form->field($model, 'KD_CUSTOMERS')->textInput(['value'=>$id->CUST_KD,'readonly'=>true])->label('Kode Customers') ?>
 
-    <?= $form->field($model, 'KD_BARANG')->textInput(['value'=>$id->KD_BARANG,'readonly'=>true])->label('KODE_BARANG') ?>
-
-    <?= $form->field($model, 'NM_BARANG')->textInput(['value'=>$id->NM_BARANG,'readonly'=>true]) ?>
+    <?= $form->field($model, 'CUST_NM')->textInput(['value'=>$nama,'disabled'=>true]) ?>
 
     <?= $form->field($model, 'KD_ALIAS',$config)->widget(LabelInPlace::classname()); ?>
 
@@ -52,3 +51,34 @@ $config = ['template'=>"{input}\n{error}\n{hint}"]
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+
+$this->registerJs("
+
+   $('form#{$model->formName()}').on('beforeSubmit',function(e)
+    {
+        var \$form = $(this);
+        $.post(
+            \$form.attr('action'),
+            \$form.serialize()
+
+        )
+            .done(function(result){
+			        if(result == 1 )
+                {
+                  $(document).find('#formalias').modal('hide');
+                  $('form#{$model->formName()}').trigger('reset');
+                  }
+                else{
+                      console.log(result)
+                    }
+
+            });
+
+return false;
+
+
+});
+
+
+ ",$this::POS_END);
