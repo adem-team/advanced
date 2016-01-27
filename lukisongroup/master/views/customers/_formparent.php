@@ -20,14 +20,14 @@ use yii\helpers\ArrayHelper;
     <?php $form = ActiveForm::begin([
 	  'id'=>'createform',
       'enableClientValidation' => true,
-	
+
 	]); ?>
 
-  
+
 
     <?= $form->field($model, 'CUST_KTG_NM')->textInput(['maxlength' => true])->label('Nama Parent') ?>
-	
-	
+
+
 	  <?= $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']) ?>
 
     <div class="form-group">
@@ -37,8 +37,36 @@ use yii\helpers\ArrayHelper;
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+$this->registerJs("
+
+   $('#createform').on('beforeSubmit',function(e)
+    {
+        var \$form = $(this);
+        $.post(
+            \$form.attr('action'),
+            \$form.serialize()
+
+        )
+
+            .done(function(result){
+			        if(result == 1 )
+                                          {
+
+                                             $(document).find('#formparent').modal('hide');
+                                             $('#createform').trigger('reset');
+                                             $.pjax.reload({container:'#gv-kat'});
+                                          }
+                                        else{
+                                           console.log(result)
+                                        }
+
+            });
+
+return false;
 
 
+});
 
 
-
+ ",$this::POS_END);

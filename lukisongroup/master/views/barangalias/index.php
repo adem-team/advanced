@@ -16,13 +16,7 @@ use lukisongroup\master\models\Tipebarang;
 */
 
 $datatype =  ArrayHelper::map(Tipebarang::find()->where('STATUS<>3')->groupBy('NM_TYPE')->all(), 'KD_TYPE', 'NM_TYPE');
-function getPermissionEmp(){
-  if (Yii::$app->getUserOpt->profile_user()){
-    return Yii::$app->getUserOpt->profile_user()->emp;
-  }else{
-    return false;
-  }
-}
+
 
 $aryParent= [
     ['PARENT' => 0, 'PAREN_NM' => 'UMUM'],
@@ -181,16 +175,7 @@ $gridColumns = [
                             'data-title'=> $model->KD_BARANG,
                             ]). '</li>' . PHP_EOL;
           },
-                      'price' =>function($url, $model, $key) {
-              $gF=getPermissionEmp()->GF_ID;
-              if ($gF<=4){
-                return  '<li>' . Html::a('<span class="fa fa-money fa-dm"></span>'.Yii::t('app', 'Price List Items'),
-                            ['/master/barang/login-price-view'],[
-                            'data-toggle'=>"modal",
-                            'data-target'=>"#modal-price",
-                            ]). '</li>' . PHP_EOL;
-              }
-          },
+
 
               ],
       'headerOptions'=>[
@@ -239,12 +224,8 @@ $gridColumns = [
 					'heading'=>'<h3 class="panel-title">LIST Nama Alias</h3>',
 					'type'=>'warning',
 					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Alias ',
-							['modelClass' => 'Kategori',]),'/master/barangalias/create',[
-								'data-toggle'=>"modal",
-									'data-target'=>"#modal-create",
-										'class' => 'btn btn-success'
-													]),
-					'showFooter'=>false,
+							['modelClass' => 'Kategori',]),'/master/barangalias/create'	),
+					      'showFooter'=>false,
 				],
 
 				'export' =>['target' => GridView::TARGET_BLANK],

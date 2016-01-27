@@ -290,7 +290,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 															'data-title'=> $model->KD_BARANG,
 															]). '</li>' . PHP_EOL;
 						},
-                        'price' =>function($url, $model, $key) {
+              'price' =>function($url, $model, $key) {
 								$gF=getPermissionEmp()->GF_ID;
 								if ($gF<=4){
 									return  '<li>' . Html::a('<span class="fa fa-money fa-dm"></span>'.Yii::t('app', 'Price List Items'),
@@ -300,6 +300,16 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 															]). '</li>' . PHP_EOL;
 								}
 						},
+						'lihat' =>function($url, $model, $key) {
+							$gF=getPermissionEmp()->GF_ID;
+							if ($gF<=4){
+								return  '<li>' . Html::a('<span class="fa fa-user"></span>'.Yii::t('app', 'Alias Data List'),
+														['/master/barang/loginalias'],[
+														'data-toggle'=>"modal",
+														'data-target'=>"#modal-alias",
+														]). '</li>' . PHP_EOL;
+							}
+					},
 
                 ],
                 'headerOptions'=>[
@@ -432,7 +442,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
     ]);
     Modal::end();
 
-	/*Price Author*/
+	/*Price*/
 	$this->registerJs("
 		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		 $('#modal-price').on('show.bs.modal', function (event) {
@@ -457,3 +467,29 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 			]
     ]);
     Modal::end();
+
+		/*alias*/
+		$this->registerJs("
+			 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+			 $('#modal-alias').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				//modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-dolar fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				})
+		",$this::POS_READY);
+			Modal::begin([
+					'id' => 'modal-alias',
+					'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Login Autorize</b></h4></div>',
+				'size' => Modal::SIZE_SMALL,
+				'headerOptions'=>[
+					'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+				]
+			]);
+			Modal::end();
