@@ -53,17 +53,7 @@ class BarangaliasController extends Controller
      * Lists all Barangalias models.
      * @return mixed
      */
-    public function actionIndex()
-    {
-        $searchModel = new BarangaliasSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
+  
     public function actionProduct() {
      $out = [];
      if (isset($_POST['depdrop_parents'])) {

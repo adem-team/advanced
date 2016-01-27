@@ -53,7 +53,7 @@ class CustomersController extends Controller
                } else {
                    //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
                    Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
-                   return true; 
+                   return true;
                }
             } else {
                 return true;
@@ -66,23 +66,23 @@ class CustomersController extends Controller
        // city data
         $searchmodelkota = new KotaSearch();
         $dataproviderkota = $searchmodelkota->search(Yii::$app->request->queryParams);
-        
+
         // province data
         $searchmodelpro = new ProvinceSearch();
         $dataproviderpro = $searchmodelpro->search(Yii::$app->request->queryParams);
 
         $searchModel1 = new KategoricusSearch();
         $dataProviderkat  = $searchModel1->searchparent(Yii::$app->request->queryParams);
-      
+
         $searchModel = new CustomersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
            if(Yii::$app->request->post('hasEditable'))
         {
             $ID = \Yii::$app->request->post('editableKey');
-            $model = Customers::findOne($ID); 
+            $model = Customers::findOne($ID);
             $out = Json::encode(['output'=>'', 'message'=>'']);
-      
+
             // fetch the first entry in posted data (there should
             // only be one entry anyway in this array for an
             // editable submission)
@@ -92,7 +92,7 @@ class CustomersController extends Controller
             $posted = current($_POST['Customers']);
             $post['Customers'] = $posted;
 
-      
+
 
             // load model like any single model validation
             if ($model->load($post)) {
@@ -118,14 +118,14 @@ class CustomersController extends Controller
                 //   $output =  ''; // process as you need
                 // }
                 $out = Json::encode(['output'=>$output, 'message'=>'']);
-              
-         
+
+
             // return ajax json encoded response and exit
             echo $out;
 
             return;
           }
-           
+
         }
 
       return $this->render('index', [
@@ -137,7 +137,7 @@ class CustomersController extends Controller
       'searchmodelpro' => $searchmodelpro,
       'dataproviderpro' =>  $dataproviderpro,
       'dataproviderkota' => $dataproviderkota,
-			
+
         ]);
 	}
 
@@ -152,7 +152,7 @@ class CustomersController extends Controller
             'model' => $this->findModelkota($id),
         ]);
     }
-	 
+
 	 public function actionViewpro($id)
     {
         return $this->renderAjax('viewpro', [
@@ -160,14 +160,14 @@ class CustomersController extends Controller
         ]);
     }
 
-	 
+
 	  public function actionViewcust($id)
     {
         return $this->render('viewcus', [
             'model' => $this->findModelcust($id),
         ]);
     }
-	
+
     public function actionView($id)
     {
         return $this->renderAjax('viewkat', [
@@ -175,25 +175,48 @@ class CustomersController extends Controller
         ]);
     }
 
-   
+
 
     /**
      * Creates a new Customer model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
+     public function actionCreateMap($id)
+     {
+       # code...
+       $model = Customers::find()->where(['CUST_KD'=>$id])->one();
+
+       if ($model->load(Yii::$app->request->post()) ) {
+
+         if($model->validate())
+         {
+
+          $model->save();
+        }
+
+           return $this->redirect(['index']);
+         }
+         else {
+           # code...
+           return $this->render('_formaddmap', [
+               'model' => $model,
+           ]);
+         }
+     }
+
       public function actionCreateprovnce()
     {
         $model = new Province();
 
         if ($model->load(Yii::$app->request->post()) ) {
-				
+
 				if($model->validate())
 				{
-				
+
 						$model->save();
 				}
-          
+
             return $this->redirect(['index']);
 		}
          else {
@@ -208,14 +231,21 @@ class CustomersController extends Controller
         $model = new Kota();
 
         if ($model->load(Yii::$app->request->post()) ) {
-                
+
                 if($model->validate())
                 {
-                
-                        $model->save();
+
+                  if($model->save())
+                  {
+                    echo 1;
+                  }
+                  else{
+                    echo 0;
+                  }
+
                 }
-          
-            return $this->redirect(['index']);
+
+            // return $this->redirect(['index']);
         }
          else {
             return $this->renderAjax('_formkota', [
@@ -223,11 +253,11 @@ class CustomersController extends Controller
             ]);
         }
     }
-	
-	
+
+
     public function actionCreate($id)
     {
-        
+
         $model = new Kategoricus();
 
         $cus = Kategoricus::find()->where(['CUST_KTG'=> $id ])->one();
@@ -236,30 +266,36 @@ class CustomersController extends Controller
         if ($model->load(Yii::$app->request->post()) ) {
 
           $model->CUST_KTG_PARENT = $par;
-				
+
 				if($model->validate())
 				{
 					  $model->CREATED_BY =  Yii::$app->user->identity->username;
 						$model->CREATED_AT = date("Y-m-d H:i:s");
-						$model->save();
+            if($model->save())
+            {
+              echo 1;
+            }
+            else{
+              echo 0;
+            }
 
 				}
-		
-            return $this->redirect(['index']);
+
+            // return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_form', [
                 'model' => $model,
             ]);
         }
     }
- 
+
  // data json map
     public function actionMap()
     {
             $conn = Yii::$app->db3;
             $hasil = $conn->createCommand("SELECT ALAMAT, CUST_NM,MAP_LAT,MAP_LNG from c0001")->queryAll();
-            echo json_encode($hasil); 
-            
+            echo json_encode($hasil);
+
     }
 
    // action depdrop
@@ -275,7 +311,7 @@ class CustomersController extends Controller
                                                     ->all();
                                                     // print_r($model);
                                                     // die();
-            //$out = self::getSubCatList($cat_id); 
+            //$out = self::getSubCatList($cat_id);
             // the getSubCatList function will query the database based on the
             // cat_id and return an array like below:
             // [
@@ -285,7 +321,7 @@ class CustomersController extends Controller
             foreach ($model as $key => $value) {
                    $out[] = ['id'=>$value['CUST_KTG'],'name'=> $value['CUST_KTG_NM']];
                }
- 
+
                echo json_encode(['output'=>$out, 'selected'=>'']);
                return;
            }
@@ -307,7 +343,7 @@ class CustomersController extends Controller
                                                     ->all();
                                                     // print_r($model);
                                                     // die();
-            //$out = self::getSubCatList($cat_id); 
+            //$out = self::getSubCatList($cat_id);
             // the getSubCatList function will query the database based on the
             // cat_id and return an array like below:
             // [
@@ -317,7 +353,7 @@ class CustomersController extends Controller
             foreach ($model as $key => $value) {
                    $out[] = ['id'=>$value['POSTAL_CODE'],'name'=> $value['CITY_NAME']];
                }
- 
+
                echo json_encode(['output'=>$out, 'selected'=>'']);
                return;
            }
@@ -327,153 +363,104 @@ class CustomersController extends Controller
 
 
 
-
-                         
-	/* create controller dropdown out extension*/
-
-	 // public function actionLisarea($id)
-  //   {
- 
-        
-  //       $countJob = Kota::find()
-  //               ->where(['PROVINCE_ID' =>$id])
-  //               ->count();
- 
-  //       $job = Kota::find()
-  //                ->where(['PROVINCE_ID' =>$id])
-		// 		 // ->andwhere('CUST_KTG_PARENT <> 0')
-  //               ->all();
-        
-        
-        
-  //       if($countJob>0){
-  //           echo "<option> Select  </option>";
-  //           foreach($job as $post){
-                
-  //               echo "<option value='".$post->POSTAL_CODE."'>".$post->CITY_NAME."</option>";
-  //           }
-  //       }
-  //       else{
-  //           echo "<option> - </option>";
-  //       }
-  
-  //   }
-	
-	
-  
   //   public function actionLis($id)
   //   {
- 
-        
+
+
   //       $countJob = Kategoricus::find()
   //               ->where(['CUST_KTG_PARENT' =>$id])
   //               ->count();
- 
+
   //       $job = Kategoricus::find()
   //                ->where(['CUST_KTG_PARENT' =>$id])
 		// 		 ->andwhere('CUST_KTG_PARENT <> 0')
   //               ->all();
-        
-        
-        
+
+
+
   //       if($countJob>0){
   //           echo "<option> Select  </option>";
   //           foreach($job as $post){
-                
+
   //               echo "<option value='".$post->CUST_KTG."'>".$post->CUST_KTG_NM."</option>";
   //           }
   //       }
   //       else{
   //           echo "<option> - </option>";
   //       }
-  
+
   //   }
-  
-    public function actionCreatemap($id,$lat,$long,$address)
-    {
-		    $model = Customers::find()->where(['CUST_KD'=>$id])->one();
 
-        if (Yii::$app->request->IsAjax) {
-			
-			       $data = Yii::$app->request->get();
-			       $lat  = $data['lat'];
-            
-			       $long = $data['long'];
-			       $address = $data['address'];
-			       // $radius = $data['radius'];
-			       $model->ALAMAT = $address;
 
-			       $model->MAP_LAT = $lat ;
-			       $model->MAP_LNG = $long;
-        if($model->save())
-        {
-          echo 1; 
-        }
-		  }else {
-				  echo  0;
-			}    
-      // print_r($model->getErrors());     
-    
-    }
-    
-    
-    
+
+
      public function actionCreateparent()
     {
         $model = new Kategoricus();
 
         if ($model->load(Yii::$app->request->post()) ) {
 
-            
+
        	    if($model->validate())
             {
                 $model->CUST_KTG_PARENT = 0;
                 $model->CREATED_BY =  Yii::$app->user->identity->username;
                 $model->CREATED_AT = date("Y-m-d H:i:s");
-                $model->save();
+                if($model->save())
+                {
+                  echo 1;
+                }
+                else{
+                  echo 0;
+                }
 
             }
               // print_r($model);
               //   die();
-            return $this->redirect(['index']);
+            // return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_formparent', [
                 'model' => $model,
             ]);
         }
     }
-    
-    
+
+
     public function actionCreatecustomers()
     {
         $model = new Customers();
 
-    if ($model->load(Yii::$app->request->post()) ) {              
+    if ($model->load(Yii::$app->request->post()) ) {
+      $kdcity = $model->CITY_ID;
 			$kdpro = $model->PROVINCE_ID;
-			$kdcity = $model->CITY_ID;
-			$kddis = $model->KD_DISTRIBUTOR;
-			$kode = Yii::$app->ambilkonci->getkeycustomers($kddis,$kdpro,$kdcity);
+			$kode = Yii::$app->ambilkonci->getkeycustomers($kdpro,$kdcity);
 			$model->CUST_KD = $kode;
 			if($model->validate())
 			{
 				$model->CORP_ID = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
 				$model->CREATED_BY =  Yii::$app->user->identity->username;
 				$model->CREATED_AT = date("Y-m-d H:i:s");
-				$model->save();
-					
-			}            
-        return $this->redirect(['index']);
+
+				if($model->save())
+        {
+          echo 1;
+        }
+        else{
+          echo 0;
+        }
+
+			}
         } else {
             return $this->renderAjax('_formcustomer', [
                 'model' => $model,
             ]);
         }
         }
-    
-	
 
-	
-	
+
+
+
+
 
     /**
      * Updates an existing Kategori model.
@@ -482,46 +469,56 @@ class CustomersController extends Controller
      * @return mixed
      */
 
-     
+
 
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) ) {
-		
-				
+
+
 				if($model->validate())
 				{
-					   $model->UPDATED_AT = date("Y-m-d H:i:s");
+					  $model->UPDATED_AT = date("Y-m-d H:i:s");
 						$model->UPDATED_BY = Yii::$app->user->identity->username;
-						$model->save();
+					if($model->save())
+          {
+            echo 1;
+          }
+          else{
+            echo 0;
+          }
 				}
-				
 
-			
-           return $this->redirect(['index']);
+          //  return $this->redirect(['index']);
         } else {
             return $this->renderAjax('update', [
                 'model' => $model,
             ]);
         }
     }
-	
+
 	 public function actionUpdatecus($id)
     {
         $model = $this->findModelcust($id);
 
         if ($model->load(Yii::$app->request->post()) ) {
-			
+
 			    if($model->validate())
-                    {
+            {
                          $model->UPDATED_AT = date("Y-m-d H:i:s");
 						$model->UPDATED_BY = Yii::$app->user->identity->username;
-                        
-                        $model->save();
-                    }
-		
+            $model->UPDATED_BY = Yii::$app->user->identity->username;
+					if($model->save())
+          {
+            echo 1;
+          }
+          else{
+            echo 0;
+          }
+            }
+
              return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_formcustomer', [
@@ -529,20 +526,20 @@ class CustomersController extends Controller
             ]);
         }
     }
-	
+
 	public function actionUpdatekota($id)
     {
         $model = $this->findModelkota($id);
 
         if ($model->load(Yii::$app->request->post()) ) {
-			
+
 			    if($model->validate())
                     {
-                    
-                        
+
+
                         $model->save();
                     }
-		
+
              return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_formkota', [
@@ -550,20 +547,20 @@ class CustomersController extends Controller
             ]);
         }
     }
-	
+
 	public function actionUpdatepro($id)
     {
         $model = $this->findModelpro($id);
 
         if ($model->load(Yii::$app->request->post()) ) {
-			
+
 			    if($model->validate())
                     {
-                 
-                        
+
+
                         $model->save();
                     }
-		
+
              return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_formprovince', [
@@ -585,7 +582,7 @@ class CustomersController extends Controller
 		// $model->save();
         // return $this->redirect(['index']);
     // }
-	 
+
 	  // public function actionDeletekota($id)
     // {
      	// $model = Kota::find()->where(['CITY_ID'=>$id])->one();
@@ -593,7 +590,7 @@ class CustomersController extends Controller
 		// $model->save();
         // return $this->redirect(['index']);
     // }
-	
+
     public function actionDelete($id)
     {
      	$model = Kategoricus::find()->where(['CUST_KTG'=>$id])->one();
@@ -602,16 +599,16 @@ class CustomersController extends Controller
         return $this->redirect(['index']);
     }
 
-	
+
 	   public function actionDeletecus($id)
     {
-    
-		
+
+
 		$model = Customers::find()->where(['CUST_KD'=>$id])->one();
-	
+
 		$model->STATUS = 3;
 		$model->save();
-     
+
         return $this->redirect(['index']);
     }
 
@@ -639,7 +636,7 @@ class CustomersController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-	
+
 	 protected function findModelcust($id)
     {
         if (($model = Customers::findOne($id)) !== null) {
@@ -649,7 +646,7 @@ class CustomersController extends Controller
         }
     }
 
-    
+
 
     protected function findModel($id)
     {

@@ -20,6 +20,7 @@ use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\BarangSearch;
 use lukisongroup\master\models\ValidationLoginPrice;
 use lukisongroup\master\models\Barangalias;
+use lukisongroup\master\models\BarangaliasSearch;
 
 /**
  * BarangController implements the CRUD actions for Barang model.
@@ -119,6 +120,13 @@ WHERE db2.NM_TYPE = 'FDSFDG'
         ]);
     }
 
+    public function actionViewAlias($id)
+    {
+        return $this->renderAjax('view_alias', [
+            'model' => $this->findModelalias($id),
+        ]);
+    }
+
     /**
      * Creates a new Barang model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -129,6 +137,7 @@ WHERE db2.NM_TYPE = 'FDSFDG'
          $model = new Barangalias();
          $id = Barang::find()->where(['KD_BARANG'=>$id])->one();
          $nama = $id->NM_BARANG;
+         $parent = $id->PARENT;
 
          if(Yii::$app->request->isAjax && $model->load($_POST))
          {
@@ -145,7 +154,38 @@ WHERE db2.NM_TYPE = 'FDSFDG'
              return $this->renderAjax('_alias', [
                  'model' => $model,
                  'id'=>$id,
-                 'nama'=>$nama
+                 'nama'=>$nama,
+                 'parent'=>$parent
+             ]);
+         }
+     }
+
+     public function actionUpdateAlias($id)
+     {
+         $model = Barangalias::find()->where(['KD_BARANG'=>$id])->one();
+
+         $id = Barang::find()->where(['KD_BARANG'=>$id])->one();
+
+         $nama = $id->NM_BARANG;
+          $parent = $id->PARENT;
+
+         if(Yii::$app->request->isAjax && $model->load($_POST))
+         {
+           Yii::$app->response->format = 'json';
+           return ActiveForm::validate($model);
+         }
+
+         if ($model->load(Yii::$app->request->post()) ) {
+           $model->UPDATED_AT = date('Y-m-d');
+           $model->UPDATED_BY = Yii::$app->user->identity->username;
+           $model->save();
+             return $this->redirect(['index-alias']);
+         } else {
+             return $this->renderAjax('_alias', [
+                 'model' => $model,
+                 'id'=>$id,
+                 'nama'=>$nama,
+                 'parent'=>$parent
              ]);
          }
      }
@@ -273,7 +313,17 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 			'ValidationLoginPrice' => $ValidationLoginPrice,
 		]);
 	}
-	public function actionLoginPriceCheck(){
+
+  public function actionLoginalias()
+  {
+    # code...
+    $ValidationLoginPrice = new ValidationLoginPrice();
+    return $this->renderAjax('login_alias', [
+      'ValidationLoginPrice' => $ValidationLoginPrice,
+    ]);
+  }
+
+	public function actionLoginaliascek(){
 		$ValidationLoginPrice = new ValidationLoginPrice();
 		/*Ajax Load*/
 		if(Yii::$app->request->isAjax){
@@ -282,11 +332,24 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 		}else{	/*Normal Load*/
 			if($ValidationLoginPrice->load(Yii::$app->request->post())){
 				if ($ValidationLoginPrice->Validationlogin()){
-					return $this->redirect(['/master/barang/barang-price']);
+					return $this->redirect(['/master/barang/index-alias']);
 				}
 			}
 		}
 	}
+
+
+  public function actionIndexAlias()
+  {
+    # code...
+    $searchModel = new BarangaliasSearch();
+    $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+    return $this->render('index_alias', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+  }
 
 	/*
 	 * Index Price
@@ -412,6 +475,14 @@ WHERE db2.NM_TYPE = 'FDSFDG'
     protected function findModel($ID)
     {
         if (($model = Barang::findOne($ID)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+    protected function findModelalias($ID)
+    {
+        if (($model = Barangalias::findOne($ID)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

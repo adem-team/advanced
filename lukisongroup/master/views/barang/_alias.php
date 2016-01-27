@@ -29,8 +29,7 @@ $config = ['template'=>"{input}\n{error}\n{hint}"]
       'enableAjaxValidation'=>true
     ]); ?>
 
-
-
+    <?= $form->field($model, 'KD_PARENT',['template' => "{input}"])->hiddenInput(['value'=>$parent,'readonly' => true]) ?>
 
     <?= $form->field($model, 'KD_BARANG')->textInput(['value'=>$id->KD_BARANG,'readonly'=>true])->label('KODE_BARANG') ?>
 
