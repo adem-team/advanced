@@ -8,16 +8,16 @@ use kartik\label\LabelInPlace;
 /* @var $model lukisongroup\master\models\Province */
 /* @var $form yii\widgets\ActiveForm */
 
-   $config = ['template'=>"{input}\n{error}\n{hint}"];  
-                                                               
+   $config = ['template'=>"{input}\n{error}\n{hint}"];
+
 ?>
 
 <div class="province-form">
 
     <?php $form = ActiveForm::begin([
-	'id'=>'createproas',
+	'id'=>$model->formName(),
 	'enableClientValidation'=>true
-	
+
 	]); ?>
 
 	<?= $form->field($model, 'PROVINCE', $config)->widget(LabelInPlace::classname());?>
@@ -29,3 +29,36 @@ use kartik\label\LabelInPlace;
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+$this->registerJs("
+
+   $('form#{$model->formName()}').on('beforeSubmit',function(e)
+    {
+        var \$form = $(this);
+        $.post(
+            \$form.attr('action'),
+            \$form.serialize()
+
+        )
+
+            .done(function(result){
+			        if(result == 1 )
+                                          {
+
+                                             $(document).find('#form3').modal('hide');
+                                             $('form#{$model->formName()}').trigger('reset');
+                                             $.pjax.reload({container:'#gv-prov'});
+                                          }
+                                        else{
+                                           console.log(result)
+                                        }
+
+            });
+
+return false;
+
+
+});
+
+
+ ",$this::POS_END);

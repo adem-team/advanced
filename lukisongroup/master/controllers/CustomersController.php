@@ -195,7 +195,7 @@ class CustomersController extends Controller
           $model->save();
         }
 
-           return $this->redirect(['index']);
+           return $this->redirect(['viewcust','id'=>$model->CUST_KD]);
          }
          else {
            # code...
@@ -214,10 +214,16 @@ class CustomersController extends Controller
 				if($model->validate())
 				{
 
-						$model->save();
+					if($model->save())
+          {
+                echo 1;
+          }
+          else{
+                echo 0;
+          }
 				}
 
-            return $this->redirect(['index']);
+            // return $this->redirect(['index']);
 		}
          else {
             return $this->renderAjax('_formprovince', [
@@ -458,10 +464,6 @@ class CustomersController extends Controller
         }
 
 
-
-
-
-
     /**
      * Updates an existing Kategori model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -507,7 +509,7 @@ class CustomersController extends Controller
 
 			    if($model->validate())
             {
-                         $model->UPDATED_AT = date("Y-m-d H:i:s");
+            $model->UPDATED_AT = date("Y-m-d H:i:s");
 						$model->UPDATED_BY = Yii::$app->user->identity->username;
             $model->UPDATED_BY = Yii::$app->user->identity->username;
 					if($model->save())
@@ -519,7 +521,7 @@ class CustomersController extends Controller
           }
             }
 
-             return $this->redirect(['index']);
+            //  return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_formcustomer', [
                 'model' => $model,
@@ -537,10 +539,17 @@ class CustomersController extends Controller
                     {
 
 
-                        $model->save();
+                      if($model->save())
+                      {
+                        echo 1;
+                      }
+                      else{
+                        echo 0;
+                      }
+
                     }
 
-             return $this->redirect(['index']);
+            //  return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_formkota', [
                 'model' => $model,
@@ -558,10 +567,16 @@ class CustomersController extends Controller
                     {
 
 
-                        $model->save();
+                      if($model->save())
+                      {
+                        echo 1;
+                      }
+                      else{
+                        echo 0;
+                      }
                     }
 
-             return $this->redirect(['index']);
+            //  return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_formprovince', [
                 'model' => $model,
