@@ -16,7 +16,7 @@ use kartik\widgets\Select2;
 <div class="kota-form">
 
     <?php $form = ActiveForm::begin([
-        'id' => 'createkota',
+        'id' => $model->formName(),
         'enableClientValidation' => true
     ]); ?>
 
@@ -31,7 +31,7 @@ use kartik\widgets\Select2;
             'allowClear' => true,
              ],
 
-        
+
     ]);?>
 
     <?= $form->field($model, 'PROVINCE')->textInput(['maxlength' => true]) ?>
@@ -49,3 +49,37 @@ use kartik\widgets\Select2;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php
+$this->registerJs("
+
+   $('form#{$model->formName()}').on('beforeSubmit',function(e)
+    {
+        var \$form = $(this);
+        $.post(
+            \$form.attr('action'),
+            \$form.serialize()
+
+        )
+
+            .done(function(result){
+			        if(result == 1 )
+                                          {
+
+                                             $(document).find('#form2').modal('hide');
+                                             $('form#{$model->formName()}').trigger('reset');
+                                             $.pjax.reload({container:'#gv-kota'});
+                                          }
+                                        else{
+                                           console.log(result)
+                                        }
+
+            });
+
+return false;
+
+
+});
+
+
+ ",$this::POS_END);

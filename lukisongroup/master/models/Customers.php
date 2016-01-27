@@ -40,10 +40,9 @@ class Customers extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-   	 public $PROVINCE_ID;
-	 public $CITY_ID;
+
 	 public $PARENT;
-	
+
     public static function tableName()
     {
         return 'c0001';
@@ -63,7 +62,7 @@ class Customers extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-			// [['CUST_NM','STT_TOKO','KD_DISTRIBUTOR'], 'required'],
+			      //  [['CUST_NM','STT_TOKO','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID'], 'required'],
             // [['CUST_NM','CUST_KTG','JOIN_DATE','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID','NPWP', 'TLP1','STT_TOKO'], 'required'],
             [['CUST_KTG', 'TLP1', 'TLP2', 'FAX', 'STT_TOKO', 'STATUS'], 'integer'],
             [['JOIN_DATE', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
@@ -78,7 +77,7 @@ class Customers extends \yii\db\ActiveRecord
         public function getCus()
         {
             return $this->hasOne(Kategoricus::className(), ['CUST_KTG' => 'CUST_KTG']);
-          
+
         }
 
     /**

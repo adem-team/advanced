@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'KD_PARENT',
             [
               'label'=>'Jenis',
-              'attributes'=> $data
+              'value'=> $data
             ]
         ],
     ]) ?>
