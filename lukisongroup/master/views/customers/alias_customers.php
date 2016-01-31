@@ -9,6 +9,7 @@ use yii\helpers\Url;
 use kartik\widgets\Select2;
 use kartik\label\LabelInPlace;
 
+
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Barangalias */
 /* @var $form yii\widgets\ActiveForm */
@@ -27,7 +28,7 @@ $config = ['template'=>"{input}\n{error}\n{hint}"]
       'id'=>$model->formName(),
       'enableClientValidation'=>true,
       'enableAjaxValidation'=>true,
-      'action'=>'/master/customers/create-alias'
+      'validationUrl'=>Url::toRoute('/master/customers/valid-alias')
     ]); ?>
 
     <?= $form->field($model, 'KD_CUSTOMERS')->textInput(['value'=>$id->CUST_KD,'readonly'=>true])->label('Kode Customers') ?>

@@ -17,7 +17,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use lukisongroup\master\models\Customersalias;
+use lukisongroup\master\models\CustomersaliasSearch;
 use yii\widgets\ActiveForm;
+use lukisongroup\master\models\ValidationLoginPrice;
 
 /**
  * CustomersController implements the CRUD actions for Customers model.
@@ -142,6 +144,7 @@ class CustomersController extends Controller
 
         ]);
 	}
+  
 
     /**
      * Displays a single Customer model.
@@ -176,19 +179,18 @@ class CustomersController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
+    public function actionViewAlias($id)
+    {
+        return $this->renderAjax('view_alias', [
+            'model' => $this->findModelalias($id),
+        ]);
+    }
 
     public function actionCreateAliasCustomers($id)
     {
         $model = new Customersalias();
         $id = Customers::find()->where(['CUST_KD'=>$id])->one();
         $nama = $id->CUST_NM;
-
-        if(Yii::$app->request->isAjax && $model->load($_POST))
-        {
-          Yii::$app->response->format = 'json';
-          return ActiveForm::validate($model);
-        }
-
         if ($model->load(Yii::$app->request->post()) ) {
           $model->CREATED_AT = date('Y-m-d');
           $model->CREATED_BY = Yii::$app->user->identity->username;
@@ -200,7 +202,6 @@ class CustomersController extends Controller
           else{
             echo 0;
           }
-            // return $this->redirect(['index']);
         } else {
             return $this->renderAjax('alias_customers', [
                 'model' => $model,
@@ -210,7 +211,55 @@ class CustomersController extends Controller
         }
     }
 
+    public function actionValidAlias()
+    {
+      # code...
+        $model = new Customersalias();
+      if(Yii::$app->request->isAjax && $model->load($_POST))
+      {
+        Yii::$app->response->format = 'json';
+        return ActiveForm::validate($model);
+      }
+    }
+    public function actionLoginAlias()
+    {
+      # code...
+      $ValidationLoginPrice = new ValidationLoginPrice();
+      return $this->renderAjax('login_alias', [
+        'ValidationLoginPrice' => $ValidationLoginPrice,
+      ]);
+    }
 
+    public function actionLoginCek(){
+      $ValidationLoginPrice = new ValidationLoginPrice();
+      /*Ajax Load*/
+      if(Yii::$app->request->isAjax){
+        $ValidationLoginPrice->load(Yii::$app->request->post());
+        return Json::encode(\yii\widgets\ActiveForm::validate($ValidationLoginPrice));
+      }else{	/*Normal Load*/
+        if($ValidationLoginPrice->load(Yii::$app->request->post())){
+          if ($ValidationLoginPrice->Validationlogin()){
+            return $this->redirect(['/master/customers/index-alias']);
+          }
+        }
+      }
+    }
+
+    public function actionIndexAlias()
+    {
+      # code...
+      $searchModel = new CustomersaliasSearch();
+      $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+      return $this->render('index_alias', [
+              'searchModel' => $searchModel,
+              'dataProvider' => $dataProvider,
+          ]);
+    }
+
+    public function actionPriceLogout(){
+  		$this->redirect('index');
+  	}
 
 
     /**
@@ -228,7 +277,7 @@ class CustomersController extends Controller
          if($model->validate())
          {
 
-          $model->save();
+           $model->save();
         }
 
            return $this->redirect(['viewcust','id'=>$model->CUST_KD]);
@@ -537,6 +586,34 @@ class CustomersController extends Controller
         }
     }
 
+    public function actionUpdateAlias($id)
+    {
+        $model = Customersalias::find()->where(['KD_CUSTOMERS'=>$id])->one();
+
+        $id = Customers::find()->where(['CUST_KD'=>$id])->one();
+
+        $nama = $id->CUST_NM;
+
+        if(Yii::$app->request->isAjax && $model->load($_POST))
+        {
+          Yii::$app->response->format = 'json';
+          return ActiveForm::validate($model);
+        }
+
+        if ($model->load(Yii::$app->request->post()) ) {
+          $model->UPDATED_AT = date('Y-m-d');
+          $model->UPDATED_BY = Yii::$app->user->identity->username;
+          $model->save();
+            return $this->redirect(['index-alias']);
+        } else {
+            return $this->renderAjax('alias_customers', [
+                'model' => $model,
+                'id'=>$id,
+                'nama'=>$nama,
+            ]);
+        }
+    }
+
 	 public function actionUpdatecus($id)
     {
         $model = $this->findModelcust($id);
@@ -678,6 +755,15 @@ class CustomersController extends Controller
 	  protected function findModelkota($id)
     {
         if (($model = Kota::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    protected function findModelalias($id)
+    {
+        if (($model = Customersalias::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

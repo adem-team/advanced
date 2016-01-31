@@ -23,6 +23,7 @@ class Customersalias extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+
     public static function tableName()
     {
         return 'c0002';
@@ -36,6 +37,27 @@ class Customersalias extends \yii\db\ActiveRecord
         return Yii::$app->get('db_esm');
     }
 
+    public function getCus()
+    {
+        return $this->hasOne(Customers::className(), ['CUST_KD' => 'KD_CUSTOMERS']);
+    }
+    public function getCustnm()
+    {
+      # code...
+      return $this->cus->CUST_NM;
+    }
+
+    public function getDis()
+    {
+        return $this->hasOne(Distributor::className(), ['KD_DISTRIBUTOR' => 'KD_DISTRIBUTOR']);
+    }
+
+    public function getDisnm()
+    {
+      # code...
+      return $this->dis->NM_DISTRIBUTOR;
+    }
+
     /**
      * @inheritdoc
      */
@@ -45,7 +67,7 @@ class Customersalias extends \yii\db\ActiveRecord
             [['KD_PARENT'], 'integer'],
             [['CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['KD_CUSTOMERS', 'KD_ALIAS'], 'string', 'max' => 30],
-            [['KD_ALIAS'], 'unique','message'=>'duplicate code alias'],
+            [['KD_ALIAS'], 'cekalias'],
             [['KD_DISTRIBUTOR'], 'string', 'max' => 50],
             [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 100]
         ];
@@ -56,6 +78,17 @@ class Customersalias extends \yii\db\ActiveRecord
       # code...
       return ArrayHelper::map($data, $to, $from);
     }
+
+    public function cekalias($model)
+    {
+      # code...
+       $kondisiTrue = Customersalias::find()->where("KD_ALIAS='".$this->KD_ALIAS. "' AND KD_DISTRIBUTOR='".$this->KD_DISTRIBUTOR."'")->one();
+       if($kondisiTrue)
+       {
+           $this->addError($model, 'Duplicated code because the code already exists in this distributor !, attention  change name distributor or change code ');
+       }
+    }
+
 
 
     /**

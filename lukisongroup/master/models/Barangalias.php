@@ -86,13 +86,11 @@ class Barangalias extends \yii\db\ActiveRecord
     public function validalias($model)
     {
       # code...
-      $alias = $this->KD_ALIAS;
-      $sql ="SELECT KD_ALIAS from b0002 where KD_ALIAS='".$alias."'";
-      $data = Yii::$app->db_esm->createCommand($sql)->queryScalar();
-      if($data == $alias)
-      {
-          $this->addError($model,'maaf duplicate Kode');
-      }
+    	 $kondisiTrue = Barangalias::find()->where("KD_ALIAS='".$this->KD_ALIAS. "' AND KD_DISTRIBUTOR='".$this->KD_DISTRIBUTOR."'")->one();
+       if($kondisiTrue)
+       {
+           $this->addError($model, 'Duplicated code because the code already exists in this distributor !, attention Better change name distributor or change code ');
+       }
     }
 
     /**
