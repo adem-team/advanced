@@ -92,7 +92,7 @@ $brgAll = ArrayHelper::map(Barang::find()->where('STATUS<>3')->orderBy('NM_BARAN
 			'data' => $brgAll,
 			'options' => ['id'=>'poplusvalidation-kd_barang'],
 			'pluginOptions' => [
-				'depends'=>['poplusvalidation-kd_kategori'],
+				'depends'=>['poplusvalidation-kd_kategori','poplusvalidation-parent_brg'],
 				'url'=>Url::to(['/purchasing/purchase-order/brgkat']),
 				'initialize'=>true,
 			], 		

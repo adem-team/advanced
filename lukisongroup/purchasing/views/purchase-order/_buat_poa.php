@@ -737,6 +737,9 @@ use lukisongroup\master\models\Unitbarang;
 		[	/* Attribute Unit Barang */
 			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'HARGA',
+			/* 'value'=>function($model){
+				return ceil($model->HARGA);
+			}, */
 			'mergeHeader'=>true,
 			'label'=>'Price',										
 			'vAlign'=>'middle',	
@@ -767,7 +770,7 @@ use lukisongroup\master\models\Unitbarang;
 				  'pluginOptions' => ['min'=>0, 'max'=>10000000000]
 				] 
 			],	
-			'format'=>['decimal', 2],
+			'format'=>['decimal',2],
 			'pageSummary'=>function ($summary, $data, $widget) use ($poHeader){ 
 							$discountModal=$poHeader->DISCOUNT!=0 ? $poHeader->DISCOUNT:'0.00';
 							$pajakModal=$poHeader->PAJAK!=0 ? $poHeader->PAJAK:'0.00';							
@@ -800,7 +803,8 @@ use lukisongroup\master\models\Unitbarang;
 			//'width'=>'7%',					
 			'value'=>function ($model, $key, $index, $widget) { 
 				$p = compact('model', 'key', 'index');
-				return $widget->col(5, $p) != 0 ? $widget->col(5, $p) * $model->UNIT_QTY  * $widget->col(7, $p) : 0;
+				/*Formula Round Unit/harga pcs -ptr.nov-*/
+				return $widget->col(5, $p) != 0 ? $widget->col(5, $p) * round($model->UNIT_QTY  * $widget->col(7, $p),0,PHP_ROUND_HALF_UP): 0;
 				//return $widget->col(3, $p) != 0 ? $widget->col(5 ,$p) * 100 / $widget->col(3, $p) : 0;
 			},						
 			'headerOptions'=>[
@@ -823,7 +827,7 @@ use lukisongroup\master\models\Unitbarang;
 			],	
 			'pageSummaryFunc'=>GridView::F_SUM,
 			'pageSummary'=>true,
-			'format'=>['decimal', 2],
+			'format'=>['decimal',2],
 			'pageSummary'=>function ($summary, $data, $widget) use ($poHeader)	{	
 					/*
 					 * Calculate SUMMARY TOTAL

@@ -549,7 +549,8 @@ class PurchaseOrderController extends Controller
 			$parents = $_POST['depdrop_parents'];
 			if ($parents != null) {
 				$kat_id = $parents[0];
-				$model = Barang::find()->asArray()->where(['KD_KATEGORI'=>$kat_id,'PARENT'=>0])->all();
+				$prn_id = $parents[1];
+				$model = Barang::find()->asArray()->where(['KD_KATEGORI'=>$kat_id,'PARENT'=>$prn_id])->all();
 				foreach ($model as $key => $value) {
 					   $out[] = ['id'=>$value['KD_BARANG'],'name'=> $value['NM_BARANG']];
 				   }
