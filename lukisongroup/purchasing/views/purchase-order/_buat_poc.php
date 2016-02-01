@@ -219,6 +219,27 @@ use lukisongroup\master\models\Unitbarang;
 	} 
 	
 	/*
+	 * LINK PO Note Term of Payment
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.2
+	*/
+	function PoNoteTOP($poHeader){
+			$title = Yii::t('app','');
+			$options = [ 'id'=>'po-notetop-id',	
+						  'data-toggle'=>"modal",
+						  'data-target'=>"#po-notetop",											
+						  'class'=>'btn btn-info btn-xs', 
+						  //'style'=>['width'=>'150px'],
+						  'title'=>'PO Note'
+			]; 
+			$icon = '<span class="fa fa-plus fa-lg"></span>';
+			$label = $icon . ' ' . $title;
+			$url = Url::toRoute(['/purchasing/purchase-order/po-notetop','kdpo'=>$poHeader->KD_PO]);
+			$content = Html::a($label,$url, $options);
+			return $content;
+	} 
+	
+	/*
 	 * Tombol Approval Item 
 	 * Permission Auth2 | Auth3
 	 * Cancel Back To Process
@@ -1266,6 +1287,24 @@ use lukisongroup\master\models\Unitbarang;
 					</dl>
 				</div>			
 		</div>	
+		<!-- PO Term Of Payment !-->
+		<div  class="row">			
+			<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">	
+				<dt><b>Term Of Payment :</b></dt>
+				<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">	
+				<div>
+					<div style="float:right;text-align:right;">
+						<?php echo PoNoteTOP($poHeader); ?>
+					</div>
+					<div style="margin-left:5px">
+						<dt><?php echo $poHeader->TOP_TYPE; ?></dt>
+						<dd><?php echo $poHeader->TOP_DURATION; ?></dd>
+						<br/>
+					</div>				
+				</div>
+				<hr style="height:1px;margin-top: 1px;">		
+			</div>
+		</div>
 		<!-- PO Note !-->
 		<div  class="row">			
 			<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">	
@@ -1276,7 +1315,8 @@ use lukisongroup\master\models\Unitbarang;
 						<?php echo PoNote($poHeader); ?>
 					</div>
 					<div style="margin-left:5px">
-						<dd><?php echo $poHeader->NOTE; ?></dd><br/><br/>
+						<dd><?php echo $poHeader->NOTE; ?></dd>
+						<dt>Invoice exchange can be performed on Monday through Tuesday time of 09:00AM-16:00PM</dt>
 					</div>				
 				</div>
 				<hr style="height:1px;margin-top: 1px;">		
@@ -1745,6 +1785,33 @@ use lukisongroup\master\models\Unitbarang;
 	Modal::begin([
 			'id' => 'po-note',
 			'header' => '<h4 class="modal-title">General Note</h4>',
+			'size' => 'modal-md',
+		]);
+	Modal::end();
+	
+	/*
+	 * PO Note Term of payment
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#po-notetop').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'po-notetop',
+			'header' => '<h4 class="modal-title">Term Of Payment</h4>',
 			'size' => 'modal-md',
 		]);
 	Modal::end();

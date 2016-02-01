@@ -206,6 +206,49 @@ $y=4;
 		};		
 	}
 	
+	/*
+	 * LINK PO Note
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.2
+	*/
+	function PoNote($poHeader){
+			$title = Yii::t('app','');
+			$options = [ 'id'=>'po-note-id',	
+						  'data-toggle'=>"modal",
+						  'data-target'=>"#po-note-review",											
+						  'class'=>'btn btn-info btn-xs', 
+						  //'style'=>['width'=>'150px'],
+						  'title'=>'PO Note'
+			]; 
+			$icon = '<span class="fa fa-plus fa-lg"></span>';
+			$label = $icon . ' ' . $title;
+			$url = Url::toRoute(['/purchasing/purchase-order/po-note-review','kdpo'=>$poHeader->KD_PO]);
+			$content = Html::a($label,$url, $options);
+			return $content;
+	} 
+	
+	/*
+	 * LINK PO Note TOP
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.2
+	*/
+	function PoNoteTOP($poHeader){
+			$title = Yii::t('app','');
+			$options = [ 'id'=>'po-notetop-id',	
+						  'data-toggle'=>"modal",
+						  'data-target'=>"#po-notetop-review",											
+						  'class'=>'btn btn-info btn-xs', 
+						  //'style'=>['width'=>'150px'],
+						  'title'=>'PO Note'
+			]; 
+			$icon = '<span class="fa fa-plus fa-lg"></span>';
+			$label = $icon . ' ' . $title;
+			$url = Url::toRoute(['/purchasing/purchase-order/po-notetop-review','kdpo'=>$poHeader->KD_PO]);
+			$content = Html::a($label,$url, $options);
+			return $content;
+	}
+	
+	
 ?>
 
  <?php 
@@ -874,15 +917,39 @@ $y=4;
 			</div>		
 		</div>	
 	</div>	
-	<!-- PO Note !-->
-	<div  class="row">
-		<div  class="ccol-md-12" style="font-family: tahoma ;font-size: 8pt;">	
-			<div  class="col-md-12">
-				<dt><b>General Notes :</b></dt>
-				<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;">	
-				<dd><?php echo $poHeader->NOTE; ?></dd><br/><br/><br/><br/>     
-				<hr style="height:1px;margin-top: 1px;">
+	<!-- PO Term Of Payment !-->
+	<div  class="row">			
+		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">	
+			<dt><b>Term Of Payment :</b></dt>
+			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">	
+			<div>
+				<div style="float:right;text-align:right;">
+					<?php echo PoNoteTOP($poHeader); ?>
+				</div>
+				<div style="margin-left:5px">
+					<dt><?php echo $poHeader->TOP_TYPE; ?></dt>
+					<dd><?php echo $poHeader->TOP_DURATION; ?></dd>
+					<br/>
+				</div>				
 			</div>
+			<hr style="height:1px;margin-top: 1px;">		
+		</div>
+	</div>
+	<!-- PO Note !-->
+	<div  class="row">			
+		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">	
+			<dt><b>General Notes :</b></dt>
+			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">	
+			<div>
+				<div style="float:right;text-align:right;">
+					<?php echo PoNote($poHeader); ?>
+				</div>
+				<div style="margin-left:5px">
+					<dd><?php echo $poHeader->NOTE; ?></dd>
+					<dt>Invoice exchange can be performed on Monday through Tuesday time of 09:00AM-16:00PM</dt>
+				</div>				
+			</div>
+			<hr style="height:1px;margin-top: 1px;">		
 		</div>
 	</div>
 	<!-- Signature !-->
@@ -1229,6 +1296,60 @@ $y=4;
 		});
 		
 	",$this::POS_READY);
+	
+	/*
+	 * PO Note MODAL AJAX | ADD Items
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#po-note-review').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'po-note-review',
+			'header' => '<h4 class="modal-title">General Note</h4>',
+			'size' => 'modal-md',
+		]);
+	Modal::end();
+	
+	/*
+	 * PO Note term of payment
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#po-notetop-review').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'po-notetop-review',
+			'header' => '<h4 class="modal-title">Term Of Payment</h4>',
+			'size' => 'modal-md',
+		]);
+	Modal::end();
 ?>
 
 
