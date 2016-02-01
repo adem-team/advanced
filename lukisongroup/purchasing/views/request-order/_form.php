@@ -23,14 +23,14 @@ $userCorp = ArrayHelper::map(Corp::find()->where('CORP_STS<>3')->all(), 'CORP_ID
 $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT');
 $brgType = ArrayHelper::map(Tipebarang::find()->where('PARENT=0 AND STATUS<>3')->orderBy('NM_TYPE')->all(), 'KD_TYPE', 'NM_TYPE');
 $brgKtg  = ArrayHelper::map(Kategori::find()->where('PARENT=0 AND STATUS<>3')->orderBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI');
-$brgUmum = ArrayHelper::map(Barang::find()->where('PARENT=0 AND STATUS<>3')->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG'); 
+$brgUmum = ArrayHelper::map(Barang::find()->where('PARENT=0 AND STATUS<>3')->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG');
 
 /* $this->registerJs("
-        $.fn.modal.Constructor.prototype.enforceFocus = function() {};			
+        $.fn.modal.Constructor.prototype.enforceFocus = function() {};
     ",$this::POS_HEAD);
  */
 
- 
+
 ?>
 
 
@@ -42,16 +42,16 @@ $brgUmum = ArrayHelper::map(Barang::find()->where('PARENT=0 AND STATUS<>3')->ord
 		]);
 	?>
 	<?php //= $form->errorSummary($model); ?>
-	
+
     <?= $form->field($roDetail, 'CREATED_AT',['template' => "{input}"])->hiddenInput(['value'=>date('Y-m-d H:i:s'),'readonly' => true]) ?>
-	
+
 
     <?php
 		echo $form->field($roDetail, 'KD_CORP')->dropDownList($userCorp,[
 				'id'=>'rodetail-kd_corp',
 				'prompt'=>' -- Pilih Salah Satu --',
-			])->label('Perusahaan'); 
-	
+			])->label('Perusahaan');
+
 		echo $form->field($roDetail, 'KD_TYPE')->widget(DepDrop::classname(), [
 			'type'=>DepDrop::TYPE_SELECT2,
 			'data' => $brgType,
@@ -60,9 +60,9 @@ $brgUmum = ArrayHelper::map(Barang::find()->where('PARENT=0 AND STATUS<>3')->ord
 				'depends'=>['rodetail-kd_corp'],
 				'url'=>Url::to(['/purchasing/request-order/corp-type']), /*Parent=0 barang Umum*/
 				'initialize'=>true,
-			], 		
+			],
 		]);
-		
+
 		echo $form->field($roDetail, 'KD_KATEGORI')->widget(DepDrop::classname(), [
 			'type'=>DepDrop::TYPE_SELECT2,
 			'data' => $brgKtg,
@@ -71,9 +71,9 @@ $brgUmum = ArrayHelper::map(Barang::find()->where('PARENT=0 AND STATUS<>3')->ord
 				'depends'=>['rodetail-kd_corp','rodetail-kd_type'],
 				'url'=>Url::to(['/purchasing/request-order/type-kat']),
 				'initialize'=>true,
-			], 		
+			],
 		]);
-		 
+
 		echo $form->field($roDetail, 'KD_BARANG')->widget(DepDrop::classname(), [
 			'type'=>DepDrop::TYPE_SELECT2,
 			'data' => $brgUmum,
@@ -82,9 +82,9 @@ $brgUmum = ArrayHelper::map(Barang::find()->where('PARENT=0 AND STATUS<>3')->ord
 				'depends'=>['rodetail-kd_kategori'],
 				'url'=>Url::to(['/purchasing/request-order/brgkat']),
 				'initialize'=>true,
-			], 		
+			],
 		]);
-		
+
 		echo $form->field($roDetail, 'NM_BARANG')->hiddenInput(['value' => ''])->label(false);
 		/* echo $form->field($roDetail, 'UNIT')->widget(DepDrop::classname(), [
 			'type'=>DepDrop::TYPE_DEFAULT,
@@ -93,9 +93,9 @@ $brgUmum = ArrayHelper::map(Barang::find()->where('PARENT=0 AND STATUS<>3')->ord
 			'pluginOptions' => [
 				'depends'=>['rodetail-kd_kategori','rodetail-kd_barang'],
 				'url'=>Url::to(['/purchasing/request-order/brgunit']),
-				//'initialize'=>true, 
+				//'initialize'=>true,
 				'placeholder' => false,
-			], 		
+			],
 		]);  */
 		echo $form->field($roDetail, 'UNIT')->widget(Select2::classname(), [
 				'data' => $brgUnit,
@@ -104,14 +104,13 @@ $brgUmum = ArrayHelper::map(Barang::find()->where('PARENT=0 AND STATUS<>3')->ord
 					'allowClear' => true
 				],
 		]);
-		
+
 		echo  $form->field($roDetail, 'RQTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']);
-		echo $form->field($roDetail, 'NOTE')->textarea(array('rows'=>2,'cols'=>5))->label('Informasi');		
+		echo $form->field($roDetail, 'NOTE')->textarea(array('rows'=>2,'cols'=>5))->label('Informasi');
 ?>
     <div class="form-group">
         <?= Html::submitButton($roDetail->isNewRecord ? 'Create' : 'Update', ['class' => $roDetail->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
-    
-	<?php ActiveForm::end(); ?>	
 
+	<?php ActiveForm::end(); ?>

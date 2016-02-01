@@ -105,20 +105,26 @@ class RequestOrderController extends Controller
 		$dataProviderInbox = $searchModel->searchRoInbox(Yii::$app->request->queryParams);
 		$dataProviderOutbox = $searchModel->searchRoOutbox(Yii::$app->request->queryParams);
     $profile=Yii::$app->getUserOpt->Profile_user();
-    $datachecked = Requestorder::find()->where("PARENT_ROSO = 0 AND STATUS = 101 AND USER_CC='".$profile->emp->EMP_ID."'")
+    $datachecked = Requestorder::find()->where("PARENT_ROSO = 0 AND STATUS = 101 AND STATUS <> 3 AND USER_CC='".$profile->emp->EMP_ID."'")
                                         ->count();
-    $datacreate = Requestorder::find()->where("PARENT_ROSO = 0 AND STATUS <> 3 AND ID_USER = '".$profile->emp->EMP_ID."'")
+    $datacreate = Requestorder::find()->where("PARENT_ROSO = 0 AND STATUS <> 3 AND STATUS = 0 AND ID_USER = '".$profile->emp->EMP_ID."'")
                                         ->count();
-    $dataapprove = Requestorder::find()->where("PARENT_ROSO = 0 AND STATUS = 103  AND KD_DEP='".$profile->emp->DEP_ID."'")
+    $dataapprove = Requestorder::find()->where("PARENT_ROSO = 0 AND STATUS = 102 AND  STATUS <>3 AND KD_DEP='".$profile->emp->DEP_ID."' OR STATUS = 5")
                                         ->count();
     $dataAprrove = new ActiveDataProvider([
-                    'query' => Requestorder::find()->where(" PARENT_ROSO = 0 AND STATUS = 103 and USER_CC='".$profile->emp->EMP_ID."'"),
+                    'query' => Requestorder::find()->where("PARENT_ROSO = 0 AND STATUS = 102 AND STATUS<>3  AND KD_DEP='".$profile->emp->DEP_ID."'OR STATUS = 5"),
                         'pagination' => [
                           'pageSize' => 5,
                                       ],
                               ]);
     $dataChecked = new ActiveDataProvider([
                                 'query' => Requestorder::find()->where("PARENT_ROSO = 0 AND  STATUS = 101 AND USER_CC='".$profile->emp->EMP_ID."'"),
+                                  'pagination' => [
+                                        'pageSize' => 5,
+                                                    ],
+                                            ]);
+    $dataCreate = new ActiveDataProvider([
+                                'query' => Requestorder::find()->where("PARENT_ROSO = 0 AND STATUS <> 3 AND STATUS = 0 AND ID_USER = '".$profile->emp->EMP_ID."'"),
                                   'pagination' => [
                                         'pageSize' => 5,
                                                     ],
@@ -131,6 +137,7 @@ class RequestOrderController extends Controller
 			'dataProviderOutbox' =>$dataProviderOutbox,
       'datachecked'=>  $datachecked,
       'datacreate'=>$datacreate,
+      'dataCreate'=>$dataCreate,
       'dataapprove'=>$dataapprove,
       'dataAprrove'=>$dataAprrove,
       'dataChecked' => $dataChecked
