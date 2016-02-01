@@ -243,7 +243,7 @@ use lukisongroup\master\models\Unitbarang;
 			]; 
 			$icon = '<span class="fa fa-plus fa-lg"></span>';
 			$label = $icon . ' ' . $title;
-			$url = Url::toRoute(['/purchasing/purchase-order/po-notetop','kdpo'=>$poHeader->KD_PO]);
+			$url = Url::toRoute(['/purchasing/purchase-order/po-notetop-view','kdpo'=>$poHeader->KD_PO]);
 			$content = Html::a($label,$url, $options);
 			return $content;
 	} 
@@ -1305,12 +1305,11 @@ use lukisongroup\master\models\Unitbarang;
 						<?php echo PoNoteTOP($poHeader); ?>
 					</div>
 					<div style="margin-left:5px">
-						<dt><?php echo $poHeader->TOP_TYPE; ?></dt>
+						<dt style="width:80px; float:left;"><?php echo $poHeader->TOP_TYPE; ?></dt>
 						<dd><?php echo $poHeader->TOP_DURATION; ?></dd>
 						<br/>
-					</div>				
-				</div>
-				<hr style="height:1px;margin-top: 1px;">		
+					</div>					
+				</div>				
 			</div>
 		</div>
 		<!-- PO Note !-->

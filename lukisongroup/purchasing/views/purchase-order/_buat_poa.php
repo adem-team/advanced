@@ -1218,12 +1218,11 @@ use lukisongroup\master\models\Unitbarang;
 						<?php echo PoNoteTOP($poHeader); ?>
 					</div>
 					<div style="margin-left:5px">
-						<dt><?php echo $poHeader->TOP_TYPE; ?></dt>
+						<dt style="width:80px; float:left;"><?php echo $poHeader->TOP_TYPE; ?></dt>
 						<dd><?php echo $poHeader->TOP_DURATION; ?></dd>
 						<br/>
-					</div>				
-				</div>
-				<hr style="height:1px;margin-top: 1px;">		
+					</div>					
+				</div>				
 			</div>
 		</div>
 		<!-- PO Note !-->
