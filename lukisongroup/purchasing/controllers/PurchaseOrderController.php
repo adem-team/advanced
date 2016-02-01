@@ -1073,7 +1073,7 @@ class PurchaseOrderController extends Controller
      */
 	public function actionPoNote($kdpo){
 		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();			
-		return $this->renderAjax('_form_ponote', [
+		return $this->renderAjax('_form_ponote_buat', [
 			'poHeader' => $poHeader,
 		]);		 
 	}
@@ -1084,6 +1084,75 @@ class PurchaseOrderController extends Controller
 			$poHeader->NOTE = $hsl['Purchaseorder']['NOTE'];
 			$poHeader->save();
 			return $this->redirect(['create', 'kdpo'=>$kdpo]);			
+		}		
+    }
+
+	/*
+	 * PO Note Term of Payment
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionPoNotetopView($kdpo){
+		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();			
+		return $this->renderAjax('_form_ponote_buat_top', [
+			'poHeader' => $poHeader,
+		]);		 
+	}
+	public function actionPoNotetopSave($kdpo){
+		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();			
+		if($poHeader->load(Yii::$app->request->post())){
+			$hsl = \Yii::$app->request->post();
+			$topType=$poHeader->TOP_TYPE = $hsl['Purchaseorder']['TOP_TYPE'];		
+			$topDuration =$hsl['Purchaseorder']['TOP_DURATION'];			
+			$poHeader->TOP_TYPE =$topType;			
+			$poHeader->TOP_DURATION = $topType=='Credit' ? $topDuration:'';
+			$poHeader->save();
+			return $this->redirect(['create', 'kdpo'=>$kdpo]);			
+		}		
+    }	
+	
+	/*
+	 * PO Note Review
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionPoNoteReview($kdpo){
+		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();			
+		return $this->renderAjax('_form_ponote_review', [
+			'poHeader' => $poHeader,
+		]);		 
+	}
+	public function actionPoNoteReviewSave($kdpo){
+		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();			
+		if($poHeader->load(Yii::$app->request->post())){
+			$hsl = \Yii::$app->request->post();
+			$poHeader->NOTE = $hsl['Purchaseorder']['NOTE'];
+			$poHeader->save();
+			return $this->redirect(['review', 'kdpo'=>$kdpo]);			
+		}		
+    }	
+	
+	/*
+	 * PO Note Review  erm of Payment
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionPoNotetopReview($kdpo){
+		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();			
+		return $this->renderAjax('_form_ponote_review_top', [
+			'poHeader' => $poHeader,
+		]);		 
+	}
+	public function actionPoNotetopReviewSave($kdpo){
+		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();			
+		if($poHeader->load(Yii::$app->request->post())){
+			$hsl = \Yii::$app->request->post();
+			$topType=$poHeader->TOP_TYPE = $hsl['Purchaseorder']['TOP_TYPE'];		
+			$topDuration =$hsl['Purchaseorder']['TOP_DURATION'];			
+			$poHeader->TOP_TYPE =$topType;			
+			$poHeader->TOP_DURATION = $topType=='Credit' ? $topDuration:'';
+			$poHeader->save();
+			return $this->redirect(['review', 'kdpo'=>$kdpo]);			
 		}		
     }	
 	

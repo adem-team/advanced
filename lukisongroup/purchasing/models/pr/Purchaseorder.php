@@ -162,7 +162,7 @@ class Purchaseorder extends \yii\db\ActiveRecord
             [['KD_PO', 'CREATE_BY', 'CREATE_AT','STATUS', 'NOTE'], 'safe'],
             [['KD_CORP','nmcorp','PAJAK','DISCOUNT', 'ETD', 'ETA', 'SHIPPING', 'BILLING', 'DELIVERY_COST'], 'safe'],
             [['STATUS'], 'integer'],
-            [['NOTE'], 'string'],
+            [['TOP_DURATION','TOP_TYPE','NOTE'], 'string'],
             [['KD_PO'], 'string', 'max' => 30],
             [['KD_SUPPLIER', 'CREATE_BY'], 'string', 'max' => 50],
 			[['SIG1_ID','SIG2_ID','SIG3_ID','SIG4_ID'], 'string'],
