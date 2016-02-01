@@ -557,12 +557,33 @@ $y=4;
 			</dl>
 		</div>		
 	</div>	
-	<!-- PO Note !-->	
-	<div style="font-family: tahoma ;font-size: 8pt;">
-		<dt><b>General Notes :</b></dt>
-		<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;">	
-		<dd><?php echo $poHeader->NOTE; ?></dd><br/>
-		<hr style="height:1px;margin-top: 1px;">
+	<!-- PO Term Of Payment !-->
+	<div  class="row">			
+		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">	
+			<dt><b>Term Of Payment :</b></dt>
+			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">	
+			<div>
+				<div style="margin-left:5px">
+					<dt style="width:80px; float:left;"><?php echo $poHeader->TOP_TYPE; ?></dt>
+					<dd><?php echo $poHeader->TOP_DURATION; ?></dd>
+					<br/>
+				</div>				
+			</div>
+		</div>
+	</div>
+	<!-- PO Note !-->
+	<div  class="row">			
+		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">	
+			<dt><b>General Notes :</b></dt>
+			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">	
+			<div>					
+				<div style="margin-left:5px">
+					<dd><?php echo $poHeader->NOTE; ?></dd>
+					<dt>Invoice exchange can be performed on Monday through Tuesday time of 09:00AM-16:00PM</dt>
+				</div>				
+			</div>
+			<hr style="height:1px;margin-top: 1px;">		
+		</div>
 	</div>
 	<!-- Signature PO !-->	
 	<div>

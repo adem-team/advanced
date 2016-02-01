@@ -557,12 +557,33 @@ $y=4;
 			</dl>
 		</div>		
 	</div>	
-	<!-- PO Note !-->	
-	<div style="font-family: tahoma ;font-size: 8pt;">
-		<dt><b>General Notes :</b></dt>
-		<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;">	
-		<dd><?php echo $poHeader->NOTE; ?></dd><br/>
-		<hr style="height:1px;margin-top: 1px;">
+	<!-- PO Term Of Payment !-->
+	<div  class="row">			
+		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">	
+			<dt><b>Term Of Payment :</b></dt>
+			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">	
+			<div>
+				<div style="margin-left:5px">
+					<dt style="width:80px; float:left;"><?php echo $poHeader->TOP_TYPE; ?></dt>
+					<dd><?php echo $poHeader->TOP_DURATION; ?></dd>
+					<br/>
+				</div>				
+			</div>
+		</div>
+	</div>
+	<!-- PO Note !-->
+	<div  class="row">			
+		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">	
+			<dt><b>General Notes :</b></dt>
+			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">	
+			<div>					
+				<div style="margin-left:5px">
+					<dd><?php echo $poHeader->NOTE; ?></dd>
+					<dt>Invoice exchange can be performed on Monday through Tuesday time of 09:00AM-16:00PM</dt>
+				</div>				
+			</div>
+			<hr style="height:1px;margin-top: 1px;">		
+		</div>
 	</div>
 	<!-- Signature PO !-->	
 	<div>
@@ -604,19 +625,19 @@ $y=4;
 			 <tr>
 				<th style="text-align: center; vertical-align:middle;width:180; height:60px">	
 					<?php 
-						$ttd1 = $poHeader->SIG1_SVGBASE64!=0 ?  '<img src="'.$poHeader->SIG1_SVGBASE64.'" height="120" width="150"></img>' : '';
+						$ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG1_SVGBASE64.'" height="60" width="150"></img>' : '';
 						echo $ttd1;
 					?> 				
 				</th>								
 				<th style="text-align: center; vertical-align:middle;width:180">
 					<?php 
-						$ttd2 = $poHeader->SIG2_SVGBASE64!=0 ?  '<img src="'.$poHeader->SIG2_SVGBASE64.'" height="120" width="150"></img>' : '';
+						$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG2_SVGBASE64.'" height="60" width="150"></img>' : '';
 						echo $ttd2;
 					?> 	
 				</th>
 				<th style="text-align: center; vertical-align:middle;width:180">
 					<?php 
-						$ttd3 = $poHeader->SIG3_SVGBASE64!=0 ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="120" width="150"></img>' : '';
+						$ttd3 = $poHeader->SIG3_SVGBASE64!=0 ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : '';
 						echo $ttd3;
 					?> 	
 				</th>
