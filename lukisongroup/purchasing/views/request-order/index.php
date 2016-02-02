@@ -338,7 +338,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 					/*KD_RO*/
 					[
 						'attribute'=>'KD_RO',
-						'label'=>'Kode SO',
+						'label'=>'Kode RO',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
 						//'group'=>true,
@@ -681,7 +681,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 					/*KD_RO*/
 					[
 						'attribute'=>'KD_RO',
-						'label'=>'Kode SO',
+						'label'=>'Kode RO',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
 						//'group'=>true,
@@ -1029,7 +1029,18 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 
 
 	?>
-	<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-envelope"></span> Total create Request order: <?= 	$datacreate ?></button>
+	<button type="button" data-toggle="collapse" class="btn btn-danger" data-target="#listing"><span class="glyphicon glyphicon-envelope"></span> Total  Request Created By : <?= 	$datacreate ?></button>
+	<div id="listing" class="collapse">
+	<?=	ListView::widget([
+		'dataProvider' => $dataCreate,
+		'options' => [
+			 'tag' => 'div',
+			 'class' => 'list-wrapper',
+			 'id' => 'list-wrapper',
+	 ],
+	 'layout' => "{pager}\n{items}\n{summary}"
+ ])?>
+ </div>
 <?php
 $profile=Yii::$app->getUserOpt->Profile_user();
 if($profile->emp->GF_ID<=4)

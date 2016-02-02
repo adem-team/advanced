@@ -22,9 +22,9 @@ class Auth1Model extends Model
 {
     public $empNm;
     public $kdpo;
-	public $status;	
+	public $status;
 	public $password;
-	
+
 	//public $findPasswords; // @property Digunakan jika Form Attribute di gunakan
 	private $_empid = false;
     /**
@@ -32,25 +32,25 @@ class Auth1Model extends Model
      */
     public function rules()
     {
-        return [						
+        return [
 			[['password'], 'required'],
 			['password', 'number','numberPattern' => '/^[0-9]*$/i'],
 			['password', 'string', 'min' => 8,  'message'=> 'Please enter 8 digit'],
-			['password', 'findPasswords'],	
+			['password', 'findPasswords'],
 			['status', 'required'],
 			['status', 'integer'],
 			[['kdpo'], 'required'],
-			[['kdpo','empNm'], 'string']		
+			[['kdpo','empNm'], 'string']
         ];
     }
-	
+
 	/**
      * Password Find Oldpassword for validation
 	 * @author ptrnov  <piter@lukison.com>
-	 * @since 1.1	
+	 * @since 1.1
      */
 	public function findPasswords($attribute, $params)
-    {        
+    {
 		/*
 		 * @author ptrnov  <piter@lukison.com>
 		 * @since 1.1
@@ -58,44 +58,56 @@ class Auth1Model extends Model
 		if (!$this->hasErrors()) {
 			 $empid = $this->getEmpid();
 			if (!$empid || !$empid->validateOldPasswordCheck($this->password)) {
-                $this->addError($attribute, 'Incorrect password.');				
-            } 
+                $this->addError($attribute, 'Incorrect password.');
+            }
+        elseif($this->getPermission()->BTN_SIGN1!=1)
+        {
+            $this->addError($attribute, 'Wrong Permission');
+        }
        }
     }
-	
+
 	/*
 	 * Check validation
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
 	*/
 	public function auth1_saved(){
-		if ($this->validate()) {			
+		if ($this->validate()) {
 			$poHeader = Purchaseorder::find()->where(['KD_PO' =>$this->kdpo])->one();
 			$poSignStt = Statuspo::find()->where(['KD_PO'=>$this->kdpo,'ID_USER'=>$this->getProfile()->EMP_ID])->one();
-				$poHeader->STATUS = $this->status;	
+				$poHeader->STATUS = $this->status;
 				$poHeader->SIG1_SVGBASE64 = $this->getProfile()->SIGSVGBASE64;
 				$poHeader->SIG1_SVGBASE30 = $this->getProfile()->SIGSVGBASE30;
 				$poHeader->SIG1_NM = $this->getProfile()->EMP_NM . ' ' . $this->getProfile()->EMP_NM_BLK;
-				$poHeader->SIG1_TGL = date('Y-m-d');				
+				$poHeader->SIG1_TGL = date('Y-m-d');
 			if ($poHeader->save()) {
 					if (!$poSignStt){
-						$poHeaderStt = new Statuspo;						
+						$poHeaderStt = new Statuspo;
 						$poHeaderStt->KD_PO = $this->kdpo;
 						$poHeaderStt->ID_USER = $this->getProfile()->EMP_ID;
 						//$poHeaderStt->TYPE
 						$poHeaderStt->STATUS = 101;
 						$poHeaderStt->UPDATE_AT = date('Y-m-d H:m:s');
 						if ($poHeaderStt->save()) {
-							
+
 						}
 					}
                 return $poHeader;
             }
 			return $poHeader;
-		}		
-		return null;			
+		}
+		return null;
 	}
-		
+
+  function getPermission(){
+    if (Yii::$app->getUserOpt->Modul_akses(3)){
+      return Yii::$app->getUserOpt->Modul_akses(3);
+    }else{
+      return false;
+    }
+  }
+
 	/**
      * Finds record by EMP_ID
      * @return EMP_ID|null
@@ -112,7 +124,7 @@ class Auth1Model extends Model
     }
 
 	public function getProfile(){
-		$profile=Yii::$app->getUserOpt->Profile_user();	
+		$profile=Yii::$app->getUserOpt->Profile_user();
 		return $profile->emp;
-	}	
+	}
 }

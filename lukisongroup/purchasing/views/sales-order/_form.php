@@ -23,7 +23,7 @@ $userCorp = ArrayHelper::map(Corp::find()->where('CORP_STS<>3')->all(), 'CORP_ID
 $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT');
 $brgType = ArrayHelper::map(Tipebarang::find()->where('PARENT=1 AND STATUS<>3')->orderBy('NM_TYPE')->all(), 'KD_TYPE', 'NM_TYPE');
 $brgKtg  = ArrayHelper::map(Kategori::find()->where('PARENT=1 AND STATUS<>3')->orderBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI');
-$brgProdak = ArrayHelper::map(Barang::find()->where('PARENT=1 AND STATUS<>3')->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG'); 
+$brgProdak = ArrayHelper::map(Barang::find()->where('PARENT=1 AND STATUS<>3')->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG');
 
 ?>
 
@@ -36,14 +36,14 @@ $brgProdak = ArrayHelper::map(Barang::find()->where('PARENT=1 AND STATUS<>3')->o
 		]);
 	?>
 	<?php //= $form->errorSummary($model); ?>
-	
+
     <?= $form->field($roDetail, 'CREATED_AT',['template' => "{input}"])->hiddenInput(['value'=>date('Y-m-d H:i:s'),'readonly' => true]) ?>
     <?php
 		echo $form->field($roDetail, 'KD_CORP')->dropDownList($userCorp,[
 				'id'=>'rodetail-kd_corp',
 				'prompt'=>' -- Pilih Salah Satu --',
-		])->label('Perusahaan'); 
-		
+		])->label('Perusahaan');
+
 		echo $form->field($roDetail, 'KD_TYPE')->widget(DepDrop::classname(), [
 			'type'=>DepDrop::TYPE_SELECT2,
 			'data' => $brgType,
@@ -52,7 +52,7 @@ $brgProdak = ArrayHelper::map(Barang::find()->where('PARENT=1 AND STATUS<>3')->o
 				'depends'=>['rodetail-kd_corp'],
 				'url'=>Url::to(['/purchasing/sales-order/corp-type']), /*Parent=0 barang Umum*/
 				'initialize'=>true,
-			], 		
+			],
 		])->label('Type');
 
 		echo $form->field($roDetail, 'KD_KATEGORI')->widget(DepDrop::classname(), [
@@ -63,9 +63,9 @@ $brgProdak = ArrayHelper::map(Barang::find()->where('PARENT=1 AND STATUS<>3')->o
 				'depends'=>['rodetail-kd_corp','rodetail-kd_type'],
 				'url'=>Url::to(['/purchasing/sales-order/type-kat']),
 				'initialize'=>true,
-			], 		
+			],
 		]);
-		
+
 		echo $form->field($roDetail, 'KD_BARANG')->widget(DepDrop::classname(), [
 			'type'=>DepDrop::TYPE_SELECT2,
 			'data' => $brgProdak,
@@ -74,10 +74,10 @@ $brgProdak = ArrayHelper::map(Barang::find()->where('PARENT=1 AND STATUS<>3')->o
 				'depends'=>['rodetail-kd_kategori'],
 				'url'=>Url::to(['/purchasing/sales-order/brgkat']),
 				'initialize'=>true,
-			], 		
-		]);	
+			],
+		]);
 		echo $form->field($roDetail, 'NM_BARANG')->hiddenInput(['value' => ''])->label(false);
-			
+
 		echo $form->field($roDetail, 'UNIT')->widget(Select2::classname(), [
 				'data' => $brgUnit,
 				'options' => ['placeholder' => 'Pilih Unit Barang ...'],
@@ -95,6 +95,6 @@ $brgProdak = ArrayHelper::map(Barang::find()->where('PARENT=1 AND STATUS<>3')->o
         <?= Html::submitButton($roDetail->isNewRecord ? 'Create' : 'Update', ['class' => $roDetail->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
-    
-	<?php ActiveForm::end(); ?>	
 
+	<?php ActiveForm::end(); ?>
+  

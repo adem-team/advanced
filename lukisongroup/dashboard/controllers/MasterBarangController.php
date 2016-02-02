@@ -16,6 +16,14 @@ use yii\filters\VerbFilter;
 use lukisongroup\widget\models\Chat;
 use lukisongroup\widget\models\ChatSearch;
 use lukisongroup\widget\models\ChatroomSearch;
+use lukisongroup\master\models\Tipebarang;
+use lukisongroup\master\models\Kategori;
+use lukisongroup\master\models\Barang;
+use lukisongroup\master\models\Unitbarang;
+use lukisongroup\master\models\Suplier;
+use lukisongroup\master\models\Distributor;
+use lukisongroup\master\models\Customers;
+
 
 class MasterBarangController extends Controller
 {
@@ -62,12 +70,50 @@ class MasterBarangController extends Controller
      */
     public function actionIndex()
     {
-		/*	variable content View Employe Author: -ptr.nov- */
-       // $searchModel_Dept = new DeptSearch();
-		//$dataProvider_Dept = $searchModel_Dept->search(Yii::$app->request->queryParams);
+		/*CNT Barang Prodak*/
+		$cntBrgProdak="SELECT COUNT(KD_BARANG) As KD_BARANG FROM b0001 WHERE PARENT=1";
+		$cntBrgPrdk=Barang::findBySql($cntBrgProdak)->one();
+		/*CNT Barang Umum*/
+		$cntBrgUmum="SELECT COUNT(KD_BARANG) As KD_BARANG FROM b0001 WHERE PARENT=0";
+		$cntBrgUmn=Barang::findBySql($cntBrgUmum)->one();
+		/*CNT Barang Type*/
+		$cntType="SELECT  COUNT(NM_TYPE) as NM_TYPE FROM b1001";
+		$cntTyp=Tipebarang::findBySql($cntType)->one();
+		/*CNT Barang Kategori*/
+		$cntCategory="SELECT COUNT(NM_KATEGORI) as NM_KATEGORI FROM b1002";
+		$cntCtg=Kategori::findBySql($cntCategory)->one();
+		/*CNT Barang Unit*/
+		$cntUnit="SELECT COUNT(KD_UNIT) as KD_UNIT FROM ub0001";
+		$cntUnt=Unitbarang::findBySql($cntUnit)->one();
+		/*CNT Supplier*/
+		$cntSupplier="SELECT COUNT(KD_SUPPLIER) as KD_SUPPLIER FROM s1000";
+		$cntSpl=Suplier::findBySql($cntSupplier)->one();
+		/*CNT Distributor*/
+		$cntDistributor="SELECT COUNT(KD_DISTRIBUTOR) as KD_DISTRIBUTOR FROM d0001";
+		$cntDist=Distributor::findBySql($cntDistributor)->one();
+		/*CNT Customer*/
+		$cntCustomer="SELECT COUNT(CUST_KD) as CUST_KD FROM c0001";
+		$cntCst=Customers::findBySql($cntCustomer)->one();
 		
-		return $this->render('index');
+		
+		//print_r($cntBrgPrdk->KD_BARANG);
+		return $this->render('index',[
+			'cntBrgPrdk'=>$cntBrgPrdk->KD_BARANG,
+			'cntBrgUmn'=>$cntBrgUmn->KD_BARANG,
+			'cntTyp'=>$cntTyp->NM_TYPE,
+			'cntCtg'=>$cntCtg->NM_KATEGORI,
+			'cntUnt'=>$cntUnt->KD_UNIT,
+			'cntSpl'=>$cntSpl->KD_SUPPLIER,
+			'cntDist'=>$cntDist->KD_DISTRIBUTOR,
+			'cntCst'=>$cntCst->CUST_KD,
+		]);
     }
+	
+	
+	
+	
+	
+	
 	
 	public function actionChat()
     {

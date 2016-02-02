@@ -24,8 +24,8 @@ $profile=Yii::$app->getUserOpt->Profile_user();
 				'method' => 'post',
 				'action' => ['/purchasing/request-order/approved-authorize-save'],
 		]);
-	?>	
-	
+	?>
+
 		<?php echo  $form->field($saFormlogin, 'empNm')->hiddenInput(['value' => $profile->emp->EMP_NM .' '. $profile->emp->EMP_NM_BLK ,'maxlength' => true, 'readonly' => true])->label('Employee Name')->label(false); ?>
 		<?php echo  $form->field($saFormlogin, 'kdro')->hiddenInput(['value' => $roHeader->KD_RO,'maxlength' => true, 'readonly' => true])->label(false); ?>
 		<?php echo  $form->field($saFormlogin, 'status')->dropDownList($valStt); ?>
@@ -34,12 +34,5 @@ $profile=Yii::$app->getUserOpt->Profile_user();
 			<?php echo Html::submitButton('login',['class' => 'btn btn-primary']); ?>
 		</div>
 
-    
-	<?php ActiveForm::end(); ?>	
 
-	
-
-
-
-
-
+	<?php ActiveForm::end(); ?>

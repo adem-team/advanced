@@ -11,17 +11,18 @@ use kartik\form\ActiveForm;
 use lukisongroup\master\models\Suplier;
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\hrd\models\Corp;
+use kartik\tabs\TabsX;
 
 	$selectCorp = ArrayHelper::map(Corp::find()->where('CORP_STS<>3')->all(), 'CORP_ID', 'CORP_NM');
-	
+
 	$poParentArray= [
-		  ['ID' => 'POA', 'DESCRIP' => 'PO Plus'],		  
-		  ['ID' => 'POB', 'DESCRIP' => 'PO General'],		  
+		  ['ID' => 'POA', 'DESCRIP' => 'PO Plus'],
+		  ['ID' => 'POB', 'DESCRIP' => 'PO General'],
 		  ['ID' => 'POC', 'DESCRIP' => 'PO Product'],
-	];	
+	];
 	$poParent = ArrayHelper::map($poParentArray, 'ID', 'DESCRIP');
-	
-	
+
+
 
 $this->title = 'Purchaseorder';
 $this->params['breadcrumbs'][] = $this->title;
@@ -36,9 +37,9 @@ $this->params['breadcrumbs'][] = $this->title;
 	function getPermission(){
 		if (Yii::$app->getUserOpt->Modul_akses('3')){
 			return Yii::$app->getUserOpt->Modul_akses('3');
-		}else{		
+		}else{
 			return false;
-		}	 
+		}
 	}
 	//print_r(getPermission());
 	/*
@@ -49,9 +50,9 @@ $this->params['breadcrumbs'][] = $this->title;
 	function getPermissionEmp(){
 		if (Yii::$app->getUserOpt->profile_user()){
 			return Yii::$app->getUserOpt->profile_user()->emp;
-		}else{		
+		}else{
 			return false;
-		}	 
+		}
 	}
 	//print_r(getPermissionEmp());
 	/*
@@ -62,94 +63,94 @@ $this->params['breadcrumbs'][] = $this->title;
 		if(getPermission()){
 			if(getPermission()->BTN_CREATE==1){
 				$title1 = Yii::t('app', 'NEW PO');
-				$options1 = [ 'id'=>'po-create',	
+				$options1 = [ 'id'=>'po-create',
 							  'data-toggle'=>"modal",
-							  'data-target'=>"#new-po",											
+							  'data-target'=>"#new-po",
 							  'class' => 'btn btn-warning btn-sm',
-				]; 
+				];
 				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
 				$content = Html::button($label1,$options1);
-				return $content;								
+				return $content;
 			 }else{
 				$title1 = Yii::t('app', 'CREATE NEW PO');
-				$options1 = [ 'id'=>'po-create',						  									
-							  'class' => 'btn btn-warning btn-sm',										  
+				$options1 = [ 'id'=>'po-create',
+							  'class' => 'btn btn-warning btn-sm',
 							  //'data-confirm'=>'Permission Failed !',
 							  'data-toggle'=>"modal",
-							  'data-target'=>"#confirm-permission-alert",	
-				]; 
+							  'data-target'=>"#confirm-permission-alert",
+				];
 				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
 				$content = Html::button($label1, $options1);
 				return $content;
-			}; 
+			};
 		}else{
 				$title1 = Yii::t('app', 'CREATE NEW PO');
-				$options1 = [ 'id'=>'ro-create',						  									
-							  'class' => 'btn btn-warning btn-sm',										  
+				$options1 = [ 'id'=>'ro-create',
+							  'class' => 'btn btn-warning btn-sm',
 							  'data-toggle'=>"modal",
 							  'data-target'=>"#confirm-permission-alert",
-				]; 
+				];
 				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
 				$content = Html::button($label1,$options1);
 				return $content;
-		}	 		
+		}
 	}
-	
+
 	/*
 	 * Tombol Modul Barang-Umum
 	 * No Permission
 	*/
 	function tombolBarangUmum(){
 		$title = Yii::t('app', 'Barang Umum');
-		$options = ['id'=>'barang-umum',	
+		$options = ['id'=>'barang-umum',
 					'data-toggle'=>"modal",
-					'data-target'=>"#check-barang-umum",							
+					'data-target'=>"#check-barang-umum",
 					'class' => 'btn btn-default btn-sm'
-		]; 
+		];
 		$icon = '<span class="glyphicon glyphicon-search"></span>';
 		$label = $icon . ' ' . $title;
 		$url = Url::toRoute(['#']);
 		$content = Html::a($label,$url, $options);
-		return $content;	
+		return $content;
 	}
-	
+
 	/*
 	 * Tombol Modul Barang-Prodak
 	 * No Permission
 	*/
 	function tombolBarangProdak(){
 		$title = Yii::t('app', 'Barang Prodak');
-		$options = ['id'=>'barang-prodak',	
+		$options = ['id'=>'barang-prodak',
 					'data-toggle'=>"modal",
-					'data-target'=>"#check-barang-prodak",							
+					'data-target'=>"#check-barang-prodak",
 					'class' => 'btn btn-default btn-sm'
-		]; 
+		];
 		$icon = '<span class="glyphicon glyphicon-search"></span>';
 		$label = $icon . ' ' . $title;
 		$url = Url::toRoute(['#']);
 		$content = Html::a($label,$url, $options);
-		return $content;	
+		return $content;
 	}
-	
+
 	/*
 	 * Tombol Modul Supplier
 	 * No Permission
 	*/
 	function tombolBarangSupplier(){
 		$title = Yii::t('app', 'Supplier');
-		$options = ['id'=>'po-spl',	
+		$options = ['id'=>'po-spl',
 					'data-toggle'=>"modal",
-					'data-target'=>"#po-spl",							
+					'data-target'=>"#po-spl",
 					'class' => 'btn btn-default btn-sm'
-		]; 
+		];
 		$icon = '<span class="glyphicon glyphicon-search"></span>';
 		$label = $icon . ' ' . $title;
 		$url = Url::toRoute(['#']);
 		$content = Html::a($label,$url, $options);
-		return $content;	
+		return $content;
 	}
 	/*
 	 * Tombol Modul Customer
@@ -157,37 +158,37 @@ $this->params['breadcrumbs'][] = $this->title;
 	*/
 	function tombolBarangCustomer(){
 		$title = Yii::t('app', 'Customer');
-		$options = ['id'=>'po-customer',	
+		$options = ['id'=>'po-customer',
 					'data-toggle'=>"modal",
-					'data-target'=>"#po-customer",							
+					'data-target'=>"#po-customer",
 					'class' => 'btn btn-default btn-sm'
-		]; 
+		];
 		$icon = '<span class="glyphicon glyphicon-search"></span>';
 		$label = $icon . ' ' . $title;
 		$url = Url::toRoute(['#']);
 		$content = Html::a($label,$url, $options);
-		return $content;	
+		return $content;
 	}
-	
-	
+
+
 	/*
 	 * Tombol Modul View
 	 * permission View [BTN_VIEW==1]
 	 * Check By User login
 	*/
 	function tombolView($url, $model){
-		if(getPermission()){	
+		if(getPermission()){
 			if(getPermission()->BTN_VIEW==1){
 				$title = Yii::t('app', 'View');
-				$options = [ 'id'=>'ro-view']; 
+				$options = [ 'id'=>'ro-view'];
 				$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
 				$label = $icon . ' ' . $title;
 				$url = Url::toRoute(['/purchasing/purchase-order/view','kd'=>$model->KD_PO]);
 				$options['tabindex'] = '-1';
-				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;	
+				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
 			}
 		}
-	} 
+	}
 
 	/*
 	 * Tombol Modul Edit -> Check By User login
@@ -198,7 +199,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	 * 2. Action EDIT Akan close atau tidak bisa di lakukan jika sudah Approved | status Approved =101 | Permission sign1
 	*/
 	function tombolEdit($url, $model){
-		if(getPermission()){								
+		if(getPermission()){
 			if(getPermissionEmp()->EMP_ID == $model->CREATE_BY OR getPermission()->BTN_EDIT==1){
 				if($model->STATUS == 0 OR $model->STATUS == 1 ){ // 0=process 101=Approved
 					$title = Yii::t('app','Edit Detail');
@@ -206,15 +207,15 @@ $this->params['breadcrumbs'][] = $this->title;
 								//'data-toggle'=>"modal",
 								//'data-target'=>"#add-ro",
 								//'data-confirm'=>'Anda yakin ingin menghapus RO ini?',
-					]; 
+					];
 					$icon = '<span class="fa fa-pencil-square-o fa-lg"></span>';
 					$label = $icon . ' ' . $title;
 					$url = Url::toRoute(['/purchasing/purchase-order/create','kdpo'=>$model->KD_PO]);
 					$options['tabindex'] = '-1';
-					return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL; 
+					return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
 				}
 			}
-		}						
+		}
 	}
 
 	/*
@@ -230,9 +231,9 @@ $this->params['breadcrumbs'][] = $this->title;
 			if(getPermissionEmp()->EMP_ID == $model->CREATE_BY AND getPermission()->BTN_DELETE==1){
 				if($model->STATUS == 0){ //STATUS=0 ATAU STATUS=1 Available to delete
 					$title = Yii::t('app', 'Delete');
-					$options = [ 'id'=>'ro-delete',															
+					$options = [ 'id'=>'ro-delete',
 								'data-confirm'=>'Anda yakin ingin menghapus RO ini?',
-					]; 
+					];
 					$icon = '<span class="fa fa-trash-o fa-lg"></span>';
 					$label = $icon . ' ' . $title;
 					$url = Url::toRoute(['/purchasing/purchase-order/hapusro','kd'=>$model->KD_PO]);
@@ -240,8 +241,8 @@ $this->params['breadcrumbs'][] = $this->title;
 					return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
 				}
 			}
-		}	
-	}	
+		}
+	}
 
 	/*
 	 * BUTTON "Review" FOR CHECKED AND APPROVAL -> Check By User login
@@ -250,13 +251,14 @@ $this->params['breadcrumbs'][] = $this->title;
 	 * EMP_ID=UserLogin & BTN_SIGN1==1 &  Status 0 = Action Edit Hide/tidak bisa edit
 	 * 1. Hanya User login dengan permission modul RO=1 dengan BTN_SIGN1==1 dan Permission Jabatan SVP keatas yang bisa melakukan Approval (Tanpa Kecuali)
 	 * 2. Action APPROVAL Akan close atau tidak bisa di lakukan jika sudah Approved | status Approved =101 | Permission sign1
-	*/	
+	*/
 	function tombolReview($url, $model){
 		if(getPermission()){
 			//Permission Jabatan
 			$grd=getPermissionEmp()->JOBGRADE_ID;
 			$auth2=getPermission()->BTN_SIGN2;
 			$auth3=getPermission()->BTN_SIGN3;
+
 			//if(getPermissionEmp()->JOBGRADE_ID == 'S' OR getPermissionEmp()->JOBGRADE_ID == 'M' OR getPermissionEmp()->JOBGRADE_ID == 'SM' AND getPermission()->BTN_SIGN1==1 ){
 			if(getPermission()->BTN_REVIEW==1){ //($a == 'EVP' OR $a == 'SVP' OR $a == 'VP') OR
 				 //if($model->STATUS == 1 | $model->STATUS != 0){ //STATUS!=0 ATAU STATUS=1 Available to Revview for Approved
@@ -268,7 +270,7 @@ $this->params['breadcrumbs'][] = $this->title;
 								 //'data-pjax' => '0',
 								 //'data-toggle-active' => $model->KD_PO
 								//'data-confirm'=>'Anda yakin ingin menghapus RO ini?',
-					]; 
+					];
 					$icon = '<span class="glyphicon glyphicon-ok"></span>';
 					$label = $icon . ' ' . $title;
 					$url = Url::toRoute(['/purchasing/purchase-order/review','kdpo'=>$model->KD_PO]);
@@ -276,11 +278,11 @@ $this->params['breadcrumbs'][] = $this->title;
 					return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
 				//}
 			}
-		}	
+		}
 	}
 	/*Button Action | Permission Denaid*/
 	function tombolDenaid($url, $model){
-		if(getPermission()){		
+		if(getPermission()){
 			$permitView = getPermission()->BTN_VIEW;
 			$permitEdit = getPermission()->BTN_EDIT;
 			$permitReview = getPermission()->BTN_REVIEW;
@@ -289,10 +291,10 @@ $this->params['breadcrumbs'][] = $this->title;
 			$auth3=getPermission()->BTN_SIGN3;
 			if($model->STATUS > 0 and ($auth2==0 or $auth3==0) and ($permitView==0 and $permitEdit==0 and $permitReview==0 and $permitDelete==0) ){
 				$title1 = Yii::t('app', 'Permit Access ');
-				$options1 = [ 'id'=>'action-denied-id',						  									
+				$options1 = [ 'id'=>'action-denied-id',
 							  'data-toggle'=>"modal",
 							  'data-target'=>"#confirm-permission-alert",
-				]; 
+				];
 				$icon1 = '<span class="fa fa-remove fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
 				$content = Html::a($label1,'',$options1);
@@ -300,19 +302,19 @@ $this->params['breadcrumbs'][] = $this->title;
 			}
 		}else{
 			$title1 = Yii::t('app', 'Permit Access ');
-			$options1 = [ 'id'=>'action-denied-id',						  									
+			$options1 = [ 'id'=>'action-denied-id',
 						  'data-toggle'=>"modal",
 						  'data-target'=>"#confirm-permission-alert",
-			]; 
+			];
 			$icon1 = '<span class="fa fa-remove fa-lg"></span>';
 			$label1 = '<div style="text-align:center">'.$icon1 . ' ' . $title1.'</div>';
 			$content = Html::a($label1,'',$options1);
 			return $content;
 		}
 	}
-	
-	
-	
+
+
+
 
 	/*
 	 * STATUS Prosess Request Order
@@ -336,12 +338,12 @@ $this->params['breadcrumbs'][] = $this->title;
 		}elseif ($model->STATUS==10){
 			return Html::a('<i class="glyphicon glyphicon-ok"></i> COMPLETED', '#',['class'=>'btn btn-info btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif ($model->STATUS==3){
-			return Html::a('<i class="glyphicon glyphicon-remove"></i> DELETE', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);						
+			return Html::a('<i class="glyphicon glyphicon-remove"></i> DELETE', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif ($model->STATUS==4){
 			return Html::a('<i class="glyphicon glyphicon-thumbs-down"></i> REJECT', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}else{
-			return Html::a('<i class="glyphicon glyphicon-question-sign"></i> UNKNOWN', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);	
-		};		
+			return Html::a('<i class="glyphicon glyphicon-question-sign"></i> UNKNOWN', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+		};
 	}
     $idEmp = Yii::$app->user->identity->EMP_ID;
     $emp = Employe::find()->where(['EMP_ID'=>$idEmp])->one();
@@ -365,7 +367,7 @@ function submitform()
 			'contentOptions'=>['class'=>'kartik-sheet-style'],
 			'width'=>'10px',
 			'header'=>'No.',
-			'headerOptions'=>[				
+			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'10px',
@@ -381,14 +383,14 @@ function submitform()
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
-			], 		
-		],		
+			],
+		],
 		[
 			'attribute'=>'KD_PO',
 			'label'=>'Kode PO',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
-			'headerOptions'=>[				
+			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'130px',
@@ -404,12 +406,12 @@ function submitform()
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
-			], 		
+			],
 		],
 		[
 			'attribute'=>'CREATE_AT',
 			'label'=>'DateTime',
-			'hAlign'=>'left',			
+			'hAlign'=>'left',
 			'vAlign'=>'middle',
 			'value'=>function($model){
 				/*
@@ -428,9 +430,9 @@ function submitform()
 								'format'=>'Y/m/d',
 								'separator' => ' - ',
 								'opens'=>'right'
-							]									
+							]
 			]),
-			'headerOptions'=>[				
+			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'80px',
@@ -444,9 +446,9 @@ function submitform()
 					'text-align'=>'left',
 					'width'=>'80px',
 					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'9pt'	
+					'font-size'=>'9pt'
 				]
-			], 		
+			],
 		],
 		[
 			'attribute'=>'namasuplier',
@@ -457,14 +459,14 @@ function submitform()
 				/*
 				 * max String Disply
 				 * @author ptrnov <piter@lukison.com>
-				*/				
+				*/
 				if (strlen($model->namasuplier) <=26){
 					return substr($model->namasuplier, 0, 26);
 				}else{
 					return substr($model->namasuplier, 0, 24). '..';
 				}
 			},
-			'headerOptions'=>[				
+			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'190px',
@@ -480,7 +482,7 @@ function submitform()
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
-			], 		
+			],
 		],
         [
 			'attribute'=>'SIG1_NM',
@@ -498,7 +500,7 @@ function submitform()
 					return substr($model->SIG1_NM, 0, 14). '..';
 				}
 			},
-			'headerOptions'=>[				
+			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'125px',
@@ -512,10 +514,10 @@ function submitform()
 					'text-align'=>'left',
 					'width'=>'125px',
 					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'9pt'					
+					'font-size'=>'9pt'
 				],
-				
-			], 		
+
+			],
 		],
 		[
 			'attribute'=>'SIG2_NM',
@@ -533,7 +535,7 @@ function submitform()
 					return substr($model->SIG2_NM, 0, 14). '..';
 				}
 			},
-			'headerOptions'=>[				
+			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'125px',
@@ -549,7 +551,7 @@ function submitform()
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
-			], 		
+			],
 		],
 		[
 			'attribute'=>'SIG3_NM',
@@ -567,7 +569,7 @@ function submitform()
 					return substr($model->SIG3_NM, 0, 14). '..';
 				}
 			},
-			'headerOptions'=>[				
+			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'125px',
@@ -583,20 +585,20 @@ function submitform()
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
-			], 		
+			],
 		],
 		[
 			'attribute'=>'nmcorp',
 			'label'=>'Corporation',
 			'filterType'=>GridView::FILTER_SELECT2,
-				'filter' => $selectCorp,	
+				'filter' => $selectCorp,
 				'filterWidgetOptions'=>[
 					'pluginOptions'=>['allowClear'=>true],
 				],
 				'filterInputOptions'=>['placeholder'=>'Any author'],
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
-			'headerOptions'=>[				
+			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'125px',
@@ -612,29 +614,29 @@ function submitform()
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
-			], 		
+			],
 		],
 		[
 			'class'=>'kartik\grid\ActionColumn',
 			'dropdown' => true,
 			'template' => '{view}{tambahEdit}{delete}{approved}{no_akses}',
-			'dropdownOptions'=>['class'=>'pull-right dropup'],									
+			'dropdownOptions'=>['class'=>'pull-right dropup'],
 			'buttons' => [
 				/* View RO | Permissian All */
 				'view' => function ($url, $model) {
 								return tombolView($url, $model);
 						  },
-						
+
 				/* View RO | Permissian Status 0; 0=process | User created = user login  */
 				'tambahEdit' => function ($url, $model) {
 								return tombolEdit($url, $model);
-							},										
-				
+							},
+
 				/* Delete RO | Permissian Status 0; 0=process | User created = user login */
 				'delete' => function ($url, $model) {
 								return tombolDelete($url, $model);
 							},
-				
+
 				/* Approved RO | Permissian Status 0; 0=process | Dept = Dept login | GF >= M */
 				'approved' => function ($url, $model) {
 								return tombolReview($url, $model);
@@ -643,7 +645,7 @@ function submitform()
 								return tombolDenaid($url, $model);
 				},
 			],
-			'headerOptions'=>[				
+			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'150px',
@@ -660,17 +662,17 @@ function submitform()
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
-			], 			
+			],
 		],
 		[
 			'label'=>'Notification',
 			'mergeHeader'=>true,
-			'format' => 'raw',						
+			'format' => 'raw',
 			'hAlign'=>'center',
 			'value' => function ($model) {
 							return statusProcessPo($model);
 			},
-			'headerOptions'=>[				
+			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'50px',
@@ -678,23 +680,23 @@ function submitform()
 					'font-size'=>'9pt',
 					'background-color'=>'rgba(0, 95, 218, 0.3)',
 				]
-			],			
-		], 		
-		
+			],
+		],
+
         /* ['class' => 'yii\grid\ActionColumn',
 		'template' => '{link} {edit}',
 		'buttons' => [
 			'link' => function ($url,$model) { return Html::a('', ['view','kd'=>$model->KD_PO],['class'=>'glyphicon glyphicon-eye-open', 'title'=>'Detail']);},
 
-			'edit' => function ($url,$model) use ($kr) { 
-				if( $kr == 'HR-02'){ 
-					return Html::a('', ['create','kdpo'=>$model->KD_PO],['class'=>'glyphicon glyphicon-pencil', 'title'=>'Ubah RO']); 
+			'edit' => function ($url,$model) use ($kr) {
+				if( $kr == 'HR-02'){
+					return Html::a('', ['create','kdpo'=>$model->KD_PO],['class'=>'glyphicon glyphicon-pencil', 'title'=>'Ubah RO']);
 				}
 			} ,
 
 			],
         ], */
-		
+
 	];
 
 	$gridLisPo= GridView::widget([
@@ -708,7 +710,7 @@ function submitform()
 			'options'=>[
 				'enablePushState'=>false,
 				'id'=>'po-list',
-			   ],						  
+			   ],
 			],
 			'hover'=>true, //cursor select
 			'responsive'=>true,
@@ -725,32 +727,68 @@ function submitform()
 			'panel'=>[
 				//'type'=>GridView::TYPE_INFO,
 				'heading'=>"<span class='fa fa-shopping-cart fa-xs'><b> LIST PURCHASE ORDER</b></span>",
-			],	
+			],
 		]);
-		
-?>
-   
-			
+
+		$outboxpo = GridView::widget([
+					'id'=>'po',
+					'dataProvider'=> $dataprovider,
+					'filterModel' => $searchmodel,
+					'columns' => $gridColumns,
+					'filterRowOptions'=>['style'=>'background-color:rgba(0, 95, 218, 0.3); align:center'],
+					'pjax'=>true,
+					'pjaxSettings'=>[
+					'options'=>[
+						'enablePushState'=>false,
+						'id'=>'po',
+					   ],
+					],
+					'hover'=>true, //cursor select
+					'responsive'=>true,
+					'responsiveWrap'=>true,
+					'bordered'=>true,
+					'striped'=>'4px',
+					'autoXlFormat'=>true,
+					'export' => false,
+					'toolbar'=> [
+							['content'=>tombolCreate().tombolBarangUmum().tombolBarangProdak().tombolBarangSupplier().tombolBarangCustomer()],
+							//'{export}',
+							//'{toggleData}',
+						],
+					'panel'=>[
+						//'type'=>GridView::TYPE_INFO,
+						'heading'=>"<span class='fa fa-shopping-cart fa-xs'><b> LIST PURCHASE ORDER</b></span>",
+					],
+				]);
+
+		?>
+
+
+
+
+
+
+
 <div class="container-full">
-	<div style="padding-left:15px; padding-right:15px">	
+	<!-- <div style="padding-left:15px; padding-right:15px">
 		<div>
-		<?php 
+		<?php
 			/*SHOW GRID VIEW*/
-			echo $gridLisPo; 
+			//  $gridLisPo;
 		?>
 		</div>
-		
-	</div>	
+
+	</div> -->
 	<!-- Modal -->
 	<div class="modal modal-wide fade" id="new-po" size="Modal::SIZE_SMALL" tabindex="-1" role="dialog" aria-labelledby="create-poLabel">
 	  <div class="modal-dialog modal-sm"  role="document">
 		<div class="modal-content">
-		
+
 			  <div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title" id="create-poLabel">OPTION CREATE PO</h4>
 			  </div>
-			  
+
 			<?php $form = ActiveForm::begin([
 				'id'=>'po-generate',
 				'enableClientValidation' => true,
@@ -760,23 +798,23 @@ function submitform()
 				'action' => ['/purchasing/purchase-order/simpanpo'],
 			]); ?>
 			  <div class="modal-body" style="text-align:center">
-				
+
 			<?php //$drop = ArrayHelper::map(Suplier::find()->where(['STATUS' => 1])->all(), 'KD_SUPPLIER', 'NM_SUPPLIER'); ?>
-			
+
 			<?php echo $form->field($poHeaderVal,'kD_CORP')->dropDownList($selectCorp)->label(false); ?>
 			<?php echo $form->field($poHeaderVal,'pARENT_PO')->dropDownList($poParent)->label(false); ?>
-			
-			
+
+
 			  </div>
 			  <div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				<button type="submit" class="btn btn-primary" >Generate PO</button>
-			  </div> 
+			  </div>
 			<?php ActiveForm::end(); ?>
 		</div>
 	  </div>
-	</div>	
-  
+	</div>
+
 </div>
 
 <?php
@@ -786,19 +824,19 @@ function submitform()
 	 * @since 1.2
 	*/
 	$this->registerJs("
-			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
 			$('#confirm-permission-alert').on('show.bs.modal', function (event) {
 				//var button = $(event.relatedTarget)
 				//var modal = $(this)
-				//var title = button.data('title') 
-				//var href = button.attr('href') 
+				//var title = button.data('title')
+				//var href = button.attr('href')
 				//modal.find('.modal-title').html(title)
 				//modal.find('.modal-body').html('')
 				/* $.post(href)
 					.done(function( data ) {
-						modal.find('.modal-body').html(data)					
+						modal.find('.modal-body').html(data)
 					}); */
-				}),			
+				}),
 	",$this::POS_READY);
 	Modal::begin([
 			'id' => 'confirm-permission-alert',
@@ -809,9 +847,33 @@ function submitform()
 			]
 		]);
 		echo "<div>You do not have permission for this module.
-				<dl>				
+				<dl>
 					<dt>Contact : itdept@lukison.com</dt>
 				</dl>
 			</div>";
 	Modal::end();
+
 ?>
+<div style="padding:10px;">
+	<?php
+		$items=[
+			[
+				'label'=>'<i class="fa fa-sign-in fa-lg"></i>  Inbox','content'=>$gridLisPo,
+				'active'=>true,
+			],
+			[
+				'label'=>'<i class="fa fa-sign-out fa-lg"></i>  Outbox','content'=>$outboxpo, // Checked/approved Ro
+			],
+		];
+		echo TabsX::widget([
+			'id'=>'tab-index-ro',
+			'items'=>$items,
+			'position'=>TabsX::POS_ABOVE,
+			//'height'=>'tab-height-xs',
+			'bordered'=>true,
+			'encodeLabels'=>false,
+			//'align'=>TabsX::ALIGN_LEFT,
+		]);
+
+	?>
+</div>

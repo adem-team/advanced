@@ -263,7 +263,7 @@ use lukisongroup\master\models\Unitbarang;
 			]; 
 			$icon = '<span class="fa fa-plus fa-lg"></span>';
 			$label = $icon . ' ' . $title;
-			$url = Url::toRoute(['/purchasing/purchase-order/po-notetop','kdpo'=>$poHeader->KD_PO]);
+			$url = Url::toRoute(['/purchasing/purchase-order/po-notetop-view','kdpo'=>$poHeader->KD_PO]);
 			$content = Html::a($label,$url, $options);
 			return $content;
 	} 

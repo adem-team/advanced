@@ -13,7 +13,7 @@ use lukisongroup\hrd\models\employe;
 	 * @since 1.2
 	*/
 	$profile=Yii::$app->getUserOpt->Profile_user();
-	/* GF_ID>=4 Group Function[Director|GM|M|S] */ 
+	/* GF_ID>=4 Group Function[Director|GM|M|S] */
 	$userData = ArrayHelper::map(employe::find()->where('(GF_ID<=4) and (STATUS<>3 or EMP_STS=3)' )->all(),'EMP_ID','EMP_NM');
 ?>
 
@@ -25,10 +25,10 @@ use lukisongroup\hrd\models\employe;
 				'method' => 'post',
 				'action' => ['/purchasing/sales-order/sign-auth1-save'],
 		]);
-	?>	
+	?>
 		<?= $form->field($auth1Mdl, 'empID')->widget(Select2::classname(), [
 			'data' => $userData,
-			'options' => ['placeholder' => 'CC User To Checked RO ...'],
+			'options' => ['placeholder' => 'CC User To Checked SO ...'],
 			'pluginOptions' => [
 				'allowClear' => true
 				 ],
@@ -41,12 +41,5 @@ use lukisongroup\hrd\models\employe;
 			<?php echo Html::submitButton('login',['class' => 'btn btn-primary']); ?>
 		</div>
 
-    
-	<?php ActiveForm::end(); ?>	
 
-	
-
-
-
-
-
+	<?php ActiveForm::end(); ?>

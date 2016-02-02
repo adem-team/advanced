@@ -16,6 +16,7 @@ use yii\filters\VerbFilter;
 use lukisongroup\widget\models\Chat;
 use lukisongroup\widget\models\ChatSearch;
 use lukisongroup\widget\models\ChatroomSearch;
+use lukisongroup\hrd\models\Employe;
 	
 
 class HrmPersonaliaController extends Controller
@@ -65,11 +66,53 @@ class HrmPersonaliaController extends Controller
      */
     public function actionIndex()
     {
-		/*	variable content View Employe Author: -ptr.nov- */
-       // $searchModel_Dept = new DeptSearch();
-		//$dataProvider_Dept = $searchModel_Dept->search(Yii::$app->request->queryParams);
+		/*CNT Active Employe*/
+		$cntAktifEmploye="SELECT COUNT(EMP_ID) as EMP_ID FROM a0001 WHERE STATUS <> 3 AND EMP_STS<>3";
+		$cntAktifEmp=Employe::findBySql($cntAktifEmploye)->one();
 		
-		return $this->render('index');
+		/*CNT Probation Employe*/
+		$cntProbationEmploye="SELECT COUNT(EMP_ID) as EMP_ID FROM a0001 WHERE STATUS <>3 AND EMP_STS=0";
+		$cntProbaEmp=Employe::findBySql($cntProbationEmploye)->one();
+		
+		/*CNT Kontrak Employe*/
+		$cntContrakEmploye="SELECT COUNT(EMP_ID) as EMP_ID FROM a0001 WHERE STATUS <>3 AND EMP_STS=2";
+		$cntContrak=Employe::findBySql($cntContrakEmploye)->one();
+		
+		/*CNT Tetap Employe*/
+		$cntTetapEmploye="SELECT COUNT(EMP_ID) as EMP_ID FROM a0001 WHERE STATUS <>3 AND EMP_STS=1";
+		$cntTetapEmp=Employe::findBySql($cntTetapEmploye)->one();
+		
+		/*CNT Support Employe*/
+		$cntSupportEmploye="SELECT COUNT(EMP_ID) as EMP_ID FROM a0001 WHERE STATUS <>3 AND EMP_STS<>3 AND SEQ_ID=1";
+		$cntSptEmp=Employe::findBySql($cntSupportEmploye)->one();
+		
+		/*CNT Bisnis Employe*/
+		$cntBisnisEmploye="SELECT COUNT(EMP_ID) as EMP_ID FROM a0001 WHERE STATUS <>3 AND EMP_STS<>3 AND SEQ_ID=2";
+		$cntBisnisEmp=Employe::findBySql($cntBisnisEmploye)->one();
+		
+		/*CNT GenderM Employe*/
+		$cntGenderMEmploye="SELECT COUNT(EMP_ID) as EMP_ID FROM a0001 WHERE STATUS <>3 AND EMP_STS<>3 AND EMP_GENDER='Male'";
+		$cntGenderMEmp=Employe::findBySql($cntGenderMEmploye)->one();
+		
+		/*CNT GenderF Employe*/
+		$cntGenderFmploye="SELECT COUNT(EMP_ID) as EMP_ID FROM a0001 WHERE STATUS <>3 AND EMP_STS<>3 AND EMP_GENDER='Female'";
+		$cntGenderFEmp=Employe::findBySql($cntGenderFmploye)->one();
+		
+		/*CNT Resign Employe*/
+		$cntResignEmploye="SELECT COUNT(EMP_ID) as EMP_ID FROM a0001 WHERE EMP_STS=3";
+		$cntResignEmp=Employe::findBySql($cntResignEmploye)->one();
+		
+		return $this->render('index',[
+			'cntAktifEmp'=>$cntAktifEmp->EMP_ID,
+			'cntProbaEmp'=>$cntProbaEmp->EMP_ID,
+			'cntContrak'=>$cntContrak->EMP_ID,
+			'cntTetapEmp'=>$cntTetapEmp->EMP_ID,
+			'cntSptEmp'=>$cntSptEmp->EMP_ID,
+			'cntBisnisEmp'=>$cntBisnisEmp->EMP_ID, 
+			'cntGenderMEmp'=>$cntGenderMEmp->EMP_ID, 
+			'cntGenderFEmp'=>$cntGenderFEmp->EMP_ID, 
+			'cntResignEmp'=>$cntResignEmp->EMP_ID, 
+		]);
     }
 	
 	public function actionChat()

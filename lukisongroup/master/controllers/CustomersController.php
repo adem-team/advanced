@@ -144,7 +144,7 @@ class CustomersController extends Controller
 
         ]);
 	}
-  
+
 
     /**
      * Displays a single Customer model.
@@ -279,12 +279,15 @@ class CustomersController extends Controller
 
            $model->save();
         }
+        // print_r($model->getErrors());
+        // die();
 
            return $this->redirect(['viewcust','id'=>$model->CUST_KD]);
          }
          else {
            # code...
            return $this->render('_formaddmap', [
+             'id'=>$id,
                'model' => $model,
            ]);
          }
