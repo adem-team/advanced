@@ -1076,13 +1076,8 @@ class PurchaseOrderController extends Controller
      * @since 1.1
      */
 	public function actionPoNote($kdpo){
-<<<<<<< HEAD
-		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
-		return $this->renderAjax('_form_ponote', [
-=======
 		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();			
 		return $this->renderAjax('_form_ponote_buat', [
->>>>>>> origin/master
 			'poHeader' => $poHeader,
 		]);
 	}
@@ -1092,12 +1087,6 @@ class PurchaseOrderController extends Controller
 			$hsl = \Yii::$app->request->post();
 			$poHeader->NOTE = $hsl['Purchaseorder']['NOTE'];
 			$poHeader->save();
-<<<<<<< HEAD
-			return $this->redirect(['create', 'kdpo'=>$kdpo]);
-		}
-    }
-
-=======
 			return $this->redirect(['create', 'kdpo'=>$kdpo]);			
 		}		
     }
@@ -1171,7 +1160,6 @@ class PurchaseOrderController extends Controller
 		}		
     }	
 	
->>>>>>> origin/master
 	/*
 	 * Print PDF
 	 * @author ptrnov <piter@lukison.com>

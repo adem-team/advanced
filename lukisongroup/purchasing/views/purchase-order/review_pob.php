@@ -46,9 +46,7 @@ $y=4;
 		}
 	}
 	//print_r(getPermissionEmp());
-<<<<<<< HEAD
 
-=======
 	/*
 	 * Tombol Approval Item 
 	 * Permission Auth2 | Auth3
@@ -251,8 +249,6 @@ $y=4;
 			return $content;
 	}
 	
-	
->>>>>>> origin/master
 ?>
 
  <?php
@@ -918,22 +914,9 @@ $y=4;
 					<dt style="width:80px; float:left;">CP</dt>
 					<dd>:	<?=$billPic;?></dd>
 				</dl>
-<<<<<<< HEAD
 			</div>
 		</div>
 	</div>
-	<!-- PO Note !-->
-	<div  class="row">
-		<div  class="ccol-md-12" style="font-family: tahoma ;font-size: 8pt;">
-			<div  class="col-md-12">
-				<dt><b>General Notes :</b></dt>
-				<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;">
-				<dd><?php echo $poHeader->NOTE; ?></dd><br/><br/><br/><br/>
-				<hr style="height:1px;margin-top: 1px;">
-=======
-			</div>		
-		</div>	
-	</div>	
 	<!-- PO Term Of Payment !-->
 	<div  class="row">			
 		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">	
@@ -963,25 +946,17 @@ $y=4;
 				<div style="margin-left:5px">
 					<dd><?php echo $poHeader->NOTE; ?></dd>
 					<dt>Invoice exchange can be performed on Monday through Tuesday time of 09:00AM-16:00PM</dt>
-				</div>				
->>>>>>> origin/master
+				</div>
 			</div>
 			<hr style="height:1px;margin-top: 1px;">		
 		</div>
 	</div>
-<<<<<<< HEAD
 	<!-- Signature PO !-->
-	<div  class="row">
-		<div class="ccol-md-12">
-			<div class="col-md-8">
-				<table id="tblRo" class="table table-bordered" style="width:360px;font-family: tahoma ;font-size: 8pt;">
-=======
-	<!-- Signature !-->
+
 	<div  class="col-md-12">
 		<div  class="row" >
 			<div class="col-md-6">
-				<table id="tblRo" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">					
->>>>>>> origin/master
+				<table id="tblRo" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">	
 					<!-- Tanggal!-->
 					 <tr>
 						<!-- Tanggal Pembuat RO!-->
@@ -992,7 +967,6 @@ $y=4;
 									echo '<b>Tanggerang</b>,' . $placeTgl1;
 								?>
 							</div>
-
 						</th>
 						<!-- Tanggal Pembuat RO!-->
 						<th class="col-md-1" style="text-align: center; height:20px">
@@ -1001,19 +975,10 @@ $y=4;
 									$placeTgl2=$poHeader->SIG2_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG2_TGL,'date') :'';
 									echo '<b>Tanggerang</b>,' . $placeTgl2;
 								?>
-<<<<<<< HEAD
 							</div>
-
-						</th>
-						<!-- Tanggal PO Approved!-->
-						<th style="text-align: center; height:20px">
-=======
-							</div> 
-						
-						</th>		
+						</th>							
 						<!-- Tanggal PO Approved!-->				
 						<th class="col-md-1" style="text-align: center; height:20px">
->>>>>>> origin/master
 							<div style="text-align:center;">
 								<?php
 									$placeTgl3=$poHeader->SIG3_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG3_TGL,'date') :'';
@@ -1043,7 +1008,6 @@ $y=4;
 					</tr>
 					<!-- Signature !-->
 					 <tr>
-<<<<<<< HEAD
 						<th style="text-align: center; vertical-align:middle;width:180; height:60px">
 							<?php
 								$ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG1_SVGBASE64.'" height="60" width="150"></img>' : SignCreated($poHeader);
@@ -1054,73 +1018,35 @@ $y=4;
 						<th style="text-align: center; vertical-align:middle;width:180">
 							<?php
 								$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG2_SVGBASE64.'" height="60" width="150"></img>' : SignChecked($poHeader);
-=======
-						<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
-							<?php 
-								$ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG1_SVGBASE64.'></img>' :SignCreated($poHeader);
-								echo $ttd1;
-							?> 
+							?>						
 						</th>								
-						<th class="col-md-1" style="text-align: center; vertical-align:middle">
-							<?php 
-								$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG2_SVGBASE64.'></img>' :SignChecked($poHeader);
->>>>>>> origin/master
-								echo $ttd2;
-							?>
-						</th>
-<<<<<<< HEAD
 						<th style="text-align: center; vertical-align:middle;width:180">
 							<?php
 								$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : SignApproved($poHeader);
 								echo $ttd3;
 							?>
-=======
-						<th  class="col-md-1" style="text-align: center; vertical-align:middle">
-							<?php 
-								$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :SignApproved($poHeader);
-								//if ($poHeader->STATUS==101 OR $poHeader->STATUS==10){
-									echo $ttd3;
-								//}
-							?> 
->>>>>>> origin/master
 						</th>
 					</tr>
 					<!--Nama !-->
 					 <tr>
-<<<<<<< HEAD
-						<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
-							<div>
-=======
 						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 							<div>		
->>>>>>> origin/master
 								<?php
 									$sigNm1=$poHeader->SIG1_NM!='none' ? '<b>'.$poHeader->SIG1_NM.'</b>' : 'none';
 									echo $sigNm1;
 								?>
 							</div>
-<<<<<<< HEAD
-						</th>
-						<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
-							<div>
-=======
-						</th>								
+						</th>													
 						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 							<div>		
->>>>>>> origin/master
 								<?php
 									$sigNm2=$poHeader->SIG2_NM!='none' ? '<b>'.$poHeader->SIG2_NM.'</b>' : 'none';
 									echo $sigNm2;
 								?>
 							</div>
-						</th>
-<<<<<<< HEAD
-						<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
-							<div>
-=======
+						</th>						
 						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 							<div>		
->>>>>>> origin/master
 								<?php
 									$sigNm3=$poHeader->SIG3_NM!='none' ? '<b>'.$poHeader->SIG3_NM.'</b>' : 'none';
 									echo $sigNm3;
@@ -1145,27 +1071,14 @@ $y=4;
 								<b><?php  echo 'Director'; ?></b>
 							</div>
 						</th>
-<<<<<<< HEAD
 					</tr>
-				</table>
-=======
-					</tr>					
-				</table>				
->>>>>>> origin/master
+				</table>			
 			</div>
 			<!-- Button Submit!-->
 			<div style="text-align:right; margin-top:80px; margin-right:15px">
 				<a href="/purchasing/purchase-order/" class="btn btn-info btn-xs" role="button" style="width:90px">Back</a>
-<<<<<<< HEAD
-				<?php echo Html::a('<i class="fa fa-print fa-fw"></i> PDF', ['cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
-				<?php
-					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print Tmp', ['temp-cetakpdf','kdpo'=>$poHeader->KD_PO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
-				?>
-=======
 				<?php echo Html::a('<i class="fa fa-print fa-fw"></i> Print', ['cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
 				<?php echo Html::a('<i class="fa fa-print fa-fw"></i> tmp Print', ['cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
-								
->>>>>>> origin/master
 			</div>
 		</div>
 	</div>		
@@ -1300,10 +1213,7 @@ $y=4;
 					<dt>Contact : itdept@lukison.com</dt>
 				</dl>
 			</div>";
-	Modal::end();
-<<<<<<< HEAD
-=======
-	
+	Modal::end();	
 	
 	/*
 	 * Action PO Detail
@@ -1434,8 +1344,4 @@ $y=4;
 			'size' => 'modal-md',
 		]);
 	Modal::end();
-?>
->>>>>>> origin/master
-
-
 ?>
