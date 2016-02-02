@@ -13,28 +13,12 @@ use yii\widgets\Pjax;
 use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
 MapAsset::register($this);
 
-/* @var $this yii\web\View */
-/* @var $searchModel lukisongroup\master\models\KategoriSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
-
 $this->params['breadcrumbs'][] = $this->title;
-$this->sideCorp = 'Customers';                  /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'umum_datamaster';                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'Customers');    /* title pada header page */
-
-?>
-
-<div class="kategori-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-</div>
+$this->sideCorp = 'Customers';                 	 /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'umum_datamaster';           	 /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Customers');   	 /* title pada header page */
 
 
-
-
-<?php
 
 // grid kota
 $tabkota = \kartik\grid\GridView::widget([
@@ -190,7 +174,6 @@ $tabprovince = \kartik\grid\GridView::widget([
 <!-- grid kategori customers -->
 <?php
 
-
 $tabcrud = \kartik\grid\GridView::widget([
     'id'=>'gv-kat',
     'dataProvider'=>$dataProviderkat,
@@ -295,186 +278,630 @@ $tabcrud = \kartik\grid\GridView::widget([
 
     ]);
 
+	/* 
+	 * GRID CUSTOMER  
+	 * @author ptrnov [piter@lukison.com]
+	 * @since 1.2
+	*/
+	$aryStt= [
+		  ['STATUS' => 0, 'STT_NM' => 'DISABLE'],		  
+		  ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
+	];	
+	$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
+	
+	$dropType= ArrayHelper::map(Kategoricus::find()->where(['CUST_KTG_PARENT'=>0])
+                                                             ->asArray()
+                                                             ->all(),'CUST_KTG', 'CUST_KTG_NM');
+	$dropKtg= ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT<>0')
+                                                             ->asArray()
+                                                             ->all(),'CUST_KTG_NM', 'CUST_KTG_NM');
+	
+	
+	$tabcustomers = \kartik\grid\GridView::widget([
+		'id'=>'gv-cus',
+		'dataProvider' => $dataProvider,
+		'filterModel' => $searchModel,
+		'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.9); align:center'],
+		'columns'=>[
+			[
+				'class'=>'kartik\grid\SerialColumn',
+				'contentOptions'=>['class'=>'kartik-sheet-style'],
+				'width'=>'10px',
+				'header'=>'No.',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 		
+			],
+			[
+				'attribute' => 'CUST_KD',
+				'label'=>'Customer.Id',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'120px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'120px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'class'=>'kartik\grid\EditableColumn',
+				'attribute' => 'CUST_KD_ALIAS',
+				'label'=>'Alias Code',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'120px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'120px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'attribute' => 'CUST_NM',
+				'label'=>'Customer Name',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'250px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'250px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'attribute' => 'tipenm',
+				'filter' => $dropType,
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'attribute' =>'cus.CUST_KTG_NM',
+				'filter' => $dropKtg,
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'200px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'200px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'label'=>'PIC',
+				'attribute' =>'PIC',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'200px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'200px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'attribute' => 'STATUS',
+				'filter' => $valStt,
+				'format' => 'raw',						
+				'hAlign'=>'center',
+				'value'=>function($model){
+						   if ($model->STATUS == 1) {
+								return Html::a('<i class="fa fa-edit"></i> &nbsp;Enable', '',['class'=>'btn btn-success btn-xs', 'title'=>'Aktif']);
+							} else if ($model->STATUS == 0) {
+								return Html::a('<i class="fa fa-close"></i> &nbsp;Disable', '',['class'=>'btn btn-danger btn-xs', 'title'=>'Deactive']);
+							} 
+				},
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'80px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'80px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 	
+			],	
+			[ 	
+				'class' => 'kartik\grid\ActionColumn',
+				'template' => '{view}{update}{delete}{edit}{alias}{login}',
+				'header'=>'Action',
+				'dropdown' => true,
+				'dropdownOptions'=>['class'=>'pull-right dropup'],
+				'buttons' => [
+					'view' =>function($url, $model, $key){
+							return'<li>'.  Html::a('<span class="glyphicon glyphicon-eye-open"></span> '.Yii::t('app', 'View'),
+														['viewcust','id'=>$model->CUST_KD],[
+															// 'data-toggle'=>"modal",
+															// 'data-target'=>"#view3",
+														  'data-title'=> $model->CUST_KD,
+														  ]).'</li>';
+							},
+					'update' =>function($url, $model, $key){
+							return '<li>'. Html::a('<span class="glyphicon glyphicon-user"></span>'.Yii::t('app', 'Update'),
+														['updatecus','id'=>$model->CUST_KD],[
+														'data-toggle'=>"modal",
+														'data-target'=>"#createcus",
+														'data-title'=> $model->CUST_KD,
+														]).'</li>';
+							},
+					'delete' =>function($url, $model, $key){
+							return '<li>'. Html::a('<i class="glyphicon glyphicon-trash"></i>'.Yii::t('app', 'Delete'),
+															['deletecus','id'=>$model->CUST_KD],[
+															// 'data-toggle'=>"modal",
+															// 'data-target'=>"#form",
+															// 'data-title'=> $model->CUST_KD,
+															]).'</li>';
+							},
+				    'edit' =>function($url, $model,$key){
+							return '<li>'. Html::a('<i class="glyphicon glyphicon-globe"></i>'.Yii::t('app', 'Create Map'),
+														['create-map','id'=>$model->CUST_KD],
+														['class'=>'btn btn-default',]).'</li>';
 
+						   },
+				    'alias' =>function($url, $model, $key){
+							return  '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Create alias'),['create-alias-customers','id'=>$model->CUST_KD],[
+														  'data-toggle'=>"modal",
+														  'data-target'=>"#formalias",
+														  'data-title'=> $model->CUST_KD,
+															 ]).'</li>';
+							},
+					'login' =>function($url, $model, $key){
+							  return  '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Login'),
+														['login-alias'],[
+															'data-toggle'=>"modal",
+															'data-target'=>"#formlogin",
+															'data-title'=> $model->CUST_KD,
+														]).'</li>';
+													},
 
-// grid customers
+				],
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'height'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+		],
+		'panel'=>[
+			'type' =>GridView::TYPE_SUCCESS,
+			'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create  ',
+							['modelClass' => 'Customers',]),'/master/customers/createcustomers',[
+																'data-toggle'=>"modal",
+																'id'=>'modcus',
+																 'data-target'=>"#createcus",
+																 'class' => 'btn btn-success'
+																])
 
- $tabcustomers = \kartik\grid\GridView::widget([
-  'id'=>'gv-cus',
-  'dataProvider' => $dataProvider,
-  'filterModel' => $searchModel ,
-   'columns'=>[
-       ['class'=>'kartik\grid\SerialColumn'],
+		],
+		'pjax'=>true,
+		'pjaxSettings'=>[
+			'options'=>[
+				'enablePushState'=>false,
+				'id'=>'gv-cus',
+			],
+		],
+		'hover'=>true,
+		'responsive'=>true,
+		'responsiveWrap'=>true,
+		'bordered'=>true,
+		'striped'=>'4px',
+		'autoXlFormat'=>true,
+		'export'=>[
+			'fontAwesome'=>true,
+			'showConfirmAlert'=>false,
+			'target'=>GridView::TARGET_BLANK
+		],
+    ]);
 
-            'CUST_KD',
-             [
-                'class'=>'kartik\grid\EditableColumn',
-                'attribute' => 'CUST_KD_ALIAS'
-            ],
+	/*CUSTOMER DATA*/
+	$tabcustomersData = \kartik\grid\GridView::widget([
+		'id'=>'gv-cus-data',
+		'dataProvider' => $dataProvider,
+		'filterModel' => $searchModel,
+		'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.9); align:center'],
+		'columns'=>[
+			[
+				'class'=>'kartik\grid\SerialColumn',
+				'contentOptions'=>['class'=>'kartik-sheet-style'],
+				'width'=>'10px',
+				'header'=>'No.',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 		
+			],
+			[
+				'attribute' => 'CUST_KD',
+				'label'=>'Customer.Id',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'120px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'120px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'attribute' => 'CUST_NM',
+				'label'=>'Customer Name',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'250px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'250px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'attribute' => 'tipenm',
+				'filter' => $dropType,
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'attribute' =>'cus.CUST_KTG_NM',
+				'filter' => $dropKtg,
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'200px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'200px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'label'=>'PIC',
+				'attribute' =>'PIC',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'200px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'200px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 				
+			],
+			[
+				'attribute' => 'STATUS',
+				'filter' => $valStt,
+				'format' => 'raw',						
+				'hAlign'=>'center',
+				'value'=>function($model){
+						   if ($model->STATUS == 1) {
+								return Html::a('<i class="fa fa-edit"></i> &nbsp;Enable', '',['class'=>'btn btn-success btn-xs', 'title'=>'Aktif']);
+							} else if ($model->STATUS == 0) {
+								return Html::a('<i class="fa fa-close"></i> &nbsp;Disable', '',['class'=>'btn btn-danger btn-xs', 'title'=>'Deactive']);
+							} 
+				},
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'80px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'80px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				], 	
+			],	
+			[ 	
+				'class' => 'kartik\grid\ActionColumn',
+				'template' => '{view}{update}{delete}{edit}{alias}{login}',
+				'header'=>'Action',
+				'dropdown' => true,
+				'dropdownOptions'=>['class'=>'pull-right dropup'],
+				'buttons' => [
+					'view' =>function($url, $model, $key){
+							return'<li>'.  Html::a('<span class="glyphicon glyphicon-eye-open"></span> '.Yii::t('app', 'View'),
+														['viewcust','id'=>$model->CUST_KD],[
+															// 'data-toggle'=>"modal",
+															// 'data-target'=>"#view3",
+														  'data-title'=> $model->CUST_KD,
+														  ]).'</li>';
+							},
+					'update' =>function($url, $model, $key){
+							return '<li>'. Html::a('<span class="glyphicon glyphicon-user"></span>'.Yii::t('app', 'Update'),
+														['updatecus','id'=>$model->CUST_KD],[
+														'data-toggle'=>"modal",
+														'data-target'=>"#createcus",
+														'data-title'=> $model->CUST_KD,
+														]).'</li>';
+							},
+					'delete' =>function($url, $model, $key){
+							return '<li>'. Html::a('<i class="glyphicon glyphicon-trash"></i>'.Yii::t('app', 'Delete'),
+															['deletecus','id'=>$model->CUST_KD],[
+															// 'data-toggle'=>"modal",
+															// 'data-target'=>"#form",
+															// 'data-title'=> $model->CUST_KD,
+															]).'</li>';
+							},
+				    'edit' =>function($url, $model,$key){
+							return '<li>'. Html::a('<i class="glyphicon glyphicon-globe"></i>'.Yii::t('app', 'Create Map'),
+														['create-map','id'=>$model->CUST_KD],
+														['class'=>'btn btn-default',]).'</li>';
 
-            'CUST_NM',
-             [
-                'label'=>'Customer Kategori',
-                'attribute' =>'cus.CUST_KTG_NM',
+						   },
+				    'alias' =>function($url, $model, $key){
+							return  '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Create alias'),['create-alias-customers','id'=>$model->CUST_KD],[
+														  'data-toggle'=>"modal",
+														  'data-target'=>"#formalias",
+														  'data-title'=> $model->CUST_KD,
+															 ]).'</li>';
+							},
+					'login' =>function($url, $model, $key){
+							  return  '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Login'),
+														['login-alias'],[
+															'data-toggle'=>"modal",
+															'data-target'=>"#formlogin",
+															'data-title'=> $model->CUST_KD,
+														]).'</li>';
+													},
 
-            ],
-
-
-            'TLP1',
-             'JOIN_DATE',
-             'EMAIL',
-            [
-                'format' => 'raw',
-                'label'=> 'Status Customers',
-                'value' => function ($model) {
-                    if ($model->STATUS == 1) {
-                        return '<i class="fa fa-check fa-lg ya" style="color:blue;" title="Aktif">aktif</i>';
-                    } else if ($model->STATUS == 0) {
-                        return '<i class="fa fa-times fa-lg no" style="color:red;" title="Tidak Aktif" >Tidak Aktif</i>';
-                    }
-                },
-            ],
-
-
-[ 'class' => 'kartik\grid\ActionColumn',
-            'template' => '{view}{update}{delete}{edit}{alias}{login}',
-                'header'=>'Action',
-                'dropdown' => true,
-                'dropdownOptions'=>['class'=>'pull-right dropup'],
-                  'buttons' => [
-                        'view' =>function($url, $model, $key){
-                                return'<li>'.  Html::a('<span class="glyphicon glyphicon-eye-open"></span> '.Yii::t('app', 'View'),
-                                                            ['viewcust','id'=>$model->CUST_KD],[
-                                                                // 'data-toggle'=>"modal",
-                                                                // 'data-target'=>"#view3",
-                                                              'data-title'=> $model->CUST_KD,
-                                                              ]).'</li>';
-                                                           },
-                             'update' =>function($url, $model, $key){
-                                    return '<li>'. Html::a('<span class="glyphicon glyphicon-user"></span>'.Yii::t('app', 'Update'),
-                                                                ['updatecus','id'=>$model->CUST_KD],[
-                                                                'data-toggle'=>"modal",
-                                                                'data-target'=>"#createcus",
-                                                                'data-title'=> $model->CUST_KD,
-                                                                ]).'</li>';
-                                                             },
-
-
-                              'delete' =>function($url, $model, $key){
-                                    return '<li>'. Html::a('<i class="glyphicon glyphicon-trash"></i>'.Yii::t('app', 'Delete'),
-                                                                ['deletecus','id'=>$model->CUST_KD],[
-                                                                // 'data-toggle'=>"modal",
-                                                                // 'data-target'=>"#form",
-                                                                // 'data-title'=> $model->CUST_KD,
-                                                                ]).'</li>';
-                            },
-							               'edit' =>function($url, $model,$key){
-                                    return '<li>'. Html::a('<i class="glyphicon glyphicon-globe"></i>'.Yii::t('app', 'Create Map'),
-                                                            ['create-map','id'=>$model->CUST_KD],
-                                                             [ 'class'=>'btn btn-default',
-															                                ]).'</li>';
-
-                                                           },
-                           'alias' =>function($url, $model, $key){
-                                     return  '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Create alias'),['create-alias-customers','id'=>$model->CUST_KD],[
-                                                              'data-toggle'=>"modal",
-                                                              'data-target'=>"#formalias",
-                                                              'data-title'=> $model->CUST_KD,
-                                                                 ]).'</li>';
-
-                                                           },
-                        'login' =>function($url, $model, $key){
-                                  return  '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Login'),['login-alias'],[
-                                                                'data-toggle'=>"modal",
-                                                                'data-target'=>"#formlogin",
-                                                                'data-title'=> $model->CUST_KD,
-                                                                ]).'</li>';
-
-                                                        },
-
-                                                     ],
-
-                                                ],
-
-                                    ],
-
-
-
-   'panel'=>[
-
-  'type' =>GridView::TYPE_SUCCESS,
-
-	 'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create  ',
-                        ['modelClass' => 'Customers',]),'/master/customers/createcustomers',[
-                                                            'data-toggle'=>"modal",
-															                               'id'=>'modcus',
-                                                             'data-target'=>"#createcus",
-                                                             'class' => 'btn btn-success'
-                                                            ])
-
-        ],
-        'pjax'=>true,
-        'pjaxSettings'=>[
-            'options'=>[
-                'enablePushState'=>false,
-                'id'=>'gv-cus',
-
-        ],
-        'hover'=>true,
-        'responsive'=>true,
-        'responsiveWrap'=>true,
-        'bordered'=>true,
-        'striped'=>'4px',
-        'autoXlFormat'=>true,
-        'export'=>[
-            'fontAwesome'=>true,
-            'showConfirmAlert'=>false,
-            'target'=>GridView::TARGET_BLANK
-        ],
-
-    ],
-
+				],
+				'headerOptions'=>[				
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'height'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+		],
+		'panel'=>[
+			'type' =>GridView::TYPE_SUCCESS,
+		],
+		'pjax'=>true,
+		'pjaxSettings'=>[
+			'options'=>[
+				'enablePushState'=>false,
+				'id'=>'gv-cus-data',
+			],
+		],
+		'hover'=>true,
+		'responsive'=>true,
+		'responsiveWrap'=>true,
+		'bordered'=>true,
+		'striped'=>'4px',
+		'autoXlFormat'=>true,
+		'export'=>[
+			'fontAwesome'=>true,
+			'showConfirmAlert'=>false,
+			'target'=>GridView::TARGET_BLANK
+		],
     ]);
 
 
-
-
 	/*Display MAP*/
-
-          $map = '<div id ="map" style="width:100%;height:400px"></div>';
-
-/*All Tab*/
+    $map = '<div id ="map" style="width:100%;height:400px"></div>';
     $items=[
 		[
-			'label'=>'<i class="glyphicon glyphicon-user"></i> New Customers ','content'=> $tabcustomers, //   $tabcustomers,
-
-
+			'label'=>'<i class="glyphicon glyphicon-user"></i> New Customers ','content'=> $tabcustomers, 
 		],
-
-		[
-			'label'=>'<i class="glyphicon glyphicon-map-marker"></i> MAP','content'=> $map, //$tab_profile,
-             'active'=>true,
-		],
+		
         [
-			'label'=>'<i class="glyphicon glyphicon-folder-open"></i> DATA',//'content'=>$tabparent,//$tab_profile,
+			'label'=>'<i class="glyphicon glyphicon-folder-open"></i> DATA','content'=>$tabcustomersData,
 		],
-			[
+		[
+			'label'=>'<i class="glyphicon glyphicon-map-marker"></i> MAP','content'=> $map, 
+             //'active'=>true,
+		],
+		[
 			'label'=>'<i class="glyphicon glyphicon-user"></i> Kategori Customers','content'=>$tabcrud,
-
-
 		],
-
-			[
-			'label'=>'<i class="glyphicon glyphicon-globe"></i> Province ','content'=> $tabprovince//$tab_profile,
+		[
+			'label'=>'<i class="glyphicon glyphicon-globe"></i> Province ','content'=> $tabprovince,
 		],
-				[
+		[
 			'label'=>'<i class="glyphicon glyphicon-globe"></i> KOTA',
-            'content'=>$tabkota,//$tab_profile,
-
+            'content'=>$tabkota,
 		],
     ];
-
-
 
 	echo TabsX::widget([
 		'id'=>'tab1',
@@ -487,31 +914,23 @@ $tabcrud = \kartik\grid\GridView::widget([
 
 	]);
 
-	?>
 
-
-
-			<?php
-
-// create and update via modal province
-
-$this->registerJs("
-     $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-        $('#form3').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-            var modal = $(this)
-            var title = button.data('title')
-            var href = button.attr('href')
-            //modal.find('.modal-title').html(title)
-            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-            $.post(href)
-                .done(function( data ) {
-                    modal.find('.modal-body').html(data)
-                });
-            })
+	// create and update via modal province
+	$this->registerJs("
+		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		$('#form3').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+		})
     ",$this::POS_READY);
-
-
     Modal::begin([
             'id' => 'form3',
             'header' => '<h4 class="modal-title">LukisonGroup</h4>',
@@ -519,9 +938,8 @@ $this->registerJs("
     Modal::end();
 
 
-/*view via modal province */
-$this->registerJs("
-
+	/*view via modal province */
+	$this->registerJs("
         $('#view3').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
@@ -535,16 +953,11 @@ $this->registerJs("
                 });
             })
     ",$this::POS_READY);
-
-
-
-Modal::begin([
-                'id' => 'view3',
-                'header' => '<h4 class="modal-title">LukisonGroup</h4>',
-            ]);
-Modal::end();
-
-
+	Modal::begin([
+					'id' => 'view3',
+					'header' => '<h4 class="modal-title">LukisonGroup</h4>',
+				]);
+	Modal::end();
 
 	// create and update kategori customers via modal
     $this->registerJs("
@@ -562,42 +975,37 @@ Modal::end();
                 });
             })
     ",$this::POS_READY);
+	Modal::begin([
+			'id' => 'formparent',
+			'header' => '<h4 class="modal-title">LukisonGroup</h4>',
+				]);
+	Modal::end();
+
+	// alias
+	$this->registerJs("
+		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		$('#formalias').on('show.bs.modal', function (event) {
+		 var button = $(event.relatedTarget)
+		 var modal = $(this)
+		 var title = button.data('title')
+		 var href = button.attr('href')
+		 //modal.find('.modal-title').html(title)
+		 modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+		 $.post(href)
+			 .done(function( data ) {
+				 modal.find('.modal-body').html(data)
+			 });
+		 })
+	",$this::POS_READY);
+	Modal::begin([
+			 'id' => 'formalias',
+			 'header' => '<h4 class="modal-title">LukisonGroup</h4>',
+				 ]);
+	Modal::end();
 
 
-Modal::begin([
-            'id' => 'formparent',
-            'header' => '<h4 class="modal-title">LukisonGroup</h4>',
-                ]);
- Modal::end();
-
-// alias
- $this->registerJs("
- $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-     $('#formalias').on('show.bs.modal', function (event) {
-         var button = $(event.relatedTarget)
-         var modal = $(this)
-         var title = button.data('title')
-         var href = button.attr('href')
-         //modal.find('.modal-title').html(title)
-         modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-         $.post(href)
-             .done(function( data ) {
-                 modal.find('.modal-body').html(data)
-             });
-         })
- ",$this::POS_READY);
-
-
-Modal::begin([
-         'id' => 'formalias',
-         'header' => '<h4 class="modal-title">LukisonGroup</h4>',
-             ]);
-Modal::end();
-
-
-// view kategori customers via modal
-$this->registerJs("
-
+	// view kategori customers via modal
+	$this->registerJs("
         $('#viewparent').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
@@ -611,8 +1019,6 @@ $this->registerJs("
                 });
             })
     ",$this::POS_READY);
-
-
     Modal::begin([
             'id' => 'viewparent',
             'header' => '<h4 class="modal-title">LukisonGroup</h4>',
@@ -620,8 +1026,8 @@ $this->registerJs("
     Modal::end();
 
 
-// create kota and update via modal
-$this->registerJs("
+	// create kota and update via modal
+	$this->registerJs("
     $.fn.modal.Constructor.prototype.enforceFocus = function(){};
         $('#form2').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
@@ -636,39 +1042,37 @@ $this->registerJs("
                 });
             })
     ",$this::POS_READY);
+	Modal::begin([
+			 'id' => 'form2',
+			 'header' => '<h4 class="modal-title">LukisonGroup</h4>',
+				 ]);
+	Modal::end();
 
- Modal::begin([
-         'id' => 'form2',
-         'header' => '<h4 class="modal-title">LukisonGroup</h4>',
-             ]);
-Modal::end();
-
-// view kota via modal
-$this->registerJs("
-         $('#view2').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-            var modal = $(this)
-            var title = button.data('title')
-            var href = button.attr('href')
-            //modal.find('.modal-title').html(title)
-            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-            $.post(href)
-                .done(function( data ) {
-                    modal.find('.modal-body').html(data)
-                });
-            })
-    ",$this::POS_READY);
-
-Modal::begin([
-                'id' => 'view2',
-                'header' => '<h4 class="modal-title">LukisonGroup</h4>',
-              ]);
-Modal::end();
+	// view kota via modal
+	$this->registerJs("
+		 $('#view2').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			})
+	",$this::POS_READY);
+	Modal::begin([
+					'id' => 'view2',
+					'header' => '<h4 class="modal-title">LukisonGroup</h4>',
+				  ]);
+	Modal::end();
 
 
     // create customers via modal
 	$this->registerJs("
-   $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		$('#createcus').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget)
 			var modal = $(this)
@@ -685,29 +1089,30 @@ Modal::end();
 			})
 
 	",$this::POS_READY);
-
-
 	Modal::begin([
 		'id' => 'createcus',
-		'header' => '<h4 class="modal-title">New Customer</h4>',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">New Customer</h4></div>',
+		'headerOptions'=>[								
+				'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.9)',	
+		],
 	]);
 	Modal::end();
 
-  /*alias*/
-  $this->registerJs("
-     $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-     $('#formlogin').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget)
-      var modal = $(this)
-      var title = button.data('title')
-      var href = button.attr('href')
-      //modal.find('.modal-title').html(title)
-      modal.find('.modal-body').html('<i class=\"fa fa-dolar fa-spin\"></i>')
-      $.post(href)
-        .done(function( data ) {
-          modal.find('.modal-body').html(data)
-        });
-      })
+	/*alias*/
+	$this->registerJs("
+		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		$('#formlogin').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-dolar fa-spin\"></i>')
+			$.post(href)
+			.done(function( data ) {
+			  modal.find('.modal-body').html(data)
+			});
+		})
   ",$this::POS_READY);
     Modal::begin([
         'id' => 'formlogin',
@@ -721,59 +1126,56 @@ Modal::end();
 
 
 
-/*js mapping */
+	/*js mapping */
+	$this->registerJs("
+		/*nampilin MAP*/
+		 var map = new google.maps.Map(document.getElementById('map'),
+			  {
+				zoom: 12,
+				center: new google.maps.LatLng(-6.229191531958687,106.65994325550469),
+				mapTypeId: google.maps.MapTypeId.ROADMAP
 
-$this->registerJs("
-/*nampilin MAP*/
- var map = new google.maps.Map(document.getElementById('map'),
-      {
-        zoom: 12,
-        center: new google.maps.LatLng(-6.229191531958687,106.65994325550469),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+			});
 
-    });
+			var public_markers = [];
+			var infowindow = new google.maps.InfoWindow();
 
-    var public_markers = [];
-    var infowindow = new google.maps.InfoWindow();
+		/*data json*/
+		 $.getJSON('/master/customers/map', function(json) {
 
-/*data json*/
- $.getJSON('/master/customers/map', function(json) {
+			for (var i in public_markers)
+			{
+				public_markers[i].setMap(null);
+			}
 
-    for (var i in public_markers)
-    {
-        public_markers[i].setMap(null);
-    }
+			$.each(json, function (i, point) {
+				// alert(point.MAP_LAT);
 
-    $.each(json, function (i, point) {
-        // alert(point.MAP_LAT);
+		//set the icon
+		//     if(point.CUST_NM == 'asep')
+		//         {
+		//             icon = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
+		//         }
 
-//set the icon
-//     if(point.CUST_NM == 'asep')
-//         {
-//             icon = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
-//         }
+					var marker = new google.maps.Marker({
+					// icon: icon,
+					position: new google.maps.LatLng(point.MAP_LAT, point.MAP_LNG),
+					animation:google.maps.Animation.BOUNCE,
+					map: map,
+					 icon : 'http://labs.google.com/ridefinder/images/mm_20_red.png'
+				});
 
-            var marker = new google.maps.Marker({
-            // icon: icon,
-            position: new google.maps.LatLng(point.MAP_LAT, point.MAP_LNG),
-            animation:google.maps.Animation.BOUNCE,
-            map: map,
-             icon : 'http://labs.google.com/ridefinder/images/mm_20_red.png'
-        });
+				 public_markers[i] = marker;
 
-         public_markers[i] = marker;
-
-         google.maps.event.addListener(public_markers[i], 'mouseover', function () {
-             infowindow.setContent('<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>');
-             infowindow.open(map, public_markers[i]);
-         });
-
-
-    });
+				 google.maps.event.addListener(public_markers[i], 'mouseover', function () {
+					 infowindow.setContent('<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>');
+					 infowindow.open(map, public_markers[i]);
+				 });
 
 
- });
+			});
 
-    // console.trace();
 
+		 });
+		// console.trace();
      ",$this::POS_READY);

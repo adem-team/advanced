@@ -64,7 +64,7 @@ class Customers extends \yii\db\ActiveRecord
         return [
 			      //  [['CUST_NM','STT_TOKO','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID'], 'required'],
             // [['CUST_NM','CUST_KTG','JOIN_DATE','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID','NPWP', 'TLP1','STT_TOKO'], 'required'],
-            [['CUST_KTG', 'TLP1', 'TLP2', 'FAX', 'STT_TOKO', 'STATUS','PROVINCE_ID'], 'integer'],
+            [['CUST_TYPE','CUST_KTG', 'TLP1', 'TLP2', 'FAX', 'STT_TOKO', 'STATUS','PROVINCE_ID'], 'integer'],
             [['JOIN_DATE', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['ALAMAT', 'NOTE'], 'string'],
             [['CUST_KD', 'CUST_KD_ALIAS', 'CUST_GRP', 'MAP_LAT', 'MAP_LNG', 'NPWP','KD_DISTRIBUTOR','CITY_ID'], 'string', 'max' => 50],
@@ -74,11 +74,22 @@ class Customers extends \yii\db\ActiveRecord
         ];
     }
 
-        public function getCus()
-        {
-            return $this->hasOne(Kategoricus::className(), ['CUST_KTG' => 'CUST_KTG']);
+	public function getCus()
+	{
+		return $this->hasOne(Kategoricus::className(), ['CUST_KTG' => 'CUST_KTG']);
 
-        }
+	}
+	
+	public function getCustype()
+	{
+		return $this->hasOne(Kategoricus::className(), ['CUST_KTG' => 'CUST_TYPE']);
+
+	}
+	
+	 public function getTipenm()
+    {
+        return $this->custype->CUST_KTG_NM;
+    }
 
     /**
      * @inheritdoc
@@ -94,7 +105,10 @@ class Customers extends \yii\db\ActiveRecord
             'CUST_KD_ALIAS' => 'Kode Customers Alias',
             'CUST_NM' => 'Nama Customer',
             'CUST_GRP' => 'Cust  Grp',
-            'CUST_KTG' => 'Kategori Customer',
+            'CUST_KTG' => 'Category',
+            'cus.CUST_KTG_NM' => 'Category',
+            'CUST_TYPE' => 'Type',
+			'typenm'=>'Type',
             'JOIN_DATE' => 'Tanggal Gabung',
             'MAP_LAT' => 'Map  Lat',
             'MAP_LNG' => 'Map  Lng',
