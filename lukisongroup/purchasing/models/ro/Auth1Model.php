@@ -54,6 +54,7 @@ class Auth1Model extends Model
       $ro = Requestorder::find()->where(['ID_USER'=>$data])->asArray()
                                                            ->one();
        $id = $ro['ID_USER'];
+       
        if($id == $dif)
        {
           $this->addError($model, 'Sorry You not CC to self');
