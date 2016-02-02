@@ -279,7 +279,7 @@ class CustomersController extends Controller
 
            $model->save();
         }
-        // print_r($model->save());
+        // print_r($model->getErrors());
         // die();
 
            return $this->redirect(['viewcust','id'=>$model->CUST_KD]);

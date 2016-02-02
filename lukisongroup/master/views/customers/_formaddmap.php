@@ -8,14 +8,17 @@ use yii\helpers\BaseHtml;
 ?>
 <?php $form = ActiveForm::begin([
 'id'=>$model->formName(),
+'method'=>'post'
 
 ]); ?>
  <?= $form->field($model, 'CUST_KD')->textInput(['value' => $id,'disabled'=>true]) ?>
+ 
    <?= $form->field($model, 'ALAMAT')->textInput(['readonly' => true]) ?>
 
    <?= BaseHtml::activeHiddenInput($model, 'MAP_LAT'); ?>
 
    <?= BaseHtml::activeHiddenInput($model, 'MAP_LNG'); ?>
+
      <?= \pigolab\locationpicker\LocationPickerWidget::widget([
        'options' => [
             'style' => 'width: 100%; height: 400px', // map canvas width and height
