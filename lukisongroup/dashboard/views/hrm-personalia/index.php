@@ -8,8 +8,8 @@ use kartik\widgets\ActiveForm;
 use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
 use kartik\builder\Form;
-use lukisongroup\assets\AppAssetDahboardHrmPersonalia;
-AppAssetDahboardHrmPersonalia::register($this);
+use lukisongroup\assets\AppAssetDahboardDatamaster;
+AppAssetDahboardDatamaster::register($this);
 
 //use backend\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
 //AppAsset::register($this);		/* INDEPENDENT CSS/JS/THEME FOR PAGE  Author: -ptr.nov-*/
@@ -23,23 +23,22 @@ $this->params['breadcrumbs'][] = $this->title;                          	/* belu
 ?>
 
 
-<div id="dasboard-item" ng-app="ChartAllDashboardHrmPersonalia" ng-controller="CtrlChart" class="row">
+<div id="dasboard-item" ng-app="ChartAllDashboardHrmPersonalia" ng-controller="CtrlChart" class="row" style="height:1100px"  >
  
-	<div class="col-md-12" style="padding-left:25px; padding-right:25px">
+	<div class="col-md-12" style="padding-left:15px; padding-right:15px;">
 		<div class="row">
 		
 			<div class="col-lg-3 col-md-6">
-				<!-- Panel Bootstrap 1!-->
-				<div class="panel panel-red">
+				<!-- Employe Aktif!-->
+				<div class="panel panel-green">
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-xs-3">
-								<i class="fa fa-group fa-5x"></i>
-							</div>
-							
+								<i class="fa fa-group fa-2x"></i>
+							</div>							
 							<div class="col-xs-9 text-right">
-								<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>
-								
+								<!-- <div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div> !-->
+								<?php echo $cntAktifEmp!=''? $cntAktifEmp:'0';; ?> 								
 								<div>Total Employee</div>
 							</div>
 						</div>
@@ -53,16 +52,17 @@ $this->params['breadcrumbs'][] = $this->title;                          	/* belu
 					</a>
 				</div>
 			</div>
-			<!-- Panel Bootstrap 2!-->
+			<!-- Employe Probation!-->
 			<div class="col-lg-3 col-md-6">
-				<div class="panel panel-green">
+				<div class="panel panel-yellow">
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-xs-3">
-								<i class="fa fa-file-photo-o fa-5x"></i>
+								<i class="fa fa-file-photo-o fa-2x"></i>
 							</div>
 							<div class="col-xs-9 text-right">
-								<div class="huge" ng-repeat="nilai in Employe_Summary">{{nilai.emp_probation}}</div>
+								<!--<div class="huge" ng-repeat="nilai in Employe_Summary">{{nilai.emp_probation}}</div>!-->
+								<?php echo $cntProbaEmp!=''? $cntProbaEmp :'0'; ?> 
 								<div>Probation</div>
 							</div>
 						</div>
@@ -76,16 +76,17 @@ $this->params['breadcrumbs'][] = $this->title;                          	/* belu
 					</a>
 				</div>
 			</div>
-			<!-- Panel Bootstrap 3!-->
+			<!-- Employee Kontrak!-->
 			<div class="col-lg-3 col-md-6">
-				<div class="panel panel-info">
+				<div class="panel panel-yellow">
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-xs-3">
-								<i class="fa fa-shopping-cart fa-5x"></i>
+								<i class="fa fa-shopping-cart fa-2x"></i>
 							</div>
 							<div class="col-xs-9 text-right">
-								<div class="huge" ng-repeat="nilai in Employe_Summary">{{nilai.emp_contract}}</div>
+								<?php echo $cntContrak!=''? $cntContrak :'0'; ?> 							
+								<!--<div class="huge" ng-repeat="nilai in Employe_Summary">{{nilai.emp_contract}}</div>!-->
 								<div>Contract</div>
 							</div>
 						</div>
@@ -99,16 +100,17 @@ $this->params['breadcrumbs'][] = $this->title;                          	/* belu
 					</a>
 				</div>
 			</div>
-			<!-- Panel Bootstrap 4!-->
+			<!-- Employee Tetap!-->
 			<div class="col-lg-3 col-md-6">
-				<div class="panel panel-yellow">
+				<div class="panel panel-green">
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-xs-3">
-								<i class="fa fa-support fa-5x"></i>
+								<i class="fa fa-support fa-2x"></i>
 							</div>
 							<div class="col-xs-9 text-right">
-								<div class="huge" ng-repeat="nilai in Employe_Summary">{{nilai.emp_tetap}}</div>
+								<?php echo $cntTetapEmp!=''? $cntTetapEmp :'0'; ?> 								
+								<!--<div class="huge" ng-repeat="nilai in Employe_Summary">{{nilai.emp_tetap}}</div>!-->
 								<div>Tetap</div>
 							</div>
 						</div>
@@ -122,6 +124,102 @@ $this->params['breadcrumbs'][] = $this->title;                          	/* belu
 					</a>
 				</div>
 			</div>
+			<!-- Employee Support!-->
+			<div class="col-lg-3 col-md-6">
+				<div class="panel panel-blue1">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-xs-3">
+								<i class="fa fa-support fa-2x"></i>
+							</div>
+							<div class="col-xs-9 text-right">
+								<?php echo $cntSptEmp!=''? $cntSptEmp :'0'; ?> 								
+								<!--<div class="huge" ng-repeat="nilai in Employe_Summary">{{nilai.emp_tetap}}</div>!-->
+								<div>Seqment Support</div>
+							</div>
+						</div>
+					</div>
+					<a href="#">
+						<div class="panel-footer">
+							<span class="pull-left">View Details</span>
+							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+							<div class="clearfix"></div>
+						</div>
+					</a>
+				</div>
+			</div>
+			<!-- Employee Bisnis!-->
+			<div class="col-lg-3 col-md-6">
+				<div class="panel panel-green">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-xs-3">
+								<i class="fa fa-support fa-2x"></i>
+							</div>
+							<div class="col-xs-9 text-right">
+								<?php echo $cntBisnisEmp!=''? $cntBisnisEmp :'0'; ?> 								
+								<!--<div class="huge" ng-repeat="nilai in Employe_Summary">{{nilai.emp_tetap}}</div>!-->
+								<div>Seqment Bisnis</div>
+							</div>
+						</div>
+					</div>
+					<a href="#">
+						<div class="panel-footer">
+							<span class="pull-left">View Details</span>
+							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+							<div class="clearfix"></div>
+						</div>
+					</a>
+				</div>
+			</div>
+			<!-- Employee gender!-->
+			<div class="col-lg-3 col-md-6">
+				<div class="panel panel-danger">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-xs-3">
+								<i class="fa fa-support fa-2x"></i>
+							</div>
+							<div class="col-xs-9 text-right">
+								<?php echo ($cntGenderMEmp!=''? $cntGenderMEmp  :0) .' |   ' .  ($cntGenderFEmp!=''? $cntGenderFEmp:0); ?> 								
+								<!--<div class="huge" ng-repeat="nilai in Employe_Summary">{{nilai.emp_tetap}}</div>!-->
+								<div>Gender Male | Female</div>
+							</div>
+						</div>
+					</div>
+					<a href="#">
+						<div class="panel-footer">
+							<span class="pull-left">View Details</span>
+							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+							<div class="clearfix"></div>
+						</div>
+					</a>
+				</div>
+			</div>
+			<!-- Employee Resign!-->
+			<div class="col-lg-3 col-md-6">
+				<div class="panel panel-red">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-xs-3">
+								<i class="fa fa-support fa-2x"></i>
+							</div>
+							<div class="col-xs-9 text-right">
+								<?php echo $cntResignEmp!=''? $cntResignEmp :'0'; ?> 								
+								<!--<div class="huge" ng-repeat="nilai in Employe_Summary">{{nilai.emp_tetap}}</div>!-->
+								<div>Resign</div>
+							</div>
+						</div>
+					</div>
+					<a href="#">
+						<div class="panel-footer">
+							<span class="pull-left">View Details</span>
+							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+							<div class="clearfix"></div>
+						</div>
+					</a>
+				</div>
+			</div>			
 		</div>
 	</div>
 	<div class="col-md-12" style="padding-left:25px; padding-right:20px">
