@@ -225,3 +225,23 @@ ul.alert-dropdown {
 .panel-yellow > a:hover {
     color: #df8a13;
 }
+
+-
+.panel-blue1 {
+    border-color: rgba(82, 224, 248, 1);
+}
+
+.panel-blue1 > .panel-heading {
+    border-color: rgba(82, 224, 248, 1);
+    color: #fff;
+    background-color: rgba(82, 224, 248, 1);
+}
+
+.panel-blue1 > a {
+    color: rgba(82, 224, 248, 1);
+}
+
+.panel-blue1 > a:hover {
+    color: #df8a13;
+}
+
