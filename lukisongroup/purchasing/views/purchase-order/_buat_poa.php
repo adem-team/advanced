@@ -248,6 +248,27 @@ use lukisongroup\master\models\Unitbarang;
 	} 
 	
 	/*
+	 * LINK PO Note Term of Payment
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.2
+	*/
+	function PoNoteTOP($poHeader){
+			$title = Yii::t('app','');
+			$options = [ 'id'=>'po-notetop-id',	
+						  'data-toggle'=>"modal",
+						  'data-target'=>"#po-notetop",											
+						  'class'=>'btn btn-info btn-xs', 
+						  //'style'=>['width'=>'150px'],
+						  'title'=>'PO Note'
+			]; 
+			$icon = '<span class="fa fa-plus fa-lg"></span>';
+			$label = $icon . ' ' . $title;
+			$url = Url::toRoute(['/purchasing/purchase-order/po-notetop','kdpo'=>$poHeader->KD_PO]);
+			$content = Html::a($label,$url, $options);
+			return $content;
+	} 
+	
+	/*
 	 * Tombol Approval Item 
 	 * Permission Auth2 | Auth3
 	 * Cancel Back To Process
@@ -1053,6 +1074,9 @@ use lukisongroup\master\models\Unitbarang;
 			<div class="row">
 			<!-- Title Left Side Descript Supplier !-->
 			<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;">
+				<div>
+					<?php echo SupplierSearch($poHeader); ?>
+				</div>
 				<dl>
 					<?php
 						$splName = $supplier!='' ? $supplier->NM_SUPPLIER : 'Supplier No Set';
@@ -1097,13 +1121,13 @@ use lukisongroup\master\models\Unitbarang;
 			<!-- Button Select |Supplier|Shipping|Billing !-->
 			<div class="col-xs-1 col-sm-1 col-md-1" style="font-family: tahoma ;font-size: 9pt;">
 				<div>
-					<?php echo SupplierSearch($poHeader); ?>
+					<?php //echo SupplierSearch($poHeader); ?>
 				</div>
 				<div  Style="margin-top:2px">
-					<?php echo ShippingSearch($poHeader); ?>
+					<?php //echo ShippingSearch($poHeader); ?>
 				</div>
 				<div Style="margin-top:2px">
-					<?php echo BillingSearch($poHeader); ?>
+					<?php //echo BillingSearch($poHeader); ?>
 				</div>				
 			</div>
 		</div>
@@ -1129,7 +1153,10 @@ use lukisongroup\master\models\Unitbarang;
 		</div>
 		<!-- Title BOTTEM Descript !-->	
 		<div  class="row">
-				<div class="col-md-5" style="font-family: tahoma ;font-size: 9pt;float:left;">
+				<div class="col-md-5" style="font-family: tahoma ;font-size: 9pt;float:left;">					
+					<div  Style="margin-top:2px">
+						<?php echo ShippingSearch($poHeader); ?>
+					</div>
 					<dl>
 						<?php
 							$shipNm= $ship !='' ? $ship->NM_ALAMAT : 'Shipping Not Set';
@@ -1152,7 +1179,10 @@ use lukisongroup\master\models\Unitbarang;
 					</dl>
 				</div>
 				<div class="col-md-2"></div>
-				<div class="col-md-5" style="font-family: tahoma ;font-size: 9pt;float:left;">
+				<div class="col-md-5" style="font-family: tahoma ;font-size: 9pt;float:left;">				
+					<div Style="margin-top:2px">
+						<?php echo BillingSearch($poHeader); ?>
+					</div>	
 					<dl>
 						<?php
 							$billNm= $bill !='' ? $bill->NM_ALAMAT : 'Billing Not Set';
@@ -1178,6 +1208,23 @@ use lukisongroup\master\models\Unitbarang;
 					</dl>
 				</div>			
 		</div>	
+		<!-- PO Term Of Payment !-->
+		<div  class="row">			
+			<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">	
+				<dt><b>Term Of Payment :</b></dt>
+				<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">	
+				<div>
+					<div style="float:right;text-align:right;">
+						<?php echo PoNoteTOP($poHeader); ?>
+					</div>
+					<div style="margin-left:5px">
+						<dt style="width:80px; float:left;"><?php echo $poHeader->TOP_TYPE; ?></dt>
+						<dd><?php echo $poHeader->TOP_DURATION; ?></dd>
+						<br/>
+					</div>					
+				</div>				
+			</div>
+		</div>
 		<!-- PO Note !-->
 		<div  class="row">			
 			<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">	
@@ -1188,87 +1235,148 @@ use lukisongroup\master\models\Unitbarang;
 						<?php echo PoNote($poHeader); ?>
 					</div>
 					<div style="margin-left:5px">
-						<dd><?php echo $poHeader->NOTE; ?></dd><br/><br/>
+						<dd><?php echo $poHeader->NOTE; ?></dd>
+						<dt>Invoice exchange can be performed on Monday through Tuesday time of 09:00AM-16:00PM</dt>
 					</div>				
 				</div>
 				<hr style="height:1px;margin-top: 1px;">		
 			</div>
 		</div>
-		<div  class="row">
-			<div class="col-md-9">
-				<table id="tblRo" class="table table-bordered" style="width:500px;font-family: tahoma ;font-size: 8pt;">
-					<!-- Tanggal!-->
-					 <tr>
-						<!-- Tanggal Pembuat RO!-->
-						<th style="text-align: center; height:20px">
-							<div style="text-align:center;">
-								<?php
-									$placeTgl1=$poHeader->SIG1_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG1_TGL,'date') :'';
-									echo '<b>Tanggerang</b>,' . $placeTgl1;  
-								?>
-							</div> 
-						
-						</th>		
-						<!-- Tanggal Pembuat RO!-->
-						<th style="text-align: center; height:20px">
-							<div style="text-align:center;">
-								<?php
-									$placeTgl2=$poHeader->SIG2_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG2_TGL,'date') :'';
-									echo '<b>Tanggerang</b>,' . $placeTgl2;  
-								?>
-							</div> 
-						
-						</th>					
-					</tr>
-					<!-- Signature !-->
-					 <tr>
-						<th style="text-align: center; vertical-align:middle;width:100; height:40px">
-							<?php 
-								$ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img style="width:100; height:40px" src='.$poHeader->SIG1_SVGBASE64.'></img>' : SignCreated($poHeader);
-								echo $ttd1;
-							?> 
-						</th>								
-						<th style="text-align: center; vertical-align:middle;width:100">
-							<?php 
-								$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:100; height:40px" src='.$poHeader->SIG2_SVGBASE64.'></img>' : SignChecked($poHeader);
-								echo $ttd2;
-							?> 
-						</th>						
-					</tr>
-					<!--Nama !-->
-					 <tr>
-						<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
-							<div>		
-								<?php
-									$sigNm1=$poHeader->SIG1_NM!='none' ? '<b>'.$poHeader->SIG1_NM.'</b>' : 'none';
-									echo $sigNm1;
-								?>
-							</div>
-						</th>								
-						<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
-							<div>		
-								<?php
-									$sigNm2=$poHeader->SIG2_NM!='none' ? '<b>'.$poHeader->SIG2_NM.'</b>' : 'none';
-									echo $sigNm2;
-								?>
-							</div>
-						</th>						
-					<!-- Department|Jbatan !-->
-					 <tr>
-						<th style="text-align: center; vertical-align:middle;height:20">
-							<div>		
-								<b><?php  echo 'Purchaser'; ?></b>
-							</div>
-						</th>								
-						<th style="text-align: center; vertical-align:middle;height:20">
-							<div>		
-								<b><?php  echo 'F & A'; ?></b>
-							</div>
-						</th>
-					</tr>
-				</table>				
+		<!-- Signature !-->
+		<div  class="col-md-12">
+			<div  class="row" >
+				<div class="col-md-6">
+					<table id="tblRo" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">					
+						<!-- Tanggal!-->
+						 <tr>
+							<!-- Tanggal Pembuat RO!-->
+							<th  class="col-md-1" style="text-align: center; height:20px">
+								<div style="text-align:center;">
+									<?php
+										$placeTgl1=$poHeader->SIG1_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG1_TGL,'date') :'';
+										echo '<b>Tanggerang</b>,' . $placeTgl1;  
+									?>
+								</div> 
+							
+							</th>		
+							<!-- Tanggal Pembuat RO!-->
+							<th class="col-md-1" style="text-align: center; height:20px">
+								<div style="text-align:center;">
+									<?php
+										$placeTgl2=$poHeader->SIG2_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG2_TGL,'date') :'';
+										echo '<b>Tanggerang</b>,' . $placeTgl2;  
+									?>
+								</div> 
+							
+							</th>		
+							<!-- Tanggal PO Approved!-->				
+							<th class="col-md-1" style="text-align: center; height:20px">
+								<div style="text-align:center;">
+									<?php
+										$placeTgl3=$poHeader->SIG3_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG3_TGL,'date') :'';
+										echo '<b>Tanggerang</b>,' . $placeTgl3;  
+									?>
+								</div> 				
+							</th>	
+							
+						</tr>
+						<!-- Department|Jbatan !-->
+						 <tr>
+							<th  class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+								<div>		
+									<b><?php  echo 'Created'; ?></b>
+								</div>
+							</th>								
+							<th class="col-md-1"  style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+								<div>		
+									<b><?php  echo 'Checked'; ?></b>
+								</div>
+							</th>
+							<th class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+								<div>		
+									<b><?php  echo 'Approved'; ?></b>
+								</div>
+							</th>
+						</tr>
+						<!-- Signature !-->
+						 <tr>
+							<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
+								<?php 
+									$ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG1_SVGBASE64.'></img>' :SignCreated($poHeader);
+									echo $ttd1;
+								?> 
+							</th>								
+							<th class="col-md-1" style="text-align: center; vertical-align:middle">
+								<?php 
+									$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG2_SVGBASE64.'></img>' :SignChecked($poHeader);
+									echo $ttd2;
+								?> 
+							</th>
+							<th  class="col-md-1" style="text-align: center; vertical-align:middle">
+								<?php 
+									$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :SignApproved($poHeader);
+									//if ($poHeader->STATUS==101 OR $poHeader->STATUS==10){
+										echo $ttd3;
+									//}
+								?> 
+							</th>
+						</tr>
+						<!--Nama !-->
+						 <tr>
+							<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
+								<div>		
+									<?php
+										$sigNm1=$poHeader->SIG1_NM!='none' ? '<b>'.$poHeader->SIG1_NM.'</b>' : 'none';
+										echo $sigNm1;
+									?>
+								</div>
+							</th>								
+							<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
+								<div>		
+									<?php
+										$sigNm2=$poHeader->SIG2_NM!='none' ? '<b>'.$poHeader->SIG2_NM.'</b>' : 'none';
+										echo $sigNm2;
+									?>
+								</div>
+							</th>
+							<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
+								<div>		
+									<?php
+										$sigNm3=$poHeader->SIG3_NM!='none' ? '<b>'.$poHeader->SIG3_NM.'</b>' : 'none';
+										echo $sigNm3;
+									?>
+								</div>
+							</th>
+						</tr>
+						<!-- Department|Jbatan !-->
+						 <tr>
+							<th style="text-align: center; vertical-align:middle;height:20">
+								<div>		
+									<b><?php  echo 'Purchaser'; ?></b>
+								</div>
+							</th>								
+							<th style="text-align: center; vertical-align:middle;height:20">
+								<div>		
+									<b><?php  echo 'F & A'; ?></b>
+								</div>
+							</th>
+							<th style="text-align: center; vertical-align:middle;height:20">
+								<div>		
+									<b><?php  echo 'Director'; ?></b>
+								</div>
+							</th>
+						</tr>					
+					</table>				
+				</div>
+				<!-- Button Submit!-->
+				<div style="text-align:right; margin-top:80px; margin-right:15px">
+					<a href="/purchasing/purchase-order/" class="btn btn-info btn-xs" role="button" style="width:90px">Back</a>
+					<?php echo Html::a('<i class="fa fa-print fa-fw"></i> Print', ['cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
+					<?php echo Html::a('<i class="fa fa-print fa-fw"></i> tmp Print', ['cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
+									
+				</div>
 			</div>
-		</div>		
+		</div>	
 	</div>
 </div>
 
@@ -1597,6 +1705,33 @@ use lukisongroup\master\models\Unitbarang;
 	Modal::begin([
 			'id' => 'po-note',
 			'header' => '<h4 class="modal-title">General Note</h4>',
+			'size' => 'modal-md',
+		]);
+	Modal::end();
+	
+	/*
+	 * PO Note Term of payment
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
+			$('#po-notetop').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title') 
+				var href = button.attr('href') 
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)					
+					});
+				}),			
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'po-notetop',
+			'header' => '<h4 class="modal-title">Term Of Payment</h4>',
 			'size' => 'modal-md',
 		]);
 	Modal::end();

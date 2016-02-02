@@ -306,7 +306,7 @@ $y=4;
 			//'width'=>'7%',					
 			'value'=>function ($model, $key, $index, $widget) { 
 				$p = compact('model', 'key', 'index');
-				return $widget->col(3, $p) != 0 ? $widget->col(3, $p) * $model->UNIT_QTY * $widget->col(5, $p) : 0;
+				return $widget->col(3, $p) != 0 ? $widget->col(3, $p) * round($model->UNIT_QTY * $widget->col(5, $p),0,PHP_ROUND_HALF_UP) : 0;
 				//return $widget->col(3, $p) != 0 ? $widget->col(5 ,$p) * 100 / $widget->col(3, $p) : 0;
 			},						
 			'headerOptions'=>[
@@ -522,26 +522,43 @@ $y=4;
 			</div>		
 		</div>	
 	</div>	
-	<!-- PO Note !-->
-	<div  class="row">
-		<div  class="col-md-12" style="font-family: tahoma ;font-size: 8pt;">	
-			<div  class="col-md-12">
-				<dt><b>General Notes :</b></dt>
-				<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;">	
-				<dd><?php echo $poHeader->NOTE; ?></dd><br/>
-				<hr style="height:1px;margin-top: 1px;">
-			</div>
+	<!-- PO Term Of Payment !-->
+	<div  class="row">			
+		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">	
+			<dt><b>Term Of Payment :</b></dt>
+			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">	
+			<div>
+				<div style="margin-left:5px">
+					<dt style="width:80px; float:left;"><?php echo $poHeader->TOP_TYPE; ?></dt>
+					<dd><?php echo $poHeader->TOP_DURATION; ?></dd>
+					<br/>
+				</div>					
+			</div>		
 		</div>
 	</div>
-	<!-- Signature PO !-->	
-	<div  class="row">
-		<div class="col-md-12">
-			<div class="col-md-8">
-				<table id="tblRo" class="table table-bordered" style="width:360px;font-family: tahoma ;font-size: 8pt;">
+	<!-- PO Note !-->
+	<div  class="row">			
+		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">	
+			<dt><b>General Notes :</b></dt>
+			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">	
+			<div>					
+				<div style="margin-left:5px">
+					<dd><?php echo $poHeader->NOTE; ?></dd>
+					<dt>Invoice exchange can be performed on Monday through Tuesday time of 09:00AM-16:00PM</dt>
+				</div>				
+			</div>
+			<hr style="height:1px;margin-top: 1px;">		
+		</div>
+	</div>
+	<!-- Signature !-->
+	<div  class="col-md-12">
+		<div  class="row" >
+			<div class="col-md-6">
+				<table id="tblRo" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">					
 					<!-- Tanggal!-->
 					 <tr>
 						<!-- Tanggal Pembuat RO!-->
-						<th style="text-align: center; height:20px">
+						<th  class="col-md-1" style="text-align: center; height:20px">
 							<div style="text-align:center;">
 								<?php
 									$placeTgl1=$poHeader->SIG1_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG1_TGL,'date') :'';
@@ -551,7 +568,7 @@ $y=4;
 						
 						</th>		
 						<!-- Tanggal Pembuat RO!-->
-						<th style="text-align: center; height:20px">
+						<th class="col-md-1" style="text-align: center; height:20px">
 							<div style="text-align:center;">
 								<?php
 									$placeTgl2=$poHeader->SIG2_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG2_TGL,'date') :'';
@@ -561,7 +578,7 @@ $y=4;
 						
 						</th>		
 						<!-- Tanggal PO Approved!-->				
-						<th style="text-align: center; height:20px">
+						<th class="col-md-1" style="text-align: center; height:20px">
 							<div style="text-align:center;">
 								<?php
 									$placeTgl3=$poHeader->SIG3_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG3_TGL,'date') :'';
@@ -571,31 +588,50 @@ $y=4;
 						</th>	
 						
 					</tr>
+					<!-- Department|Jbatan !-->
+					 <tr>
+						<th  class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+							<div>		
+								<b><?php  echo 'Created'; ?></b>
+							</div>
+						</th>								
+						<th class="col-md-1"  style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+							<div>		
+								<b><?php  echo 'Checked'; ?></b>
+							</div>
+						</th>
+						<th class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+							<div>		
+								<b><?php  echo 'Approved'; ?></b>
+							</div>
+						</th>
+					</tr>
 					<!-- Signature !-->
 					 <tr>
-						<th style="text-align: center; vertical-align:middle;width:180; height:60px">
+						<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
 							<?php 
-								$ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG1_SVGBASE64.'" height="120" width="150"></img>' : '';
+								$ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG1_SVGBASE64.'></img>' :'';
 								echo $ttd1;
-								
-							?> 	
+							?> 
 						</th>								
-						<th style="text-align: center; vertical-align:middle;width:180">
+						<th class="col-md-1" style="text-align: center; vertical-align:middle">
 							<?php 
-								$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG2_SVGBASE64.'" height="120" width="150"></img>' : '';
+								$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG2_SVGBASE64.'></img>' :'';
 								echo $ttd2;
 							?> 
 						</th>
-						<th style="text-align: center; vertical-align:middle;width:180">
+						<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 							<?php 
-								$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="120" width="150"></img>' : '';
-								echo $ttd3;
+								$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :'';
+								//if ($poHeader->STATUS==101 OR $poHeader->STATUS==10){
+									echo $ttd3;
+								//}
 							?> 
 						</th>
 					</tr>
 					<!--Nama !-->
 					 <tr>
-						<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
+						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 							<div>		
 								<?php
 									$sigNm1=$poHeader->SIG1_NM!='none' ? '<b>'.$poHeader->SIG1_NM.'</b>' : 'none';
@@ -603,7 +639,7 @@ $y=4;
 								?>
 							</div>
 						</th>								
-						<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
+						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 							<div>		
 								<?php
 									$sigNm2=$poHeader->SIG2_NM!='none' ? '<b>'.$poHeader->SIG2_NM.'</b>' : 'none';
@@ -611,7 +647,7 @@ $y=4;
 								?>
 							</div>
 						</th>
-						<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
+						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 							<div>		
 								<?php
 									$sigNm3=$poHeader->SIG3_NM!='none' ? '<b>'.$poHeader->SIG3_NM.'</b>' : 'none';
@@ -637,16 +673,18 @@ $y=4;
 								<b><?php  echo 'Director'; ?></b>
 							</div>
 						</th>
-					</tr>
+					</tr>					
 				</table>				
 			</div>
-			<div  class="col-md-4" style="text-align:right;">
+			<!-- Button Submit!-->
+			<div style="text-align:right; margin-top:80px; margin-right:15px">
 				<a href="/purchasing/purchase-order/" class="btn btn-info btn-xs" role="button" style="width:90px">Back</a>
 				<?php echo Html::a('<i class="fa fa-print fa-fw"></i> Print', ['cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
 				<?php echo Html::a('<i class="fa fa-print fa-fw"></i> tmp Print', ['cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
+								
 			</div>
 		</div>
-	</div>
+	</div>	
 </div>
 
 
