@@ -43,10 +43,19 @@ class PurchaseorderSearch extends Purchaseorder
     public function searchpoOutbox($params)
       {
         $profile=Yii::$app->getUserOpt->Profile_user();
-    		$id = $profile->emp->EMP_ID = "LG.2015.000003" ;
+    		$id = $profile->emp->EMP_ID;
+        if($id == 'LG.2016.000003')
+        {
+          $query = Purchaseorder::find()->where(['p0001.STATUS'=>101])
+                                        ->orderBy(['CREATE_AT'=> SORT_DESC]);
+          $query->joinWith(['suplier' => function ($q) {
+                  $q->where('s1000.NM_SUPPLIER LIKE "%' . $this->namasuplier . '%"');
+              }]);
 
-    			$query = Statuspo::find()->where(['ID_USER'=>$id]);
-
+        }
+        else{
+          $query = Purchaseorder::find()->where('STATUS = 200');
+        }
 
 
 
