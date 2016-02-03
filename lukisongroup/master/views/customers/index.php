@@ -279,25 +279,25 @@ $tabcrud = \kartik\grid\GridView::widget([
 
     ]);
 
-	/* 
-	 * GRID CUSTOMER  
+	/*
+	 * GRID CUSTOMER
 	 * @author ptrnov [piter@lukison.com]
 	 * @since 1.2
 	*/
 	$aryStt= [
-		  ['STATUS' => 0, 'STT_NM' => 'DISABLE'],		  
+		  ['STATUS' => 0, 'STT_NM' => 'DISABLE'],
 		  ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
-	];	
+	];
 	$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
-	
+
 	$dropType= ArrayHelper::map(Kategoricus::find()->where(['CUST_KTG_PARENT'=>0])
                                                              ->asArray()
                                                              ->all(),'CUST_KTG', 'CUST_KTG_NM');
 	$dropKtg= ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT<>0')
                                                              ->asArray()
                                                              ->all(),'CUST_KTG_NM', 'CUST_KTG_NM');
-	
-	
+
+
 	$tabcustomers = \kartik\grid\GridView::widget([
 		'id'=>'gv-cus',
 		'dataProvider' => $dataProvider,
@@ -309,7 +309,7 @@ $tabcrud = \kartik\grid\GridView::widget([
 				'contentOptions'=>['class'=>'kartik-sheet-style'],
 				'width'=>'10px',
 				'header'=>'No.',
-				'headerOptions'=>[				
+				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
 						'width'=>'10px',
@@ -325,14 +325,14 @@ $tabcrud = \kartik\grid\GridView::widget([
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				], 		
+				],
 			],
 			[
 				'attribute' => 'CUST_KD',
 				'label'=>'Customer.Id',
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
-				'headerOptions'=>[				
+				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
 						'width'=>'120px',
@@ -348,7 +348,7 @@ $tabcrud = \kartik\grid\GridView::widget([
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				], 				
+				],
 			],
 			[
 				//'class'=>'kartik\grid\EditableColumn',
@@ -361,16 +361,16 @@ $tabcrud = \kartik\grid\GridView::widget([
 			    'value'=>function ($model) {
 					// return Html::a('link_text','site/index');
 						$title = Yii::t('app','Alias Code');
-						$options = [ 'id'=>'cust-code-id',	
+						$options = [ 'id'=>'cust-code-id',
 									  'data-toggle'=>'modal',
-									  'data-target'=>'#cust-code',				 
+									  'data-target'=>'#cust-code',
 									  'title'=>'Add Alias Customer'
-						]; 
+						];
 						$url = Url::toRoute(['/master/customers/alias-code-view','id'=>$model->CUST_KD]);
 						$content = Html::a($title,$url, $options);
-						return $content;	
+						return $content;
 				},
-				'headerOptions'=>[				
+				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
 						'width'=>'120px',
@@ -386,14 +386,14 @@ $tabcrud = \kartik\grid\GridView::widget([
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				], 				
+				],
 			],
 			[
 				'attribute' => 'CUST_NM',
 				'label'=>'Customer Name',
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
-				'headerOptions'=>[				
+				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
 						'width'=>'250px',
@@ -409,14 +409,14 @@ $tabcrud = \kartik\grid\GridView::widget([
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				], 				
+				],
 			],
 			[
 				'attribute' => 'tipenm',
 				'filter' => $dropType,
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
-				'headerOptions'=>[				
+				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
 						'width'=>'150px',
@@ -432,14 +432,14 @@ $tabcrud = \kartik\grid\GridView::widget([
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				], 				
+				],
 			],
 			[
 				'attribute' =>'cus.CUST_KTG_NM',
 				'filter' => $dropKtg,
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
-				'headerOptions'=>[				
+				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
 						'width'=>'200px',
@@ -455,14 +455,14 @@ $tabcrud = \kartik\grid\GridView::widget([
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				], 				
+				],
 			],
 			[
 				'label'=>'PIC',
 				'attribute' =>'PIC',
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
-				'headerOptions'=>[				
+				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
 						'width'=>'200px',
@@ -478,23 +478,23 @@ $tabcrud = \kartik\grid\GridView::widget([
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				], 				
+				],
 			],
 			[
 				'attribute' => 'STATUS',
 				'filter' => $valStt,
-				'format' => 'raw',						
+				'format' => 'raw',
 				'hAlign'=>'center',
 				'value'=>function($model){
 						   if ($model->STATUS == 1) {
 								return Html::a('<i class="fa fa-edit"></i> &nbsp;Enable', '',['class'=>'btn btn-success btn-xs', 'title'=>'Aktif']);
 							} else if ($model->STATUS == 0) {
 								return Html::a('<i class="fa fa-close"></i> &nbsp;Disable', '',['class'=>'btn btn-danger btn-xs', 'title'=>'Deactive']);
-							} 
+							}
 				},
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
-				'headerOptions'=>[				
+				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
 						'width'=>'80px',
@@ -510,9 +510,9 @@ $tabcrud = \kartik\grid\GridView::widget([
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				], 	
-			],	
-			[ 	
+				],
+			],
+			[
 				'class' => 'kartik\grid\ActionColumn',
 				'template' => '{view}{update}{delete}{edit}{alias}{login}',
 				'header'=>'Action',
@@ -566,7 +566,7 @@ $tabcrud = \kartik\grid\GridView::widget([
 													},
 
 				],
-				'headerOptions'=>[				
+				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
 						'width'=>'150px',
@@ -629,7 +629,7 @@ $tabcrud = \kartik\grid\GridView::widget([
 				'contentOptions'=>['class'=>'kartik-sheet-style'],
 				'width'=>'10px',
 				'header'=>'No.',
-				'headerOptions'=>[				
+				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
 						'width'=>'10px',
@@ -645,14 +645,14 @@ $tabcrud = \kartik\grid\GridView::widget([
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				], 		
+				],
 			],
 			[
 				'attribute' => 'CUST_KD',
 				'label'=>'Customer.Id',
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
-				'headerOptions'=>[				
+				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
 						'width'=>'120px',
@@ -668,14 +668,14 @@ $tabcrud = \kartik\grid\GridView::widget([
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				], 				
+				],
 			],
 			[
 				'attribute' => 'CUST_NM',
 				'label'=>'Customer Name',
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
-				'headerOptions'=>[				
+				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
 						'width'=>'250px',
@@ -691,14 +691,14 @@ $tabcrud = \kartik\grid\GridView::widget([
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				], 				
+				],
 			],
 			[
 				'attribute' => 'tipenm',
 				'filter' => $dropType,
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
-				'headerOptions'=>[				
+				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
 						'width'=>'150px',
@@ -714,14 +714,14 @@ $tabcrud = \kartik\grid\GridView::widget([
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				], 				
+				],
 			],
 			[
 				'attribute' =>'cus.CUST_KTG_NM',
 				'filter' => $dropKtg,
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
-				'headerOptions'=>[				
+				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
 						'width'=>'200px',
@@ -737,14 +737,14 @@ $tabcrud = \kartik\grid\GridView::widget([
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				], 				
+				],
 			],
 			[
 				'label'=>'PIC',
 				'attribute' =>'PIC',
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
-				'headerOptions'=>[				
+				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
 						'width'=>'200px',
@@ -760,23 +760,23 @@ $tabcrud = \kartik\grid\GridView::widget([
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				], 				
+				],
 			],
 			[
 				'attribute' => 'STATUS',
 				'filter' => $valStt,
-				'format' => 'raw',						
+				'format' => 'raw',
 				'hAlign'=>'center',
 				'value'=>function($model){
 						   if ($model->STATUS == 1) {
 								return Html::a('<i class="fa fa-edit"></i> &nbsp;Enable', '',['class'=>'btn btn-success btn-xs', 'title'=>'Aktif']);
 							} else if ($model->STATUS == 0) {
 								return Html::a('<i class="fa fa-close"></i> &nbsp;Disable', '',['class'=>'btn btn-danger btn-xs', 'title'=>'Deactive']);
-							} 
+							}
 				},
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
-				'headerOptions'=>[				
+				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
 						'width'=>'80px',
@@ -792,9 +792,9 @@ $tabcrud = \kartik\grid\GridView::widget([
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				], 	
-			],	
-			[ 	
+				],
+			],
+			[
 				'class' => 'kartik\grid\ActionColumn',
 				'template' => '{view}{update}{delete}{edit}{alias}{login}',
 				'header'=>'Action',
@@ -848,7 +848,7 @@ $tabcrud = \kartik\grid\GridView::widget([
 													},
 
 				],
-				'headerOptions'=>[				
+				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
 						'width'=>'150px',
@@ -896,15 +896,15 @@ $tabcrud = \kartik\grid\GridView::widget([
     $map = '<div id ="map" style="width:100%;height:400px"></div>';
     $items=[
 		[
-			'label'=>'<i class="glyphicon glyphicon-user"></i> New Customers ','content'=> $tabcustomers, 
+			'label'=>'<i class="glyphicon glyphicon-user"></i> New Customers ','content'=> $tabcustomers,
 		],
-		
+
         [
 			'label'=>'<i class="glyphicon glyphicon-folder-open"></i> DATA','content'=>$tabcustomersData,
 		],
 		[
-			'label'=>'<i class="glyphicon glyphicon-map-marker"></i> MAP','content'=> $map, 
-             //'active'=>true,
+			'label'=>'<i class="glyphicon glyphicon-map-marker"></i> MAP','content'=> $map,
+             'active'=>true,
 		],
 		[
 			'label'=>'<i class="glyphicon glyphicon-user"></i> Kategori Customers','content'=>$tabcrud,
@@ -1107,13 +1107,13 @@ $tabcrud = \kartik\grid\GridView::widget([
 	Modal::begin([
 		'id' => 'createcus',
 		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">New Customer</h4></div>',
-		'headerOptions'=>[								
-				'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.9)',	
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.9)',
 		],
 	]);
 	Modal::end();
 
-	// JS Alias Code customers 
+	// JS Alias Code customers
 	$this->registerJs("
 		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		$('#cust-code').on('show.bs.modal', function (event) {
@@ -1134,14 +1134,14 @@ $tabcrud = \kartik\grid\GridView::widget([
 	Modal::begin([
 		'id' => 'cust-code',
 		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Alias Customer</h4></div>',
-		'headerOptions'=>[								
-				'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.9)',	
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.9)',
 		],
 	]);
 	Modal::end();
-	
-	
-	
+
+
+
 	/*alias*/
 	$this->registerJs("
 		$.fn.modal.Constructor.prototype.enforceFocus = function(){};

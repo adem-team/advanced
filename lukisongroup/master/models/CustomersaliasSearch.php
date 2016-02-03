@@ -39,9 +39,9 @@ class CustomersaliasSearch extends Customersalias
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params,$id)
     {
-        $query = Customersalias::find();
+        $query = Customersalias::find()->where(['KD_CUSTOMERS'=>$id]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

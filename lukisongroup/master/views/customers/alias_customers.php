@@ -10,6 +10,7 @@ use kartik\widgets\Select2;
 use kartik\label\LabelInPlace;
 
 
+
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Barangalias */
 /* @var $form yii\widgets\ActiveForm */
