@@ -185,6 +185,16 @@ class CustomersController extends Controller
             'model' => $this->findModelalias($id),
         ]);
     }
+	
+	public function actionAliasCodeView($id)
+    {
+        return $this->renderAjax('view_alias', [
+            'model' => $this->findModelcust($id),
+        ]);
+    }
+	
+	
+	
 
     public function actionCreateAliasCustomers($id)
     {
