@@ -10,6 +10,7 @@ use lukisongroup\master\models\Kategoricus;
 use yii\web\JsExpression;
 use kartik\form\ActiveForm;
 use yii\widgets\Pjax;
+use yii\helpers\Url;
 use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
 MapAsset::register($this);
 
@@ -350,11 +351,25 @@ $tabcrud = \kartik\grid\GridView::widget([
 				], 				
 			],
 			[
-				'class'=>'kartik\grid\EditableColumn',
+				//'class'=>'kartik\grid\EditableColumn',
 				'attribute' => 'CUST_KD_ALIAS',
 				'label'=>'Alias Code',
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
+				//'format' => 'url',
+				'format' => 'raw',
+			    'value'=>function ($model) {
+					// return Html::a('link_text','site/index');
+						$title = Yii::t('app','Alias Code');
+						$options = [ 'id'=>'cust-code-id',	
+									  'data-toggle'=>'modal',
+									  'data-target'=>'#cust-code',				 
+									  'title'=>'Add Alias Customer'
+						]; 
+						$url = Url::toRoute(['/master/customers/alias-code-view','id'=>$model->CUST_KD]);
+						$content = Html::a($title,$url, $options);
+						return $content;	
+				},
 				'headerOptions'=>[				
 					'style'=>[
 						'text-align'=>'center',
@@ -366,7 +381,7 @@ $tabcrud = \kartik\grid\GridView::widget([
 				],
 				'contentOptions'=>[
 					'style'=>[
-						'text-align'=>'left',
+						'text-align'=>'center',
 						'width'=>'120px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
@@ -1098,6 +1113,35 @@ $tabcrud = \kartik\grid\GridView::widget([
 	]);
 	Modal::end();
 
+	// JS Alias Code customers 
+	$this->registerJs("
+		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		$('#cust-code').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+
+
+			})
+	",$this::POS_READY);
+	Modal::begin([
+		'id' => 'cust-code',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Alias Customer</h4></div>',
+		'headerOptions'=>[								
+				'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.9)',	
+		],
+	]);
+	Modal::end();
+	
+	
+	
 	/*alias*/
 	$this->registerJs("
 		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
