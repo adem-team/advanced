@@ -134,7 +134,7 @@ class CustomersController extends Controller
 
       return $this->render('index', [
 			'searchModel1' => $searchModel1,
-			'dataProviderkat'  =>   $dataProviderkat ,
+			'dataProviderkat'  =>$dataProviderkat ,
       'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
       'searchmodelkota' => $searchmodelkota,
@@ -185,16 +185,42 @@ class CustomersController extends Controller
             'model' => $this->findModelalias($id),
         ]);
     }
-	
+
 	public function actionAliasCodeView($id)
     {
-        return $this->renderAjax('view_alias', [
-            'model' => $this->findModelcust($id),
-        ]);
+      $model = new Customersalias();
+      $searchModel = new CustomersaliasSearch();
+      $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$id);
+        $query = Customersalias::find()->where(['KD_CUSTOMERS'=>$id])->asArray()->all();
+
+
+      $id = Customers::find()->where(['CUST_KD'=>$id])->one();
+      $nama = $id->CUST_NM;
+      if ($model->load(Yii::$app->request->post()) ) {
+        $model->CREATED_AT = date('Y-m-d');
+        $model->CREATED_BY = Yii::$app->user->identity->username;
+        $model->KD_PARENT = 1;
+        if($model->save())
+        {
+          echo 1;
+          echo json_encode($query);
+        }
+        else{
+          echo 0;
+        }
+      } else {
+          return $this->renderAjax('_aliascus', [
+              'model' => $model,
+              'id'=>$id,
+              'nama'=>$nama,
+              'searchModel'=>$searchModel,
+              'dataProvider'=>$dataProvider
+          ]);
+      }
     }
-	
-	
-	
+
+
+
 
     public function actionCreateAliasCustomers($id)
     {
