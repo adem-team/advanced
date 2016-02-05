@@ -557,7 +557,7 @@ $tabcrud = \kartik\grid\GridView::widget([
 															 ]).'</li>';
 							},
 					'login' =>function($url, $model, $key){
-							  return  '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Login'),
+							  return  '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'List data'),
 														['login-alias'],[
 															'data-toggle'=>"modal",
 															'data-target'=>"#formlogin",
