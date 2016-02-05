@@ -30,8 +30,7 @@ use lukisongroup\master\models\Kategoricus;
 
      <?= $form->field($model, 'CUST_KTG_NM')->textInput(['maxlength' => true])->label('Nama Customers Kategori') ?>
 
-
-	  <?= $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']) ?>
+       <?= $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']) ?>
 
     <div class="form-group">
             <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -40,7 +40,7 @@ class Customers extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-
+	// public $tipenm;
 	 public $PARENT;
 
     public static function tableName()
@@ -79,17 +79,14 @@ class Customers extends \yii\db\ActiveRecord
 		return $this->hasOne(Kategoricus::className(), ['CUST_KTG' => 'CUST_KTG']);
 
 	}
-	
+
 	public function getCustype()
 	{
 		return $this->hasOne(Kategoricus::className(), ['CUST_KTG' => 'CUST_TYPE']);
 
 	}
-	
-	 public function getTipenm()
-    {
-        return $this->custype->CUST_KTG_NM;
-    }
+
+
 
     /**
      * @inheritdoc
@@ -108,7 +105,7 @@ class Customers extends \yii\db\ActiveRecord
             'CUST_KTG' => 'Category',
             'cus.CUST_KTG_NM' => 'Category',
             'CUST_TYPE' => 'Type',
-			'typenm'=>'Type',
+
             'JOIN_DATE' => 'Tanggal Gabung',
             'MAP_LAT' => 'Map  Lat',
             'MAP_LNG' => 'Map  Lng',

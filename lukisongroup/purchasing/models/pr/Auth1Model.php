@@ -55,10 +55,19 @@ class Auth1Model extends Model
 		 * @author ptrnov  <piter@lukison.com>
 		 * @since 1.1
 		*/
+
+
 		if (!$this->hasErrors()) {
 			 $empid = $this->getEmpid();
+       $id = $this->kdpo;
+       $data = Purchasedetail::find()->where('STATUS<>3 AND KD_PO="'.$id.'"')->count();
+    
 			if (!$empid || !$empid->validateOldPasswordCheck($this->password)) {
                 $this->addError($attribute, 'Incorrect password.');
+            }
+            elseif($data == 0)
+            {
+              $this->addError($attribute, 'Sorry data PO '.$data);
             }
         elseif($this->getPermission()->BTN_SIGN1!=1)
         {

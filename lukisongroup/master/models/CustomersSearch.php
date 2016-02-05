@@ -16,23 +16,23 @@ class CustomersSearch extends Customers
      * @inheritdoc
      */
 
-   
-    
+
+
 
     public $CUST_KTG;
     public $CUST_KTG_PARENT;
     public $cus;
-	
+
 	public function attributes()
     {
         /*Author -ptr.nov- add related fields to searchable attributes */
-        return array_merge(parent::attributes(), ['cus.CUST_KTG_NM','tipenm']);
+        return array_merge(parent::attributes(), ['cus.CUST_KTG_NM','custype.CUST_KTG_NM']);
     }
-	
+
     public function rules()
     {
         return [
-            [['CUST_TYPE','tipenm','CUST_KD','CUST_KD_ALIAS','cus.CUST_KTG_NM', 'CUST_NM', 'CUST_GRP', 'JOIN_DATE', 'MAP_LAT', 'MAP_LNG', 'KD_DISTRIBUTOR', 'PIC', 'ALAMAT', 'EMAIL', 'WEBSITE', 'NOTE', 'NPWP', 'DATA_ALL', 'CAB_ID', 'CORP_ID', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT'], 'safe'],
+            [['CUST_TYPE','CUST_KD','CUST_KD_ALIAS','cus.CUST_KTG_NM','custype.CUST_KTG_NM' ,'CUST_NM', 'CUST_GRP', 'JOIN_DATE', 'MAP_LAT', 'MAP_LNG', 'KD_DISTRIBUTOR', 'PIC', 'ALAMAT', 'EMAIL', 'WEBSITE', 'NOTE', 'NPWP', 'DATA_ALL', 'CAB_ID', 'CORP_ID', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT'], 'safe'],
             [['CUST_KTG', 'TLP1', 'TLP2', 'FAX', 'STT_TOKO', 'STATUS'], 'integer'],
         ];
     }
@@ -55,7 +55,7 @@ class CustomersSearch extends Customers
      */
     //    public function search_parent($params)
     // {
-        
+
     //     $query3 = Kategoricus::find()->where('STATUS <> 0')->andwhere('CUST_KTG_PARENT = 0');
     //     $dataProviderparent= new ActiveDataProvider([
     //         'query' => $query3,
@@ -102,8 +102,8 @@ class CustomersSearch extends Customers
                 'asc' => ['c0001k.CUST_KTG_NM' => SORT_ASC],
                 'desc' => ['c0001k.CUST_KTG_NM' => SORT_DESC],
             ];
-			
-			$dataProvider->sort->attributes['tipenm'] = [
+
+			$dataProvider->sort->attributes['custype.CUST_KTG_NM'] = [
                 'asc' => ['c0001k.CUST_KTG_NM' => SORT_ASC],
                 'desc' => ['c0001k.CUST_KTG_NM' => SORT_DESC],
             ];
@@ -132,9 +132,9 @@ class CustomersSearch extends Customers
             ->andFilterWhere(['like', 'CUST_KD_ALIAS', $this->CUST_KD_ALIAS])
             ->andFilterWhere(['like', 'TLP1', $this->TLP1])
             ->andFilterWhere(['like', 'TLP2', $this->TLP2])
-            ->andFilterWhere(['like', 'FAX', $this->FAX])            
+            ->andFilterWhere(['like', 'FAX', $this->FAX])
             ->andFilterWhere(['like', 'c0001k.CUST_KTG_NM', $this->getAttribute('cus.CUST_KTG_NM')])
-            ->andFilterWhere(['like', 'CUST_TYPE', $this->getAttribute('tipenm')])
+            ->andFilterWhere(['like', 'CUST_TYPE', $this->getAttribute('custype.CUST_KTG_NM')])
             ->andFilterWhere(['like', 'CUST_NM', $this->CUST_NM])
             ->andFilterWhere(['like', 'CUST_GRP', $this->CUST_GRP])
             ->andFilterWhere(['like', 'MAP_LAT', $this->MAP_LAT])
