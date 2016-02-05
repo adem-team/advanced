@@ -191,7 +191,7 @@ class CustomersController extends Controller
       $model = new Customersalias();
       $searchModel = new CustomersaliasSearch();
       $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$id);
-        $query = Customersalias::find()->where(['KD_CUSTOMERS'=>$id])->asArray()->all();
+
 
 
       $id = Customers::find()->where(['CUST_KD'=>$id])->one();
@@ -203,7 +203,7 @@ class CustomersController extends Controller
         if($model->save())
         {
           echo 1;
-          echo json_encode($query);
+
         }
         else{
           echo 0;
@@ -399,6 +399,7 @@ class CustomersController extends Controller
 
 				if($model->validate())
 				{
+            $model->STATUS = 1;
 					  $model->CREATED_BY =  Yii::$app->user->identity->username;
 						$model->CREATED_AT = date("Y-m-d H:i:s");
             if($model->save())
@@ -437,7 +438,7 @@ class CustomersController extends Controller
             $id = $parents[0];
 
             $model = Kategoricus::find()->asArray()->where(['CUST_KTG_PARENT'=>$id])
-                                                     ->andwhere('CUST_KTG_PARENT <> 0')
+                                                     ->andwhere('CUST_KTG_PARENT <> CUST_KTG')
                                                     ->all();
                                                     // print_r($model);
                                                     // die();
@@ -529,11 +530,21 @@ class CustomersController extends Controller
         $model = new Kategoricus();
 
         if ($model->load(Yii::$app->request->post()) ) {
+          $data = Kategoricus::find()->count();
+          if($data == 0)
+          {
 
+              $model->CUST_KTG_PARENT = 1;
+          }
+          else{
+              $datax = Kategoricus::find()->count();
+                $model->CUST_KTG_PARENT = $datax+1;
+          }
 
        	    if($model->validate())
             {
-                $model->CUST_KTG_PARENT = 0;
+
+
                 $model->CREATED_BY =  Yii::$app->user->identity->username;
                 $model->CREATED_AT = date("Y-m-d H:i:s");
                 if($model->save())

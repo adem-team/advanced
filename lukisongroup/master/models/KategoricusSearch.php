@@ -75,7 +75,7 @@ class KategoricusSearch extends Kategoricus
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
+         $query->andFilterWhere([
             'CUST_KTG_NM' => $this->CUST_KTG_NM,
              'CUST_KTG_PARENT' => $this->CUST_KTG_PARENT
             // 'CREATED_AT' => $this->CREATED_AT,

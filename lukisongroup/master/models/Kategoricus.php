@@ -21,8 +21,8 @@ class Kategoricus extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-	
- 
+
+
     public static function tableName()
     {
         return 'c0001k';
@@ -36,7 +36,7 @@ class Kategoricus extends \yii\db\ActiveRecord
         return Yii::$app->get('db3');
     }
 
-       
+
 
     /**
      * @inheritdoc
@@ -44,7 +44,7 @@ class Kategoricus extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-			[['CUST_KTG_NM','STATUS'], 'required'],
+						[['CUST_KTG_NM','STATUS'], 'required'],
             [['CUST_KTG_PARENT', 'STATUS'], 'integer'],
             [['CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['CUST_KTG_NM'], 'string', 'max' => 255],

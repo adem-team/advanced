@@ -236,7 +236,7 @@ $config = ['template'=>"{input}\n{error}\n{hint}"]
     				'columns' => $gridColumns,
     				'pjax'=>true,
     					'pjaxSettings'=>[
-                'neverTimeout'=>true,
+                // 'neverTimeout'=>true,
     						'options'=>[
     							'enablePushState'=>false,
     							'id'=>'gv-brg1-alias',
@@ -278,12 +278,12 @@ $this->registerJs("
             \$form.serialize()
 
         )
-            .done(function(result,response){
+            .done(function(result){
 
 			        if(result == 1 )
                 {
-                    $('#gv-brg1-alias').append(response);
-                  // $(document).find('#cust-code').modal('hide');
+
+                  $(document).find('#cust-code').modal('hide');
                   // $.pjax.reload({container:'#gv-brg1-alias'});
                   // $.pjax({url: '/master/customres/index-alias', container: '#gv-brg-alias'});
                   $('form#{$model->formName()}').trigger('reset');

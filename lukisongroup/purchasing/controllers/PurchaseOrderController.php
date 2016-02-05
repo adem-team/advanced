@@ -416,6 +416,16 @@ class PurchaseOrderController extends Controller
 					}
 					if (isset($posted['HARGA'])) {
 						 $model->save();
+             $poDetail = Purchasedetail::findOne($idx);
+             $data = $poDetail->KD_BARANG;
+             $barang = Barang::find()->where(['KD_BARANG'=>$data])->one();
+             if($barang->PARENT==0){
+               $barang->HARGA_SPL=$posted['HARGA'];
+               $barang->save();
+             }elseif($barang->PARENT==1){
+               $barang->HARGA_PABRIK=$posted['HARGA'];
+               $barang->save();
+             }
 						$output = Yii::$app->formatter->asDecimal($model->HARGA, 2);
 					}
 					if (isset($posted['UNIT'])) {

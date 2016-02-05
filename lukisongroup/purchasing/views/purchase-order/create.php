@@ -8,17 +8,17 @@ $checkPOCode = explode('.',$poHeader->KD_PO);
 	<!-- HEADER !-->
 		<div class="col-md-12">
 			<div class="col-md-1" style="float:left;">
-				<?php echo Html::img('@web/upload/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>	
+				<?php echo Html::img('@web/upload/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
 			</div>
 			<div class="col-md-10" style="padding-top:15px;">
 				<h3 class="text-center"><b>
 					<?php echo $checkPOCode[0]=='POA'? 'PLUS PURCHASE ORDER': 'PURCHASE ORDER'; ?>
 				</b></h3>
-			</div>			
+			</div>
 			<div class="col-md-12">
 				<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
 			</div>
-			
+
 		</div>
 	</div>
 </div>
@@ -26,7 +26,7 @@ $checkPOCode = explode('.',$poHeader->KD_PO);
 
     <h1><?= Html::encode($this->title) ?></h1> <hr/>
 
-    <?php 
+    <?php
 		/*CREATE AND EDIT*/
 		if ($checkPOCode[0]=='POA'){
 			 echo $this->render('_buat_poa', [
@@ -39,9 +39,9 @@ $checkPOCode = explode('.',$poHeader->KD_PO);
 				'bill' => $bill,
 				'ship' => $ship,
 				'employee'=>$employee,
-			]);			
+			]);
 		}elseif($checkPOCode[0]=='POB'){
-			 echo $this->render('_buat_pob', [				
+			 echo $this->render('_buat_pob', [
 				'searchModel' => $searchModel,
 				'dataProviderRo' => $dataProviderRo,
 				'dataProviderSo'=>$dataProviderSo,
@@ -53,7 +53,7 @@ $checkPOCode = explode('.',$poHeader->KD_PO);
 				'employee'=>$employee,
 			]);
 		}elseif($checkPOCode[0]=='POC'){
-			 echo $this->render('_buat_poc', [				
+			 echo $this->render('_buat_poc', [
 				'searchModel' => $searchModel,
 				'dataProviderRo' => $dataProviderRo,
 				'dataProviderSo'=>$dataProviderSo,

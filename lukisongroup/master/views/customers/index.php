@@ -191,7 +191,7 @@ $tabcrud = \kartik\grid\GridView::widget([
                     return $kategori->CUST_KTG_NM;
                 },
                  'filterType'=>GridView::FILTER_SELECT2,
-                 'filter'=>ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT = 0')
+                 'filter'=>ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT = CUST_KTG')
                                                               ->asArray()
                                                               ->all(), 'CUST_KTG', 'CUST_KTG_NM'),
                  'filterWidgetOptions'=>[
@@ -290,10 +290,10 @@ $tabcrud = \kartik\grid\GridView::widget([
 	];
 	$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
 
-	$dropType= ArrayHelper::map(Kategoricus::find()->where(['CUST_KTG_PARENT'=>0])
+	$dropType= ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT = CUST_KTG')
                                                              ->asArray()
                                                              ->all(),'CUST_KTG', 'CUST_KTG_NM');
-	$dropKtg= ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT<>0')
+	$dropKtg= ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT<>CUST_KTG')
                                                              ->asArray()
                                                              ->all(),'CUST_KTG_NM', 'CUST_KTG_NM');
 
@@ -412,7 +412,7 @@ $tabcrud = \kartik\grid\GridView::widget([
 				],
 			],
 			[
-				'attribute' => 'tipenm',
+				'attribute' => 'custype.CUST_KTG_NM',
 				'filter' => $dropType,
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
@@ -694,7 +694,7 @@ $tabcrud = \kartik\grid\GridView::widget([
 				],
 			],
 			[
-				'attribute' => 'tipenm',
+				'attribute' => 'cus.CUST_KTG_NM',
 				'filter' => $dropType,
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
@@ -717,7 +717,7 @@ $tabcrud = \kartik\grid\GridView::widget([
 				],
 			],
 			[
-				'attribute' =>'cus.CUST_KTG_NM',
+				'attribute' =>'custype.CUST_KTG_NM',
 				'filter' => $dropKtg,
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
