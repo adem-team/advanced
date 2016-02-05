@@ -291,12 +291,13 @@ class PurchaseorderSearch extends Purchaseorder
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function searchpoesm($params)
     {
-        $query = Purchaseorder::find()->orderBy(['CREATE_AT'=> SORT_DESC]);
-		$query->joinWith(['suplier' => function ($q) {
-            $q->where('s1000.NM_SUPPLIER LIKE "%' . $this->namasuplier . '%"');
-        }]);
+        $query = Purchaseorder::find()->where(['p0001.KD_CORP' => 'ESM' ]);
+        $query->joinWith(['suplier' => function ($q) {
+                $q->where('s1000.NM_SUPPLIER LIKE "%' . $this->namasuplier . '%"');
+            }]);
+
 
        /*  $query->joinWith(['employe' => function ($q) {
             $q->where('a0001.EMP_NM LIKE "%' . $this->pembuat . '%"');
@@ -361,6 +362,400 @@ class PurchaseorderSearch extends Purchaseorder
             ->andFilterWhere(['like', 'p0001.KD_CORP', $this->nmcorp]);
 
 		if($this->CREATE_AT!=''){
+            $date_explode = explode(' - ', $this->CREATE_AT);
+            $date1 = trim($date_explode[0]);
+            $date2= trim($date_explode[1]);
+            $query->andFilterWhere(['between','CREATE_AT', $date1,$date2]);
+        }
+        return $dataProvider;
+    }
+
+    public function searchbeverage($params)
+    {
+        $query = Purchaseorder::find()->where(['p0001.KD_CORP' => 'MM' ]);
+        $query->joinWith(['suplier' => function ($q) {
+                $q->where('s1000.NM_SUPPLIER LIKE "%' . $this->namasuplier . '%"');
+            }]);
+
+
+       /*  $query->joinWith(['employe' => function ($q) {
+            $q->where('a0001.EMP_NM LIKE "%' . $this->pembuat . '%"');
+        }]);
+
+        $query->joinWith(['employe' => function ($q) {
+            $q->where('a0001.EMP_NM LIKE "%' . $this->disetujui . '%"');
+        }]);
+
+        $query->joinWith(['employe' => function ($q) {
+            $q->where('a0001.EMP_NM LIKE "%' . $this->approved . '%"');
+        }]); */
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+      'pagination' => [
+          'pageSize' => 10,
+        ],
+        ]);
+
+         $dataProvider->setSort([
+            'attributes' => [
+            'KD_PO',
+            //'KD_SUPPLIER',
+
+            /* 'pembuat' => [
+                'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                'label' => 'Pembuat',
+            ],
+
+            'disetujui' => [
+                'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                'label' => 'Pembuat',
+            ],
+
+            'approved' => [
+                'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                'label' => 'Pembuat',
+            ],    */
+
+            ]
+        ]);
+
+        if (!($this->load($params) && $this->validate())) {
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'STATUS' => $this->STATUS,
+        ]);
+
+        $query->andFilterWhere(['like', 'KD_PO', $this->KD_PO])
+      //->andFilterWhere(['like', 'KD_SUPPLIER', $this->KD_SUPPLIER])
+            ->andFilterWhere(['like', 'SIG1_NM', $this->SIG1_NM])
+            ->andFilterWhere(['like', 'SIG2_NM', $this->SIG2_NM])
+            ->andFilterWhere(['like', 'SIG3_NM', $this->SIG3_NM])
+            ->andFilterWhere(['like', 'SIG4_NM', $this->SIG4_NM])
+            ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
+            ->andFilterWhere(['like', 'p0001.KD_CORP', $this->nmcorp]);
+
+    if($this->CREATE_AT!=''){
+            $date_explode = explode(' - ', $this->CREATE_AT);
+            $date1 = trim($date_explode[0]);
+            $date2= trim($date_explode[1]);
+            $query->andFilterWhere(['between','CREATE_AT', $date1,$date2]);
+        }
+        return $dataProvider;
+    }
+
+    public function searchLG($params)
+    {
+        $query = Purchaseorder::find()->where(['p0001.KD_CORP' => 'LG' ]);
+        $query->joinWith(['suplier' => function ($q) {
+                $q->where('s1000.NM_SUPPLIER LIKE "%' . $this->namasuplier . '%"');
+            }]);
+
+
+       /*  $query->joinWith(['employe' => function ($q) {
+            $q->where('a0001.EMP_NM LIKE "%' . $this->pembuat . '%"');
+        }]);
+
+        $query->joinWith(['employe' => function ($q) {
+            $q->where('a0001.EMP_NM LIKE "%' . $this->disetujui . '%"');
+        }]);
+
+        $query->joinWith(['employe' => function ($q) {
+            $q->where('a0001.EMP_NM LIKE "%' . $this->approved . '%"');
+        }]); */
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+      'pagination' => [
+          'pageSize' => 10,
+        ],
+        ]);
+
+         $dataProvider->setSort([
+            'attributes' => [
+            'KD_PO',
+            //'KD_SUPPLIER',
+
+            /* 'pembuat' => [
+                'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                'label' => 'Pembuat',
+            ],
+
+            'disetujui' => [
+                'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                'label' => 'Pembuat',
+            ],
+
+            'approved' => [
+                'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                'label' => 'Pembuat',
+            ],    */
+
+            ]
+        ]);
+
+        if (!($this->load($params) && $this->validate())) {
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'STATUS' => $this->STATUS,
+        ]);
+
+        $query->andFilterWhere(['like', 'KD_PO', $this->KD_PO])
+      //->andFilterWhere(['like', 'KD_SUPPLIER', $this->KD_SUPPLIER])
+            ->andFilterWhere(['like', 'SIG1_NM', $this->SIG1_NM])
+            ->andFilterWhere(['like', 'SIG2_NM', $this->SIG2_NM])
+            ->andFilterWhere(['like', 'SIG3_NM', $this->SIG3_NM])
+            ->andFilterWhere(['like', 'SIG4_NM', $this->SIG4_NM])
+            ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
+            ->andFilterWhere(['like', 'p0001.KD_CORP', $this->nmcorp]);
+
+    if($this->CREATE_AT!=''){
+            $date_explode = explode(' - ', $this->CREATE_AT);
+            $date1 = trim($date_explode[0]);
+            $date2= trim($date_explode[1]);
+            $query->andFilterWhere(['between','CREATE_AT', $date1,$date2]);
+        }
+        return $dataProvider;
+    }
+
+    public function searchSSS($params)
+    {
+        $query = Purchaseorder::find()->where(['p0001.KD_CORP' => 'SSS' ]);
+        $query->joinWith(['suplier' => function ($q) {
+                $q->where('s1000.NM_SUPPLIER LIKE "%' . $this->namasuplier . '%"');
+            }]);
+
+
+       /*  $query->joinWith(['employe' => function ($q) {
+            $q->where('a0001.EMP_NM LIKE "%' . $this->pembuat . '%"');
+        }]);
+
+        $query->joinWith(['employe' => function ($q) {
+            $q->where('a0001.EMP_NM LIKE "%' . $this->disetujui . '%"');
+        }]);
+
+        $query->joinWith(['employe' => function ($q) {
+            $q->where('a0001.EMP_NM LIKE "%' . $this->approved . '%"');
+        }]); */
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+      'pagination' => [
+          'pageSize' => 10,
+        ],
+        ]);
+
+         $dataProvider->setSort([
+            'attributes' => [
+            'KD_PO',
+            //'KD_SUPPLIER',
+
+            /* 'pembuat' => [
+                'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                'label' => 'Pembuat',
+            ],
+
+            'disetujui' => [
+                'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                'label' => 'Pembuat',
+            ],
+
+            'approved' => [
+                'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                'label' => 'Pembuat',
+            ],    */
+
+            ]
+        ]);
+
+        if (!($this->load($params) && $this->validate())) {
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'STATUS' => $this->STATUS,
+        ]);
+
+        $query->andFilterWhere(['like', 'KD_PO', $this->KD_PO])
+      //->andFilterWhere(['like', 'KD_SUPPLIER', $this->KD_SUPPLIER])
+            ->andFilterWhere(['like', 'SIG1_NM', $this->SIG1_NM])
+            ->andFilterWhere(['like', 'SIG2_NM', $this->SIG2_NM])
+            ->andFilterWhere(['like', 'SIG3_NM', $this->SIG3_NM])
+            ->andFilterWhere(['like', 'SIG4_NM', $this->SIG4_NM])
+            ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
+            ->andFilterWhere(['like', 'p0001.KD_CORP', $this->nmcorp]);
+
+    if($this->CREATE_AT!=''){
+            $date_explode = explode(' - ', $this->CREATE_AT);
+            $date1 = trim($date_explode[0]);
+            $date2= trim($date_explode[1]);
+            $query->andFilterWhere(['between','CREATE_AT', $date1,$date2]);
+        }
+        return $dataProvider;
+    }
+
+    public function searchGSN($params)
+    {
+        $query = Purchaseorder::find()->where(['p0001.KD_CORP' => 'GSN' ]);
+        $query->joinWith(['suplier' => function ($q) {
+                $q->where('s1000.NM_SUPPLIER LIKE "%' . $this->namasuplier . '%"');
+            }]);
+
+
+       /*  $query->joinWith(['employe' => function ($q) {
+            $q->where('a0001.EMP_NM LIKE "%' . $this->pembuat . '%"');
+        }]);
+
+        $query->joinWith(['employe' => function ($q) {
+            $q->where('a0001.EMP_NM LIKE "%' . $this->disetujui . '%"');
+        }]);
+
+        $query->joinWith(['employe' => function ($q) {
+            $q->where('a0001.EMP_NM LIKE "%' . $this->approved . '%"');
+        }]); */
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+      'pagination' => [
+          'pageSize' => 10,
+        ],
+        ]);
+
+         $dataProvider->setSort([
+            'attributes' => [
+            'KD_PO',
+            //'KD_SUPPLIER',
+
+            /* 'pembuat' => [
+                'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                'label' => 'Pembuat',
+            ],
+
+            'disetujui' => [
+                'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                'label' => 'Pembuat',
+            ],
+
+            'approved' => [
+                'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                'label' => 'Pembuat',
+            ],    */
+
+            ]
+        ]);
+
+        if (!($this->load($params) && $this->validate())) {
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'STATUS' => $this->STATUS,
+        ]);
+
+        $query->andFilterWhere(['like', 'KD_PO', $this->KD_PO])
+      //->andFilterWhere(['like', 'KD_SUPPLIER', $this->KD_SUPPLIER])
+            ->andFilterWhere(['like', 'SIG1_NM', $this->SIG1_NM])
+            ->andFilterWhere(['like', 'SIG2_NM', $this->SIG2_NM])
+            ->andFilterWhere(['like', 'SIG3_NM', $this->SIG3_NM])
+            ->andFilterWhere(['like', 'SIG4_NM', $this->SIG4_NM])
+            ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
+            ->andFilterWhere(['like', 'p0001.KD_CORP', $this->nmcorp]);
+
+    if($this->CREATE_AT!=''){
+            $date_explode = explode(' - ', $this->CREATE_AT);
+            $date1 = trim($date_explode[0]);
+            $date2= trim($date_explode[1]);
+            $query->andFilterWhere(['between','CREATE_AT', $date1,$date2]);
+        }
+        return $dataProvider;
+    }
+    public function searchALG($params)
+    {
+        $query = Purchaseorder::find()->where(['p0001.KD_CORP' => 'ALG' ]);
+        $query->joinWith(['suplier' => function ($q) {
+                $q->where('s1000.NM_SUPPLIER LIKE "%' . $this->namasuplier . '%"');
+            }]);
+
+
+       /*  $query->joinWith(['employe' => function ($q) {
+            $q->where('a0001.EMP_NM LIKE "%' . $this->pembuat . '%"');
+        }]);
+
+        $query->joinWith(['employe' => function ($q) {
+            $q->where('a0001.EMP_NM LIKE "%' . $this->disetujui . '%"');
+        }]);
+
+        $query->joinWith(['employe' => function ($q) {
+            $q->where('a0001.EMP_NM LIKE "%' . $this->approved . '%"');
+        }]); */
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+      'pagination' => [
+          'pageSize' => 10,
+        ],
+        ]);
+
+         $dataProvider->setSort([
+            'attributes' => [
+            'KD_PO',
+            //'KD_SUPPLIER',
+
+            /* 'pembuat' => [
+                'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                'label' => 'Pembuat',
+            ],
+
+            'disetujui' => [
+                'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                'label' => 'Pembuat',
+            ],
+
+            'approved' => [
+                'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                'label' => 'Pembuat',
+            ],    */
+
+            ]
+        ]);
+
+        if (!($this->load($params) && $this->validate())) {
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'STATUS' => $this->STATUS,
+        ]);
+
+        $query->andFilterWhere(['like', 'KD_PO', $this->KD_PO])
+      //->andFilterWhere(['like', 'KD_SUPPLIER', $this->KD_SUPPLIER])
+            ->andFilterWhere(['like', 'SIG1_NM', $this->SIG1_NM])
+            ->andFilterWhere(['like', 'SIG2_NM', $this->SIG2_NM])
+            ->andFilterWhere(['like', 'SIG3_NM', $this->SIG3_NM])
+            ->andFilterWhere(['like', 'SIG4_NM', $this->SIG4_NM])
+            ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
+            ->andFilterWhere(['like', 'p0001.KD_CORP', $this->nmcorp]);
+
+    if($this->CREATE_AT!=''){
             $date_explode = explode(' - ', $this->CREATE_AT);
             $date1 = trim($date_explode[0]);
             $date2= trim($date_explode[1]);
