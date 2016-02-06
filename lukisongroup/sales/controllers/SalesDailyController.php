@@ -16,7 +16,7 @@ use lukisongroup\master\models\Barang;
 /**
  * SalesDetailController implements the CRUD actions for Sot2 model.
  */
-class SalesDetailController extends Controller
+class SalesDailyController extends Controller
 {
     public function behaviors()
     {
