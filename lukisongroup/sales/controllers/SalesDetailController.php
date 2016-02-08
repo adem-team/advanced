@@ -36,7 +36,7 @@ class SalesDetailController extends Controller
      * @since 2.1
      */
 	public function getScripts(){
-		return Yii::$app->db_esm->createCommand("CALL so_1()")->queryAll();                
+		return Yii::$app->db_esm->createCommand("CALL esm_sales_analize()")->queryAll();                
 	}
 	/* public function getScriptsa(){
 		return Yii::$app->db_esm->createCommand('call so_1()')->queryColumn();                
@@ -62,7 +62,7 @@ class SalesDetailController extends Controller
 			'key' => 'ID',
 			'allModels'=>$this->getScripts(),
 			 'pagination' => [
-				'pageSize' => 20,
+				'pageSize' => 50,
 			]
 		]);
 		
@@ -72,7 +72,7 @@ class SalesDetailController extends Controller
 		 * @since 2.1
 		 */
 		$attributeField=$plsql_so_1->allModels[0]; //get label Array 0
-		//print_r($attributeField);
+		//print_r($plsql_so_1->allModels);
 				 
         $searchModel = new Sot2Search();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
