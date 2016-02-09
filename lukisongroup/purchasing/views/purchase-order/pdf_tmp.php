@@ -586,22 +586,33 @@ $y=4;
 		</div>
 	</div>
 	<!-- Signature PO !-->
+
 	<div>
 		<table id="tblRo" class="table table-bordered" style="width:360px;font-family: tahoma ;font-size: 8pt;">
 			<!-- Tanggal!-->
 
 			<!-- Signature !-->
-			 <tr>
-				<th style="text-align: center; vertical-align:middle;width:180; height:60px">
 
-				</th>
-				<th style="text-align: center; vertical-align:middle;width:180">
-
-				</th>
-				<th style="text-align: center; vertical-align:middle;width:180">
-
-				</th>
-			</tr>
+      <tr>
+       <th style="text-align: center; vertical-align:middle;width:180; height:60px">
+         <?php
+           $ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG1_SVGBASE64.'" height="60" width="150"></img>' : '';
+           echo $ttd1;
+         ?>
+       </th>
+       <th style="text-align: center; vertical-align:middle;width:180">
+         <?php
+           $ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG2_SVGBASE64.'" height="60" width="150"></img>' : '';
+           echo $ttd2;
+         ?>
+       </th>
+       <th style="text-align: center; vertical-align:middle;width:180">
+         <?php
+           $ttd3 = $poHeader->SIG3_SVGBASE64!=0 ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : '';
+           echo $ttd3;
+         ?>
+       </th>
+     </tr>
 			<!--Nama !-->
       <tr>
        <th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
