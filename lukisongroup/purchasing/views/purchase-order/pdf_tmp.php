@@ -589,24 +589,7 @@ $y=4;
 	<div>
 		<table id="tblRo" class="table table-bordered" style="width:360px;font-family: tahoma ;font-size: 8pt;">
 			<!-- Tanggal!-->
-			 <tr>
-				<!-- Tanggal Pembuat RO!-->
-				<th style="text-align: left; height:20px">
-					<div style="text-align:center;">
-						Tangerang,
-					</div>
 
-				</th>
-				<!-- Tanggal Pembuat RO!-->
-				<th style="text-align: left; height:20px">
-						Tangerang,
-				</th>
-				<!-- Tanggal PO Approved!-->
-				<th style="text-align: left; height:20px">
-						Tangerang,
-				</th>
-
-			</tr>
 			<!-- Signature !-->
 			 <tr>
 				<th style="text-align: center; vertical-align:middle;width:180; height:60px">
@@ -624,7 +607,7 @@ $y=4;
        <th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
          <div>
            <?php
-             $sigNm1=$poHeader->SIG1_NM!='none' ? '<b>'.$poHeader->SIG1_NM.'</b>' : 'none';
+             $sigNm1="Alam Maffian";
              echo $sigNm1;
            ?>
          </div>
