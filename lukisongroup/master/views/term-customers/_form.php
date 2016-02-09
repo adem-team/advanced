@@ -12,10 +12,16 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin([
       'id'=>$model->formName(),
-      
+
     ]); ?>
 
     <?= $form->field($model, 'NM_TERM')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'CUST_KD')->widget(Select2::classname(),[
+  		'options'=>[  'placeholder' => 'Select Customers parent ...'
+  		],
+  		'data' => $dropparentkategori
+  	]);?>
 
     <?= $form->field($model, 'CUST_KD')->textInput(['maxlength' => true]) ?>
 
