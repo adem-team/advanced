@@ -31,18 +31,18 @@ class SalesDetailController extends Controller
     }
 
 	 /**
-     * PLSQL ! GET DATA SALES 
+     * PLSQL ! GET DATA SALES
      * @author ptrnov [piter@lukison.com]
      * @since 2.1
      */
 	public function getScripts(){
-		return Yii::$app->db_esm->createCommand("CALL esm_sales_analize()")->queryAll();                
+		return Yii::$app->db_esm->createCommand("CALL esm_sales_analize()")->queryAll();
 	}
 	/* public function getScriptsa(){
-		return Yii::$app->db_esm->createCommand('call so_1()')->queryColumn();                
+		return Yii::$app->db_esm->createCommand('call so_1()')->queryColumn();
 	} */
 	/* public function getEsmbrg(){
-		return Yii::$app->db_esm->createCommand('call BarangMaxi_Colomn()')->queryAll();                
+		return Yii::$app->db_esm->createCommand('call BarangMaxi_Colomn()')->queryAll();
 	} */
 
     /**
@@ -52,7 +52,7 @@ class SalesDetailController extends Controller
     public function actionIndex()
     {
 		//print_r($this->getScripts());
-		
+
 		/**
 		 * PLSQL ! Array Data Provider
 		 * @author ptrnov [piter@lukison.com]
@@ -65,15 +65,15 @@ class SalesDetailController extends Controller
 				'pageSize' => 50,
 			]
 		]);
-		
+
 		/**
 		 * PLSQL ! Column Label
 		 * @author ptrnov [piter@lukison.com]
 		 * @since 2.1
 		 */
 		$attributeField=$plsql_so_1->allModels[0]; //get label Array 0
-		//print_r($plsql_so_1->allModels);
-				 
+		// print_r($plsql_so_1->allModels);
+
         $searchModel = new Sot2Search();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -81,11 +81,11 @@ class SalesDetailController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'dataProviderX' => $plsql_so_1,
-			'attributeField'=>$attributeField,
+			      'attributeField'=>$attributeField,
 			//'brgEsmProdak'=>$brgEsmProdak,
 			//'brgEsmProdak'=>$this->getEsmbrg(),
 			//'clmKdBarang'=>$clmKdBarang,
-			
+
         ]);
     }
 

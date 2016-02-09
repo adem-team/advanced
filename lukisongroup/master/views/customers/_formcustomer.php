@@ -28,6 +28,7 @@ use kartik\widgets\DepDrop;
 
 	$form = ActiveForm::begin([
 			'id'=>$model->formName(),
+			'enableClientValidation' => true,
 	]);
 
 	echo $form->field($model, 'CUST_NM', $config)->widget(LabelInPlace::classname());
