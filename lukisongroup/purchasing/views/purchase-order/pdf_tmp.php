@@ -603,7 +603,7 @@ $y=4;
 				</th>
 				<!-- Tanggal PO Approved!-->
 				<th style="text-align: left; height:20px">
-						Tangerang,			
+						Tangerang,
 				</th>
 
 			</tr>
@@ -620,23 +620,32 @@ $y=4;
 				</th>
 			</tr>
 			<!--Nama !-->
-			 <tr>
-				<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
-					<div>
-
-					</div>
-				</th>
-				<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
-					<div>
-
-					</div>
-				</th>
-				<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
-					<div>
-
-					</div>
-				</th>
-			</tr>
+      <tr>
+       <th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
+         <div>
+           <?php
+             $sigNm1=$poHeader->SIG1_NM!='none' ? '<b>'.$poHeader->SIG1_NM.'</b>' : 'none';
+             echo $sigNm1;
+           ?>
+         </div>
+       </th>
+       <th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
+         <div>
+           <?php
+             $sigNm2="Melissa Waluyan";
+             echo $sigNm2;
+           ?>
+         </div>
+       </th>
+       <th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
+         <div>
+           <?php
+             $sigNm3="Stephen S.Djaja";
+             echo $sigNm3;
+           ?>
+         </div>
+       </th>
+     </tr>
 			<!-- Department|Jbatan !-->
 			 <tr>
 				<th style="text-align: center; vertical-align:middle;height:20">

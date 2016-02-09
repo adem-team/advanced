@@ -538,7 +538,7 @@ class CustomersController extends Controller
           }
           else{
               $datax = Kategoricus::find()->MAX('CUST_KTG');
-            
+
                 $model->CUST_KTG_PARENT = $datax+1;
           }
 

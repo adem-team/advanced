@@ -699,7 +699,7 @@ function submitform()
 
 	];
 
-	$gridLisPo= GridView::widget([
+	echo $gridLisPo= GridView::widget([
 			'id'=>'po-list',
 			'dataProvider'=> $dataProvider,
 			'filterModel' => $searchModel,
@@ -726,40 +726,9 @@ function submitform()
 				],
 			'panel'=>[
 				//'type'=>GridView::TYPE_INFO,
-				'heading'=>"<span class='fa fa-shopping-cart fa-xs'><b> LIST PURCHASE ORDER</b></span>",
+				'heading'=>"<span class='fa fa-shopping-cart fa-xs'><b> LIST PURCHASE ORDER ESM</b></span>",
 			],
 		]);
-
-		$outboxpo = GridView::widget([
-					'id'=>'po',
-					'dataProvider'=>   $dataProvider,
-					'filterModel' => $searchModel,
-					'columns' => $gridColumns,
-					'filterRowOptions'=>['style'=>'background-color:rgba(0, 95, 218, 0.3); align:center'],
-					'pjax'=>true,
-					'pjaxSettings'=>[
-					'options'=>[
-						'enablePushState'=>false,
-						'id'=>'po',
-					   ],
-					],
-					'hover'=>true, //cursor select
-					'responsive'=>true,
-					'responsiveWrap'=>true,
-					'bordered'=>true,
-					'striped'=>'4px',
-					'autoXlFormat'=>true,
-					'export' => false,
-					'toolbar'=> [
-							['content'=>tombolCreate().tombolBarangUmum().tombolBarangProdak().tombolBarangSupplier().tombolBarangCustomer()],
-							//'{export}',
-							//'{toggleData}',
-						],
-					'panel'=>[
-						//'type'=>GridView::TYPE_INFO,
-						'heading'=>"<span class='fa fa-shopping-cart fa-xs'><b> LIST PURCHASE ORDER</b></span>",
-					],
-				]);
 
 		?>
 
@@ -854,26 +823,3 @@ function submitform()
 	Modal::end();
 
 ?>
-<div style="padding:10px;">
-	<?php
-		$items=[
-			[
-				'label'=>'<i class="fa fa-sign-in fa-lg"></i>  Inbox','content'=>$gridLisPo,
-				'active'=>true,
-			],
-			[
-				'label'=>'<i class="fa fa-sign-out fa-lg"></i>  Outbox','content'=>$outboxpo, // Checked/approved Ro
-			],
-		];
-		echo TabsX::widget([
-			'id'=>'tab-index-ro',
-			'items'=>$items,
-			'position'=>TabsX::POS_ABOVE,
-			//'height'=>'tab-height-xs',
-			'bordered'=>true,
-			'encodeLabels'=>false,
-			//'align'=>TabsX::ALIGN_LEFT,
-		]);
-
-	?>
-</div>

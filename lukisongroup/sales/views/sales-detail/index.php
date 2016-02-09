@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 
 //$dropSpl = ArrayHelper::map(Suplier::find()->all(), 'KD_SUPPLIER', 'NM_SUPPLIER');
 
-	/* ==== Key FIND-SEARCH Page ========== 
+	/* ==== Key FIND-SEARCH Page ==========
 	 * AttStatic
 	 * AttDinamik-sellIN
 	 * AttDinamik-sellOUT
@@ -32,74 +32,74 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	$hdrLabel1=[];
 	$hdrLabel1_ALL=[];
 	$hdrLabel2_ALL =[];
-	
+
 	/*
 	 * HeaderLabelWrap-> hdrLabel2
 	 * @author ptrnov [piter@lukison.com]
 	 * @since 1.2
 	 * Key-FIND : BeforeHeader
-	*/	
+	*/
 	$hdrLabel2_ALL =[
 		'columns'=>[
-			[	
-				'content'=>'Header',								
+			[
+				'content'=>'Header',
 				'options'=>[
 					'colspan'=>5,
-					'rowspan'=>2,															
+					'rowspan'=>2,
 					'style'=>[
 						 'vAlign'=>'middle',
 						 'text-align'=>'center',
 						 'width'=>'30px',
 						 'font-family'=>'tahoma',
 						 'font-size'=>'8pt',
-						 'background-color'=>'rgba(0, 95, 218, 0.3)',								
+						 'background-color'=>'rgba(0, 95, 218, 0.3)',
 					 ]
 				 ],
-			], 
+			],
 			[	//INPUT DATA BY SELL IN -> RETURN RESULT REPORT -> STOCK AWAL
 				'content'=>'SELL IN',
 				'options'=>[
-					'colspan'=>13,							
+					'colspan'=>13,
 					'style'=>[
 						 'text-align'=>'center',
 						 'width'=>'30px',
 						 'font-family'=>'tahoma',
 						 'font-size'=>'8pt',
-						 'background-color'=>'rgba(0, 95, 218, 0.3)',								
+						 'background-color'=>'rgba(0, 95, 218, 0.3)',
 					 ]
 				 ],
-			], 
-			[	
+			],
+			[
 				//INPUT DATA BY SELL OUT -> RETURN RESULT REPORT -> SELL_OUT
 				'content'=>'BY SELL OUT',
 				'options'=>[
-					'colspan'=>16,							
+					'colspan'=>16,
 					'style'=>[
 						 'text-align'=>'center',
 						 'width'=>'30px',
 						 'font-family'=>'tahoma',
 						 'font-size'=>'8pt',
-						 'background-color'=>'rgba(0, 95, 218, 0.3)',								
+						 'background-color'=>'rgba(0, 95, 218, 0.3)',
 					 ]
 				 ],
-			], 
-			[	
+			],
+			[
 				//INPUT DATA BY STOCK -> RETURN RESULT REPORT -> SELL_OUT
 				'content'=>'BY LAST STOCK',
 				'options'=>[
-					'colspan'=>22,							
+					'colspan'=>22,
 					'style'=>[
 						 'text-align'=>'center',
 						 'width'=>'30px',
 						 'font-family'=>'tahoma',
 						 'font-size'=>'8pt',
-						 'background-color'=>'rgba(0, 95, 218, 0.3)',								
+						 'background-color'=>'rgba(0, 95, 218, 0.3)',
 					 ]
 				 ],
-			], 
+			],
 		]
 	];
-	
+
 	/* 0 | KODE CUSTOMER ALIAS TOTAL SUM
 	 * Key-FIND : AttStatic
 	*/
@@ -109,13 +109,13 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		//'filter'=>$dropSpl,
 		// 'hAlign'=>'right',
 		// 'vAlign'=>'middle',
-		'value'=>function($model){
-			$nmCustomer=Customers::find()->where(['CUST_KD'=>$model['CUST_GRP']])->one();
-			return $nmCustomer->CUST_NM;
-		},
+		// 'value'=>function($model){
+		// 	$nmCustomer=Customers::find()->where(['CUST_KD'=>$model['CUST_GRP']])->one();
+		// 	return $nmCustomer->CUST_NM;
+		// },
 		'group'=>true,
 		'groupedRow'=>true, //hide column send row -ptr.nov-
-		
+
 		//'subGroupOf'=>1,
 		'headerOptions'=>[
 			'style'=>[
@@ -125,7 +125,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'font-size'=>'8pt',
 				'background-color'=>'rgba(97, 211, 96, 0.3)',
 			]
-		], 
+		],
 		'contentOptions'=>[
 			'style'=>[
 				'text-align'=>'left',
@@ -134,10 +134,10 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'font-size'=>'8pt',
 				'font-weight'=>'bold',
 			]
-		], 
-		'groupFooter'=>function($model, $key, $index, $widget){ 
+		],
+		'groupFooter'=>function($model, $key, $index, $widget){
 			return [
-				'mergeColumns'=>[[1,5]],		
+				'mergeColumns'=>[[1,5]],
 				'content'=>[             // content to show in each summary cell
 					//1=>$model['CUST_NM'],
 					1=>'Summary Total',
@@ -151,7 +151,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					41=>GridView::F_SUM,42=>GridView::F_SUM,43=>GridView::F_SUM,44=>GridView::F_SUM,45=>GridView::F_SUM,
 					46=>GridView::F_SUM,47=>GridView::F_SUM,48=>GridView::F_SUM,49=>GridView::F_SUM,50=>GridView::F_SUM,
 					51=>GridView::F_SUM,52=>GridView::F_SUM,53=>GridView::F_SUM,54=>GridView::F_SUM,55=>GridView::F_SUM,
-					
+
 				],
 				'contentFormats'=>[      // content reformatting for each summary cell
 					//6=>['format'=>'number', 'decimals'=>1],
@@ -176,16 +176,16 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					1=>['style'=>'text-align:right;font-weight:bold'],
 					6=>['style'=>'text-align:right'],
 				],
-				'options'=>[	
+				'options'=>[
 					'style'=>[
 						'font-weight:bold;background-color:rgba(73, 80, 83, 0.3)'
 					]
-				],			
+				],
 			];
-		}, 
-		/* 'groupHeader'=>function($model, $key, $index, $widget){ 
+		},
+		/* 'groupHeader'=>function($model, $key, $index, $widget){
 			return [
-				'mergeColumns'=>[[1,5]], 
+				'mergeColumns'=>[[1,5]],
 				'content'=>[             // content to show in each summary cell
 					1=>'JUMLAH OUTLET TRANSAKSI',
 					6=>GridView::F_COUNT,7=>GridView::F_COUNT,8=>GridView::F_COUNT,9=>GridView::F_COUNT,10=>GridView::F_COUNT,
@@ -194,10 +194,10 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					21=>GridView::F_COUNT,22=>GridView::F_COUNT,23=>GridView::F_COUNT,24=>GridView::F_COUNT,25=>GridView::F_COUNT,
 					26=>GridView::F_COUNT,27=>GridView::F_COUNT,28=>GridView::F_COUNT,29=>GridView::F_COUNT,30=>GridView::F_COUNT,
 					31=>GridView::F_COUNT,32=>GridView::F_COUNT,33=>GridView::F_COUNT,34=>GridView::F_COUNT,35=>GridView::F_COUNT,
-					
+
 				],
 				'contentFormats'=>[      // content reformatting for each summary cell
-					
+
 					6=>['format'=>'number'],7=>['format'=>'number'],8=>['format'=>'number'],9=>['format'=>'number'],10=>['format'=>'number'],
 					11=>['format'=>'number'],12=>['format'=>'number'],13=>['format'=>'number'],14=>['format'=>'number'],15=>['format'=>'number'],
 					16=>['format'=>'number'],17=>['format'=>'number'],18=>['format'=>'number'],19=>['format'=>'number'],20=>['format'=>'number'],
@@ -209,15 +209,15 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					1=>['style'=>'font-variant:small-caps'],
 					1=>['style'=>'text-align:right'],
 				],
-				'options'=>[	
+				'options'=>[
 					'style'=>[
 						'font-weight:bold;background-color:rgba(73, 80, 83, 0.3)'
 					]
-				],			
+				],
 			];
 		},  */
 	];
-	
+
 	/* 1 | SerialColumn
 	 * Key-FIND : AttStatic
 	*/
@@ -245,7 +245,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		],
 	];
 
-	/* 2 KODE CUSTOMER ALIAS 
+	/* 2 KODE CUSTOMER ALIAS
 	 * Key-FIND : AttStatic
 	 */
 	$attDinamik[]=[
@@ -273,9 +273,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'8pt',
 			]
-		],	
+		],
 	];
-	
+
 	/* 3 | KODE CUSTOMER ALIAS
 	 * Key-FIND : AttStatic
 	*/
@@ -301,7 +301,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'8pt',
 			]
-		],	
+		],
 	];
 
 	/* 4 KODE CUSTOMER MASTER ESM
@@ -330,9 +330,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'8pt',
 			]
-		],	
+		],
 	];
-	
+
 	/* 5 | CUSTOMER NAME MASTER ESM
 	 * Key-FIND : AttStatic
 	*/
@@ -358,7 +358,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'8pt',
 			]
-		],	
+		],
 	];
 
 	/*
@@ -369,18 +369,18 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * ===================================
 	 */
 	foreach($attributeField as $key =>$value)
-	{	
+	{
 		$colorb= 'rgba(255, 255, 142, 0.2)';
 		$kd = explode('.',$key);
 
 		/* SELL-IN ITEMS */
-		if ($kd[0]=='IN_BRG'|| $kd[0]=='IN_KRT' ){		
+		if ($kd[0]=='IN_BRG'|| $kd[0]=='IN_KRT' ){
 			$lbl=$kd[0]=='IN_BRG'? 'PCS':'KRT';
 			/* Attribute Dinamik */
-			$attDinamik[]=[		
+			$attDinamik[]=[
 				'attribute'=>$key,'label'=>$lbl,
 				'hAlign'=>'right',
-				'vAlign'=>'middle',			
+				'vAlign'=>'middle',
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -398,39 +398,39 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						'font-size'=>'8pt',
 						'background-color'=>$colorb,
 					]
-				],			
+				],
 			];
 			/*hdrLabel1 ITEMS PCS[IN_BRG]+KRT[IN_KRT] Marge 2*/
-			if ($kd[0]=='IN_BRG'){		
+			if ($kd[0]=='IN_BRG'){
 				$lbl=$kd[0]=='IN_BRG'? 'PCS':'KRT';
 				$kdBrg=str_replace('IN_BRG','BRG',$key);
 				$nmBrg=Barang::find()->where("KD_BARANG='".$kdBrg."'")->one();
 				$lbl=$nmBrg['NM_BARANG'];
-				$hdrLabel1[] =[	
+				$hdrLabel1[] =[
 					'content'=>$lbl,
 					'options'=>[
 						'colspan'=>2,
-						'class'=>'text-center info',								
+						'class'=>'text-center info',
 						'style'=>[
 							 'text-align'=>'center',
 							 'width'=>'30px',
 							 'font-family'=>'tahoma',
 							 'font-size'=>'8pt',
-							 'background-color'=>'rgba(0, 95, 218, 0.3)',								
+							 'background-color'=>'rgba(0, 95, 218, 0.3)',
 						 ]
 					 ],
 				];
-			}			
+			}
 		}
-		
+
 		/* SELL-IN TOTAL-A */
 		if ($key=='IN_TTL_PCS'||$key=='IN_TTL_KRT' || $key=='IN_TTL_PRCNT'){
 			if ($key=='IN_TTL_PCS'){$lbl ='PCS';}elseif($key=='IN_TTL_KRT'){$lbl='KRT';}elseif($key=='IN_TTL_PRCNT'){$lbl='%';}
-			$attDinamik[]=[		
+			$attDinamik[]=[
 				'attribute'=>$key,'label'=>$lbl,
 				'hAlign'=>'right',
 				'vAlign'=>'middle',
-				'format'=>['decimal', 2],			
+				'format'=>['decimal', 2],
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -453,39 +453,39 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'pageSummary'=>true,
 				'pageSummaryOptions' => [
 					'style'=>[
-							'text-align'=>'right',		
+							'text-align'=>'right',
 							'width'=>'30px',
 							'font-family'=>'tahoma',
-							'font-size'=>'8pt',	
+							'font-size'=>'8pt',
 							//'text-decoration'=>'underline',
 							//'font-weight'=>'bold',
-							//'border-left-color'=>'transparant',		
-							'border-left'=>'0px',									
+							//'border-left-color'=>'transparant',
+							'border-left'=>'0px',
 					]
-				],											
-				'footer'=>true,			
+				],
+				'footer'=>true,
 			];
 			/*hdrLabel1 TOTAL-A  TTL_PCS| TTL_KRT | TTL_PERCENT | Marge 3*/
 			if($key=='IN_TTL_PCS'){
-				$hdrLabel1[] =[	
+				$hdrLabel1[] =[
 					'content'=>'TOTAL SELL IN',
 					'options'=>[
 						'colspan'=>3,
-						'class'=>'text-center info',								
+						'class'=>'text-center info',
 						'style'=>[
 							 'text-align'=>'center',
 							 'width'=>'30px',
 							 'font-family'=>'tahoma',
 							 'font-size'=>'8pt',
-							 'background-color'=>'rgba(0, 95, 218, 0.3)',								
+							 'background-color'=>'rgba(0, 95, 218, 0.3)',
 						 ]
 					 ],
-				];		
+				];
 			}
-		}	
+		}
 	}
- 
-	
+
+
 	/*
 	 * === SELL OUT =======================
 	 * Key-FIND : AttDinamik-sellOUT
@@ -494,16 +494,16 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * ===================================
 	 */
 	foreach($attributeField as $key =>$value)
-	{	
+	{
 		$colorb= 'rgba(255, 255, 142, 0.2)';
 		$kd = explode('.',$key);
-		
-		if ($kd[0]=='OUT_BRG'|| $kd[0]=='OUT_KRT' ){		
+
+		if ($kd[0]=='OUT_BRG'|| $kd[0]=='OUT_KRT' ){
 			$lbl=$kd[0]=='OUT_BRG'? 'PCS':'KRT';
-			$attDinamik[]=[		
+			$attDinamik[]=[
 				'attribute'=>$key,'label'=>$lbl,
 				'hAlign'=>'right',
-				'vAlign'=>'middle',			
+				'vAlign'=>'middle',
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -521,38 +521,38 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						'font-size'=>'8pt',
 						'background-color'=>$colorb,
 					]
-				],			
+				],
 			];
 			/*hdrLabel1 ITEMS PCS[OUT_BRG]+KRT[OUT_KRT] Marge 2*/
-			if ($kd[0]=='OUT_BRG'){		
+			if ($kd[0]=='OUT_BRG'){
 				$lbl=$kd[0]=='OUT_BRG'? 'PCS':'KRT';
 				$kdBrg=str_replace('OUT_BRG','BRG',$key);
 				$nmBrg=Barang::find()->where("KD_BARANG='".$kdBrg."'")->one();
 				$lbl=$nmBrg['NM_BARANG'];
-				$hdrLabel1[] =[	
+				$hdrLabel1[] =[
 					'content'=>$lbl,
 					'options'=>[
 						'colspan'=>2,
-						'class'=>'text-center info',								
+						'class'=>'text-center info',
 						'style'=>[
 							 'text-align'=>'center',
 							 'width'=>'30px',
 							 'font-family'=>'tahoma',
 							 'font-size'=>'8pt',
-							 'background-color'=>'rgba(0, 95, 218, 0.3)',								
+							 'background-color'=>'rgba(0, 95, 218, 0.3)',
 						 ]
 					 ],
 				];
-			}			
+			}
 		}
-		/* SELL-OUT TOTAL-A */		
+		/* SELL-OUT TOTAL-A */
 		if ($key=='OUT_TTL_PCS'||$key=='OUT_TTL_KRT' || $key=='OUT_TTL_PRCNT'){
 			if ($key=='OUT_TTL_PCS'){$lbl ='PCS';}elseif($key=='OUT_TTL_KRT'){$lbl='KRT';}elseif($key=='OUT_TTL_PRCNT'){$lbl='%';}
-			$attDinamik[]=[		
+			$attDinamik[]=[
 				'attribute'=>$key,'label'=>$lbl,
 				'hAlign'=>'right',
 				'vAlign'=>'middle',
-				'format'=>['decimal', 2],			
+				'format'=>['decimal', 2],
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -575,54 +575,54 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'pageSummary'=>true,
 				'pageSummaryOptions' => [
 					'style'=>[
-							'text-align'=>'right',		
+							'text-align'=>'right',
 							'width'=>'100px',
 							'font-family'=>'tahoma',
-							'font-size'=>'8pt',	
+							'font-size'=>'8pt',
 							//'text-decoration'=>'underline',
 							//'font-weight'=>'bold',
-							//'border-left-color'=>'transparant',		
-							'border-left'=>'0px',									
+							//'border-left-color'=>'transparant',
+							'border-left'=>'0px',
 					]
-				],											
-				'footer'=>true,			
+				],
+				'footer'=>true,
 			];
 			/*hdrLabel1 TOTAL-A  TTL_PCS| TTL_KRT | TTL_PERCENT | Marge 3*/
 			if($key=='OUT_TTL_PCS'){
-				$hdrLabel1[] =[	
+				$hdrLabel1[] =[
 					'content'=>'UPDATE SELL OUT',
 					'options'=>[
 						'colspan'=>3,
-						'class'=>'text-center info',								
+						'class'=>'text-center info',
 						'style'=>[
 							 'text-align'=>'center',
 							 'width'=>'30px',
 							 'font-family'=>'tahoma',
 							 'font-size'=>'8pt',
-							 'background-color'=>'rgba(0, 95, 218, 0.3)',								
+							 'background-color'=>'rgba(0, 95, 218, 0.3)',
 						 ]
 					 ],
-				];		
+				];
 			}
 		}
 	}
- 
+
 	/*
 	 * === SELL OUT ADD TOTAL ==========
 	 * Key-FIND : AttDinamik-selOUT
 	 * @author ptrnov [piter@lukison.com]
 	 * @since 1.2
 	 * ===================================
-	 */	
-	foreach($attributeField as $key =>$value){	
-		/* SELL OUT TOTAL-B */				
+	 */
+	foreach($attributeField as $key =>$value){
+		/* SELL OUT TOTAL-B */
 		if ($key=='LST_SELLOUT_TTL_PCS1'||$key=='LST_SELLOUT_TTL_KRT1' || $key=='LST_SELLOUT_TTL_PRCNT1'){
 			if ($key=='LST_SELLOUT_TTL_PCS1'){$lbl ='PCS';}elseif($key=='LST_SELLOUT_TTL_KRT1'){$lbl='KRT';}elseif($key=='LST_SELLOUT_TTL_PRCNT1'){$lbl='%';}
-			$attDinamik[]=[		
+			$attDinamik[]=[
 				'attribute'=>$key,'label'=>$lbl,
 				'hAlign'=>'right',
 				'vAlign'=>'middle',
-				'format'=>['decimal', 2],			
+				'format'=>['decimal', 2],
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -645,56 +645,56 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'pageSummary'=>true,
 				'pageSummaryOptions' => [
 					'style'=>[
-							'text-align'=>'right',		
+							'text-align'=>'right',
 							'width'=>'100px',
 							'font-family'=>'tahoma',
-							'font-size'=>'8pt',	
+							'font-size'=>'8pt',
 							//'text-decoration'=>'underline',
 							//'font-weight'=>'bold',
-							//'border-left-color'=>'transparant',		
-							'border-left'=>'0px',									
+							//'border-left-color'=>'transparant',
+							'border-left'=>'0px',
 					]
-				],											
-				'footer'=>true,			
-			];	
-			
+				],
+				'footer'=>true,
+			];
+
 			// hdrLabel1 TOTAL-B  TTL_PCS| TTL_KRT | TTL_PERCENT | Marge 3
 			if($key=='LST_SELLOUT_TTL_PCS1'){
-				$hdrLabel1[] =[	
+				$hdrLabel1[] =[
 					'content'=>'LAST STOCK',
 					'options'=>[
 						'colspan'=>3,
-						'class'=>'text-center info',								
+						'class'=>'text-center info',
 						'style'=>[
 							 'text-align'=>'center',
 							 'width'=>'30px',
 							 'font-family'=>'tahoma',
 							 'font-size'=>'8pt',
-							 'background-color'=>'rgba(0, 95, 218, 0.3)',								
+							 'background-color'=>'rgba(0, 95, 218, 0.3)',
 						 ]
 					 ],
-				];		
-			}		
+				];
+			}
 		}
 	}
- 
+
 	/*
 	 * === LAST STOCK ====================
 	 * Key-FIND : AttDinamik-lastSTOCK
 	 * @author ptrnov [piter@lukison.com]
 	 * @since 1.2
 	 * ===================================
-	 */	
-	foreach($attributeField as $key =>$value){	
-		$colorb= 'rgba(255, 255, 142, 0.2)';	
-		$kd = explode('.',$key);		
-		
-		if ($kd[0]=='STCK_BRG'|| $kd[0]=='STCK_KRT' ){		
+	 */
+	foreach($attributeField as $key =>$value){
+		$colorb= 'rgba(255, 255, 142, 0.2)';
+		$kd = explode('.',$key);
+
+		if ($kd[0]=='STCK_BRG'|| $kd[0]=='STCK_KRT' ){
 			$lbl=$kd[0]=='STCK_BRG'? 'PCS':'KRT';
-			$attDinamik[]=[		
+			$attDinamik[]=[
 				'attribute'=>$key,'label'=>$lbl,
 				'hAlign'=>'right',
-				'vAlign'=>'middle',			
+				'vAlign'=>'middle',
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -712,38 +712,38 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						'font-size'=>'8pt',
 						'background-color'=>$colorb,
 					]
-				],			
+				],
 			];
 			/*hdrLabel1 ITEMS PCS[STOCK_BRG]+KRT[STOCK_KRT] Marge 2*/
-			if ($kd[0]=='STCK_BRG'){		
+			if ($kd[0]=='STCK_BRG'){
 				$lbl=$kd[0]=='STCK_BRG'? 'PCS':'KRT';
 				$kdBrg=str_replace('STCK_BRG','BRG',$key);
 				$nmBrg=Barang::find()->where("KD_BARANG='".$kdBrg."'")->one();
 				$lbl=$nmBrg['NM_BARANG'];
-				$hdrLabel1[] =[	
+				$hdrLabel1[] =[
 					'content'=>$lbl,
 					'options'=>[
 						'colspan'=>2,
-						'class'=>'text-center info',								
+						'class'=>'text-center info',
 						'style'=>[
 							 'text-align'=>'center',
 							 'width'=>'30px',
 							 'font-family'=>'tahoma',
 							 'font-size'=>'8pt',
-							 'background-color'=>'rgba(0, 95, 218, 0.3)',								
+							 'background-color'=>'rgba(0, 95, 218, 0.3)',
 						 ]
 					 ],
 				];
-			}				
+			}
 		}
-		/* UPDATE STOCK TOTAL-A */		
+		/* UPDATE STOCK TOTAL-A */
 		if ($key=='STCK_TTL_PCS'||$key=='STCK_TTL_KRT' || $key=='STCK_TTL_PRCNT'){
 			if ($key=='STCK_TTL_PCS'){$lbl ='PCS';}elseif($key=='STCK_TTL_KRT'){$lbl='KRT';}elseif($key=='STCK_TTL_PRCNT'){	$lbl='%';}
-			$attDinamik[]=[		
+			$attDinamik[]=[
 				'attribute'=>$key,'label'=>$lbl,
 				'hAlign'=>'right',
 				'vAlign'=>'middle',
-				'format'=>['decimal', 2],			
+				'format'=>['decimal', 2],
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -766,54 +766,54 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'pageSummary'=>true,
 				'pageSummaryOptions' => [
 					'style'=>[
-							'text-align'=>'right',		
+							'text-align'=>'right',
 							'width'=>'100px',
 							'font-family'=>'tahoma',
-							'font-size'=>'8pt',	
+							'font-size'=>'8pt',
 							//'text-decoration'=>'underline',
 							//'font-weight'=>'bold',
-							//'border-left-color'=>'transparant',		
-							'border-left'=>'0px',									
+							//'border-left-color'=>'transparant',
+							'border-left'=>'0px',
 					]
-				],											
-				'footer'=>true,			
+				],
+				'footer'=>true,
 			];
 			/*hdrLabel1 TOTAL-A  TTL_PCS| TTL_KRT | TTL_PERCENT | Marge 3*/
 			if($key=='STCK_TTL_PCS'){
-				$hdrLabel1[] =[	
+				$hdrLabel1[] =[
 					'content'=>'UPDATE STOCK',
 					'options'=>[
 						'colspan'=>3,
-						'class'=>'text-center info',								
+						'class'=>'text-center info',
 						'style'=>[
 							 'text-align'=>'center',
 							 'width'=>'30px',
 							 'font-family'=>'tahoma',
 							 'font-size'=>'8pt',
-							 'background-color'=>'rgba(0, 95, 218, 0.3)',								
+							 'background-color'=>'rgba(0, 95, 218, 0.3)',
 						 ]
 					 ],
-				];		
-			}			
-		}		
+				];
+			}
+		}
 	}
-	
+
 	/*
 	 * === LAST STOCK ADD TOTAL ==========
 	 * Key-FIND : AttDinamik-lastSTOCK
 	 * @author ptrnov [piter@lukison.com]
 	 * @since 1.2
 	 * ===================================
-	 */	
-	foreach($attributeField as $key =>$value){	
-		/* LAST STOCK TOTAL-B */		
+	 */
+	foreach($attributeField as $key =>$value){
+		/* LAST STOCK TOTAL-B */
 		if ($key=='LSTSTCK_TTL_PCS'||$key=='LSTSTCK_TTL_KRT' || $key=='LSTSTCK_TTL_PRCNT'){
 			if ($key=='LSTSTCK_TTL_PCS'){$lbl ='PCS';}elseif($key=='LSTSTCK_TTL_KRT'){$lbl='KRT';}elseif($key=='LSTSTCK_TTL_PRCNT'){$lbl='%';}
-			$attDinamik[]=[		
+			$attDinamik[]=[
 				'attribute'=>$key,'label'=>$lbl,
 				'hAlign'=>'right',
 				'vAlign'=>'middle',
-				'format'=>['decimal', 2],			
+				'format'=>['decimal', 2],
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -836,54 +836,54 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'pageSummary'=>true,
 				'pageSummaryOptions' => [
 					'style'=>[
-							'text-align'=>'right',		
+							'text-align'=>'right',
 							'width'=>'100px',
 							'font-family'=>'tahoma',
-							'font-size'=>'8pt',	
+							'font-size'=>'8pt',
 							//'text-decoration'=>'underline',
 							//'font-weight'=>'bold',
-							//'border-left-color'=>'transparant',		
-							'border-left'=>'0px',									
+							//'border-left-color'=>'transparant',
+							'border-left'=>'0px',
 					]
-				],											
-				'footer'=>true,			
-			];	
+				],
+				'footer'=>true,
+			];
 			// hdrLabel1 TOTAL-B  TTL_PCS| TTL_KRT | TTL_PERCENT | Marge 3
 			if($key=='LSTSTCK_TTL_PCS'){
-				$hdrLabel1[] =[	
+				$hdrLabel1[] =[
 					'content'=>'LAST STOCK',
 					'options'=>[
 						'colspan'=>3,
-						'class'=>'text-center info',								
+						'class'=>'text-center info',
 						'style'=>[
 							 'text-align'=>'center',
 							 'width'=>'30px',
 							 'font-family'=>'tahoma',
 							 'font-size'=>'8pt',
-							 'background-color'=>'rgba(0, 95, 218, 0.3)',								
+							 'background-color'=>'rgba(0, 95, 218, 0.3)',
 						 ]
 					 ],
-				];		
-			}		
+				];
+			}
 		}
 	}
-	
+
 	/*
 	 * === LAST STOCK ADD TOTAL B =========
 	 * Key-FIND : AttDinamik-lastSTOCK
 	 * @author ptrnov [piter@lukison.com]
 	 * @since 1.2
 	 * ===================================
-	 */	
-	foreach($attributeField as $key =>$value){	
-		/* LAST STOCK TOTAL-B */				
+	 */
+	foreach($attributeField as $key =>$value){
+		/* LAST STOCK TOTAL-B */
 		if ($key=='LST_SELLOUT_TTL_PCS2'||$key=='LST_SELLOUT_TTL_KRT2' || $key=='LST_SELLOUT_TTL_PRCNT2'){
 			if ($key=='LST_SELLOUT_TTL_PCS2'){$lbl ='PCS';}elseif($key=='LST_SELLOUT_TTL_KRT2'){$lbl='KRT';}elseif($key=='LST_SELLOUT_TTL_PRCNT2'){$lbl='%';}
-			$attDinamik[]=[		
+			$attDinamik[]=[
 				'attribute'=>$key,'label'=>$lbl,
 				'hAlign'=>'right',
 				'vAlign'=>'middle',
-				'format'=>['decimal', 2],			
+				'format'=>['decimal', 2],
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -906,46 +906,46 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'pageSummary'=>true,
 				'pageSummaryOptions' => [
 					'style'=>[
-							'text-align'=>'right',		
+							'text-align'=>'right',
 							'width'=>'100px',
 							'font-family'=>'tahoma',
-							'font-size'=>'8pt',	
+							'font-size'=>'8pt',
 							//'text-decoration'=>'underline',
 							//'font-weight'=>'bold',
-							//'border-left-color'=>'transparant',		
-							'border-left'=>'0px',									
+							//'border-left-color'=>'transparant',
+							'border-left'=>'0px',
 					]
-				],											
-				'footer'=>true,			
-			];	
-			
+				],
+				'footer'=>true,
+			];
+
 			// hdrLabel1 TOTAL-B  TTL_PCS| TTL_KRT | TTL_PERCENT | Marge 3
 			if($key=='LST_SELLOUT_TTL_PCS2'){
-				$hdrLabel1[] =[	
+				$hdrLabel1[] =[
 					'content'=>'LAST SELL OUT',
 					'options'=>[
 						'colspan'=>3,
-						'class'=>'text-center info',								
+						'class'=>'text-center info',
 						'style'=>[
 							 'text-align'=>'center',
 							 'width'=>'30px',
 							 'font-family'=>'tahoma',
 							 'font-size'=>'8pt',
-							 'background-color'=>'rgba(0, 95, 218, 0.3)',								
+							 'background-color'=>'rgba(0, 95, 218, 0.3)',
 						 ]
 					 ],
-				];		
-			}		
+				];
+			}
 		}
 	}
-	
+
 	/*
 	 * ========= CONFIGURATION ===========
 	 * Key-FIND : AttDinamik-lastSTOCK
 	 * @author ptrnov [piter@lukison.com]
 	 * @since 1.2
 	 * ===================================
-	*/		
+	*/
 	$clm=$attDinamik;
 	$hdrLabel1_ALL =[
 		'columns'=>array_merge($hdrLabel1),
@@ -967,7 +967,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		'options'=>[
 			'enablePushState'=>false,
 			'id'=>'gv-rpt-sales',
-		   ],						  
+		   ],
 		],
 		'hover'=>true, //cursor select
 		'responsive'=>true,
@@ -976,9 +976,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		//'striped'=>'4px',
 		//'autoXlFormat'=>true,
 		//'export' => false,
-    ]); 
+    ]);
 ?>
-	
+
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
 	<?php
 		echo $gvSales;
