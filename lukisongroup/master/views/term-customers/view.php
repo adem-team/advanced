@@ -1,58 +1,69 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
+use yii\helpers\ArrayHelper;;
+use lukisongroup\master\models\Terminvest;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Termcustomers */
 
-$this->title = $model->ID_TERM;
-$this->params['breadcrumbs'][] = ['label' => 'Termcustomers', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+function pihakSearch($model){
+  $title = Yii::t('app','');
+  $options = [ 'id'=>'select-spl-id',
+          'data-toggle'=>"modal",
+          'data-target'=>"#search-spl",
+          'class'=>'btn btn-warning btn-xs',
+          //'style'=>['width'=>'150px'],
+          'title'=>'Set Supplier'
+  ];
+  $icon = '<span class="glyphicon glyphicon-open"></span>';
+  $label = $icon . ' ' . $title;
+  $url = Url::toRoute(['/purchasing/purchase-order/supplier-view','id'=>$model->ID_TERM]);
+  $content = Html::a($label,$url, $options);
+  return $content;
+}
+
 ?>
-<div class="termcustomers-view">
+<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+  <div  class="row">
+	<!-- HEADER !-->
+		<div class="col-md-12">
+			<div class="col-md-1" style="float:left;">
+				<?php echo Html::img('@web/upload/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
+			</div>
+			<div class="col-md-9" style="padding-top:15px;">
+				<h3 class="text-center"><b> Trading Term <?php echo date('Y')  ?> </b></h3>
+			</div>
+			<div class="col-md-12">
+				<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
+			</div>
 
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->ID_TERM], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->ID_TERM], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+		</div>
+	</div>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'ID_TERM',
-            'NM_TERM',
-            'CUST_KD',
-            'CUST_NM',
-            'CUST_SIGN',
-            'PRINCIPAL_KD',
-            'PRINCIPAL_NM',
-            'PRINCIPAL_SIGN',
-            'DIST_KD',
-            'DIST_NM',
-            'DIST_SIGN',
-            'DCRP_SIGNARURE:ntext',
-            'PERIOD_START',
-            'PERIOD_END',
-            'TARGET_TEXT:ntext',
-            'TARGET_VALUE',
-            'RABATE_CNDT:ntext',
-            'GROWTH',
-            'TOP:ntext',
-            'STATUS',
-            'CREATED_BY',
-            'CREATED_AT',
-            'UPDATE_BY',
-            'UPDATE_AT',
-        ],
-    ]) ?>
-
-</div>
+  <div class="row">
+    <div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;">
+      <div>
+        <?php echo pihakSearch($model); ?>
+      </div>
+      <dl>
+        <?php
+          // $splName = $supplier!='' ? $supplier->NM_SUPPLIER : 'Supplier No Set';
+          // $splAlamat = $supplier!='' ? $supplier->ALAMAT : 'Address No Set';
+          // $splKota = $supplier!='' ? $supplier->KOTA : 'City No Set';
+          // $splTlp = $supplier!='' ? $supplier->TLP : 'Phone No Set';
+          // $splFax = $supplier!='' ? $supplier->FAX : 'FAX No Set';
+          // $splEmail= $supplier!='' ? $supplier->EMAIL : 'Email No Set';
+        ?>
+        <!-- <dt><$splName; ?></dt>
+        <dt>$splAlamat; ?></dt>
+        <dt><$splKota; ?></dt>
+        <dt style="width:80px; float:left;">Telp / Fax</dt>
+        <dd>:	<$splTlp; ?> / <$splFax; ?></dd>
+        <dt style="width:80px; float:left;">Email</dt>
+        <dd>:	<$splEmail; ?></dd> -->
+      </dl>
+    </div>
+  </div>

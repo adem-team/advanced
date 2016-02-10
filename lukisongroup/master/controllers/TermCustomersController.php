@@ -69,6 +69,7 @@ class TermCustomersController extends Controller
      */
     public function actionView($id)
     {
+      // $model = new Ter
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -90,7 +91,7 @@ class TermCustomersController extends Controller
               $model->CREATED_BY = Yii::$app->user->identity->username;
               $model->save();
           }
-            return $this->redirect(['index']);
+            return $this->redirect(['view','id'=>$model->ID_TERM]);
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,

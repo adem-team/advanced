@@ -9,6 +9,7 @@ use lukisongroup\master\models\Distributor;
 use kartik\widgets\DatePicker;
 use kartik\label\LabelInPlace;
 
+
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Termcustomers */
 /* @var $form yii\widgets\ActiveForm */
@@ -32,6 +33,7 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 
     <?php $form = ActiveForm::begin([
       'id'=>$model->formName(),
+      
 
     ]); ?>
 
@@ -44,21 +46,11 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
   	]);?>
 
 
-
-    <?= $form->field($model, 'CUST_NM')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'CUST_SIGN')->textInput(['maxlength' => true]) ?>
-
-
     <?= $form->field($model, 'PRINCIPAL_KD')->widget(Select2::classname(),[
   		'options'=>[  'placeholder' => 'Select Nama Principal ...'
   		],
   		'data' =>$model->data($data1,$to1,$from1)
   	]);?>
-
-    <?= $form->field($model, 'PRINCIPAL_NM')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'PRINCIPAL_SIGN')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'DIST_KD')->widget(Select2::classname(),[
       'options'=>[  'placeholder' => 'Select Nama Distributor ...'
@@ -66,9 +58,6 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
       'data' =>$model->data($data2,$to2,$from2)
     ]);?>
 
-    <?= $form->field($model, 'DIST_NM')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'DIST_SIGN')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'DCRP_SIGNARURE')->textarea(['rows' => 6]) ?>
 
@@ -93,17 +82,6 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
                 ],
     ])  ?>
 
-    <?= $form->field($model, 'TARGET_TEXT')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'TARGET_VALUE')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'RABATE_CNDT')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'GROWTH')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'TOP', $config)->widget(LabelInPlace::classname(), [
-        'type' => LabelInPlace::TYPE_TEXTAREA
-    ]) ?>
 
     <?php
       if(!$model->IsNewRecord)
@@ -112,8 +90,6 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
       }
 
      ?>
-
-
 
 
     <div class="form-group">

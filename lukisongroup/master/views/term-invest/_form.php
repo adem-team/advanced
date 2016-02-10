@@ -10,7 +10,9 @@ use yii\widgets\ActiveForm;
 
 <div class="terminvest-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+      'id'=>$model->formName()
+    ]); ?>
 
     <?= $form->field($model, 'INVES_TYPE')->textInput(['maxlength' => true]) ?>
 
@@ -18,13 +20,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'KETERANGAN')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'CREATE_BY')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'CREATE_AT')->textInput() ?>
-
-    <?= $form->field($model, 'UPDATE_BY')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'UPDATE_AT')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
