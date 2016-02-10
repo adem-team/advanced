@@ -231,17 +231,17 @@ $gridColumns = [
       'buttons' => [
           'view' =>function($url, $model, $key){
               return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
-                            ['/master/barang/view','id'=>$model->ID_TERM],[
-                            'data-toggle'=>"modal",
-                            'data-target'=>"#modal-view",
-                            'data-title'=> $model->ID_TERM,
+                            ['/master/term-customers/view','id'=>$model->ID_TERM],[
+                            // 'data-toggle'=>"modal",
+                            // 'data-target'=>"#modal-view",
+                            // 'data-title'=> $model->ID_TERM,
                             ]). '</li>' . PHP_EOL;
           },
           'update' =>function($url, $model, $key){
               return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Edit'),
                             ['update','id'=>$model->ID_TERM],[
-                            'data-toggle'=>"modal",
-                            'data-target'=>"#modal-create",
+                            // 'data-toggle'=>"modal",
+                            // 'data-target'=>"#modal-create",
                             'data-title'=> $model->ID_TERM,
                             ]). '</li>' . PHP_EOL;
           },

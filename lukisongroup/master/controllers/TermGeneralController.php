@@ -26,6 +26,29 @@ class TermGeneralController extends Controller
         ];
     }
 
+
+
+        public function beforeAction(){
+                if (Yii::$app->user->isGuest)  {
+                     Yii::$app->user->logout();
+                       $this->redirect(array('/site/login'));  //
+                }
+                // Check only when the user is logged in
+                if (!Yii::$app->user->isGuest)  {
+                   if (Yii::$app->session['userSessionTimeout']< time() ) {
+                       // timeout
+                       Yii::$app->user->logout();
+                       $this->redirect(array('/site/login'));  //
+                   } else {
+                       //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+                       Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                       return true;
+                   }
+                } else {
+                    return true;
+                }
+        }
+
     /**
      * Lists all Termgeneral models.
      * @return mixed
@@ -62,8 +85,15 @@ class TermGeneralController extends Controller
     {
         $model = new Termgeneral();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
+        if ($model->load(Yii::$app->request->post()) ) {
+
+          if($model->validate())
+          {
+              $model->CREATED_AT = date("Y-m-d H:i:s");
+              $model->CREATED_BY = Yii::$app->user->identity->username;
+              $model->save();
+          }
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -81,7 +111,14 @@ class TermGeneralController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+
+          if($model->validate())
+          {
+              $model->UPDATED_AT = date("Y-m-d H:i:s");
+              $model->UPDATED_BY = Yii::$app->user->identity->username;
+              $model->save();
+          }
             return $this->redirect(['view', 'id' => $model->ID]);
         } else {
             return $this->render('update', [
