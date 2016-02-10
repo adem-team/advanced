@@ -597,8 +597,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 */	
 	foreach($attributeField as $key =>$value){	
 		// STOCK OUT TOTAL-B 				
-		if ($key=='lastTTL_PCS'||$key=='lastTTL_KRT'|| $key=='lastTTL_KRT_PRCNT'){
-			if ($key=='lastTTL_PCS'){$lbl ='PCS';}elseif($key=='lastTTL_KRT'){$lbl='KRT';}elseif($key=='lastTTL_KRT_PRCNT'){$lbl='%';}
+		if ($key=='lastTTL_PCS'||$key=='lastTTL_KRT'|| $key=='lastTTL_PRCNT'){
+			if ($key=='lastTTL_PCS'){$lbl ='PCS';}elseif($key=='lastTTL_KRT'){$lbl='KRT';}elseif($key=='lastTTL_PRCNT'){$lbl='%';}
 			$attDinamik[]=[		
 				'attribute'=>$key,'label'=>$lbl,
 				'hAlign'=>'right',
