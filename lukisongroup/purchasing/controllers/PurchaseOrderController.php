@@ -289,8 +289,8 @@ class PurchaseOrderController extends Controller
 		}
 
         return $this->render('create', [
-            'searchModel' => $searchModel,
-            'dataProviderRo' => $dataProviderRo,
+      'searchModel' => $searchModel,
+      'dataProviderRo' => $dataProviderRo,
 			'dataProviderSo'=>$dataProviderSo,
 			'poDetailProvider'=>$poDetailProvider,
 			'poHeader'=> $poHeader,

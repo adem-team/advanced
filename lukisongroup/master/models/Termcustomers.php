@@ -1,6 +1,7 @@
 <?php
 
 namespace lukisongroup\master\models;
+use yii\helpers\ArrayHelper;
 
 use Yii;
 

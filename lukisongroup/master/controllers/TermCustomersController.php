@@ -83,10 +83,16 @@ class TermCustomersController extends Controller
     {
         $model = new Termcustomers();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID_TERM]);
+        if ($model->load(Yii::$app->request->post()) ) {
+          if($model->validate())
+          {
+              $model->CREATED_AT = date("Y-m-d H:i:s");
+              $model->CREATED_BY = Yii::$app->user->identity->username;
+              $model->save();
+          }
+            return $this->redirect(['index']);
         } else {
-            return $this->render('create', [
+            return $this->renderAjax('create', [
                 'model' => $model,
             ]);
         }
@@ -102,10 +108,16 @@ class TermCustomersController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+          if($model->validate())
+  				{
+  					  $model->UPDATED_AT = date("Y-m-d H:i:s");
+  						$model->UPDATED_BY = Yii::$app->user->identity->username;
+              $model->save();
+          }
             return $this->redirect(['view', 'id' => $model->ID_TERM]);
         } else {
-            return $this->render('update', [
+            return $this->renderAjax('update', [
                 'model' => $model,
             ]);
         }
