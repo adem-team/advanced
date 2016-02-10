@@ -1,22 +1,18 @@
 <?php
 
-namespace lukisongroup\sales\controllers;
+namespace lukisongroup\master\controllers;
 
 use Yii;
-use yii\data\ActiveDataProvider;
-use yii\data\ArrayDataProvider;
-use yii\db\Query;
-use lukisongroup\sales\models\Sot2;
-use lukisongroup\sales\models\Sot2Search;
+use lukisongroup\master\models\Termbudget;
+use lukisongroup\master\models\TermbudgetSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-use lukisongroup\master\models\Barang;
 /**
- * SalesDetailController implements the CRUD actions for Sot2 model.
+ * TermBudgetController implements the CRUD actions for Termbudget model.
  */
-class SalesDetailController extends Controller
+class TermBudgetController extends Controller
 {
     public function behaviors()
     {
@@ -30,68 +26,46 @@ class SalesDetailController extends Controller
         ];
     }
 
-	 /**
-     * PLSQL ! GET DATA SALES
-     * @author ptrnov [piter@lukison.com]
-     * @since 2.1
-     */
-	public function getScripts(){
-		return Yii::$app->db_esm->createCommand("CALL esm_sales_analize()")->queryAll();
-	}
-	/* public function getScriptsa(){
-		return Yii::$app->db_esm->createCommand('call so_1()')->queryColumn();
-	} */
-	/* public function getEsmbrg(){
-		return Yii::$app->db_esm->createCommand('call BarangMaxi_Colomn()')->queryAll();
-	} */
+
+    public function beforeAction(){
+            if (Yii::$app->user->isGuest)  {
+                 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+            }
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+                   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true;
+               }
+            } else {
+                return true;
+            }
+    }
 
     /**
-     * Lists all Sot2 models.
+     * Lists all Termbudget models.
      * @return mixed
      */
     public function actionIndex()
     {
-		//print_r($this->getScripts());
-
-		/**
-		 * PLSQL ! Array Data Provider
-		 * @author ptrnov [piter@lukison.com]
-		 * @since 2.1
-		 */
-		$plsql_so_1= new ArrayDataProvider([
-			'key' => 'ID',
-			'allModels'=>$this->getScripts(),
-			 'pagination' => [
-				'pageSize' => 50,
-			]
-		]);
-
-		/**
-		 * PLSQL ! Column Label
-		 * @author ptrnov [piter@lukison.com]
-		 * @since 2.1
-		 */
-		$attributeField=$plsql_so_1->allModels[0]; //get label Array 0
-		// print_r($plsql_so_1->allModels);
-
-        $searchModel = new Sot2Search();
+        $searchModel = new TermbudgetSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'dataProviderX' => $plsql_so_1,
-			      'attributeField'=>$attributeField,
-			//'brgEsmProdak'=>$brgEsmProdak,
-			//'brgEsmProdak'=>$this->getEsmbrg(),
-			//'clmKdBarang'=>$clmKdBarang,
-
         ]);
     }
 
     /**
-     * Displays a single Sot2 model.
-     * @param string $id
+     * Displays a single Termbudget model.
+     * @param integer $id
      * @return mixed
      */
     public function actionView($id)
@@ -102,13 +76,13 @@ class SalesDetailController extends Controller
     }
 
     /**
-     * Creates a new Sot2 model.
+     * Creates a new Termbudget model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Sot2();
+        $model = new Termbudget();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->ID]);
@@ -120,9 +94,9 @@ class SalesDetailController extends Controller
     }
 
     /**
-     * Updates an existing Sot2 model.
+     * Updates an existing Termbudget model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      */
     public function actionUpdate($id)
@@ -139,9 +113,9 @@ class SalesDetailController extends Controller
     }
 
     /**
-     * Deletes an existing Sot2 model.
+     * Deletes an existing Termbudget model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      */
     public function actionDelete($id)
@@ -152,15 +126,15 @@ class SalesDetailController extends Controller
     }
 
     /**
-     * Finds the Sot2 model based on its primary key value.
+     * Finds the Termbudget model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return Sot2 the loaded model
+     * @param integer $id
+     * @return Termbudget the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Sot2::findOne($id)) !== null) {
+        if (($model = Termbudget::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

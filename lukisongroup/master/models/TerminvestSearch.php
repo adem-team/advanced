@@ -5,12 +5,12 @@ namespace lukisongroup\master\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use lukisongroup\master\models\Customersalias;
+use lukisongroup\master\models\Terminvest;
 
 /**
- * CustomersaliasSearch represents the model behind the search form about `lukisongroup\master\models\Customersalias`.
+ * TerminvestSearch represents the model behind the search form about `lukisongroup\master\models\Terminvest`.
  */
-class CustomersaliasSearch extends Customersalias
+class TerminvestSearch extends Terminvest
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class CustomersaliasSearch extends Customersalias
     public function rules()
     {
         return [
-            [['ID', 'KD_PARENT'], 'integer'],
-            [['KD_CUSTOMERS', 'KD_ALIAS', 'KD_DISTRIBUTOR', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT'], 'safe'],
+            [['ID', 'STATUS'], 'integer'],
+            [['INVES_TYPE', 'KETERANGAN', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class CustomersaliasSearch extends Customersalias
      */
     public function search($params)
     {
-        $query = Customersalias::find();
+        $query = Terminvest::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -57,16 +57,15 @@ class CustomersaliasSearch extends Customersalias
 
         $query->andFilterWhere([
             'ID' => $this->ID,
-            'KD_PARENT' => $this->KD_PARENT,
-            'CREATED_AT' => $this->CREATED_AT,
-            'UPDATED_AT' => $this->UPDATED_AT,
+            'STATUS' => $this->STATUS,
+            'CREATE_AT' => $this->CREATE_AT,
+            'UPDATE_AT' => $this->UPDATE_AT,
         ]);
 
-        $query->andFilterWhere(['like', 'KD_CUSTOMERS', $this->KD_CUSTOMERS])
-            ->andFilterWhere(['like', 'KD_ALIAS', $this->KD_ALIAS])
-            ->andFilterWhere(['like', 'KD_DISTRIBUTOR', $this->KD_DISTRIBUTOR])
-            ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
-            ->andFilterWhere(['like', 'UPDATED_BY', $this->UPDATED_BY]);
+        $query->andFilterWhere(['like', 'INVES_TYPE', $this->INVES_TYPE])
+            ->andFilterWhere(['like', 'KETERANGAN', $this->KETERANGAN])
+            ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
+            ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
 
         return $dataProvider;
     }

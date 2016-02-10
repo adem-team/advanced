@@ -1388,7 +1388,7 @@ use lukisongroup\master\models\Unitbarang;
 						<!-- Signature !-->
 						 <tr>
 							<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
-								<?php 
+								<?php
 									$ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG1_SVGBASE64.'></img>' :SignCreated($poHeader);
 									echo $ttd1;
 								?>
@@ -1459,7 +1459,7 @@ use lukisongroup\master\models\Unitbarang;
 				<div style="text-align:right; margin-top:80px; margin-right:15px">
 					<a href="/purchasing/purchase-order/" class="btn btn-info btn-xs" role="button" style="width:90px">Back</a>
 					<?php echo Html::a('<i class="fa fa-print fa-fw"></i> Print', ['cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
-					<?php echo Html::a('<i class="fa fa-print fa-fw"></i> tmp Print', ['cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
+					<?php echo Html::a('<i class="fa fa-print fa-fw"></i> tmp Print', ['temp-cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
 
 				</div>
 			</div>
