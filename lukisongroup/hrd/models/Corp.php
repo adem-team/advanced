@@ -54,5 +54,3 @@ class Corp extends \yii\db\ActiveRecord
         ];
     }
 }
-
-
