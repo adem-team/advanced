@@ -5,12 +5,12 @@ namespace lukisongroup\master\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use lukisongroup\master\models\Termbudget;
+use lukisongroup\master\models\Scheduledetail;
 
 /**
- * TermbudgetSearch represents the model behind the search form about `lukisongroup\master\models\Termbudget`.
+ * ScheduledetailSearch represents the model behind the search form about `lukisongroup\master\models\Scheduledetail`.
  */
-class TermbudgetSearch extends Termbudget
+class ScheduledetailSearch extends Scheduledetail
 {
     /**
      * @inheritdoc
@@ -18,9 +18,9 @@ class TermbudgetSearch extends Termbudget
     public function rules()
     {
         return [
-            [['ID', 'STATUS'], 'integer'],
-            [['ID_TERM', 'INVES_TYPE', 'BUDGET_SOURCE', 'PERIODE_START', 'PERIODE_END', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
-            [['BUDGET_VALUE'], 'number'],
+            [['ID', 'SCDL_GROUP', 'STATUS'], 'integer'],
+            [['TGL', 'CUST_ID', 'USER_ID', 'NOTE', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
+            [['LAT', 'LAG', 'RADIUS'], 'number'],
         ];
     }
 
@@ -42,7 +42,7 @@ class TermbudgetSearch extends Termbudget
      */
     public function search($params)
     {
-        $query = Termbudget::find();
+        $query = Scheduledetail::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -58,17 +58,19 @@ class TermbudgetSearch extends Termbudget
 
         $query->andFilterWhere([
             'ID' => $this->ID,
-            'BUDGET_VALUE' => $this->BUDGET_VALUE,
-            'PERIODE_START' => $this->PERIODE_START,
-            'PERIODE_END' => $this->PERIODE_END,
+            'TGL' => $this->TGL,
+            'SCDL_GROUP' => $this->SCDL_GROUP,
+            'LAT' => $this->LAT,
+            'LAG' => $this->LAG,
+            'RADIUS' => $this->RADIUS,
             'STATUS' => $this->STATUS,
             'CREATE_AT' => $this->CREATE_AT,
             'UPDATE_AT' => $this->UPDATE_AT,
         ]);
 
-        $query->andFilterWhere(['like', 'CUST_KD', $this->CUST_KD])
-            ->andFilterWhere(['like', 'INVES_TYPE', $this->INVES_TYPE])
-            ->andFilterWhere(['like', 'BUDGET_SOURCE', $this->BUDGET_SOURCE])
+        $query->andFilterWhere(['like', 'CUST_ID', $this->CUST_ID])
+            ->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
+            ->andFilterWhere(['like', 'NOTE', $this->NOTE])
             ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
 

@@ -73,6 +73,8 @@ class Termcustomers extends \yii\db\ActiveRecord
       return ArrayHelper::map($data, $to, $from);
     }
 
+  
+
     /**
      * @inheritdoc
      */

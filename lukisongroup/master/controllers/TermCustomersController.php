@@ -4,6 +4,11 @@ namespace lukisongroup\master\controllers;
 
 use Yii;
 use lukisongroup\master\models\Termcustomers;
+use lukisongroup\master\models\Termgeneral;
+use lukisongroup\master\models\Terminvest;
+use lukisongroup\master\models\TerminvestSearch;
+use lukisongroup\master\models\Termbudget;
+use lukisongroup\master\models\TermgeneralSearch;
 use lukisongroup\master\models\TermcustomersSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -69,9 +74,19 @@ class TermCustomersController extends Controller
      */
     public function actionView($id)
     {
-      // $model = new Ter
+
+      $searchModel = new TermgeneralSearch();
+      $dataProvider = $searchModel->searchtermgeneral(Yii::$app->request->queryParams,$id);
+
+      $searchModel1 = new TerminvestSearch();
+      $dataProvider1 = $searchModel1->search(Yii::$app->request->queryParams);
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'searchModel'=>   $searchModel,
+            'dataProvider' =>  $dataProvider,
+            'searchModel1'=>   $searchModel1,
+            'dataProvider1' =>  $dataProvider1
         ]);
     }
 
@@ -82,19 +97,41 @@ class TermCustomersController extends Controller
      */
     public function actionCreate()
     {
+        $general = new Termgeneral();
+
         $model = new Termcustomers();
 
-        if ($model->load(Yii::$app->request->post()) ) {
+        $inves = new Terminvest();
+
+        $BUDGET = new Termbudget();
+
+        if ($model->load(Yii::$app->request->post()) && $inves->load(Yii::$app->request->post()) && $general->load(Yii::$app->request->post()) || $BUDGET->load(Yii::$app->request->post()) ) {
+          $model->ID_TERM = Yii::$app->ambilkonci->getkdTerm();
           if($model->validate())
           {
               $model->CREATED_AT = date("Y-m-d H:i:s");
               $model->CREATED_BY = Yii::$app->user->identity->username;
               $model->save();
           }
+              $inves->CREATE_AT = date("Y-m-d H:i:s");
+              $inves->CREATE_BY = Yii::$app->user->identity->username;
+              $inves->save();
+
+              $general->ID_TERM = $model->ID_TERM;
+              $general->CREATE_AT = date("Y-m-d H:i:s");
+              $general->CREATE_BY = Yii::$app->user->identity->username;
+              $general->save();
+
+              $BUDGET->CREATE_AT = date("Y-m-d H:i:s");
+              $BUDGET->CREATE_BY = Yii::$app->user->identity->username;
+              $BUDGET->save();
             return $this->redirect(['view','id'=>$model->ID_TERM]);
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,
+                'general'=> $general,
+                'inves'=> $inves,
+
             ]);
         }
     }

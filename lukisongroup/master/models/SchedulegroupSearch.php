@@ -5,12 +5,12 @@ namespace lukisongroup\master\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use lukisongroup\master\models\Termbudget;
+use lukisongroup\master\models\Schedulegroup;
 
 /**
- * TermbudgetSearch represents the model behind the search form about `lukisongroup\master\models\Termbudget`.
+ * SchedulegroupSearch represents the model behind the search form about `lukisongroup\master\models\Schedulegroup`.
  */
-class TermbudgetSearch extends Termbudget
+class SchedulegroupSearch extends Schedulegroup
 {
     /**
      * @inheritdoc
@@ -19,8 +19,7 @@ class TermbudgetSearch extends Termbudget
     {
         return [
             [['ID', 'STATUS'], 'integer'],
-            [['ID_TERM', 'INVES_TYPE', 'BUDGET_SOURCE', 'PERIODE_START', 'PERIODE_END', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
-            [['BUDGET_VALUE'], 'number'],
+            [['SCDL_GROUP_NM', 'KETERANGAN', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
         ];
     }
 
@@ -42,7 +41,7 @@ class TermbudgetSearch extends Termbudget
      */
     public function search($params)
     {
-        $query = Termbudget::find();
+        $query = Schedulegroup::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -58,17 +57,13 @@ class TermbudgetSearch extends Termbudget
 
         $query->andFilterWhere([
             'ID' => $this->ID,
-            'BUDGET_VALUE' => $this->BUDGET_VALUE,
-            'PERIODE_START' => $this->PERIODE_START,
-            'PERIODE_END' => $this->PERIODE_END,
             'STATUS' => $this->STATUS,
             'CREATE_AT' => $this->CREATE_AT,
             'UPDATE_AT' => $this->UPDATE_AT,
         ]);
 
-        $query->andFilterWhere(['like', 'CUST_KD', $this->CUST_KD])
-            ->andFilterWhere(['like', 'INVES_TYPE', $this->INVES_TYPE])
-            ->andFilterWhere(['like', 'BUDGET_SOURCE', $this->BUDGET_SOURCE])
+        $query->andFilterWhere(['like', 'SCDL_GROUP_NM', $this->SCDL_GROUP_NM])
+            ->andFilterWhere(['like', 'KETERANGAN', $this->KETERANGAN])
             ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
 

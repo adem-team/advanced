@@ -32,7 +32,7 @@ class CustomersSearch extends Customers
     public function rules()
     {
         return [
-            [['CUST_TYPE','CUST_KD','CUST_KD_ALIAS','cus.CUST_KTG_NM','custype.CUST_KTG_NM' ,'CUST_NM', 'CUST_GRP', 'JOIN_DATE', 'MAP_LAT', 'MAP_LNG', 'KD_DISTRIBUTOR', 'PIC', 'ALAMAT', 'EMAIL', 'WEBSITE', 'NOTE', 'NPWP', 'DATA_ALL', 'CAB_ID', 'CORP_ID', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT'], 'safe'],
+            [['CUST_TYPE','CUST_KD','CUST_KD_ALIAS','cus.CUST_KTG_NM','custype.CUST_KTG_NM' ,'SCDL_GROUP','CUST_NM', 'CUST_GRP', 'JOIN_DATE', 'MAP_LAT', 'MAP_LNG', 'KD_DISTRIBUTOR', 'PIC', 'ALAMAT', 'EMAIL', 'WEBSITE', 'NOTE', 'NPWP', 'DATA_ALL', 'CAB_ID', 'CORP_ID', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT'], 'safe'],
             [['CUST_KTG', 'TLP1', 'TLP2', 'FAX', 'STT_TOKO', 'STATUS'], 'integer'],
         ];
     }

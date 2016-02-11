@@ -673,7 +673,7 @@ class PurchaseOrderController extends Controller
 			$dataKdRo=$request->post('kdRo');
 			$dataKdBrg=$request->post('kdBrg');
 			 /* Before Action -> 0 */
-			 $AryKdRo = ArrayHelper::map	(Rodetail::find()->where(['KD_RO'=>$dataKdRo])->andWhere('STATUS=101')->all(),'ID','ID');
+			 $AryKdRo = ArrayHelper::map(Rodetail::find()->where(['KD_RO'=>$dataKdRo])->andWhere('STATUS=101')->all(),'ID','ID');
 						//print_r($AryKdRo);
 						$foreaceAryKdRo=$AryKdRo!=0?$AryKdRo:'Array([0]=>"0")';
 						foreach ($foreaceAryKdRo as $keyRo){

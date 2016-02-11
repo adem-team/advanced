@@ -69,4 +69,35 @@ class TermgeneralSearch extends Termgeneral
 
         return $dataProvider;
     }
+
+    public function searchtermgeneral($params,$id)
+    {
+        $query = Termgeneral::find()->where(['ID'=>$id]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'ID' => $this->ID,
+            'STATUS' => $this->STATUS,
+            'CREATE_AT' => $this->CREATE_AT,
+            'UPDATE_AT' => $this->UPDATE_AT,
+        ]);
+
+        $query->andFilterWhere(['like', 'SUBJECT', $this->SUBJECT])
+            ->andFilterWhere(['like', 'ISI_TERM', $this->ISI_TERM])
+            ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
+            ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
+
+        return $dataProvider;
+    }
 }
