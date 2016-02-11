@@ -8,6 +8,7 @@ use lukisongroup\hrd\models\Corp;
 use lukisongroup\master\models\Distributor;
 use kartik\widgets\DatePicker;
 use kartik\label\LabelInPlace;
+use lukisongroup\master\models\Terminvest;
 
 
 /* @var $this yii\web\View */
@@ -25,6 +26,10 @@ $data2 = Distributor::find()->all();
 $to2 = 'KD_DISTRIBUTOR';
 $from2 = "NM_DISTRIBUTOR";
 
+$data3 = Terminvest::find()->all();
+$to3 = 'ID';
+$from3 = "INVES_TYPE";
+
 $config = ['template'=>"{input}\n{error}\n{hint}"];
 
 
@@ -33,7 +38,7 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 
     <?php $form = ActiveForm::begin([
       'id'=>$model->formName(),
-      
+
 
     ]); ?>
 
@@ -58,10 +63,17 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
       'data' =>$model->data($data2,$to2,$from2)
     ]);?>
 
+    <?= $form->field($inves, 'INVES_TYPE')->widget(Select2::classname(),[
+      'options'=>[  'placeholder' => 'Select Type Investasi ...'
+      ],
+      'data' =>$model->data($data3,$to3,$from3)
+    ]);?>
 
-    <?= $form->field($model, 'DCRP_SIGNARURE')->textarea(['rows' => 6]) ?>
+   <?= $form->field($general, 'SUBJECT', $config)->widget(LabelInPlace::classname())?>
+     
 
-    <?= $form->field($model, 'PERIOD_START')->widget(DatePicker::classname(), [
+
+     <!-- $form->field($model, 'PERIOD_START')->widget(DatePicker::classname(), [
     'options' => ['placeholder' => 'select  ...'],
     'pluginOptions' => [
         'autoclose'=>true
@@ -70,9 +82,9 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
             'show' => "function(e) {show}",
                 ],
 
-    ])  ?>
+    ])  ?> -->
 
-    <?= $form->field($model, 'PERIOD_END')->widget(DatePicker::classname(), [
+     <!-- $form->field($model, 'PERIOD_END')->widget(DatePicker::classname(), [
     'options' => ['placeholder' => 'select  ...'],
     'pluginOptions' => [
         'autoclose'=>true
@@ -80,7 +92,7 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
     'pluginEvents'=>[
             'show' => "function(e) {show}",
                 ],
-    ])  ?>
+    ])  ?> -->
 
 
     <?php

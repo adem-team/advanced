@@ -5,29 +5,31 @@ namespace lukisongroup\master\models;
 use Yii;
 
 /**
- * This is the model class for table "c0005".
+ * This is the model class for table "c0002scdl_detail".
  *
  * @property integer $ID
- * @property string $CUST_KD
- * @property string $INVES_TYPE
- * @property string $BUDGET_SOURCE
- * @property string $BUDGET_VALUE
- * @property string $PERIODE_START
- * @property string $PERIODE_END
+ * @property string $TGL
+ * @property string $CUST_ID
+ * @property string $USER_ID
+ * @property integer $SCDL_GROUP
+ * @property double $LAT
+ * @property double $LAG
+ * @property double $RADIUS
+ * @property string $NOTE
  * @property integer $STATUS
  * @property string $CREATE_BY
  * @property string $CREATE_AT
  * @property string $UPDATE_BY
  * @property string $UPDATE_AT
  */
-class Termbudget extends \yii\db\ActiveRecord
+class Scheduledetail extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'c0005';
+        return 'c0002scdl_detail';
     }
 
     /**
@@ -44,11 +46,11 @@ class Termbudget extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['BUDGET_VALUE'], 'number'],
-            [['PERIODE_START', 'PERIODE_END', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
-            [['STATUS'], 'integer'],
-            [['ID_TERM'], 'string', 'max' => 50],
-            [['INVES_TYPE', 'BUDGET_SOURCE'], 'string', 'max' => 255],
+            [['TGL', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
+            [['SCDL_GROUP', 'STATUS'], 'integer'],
+            [['LAT', 'LAG', 'RADIUS'], 'number'],
+            [['NOTE'], 'string'],
+            [['CUST_ID', 'USER_ID'], 'string', 'max' => 50],
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100]
         ];
     }
@@ -60,12 +62,14 @@ class Termbudget extends \yii\db\ActiveRecord
     {
         return [
             'ID' => 'ID',
-            'CUST_KD' => 'Cust  Kd',
-            'INVES_TYPE' => 'Inves  Type',
-            'BUDGET_SOURCE' => 'Budget  Source',
-            'BUDGET_VALUE' => 'Budget  Value',
-            'PERIODE_START' => 'Periode  Start',
-            'PERIODE_END' => 'Periode  End',
+            'TGL' => 'Tgl',
+            'CUST_ID' => 'Cust  ID',
+            'USER_ID' => 'User  ID',
+            'SCDL_GROUP' => 'Scdl  Group',
+            'LAT' => 'Lat',
+            'LAG' => 'Lag',
+            'RADIUS' => 'Radius',
+            'NOTE' => 'Note',
             'STATUS' => 'Status',
             'CREATE_BY' => 'Create  By',
             'CREATE_AT' => 'Create  At',
