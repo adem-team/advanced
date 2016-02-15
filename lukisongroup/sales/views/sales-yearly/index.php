@@ -329,7 +329,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					6=>GridView::F_SUM,7=>GridView::F_SUM,8=>GridView::F_SUM,9=>GridView::F_SUM,10=>GridView::F_SUM,
 					11=>GridView::F_SUM,12=>GridView::F_SUM,13=>GridView::F_SUM,14=>GridView::F_SUM,15=>GridView::F_SUM,
 					16=>GridView::F_SUM,17=>GridView::F_SUM,18=>GridView::F_SUM,19=>GridView::F_SUM,
-					20=>$model['GRAND_TTL_PRCNT_OUT'],	
+					20=>$model['sumTTL_PRCNT_OUT'],	
 					21=>GridView::F_SUM,22=>GridView::F_SUM,23=>GridView::F_SUM,24=>GridView::F_SUM,25=>GridView::F_SUM,
 					26=>GridView::F_SUM,27=>GridView::F_SUM,28=>GridView::F_SUM,29=>GridView::F_SUM,30=>GridView::F_SUM,
 					31=>GridView::F_SUM,32=>GridView::F_SUM,33=>GridView::F_SUM,34=>GridView::F_SUM,35=>GridView::F_SUM,
@@ -484,7 +484,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			$attDinamik[]=[		
 				'attribute'=>$key,'label'=>$lbl,
 				'hAlign'=>'right',
-				'vAlign'=>'middle',			
+				'vAlign'=>'middle',
+				'format'=>['decimal', 1],				
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
