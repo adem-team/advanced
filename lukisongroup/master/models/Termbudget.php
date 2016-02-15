@@ -2,7 +2,9 @@
 
 namespace lukisongroup\master\models;
 
+
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "c0005".
@@ -45,12 +47,31 @@ class Termbudget extends \yii\db\ActiveRecord
     {
         return [
             [['BUDGET_VALUE'], 'number'],
+            [['INVES_TYPE'], 'cekdata'],
             [['PERIODE_START', 'PERIODE_END', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
             [['STATUS'], 'integer'],
-            [['ID_TERM'], 'string', 'max' => 50],
+            [['ID_TERM','CORP_ID'], 'string', 'max' => 50],
             [['INVES_TYPE', 'BUDGET_SOURCE'], 'string', 'max' => 255],
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100]
         ];
+    }
+
+    public function data($data,$to,$from)
+    {
+      # code...
+      return ArrayHelper::map($data, $to, $from);
+    }
+
+    public function cekdata($budget)
+    {
+
+      $inves = $this->INVES_TYPE;
+      $data = Termbudget::find()->where(['INVES_TYPE'=>$inves])->asArray()
+                                                          ->one();
+      if($inves ==  $data['INVES_TYPE'])
+      {
+           $this->addError($budget,'Maaf Duplikat data');
+      }
     }
 
     /**

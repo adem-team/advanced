@@ -72,7 +72,7 @@ class TermgeneralSearch extends Termgeneral
 
     public function searchtermgeneral($params,$id)
     {
-        $query = Termgeneral::find()->where(['ID'=>$id]);
+        $query = Termgeneral::find()->where(['ID_TERM'=>$id]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

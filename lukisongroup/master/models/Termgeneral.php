@@ -3,6 +3,8 @@
 namespace lukisongroup\master\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
+
 
 /**
  * This is the model class for table "c0004".
@@ -40,12 +42,18 @@ class Termgeneral extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['ISI_TERM'], 'string'],
+            [['ISI_TERM','ID_TERM'], 'string'],
             [['STATUS'], 'integer'],
             [['CREATE_AT', 'UPDATE_AT'], 'safe'],
             [['SUBJECT'], 'string', 'max' => 255],
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100]
         ];
+    }
+
+    public function data($data,$to,$from)
+    {
+      # code...
+      return ArrayHelper::map($data, $to, $from);
     }
 
     /**
