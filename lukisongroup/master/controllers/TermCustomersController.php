@@ -6,13 +6,18 @@ use Yii;
 use lukisongroup\master\models\Termcustomers;
 use lukisongroup\master\models\Termgeneral;
 use lukisongroup\master\models\Terminvest;
-use lukisongroup\master\models\TerminvestSearch;
+use lukisongroup\master\models\TermbudgetSearch;
 use lukisongroup\master\models\Termbudget;
 use lukisongroup\master\models\TermgeneralSearch;
 use lukisongroup\master\models\TermcustomersSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\widgets\ActiveForm;
+use kartik\mpdf\Pdf;
+use lukisongroup\master\models\Customers;
+use lukisongroup\master\models\Distributor;
+use lukisongroup\hrd\models\Corp;
 
 /**
  * TermCustomersController implements the CRUD actions for Termcustomers model.
@@ -78,8 +83,11 @@ class TermCustomersController extends Controller
       $searchModel = new TermgeneralSearch();
       $dataProvider = $searchModel->searchtermgeneral(Yii::$app->request->queryParams,$id);
 
-      $searchModel1 = new TerminvestSearch();
-      $dataProvider1 = $searchModel1->search(Yii::$app->request->queryParams);
+      $searchModel1 = new TermbudgetSearch();
+      $dataProvider1 = $searchModel1->searchbudget(Yii::$app->request->queryParams,$id);
+
+
+      // $data
 
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -90,6 +98,246 @@ class TermCustomersController extends Controller
         ]);
     }
 
+
+    public function actionValid()
+    {
+      # code...
+      $model = new Termcustomers();
+    if(Yii::$app->request->isAjax && $model->load($_POST))
+    {
+      Yii::$app->response->format = 'json';
+      return ActiveForm::validate($model);
+      }
+    }
+
+
+    public function actionValidInves()
+    {
+      # code...
+      $budget = new Termbudget();
+    if(Yii::$app->request->isAjax && $budget->load($_POST))
+    {
+      Yii::$app->response->format = 'json';
+      return ActiveForm::validate($budget);
+      }
+    }
+
+
+    public function actionPihak($id)
+    {
+      # code...
+      $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
+
+      if ($model->load(Yii::$app->request->post())) {
+        if($model->validate())
+        {
+
+            $model->save();
+        }
+
+      return  $this->redirect(['view','id'=> $model->ID_TERM]);
+
+      }
+      else {
+          return $this->renderAjax('_pihak', [
+              'model' => $model,
+
+          ]);
+      }
+
+    }
+
+
+    public function actionPeriode($id)
+    {
+      # code...
+        $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
+        if ($model->load(Yii::$app->request->post())) {
+          if($model->validate())
+          {
+
+              $model->save();
+          }
+
+        return  $this->redirect(['view','id'=> $model->ID_TERM]);
+
+        }
+        else {
+            return $this->renderAjax('_periode', [
+                'model' => $model,
+
+            ]);
+        }
+    }
+
+    public function actionTop($id)
+    {
+      # code...
+        $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
+        if ($model->load(Yii::$app->request->post())) {
+          if($model->validate())
+          {
+
+              $model->save();
+          }
+
+
+        return  $this->redirect(['view','id'=> $model->ID_TERM]);
+
+        }
+        else {
+            return $this->renderAjax('_top', [
+                'model' => $model,
+
+            ]);
+        }
+    }
+
+    public function actionTarget($id)
+    {
+      # code...
+        $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
+        if ($model->load(Yii::$app->request->post())) {
+          if($model->validate())
+          {
+
+              $model->save();
+          }
+
+        return  $this->redirect(['view','id'=> $model->ID_TERM]);
+
+        }
+        else {
+            return $this->renderAjax('target', [
+                'model' => $model,
+
+            ]);
+        }
+    }
+
+
+    public function actionCreateBudget($id)
+    {
+      # code...
+        $budget = new  Termbudget();
+
+        if ($budget->load(Yii::$app->request->post())) {
+
+          $budget->ID_TERM = $id;
+
+          if($budget->validate())
+          {
+            $budget->CREATE_AT = date("Y-m-d H:i:s");
+            $budget->CREATE_BY = Yii::$app->user->identity->username;
+            $budget->save();
+
+          }
+          // print_r($model->getErrors());
+        //  die();
+
+            return $this->redirect(['view','id'=>$budget->ID_TERM]);
+
+        }
+        else {
+            return $this->renderAjax('budget', [
+                'budget' => $budget,
+                // 'id'=>$id
+
+            ]);
+        }
+
+    }
+
+    public function actionCreateGeneral($id)
+    {
+      # code...
+        $model = new  Termgeneral();
+
+        if ($model->load(Yii::$app->request->post())) {
+
+          $model->ID_TERM = $id;
+
+          if($model->validate())
+          {
+            $model->CREATE_AT = date("Y-m-d H:i:s");
+            $model->CREATE_BY = Yii::$app->user->identity->username;
+            $model->save();
+
+          }
+          // print_r($model->getErrors());
+        //  die();
+
+            return $this->redirect(['view','id'=>$id]);
+
+        }
+        else {
+            return $this->renderAjax('term', [
+                'model' => $model,
+                'id'=>$id
+
+            ]);
+        }
+
+    }
+
+
+    public function actionCetakpdf($id)
+    {
+      # code...
+      $data = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
+      $datacus = Customers::find()->where(['CUST_KD'=> $data->CUST_KD])
+                              ->asArray()
+                              ->one();
+      $term = Termgeneral::find()->where(['ID_TERM'=>$id])->asArray()
+                                                          ->one();
+
+      $datadis = Distributor::find()->where(['KD_DISTRIBUTOR'=> $data->DIST_KD])
+                                    ->asArray()
+                                    ->one();
+      $datacorp = Corp::find()->where(['CORP_ID'=> $data->PRINCIPAL_KD])
+                                                                  ->asArray()
+                                                                  ->one();
+      $content = $this->renderPartial( '_pdf', [
+        'data' => $data,
+        'datacus'=>  $datacus,
+        'datadis'=>$datadis,
+        'datacorp'=>$datacorp,
+        'term'=>$term
+              //'roHeader' => $roHeader,
+              //'detro' => $detro,
+              //'employ' => $employ,
+        //'dept' => $dept,
+        // 'dataProvider' => $dataProvider,
+          ]);
+
+      $pdf = new Pdf([
+        // set to use core fonts only
+        'mode' => Pdf::MODE_CORE,
+        // A4 paper format
+        'format' => Pdf::FORMAT_A4,
+        // portrait orientation
+        'orientation' => Pdf::ORIENT_PORTRAIT,
+        // stream to browser inline
+        'destination' => Pdf::DEST_BROWSER,
+        // your html content input
+        'content' => $content,
+        // format content from your own css file if needed or use the
+        // enhanced bootstrap css built by Krajee for mPDF formatting
+        //D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+        'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+        // any css to be embedded if required
+        'cssInline' => '.kv-heading-1{font-size:12px}',
+         // set mPDF properties on the fly
+        'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+         // call mPDF methods on the fly
+        'methods' => [
+          'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
+          'SetFooter'=>['{PAGENO}'],
+        ]
+      ]);
+      return $pdf->render();
+    }
+
     /**
      * Creates a new Termcustomers model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -97,15 +345,10 @@ class TermCustomersController extends Controller
      */
     public function actionCreate()
     {
-        $general = new Termgeneral();
 
         $model = new Termcustomers();
 
-        $inves = new Terminvest();
-
-        $BUDGET = new Termbudget();
-
-        if ($model->load(Yii::$app->request->post()) && $inves->load(Yii::$app->request->post()) && $general->load(Yii::$app->request->post()) || $BUDGET->load(Yii::$app->request->post()) ) {
+        if ($model->load(Yii::$app->request->post())) {
           $model->ID_TERM = Yii::$app->ambilkonci->getkdTerm();
           if($model->validate())
           {
@@ -113,25 +356,11 @@ class TermCustomersController extends Controller
               $model->CREATED_BY = Yii::$app->user->identity->username;
               $model->save();
           }
-              $inves->CREATE_AT = date("Y-m-d H:i:s");
-              $inves->CREATE_BY = Yii::$app->user->identity->username;
-              $inves->save();
 
-              $general->ID_TERM = $model->ID_TERM;
-              $general->CREATE_AT = date("Y-m-d H:i:s");
-              $general->CREATE_BY = Yii::$app->user->identity->username;
-              $general->save();
-
-              $BUDGET->CREATE_AT = date("Y-m-d H:i:s");
-              $BUDGET->CREATE_BY = Yii::$app->user->identity->username;
-              $BUDGET->save();
             return $this->redirect(['view','id'=>$model->ID_TERM]);
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,
-                'general'=> $general,
-                'inves'=> $inves,
-
             ]);
         }
     }

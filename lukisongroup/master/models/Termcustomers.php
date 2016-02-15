@@ -38,6 +38,7 @@ class Termcustomers extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+
     public static function tableName()
     {
         return 'c0003';
@@ -59,6 +60,7 @@ class Termcustomers extends \yii\db\ActiveRecord
         return [
             [['DCRP_SIGNARURE', 'TARGET_TEXT', 'RABATE_CNDT', 'TOP'], 'string'],
             [['PERIOD_START', 'PERIOD_END', 'CREATED_AT', 'UPDATE_AT'], 'safe'],
+            [['PERIOD_END'], 'cekdate'],
             [['TARGET_VALUE', 'GROWTH'], 'number'],
             [['STATUS'], 'integer'],
             [['NM_TERM', 'CREATED_BY', 'UPDATE_BY'], 'string', 'max' => 100],
@@ -73,7 +75,20 @@ class Termcustomers extends \yii\db\ActiveRecord
       return ArrayHelper::map($data, $to, $from);
     }
 
-  
+    public function cekdate($model)
+    {
+      # code...
+      $datestart = $this->PERIOD_START;
+      $dateend = $this->PERIOD_END;
+
+       if( $dateend < $datestart  )
+       {
+           $this->addError($model, 'Tanggal harus lebih Besar'.$datestart);
+       }
+
+    }
+
+
 
     /**
      * @inheritdoc

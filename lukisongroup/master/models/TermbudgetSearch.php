@@ -66,7 +66,42 @@ class TermbudgetSearch extends Termbudget
             'UPDATE_AT' => $this->UPDATE_AT,
         ]);
 
-        $query->andFilterWhere(['like', 'CUST_KD', $this->CUST_KD])
+        $query->andFilterWhere(['like', 'ID_TERM', $this->ID_TERM])
+            ->andFilterWhere(['like', 'INVES_TYPE', $this->INVES_TYPE])
+            ->andFilterWhere(['like', 'BUDGET_SOURCE', $this->BUDGET_SOURCE])
+            ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
+            ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
+
+        return $dataProvider;
+    }
+
+    public function searchbudget($params,$id)
+    {
+        $query = Termbudget::find()->where(['ID_TERM'=>$id]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'ID' => $this->ID,
+            'BUDGET_VALUE' => $this->BUDGET_VALUE,
+            'PERIODE_START' => $this->PERIODE_START,
+            'PERIODE_END' => $this->PERIODE_END,
+            'STATUS' => $this->STATUS,
+            'CREATE_AT' => $this->CREATE_AT,
+            'UPDATE_AT' => $this->UPDATE_AT,
+        ]);
+
+        $query->andFilterWhere(['like', 'ID_TERM', $this->ID_TERM])
             ->andFilterWhere(['like', 'INVES_TYPE', $this->INVES_TYPE])
             ->andFilterWhere(['like', 'BUDGET_SOURCE', $this->BUDGET_SOURCE])
             ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])

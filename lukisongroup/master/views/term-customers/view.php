@@ -7,26 +7,90 @@ use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Distributor;
 use lukisongroup\hrd\models\Corp;
 use yii\helpers\Url;
+use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Termcustomers */
 
-function pihakSearch($model){
+function pihak($model){
   $title = Yii::t('app','');
-  $options = [ 'id'=>'select-spl-id',
+  $options = [ 'id'=>'phk',
           'data-toggle'=>"modal",
-          'data-target'=>"#search-spl",
+          'data-target'=>"#pihak",
           'class'=>'btn btn-warning btn-xs',
           //'style'=>['width'=>'150px'],
           'title'=>'Set Supplier'
   ];
   $icon = '<span class="glyphicon glyphicon-open"></span>';
   $label = $icon . ' ' . $title;
-  $url = Url::toRoute(['/purchasing/purchase-order/supplier-view','id'=>$model->ID_TERM]);
+  $url = Url::toRoute(['/master/term-customers/pihak','id'=>$model->ID_TERM]);
   $content = Html::a($label,$url, $options);
   return $content;
 }
+
+function periode($model){
+  $title = Yii::t('app','');
+  $options = [ 'id'=>'peirod',
+          'data-toggle'=>"modal",
+          'data-target'=>"#periode",
+          'class'=>'btn btn-warning btn-xs',
+          //'style'=>['width'=>'150px'],
+          'title'=>'Set Supplier'
+  ];
+  $icon = '<span class="glyphicon glyphicon-open"></span>';
+  $label = $icon . ' ' . $title;
+  $url = Url::toRoute(['/master/term-customers/periode','id'=>$model->ID_TERM]);
+  $content = Html::a($label,$url, $options);
+  return $content;
+}
+
+function TOP($model){
+  $title = Yii::t('app','');
+  $options = [ 'id'=>'top',
+          'data-toggle'=>"modal",
+          'data-target'=>"#TOP",
+          'class'=>'btn btn-warning btn-xs',
+          //'style'=>['width'=>'150px'],
+          'title'=>'Set Supplier'
+  ];
+  $icon = '<span class="glyphicon glyphicon-open"></span>';
+  $label = $icon . ' ' . $title;
+  $url = Url::toRoute(['/master/term-customers/top','id'=>$model->ID_TERM]);
+  $content = Html::a($label,$url, $options);
+  return $content;
+}
+
+function target($model){
+  $title = Yii::t('app','');
+  $options = [ 'id'=>'target-id',
+          'data-toggle'=>"modal",
+          'data-target'=>"#TARGET",
+          'class'=>'btn btn-warning btn-xs',
+          //'style'=>['width'=>'150px'],
+          'title'=>'Set Supplier'
+  ];
+  $icon = '<span class="glyphicon glyphicon-open"></span>';
+  $label = $icon . ' ' . $title;
+  $url = Url::toRoute(['/master/term-customers/target','id'=>$model->ID_TERM]);
+  $content = Html::a($label,$url, $options);
+  return $content;
+}
+
+function PrintPdf($model){
+    $title = Yii::t('app','Print');
+    $options = [ 'id'=>'pdf-print-id',
+            'class'=>'btn btn-default btn-xs',
+            'title'=>'Print PDF'
+    ];
+    $icon = '<span class="fa fa-print fa-fw"></span>';
+    $label = $icon . ' ' . $title;
+    $url = Url::toRoute(['/master/term-customers/cetakpdf','id'=>$model->ID_TERM]);
+    $content = Html::a($label,$url, $options);
+    return $content;
+}
+
+
 
 ?>
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
@@ -50,7 +114,7 @@ function pihakSearch($model){
   <div class="row">
     <div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;">
       <div>
-        <?php echo pihakSearch($model); ?>
+        <?php echo pihak($model); ?>
       </div>
       <dl>
         <?php
@@ -82,7 +146,7 @@ function pihakSearch($model){
   <div class="row">
     <div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;">
       <div>
-        <?php echo pihakSearch($model); ?>
+        <?php echo periode($model); ?>
       </div>
       <dl>
 
@@ -100,7 +164,7 @@ function pihakSearch($model){
   <div class="row">
     <div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;">
       <div>
-        <?php echo pihakSearch($model); ?>
+        <?php echo TOP($model); ?>
       </div>
       <dl>
 
@@ -114,7 +178,7 @@ function pihakSearch($model){
   <div class="row">
   <div class="col-xs-5 col-sm-5 col-md-5" style="font-family: tahoma ;font-size: 9pt;">
     <div>
-      <?php echo pihakSearch($model); ?>
+      <?php echo target($model); ?>
     </div
       <dl>
 
@@ -126,113 +190,286 @@ function pihakSearch($model){
   </div>
 </div>
 <?php
+$dataids = $_GET['id'];
 
-$gvterm = GridView::widget([
-  'id'=>'gv-term',
-  'dataProvider' => $dataProvider,
-  'filterModel' => $searchModel,
-  'columns' => [
-    [/* Attribute KD RO */
-      'attribute'=>'SUBJECT',
-      'label'=>'Aturan',
-      'hAlign'=>'left',
-      'vAlign'=>'middle',
-      //'mergeHeader'=>true,
-      'format' => 'raw',
+?>
+
+<?php
+echo  $grid = GridView::widget([
+    'id'=>'gv-term-general',
+    'dataProvider'=> $dataProvider1,
+    'footerRowOptions'=>['style'=>'font-weight:bold;text-decoration: underline;'],
+    'filterModel' => $searchModel1,
+    'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+    'columns' =>
+      [
+         [
+           'class'=>'kartik\grid\SerialColumn',
+           'contentOptions'=>['class'=>'kartik-sheet-style'],
+           'width'=>'10px',
+           'header'=>'No.',
+           'headerOptions'=>[
+             'style'=>[
+               'text-align'=>'center',
+               'width'=>'10px',
+               'font-family'=>'verdana, arial, sans-serif',
+               'font-size'=>'9pt',
+               'background-color'=>'rgba(97, 211, 96, 0.3)',
+             ]
+           ],
+           'contentOptions'=>[
+             'style'=>[
+               'text-align'=>'center',
+               'width'=>'10px',
+               'font-family'=>'tahoma, arial, sans-serif',
+               'font-size'=>'9pt',
+             ]
+           ],
+         ],
+
+         [
+           'attribute' => 'INVES_TYPE',
+           'label'=>'Type Investasi',
+           'hAlign'=>'left',
+           'vAlign'=>'middle',
+           'headerOptions'=>[
+             'style'=>[
+               'text-align'=>'center',
+               'font-family'=>'tahoma, arial, sans-serif',
+               'font-size'=>'9pt',
+               'background-color'=>'rgba(97, 211, 96, 0.3)',
+             ]
+           ],
+           'contentOptions'=>[
+             'style'=>[
+               'text-align'=>'left',
+               'width'=>'80px',
+               'font-family'=>'tahoma, arial, sans-serif',
+               'font-size'=>'9pt',
+             ]
+           ],
+           'pageSummaryOptions' => [
+             'style'=>[
+                 'border-left'=>'0px',
+                 'border-right'=>'0px',
+             ]
+           ],
+           'pageSummary'=>function ($summary, $data, $widget){
+                   return '<div> Total :</div>';
+                 },
+           'pageSummaryOptions' => [
+             'style'=>[
+                 'font-family'=>'tahoma',
+                 'font-size'=>'8pt',
+                 'text-align'=>'center',
+                 'border-left'=>'0px',
+                 'border-right'=>'0px',
+             ]
+           ],
+         ],
+         [
+           'attribute' => 'BUDGET_VALUE',
+           'label'=>'Value',
+           'hAlign'=>'left',
+           'vAlign'=>'middle',
+           'headerOptions'=>[
+             'style'=>[
+               'text-align'=>'center',
+               'width'=>'200px',
+               'font-family'=>'tahoma, arial, sans-serif',
+               'font-size'=>'9pt',
+               'background-color'=>'rgba(97, 211, 96, 0.3)',
+             ]
+           ],
+           'contentOptions'=>[
+             'style'=>[
+               'text-align'=>'left',
+               'width'=>'200px',
+               'font-family'=>'tahoma, arial, sans-serif',
+               'font-size'=>'9pt',
+             ]
+           ],
+           	'pageSummaryFunc'=>GridView::F_SUM,
+           'format'=>['decimal', 2],
+           	'pageSummary'=>true,
+           'pageSummaryOptions' => [
+             'style'=>[
+                 'font-family'=>'tahoma',
+                 'font-size'=>'8pt',
+                 'text-align'=>'left',
+                 'border-left'=>'0px',
+             ]
+           ],
+           	'footer'=>true,
+         ],
+        //  [
+        //    'attribute' => 'PERIODE_END',
+        //    'label'=>'Periode',
+        //    'hAlign'=>'left',
+        //    'vAlign'=>'middle',
+        //    'value' => function($model) { return $model->PERIODE_START . "-" . $model->PERIODE_END ;},
+        //    'headerOptions'=>[
+        //      'style'=>[
+        //        'text-align'=>'center',
+        //        'width'=>'200px',
+        //        'font-family'=>'tahoma, arial, sans-serif',
+        //        'font-size'=>'9pt',
+        //        'background-color'=>'rgba(97, 211, 96, 0.3)',
+        //      ]
+        //    ],
+        //    'contentOptions'=>[
+        //      'style'=>[
+        //        'text-align'=>'left',
+        //        'width'=>'200px',
+        //        'font-family'=>'tahoma, arial, sans-serif',
+        //        'font-size'=>'9pt',
+        //      ]
+        //    ],
+        //  ],
+       ],
+    'showPageSummary' => true,
+    'pjax'=>true,
+      'pjaxSettings'=>[
+        'options'=>[
+          'enablePushState'=>false,
+          'id'=>'gv-term-general',
+        ],
+       ],
+    'toolbar' => [
+      '{export}',
+    ],
+    'panel' => [
+      'heading'=>'<h3 class="panel-title">Type Investasi</h3>',
+      'type'=>'warning',
+      'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Investasi ',
+          ['modelClass' => 'Termcustomers',]),['/master/term-customers/create-budget','id'=>$dataids],[
+            'data-toggle'=>"modal",
+              'data-target'=>"#modal-create",
+                'class' => 'btn btn-success'
+                      ]),
+      'showFooter'=>true,
+
+    ],
+
+    'export' =>['target' => GridView::TARGET_BLANK],
+    'exportConfig' => [
+      GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
+      GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
+    ],
+  ]);
+
+
+$gridColumns = [
+    [
+      'class'=>'kartik\grid\SerialColumn',
+      'contentOptions'=>['class'=>'kartik-sheet-style'],
+      'width'=>'10px',
+      'header'=>'No.',
       'headerOptions'=>[
-        //'class'=>'kartik-sheet-style'
         'style'=>[
           'text-align'=>'center',
-          'width'=>'150px',
-          'font-family'=>'tahoma',
-          'font-size'=>'8pt',
-          'background-color'=>'rgba(0, 95, 218, 0.3)',
+          'width'=>'10px',
+          'font-family'=>'verdana, arial, sans-serif',
+          'font-size'=>'9pt',
+          'background-color'=>'rgba(97, 211, 96, 0.3)',
         ]
       ],
       'contentOptions'=>[
         'style'=>[
-          'width'=>'150px',
-          'font-family'=>'tahoma',
-          'font-size'=>'8pt',
+          'text-align'=>'center',
+          'width'=>'10px',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'9pt',
         ]
       ],
-      'pageSummaryOptions' => [
-        'style'=>[
-            'border-left'=>'0px',
-            'border-right'=>'0px',
-        ]
-      ]
     ],
 
     [
-      'class'=>'kartik\grid\EditableColumn',
-      'attribute'=>'ISI_TERM',
-      'label'=>'ISI Perjanjian',
+      'attribute' => 'SUBJECT',
+      'label'=>'Aturan',
+      'hAlign'=>'left',
       'vAlign'=>'middle',
-      'hAlign'=>'center',
-      // 'mergeHeader'=>true,
       'headerOptions'=>[
         'style'=>[
-          // 'text-align'=>'center',
-          // 'width'=>'20px',
-          'font-family'=>'tahoma',
-          'font-size'=>'8pt',
-          'background-color'=>'rgba(0, 95, 218, 0.3)',
+          'text-align'=>'center',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'9pt',
+          'background-color'=>'rgba(97, 211, 96, 0.3)',
         ]
       ],
       'contentOptions'=>[
         'style'=>[
-            // 'text-align'=>'right',
-            'width'=>'10px',
-            'font-family'=>'tahoma',
-            'font-size'=>'8pt',
-            'border-right'=>'0px',
+          'text-align'=>'left',
+          'width'=>'80px',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'9pt',
         ]
-      ],
-      'pageSummaryOptions' => [
-        'style'=>[
-            'border-left'=>'0px',
-            'border-right'=>'0px',
-        ]
-      ],
-      'editableOptions' => [
-        'header' => 'Isi Perjanjian',
-        'inputType' => \kartik\editable\Editable::INPUT_TEXTAREA,
-        'size' => 'sm',
-         'options' => ['class'=>'form-control', 'rows'=>6, 'placeholder'=>'Enter notes...']
-            // 'text-align'=>'center',
       ],
     ],
+    [
+      'attribute' => 'ISI_TERM',
+      'label'=>'Isi Perjanjian',
+      'hAlign'=>'left',
+      'vAlign'=>'middle',
+      'headerOptions'=>[
+        'style'=>[
+          'text-align'=>'center',
+          'width'=>'200px',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'9pt',
+          'background-color'=>'rgba(97, 211, 96, 0.3)',
+        ]
+      ],
+      'contentOptions'=>[
+        'style'=>[
+          'text-align'=>'left',
+          'width'=>'200px',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'9pt',
+        ]
+      ],
+    ],
+  ];
 
-  ],
-  'pjax'=>true,
-  'pjaxSettings'=>[
-   'options'=>[
-    'enablePushState'=>false,
+echo  $grid = GridView::widget([
     'id'=>'gv-term',
-     ],
-    'refreshGrid' => true,
-    'neverTimeout'=>true,
-  ],
-  'panel' => [
-    //'footer'=>false,
-    'heading'=>false,
-  ],
-  /* 'toolbar'=> [
-    //'{items}',
-  ],  */
-  'hover'=>true, //cursor select
-  'responsive'=>true,
-  'responsiveWrap'=>true,
-  'bordered'=>true,
-  'striped'=>'4px',
-  'autoXlFormat'=>true,
-  'export' => false,
-]);
+    'dataProvider'=> $dataProvider,
+    'filterModel' => $searchModel,
+    'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+    'columns' => $gridColumns,
+    'pjax'=>true,
+      'pjaxSettings'=>[
+        'options'=>[
+          'enablePushState'=>false,
+          'id'=>'gv-term',
+        ],
+       ],
+    'toolbar' => [
+      '{export}',
+    ],
+    'panel' => [
+      'heading'=>'<h3 class="panel-title">LIST PERJANJIAN</h3>',
+      'type'=>'warning',
+      'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Term ',
+          ['modelClass' => 'Termcustomers',]),['/master/term-customers/create-general','id'=>$dataids],[
+            'data-toggle'=>"modal",
+              'data-target'=>"#modal-general",
+                'class' => 'btn btn-success'
+                      ]),
+      'showFooter'=>false,
+    ],
 
-echo $gvterm;
+    'export' =>['target' => GridView::TARGET_BLANK],
+    'exportConfig' => [
+      GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
+      GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
+    ],
+  ]);
 
  ?>
+ <div style="text-align:right;float:right"">
+    <?php echo PrintPdf($model); ?>
+  </div>
 
  <div  class="col-md-12">
    <div  class="row" >
@@ -359,3 +596,147 @@ echo $gvterm;
          </tr>
        </table>
      </div>
+<?php
+     $this->registerJs("
+        $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+        $('#pihak').on('show.bs.modal', function (event) {
+         var button = $(event.relatedTarget)
+         var modal = $(this)
+         var title = button.data('title')
+         var href = button.attr('href')
+         //modal.find('.modal-title').html(title)
+         modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+         $.post(href)
+           .done(function( data ) {
+             modal.find('.modal-body').html(data)
+           });
+         })
+     ",$this::POS_READY);
+       Modal::begin([
+        'id' => 'pihak',
+       'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+       'headerOptions'=>[
+           'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+       ],
+       ]);
+       Modal::end();
+
+       $this->registerJs("
+          $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+          $('#periode').on('show.bs.modal', function (event) {
+           var button = $(event.relatedTarget)
+           var modal = $(this)
+           var title = button.data('title')
+           var href = button.attr('href')
+           //modal.find('.modal-title').html(title)
+           modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+           $.post(href)
+             .done(function( data ) {
+               modal.find('.modal-body').html(data)
+             });
+           })
+       ",$this::POS_READY);
+         Modal::begin([
+          'id' => 'periode',
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+         'headerOptions'=>[
+             'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+         ],
+         ]);
+         Modal::end();
+
+         $this->registerJs("
+            $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+            $('#TOP').on('show.bs.modal', function (event) {
+             var button = $(event.relatedTarget)
+             var modal = $(this)
+             var title = button.data('title')
+             var href = button.attr('href')
+             //modal.find('.modal-title').html(title)
+             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+             $.post(href)
+               .done(function( data ) {
+                 modal.find('.modal-body').html(data)
+               });
+             })
+         ",$this::POS_READY);
+           Modal::begin([
+            'id' => 'TOP',
+           'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+           'headerOptions'=>[
+               'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+           ],
+           ]);
+           Modal::end();
+
+           $this->registerJs("
+              $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+              $('#TARGET').on('show.bs.modal', function (event) {
+               var button = $(event.relatedTarget)
+               var modal = $(this)
+               var title = button.data('title')
+               var href = button.attr('href')
+               //modal.find('.modal-title').html(title)
+               modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+               $.post(href)
+                 .done(function( data ) {
+                   modal.find('.modal-body').html(data)
+                 });
+               })
+           ",$this::POS_READY);
+             Modal::begin([
+              'id' => 'TARGET',
+             'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+             'headerOptions'=>[
+                 'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+             ],
+             ]);
+             Modal::end();
+
+             $this->registerJs("
+                $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+                $('#modal-create').on('show.bs.modal', function (event) {
+                 var button = $(event.relatedTarget)
+                 var modal = $(this)
+                 var title = button.data('title')
+                 var href = button.attr('href')
+                 //modal.find('.modal-title').html(title)
+                 modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+                 $.post(href)
+                   .done(function( data ) {
+                     modal.find('.modal-body').html(data)
+                   });
+                 })
+             ",$this::POS_READY);
+               Modal::begin([
+                'id' => 'modal-create',
+               'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+               'headerOptions'=>[
+                   'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+               ],
+               ]);
+               Modal::end();
+
+               $this->registerJs("
+                  $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+                  $('#modal-general').on('show.bs.modal', function (event) {
+                   var button = $(event.relatedTarget)
+                   var modal = $(this)
+                   var title = button.data('title')
+                   var href = button.attr('href')
+                   //modal.find('.modal-title').html(title)
+                   modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+                   $.post(href)
+                     .done(function( data ) {
+                       modal.find('.modal-body').html(data)
+                     });
+                   })
+               ",$this::POS_READY);
+                 Modal::begin([
+                  'id' => 'modal-general',
+                 'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+                 'headerOptions'=>[
+                     'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+                 ],
+                 ]);
+                 Modal::end();
