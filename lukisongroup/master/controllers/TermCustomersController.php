@@ -18,6 +18,7 @@ use kartik\mpdf\Pdf;
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Distributor;
 use lukisongroup\hrd\models\Corp;
+use yii\data\ArrayDataProvider;
 
 /**
  * TermCustomersController implements the CRUD actions for Termcustomers model.
@@ -174,6 +175,7 @@ class TermCustomersController extends Controller
     {
       # code...
         $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
+
         if ($model->load(Yii::$app->request->post())) {
           if($model->validate())
           {
@@ -198,6 +200,7 @@ class TermCustomersController extends Controller
       # code...
         $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
         if ($model->load(Yii::$app->request->post())) {
+          $model->TARGET_TEXT =  Yii::$app->mastercode->terbilang($model->TARGET_VALUE);
           if($model->validate())
           {
 
@@ -223,7 +226,7 @@ class TermCustomersController extends Controller
 
         if ($budget->load(Yii::$app->request->post())) {
 
-          $budget->ID_TERM = $id;
+
 
           if($budget->validate())
           {
@@ -241,7 +244,7 @@ class TermCustomersController extends Controller
         else {
             return $this->renderAjax('budget', [
                 'budget' => $budget,
-                // 'id'=>$id
+                'id'=>$id
 
             ]);
         }
@@ -297,17 +300,28 @@ class TermCustomersController extends Controller
       $datacorp = Corp::find()->where(['CORP_ID'=> $data->PRINCIPAL_KD])
                                                                   ->asArray()
                                                                   ->one();
+      $sql = "SELECT c.INVES_TYPE,c.ID_TERM,c.BUDGET_VALUE,c.PERIODE_START,c.PERIODE_END,b.TARGET_VALUE from c0005 c LEFT JOIN c0003 b on c.ID_TERM = b.ID_TERM   where c.ID_TERM='".$id."'";
+      $data1 = Termbudget::findBySql($sql)->all();
+      $sqlsum = "SELECT SUM(BUDGET_VALUE) as BUDGET_VALUE from c0005 where ID_TERM='".$id."'";
+      $datasum = Termbudget::findBySql($sqlsum)->one();
+
+     $dataProvider = new ArrayDataProvider([
+       'key' => 'ID_TERM',
+       'allModels'=>$data1,
+       'pagination' => [
+         'pageSize' => 20,
+       ],
+        ]);
+
       $content = $this->renderPartial( '_pdf', [
         'data' => $data,
         'datacus'=>  $datacus,
         'datadis'=>$datadis,
         'datacorp'=>$datacorp,
-        'term'=>$term
-              //'roHeader' => $roHeader,
-              //'detro' => $detro,
-              //'employ' => $employ,
-        //'dept' => $dept,
-        // 'dataProvider' => $dataProvider,
+        'term'=>$term,
+        'datasum'=>$datasum,
+        'dataProvider'=>$dataProvider
+
           ]);
 
       $pdf = new Pdf([

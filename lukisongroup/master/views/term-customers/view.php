@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;;
 use lukisongroup\master\models\Terminvest;
 use lukisongroup\master\models\Customers;
+use lukisongroup\master\models\Termcustomers;
 use lukisongroup\master\models\Distributor;
 use lukisongroup\hrd\models\Corp;
 use yii\helpers\Url;
@@ -77,18 +78,44 @@ function target($model){
   return $content;
 }
 
-function PrintPdf($model){
-    $title = Yii::t('app','Print');
-    $options = [ 'id'=>'pdf-print-id',
-            'class'=>'btn btn-default btn-xs',
-            'title'=>'Print PDF'
-    ];
-    $icon = '<span class="fa fa-print fa-fw"></span>';
-    $label = $icon . ' ' . $title;
-    $url = Url::toRoute(['/master/term-customers/cetakpdf','id'=>$model->ID_TERM]);
-    $content = Html::a($label,$url, $options);
-    return $content;
-}
+// $data = Termcustomers::find()->where(['ID_TERM'=>$_GET['id']])->asArray()
+//                                                              ->one();
+// $baris = count($data['TARGET_VALUE']);
+// if($baris == 0)
+// {
+//   function PrintPdf($model){
+// 		$title = Yii::t('app', 'Print');
+// 		$options = [ 'id'=>'confirm-permission-id',
+// 					  'data-toggle'=>"modal",
+// 					  'data-target'=>"#confirm-permission-alert",
+// 					  'class'=>'btn btn-info btn-xs',
+// 					  'style'=>['width'=>'100px','text-align'=>'center'],
+// 					  'title'=>'Signature'
+// 		];
+// 		$icon = '<span class="glyphicon glyphicon-retweet" style="text-align:center"></span>';
+// 		$label = $icon . ' ' . $title;
+// 		$content = Html::button($label, $options);
+// 		return $content;
+// 	}
+//
+// }
+// else{
+  function PrintPdf($model){
+      $title = Yii::t('app','Print');
+      $options = [ 'id'=>'pdf-print-id',
+              'class'=>'btn btn-default btn-xs',
+              'title'=>'Print PDF'
+      ];
+      $icon = '<span class="fa fa-print fa-fw"></span>';
+      $label = $icon . ' ' . $title;
+      $url = Url::toRoute(['/master/term-customers/cetakpdf','id'=>$model->ID_TERM]);
+      $content = Html::a($label,$url, $options);
+      return $content;
+  }
+
+// }
+
+
 
 
 
@@ -300,32 +327,77 @@ echo  $grid = GridView::widget([
                  'border-left'=>'0px',
              ]
            ],
-           	'footer'=>true,
+
+
          ],
-        //  [
-        //    'attribute' => 'PERIODE_END',
-        //    'label'=>'Periode',
-        //    'hAlign'=>'left',
-        //    'vAlign'=>'middle',
-        //    'value' => function($model) { return $model->PERIODE_START . "-" . $model->PERIODE_END ;},
-        //    'headerOptions'=>[
-        //      'style'=>[
-        //        'text-align'=>'center',
-        //        'width'=>'200px',
-        //        'font-family'=>'tahoma, arial, sans-serif',
-        //        'font-size'=>'9pt',
-        //        'background-color'=>'rgba(97, 211, 96, 0.3)',
-        //      ]
-        //    ],
-        //    'contentOptions'=>[
-        //      'style'=>[
-        //        'text-align'=>'left',
-        //        'width'=>'200px',
-        //        'font-family'=>'tahoma, arial, sans-serif',
-        //        'font-size'=>'9pt',
-        //      ]
-        //    ],
-        //  ],
+          [
+              'attribute' => 'budget.TARGET_VALUE',
+            'label'=>'%',
+            'hAlign'=>'left',
+            'vAlign'=>'middle',
+            'value' => function($model) {
+                      if($model->budget->TARGET_VALUE == '')
+                      {
+                           return  $model->budget->TARGET_VALUE = 0.00;
+                      }
+                      else {
+                        # code...
+                         return $model->BUDGET_VALUE / $model->budget->TARGET_VALUE * 100;
+                      }
+                      ;},
+            'headerOptions'=>[
+              'style'=>[
+                'text-align'=>'center',
+                'width'=>'200px',
+                'font-family'=>'tahoma, arial, sans-serif',
+                'font-size'=>'9pt',
+                'background-color'=>'rgba(97, 211, 96, 0.3)',
+              ]
+            ],
+            'contentOptions'=>[
+              'style'=>[
+                'text-align'=>'left',
+                'width'=>'200px',
+                'font-family'=>'tahoma, arial, sans-serif',
+                'font-size'=>'9pt',
+              ]
+            ],
+            'pageSummaryFunc'=>GridView::F_SUM,
+          'format'=>['decimal', 2],
+            'pageSummary'=>true,
+          'pageSummaryOptions' => [
+            'style'=>[
+                'font-family'=>'tahoma',
+                'font-size'=>'8pt',
+                'text-align'=>'left',
+                'border-left'=>'0px',
+            ]
+             ],
+          ],
+         [
+           'attribute' => 'PERIODE_END',
+           'label'=>'Periode',
+           'hAlign'=>'left',
+           'vAlign'=>'middle',
+           'value' => function($model) { return $model->PERIODE_START . "-" . $model->PERIODE_END;},
+           'headerOptions'=>[
+             'style'=>[
+               'text-align'=>'center',
+               'width'=>'200px',
+               'font-family'=>'tahoma, arial, sans-serif',
+               'font-size'=>'9pt',
+               'background-color'=>'rgba(97, 211, 96, 0.3)',
+             ]
+           ],
+           'contentOptions'=>[
+             'style'=>[
+               'text-align'=>'left',
+               'width'=>'200px',
+               'font-family'=>'tahoma, arial, sans-serif',
+               'font-size'=>'9pt',
+             ]
+           ],
+         ],
        ],
     'showPageSummary' => true,
     'pjax'=>true,
@@ -739,4 +811,33 @@ echo  $grid = GridView::widget([
                      'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
                  ],
                  ]);
+                 Modal::end();
+                 $this->registerJs("
+                     $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+                     $('#confirm-permission-alert').on('show.bs.modal', function (event) {
+                       //var button = $(event.relatedTarget)
+                       //var modal = $(this)
+                       //var title = button.data('title')
+                       //var href = button.attr('href')
+                       //modal.find('.modal-title').html(title)
+                       //modal.find('.modal-body').html('')
+                       /* $.post(href)
+                         .done(function( data ) {
+                           modal.find('.modal-body').html(data)
+                         }); */
+                       }),
+                 ",$this::POS_READY);
+                 Modal::begin([
+                     'id' => 'confirm-permission-alert',
+                     'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/warning/denied.png',  ['class' => 'pnjg', 'style'=>'width:40px;height:40px;']).'</div><div style="margin-top:10px;"><h4><b>Permmission Confirm !</b></h4></div>',
+                     'size' => Modal::SIZE_SMALL,
+                     'headerOptions'=>[
+                       'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+                     ]
+                   ]);
+                   echo "<div>Tolong Di isi Target Value.
+                       <dl>
+                         <dt>Contact : itdept@lukison.com</dt>
+                       </dl>
+                     </div>";
                  Modal::end();
