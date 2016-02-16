@@ -46,7 +46,7 @@ $y=4;
 	<!-- Header !-->
 	<div>
 		<div style="width:240px; float:left;">
-			<?php echo Html::img('@web/img_setting/kop/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
+			<?php echo Html::img('http://lukisongroup.com/img_setting/kop/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
 		</div>
 		<div style="padding-top:40px;">
 			<!-- <h5 class="text-left"><b>FORM PERMINTAAN BARANG & JASA</b></h5> !-->
@@ -57,8 +57,8 @@ $y=4;
 
 	</div>
 	<!-- Title HEADER Descript !-->
-	<div>
-		<div style="width:250px; float:left">
+	<div class="row">
+		<div class="col-md-4" style="width:250px; float:left">
 			<dl>
 				<dt><b><?= $sup->NM_SUPPLIER; ?></b></dt>
 				<dt><?= $sup->ALAMAT; ?></dt>
@@ -71,7 +71,7 @@ $y=4;
 
 			</dl>
 		</div>
-		<div style="float:left; margin-left:160px">
+		<div class="col-md-4">
 			<dl>
 				<!-- Date !-->
 				<dt style="width:80px; float:left;">Date</dt>
@@ -106,7 +106,7 @@ $y=4;
 					'width'=>'10px',
 					'font-family'=>'tahoma',
 					'font-size'=>'8pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
+					'background-color'=>'#88b3ec',//'#88b3ec',
 				]
 			],
 			'contentOptions'=>[
@@ -154,7 +154,7 @@ $y=4;
 					'width'=>'150px',
 					'font-family'=>'tahoma',
 					'font-size'=>'8pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
+					'background-color'=>'#88b3ec',
 				]
 			],
 			'contentOptions'=>[
@@ -185,7 +185,7 @@ $y=4;
 					'width'=>'200px',
 					'font-family'=>'tahoma',
 					'font-size'=>'8pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
+					'background-color'=>'#88b3ec',
 				]
 			],
 			'contentOptions'=>[
@@ -215,7 +215,7 @@ $y=4;
 					'width'=>'60px',
 					'font-family'=>'tahoma',
 					'font-size'=>'8pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
+					'background-color'=>'#88b3ec',
 				]
 			],
 			'contentOptions'=>[
@@ -254,7 +254,7 @@ $y=4;
 					'width'=>'150px',
 					'font-family'=>'tahoma',
 					'font-size'=>'8pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
+					'background-color'=>'#88b3ec',
 				]
 			],
 			'contentOptions'=>[
@@ -303,7 +303,7 @@ $y=4;
 					'width'=>'100px',
 					'font-family'=>'tahoma',
 					'font-size'=>'8pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
+					'background-color'=>'#88b3ec',
 				]
 			],
 			'contentOptions'=>[
@@ -365,7 +365,7 @@ $y=4;
 					'width'=>'150px',
 					'font-family'=>'tahoma',
 					'font-size'=>'8pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
+					'background-color'=>'#88b3ec',
 				]
 			],
 			'contentOptions'=>[
@@ -433,7 +433,7 @@ $y=4;
 		/* 'footerRowOptions'=>[
 			['style'=>['class'=>'text-left info',]],
 		], */
-		//'footerRowOptions'=>['style'=>'background-color:rgba(0, 95, 218, 0.3); align:center;border:0.1px solid'],
+		//'footerRowOptions'=>['style'=>'background-color:#88b3ec; align:center;border:0.1px solid'],
 			'showPageSummary' => true,
 			//'pageSummaryRowOptions'=>[
 		//],
@@ -452,8 +452,8 @@ $y=4;
 			['attribute'=>'QTY',],
 		], */
 		//'filterModel' => ['STATUS'=>'10'],
-		//'headerRowOptions'=>['style'=>'background-color:rgba(0, 95, 218, 0.3); align:center;border:0.1px solid'],
-		//	'filterRowOptions'=>['style'=>'background-color:rgba(0, 95, 218, 0.3); align:center;border:0.1px solid'],
+		//'headerRowOptions'=>['style'=>'background-color:#88b3ec; align:center;border:0.1px solid'],
+		//	'filterRowOptions'=>['style'=>'background-color:#88b3ec; align:center;border:0.1px solid'],
 		/* 'beforeHeader'=>[
 			[
 				'columns'=>[
@@ -508,8 +508,8 @@ $y=4;
 ?>
 	</div>
 	<!-- Title BOTTEM Descript !-->
-	<div>
-		<div style="width:290px;float:left;">
+	<div class="row">
+		<div class="col-md-4" style="width:290px;float:left;">
 			<dl>
 				<?php
 					$shipNm= $ship !='' ? $ship->NM_ALAMAT : 'Shipping Not Set';
@@ -531,7 +531,7 @@ $y=4;
 				<dd>:	<?=$shipPic; ?></dd>
 			</dl>
 		</div>
-		<div style="float:left; margin-left:60px">
+		<div class="col-md-4">
 			<dl>
 				<?php
 					$billNm= $bill !='' ? $bill->NM_ALAMAT : 'Billing Not Set';
@@ -560,22 +560,22 @@ $y=4;
 	<!-- PO Term Of Payment !-->
 	<div  class="row">
 		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
-			<dt><b>Term Of Payment :</b></dt>
-			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
+			<dt><u><b>Term Of Payment :</b></u></dt>
+			<!-- <hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">!-->
 			<div>
 				<div style="margin-left:5px">
 					<dt style="width:80px; float:left;"><?php echo $poHeader->TOP_TYPE; ?></dt>
 					<dd><?php echo $poHeader->TOP_DURATION; ?></dd>
-					<br/>
+						<!-- <br/>!-->
 				</div>
 			</div>
 		</div>
 	</div>
 	<!-- PO Note !-->
 	<div  class="row">
-		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
-			<dt><b>General Notes :</b></dt>
-			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
+		<div  class="col-md-12" style="margin-top:10px;font-family: tahoma ;font-size: 9pt;">
+			<dt><u><b>General Notes :</b></u></dt>
+			<!-- <hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">!-->
 			<div>
 				<div style="margin-left:5px">
 					<dd><?php echo $poHeader->NOTE; ?></dd>
@@ -644,7 +644,7 @@ $y=4;
 			</tr>
 			<!--Nama !-->
 			 <tr>
-				<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
+				<th style="text-align: center; vertical-align:middle;height:20; background-color:#88b3ec;text-align: center;">
 					<div>
 						<?php
 							$sigNm1=$poHeader->SIG1_NM!='none' ? '<b>'.$poHeader->SIG1_NM.'</b>' : 'none';
@@ -652,7 +652,7 @@ $y=4;
 						?>
 					</div>
 				</th>
-				<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
+				<th style="text-align: center; vertical-align:middle;height:20; background-color:#88b3ec;text-align: center;">
 					<div>
 						<?php
 							$sigNm2=$poHeader->SIG2_NM!='none' ? '<b>'.$poHeader->SIG2_NM.'</b>' : 'none';
@@ -660,7 +660,7 @@ $y=4;
 						?>
 					</div>
 				</th>
-				<th style="text-align: center; vertical-align:middle;height:20; background-color:rgba(0, 95, 218, 0.3);text-align: center;">
+				<th style="text-align: center; vertical-align:middle;height:20; background-color:#88b3ec;text-align: center;">
 					<div>
 						<?php
 							$sigNm3=$poHeader->SIG3_NM!='none' ? '<b>'.$poHeader->SIG3_NM.'</b>' : 'none';
