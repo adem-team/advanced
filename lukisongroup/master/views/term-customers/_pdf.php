@@ -1,6 +1,7 @@
 
 <?php
 use yii\helpers\Html;
+use kartik\grid\GridView;
 
 ?>
 
@@ -32,7 +33,7 @@ use yii\helpers\Html;
 
         <tr>
               <td> Period/Jangka waktu</td>
-              <td> <?= $data->PERIOD_START ?> - <?= $data->PERIOD_END  ?>
+              <td> <?= $data->PERIOD_START ?> - <?= $data->PERIOD_END  ?></td>
 
       </tr>
        <tr>
@@ -42,7 +43,206 @@ use yii\helpers\Html;
       </tr>
       <tr>
           <td> Trade Investment</td>
-          <td>                  </td>
+          <td> <?= $grid = GridView::widget([
+              'id'=>'gv-term-general',
+              'dataProvider'=> $dataProvider,
+              'columns' =>
+                [
+                   [
+                     'class'=>'kartik\grid\SerialColumn',
+                     'contentOptions'=>['class'=>'kartik-sheet-style'],
+                     'width'=>'10px',
+                     'header'=>'No.',
+                     'headerOptions'=>[
+                       'style'=>[
+                         'text-align'=>'center',
+                         'width'=>'10px',
+                         'font-family'=>'verdana, arial, sans-serif',
+                         'font-size'=>'9pt',
+                         'background-color'=>'rgba(97, 211, 96, 0.3)',
+                       ]
+                     ],
+                     'contentOptions'=>[
+                       'style'=>[
+                         'text-align'=>'center',
+                         'width'=>'10px',
+                         'font-family'=>'tahoma, arial, sans-serif',
+                         'font-size'=>'9pt',
+                       ]
+                     ],
+                   ],
+
+                   [
+                     'attribute' => 'INVES_TYPE',
+                     'label'=>'Type Investasi',
+                     'hAlign'=>'left',
+                     'vAlign'=>'middle',
+                     'headerOptions'=>[
+                       'style'=>[
+                         'text-align'=>'center',
+                         'font-family'=>'tahoma, arial, sans-serif',
+                         'font-size'=>'9pt',
+                         'background-color'=>'rgba(97, 211, 96, 0.3)',
+                       ]
+                     ],
+                     'contentOptions'=>[
+                       'style'=>[
+                         'text-align'=>'left',
+                         'width'=>'80px',
+                         'font-family'=>'tahoma, arial, sans-serif',
+                         'font-size'=>'9pt',
+                       ]
+                     ],
+                     'pageSummaryOptions' => [
+                       'style'=>[
+                           'border-left'=>'0px',
+                           'border-right'=>'0px',
+                       ]
+                     ],
+                     'pageSummary'=>function ($summary, $data, $widget){
+                             return '<div> Total :</div>';
+                           },
+                     'pageSummaryOptions' => [
+                       'style'=>[
+                           'font-family'=>'tahoma',
+                           'font-size'=>'8pt',
+                           'text-align'=>'center',
+                           'border-left'=>'0px',
+                           'border-right'=>'0px',
+                       ]
+                     ],
+                   ],
+                   [
+                     'attribute' => 'BUDGET_VALUE',
+                     'label'=>'Value',
+                     'hAlign'=>'left',
+                     'vAlign'=>'middle',
+                     'headerOptions'=>[
+                       'style'=>[
+                         'text-align'=>'center',
+                         'width'=>'200px',
+                         'font-family'=>'tahoma, arial, sans-serif',
+                         'font-size'=>'9pt',
+                         'background-color'=>'rgba(97, 211, 96, 0.3)',
+                       ]
+                     ],
+                     'contentOptions'=>[
+                       'style'=>[
+                         'text-align'=>'left',
+                         'width'=>'200px',
+                         'font-family'=>'tahoma, arial, sans-serif',
+                         'font-size'=>'9pt',
+                       ]
+                     ],
+                     	'pageSummaryFunc'=>GridView::F_SUM,
+                     'format'=>['decimal', 2],
+                     	'pageSummary'=>true,
+                     'pageSummaryOptions' => [
+                       'style'=>[
+                           'font-family'=>'tahoma',
+                           'font-size'=>'8pt',
+                           'text-align'=>'left',
+                           'border-left'=>'0px',
+                       ]
+                     ],
+
+                   ],
+                   [
+                     'label'=>'%',
+                     'hAlign'=>'left',
+                     'vAlign'=>'middle',
+                     'value' => function($model) {
+                                if($model['TARGET_VALUE'] == '')
+                                {
+                                   return $model['TARGET_VALUE'] = 0.00;
+                                }
+                                else {
+                                  # code...
+                                 return $model['BUDGET_VALUE'] / $model['TARGET_VALUE'] * 100;
+                                }
+                            ;},
+                     'headerOptions'=>[
+                       'style'=>[
+                         'text-align'=>'center',
+                         'width'=>'200px',
+                         'font-family'=>'tahoma, arial, sans-serif',
+                         'font-size'=>'9pt',
+                         'background-color'=>'rgba(97, 211, 96, 0.3)',
+                       ]
+                     ],
+                     'contentOptions'=>[
+                       'style'=>[
+                         'text-align'=>'left',
+                         'width'=>'200px',
+                         'font-family'=>'tahoma, arial, sans-serif',
+                         'font-size'=>'9pt',
+                       ]
+                     ],
+                     'pageSummaryFunc'=>GridView::F_SUM,
+                   'format'=>['decimal', 2],
+                     'pageSummary'=>true,
+                   'pageSummaryOptions' => [
+                     'style'=>[
+                         'font-family'=>'tahoma',
+                         'font-size'=>'8pt',
+                         'text-align'=>'left',
+                         'border-left'=>'0px',
+                     ]
+                      ],
+                   ],
+                   [
+                     'attribute' => 'PERIODE_END',
+                     'label'=>'Periode',
+                     'hAlign'=>'left',
+                     'vAlign'=>'middle',
+                     'value' => function($model) { return $model['PERIODE_START'] . "-" . $model['PERIODE_END'] ;},
+                     'headerOptions'=>[
+                       'style'=>[
+                         'text-align'=>'center',
+                         'width'=>'200px',
+                         'font-family'=>'tahoma, arial, sans-serif',
+                         'font-size'=>'9pt',
+                         'background-color'=>'rgba(97, 211, 96, 0.3)',
+                       ]
+                     ],
+                     'contentOptions'=>[
+                       'style'=>[
+                         'text-align'=>'left',
+                         'width'=>'200px',
+                         'font-family'=>'tahoma, arial, sans-serif',
+                         'font-size'=>'9pt',
+                       ]
+                     ],
+                   ],
+                ],
+
+                'panel' => [
+                  'footer'=>false,
+                  'heading'=>false,
+                ],
+                'toolbar'=> [
+                  //'{items}',
+                ],
+                'showPageSummary' => true,
+                'showFooter'=>false,
+                'hover'=>true, //cursor select
+                'responsive'=>true,
+                'responsiveWrap'=>true,
+                'bordered'=>false,
+                'striped'=>'0px',
+                'autoXlFormat'=>true,
+                'export' => false,
+
+            ])?>
+                  <p style="border:0px;">Running Rate base on percentage
+                  <br>Total Trade Investment    : RP. <?= $data->TARGET_VALUE ?>
+                  <?php
+                    $percentage = ($datasum['BUDGET_VALUE'] / $data->TARGET_VALUE)*100;
+                    $bulat = round($percentage);
+
+                   ?>
+                  <br>Investment Percentage   :   <?= $bulat ?>%</p>
+          </td>
 
      </tr>
      <tr>
@@ -50,6 +250,16 @@ use yii\helpers\Html;
          <td>                  </td>
 
     </tr>
+    <tr>
+        <td> Purchase Target/Target
+            <br>Pembelian
+        </td>
+        <td>      <h3 style="text-align: center;"><?= $data->TARGET_VALUE ?></h3>
+                  <h3 style="text-align: center;"> <br><?= $data->TARGET_TEXT ?> Rupiah</h3>
+
+        </td>
+
+   </tr>
     <tr>
         <td> Growth </td>
         <td> <?= $data->GROWTH ?></td>
@@ -63,11 +273,13 @@ use yii\helpers\Html;
 
   </tr>
 
-     </table>
-     <table id="tblRo" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">
-       <!-- Tanggal!-->
+</table>
+
+<p> This Trading Term is executed in 3(three) originals each suffciently affixed with duty stamps and shall has the same legal force to the Partiles.
+   Trading Term ini dibuat dala rangkap 3 (tiga),dan ditandatangani oleh Para Pihak,bermaterai cukup dan masing-masing mempunyai kekuatan hukum yang sama bagi Para Pihak </p>
+
+     <table id="tbl" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">
         <tr>
-         <!-- Tanggal Pembuat RO!-->
          <th  class="col-md-1" style="text-align: center; height:20px">
            <div style="text-align:center;">
              <?php

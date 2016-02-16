@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use lukisongroup\master\models\Termbudget;
+use yii\data\ArrayDataProvider;
 
 /**
  * TermbudgetSearch represents the model behind the search form about `lukisongroup\master\models\Termbudget`.
@@ -77,7 +78,11 @@ class TermbudgetSearch extends Termbudget
 
     public function searchbudget($params,$id)
     {
-        $query = Termbudget::find()->where(['ID_TERM'=>$id]);
+
+      // Customers::find()->joinWith('cus',true,'JOIN')
+      //           ->where('c0001.STATUS <> 3');
+        $query = Termbudget::find()->joinWith('budget',true,'JOIN')
+                                  ->where(['c0003.ID_TERM'=>$id]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

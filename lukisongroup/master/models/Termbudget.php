@@ -5,6 +5,7 @@ namespace lukisongroup\master\models;
 
 use Yii;
 use yii\helpers\ArrayHelper;
+use lukisongroup\master\models\Termcustomers;
 
 /**
  * This is the model class for table "c0005".
@@ -27,6 +28,7 @@ class Termbudget extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+     public $TARGET_VALUE;
     public static function tableName()
     {
         return 'c0005';
@@ -48,6 +50,7 @@ class Termbudget extends \yii\db\ActiveRecord
         return [
             [['BUDGET_VALUE'], 'number'],
             [['INVES_TYPE'], 'cekdata'],
+            [['PERIODE_END'], 'datevalid'],
             [['PERIODE_START', 'PERIODE_END', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
             [['STATUS'], 'integer'],
             [['ID_TERM','CORP_ID'], 'string', 'max' => 50],
@@ -65,13 +68,35 @@ class Termbudget extends \yii\db\ActiveRecord
     public function cekdata($budget)
     {
 
+      $id = $this->ID_TERM;
       $inves = $this->INVES_TYPE;
-      $data = Termbudget::find()->where(['INVES_TYPE'=>$inves])->asArray()
+      $data = Termbudget::find()->where(['ID_TERM'=>$id])->asArray()
                                                           ->one();
+                                                          // print_r($data);
+                                                          // die();
       if($inves ==  $data['INVES_TYPE'])
       {
            $this->addError($budget,'Maaf Duplikat data');
       }
+    }
+
+    public function getBudget()
+    {
+      return $this->hasOne(Termcustomers::className(), ['ID_TERM' => 'ID_TERM']);
+
+    }
+
+
+    public function datevalid($model)
+    {
+      # code...
+      $datestart = $this->PERIODE_START;
+      $dateend = $this->PERIODE_END;
+
+       if( $dateend < $datestart  )
+       {
+           $this->addError($model, 'Tanggal harus lebih Besar'.$datestart);
+       }
     }
 
     /**

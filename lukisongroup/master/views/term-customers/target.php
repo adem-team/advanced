@@ -2,10 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use kartik\label\LabelInPlace;
 use kartik\money\MaskMoney;
-
-$config = ['template'=>"{input}\n{error}\n{hint}"];
 
  ?>
 
@@ -15,8 +12,6 @@ $form = ActiveForm::begin([
 
 ]);
  ?>
-
-  <?= $form->field($model, 'TARGET_TEXT', $config)->widget(LabelInPlace::classname())?>
 
   <?= $form->field($model, 'TARGET_VALUE')->widget(MaskMoney::classname(), [
     'pluginOptions' => [
