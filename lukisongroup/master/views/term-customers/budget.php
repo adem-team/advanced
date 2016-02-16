@@ -25,7 +25,7 @@ $form = ActiveForm::begin([
 ]);
  ?>
 
- <!-- $form->field($budget, 'ID_TERM')->textInput(['value' => $id,'readonly'=>true]) -->
+ <?= $form->field($budget, 'ID_TERM')->hiddenInput(['value' => $id])->label(false)?>
 
 <?= $form->field($budget, 'INVES_TYPE')->widget(Select2::classname(),[
   'options'=>[  'placeholder' => 'Select Type Investasi ...'

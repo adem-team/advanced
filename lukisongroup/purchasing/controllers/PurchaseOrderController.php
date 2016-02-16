@@ -3,6 +3,7 @@
 namespace lukisongroup\purchasing\controllers;
 
 use Yii;
+use yii\helpers\Html;
 use yii\web\Request;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -13,6 +14,7 @@ use yii\web\Response;
 use yii\helpers\ArrayHelper;
 use kartik\mpdf\Pdf;
 use yii\helpers\Url;
+use zyx\phpmailer\Mailer;
 
 use lukisongroup\purchasing\models\pr\Purchaseorder;
 use lukisongroup\purchasing\models\pr\PurchaseorderSearch;
@@ -1201,7 +1203,7 @@ class PurchaseOrderController extends Controller
 			],
 		]);
 
-		$content = $this->renderPartial( 'pdf', [
+		$content= $this->renderPartial( 'pdf', [
 			'poHeader' => $poHeader,
             //'roHeader' => $roHeader,
             //'detro' => $detro,
@@ -1209,7 +1211,27 @@ class PurchaseOrderController extends Controller
 			//'dept' => $dept,
 			'dataProvider' => $dataProvider,
         ]);
+	
+		/*PR TO WAWAN*/
+		/*
+		 * Render partial -> Add Css -> Sendmail
+		 * @author ptrnov [piter@lukison]
+		 * @since 1.2
+		*/
+		$contentMail= $this->renderPartial('sendmailcontent',[
+			'poHeader' => $poHeader,
+			'dataProvider' => $dataProvider,
+		]);			
+		Yii::$app->mailer->compose()
+					 ->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
+					 //->setTo(['piter@lukison.com'])
+					 //->setTo(['it-dept@lukison.com'])
+					 ->setTo(['it-dept@lukison.com'])
+					 ->setSubject('Purchase Order')
+					 ->setHtmlBody($contentMail)
+					 ->send();
 
+	
 		$pdf = new Pdf([
 			// set to use core fonts only
 			'mode' => Pdf::MODE_CORE,
@@ -1403,11 +1425,6 @@ class PurchaseOrderController extends Controller
 		}
     }
 
-
-
-
-
-
     public function actionDelpo($idpo,$kdpo)
     {
         $podet = Podetail::find()->where(['KD_PO'=>$kdpo, 'ID'=>$idpo])->one();
@@ -1426,10 +1443,6 @@ class PurchaseOrderController extends Controller
 
         return $this->redirect(['create', 'kdpo'=>$kdpo]);
     }
-
-
-
-
 
     public function actionUpdate($id)
     {
