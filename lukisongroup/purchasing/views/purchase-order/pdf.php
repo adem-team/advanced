@@ -92,7 +92,7 @@ $y=4;
 		</div>
 	</div>
 	<!-- Title GRID PO Detail !-->
-	<div>
+	<div class="row">
 		<?php
 		$gridColumnsX= [
 		[/* Attribute Serial No */
@@ -586,7 +586,7 @@ $y=4;
 		</div>
 	</div>
 	<!-- Signature PO !-->
-	<div>
+	<div class="row">
 		<table id="tblRo" class="table table-bordered" style="width:360px;font-family: tahoma ;font-size: 8pt;">
 			<!-- Tanggal!-->
 			 <tr>

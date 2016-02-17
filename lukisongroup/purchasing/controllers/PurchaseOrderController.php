@@ -1222,18 +1222,11 @@ class PurchaseOrderController extends Controller
 			'poHeader' => $poHeader,
 			'dataProvider' => $dataProvider,
 		]);			
-		Yii::$app->mailer->compose()
-					 ->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
-					 //->setTo(['piter@lukison.com'])
-					 //->setTo(['it-dept@lukison.com'])
-					 ->setTo(['it-dept@lukison.com'])
-					 ->setSubject('Purchase Order')
-					 ->setHtmlBody($contentMail)
-					 ->send();
+		
 
 	
 		$pdf = new Pdf([
-			// set to use core fonts only
+			// set to use core fonts only		
 			'mode' => Pdf::MODE_CORE,
 			// A4 paper format
 			'format' => Pdf::FORMAT_A4,
@@ -1257,8 +1250,36 @@ class PurchaseOrderController extends Controller
 				'SetFooter'=>['{PAGENO}'],
 			]
 		]);
-		return $pdf->render();
+		 $hasil= $pdf->render();
+		
+		//return $pdf->render();
+		
+		 // $pdf = Yii::$app->pdf; // or new Pdf();
+		 // $mpdf = $pdf->api; // fetches mpdf api
+		 // $mpdf->SetHeader('Kartik Header'); // call methods or set any properties
+		 // $mpdf->WriteHtml($content); // call mpdf write html
+		 $fileX= $pdf->Output('po', 'D');
+		 //$fileAttach=chunk_split(base64_encode($hasil));
+		 $fileAttach=chunk_split(base64_encode($fileX));
 
+		Yii::$app->mailer->compose()
+					 ->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
+					 //->setTo(['piter@lukison.com'])
+					 //->setTo(['it-dept@lukison.com'])
+					 //->setTo(['it-dept@lukison.com'])
+					 ->setTo(['ptr.nov@gmail.com','it-dept@lukison.com'])
+					 ->setSubject('Purchase Order')
+					 ->setHtmlBody($contentMail)
+					 //->attach('../../lukisongroup/web/login.png',['login','png'])
+					 ->attach($fileAttach,['po','pdf'])
+					 //->attachContent( $fileAttach,['po','pdf'])
+					 //->attachContent($fileAttach)
+					 ->send();
+		
+		 return $hasil;
+		
+		
+					 
 		/* $mpdf=new mPDF();
         $mpdf->WriteHTML($this->renderPartial( 'pdf', [
             'model' => Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one(),
