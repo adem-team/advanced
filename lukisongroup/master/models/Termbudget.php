@@ -48,8 +48,10 @@ class Termbudget extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+
             [['BUDGET_VALUE'], 'number'],
             [['INVES_TYPE'], 'cekdata'],
+            // [['INVES_TYPE'], 'required'],
             [['PERIODE_END'], 'datevalid'],
             [['PERIODE_START', 'PERIODE_END', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
             [['STATUS'], 'integer'],
@@ -70,11 +72,11 @@ class Termbudget extends \yii\db\ActiveRecord
 
       $id = $this->ID_TERM;
       $inves = $this->INVES_TYPE;
-      $data = Termbudget::find()->where(['ID_TERM'=>$id])->asArray()
+      $data = Termbudget::find()->where(['ID_TERM'=>$id,'INVES_TYPE'=>$inves])->asArray()
                                                           ->one();
-                                                          // print_r($data);
-                                                          // die();
-      if($inves ==  $data['INVES_TYPE'])
+                                                        
+
+      if($inves ===  $data['INVES_TYPE'])
       {
            $this->addError($budget,'Maaf Duplikat data');
       }

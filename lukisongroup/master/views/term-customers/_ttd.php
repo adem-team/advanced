@@ -2,16 +2,17 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use lukisongroup\master\models\Termgeneral;
+use lukisongroup\hrd\models\Jobgrade;
 use kartik\widgets\Select2;
+use kartik\label\LabelInPlace;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Termgeneral */
 /* @var $form yii\widgets\ActiveForm */
-
-$data = Termgeneral::find()->all();
-$to = "ID";
-$from = "SUBJECT";
+$config = ['template'=>"{input}\n{error}\n{hint}"];
+$data = Jobgrade::find()->all();
+$to = "JOBGRADE_ID";
+$from = "JOBGRADE_NM";
 ?>
 
 <div class="termgeneral-form">
@@ -21,14 +22,15 @@ $from = "SUBJECT";
     ]); ?>
 
 
-    <?= $form->field($model, 'GENERAL_TERM')->widget(Select2::classname(),[
-      'options'=>[  'placeholder' => 'Select  ...'
+    <?= $form->field($model, 'PRINCIPAL_NM', $config)->widget(LabelInPlace::classname())?>
+
+    <?= $form->field($model, 'JOBGRADE_ID')->widget(Select2::classname(),[
+      'options'=>[  'placeholder' => 'Select Jabatan ...'
       ],
       'data' =>$model->data($data,$to,$from)
     ]);?>
 
 
-    <!-- $form->field($model, 'ISI_TERM')->textarea(['rows' => 6]) ?> -->
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

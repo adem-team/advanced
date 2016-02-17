@@ -237,7 +237,15 @@ use kartik\grid\GridView;
                   <p style="border:0px;">Running Rate base on percentage
                   <br>Total Trade Investment    : RP. <?= $data->TARGET_VALUE ?>
                   <?php
+                  if( $datasum['BUDGET_VALUE'] == '')
+                  {
+                    $percentage = 0.00;
+                  }
+                  else {
+                    # code...
                     $percentage = ($datasum['BUDGET_VALUE'] / $data->TARGET_VALUE)*100;
+
+                  }
                     $bulat = round($percentage);
 
                    ?>
@@ -331,24 +339,13 @@ use kartik\grid\GridView;
        <!-- Signature !-->
         <tr>
          <th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
-           <?php
-            //  $ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG1_SVGBASE64.'></img>' :'';
-            //  echo $ttd1;
-           ?>
+
          </th>
          <th class="col-md-1" style="text-align: center; vertical-align:middle">
-           <?php
-            //  $ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG2_SVGBASE64.'></img>' :'';
-            //  echo $ttd2;
-           ?>
+
          </th>
          <th  class="col-md-1" style="text-align: center; vertical-align:middle">
-           <?php
-            //  $ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :'';
-             //if ($poHeader->STATUS==101 OR $poHeader->STATUS==10){
-              //  echo $ttd3;
-             //}
-           ?>
+           
          </th>
        </tr>
        <!--Nama !-->
@@ -382,17 +379,20 @@ use kartik\grid\GridView;
         <tr>
          <th style="text-align: center; vertical-align:middle;height:20">
            <div>
-             <b><?php  echo 'Pihak 1'; ?></b>
+             <b><?php  echo 'NAMA:  '.$data['CUST_NM']; ?></b>
+            <br><b><?php  echo 'Jabatan:  '.$data['JABATAN_CUS'] ?></b>
            </div>
          </th>
          <th style="text-align: center; vertical-align:middle;height:20">
            <div>
-             <b><?php  echo 'Pihak 2'; ?></b>
+               <b><?php  echo 'NAMA:  '.$data['DIST_NM']; ?></b>
+               <br><b><?php  echo 'Jabatan:  '.$data['JABATAN_DIST'] ?></b>
            </div>
          </th>
          <th style="text-align: center; vertical-align:middle;height:20">
            <div>
-             <b><?php  echo 'Pihak 3'; ?></b>
+             <b><?php  echo 'NAMA:  '.$data['PRINCIPAL_NM']; ?></b>
+              <br><b><?php  echo 'Jabatan:  '.$datainternal['JOBGRADE_NM'] ?></b>
            </div>
          </th>
        </tr>

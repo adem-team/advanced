@@ -2,16 +2,13 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use lukisongroup\master\models\Termgeneral;
-use kartik\widgets\Select2;
+use kartik\label\LabelInPlace;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Termgeneral */
 /* @var $form yii\widgets\ActiveForm */
+$config = ['template'=>"{input}\n{error}\n{hint}"];
 
-$data = Termgeneral::find()->all();
-$to = "ID";
-$from = "SUBJECT";
 ?>
 
 <div class="termgeneral-form">
@@ -21,14 +18,9 @@ $from = "SUBJECT";
     ]); ?>
 
 
-    <?= $form->field($model, 'GENERAL_TERM')->widget(Select2::classname(),[
-      'options'=>[  'placeholder' => 'Select  ...'
-      ],
-      'data' =>$model->data($data,$to,$from)
-    ]);?>
+    <?= $form->field($model, 'CUST_NM', $config)->widget(LabelInPlace::classname())?>
 
-
-    <!-- $form->field($model, 'ISI_TERM')->textarea(['rows' => 6]) ?> -->
+    <?= $form->field($model, 'JABATAN_CUS', $config)->widget(LabelInPlace::classname())?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

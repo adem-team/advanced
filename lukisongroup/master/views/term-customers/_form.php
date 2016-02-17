@@ -13,8 +13,9 @@ use lukisongroup\master\models\Terminvest;
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Termcustomers */
 /* @var $form yii\widgets\ActiveForm */
-$data = Customers::find()->all();
-$to = "CUST_GRP";
+
+$data = Customers::find()->where('CUST_KD = CUST_GRP')->all();
+$to = "CUST_KD";
 $from = "CUST_NM";
 
 $data1 = Corp::find()->all();
