@@ -41,7 +41,7 @@ $gridColumns = [
     ],
 
     [
-      'attribute' => 'CUST_NM',
+      'attribute' => 'cus.CUST_NM',
       'label'=>'Nama Customers',
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -87,7 +87,7 @@ $gridColumns = [
       ],
     ],
     [
-      'attribute' => 'DIST_NM',
+      'attribute' => 'dis.NM_DISTRIBUTOR',
       'label'=>'Nama Distributor',
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -110,7 +110,7 @@ $gridColumns = [
       ],
     ],
     [
-      'attribute' =>'PRINCIPAL_NM',
+      'attribute' =>'corp.CORP_NM',
       'label'=>'Nama Pihak 2',
       // 'filter' => $userCorp,
       'hAlign'=>'left',
@@ -230,7 +230,7 @@ $gridColumns = [
       'dropdownOptions'=>['class'=>'pull-right dropup'],
       'buttons' => [
           'view' =>function($url, $model, $key){
-              return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
+              return  '<li>' .Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Review'),
                             ['/master/term-customers/view','id'=>$model->ID_TERM],[
                             // 'data-toggle'=>"modal",
                             // 'data-target'=>"#modal-view",
@@ -238,8 +238,8 @@ $gridColumns = [
                             ]). '</li>' . PHP_EOL;
           },
           'update' =>function($url, $model, $key){
-              return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Edit'),
-                            ['update','id'=>$model->ID_TERM],[
+              return  '<li>' . Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
+                            ['/master/term-customers/view-term-cus','id'=>$model->ID_TERM],[
                             // 'data-toggle'=>"modal",
                             // 'data-target'=>"#modal-create",
                             'data-title'=> $model->ID_TERM,

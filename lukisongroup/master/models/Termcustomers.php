@@ -2,6 +2,7 @@
 
 namespace lukisongroup\master\models;
 use yii\helpers\ArrayHelper;
+use lukisongroup\hrd\models\Corp;
 
 use Yii;
 
@@ -58,10 +59,10 @@ class Termcustomers extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['DCRP_SIGNARURE', 'TARGET_TEXT', 'RABATE_CNDT', 'TOP'], 'string'],
+            [['DCRP_SIGNARURE', 'TARGET_TEXT', 'RABATE_CNDT', 'TOP','JOBGRADE_ID','JABATAN_CUS','JABATAN_DIST'], 'string'],
             [['PERIOD_START', 'PERIOD_END', 'CREATED_AT', 'UPDATE_AT'], 'safe'],
             [['PERIOD_END'], 'cekdate'],
-            [['TARGET_VALUE', 'GROWTH'], 'number'],
+            [['TARGET_VALUE', 'GROWTH','GENERAL_TERM'], 'number'],
             [['STATUS'], 'integer'],
             [['NM_TERM', 'CREATED_BY', 'UPDATE_BY'], 'string', 'max' => 100],
             [['CUST_KD', 'PRINCIPAL_KD', 'DIST_KD'], 'string', 'max' => 50],
@@ -87,6 +88,31 @@ class Termcustomers extends \yii\db\ActiveRecord
        }
 
     }
+
+    public function getGeneral()
+    {
+      # code...
+      return $this->hasOne(Termgeneral::className(), ['ID' => 'GENERAL_TERM']);
+    }
+
+    public function getCus()
+    {
+      # code...
+      return $this->hasOne(Customers::className(), ['CUST_KD' => 'CUST_KD']);
+    }
+
+    public function getDis()
+    {
+      # code...
+      return $this->hasOne(Distributor::className(), ['KD_DISTRIBUTOR' => 'DIST_KD']);
+    }
+    public function getCorp()
+    {
+      # code...
+      return $this->hasOne(Corp::className(), ['CORP_ID' => 'PRINCIPAL_KD']);
+    }
+
+
 
 
 

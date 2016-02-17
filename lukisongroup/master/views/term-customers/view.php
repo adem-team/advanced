@@ -3,13 +3,16 @@
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;;
 use lukisongroup\master\models\Terminvest;
+use lukisongroup\master\models\Termgeneral;
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Termcustomers;
 use lukisongroup\master\models\Distributor;
 use lukisongroup\hrd\models\Corp;
+use lukisongroup\hrd\models\Jobgrade;
 use yii\helpers\Url;
 use yii\bootstrap\Modal;
 use kartik\grid\GridView;
+use kartik\detail\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Termcustomers */
@@ -21,7 +24,7 @@ function pihak($model){
           'data-target'=>"#pihak",
           'class'=>'btn btn-warning btn-xs',
           //'style'=>['width'=>'150px'],
-          'title'=>'Set Supplier'
+          'title'=>'Set'
   ];
   $icon = '<span class="glyphicon glyphicon-open"></span>';
   $label = $icon . ' ' . $title;
@@ -37,7 +40,7 @@ function periode($model){
           'data-target'=>"#periode",
           'class'=>'btn btn-warning btn-xs',
           //'style'=>['width'=>'150px'],
-          'title'=>'Set Supplier'
+          'title'=>'Set'
   ];
   $icon = '<span class="glyphicon glyphicon-open"></span>';
   $label = $icon . ' ' . $title;
@@ -53,7 +56,7 @@ function TOP($model){
           'data-target'=>"#TOP",
           'class'=>'btn btn-warning btn-xs',
           //'style'=>['width'=>'150px'],
-          'title'=>'Set Supplier'
+          'title'=>'Set'
   ];
   $icon = '<span class="glyphicon glyphicon-open"></span>';
   $label = $icon . ' ' . $title;
@@ -69,7 +72,7 @@ function target($model){
           'data-target'=>"#TARGET",
           'class'=>'btn btn-warning btn-xs',
           //'style'=>['width'=>'150px'],
-          'title'=>'Set Supplier'
+          'title'=>'Set'
   ];
   $icon = '<span class="glyphicon glyphicon-open"></span>';
   $label = $icon . ' ' . $title;
@@ -77,6 +80,67 @@ function target($model){
   $content = Html::a($label,$url, $options);
   return $content;
 }
+
+function ttd($model){
+  if($model->CUST_NM == '')
+  {
+    $title = Yii::t('app','-- -- --');
+  }
+  else {
+    # code...
+      $title = Yii::t('app',$model['CUST_NM']);
+  }
+
+  $options = [ 'id'=>'tdd-id',
+          'data-toggle'=>"modal",
+          'data-target'=>"#TTD1",
+          'title'=>'Set'
+  ];
+  $url = Url::toRoute(['/master/term-customers/set-cus','id'=>$model->ID_TERM]);
+  $content = Html::a($title,$url, $options);
+  return $content;
+}
+
+function ttd2($model){
+  if($model->DIST_NM == '')
+  {
+    $title = Yii::t('app','-- -- --');
+  }
+  else {
+    # code...
+      $title = Yii::t('app',$model['DIST_NM']);
+  }
+  $options = [ 'id'=>'tdd-id2',
+          'data-toggle'=>"modal",
+          'data-target'=>"#TTD2",
+          'title'=>'Set'
+  ];
+  $url = Url::toRoute(['/master/term-customers/set-dist','id'=>$model->ID_TERM]);
+  $content = Html::a($title,$url, $options);
+  return $content;
+}
+
+function ttd3($model){
+  if($model->JOBGRADE_ID == '')
+  {
+    $title = Yii::t('app','-- -- --');
+  }
+  else {
+    # code...
+      $title = Yii::t('app',$model['PRINCIPAL_NM']);
+  }
+
+  $options = [ 'id'=>'tdd-id3',
+          'data-toggle'=>"modal",
+          'data-target'=>"#TTD3",
+          'title'=>'Set'
+  ];
+  $url = Url::toRoute(['/master/term-customers/set-internal','id'=>$model->ID_TERM]);
+  $content = Html::a($title,$url, $options);
+  return $content;
+}
+
+
 
 // $data = Termcustomers::find()->where(['ID_TERM'=>$_GET['id']])->asArray()
 //                                                              ->one();
@@ -113,11 +177,6 @@ function target($model){
       return $content;
   }
 
-// }
-
-
-
-
 
 ?>
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
@@ -136,6 +195,7 @@ function target($model){
 			</div>
 
 		</div>
+
 	</div>
 
   <div class="row">
@@ -194,13 +254,12 @@ function target($model){
         <?php echo TOP($model); ?>
       </div>
       <dl>
-
         <dt><h6><u><b>Term Of Payment : <?= $model->TOP ?></b></u></h6></dt>
-
-
       </dl>
     </div>
   </div>
+
+
 
   <div class="row">
   <div class="col-xs-5 col-sm-5 col-md-5" style="font-family: tahoma ;font-size: 9pt;">
@@ -210,8 +269,8 @@ function target($model){
       <dl>
 
         <dt style="width:80px; float:left;"><h6><u><b>Target :</b></u></h6></dt>
-        <dd>:	<?=$model->TARGET_TEXT ?></dd>
-        <dd>:	<?=$model->TARGET_VALUE?></dd>
+        <dd>:	<?=$model->TARGET_TEXT ?> Rupiah</dd>
+        <dd>:Rp.<?=$model->TARGET_VALUE?></dd>
 
       </dl>
   </div>
@@ -222,321 +281,312 @@ $dataids = $_GET['id'];
 ?>
 
 <?php
-echo  $grid = GridView::widget([
-    'id'=>'gv-term-general',
-    'dataProvider'=> $dataProvider1,
-    'footerRowOptions'=>['style'=>'font-weight:bold;text-decoration: underline;'],
-    'filterModel' => $searchModel1,
-    'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
-    'columns' =>
-      [
-         [
-           'class'=>'kartik\grid\SerialColumn',
-           'contentOptions'=>['class'=>'kartik-sheet-style'],
-           'width'=>'10px',
-           'header'=>'No.',
-           'headerOptions'=>[
-             'style'=>[
-               'text-align'=>'center',
-               'width'=>'10px',
-               'font-family'=>'verdana, arial, sans-serif',
-               'font-size'=>'9pt',
-               'background-color'=>'rgba(97, 211, 96, 0.3)',
-             ]
-           ],
-           'contentOptions'=>[
-             'style'=>[
-               'text-align'=>'center',
-               'width'=>'10px',
-               'font-family'=>'tahoma, arial, sans-serif',
-               'font-size'=>'9pt',
-             ]
-           ],
-         ],
-
-         [
-           'attribute' => 'INVES_TYPE',
-           'label'=>'Type Investasi',
-           'hAlign'=>'left',
-           'vAlign'=>'middle',
-           'headerOptions'=>[
-             'style'=>[
-               'text-align'=>'center',
-               'font-family'=>'tahoma, arial, sans-serif',
-               'font-size'=>'9pt',
-               'background-color'=>'rgba(97, 211, 96, 0.3)',
-             ]
-           ],
-           'contentOptions'=>[
-             'style'=>[
-               'text-align'=>'left',
-               'width'=>'80px',
-               'font-family'=>'tahoma, arial, sans-serif',
-               'font-size'=>'9pt',
-             ]
-           ],
-           'pageSummaryOptions' => [
-             'style'=>[
-                 'border-left'=>'0px',
-                 'border-right'=>'0px',
-             ]
-           ],
-           'pageSummary'=>function ($summary, $data, $widget){
-                   return '<div> Total :</div>';
-                 },
-           'pageSummaryOptions' => [
-             'style'=>[
-                 'font-family'=>'tahoma',
-                 'font-size'=>'8pt',
+  echo  $grid = GridView::widget([
+      'id'=>'gv-term-general',
+      'dataProvider'=> $dataProvider1,
+      'footerRowOptions'=>['style'=>'font-weight:bold;text-decoration: underline;'],
+      'columns' =>
+        [
+           [
+             'class'=>'kartik\grid\SerialColumn',
+             'contentOptions'=>['class'=>'kartik-sheet-style'],
+             'width'=>'10px',
+             'header'=>'No.',
+             'headerOptions'=>[
+               'style'=>[
                  'text-align'=>'center',
-                 'border-left'=>'0px',
-                 'border-right'=>'0px',
-             ]
-           ],
-         ],
-         [
-           'attribute' => 'BUDGET_VALUE',
-           'label'=>'Value',
-           'hAlign'=>'left',
-           'vAlign'=>'middle',
-           'headerOptions'=>[
-             'style'=>[
-               'text-align'=>'center',
-               'width'=>'200px',
-               'font-family'=>'tahoma, arial, sans-serif',
-               'font-size'=>'9pt',
-               'background-color'=>'rgba(97, 211, 96, 0.3)',
-             ]
-           ],
-           'contentOptions'=>[
-             'style'=>[
-               'text-align'=>'left',
-               'width'=>'200px',
-               'font-family'=>'tahoma, arial, sans-serif',
-               'font-size'=>'9pt',
-             ]
-           ],
-           	'pageSummaryFunc'=>GridView::F_SUM,
-           'format'=>['decimal', 2],
-           	'pageSummary'=>true,
-           'pageSummaryOptions' => [
-             'style'=>[
-                 'font-family'=>'tahoma',
-                 'font-size'=>'8pt',
-                 'text-align'=>'left',
-                 'border-left'=>'0px',
-             ]
-           ],
-
-
-         ],
-          [
-              'attribute' => 'budget.TARGET_VALUE',
-            'label'=>'%',
-            'hAlign'=>'left',
-            'vAlign'=>'middle',
-            'value' => function($model) {
-                      if($model->budget->TARGET_VALUE == '')
-                      {
-                           return  $model->budget->TARGET_VALUE = 0.00;
-                      }
-                      else {
-                        # code...
-                         return $model->BUDGET_VALUE / $model->budget->TARGET_VALUE * 100;
-                      }
-                      ;},
-            'headerOptions'=>[
-              'style'=>[
-                'text-align'=>'center',
-                'width'=>'200px',
-                'font-family'=>'tahoma, arial, sans-serif',
-                'font-size'=>'9pt',
-                'background-color'=>'rgba(97, 211, 96, 0.3)',
-              ]
-            ],
-            'contentOptions'=>[
-              'style'=>[
-                'text-align'=>'left',
-                'width'=>'200px',
-                'font-family'=>'tahoma, arial, sans-serif',
-                'font-size'=>'9pt',
-              ]
-            ],
-            'pageSummaryFunc'=>GridView::F_SUM,
-          'format'=>['decimal', 2],
-            'pageSummary'=>true,
-          'pageSummaryOptions' => [
-            'style'=>[
-                'font-family'=>'tahoma',
-                'font-size'=>'8pt',
-                'text-align'=>'left',
-                'border-left'=>'0px',
-            ]
+                 'width'=>'100px',
+                 'font-family'=>'verdana, arial, sans-serif',
+                 'font-size'=>'9pt',
+                 'background-color'=>'rgba(97, 211, 96, 0.3)',
+               ]
              ],
-          ],
-         [
-           'attribute' => 'PERIODE_END',
-           'label'=>'Periode',
-           'hAlign'=>'left',
-           'vAlign'=>'middle',
-           'value' => function($model) { return $model->PERIODE_START . "-" . $model->PERIODE_END;},
-           'headerOptions'=>[
-             'style'=>[
-               'text-align'=>'center',
-               'width'=>'200px',
-               'font-family'=>'tahoma, arial, sans-serif',
-               'font-size'=>'9pt',
-               'background-color'=>'rgba(97, 211, 96, 0.3)',
-             ]
+             'contentOptions'=>[
+               'style'=>[
+                 'text-align'=>'center',
+                 'width'=>'100px',
+                 'font-family'=>'tahoma, arial, sans-serif',
+                 'font-size'=>'9pt',
+               ]
+             ],
            ],
-           'contentOptions'=>[
-             'style'=>[
-               'text-align'=>'left',
-               'width'=>'200px',
-               'font-family'=>'tahoma, arial, sans-serif',
-               'font-size'=>'9pt',
-             ]
+
+           [
+             'attribute' => 'INVES_TYPE',
+             'label'=>'Type Investasi',
+             'hAlign'=>'left',
+             'vAlign'=>'middle',
+             'headerOptions'=>[
+               'style'=>[
+                 'text-align'=>'center',
+                 'font-family'=>'tahoma, arial, sans-serif',
+                 'font-size'=>'9pt',
+                 'background-color'=>'rgba(97, 211, 96, 0.3)',
+               ]
+             ],
+             'contentOptions'=>[
+               'style'=>[
+                 'text-align'=>'left',
+                 'width'=>'100px',
+                 'font-family'=>'tahoma, arial, sans-serif',
+                 'font-size'=>'9pt',
+               ]
+             ],
+             'pageSummaryOptions' => [
+               'style'=>[
+                   'border-left'=>'0px',
+                   'border-right'=>'0px',
+               ]
+             ],
+             'pageSummary'=>function ($summary, $data, $widget){
+                     return '<div> Total :</div>';
+                   },
+             'pageSummaryOptions' => [
+               'style'=>[
+                   'font-family'=>'tahoma',
+                   'font-size'=>'8pt',
+                   'text-align'=>'center',
+                   'border-left'=>'0px',
+                   'border-right'=>'0px',
+               ]
+             ],
+           ],
+           [
+             'attribute' => 'BUDGET_VALUE',
+             'label'=>'Value',
+             'hAlign'=>'left',
+             'vAlign'=>'middle',
+             'headerOptions'=>[
+               'style'=>[
+                 'text-align'=>'center',
+                 'width'=>'100px',
+                 'font-family'=>'tahoma, arial, sans-serif',
+                 'font-size'=>'9pt',
+                 'background-color'=>'rgba(97, 211, 96, 0.3)',
+               ]
+             ],
+             'contentOptions'=>[
+               'style'=>[
+                 'text-align'=>'left',
+                 'width'=>'100px',
+                 'font-family'=>'tahoma, arial, sans-serif',
+                 'font-size'=>'9pt',
+               ]
+             ],
+             	'pageSummaryFunc'=>GridView::F_SUM,
+             'format'=>['decimal', 2],
+             	'pageSummary'=>true,
+             'pageSummaryOptions' => [
+               'style'=>[
+                   'font-family'=>'tahoma',
+                   'font-size'=>'8pt',
+                   'text-align'=>'left',
+                   'border-left'=>'0px',
+               ]
+             ],
+
+
+           ],
+            [
+              'attribute' => 'budget.TARGET_VALUE',
+              'label'=>'%',
+              'hAlign'=>'left',
+              'vAlign'=>'middle',
+              'value' => function($model) {
+                        if($model->budget->TARGET_VALUE == '')
+                        {
+                             return  $model->budget->TARGET_VALUE = 0.00;
+                        }
+                        else {
+                          # code...
+                           return $model->BUDGET_VALUE / $model->budget->TARGET_VALUE * 100;
+                        }
+                        ;},
+              'headerOptions'=>[
+                'style'=>[
+                  'text-align'=>'center',
+                  'width'=>'100px',
+                  'font-family'=>'tahoma, arial, sans-serif',
+                  'font-size'=>'9pt',
+                  'background-color'=>'rgba(97, 211, 96, 0.3)',
+                ]
+              ],
+              'contentOptions'=>[
+                'style'=>[
+                  'text-align'=>'left',
+                  'width'=>'100px',
+                  'font-family'=>'tahoma, arial, sans-serif',
+                  'font-size'=>'9pt',
+                ]
+              ],
+              'pageSummaryFunc'=>GridView::F_SUM,
+            'format'=>['decimal', 2],
+              'pageSummary'=>true,
+            'pageSummaryOptions' => [
+              'style'=>[
+                  'font-family'=>'tahoma',
+                  'font-size'=>'8pt',
+                  'text-align'=>'left',
+                  'border-left'=>'0px',
+              ]
+               ],
+            ],
+           [
+             'attribute' => 'PERIODE_END',
+             'label'=>'Periode',
+             'hAlign'=>'left',
+             'vAlign'=>'middle',
+             'value' => function($model) { return $model->PERIODE_START . "-" . $model->PERIODE_END;},
+             'headerOptions'=>[
+               'style'=>[
+                 'text-align'=>'center',
+                 'width'=>'100px',
+                 'font-family'=>'tahoma, arial, sans-serif',
+                 'font-size'=>'9pt',
+                 'background-color'=>'rgba(97, 211, 96, 0.3)',
+               ]
+             ],
+             'contentOptions'=>[
+               'style'=>[
+                 'text-align'=>'left',
+                 'width'=>'100px',
+                 'font-family'=>'tahoma, arial, sans-serif',
+                 'font-size'=>'9pt',
+               ]
+             ],
            ],
          ],
-       ],
-    'showPageSummary' => true,
-    'pjax'=>true,
-      'pjaxSettings'=>[
-        'options'=>[
-          'enablePushState'=>false,
-          'id'=>'gv-term-general',
+      'showPageSummary' => true,
+      'pjax'=>true,
+        'pjaxSettings'=>[
+          'options'=>[
+            'enablePushState'=>false,
+            'id'=>'gv-term-general',
+          ],
+         ],
+      'toolbar' => [
+        '',
+      ],
+      'panel' => [
+        'heading'=>'<h3 class="panel-title">Type Investasi</h3>',
+        'type'=>'primary',
+        'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Investasi ',
+            ['modelClass' => 'Termcustomers',]),['/master/term-customers/create-budget','id'=>$dataids],[
+              'data-toggle'=>"modal",
+                'data-target'=>"#modal-create",
+                  'class' => 'btn btn-info'
+                        ]),
+        'showFooter'=>true,
+
+      ],
+
+      'export' =>false,
+    ]);
+
+    echo  $grid = GridView::widget([
+        'id'=>'gv-term',
+        'dataProvider'=> $dataProvider,
+        'footerRowOptions'=>['style'=>'font-weight:bold;text-decoration: underline;'],
+        // 'filterModel' => $searchModel1,
+        // 'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+        'columns' =>
+          [
+             [
+               'class'=>'kartik\grid\SerialColumn',
+               'contentOptions'=>['class'=>'kartik-sheet-style'],
+               'width'=>'10px',
+               'header'=>'No.',
+               'headerOptions'=>[
+                 'style'=>[
+                   'text-align'=>'center',
+                   'width'=>'100px',
+                   'font-family'=>'verdana, arial, sans-serif',
+                   'font-size'=>'9pt',
+                   'background-color'=>'rgba(97, 211, 96, 0.3)',
+                 ]
+               ],
+               'contentOptions'=>[
+                 'style'=>[
+                   'text-align'=>'center',
+                   'width'=>'100px',
+                   'font-family'=>'tahoma, arial, sans-serif',
+                   'font-size'=>'9pt',
+                 ]
+               ],
+             ],
+
+             [
+               'attribute' => 'general.SUBJECT',
+               'label'=>'General Term',
+               'hAlign'=>'left',
+               'vAlign'=>'middle',
+               'headerOptions'=>[
+                 'style'=>[
+                   'text-align'=>'center',
+                   'font-family'=>'tahoma, arial, sans-serif',
+                   'font-size'=>'9pt',
+                   'background-color'=>'rgba(97, 211, 96, 0.3)',
+                 ]
+               ],
+               'contentOptions'=>[
+                 'style'=>[
+                   'text-align'=>'left',
+                   'width'=>'100px',
+                   'font-family'=>'tahoma, arial, sans-serif',
+                   'font-size'=>'9pt',
+                 ]
+               ],
+             ],
+             [
+               'attribute' => 'general.ISI_TERM',
+               'label'=>'Isi Peraturan',
+               'hAlign'=>'left',
+               'vAlign'=>'middle',
+               'headerOptions'=>[
+                 'style'=>[
+                   'text-align'=>'center',
+                   'font-family'=>'tahoma, arial, sans-serif',
+                   'font-size'=>'9pt',
+                   'background-color'=>'rgba(97, 211, 96, 0.3)',
+                 ]
+               ],
+               'contentOptions'=>[
+                 'style'=>[
+                   'text-align'=>'left',
+                   'width'=>'100px',
+                   'font-family'=>'tahoma, arial, sans-serif',
+                   'font-size'=>'9pt',
+                 ]
+               ],
+             ],
+
+           ],
+        'showPageSummary' => false,
+        'pjax'=>true,
+          'pjaxSettings'=>[
+            'options'=>[
+              'enablePushState'=>false,
+              'id'=>'gv-term-general',
+            ],
+           ],
+        'toolbar' => [
+          '',
         ],
-       ],
-    'toolbar' => [
-      '{export}',
-    ],
-    'panel' => [
-      'heading'=>'<h3 class="panel-title">Type Investasi</h3>',
-      'type'=>'warning',
-      'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Investasi ',
-          ['modelClass' => 'Termcustomers',]),['/master/term-customers/create-budget','id'=>$dataids],[
-            'data-toggle'=>"modal",
-              'data-target'=>"#modal-create",
-                'class' => 'btn btn-success'
-                      ]),
-      'showFooter'=>true,
+        'panel' => [
+          'heading'=>'<h3 class="panel-title">General Term</h3>',
+          'type'=>'primary',
+          'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Term ',
+              ['modelClass' => 'Termcustomers',]),['/master/term-customers/create-general','id'=>$dataids],[
+                'data-toggle'=>"modal",
+                  'data-target'=>"#modal-create",
+                    'class' => 'btn btn-info'
+                          ]),
+          'showFooter'=>true,
 
-    ],
-
-    'export' =>['target' => GridView::TARGET_BLANK],
-    'exportConfig' => [
-      GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
-      GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
-    ],
-  ]);
-
-
-$gridColumns = [
-    [
-      'class'=>'kartik\grid\SerialColumn',
-      'contentOptions'=>['class'=>'kartik-sheet-style'],
-      'width'=>'10px',
-      'header'=>'No.',
-      'headerOptions'=>[
-        'style'=>[
-          'text-align'=>'center',
-          'width'=>'10px',
-          'font-family'=>'verdana, arial, sans-serif',
-          'font-size'=>'9pt',
-          'background-color'=>'rgba(97, 211, 96, 0.3)',
-        ]
-      ],
-      'contentOptions'=>[
-        'style'=>[
-          'text-align'=>'center',
-          'width'=>'10px',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-        ]
-      ],
-    ],
-
-    [
-      'attribute' => 'SUBJECT',
-      'label'=>'Aturan',
-      'hAlign'=>'left',
-      'vAlign'=>'middle',
-      'headerOptions'=>[
-        'style'=>[
-          'text-align'=>'center',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-          'background-color'=>'rgba(97, 211, 96, 0.3)',
-        ]
-      ],
-      'contentOptions'=>[
-        'style'=>[
-          'text-align'=>'left',
-          'width'=>'80px',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-        ]
-      ],
-    ],
-    [
-      'attribute' => 'ISI_TERM',
-      'label'=>'Isi Perjanjian',
-      'hAlign'=>'left',
-      'vAlign'=>'middle',
-      'headerOptions'=>[
-        'style'=>[
-          'text-align'=>'center',
-          'width'=>'200px',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-          'background-color'=>'rgba(97, 211, 96, 0.3)',
-        ]
-      ],
-      'contentOptions'=>[
-        'style'=>[
-          'text-align'=>'left',
-          'width'=>'200px',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-        ]
-      ],
-    ],
-  ];
-
-echo  $grid = GridView::widget([
-    'id'=>'gv-term',
-    'dataProvider'=> $dataProvider,
-    'filterModel' => $searchModel,
-    'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
-    'columns' => $gridColumns,
-    'pjax'=>true,
-      'pjaxSettings'=>[
-        'options'=>[
-          'enablePushState'=>false,
-          'id'=>'gv-term',
         ],
-       ],
-    'toolbar' => [
-      '{export}',
-    ],
-    'panel' => [
-      'heading'=>'<h3 class="panel-title">LIST PERJANJIAN</h3>',
-      'type'=>'warning',
-      'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Term ',
-          ['modelClass' => 'Termcustomers',]),['/master/term-customers/create-general','id'=>$dataids],[
-            'data-toggle'=>"modal",
-              'data-target'=>"#modal-general",
-                'class' => 'btn btn-success'
-                      ]),
-      'showFooter'=>false,
-    ],
 
-    'export' =>['target' => GridView::TARGET_BLANK],
-    'exportConfig' => [
-      GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
-      GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
-    ],
-  ]);
+        'export' =>false,
+      ]);
 
  ?>
  <div style="text-align:right;float:right"">
@@ -546,10 +596,9 @@ echo  $grid = GridView::widget([
  <div  class="col-md-12">
    <div  class="row" >
      <div class="col-md-6">
-       <table id="tblRo" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">
+       <table id="tblterm" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">
          <!-- Tanggal!-->
           <tr>
-           <!-- Tanggal Pembuat RO!-->
            <th  class="col-md-1" style="text-align: center; height:20px">
              <div style="text-align:center;">
                <?php
@@ -601,50 +650,30 @@ echo  $grid = GridView::widget([
          <!-- Signature !-->
           <tr>
            <th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
-             <?php
-              //  $ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG1_SVGBASE64.'></img>' :'';
-              //  echo $ttd1;
-             ?>
+
            </th>
            <th class="col-md-1" style="text-align: center; vertical-align:middle">
-             <?php
-              //  $ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG2_SVGBASE64.'></img>' :'';
-              //  echo $ttd2;
-             ?>
+
            </th>
            <th  class="col-md-1" style="text-align: center; vertical-align:middle">
-             <?php
-              //  $ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :'';
-               //if ($poHeader->STATUS==101 OR $poHeader->STATUS==10){
-                //  echo $ttd3;
-               //}
-             ?>
+
            </th>
          </tr>
          <!--Nama !-->
           <tr>
            <th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
              <div>
-               <?php
-                //  $sigNm1=$poHeader->SIG1_NM!='none' ? '<b>'.$poHeader->SIG1_NM.'</b>' : 'none';
-                //  echo $sigNm1;
-               ?>
+
              </div>
            </th>
            <th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
              <div>
-               <?php
-                //  $sigNm2=$poHeader->SIG2_NM!='none' ? '<b>'.$poHeader->SIG2_NM.'</b>' : 'none';
-                //  echo $sigNm2;
-               ?>
+
              </div>
            </th>
            <th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
              <div>
-               <?php
-                //  $sigNm3=$poHeader->SIG3_NM!='none' ? '<b>'.$poHeader->SIG3_NM.'</b>' : 'none';
-                //  echo $sigNm3;
-               ?>
+
              </div>
            </th>
          </tr>
@@ -652,17 +681,63 @@ echo  $grid = GridView::widget([
           <tr>
            <th style="text-align: center; vertical-align:middle;height:20">
              <div>
-               <b><?php  echo 'Pihak 1'; ?></b>
+               <b><?php  echo 'Nama:  '.ttd($model) ?></b>
+               <?php
+               $barisjabatancus = count($model->JABATAN_CUS);
+               if($barisjabatancus == 0)
+               {
+               ?>
+               <br><b><?php  echo 'Jabatan:  ---' ?></b>
+               <?php
+              }
+              else{
+               ?>
+               <br><b><?php  echo 'Jabatan:  '.$model->JABATAN_CUS ?></b>
+               <?php
+             }
+               ?>
              </div>
            </th>
            <th style="text-align: center; vertical-align:middle;height:20">
              <div>
-               <b><?php  echo 'Pihak 2'; ?></b>
+               <b><?php  echo 'Nama:   '.ttd2($model) ?></b>
+               <?php
+               $barisjabatandis = count($model->JABATAN_DIST);
+               if($barisjabatandis == 0)
+               {
+               ?>
+               <br><b><?php  echo 'Jabatan:  ---' ?></b>
+               <?php
+              }
+              else{
+               ?>
+               <br><b><?php  echo 'Jabatan:  '.$model->JABATAN_DIST ?></b>
+               <?php
+             }
+               ?>
              </div>
            </th>
            <th style="text-align: center; vertical-align:middle;height:20">
              <div>
-               <b><?php  echo 'Pihak 3'; ?></b>
+                  <b><?php  echo 'Nama:   '.ttd3($model) ?></b>
+               <?php
+               $barisjabataninternal = count($model->JOBGRADE_ID);
+               if($barisjabataninternal == 0)
+               {
+               ?>
+
+               <br><b><?php  echo 'Jabatan:  ---' ?></b>
+               <?php
+              }
+              else{
+                $datainternal = Jobgrade::find()->where(['JOBGRADE_ID'=>$model->JOBGRADE_ID])->asArray()
+                                                                                              ->one();
+               ?>
+                <br><b><?php  echo 'Jabatan:  '.$datainternal['JOBGRADE_NM'] ?></b>
+
+               <?php
+             }
+               ?>
              </div>
            </th>
          </tr>
@@ -812,32 +887,73 @@ echo  $grid = GridView::widget([
                  ],
                  ]);
                  Modal::end();
+
                  $this->registerJs("
-                     $.fn.modal.Constructor.prototype.enforceFocus = function() {};
-                     $('#confirm-permission-alert').on('show.bs.modal', function (event) {
-                       //var button = $(event.relatedTarget)
-                       //var modal = $(this)
-                       //var title = button.data('title')
-                       //var href = button.attr('href')
+                    $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+                    $('#TTD1').on('show.bs.modal', function (event) {
+                     var button = $(event.relatedTarget)
+                     var modal = $(this)
+                     var title = button.data('title')
+                     var href = button.attr('href')
+                     //modal.find('.modal-title').html(title)
+                     modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+                     $.post(href)
+                       .done(function( data ) {
+                         modal.find('.modal-body').html(data)
+                       });
+                     })
+                 ",$this::POS_READY);
+                   Modal::begin([
+                    'id' => 'TTD1',
+                   'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+                   'headerOptions'=>[
+                       'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+                   ],
+                   ]);
+                   Modal::end();
+                   $this->registerJs("
+                      $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+                      $('#TTD2').on('show.bs.modal', function (event) {
+                       var button = $(event.relatedTarget)
+                       var modal = $(this)
+                       var title = button.data('title')
+                       var href = button.attr('href')
                        //modal.find('.modal-title').html(title)
-                       //modal.find('.modal-body').html('')
-                       /* $.post(href)
+                       modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+                       $.post(href)
                          .done(function( data ) {
                            modal.find('.modal-body').html(data)
-                         }); */
-                       }),
-                 ",$this::POS_READY);
-                 Modal::begin([
-                     'id' => 'confirm-permission-alert',
-                     'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/warning/denied.png',  ['class' => 'pnjg', 'style'=>'width:40px;height:40px;']).'</div><div style="margin-top:10px;"><h4><b>Permmission Confirm !</b></h4></div>',
-                     'size' => Modal::SIZE_SMALL,
+                         });
+                       })
+                   ",$this::POS_READY);
+                     Modal::begin([
+                      'id' => 'TTD2',
+                     'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
                      'headerOptions'=>[
-                       'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
-                     ]
-                   ]);
-                   echo "<div>Tolong Di isi Target Value.
-                       <dl>
-                         <dt>Contact : itdept@lukison.com</dt>
-                       </dl>
-                     </div>";
-                 Modal::end();
+                         'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+                     ],
+                     ]);
+                     Modal::end();
+                     $this->registerJs("
+                        $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+                        $('#TTD3').on('show.bs.modal', function (event) {
+                         var button = $(event.relatedTarget)
+                         var modal = $(this)
+                         var title = button.data('title')
+                         var href = button.attr('href')
+                         //modal.find('.modal-title').html(title)
+                         modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+                         $.post(href)
+                           .done(function( data ) {
+                             modal.find('.modal-body').html(data)
+                           });
+                         })
+                     ",$this::POS_READY);
+                       Modal::begin([
+                        'id' => 'TTD3',
+                       'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+                       'headerOptions'=>[
+                           'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+                       ],
+                       ]);
+                       Modal::end();

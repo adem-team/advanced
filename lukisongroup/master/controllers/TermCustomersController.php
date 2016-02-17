@@ -4,6 +4,7 @@ namespace lukisongroup\master\controllers;
 
 use Yii;
 use lukisongroup\master\models\Termcustomers;
+use lukisongroup\hrd\models\Jobgrade;
 use lukisongroup\master\models\Termgeneral;
 use lukisongroup\master\models\Terminvest;
 use lukisongroup\master\models\TermbudgetSearch;
@@ -81,8 +82,8 @@ class TermCustomersController extends Controller
     public function actionView($id)
     {
 
-      $searchModel = new TermgeneralSearch();
-      $dataProvider = $searchModel->searchtermgeneral(Yii::$app->request->queryParams,$id);
+      $searchModel = new TermcustomersSearch();
+      $dataProvider = $searchModel->searchcusbyid(Yii::$app->request->queryParams,$id);
 
       $searchModel1 = new TermbudgetSearch();
       $dataProvider1 = $searchModel1->searchbudget(Yii::$app->request->queryParams,$id);
@@ -92,12 +93,34 @@ class TermCustomersController extends Controller
 
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'searchModel'=>   $searchModel,
+            // 'searchModel'=>   $searchModel,
             'dataProvider' =>  $dataProvider,
             'searchModel1'=>   $searchModel1,
             'dataProvider1' =>  $dataProvider1
         ]);
     }
+
+    public function actionViewTermCus($id)
+    {
+
+      $searchModel = new TermcustomersSearch();
+      $dataProvider = $searchModel->searchcusbyid(Yii::$app->request->queryParams,$id);
+
+      $searchModel1 = new TermbudgetSearch();
+      $dataProvider1 = $searchModel1->searchbudget(Yii::$app->request->queryParams,$id);
+
+
+      // $data
+
+        return $this->render('viewterm', [
+            'model' => $this->findModel($id),
+            // 'searchModel'=>   $searchModel,
+            'dataProvider' =>  $dataProvider,
+            'searchModel1'=>   $searchModel1,
+            'dataProvider1' =>  $dataProvider1
+        ]);
+    }
+
 
 
     public function actionValid()
@@ -147,6 +170,79 @@ class TermCustomersController extends Controller
       }
 
     }
+
+    public function actionSetInternal($id)
+    {
+      # code...
+      $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
+
+      if ($model->load(Yii::$app->request->post())) {
+        if($model->validate())
+        {
+
+            $model->save();
+        }
+
+      return  $this->redirect(['view','id'=> $model->ID_TERM]);
+
+      }
+      else {
+          return $this->renderAjax('_ttd', [
+              'model' => $model,
+
+          ]);
+      }
+
+    }
+
+    public function actionSetCus($id)
+    {
+      # code...
+      $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
+
+      if ($model->load(Yii::$app->request->post())) {
+        if($model->validate())
+        {
+
+            $model->save();
+        }
+
+      return  $this->redirect(['view','id'=> $model->ID_TERM]);
+
+      }
+      else {
+          return $this->renderAjax('_ttd2', [
+              'model' => $model,
+
+          ]);
+      }
+
+    }
+
+    public function actionSetDist($id)
+    {
+      # code...
+      $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
+
+      if ($model->load(Yii::$app->request->post())) {
+        if($model->validate())
+        {
+
+            $model->save();
+        }
+
+      return  $this->redirect(['view','id'=> $model->ID_TERM]);
+
+      }
+      else {
+          return $this->renderAjax('ttd3', [
+              'model' => $model,
+
+          ]);
+      }
+
+    }
+
 
 
     public function actionPeriode($id)
@@ -206,6 +302,8 @@ class TermCustomersController extends Controller
 
               $model->save();
           }
+        //   print_r($model->getErrors());
+        //  die();
 
         return  $this->redirect(['view','id'=> $model->ID_TERM]);
 
@@ -223,11 +321,12 @@ class TermCustomersController extends Controller
     {
       # code...
         $budget = new  Termbudget();
+        $profile= Yii::$app->getUserOpt->Profile_user();
 
         if ($budget->load(Yii::$app->request->post())) {
 
 
-
+          $budget->CORP_ID = $profile->emp->EMP_CORP_ID;
           if($budget->validate())
           {
             $budget->CREATE_AT = date("Y-m-d H:i:s");
@@ -254,16 +353,14 @@ class TermCustomersController extends Controller
     public function actionCreateGeneral($id)
     {
       # code...
-        $model = new  Termgeneral();
+        $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
 
         if ($model->load(Yii::$app->request->post())) {
 
-          $model->ID_TERM = $id;
-
           if($model->validate())
           {
-            $model->CREATE_AT = date("Y-m-d H:i:s");
-            $model->CREATE_BY = Yii::$app->user->identity->username;
+            // $model->CREATE_AT = date("Y-m-d H:i:s");
+            // $model->CREATE_BY = Yii::$app->user->identity->username;
             $model->save();
 
           }
@@ -288,10 +385,13 @@ class TermCustomersController extends Controller
     {
       # code...
       $data = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
+      $datainternal = Jobgrade::find()->where(['JOBGRADE_ID'=>$data['JOBGRADE_ID']])->asArray()
+                                                                                    ->one();
       $datacus = Customers::find()->where(['CUST_KD'=> $data->CUST_KD])
                               ->asArray()
                               ->one();
-      $term = Termgeneral::find()->where(['ID_TERM'=>$id])->asArray()
+
+      $term = Termgeneral::find()->where(['ID'=>$data['GENERAL_TERM']])->asArray()
                                                           ->one();
 
       $datadis = Distributor::find()->where(['KD_DISTRIBUTOR'=> $data->DIST_KD])
@@ -315,6 +415,7 @@ class TermCustomersController extends Controller
 
       $content = $this->renderPartial( '_pdf', [
         'data' => $data,
+        'datainternal'=>$datainternal,
         'datacus'=>  $datacus,
         'datadis'=>$datadis,
         'datacorp'=>$datacorp,
