@@ -571,6 +571,9 @@ $y=4;
 		[	/* Attribute Unit Barang */
 			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'HARGA',
+			'value'=>function($model){
+				return  round(($model->HARGA * $model->UNIT_QTY),0,PHP_ROUND_HALF_UP);
+			},
 			'mergeHeader'=>true,
 			'label'=>'Price',
 			'vAlign'=>'middle',
@@ -634,7 +637,8 @@ $y=4;
 			//'width'=>'7%',
 			'value'=>function ($model, $key, $index, $widget) {
 				$p = compact('model', 'key', 'index');
-				return $widget->col(5, $p) != 0 ? $widget->col(5, $p) * round($model->UNIT_QTY * $widget->col(7, $p),0,PHP_ROUND_HALF_UP) : 0;
+				//return $widget->col(5, $p) != 0 ? $widget->col(5, $p) * round($model->UNIT_QTY * $widget->col(7, $p),0,PHP_ROUND_HALF_UP) : 0;
+				return $widget->col(5, $p) != 0 ? $widget->col(5, $p) * $widget->col(7, $p): 0;
 				//return $widget->col(3, $p) != 0 ? $widget->col(5 ,$p) * 100 / $widget->col(3, $p) : 0;
 			},
 			'headerOptions'=>[

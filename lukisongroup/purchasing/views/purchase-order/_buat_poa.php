@@ -758,9 +758,9 @@ use lukisongroup\master\models\Unitbarang;
 		[	/* Attribute Unit Barang */
 			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'HARGA',
-			/* 'value'=>function($model){
-				return ceil($model->HARGA);
-			}, */
+			'value'=>function($model){
+				return  round(($model->HARGA * $model->UNIT_QTY),0,PHP_ROUND_HALF_UP);
+			},
 			'mergeHeader'=>true,
 			'label'=>'Price',
 			'vAlign'=>'middle',
@@ -825,7 +825,8 @@ use lukisongroup\master\models\Unitbarang;
 			'value'=>function ($model, $key, $index, $widget) {
 				$p = compact('model', 'key', 'index');
 				/*Formula Round Unit/harga pcs -ptr.nov-*/
-				return $widget->col(5, $p) != 0 ? $widget->col(5, $p) * round($model->UNIT_QTY  * $widget->col(7, $p),0,PHP_ROUND_HALF_UP): 0;
+				//return $widget->col(5, $p) != 0 ? $widget->col(5, $p) * round($model->UNIT_QTY  * $widget->col(7, $p),0,PHP_ROUND_HALF_UP): 0;
+				return $widget->col(5, $p) != 0 ? $widget->col(5, $p) * $widget->col(7, $p): 0;
 				//return $widget->col(3, $p) != 0 ? $widget->col(5 ,$p) * 100 / $widget->col(3, $p) : 0;
 			},
 			'headerOptions'=>[
