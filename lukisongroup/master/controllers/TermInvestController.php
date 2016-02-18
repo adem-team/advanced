@@ -27,7 +27,6 @@ class TermInvestController extends Controller
     }
 
 
-
             public function beforeAction(){
                     if (Yii::$app->user->isGuest)  {
                          Yii::$app->user->logout();
@@ -72,7 +71,7 @@ class TermInvestController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        return $this->renderAjax('view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -86,10 +85,17 @@ class TermInvestController extends Controller
     {
         $model = new Terminvest();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
+        if ($model->load(Yii::$app->request->post())) {
+          if($model->validate())
+          {
+             $model->CREATE_BY = Yii::$app->user->identity->username;
+             $model->CREATE_AT = date("Y-m-d H:i:s");
+             $model->save();
+          }
+
+            return $this->redirect(['index']);
         } else {
-            return $this->render('create', [
+            return $this->renderAjax('create', [
                 'model' => $model,
             ]);
         }
@@ -105,10 +111,17 @@ class TermInvestController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
+        if ($model->load(Yii::$app->request->post()) ) {
+          if($model->validate())
+          {
+            $model->UPDATE_AT = date("Y-m-d H:i:s");
+            $model->UPDATE_BY = Yii::$app->user->identity->username;
+            $model->save();
+          }
+
+            return $this->redirect(['index']);
         } else {
-            return $this->render('update', [
+            return $this->renderAjax('update', [
                 'model' => $model,
             ]);
         }

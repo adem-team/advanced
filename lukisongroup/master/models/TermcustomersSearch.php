@@ -15,11 +15,18 @@ class TermcustomersSearch extends Termcustomers
     /**
      * @inheritdoc
      */
+
+     public function attributes()
+       {
+           /*Author -ptr.nov- add related fields to searchable attributes */
+           return array_merge(parent::attributes(), ['cus.CUST_NM','dis.NM_DISTRIBUTOR','corp.CORP_NM']);
+       }
+
     public function rules()
     {
         return [
             [[ 'STATUS'], 'integer'],
-            [['NM_TERM','ID_TERM','GENERAL_TERM','CUST_KD', 'CUST_NM', 'CUST_SIGN', 'PRINCIPAL_KD', 'PRINCIPAL_NM', 'PRINCIPAL_SIGN', 'DIST_KD', 'DIST_NM', 'DIST_SIGN', 'DCRP_SIGNARURE', 'PERIOD_START', 'PERIOD_END', 'TARGET_TEXT', 'RABATE_CNDT', 'TOP', 'CREATED_BY', 'CREATED_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
+            [['NM_TERM','ID_TERM','GENERAL_TERM','cus.CUST_NM','CUST_KD','dis.NM_DISTRIBUTOR','corp.CORP_NM', 'CUST_NM', 'CUST_SIGN', 'PRINCIPAL_KD', 'PRINCIPAL_NM', 'PRINCIPAL_SIGN', 'DIST_KD', 'DIST_NM', 'DIST_SIGN', 'DCRP_SIGNARURE', 'PERIOD_START', 'PERIOD_END', 'TARGET_TEXT', 'RABATE_CNDT', 'TOP', 'CREATED_BY', 'CREATED_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
             [['TARGET_VALUE', 'GROWTH'], 'number'],
         ];
     }
@@ -117,6 +124,9 @@ class TermcustomersSearch extends Termcustomers
         $query->andFilterWhere(['like', 'NM_TERM', $this->NM_TERM])
             ->andFilterWhere(['like', 'CUST_KD', $this->CUST_KD])
             ->andFilterWhere(['like', 'CUST_NM', $this->CUST_NM])
+            ->andFilterWhere(['like', 'CUST_KD', $this->getAttribute('cus.CUST_NM')])
+            ->andFilterWhere(['like', 'DIST_KD', $this->getAttribute('dis.NM_DISTRIBUTOR')])
+            ->andFilterWhere(['like', 'PRINCIPAL_KD', $this->getAttribute('corp.CORP_NM')])
             ->andFilterWhere(['like', 'CUST_SIGN', $this->CUST_SIGN])
             ->andFilterWhere(['like', 'PRINCIPAL_KD', $this->PRINCIPAL_KD])
             ->andFilterWhere(['like', 'PRINCIPAL_NM', $this->PRINCIPAL_NM])

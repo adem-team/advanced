@@ -5,10 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Terminvest */
 
-$this->title = 'Update Terminvest: ' . ' ' . $model->ID;
-$this->params['breadcrumbs'][] = ['label' => 'Terminvests', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->ID, 'url' => ['view', 'id' => $model->ID]];
-$this->params['breadcrumbs'][] = 'Update';
+ // $model->INVES_TYPE
+// $this->params['breadcrumbs'][] = ['label' => 'Terminvests', 'url' => ['index']];
+// $this->params['breadcrumbs'][] = ['label' => $model->ID, 'url' => ['view', 'id' => $model->ID]];
+// $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="terminvest-update">
 

@@ -71,7 +71,7 @@ class TermGeneralController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        return $this->renderAjax('view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -89,13 +89,13 @@ class TermGeneralController extends Controller
 
           if($model->validate())
           {
-              $model->CREATED_AT = date("Y-m-d H:i:s");
-              $model->CREATED_BY = Yii::$app->user->identity->username;
+              $model->CREATE_AT = date("Y-m-d H:i:s");
+              $model->CREATE_BY = Yii::$app->user->identity->username;
               $model->save();
           }
             return $this->redirect(['index']);
         } else {
-            return $this->render('create', [
+            return $this->renderAjax('create', [
                 'model' => $model,
             ]);
         }
@@ -115,13 +115,13 @@ class TermGeneralController extends Controller
 
           if($model->validate())
           {
-              $model->UPDATED_AT = date("Y-m-d H:i:s");
-              $model->UPDATED_BY = Yii::$app->user->identity->username;
+              $model->UPDATE_AT = date("Y-m-d H:i:s");
+              $model->UPDATE_BY = Yii::$app->user->identity->username;
               $model->save();
           }
-            return $this->redirect(['view', 'id' => $model->ID]);
+            return $this->redirect(['index']);
         } else {
-            return $this->render('update', [
+            return $this->renderAjax('update', [
                 'model' => $model,
             ]);
         }

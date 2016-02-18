@@ -36,7 +36,8 @@ $form = ActiveForm::begin([
 <?= $form->field($budget, 'PERIODE_START')->widget(DatePicker::classname(), [
 'options' => ['placeholder' => 'Dari  ...'],
 'pluginOptions' => [
-   'autoclose'=>true
+   'autoclose'=>true,
+   'format' => 'dd/mm/yyyy',
 ],
 'pluginEvents'=>[
        'show' => "function(e) {errror}",
@@ -47,7 +48,8 @@ $form = ActiveForm::begin([
 <?= $form->field($budget, 'PERIODE_END')->widget(DatePicker::classname(), [
 'options' => ['placeholder' => 'Sampai'],
 'pluginOptions' => [
-   'autoclose'=>true
+   'autoclose'=>true,
+   'format' => 'dd/mm/yyyy',
 ],
 'pluginEvents'=>[
        'show' => "function(e) {error}",

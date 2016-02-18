@@ -40,6 +40,7 @@ class Terminvest extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['KETERANGAN','INVES_TYPE'], 'required'],
             [['STATUS'], 'integer'],
             [['KETERANGAN'], 'string'],
             [['CREATE_AT', 'UPDATE_AT'], 'safe'],

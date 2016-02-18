@@ -26,10 +26,6 @@ $data2 = Distributor::find()->all();
 $to2 = 'KD_DISTRIBUTOR';
 $from2 = "NM_DISTRIBUTOR";
 
-$data3 = Terminvest::find()->all();
-$to3 = 'ID';
-$from3 = "INVES_TYPE";
-
 $config = ['template'=>"{input}\n{error}\n{hint}"];
 
 
