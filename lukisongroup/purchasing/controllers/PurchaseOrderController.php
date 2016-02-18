@@ -1258,9 +1258,13 @@ class PurchaseOrderController extends Controller
 		 // $mpdf = $pdf->api; // fetches mpdf api
 		 // $mpdf->SetHeader('Kartik Header'); // call methods or set any properties
 		 // $mpdf->WriteHtml($content); // call mpdf write html
-		 $fileX= $pdf->Output('po', 'D');
+		 // $reportName ="Report(".date('d-m-Y h:i').").pdf";
+		 // $content1 = $mpdf->Output($reportName, 'D');
+		 // $content1 = chunk_split(base64_encode($content1));
+		 // = $pdf->Output('test.pdf', 'S')
+		// $fileX= $pdf->Output('po', 'I');
 		 //$fileAttach=chunk_split(base64_encode($hasil));
-		 $fileAttach=chunk_split(base64_encode($fileX));
+		// $fileAttach=chunk_split(base64_encoder($fileX));
 
 		Yii::$app->mailer->compose()
 					 ->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
@@ -1271,9 +1275,9 @@ class PurchaseOrderController extends Controller
 					 ->setSubject('Purchase Order')
 					 ->setHtmlBody($contentMail)
 					 //->attach('../../lukisongroup/web/login.png',['login','png'])
-					 ->attach($fileAttach,['po','pdf'])
+					// ->attach($content1,['po','pdf'])
 					 //->attachContent( $fileAttach,['po','pdf'])
-					 //->attachContent($fileAttach)
+					 // ->attachContent($content1)
 					 ->send();
 		
 		 return $hasil;
