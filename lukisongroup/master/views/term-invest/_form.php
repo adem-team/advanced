@@ -11,14 +11,22 @@ use yii\widgets\ActiveForm;
 <div class="terminvest-form">
 
     <?php $form = ActiveForm::begin([
-      'id'=>$model->formName()
+      'id'=>$model->formName(),
+      'enableClientValidation'=>true
     ]); ?>
 
     <?= $form->field($model, 'INVES_TYPE')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'STATUS')->textInput() ?>
 
     <?= $form->field($model, 'KETERANGAN')->textarea(['rows' => 6]) ?>
+
+    <?php
+      if(!$model->IsNewRecord)
+      {
+        	echo $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']);
+      }
+
+     ?>
 
 
     <div class="form-group">

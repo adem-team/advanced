@@ -59,6 +59,7 @@ class Termcustomers extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['CUST_KD', 'PRINCIPAL_KD', 'DIST_KD'], 'required'],
             [['DCRP_SIGNARURE', 'TARGET_TEXT', 'RABATE_CNDT', 'TOP','JOBGRADE_ID','JABATAN_CUS','JABATAN_DIST'], 'string'],
             [['PERIOD_START', 'PERIOD_END', 'CREATED_AT', 'UPDATE_AT'], 'safe'],
             [['PERIOD_END'], 'cekdate'],
@@ -80,6 +81,10 @@ class Termcustomers extends \yii\db\ActiveRecord
     {
       # code...
       $datestart = $this->PERIOD_START;
+      $dateawal = explode('/', $datestart);
+
+      print_r($dateawal);
+      die();
       $dateend = $this->PERIOD_END;
 
        if( $dateend < $datestart  )

@@ -11,7 +11,6 @@ use lukisongroup\master\models\Termcustomers;
  * This is the model class for table "c0005".
  *
  * @property integer $ID
- * @property string $CUST_KD
  * @property string $INVES_TYPE
  * @property string $BUDGET_SOURCE
  * @property string $BUDGET_VALUE
@@ -51,7 +50,7 @@ class Termbudget extends \yii\db\ActiveRecord
 
             [['BUDGET_VALUE'], 'number'],
             [['INVES_TYPE'], 'cekdata'],
-            // [['INVES_TYPE'], 'required'],
+            [['INVES_TYPE','BUDGET_VALUE','PERIODE_START','PERIODE_END'], 'required'],
             [['PERIODE_END'], 'datevalid'],
             [['PERIODE_START', 'PERIODE_END', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
             [['STATUS'], 'integer'],
@@ -74,8 +73,6 @@ class Termbudget extends \yii\db\ActiveRecord
       $inves = $this->INVES_TYPE;
       $data = Termbudget::find()->where(['ID_TERM'=>$id,'INVES_TYPE'=>$inves])->asArray()
                                                           ->one();
-                                                        
-
       if($inves ===  $data['INVES_TYPE'])
       {
            $this->addError($budget,'Maaf Duplikat data');
@@ -89,6 +86,7 @@ class Termbudget extends \yii\db\ActiveRecord
     }
 
 
+// valid date in term-customers
     public function datevalid($model)
     {
       # code...

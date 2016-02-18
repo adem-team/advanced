@@ -4,16 +4,40 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
+use lukisongroup\master\models\Termcustomers;
+use lukisongroup\hrd\models\Corp;
+use lukisongroup\master\models\Distributor;
 
 /* @var $this yii\web\View */
 /* @var $searchModel lukisongroup\master\models\TermcustomersSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+
+$this->sideCorp = 'PT. Efenbi Sukses Makmur';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'esm_sales';                                      /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pada header page */
+$this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+
 
 $aryStt= [
     ['STATUS' => 0, 'STT_NM' => 'DISABLE'],
     ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
 ];
 $valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
+
+$data = Termcustomers::find()->all();
+$to = "CUST_KD";
+$from = "cus.CUST_NM";
+$val = ArrayHelper::map($data, $to,$from);
+
+$data1 = Termcustomers::find()->all();
+$to1 = "PRINCIPAL_KD";
+$from1 = "corp.CORP_NM";
+$val1 = ArrayHelper::map($data1, $to1,$from1);
+
+$data2 = Termcustomers::find()->all();
+$to2 = 'DIST_KD';
+$from2 = "dis.NM_DISTRIBUTOR";
+$val2 = ArrayHelper::map($data2, $to2, $from2);
 
 $gridColumns = [
     [
@@ -43,6 +67,12 @@ $gridColumns = [
     [
       'attribute' => 'cus.CUST_NM',
       'label'=>'Nama Customers',
+      'filter' =>$val,
+      'filterType'=>GridView::FILTER_SELECT2,
+      'filterWidgetOptions'=>[
+        'pluginOptions'=>['allowClear'=>true],
+      ],
+      'filterInputOptions'=>['placeholder'=>'Nama CUstomers'],
       'hAlign'=>'left',
       'vAlign'=>'middle',
       'headerOptions'=>[
@@ -89,6 +119,12 @@ $gridColumns = [
     [
       'attribute' => 'dis.NM_DISTRIBUTOR',
       'label'=>'Nama Distributor',
+      'filter' =>$val2,
+      'filterType'=>GridView::FILTER_SELECT2,
+      'filterWidgetOptions'=>[
+        'pluginOptions'=>['allowClear'=>true],
+      ],
+      'filterInputOptions'=>['placeholder'=>'Nama Distributor'],
       'hAlign'=>'left',
       'vAlign'=>'middle',
       'headerOptions'=>[
@@ -112,7 +148,12 @@ $gridColumns = [
     [
       'attribute' =>'corp.CORP_NM',
       'label'=>'Nama Pihak 2',
-      // 'filter' => $userCorp,
+      'filter' =>$val1,
+      'filterType'=>GridView::FILTER_SELECT2,
+      'filterWidgetOptions'=>[
+        'pluginOptions'=>['allowClear'=>true],
+      ],
+      'filterInputOptions'=>['placeholder'=>'Nama Perusahaan'],
       'hAlign'=>'left',
       'vAlign'=>'middle',
       'headerOptions'=>[
@@ -136,12 +177,22 @@ $gridColumns = [
     [
       'attribute' => 'PERIOD_END',
       'label'=>'Tanggal Berakhir Perjanjian',
-      'filterType'=>GridView::FILTER_SELECT2,
+      'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
       // 'filter' => $typeBrg,
-      'filterWidgetOptions'=>[
-        'pluginOptions'=>['allowClear'=>true],
-      ],
-      'filterInputOptions'=>['placeholder'=>'Any author'],
+      'filterWidgetOptions' =>([
+        'attribute' =>'PERIOD_END',
+        'presetDropdown'=>TRUE,
+        'convertFormat'=>true,
+        'pluginOptions'=>[
+          'format'=>'Y-m-d',
+          'separator' => ' TO ',
+          'opens'=>'left'
+        ],
+
+      //'pluginEvents' => [
+      //	"apply.daterangepicker" => "function() { aplicarDateRangeFilter('EMP_JOIN_DATE') }",
+      //]
+      ]),
       'hAlign'=>'left',
       'vAlign'=>'middle',
       'headerOptions'=>[
@@ -165,12 +216,23 @@ $gridColumns = [
     [
       'attribute' => 'PERIOD_START',
       'label'=>'Tanggal awal Perjanjian',
-      'filterType'=>GridView::FILTER_SELECT2,
+      'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
       // 'filter' => $kat,
-      'filterWidgetOptions'=>[
-        'pluginOptions'=>['allowClear'=>true],
-      ],
-      'filterInputOptions'=>['placeholder'=>'Any author'],
+      'filterWidgetOptions' =>([
+        'attribute' =>'PERIOD_START',
+        'presetDropdown'=>TRUE,
+        'convertFormat'=>true,
+        'pluginOptions'=>[
+          'format'=>'Y-m-d',
+          'separator' => ' TO ',
+          'opens'=>'left'
+        ],
+
+      //'pluginEvents' => [
+      //	"apply.daterangepicker" => "function() { aplicarDateRangeFilter('EMP_JOIN_DATE') }",
+      //]
+      ]),
+      // 'filterInputOptions'=>['placeholder'=>'Any author'],
       'hAlign'=>'left',
       'vAlign'=>'middle',
       'headerOptions'=>[
@@ -275,7 +337,7 @@ $gridColumns = [
 <div class="container-full">
 	<div style="padding-left:15px; padding-right:15px">
 		<?= $grid = GridView::widget([
-				'id'=>'gv-term-customers',
+				'id'=>'gv-customers',
 				'dataProvider'=> $dataProvider,
 				'filterModel' => $searchModel,
 				'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
@@ -284,7 +346,7 @@ $gridColumns = [
 					'pjaxSettings'=>[
 						'options'=>[
 							'enablePushState'=>false,
-							'id'=>'gv-term-customers',
+							'id'=>'gv-customers',
 						],
 					 ],
 				'toolbar' => [
