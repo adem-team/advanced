@@ -24,6 +24,7 @@ class Purchasedetail extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+		 public $NM_COSTCENTER;
     public static function tableName()
     {
         return 'p0002';
@@ -37,12 +38,17 @@ class Purchasedetail extends \yii\db\ActiveRecord
         return Yii::$app->get('db_esm');
     }
 
-	
+
 	public function getCunit()
     {
         return $this->hasOne(Unitbarang::className(), ['KD_UNIT' => 'UNIT']);
     }
-	
+
+		public function getCost()
+			{
+					return $this->hasOne(Costcenter::className(), ['KD_COSTCENTER' => 'KD_COSTCENTER']);
+			}
+
     /**
      * @inheritdoc
      */
@@ -51,7 +57,7 @@ class Purchasedetail extends \yii\db\ActiveRecord
         return [
             [['KD_PO','KD_RO','KD_BARANG','NM_BARANG','UNIT'], 'required'],
             [['STATUS'], 'integer'],
-            [['KD_PO', 'KD_RO','KD_BARANG','NM_BARANG','UNIT','NM_UNIT','NOTE'], 'string'],
+            [['KD_PO', 'KD_RO','KD_BARANG','NM_BARANG','UNIT','NM_UNIT','NOTE','KD_COSTCENTER'], 'string'],
 			[['ID','UNIT_QTY','UNIT_WIGHT', 'HARGA','QTY','STATUS_DATE'], 'safe']
         ];
     }
