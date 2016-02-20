@@ -4,6 +4,9 @@ namespace lukisongroup\master\models;
 
 use Yii;
 
+use lukisongroup\master\models\Schedulegroup;
+
+
 /**
  * This is the model class for table "c0001".
  *
@@ -86,8 +89,17 @@ class Customers extends \yii\db\ActiveRecord
 
 	}
 
+	public function getCustgrp(){
+		return $this->hasOne(Schedulegroup::className(), ['ID'=>'SCDL_GROUP']);		
+	}
 
-
+	public function getGrp_nm()
+    {
+        return $this->custgrp->SCDL_GROUP_NM;
+    }
+	
+	
+	
     /**
      * @inheritdoc
      */
