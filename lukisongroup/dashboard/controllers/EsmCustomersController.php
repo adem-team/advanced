@@ -22,7 +22,7 @@ use lukisongroup\master\models\ValidationLoginPrice;
 /**
  * BarangController implements the CRUD actions for Barang model.
  */
-class EsmProductController extends Controller
+class EsmCustomersController extends Controller
 {
     public function behaviors()
     {
@@ -70,31 +70,12 @@ class EsmProductController extends Controller
     {
         $searchModel = new BarangSearch();
         $dataProvider = $searchModel->searchBarangESM(Yii::$app->request->queryParams);
-		$sideMenu_control='esm_produk';				
         return $this->render('dashboard', [
-			'sideMenu_control'=> $sideMenu_control,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
-	
-	/**
-     * Lists all Barang models.
-     * @return mixed
-     */
-    public function actionEsmIndex()
-    {
-        $searchModel = new BarangSearch();
-        $dataProvider = $searchModel->searchBarangESM(Yii::$app->request->queryParams);
-		$sideMenu_control='esm_produk';				
-        return $this->render('index', [
-			'sideMenu_control'=> $sideMenu_control,
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-	
-	
+
     /**
      * Displays a single Barang model.
      * @param string $ID

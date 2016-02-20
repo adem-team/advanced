@@ -14,8 +14,11 @@ use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use kartik\detail\DetailView;
 
-/* @var $this yii\web\View */
-/* @var $model lukisongroup\master\models\Termcustomers */
+
+$this->sideCorp = 'PT. Efenbi Sukses Makmur';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'esm_customers';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pada header page */
+$this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
 
 

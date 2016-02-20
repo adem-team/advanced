@@ -26,7 +26,7 @@ $kat = ArrayHelper::map(Kategori::find()->where('STATUS<>3 and PARENT=1')->group
 	}
 
 $this->sideCorp = 'Master Data';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'umum_datamaster';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->sideMenu = $sideMenu_control;               /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Umum - Barang ');
 	$aryStt= [
 		  ['STATUS' => 0, 'STT_NM' => 'DISABLE'],		  

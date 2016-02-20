@@ -15,10 +15,9 @@ use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -waw
 MapAsset::register($this);
 
 $this->params['breadcrumbs'][] = $this->title;
-$this->sideCorp = 'Customers';                 	 /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'umum_datamaster';           	 /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'Customers');   	 /* title pada header page */
-
+$this->sideCorp = 'Customers';                 				 /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = $sideMenu_control;//'umum_datamaster';   	 /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Customers');   	 			 /* title pada header page */
 
 
 // grid kota

@@ -100,8 +100,10 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 
 		$querys = Barang::find()->with('tbesm')->where(['tbesm.NM_TYPE' => 'FDSFDG'])->asArray()->all();
 		*/
-
+		/*Tambahal menu side Dinamik */
+		$sideMenu_control='umum_datamaster';			
         return $this->render('index', [
+			'sideMenu_control'=> $sideMenu_control,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
              'querys' => $querys,

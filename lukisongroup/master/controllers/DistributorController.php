@@ -35,7 +35,28 @@ class DistributorController extends Controller
         $searchModel = new DistributorSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+		/*Tambahal menu side Dinamik */
+		$sideMenu_control='umum_datamaster';
         return $this->render('index', [
+			'sideMenu_control'=> $sideMenu_control,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+	
+	/**
+     * ESM Distributor
+     * @return mixed
+     */
+    public function actionEsmIndex()
+    {
+        $searchModel = new DistributorSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+		/*Tambahal menu side Dinamik */
+		$sideMenu_control='esm_produk';
+        return $this->render('index', [
+			'sideMenu_control'=> $sideMenu_control,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);

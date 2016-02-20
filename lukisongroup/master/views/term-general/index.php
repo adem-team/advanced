@@ -1,20 +1,14 @@
+<?php
 
+use yii\helpers\Html;
+use kartik\grid\GridView;
+use yii\helpers\ArrayHelper;
+use yii\bootstrap\Modal;
 
-            <?php
-
-            use yii\helpers\Html;
-            use kartik\grid\GridView;
-            use yii\helpers\ArrayHelper;
-            use yii\bootstrap\Modal;
-
-            /* @var $this yii\web\View */
-            /* @var $searchModel lukisongroup\master\models\TermcustomersSearch */
-            /* @var $dataProvider yii\data\ActiveDataProvider */
-
-            $this->sideCorp = 'PT. Efenbi Sukses Makmur';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-            $this->sideMenu = 'esm_sales';                                      /* kd_menu untuk list menu pada sidemenu, get from table of database */
-            $this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pada header page */
-            $this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+$this->sideCorp = 'PT. Efenbi Sukses Makmur';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'esm_customers';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pada header page */
+$this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
 
             $aryStt= [
