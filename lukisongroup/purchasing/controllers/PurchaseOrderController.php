@@ -189,6 +189,8 @@ class PurchaseOrderController extends Controller
 			$currentKdPo= $model->KD_PO;
 			$currentKdRo= $model->KD_RO;
 			$currentKdBrg= $model->KD_BARANG;
+     $currentKdcost= $model->KD_COSTCENTER;
+
 			/* $iendPoQtyValidation = new SendPoQtyValidation();
 			$iendPoQtyValidation->findOne($id); */
 			$out = Json::encode(['output'=>'', 'message'=>'']);
@@ -261,6 +263,10 @@ class PurchaseOrderController extends Controller
 						$model->save();
 						$output =$model->UNIT;
 					}
+          if (isset($posted['KD_COSTCENTER'])) {
+            $model->save();
+            $output =$model->KD_COSTCENTER;
+          }
 					/*
 					if (isset($posted['NOTE'])) {
 					   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
@@ -281,6 +287,10 @@ class PurchaseOrderController extends Controller
 						$model->save();
 						$output = $model->UNIT;
 					}
+          if (isset($posted['KD_COSTCENTER'])) {
+            $model->save();
+            $output = $model->KD_COSTCENTER;
+          }
 				}
 
 				$out = Json::encode(['output'=>$output, 'message'=>'']);
@@ -315,8 +325,12 @@ class PurchaseOrderController extends Controller
         ]); */
 		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kd])->one();
         //$poDetail = Purchasedetail::find()->where(['KD_PO'=>$kd])->all();
-		$poDetailQry= "SELECT ID,KD_PO,KD_RO,KD_BARANG,NM_BARANG,UNIT,NM_UNIT,UNIT_QTY,UNIT_WIGHT,SUM(QTY) AS QTY,HARGA,STATUS,STATUS_DATE,NOTE
-						FROM `p0002` WHERE KD_PO='" .$kd. "' GROUP BY KD_BARANG,UNIT,HARGA";
+		// $poDetailQry= "SELECT ID,KD_PO,KD_RO,KD_BARANG,NM_BARANG,UNIT,NM_UNIT,UNIT_QTY,UNIT_WIGHT,SUM(QTY) AS QTY,HARGA,STATUS,STATUS_DATE,NOTE
+		// 				FROM `p0002` WHERE KD_PO='" .$kd. "' GROUP BY KD_BARANG,UNIT,HARGA";
+    $poDetailQry = "SELECT p.ID,p.KD_PO,p.KD_RO,p.KD_BARANG,p.NM_BARANG,p.UNIT,p.NM_UNIT,p.UNIT_QTY,a.NM_COSTCENTER,p.HARGA,p.STATUS,
+                    p.STATUS_DATE,p.NOTE,p.UNIT_WIGHT,SUM(QTY) AS QTY FROM `p0002` p
+                   LEFT JOIN p0004 a ON p.KD_COSTCENTER = a.KD_COSTCENTER
+                   WHERE p.KD_PO='".$kd."' GROUP BY p.KD_BARANG,p.NM_UNIT,p.HARGA";
 		$poDetail=Purchasedetail::findBySql($poDetailQry)->all();
 		$dataProvider = new ArrayDataProvider([
 			'key' => 'KD_PO',
@@ -367,6 +381,8 @@ class PurchaseOrderController extends Controller
 			$currentKdPo= $model->KD_PO;
 			$currentKdRo= $model->KD_RO;
 			$currentKdBrg= $model->KD_BARANG;
+      $currentKdcost= $model->KD_COSTCENTER;
+
 			/* $iendPoQtyValidation = new SendPoQtyValidation();
 			$iendPoQtyValidation->findOne($id); */
 			$out = Json::encode(['output'=>'', 'message'=>'']);
@@ -438,6 +454,10 @@ class PurchaseOrderController extends Controller
 						$model->save();
 						$output =$model->UNIT;
 					}
+          if (isset($posted['KD_COSTCENTER'])) {
+            $model->save();
+            $output =$model->KD_COSTCENTER;
+          }
 					/*
 					if (isset($posted['NOTE'])) {
 					   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
@@ -458,6 +478,10 @@ class PurchaseOrderController extends Controller
 						$model->save();
 						$output = $model->UNIT;
 					}
+          if (isset($posted['KD_COSTCENTER'])) {
+            $model->save();
+            $output = $model->KD_COSTCENTER;
+          }
 				}
 
 				$out = Json::encode(['output'=>$output, 'message'=>'']);
@@ -1192,9 +1216,14 @@ class PurchaseOrderController extends Controller
     {
 		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
 		//$poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->all();
-		$poDetailQry= "SELECT ID,KD_PO,KD_RO,KD_BARANG,NM_BARANG,UNIT,NM_UNIT,UNIT_QTY,UNIT_WIGHT,SUM(QTY) AS QTY,HARGA,STATUS,STATUS_DATE,NOTE
-						FROM `p0002` WHERE KD_PO='" .$kdpo. "' GROUP BY KD_BARANG,NM_UNIT,HARGA";
-		$poDetail=Purchasedetail::findBySql($poDetailQry)->all();
+		// $poDetailQry= "SELECT ID,KD_PO,KD_RO,KD_BARANG,NM_BARANG,UNIT,NM_UNIT,UNIT_QTY,UNIT_WIGHT,SUM(QTY) AS QTY,HARGA,STATUS,STATUS_DATE,NOT
+		// 				FROM `p0002` WHERE KD_PO='" .$kdpo. "' GROUP BY KD_BARANG,NM_UNIT,HARGA";
+          $poDetailQry = "SELECT p.ID,p.KD_PO,p.KD_RO,p.KD_BARANG,p.NM_BARANG,p.UNIT,p.NM_UNIT,p.UNIT_QTY,a.NM_COSTCENTER,p.HARGA,p.STATUS,
+                          p.STATUS_DATE,p.NOTE,p.UNIT_WIGHT,SUM(QTY) AS QTY FROM `p0002` p
+                         LEFT JOIN p0004 a ON p.KD_COSTCENTER = a.KD_COSTCENTER
+                         WHERE p.KD_PO='".$kdpo."' GROUP BY p.KD_BARANG,p.NM_UNIT,p.HARGA";
+
+		    $poDetail=Purchasedetail::findBySql($poDetailQry)->all();
         $dataProvider = new ArrayDataProvider([
 			'key' => 'KD_PO',
 			'allModels'=>$poDetail,
@@ -1211,7 +1240,7 @@ class PurchaseOrderController extends Controller
 			//'dept' => $dept,
 			'dataProvider' => $dataProvider,
         ]);
-	
+
 		/*PR TO WAWAN*/
 		/*
 		 * Render partial -> Add Css -> Sendmail
@@ -1221,12 +1250,12 @@ class PurchaseOrderController extends Controller
 		$contentMail= $this->renderPartial('sendmailcontent',[
 			'poHeader' => $poHeader,
 			'dataProvider' => $dataProvider,
-		]);			
-		
+		]);
 
-	
+
+
 		$pdf = new Pdf([
-			// set to use core fonts only		
+			// set to use core fonts only
 			'mode' => Pdf::MODE_CORE,
 			// A4 paper format
 			'format' => Pdf::FORMAT_A4,
@@ -1251,9 +1280,9 @@ class PurchaseOrderController extends Controller
 			]
 		]);
 		 $hasil= $pdf->render();
-		
+
 		//return $pdf->render();
-		
+
 		 // $pdf = Yii::$app->pdf; // or new Pdf();
 		 // $mpdf = $pdf->api; // fetches mpdf api
 		 // $mpdf->SetHeader('Kartik Header'); // call methods or set any properties
@@ -1279,11 +1308,11 @@ class PurchaseOrderController extends Controller
 					 //->attachContent( $fileAttach,['po','pdf'])
 					 // ->attachContent($content1)
 					 ->send();
-		
+
 		 return $hasil;
-		
-		
-					 
+
+
+
 		/* $mpdf=new mPDF();
         $mpdf->WriteHTML($this->renderPartial( 'pdf', [
             'model' => Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one(),
@@ -1301,9 +1330,13 @@ class PurchaseOrderController extends Controller
     public function actionTempCetakpdf($kdpo)
     {
 		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
-		//$poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->all();
-		$poDetailQry= "SELECT ID,KD_PO,KD_RO,KD_BARANG,NM_BARANG,UNIT,NM_UNIT,UNIT_QTY,UNIT_WIGHT,SUM(QTY) AS QTY,HARGA,STATUS,STATUS_DATE,NOTE
-						FROM `p0002` WHERE KD_PO='" .$kdpo. "' GROUP BY KD_BARANG,NM_UNIT,HARGA";
+		// //$poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->all();
+		// $poDetailQry= "SELECT ID,KD_PO,KD_RO,KD_BARANG,NM_BARANG,UNIT,NM_UNIT,UNIT_QTY,UNIT_WIGHT,SUM(QTY) AS QTY,HARGA,STATUS,STATUS_DATE,NOTE
+		// 				FROM `p0002` WHERE KD_PO='" .$kdpo. "' GROUP BY KD_BARANG,NM_UNIT,HARGA";
+    $poDetailQry = "SELECT p.ID,p.KD_PO,p.KD_RO,p.KD_BARANG,p.NM_BARANG,p.UNIT,p.NM_UNIT,p.UNIT_QTY,a.NM_COSTCENTER,p.HARGA,p.STATUS,
+                    p.STATUS_DATE,p.NOTE,p.UNIT_WIGHT,SUM(QTY) AS QTY FROM `p0002` p
+                   LEFT JOIN p0004 a ON p.KD_COSTCENTER = a.KD_COSTCENTER
+                   WHERE p.KD_PO='".$kdpo."' GROUP BY p.KD_BARANG,p.NM_UNIT,p.HARGA";
 		$poDetail=Purchasedetail::findBySql($poDetailQry)->all();
         $dataProvider = new ArrayDataProvider([
 			'key' => 'KD_PO',

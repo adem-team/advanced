@@ -10,6 +10,7 @@ use lukisongroup\master\models\Suplier;
 use lukisongroup\master\models\Barangumum;
 use lukisongroup\master\models\Nmperusahaan;
 use lukisongroup\purchasing\models\Purchasedetail;
+use lukisongroup\purchasing\models\pr\Costcenter;
 use lukisongroup\esm\models\Barang;
 /* @var $this yii\web\View */
 /* @var $poHeader lukisongroup\poHeaders\esm\po\Purchaseorder */
@@ -449,6 +450,54 @@ $y=4;
 				]
 			]
 		],
+		[/* Attribute Request KD_COSTCENTER */
+			'class'=>'kartik\grid\EditableColumn',
+			'attribute'=>'KD_COSTCENTER',
+			'label'=>'Nama Cost Center',
+			'vAlign'=>'middle',
+			// 'hAlign'=>'center',
+			'mergeHeader'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'60px',
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(0, 95, 218, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+						'text-align'=>'right',
+						'width'=>'60px',
+						'font-family'=>'tahoma',
+						'font-size'=>'8pt',
+						//'border-right'=>'0px',
+				]
+			],
+			'pageSummaryOptions' => [
+				'style'=>[
+						'border-left'=>'0px',
+						'border-right'=>'0px',
+				]
+			],
+			'editableOptions' => [
+				'header' => 'Cost Center',
+				'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+				'size' => 'md',
+				'options' => [
+					'data' => ArrayHelper::map(Costcenter::find()->all(), 'KD_COSTCENTER', 'NM_COSTCENTER'),
+					'pluginOptions' => [
+						//'min'=>0,
+						//'max'=>5000,
+						'allowClear' => true,
+						'class'=>'pull-top dropup'
+					],
+				],
+				//Refresh Display
+				'displayValueConfig' => ArrayHelper::map(Costcenter::find()->all(), 'KD_COSTCENTER', 'NM_COSTCENTER'),
+			],
+		],
 		[/* Attribute Items Barang */
 			'label'=>'Items Name',
 			'attribute'=>'NM_BARANG',
@@ -570,6 +619,9 @@ $y=4;
 		[	/* Attribute Unit Barang */
 			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'HARGA',
+			'value'=>function($model){
+				return  round(($model->HARGA * $model->UNIT_QTY),0,PHP_ROUND_HALF_UP);
+			},
 			'mergeHeader'=>true,
 			'label'=>'Price',
 			'vAlign'=>'middle',
@@ -633,7 +685,8 @@ $y=4;
 			//'width'=>'7%',
 			'value'=>function ($model, $key, $index, $widget) {
 				$p = compact('model', 'key', 'index');
-				return $widget->col(5, $p) != 0 ? $widget->col(5, $p) * round($model->UNIT_QTY * $widget->col(5, $p),0,PHP_ROUND_HALF_UP) : 0;
+				// return $widget->col(5, $p) != 0 ? $widget->col(5, $p) * round($model->UNIT_QTY * $widget->col(7, $p),0,PHP_ROUND_HALF_UP) : 0;
+					return $widget->col(5, $p) != 0 ? $widget->col(5, $p) * $widget->col(7, $p): 0;
 				//return $widget->col(3, $p) != 0 ? $widget->col(5 ,$p) * 100 / $widget->col(3, $p) : 0;
 			},
 			'headerOptions'=>[

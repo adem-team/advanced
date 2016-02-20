@@ -93,6 +93,8 @@ class Termbudget extends \yii\db\ActiveRecord
       $datestart = $this->PERIODE_START;
       $dateend = $this->PERIODE_END;
 
+    
+
        if( $dateend < $datestart  )
        {
            $this->addError($model, 'Tanggal harus lebih Besar'.$datestart);

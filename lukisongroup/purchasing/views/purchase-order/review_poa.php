@@ -11,6 +11,7 @@ use lukisongroup\master\models\Barangumum;
 use lukisongroup\master\models\Nmperusahaan;
 use lukisongroup\purchasing\models\Purchasedetail;
 use lukisongroup\esm\models\Barang;
+use lukisongroup\purchasing\models\pr\Costcenter;
 /* @var $this yii\web\View */
 /* @var $poHeader lukisongroup\poHeaders\esm\po\Purchaseorder */
 
@@ -449,6 +450,54 @@ $y=4;
 						'border-right'=>'0px',
 				]
 			]
+		],
+		[/* Attribute Request KD_COSTCENTER */
+			'class'=>'kartik\grid\EditableColumn',
+			'attribute'=>'KD_COSTCENTER',
+			'label'=>'Nama Cost Center',
+			'vAlign'=>'middle',
+			// 'hAlign'=>'center',
+			'mergeHeader'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'60px',
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(0, 95, 218, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+						'text-align'=>'right',
+						'width'=>'60px',
+						'font-family'=>'tahoma',
+						'font-size'=>'8pt',
+						//'border-right'=>'0px',
+				]
+			],
+			'pageSummaryOptions' => [
+				'style'=>[
+						'border-left'=>'0px',
+						'border-right'=>'0px',
+				]
+			],
+			'editableOptions' => [
+				'header' => 'Cost Center',
+				'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+				'size' => 'md',
+				'options' => [
+					'data' => ArrayHelper::map(Costcenter::find()->all(), 'KD_COSTCENTER', 'NM_COSTCENTER'),
+					'pluginOptions' => [
+						//'min'=>0,
+						//'max'=>5000,
+						'allowClear' => true,
+						'class'=>'pull-top dropup'
+					],
+				],
+				//Refresh Display
+				'displayValueConfig' => ArrayHelper::map(Costcenter::find()->all(), 'KD_COSTCENTER', 'NM_COSTCENTER'),
+			],
 		],
 		[/* Attribute Items Barang */
 			'label'=>'Items Name',

@@ -171,6 +171,37 @@ $y=4;
 				]
 			]
 		],
+    [/* Attribute KD Cost*/
+      'attribute'=>'NM_COSTCENTER',
+      'label'=>'Nama CostCenter',
+      'hAlign'=>'left',
+      'vAlign'=>'middle',
+      'mergeHeader'=>true,
+      'format' => 'raw',
+      'headerOptions'=>[
+        //'class'=>'kartik-sheet-style'
+        'style'=>[
+          'text-align'=>'center',
+          'width'=>'150px',
+          'font-family'=>'tahoma',
+          'font-size'=>'8pt',
+          'background-color'=>'rgba(0, 95, 218, 0.3)',
+        ]
+      ],
+      'contentOptions'=>[
+        'style'=>[
+          'width'=>'150px',
+          'font-family'=>'tahoma',
+          'font-size'=>'8pt',
+        ]
+      ],
+      'pageSummaryOptions' => [
+        'style'=>[
+            'border-left'=>'0px',
+            'border-right'=>'0px',
+        ]
+      ]
+    ],
 		[/* Attribute Items Barang */
 			'label'=>'Items Name',
 			'attribute'=>'NM_BARANG',
@@ -293,9 +324,9 @@ $y=4;
 			//'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'HARGA',
 			'value'=>function($model){
-				if ($model->HARGA!=0 || $model->UNIT_QTY!==0 ){				
+				if ($model->HARGA!=0 || $model->UNIT_QTY!==0 ){
 					$hargaQty=round(($model->HARGA * $model->UNIT_QTY),0,PHP_ROUND_HALF_UP);
-				}else{ $hargaQty=0; }			
+				}else{ $hargaQty=0; }
 				return $hargaQty;
 			},
 			'mergeHeader'=>true,

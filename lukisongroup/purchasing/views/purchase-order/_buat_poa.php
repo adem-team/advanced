@@ -12,6 +12,7 @@ use kartik\tabs\TabsX;
 use kartik\money\MaskMoney;
 
 use lukisongroup\purchasing\models\ro\Requestorder;
+use lukisongroup\purchasing\models\pr\Costcenter;
 use lukisongroup\purchasing\models\ro\Rodetail;
 use lukisongroup\purchasing\models\ro\RodetailSearch;
 use lukisongroup\master\models\Unitbarang;
@@ -607,10 +608,58 @@ use lukisongroup\master\models\Unitbarang;
 				]
 			]
 		],
+		[/* Attribute Request KD_COSTCENTER */
+			'class'=>'kartik\grid\EditableColumn',
+			'attribute'=>'KD_COSTCENTER',
+			'label'=>'Nama Cost Center',
+			'vAlign'=>'middle',
+			// 'hAlign'=>'center',
+			'mergeHeader'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'60px',
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(0, 95, 218, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+						'text-align'=>'right',
+						'width'=>'60px',
+						'font-family'=>'tahoma',
+						'font-size'=>'8pt',
+						//'border-right'=>'0px',
+				]
+			],
+			'pageSummaryOptions' => [
+				'style'=>[
+						'border-left'=>'0px',
+						'border-right'=>'0px',
+				]
+			],
+			'editableOptions' => [
+				'header' => 'Cost Center',
+				'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+				'size' => 'md',
+				'options' => [
+					'data' => ArrayHelper::map(Costcenter::find()->all(), 'KD_COSTCENTER', 'NM_COSTCENTER'),
+					'pluginOptions' => [
+						//'min'=>0,
+						//'max'=>5000,
+						'allowClear' => true,
+						'class'=>'pull-top dropup'
+					],
+				],
+				//Refresh Display
+				'displayValueConfig' => ArrayHelper::map(Costcenter::find()->all(), 'KD_COSTCENTER', 'NM_COSTCENTER'),
+			],
+		],
 		[/* Attribute Items Barang */
 			'label'=>'Items Name',
 			'attribute'=>'NM_BARANG',
-			'hAlign'=>'left',
+			'hAlign'=>'center',
 			'vAlign'=>'middle',
 			'mergeHeader'=>true,
 			'format' => 'raw',
@@ -638,6 +687,7 @@ use lukisongroup\master\models\Unitbarang;
 				]
 			]
 		],
+
 		[/* Attribute Request Quantity */
 			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'QTY',

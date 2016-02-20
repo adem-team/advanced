@@ -48,7 +48,7 @@ class Purchaseorder extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Employe::className(), ['EMP_ID' => 'CREATE_BY']);
     }
-    
+
 	/*
 	 * Join hasOne Purchasing | Supplier
 	 * @author ptrnov <piter@lukison.com>
@@ -58,12 +58,12 @@ class Purchaseorder extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Suplier::className(), ['KD_SUPPLIER' => 'KD_SUPPLIER']);
     }
-	
+
 	public function getNamasuplier()
     {
         return $this->suplier->NM_SUPPLIER;
     }
-	
+
 	/*
 	 * Join hasOne NMPERUSAHAAN  | Billing | Local Group Lukison
 	 * @author ptrnov <piter@lukison.com>
@@ -73,7 +73,7 @@ class Purchaseorder extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Nmperusahaan::className(), ['ID' => 'BILLING']);
     }
-	
+
 	/*
 	 * Join hasOne NMPERUSAHAAN  | Shipping | Local Group Lukison
 	 * @author ptrnov <piter@lukison.com>
@@ -83,7 +83,7 @@ class Purchaseorder extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Nmperusahaan::className(), ['ID' => 'SHIPPING']);
     }
-	
+
 	/*
 	 * Attribute class getEmploye
 	 * used data master not data transaction | name saved table or dirict table trans
@@ -95,12 +95,12 @@ class Purchaseorder extends \yii\db\ActiveRecord
     {
         return $this->employe->EMP_NM.' '.$this->employe->EMP_NM_BLK;
     }
-	
+
 	public function getCorp()
     {
        return $this->hasOne(Corp::className(), ['CORP_ID' => 'KD_CORP']);
     }
-	
+
 	public function getNmcorp()
     {
         return $this->corp->CORP_NM;
@@ -115,7 +115,7 @@ class Purchaseorder extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Employe::className(), ['EMP_ID' => 'APPROVE_BY']);
     } */
-    
+
 	/*
 	 * Same above
 	 * @author ptrnov <piter@lukison>
@@ -123,8 +123,8 @@ class Purchaseorder extends \yii\db\ActiveRecord
 	*/
     public function getDisetujui()
     {
-        if(count($this->setujui) == 0){ 
-            return ''; 
+        if(count($this->setujui) == 0){
+            return '';
         } else {
             return $this->setujui->EMP_NM.' '.$this->setujui->EMP_NM_BLK;
         }
@@ -139,7 +139,7 @@ class Purchaseorder extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Employe::className(), ['EMP_ID' => 'APPROVE_DIR']);
     }
-    
+
 	/*
 	 * Same above
 	 * @author ptrnov <piter@lukison>
@@ -147,8 +147,8 @@ class Purchaseorder extends \yii\db\ActiveRecord
 	*/
     public function getApproved()
     {
-        if(count($this->approve) == 0){ 
-            return ''; 
+        if(count($this->approve) == 0){
+            return '';
         } else {
             return $this->approve->EMP_NM.' '.$this->approve->EMP_NM_BLK;
         }
