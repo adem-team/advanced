@@ -3,11 +3,15 @@
 namespace lukisongroup\master\controllers;
 
 use Yii;
-use lukisongroup\master\models\Schedulegroup;
-use lukisongroup\master\models\SchedulegroupSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
+use lukisongroup\master\models\Schedulegroup;
+use lukisongroup\master\models\SchedulegroupSearch;
+
+use lukisongroup\master\models\Customers;
+use lukisongroup\master\models\CustomersSearch;
 
 /**
  * ScheduleGroupController implements the CRUD actions for Schedulegroup model.
@@ -34,10 +38,13 @@ class ScheduleGroupController extends Controller
     {
         $searchModel = new SchedulegroupSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        
+		$searchModelCustGrp = new CustomersSearch();		
+        $dpListCustGrp = $searchModelCustGrp->searchCustGrp(Yii::$app->request->queryParams);
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+			'dpListCustGrp'=>$dpListCustGrp,
         ]);
     }
 

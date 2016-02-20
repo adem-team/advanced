@@ -224,13 +224,13 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		]);
 		
 	/*
-	 * GRIDVIEW Group CUSTOMER
+	 * GRIDVIEW CUSTOMER LIST
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
 	$gvCustGroupList= GridView::widget([
 		'id'=>'gv-custgrp-list',
-		'dataProvider' => $dataProvider,
+		'dataProvider' => $dpListCustGrp,
 		'filterModel' => $searchModel,
 		'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
 		'columns' => [
@@ -265,7 +265,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			],
 			[  	//col-1
 				//CUSTOMER GRAOUP NAME
-				'attribute' => 'SCDL_GROUP_NM',
+				'attribute' =>'grp_nm',
 				'label'=>'Customer Groups',
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
@@ -286,10 +286,11 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						'font-size'=>'9pt',
 					]
 				],
-			],
+			], 
 			[  	//col-2
 				//CUSTOMER GRAOUP NAME
-				'attribute' => 'KETERANGAN',
+				//'attribute' => 'cust_nm',
+				'attribute' => 'CUST_NM',
 				'label'=>'Keterangan',
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
@@ -350,7 +351,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'template' => '{view}{edit}',
 				'dropdownOptions'=>['class'=>'pull-right dropup'],
 				'buttons' => [
-						'view' =>function($url, $model, $key){
+						/* 'view' =>function($url, $model, $key){
 								return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
 															['/master/barang/view','id'=>$model->ID],[
 															'data-toggle'=>"modal",
@@ -365,7 +366,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 															'data-target'=>"#modal-create",
 															'data-title'=>'',// $model->KD_BARANG,
 															]). '</li>' . PHP_EOL;
-						},
+						}, */
 				],
 				'headerOptions'=>[
 					'style'=>[
