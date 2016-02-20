@@ -28,6 +28,7 @@ class UserloginSearch extends Userlogin
             [['username','EMP_ID','email'], 'string'],
             [['email','avatar','avatarImage'], 'string'],
 			[['id','status','created_at','updated_at'],'integer'],
+			[['POSITION_SITE','POSITION_LOGIN'], 'safe'],
         ];
     }
 	
@@ -102,5 +103,31 @@ class UserloginSearch extends Userlogin
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+	
+	/*	CUST GROUP */
+    public function searchCustGroup($params)
+    {	
+		/*[5.1] JOIN TABLE */
+		$query = Userlogin::find()
+						->where("POSITION_SITE='CRM'");
+        $dataProvider_Userlogin = new ActiveDataProvider([
+            'query' => $query,
+			'pagination' => [
+				'pageSize' => 10,
+			],
+        ]);
+		
+		/*[5.3] LOAD VALIDATION PARAMS */
+			/*LOAD FARM VER 1*/
+			$this->load($params);
+			if (!$this->validate()) {
+				return $dataProvider_Userlogin;
+			}
+
+		/*[5.4] FILTER WHERE LIKE (string/integer)*/
+			/* FILTER COLUMN Author -ptr.nov-*/
+			 $query->andFilterWhere(['like', 'username', $this->username]);			
+        return $dataProvider_Userlogin;
     }
 }

@@ -4,6 +4,7 @@ namespace lukisongroup\master\models;
 
 use Yii;
 
+
 /**
  * This is the model class for table "c0007".
  *
@@ -34,6 +35,17 @@ class Schedulegroup extends \yii\db\ActiveRecord
         return Yii::$app->get('db_esm');
     }
 
+	
+	// public function getCust(){
+		 // return $this->hasMany(Customers::className(), ['SCDL_GROUP' => 'ID']);		
+	// }
+	
+	// public function getCust_nm()
+    // {
+        // return $this->cust->CUST_NM;
+    // }
+	
+	
     /**
      * @inheritdoc
      */
