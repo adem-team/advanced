@@ -46,7 +46,8 @@ $y=4;
      * @since 1.1
      */
 	$gridColumnsX= [
-		[/* Attribute Serial No */
+		[	//COL-0
+			/* Attribute Serial No */
 			'class'=>'kartik\grid\SerialColumn',
 			'width'=>'10px',
 			'header'=>'No.',
@@ -90,8 +91,41 @@ $y=4;
 			},
 
 		], */
-
-		[/* Attribute Items Barang */
+		[	//COL-1
+			/* Attribute Cost Center */
+		  'attribute'=>'KD_COSTCENTER',
+		  'label'=>'Cost.Center',
+		  'hAlign'=>'left',
+		  'vAlign'=>'middle',
+		  'mergeHeader'=>true,
+		  'format' => 'raw',
+		  'headerOptions'=>[
+			//'class'=>'kartik-sheet-style'
+			'style'=>[
+			  'text-align'=>'center',
+			  'width'=>'60px',
+			  'font-family'=>'tahoma',
+			  'font-size'=>'8pt',
+			  'background-color'=>'rgba(0, 95, 218, 0.3)',
+			]
+		  ],
+		  'contentOptions'=>[
+			'style'=>[
+				'text-align'=>'center',
+			  'width'=>'60px',
+			  'font-family'=>'tahoma',
+			  'font-size'=>'8pt',
+			]
+		  ],
+		  'pageSummaryOptions' => [
+			'style'=>[
+				'border-left'=>'0px',
+				'border-right'=>'0px',
+			]
+		  ]
+		],
+		[	//COL-2
+			/* Attribute Items Barang */
 			'attribute'=>'KD_BARANG',
 			'label'=>'SKU',
 			'hAlign'=>'left',
@@ -110,6 +144,7 @@ $y=4;
 			],
 			'contentOptions'=>[
 				'style'=>[
+					'text-align'=>'left',
 					'width'=>'150px',
 					'font-family'=>'tahoma',
 					'font-size'=>'8pt',
@@ -122,38 +157,8 @@ $y=4;
 				]
 			]
 		],
-    [/* Attribute Cost Center */
-      'attribute'=>'NM_COSTCENTER',
-      'label'=>'Nama Cost Center',
-      'hAlign'=>'left',
-      'vAlign'=>'middle',
-      'mergeHeader'=>true,
-      'format' => 'raw',
-      'headerOptions'=>[
-        //'class'=>'kartik-sheet-style'
-        'style'=>[
-          'text-align'=>'center',
-          'width'=>'150px',
-          'font-family'=>'tahoma',
-          'font-size'=>'8pt',
-          'background-color'=>'rgba(0, 95, 218, 0.3)',
-        ]
-      ],
-      'contentOptions'=>[
-        'style'=>[
-          'width'=>'150px',
-          'font-family'=>'tahoma',
-          'font-size'=>'8pt',
-        ]
-      ],
-      'pageSummaryOptions' => [
-        'style'=>[
-            'border-left'=>'0px',
-            'border-right'=>'0px',
-        ]
-      ]
-    ],
-		[/* Attribute Items Barang */
+		[	//COL-3
+			/* Attribute Items Barang */
 			'label'=>'Items Name',
 			'attribute'=>'NM_BARANG',
 			'hAlign'=>'left',
@@ -172,6 +177,7 @@ $y=4;
 			],
 			'contentOptions'=>[
 				'style'=>[
+					'text-align'=>'left',
 					'width'=>'200px',
 					'font-family'=>'tahoma',
 					'font-size'=>'8pt',
@@ -184,7 +190,8 @@ $y=4;
 				]
 			]
 		],
-		[/* Attribute Request Quantity */
+		[	//COL-4
+			/* Attribute Request Quantity */
 			//'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'QTY',
 			'label'=>'Qty',
@@ -224,7 +231,8 @@ $y=4;
 				]
 			],	 */
 		],
-		[/* Attribute Unit Barang */
+		[	//COL-5
+			/* Attribute Unit Barang */
 			'attribute'=>'NM_UNIT',
 			'mergeHeader'=>true,
 			'label'=>'UoM',
@@ -271,12 +279,13 @@ $y=4;
 				]
 			],
 		],
-		[	/* Attribute Unit Barang */
+		[	//COL-6		
+			/* Attribute Unit Barang */
 			//'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'HARGA',
-      'value'=>function($model){
-        return  round(($model->HARGA * $model->UNIT_QTY),0,PHP_ROUND_HALF_UP);
-      },
+			'value'=>function($model){
+				return  round(($model->HARGA * $model->UNIT_QTY),0,PHP_ROUND_HALF_UP);
+			},
 			'mergeHeader'=>true,
 			'label'=>'Price',
 			'vAlign'=>'middle',
@@ -331,7 +340,7 @@ $y=4;
 				]
 			],
 		],
-		[
+		[	//COL-7
 			'class'=>'kartik\grid\FormulaColumn',
 			'header'=>'Amount',
 			'mergeHeader'=>true,
@@ -340,8 +349,8 @@ $y=4;
 			//'width'=>'7%',
 			'value'=>function ($model, $key, $index, $widget) {
 				$p = compact('model', 'key', 'index');
-				// return $widget->col(3, $p) != 0 ? $widget->col(3, $p) * round($model->UNIT_QTY * $widget->col(5, $p),0,PHP_ROUND_HALF_UP) : 0;
-        	return $widget->col(3, $p) != 0 ? $widget->col(3, $p) * $widget->col(5, $p) : 0;
+				// return $widget->col(4, $p) != 0 ? $widget->col(4, $p) * round($model->UNIT_QTY * $widget->col(6, $p),0,PHP_ROUND_HALF_UP) : 0;
+        	return $widget->col(4, $p) != 0 ? $widget->col(4, $p) * $widget->col(6, $p) : 0;
 				//return $widget->col(3, $p) != 0 ? $widget->col(5 ,$p) * 100 / $widget->col(3, $p) : 0;
 			},
 			'headerOptions'=>[

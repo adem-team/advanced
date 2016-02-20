@@ -407,7 +407,7 @@ use lukisongroup\master\models\Unitbarang;
      * @since 1.1
      */
 	$gridColumns = [
-		[
+		[	//COL-0
 			'class'=>'kartik\grid\ActionColumn',
 			'dropdown' => true,
 			'template' => '{approved} {reject} {cancel} {delete} {closed}',
@@ -472,7 +472,7 @@ use lukisongroup\master\models\Unitbarang;
 			],
 
 		],
-		[
+		[	//COL-1
 			/* Attribute Status Detail RO */
 			'attribute'=>'STATUS',
 			'options'=>['id'=>'test-ro'],
@@ -504,7 +504,8 @@ use lukisongroup\master\models\Unitbarang;
 				]
 			],
 		],
-		[/* Attribute Serial No */
+		[	//COL-2
+			/* Attribute Serial No */
 			'class'=>'kartik\grid\SerialColumn',
 			'width'=>'10px',
 			'header'=>'No.',
@@ -548,8 +549,57 @@ use lukisongroup\master\models\Unitbarang;
 			},
 
 		], */
-
-		[/* Attribute Items Barang */
+		[	//COL-3
+			/* Attribute Request KD_COSTCENTER */
+			'class'=>'kartik\grid\EditableColumn',
+			'attribute'=>'KD_COSTCENTER',
+			'label'=>'Cost.Center',
+			'vAlign'=>'middle',
+			// 'hAlign'=>'center',
+			'mergeHeader'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'60px',
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(0, 95, 218, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+						'text-align'=>'center',
+						'width'=>'60px',
+						'font-family'=>'tahoma',
+						'font-size'=>'8pt',
+						//'border-right'=>'0px',
+				]
+			],
+			'pageSummaryOptions' => [
+				'style'=>[
+						'border-left'=>'0px',
+						'border-right'=>'0px',
+				]
+			],
+			'editableOptions' => [
+				'header' => 'Cost Center',
+				'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+				'size' => 'md',
+				'options' => [
+					'data' => ArrayHelper::map(Costcenter::find()->all(), 'KD_COSTCENTER', 'NM_COSTCENTER'),
+					'pluginOptions' => [
+						//'min'=>0,
+						//'max'=>5000,
+						'allowClear' => true,
+						'class'=>'pull-top dropup'
+					],
+				],
+				//Refresh Display
+				'displayValueConfig' => ArrayHelper::map(Costcenter::find()->all(), 'KD_COSTCENTER', 'KD_COSTCENTER'),
+			],
+		],
+		[	//COL-4
+			/* Attribute Items Barang */
 			'attribute'=>'KD_BARANG',
 			'label'=>'SKU',
 			'hAlign'=>'left',
@@ -579,56 +629,9 @@ use lukisongroup\master\models\Unitbarang;
 						'border-right'=>'0px',
 				]
 			]
-		],
-		[/* Attribute Request KD_COSTCENTER */
-			'class'=>'kartik\grid\EditableColumn',
-			'attribute'=>'KD_COSTCENTER',
-			'label'=>'Nama Cost Center',
-			'vAlign'=>'middle',
-			// 'hAlign'=>'center',
-			'mergeHeader'=>true,
-			'headerOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'60px',
-					'font-family'=>'tahoma',
-					'font-size'=>'8pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
-				]
-			],
-			'contentOptions'=>[
-				'style'=>[
-						'text-align'=>'right',
-						'width'=>'60px',
-						'font-family'=>'tahoma',
-						'font-size'=>'8pt',
-						//'border-right'=>'0px',
-				]
-			],
-			'pageSummaryOptions' => [
-				'style'=>[
-						'border-left'=>'0px',
-						'border-right'=>'0px',
-				]
-			],
-			'editableOptions' => [
-				'header' => 'Cost Center',
-				'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
-				'size' => 'md',
-				'options' => [
-					'data' => ArrayHelper::map(Costcenter::find()->all(), 'KD_COSTCENTER', 'NM_COSTCENTER'),
-					'pluginOptions' => [
-						//'min'=>0,
-						//'max'=>5000,
-						'allowClear' => true,
-						'class'=>'pull-top dropup'
-					],
-				],
-				//Refresh Display
-				'displayValueConfig' => ArrayHelper::map(Costcenter::find()->all(), 'KD_COSTCENTER', 'NM_COSTCENTER'),
-			],
-		],
-		[/* Attribute Items Barang */
+		],		
+		[	//COL-5
+			/* Attribute Items Barang */
 			'label'=>'Items Name',
 			'attribute'=>'NM_BARANG',
 			'hAlign'=>'left',
@@ -647,6 +650,7 @@ use lukisongroup\master\models\Unitbarang;
 			],
 			'contentOptions'=>[
 				'style'=>[
+					'text-align'=>'left',
 					'width'=>'200px',
 					'font-family'=>'tahoma',
 					'font-size'=>'8pt',
@@ -659,7 +663,8 @@ use lukisongroup\master\models\Unitbarang;
 				]
 			]
 		],
-		[/* Attribute Request Quantity */
+		[	//COL-6
+			/* Attribute Request Quantity */
 			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'QTY',
 			'label'=>'Qty',
@@ -699,7 +704,8 @@ use lukisongroup\master\models\Unitbarang;
 				]
 			],
 		],
-		[/* Attribute Unit Barang */
+		[	//COL-7
+			/* Attribute Unit Barang */
 			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'UNIT',
 			'mergeHeader'=>true,
@@ -776,7 +782,8 @@ use lukisongroup\master\models\Unitbarang;
 				]
 			],
 		],
-		[	/* Attribute Unit Barang */
+		[	//COL-8
+			/* Attribute Unit Barang */
 			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'HARGA',
 			'value'=>function($model){
@@ -836,7 +843,7 @@ use lukisongroup\master\models\Unitbarang;
 				]
 			],
 		],
-		[
+		[	//COL-9
 			'class'=>'kartik\grid\FormulaColumn',
 			'header'=>'Amount',
 			'mergeHeader'=>true,
@@ -845,8 +852,8 @@ use lukisongroup\master\models\Unitbarang;
 			//'width'=>'7%',
 			'value'=>function ($model, $key, $index, $widget) {
 				$p = compact('model', 'key', 'index');
-				// return $widget->col(5, $p) != 0 ? $widget->col(5, $p) * round($model->UNIT_QTY  * $widget->col(7, $p),0,PHP_ROUND_HALF_UP) : 0;
-					return $widget->col(5, $p) != 0 ? $widget->col(5, $p) * $widget->col(7, $p): 0;
+				// return $widget->col(6, $p) != 0 ? $widget->col(6, $p) * round($model->UNIT_QTY  * $widget->col(8, $p),0,PHP_ROUND_HALF_UP) : 0;
+					return $widget->col(6, $p) != 0 ? $widget->col(6, $p) * $widget->col(8, $p): 0;
 				//return $widget->col(3, $p) != 0 ? $widget->col(5 ,$p) * 100 / $widget->col(3, $p) : 0;
 			},
 			'headerOptions'=>[

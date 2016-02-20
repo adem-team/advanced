@@ -278,7 +278,7 @@ $y=4;
      * @since 1.1
      */
 	$gridColumnsX= [
-		[
+		[	//COL-0
 			'class'=>'kartik\grid\ActionColumn',
 			'dropdown' => true,
 			'template' => '{approved} {reject} {cancel} {delete} {closed}',
@@ -343,7 +343,7 @@ $y=4;
 			],
 
 		],
-		[
+		[	//COL-1
 			/* Attribute Status Detail RO */
 			'attribute'=>'STATUS',
 			'options'=>['id'=>'test-ro'],
@@ -375,7 +375,8 @@ $y=4;
 				]
 			],
 		],
-		[/* Attribute Serial No */
+		[	//COL-2
+			/* Attribute Serial No */
 			'class'=>'kartik\grid\SerialColumn',
 			'width'=>'10px',
 			'header'=>'No.',
@@ -419,42 +420,11 @@ $y=4;
 			},
 
 		], */
-
-		[/* Attribute Items Barang */
-			'attribute'=>'KD_BARANG',
-			'label'=>'SKU',
-			'hAlign'=>'left',
-			'vAlign'=>'middle',
-			'mergeHeader'=>true,
-			'format' => 'raw',
-			'headerOptions'=>[
-				//'class'=>'kartik-sheet-style'
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'150px',
-					'font-family'=>'tahoma',
-					'font-size'=>'8pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
-				]
-			],
-			'contentOptions'=>[
-				'style'=>[
-					'width'=>'150px',
-					'font-family'=>'tahoma',
-					'font-size'=>'8pt',
-				]
-			],
-			'pageSummaryOptions' => [
-				'style'=>[
-						'border-left'=>'0px',
-						'border-right'=>'0px',
-				]
-			]
-		],
-		[/* Attribute Request KD_COSTCENTER */
+		[	//COL-3
+			/* Attribute Request KD_COSTCENTER */
 			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'KD_COSTCENTER',
-			'label'=>'Nama Cost Center',
+			'label'=>'Cost.Center',
 			'vAlign'=>'middle',
 			// 'hAlign'=>'center',
 			'mergeHeader'=>true,
@@ -469,7 +439,7 @@ $y=4;
 			],
 			'contentOptions'=>[
 				'style'=>[
-						'text-align'=>'right',
+						'text-align'=>'center',
 						'width'=>'60px',
 						'font-family'=>'tahoma',
 						'font-size'=>'8pt',
@@ -496,10 +466,45 @@ $y=4;
 					],
 				],
 				//Refresh Display
-				'displayValueConfig' => ArrayHelper::map(Costcenter::find()->all(), 'KD_COSTCENTER', 'NM_COSTCENTER'),
+				'displayValueConfig' => ArrayHelper::map(Costcenter::find()->all(), 'KD_COSTCENTER', 'KD_COSTCENTER'),
 			],
 		],
-		[/* Attribute Items Barang */
+		[	//COL-4
+			/* Attribute Items Barang */
+			'attribute'=>'KD_BARANG',
+			'label'=>'SKU',
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'mergeHeader'=>true,
+			'format' => 'raw',
+			'headerOptions'=>[
+				//'class'=>'kartik-sheet-style'
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'150px',
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(0, 95, 218, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'left',
+					'width'=>'150px',
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+				]
+			],
+			'pageSummaryOptions' => [
+				'style'=>[
+						'border-left'=>'0px',
+						'border-right'=>'0px',
+				]
+			]
+		],
+		
+		[	//COL-5
+			/* Attribute Items Barang */
 			'label'=>'Items Name',
 			'attribute'=>'NM_BARANG',
 			'hAlign'=>'left',
@@ -518,6 +523,8 @@ $y=4;
 			],
 			'contentOptions'=>[
 				'style'=>[
+					'text-align'=>'left',
+					'text-align'=>'left',
 					'width'=>'200px',
 					'font-family'=>'tahoma',
 					'font-size'=>'8pt',
@@ -530,7 +537,8 @@ $y=4;
 				]
 			]
 		],
-		[/* Attribute Request Quantity */
+		[	//COL-6
+			/* Attribute Request Quantity */
 			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'QTY',
 			'label'=>'Qty',
@@ -570,7 +578,8 @@ $y=4;
 				]
 			],
 		],
-		[/* Attribute Unit Barang */
+		[	//COL-7
+			/* Attribute Unit Barang */
 			'attribute'=>'NM_UNIT',
 			'mergeHeader'=>true,
 			'label'=>'UoM',
@@ -617,7 +626,8 @@ $y=4;
 				]
 			],
 		],
-		[	/* Attribute Unit Barang */
+		[	//COL-8
+			/* Attribute Unit Barang */
 			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'HARGA',
 			'value'=>function($model){
@@ -677,7 +687,7 @@ $y=4;
 				]
 			],
 		],
-		[
+		[	//COL-9
 			'class'=>'kartik\grid\FormulaColumn',
 			'header'=>'Amount',
 			'mergeHeader'=>true,
@@ -686,8 +696,8 @@ $y=4;
 			//'width'=>'7%',
 			'value'=>function ($model, $key, $index, $widget) {
 				$p = compact('model', 'key', 'index');
-				//return $widget->col(5, $p) != 0 ? $widget->col(5, $p) * round($model->UNIT_QTY * $widget->col(7, $p),0,PHP_ROUND_HALF_UP) : 0;
-				return $widget->col(5, $p) != 0 ? $widget->col(5, $p) * $widget->col(7, $p): 0;
+				//return $widget->col(6, $p) != 0 ? $widget->col(6, $p) * round($model->UNIT_QTY * $widget->col(8, $p),0,PHP_ROUND_HALF_UP) : 0;
+				return $widget->col(6, $p) != 0 ? $widget->col(6, $p) * $widget->col(8, $p): 0;
 				//return $widget->col(3, $p) != 0 ? $widget->col(5 ,$p) * 100 / $widget->col(3, $p) : 0;
 			},
 			'headerOptions'=>[
