@@ -1263,6 +1263,7 @@ class PurchaseOrderController extends Controller
 			'orientation' => Pdf::ORIENT_PORTRAIT,
 			// stream to browser inline
 			'destination' => Pdf::DEST_BROWSER,
+			//'destination' => Pdf::DEST_FILE ,
 			// your html content input
 			'content' => $content,
 			// format content from your own css file if needed or use the
@@ -1279,22 +1280,31 @@ class PurchaseOrderController extends Controller
 				'SetFooter'=>['{PAGENO}'],
 			]
 		]);
-		 $hasil= $pdf->render();
-
+		$this->actionPdfEmail($contentMail);
+		
+		return $pdf->render();
+		/* 
+		//$hasil= $pdf->render();
+		//$this->actionPdfEmail($content);
+	    //return $hasil;	 
+		 
 		//return $pdf->render();
 
 		 // $pdf = Yii::$app->pdf; // or new Pdf();
-		 // $mpdf = $pdf->api; // fetches mpdf api
+		 $mpdf = $pdf->api; // fetches mpdf api
 		 // $mpdf->SetHeader('Kartik Header'); // call methods or set any properties
-		 // $mpdf->WriteHtml($content); // call mpdf write html
-		 // $reportName ="Report(".date('d-m-Y h:i').").pdf";
-		 // $content1 = $mpdf->Output($reportName, 'D');
-		 // $content1 = chunk_split(base64_encode($content1));
+		 $mpdf->WriteHtml($cx`ontentMail); // call mpdf write html
+		  //$reportName ="Report(".date('d-m-Y h:i').").pdf";
+		  //$content1 = $pdf->Output($reportName, 'S');
+		  //$content1 = chunk_split(base64_encode($content1));
 		 // = $pdf->Output('test.pdf', 'S')
 		// $fileX= $pdf->Output('po', 'I');
 		 //$fileAttach=chunk_split(base64_encode($hasil));
 		// $fileAttach=chunk_split(base64_encoder($fileX));
-
+		$reportName ="Report(".date('d-m-Y h:m:s').").pdf";
+		//$strAttch=$pdf->Output($reportName, 's'); 
+		$mpdf->Output('../../lukisongroup/web/pdf_tmp/'.$reportName, 'F'); 
+		//$strAttch=chunk_split(base64_encode($doc));
 		Yii::$app->mailer->compose()
 					 ->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
 					 //->setTo(['piter@lukison.com'])
@@ -1303,15 +1313,17 @@ class PurchaseOrderController extends Controller
 					 ->setTo(['ptr.nov@gmail.com','it-dept@lukison.com'])
 					 ->setSubject('Purchase Order')
 					 ->setHtmlBody($contentMail)
-					 //->attach('../../lukisongroup/web/login.png',['login','png'])
+					// ->attach('../../lukisongroup/web/login.png',['login','png'])
+					 ->attach('../../lukisongroup/web/pdf_tmp/pdf_test.pdf',['login','pdf'])
 					// ->attach($content1,['po','pdf'])
-					 //->attachContent( $fileAttach,['po','pdf'])
+					 //->attach($pdf->Output($reportName, 'f'),[$reportName,'pdf'])
+					 //->attachContent($strAttch,[$reportName,'pdf'])
 					 // ->attachContent($content1)
 					 ->send();
 
-		 return $hasil;
+		 //return $pdf->render(); 
 
-
+ */
 
 		/* $mpdf=new mPDF();
         $mpdf->WriteHTML($this->renderPartial( 'pdf', [
@@ -1321,6 +1333,64 @@ class PurchaseOrderController extends Controller
         exit; */
     }
 
+	  public function actionPdfEmail($htmlPdf)
+	  {
+		 $pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE,
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4,
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_PORTRAIT,
+			// stream to browser inline
+			'destination' => Pdf::DEST_FILE ,
+			// your html content input
+			'content' => $htmlPdf,
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting
+			//D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+			'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			'cssInline' => '.kv-heading-1{font-size:12px}',
+			 // set mPDF properties on the fly
+			'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+			 // call mPDF methods on the fly
+			'methods' => [
+				'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
+				'SetFooter'=>['{PAGENO}'],
+			]
+		]);
+		 $mpdf = $pdf->api; // fetches mpdf api
+		 //$mpdf->SetHeader('Kartik Header'); // call methods or set any properties
+		 //$css='@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css';
+		// $css .='.kv-heading-1{font-size:12px}';
+		// $mpdf->SetHeader($css); 
+		 $mpdf->WriteHtml($htmlPdf);
+		 $reportName ="PO".date('d-m-Y Hms').".pdf";
+		 $mpdf->Output('../../lukisongroup/web/pdf_tmp/'.$reportName, 'F'); 		
+		
+		Yii::$app->mailer->compose()
+					 ->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
+					 //->setTo(['piter@lukison.com'])
+					 //->setTo(['it-dept@lukison.com'])
+					 //->setTo(['it-dept@lukison.com'])
+					 ->setTo(['ptr.nov@gmail.com','it-dept@lukison.com'])
+					 ->setSubject('Purchase Order')
+					 ->setHtmlBody($contentMail)
+					// ->attach('../../lukisongroup/web/login.png',['login','png'])
+					 ->attach('../../lukisongroup/web/pdf_tmp/'.$reportName,[$reportName,'pdf'])
+					// ->attach($content1,['po','pdf'])
+					 //->attach($pdf->Output($reportName, 'f'),[$reportName,'pdf'])
+					 //->attachContent($strAttch,[$reportName,'pdf'])
+					 // ->attachContent($content1)
+					 ->send();	 
+	  }
+	
+	
+	
+	
+	
+	
 
 	/*
 	 * TMP PDF | Purchaseorder| Purchasedetail
