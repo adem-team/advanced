@@ -1263,6 +1263,7 @@ class PurchaseOrderController extends Controller
 			'orientation' => Pdf::ORIENT_PORTRAIT,
 			// stream to browser inline
 			'destination' => Pdf::DEST_BROWSER,
+			//'destination' => Pdf::DEST_FILE ,
 			// your html content input
 			'content' => $content,
 			// format content from your own css file if needed or use the
@@ -1279,48 +1280,12 @@ class PurchaseOrderController extends Controller
 				'SetFooter'=>['{PAGENO}'],
 			]
 		]);
-		 $hasil= $pdf->render();
-
-		//return $pdf->render();
-
-		 // $pdf = Yii::$app->pdf; // or new Pdf();
-		 // $mpdf = $pdf->api; // fetches mpdf api
-		 // $mpdf->SetHeader('Kartik Header'); // call methods or set any properties
-		 // $mpdf->WriteHtml($content); // call mpdf write html
-		 // $reportName ="Report(".date('d-m-Y h:i').").pdf";
-		 // $content1 = $mpdf->Output($reportName, 'D');
-		 // $content1 = chunk_split(base64_encode($content1));
-		 // = $pdf->Output('test.pdf', 'S')
-		// $fileX= $pdf->Output('po', 'I');
-		 //$fileAttach=chunk_split(base64_encode($hasil));
-		// $fileAttach=chunk_split(base64_encoder($fileX));
-
-		Yii::$app->mailer->compose()
-					 ->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
-					 //->setTo(['piter@lukison.com'])
-					 //->setTo(['it-dept@lukison.com'])
-					 //->setTo(['it-dept@lukison.com'])
-					 ->setTo(['ptr.nov@gmail.com','it-dept@lukison.com'])
-					 ->setSubject('Purchase Order')
-					 ->setHtmlBody($contentMail)
-					 //->attach('../../lukisongroup/web/login.png',['login','png'])
-					// ->attach($content1,['po','pdf'])
-					 //->attachContent( $fileAttach,['po','pdf'])
-					 // ->attachContent($content1)
-					 ->send();
-
-		 return $hasil;
-
-
-
-		/* $mpdf=new mPDF();
-        $mpdf->WriteHTML($this->renderPartial( 'pdf', [
-            'model' => Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one(),
-        ]));
-        $mpdf->Output();
-        exit; */
+		/* KIRIM ATTACH emaiL */
+		$to=['piter@lukison.com'];
+		\Yii::$app->kirim_email->pdf($contentMail,'PO',$to,'Purchase-Order',$content);
+		
+		return $pdf->render();		
     }
-
 
 	/*
 	 * TMP PDF | Purchaseorder| Purchasedetail
