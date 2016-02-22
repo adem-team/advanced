@@ -1218,7 +1218,7 @@ class PurchaseOrderController extends Controller
 		//$poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->all();
 		// $poDetailQry= "SELECT ID,KD_PO,KD_RO,KD_BARANG,NM_BARANG,UNIT,NM_UNIT,UNIT_QTY,UNIT_WIGHT,SUM(QTY) AS QTY,HARGA,STATUS,STATUS_DATE,NOT
 		// 				FROM `p0002` WHERE KD_PO='" .$kdpo. "' GROUP BY KD_BARANG,NM_UNIT,HARGA";
-          $poDetailQry = "SELECT p.ID,p.KD_PO,p.KD_RO,p.KD_BARANG,p.NM_BARANG,p.UNIT,p.NM_UNIT,p.UNIT_QTY,a.NM_COSTCENTER,p.HARGA,p.STATUS,
+          $poDetailQry = "SELECT p.ID,p.KD_PO,p.KD_RO,p.KD_BARANG,p.NM_BARANG,p.UNIT,p.NM_UNIT,p.UNIT_QTY,p.KD_COSTCENTER,p.HARGA,p.STATUS,
                           p.STATUS_DATE,p.NOTE,p.UNIT_WIGHT,SUM(QTY) AS QTY FROM `p0002` p
                          LEFT JOIN p0004 a ON p.KD_COSTCENTER = a.KD_COSTCENTER
                          WHERE p.KD_PO='".$kdpo."' GROUP BY p.KD_BARANG,p.NM_UNIT,p.HARGA";
@@ -1283,8 +1283,8 @@ class PurchaseOrderController extends Controller
 		/* KIRIM ATTACH emaiL */
 		$to=['piter@lukison.com'];
 		\Yii::$app->kirim_email->pdf($contentMail,'PO',$to,'Purchase-Order',$content);
-		
-		return $pdf->render();		
+
+		return $pdf->render();
     }
 
 	/*
@@ -1298,7 +1298,7 @@ class PurchaseOrderController extends Controller
 		// //$poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->all();
 		// $poDetailQry= "SELECT ID,KD_PO,KD_RO,KD_BARANG,NM_BARANG,UNIT,NM_UNIT,UNIT_QTY,UNIT_WIGHT,SUM(QTY) AS QTY,HARGA,STATUS,STATUS_DATE,NOTE
 		// 				FROM `p0002` WHERE KD_PO='" .$kdpo. "' GROUP BY KD_BARANG,NM_UNIT,HARGA";
-    $poDetailQry = "SELECT p.ID,p.KD_PO,p.KD_RO,p.KD_BARANG,p.NM_BARANG,p.UNIT,p.NM_UNIT,p.UNIT_QTY,a.NM_COSTCENTER,p.HARGA,p.STATUS,
+    $poDetailQry = "SELECT p.ID,p.KD_PO,p.KD_RO,p.KD_BARANG,p.NM_BARANG,p.UNIT,p.NM_UNIT,p.UNIT_QTY,p.KD_COSTCENTER,p.HARGA,p.STATUS,
                     p.STATUS_DATE,p.NOTE,p.UNIT_WIGHT,SUM(QTY) AS QTY FROM `p0002` p
                    LEFT JOIN p0004 a ON p.KD_COSTCENTER = a.KD_COSTCENTER
                    WHERE p.KD_PO='".$kdpo."' GROUP BY p.KD_BARANG,p.NM_UNIT,p.HARGA";

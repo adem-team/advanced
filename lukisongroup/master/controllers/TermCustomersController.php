@@ -302,8 +302,6 @@ class TermCustomersController extends Controller
 
               $model->save();
           }
-        //   print_r($model->getErrors());
-        //  die();
 
         return  $this->redirect(['view','id'=> $model->ID_TERM]);
 
@@ -359,12 +357,12 @@ class TermCustomersController extends Controller
 
           if($model->validate())
           {
-            // $model->CREATE_AT = date("Y-m-d H:i:s");
-            // $model->CREATE_BY = Yii::$app->user->identity->username;
+
             $model->save();
 
+
           }
-          // print_r($model->getErrors());
+        //   print_r($model->getErrors());
         //  die();
 
             return $this->redirect(['view','id'=>$id]);
@@ -373,7 +371,7 @@ class TermCustomersController extends Controller
         else {
             return $this->renderAjax('term', [
                 'model' => $model,
-                'id'=>$id
+              
 
             ]);
         }

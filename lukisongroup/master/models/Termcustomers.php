@@ -81,13 +81,13 @@ class Termcustomers extends \yii\db\ActiveRecord
     {
       # code...
       $datestart = $this->PERIOD_START;
-      $dateawal = explode('/', $datestart);
-
-      print_r($dateawal);
-      die();
       $dateend = $this->PERIOD_END;
+      // $date = strtotime($datestart);
+      // print_r($date);
+      // die();
 
-       if( $dateend < $datestart  )
+
+      if(strtotime($dateend) < strtotime($datestart))
        {
            $this->addError($model, 'Tanggal harus lebih Besar'.$datestart);
        }
