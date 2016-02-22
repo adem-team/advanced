@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'120px',
+					'width'=>'100px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 					'background-color'=>'rgba(97, 211, 96, 0.3)',
@@ -67,7 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'contentOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'120px',
+					'width'=>'100px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
@@ -92,6 +92,30 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'50px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+				]
+			],
+		],
+		[  	//col-3
+			//Employee-Name
+			'attribute' => 'username',
+			'label'=>'Employee-Name',
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'80px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'left',
+					'width'=>'80px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
@@ -130,7 +154,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'150px',
+					'width'=>'100px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 					'background-color'=>'rgba(97, 211, 96, 0.3)',
@@ -139,36 +163,13 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'contentOptions'=>[
 				'style'=>[
 					'text-align'=>'left',
-					'width'=>'150px',
+					'width'=>'100px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
 			],
 		],
-		[  	//col-5
-			//DateTime
-			'attribute' => 'DateTime',
-			'label'=>'DateTime',
-			'hAlign'=>'left',
-			'vAlign'=>'middle',
-			'headerOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'80px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'9pt',
-					'background-color'=>'rgba(97, 211, 96, 0.3)',
-				]
-			],
-			'contentOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'80px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'9pt',
-				]
-			],
-		],
+		
 	];
 		
 	
