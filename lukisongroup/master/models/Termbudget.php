@@ -50,6 +50,7 @@ class Termbudget extends \yii\db\ActiveRecord
 
             [['BUDGET_VALUE'], 'number'],
             [['INVES_TYPE'], 'cekdata'],
+            // [['PERIODE_START','PERIODE_END'], 'date', 'format' => 'php:F d Y'],
             [['INVES_TYPE','BUDGET_VALUE','PERIODE_START','PERIODE_END'], 'required'],
             [['PERIODE_END'], 'datevalid'],
             [['PERIODE_START', 'PERIODE_END', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
@@ -92,10 +93,13 @@ class Termbudget extends \yii\db\ActiveRecord
       # code...
       $datestart = $this->PERIODE_START;
       $dateend = $this->PERIODE_END;
+      $date = strtotime($datestart);
+      // print_r($date);
+      // die();
 
-    
 
-       if( $dateend < $datestart  )
+
+     if(strtotime($dateend) < strtotime($datestart))
        {
            $this->addError($model, 'Tanggal harus lebih Besar'.$datestart);
        }
