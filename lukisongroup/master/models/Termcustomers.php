@@ -127,16 +127,22 @@ class Termcustomers extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+
+          // 'JOBGRADE_ID','JABATAN_CUS','JABATAN_DIST'
+           'JABATAN_CUS' => 'Jabatan Customers',
+          'JABATAN_DIST' => 'Jabatan Distributor',
+          'JOBGRADE_ID' => 'Jabatan Principal',
+          // 'CUST_KD' => 'Cust  Kd',
             'ID_TERM' => 'Id  Term',
-            'NM_TERM' => 'Nm  Term',
-            'CUST_KD' => 'Cust  Kd',
-            'CUST_NM' => 'Cust  Nm',
+            'NM_TERM' => 'Nama Perjanjian',
+            'CUST_KD' => 'Nama Customers',
+            'CUST_NM' => 'Nama Customers',
             // 'CUST_SIGN' => 'Cust  Sign',
-            // 'PRINCIPAL_KD' => 'Principal  Kd',
-            'PRINCIPAL_NM' => 'Principal  Nm',
+            'PRINCIPAL_KD' => ' Nama Principal',
+            'PRINCIPAL_NM' => ' Nama Principal',
             'PRINCIPAL_SIGN' => 'Principal  Sign',
-            // 'DIST_KD' => 'Dist  Kd',
-            'DIST_NM' => 'Dist  Nm',
+            'DIST_KD' => 'Nama Distributor',
+            'DIST_NM' => 'Nama Distributor',
             'DIST_SIGN' => 'Dist  Sign',
             'DCRP_SIGNARURE' => 'Dcrp  Signarure',
             'PERIOD_START' => 'Period  Start',

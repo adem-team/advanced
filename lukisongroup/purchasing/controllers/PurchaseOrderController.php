@@ -1018,6 +1018,193 @@ class PurchaseOrderController extends Controller
 		}
     }
 
+    public function Sendmail($kdpo)
+    {
+
+      $poDetailQry = "SELECT p.ID,p.KD_PO,p.KD_RO,p.KD_BARANG,p.NM_BARANG,p.UNIT,p.NM_UNIT,p.UNIT_QTY,p.KD_COSTCENTER,p.HARGA,p.STATUS,
+                      p.STATUS_DATE,p.NOTE,p.UNIT_WIGHT,SUM(QTY) AS QTY FROM `p0002` p
+                     LEFT JOIN p0004 a ON p.KD_COSTCENTER = a.KD_COSTCENTER
+                     WHERE p.KD_PO='".$kdpo."' GROUP BY p.KD_BARANG,p.NM_UNIT,p.HARGA";
+
+      $poDetail=Purchasedetail::findBySql($poDetailQry)->all();
+      $poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
+     $dataProvider = new ArrayDataProvider([
+       'key' => 'KD_PO',
+       'allModels'=>$poDetail,
+       'pagination' => [
+         'pageSize' => 20,
+        ],
+      ]);
+
+      $content= $this->renderPartial( 'pdf', [
+        'poHeader' => $poHeader,
+        'dataProvider' => $dataProvider,
+          ]);
+      # code...
+      $contentMail= $this->renderPartial('sendmailcontent',[
+        'poHeader' => $poHeader,
+        'dataProvider' => $dataProvider,
+      ]);
+
+
+
+      $pdf = new Pdf([
+        // set to use core fonts only
+        'mode' => Pdf::MODE_CORE,
+        // A4 paper format
+        'format' => Pdf::FORMAT_A4,
+        // portrait orientation
+        'orientation' => Pdf::ORIENT_PORTRAIT,
+        // stream to browser inline
+        'destination' => Pdf::DEST_BROWSER,
+        //'destination' => Pdf::DEST_FILE ,
+        // your html content input
+        'content' => $content,
+        // format content from your own css file if needed or use the
+        // enhanced bootstrap css built by Krajee for mPDF formatting
+        //D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+        'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+        // any css to be embedded if required
+        'cssInline' => '.kv-heading-1{font-size:12px}',
+         // set mPDF properties on the fly
+        'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+         // call mPDF methods on the fly
+        'methods' => [
+          'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
+          'SetFooter'=>['{PAGENO}'],
+        ]
+      ]);
+      /* KIRIM ATTACH emaiL */
+      $to=['aditiya@lukison.com'];
+      \Yii::$app->kirim_email->pdf($contentMail,'PO',$to,'Purchase-Order',$content);
+    }
+
+
+
+        public function Sendmail2($kdpo)
+        {
+
+        $poDetailQry = "SELECT p.ID,p.KD_PO,p.KD_RO,p.KD_BARANG,p.NM_BARANG,p.UNIT,p.NM_UNIT,p.UNIT_QTY,p.KD_COSTCENTER,p.HARGA,p.STATUS,
+                        p.STATUS_DATE,p.NOTE,p.UNIT_WIGHT,SUM(QTY) AS QTY FROM `p0002` p
+                         LEFT JOIN p0004 a ON p.KD_COSTCENTER = a.KD_COSTCENTER
+                         WHERE p.KD_PO='".$kdpo."' GROUP BY p.KD_BARANG,p.NM_UNIT,p.HARGA";
+        $poDetail=Purchasedetail::findBySql($poDetailQry)->all();
+        $poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
+        $dataProvider = new ArrayDataProvider([
+            'key' => 'KD_PO',
+            'allModels'=>$poDetail,
+            'pagination' => [
+            'pageSize' => 20,
+              ],
+          ]);
+
+
+          $content= $this->renderPartial( 'pdf', [
+            'poHeader' => $poHeader,
+            'dataProvider' => $dataProvider,
+              ]);
+          # code...
+          $contentMail= $this->renderPartial('sendmailcontent',[
+            'poHeader' => $poHeader,
+            'dataProvider' => $dataProvider,
+          ]);
+
+
+
+          $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_CORE,
+            // A4 paper format
+            'format' => Pdf::FORMAT_A4,
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_PORTRAIT,
+            // stream to browser inline
+            'destination' => Pdf::DEST_BROWSER,
+            //'destination' => Pdf::DEST_FILE ,
+            // your html content input
+            'content' => $content,
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting
+            //D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+            'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+            // any css to be embedded if required
+            'cssInline' => '.kv-heading-1{font-size:12px}',
+             // set mPDF properties on the fly
+            'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+             // call mPDF methods on the fly
+            'methods' => [
+              'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
+              'SetFooter'=>['{PAGENO}'],
+            ]
+          ]);
+          /* KIRIM ATTACH emaiL */
+          $to=['aditiya@lukison.com','piter@lukison.com'];
+          \Yii::$app->kirim_email->pdf($contentMail,'PO',$to,'Purchase-Order',$content);
+        }
+
+
+        public function Sendmail3($kdpo)
+        {
+
+          $poDetailQry = "SELECT p.ID,p.KD_PO,p.KD_RO,p.KD_BARANG,p.NM_BARANG,p.UNIT,p.NM_UNIT,p.UNIT_QTY,p.KD_COSTCENTER,p.HARGA,p.STATUS,
+                          p.STATUS_DATE,p.NOTE,p.UNIT_WIGHT,SUM(QTY) AS QTY FROM `p0002` p
+                         LEFT JOIN p0004 a ON p.KD_COSTCENTER = a.KD_COSTCENTER
+                         WHERE p.KD_PO='".$kdpo."' GROUP BY p.KD_BARANG,p.NM_UNIT,p.HARGA";
+
+         $poDetail=Purchasedetail::findBySql($poDetailQry)->all();
+         $poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
+         $dataProvider = new ArrayDataProvider([
+          'key' => 'KD_PO',
+          'allModels'=>$poDetail,
+          'pagination' => [
+            'pageSize' => 20,
+                ],
+            ]);
+
+          $content= $this->renderPartial( 'pdf', [
+            'poHeader' => $poHeader,
+            'dataProvider' => $dataProvider,
+              ]);
+          # code...
+          $contentMail= $this->renderPartial('sendmailcontent',[
+            'poHeader' => $poHeader,
+            'dataProvider' => $dataProvider,
+          ]);
+
+
+
+          $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_CORE,
+            // A4 paper format
+            'format' => Pdf::FORMAT_A4,
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_PORTRAIT,
+            // stream to browser inline
+            'destination' => Pdf::DEST_BROWSER,
+            //'destination' => Pdf::DEST_FILE ,
+            // your html content input
+            'content' => $content,
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting
+            //D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+            'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+            // any css to be embedded if required
+            'cssInline' => '.kv-heading-1{font-size:12px}',
+             // set mPDF properties on the fly
+            'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+             // call mPDF methods on the fly
+            'methods' => [
+              'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
+              'SetFooter'=>['{PAGENO}'],
+            ]
+          ]);
+          /* KIRIM ATTACH emaiL */
+          $to=['aditiya@lukison.com','piter@lukison.com','ridwan@lukison.com'];
+          \Yii::$app->kirim_email->pdf($contentMail,'PO',$to,'Purchase-Order',$content);
+        }
+
+
 	/*
 	 * SIGNATURE AUTH1 | SIGN CREATED PO
 	 * $poHeader->STATUS =101
@@ -1028,11 +1215,13 @@ class PurchaseOrderController extends Controller
 		$auth1Mdl = new Auth1Model();
 		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
 		$employe = $poHeader->employe;
+
 			return $this->renderAjax('sign-auth1', [
 				'poHeader' => $poHeader,
 				'employe' => $employe,
 				'auth1Mdl' => $auth1Mdl,
 			]);
+
 	}
 	public function actionSignAuth1Save(){
 		$auth1Mdl = new Auth1Model();
@@ -1043,8 +1232,10 @@ class PurchaseOrderController extends Controller
 		}else{	/*Normal Load*/
 			if($auth1Mdl->load(Yii::$app->request->post())){
 				if ($auth1Mdl->auth1_saved()){
+
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth1Model']['kdpo'];
+          $this->Sendmail($kdpo);
 					return $this->redirect(['create', 'kdpo'=>$kdpo]);
 				}
 			}
@@ -1078,6 +1269,7 @@ class PurchaseOrderController extends Controller
 				if ($auth2Mdl->auth2_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth2Model']['kdpo'];
+          $this->Sendmail2($kdpo);
 					return $this->redirect(['create', 'kdpo'=>$kdpo]);
 				}
 			}
@@ -1111,6 +1303,7 @@ class PurchaseOrderController extends Controller
 				if ($auth3Mdl->auth3_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth3Model']['kdpo'];
+            $this->Sendmail3($kdpo);
 					return $this->redirect(['create', 'kdpo'=>$kdpo]);
 				}
 			}
@@ -1287,7 +1480,9 @@ class PurchaseOrderController extends Controller
 		return $pdf->render();
     }
 
-	/*
+
+
+	/*.
 	 * TMP PDF | Purchaseorder| Purchasedetail
 	 * @author ptrnov <piter@lukison.com>
 	 * @since 1.2

@@ -140,7 +140,7 @@ function ttd3($model){
   <div class="row">
     <div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;">
       <div>
-      
+
       </div>
       <dl>
         <?php
@@ -411,6 +411,46 @@ function ttd3($model){
 
       'export' =>false,
     ]);
+
+    ?>
+    <div class="row">
+      <div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;">
+        <div>
+           <!-- echo RABATE($model); ?> -->
+        </div>
+        <dl>
+          <dt><h6><b>Conditional Rabate : <u><?= $model->RABATE_CNDT ?></b></u></h6></dt>
+        </dl>
+      </div>
+    </div>
+
+    <div class="row">
+    <div class="col-xs-5 col-sm-5 col-md-5" style="font-family: tahoma ;font-size: 9pt;">
+      <div>
+         <!-- target($model); ?> -->
+      </div
+        <dl>
+
+          <dt style="width:80px; float:left;"><h6><u><b>Target :</b></u></h6></dt>
+          <dd>:	<?=$model->TARGET_TEXT ?> Rupiah</dd>
+          <dd>:Rp.<?=$model->TARGET_VALUE?></dd>
+
+        </dl>
+    </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;">
+        <div>
+           <!-- echo Growth($model); ?> -->
+        </div>
+        <dl>
+          <dt><h6><u><b>Growth : <?= $model->GROWTH ?> %</b></u></h6></dt>
+        </dl>
+      </div>
+    </div>
+
+    <?php
 
     echo  $grid = GridView::widget([
         'id'=>'gv-term',
