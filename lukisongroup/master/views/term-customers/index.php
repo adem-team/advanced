@@ -391,7 +391,7 @@ $this->registerJs("
 ",$this::POS_READY);
   Modal::begin([
       'id' => 'modal-create',
-  'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+  'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Perjanjian </h4></div>',
   'headerOptions'=>[
       'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
   ],

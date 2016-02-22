@@ -5,10 +5,6 @@ use kartik\grid\GridView;
 
 ?>
 
-<?php
-
-
- ?>
 
 <div class="container-fluid" style="font-family: tahoma ;font-size: 8pt;">
   <div style="width:240px; float:left;">
@@ -255,7 +251,7 @@ use kartik\grid\GridView;
      </tr>
      <tr>
          <td> Conditional Rabate </td>
-         <td>                  </td>
+         <td>     <?= $data->RABATE_CNDT ?>  </td>
 
     </tr>
     <tr>
@@ -270,7 +266,7 @@ use kartik\grid\GridView;
    </tr>
     <tr>
         <td> Growth </td>
-        <td> <?= $data->GROWTH ?></td>
+        <td> <?= $data->GROWTH ?> % </td>
 
    </tr>
    <tr>
@@ -345,7 +341,7 @@ use kartik\grid\GridView;
 
          </th>
          <th  class="col-md-1" style="text-align: center; vertical-align:middle">
-           
+
          </th>
        </tr>
        <!--Nama !-->

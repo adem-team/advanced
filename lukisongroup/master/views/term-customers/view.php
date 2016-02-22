@@ -20,7 +20,7 @@ use kartik\detail\DetailView;
 $this->sideCorp = 'PT. Efenbi Sukses Makmur';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_customers';                                      /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pada header page */
-$this->params['breadcrumbs'][] = $this->title;  
+$this->params['breadcrumbs'][] = $this->title;
 
 function pihak($model){
   $title = Yii::t('app','');
@@ -70,6 +70,22 @@ function TOP($model){
   return $content;
 }
 
+function RABATE($model){
+  $title = Yii::t('app','');
+  $options = [ 'id'=>'rabate',
+          'data-toggle'=>"modal",
+          'data-target'=>"#RABATE",
+          'class'=>'btn btn-warning btn-xs',
+          //'style'=>['width'=>'150px'],
+          'title'=>'Set'
+  ];
+  $icon = '<span class="glyphicon glyphicon-open"></span>';
+  $label = $icon . ' ' . $title;
+  $url = Url::toRoute(['/master/term-customers/rabate','id'=>$model->ID_TERM]);
+  $content = Html::a($label,$url, $options);
+  return $content;
+}
+
 function target($model){
   $title = Yii::t('app','');
   $options = [ 'id'=>'target-id',
@@ -82,6 +98,22 @@ function target($model){
   $icon = '<span class="glyphicon glyphicon-open"></span>';
   $label = $icon . ' ' . $title;
   $url = Url::toRoute(['/master/term-customers/target','id'=>$model->ID_TERM]);
+  $content = Html::a($label,$url, $options);
+  return $content;
+}
+
+function growth($model){
+  $title = Yii::t('app','');
+  $options = [ 'id'=>'growth',
+          'data-toggle'=>"modal",
+          'data-target'=>"#Growth",
+          'class'=>'btn btn-warning btn-xs',
+          //'style'=>['width'=>'150px'],
+          'title'=>'Set'
+  ];
+  $icon = '<span class="glyphicon glyphicon-open"></span>';
+  $label = $icon . ' ' . $title;
+  $url = Url::toRoute(['/master/term-customers/growth','id'=>$model->ID_TERM]);
   $content = Html::a($label,$url, $options);
   return $content;
 }
@@ -266,20 +298,7 @@ function ttd3($model){
 
 
 
-  <div class="row">
-  <div class="col-xs-5 col-sm-5 col-md-5" style="font-family: tahoma ;font-size: 9pt;">
-    <div>
-      <?php echo target($model); ?>
-    </div
-      <dl>
 
-        <dt style="width:80px; float:left;"><h6><u><b>Target :</b></u></h6></dt>
-        <dd>:	<?=$model->TARGET_TEXT ?> Rupiah</dd>
-        <dd>:Rp.<?=$model->TARGET_VALUE?></dd>
-
-      </dl>
-  </div>
-</div>
 <?php
 $dataids = $_GET['id'];
 
@@ -479,6 +498,7 @@ $dataids = $_GET['id'];
             ['modelClass' => 'Termcustomers',]),['/master/term-customers/create-budget','id'=>$dataids],[
               'data-toggle'=>"modal",
                 'data-target'=>"#modal-create",
+                'data-title'=>'type Investasi',
                   'class' => 'btn btn-info'
                         ]),
         'showFooter'=>true,
@@ -487,6 +507,46 @@ $dataids = $_GET['id'];
 
       'export' =>false,
     ]);
+    ?>
+    <div class="row">
+      <div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;">
+        <div>
+          <?php echo RABATE($model); ?>
+        </div>
+        <dl>
+          <dt><h6><u><b>Conditional Rabate : <?= $model->RABATE_CNDT ?></b></u></h6></dt>
+        </dl>
+      </div>
+    </div>
+
+    <div class="row">
+    <div class="col-xs-5 col-sm-5 col-md-5" style="font-family: tahoma ;font-size: 9pt;">
+      <div>
+        <?php echo target($model); ?>
+      </div
+        <dl>
+
+          <dt style="width:80px; float:left;"><h6><u><b>Target :</b></u></h6></dt>
+          <dd>:Rp.<?=$model->TARGET_VALUE?></dd>
+            <dd>:	<?=$model->TARGET_TEXT ?> Rupiah</dd>
+
+        </dl>
+    </div>
+  </div>
+
+    <div class="row">
+      <div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;">
+        <div>
+          <?php echo Growth($model); ?>
+        </div>
+        <dl>
+          <dt><h6><u><b>Growth : <?= $model->GROWTH ?> %</b></u></h6></dt>
+        </dl>
+      </div>
+    </div>
+
+
+    <?php
 
     echo  $grid = GridView::widget([
         'id'=>'gv-term',
@@ -766,12 +826,58 @@ $dataids = $_GET['id'];
      ",$this::POS_READY);
        Modal::begin([
         'id' => 'pihak',
-       'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+       'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title"> Pihak Terkait</h4></div>',
        'headerOptions'=>[
            'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
        ],
        ]);
        Modal::end();
+       $this->registerJs("
+          $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+          $('#RABATE').on('show.bs.modal', function (event) {
+           var button = $(event.relatedTarget)
+           var modal = $(this)
+           var title = button.data('title')
+           var href = button.attr('href')
+           //modal.find('.modal-title').html(title)
+           modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+           $.post(href)
+             .done(function( data ) {
+               modal.find('.modal-body').html(data)
+             });
+           })
+       ",$this::POS_READY);
+         Modal::begin([
+          'id' => 'RABATE',
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title"> Rabate Conditional</h4></div>',
+         'headerOptions'=>[
+             'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+         ],
+         ]);
+         Modal::end();
+         $this->registerJs("
+            $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+            $('#Growth').on('show.bs.modal', function (event) {
+             var button = $(event.relatedTarget)
+             var modal = $(this)
+             var title = button.data('title')
+             var href = button.attr('href')
+             //modal.find('.modal-title').html(title)
+             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+             $.post(href)
+               .done(function( data ) {
+                 modal.find('.modal-body').html(data)
+               });
+             })
+         ",$this::POS_READY);
+           Modal::begin([
+            'id' => 'Growth',
+           'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title"> Growth</h4></div>',
+           'headerOptions'=>[
+               'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+           ],
+           ]);
+           Modal::end();
 
        $this->registerJs("
           $.fn.modal.Constructor.prototype.enforceFocus = function(){};
@@ -790,7 +896,7 @@ $dataids = $_GET['id'];
        ",$this::POS_READY);
          Modal::begin([
           'id' => 'periode',
-         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Jangka Waktu</h4></div>',
          'headerOptions'=>[
              'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
          ],
@@ -814,7 +920,7 @@ $dataids = $_GET['id'];
          ",$this::POS_READY);
            Modal::begin([
             'id' => 'TOP',
-           'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+           'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Term Of Payment</h4></div>',
            'headerOptions'=>[
                'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
            ],
@@ -838,7 +944,7 @@ $dataids = $_GET['id'];
            ",$this::POS_READY);
              Modal::begin([
               'id' => 'TARGET',
-             'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+             'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Target</h4></div>',
              'headerOptions'=>[
                  'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
              ],
@@ -862,7 +968,7 @@ $dataids = $_GET['id'];
              ",$this::POS_READY);
                Modal::begin([
                 'id' => 'modal-create',
-               'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+               'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Term</h4></div>',
                'headerOptions'=>[
                    'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
                ],
@@ -886,7 +992,7 @@ $dataids = $_GET['id'];
                ",$this::POS_READY);
                  Modal::begin([
                   'id' => 'modal-general',
-                 'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+                 'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">General Term</h4></div>',
                  'headerOptions'=>[
                      'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
                  ],

@@ -20,7 +20,7 @@ $form = ActiveForm::begin([
 'options' => ['placeholder' => 'Dari  ...'],
 'pluginOptions' => [
    'autoclose'=>true,
-   'format' => 'dd/m/yyyy',
+   'format' => 'dd-mm-yyyy',
 ],
 
 'pluginEvents'=>[
@@ -33,7 +33,7 @@ $form = ActiveForm::begin([
 'options' => ['placeholder' => 'Sampai'],
 'pluginOptions' => [
    'autoclose'=>true,
-   'format' => 'dd/m/yyyy',
+   'format' => 'dd-mm-yyyy',
 ],
 
 'pluginEvents'=>[

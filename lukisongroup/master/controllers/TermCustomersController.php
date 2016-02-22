@@ -171,6 +171,54 @@ class TermCustomersController extends Controller
 
     }
 
+    public function actionRabate($id)
+    {
+      # code...
+      $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
+
+      if ($model->load(Yii::$app->request->post())) {
+        if($model->validate())
+        {
+
+            $model->save();
+        }
+
+      return  $this->redirect(['view','id'=> $model->ID_TERM]);
+
+      }
+      else {
+          return $this->renderAjax('_rabate', [
+              'model' => $model,
+
+          ]);
+      }
+
+    }
+
+    public function actionGrowth($id)
+    {
+      # code...
+      $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
+
+      if ($model->load(Yii::$app->request->post())) {
+        if($model->validate())
+        {
+
+            $model->save();
+        }
+
+      return  $this->redirect(['view','id'=> $model->ID_TERM]);
+
+      }
+      else {
+          return $this->renderAjax('growth', [
+              'model' => $model,
+
+          ]);
+      }
+
+    }
+
     public function actionSetInternal($id)
     {
       # code...
@@ -371,7 +419,7 @@ class TermCustomersController extends Controller
         else {
             return $this->renderAjax('term', [
                 'model' => $model,
-              
+
 
             ]);
         }
