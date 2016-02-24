@@ -14,12 +14,13 @@ $this->sideMenu = 'hrd_absensi';                                       /* kd_men
 $this->title = Yii::t('app', 'HRM - Absensi	 Dashboard');             /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;                          /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
+
 	/*
-	 * COLUMN LOG ABSENSI
+	 * COLUMN MAINTAIN ABSENSI
 	 * @author ptrnov  [piter@lukison.com]
 	 * @since 1.2
 	*/
-	$clmLog=[
+	$clmMaintain=[
 		[	//COL-0
 			/* Attribute Serial No */
 			'class'=>'kartik\grid\SerialColumn',
@@ -48,20 +49,23 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 						'border-right'=>'0px',
 				]
 			]
-		],
-		[  	//col-1
-			//Finger Machine
-			'attribute' => 'TerminalNm',
-			'label'=>'Finger Machine',
+		],		
+		[  	//col-3
+			//Finger-Machine
+			'attribute' => 'TerminalID',			
+			'label'=>'Finger-Machine',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
+			'group'=>true,
+			'groupedRow'=>true,
+			'noWrap'=>true,
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'100px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
 				]
 			],
 			'contentOptions'=>[
@@ -73,8 +77,89 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 				]
 			],
 		],
+		[  	//col-6
+			//DateTime
+			'attribute' => 'DateTime',
+			'label'=>'DateTime',
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'group'=>true,
+			//'groupedRow'=>true,
+			'noWrap'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'80px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'80px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+				]
+			],
+		],
+		[  	//col-1
+			//Employee-ID
+			'attribute' => 'EMP_ID',
+			'label'=>'Employee-ID',
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'group'=>true,
+			//'groupedRow'=>true,
+			'noWrap'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+				]
+			],
+		],
 		[  	//col-2
-			//CUSTOMER GRAOUP NAME
+			//Employee-Name
+			'attribute' => 'EMP_NM',
+			'label'=>'Employee-Name',
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'noWrap'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'120px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'left',
+					'width'=>'120px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+				]
+			],
+		],
+		
+		
+		[  	//col-5
+			//Finger
 			'attribute' => 'FingerPrintID',
 			'label'=>'Finger',
 			'hAlign'=>'left',
@@ -85,7 +170,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 					'width'=>'50px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
 				]
 			],
 			'contentOptions'=>[
@@ -97,43 +182,20 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 				]
 			],
 		],
-		[  	//col-3
-			//Employee-Name
-			'attribute' => 'username',
-			'label'=>'Employee-Name',
+		[  	//col-6
+			//FunctionKeyNM FROM Key Function
+			'attribute' => 'FunctionKeyNM',
+			'label'=>'Key-Name',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
-			'headerOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'80px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'9pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
-				]
-			],
-			'contentOptions'=>[
-				'style'=>[
-					'text-align'=>'left',
-					'width'=>'80px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'9pt',
-				]
-			],
-		],
-		[  	//col-3
-			//Finger.Key
-			'attribute' => 'FunctionKey',
-			'label'=>'Key',
-			'hAlign'=>'left',
-			'vAlign'=>'middle',
+			'noWrap'=>true,
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'50px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
 				]
 			],
 			'contentOptions'=>[
@@ -144,58 +206,50 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 					'font-size'=>'9pt',
 				]
 			],
-		],
-		[  	//col-4
-			//DateTime
-			'attribute' => 'DateTime',
-			'label'=>'DateTime',
+		],		
+		[  	//col-7
+			//FlagAbsence
+			'attribute' => 'FlagAbsence',
+			'label'=>'Status',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'100px',
+					'width'=>'50px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
 				]
 			],
 			'contentOptions'=>[
 				'style'=>[
-					'text-align'=>'left',
-					'width'=>'100px',
+					'text-align'=>'center',
+					'width'=>'50px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
 			],
 		],
-		
 	];
-		
+
 	
-	
-	
-	/*
-	 * LOG ABSENSI
-	 * @author ptrnov  [piter@lukison.com]
-	 * @since 1.2
-	*/
-	$gvAbsenLog=GridView::widget([
-		'id'=>'gv-absenlog-id',
+	$gvAbsenmaintain=GridView::widget([
+		'id'=>'gv-maintain-id',
         'dataProvider' => $absenMaintain,
         //'filterModel' => $searchModel,
-		'filterRowOptions'=>['style'=>'background-color:rgba(0, 95, 218, 0.3); align:center'],
+		'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
 		'showPageSummary' => true,
-		'columns' =>$clmLog,
+		'columns' =>$clmMaintain,
 		'pjax'=>true,
 		'pjaxSettings'=>[
 		'options'=>[
 			'enablePushState'=>false,
-			'id'=>'gv-absenlog-id',
+			'id'=>'gv-maintain-id',
 		   ],
 		],
 		'panel' => [
-					'heading'=>'<h3 class="panel-title">EMPLOYEE LOG FINGER</h3>',
+					'heading'=>'<h3 class="panel-title">LOG ABSENSI</h3>',
 					/* 'type'=>'warning',
 					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Customer ',
 							['modelClass' => 'Kategori',]),'/master/barang/create',[
@@ -214,44 +268,17 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		'bordered'=>true,
 		'striped'=>'4px',
 		'autoXlFormat'=>true,
-		'export' => false,		
+		'export' => false,
 	]);
 ?>
 
 
 <div class="body-content">
     <div class="row" style="padding-left: 5px; padding-right: 5px">
-        <div class="col-sm-12 col-md-2 col-lg-12" style="padding-left:80px; padding-right:80px">
-            <?php            		
-				echo $gvAbsenLog;
+        <<div class="col-sm-12 col-md-2 col-lg-12" style="padding-left:80px; padding-right:80px">
+            <?php
+				echo $gvAbsenmaintain;
             ?>
         </div>
     </div>
 </div>
-
-<?php
-$this->registerJs("
-		$(document).on('click', '[data-toggle-approved]', function(e){
-			e.preventDefault();
-			var idx = $(this).data('toggle-approved');
-			$.ajax({
-					url: '/hrd/absen-log/cari?int=1',
-					type: 'POST',
-					//contentType: 'application/json; charset=utf-8',
-					data:'id='+idx,
-					dataType: 'json',
-					success: function(result) {
-						if (result == 1){
-							// Success
-							$.pjax.reload({container:'#gv-absenlog-id'});
-						} else {
-							// Fail
-						}
-					}
-				});
-
-		});
-	",$this::POS_READY);
-?>
-
-

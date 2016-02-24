@@ -30,8 +30,9 @@ class AbsenLogController extends Controller
      * @author ptrnov [piter@lukison.com]
      * @since 2.1
      */
-	public function getScriptsMaintain(){
-		return Yii::$app->db2->createCommand("CALL absensi_grid('inout_monitoring=2016-02-01=2016-02-22=0=0=0=0=0')")->queryAll();                
+	public function getScriptsMaintain($int){
+		//return Yii::$app->db2->createCommand("CALL absensi_grid('inout_monitoring=2016-02-01=2016-02-22=0=0=0=0=0')")->queryAll();                
+		return Yii::$app->db2->createCommand("CALL absensi_monitoring(".$int.")")->queryAll();                
 	}
 	
 	// public function getScriptsDetail(){
@@ -57,67 +58,46 @@ class AbsenLogController extends Controller
 		 * @author ptrnov [piter@lukison.com]
 		 * @since 2.1
 		 */
-		$absenMaintain= new ArrayDataProvider([
+		/* $absenMaintain= new ArrayDataProvider([
 			'key' => 'idno',
-			'allModels'=>$this->getScriptsMaintain(),
-			 'pagination' => [
-				'pageSize' => 500,
-			]
-		]);
-		
-		
-		//$attributeField=$plsql_so_label->allModels[0]; //get label Array 0
-		//$attDinamik=[];
-		//foreach($attributeField as $key =>$value)
-		//{
-			//$attDinamik[]=[$key];
-		//}
-		//print_r($attDinamik);
-		
-		
-		/* $plsql_so_1= new ArrayDataProvider([
-			'key' => 'ID',
-			'allModels'=>$this->getScripts(),
-			// 'sort' => [
-				// 'attributes' => $attDinamik,
-			// ],
+			'allModels'=>$this->getScriptsMaintain(0),
 			 'pagination' => [
 				'pageSize' => 500,
 			]
 		]); */
 		
-		// $plsql_so_detail= new ArrayDataProvider([
-			// 'key' => 'ID',
-			// 'allModels'=>$this->getScriptsDetail(),
-			 // 'pagination' => [
-				// 'pageSize' => 500,
-			// ]
-		// ]);
+        /* return $this->render('index', [
+           // 'searchModel' => $searchModel,
+            'absenMaintain' => $absenMaintain,
+            //'dataProviderX' => $plsql_so_1,
+			//'dataProviderX1' => $plsql_so_detail,
+			//'attributeField'=>$attributeField,
+			//'attributeField1'=>$attributeField1,
+			//'brgEsmProdak'=>$brgEsmProdak,
+			//'brgEsmProdak'=>$this->getEsmbrg(),
+			//'clmKdBarang'=>$clmKdBarang,
+			
+        ]); */
 		
-		
-		
+		$this->redirect(['cari','int'=>0]);
+    }
+
+	public function actionCari($int)
+    {
+		//print_r($this->getScripts());
 		
 		/**
-		 * PLSQL ! Column Label
+		 * PLSQL ! Array Data Provider
 		 * @author ptrnov [piter@lukison.com]
 		 * @since 2.1
 		 */
-		//$attributeField=$plsql_so_1->allModels[0]; //get label Array 0
-		// $attDinamik=[];
-		// foreach($attributeField as $key =>$value)
-		// {
-			// $attDinamik[]=[$key];
-		// }
-		// print_r($attDinamik);
-		
-		// $attributeField1=$plsql_so_detail->allModels[0];
-		// print_r($plsql_so_1->getModels());
-		//$tes1=$plsql_so_1->getModels();
-       // $searchModel = new Sot2Search();
-        //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-		
-		
+		$absenMaintain= new ArrayDataProvider([
+			'key' => 'idno',
+			'allModels'=>$this->getScriptsMaintain($int),
+			 'pagination' => [
+				'pageSize' => 500,
+			]
+		]);
 		
         return $this->render('index', [
            // 'searchModel' => $searchModel,
@@ -132,7 +112,8 @@ class AbsenLogController extends Controller
 			
         ]);
     }
-
+	
+	
     /**
      * Displays a single Sot2 model.
      * @param string $id

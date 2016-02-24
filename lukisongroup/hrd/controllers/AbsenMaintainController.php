@@ -31,7 +31,9 @@ class AbsenMaintainController extends Controller
      * @since 2.1
      */
 	public function getScriptsMaintain(){
-		return Yii::$app->db2->createCommand("CALL absensi_grid('inout_maintain=2016-02-01=2016-02-22=IT=0=0=0=0')")->queryAll();                
+		return Yii::$app->db2->createCommand("CALL absensi_grid('inout_maintain_machine=2016-02-01=2016-02-22=0=0=0=0=0')")->queryAll();                
+		//return Yii::$app->db2->createCommand("CALL absensi_grid('inout_maintain_grp=2016-02-01=2016-02-22=0=0=0=0=0')")->queryAll();                
+		//return Yii::$app->db2->createCommand("CALL absensi_grid('inout_maintain_grp=2016-02-01=2016-02-22=IT=0=0=0=0')")->queryAll();                
 	}
 	
 	// public function getScriptsDetail(){
@@ -50,86 +52,22 @@ class AbsenMaintainController extends Controller
      */
     public function actionIndex()
     {
-		//print_r($this->getScripts());
-		
 		/**
-		 * PLSQL ! Array Data Provider
+		 * MACHINE FINGER GROUP
 		 * @author ptrnov [piter@lukison.com]
 		 * @since 2.1
 		 */
-		$absenMaintain= new ArrayDataProvider([
-			'key' => 'idno',
+		$dataProvider= new ArrayDataProvider([
+			'key' => 'MesinID',
 			'allModels'=>$this->getScriptsMaintain(),
 			 'pagination' => [
-				'pageSize' => 500,
+				'pageSize' => 20,
 			]
 		]);
 		
-		
-		//$attributeField=$plsql_so_label->allModels[0]; //get label Array 0
-		//$attDinamik=[];
-		//foreach($attributeField as $key =>$value)
-		//{
-			//$attDinamik[]=[$key];
-		//}
-		//print_r($attDinamik);
-		
-		
-		/* $plsql_so_1= new ArrayDataProvider([
-			'key' => 'ID',
-			'allModels'=>$this->getScripts(),
-			// 'sort' => [
-				// 'attributes' => $attDinamik,
-			// ],
-			 'pagination' => [
-				'pageSize' => 500,
-			]
-		]); */
-		
-		// $plsql_so_detail= new ArrayDataProvider([
-			// 'key' => 'ID',
-			// 'allModels'=>$this->getScriptsDetail(),
-			 // 'pagination' => [
-				// 'pageSize' => 500,
-			// ]
-		// ]);
-		
-		
-		
-		
-		/**
-		 * PLSQL ! Column Label
-		 * @author ptrnov [piter@lukison.com]
-		 * @since 2.1
-		 */
-		//$attributeField=$plsql_so_1->allModels[0]; //get label Array 0
-		// $attDinamik=[];
-		// foreach($attributeField as $key =>$value)
-		// {
-			// $attDinamik[]=[$key];
-		// }
-		// print_r($attDinamik);
-		
-		// $attributeField1=$plsql_so_detail->allModels[0];
-		// print_r($plsql_so_1->getModels());
-		//$tes1=$plsql_so_1->getModels();
-       // $searchModel = new Sot2Search();
-        //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-		
-		
-		
         return $this->render('index', [
            // 'searchModel' => $searchModel,
-            'absenMaintain' => $absenMaintain,
-            //'dataProviderX' => $plsql_so_1,
-			//'dataProviderX1' => $plsql_so_detail,
-			//'attributeField'=>$attributeField,
-			//'attributeField1'=>$attributeField1,
-			//'brgEsmProdak'=>$brgEsmProdak,
-			//'brgEsmProdak'=>$this->getEsmbrg(),
-			//'clmKdBarang'=>$clmKdBarang,
-			
+            'dataProvider' => $dataProvider,			
         ]);
     }
 
