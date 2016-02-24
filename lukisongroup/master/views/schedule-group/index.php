@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		  ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
 	];
 	$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
-	
+
 
 	/*
 	 * GRIDVIEW Group CUSTOMER
@@ -162,7 +162,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 																'data-target'=>"#modal-view",
 																'data-title'=> '',//$model->KD_BARANG,
 																]). '</li>' . PHP_EOL;
-							},						
+							},
 							'edit' =>function($url, $model, $key){
 									return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Create Kode Alias'),
 																['createalias','id'=>$model->ID],[
@@ -204,7 +204,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						'heading'=>'<h3 class="panel-title">GROUPING CUSTOMER LOCALTIONS</h3>',
 						'type'=>'warning',
 						'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Group ',
-								['modelClass' => 'Kategori',]),'/master/barang/create',[
+								['modelClass' => 'Kategori',]),'/master/schedule-group/create',[
 									'data-toggle'=>"modal",
 										'data-target'=>"#modal-create",
 											'class' => 'btn btn-success'
@@ -213,7 +213,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			],
 			'toolbar'=> [
 				//'{items}',
-			], 
+			],
 			'hover'=>true, //cursor select
 			'responsive'=>true,
 			'responsiveWrap'=>true,
@@ -222,7 +222,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			'autoXlFormat'=>true,
 			'export' => false,
 		]);
-		
+
 	/*
 	 * GRIDVIEW CUSTOMER LIST
 	 * @author ptrnov  <piter@lukison.com>
@@ -286,7 +286,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						'font-size'=>'9pt',
 					]
 				],
-			], 
+			],
 			[  	//col-2
 				//CUSTOMER GRAOUP NAME
 				//'attribute' => 'cust_nm',
@@ -358,7 +358,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 															'data-target'=>"#modal-view",
 															'data-title'=> '',//$model->KD_BARANG,
 															]). '</li>' . PHP_EOL;
-						},						
+						},
 						'edit' =>function($url, $model, $key){
 								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Create Kode Alias'),
 															['createalias','id'=>$model->ID],[
@@ -409,7 +409,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		],
 		'toolbar'=> [
 			//'{items}',
-		], 
+		],
 		'hover'=>true, //cursor select
 		'responsive'=>true,
 		'responsiveWrap'=>true,
@@ -418,7 +418,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		'autoXlFormat'=>true,
 		'export' => false,
 	]);
-	
+
 
 ?>
 
@@ -441,7 +441,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		</div>
 		<!-- GROUP CUSTOMER LIST !-->
 		<div class="col-md-7">
-			
+
 			<?php
 				echo $gvCustGroupList;
 			?>
@@ -450,7 +450,32 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 </div>
 
 
-<?php 
+<?php
+
+$this->registerJs("
+	 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+	 $('#modal-create').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget)
+		var modal = $(this)
+		var title = button.data('title')
+		var href = button.attr('href')
+		//modal.find('.modal-title').html(title)
+		modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+		$.post(href)
+			.done(function( data ) {
+				modal.find('.modal-body').html(data)
+			});
+		})
+",$this::POS_READY);
+	Modal::begin([
+			'id' => 'modal-create',
+	'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+	'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+	],
+	]);
+	Modal::end();
+
 /*js mapping */
 	$this->registerJs("
 		/*nampilin MAP*/

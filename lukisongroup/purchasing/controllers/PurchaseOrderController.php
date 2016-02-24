@@ -158,7 +158,7 @@ class PurchaseOrderController extends Controller
         $searchModel = new RequestorderSearch();
         $dataProviderRo = $searchModel->cariHeaderRO_SendPO(Yii::$app->request->queryParams);
 
-		$searchModel = new SalesorderSearch();
+		    $searchModel = new SalesorderSearch();
         $dataProviderSo = $searchModel->cariHeaderSO_SendPO(Yii::$app->request->queryParams);
 
 		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();

@@ -23,33 +23,33 @@ function(start, end) {
 	var dateTime2 = new Date(end);
 	tgl1 = moment(dateTime1).format("YYYY-MM-DD HH:mm:ss");
 	tgl2 = moment(dateTime2).format("YYYY-MM-DD HH:mm:ss");
-	if (title) {		
+	if (title) {
 		$.ajax({
 			url:'/master/schedule-header/jsoncalendar_add',
 			type: 'POST',
-			data:'title=' + title + '&start='+ tgl1 + '&end=' + tgl2,			
+			data:'title=' + title + '&start='+ tgl1 + '&end=' + tgl2,
 			dataType:'json',
 			success: function(result){
 				alert('ok');
 			}
-		});		
+		});
 		/* calendar.fullCalendar('renderEvent', {
 				title:title,
 				start:start,
 				end:end
-			}, 
+			},
 			true
 		); */
-			
+
        /*  eventData = {
             title: title,
             start: start,
             end: end
         };
-        //$('#w0').fullCalendar('renderEvent', eventData, true); 
+        //$('#w0').fullCalendar('renderEvent', eventData, true);
 		*/
     }
-		
+
 	//$('#w0').fullCalendar('unselect');
     //$('#w0').fullCalendar('unselect');
 }
@@ -198,7 +198,7 @@ EOF;
 															'data-target'=>"#modal-view",
 															'data-title'=> '',//$model->KD_BARANG,
 															]). '</li>' . PHP_EOL;
-						},						
+						},
 						'edit' =>function($url, $model, $key){
 								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Create Kode Alias'),
 															['createalias','id'=>$model->id],[
@@ -249,7 +249,7 @@ EOF;
 		],
 		'toolbar'=> [
 			//'{items}',
-		], 
+		],
 		'hover'=>true, //cursor select
 		'responsive'=>true,
 		'responsiveWrap'=>true,
@@ -257,9 +257,9 @@ EOF;
 		'striped'=>'4px',
 		'autoXlFormat'=>true,
 		'export' => false,
-    ]); 
-	
-	
+    ]);
+
+
 	/*
 	 * GRIDVIEW SCHEDULE HEADER
 	 * @author ptrnov  <piter@lukison.com>
@@ -326,7 +326,7 @@ EOF;
 			],
 			[  	//col-2
 				//TANGGAL
-				'attribute' => 'TGL',
+				'attribute' => 'TGL1',
 				'label'=>'Schadule Group',
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
@@ -368,7 +368,7 @@ EOF;
 															'data-target'=>"#modal-view",
 															'data-title'=> '',//$model->KD_BARANG,
 															]). '</li>' . PHP_EOL;
-						},						
+						},
 						'edit' =>function($url, $model, $key){
 								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Create Kode Alias'),
 															['createalias','id'=>$model->ID],[
@@ -419,7 +419,7 @@ EOF;
 		],
 		'toolbar'=> [
 			//'{items}',
-		], 
+		],
 		'hover'=>true, //cursor select
 		'responsive'=>true,
 		'responsiveWrap'=>true,
@@ -427,8 +427,8 @@ EOF;
 		'striped'=>'4px',
 		'autoXlFormat'=>true,
 		'export' => false,
-    ]); 
-	
+    ]);
+
 ?>
 
 </div>
@@ -441,8 +441,8 @@ EOF;
 			?>
 		</div>
 		<!-- GROUP CUSTOMER LIST !-->
-		<div class="col-md-6">	
-		
+		<div class="col-md-6">
+
 			<?php
 				$events = array();
 				  //Testing
@@ -451,17 +451,17 @@ EOF;
 				  $Event->title = 'Testing';
 				  $Event->start = date('Y-m-d\Th:m:s\Z');
 				  $events[] = $Event;
-				 
+
 				  $Event = new \yii2fullcalendar\models\Event();
 				  $Event->id = 2;
 				  $Event->title = 'pergi ke mana';
 				  $Event->start = date('Y-m-d\Th:m:s\Z',strtotime('tomorrow 6am'));
 				  $events[] = $Event;
-			
-			
-			
-			
-			
+
+
+
+
+
 				$calenderRt=yii2fullcalendar\yii2fullcalendar::widget([
 				  'id'=>'calendar',
 				  'options' => [
@@ -486,9 +486,9 @@ EOF;
 				echo Html::panel(
 						['heading' => 'Kalender RW ', 'body' =>$calenderRt],
 						Html::TYPE_DANGER
-					);		
+					);
 			?>
-			
+
 		</div>
 	</div>
 	<div  class="row">
@@ -501,13 +501,10 @@ EOF;
 	</div>
 </div>
 
-<?php 
+<?php
 
 
 
 
 
 ?>
-
-
-

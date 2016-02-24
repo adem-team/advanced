@@ -42,7 +42,7 @@ class Scheduleheader extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['TGL', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
+            [['TGL1', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
             [['SCDL_GROUP', 'STATUS'], 'integer'],
             [['NOTE'], 'string'],
             [['USER_ID'], 'string', 'max' => 50],

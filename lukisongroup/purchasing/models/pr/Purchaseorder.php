@@ -96,6 +96,11 @@ class Purchaseorder extends \yii\db\ActiveRecord
         return $this->employe->EMP_NM.' '.$this->employe->EMP_NM_BLK;
     }
 
+    public function pembuat()
+    {
+        return $this->employe->EMP_NM.' '.$this->employe->EMP_NM_BLK;
+    }
+
 	public function getCorp()
     {
        return $this->hasOne(Corp::className(), ['CORP_ID' => 'KD_CORP']);

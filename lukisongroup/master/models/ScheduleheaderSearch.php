@@ -19,7 +19,7 @@ class ScheduleheaderSearch extends Scheduleheader
     {
         return [
             [['ID', 'SCDL_GROUP', 'STATUS'], 'integer'],
-            [['TGL', 'USER_ID', 'NOTE', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
+            [['TGL1', 'USER_ID', 'NOTE', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
         ];
     }
 
@@ -57,7 +57,7 @@ class ScheduleheaderSearch extends Scheduleheader
 
         $query->andFilterWhere([
             'ID' => $this->ID,
-            'TGL' => $this->TGL,
+            'TGL1' => $this->TGL1,
             'SCDL_GROUP' => $this->SCDL_GROUP,
             'STATUS' => $this->STATUS,
             'CREATE_AT' => $this->CREATE_AT,

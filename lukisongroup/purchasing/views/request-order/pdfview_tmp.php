@@ -333,7 +333,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 		?>
 		<table id="tblRo" class="table table-bordered" style="width:360px;font-family: tahoma;font-size: 8pt;">
-			
+
 			<!--Keterangan !-->
 			 <tr>
 				<th style="background-color:rgba(126, 189, 188, 0.3);text-align: center; height:20px">
@@ -347,34 +347,44 @@ $this->params['breadcrumbs'][] = $this->title;
 				</th>
 			</tr>
 			<!-- Signature !-->
-			 <tr>
-				<th style="text-align: center; vertical-align:middle;width:150; height:60px">
-
-				</th>
-				<th style="text-align: center; vertical-align:middle;width:150">
-
-				</th>
-				<th style="text-align: center; vertical-align:middle;width:150">
-
-				</th>
-			</tr>
+			<tr>
+       <th style="text-align: center; vertical-align:middle;width:180; height:60px">
+         <?php
+           $ttd1 = $roHeader->SIG1_SVGBASE64!='' ?  '<img src="'.$roHeader->SIG1_SVGBASE64.'" height="60" width="150"></img>' : '';
+           echo $ttd1;
+         ?>
+       </th>
+       <th style="text-align: center; vertical-align:middle;width:180">
+         <?php
+           $ttd2 = $roHeader->SIG2_SVGBASE64!='' ?  '<img src="'.$roHeader->SIG2_SVGBASE64.'" height="60" width="150"></img>' : '';
+           echo $ttd2;
+         ?>
+       </th>
+       <th style="text-align: center; vertical-align:middle;width:180">
+         <?php
+           $ttd3 = $roHeader->SIG3_SVGBASE64!=0 ?  '<img src="'.$roHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : '';
+           echo $ttd3;
+         ?>
+       </th>
+     </tr>
 			<!--Nama !-->
-			 <tr>
-				<th style="text-align: center; vertical-align:middle;height:20">
-					<div>
-					</div>
-				</th>
-				<th style="text-align: center; vertical-align:middle;height:20">
-					<div>
-
-					</div>
-				</th>
-				<th style="text-align: center; vertical-align:middle;height:20">
-					<div>
-
-					</div>
-				</th>
-			</tr>
+			<tr>
+			 <th style="text-align: center; vertical-align:middle;height:20">
+				 <div>
+					 <b><?php  echo $roHeader->SIG1_NM; ?></b>
+				 </div>
+			 </th>
+			 <th style="text-align: center; vertical-align:middle;height:20">
+				 <div>
+					 <b><?php  echo $roHeader->SIG2_NM; ?></b>
+				 </div>
+			 </th>
+			 <th style="text-align: center; vertical-align:middle;height:20">
+				 <div>
+					 <b><?php  echo $roHeader->SIG3_NM; ?></b>
+				 </div>
+			 </th>
+		 </tr>
 		</table>
 	</div>
 	</th>
