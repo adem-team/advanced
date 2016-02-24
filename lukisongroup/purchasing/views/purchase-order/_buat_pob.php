@@ -637,7 +637,7 @@ use lukisongroup\master\models\Unitbarang;
 						'border-right'=>'0px',
 				]
 			]
-		],		
+		],
 		[	//COL-5
 			/* Attribute Items Barang */
 			'label'=>'Items Name',
@@ -1259,7 +1259,7 @@ use lukisongroup\master\models\Unitbarang;
 					<dd>:	<?=$poID; ?></dd>
 
 					<dt style="width:80px; float:left;">Order By</dt>
-					<dd>:	<?= Yii::$app->user->identity->username; ?></dd>
+					<dd>: <?= $poHeader->pembuat() ?></dd>
 
 					<dt style="width:80px; float:left;">ETD</dt>
 					<dd>:	<?php echo link_etd($poHeader); ?></dd>

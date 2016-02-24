@@ -15,6 +15,7 @@ use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 use kartik\mpdf\Pdf;
+use zyx\phpmailer\Mailer;
 
 use lukisongroup\purchasing\models\ro\Requestorder;
 use lukisongroup\purchasing\models\ro\RequestorderSearch;
@@ -34,6 +35,8 @@ use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Tipebarang;
 use yii\data\ActiveDataProvider;
+use lukisongroup\sistem\models\Userlogin;
+// use lukisongroup\hrd\models\Employe;
 
 /**
  * RequestorderController implements the CRUD actions for Requestorder model.
@@ -688,9 +691,9 @@ class RequestOrderController extends Controller
      * @since 1.1
      */
 	public function actionCetakpdf($kd,$v){
-    	$roHeader = Requestorder::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
+    $roHeader = Requestorder::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
 		$detro = $roHeader->detro;
-        $employ = $roHeader->employe;
+    $employ = $roHeader->employe;
 		$dept = $roHeader->dept;
 		if ($v==101){
 			$filterPdf="KD_RO='".$kd."' AND (STATUS='101' OR STATUS='10')";
@@ -984,6 +987,93 @@ class RequestOrderController extends Controller
 
     }
 
+    public function Sendmail($kd,$empid)
+    {
+      // $profile=Yii::$app->getUserOpt->Profile_user();
+      // $dep = $profile->emp->DEP_ID;
+      // $datamanager = Employe::find()->where(['DEP_ID'=>$dep,'JOBGRADE_ID'=>'M'])->asArray()->one();
+      // $datamanager['EMP_EMAIL'];
+      // print_r(  $datamanager['EMP_EMAIL']);
+      // die();
+
+      // $email = Yii::$app->user->identity->email;
+      $roHeader = Requestorder::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
+      $detro = $roHeader->detro;
+      // $dataemail = Userlogin::find()->where(['EMP_ID'=>$empid])->asArray()->one();
+      // print_r($email);
+      // die();
+
+      $employ = $roHeader->employe;
+      $dept = $roHeader->dept;
+      $roDetail = Rodetail::find()->where(['KD_RO'=>$kd])->all();
+
+    /* PR Filter Status Output to Grid print*/
+    $dataProvider = new ArrayDataProvider([
+      'key' => 'ID',
+      'allModels'=>$roDetail,//$detro,
+      'pagination' => [
+        'pageSize' => 20,
+      ],
+    ]);
+
+    //PR
+    //$dataProviderFilter = $dataProvider->getModels();
+
+    /* $StatusFilter = ["101","10"];
+        $test1 = ArrayHelper::where($dataProviderFilter, function($key, $StatusFilter) {
+             return is_string($value);
+        });
+    print_r($test1); */
+
+      $content = $this->renderPartial( 'pdfview', [
+            'roHeader' => $roHeader,
+            'detro' => $detro,
+            'employ' => $employ,
+            'dept' => $dept,
+            'dataProvider' => $dataProvider,
+        ]);
+
+        $contentMail= $this->renderPartial('sendmailcontent',[
+          'roHeader' => $roHeader,
+          'detro' => $detro,
+          'employ' => $employ,
+          'dept' => $dept,
+          'dataProvider' => $dataProvider,
+        ]);
+
+    $pdf = new Pdf([
+      // set to use core fonts only
+      'mode' => Pdf::MODE_CORE,
+      // A4 paper format
+      'format' => Pdf::FORMAT_A4,
+      // portrait orientation
+      'orientation' => Pdf::ORIENT_PORTRAIT,
+      // stream to browser inline
+      'destination' => Pdf::DEST_BROWSER,
+      // your html content input
+      'content' => $content,
+      // format content from your own css file if needed or use the
+      // enhanced bootstrap css built by Krajee for mPDF formatting
+      //D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+      'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+      // any css to be embedded if required
+      'cssInline' => '.kv-heading-1{font-size:12px}',
+       // set mPDF properties on the fly
+      'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+       // call mPDF methods on the fly
+      'methods' => [
+        'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
+        'SetFooter'=>['{PAGENO}'],
+      ]
+    ]);
+    // aditiya@lukison.com
+    // $to=[$dataemail['email'],$email,'purchasing@lukison.com',$datamanager['EMP_EMAIL']];
+    $to=['purchasing@lukison.com'];
+
+    \Yii::$app->kirim_email->pdf($contentMail,'RO',$to,'Request-Order',$content);
+
+    }
+
 
 	/*
 	 * SIGNARURE AUTH1 | VIEW CREATED
@@ -1015,6 +1105,8 @@ class RequestOrderController extends Controller
 				if ($auth1Mdl->auth1_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth1Model']['kdro'];
+          $userid =  $hsl['Auth1Model']['empID'];
+          $this->Sendmail($kdro,$userid);
 					return $this->redirect(['/purchasing/request-order/view','kd'=>$kdro]);
 				}
 			}
@@ -1121,11 +1213,11 @@ class RequestOrderController extends Controller
 	**/
     public function actionHapusro($kd)
     {
-		$model =Requestorder::find()->where(['KD_RO' =>$kd])->one();
+		$model = Requestorder::find()->where(['KD_RO' =>$kd])->one();
 		$model->STATUS=3;
 		$model->save();
 
-		$model =Rodetail::find()->where(['KD_RO' =>$kd])->one();
+		$model = Rodetail::find()->where(['KD_RO' =>$kd])->one();
 		$model->STATUS=3;
 		$model->save();
 		return Yii::$app->getResponse()->redirect(['/purchasing/request-order/index']);

@@ -30,6 +30,28 @@ class ScheduleGroupController extends Controller
         ];
     }
 
+
+    public function beforeAction(){
+            if (Yii::$app->user->isGuest)  {
+                 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+            }
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+                   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true;
+               }
+            } else {
+                return true;
+            }
+    }
+
     /**
      * Lists all Schedulegroup models.
      * @return mixed
@@ -38,13 +60,13 @@ class ScheduleGroupController extends Controller
     {
         $searchModel = new SchedulegroupSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        
-		$searchModelCustGrp = new CustomersSearch();		
-        $dpListCustGrp = $searchModelCustGrp->searchCustGrp(Yii::$app->request->queryParams);
+
+		      $searchModelCustGrp = new CustomersSearch();
+          $dpListCustGrp = $searchModelCustGrp->searchCustGrp(Yii::$app->request->queryParams);
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-			'dpListCustGrp'=>$dpListCustGrp,
+			      'dpListCustGrp'=>$dpListCustGrp,
         ]);
     }
 
@@ -69,10 +91,18 @@ class ScheduleGroupController extends Controller
     {
         $model = new Schedulegroup();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
+        if ($model->load(Yii::$app->request->post())) {
+
+          if($model->validate())
+          {
+            $model->CREATE_BY = Yii::$app->user->identity->username;
+            $model->CREATE_AT =  date("Y-m-d H:i:s");
+            $model->save();
+          }
+
+            return $this->redirect(['index']);
         } else {
-            return $this->render('create', [
+            return $this->renderAjax('create', [
                 'model' => $model,
             ]);
         }
