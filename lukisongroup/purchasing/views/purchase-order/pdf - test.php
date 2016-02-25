@@ -58,7 +58,7 @@ $y=4;
 	</div>
 	<!-- Title HEADER Descript !-->
 	<div class="row">
-		<div class="col-md-4" style="width:250px; float:left">
+		<div style="width:250px; float:left">
 			<dl>
 				<dt><b><?= $sup->NM_SUPPLIER; ?></b></dt>
 				<dt><?= $sup->ALAMAT; ?></dt>
@@ -71,7 +71,7 @@ $y=4;
 
 			</dl>
 		</div>
-		<div class="col-md-4">
+		<div style="width:250px;">
 			<dl>
 				<!-- Date !-->
 				<dt style="width:80px; float:left;">Date</dt>
@@ -92,8 +92,7 @@ $y=4;
 		</div>
 	</div>
 	<!-- Title GRID PO Detail !-->
-	<div class="row" >
-		<div class="col-md-12">
+	<div style="width:550px;">
 		<?php
 		$gridColumnsX= [
 		[	//COL-0
@@ -552,11 +551,10 @@ $y=4;
 	]);
 
 ?>
-		</div>
 	</div>
 	<!-- Title BOTTEM Descript !-->
 	<div class="row">
-		<div class="col-md-4" style="width:290px;float:left;">
+		<div style="width:290px;float:left;">
 			<dl>
 				<?php
 					$shipNm= $ship !='' ? $ship->NM_ALAMAT : 'Shipping Not Set';
@@ -578,7 +576,7 @@ $y=4;
 				<dd>:	<?=$shipPic; ?></dd>
 			</dl>
 		</div>
-		<div class="col-md-4">
+		<div style="width:290px;">
 			<dl>
 				<?php
 					$billNm= $bill !='' ? $bill->NM_ALAMAT : 'Billing Not Set';
