@@ -4,21 +4,12 @@ namespace lukisongroup\hrd\models;
 
 use Yii;
 
-/**
- * This is the model class for table "personallog".
- *
- * @property string $idno
- * @property string $TerminalID
- * @property string $UserID
- * @property string $FingerPrintID
- * @property string $FunctionKey
- * @property string $Edited
- * @property string $UserName
- * @property string $FlagAbsence
- * @property string $DateTime
- * @property string $tgl
- * @property string $waktu
- */
+use lukisongroup\hrd\models\Machine;
+use lukisongroup\hrd\models\MachineSearch;
+use lukisongroup\hrd\models\Key_list;
+use lukisongroup\hrd\models\Key_listSearch;
+
+
 class Personallog extends \yii\db\ActiveRecord
 {
     /**
@@ -37,6 +28,22 @@ class Personallog extends \yii\db\ActiveRecord
         return Yii::$app->get('db2');
     }
 
+	public function getMachines(){		
+		return $this->hasOne(Machine::className(),['TerminalID'=>'TerminalID']);
+	}
+	
+	public function getMachine_nm(){
+		return $this->machines->MESIN_NM;
+	}
+	
+	public function getKeys(){
+		return $this->hasOne(Key_list::className(),['FunctionKey'=>'FunctionKey']);
+	}
+	
+	public function getKeys_nm(){
+		return $this->keys->FunctionKeyNM;
+	}
+	
     /**
      * @inheritdoc
      */

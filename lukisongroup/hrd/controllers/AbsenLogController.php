@@ -10,6 +10,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+use lukisongroup\hrd\models\Personallog;
+use lukisongroup\hrd\models\PersonallogSearch;
 
 class AbsenLogController extends Controller
 {
@@ -24,97 +26,23 @@ class AbsenLogController extends Controller
             ],
         ];
     }
-
-	 /**
-     * PLSQL ! GET ABSENSI
-     * @author ptrnov [piter@lukison.com]
-     * @since 2.1
-     */
-	public function getScriptsMaintain($int){
-		//return Yii::$app->db2->createCommand("CALL absensi_grid('inout_monitoring=2016-02-01=2016-02-22=0=0=0=0=0')")->queryAll();                
-		return Yii::$app->db2->createCommand("CALL absensi_monitoring(".$int.")")->queryAll();                
-	}
-	
-	// public function getScriptsDetail(){
-		// return Yii::$app->db_esm->createCommand("CALL esm_account_stock_detail()")->queryAll();                
-	// }
-	/* public function getScriptsa(){
-		return Yii::$app->db_esm->createCommand('call so_1()')->queryColumn();                
-	} */
-	/* public function getEsmbrg(){
-		return Yii::$app->db_esm->createCommand('call BarangMaxi_Colomn()')->queryAll();                
-	} */
-
-    /**
-     * Lists all Sot2 models.
-     * @return mixed
-     */
+     
     public function actionIndex()
     {
-		//print_r($this->getScripts());
-		
-		/**
-		 * PLSQL ! Array Data Provider
-		 * @author ptrnov [piter@lukison.com]
-		 * @since 2.1
-		 */
-		/* $absenMaintain= new ArrayDataProvider([
-			'key' => 'idno',
-			'allModels'=>$this->getScriptsMaintain(0),
-			 'pagination' => [
-				'pageSize' => 500,
-			]
-		]); */
-		
-        /* return $this->render('index', [
-           // 'searchModel' => $searchModel,
-            'absenMaintain' => $absenMaintain,
-            //'dataProviderX' => $plsql_so_1,
-			//'dataProviderX1' => $plsql_so_detail,
-			//'attributeField'=>$attributeField,
-			//'attributeField1'=>$attributeField1,
-			//'brgEsmProdak'=>$brgEsmProdak,
-			//'brgEsmProdak'=>$this->getEsmbrg(),
-			//'clmKdBarang'=>$clmKdBarang,
-			
-        ]); */
-		
-		$this->redirect(['cari','int'=>0]);
-    }
+		$searchModel = new PersonallogSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$searchModelLate = new PersonallogSearch();
+        $dataProviderLate = $searchModelLate->searchLate(Yii::$app->request->queryParams);
 
-	public function actionCari($int)
-    {
-		//print_r($this->getScripts());
-		
-		/**
-		 * PLSQL ! Array Data Provider
-		 * @author ptrnov [piter@lukison.com]
-		 * @since 2.1
-		 */
-		$absenMaintain= new ArrayDataProvider([
-			'key' => 'idno',
-			'allModels'=>$this->getScriptsMaintain($int),
-			 'pagination' => [
-				'pageSize' => 500,
-			]
-		]);
-		
         return $this->render('index', [
-           // 'searchModel' => $searchModel,
-            'absenMaintain' => $absenMaintain,
-            //'dataProviderX' => $plsql_so_1,
-			//'dataProviderX1' => $plsql_so_detail,
-			//'attributeField'=>$attributeField,
-			//'attributeField1'=>$attributeField1,
-			//'brgEsmProdak'=>$brgEsmProdak,
-			//'brgEsmProdak'=>$this->getEsmbrg(),
-			//'clmKdBarang'=>$clmKdBarang,
-			
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider, 
+			'searchModelLate' => $searchModelLate,
+            'dataProviderLate' => $dataProviderLate,
         ]);
     }
-	
-	
-    /**
+
+	/**
      * Displays a single Sot2 model.
      * @param string $id
      * @return mixed
