@@ -21,7 +21,8 @@ class AbsenLogController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    //'delete' => ['post'],
+					'save' => ['post'],
                 ],
             ],
         ];
@@ -32,7 +33,7 @@ class AbsenLogController extends Controller
 		$searchModel = new PersonallogSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$searchModelLate = new PersonallogSearch();
-        $dataProviderLate = $searchModelLate->searchLate(Yii::$app->request->queryParams);
+        $dataProviderLate = $searchModel->search_telat(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
