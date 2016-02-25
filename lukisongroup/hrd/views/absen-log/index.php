@@ -2,12 +2,12 @@
 use kartik\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\widgets\Breadcrumbs;
-use app\models\hrd\Dept;
+//use app\models\hrd\Dept;
 use kartik\grid\GridView;
-use kartik\widgets\ActiveForm;
-use kartik\tabs\TabsX;
-use kartik\date\DatePicker;
-use kartik\builder\Form;
+//use kartik\widgets\ActiveForm;
+//use kartik\tabs\TabsX;
+//use kartik\date\DatePicker;
+//use kartik\builder\Form;
 use yii\widgets\Pjax;
 
 $this->sideCorp = 'PT. Lukisongroup';                                   /* Title Select Company pada header pasa sidemenu/menu samping kiri */
@@ -152,19 +152,19 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'attribute' => 'DateTime',
 			'label'=>'DateTime',
 			'noWrap'=>true,
-			//'filter'=>[
-				'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
-				'filterWidgetOptions' =>([
-					'attribute' =>'DateTime',
-					'presetDropdown'=>TRUE,                
-					'convertFormat'=>true,                
-					'pluginOptions'=>[				
-						'format'=>'Y-m-d',
-						'separator' => ' - ',
-						'opens'=>'left'
-					],
-				]),
-			//],
+			'filterType' => GridView::FILTER_DATE,
+            'filterWidgetOptions' => [
+                'pluginOptions' => [
+					'id'=>'sa1',
+                    'format' => 'yyyy-mm-dd',
+					 
+                    'autoclose' => true,
+                    'todayHighlight' => true,
+					//'format' => 'dd-mm-yyyy hh:mm',
+					'autoWidget' => true,
+					//'todayBtn' => true,
+                ]
+            ],
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
 			
@@ -322,24 +322,22 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 				]
 			],
 		],
-		[  	//col-4
+		 [  	//col-4
 			//DateTime
-			'attribute' => 'DateTime',
+			'attribute' => 'tgl',
 			'label'=>'DateTime',
 			'noWrap'=>true,
-			//'filter'=>[
-				'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
-				'filterWidgetOptions' =>([
-					'attribute' =>'DateTime',
-					'presetDropdown'=>TRUE,                
-					'convertFormat'=>true,                
-					'pluginOptions'=>[				
-						'format'=>'Y-m-d',
-						'separator' => ' - ',
-						'opens'=>'left'
-					],
-				]),
-			//],
+			'filterType' => GridView::FILTER_DATE,
+            'filterWidgetOptions' => [				
+                'pluginOptions' => [
+					'id'=>'sa',
+                    'format' => 'yyyy-mm-dd',
+                    'autoclose' => true,
+                    'todayHighlight' => true,
+					'autoWidget' => true,
+					//'todayBtn' => true,
+                ]
+            ],
 			'hAlign'=>'left',
 			'vAlign'=>'middle',			
 			'headerOptions'=>[
@@ -359,7 +357,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 					'font-size'=>'9pt',
 				]
 			],
-		],
+		],  
 		
 	];
 	
@@ -370,7 +368,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 	 * @since 1.2
 	*/
 	$gvAbsenLog=GridView::widget([
-		'id'=>'gv-absenlog-id',
+		'id'=>'absenlog',
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
 		'filterRowOptions'=>['style'=>'background-color:rgba(0, 95, 218, 0.3); align:center'],
@@ -380,7 +378,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		'pjaxSettings'=>[
 		'options'=>[
 			'enablePushState'=>false,
-			'id'=>'gv-absenlog-id',
+			'id'=>'absenlog',
 		   ],
 		],
 		'panel' => [
@@ -413,7 +411,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 	 * @since 1.2
 	*/
 	$gvAbsenLate=GridView::widget([
-		'id'=>'gv-absenlogLate-id',
+		'id'=>'telat',
         'dataProvider' => $dataProviderLate,
         'filterModel' => $searchModelLate,
 		'filterRowOptions'=>['style'=>'background-color:rgba(0, 95, 218, 0.3); align:center'],
@@ -421,10 +419,10 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		'columns' =>$clmLate,
 		'pjax'=>true,
 		'pjaxSettings'=>[
-		'options'=>[
-			'enablePushState'=>false,
-			'id'=>'gv-absenlogLate-id',
-		   ],
+			'options'=>[
+				'enablePushState'=>false,
+				'id'=>'telat',
+			],
 		],
 		'panel' => [
 					'heading'=>'<h3 class="panel-title">EMPLOYEE LATE</h3>',
@@ -470,7 +468,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 
 
 <?php
-$this->registerJs("
+/* $this->registerJs("
 		$(document).on('click', '[data-toggle-approved]', function(e){
 			e.preventDefault();
 			var idx = $(this).data('toggle-approved');
@@ -483,7 +481,7 @@ $this->registerJs("
 					success: function(result) {
 						if (result == 1){
 							// Success
-							$.pjax.reload({container:'#gv-absenlog-id'});
+							$.pjax.reload({container:'#absenlog'});
 						} else {
 							// Fail
 						}
@@ -491,7 +489,7 @@ $this->registerJs("
 				});
 
 		});
-	",$this::POS_READY);
+	",$this::POS_READY); */
 ?>
 
 
