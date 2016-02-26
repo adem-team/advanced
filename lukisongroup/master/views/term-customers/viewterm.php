@@ -107,7 +107,8 @@ function ttd3($model){
       $title = Yii::t('app','Print');
       $options = [ 'id'=>'pdf-print-id',
               'class'=>'btn btn-default btn-xs',
-              'title'=>'Print PDF'
+              'title'=>'Print PDF',
+              'target' => '_blank'
       ];
       $icon = '<span class="fa fa-print fa-fw"></span>';
       $label = $icon . ' ' . $title;

@@ -147,7 +147,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 				],
 			],
 			[
-				'attribute' =>'nmcorp',
+				'attribute' =>'corp.CORP_NM',
 				'label'=>'Corporation',
 				'filter' => $userCorp,
 				'hAlign'=>'left',

@@ -13,21 +13,21 @@ use lukisongroup\master\models\Barang;
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
 	*/
-	
+
 	/*
 	 * FIELD RECOMENDED FROM Model | Rodetail
 		CREATED_AT  value  date('Y-m-d H:i:s');
-		KD_RO 
+		KD_RO
 		KD_BARANG
-		NM_BARANG 
-		UNIT 		
+		NM_BARANG
+		UNIT
 		RQTY
-		NOTE 
-		STATUS 
+		NOTE
+		STATUS
 	* @author ptrnov  <piter@lukison.com>
 	* @since 1.1
 	*/
-	
+
 class AdditemValidation extends Model
 {
     public $kD_RO;
@@ -35,7 +35,7 @@ class AdditemValidation extends Model
 	public $kD_TYPE;
 	public $kD_KATEGORI;
 	public $kD_BARANG;
-	public $hARGA;	
+	public $hARGA;
 	//public $nmBarang;
 	public $uNIT;
 	public $rQTY;
@@ -43,36 +43,36 @@ class AdditemValidation extends Model
 	public $nOTE;
 	public $sTATUS;
 	public $cREATED_AT;
-	  
+
     public function rules()
     {
-        return [			
-			[['kD_BARANG'], 'findcheck'],		
-			[['kD_RO','kD_BARANG','uNIT','rQTY'], 'required'],				
-			//[['nmBarang','nOTE'], 'string'],			
-        	[['nOTE'], 'string'],			
-        	['sTATUS','integer'],			
-        	[['rQTY','cREATED_AT','kD_KATEGORI','kD_TYPE','hARGA'], 'safe'],			
-			[['kD_CORP'], 'safe'],			
+        return [
+			[['kD_BARANG'], 'findcheck'],
+			[['kD_RO','kD_BARANG','uNIT','rQTY'], 'required'],
+			//[['nmBarang','nOTE'], 'string'],
+        	[['nOTE'], 'string'],
+        	['sTATUS','integer'],
+        	[['rQTY','cREATED_AT','kD_KATEGORI','kD_TYPE','hARGA'], 'safe'],
+			[['kD_CORP'], 'safe'],
 		];
     }
-	
+
 	/**
      * Check KD_RO dan KD_BARANG
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
      */
 	public function findcheck($attribute, $params)
-    {        
+    {
 		if (!$this->hasErrors()) {
 			 //$kondisiTrue = Rodetail::find()->where(['KD_RO' => $this->kD_RO, 'KD_BARANG' => $this->kD_BARANG ])->one();
 			 $kondisiTrue = Rodetail::find()->where("KD_RO='".$this->kD_RO. "' AND KD_BARANG='".$this->kD_BARANG."' AND STATUS<>3")->one();
 			if ($kondisiTrue) {
-                $this->addError($attribute, 'Duplicated Items Barang !, Better (-/+) Request.Qty ');				
-            } 
+                $this->addError($attribute, 'Duplicated Items Barang !, Better (-/+) Request.Qty ');
+            }
        }
     }
-	
+
 	/**
      * Saved Data Rodetail
 	 * @author ptrnov  <piter@lukison.com>
@@ -99,9 +99,9 @@ class AdditemValidation extends Model
             }
 			return $rodetail;
 		}		
-		return null;	
+		return null;
 	}
-	
+
 	public function attributeLabels()
     {
         return [
@@ -119,7 +119,7 @@ class AdditemValidation extends Model
             //'UPDATED_AT' => 'Updated  At',
         ];
     }
-	
+
 	protected function valuesBarang($kdBarang){
 		$valuesBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
 		return $valuesBarang;

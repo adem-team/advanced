@@ -13,48 +13,48 @@ use lukisongroup\master\models\Barang;
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
 	*/
-	
+
 	/*
 	 * FIELD RECOMENDED FROM Model | Rodetail
 		CREATED_AT  value  date('Y-m-d H:i:s');
-		KD_RO 
+		KD_RO
 		KD_BARANG
-		NM_BARANG 
-		UNIT 		
+		NM_BARANG
+		UNIT
 		RQTY
-		NOTE 
-		STATUS 
+		NOTE
+		STATUS
 	* @author ptrnov  <piter@lukison.com>
 	* @since 1.1
 	*/
-	
+
 class AddNewitemValidation extends Model
 {
     public $kD_RO;
 	public $kD_CORP;
 	public $kD_TYPE;
 	public $kD_KATEGORI;
-	public $kD_BARANG;	
+	public $kD_BARANG;
 	public $nM_BARANG;
-	public $hARGA;	
+	public $hARGA;
 	public $uNIT;
 	public $rQTY;
 	public $nOTE;
 	public $sTATUS;
 	public $cREATED_AT;
 	public $kD_SUPPLIER;
-	
+
 	public function rules()
     {
-        return [			
-			[['kD_RO','nM_BARANG','kD_KATEGORI','kD_SUPPLIER','kD_TYPE','uNIT','rQTY','hARGA'], 'required'],				
-			[['nOTE'], 'string'],			
-        	['sTATUS','integer'],			
-        	[['rQTY','cREATED_AT','kD_KATEGORI','kD_TYPE','hARGA','kD_SUPPLIER'], 'safe'],			
-			[['kD_CORP'], 'safe'],			
+        return [
+			[['kD_RO','nM_BARANG','kD_KATEGORI','kD_SUPPLIER','kD_TYPE','uNIT','rQTY','hARGA'], 'required'],
+			[['nOTE'], 'string'],
+        	['sTATUS','integer'],
+        	[['rQTY','cREATED_AT','kD_KATEGORI','kD_TYPE','hARGA','kD_SUPPLIER'], 'safe'],
+			[['kD_CORP'], 'safe'],
 		];
     }
-	
+
 	/**
      * Saved Data Rodetail
 	 * @author ptrnov  <piter@lukison.com>
@@ -73,8 +73,8 @@ class AddNewitemValidation extends Model
 				$barangNew->KD_CORP = $this->kD_CORP;
 				$barangNew->KD_TYPE = $this->kD_TYPE;
 				$barangNew->KD_KATEGORI = $this->kD_KATEGORI;
-				$barangNew->KD_SUPPLIER = $this->kD_SUPPLIER;	
-				$barangNew->STATUS = 1;	
+				$barangNew->KD_SUPPLIER = $this->kD_SUPPLIER;
+				$barangNew->STATUS = 1;
 				$barangNew->CREATED_BY = Yii::$app->user->identity->username;
 				$barangNew->CREATED_AT = date('Y-m-d H:i:s');
 				$barangNew->UPDATED_BY = Yii::$app->user->identity->username;
@@ -94,13 +94,15 @@ class AddNewitemValidation extends Model
 					$rodetail->HARGA= $this->hARGA;
 					$rodetail->STATUS = 0;
 					if ($rodetail->save()) {
+
+						// print_r($rodetail->geterrors());
 						return $rodetail;
-					} 
+					}
 				}
-		}		
-		return null;	
+		}
+		return null;
 	}
-	
+
 	public function attributeLabels()
     {
         return [
@@ -118,5 +120,5 @@ class AddNewitemValidation extends Model
             //'UPDATED_AT' => 'Updated  At',
         ];
     }
-	
+
 }

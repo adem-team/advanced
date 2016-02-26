@@ -16,6 +16,7 @@ use yii\helpers\Url;
 use yii\widgets\Pjax;
 use kartik\mpdf\Pdf;
 use zyx\phpmailer\Mailer;
+use yii\widgets\ActiveForm;
 
 use lukisongroup\purchasing\models\ro\Requestorder;
 use lukisongroup\purchasing\models\ro\RequestorderSearch;
@@ -36,6 +37,7 @@ use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Tipebarang;
 use yii\data\ActiveDataProvider;
 use lukisongroup\sistem\models\Userlogin;
+use lukisongroup\purchasing\models\ro\Validateitem;
 // use lukisongroup\hrd\models\Employe;
 
 /**
@@ -158,14 +160,21 @@ class RequestOrderController extends Controller
      */
     public function actionCreate()
     {
-		$roDetail = new Rodetail();
-		$roHeader = new Requestorder();
-            return $this->renderAjax('_form', [
+      $model = new \yii\base\DynamicModel(['NEW']);
+      $model->addRule(['NEW'], 'required');
+		  $roDetail = new Rodetail();
+		// $roHeader = new Requestorder();
+      return $this->renderAjax('_form', [
                 'roDetail' => $roDetail,
-				'roHeader' => $roHeader,
+                  'model'=> $model
+				        // 'roHeader' => $roHeader,
             ]);
 
     }
+
+
+
+
 
 	/**
      * Edit Form - Add Item Barang | Tambah Barang
@@ -317,6 +326,28 @@ class RequestOrderController extends Controller
 	}
 
 
+  public function actionItemSaved(){
+		//$roDetail = new Rodetail();
+		$roDetail = new Validateitem();
+
+		if(Yii::$app->request->isAjax){
+			$roDetail->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($roDetail));
+		}else{
+			if($roDetail->load(Yii::$app->request->post())){
+				if($roDetail->newsaved()){
+					$hsl = \Yii::$app->request->post();
+					// $kdro = $hsl['Rodetail']['KD_RO'];
+          	$kdro = $roDetail->newsaved()->KD_RO;
+            // print_r(	$kdro);
+            // die();
+					return $this->redirect(['/purchasing/request-order/edit?kd='.$kdro]);
+				}
+			}
+		}
+	}
+
+
    /**
      * DepDrop | CORP-TYPE - KAT
      * @author ptrnov  <piter@lukison.com>
@@ -426,72 +457,214 @@ class RequestOrderController extends Controller
 	**/
 	public function actionSimpanfirst(){
 
-				$cons = \Yii::$app->db_esm;
+				// $cons = \Yii::$app->db_esm;
 				$roHeader = new Requestorder();
 				//$reqorder = new Roatribute();
 				$roDetail = new Rodetail();
+        $BARANG = new Barang();
 				$profile= Yii::$app->getUserOpt->Profile_user();
+        // $corp = Yii::$app->getUserOpt->Profile_user()->EMP_ID;
+        // $Corp1 = Employe::find()->where(['KD_CORP'=>$corp])->asArray()->one();
+        $corp = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
+
 
 				//if($roDetail->load(Yii::$app->request->post()) && $roDetail->validate()){
 			if($roDetail->load(Yii::$app->request->post())){
-				$hsl = \Yii::$app->request->post();
-				$selectCorp = $hsl['Rodetail']['KD_CORP'];
-				$kdUnit = $hsl['Rodetail']['UNIT'];
-				$kdBarang = $hsl['Rodetail']['KD_BARANG'];
-				$nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
-				$rqty = $hsl['Rodetail']['RQTY'];
-				$note = $hsl['Rodetail']['NOTE'];
 
-				$GneratekodeRo=\Yii::$app->ambilkonci->getRoCode($selectCorp); //Requst Order Kode;
+
+				 $hsl = \Yii::$app->request->post();
+          $radio =  $hsl['DynamicModel']['NEW'];
+            // print_r($radio);
+            // die();
+            $selectCorp = $corp;
+            if($radio == 2 )
+            {
+              	$kdBarang = $hsl['Rodetail']['KD_BARANG'];
+                $nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
+                // print_r($nmBarang);
+                // die();
+                $GneratekodeRo=\Yii::$app->ambilkonci->getRoCode($selectCorp);
+                $roDetail->KD_RO = $GneratekodeRo;
+                $roDetail->PARENT_ROSO=0;
+                $roDetail->KD_CORP = $selectCorp;
+                $roDetail->CREATED_AT = date('Y-m-d H:i:s');
+                $roDetail->NM_BARANG = $nmBarang->NM_BARANG;
+                // print_r(  $roDetail->NM_BARANG);
+                // die();
+                $roDetail->KD_BARANG = $kdBarang;
+                $roDetail->UNIT = 'none';
+                $roDetail->SQTY = $roDetail->RQTY;
+                $roDetail->HARGA= $nmBarang->HARGA_SPL;
+                // $roDetail->NOTE = $note;
+                $roDetail->STATUS = 0;
+
+                $roDetail->save();
+                      // getErrors()
+                // print_r($roDetail->getErrors());
+                // die();
+
+
+                // $BARANG->KD_BARANG = 	$kdBarang;
+                // 'KD_CORP','KD_SUPPLIER', 'KD_TYPE', 'KD_KATEGORI','KD_BARANG', 'NM_BARANG', 'KD_UNIT','STATUS']
+                // $BARANG->KD_CORP =
+                // $BARANG->KD_SUPPLIER =
+                // $BARANG->KD_TYPE =
+                // $BARANG->KD_KATEGORI =
+
+                $roHeader->PARENT_ROSO=0; // RO=0
+                $roHeader->KD_RO =$GneratekodeRo;
+                $roHeader->CREATED_AT = date('Y-m-d H:i:s');
+                $roHeader->TGL = date('Y-m-d');
+                $roHeader->ID_USER = $profile->emp->EMP_ID;
+                $roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
+                $roHeader->KD_CORP = $selectCorp;
+                $roHeader->KD_DEP = $profile->emp->DEP_ID;
+                //$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
+                //$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
+                $roHeader->STATUS = 0;
+
+                $roHeader->PARENT_ROSO=0; // RO=0
+                $roHeader->KD_RO =$GneratekodeRo;
+                $roHeader->CREATED_AT = date('Y-m-d H:i:s');
+                $roHeader->TGL = date('Y-m-d');
+                $roHeader->ID_USER = $profile->emp->EMP_ID;
+                $roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
+                $roHeader->KD_CORP = $selectCorp;
+                $roHeader->KD_DEP = $profile->emp->DEP_ID;
+                //$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
+                //$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
+                $roHeader->STATUS = 0;
+                $roHeader->save();
+
+            }
+            else
+            {
+              // $kdBarang = $hsl['Rodetail']['KD_BARANG'];
+              // $nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
+              $GneratekodeRo=\Yii::$app->ambilkonci->getRoCode($selectCorp);
+              $roDetail->KD_RO = $GneratekodeRo;
+              $roDetail->PARENT_ROSO=0;
+              $roDetail->KD_CORP = $selectCorp;
+              $roDetail->CREATED_AT = date('Y-m-d H:i:s');
+              $roDetail->NM_BARANG = $hsl['Rodetail']['NM_BARANG'];
+              $roDetail->UNIT = 'none';
+              $roDetail->SQTY =   $roDetail->RQTY;
+              $roDetail->STATUS = 0;
+              $roDetail->save();
+              // $roDetail->KD_BARANG = $kdBarang;
+              // $roDetail->RQTY = $rqty;
+              // $roDetail->SQTY = $rqty;
+              // $roDetail->HARGA= $nmBarang->HARGA_SPL;
+              // $roDetail->NOTE = $note;
+
+              $kdcorp = $BARANG->KD_CORP =  $roDetail->KD_CORP;
+              $kdType = Yii::$app->esmcode->kdTipe();
+              // $kd = Yii::$app->mastercode->kdsupplier($selectCorp);
+              // $BARANG->KD_SUPPLIER = $kd;
+              $kdUnit = Yii::$app->esmcode->kdUnit();
+              // $kdUnit = $BARANG->KD_UNIT = $kd1;
+              $nw1 = Yii::$app->esmcode->kdKategori();
+              $kdKategori = $BARANG->KD_KATEGORI =  $nw1;
+              $kdPrn = 0;
+
+              $kdbrg =  Yii::$app->esmcode->kdbarangUmum($kdPrn,$kdcorp,$kdType,$kdKategori,$kdUnit);
+              $BARANG->KD_BARANG = $kdbrg;
+              $BARANG->NM_BARANG = $roDetail->NM_BARANG ;
+              $BARANG->STATUS = 0;
+              $BARANG->KD_SUPPLIER = 'SPL.LG.0000';
+              $BARANG->KD_KATEGORI = 39;
+              $BARANG->KD_UNIT ='E07';
+              $BARANG->KD_TYPE = 30;
+
+              $BARANG->save();
+            //   print_r($BARANG->getErrors());
+            // die();
+
+
+              $roHeader->PARENT_ROSO=0; // RO=0
+              $roHeader->KD_RO =$GneratekodeRo;
+              $roHeader->CREATED_AT = date('Y-m-d H:i:s');
+              $roHeader->TGL = date('Y-m-d');
+              $roHeader->ID_USER = $profile->emp->EMP_ID;
+              $roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
+              $roHeader->KD_CORP = $selectCorp;
+              $roHeader->KD_DEP = $profile->emp->DEP_ID;
+              //$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
+              //$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
+              $roHeader->STATUS = 0;
+
+              $roHeader->PARENT_ROSO=0; // RO=0
+              $roHeader->KD_RO =$GneratekodeRo;
+              $roHeader->CREATED_AT = date('Y-m-d H:i:s');
+              $roHeader->TGL = date('Y-m-d');
+              $roHeader->ID_USER = $profile->emp->EMP_ID;
+              $roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
+              $roHeader->KD_CORP = $selectCorp;
+              $roHeader->KD_DEP = $profile->emp->DEP_ID;
+              //$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
+              //$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
+              $roHeader->STATUS = 0;
+              $roHeader->save();
+            //   print_r($roHeader->getErrors());
+            //  die();
+            }
+				// $selectCorp = $hsl['Rodetail']['KD_CORP'];
+				// $kdUnit = $hsl['Rodetail']['UNIT'];
+				// $kdBarang = $hsl['Rodetail']['KD_BARANG'];
+				// $nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
+				// $rqty = $hsl['Rodetail']['RQTY'];
+				// $note = $hsl['Rodetail']['NOTE'];
+
+				// $GneratekodeRo=\Yii::$app->ambilkonci->getRoCode($selectCorp); //Requst Order Kode;
 
 				/*
 				 * Detail Request Order
 				**/
-				$roDetail->KD_RO = $GneratekodeRo;
-				$roDetail->PARENT_ROSO=0; // RO=0
-				$roDetail->KD_CORP = $selectCorp;
-				$roDetail->UNIT = $kdUnit;
-				$roDetail->CREATED_AT = date('Y-m-d H:i:s');
-				$roDetail->NM_BARANG = $nmBarang->NM_BARANG;
-				$roDetail->KD_BARANG = $kdBarang;
-				$roDetail->RQTY = $rqty;
-				$roDetail->SQTY = $rqty;
-				$roDetail->HARGA= $nmBarang->HARGA_SPL;
-				$roDetail->NOTE = $note;
-				$roDetail->STATUS = 0;
+				// $roDetail->KD_RO = $GneratekodeRo;
+				// $roDetail->PARENT_ROSO=0; // RO=0
+				// $roDetail->KD_CORP = $selectCorp;
+				// $roDetail->UNIT = $kdUnit;
+				// $roDetail->CREATED_AT = date('Y-m-d H:i:s');
+				// $roDetail->NM_BARANG = $nmBarang->NM_BARANG;
+				// $roDetail->KD_BARANG = $kdBarang;
+				// $roDetail->RQTY = $rqty;
+				// $roDetail->SQTY = $rqty;
+				// $roDetail->HARGA= $nmBarang->HARGA_SPL;
+				// $roDetail->NOTE = $note;
+				// $roDetail->STATUS = 0;
 
 				/*
 				 * Header Request Order
 				**/
 				//$getkdro=\Yii::$app->ambilkonci->getRoCode();
-				$roHeader->PARENT_ROSO=0; // RO=0
-				$roHeader->KD_RO =$GneratekodeRo;
-				$roHeader->CREATED_AT = date('Y-m-d H:i:s');
-				$roHeader->TGL = date('Y-m-d');
-				$roHeader->ID_USER = $profile->emp->EMP_ID;
-				$roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
-				$roHeader->KD_CORP = $selectCorp;
-				$roHeader->KD_DEP = $profile->emp->DEP_ID;
-				//$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
-				//$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
-				$roHeader->STATUS = 0;
-					$transaction = $cons->beginTransaction();
-					try {
-						if (!$roDetail->save()) {
-								$transaction->rollback();
-								return false;
-						}
-
-						if (!$roHeader->save()) {
-								$transaction->rollback();
-								return false;
-						}
-						$transaction->commit();
-					} catch (Exception $ex) {
-						//print_r("error");
-						$transaction->rollback();
-						return false;
-					}
+				// $roHeader->PARENT_ROSO=0; // RO=0
+				// $roHeader->KD_RO =$GneratekodeRo;
+				// $roHeader->CREATED_AT = date('Y-m-d H:i:s');
+				// $roHeader->TGL = date('Y-m-d');
+				// $roHeader->ID_USER = $profile->emp->EMP_ID;
+				// $roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
+				// $roHeader->KD_CORP = $selectCorp;
+				// $roHeader->KD_DEP = $profile->emp->DEP_ID;
+				// //$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
+				// //$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
+				// $roHeader->STATUS = 0;
+				// 	$transaction = $cons->beginTransaction();
+				// 	try {
+				// 		if (!$roDetail->save()) {
+				// 				$transaction->rollback();
+				// 				return false;
+				// 		}
+        //
+				// 		if (!$roHeader->save()) {
+				// 				$transaction->rollback();
+				// 				return false;
+				// 		}
+				// 		$transaction->commit();
+				// 	} catch (Exception $ex) {
+				// 		//print_r("error");
+				// 		$transaction->rollback();
+				// 		return false;
+				// 	}
 					//return $this->redirect(['index','param'=>$getkdro]);
 					//return $this->redirect(['index?RequestorderSearch[KD_RO]='.$getkdro]);
 					return $this->redirect(['/purchasing/request-order/edit?kd='.$GneratekodeRo]);
@@ -843,7 +1016,7 @@ class RequestOrderController extends Controller
 			$id=$request->post('id');
 			//\Yii::$app->response->format = Response::FORMAT_JSON;
 			$roDetail = Rodetail::findOne($id);
-			$roDetail->STATUS = 1;
+	    $roDetail->STATUS = 1;
 			//$ro->NM_BARANG=''
 			$roDetail->save();
 			return true;
