@@ -13,15 +13,16 @@ use lukisongroup\hrd\models\Personallog;
 class PersonallogSearch extends Personallog
 {
 	
-	public $tgl2;
+	public $tgllog;
+	public $tgllate;
     /**
-     * @inheritdoc
+     * @inheritdoc	
      */
     public function rules()
     {
         return [
             [['idno'], 'integer'],
-            [['tgl2','TerminalID', 'UserID', 'FingerPrintID', 'FunctionKey', 'Edited', 'UserName', 'FlagAbsence', 'DateTime', 'tgl', 'waktu'], 'safe'],
+            [['tgllog','tgllate','TerminalID', 'UserID', 'FingerPrintID', 'FunctionKey', 'Edited', 'UserName', 'FlagAbsence', 'DateTime', 'tgl', 'waktu'], 'safe'],
         ];
     }
 
@@ -53,7 +54,7 @@ class PersonallogSearch extends Personallog
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
-            $query->where('0=1');
+            //$query->where('0=1');
             return $dataProvider;
         }
 
@@ -78,7 +79,8 @@ class PersonallogSearch extends Personallog
             ->andFilterWhere(['like', 'FunctionKey', $this->FunctionKey])
             ->andFilterWhere(['like', 'UserName', $this->UserName])
 			//->andFilterWhere(['like', 'DateTime', $this->DateTime!=''?date("Y-m-d",strtotime($this->DateTime)):date("Y-m-d")])
-			->andFilterWhere(['like', 'DateTime', $this->tgl2!=''?date("Y-m-d",strtotime($this->tgl2)):date("Y-m-d")])
+			->andFilterWhere(['like', 'DateTime', $this->tgllog])
+			//->andFilterWhere(['like', 'DateTime', $this->tgllog!=''?date("Y-m-d",strtotime($this->tgllog)):date("Y-m-d")])
             ->andFilterWhere(['like', 'FlagAbsence', $this->FlagAbsence]);
 
         return $dataProvider;
@@ -91,7 +93,7 @@ class PersonallogSearch extends Personallog
     {
 			//$query = Personallog::find(['machine_nm','FingerPrintID','UserName','Keys_nm',['DateTime as DateTime1']])->where("FunctionKey=0 AND time(DateTime)>'08:45:00'");
 		//$query = Personallog::find()->select('TerminalID,FingerPrintID,UserName,DateTime as DateTime1')->where("FunctionKey=0 AND time(DateTime)>'08:45:00'");
-       $query = Personallog::find()->where("FunctionKey=0 AND time(DateTime)>'08:45:00'");
+       $query = Personallog::find()->where("FunctionKey=0 AND time(DateTime)>'08:45:00'")->groupby('DateTime,FingerPrintID');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -125,6 +127,7 @@ class PersonallogSearch extends Personallog
             ->andFilterWhere(['like', 'FingerPrintID', $this->FingerPrintID])
             ->andFilterWhere(['like', 'FunctionKey', $this->FunctionKey])
             ->andFilterWhere(['like', 'UserName', $this->UserName])
+			->andFilterWhere(['like', 'DateTime', $this->tgllate])
             ->andFilterWhere(['like', 'FlagAbsence', $this->FlagAbsence]);
 
         return $dataProvider;
