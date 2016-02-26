@@ -153,15 +153,15 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'label'=>'DateTime',
 			'noWrap'=>true,
 			'filterType' => GridView::FILTER_DATE,
-            'filterWidgetOptions' => [
-					'pluginOptions' => [
-                    'format' => 'yyyy-mm-dd',					 
-                    'autoclose' => true,
-                    'todayHighlight' => true,
+            'filterWidgetOptions' => [				
+				'pluginOptions' => [					
+					'format' => 'yyyy-mm-dd',					 
+					'autoclose' => true,
+					'todayHighlight' => true,
 					//'format' => 'dd-mm-yyyy hh:mm',
 					'autoWidget' => false,
 					//'todayBtn' => true,
-                ]
+                ],
             ],
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
