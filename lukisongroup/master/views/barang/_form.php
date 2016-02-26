@@ -17,7 +17,7 @@ use lukisongroup\hrd\models\Corp;
 
 $drop = ArrayHelper::map(Corp::find()->where(['CORP_STS' => 1])->all(), 'CORP_ID', 'CORP_NM');
 $droptype = ArrayHelper::map(Tipebarang::find()->where('STATUS<>3 and PARENT=1')->all(), 'KD_TYPE', 'NM_TYPE');
-$dropkat = ArrayHelper::map(Kategori::find()->where('STATUS<>3 and PARENT=1')->all(), 'KD_KATEGORI', 'NM_KATEGORI'); 
+$dropkat = ArrayHelper::map(Kategori::find()->where('STATUS<>3 and PARENT=1')->all(), 'KD_KATEGORI', 'NM_KATEGORI');
 $dropunit = ArrayHelper::map(Unitbarang::find()->all(), 'KD_UNIT', 'NM_UNIT');
 $dropsup = ArrayHelper::map(Suplier::find()->all(), 'KD_SUPPLIER', 'NM_SUPPLIER');
 ?>
@@ -33,13 +33,13 @@ $dropsup = ArrayHelper::map(Suplier::find()->all(), 'KD_SUPPLIER', 'NM_SUPPLIER'
 		]);
 	?>
 		<?= $form->field($model, 'PARENT')->hiddenInput(['value'=>1,'maxlength' => true])->label(false) ?>
-		<?php 
-			
+		<?php
+
 			echo $form->field($model, 'KD_CORP')->dropDownList($drop,[
 				'id'=>'barang-kd_corp',
 				'prompt'=>' -- Pilih Salah Satu --',
-			])->label('Perusahaan'); 
-		
+			])->label('Perusahaan');
+
 			echo $form->field($model, 'KD_TYPE')->widget(DepDrop::classname(), [
 				'type'=>DepDrop::TYPE_SELECT2,
 				'data' => $droptype,
@@ -48,9 +48,9 @@ $dropsup = ArrayHelper::map(Suplier::find()->all(), 'KD_SUPPLIER', 'NM_SUPPLIER'
 					'depends'=>['barang-kd_corp'],
 					'url'=>Url::to(['/master/barang/prodak-corp-type']), /*Parent=0 barang Umum*/
 					'initialize'=>true,
-				], 		
+				],
 			]);
-			
+
 			echo $form->field($model, 'KD_KATEGORI')->widget(DepDrop::classname(), [
 				'type'=>DepDrop::TYPE_SELECT2,
 				'data' => $dropkat,
@@ -59,7 +59,7 @@ $dropsup = ArrayHelper::map(Suplier::find()->all(), 'KD_SUPPLIER', 'NM_SUPPLIER'
 					'depends'=>['barang-kd_corp','barang-kd_type'],
 					'url'=>Url::to(['/master/barang/prodak-type-kat']),
 					'initialize'=>true,
-				], 				
+				],
 			]);
 		?>
 		<?= $form->field($model, 'NM_BARANG')->textInput(['maxlength' => true]) ?>
@@ -70,7 +70,7 @@ $dropsup = ArrayHelper::map(Suplier::find()->all(), 'KD_SUPPLIER', 'NM_SUPPLIER'
 				'allowClear' => true
 				 ],
 		]);?>
-		
+
 		<?= $form->field($model, 'KD_SUPPLIER')->widget(Select2::classname(), [
 			'data' => $dropsup,
 			'options' => ['placeholder' => 'Pilih  Nama Supplier ...'],
@@ -78,8 +78,8 @@ $dropsup = ArrayHelper::map(Suplier::find()->all(), 'KD_SUPPLIER', 'NM_SUPPLIER'
 				'allowClear' => true
 				 ],
 		]);?>
-		
-		
+
+
 		<?php /* $form->field($model, 'KD_DISTRIBUTOR')->widget(Select2::classname(), [
 			'data' => $dropdistrubutor,
 			'options' => ['placeholder' => 'Pilih KD DISTRIBUTOR  ...'],
@@ -93,7 +93,7 @@ $dropsup = ArrayHelper::map(Suplier::find()->all(), 'KD_SUPPLIER', 'NM_SUPPLIER'
 		'options'=>['accept'=>'image/*'],
 		'pluginOptions'=>['allowedFileExtensions'=>['jpg','gif','png']]
 		]);
-		?>	 
+		?>
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
 				<?= Html::submitButton($model->isNewRecord ? '<i class="fa fa-plus"></i>&nbsp;&nbsp;Tambah Barang' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

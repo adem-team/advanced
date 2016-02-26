@@ -27,6 +27,8 @@ class Rodetail extends \yii\db\ActiveRecord
 	public $KD_TYPE;
 	public $STT_SEND_PO;
 	public $PQTY=0;
+	// public $NEW;
+
 	//Public $PQTY;
     /**
      * @inheritdoc
@@ -51,43 +53,55 @@ class Rodetail extends \yii\db\ActiveRecord
     {
         return [
  //         [['ID','KD_RO', 'KD_BARANG', 'NM_BARANG', 'QTY', 'NO_URUT', 'NOTE', 'STATUS', 'CREATED_AT', 'UPDATED_AT'], 'required'],
-			[['KD_RO','PARENT_ROSO','RQTY','UNIT','KD_BARANG'], 'required'],
-			//[['KD_RO','RQTY','SQTY','UNIT','KD_BARANG'], 'safe'],			
+			[['KD_RO','PARENT_ROSO','RQTY','UNIT'], 'required'],
+			//[['KD_RO','RQTY','SQTY','UNIT','KD_BARANG'], 'safe'],
             [['PQTY','HARGA'], 'safe'],
-			[['STATUS','PARENT_ROSO'], 'integer'],
+						// [['NEW'], 'cek'],
+						[['STATUS','PARENT_ROSO'], 'integer'],
             [['NOTE','UNIT','KD_BARANG'], 'string'],
             [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT','TMP_CK','HARGA','KD_CORP'], 'safe'],
             [['KD_RO','KD_CORP', 'KD_BARANG'], 'string', 'max' => 50],
             [['NM_BARANG', 'NO_URUT'], 'string', 'max' => 255]
         ];
     }
-	
+
 	/* public function getPQTY()
     {
         return 10;
     } */
-	
-	
+
+
 	/* 	public static function primaryKey()
     {
       return ['ID'];
     } */
-	
+		// public function cek($model)
+		// 	{
+		// 		$radio = $this->NEW;
+		// 		print_r($radio);
+		// 		die();
+		// 			// if($this->NEW = '')
+		// 			// {
+		// 			// 	 $this->addError($model, 'Maaf Tolong Di isi');
+		// 			// }
+		//
+		// 	}
+
 	public function getParentro()
     {
         return $this->hasOne(Requestorder::className(), ['KD_RO' => 'KD_RO']);
     }
-	
+
 	public function getCunit()
     {
         return $this->hasOne(Unitbarang::className(), ['KD_UNIT' => 'UNIT']);
     }
-	
+
 	public function getBarangumum()
     {
         return $this->hasOne(Barang::className(), ['KD_BARANG' => 'KD_BARANG']);
     }
-	
+
 	/* public function getBrgproduksi()
     {
         return $this->hasOne(Barang::className(), ['KD_BARANG' => 'KD_BARANG']);
@@ -98,11 +112,13 @@ class Rodetail extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+					'NEW'=>'NEW',
+					'SRCBRG'=>'SEARCH',
             'ID' => 'ID',
             'UNIT' => 'Satuan Barang',
             'KD_RO' => 'Kd  Ro',
             'KD_BARANG' => 'Kode  Barang',
-            'NM_BARANG' => 'Nm  Barang',
+            // 'NM_BARANG' => 'Nm  Barang',
             'RQTY' => 'Request Quantity',
             'SQTY' => 'Submit Quantity',
             'NO_URUT' => 'No  Urut',

@@ -15,7 +15,7 @@ use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\BarangSearch;
 
 
-	
+
 /**
  * BarangController implements the CRUD actions for Barang model.
  */
@@ -32,7 +32,7 @@ class BarangumumController extends Controller
             ],
         ];
     }
-	
+
 	/**
      * Before Action Index
 	 * @author ptrnov  <piter@lukison.com>
@@ -52,7 +52,7 @@ class BarangumumController extends Controller
                } else {
                    //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
 				   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
-                   return true; 
+                   return true;
                }
             } else {
                 return true;
@@ -67,34 +67,34 @@ class BarangumumController extends Controller
     {
         $searchModel = new BarangSearch();
         $dataProvider = $searchModel->searchBarangUmum(Yii::$app->request->queryParams);
-	
-	
+
+
         $model = new Barang();
 		$querys = Barang::find()->from('dbc002.b0001 AS db1')->leftJoin('dbc002.b1001 AS db2', 'db1.KD_BARANG = db2.KD_TYPE')->where(['NM_TYPE' => 'FDSFDG'])->all();
-		
-		
-/*	
+
+
+/*
 	var_dump($querys);
-		
-		
+
+
 		$query= new Query;
 		$query->select('*')
 				->from('dbc002.b0001 AS db1')
-				->leftJoin('dbm000.b1001 AS db2', 'db1.KD_BARANG = db2.KD_TYPE')  
+				->leftJoin('dbm000.b1001 AS db2', 'db1.KD_BARANG = db2.KD_TYPE')
 				->where(['db2.NM_TYPE' =>'FDSFDG']);
 		$command = $query->createCommand();
 		$resp = $command->queryAll();
 	*/
 	/*
-	select * 
-from dbc002.b0001 AS db1 
+	select *
+from dbc002.b0001 AS db1
 LEFT JOIN dbm000.b1001 AS db2
 on db1.KD_BARANG = db2.KD_TYPE
 WHERE db2.NM_TYPE = 'FDSFDG'
-	
+
 		$querys = Barang::find()->with('tbesm')->where(['tbesm.NM_TYPE' => 'FDSFDG'])->asArray()->all();
 		*/
-		
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -124,22 +124,22 @@ WHERE db2.NM_TYPE = 'FDSFDG'
         $model = new Barang();
 
         if ($model->load(Yii::$app->request->post()) ) {
-				//$kdDbtr = $model->KD_DISTRIBUTOR;	
-				$kdType = $model->KD_TYPE;	
-				$kdKategori = $model->KD_KATEGORI;	
-				$kdUnit = $model->KD_UNIT;	
+				//$kdDbtr = $model->KD_DISTRIBUTOR;
+				$kdType = $model->KD_TYPE;
+				$kdKategori = $model->KD_KATEGORI;
+				$kdUnit = $model->KD_UNIT;
 				$kdPrn = $model->PARENT;
 				$kdCorp=  $model->KD_CORP;
 				$kd = Yii::$app->esmcode->kdbarangUmum($kdPrn,$kdCorp,$kdType,$kdKategori,$kdUnit);
-				
+
 				//$kd = Yii::$app->esmcode->kdbarangUmum($kdPrn,$kdType,$kdKategori,$kdUnit);
 
 				$model->KD_BARANG = $kd;
 		if($model->validate())
 		{
-		
+
 				$model->CREATED_BY = Yii::$app->user->identity->username;
-		
+
 				$image = $model->uploadImage();
 		if ($model->save()) {
 			// upload only if valid uploaded file instance found
@@ -161,23 +161,23 @@ WHERE db2.NM_TYPE = 'FDSFDG'
     {
         $model = new Barang();
 		$model->load(Yii::$app->request->post());
-		
-		//$kdDbtr = $model->KD_DISTRIBUTOR;	
-		$kdType = $model->KD_TYPE;	
-		$kdKategori = $model->KD_KATEGORI;	
-		$kdUnit = $model->KD_UNIT;	
+
+		//$kdDbtr = $model->KD_DISTRIBUTOR;
+		$kdType = $model->KD_TYPE;
+		$kdKategori = $model->KD_KATEGORI;
+		$kdUnit = $model->KD_UNIT;
 		$kdPrn = $model->PARENT;
 		$kdCorp=  $model->KD_CORP;
 		$kd = Yii::$app->esmcode->kdbarangUmum($kdPrn,$kdCorp,$kdType,$kdKategori,$kdUnit);
-		
+
 		//$kd = Yii::$app->esmcode->kdbarangUmum($kdPrn,$kdType,$kdKategori,$kdUnit);
 
 		$model->KD_BARANG = $kd;
 		if($model->validate())
 		{
-		
+
 		$model->CREATED_BY = Yii::$app->user->identity->username;
-		
+
 		$image = $model->uploadImage();
 		if ($model->save()) {
 			// upload only if valid uploaded file instance found
@@ -226,16 +226,16 @@ WHERE db2.NM_TYPE = 'FDSFDG'
     public function actionDelete($id)
     {
      //   $this->findModel($ID)->delete();
-	 
+
 		$model = Barang::find()->where(['ID'=>$id])->one();
 		$model->STATUS = 3;
 		$model->UPDATED_BY = Yii::$app->user->identity->username;
 		$model->save();
-		
+
         return $this->redirect(['index']);
     }
 
-	
+
 	/**
      * DepDrop Barang Umum | CORP-TYPE
      * @author ptrnov  <piter@lukison.com>
@@ -251,14 +251,14 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 				foreach ($model as $key => $value) {
 					   $out[] = ['id'=>$value['KD_TYPE'],'name'=> $value['NM_TYPE']];
 				   }
-	 
+
 				   echo json_encode(['output'=>$out, 'selected'=>'']);
 				   return;
 			   }
 		   }
 		   echo Json::encode(['output'=>'', 'selected'=>'']);
 	}
-	
+
 	/**
 	* DepDrop Barang Umum | TYPE - KAT
 	* @author ptrnov  <piter@lukison.com>
@@ -275,14 +275,14 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 				foreach ($model as $key => $value) {
 					   $out[] = ['id'=>$value['KD_KATEGORI'],'name'=> $value['NM_KATEGORI']];
 				   }
-	 
+
 				   echo json_encode(['output'=>$out, 'selected'=>'']);
 				   return;
 			   }
 		   }
 		   echo Json::encode(['output'=>'', 'selected'=>'']);
 	}
-	
+
     /**
      * Finds the Barang model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

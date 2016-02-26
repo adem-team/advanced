@@ -26,10 +26,10 @@ use lukisongroup\master\models\Suplier ;
  * @property integer $updateAt
  * @property string $data_all
  */
- 
+
 Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/upload/barang/';
 Yii::$app->params['uploadUrl'] = Yii::$app->urlManager->baseUrl . '/web/upload/barang/';
- 
+
 class Barang extends \yii\db\ActiveRecord
 {
     /**
@@ -37,6 +37,7 @@ class Barang extends \yii\db\ActiveRecord
      */
 
 	public $image;
+  public $nmcorp;
 
     public static function tableName()
     {
@@ -50,7 +51,7 @@ class Barang extends \yii\db\ActiveRecord
     {
         return Yii::$app->get('db_esm');
     }
-	
+
     public function getUnitb()
     {
         return $this->hasOne(Unitbarang::className(), ['KD_UNIT' => 'KD_UNIT']);
@@ -70,7 +71,7 @@ class Barang extends \yii\db\ActiveRecord
     {
         return $this->tipebg->NM_TYPE;
     }
-    
+
 
 	public function getKategori()
     {
@@ -80,39 +81,39 @@ class Barang extends \yii\db\ActiveRecord
     {
         return $this->kategori->NM_KATEGORI;
     }
-	
+
 
 
 	 public function getSup()
     {
         return $this->hasOne(Suplier::className(), ['KD_SUPPLIER' => 'KD_SUPPLIER']);
-    } 
+    }
 	 public function getNmsuplier()
     {
         return $this->sup->NM_SUPPLIER;
-    } 
-	
+    }
+
 	public function getBrg()
     {
         return $this->hasOne(Barangmaxi::className(), ['KD_BARANG' => 'NM_BARANG']);
     }
-	
+
 	public function getTbesm()
     {
         return $this->hasMany(Barang::className(), ['KD_BARANG' => 'KD_TYPE']);
     }
-	
-	
+
+
 	public function getCorp()
     {
        return $this->hasOne(Corp::className(), ['CORP_ID' => 'KD_CORP']);
     }
-	
-	public function getNmcorp()
-    {
-        return $this->corp->CORP_NM;
-    }
-	
+
+	// public function getNmcorp()
+  //   {
+  //       return $this->corp->CORP_NM;
+  //   }
+
     /**
      * @inheritdoc
      */
@@ -122,46 +123,46 @@ class Barang extends \yii\db\ActiveRecord
             [['KD_CORP','KD_SUPPLIER', 'KD_TYPE', 'KD_KATEGORI','KD_BARANG', 'NM_BARANG', 'KD_UNIT','STATUS'], 'required'],
             [['HARGA_SPL','HARGA_PABRIK', 'HARGA_LG','HARGA_DIST','HARGA_SALES'], 'safe'],
 			[['PARENT', 'STATUS'], 'integer'],
-			[['nmcorp','BARCODE64BASE','KD_CAB','KD_DEP','DATA_ALL'], 'safe'],
+			[['BARCODE64BASE','KD_CAB','KD_DEP','DATA_ALL'], 'safe'],
             [['CREATED_BY','CREATED_AT','UPDATED_BY','UPDATED_AT'], 'safe'],
 			[['image'], 'file', 'extensions'=>'jpg, gif, png'],
         ];
     }
 
-    public function getImageFile() 
+    public function getImageFile()
     {
         return isset($this->IMAGE) ? Yii::$app->params['uploadPath'] . $this->IMAGE : null;
     }
-	
-    public function getImageUrl() 
+
+    public function getImageUrl()
     {
         // return a default image placeholder if your source IMAGE is not found
         $IMAGE = isset($this->IMAGE) ? $this->IMAGE : 'default_user.jpg';
         return Yii::$app->params['uploadUrl'] . $IMAGE;
     }
-	
+
 	public function uploadImage() {
         // get the uploaded file instance. for multiple file uploads
         // the following data will return an array (you may need to use
         // getInstances method)
         $image = UploadedFile::getInstance($this, 'image');
- 
+
         // if no image was uploaded abort the upload
         if (empty($image)) {
             return false;
         }
- 
+
         // store the source file name
         //$this->filename = $image->name;
         $ext = end((explode(".", $image->name)));
- 
+
         // generate a unique file name
         $this->IMAGE = 'lukison-'.date('ymdHis').".{$ext}"; //$image->name;//Yii::$app->security->generateRandomString().".{$ext}";
- 
+
         // the uploaded image instance
         return $image;
     }
- 
+
     /**
      * @inheritdoc
      */

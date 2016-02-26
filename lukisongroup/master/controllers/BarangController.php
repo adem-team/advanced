@@ -101,7 +101,7 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 		$querys = Barang::find()->with('tbesm')->where(['tbesm.NM_TYPE' => 'FDSFDG'])->asArray()->all();
 		*/
 		/*Tambahal menu side Dinamik */
-		$sideMenu_control='umum_datamaster';			
+		$sideMenu_control='umum_datamaster';
         return $this->render('index', [
 			'sideMenu_control'=> $sideMenu_control,
             'searchModel' => $searchModel,
@@ -198,6 +198,7 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 
         if ($model->load(Yii::$app->request->post()) ) {
 				//$kdDbtr = $model->KD_DISTRIBUTOR;
+
 				$kdType = $model->KD_TYPE;
 				$kdKategori = $model->KD_KATEGORI;
 				$kdUnit = $model->KD_UNIT;

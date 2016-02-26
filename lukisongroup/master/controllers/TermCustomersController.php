@@ -489,7 +489,7 @@ class TermCustomersController extends Controller
         // any css to be embedded if required
         'cssInline' => '.kv-heading-1{font-size:12px}',
          // set mPDF properties on the fly
-        'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+        'options' => ['title' => 'Term-Customers','subject'=>'Term'],
          // call mPDF methods on the fly
         'methods' => [
           'SetHeader'=>['Copyright@LukisonGroup '.date("r")],

@@ -22,19 +22,19 @@ class BarangSearch extends Barang
     /**
      * @inheritdoc
      */
-	
+
 	public function attributes()
 	{
 		/*Author -ptr.nov- add related fields to searchable attributes */
-		return array_merge(parent::attributes(), ['nmcorp','nmkategori','tipebrg']);
+		return array_merge(parent::attributes(), ['nmkategori','tipebrg','corp.CORP_NM']);
 	}
-	
+
     public function rules()
     {
         return [
             [['KD_CORP','KD_SUPPLIER', 'KD_TYPE', 'KD_KATEGORI','KD_BARANG', 'NM_BARANG', 'KD_UNIT'], 'safe'],
-            [['nmcorp','nmsuplier','unitbrg','tipebrg','nmkategori'], 'safe'],
-            [['HARGA_SPL','HARGA_PABRIK', 'HARGA_LG','HARGA_DIST','HARGA_SALES'], 'safe'],			
+            [['corp.CORP_NM','nmsuplier','unitbrg','tipebrg','nmkategori'], 'safe'],
+            [['HARGA_SPL','HARGA_PABRIK', 'HARGA_LG','HARGA_DIST','HARGA_SALES'], 'safe'],
 			[['PARENT', 'STATUS'], 'integer'],
 			[['BARCODE64BASE','KD_CAB','KD_DEP','DATA_ALL'], 'safe'],
             [['CREATED_BY','CREATED_AT','UPDATED_BY','UPDATED_AT'], 'safe'],
@@ -59,7 +59,7 @@ class BarangSearch extends Barang
     public function searchBarang($params)
     {
         $query = Barang::find()->where('b0001.STATUS <> 3')->andWhere('b0001.PARENT=1')->groupBy(['KD_BARANG','KD_CORP','KD_TYPE','KD_KATEGORI']);
-		
+
 		/* $query->joinWith(['sup' => function ($q) {
 			$q->where('d0001.NM_DISTRIBUTOR LIKE "%' . $this->nmsuplier . '%"');
 		}]); */
@@ -91,45 +91,51 @@ class BarangSearch extends Barang
     				'desc' => ['d0001.NM_DISTRIBUTOR' => SORT_DESC],
     				'label' => 'Supplier',
     			], */
-    			
+					'corp.CORP_NM' => [
+							'asc' => ['u0001.CORP_NM' => SORT_ASC],
+							'desc' => ['u0001.CORP_NM' => SORT_DESC],
+							// 'label' => 'Unit Barang',
+					],
+
                 'unitbrg' => [
                     'asc' => ['ub0001.NM_UNIT' => SORT_ASC],
                     'desc' => ['ub0001.NM_UNIT' => SORT_DESC],
                     'label' => 'Unit Barang',
                 ],
-                
+
                 'tipebrg' => [
                     'asc' => ['dbc002.b1001.NM_TYPE' => SORT_ASC],
                     'desc' => ['dbc002.b1001.NM_TYPE' => SORT_DESC],
                     'label' => 'Tipe Barang',
                 ],
-                
+
     			'nmkategori' => [
     				'asc' => ['b1002.NM_KATEGORI' => SORT_ASC],
     				'desc' => ['b1002.NM_KATEGORI' => SORT_DESC],
     				'label' => 'Kategori',
     			],
-    			
+
 			]
 		]);
-		
+
 		if (!($this->load($params) && $this->validate())) {
 			/**
-			 * The following line will allow eager loading with country data 
+			 * The following line will allow eager loading with country data
 			 * to enable sorting by country on initial loading of the grid.
-			 */ 
+			 */
 			return $dataProvider;
 		}
 
         $query->andFilterWhere(['like', 'b0001.STATUS', $this->STATUS])
             ->andFilterWhere(['like', 'NM_BARANG', $this->NM_BARANG])
             ->andFilterWhere(['like', 'b0001.KD_BARANG', $this->KD_BARANG])
-			->andFilterWhere(['like', 'b0001.KD_CORP', $this->nmcorp])
+			// ->andFilterWhere(['like', 'b0001.KD_CORP', $this->nmcorp])
+				  ->andFilterWhere(['like', 'b0001.KD_CORP', $this->getAttribute('corp.CORP_NM')])
 			->andFilterWhere(['like', 'b0001.KD_TYPE', $this->tipebrg])
 			->andFilterWhere(['like', 'b0001.KD_KATEGORI', $this->nmkategori]);
         return $dataProvider;
     }
-	
+
 	/**
      * BARANG UMUM
      * PARENT = 1 [PRODUK]
@@ -169,33 +175,33 @@ class BarangSearch extends Barang
     				'desc' => ['d0001.NM_DISTRIBUTOR' => SORT_DESC],
     				'label' => 'Supplier',
     			], */
-    			
-                'unitbrg' => [
-                    'asc' => ['ub0001.NM_UNIT' => SORT_ASC],
-                    'desc' => ['ub0001.NM_UNIT' => SORT_DESC],
-                    'label' => 'Unit Barang',
+
+                'corp.CORP_NM' => [
+                    'asc' => ['u0001.CORP_NM' => SORT_ASC],
+                    'desc' => ['u0001.CORP_NM' => SORT_DESC],
+                    // 'label' => 'Unit Barang',
                 ],
-                
+
                 'tipebrg' => [
                     'asc' => ['dbc002.b1001.NM_TYPE' => SORT_ASC],
                     'desc' => ['dbc002.b1001.NM_TYPE' => SORT_DESC],
                     'label' => 'Tipe Barang',
                 ],
-                
+
     			'nmkategori' => [
     				'asc' => ['b1002.NM_KATEGORI' => SORT_ASC],
     				'desc' => ['b1002.NM_KATEGORI' => SORT_DESC],
     				'label' => 'Kategori',
     			],
-    			
+
 			]
 		]);
-		
+
 		if (!($this->load($params) && $this->validate())) {
 			/**
-			 * The following line will allow eager loading with country data 
+			 * The following line will allow eager loading with country data
 			 * to enable sorting by country on initial loading of the grid.
-			 */ 
+			 */
 			return $dataProvider;
 		}
 
@@ -203,23 +209,86 @@ class BarangSearch extends Barang
             ->andFilterWhere(['like', 'NM_BARANG', $this->NM_BARANG])
             ->andFilterWhere(['like', 'b0001.KD_BARANG', $this->KD_BARANG])
             ->andFilterWhere(['like', 'b0001.HARGA_SPL', $this->HARGA_SPL])
-			->andFilterWhere(['like', 'b0001.KD_CORP', $this->nmcorp])
+			  ->andFilterWhere(['like', 'b0001.KD_CORP', $this->getAttribute('corp.CORP_NM')])
 			->andFilterWhere(['like', 'b0001.KD_TYPE', $this->tipebrg])
 			->andFilterWhere(['like', 'b0001.KD_KATEGORI', $this->nmkategori]);
         return $dataProvider;
     }
-	
-	
-	
+
+		public function searchBaranunkwon($params)
+		{
+				$query = Barang::find()->where('b0001.STATUS <> 3')->andWhere('b0001.PARENT=0 AND KD_TYPE=30 AND KD_UNIT = "E07" AND KD_UNIT = 39 ')->groupBy(['KD_BARANG','KD_CORP','KD_TYPE','KD_KATEGORI']);
+
+		$query->joinWith(['unitb' => function ($q) {
+						$q->where('ub0001.NM_UNIT LIKE "%' . $this->unitbrg . '%"');
+				}]);
+				$dataProvider = new ActiveDataProvider([
+						'query' => $query,
+			'pagination' => [
+				'pageSize' => 20,
+			],
+				]);
+
+		 $dataProvider->setSort([
+			'attributes' => [
+								'KD_BARANG',
+								'NM_BARANG',
+							 /* 'nmsuplier' => [
+						'asc' => ['d0001.NM_DISTRIBUTOR' => SORT_ASC],
+						'desc' => ['d0001.NM_DISTRIBUTOR' => SORT_DESC],
+						'label' => 'Supplier',
+					], */
+
+								'unitbrg' => [
+										'asc' => ['ub0001.NM_UNIT' => SORT_ASC],
+										'desc' => ['ub0001.NM_UNIT' => SORT_DESC],
+										'label' => 'Unit Barang',
+								],
+
+								'tipebrg' => [
+										'asc' => ['dbc002.b1001.NM_TYPE' => SORT_ASC],
+										'desc' => ['dbc002.b1001.NM_TYPE' => SORT_DESC],
+										'label' => 'Tipe Barang',
+								],
+
+					'nmkategori' => [
+						'asc' => ['b1002.NM_KATEGORI' => SORT_ASC],
+						'desc' => ['b1002.NM_KATEGORI' => SORT_DESC],
+						'label' => 'Kategori',
+					],
+
+			]
+		]);
+
+		if (!($this->load($params) && $this->validate())) {
+			/**
+			 * The following line will allow eager loading with country data
+			 * to enable sorting by country on initial loading of the grid.
+			 */
+			return $dataProvider;
+		}
+
+				$query->andFilterWhere(['like', 'b0001.STATUS', $this->STATUS])
+						->andFilterWhere(['like', 'NM_BARANG', $this->NM_BARANG])
+						->andFilterWhere(['like', 'b0001.KD_BARANG', $this->KD_BARANG])
+			//->andFilterWhere(['like', 'b0001.KD_CORP', $this->nmcorp])
+			->andFilterWhere(['like', 'b0001.KD_TYPE', $this->tipebrg])
+			->andFilterWhere(['like', 'b0001.KD_KATEGORI', $this->nmkategori]);
+				return $dataProvider;
+		}
+
+
+
+
 	/**
-     * BARANG PRODUCTION || Effembi Sukses Makmur 
+     * BARANG PRODUCTION || Effembi Sukses Makmur
      * PARENT = 1 [PRODUK]
      * @author ptrnov [piter@lukison.com]
      */
     public function searchBarangESM($params)
     {
         $query = Barang::find()->where('b0001.STATUS <> 3')->andWhere('b0001.PARENT=1 AND KD_CORP="ESM"')->groupBy(['KD_BARANG','KD_CORP','KD_TYPE','KD_KATEGORI']);
-	
+
 		$query->joinWith(['unitb' => function ($q) {
             $q->where('ub0001.NM_UNIT LIKE "%' . $this->unitbrg . '%"');
         }]);
@@ -239,33 +308,33 @@ class BarangSearch extends Barang
     				'desc' => ['d0001.NM_DISTRIBUTOR' => SORT_DESC],
     				'label' => 'Supplier',
     			], */
-    			
+
                 'unitbrg' => [
                     'asc' => ['ub0001.NM_UNIT' => SORT_ASC],
                     'desc' => ['ub0001.NM_UNIT' => SORT_DESC],
                     'label' => 'Unit Barang',
                 ],
-                
+
                 'tipebrg' => [
                     'asc' => ['dbc002.b1001.NM_TYPE' => SORT_ASC],
                     'desc' => ['dbc002.b1001.NM_TYPE' => SORT_DESC],
                     'label' => 'Tipe Barang',
                 ],
-                
+
     			'nmkategori' => [
     				'asc' => ['b1002.NM_KATEGORI' => SORT_ASC],
     				'desc' => ['b1002.NM_KATEGORI' => SORT_DESC],
     				'label' => 'Kategori',
     			],
-    			
+
 			]
 		]);
-		
+
 		if (!($this->load($params) && $this->validate())) {
 			/**
-			 * The following line will allow eager loading with country data 
+			 * The following line will allow eager loading with country data
 			 * to enable sorting by country on initial loading of the grid.
-			 */ 
+			 */
 			return $dataProvider;
 		}
 
@@ -277,9 +346,9 @@ class BarangSearch extends Barang
 			->andFilterWhere(['like', 'b0001.KD_KATEGORI', $this->nmkategori]);
         return $dataProvider;
     }
-	
+
 	/**
-     * BARANG PRODUCTION || Sarana Sinar Surya atau Beverage 
+     * BARANG PRODUCTION || Sarana Sinar Surya atau Beverage
      * PARENT = 1 [PRODUK]
      * @author ptrnov [piter@lukison.com]
      */
@@ -289,7 +358,7 @@ class BarangSearch extends Barang
 							   ->andWhere('b0001.PARENT=1')
 							   ->andWhere('KD_CORP="SSS" OR KD_CORP="MM"')
 							   ->groupBy(['KD_BARANG','KD_CORP','KD_TYPE','KD_KATEGORI']);
-		
+
         $query->joinWith(['unitb' => function ($q) {
             $q->where('ub0001.NM_UNIT LIKE "%' . $this->unitbrg . '%"');
         }]);
@@ -310,33 +379,33 @@ class BarangSearch extends Barang
     				'desc' => ['d0001.NM_DISTRIBUTOR' => SORT_DESC],
     				'label' => 'Supplier',
     			], */
-    			
+
                 'unitbrg' => [
                     'asc' => ['ub0001.NM_UNIT' => SORT_ASC],
                     'desc' => ['ub0001.NM_UNIT' => SORT_DESC],
                     'label' => 'Unit Barang',
                 ],
-                
+
                 'tipebrg' => [
                     'asc' => ['dbc002.b1001.NM_TYPE' => SORT_ASC],
                     'desc' => ['dbc002.b1001.NM_TYPE' => SORT_DESC],
                     'label' => 'Tipe Barang',
                 ],
-                
+
     			'nmkategori' => [
     				'asc' => ['b1002.NM_KATEGORI' => SORT_ASC],
     				'desc' => ['b1002.NM_KATEGORI' => SORT_DESC],
     				'label' => 'Kategori',
     			],
-    			
+
 			]
 		]);
-		
+
 		if (!($this->load($params) && $this->validate())) {
 			/**
-			 * The following line will allow eager loading with country data 
+			 * The following line will allow eager loading with country data
 			 * to enable sorting by country on initial loading of the grid.
-			 */ 
+			 */
 			return $dataProvider;
 		}
 
@@ -348,16 +417,16 @@ class BarangSearch extends Barang
 			->andFilterWhere(['like', 'b0001.KD_KATEGORI', $this->nmkategori]);
         return $dataProvider;
     }
-	
+
 	/**
-     * BARANG PRODUCTION || Artha Lipat Ganda 
+     * BARANG PRODUCTION || Artha Lipat Ganda
      * PARENT = 1 [PRODUK]
      * @author ptrnov [piter@lukison.com]
      */
     public function searchBarangALG($params)
     {
         $query = Barang::find()->where('b0001.STATUS <> 3')->andWhere('b0001.PARENT=1 AND KD_CORP="ALG"')->groupBy(['KD_BARANG','KD_CORP','KD_TYPE','KD_KATEGORI']);
-		
+
         $query->joinWith(['unitb' => function ($q) {
             $q->where('ub0001.NM_UNIT LIKE "%' . $this->unitbrg . '%"');
         }]);
@@ -378,33 +447,33 @@ class BarangSearch extends Barang
     				'desc' => ['d0001.NM_DISTRIBUTOR' => SORT_DESC],
     				'label' => 'Supplier',
     			], */
-    			
+
                 'unitbrg' => [
                     'asc' => ['ub0001.NM_UNIT' => SORT_ASC],
                     'desc' => ['ub0001.NM_UNIT' => SORT_DESC],
                     'label' => 'Unit Barang',
                 ],
-                
+
                 'tipebrg' => [
                     'asc' => ['dbc002.b1001.NM_TYPE' => SORT_ASC],
                     'desc' => ['dbc002.b1001.NM_TYPE' => SORT_DESC],
                     'label' => 'Tipe Barang',
                 ],
-                
+
     			'nmkategori' => [
     				'asc' => ['b1002.NM_KATEGORI' => SORT_ASC],
     				'desc' => ['b1002.NM_KATEGORI' => SORT_DESC],
     				'label' => 'Kategori',
     			],
-    			
+
 			]
 		]);
-		
+
 		if (!($this->load($params) && $this->validate())) {
 			/**
-			 * The following line will allow eager loading with country data 
+			 * The following line will allow eager loading with country data
 			 * to enable sorting by country on initial loading of the grid.
-			 */ 
+			 */
 			return $dataProvider;
 		}
 
@@ -416,7 +485,7 @@ class BarangSearch extends Barang
 			->andFilterWhere(['like', 'b0001.KD_KATEGORI', $this->nmkategori]);
         return $dataProvider;
     }
-	
+
 	/**
      * BARANG PRODUCTION || Gosend
      * PARENT = 1 [PRODUK]
@@ -425,7 +494,7 @@ class BarangSearch extends Barang
     public function searchBarangGSN($params)
     {
         $query = Barang::find()->where('b0001.STATUS <> 3')->andWhere('b0001.PARENT=1 AND KD_CORP="GSN"')->groupBy(['KD_BARANG','KD_CORP','KD_TYPE','KD_KATEGORI']);
-		
+
         $query->joinWith(['unitb' => function ($q) {
             $q->where('ub0001.NM_UNIT LIKE "%' . $this->unitbrg . '%"');
         }]);
@@ -446,33 +515,33 @@ class BarangSearch extends Barang
     				'desc' => ['d0001.NM_DISTRIBUTOR' => SORT_DESC],
     				'label' => 'Supplier',
     			], */
-    			
+
                 'unitbrg' => [
                     'asc' => ['ub0001.NM_UNIT' => SORT_ASC],
                     'desc' => ['ub0001.NM_UNIT' => SORT_DESC],
                     'label' => 'Unit Barang',
                 ],
-                
+
                 'tipebrg' => [
                     'asc' => ['dbc002.b1001.NM_TYPE' => SORT_ASC],
                     'desc' => ['dbc002.b1001.NM_TYPE' => SORT_DESC],
                     'label' => 'Tipe Barang',
                 ],
-                
+
     			'nmkategori' => [
     				'asc' => ['b1002.NM_KATEGORI' => SORT_ASC],
     				'desc' => ['b1002.NM_KATEGORI' => SORT_DESC],
     				'label' => 'Kategori',
     			],
-    			
+
 			]
 		]);
-		
+
 		if (!($this->load($params) && $this->validate())) {
 			/**
-			 * The following line will allow eager loading with country data 
+			 * The following line will allow eager loading with country data
 			 * to enable sorting by country on initial loading of the grid.
-			 */ 
+			 */
 			return $dataProvider;
 		}
 
@@ -484,7 +553,7 @@ class BarangSearch extends Barang
 			->andFilterWhere(['like', 'b0001.KD_KATEGORI', $this->nmkategori]);
         return $dataProvider;
     }
-	
+
 	/**
      * BARANG PRODUCTION || Lukisongroup
      * PARENT = 1 [PRODUK]
@@ -493,7 +562,7 @@ class BarangSearch extends Barang
     public function searchBarangLG($params)
     {
         $query = Barang::find()->where('b0001.STATUS <> 3')->andWhere('b0001.PARENT=1 AND KD_CORP="LG"')->groupBy(['KD_BARANG','KD_CORP','KD_TYPE','KD_KATEGORI']);
-		
+
         $query->joinWith(['unitb' => function ($q) {
             $q->where('ub0001.NM_UNIT LIKE "%' . $this->unitbrg . '%"');
         }]);
@@ -514,33 +583,33 @@ class BarangSearch extends Barang
     				'desc' => ['d0001.NM_DISTRIBUTOR' => SORT_DESC],
     				'label' => 'Supplier',
     			], */
-    			
+
                 'unitbrg' => [
                     'asc' => ['ub0001.NM_UNIT' => SORT_ASC],
                     'desc' => ['ub0001.NM_UNIT' => SORT_DESC],
                     'label' => 'Unit Barang',
                 ],
-                
+
                 'tipebrg' => [
                     'asc' => ['dbc002.b1001.NM_TYPE' => SORT_ASC],
                     'desc' => ['dbc002.b1001.NM_TYPE' => SORT_DESC],
                     'label' => 'Tipe Barang',
                 ],
-                
+
     			'nmkategori' => [
     				'asc' => ['b1002.NM_KATEGORI' => SORT_ASC],
     				'desc' => ['b1002.NM_KATEGORI' => SORT_DESC],
     				'label' => 'Kategori',
     			],
-    			
+
 			]
 		]);
-		
+
 		if (!($this->load($params) && $this->validate())) {
 			/**
-			 * The following line will allow eager loading with country data 
+			 * The following line will allow eager loading with country data
 			 * to enable sorting by country on initial loading of the grid.
-			 */ 
+			 */
 			return $dataProvider;
 		}
 
