@@ -12,6 +12,8 @@ use lukisongroup\hrd\models\Personallog;
  */
 class PersonallogSearch extends Personallog
 {
+	
+	public $tgl2;
     /**
      * @inheritdoc
      */
@@ -19,7 +21,7 @@ class PersonallogSearch extends Personallog
     {
         return [
             [['idno'], 'integer'],
-            [['TerminalID', 'UserID', 'FingerPrintID', 'FunctionKey', 'Edited', 'UserName', 'FlagAbsence', 'DateTime', 'tgl', 'waktu'], 'safe'],
+            [['tgl2','TerminalID', 'UserID', 'FingerPrintID', 'FunctionKey', 'Edited', 'UserName', 'FlagAbsence', 'DateTime', 'tgl', 'waktu'], 'safe'],
         ];
     }
 
@@ -75,7 +77,8 @@ class PersonallogSearch extends Personallog
             ->andFilterWhere(['like', 'FingerPrintID', $this->FingerPrintID])
             ->andFilterWhere(['like', 'FunctionKey', $this->FunctionKey])
             ->andFilterWhere(['like', 'UserName', $this->UserName])
-			->andFilterWhere(['like', 'DateTime', $this->DateTime!=''?date("Y-m-d",strtotime($this->DateTime)):date("Y-m-d")])
+			//->andFilterWhere(['like', 'DateTime', $this->DateTime!=''?date("Y-m-d",strtotime($this->DateTime)):date("Y-m-d")])
+			->andFilterWhere(['like', 'DateTime', $this->tgl2!=''?date("Y-m-d",strtotime($this->tgl2)):date("Y-m-d")])
             ->andFilterWhere(['like', 'FlagAbsence', $this->FlagAbsence]);
 
         return $dataProvider;
