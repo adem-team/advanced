@@ -50,7 +50,7 @@ class Personallog extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tgl2','Edited', 'DateTime', 'tgl', 'waktu'], 'safe'],
+            [['tgllog','tgllate','Edited', 'DateTime', 'tgl', 'waktu'], 'safe'],
             [['TerminalID', 'UserName', 'FlagAbsence'], 'string', 'max' => 100],
             [['UserID', 'FingerPrintID'], 'string', 'max' => 50],
             [['FunctionKey'], 'string', 'max' => 15]
@@ -58,17 +58,20 @@ class Personallog extends \yii\db\ActiveRecord
     }
 
 	
-	public function fields()
+/* 	public function fields()
 	{
 		return [
 			'tgl2'=>function($model){
 							return 'DateTime';
 					},
 		];
+	} */
+	
+	
+	public function getTgllog(){
+		return $this->DateTime;		
 	}
-	
-	
-	public function getTgl2(){
+	public function getTgllate(){
 		return $this->DateTime;		
 	}
 	

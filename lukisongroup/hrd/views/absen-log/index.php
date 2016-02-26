@@ -149,19 +149,17 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		],
 		[  	//col-4
 			//DateTime
-			'attribute' => 'tgl2',
+			'attribute' => 'tgllog',
 			'label'=>'DateTime',
 			'noWrap'=>true,
 			'filterType' => GridView::FILTER_DATE,
             'filterWidgetOptions' => [
-                'pluginOptions' => [
-					'id'=>'sa1',
-                    'format' => 'yyyy-mm-dd',
-					 
+					'pluginOptions' => [
+                    'format' => 'yyyy-mm-dd',					 
                     'autoclose' => true,
                     'todayHighlight' => true,
 					//'format' => 'dd-mm-yyyy hh:mm',
-					'autoWidget' => true,
+					'autoWidget' => false,
 					//'todayBtn' => true,
                 ]
             ],
@@ -324,7 +322,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		],
 		 [  	//col-4
 			//DateTime
-			'attribute' => 'tgl',
+			'attribute' => 'tgllate',
 			'label'=>'DateTime',
 			'noWrap'=>true,
 			'filterType' => GridView::FILTER_DATE,

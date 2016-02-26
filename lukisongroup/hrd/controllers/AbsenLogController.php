@@ -9,7 +9,7 @@ use yii\db\Query;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use \DateTime;
 use lukisongroup\hrd\models\Personallog;
 use lukisongroup\hrd\models\PersonallogSearch;
 
@@ -30,9 +30,22 @@ class AbsenLogController extends Controller
      
     public function actionIndex()
     {
-		$searchModel = new PersonallogSearch();
+		$date=new DateTime();
+		$thn=strlen($date->format('Y'));
+		$bln=strlen($date->format('m'));
+		$hri=strlen($date->format('d'));
+		$dateRlt=$thn."-".$bln."-".$hri;
+		$searchModel = new PersonallogSearch([
+			'tgllog'=>Yii::$app->ambilKonvesi->tglSekarang()
+		]);
+		//$queryParams = array_merge(array(),Yii::$app->request->getQueryParams());
+        //$queryParams["PersonallogSearch"]["tgllog"]=Yii::$app->ambilKonvesi->tglSekarang();//	Yii::$app->ambilKonvesi->tglSekarang();//$dateRlt;//"2016-02-22";// date('Y-m-d');//"2016-02-22" ;date("Y-mm-dd");//
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-		$searchModelLate = new PersonallogSearch();
+        //$dataProvider = $searchModel->search($queryParams);
+		
+		$searchModelLate = new PersonallogSearch([
+			'tgllate'=>Yii::$app->ambilKonvesi->tglSekarang()
+		]);
         $dataProviderLate = $searchModel->search_telat(Yii::$app->request->queryParams);
 
         return $this->render('index', [
