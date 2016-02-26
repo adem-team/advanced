@@ -149,7 +149,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		],
 		[  	//col-4
 			//DateTime
-			'attribute' => 'DateTime',
+			'attribute' => 'tgl2',
 			'label'=>'DateTime',
 			'noWrap'=>true,
 			'filterType' => GridView::FILTER_DATE,
