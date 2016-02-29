@@ -262,11 +262,19 @@ class RequestOrderController extends Controller
 	 */
     public function actionAddNewItem($kd)
     {
-			$roDetail = new AddNewitemValidation();
+			$roDetail = new Rodetail();
 			$roHeader = Requestorder::find()->where(['KD_RO' => $kd])->one();
 			$detro = $roHeader->detro;
 			$employ = $roHeader->employe;
 			$dept = $roHeader->dept;
+      $model = new \yii\base\DynamicModel(['addNEW']);
+      $model->addRule(['addNEW'], 'required');
+      // addnewitem
+      		// [['kD_RO','nM_BARANG','kD_KATEGORI','kD_SUPPLIER','kD_TYPE','uNIT','rQTY','hARGA'], 'required'],
+
+          // additem
+          // [['kD_BARANG'], 'findcheck'],
+          // [['kD_RO','kD_BARANG','uNIT','rQTY'], 'required'],
 
 			/*
 			 * Convert $roHeader->detro to ArrayDataProvider | Identity 'key' => 'ID',
@@ -283,6 +291,7 @@ class RequestOrderController extends Controller
 
 			return $this->renderAjax('addnewitem', [
 				'roHeader' => $roHeader,
+        'model'=>$model,
 				'roDetail' => $roDetail,
 				'dataProvider'=>$detroProvider,
 			]);
@@ -639,6 +648,17 @@ class RequestOrderController extends Controller
 					]);
     }
 
+    // public function actionValid()
+    // {
+    //   # code...
+    //   $roDetail = new AdditemValidation();
+    // if(Yii::$app->request->isAjax && $roDetail->load($_POST))
+    // {
+    //   Yii::$app->response->format = 'json';
+    //   return ActiveForm::validate($roDetail);
+    //   }
+    // }
+
 	/*
 	 * actionSimpansecondt() <- actionTambah($kd)
 	 * First Create RO |Rodetail
@@ -946,6 +966,79 @@ class RequestOrderController extends Controller
 		]);
 		return $pdf->render();
 	}
+
+  public function actionSaveNewAdd()
+  {
+    $rodetail = new Rodetail();
+  	$barangNew = new Barang();
+    // $roDetail = new AdditemValidation();
+    $profile= Yii::$app->getUserOpt->Profile_user();
+    $corp = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
+  if($roDetail->load(Yii::$app->request->post())){
+
+    //  print_r($roDetail->kD_BARANG );
+    //  die();
+    $hsl = \Yii::$app->request->post();
+     // $radio =  $hsl['DynamicModel']['NEW'];
+     $radio =  $hsl['newadd'];
+
+     if($radio == 1)
+     {
+
+        // $kdro = $hsl['AdditemValidation']['kD_RO'];
+        // $kdbrg = $hsl['AdditemValidation']['kD_BARANG'];
+      //  if($roDetail->validate()) {
+   			$barangNew= new Barang();
+        $roDetail = new AdditemValidation();
+
+        print_r( $kdbrg);
+        die();
+        $kondisiTrue = Rodetail::find()->where("KD_RO='".$kdro. "' AND KD_BARANG='".$kdbrg."' AND STATUS<>3")->one();
+        if($kondisiTrue)
+        {
+          die();
+        }
+        else{
+          echo "succes";
+        }
+
+   			// 	$this->kD_BARANG= Yii::$app->esmcode->kdbarangUmum(0,$this->kD_CORP,$this->kD_TYPE,$this->kD_KATEGORI,$this->uNIT);
+   			// 	$barangNew->KD_BARANG =$roDetail->kD_BARANG;
+   			// 	$barangNew->NM_BARANG = $this->nM_BARANG;
+   			// 	$barangNew->KD_UNIT = $this->uNIT;
+   			// 	$barangNew->HARGA_SPL = $this->hARGA;
+   			// 	$barangNew->PARENT = 0;
+   			// 	$barangNew->KD_CORP = $this->kD_CORP;
+   			// 	$barangNew->KD_TYPE = $this->kD_TYPE;
+   			// 	$barangNew->KD_KATEGORI = $this->kD_KATEGORI;
+   			// 	$barangNew->KD_SUPPLIER = $this->kD_SUPPLIER;
+   			// 	$barangNew->STATUS = 1;
+   			// 	$barangNew->CREATED_BY = Yii::$app->user->identity->username;
+   			// 	$barangNew->CREATED_AT = date('Y-m-d H:i:s');
+   			// 	$barangNew->UPDATED_BY = Yii::$app->user->identity->username;
+   			// 	if($barangNew->validate()){
+   			// 		$barangNew->save();
+   			// 		$rodetail = new Rodetail();
+   			// 		$rodetail->CREATED_AT = date('Y-m-d H:i:s');
+   			// 		$rodetail->KD_RO = $this->kD_RO; 		//required
+   			// 		$rodetail->KD_CORP = $this->kD_CORP; 	//required
+   			// 		$rodetail->PARENT_ROSO=0; // RO=1 		//required
+   			// 		$rodetail->KD_BARANG = $this->kD_BARANG;
+   			// 		$rodetail->NM_BARANG = $this->nM_BARANG;
+   			// 		$rodetail->UNIT = $this->uNIT;
+   			// 		$rodetail->RQTY = $this->rQTY;
+   			// 		$rodetail->SQTY = $this->rQTY;
+   			// 		$rodetail->NOTE = $this->nOTE;
+   			// 		$rodetail->HARGA= $this->hARGA;
+   			// 		$rodetail->STATUS = 0;
+
+  //  }
+ }
+    //  print_r($radio);
+    //  die();
+
+  }
+}
 
 	/**
 	 * On Approval View

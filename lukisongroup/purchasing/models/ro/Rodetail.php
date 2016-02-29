@@ -56,7 +56,7 @@ class Rodetail extends \yii\db\ActiveRecord
 			[['KD_RO','PARENT_ROSO','RQTY','UNIT'], 'required'],
 			//[['KD_RO','RQTY','SQTY','UNIT','KD_BARANG'], 'safe'],
             [['PQTY','HARGA'], 'safe'],
-						// [['NEW'], 'cek'],
+						// [['KD_BARANG','NEW'], 'cek'],
 						[['STATUS','PARENT_ROSO'], 'integer'],
             [['NOTE','UNIT','KD_BARANG'], 'string'],
             [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT','TMP_CK','HARGA','KD_CORP'], 'safe'],
@@ -78,12 +78,13 @@ class Rodetail extends \yii\db\ActiveRecord
 		// public function cek($model)
 		// 	{
 		// 		$radio = $this->NEW;
-		// 		print_r($radio);
-		// 		die();
-		// 			// if($this->NEW = '')
-		// 			// {
-		// 			// 	 $this->addError($model, 'Maaf Tolong Di isi');
-		// 			// }
+		// 			$barang = $this->KD_BARANG;
+		// 			// print_r(	$barang);
+		// 			// die();
+		// 		if($radio == 2 && $barang = '')
+		// 		{
+		// 				 $this->addError($model, 'Maaf Tolong Di isi');
+		// 			}
 		//
 		// 	}
 

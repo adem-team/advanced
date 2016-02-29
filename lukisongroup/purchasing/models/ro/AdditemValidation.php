@@ -43,14 +43,15 @@ class AdditemValidation extends Model
 	public $nOTE;
 	public $sTATUS;
 	public $cREATED_AT;
+  public $nM_BARANG;
 
     public function rules()
     {
         return [
 			[['kD_BARANG'], 'findcheck'],
-			[['kD_RO','kD_BARANG','uNIT','rQTY'], 'required'],
+			[['kD_RO','uNIT','rQTY'], 'required'],
 			//[['nmBarang','nOTE'], 'string'],
-        	[['nOTE'], 'string'],
+        	[['nOTE','nM_BARANG'], 'string'],
         	['sTATUS','integer'],
         	[['rQTY','cREATED_AT','kD_KATEGORI','kD_TYPE','hARGA'], 'safe'],
 			[['kD_CORP'], 'safe'],
@@ -65,6 +66,7 @@ class AdditemValidation extends Model
 	public function findcheck($attribute, $params)
     {
 		if (!$this->hasErrors()) {
+      $
 			 //$kondisiTrue = Rodetail::find()->where(['KD_RO' => $this->kD_RO, 'KD_BARANG' => $this->kD_BARANG ])->one();
 			 $kondisiTrue = Rodetail::find()->where("KD_RO='".$this->kD_RO. "' AND KD_BARANG='".$this->kD_BARANG."' AND STATUS<>3")->one();
 			if ($kondisiTrue) {
@@ -78,29 +80,29 @@ class AdditemValidation extends Model
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
      */
-	public function additem_saved()
-    {
-		if ($this->validate()) {
-			$rodetail = new Rodetail();
-			$rodetail->CREATED_AT = date('Y-m-d H:i:s');
-			$rodetail->KD_RO = $this->kD_RO; 		//required
-			$rodetail->KD_CORP = $this->kD_CORP; 	//required
-			$rodetail->PARENT_ROSO=0; // RO=1 		//required
-			$rodetail->KD_BARANG = $this->kD_BARANG;
-			$rodetail->NM_BARANG = $this->valuesBarang($this->kD_BARANG)->NM_BARANG;
-			$rodetail->UNIT = $this->uNIT;
-			$rodetail->RQTY = $this->rQTY;
-			$rodetail->SQTY = $this->rQTY;
-			$rodetail->NOTE = $this->nOTE;
-			$rodetail->HARGA= $this->valuesBarang($this->kD_BARANG)->HARGA_SPL;
-			$rodetail->STATUS = 0;
-			if ($rodetail->save()) {
-                return $rodetail;
-            }
-			return $rodetail;
-		}		
-		return null;
-	}
+	// public function additem_saved()
+  //   {
+	// 	if ($this->validate()) {
+	// 		$rodetail = new Rodetail();
+	// 		$rodetail->CREATED_AT = date('Y-m-d H:i:s');
+	// 		$rodetail->KD_RO = $this->kD_RO; 		//required
+	// 		$rodetail->KD_CORP = $this->kD_CORP; 	//required
+	// 		$rodetail->PARENT_ROSO=0; // RO=1 		//required
+	// 		$rodetail->KD_BARANG = $this->kD_BARANG;
+	// 		$rodetail->NM_BARANG = $this->valuesBarang($this->kD_BARANG)->NM_BARANG;
+	// 		$rodetail->UNIT = $this->uNIT;
+	// 		$rodetail->RQTY = $this->rQTY;
+	// 		$rodetail->SQTY = $this->rQTY;
+	// 		$rodetail->NOTE = $this->nOTE;
+	// 		$rodetail->HARGA= $this->valuesBarang($this->kD_BARANG)->HARGA_SPL;
+	// 		$rodetail->STATUS = 0;
+	// 		if ($rodetail->save()) {
+  //               return $rodetail;
+  //           }
+	// 		return $rodetail;
+	// 	}
+	// 	return null;
+	// }
 
 	public function attributeLabels()
     {
