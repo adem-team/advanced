@@ -6,23 +6,17 @@ use kartik\grid\GridView;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\Select2;
-use kartik\widgets\DepDrop;
-use yii\helpers\Url;
-use yii\data\ActiveDataProvider;
-
 use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\Tipebarang;
 use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\hrd\models\Corp;
-use lukisongroup\purchasing\models\ro\Validateitem;
+use kartik\money\MaskMoney;
 
 
-
-$config = ['template'=>"{input}\n{error}\n{hint}"];
 
 // $userCorp = ArrayHelper::map(Corp::find()->where('CORP_STS<>3')->all(), 'CORP_ID', 'CORP_NM');
-// $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT');
+$brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT');
 // $brgType = ArrayHelper::map(Tipebarang::find()->where('PARENT=0 AND STATUS<>3')->orderBy('NM_TYPE')->all(), 'KD_TYPE', 'NM_TYPE');
 // $brgKtg  = ArrayHelper::map(Kategori::find()->where('PARENT=0 AND STATUS<>3')->orderBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI');
 // $brgUmum = ArrayHelper::map(Barang::find()->where('PARENT=0 AND STATUS<>3')->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG');
@@ -73,9 +67,9 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
                           ])->label(false)?>
 
 
-    <?php
+    <div id="tes">
 
-  echo $form->field($roDetail, 'KD_BARANG')->widget(Select2::classname(), [
+  <?=  $form->field($roDetail, 'KD_BARANG')->widget(Select2::classname(), [
 				'data' => $data,
 				'options' => ['id'=>'purchaseorder-top',
           'placeholder' => 'Pilih Unit Barang ...'
@@ -83,15 +77,43 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 				'pluginOptions' => [
 					'allowClear' => true
 				],
-		]);
+		]) ?>
 
-     echo  $form->field($roDetail, 'NM_BARANG')->textInput(['maxlength' => true, 'placeholder'=>'New Item'])->label('Nama Barang');
+  </div>
+
+
+
+     <?=  $form->field($roDetail, 'NM_BARANG')->textInput(['maxlength' => true, 'placeholder'=>'New Item'])->label('Nama Barang')?>
+
+     <div id="hrg">
+
+     <?= $form->field($roDetail, 'HARGA')->widget(MaskMoney::classname(), [
+       'pluginOptions' => [
+           'prefix' => 'Rp',
+          'precision' => 2,
+           'allowNegative' => false
+       ]
+     ]) ?>
+
+   </div>
+
+     <?php
 
       echo  $form->field($roDetail, 'KD_CORP')->hiddenInput(['value'=>$corp])->label(false);
 
      echo  $form->field($roDetail, 'RQTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']);
 
+     echo $form->field($roDetail, 'UNIT')->widget(Select2::classname(), [
+         'data' => $brgUnit,
+         'options' => ['placeholder' => 'Pilih Unit Barang ...'],
+         'pluginOptions' => [
+           'allowClear' => true
+         ],
+     ]);
+
  		 echo $form->field($roDetail, 'NOTE')->textarea(array('rows'=>2,'cols'=>5))->label('Informasi');
+
+
 		// echo $form->field($roDetail, 'KD_CORP')->dropDownList($userCorp,[
 		// 		'id'=>'rodetail-kd_corp',
 		// 		'prompt'=>' -- Pilih Salah Satu --',
@@ -142,13 +164,7 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 		// 		'placeholder' => false,
 		// 	],
 		// ]);  */
-		// echo $form->field($roDetail, 'UNIT')->widget(Select2::classname(), [
-		// 		'data' => $brgUnit,
-		// 		'options' => ['placeholder' => 'Pilih Unit Barang ...'],
-		// 		'pluginOptions' => [
-		// 			'allowClear' => true
-		// 		],
-		// ]);
+
     //
 
 ?>
@@ -169,30 +185,17 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
       {
       		$("#rodetail-nm_barang").hide();
           $("label[for=rodetail-nm_barang]").hide();
-          $("select#purchaseorder-top").prop("disabled", false).select2();
-          $("select#purchaseorder-top").select2({
-                minimumResultsForSearch: "0",
-                 tags: "true",
-                   allowClear :"true",
-                   tabindex:"1",
-
-          });
-            $("label[for=rodetail-kd_barang]").show();
-
-
-
+          $("#tes").show();
+          $("label[for=rodetail-kd_barang]").show();
+          $("#hrg").hide();
 
       }
       else{
         $("#rodetail-nm_barang").show();
         $("label[for=rodetail-nm_barang]").show();
-        $("select#purchaseorder-top").prop("disabled", true).select2();
-      //   $("select#purchaseorder-top").select2({
-      //       minimumResultsForSearch: "2",
-      //        tags: "false",
-      //
-      // });
+        $("#tes").hide();
         $("label[for=rodetail-kd_barang]").hide();
+        $("#hrg").show();
       }
 
 

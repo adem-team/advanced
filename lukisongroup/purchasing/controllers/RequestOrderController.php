@@ -473,44 +473,31 @@ class RequestOrderController extends Controller
 
 
 				 $hsl = \Yii::$app->request->post();
-          $radio =  $hsl['DynamicModel']['NEW'];
+          // $radio =  $hsl['DynamicModel']['NEW'];
+          $radio =  $hsl['new'];
             // print_r($radio);
             // die();
             $selectCorp = $corp;
             if($radio == 2 )
             {
-              	$kdBarang = $hsl['Rodetail']['KD_BARANG'];
+              // rodetail
+              	$kdBarang = $roDetail->KD_BARANG;
                 $nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
-                // print_r($nmBarang);
-                // die();
                 $GneratekodeRo=\Yii::$app->ambilkonci->getRoCode($selectCorp);
                 $roDetail->KD_RO = $GneratekodeRo;
                 $roDetail->PARENT_ROSO=0;
                 $roDetail->KD_CORP = $selectCorp;
                 $roDetail->CREATED_AT = date('Y-m-d H:i:s');
                 $roDetail->NM_BARANG = $nmBarang->NM_BARANG;
-                // print_r(  $roDetail->NM_BARANG);
-                // die();
                 $roDetail->KD_BARANG = $kdBarang;
-                $roDetail->UNIT = 'none';
                 $roDetail->SQTY = $roDetail->RQTY;
                 $roDetail->HARGA= $nmBarang->HARGA_SPL;
-                // $roDetail->NOTE = $note;
                 $roDetail->STATUS = 0;
-
                 $roDetail->save();
                       // getErrors()
                 // print_r($roDetail->getErrors());
                 // die();
-
-
-                // $BARANG->KD_BARANG = 	$kdBarang;
-                // 'KD_CORP','KD_SUPPLIER', 'KD_TYPE', 'KD_KATEGORI','KD_BARANG', 'NM_BARANG', 'KD_UNIT','STATUS']
-                // $BARANG->KD_CORP =
-                // $BARANG->KD_SUPPLIER =
-                // $BARANG->KD_TYPE =
-                // $BARANG->KD_KATEGORI =
-
+                // roheader
                 $roHeader->PARENT_ROSO=0; // RO=0
                 $roHeader->KD_RO =$GneratekodeRo;
                 $roHeader->CREATED_AT = date('Y-m-d H:i:s');
@@ -539,48 +526,42 @@ class RequestOrderController extends Controller
             }
             else
             {
-              // $kdBarang = $hsl['Rodetail']['KD_BARANG'];
-              // $nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
+              // barang
+              $kdcorp = $BARANG->KD_CORP =  $roDetail->KD_CORP;
+              $kdType = Yii::$app->esmcode->kdTipe();
+              $kdUnit = Yii::$app->esmcode->kdUnit();
+              $nw1 = Yii::$app->esmcode->kdKategori();
+              $kdKategori = $BARANG->KD_KATEGORI =  $nw1;
+              $kdPrn = 0;
+              $kdbrg =  Yii::$app->esmcode->kdbarangUmum($kdPrn,$kdcorp,$kdType,$kdKategori,$kdUnit);
+              $BARANG->KD_BARANG = $kdbrg;
+              $BARANG->NM_BARANG = $roDetail->NM_BARANG ;
+              $BARANG->HARGA_SPL =  $roDetail->HARGA;
+              $BARANG->STATUS = 1;
+              $BARANG->KD_SUPPLIER = 'SPL.LG.0000';
+              $BARANG->KD_KATEGORI = 39;
+              $BARANG->KD_UNIT = $roDetail->UNIT;
+              $BARANG->KD_TYPE = 30;
+              $BARANG->CREATED_BY = Yii::$app->user->identity->username;
+              $BARANG->CREATED_AT = date('Y-m-d H:i:s');
+              $BARANG->save();
+
+              // rodetail
               $GneratekodeRo=\Yii::$app->ambilkonci->getRoCode($selectCorp);
               $roDetail->KD_RO = $GneratekodeRo;
               $roDetail->PARENT_ROSO=0;
               $roDetail->KD_CORP = $selectCorp;
               $roDetail->CREATED_AT = date('Y-m-d H:i:s');
               $roDetail->NM_BARANG = $hsl['Rodetail']['NM_BARANG'];
-              $roDetail->UNIT = 'none';
+              $roDetail->KD_BARANG = $kdbrg ;
+              // $roDetail->UNIT = 'none';
               $roDetail->SQTY =   $roDetail->RQTY;
               $roDetail->STATUS = 0;
               $roDetail->save();
-              // $roDetail->KD_BARANG = $kdBarang;
-              // $roDetail->RQTY = $rqty;
-              // $roDetail->SQTY = $rqty;
-              // $roDetail->HARGA= $nmBarang->HARGA_SPL;
-              // $roDetail->NOTE = $note;
-
-              $kdcorp = $BARANG->KD_CORP =  $roDetail->KD_CORP;
-              $kdType = Yii::$app->esmcode->kdTipe();
-              // $kd = Yii::$app->mastercode->kdsupplier($selectCorp);
-              // $BARANG->KD_SUPPLIER = $kd;
-              $kdUnit = Yii::$app->esmcode->kdUnit();
-              // $kdUnit = $BARANG->KD_UNIT = $kd1;
-              $nw1 = Yii::$app->esmcode->kdKategori();
-              $kdKategori = $BARANG->KD_KATEGORI =  $nw1;
-              $kdPrn = 0;
-
-              $kdbrg =  Yii::$app->esmcode->kdbarangUmum($kdPrn,$kdcorp,$kdType,$kdKategori,$kdUnit);
-              $BARANG->KD_BARANG = $kdbrg;
-              $BARANG->NM_BARANG = $roDetail->NM_BARANG ;
-              $BARANG->STATUS = 0;
-              $BARANG->KD_SUPPLIER = 'SPL.LG.0000';
-              $BARANG->KD_KATEGORI = 39;
-              $BARANG->KD_UNIT ='E07';
-              $BARANG->KD_TYPE = 30;
-
-              $BARANG->save();
             //   print_r($BARANG->getErrors());
             // die();
 
-
+            // roheader
               $roHeader->PARENT_ROSO=0; // RO=0
               $roHeader->KD_RO =$GneratekodeRo;
               $roHeader->CREATED_AT = date('Y-m-d H:i:s');
@@ -608,43 +589,7 @@ class RequestOrderController extends Controller
             //   print_r($roHeader->getErrors());
             //  die();
             }
-				// $selectCorp = $hsl['Rodetail']['KD_CORP'];
-				// $kdUnit = $hsl['Rodetail']['UNIT'];
-				// $kdBarang = $hsl['Rodetail']['KD_BARANG'];
-				// $nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
-				// $rqty = $hsl['Rodetail']['RQTY'];
-				// $note = $hsl['Rodetail']['NOTE'];
 
-				// $GneratekodeRo=\Yii::$app->ambilkonci->getRoCode($selectCorp); //Requst Order Kode;
-
-				/*
-				 * Detail Request Order
-				**/
-				// $roDetail->KD_RO = $GneratekodeRo;
-				// $roDetail->PARENT_ROSO=0; // RO=0
-				// $roDetail->KD_CORP = $selectCorp;
-				// $roDetail->UNIT = $kdUnit;
-				// $roDetail->CREATED_AT = date('Y-m-d H:i:s');
-				// $roDetail->NM_BARANG = $nmBarang->NM_BARANG;
-				// $roDetail->KD_BARANG = $kdBarang;
-				// $roDetail->RQTY = $rqty;
-				// $roDetail->SQTY = $rqty;
-				// $roDetail->HARGA= $nmBarang->HARGA_SPL;
-				// $roDetail->NOTE = $note;
-				// $roDetail->STATUS = 0;
-
-				/*
-				 * Header Request Order
-				**/
-				//$getkdro=\Yii::$app->ambilkonci->getRoCode();
-				// $roHeader->PARENT_ROSO=0; // RO=0
-				// $roHeader->KD_RO =$GneratekodeRo;
-				// $roHeader->CREATED_AT = date('Y-m-d H:i:s');
-				// $roHeader->TGL = date('Y-m-d');
-				// $roHeader->ID_USER = $profile->emp->EMP_ID;
-				// $roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
-				// $roHeader->KD_CORP = $selectCorp;
-				// $roHeader->KD_DEP = $profile->emp->DEP_ID;
 				// //$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
 				// //$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
 				// $roHeader->STATUS = 0;

@@ -11,8 +11,8 @@ use lukisongroup\master\models\Tipebarang;
 use lukisongroup\master\models\Kategori;
 
 $userCorp = ArrayHelper::map(Corp::find()->where('CORP_STS<>3')->all(), 'CORP_ID', 'CORP_NM');
-$typeBrg = ArrayHelper::map(Tipebarang::find()->where('STATUS<>3 and PARENT=0')->all(),'KD_TYPE', 'NM_TYPE');
-$kat = ArrayHelper::map(Kategori::find()->where('STATUS<>3 and PARENT=0')->groupBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI');
+$typeBrg = ArrayHelper::map(Tipebarang::find()->where('STATUS<>3 and PARENT=0 and NM_TYPE <> "UNKNOWN"')->all(),'KD_TYPE', 'NM_TYPE');
+$kat = ArrayHelper::map(Kategori::find()->where('STATUS<>3 and PARENT=0 and NM_KATEGORI <> "UNKNOWN"')->groupBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI');
 
 $this->sideCorp = 'Master Data';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'umum_datamaster';               /* kd_menu untuk list menu pada sidemenu, get from table of database */

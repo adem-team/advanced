@@ -14,9 +14,9 @@ use lukisongroup\master\models\Unitbarang;
 use lukisongroup\master\models\Suplier;
 use lukisongroup\hrd\models\Corp;
 
-// 'STATUS' => 1,'PARENT'=>0,'NM_TYPE'=> "<>UNKNOWN"]
+
 $drop = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM');
-$droptype = ArrayHelper::map(Tipebarang::find()->where('STATUS = 1 AND PARENT = 0 AND KD_TYPE <> 30')->all(), 'KD_TYPE', 'NM_TYPE');
+$droptype = ArrayHelper::map(Tipebarang::find()->where(['STATUS' => 1,'PARENT'=>0])->all(), 'KD_TYPE', 'NM_TYPE');
 $dropkat = ArrayHelper::map(Kategori::find()->where(['STATUS' => 1,'PARENT'=>0])->all(), 'KD_KATEGORI', 'NM_KATEGORI');
 $dropunit = ArrayHelper::map(Unitbarang::find()->all(), 'KD_UNIT', 'NM_UNIT');
 $dropsup = ArrayHelper::map(Suplier::find()->all(), 'KD_SUPPLIER', 'NM_SUPPLIER');

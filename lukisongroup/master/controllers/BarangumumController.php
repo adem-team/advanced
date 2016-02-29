@@ -247,7 +247,7 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 			$parents = $_POST['depdrop_parents'];
 			if ($parents != null) {
 				$corp_id = $parents[0];
-				$model = Tipebarang::find()->asArray()->where(['CORP_ID'=>$corp_id,'PARENT'=>0])->all();
+				$model = Tipebarang::find()->asArray()->where(['CORP_ID'=>$corp_id,'PARENT'=>0])->andwhere('NM_TYPE <>"UNKNOWN"')->all();
 				foreach ($model as $key => $value) {
 					   $out[] = ['id'=>$value['KD_TYPE'],'name'=> $value['NM_TYPE']];
 				   }
