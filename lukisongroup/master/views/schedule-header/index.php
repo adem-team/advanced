@@ -326,7 +326,7 @@ EOF;
 			],
 			[  	//col-2
 				//TANGGAL
-				'attribute' => 'TGL1',
+				'attribute' => 'TGL',
 				'label'=>'Schadule Group',
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
