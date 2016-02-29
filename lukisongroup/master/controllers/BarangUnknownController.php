@@ -25,7 +25,7 @@ use lukisongroup\master\models\BarangaliasSearch;
 /**
  * BarangController implements the CRUD actions for Barang model.
  */
-class BarangController extends Controller
+class BarangUnknownController extends Controller
 {
     public function behaviors()
     {

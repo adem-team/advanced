@@ -143,7 +143,7 @@ class BarangSearch extends Barang
      */
     public function searchBarangUmum($params)
     {
-        $query = Barang::find()->where('b0001.STATUS <> 3')->andWhere('b0001.PARENT=0');
+        $query = Barang::find()->where('b0001.STATUS <> 3 AND b0001.KD_TYPE<>30 AND b0001.KD_KATEGORI <>39 AND b0001.KD_SUPPLIER <> "SPL.LG.0000" AND b0001.PARENT=0');
 		/* $query->joinWith(['sup' => function ($q) {
 			$q->where('d0001.NM_DISTRIBUTOR LIKE "%' . $this->nmsuplier . '%"');
 		}]); */
@@ -217,7 +217,7 @@ class BarangSearch extends Barang
 
 		public function searchBaranunkwon($params)
 		{
-				$query = Barang::find()->where('b0001.STATUS <> 3')->andWhere('b0001.PARENT=0 AND KD_TYPE=30 AND KD_UNIT = "E07" AND KD_UNIT = 39 ')->groupBy(['KD_BARANG','KD_CORP','KD_TYPE','KD_KATEGORI']);
+				$query = Barang::find()->where('b0001.STATUS <> 3')->andWhere('b0001.PARENT=0 AND b0001.KD_TYPE=30 AND b0001.KD_KATEGORI = 39 AND b0001.STATUS<>3 AND b0001.KD_SUPPLIER = "SPL.LG.0000"')->groupBy(['KD_BARANG','KD_CORP','KD_TYPE','KD_KATEGORI']);
 
 		$query->joinWith(['unitb' => function ($q) {
 						$q->where('ub0001.NM_UNIT LIKE "%' . $this->unitbrg . '%"');
