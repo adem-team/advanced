@@ -976,8 +976,7 @@ class RequestOrderController extends Controller
     $corp = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
   if($roDetail->load(Yii::$app->request->post())){
 
-    //  print_r($roDetail->kD_BARANG );
-    //  die();
+    
     $hsl = \Yii::$app->request->post();
      // $radio =  $hsl['DynamicModel']['NEW'];
      $radio =  $hsl['newadd'];

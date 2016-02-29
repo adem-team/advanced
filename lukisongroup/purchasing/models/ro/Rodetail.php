@@ -24,6 +24,7 @@ use lukisongroup\master\models\Barang; /* Barang Pembelian/barang Produksi untuk
 class Rodetail extends \yii\db\ActiveRecord
 {
 	public $KD_KATEGORI;
+	public $NAMA_BARANG;
 	public $KD_TYPE;
 	public $STT_SEND_PO;
 	public $PQTY=0;
