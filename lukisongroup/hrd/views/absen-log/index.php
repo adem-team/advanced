@@ -10,10 +10,20 @@ use kartik\grid\GridView;
 //use kartik\builder\Form;
 use yii\widgets\Pjax;
 
+use lukisongroup\hrd\models\Machine;
+use lukisongroup\hrd\models\Key_list;
+
+$aryMachine = ArrayHelper::map(Machine::find()->all(),'TerminalID','MESIN_NM');
+$aryKeylist = ArrayHelper::map(Key_list::find()->all(),'FunctionKey','FunctionKeyNM');
+
+
 $this->sideCorp = 'PT. Lukisongroup';                                   /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'hrd_absensi';                                       /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'HRM - Absensi	 Dashboard');             /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;                          /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+
+
+
 
 	/*
 	 * COLUMN LOG ABSENSI
@@ -52,14 +62,19 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		],
 		[  	//col-1
 			//Finger Machine
-			'attribute' => 'machine_nm',
+			'attribute' =>'TerminalID',// 'machine_nm',
+			'filter'=>$aryMachine,
+			'value'=>function($model){
+				$nmMachine=Machine::find()->where(['TerminalID'=>$model->TerminalID])->one();
+				return $nmMachine!=''?$nmMachine->MESIN_NM:'Unknown';
+			},
 			'label'=>'Finger Machine',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'100px',
+					'width'=>'90px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 					'background-color'=>'rgba(0, 95, 218, 0.3)',
@@ -68,7 +83,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'contentOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'100px',
+					'width'=>'90px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
@@ -125,8 +140,13 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		],
 		[  	//col-3
 			//Finger.Key
-			'attribute' => 'Keys_nm',
+			'attribute' => 'FunctionKey',//'Keys_nm',
 			'label'=>'Key',
+			'filter'=>$aryKeylist,
+			'value' => function($model){
+				$nmKeylist=Key_list::find()->where(['FunctionKey'=>$model->FunctionKey])->one();
+				return $nmKeylist!=''? $nmKeylist->FunctionKeyNM:'unknown';
+			},
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
 			'headerOptions'=>[
@@ -153,15 +173,15 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'label'=>'DateTime',
 			'noWrap'=>true,
 			'filterType' => GridView::FILTER_DATE,
-            'filterWidgetOptions' => [				
-				'pluginOptions' => [					
-					'format' => 'yyyy-mm-dd',					 
-					'autoclose' => true,
-					'todayHighlight' => true,
+            'filterWidgetOptions' => [
+					'pluginOptions' => [
+                    'format' => 'yyyy-mm-dd',					 
+                    'autoclose' => true,
+                    'todayHighlight' => true,
 					//'format' => 'dd-mm-yyyy hh:mm',
 					'autoWidget' => false,
 					//'todayBtn' => true,
-                ],
+                ]
             ],
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
@@ -225,7 +245,12 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		],
 		[  	//col-1
 			//Finger Machine
-			'attribute' => 'machine_nm',
+			'attribute' => 'TerminalID',
+			'filter'=>$aryMachine,
+			'value'=>function($model){
+				$nmMachine=Machine::find()->where(['TerminalID'=>$model->TerminalID])->one();
+				return $nmMachine!=''?$nmMachine->MESIN_NM:'Unknown';
+			},
 			'label'=>'Finger Machine',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
@@ -298,7 +323,12 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		],
 		[  	//col-3
 			//Finger.Key
-			'attribute' => 'Keys_nm',
+			'attribute' =>'FunctionKey',// 'Keys_nm',
+			'filter'=>$aryKeylist,
+			'value' => function($model){
+				$nmKeylist=Key_list::find()->where(['FunctionKey'=>$model->FunctionKey])->one();
+				return $nmKeylist!=''? $nmKeylist->FunctionKeyNM:'unknown';
+			},
 			'label'=>'Key',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
@@ -424,7 +454,8 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		],
 		'panel' => [
 					'heading'=>'<h3 class="panel-title">EMPLOYEE LATE</h3>',
-					/* 'type'=>'warning',
+					'type'=>'danger',
+					 /*
 					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Customer ',
 							['modelClass' => 'Kategori',]),'/master/barang/create',[
 								'data-toggle'=>"modal",
