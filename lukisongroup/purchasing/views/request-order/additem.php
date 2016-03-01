@@ -25,7 +25,7 @@ $userCorp = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM');
 $brgType = ArrayHelper::map(Tipebarang::find()->where(['PARENT'=>0])->orderBy('NM_TYPE')->all(), 'KD_TYPE', 'NM_TYPE');
 $brgUnit = ArrayHelper::map(Unitbarang::find()->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT');
 $brgKtg = ArrayHelper::map(Kategori::find()->where(['PARENT'=>0,'STATUS'=>1])->orderBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI');
-$brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1])->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG'); 
+$brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1])->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG');
 ?>
 	<?php
 	/*
@@ -36,11 +36,11 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1])->or
 	 * @since 1.1
 	*/
 	?>
-	
+
 	<div  style="padding-top:20">
-		<!-- Render create form -->  
-			<?php 		
-			/* echo $this->render('_form', [   					
+		<!-- Render create form -->
+			<?php
+			/* echo $this->render('_form', [
 						'roDetail' => $roDetail,
 					]); */
 			?>
@@ -52,34 +52,34 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1])->or
 					'method' => 'post',
 					'action' => ['/purchasing/request-order/additem_saved'],
 				]);
-				
-			
-			echo $form->field($roDetail, 'kD_CORP')->dropDownList($userCorp,[
-				'id'=>'additemvalidation-kd_corp',
-				'prompt'=>' -- Pilih Salah Satu --',
-			])->label('Perusahaan'); 
-			
-			echo $form->field($roDetail, 'kD_TYPE')->widget(DepDrop::classname(), [
-				'type'=>DepDrop::TYPE_SELECT2,
-				'data' => $brgType,
-				'options' => ['id'=>'additemvalidation-kd_type'],
-				'pluginOptions' => [
-					'depends'=>['additemvalidation-kd_corp'],
-					'url'=>Url::to(['/purchasing/request-order/corp-type']), /*Parent=0 barang Umum*/
-					'initialize'=>true,
-				], 		
-			]);
-			
-			echo $form->field($roDetail, 'kD_KATEGORI')->widget(DepDrop::classname(), [
-				'type'=>DepDrop::TYPE_SELECT2,
-				'data' => $brgKtg,
-				'options' => ['id'=>'additemvalidation-kd_kategori'],
-				'pluginOptions' => [
-					'depends'=>['additemvalidation-kd_corp','additemvalidation-kd_type'],
-					'url'=>Url::to(['/purchasing/request-order/type-kat']),
-					'initialize'=>true,
-				], 		
-			]);
+
+			//
+			// $form->field($roDetail, 'kD_CORP')->dropDownList($userCorp,[
+			// 	'id'=>'additemvalidation-kd_corp',
+			// 	'prompt'=>' -- Pilih Salah Satu --',
+			// ])->label('Perusahaan');
+
+		//  $form->field($roDetail, 'kD_TYPE')->widget(DepDrop::classname(), [
+		// 		'type'=>DepDrop::TYPE_SELECT2,
+		// 		'data' => $brgType,
+		// 		'options' => ['id'=>'additemvalidation-kd_type'],
+		// 		'pluginOptions' => [
+		// 			'depends'=>['additemvalidation-kd_corp'],
+		// 			'url'=>Url::to(['/purchasing/request-order/corp-type']), /*Parent=0 barang Umum*/
+		// 			'initialize'=>true,
+		// 		],
+		// 	]);
+
+			// echo $form->field($roDetail, 'kD_KATEGORI')->widget(DepDrop::classname(), [
+			// 	'type'=>DepDrop::TYPE_SELECT2,
+			// 	'data' => $brgKtg,
+			// 	'options' => ['id'=>'additemvalidation-kd_kategori'],
+			// 	'pluginOptions' => [
+			// 		'depends'=>['additemvalidation-kd_corp','additemvalidation-kd_type'],
+			// 		'url'=>Url::to(['/purchasing/request-order/type-kat']),
+			// 		'initialize'=>true,
+			// 	],
+			// ]);
 			?>
 			<?php  echo $form->field($roDetail, 'cREATED_AT',['template' => "{input}"])->hiddenInput(['value'=>date('Y-m-d H:i:s'),'readonly' => true]) ?>
 			<?php  echo $form->field($roDetail, 'kD_RO',['template' => "{input}"])->textInput(['value'=>$roHeader->KD_RO,'type' =>'hidden']) ?>
@@ -94,9 +94,9 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1])->or
 						'depends'=>['additemvalidation-kd_kategori'],
 						'url'=>Url::to(['/purchasing/request-order/brgkat']),
 						'initialize'=>true,
-					], 		
-				]); 
-				
+					],
+				]);
+
 				/* echo $form->field($roDetail, 'uNIT')->widget(DepDrop::classname(), [
 					'type'=>DepDrop::TYPE_DEFAULT,
 					'data' => $brgUnit,
@@ -104,11 +104,11 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1])->or
 					'pluginOptions' => [
 						'depends'=>['additemvalidation-kd_kategori','additemvalidation-kd_barang'],
 						'url'=>Url::to(['/purchasing/request-order/brgunit']),
-						'initialize'=>true, 
+						'initialize'=>true,
 						'placeholder' => false,
-					], 		
+					],
 				]);   */
-				
+
 				echo $form->field($roDetail, 'uNIT')->widget(Select2::classname(), [
 						'data' => $brgUnit,
 						'options' => ['placeholder' => 'Pilih Unit Barang ...'],
@@ -116,10 +116,10 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1])->or
 							'allowClear' => true
 						],
 					]);
-				
-				
+
+
 			?>
-		
+
 			<?php echo  $form->field($roDetail, 'rQTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']); ?>
 
 			<?php echo $form->field($roDetail, 'nOTE')->textarea(array('rows'=>2,'cols'=>5))->label('Informasi');?>
@@ -127,8 +127,7 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1])->or
 		    <div class="form-group">
 				<?php //echo Html::submitButton($roDetail->isNewRecord ? 'Save' : 'Update', ['class' => $roDetail->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
 				<?php echo Html::submitButton('SAVE',['class' => 'btn btn-primary']); ?>
-			</div>			
+			</div>
 			<?php ActiveForm::end(); ?>
-			</div>		
+			</div>
 </div>
-

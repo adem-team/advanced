@@ -12,6 +12,7 @@ use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\hrd\models\Corp;
 use kartik\money\MaskMoney;
+use yii\helpers\Url;
 
 
 
@@ -72,18 +73,18 @@ $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_
   <?=  $form->field($roDetail, 'KD_BARANG')->widget(Select2::classname(), [
 				'data' => $data,
 				'options' => ['id'=>'purchaseorder-top',
-          'placeholder' => 'Pilih Unit Barang ...'
+          'placeholder' => 'Pilih Nama Barang ...'
       ],
 				'pluginOptions' => [
 					'allowClear' => true
 				],
-		]) ?>
+		])->label('Nama Barang') ?>
 
   </div>
 
 
 
-     <?=  $form->field($roDetail, 'NM_BARANG')->textInput(['maxlength' => true, 'placeholder'=>'New Item'])->label('Nama Barang')?>
+     <?=  $form->field($roDetail, 'NM_BARANG')->textInput(['maxlength' => true, 'placeholder'=>'New Item'])->label('New Item Barang')?>
 
      <div id="hrg">
 
@@ -180,6 +181,7 @@ $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_
   $("div#dynamicmodel-new").click(function()
   {
       var val = $("input[name=new]:checked").val();
+
       // alert(val);
       if(val === "2")
       {
@@ -189,6 +191,11 @@ $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_
           $("label[for=rodetail-kd_barang]").show();
           $("#hrg").hide();
 
+          // if(sel == "")
+          // {
+          //
+          // }
+
       }
       else{
         $("#rodetail-nm_barang").show();
@@ -196,6 +203,23 @@ $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_
         $("#tes").hide();
         $("label[for=rodetail-kd_barang]").hide();
         $("#hrg").show();
+      }
+
+
+  });
+
+  $("form#roInput").on("submit", function() {
+     var sel = $("#purchaseorder-top").val();
+       var val = $("input[name=new]:checked").val();
+      if( sel === "" && val === "2")
+      {
+
+            alert("tolong di isi Field Barang");
+              return false;
+
+      }
+      else{
+          return true;
       }
 
 
