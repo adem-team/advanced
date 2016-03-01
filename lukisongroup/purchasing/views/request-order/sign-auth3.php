@@ -11,7 +11,7 @@ $profile=Yii::$app->getUserOpt->Profile_user();
 		  ['status' => 4, 'DESCRIP' => 'REJECT'],
 		  ['status' => 5, 'DESCRIP' => 'PENDING'],
 		  ['status' => 103, 'DESCRIP' => 'APPROVED'],
-	];	
+	];
 	$valStt = ArrayHelper::map($arrayStt, 'status', 'DESCRIP');
 ?>
 
@@ -21,10 +21,10 @@ $profile=Yii::$app->getUserOpt->Profile_user();
 				'enableClientValidation' => true,
 				'enableAjaxValidation' => true,
 				'method' => 'post',
-				'action' => ['/purchasing/sales-order/sign-auth3-save'],
+				'action' => ['/purchasing/request-order/sign-auth3-save'],
 		]);
-	?>	
-	
+	?>
+
 		<?php echo  $form->field($auth3Mdl, 'empNm')->hiddenInput(['value' => $profile->emp->EMP_NM .' '. $profile->emp->EMP_NM_BLK ,'maxlength' => true, 'readonly' => true])->label('Employee Name')->label(false); ?>
 		<?php echo  $form->field($auth3Mdl, 'kdro')->hiddenInput(['value' => $roHeader->KD_RO,'maxlength' => true, 'readonly' => true])->label(false); ?>
 		<?php echo  $form->field($auth3Mdl, 'status')->dropDownList($valStt); ?>
@@ -33,12 +33,5 @@ $profile=Yii::$app->getUserOpt->Profile_user();
 			<?php echo Html::submitButton('login',['class' => 'btn btn-primary']); ?>
 		</div>
 
-    
-	<?php ActiveForm::end(); ?>	
 
-	
-
-
-
-
-
+	<?php ActiveForm::end(); ?>

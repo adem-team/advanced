@@ -219,7 +219,11 @@ class RequestOrderController extends Controller
      */
 	public function actionAdditem_saved(){
 		//$roDetail = new Rodetail();
-		$roDetail = new AdditemValidation();
+    	$roDetail = new AdditemValidation();
+    $hsl = \Yii::$app->request->post();
+    $radio = $hsl['AdditemValidation']['addnew'];
+    if($radio == 2)
+    {
 
 		if(Yii::$app->request->isAjax){
 			$roDetail->load(Yii::$app->request->post());
@@ -253,6 +257,43 @@ class RequestOrderController extends Controller
 				return $this->redirect(['/purchasing/request-order/edit?kd='.$kdRo]);*/
 			}
 		}
+  }
+  else{
+
+    // $roDetail = new AddNewitemValidation();
+    if(Yii::$app->request->isAjax){
+      $roDetail->load(Yii::$app->request->post());
+      return Json::encode(\yii\widgets\ActiveForm::validate($roDetail));
+    }else{
+      if($roDetail->load(Yii::$app->request->post())){
+        if($roDetail->addnewitem_saved()){
+          $hsl = \Yii::$app->request->post();
+          $kdro = $hsl['AdditemValidation']['kD_RO'];
+          return $this->redirect(['/purchasing/request-order/edit?kd='.$kdro]);
+        }
+        //Request Result
+      /*	$hsl = \Yii::$app->request->post();
+        $kdRo = $hsl['Rodetail']['KD_RO'];
+        $kdBarang = $hsl['Rodetail']['KD_BARANG'];
+        $nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
+        $kdUnit = $hsl['Rodetail']['UNIT'];
+        $rqty = $hsl['Rodetail']['RQTY'];
+        $note = $hsl['Rodetail']['NOTE'];
+
+          //Request Put
+          $roDetail->CREATED_AT = date('Y-m-d H:i:s');
+          $roDetail->KD_RO = $kdRo;
+          $roDetail->KD_BARANG = $kdBarang;
+          $roDetail->NM_BARANG = $nmBarang->NM_BARANG;
+          $roDetail->UNIT = $kdUnit;
+          $roDetail->RQTY = $rqty;
+          $roDetail->NOTE = $note;
+          $roDetail->STATUS = 0;
+          $roDetail->save();
+        return $this->redirect(['/purchasing/request-order/edit?kd='.$kdRo]);*/
+      }
+    }
+  }
 	}
 
 	/**
@@ -262,13 +303,13 @@ class RequestOrderController extends Controller
 	 */
     public function actionAddNewItem($kd)
     {
-			$roDetail = new Rodetail();
+			$roDetail = new AdditemValidation();
 			$roHeader = Requestorder::find()->where(['KD_RO' => $kd])->one();
 			$detro = $roHeader->detro;
 			$employ = $roHeader->employe;
 			$dept = $roHeader->dept;
-      $model = new \yii\base\DynamicModel(['addNEW']);
-      $model->addRule(['addNEW'], 'required');
+      // $model = new \yii\base\DynamicModel(['addNEW']);
+      // $model->addRule(['addNEW'], 'required');
       // addnewitem
       		// [['kD_RO','nM_BARANG','kD_KATEGORI','kD_SUPPLIER','kD_TYPE','uNIT','rQTY','hARGA'], 'required'],
 
@@ -291,7 +332,7 @@ class RequestOrderController extends Controller
 
 			return $this->renderAjax('addnewitem', [
 				'roHeader' => $roHeader,
-        'model'=>$model,
+        // 'model'=>$model,
 				'roDetail' => $roDetail,
 				'dataProvider'=>$detroProvider,
 			]);
@@ -318,7 +359,7 @@ class RequestOrderController extends Controller
      */
 	public function actionAddNewItem_saved(){
 		//$roDetail = new Rodetail();
-		$roDetail = new AddNewitemValidation();
+		$roDetail = new AdditemValidation();
 
 		if(Yii::$app->request->isAjax){
 			$roDetail->load(Yii::$app->request->post());
@@ -335,26 +376,26 @@ class RequestOrderController extends Controller
 	}
 
 
-  public function actionItemSaved(){
-		//$roDetail = new Rodetail();
-		$roDetail = new Validateitem();
-
-		if(Yii::$app->request->isAjax){
-			$roDetail->load(Yii::$app->request->post());
-			return Json::encode(\yii\widgets\ActiveForm::validate($roDetail));
-		}else{
-			if($roDetail->load(Yii::$app->request->post())){
-				if($roDetail->newsaved()){
-					$hsl = \Yii::$app->request->post();
-					// $kdro = $hsl['Rodetail']['KD_RO'];
-          	$kdro = $roDetail->newsaved()->KD_RO;
-            // print_r(	$kdro);
-            // die();
-					return $this->redirect(['/purchasing/request-order/edit?kd='.$kdro]);
-				}
-			}
-		}
-	}
+  // public function actionItemSaved(){
+	// 	//$roDetail = new Rodetail();
+	// 	$roDetail = new Validateitem();
+  //
+	// 	if(Yii::$app->request->isAjax){
+	// 		$roDetail->load(Yii::$app->request->post());
+	// 		return Json::encode(\yii\widgets\ActiveForm::validate($roDetail));
+	// 	}else{
+	// 		if($roDetail->load(Yii::$app->request->post())){
+	// 			if($roDetail->newsaved()){
+	// 				$hsl = \Yii::$app->request->post();
+	// 				// $kdro = $hsl['Rodetail']['KD_RO'];
+  //         	$kdro = $roDetail->newsaved()->KD_RO;
+  //           // print_r(	$kdro);
+  //           // die();
+	// 				return $this->redirect(['/purchasing/request-order/edit?kd='.$kdro]);
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 
    /**
@@ -967,77 +1008,6 @@ class RequestOrderController extends Controller
 		return $pdf->render();
 	}
 
-  public function actionSaveNewAdd()
-  {
-    $rodetail = new Rodetail();
-  	$barangNew = new Barang();
-    // $roDetail = new AdditemValidation();
-    $profile= Yii::$app->getUserOpt->Profile_user();
-    $corp = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
-  if($roDetail->load(Yii::$app->request->post())){
-
-    
-    $hsl = \Yii::$app->request->post();
-     // $radio =  $hsl['DynamicModel']['NEW'];
-     $radio =  $hsl['newadd'];
-
-     if($radio == 1)
-     {
-
-        // $kdro = $hsl['AdditemValidation']['kD_RO'];
-        // $kdbrg = $hsl['AdditemValidation']['kD_BARANG'];
-      //  if($roDetail->validate()) {
-   			$barangNew= new Barang();
-        $roDetail = new AdditemValidation();
-
-        print_r( $kdbrg);
-        die();
-        $kondisiTrue = Rodetail::find()->where("KD_RO='".$kdro. "' AND KD_BARANG='".$kdbrg."' AND STATUS<>3")->one();
-        if($kondisiTrue)
-        {
-          die();
-        }
-        else{
-          echo "succes";
-        }
-
-   			// 	$this->kD_BARANG= Yii::$app->esmcode->kdbarangUmum(0,$this->kD_CORP,$this->kD_TYPE,$this->kD_KATEGORI,$this->uNIT);
-   			// 	$barangNew->KD_BARANG =$roDetail->kD_BARANG;
-   			// 	$barangNew->NM_BARANG = $this->nM_BARANG;
-   			// 	$barangNew->KD_UNIT = $this->uNIT;
-   			// 	$barangNew->HARGA_SPL = $this->hARGA;
-   			// 	$barangNew->PARENT = 0;
-   			// 	$barangNew->KD_CORP = $this->kD_CORP;
-   			// 	$barangNew->KD_TYPE = $this->kD_TYPE;
-   			// 	$barangNew->KD_KATEGORI = $this->kD_KATEGORI;
-   			// 	$barangNew->KD_SUPPLIER = $this->kD_SUPPLIER;
-   			// 	$barangNew->STATUS = 1;
-   			// 	$barangNew->CREATED_BY = Yii::$app->user->identity->username;
-   			// 	$barangNew->CREATED_AT = date('Y-m-d H:i:s');
-   			// 	$barangNew->UPDATED_BY = Yii::$app->user->identity->username;
-   			// 	if($barangNew->validate()){
-   			// 		$barangNew->save();
-   			// 		$rodetail = new Rodetail();
-   			// 		$rodetail->CREATED_AT = date('Y-m-d H:i:s');
-   			// 		$rodetail->KD_RO = $this->kD_RO; 		//required
-   			// 		$rodetail->KD_CORP = $this->kD_CORP; 	//required
-   			// 		$rodetail->PARENT_ROSO=0; // RO=1 		//required
-   			// 		$rodetail->KD_BARANG = $this->kD_BARANG;
-   			// 		$rodetail->NM_BARANG = $this->nM_BARANG;
-   			// 		$rodetail->UNIT = $this->uNIT;
-   			// 		$rodetail->RQTY = $this->rQTY;
-   			// 		$rodetail->SQTY = $this->rQTY;
-   			// 		$rodetail->NOTE = $this->nOTE;
-   			// 		$rodetail->HARGA= $this->hARGA;
-   			// 		$rodetail->STATUS = 0;
-
-  //  }
- }
-    //  print_r($radio);
-    //  die();
-
-  }
-}
 
 	/**
 	 * On Approval View
@@ -1278,7 +1248,7 @@ class RequestOrderController extends Controller
     ]);
     // aditiya@lukison.com
     // $to=[$dataemail['email'],$email,'purchasing@lukison.com',$datamanager['EMP_EMAIL']];
-    $to=['purchasing@lukison.com'];
+    $to=['it-dept@lukison.com'];
 
     \Yii::$app->kirim_email->pdf($contentMail,'RO',$to,'Request-Order',$content);
 

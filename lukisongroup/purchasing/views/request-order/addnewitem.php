@@ -22,6 +22,8 @@ use lukisongroup\master\models\Unitbarang;
 use lukisongroup\hrd\models\Corp;
 use lukisongroup\master\models\Suplier;
 use kartik\money\MaskMoney;
+use kartik\widgets\SwitchInput;
+use kartik\checkbox\CheckboxX;
 
 
 
@@ -49,25 +51,30 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1,'KD_C
 			/* echo $this->render('_form', [
 						'roDetail' => $roDetail,
 					]); */
+          $profile= Yii::$app->getUserOpt->Profile_user();
+          // $corp = Yii::$app->getUserOpt->Profile_user()->EMP_ID;
+          // $Corp1 = Employe::find()->where(['KD_CORP'=>$corp])->asArray()->one();
+          $corp = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
+
 			?>
 			<?php
 				$form = ActiveForm::begin([
 					'id'=>'additem-update',
 					'enableClientValidation' => true,
-					// 'enableAjaxValidation' => true,
+					'enableAjaxValidation' => true,
 					'method' => 'post',
-					'action' => ['/purchasing/request-order/save-new-add'],
+					'action' => ['/purchasing/request-order/additem_saved'],
 					  // 'validationUrl'=>Url::toRoute('/purchasing/request-order/valid')
 				]);
 				?>
 
-				<?= $form->field($model, 'addNEW')->radioList([
+				<?= $form->field($roDetail, 'addnew')->radioList([
 				'1' => 'Add New Item ',
 				'2' => ' Add item',
-		],
+		 ],
 		['item' => function($index, $label, $name, $checked, $value) {
 																			$return = '<label class="modal-radio">';
-																			$return .= '<input type="radio" name="' . 'newadd'. '" value="' . $value . '" tabindex="-1">';
+																			$return .= '<input type="radio" id="ada" name="' . 'AdditemValidation[addnew]'. '" value="' . $value . '" tabindex="-1">';
 																			$return .= '<i></i>';
 																			$return .= '<span>' . ucwords($label) . '</span>';
 																			$return .= '</label>';
@@ -76,12 +83,14 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1,'KD_C
 																	}
 															])->label(false)?>
 
-			  <!-- echo $form->field($roDetail, 'cREATED_AT',['template' => "{input}"])->hiddenInput(['value'=>date('Y-m-d H:i:s'),'readonly' => true]) ?> -->
-			<?php  echo $form->field($roDetail, 'KD_RO',['template' => "{input}"])->textInput(['value'=>$roHeader->KD_RO,'type' =>'hidden']) ?>
+
+
+			  <?=  $form->field($roDetail, 'kD_CORP',['template' => "{input}"])->hiddenInput(['value'=>$corp,'readonly' => true]) ?>
+			<?php  echo $form->field($roDetail, 'kD_RO',['template' => "{input}"])->textInput(['value'=>$roHeader->KD_RO,'type' =>'hidden']) ?>
 			<div id="Kdbg">
-			<?= $form->field($roDetail, 'KD_BARANG')->widget(Select2::classname(), [
+			<?= $form->field($roDetail, 'kD_BARANG')->widget(Select2::classname(), [
 						'data' =>$brgUmum,
-						'options' => ['id'=>'top',
+						'options' => [
 							'placeholder' => 'Pilih  Barang ...'
 					],
 						'pluginOptions' => [
@@ -91,13 +100,15 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1,'KD_C
 			</div>
 
 
+
+
 				<div id="Nbrg">
-				<?= $form->field($roDetail, 'NAMA_BARANG')->textInput(['maxlength' => true])->label('Nama Item Baru') ?>
+				<?= $form->field($roDetail, 'nM_BARANG')->textInput(['maxlength' => true])->label('Nama Item Baru') ?>
 					</div>
 
 				<div id="hrg">
 
-				<?= $form->field($roDetail, 'HARGA')->widget(MaskMoney::classname(), [
+				<?= $form->field($roDetail, 'hARGA')->widget(MaskMoney::classname(), [
 					'pluginOptions' => [
 							'prefix' => 'Rp',
 						 'precision' => 2,
@@ -107,7 +118,7 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1,'KD_C
 
 			</div>
 			<?php
-				echo $form->field($roDetail, 'UNIT')->widget(Select2::classname(), [
+				echo $form->field($roDetail, 'uNIT')->widget(Select2::classname(), [
 						'data' => $brgUnit,
 						'options' => ['placeholder' => 'Pilih Unit Barang ...'],
 						'pluginOptions' => [
@@ -119,14 +130,14 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1,'KD_C
 			?>
 
 
-			<?php echo  $form->field($roDetail, 'RQTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']); ?>
+			<?php echo  $form->field($roDetail, 'rQTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']); ?>
 
 
-			<?php echo $form->field($roDetail, 'NOTE')->textarea(array('rows'=>2,'cols'=>5))->label('Informasi');?>
+			<?php echo $form->field($roDetail, 'nOTE')->textarea(array('rows'=>2,'cols'=>5))->label('Informasi');?>
 
 		    <div class="form-group">
-				<?php //echo Html::submitButton($roDetail->isNewRecord ? 'Save' : 'Update', ['class' => $roDetail->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-				<?php echo Html::submitButton('SAVE',['class' => 'btn btn-primary']); ?>
+			   <!-- Html::submitButton($roDetail->isNewRecord ? 'Create' : 'Update', ['class' => $roDetail->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?> -->
+				 <?php echo Html::submitButton('SAVE',['class' => 'btn btn-primary']); ?>
 			</div>
 			<?php ActiveForm::end(); ?>
 			</div>
@@ -134,9 +145,10 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1,'KD_C
 <?php
   $this->registerJs('
 
-  $("div#dynamicmodel-addnew").click(function()
+  $("div#additemvalidation-addnew").click(function()
   {
-      var val = $("input[name=newadd]:checked").val();
+      // var val = $("input[name=AdditemValidation[addnew]]:checked").val();
+      var val = $("#ada:checked").val();
       // alert(val);
       if(val === "1")
       {
@@ -154,6 +166,7 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1,'KD_C
 
 
   });
+
 
 
 	',$this::POS_READY);

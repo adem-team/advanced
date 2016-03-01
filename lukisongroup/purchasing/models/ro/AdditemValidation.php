@@ -44,12 +44,13 @@ class AdditemValidation extends Model
 	public $sTATUS;
 	public $cREATED_AT;
   public $nM_BARANG;
+  public $addnew;
 
     public function rules()
     {
         return [
-			[['kD_BARANG'], 'findcheck'],
-			[['kD_RO','uNIT','rQTY'], 'required'],
+			[['kD_BARANG','addnew'], 'findcheck'],
+			[['kD_RO','uNIT','rQTY','addnew'], 'required'],
 			//[['nmBarang','nOTE'], 'string'],
         	[['nOTE','nM_BARANG'], 'string'],
         	['sTATUS','integer'],
@@ -65,44 +66,144 @@ class AdditemValidation extends Model
      */
 	public function findcheck($attribute, $params)
     {
-		if (!$this->hasErrors()) {
-      $
-			 //$kondisiTrue = Rodetail::find()->where(['KD_RO' => $this->kD_RO, 'KD_BARANG' => $this->kD_BARANG ])->one();
-			 $kondisiTrue = Rodetail::find()->where("KD_RO='".$this->kD_RO. "' AND KD_BARANG='".$this->kD_BARANG."' AND STATUS<>3")->one();
-			if ($kondisiTrue) {
-                $this->addError($attribute, 'Duplicated Items Barang !, Better (-/+) Request.Qty ');
-            }
-       }
+      $groupradio = $this->addnew;
+      // print_r($groupradio);
+      // die();
+      if(  $groupradio == 2)
+      {
+        if (!$this->hasErrors()) {
+          //  $kondisiTrue = Rodetail::find()->where(['KD_RO' => $this->kD_RO, 'KD_BARANG' => $this->kD_BARANG ])->one();
+           $kondisiTrue = Rodetail::find()->where("KD_RO='".$this->kD_RO. "' AND KD_BARANG='".$this->kD_BARANG."' AND STATUS<>3")->one();
+          if ($kondisiTrue) {
+                    $this->addError($attribute, 'Duplicated Items Barang !, Better (-/+) Request.Qty ');
+                }
+           }
+
+      }
+
     }
+
 
 	/**
      * Saved Data Rodetail
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
      */
-	// public function additem_saved()
-  //   {
-	// 	if ($this->validate()) {
-	// 		$rodetail = new Rodetail();
-	// 		$rodetail->CREATED_AT = date('Y-m-d H:i:s');
-	// 		$rodetail->KD_RO = $this->kD_RO; 		//required
-	// 		$rodetail->KD_CORP = $this->kD_CORP; 	//required
-	// 		$rodetail->PARENT_ROSO=0; // RO=1 		//required
-	// 		$rodetail->KD_BARANG = $this->kD_BARANG;
-	// 		$rodetail->NM_BARANG = $this->valuesBarang($this->kD_BARANG)->NM_BARANG;
-	// 		$rodetail->UNIT = $this->uNIT;
-	// 		$rodetail->RQTY = $this->rQTY;
-	// 		$rodetail->SQTY = $this->rQTY;
-	// 		$rodetail->NOTE = $this->nOTE;
-	// 		$rodetail->HARGA= $this->valuesBarang($this->kD_BARANG)->HARGA_SPL;
-	// 		$rodetail->STATUS = 0;
-	// 		if ($rodetail->save()) {
-  //               return $rodetail;
-  //           }
-	// 		return $rodetail;
-	// 	}
-	// 	return null;
-	// }
+
+	public function additem_saved()
+    {
+      // $groupradio = $this->addnew;
+      // if($groupradio == 2)
+      // {
+        if ($this->validate()) {
+          $rodetail = new Rodetail();
+          $rodetail->CREATED_AT = date('Y-m-d H:i:s');
+          $rodetail->KD_RO = $this->kD_RO; 		//required
+          $rodetail->KD_CORP = $this->kD_CORP; 	//required
+          $rodetail->PARENT_ROSO=0; // RO=1 		//required
+          $rodetail->KD_BARANG = $this->kD_BARANG;
+          $rodetail->NM_BARANG = $this->valuesBarang($this->kD_BARANG)->NM_BARANG;
+          $rodetail->UNIT = $this->uNIT;
+          $rodetail->RQTY = $this->rQTY;
+          $rodetail->SQTY = $this->rQTY;
+          $rodetail->NOTE = $this->nOTE;
+          $rodetail->HARGA= $this->valuesBarang($this->kD_BARANG)->HARGA_SPL;
+          $rodetail->STATUS = 0;
+          if ($rodetail->save()) {
+                    return $rodetail;
+                }
+          return $rodetail;
+        }
+      // }
+      // else{
+      //   if ($this->validate()) {
+      //     $barangNew= new Barang();
+      //       $this->kD_BARANG= Yii::$app->esmcode->kdbarangUmum(0,$this->kD_CORP,$type,$kat,$unit);
+      //       $barangNew->KD_BARANG =$this->kD_BARANG;
+      //       $barangNew->NM_BARANG = $this->nM_BARANG;
+      //       $barangNew->KD_UNIT = $this->uNIT;
+      //       $barangNew->HARGA_SPL = $this->hARGA;
+      //       $barangNew->PARENT = 0;
+      //       $barangNew->KD_CORP = $this->kD_CORP;
+      //       $barangNew->KD_TYPE = $this->kD_TYPE;
+      //       $barangNew->KD_KATEGORI = $this->kD_KATEGORI;
+      //       $barangNew->KD_SUPPLIER = $this->kD_SUPPLIER;
+      //       $barangNew->STATUS = 1;
+      //       $barangNew->CREATED_BY = Yii::$app->user->identity->username;
+      //       $barangNew->CREATED_AT = date('Y-m-d H:i:s');
+      //       $barangNew->UPDATED_BY = Yii::$app->user->identity->username;
+      //       if($barangNew->validate()){
+      //         $barangNew->save();
+      //         $rodetail = new Rodetail();
+      //         $rodetail->CREATED_AT = date('Y-m-d H:i:s');
+      //         $rodetail->KD_RO = $this->kD_RO; 		//required
+      //         $rodetail->KD_CORP = $this->kD_CORP; 	//required
+      //         $rodetail->PARENT_ROSO=0; // RO=1 		//required
+      //         $rodetail->KD_BARANG = $this->kD_BARANG;
+      //         $rodetail->NM_BARANG = $this->nM_BARANG;
+      //         $rodetail->UNIT = $this->uNIT;
+      //         $rodetail->RQTY = $this->rQTY;
+      //         $rodetail->SQTY = $this->rQTY;
+      //         $rodetail->NOTE = $this->nOTE;
+      //         $rodetail->HARGA= $this->hARGA;
+      //         $rodetail->STATUS = 0;
+      //         if ($rodetail->save()) {
+      //
+      //           // print_r($rodetail->geterrors());
+      //           return $rodetail;
+      //         }
+      //       }
+          // }
+
+      // }
+
+		return null;
+	}
+
+  public function addnewitem_saved()
+    {
+    if ($this->validate()) {
+      $barangNew= new Barang();
+        $kategori = 39;
+        $type = 30;
+        $this->kD_BARANG= Yii::$app->esmcode->kdbarangUmum(0,$this->kD_CORP,$type,$kategori,$this->uNIT);
+        $barangNew->KD_BARANG =$this->kD_BARANG;
+        $barangNew->NM_BARANG = $this->nM_BARANG;
+        $barangNew->KD_UNIT = $this->uNIT;
+        $barangNew->HARGA_SPL = $this->hARGA;
+        $barangNew->PARENT = 0;
+        $barangNew->KD_CORP = $this->kD_CORP;
+        $barangNew->KD_TYPE = 30;
+        $barangNew->KD_KATEGORI =39;
+        $barangNew->KD_SUPPLIER ="SPL.LG.0000";
+        $barangNew->STATUS = 1;
+        $barangNew->CREATED_BY = Yii::$app->user->identity->username;
+        $barangNew->CREATED_AT = date('Y-m-d H:i:s');
+        $barangNew->UPDATED_BY = Yii::$app->user->identity->username;
+        if($barangNew->validate()){
+          $barangNew->save();
+          $rodetail = new Rodetail();
+          $rodetail->CREATED_AT = date('Y-m-d H:i:s');
+          $rodetail->KD_RO = $this->kD_RO; 		//required
+          $rodetail->KD_CORP = $this->kD_CORP; 	//required
+          $rodetail->PARENT_ROSO=0; // RO=1 		//required
+          $rodetail->KD_BARANG = $this->kD_BARANG;
+          $rodetail->NM_BARANG = $this->nM_BARANG;
+          $rodetail->UNIT = $this->uNIT;
+          $rodetail->RQTY = $this->rQTY;
+          $rodetail->SQTY = $this->rQTY;
+          $rodetail->NOTE = $this->nOTE;
+          $rodetail->HARGA= $this->hARGA;
+          $rodetail->STATUS = 0;
+          if ($rodetail->save()) {
+
+            // print_r($rodetail->geterrors());
+            return $rodetail;
+          }
+        }
+    }
+    return null;
+  }
 
 	public function attributeLabels()
     {
