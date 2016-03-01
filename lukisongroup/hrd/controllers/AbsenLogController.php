@@ -62,15 +62,15 @@ class AbsenLogController extends Controller
 		$hri=strlen($date->format('d'));
 		$dateRlt=$thn."-".$bln."-".$hri;
 		$searchModel = new PersonallogSearch([
-			'tgllog'=>Yii::$app->ambilKonvesi->tglSekarang()
-		]);
+			'DateTime'=>Yii::$app->ambilKonvesi->tglSekarang()
+		]); 
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		//$queryParams = array_merge(array(),Yii::$app->request->getQueryParams());
         //$queryParams["PersonallogSearch"]["tgllog"]=Yii::$app->ambilKonvesi->tglSekarang();//	Yii::$app->ambilKonvesi->tglSekarang();//$dateRlt;//"2016-02-22";// date('Y-m-d');//"2016-02-22" ;date("Y-mm-dd");//      
         //$dataProvider = $searchModel->search($queryParams);
 		
 		$searchModelLate = new PersonallogSearch([
-			'tgllate'=>Yii::$app->ambilKonvesi->tglSekarang()
+			'DateTimeLate'=>Yii::$app->ambilKonvesi->tglSekarang()
 		]);
         $dataProviderLate = $searchModelLate->search_telat(Yii::$app->request->queryParams);
 

@@ -22,7 +22,12 @@ $this->sideMenu = 'hrd_absensi';                                       /* kd_men
 $this->title = Yii::t('app', 'HRM - Absensi	 Dashboard');             /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;                          /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
-
+	$aryFlag= [
+		  ['ID' =>0, 'DESCRIP' => 'Online'],		  
+		  ['ID' =>1, 'DESCRIP' => 'Offline'],
+		  ['ID' =>2, 'DESCRIP' => 'USB']
+	];	
+	$valFlag = ArrayHelper::map($aryFlag, 'DESCRIP', 'DESCRIP'); 
 
 
 	/*
@@ -65,16 +70,17 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'attribute' =>'TerminalID',// 'machine_nm',
 			'filter'=>$aryMachine,
 			'value'=>function($model){
-				$nmMachine=Machine::find()->where(['TerminalID'=>$model->TerminalID])->one();
+				$nmMachine=Machine::find()->where(['TerminalID'=>$model['TerminalID']])->one();
 				return $nmMachine!=''?$nmMachine->MESIN_NM:'Unknown';
-			},
-			'label'=>'Finger Machine',
+			}, 
+			'noWrap'=>false,
+			'label'=>'Finger.Machine',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'90px',
+					'width'=>'50px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 					'background-color'=>'rgba(0, 95, 218, 0.3)',
@@ -83,22 +89,23 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'contentOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'90px',
+					'width'=>'50px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
 			],
 		],
 		[  	//col-2
-			//CUSTOMER GRAOUP NAME
+			//FingerPrintID
 			'attribute' => 'FingerPrintID',
 			'label'=>'Finger',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
+			'noWrap'=>false,
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'50px',
+					'width'=>'40px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 					'background-color'=>'rgba(0, 95, 218, 0.3)',
@@ -107,7 +114,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'contentOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'50px',
+					'width'=>'40px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
@@ -115,15 +122,18 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		],
 		[  	//col-3
 			//Employee-Name
-			'attribute' => 'UserName',
+			'attribute' => 'NAMA',
 			'label'=>'Employee-Name',
+			// 'value'=>function($model){
+				// return $model['NAMA'];//!=''?$model['']:$model['NAMA'];
+			// },
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
-			'noWrap'=>true,
+			'noWrap'=>false,
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'80px',
+					'width'=>'100px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 					'background-color'=>'rgba(0, 95, 218, 0.3)',
@@ -132,7 +142,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'contentOptions'=>[
 				'style'=>[
 					'text-align'=>'left',
-					'width'=>'80px',
+					'width'=>'100px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
@@ -144,15 +154,16 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'label'=>'Key',
 			'filter'=>$aryKeylist,
 			'value' => function($model){
-				$nmKeylist=Key_list::find()->where(['FunctionKey'=>$model->FunctionKey])->one();
-				return $nmKeylist!=''? $nmKeylist->FunctionKeyNM:'unknown';
-			},
+				$nmKeylist=Key_list::find()->where(['FunctionKey'=>$model['FunctionKey']])->one();
+				return $nmKeylist!=''? $nmKeylist['FunctionKeyNM']:'unknown';
+			}, 
+			'noWrap'=>false,
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'50px',
+					'width'=>'30px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 					'background-color'=>'rgba(0, 95, 218, 0.3)',
@@ -161,7 +172,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'contentOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'50px',
+					'width'=>'30px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
@@ -169,7 +180,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		],
 		[  	//col-4
 			//DateTime
-			'attribute' => 'tgllog',
+			'attribute' => 'DateTime',
 			'label'=>'DateTime',
 			'noWrap'=>true,
 			'filterType' => GridView::FILTER_DATE,
@@ -185,11 +196,11 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
             ],
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
-			
+			'noWrap'=>false,
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'100px',
+					'width'=>'70px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 					'background-color'=>'rgba(0, 95, 218, 0.3)',
@@ -198,13 +209,38 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'contentOptions'=>[
 				'style'=>[
 					'text-align'=>'left',
-					'width'=>'100px',
+					'width'=>'70px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
 			],
 		],
-		
+		[  	//col-3
+			//FlagAbsence
+			'attribute' => 'FlagAbsence',
+			'label'=>'Key',
+			'noWrap'=>false,
+			'filter'=>$valFlag,
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+					'background-color'=>'rgba(0, 95, 218, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+				]
+			],
+		]	
 	];
 		
 	
@@ -248,16 +284,17 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'attribute' => 'TerminalID',
 			'filter'=>$aryMachine,
 			'value'=>function($model){
-				$nmMachine=Machine::find()->where(['TerminalID'=>$model->TerminalID])->one();
-				return $nmMachine!=''?$nmMachine->MESIN_NM:'Unknown';
+				$nmMachine=Machine::find()->where(['TerminalID'=>$model['TerminalID']])->one();
+				return $nmMachine!=''?$nmMachine['MESIN_NM']:'Unknown';
 			},
-			'label'=>'Finger Machine',
+			'noWrap'=>false,
+			'label'=>'Finger.Machine',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'100px',
+					'width'=>'50px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 					'background-color'=>'rgba(0, 95, 218, 0.3)',
@@ -266,7 +303,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'contentOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'100px',
+					'width'=>'50px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
 				]
@@ -302,7 +339,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'label'=>'Employee-Name',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
-			'noWrap'=>true,
+			'noWrap'=>false,
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
@@ -326,9 +363,10 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'attribute' =>'FunctionKey',// 'Keys_nm',
 			'filter'=>$aryKeylist,
 			'value' => function($model){
-				$nmKeylist=Key_list::find()->where(['FunctionKey'=>$model->FunctionKey])->one();
-				return $nmKeylist!=''? $nmKeylist->FunctionKeyNM:'unknown';
+				$nmKeylist=Key_list::find()->where(['FunctionKey'=>$model['FunctionKey']])->one();
+				return $nmKeylist!=''? $nmKeylist['FunctionKeyNM']:'unknown';
 			},
+			'noWrap'=>false,
 			'label'=>'Key',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
@@ -352,7 +390,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		],
 		 [  	//col-4
 			//DateTime
-			'attribute' => 'tgllate',
+			'attribute' => 'DateTimeLate',
 			'label'=>'DateTime',
 			'noWrap'=>true,
 			'filterType' => GridView::FILTER_DATE,
@@ -366,6 +404,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 					//'todayBtn' => true,
                 ]
             ],
+			'noWrap'=>false,
 			'hAlign'=>'left',
 			'vAlign'=>'middle',			
 			'headerOptions'=>[
@@ -385,7 +424,33 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 					'font-size'=>'9pt',
 				]
 			],
-		],  
+		], 
+		[  	//col-3
+			//FlagAbsence
+			'attribute' => 'FlagAbsence',
+			'label'=>'Key',
+			'noWrap'=>false,
+			'filter'=>$valFlag,
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+					'background-color'=>'rgba(0, 95, 218, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+				]
+			],
+		]			
 		
 	];
 	

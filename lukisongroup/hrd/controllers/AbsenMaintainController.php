@@ -9,6 +9,10 @@ use yii\db\Query;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use \DateTime;
+use lukisongroup\hrd\models\Personallog;
+use lukisongroup\hrd\models\PersonallogSearch;
+use lukisongroup\hrd\models\Kar_finger;
 
 
 class AbsenMaintainController extends Controller
@@ -19,59 +23,112 @@ class AbsenMaintainController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    //'delete' => ['post'],
+					'save' => ['post'],
                 ],
             ],
         ];
     }
-
-	 /**
-     * PLSQL ! GET ABSENSI
-     * @author ptrnov [piter@lukison.com]
-     * @since 2.1
-     */
-	public function getScriptsMaintain(){
-		return Yii::$app->db2->createCommand("CALL absensi_grid('inout_maintain_machine=2016-02-01=2016-02-22=0=0=0=0=0')")->queryAll();                
-		//return Yii::$app->db2->createCommand("CALL absensi_grid('inout_maintain_grp=2016-02-01=2016-02-22=0=0=0=0=0')")->queryAll();                
-		//return Yii::$app->db2->createCommand("CALL absensi_grid('inout_maintain_grp=2016-02-01=2016-02-22=IT=0=0=0=0')")->queryAll();                
-	}
 	
-	// public function getScriptsDetail(){
-		// return Yii::$app->db_esm->createCommand("CALL esm_account_stock_detail()")->queryAll();                
-	// }
-	/* public function getScriptsa(){
-		return Yii::$app->db_esm->createCommand('call so_1()')->queryColumn();                
-	} */
-	/* public function getEsmbrg(){
-		return Yii::$app->db_esm->createCommand('call BarangMaxi_Colomn()')->queryAll();                
-	} */
-
     /**
-     * Lists all Sot2 models.
-     * @return mixed
+     * Before Action Index
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
      */
+	public function beforeAction(){
+			if (Yii::$app->user->isGuest)  {
+				 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+			}
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+				   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true;
+               }
+            } else {
+                return true;
+            }
+    }
+	
     public function actionIndex()
     {
-		/**
-		 * MACHINE FINGER GROUP
-		 * @author ptrnov [piter@lukison.com]
-		 * @since 2.1
-		 */
-		$dataProvider= new ArrayDataProvider([
-			'key' => 'MesinID',
-			'allModels'=>$this->getScriptsMaintain(),
-			 'pagination' => [
-				'pageSize' => 20,
-			]
+		$date=new DateTime();
+		$thn=strlen($date->format('Y'));
+		$bln=strlen($date->format('m'));
+		$hri=strlen($date->format('d'));
+		$dateRlt=$thn."-".$bln."-".$hri;
+		$searchModel = new PersonallogSearch([
+			'tgllog'=>Yii::$app->ambilKonvesi->tglSekarang()
 		]);
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		//$queryParams = array_merge(array(),Yii::$app->request->getQueryParams());
+        //$queryParams["PersonallogSearch"]["tgllog"]=Yii::$app->ambilKonvesi->tglSekarang();//	Yii::$app->ambilKonvesi->tglSekarang();//$dateRlt;//"2016-02-22";// date('Y-m-d');//"2016-02-22" ;date("Y-mm-dd");//      
+        //$dataProvider = $searchModel->search($queryParams);
 		
+		$searchModelLate = new PersonallogSearch([
+			'tgllate'=>Yii::$app->ambilKonvesi->tglSekarang()
+		]);
+        $dataProviderLate = $searchModelLate->search_telat(Yii::$app->request->queryParams);
+
         return $this->render('index', [
-           // 'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,			
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider, 
+			'searchModelLate' => $searchModelLate,
+            'dataProviderLate' => $dataProviderLate,
         ]);
     }
 
-    /**
+	/*
+	 * Set Finger to EmpID | Employe 
+	 * @author ptrnov [piter@lukison]
+	 * @since 1.2
+	*/
+	public function actionFingerEmp($m,$f)
+    {
+		
+		$modelView = Personallog::find()->where(['TerminalID'=>$m,'FingerPrintID'=>$f])->one();
+        $model = new Kar_finger();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+           return $this->redirect(['index']);
+        } else {
+            return $this->renderAjax('_form_karfinger', [
+                'model' => $model,
+				'modelView'=>$modelView
+            ]);
+       }
+    }
+	
+	public function actionFingerEmpSave()
+    {
+		if (!Yii::$app->user->isGuest){
+			$model = new Kar_finger();
+
+			if($model->load(Yii::$app->request->post())){                  
+						//$model->CREATED_BY = Yii::$app->user->identity->username;
+						//$model->CREATED_AT = date('Y-m-d H:i:s');
+						$model->save();    
+				return $this->redirect(['index']);
+						
+			}else{
+				return ActiveForm::validate($model);
+			}	
+		}
+    }
+	
+	
+	
+	
+	
+	
+	
+	/**
      * Displays a single Sot2 model.
      * @param string $id
      * @return mixed
