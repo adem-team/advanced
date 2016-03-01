@@ -24,7 +24,7 @@ use lukisongroup\master\models\Barang; /* Barang Pembelian/barang Produksi untuk
 class Rodetail extends \yii\db\ActiveRecord
 {
 	public $KD_KATEGORI;
-	public $NAMA_BARANG;
+	// public $NAMA_BARANG;
 	public $KD_TYPE;
 	public $STT_SEND_PO;
 	public $PQTY=0;
@@ -55,10 +55,13 @@ class Rodetail extends \yii\db\ActiveRecord
         return [
  //         [['ID','KD_RO', 'KD_BARANG', 'NM_BARANG', 'QTY', 'NO_URUT', 'NOTE', 'STATUS', 'CREATED_AT', 'UPDATED_AT'], 'required'],
 			[['KD_RO','PARENT_ROSO','RQTY','UNIT'], 'required'],
+
 			//[['KD_RO','RQTY','SQTY','UNIT','KD_BARANG'], 'safe'],
             [['PQTY','HARGA'], 'safe'],
 						// [['KD_BARANG','NEW'], 'cek'],
 						[['STATUS','PARENT_ROSO'], 'integer'],
+						['HARGA','default','value'=>0.00 ],
+							// ['KD_BARANG','default','value'=>0.00 ],
             [['NOTE','UNIT','KD_BARANG'], 'string'],
             [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT','TMP_CK','HARGA','KD_CORP'], 'safe'],
             [['KD_RO','KD_CORP', 'KD_BARANG'], 'string', 'max' => 50],
@@ -70,6 +73,8 @@ class Rodetail extends \yii\db\ActiveRecord
     {
         return 10;
     } */
+
+
 
 
 	/* 	public static function primaryKey()

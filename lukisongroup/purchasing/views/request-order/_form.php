@@ -73,18 +73,18 @@ $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_
   <?=  $form->field($roDetail, 'KD_BARANG')->widget(Select2::classname(), [
 				'data' => $data,
 				'options' => ['id'=>'purchaseorder-top',
-          'placeholder' => 'Pilih Unit Barang ...'
+          'placeholder' => 'Pilih Nama Barang ...'
       ],
 				'pluginOptions' => [
 					'allowClear' => true
 				],
-		]) ?>
+		])->label('Nama Barang') ?>
 
   </div>
 
 
 
-     <?=  $form->field($roDetail, 'NM_BARANG')->textInput(['maxlength' => true, 'placeholder'=>'New Item'])->label('Nama Barang')?>
+     <?=  $form->field($roDetail, 'NM_BARANG')->textInput(['maxlength' => true, 'placeholder'=>'New Item'])->label('New Item Barang')?>
 
      <div id="hrg">
 
@@ -214,7 +214,7 @@ $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_
       if( sel === "" && val === "2")
       {
 
-            alert("tolong di isi KD Barang");
+            alert("tolong di isi Field Barang");
               return false;
 
       }
