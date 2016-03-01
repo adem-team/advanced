@@ -33,7 +33,8 @@ class Personallog extends \yii\db\ActiveRecord
 	}
 	
 	public function getMachine_nm(){
-		return $this->machines->MESIN_NM;
+		//return $this->machines->MESIN_NM;
+		return $this->machines!=''?$this->machines->MESIN_NM:'unknown';
 	}
 	
 	public function getKeys(){
@@ -41,7 +42,8 @@ class Personallog extends \yii\db\ActiveRecord
 	}
 	
 	public function getKeys_nm(){
-		return $this->keys->FunctionKeyNM;
+		//return $this->keys->FunctionKeyNM;
+		return $this->keys!=''?$this->keys->FunctionKeyNM:'unknown';
 	}
 	
     /**
