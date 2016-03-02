@@ -163,6 +163,7 @@ class RequestOrderController extends Controller
       $model = new \yii\base\DynamicModel(['NEW']);
       $model->addRule(['NEW'], 'required');
 		  $roDetail = new Rodetail();
+        // $roDetail = new Rodetail(['scenario'=>'simpan']);
 		// $roHeader = new Requestorder();
       return $this->renderAjax('_form', [
                 'roDetail' => $roDetail,
@@ -170,6 +171,17 @@ class RequestOrderController extends Controller
 				        // 'roHeader' => $roHeader,
             ]);
 
+    }
+
+    public function actionValid()
+    {
+      # code...
+        $model = new roDetail();
+      if(Yii::$app->request->isAjax && $model->load($_POST))
+      {
+        Yii::$app->response->format = 'json';
+        return ActiveForm::validate($model);
+      }
     }
 
 
@@ -219,7 +231,7 @@ class RequestOrderController extends Controller
      */
 	public function actionAdditem_saved(){
 		//$roDetail = new Rodetail();
-    	$roDetail = new AdditemValidation();
+    $roDetail = new AdditemValidation();
     $hsl = \Yii::$app->request->post();
     $radio = $hsl['AdditemValidation']['addnew'];
     if($radio == 2)
@@ -516,15 +528,16 @@ class RequestOrderController extends Controller
         // $corp = Yii::$app->getUserOpt->Profile_user()->EMP_ID;
         // $Corp1 = Employe::find()->where(['KD_CORP'=>$corp])->asArray()->one();
         $corp = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
+        $hsl = \Yii::$app->request->post();
+         // $radio =  $hsl['DynamicModel']['NEW'];
+         $radio =  $hsl['new'];
 
 
 				//if($roDetail->load(Yii::$app->request->post()) && $roDetail->validate()){
 			if($roDetail->load(Yii::$app->request->post())){
 
 
-				 $hsl = \Yii::$app->request->post();
-          // $radio =  $hsl['DynamicModel']['NEW'];
-          $radio =  $hsl['new'];
+
             // print_r($radio);
             // die();
             $selectCorp = $corp;

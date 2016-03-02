@@ -137,7 +137,7 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1,'KD_C
 
 		    <div class="form-group">
 			   <!-- Html::submitButton($roDetail->isNewRecord ? 'Create' : 'Update', ['class' => $roDetail->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?> -->
-				 <?php echo Html::submitButton('SAVE',['class' => 'btn btn-primary']); ?>
+				 <?php echo Html::submitButton('SAVE',['class' => 'btn btn-primary','id'=>'btn']); ?>
 			</div>
 			<?php ActiveForm::end(); ?>
 			</div>
@@ -149,6 +149,7 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1,'KD_C
   {
       // var val = $("input[name=AdditemValidation[addnew]]:checked").val();
       var val = $("#ada:checked").val();
+      // var sel = $("select#additemvalidation-kd_barang").val();
       // alert(val);
       if(val === "1")
       {
@@ -158,14 +159,29 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1,'KD_C
 
 
       }
-      else{
+    else{
 					$("#Kdbg").show();
 					$("#Nbrg").hide();
 					$("#hrg").hide();
       }
 
 
+
   });
+
+  $("#btn").click(function(){
+    var val = $("#ada:checked").val();
+    var sel = $("select#additemvalidation-kd_barang").val();
+     if(sel == "" && val == "2")
+    {
+      alert("tolong di isi Field Barang");
+                 return false;
+               }
+    else{
+       return true;
+    }
+  })
+
 
 
 
