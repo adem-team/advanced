@@ -35,6 +35,129 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 	$attDinamik =[];
 	$hdrLabel1=[];
 	$getHeaderLabelWrap=[];
+	
+
+	/*
+	 * Terminal ID | Mashine
+	 * Colomn 1
+	*/
+	$attDinamik[]=[		
+		'attribute'=>'TerminalID','label'=>'Machine',
+		'hAlign'=>'right',
+		'vAlign'=>'middle',
+		//'format'=>['decimal', 2],
+		'noWrap'=>true,
+		'headerOptions'=>[
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'10px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'8pt',
+				'background-color'=>'rgba(240, 195, 59, 0.4)',
+			]
+		],
+		'contentOptions'=>[
+			'style'=>[
+				'text-align'=>'left',
+				'width'=>'10px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'8pt',
+				//'background-color'=>'rgba(13, 127, 3, 0.1)',
+			]
+		],
+		//'pageSummaryFunc'=>GridView::F_SUM,
+		//'pageSummary'=>true,
+		'pageSummaryOptions' => [
+			'style'=>[
+					'text-align'=>'right',		
+					'width'=>'10px',
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',	
+					'text-decoration'=>'underline',
+					'font-weight'=>'bold',
+					'border-left-color'=>'transparant',		
+					'border-left'=>'0px',									
+			]
+		],											
+		//'footer'=>true,			
+	];
+	$hdrLabel1[] =[	
+		'content'=>'Employee Data',
+		'options'=>[
+			'noWrap'=>true,
+			'colspan'=>2,
+			'class'=>'text-center info',								
+			'style'=>[
+				 'text-align'=>'center',
+				 'width'=>'20px',
+				 'font-family'=>'tahoma',
+				 'font-size'=>'8pt',
+				 'background-color'=>'rgba(240, 195, 59, 0.4)',								
+			 ]
+		 ],
+	];
+	/*
+	 * Employe name
+	 * Colomn 2
+	*/
+	$attDinamik[]=[		
+		'attribute'=>'EMP_NM','label'=>'Employee',
+		'hAlign'=>'right',
+		'vAlign'=>'middle',
+		//'format'=>['decimal', 2],
+		'noWrap'=>true,
+		'headerOptions'=>[
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'10px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'8pt',
+				'background-color'=>'rgba(240, 195, 59, 0.4)',
+			]
+		],
+		'contentOptions'=>[
+			'style'=>[
+				'text-align'=>'left',
+				'width'=>'10px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'8pt',
+				//'background-color'=>'rgba(13, 127, 3, 0.1)',
+			]
+		],
+		//'pageSummaryFunc'=>GridView::F_SUM,
+		//'pageSummary'=>true,
+		'pageSummaryOptions' => [
+			'style'=>[
+					'text-align'=>'right',		
+					'width'=>'10px',
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',	
+					'text-decoration'=>'underline',
+					'font-weight'=>'bold',
+					'border-left-color'=>'transparant',		
+					'border-left'=>'0px',									
+			]
+		],											
+		//'footer'=>true,			
+	];
+	/* $hdrLabel1[] =[	
+		'content'=>'Employee Data',
+		'options'=>[
+			'noWrap'=>true,
+			'colspan'=>1,
+			'class'=>'text-center info',								
+			'style'=>[
+				 'text-align'=>'center',
+				 'width'=>'20px',
+				 'font-family'=>'tahoma',
+				 'font-size'=>'8pt',
+				 'background-color'=>'rgba(240, 195, 59, 0.4)',								
+			 ]
+		 ],
+	];  */
+	
+	
+	
 	/*
 	* === REKAP =========================
 	* Key-FIND : AttDinamik-Clalender
@@ -44,65 +167,70 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 	*/
 	foreach($dataProviderField as $key =>$value)
 	{	
-		$kd = explode('.',$key);
-		if ($kd[0]=='IN'){$lbl='IN';} elseif($kd[0]=='OUT'){$lbl='OUT';};
-		$attDinamik[]=[		
-			'attribute'=>$key,'label'=>$lbl,
-			'hAlign'=>'right',
-			'vAlign'=>'middle',
-			//'format'=>['decimal', 2],
-			'noWrap'=>true,
-			'headerOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'10px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'8pt',
-					'background-color'=>'rgba(97, 211, 96, 0.3)',
-				]
-			],
-			'contentOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'10px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'8pt',
-					//'background-color'=>'rgba(13, 127, 3, 0.1)',
-				]
-			],
-			//'pageSummaryFunc'=>GridView::F_SUM,
-			//'pageSummary'=>true,
-			'pageSummaryOptions' => [
-				'style'=>[
-						'text-align'=>'right',		
-						'width'=>'10px',
-						'font-family'=>'tahoma',
-						'font-size'=>'8pt',	
-						'text-decoration'=>'underline',
-						'font-weight'=>'bold',
-						'border-left-color'=>'transparant',		
-						'border-left'=>'0px',									
-				]
-			],											
-			//'footer'=>true,			
-		];
-		if($kd[0]=='IN'){
-			$hdrLabel1[] =[	
-				'content'=>$kd[1],
-				'options'=>[
-					//'noWrap'=>true,
-					'colspan'=>2,
-					'class'=>'text-center info',								
+		if($key!='EMP_NM' AND $key!='TerminalID'){
+			$kd = explode('.',$key);
+			if ($kd[0]=='IN'){$lbl='IN';} elseif($kd[0]=='OUT'){$lbl='OUT';}else {$lbl='';};
+			$attDinamik[]=[		
+				'attribute'=>$key,'label'=>$lbl,
+				'hAlign'=>'right',
+				'vAlign'=>'middle',
+				'value'=>function($model)use($key){
+					return $model[$key]!=''?$model[$key]:'x';
+				},
+				//'format'=>['decimal', 2],
+				'noWrap'=>true,
+				'headerOptions'=>[
 					'style'=>[
-						 'text-align'=>'center',
-						 'width'=>'20px',
-						 'font-family'=>'tahoma',
-						 'font-size'=>'8pt',
-						 'background-color'=>'rgba(0, 95, 218, 0.3)',								
-					 ]
-				 ],
-			];		
-		} 
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(13, 127, 3, 0.1)',
+					]
+				],
+				//'pageSummaryFunc'=>GridView::F_SUM,
+				//'pageSummary'=>true,
+				'pageSummaryOptions' => [
+					'style'=>[
+							'text-align'=>'right',		
+							'width'=>'10px',
+							'font-family'=>'tahoma',
+							'font-size'=>'8pt',	
+							'text-decoration'=>'underline',
+							'font-weight'=>'bold',
+							'border-left-color'=>'transparant',		
+							'border-left'=>'0px',									
+					]
+				],											
+				//'footer'=>true,			
+			];
+			if($kd[0]=='IN'){
+				$hdrLabel1[] =[	
+					'content'=>$kd[1],
+					'options'=>[
+						'noWrap'=>true,
+						'colspan'=>2,
+						'class'=>'text-center info',								
+						'style'=>[
+							 'text-align'=>'center',
+							 'width'=>'20px',
+							 'font-family'=>'tahoma',
+							 'font-size'=>'8pt',
+							 'background-color'=>'rgba(0, 95, 218, 0.3)',								
+						 ]
+					 ],
+				];		
+			} 
+		}
 	}
 	
 	$hdrLabel1_ALL =[
