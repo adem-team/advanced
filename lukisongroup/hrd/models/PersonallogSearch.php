@@ -64,7 +64,7 @@ class PersonallogSearch extends Personallog
 		return Yii::$app->db2->createCommand("CALL personallog_Employe()")->queryAll();             
 	}
 	
-    public function search($params)
+	public function search($params)
     {
         /* $query = Personallog::find();//->where("FunctionKey=0 OR FunctionKey=1");
 
@@ -239,6 +239,45 @@ class PersonallogSearch extends Personallog
         return $dataProvider;
 		*/
     }
+	
+	public function fieldTglRange(){
+		$proData= Yii::$app->db2->createCommand("CALL absensi_calender('2016-03-23')")->queryAll();  
+		$aryData= new ArrayDataProvider([
+			'key' => 'ID',
+			'allModels'=>$proData,			
+			'pagination' => [
+				'pageSize' => 50,
+			]
+		]);
+		$attributeField=$aryData->allModels[0];
+		
+		return $attributeField;
+	}
+	
+    public function searchTglRange($params){
+		$proDataRow= Yii::$app->db2->createCommand("CALL absensi_calender('2016-03-23')")->queryAll();  
+		$dataProvider= new ArrayDataProvider([
+			//'key' => 'ID',
+			'allModels'=>$proDataRow,			
+			'pagination' => [
+				'pageSize' => 500,
+			]
+		]);
+		if (!($this->load($params) && $this->validate())) {
+ 			return $dataProvider;
+ 		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
