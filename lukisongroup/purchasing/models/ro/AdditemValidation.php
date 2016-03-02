@@ -67,7 +67,8 @@ class AdditemValidation extends Model
 	public function findcheck($attribute, $params)
     {
       $groupradio = $this->addnew;
-      // print_r($groupradio);
+
+      // print_r($barang);
       // die();
       if(  $groupradio == 2)
       {
