@@ -147,10 +147,7 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1,'KD_C
 
   $("div#additemvalidation-addnew").click(function()
   {
-      // var val = $("input[name=AdditemValidation[addnew]]:checked").val();
       var val = $("#ada:checked").val();
-      // var sel = $("select#additemvalidation-kd_barang").val();
-      // alert(val);
       if(val === "1")
       {
       		$("#Kdbg").hide();
@@ -169,18 +166,24 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1,'KD_C
 
   });
 
-  $("#btn").click(function(){
-    var val = $("#ada:checked").val();
-    var sel = $("select#additemvalidation-kd_barang").val();
-     if(sel == "" && val == "2")
-    {
-      alert("tolong di isi Field Barang");
-                 return false;
-               }
-    else{
-       return true;
-    }
-  })
+  // $("#btn").click(function(){
+  //   var val = $("#ada:checked").val();
+  //   var sel = $("select#additemvalidation-kd_barang").val();
+  //   var newitem = $("#additemvalidation-nm_barang").val();
+  //    if(sel == "" && val == "2")
+  //   {
+  //     alert("tolong di isi Field Barang");
+  //                return false;
+  //   }
+  //   else if(val == "1" && newitem == "")
+  //   {
+  //     alert("tolong di isi Item Barang");
+  //       return false;
+  //   }
+  //   else{
+  //      return true;
+  //   }
+  // })
 
 
 
