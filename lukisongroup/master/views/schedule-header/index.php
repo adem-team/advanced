@@ -30,7 +30,8 @@ function(start, end) {
 			data:'title=' + title + '&start='+ tgl1 + '&end=' + tgl2,
 			dataType:'json',
 			success: function(result){
-				alert('ok');
+        alert('ok')
+			  $.pjax.reload({container:'#gv-schedule-id'});
 			}
 		});
 		/* calendar.fullCalendar('renderEvent', {
@@ -83,6 +84,14 @@ EOF;
         'dataProvider' => $dataProviderUser,
         'filterModel' => $searchModelUser,
 		'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+    'rowOptions'   => function ($model, $key, $index, $grid) {
+       return ['id' => $model->id,'onclick' => '$.pjax.reload({
+            url: "'.Url::to(['/master/schedule-header/index']).'?ScheduleheaderSearch[USER_ID]="+this.id,
+            container: "#gv-schedule-id",
+            timeout: 10,
+        });'];
+      //  return ['data-id' => $model->USER_ID];
+   },
         'columns' => [
             [	//COL-0
 				/* Attribute Serial No */
@@ -270,6 +279,17 @@ EOF;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
 		'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+  //   'rowOptions'   => function ($model, $key, $index, $grid) {
+  //      return ['id' => $model->USER_ID,'onclick' => '$.pjax.reload({
+  //           url: "'.Url::to(['/master/schedule-header/index']).'?UserloginSearch[id]="+this.id,
+  //           container: "#gv-user-list-id",
+  //           timeout: 10,
+   //
+  //       });'];
+  //     //  return ['data-id' => $model->USER_ID];
+  //  },
+
+
         'columns' => [
            [	//COL-0
 				/* Attribute Serial No */
@@ -502,9 +522,29 @@ EOF;
 </div>
 
 <?php
-
-
-
+// $this->registerJs("
+//
+//     $('td').click(function (e) {
+//         var id = $(this).closest('tr').data('id')
+//         if(e.target == this)
+//         {
+//           // location.href = '" .Url::to(['accountinfo/update']) . "?id=' + id;
+//           // return false;
+//           $.ajax({
+//             url:'/master/schedule-header/search-grid',
+//             type: 'GET',
+//             data:{id : id},
+//             dataType:'json',
+//             success: function(result){
+//               // alert('ok');
+//                 $.pjax.reload({container:'#gv-user-list-id'});
+//             }
+//           });
+//         }
+//         });
+//
+//
+// ");
 
 
 ?>

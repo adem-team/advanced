@@ -24,7 +24,6 @@ use lukisongroup\master\models\Barang; /* Barang Pembelian/barang Produksi untuk
 class Rodetail extends \yii\db\ActiveRecord
 {
 	public $KD_KATEGORI;
-	// public $NAMA_BARANG;
 	public $KD_TYPE;
 	public $STT_SEND_PO;
 	public $PQTY=0;
@@ -34,6 +33,7 @@ class Rodetail extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+		//  const SCENARIO_RADIO = 'simpan';
     public static function tableName()
     {
         return 'r0003';
@@ -54,14 +54,19 @@ class Rodetail extends \yii\db\ActiveRecord
     {
         return [
  //         [['ID','KD_RO', 'KD_BARANG', 'NM_BARANG', 'QTY', 'NO_URUT', 'NOTE', 'STATUS', 'CREATED_AT', 'UPDATED_AT'], 'required'],
-			[['KD_RO','PARENT_ROSO','RQTY','UNIT'], 'required'],
-
+			// [['KD_RO','PARENT_ROSO','RQTY','UNIT','KD_BARANG','NEW','NM_BARANG'], 'required','on'=>self::SCENARIO_RADIO],
 			//[['KD_RO','RQTY','SQTY','UNIT','KD_BARANG'], 'safe'],
+			[['KD_RO','PARENT_ROSO','RQTY','UNIT'], 'required'],
+		// 	['KD_BARANG','required','when'=>
+    // function($model){  $model->NEW == 2; }
+		// 				],
+		
+					// 	['NM_BARANG','required','when'=>
+					// function($model){  $model->NEW == 1; }
+					// 				],
             [['PQTY','HARGA'], 'safe'],
-						// [['KD_BARANG','NEW'], 'cek'],
+						['HARGA','default', 'value'=>0.00],
 						[['STATUS','PARENT_ROSO'], 'integer'],
-						['HARGA','default','value'=>0.00 ],
-							// ['KD_BARANG','default','value'=>0.00 ],
             [['NOTE','UNIT','KD_BARANG'], 'string'],
             [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT','TMP_CK','HARGA','KD_CORP'], 'safe'],
             [['KD_RO','KD_CORP', 'KD_BARANG'], 'string', 'max' => 50],
@@ -73,8 +78,27 @@ class Rodetail extends \yii\db\ActiveRecord
     {
         return 10;
     } */
-
-
+// 		public function scenarios()
+// {
+// 		$radio = $this->NEW;
+// 		print_r($radio);
+// 		// die();
+// 		if($radio == 2)
+// 		{
+// 			$scenarios = parent::scenarios();
+// 			$scenarios[self::SCENARIO_RADIO] = ['KD_RO', 'PARENT_ROSO','RQTY','UNIT','NEW','KD_BARANG'];
+//
+// 			return $scenarios;
+// 		}
+// 		else {
+// 			# code...
+// 			$scenarios = parent::scenarios();
+// 			$scenarios[self::SCENARIO_RADIO] = ['KD_RO', 'PARENT_ROSO','RQTY','UNIT','NEW','NM_BARANG'];
+//
+// 			return $scenarios;
+// 		}
+//
+// }
 
 
 	/* 	public static function primaryKey()

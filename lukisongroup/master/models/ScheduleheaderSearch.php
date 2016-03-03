@@ -72,4 +72,37 @@ class ScheduleheaderSearch extends Scheduleheader
 
         return $dataProvider;
     }
+
+    // public function searchheader($params,$id)
+    // {
+    //     $query = Scheduleheader::find()->where(['SCDL_GROUP'=>$id]);
+    //
+    //     $dataProvider = new ActiveDataProvider([
+    //         'query' => $query,
+    //     ]);
+    //
+    //     $this->load($params);
+    //
+    //     if (!$this->validate()) {
+    //         // uncomment the following line if you do not want to return any records when validation fails
+    //         // $query->where('0=1');
+    //         return $dataProvider;
+    //     }
+    //
+    //     $query->andFilterWhere([
+    //         'ID' => $this->ID,
+    //         'TGL1' => $this->TGL1,
+    //         'SCDL_GROUP' => $this->SCDL_GROUP,
+    //         'STATUS' => $this->STATUS,
+    //         'CREATE_AT' => $this->CREATE_AT,
+    //         'UPDATE_AT' => $this->UPDATE_AT,
+    //     ]);
+    //
+    //     $query->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
+    //         ->andFilterWhere(['like', 'NOTE', $this->NOTE])
+    //         ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
+    //         ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
+    //
+    //     return $dataProvider;
+    // }
 }
