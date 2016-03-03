@@ -60,6 +60,7 @@ class Rodetail extends \yii\db\ActiveRecord
 		// 	['KD_BARANG','required','when'=>
     // function($model){  $model->NEW == 2; }
 		// 				],
+		
 					// 	['NM_BARANG','required','when'=>
 					// function($model){  $model->NEW == 1; }
 					// 				],

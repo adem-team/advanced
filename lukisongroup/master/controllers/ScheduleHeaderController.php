@@ -61,12 +61,41 @@ class ScheduleHeaderController extends Controller
      */
     public function actionIndex()
     {
+      	// if (Yii::$app->request->isAjax) {
+        //   	$request= Yii::$app->request;
+        //     $ID=$request->post('id');
+        //
+        // }
+        // print_r($id);
+        // die();
         $searchModel = new ScheduleheaderSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+              $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+              $searchModelUser = new UserloginSearch();
+              $dataProviderUser = $searchModelUser->searchCustGroup(Yii::$app->request->queryParams);
+
+    //     if($id == NULL)
+    //     {
+    //       $searchModel = new ScheduleheaderSearch();
+    //       $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    //
+    //       $searchModelUser = new UserloginSearch();
+    //       $dataProviderUser = $searchModelUser->searchCustGroup(Yii::$app->request->queryParams);
+    //     }
+    //     else {
+    //       # code...
+    //       $searchModel = new ScheduleheaderSearch();
+    //       $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    //       $searchModelUser = new UserloginSearch();
+    //       $dataProviderUser = $searchModelUser->searchCust(Yii::$app->request->queryParams,$id);
+    //       \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    // return [
+    //     'message' => 'SUCCES',
+    //     'code' => 100,
+    // ];
+    //     }
 
 
-		$searchModelUser = new UserloginSearch();
-		$dataProviderUser = $searchModelUser->searchCustGroup(Yii::$app->request->queryParams);
 
         return $this->render('index', [
 			'dataProviderUser'=>$dataProviderUser,
@@ -75,6 +104,35 @@ class ScheduleHeaderController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
+    //
+    // public function actionSearchGrid($id)
+    // {
+    //             # code...
+    //             $searchModel = new ScheduleheaderSearch();
+    //             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    //             $searchModelUser = new UserloginSearch();
+    //             $dataProviderUser = $searchModelUser->searchCust(Yii::$app->request->queryParams,$id);
+    //             // print_r($dataProviderUser);
+    //             // die();
+    //             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    //       return [
+    //           'message' => 'SUCCES',
+    //           'code' => 100,
+    //       ];
+    //     //
+    //       return $this->renderAjax('index', [
+    //         'dataProviderUser'=>$dataProviderUser,
+    //          'searchModelUser'=>$searchModelUser,
+    //           'searchModel' => $searchModel,
+    //           'dataProvider' => $dataProvider,
+    //         ]);
+    //           	// return true;
+    //   }
+
+
+
+
+
 
     /**
      * Displays a single Scheduleheader model.
@@ -195,9 +253,10 @@ class ScheduleHeaderController extends Controller
 			$model =  new Scheduleheader();
 			$start=$request->post('start');
 			$title=$request->post('title');
-			$model->TGL = $start;
+			$model->TGL1 = $start;
 			$model->USER_ID = $title;
 			$model->save();
+
 		}
 		return true;
 

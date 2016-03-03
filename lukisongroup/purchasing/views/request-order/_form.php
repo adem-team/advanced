@@ -127,8 +127,6 @@ $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_
   $("div#dynamicmodel-new").click(function()
   {
       var val = $("input[name=new]:checked").val();
-
-      // alert(val);
       if(val === "2")
       {
       		$("#rodetail-nm_barang").hide();
@@ -150,12 +148,17 @@ $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_
   $("form#roInput").on("submit", function() {
      var sel = $("#purchaseorder-top").val();
        var val = $("input[name=new]:checked").val();
+       var item = $("#rodetail-nm_barang").val();
       if( sel === "" && val === "2")
       {
 
-            alert("tolong di isi Field Barang");
-              return false;
+        alert("tolong di isi Field Barang");
+        return false;
 
+      }
+      else if(item == "" && val == "1"){
+        alert("tolong di isi Item Barang");
+          return false;
       }
       else{
           return true;

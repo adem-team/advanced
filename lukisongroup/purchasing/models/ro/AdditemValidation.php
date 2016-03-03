@@ -51,6 +51,21 @@ class AdditemValidation extends Model
         return [
 			[['kD_BARANG','addnew'], 'findcheck'],
 			[['kD_RO','uNIT','rQTY','addnew'], 'required'],
+      // kD_BARANG
+      	[['kD_BARANG'], 'required','when' => function ($attribute) {
+        return $attribute->addnew == 2; },
+        'whenClient' => "function (attribute, value) {
+          // var data = $('#ada:checked').val();
+            return $('#ada:checked').val() == '2';
+        }"
+        ],
+        [['nM_BARANG','hARGA'], 'required','when' => function ($attribute) {
+        return $attribute->addnew == 1; },
+        'whenClient' => "function (attribute, value) {
+          // var data = $('#ada:checked').val();
+            return $('#ada:checked').val() == '1';
+        }"
+        ],
 			//[['nmBarang','nOTE'], 'string'],
         	[['nOTE','nM_BARANG'], 'string'],
         	['sTATUS','integer'],
