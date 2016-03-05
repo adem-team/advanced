@@ -96,7 +96,7 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1,'KD_C
 						'pluginOptions' => [
 							'allowClear' => true
 						],
-				]) ?>
+				])->label('Nama Barang') ?>
 			</div>
 
 

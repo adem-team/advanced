@@ -25,10 +25,10 @@ $aryEmploye = ArrayHelper::map(Employe::find()->where("STATUS<>3 AND EMP_STS<>3"
 																							}
 			);
 
-$this->sideCorp = 'PT. Lukisongroup';                                   /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'hrd_absensi';                                       /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'HRM - Absensi	 Dashboard');             /* title pada header page */
-$this->params['breadcrumbs'][] = $this->title;                          /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+$this->sideCorp = 'PT. Efenbi Sukses Makmur';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'esm_purchasing';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'ESM - Purchasing Dashboard');         /* title pada header page */
+$this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
 	/* $aryFlag= [
 		  ['ID' =>0, 'DESCRIP' => 'Online'],		  
@@ -301,8 +301,8 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			],
 		],
 		 'panel' => [
-					'heading'=>'<h3 class="panel-title">Daily Absensi</h3>',
-					'type'=>'warning',
+					'heading'=>'<h3 class="panel-title">Stock Card</h3>',
+					'type'=>'success',
 					// 'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Customer ',
 							// ['modelClass' => 'Kategori',]),'/master/barang/create',[
 								// 'data-toggle'=>"modal",

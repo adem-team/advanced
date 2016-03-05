@@ -6,6 +6,8 @@ use kartik\grid\GridView;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
+use yii\widgets\ActiveForm;
+
 
 use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
 MapAsset::register($this);
@@ -38,6 +40,14 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			'dataProvider' => $dataProvider,
 			'filterModel' => $searchModel,
 			'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+			'rowOptions'   => function ($model, $key, $index, $grid) {
+				 return ['id' => $model->ID,'onclick' => '$.pjax.reload({
+							url: "'.Url::to(['/master/schedule-group/index']).'?CustomersSearch[SCDL_GROUP]="+this.id,
+							container: "#gv-custgrp-list",
+							timeout: 10,
+					});'];
+				//  return ['data-id' => $model->USER_ID];
+		 },
 			'columns' => [
 				[	//COL-2
 					/* Attribute Serial No */
@@ -265,7 +275,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			],
 			[  	//col-1
 				//CUSTOMER GRAOUP NAME
-				'attribute' =>'grp_nm',
+				'attribute' =>'custgrp.SCDL_GROUP_NM',
 				'label'=>'Customer Groups',
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
@@ -291,7 +301,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				//CUSTOMER GRAOUP NAME
 				//'attribute' => 'cust_nm',
 				'attribute' => 'CUST_NM',
-				'label'=>'Keterangan',
+				'label'=>'Nama Customers',
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
 				'headerOptions'=>[
@@ -476,6 +486,36 @@ $this->registerJs("
 	]);
 	Modal::end();
 
+	$this->registerJs("
+		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		 $('#modalmap').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			})
+	",$this::POS_READY);
+		Modal::begin([
+				'id' => 'modal-create',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+		],
+		]);
+		Modal::end();
+
+
+?>
+
+
+
+<?PHP
 /*js mapping */
 	$this->registerJs("
 		/*nampilin MAP*/
@@ -488,7 +528,7 @@ $this->registerJs("
 			});
 
 			var public_markers = [];
-			var infowindow = new google.maps.InfoWindow();
+
 
 		/*data json*/
 		 $.getJSON('/master/customers/map', function(json) {
@@ -517,8 +557,24 @@ $this->registerJs("
 
 				 public_markers[i] = marker;
 
-				 google.maps.event.addListener(public_markers[i], 'mouseover', function () {
-					 infowindow.setContent('<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>');
+				 google.maps.event.addListener(public_markers[i], 'click', function () {
+					 var contentString = '<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM +
+					 '</p>'+ '<button type=button class=btn btn-info btn-sm id=myBtn>'+ point.CUST_NM
+					 +'</button>'
+					var contentString = '<h1>' + point.ALAMAT + '</h1>'+'<p>' + point.CUST_NM + '</p>'+
+					 											'<input type= text  name= custkd value='+ point.CUST_KD+' readonly=true>'+'<br>'+
+					 											'<select>'+'<option value=1>GROUP BARAT</option>'+
+																					'<option value=2>GROUP TIMUR</option>'+
+																					'<option value=3>GROUP SELATAN</option>'+
+																					'<option value=4>GROUP UTARA</option>'+
+					 											'<select>'+'<br>'+
+																'<input id=btn type=submit value=save>'
+
+
+					 var infowindow = new google.maps.InfoWindow({
+							content: contentString
+					 });
+					//  infowindow.setContent('<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>'+ '<button type=button class=btn btn-info btn-sm id=myBtn>'+ point.CUST_NM+'</button>');
 					 infowindow.open(map, public_markers[i]);
 				 });
 
@@ -527,9 +583,26 @@ $this->registerJs("
 
 
 		 });
+		 $('#btn').click(function (e) {
+			 alert('tes');
+		        // if(e.target == this)
+		        // {
+		        //   // location.href = '" .Url::to(['accountinfo/update']) . "?id=' + id;
+		        //   // return false;
+		          // $.ajax({
+		          //   url:'/master/schedule-header/search-grid',
+		          //   type: 'GET',
+		          //   data:{id : id,},
+		          //   dataType:'json',
+		          //   success: function(result){
+		          //     // alert('ok');
+		          //       $.pjax.reload({container:'#gv-user-list-id'});
+		          //   }
+		          // });
+		        // }
+		        });
 		// console.trace();
      ",$this::POS_READY);
-
 
 
 ?>

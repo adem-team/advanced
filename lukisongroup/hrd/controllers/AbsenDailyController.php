@@ -15,7 +15,7 @@ use lukisongroup\hrd\models\AbsenDailySearch;
 use lukisongroup\hrd\models\Kar_finger;
 
 
-class AbsenRekapController extends Controller
+class AbsenDailyController extends Controller
 {
     public function behaviors()
     {

@@ -18,13 +18,12 @@ use yii\data\ArrayDataProvider;
 use yii\db\Query;
 use \DateTime;
 
- 	
 use lukisongroup\widget\models\Chat;
 use lukisongroup\widget\models\ChatSearch;
 use lukisongroup\widget\models\ChatroomSearch;
-use lukisongroup\dashboard\models\AccSalesSearch;
+use lukisongroup\dashboard\models\AccPurchaseSearch;
 		
-class AccSalesController extends Controller
+class AccPurchaseController extends Controller
 {
     public function behaviors()
     {
@@ -110,14 +109,16 @@ class AccSalesController extends Controller
 		]);		      
     }
 	
-	public function actionCustTerm()
+	
+	
+	public function actionPurchase()
     {
 		$date=new DateTime();
 		$thn=strlen($date->format('Y'));
 		$bln=strlen($date->format('m'));
 		$hri=strlen($date->format('d'));
 		$dateRlt=$thn."-".$bln."-".$hri;
-		$searchModel = new AccSalesSearch([
+		$searchModel = new AccPurchaseSearch([
 			//'tgllog'=>Yii::$app->ambilKonvesi->tglSekarang()
 		]);
 				
@@ -126,7 +127,103 @@ class AccSalesController extends Controller
 		$dataProviderField = $searchModel->dailyFieldTglRange();
 		//Value row
 		$dataProvider = $searchModel->searchDailyTglRange(Yii::$app->request->queryParams);
-        return $this->render('cterm', [
+        return $this->render('purchase', [
+			/*Daily Absensi*/
+			'searchModel'=>$searchModel,
+			'dataProviderField'=>$dataProviderField,
+			'dataProvider'=>$dataProvider			
+        ]);
+    }
+	
+	public function actionStockcard()
+    {
+		$date=new DateTime();
+		$thn=strlen($date->format('Y'));
+		$bln=strlen($date->format('m'));
+		$hri=strlen($date->format('d'));
+		$dateRlt=$thn."-".$bln."-".$hri;
+		$searchModel = new AccPurchaseSearch([
+			//'tgllog'=>Yii::$app->ambilKonvesi->tglSekarang()
+		]);
+				
+		/*REKAP ABSENSI*/
+		//Field Label
+		$dataProviderField = $searchModel->dailyFieldTglRange();
+		//Value row
+		$dataProvider = $searchModel->searchDailyTglRange(Yii::$app->request->queryParams);
+        return $this->render('stockcard', [
+			/*Daily Absensi*/
+			'searchModel'=>$searchModel,
+			'dataProviderField'=>$dataProviderField,
+			'dataProvider'=>$dataProvider			
+        ]);
+    }
+	
+	public function actionCostcenter()
+    {
+		$date=new DateTime();
+		$thn=strlen($date->format('Y'));
+		$bln=strlen($date->format('m'));
+		$hri=strlen($date->format('d'));
+		$dateRlt=$thn."-".$bln."-".$hri;
+		$searchModel = new AccPurchaseSearch([
+			//'tgllog'=>Yii::$app->ambilKonvesi->tglSekarang()
+		]);
+				
+		/*REKAP ABSENSI*/
+		//Field Label
+		$dataProviderField = $searchModel->dailyFieldTglRange();
+		//Value row
+		$dataProvider = $searchModel->searchDailyTglRange(Yii::$app->request->queryParams);
+        return $this->render('costcenter', [
+			/*Daily Absensi*/
+			'searchModel'=>$searchModel,
+			'dataProviderField'=>$dataProviderField,
+			'dataProvider'=>$dataProvider			
+        ]);
+    }
+	
+	public function actionSo()
+    {
+		$date=new DateTime();
+		$thn=strlen($date->format('Y'));
+		$bln=strlen($date->format('m'));
+		$hri=strlen($date->format('d'));
+		$dateRlt=$thn."-".$bln."-".$hri;
+		$searchModel = new AccPurchaseSearch([
+			//'tgllog'=>Yii::$app->ambilKonvesi->tglSekarang()
+		]);
+				
+		/*REKAP ABSENSI*/
+		//Field Label
+		$dataProviderField = $searchModel->dailyFieldTglRange();
+		//Value row
+		$dataProvider = $searchModel->searchDailyTglRange(Yii::$app->request->queryParams);
+        return $this->render('so', [
+			/*Daily Absensi*/
+			'searchModel'=>$searchModel,
+			'dataProviderField'=>$dataProviderField,
+			'dataProvider'=>$dataProvider			
+        ]);
+    }
+	
+	public function actionRo()
+    {
+		$date=new DateTime();
+		$thn=strlen($date->format('Y'));
+		$bln=strlen($date->format('m'));
+		$hri=strlen($date->format('d'));
+		$dateRlt=$thn."-".$bln."-".$hri;
+		$searchModel = new AccPurchaseSearch([
+			//'tgllog'=>Yii::$app->ambilKonvesi->tglSekarang()
+		]);
+				
+		/*REKAP ABSENSI*/
+		//Field Label
+		$dataProviderField = $searchModel->dailyFieldTglRange();
+		//Value row
+		$dataProvider = $searchModel->searchDailyTglRange(Yii::$app->request->queryParams);
+        return $this->render('ro', [
 			/*Daily Absensi*/
 			'searchModel'=>$searchModel,
 			'dataProviderField'=>$dataProviderField,

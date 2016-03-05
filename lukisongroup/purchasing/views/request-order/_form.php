@@ -27,37 +27,32 @@ $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_
     ",$this::POS_HEAD);
  */
  $corp = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
- // print_r($corp);
- // die();
  $data = ArrayHelper::map(Barang::find()->where(['KD_CORP'=> $corp])->all(),'KD_BARANG','NM_BARANG')
-
- // print_r($data);
- // die();
 
 
 ?>
 
 
     <?php $form = ActiveForm::begin([
-			'id'=>'roInput',
+			'id'=>$roDetail->formName(),
 			'enableClientValidation' => true,
-        // 'enableAjaxValidation'=>true,
+      'enableAjaxValidation'=>true,
 			'method' => 'post',
 			'action' => ['/purchasing/request-order/simpanfirst'],
-      // 'validationUrl'=>Url::toRoute('/purchasing/request-order/valid')
+      'validationUrl'=>Url::toRoute('/purchasing/request-order/valid')
 		]);
 	?>
 	<?php //= $form->errorSummary($model); ?>
 
     <!-- $form->field($roDetail, 'CREATED_AT',['template' => "{input}"])->hiddenInput(['value'=>date('Y-m-d H:i:s'),'readonly' => true]) ?> -->
 
-    <?= $form->field($model, 'NEW')->radioList([
+    <?= $form->field($roDetail, 'NEW')->radioList([
     '1' => 'New ',
     '2' => ' Search',
 ],
 ['item' => function($index, $label, $name, $checked, $value) {
                                   $return = '<label class="modal-radio">';
-                                  $return .= '<input type="radio" name="' . 'new'. '" value="' . $value . '" tabindex="-1">';
+                                  $return .= '<input type="radio" id = "radiochek" name="' .'Rodetail[NEW]'. '" value="' . $value . '" tabindex="-1">';
                                   $return .= '<i></i>';
                                   $return .= '<span>' . ucwords($label) . '</span>';
                                   $return .= '</label>';
@@ -71,7 +66,7 @@ $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_
 
   <?=  $form->field($roDetail, 'KD_BARANG')->widget(Select2::classname(), [
 				'data' => $data,
-				'options' => ['id'=>'purchaseorder-top',
+				'options' => [
           'placeholder' => 'Pilih Nama Barang ...'
       ],
 				'pluginOptions' => [
@@ -124,9 +119,9 @@ $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_
 <?php
   $this->registerJs('
 
-  $("div#dynamicmodel-new").click(function()
+  $("div#rodetail-new").click(function()
   {
-      var val = $("input[name=new]:checked").val();
+      var val = $("#radiochek:checked").val();
       if(val === "2")
       {
       		$("#rodetail-nm_barang").hide();
@@ -145,27 +140,27 @@ $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_
       }
   });
 
-  $("form#roInput").on("submit", function() {
-     var sel = $("#purchaseorder-top").val();
-       var val = $("input[name=new]:checked").val();
-       var item = $("#rodetail-nm_barang").val();
-      if( sel === "" && val === "2")
-      {
-
-        alert("tolong di isi Field Barang");
-        return false;
-
-      }
-      else if(item == "" && val == "1"){
-        alert("tolong di isi Item Barang");
-          return false;
-      }
-      else{
-          return true;
-      }
-
-
-  });
+  // $("form#roInput").on("submit", function() {
+  //    var sel = $("#purchaseorder-top").val();
+  //      var val = $("input[name=new]:checked").val();
+  //      var item = $("#rodetail-nm_barang").val();
+  //     if( sel === "" && val === "2")
+  //     {
+  //
+  //       alert("tolong di isi Field Barang");
+  //       return false;
+  //
+  //     }
+  //     else if(item == "" && val == "1"){
+  //       alert("tolong di isi Item Barang");
+  //         return false;
+  //     }
+  //     else{
+  //         return true;
+  //     }
+  //
+  //
+  // });
 
 
 	',$this::POS_READY);
