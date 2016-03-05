@@ -160,14 +160,12 @@ class RequestOrderController extends Controller
      */
     public function actionCreate()
     {
-      $model = new \yii\base\DynamicModel(['NEW']);
-      $model->addRule(['NEW'], 'required');
+      // $model = new \yii\base\DynamicModel(['NEW']);
+      // $model->addRule(['NEW'], 'required');
 		  $roDetail = new Rodetail();
-        // $roDetail = new Rodetail(['scenario'=>'simpan']);
-		// $roHeader = new Requestorder();
+      $roDetail->scenario = "simpan";
       return $this->renderAjax('_form', [
                 'roDetail' => $roDetail,
-                  'model'=> $model
 				        // 'roHeader' => $roHeader,
             ]);
 
@@ -529,10 +527,8 @@ class RequestOrderController extends Controller
         // $Corp1 = Employe::find()->where(['KD_CORP'=>$corp])->asArray()->one();
         $corp = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
         $hsl = \Yii::$app->request->post();
-         // $radio =  $hsl['DynamicModel']['NEW'];
-         $radio =  $hsl['new'];
-
-
+         $radio =  $hsl['Rodetail']['NEW'];
+        
 				//if($roDetail->load(Yii::$app->request->post()) && $roDetail->validate()){
 			if($roDetail->load(Yii::$app->request->post())){
 

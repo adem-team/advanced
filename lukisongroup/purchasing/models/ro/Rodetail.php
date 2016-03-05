@@ -27,13 +27,13 @@ class Rodetail extends \yii\db\ActiveRecord
 	public $KD_TYPE;
 	public $STT_SEND_PO;
 	public $PQTY=0;
-	// public $NEW;
+	public $NEW;
 
 	//Public $PQTY;
     /**
      * @inheritdoc
      */
-		//  const SCENARIO_RADIO = 'simpan';
+
     public static function tableName()
     {
         return 'r0003';
@@ -53,17 +53,20 @@ class Rodetail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
- //         [['ID','KD_RO', 'KD_BARANG', 'NM_BARANG', 'QTY', 'NO_URUT', 'NOTE', 'STATUS', 'CREATED_AT', 'UPDATED_AT'], 'required'],
-			// [['KD_RO','PARENT_ROSO','RQTY','UNIT','KD_BARANG','NEW','NM_BARANG'], 'required','on'=>self::SCENARIO_RADIO],
-			//[['KD_RO','RQTY','SQTY','UNIT','KD_BARANG'], 'safe'],
+			[['KD_RO','PARENT_ROSO','RQTY','UNIT','NEW'], 'required','message' => 'Maaf Tolong Diisi','on'=>'simpan'],
 			[['KD_RO','PARENT_ROSO','RQTY','UNIT'], 'required'],
-		// 	['KD_BARANG','required','when'=>
-    // function($model){  $model->NEW == 2; }
-		// 				],
-		
-					// 	['NM_BARANG','required','when'=>
-					// function($model){  $model->NEW == 1; }
-					// 				],
+			[['KD_BARANG'], 'required','when' => function ($attribute) {
+					return $attribute->NEW == 2; },
+					'whenClient' => "function (attribute, value) {
+							return $('#radiochek:checked').val() == '2';
+					}"
+					],
+			[['NM_BARANG','HARGA'], 'required','when' => function ($attribute) {
+					return $attribute->NEW == 1; },
+					'whenClient' => "function (attribute, value) {
+							return $('#radiochek:checked').val() == '1';
+					}"
+					],
             [['PQTY','HARGA'], 'safe'],
 						['HARGA','default', 'value'=>0.00],
 						[['STATUS','PARENT_ROSO'], 'integer'],
@@ -78,45 +81,9 @@ class Rodetail extends \yii\db\ActiveRecord
     {
         return 10;
     } */
-// 		public function scenarios()
-// {
-// 		$radio = $this->NEW;
-// 		print_r($radio);
-// 		// die();
-// 		if($radio == 2)
-// 		{
-// 			$scenarios = parent::scenarios();
-// 			$scenarios[self::SCENARIO_RADIO] = ['KD_RO', 'PARENT_ROSO','RQTY','UNIT','NEW','KD_BARANG'];
-//
-// 			return $scenarios;
-// 		}
-// 		else {
-// 			# code...
-// 			$scenarios = parent::scenarios();
-// 			$scenarios[self::SCENARIO_RADIO] = ['KD_RO', 'PARENT_ROSO','RQTY','UNIT','NEW','NM_BARANG'];
-//
-// 			return $scenarios;
-// 		}
-//
-// }
 
 
-	/* 	public static function primaryKey()
-    {
-      return ['ID'];
-    } */
-		// public function cek($model)
-		// 	{
-		// 		$radio = $this->NEW;
-		// 			$barang = $this->KD_BARANG;
-		// 			// print_r(	$barang);
-		// 			// die();
-		// 		if($radio == 2 && $barang = '')
-		// 		{
-		// 				 $this->addError($model, 'Maaf Tolong Di isi');
-		// 			}
-		//
-		// 	}
+
 
 	public function getParentro()
     {
@@ -143,8 +110,7 @@ class Rodetail extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-					'NEW'=>'NEW',
-					'SRCBRG'=>'SEARCH',
+					'NEW'=>'',
             'ID' => 'ID',
             'UNIT' => 'Satuan Barang',
             'KD_RO' => 'Kd  Ro',

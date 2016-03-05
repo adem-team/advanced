@@ -146,7 +146,7 @@ class CustomersController extends Controller
 			'dataproviderkota' => $dataproviderkota,
 		]);
 	}
-	
+
 	/*ESM INDEX*/
 	public function actionEsmIndex()
     {
@@ -231,8 +231,8 @@ class CustomersController extends Controller
 		]);
 	}
 
-	
-	 
+
+
 
     /**
      * Displays a single Customer model.
@@ -512,7 +512,7 @@ class CustomersController extends Controller
     public function actionMap()
     {
             $conn = Yii::$app->db3;
-            $hasil = $conn->createCommand("SELECT ALAMAT, CUST_NM,MAP_LAT,MAP_LNG from c0001")->queryAll();
+            $hasil = $conn->createCommand("SELECT CUST_KD, ALAMAT, CUST_NM,MAP_LAT,MAP_LNG from c0001 order by SCDL_GROUP")->queryAll();
             echo json_encode($hasil);
 
     }

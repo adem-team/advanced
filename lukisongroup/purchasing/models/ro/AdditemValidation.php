@@ -50,23 +50,19 @@ class AdditemValidation extends Model
     {
         return [
 			[['kD_BARANG','addnew'], 'findcheck'],
-			[['kD_RO','uNIT','rQTY','addnew'], 'required'],
-      // kD_BARANG
+			[['kD_RO','uNIT','rQTY','addnew'], 'required','message' => 'Maaf Tolong Diisi'],
       	[['kD_BARANG'], 'required','when' => function ($attribute) {
         return $attribute->addnew == 2; },
         'whenClient' => "function (attribute, value) {
-          // var data = $('#ada:checked').val();
             return $('#ada:checked').val() == '2';
         }"
         ],
         [['nM_BARANG','hARGA'], 'required','when' => function ($attribute) {
         return $attribute->addnew == 1; },
         'whenClient' => "function (attribute, value) {
-          // var data = $('#ada:checked').val();
             return $('#ada:checked').val() == '1';
         }"
         ],
-			//[['nmBarang','nOTE'], 'string'],
         	[['nOTE','nM_BARANG'], 'string'],
         	['sTATUS','integer'],
         	[['rQTY','cREATED_AT','kD_KATEGORI','kD_TYPE','hARGA'], 'safe'],
@@ -130,48 +126,6 @@ class AdditemValidation extends Model
                 }
           return $rodetail;
         }
-      // }
-      // else{
-      //   if ($this->validate()) {
-      //     $barangNew= new Barang();
-      //       $this->kD_BARANG= Yii::$app->esmcode->kdbarangUmum(0,$this->kD_CORP,$type,$kat,$unit);
-      //       $barangNew->KD_BARANG =$this->kD_BARANG;
-      //       $barangNew->NM_BARANG = $this->nM_BARANG;
-      //       $barangNew->KD_UNIT = $this->uNIT;
-      //       $barangNew->HARGA_SPL = $this->hARGA;
-      //       $barangNew->PARENT = 0;
-      //       $barangNew->KD_CORP = $this->kD_CORP;
-      //       $barangNew->KD_TYPE = $this->kD_TYPE;
-      //       $barangNew->KD_KATEGORI = $this->kD_KATEGORI;
-      //       $barangNew->KD_SUPPLIER = $this->kD_SUPPLIER;
-      //       $barangNew->STATUS = 1;
-      //       $barangNew->CREATED_BY = Yii::$app->user->identity->username;
-      //       $barangNew->CREATED_AT = date('Y-m-d H:i:s');
-      //       $barangNew->UPDATED_BY = Yii::$app->user->identity->username;
-      //       if($barangNew->validate()){
-      //         $barangNew->save();
-      //         $rodetail = new Rodetail();
-      //         $rodetail->CREATED_AT = date('Y-m-d H:i:s');
-      //         $rodetail->KD_RO = $this->kD_RO; 		//required
-      //         $rodetail->KD_CORP = $this->kD_CORP; 	//required
-      //         $rodetail->PARENT_ROSO=0; // RO=1 		//required
-      //         $rodetail->KD_BARANG = $this->kD_BARANG;
-      //         $rodetail->NM_BARANG = $this->nM_BARANG;
-      //         $rodetail->UNIT = $this->uNIT;
-      //         $rodetail->RQTY = $this->rQTY;
-      //         $rodetail->SQTY = $this->rQTY;
-      //         $rodetail->NOTE = $this->nOTE;
-      //         $rodetail->HARGA= $this->hARGA;
-      //         $rodetail->STATUS = 0;
-      //         if ($rodetail->save()) {
-      //
-      //           // print_r($rodetail->geterrors());
-      //           return $rodetail;
-      //         }
-      //       }
-          // }
-
-      // }
 
 		return null;
 	}
@@ -227,9 +181,10 @@ class AdditemValidation extends Model
             'uNIT' => 'Satuan Barang',
             'kD_RO' => 'Kode Request Order',
             'kD_BARANG' => 'Nama  Barang',
-			'kD_KATEGORI' => 'Kategori Barang',
-			// 'NM_BARANG' => 'Nm  Barang',
+			      'kD_KATEGORI' => 'Kategori Barang',
+			      'nM_BARANG' => 'Nama Item',
             'rQTY' => 'Request Quantity',
+            'hARGA'=>'Harga',
          //   'SQTY' => 'Submit Quantity',
            // 'NO_URUT' => 'No  Urut',
             'nOTE' => 'Notes',

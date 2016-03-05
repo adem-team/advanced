@@ -90,16 +90,16 @@ class Customers extends \yii\db\ActiveRecord
 	}
 
 	public function getCustgrp(){
-		return $this->hasOne(Schedulegroup::className(), ['ID'=>'SCDL_GROUP']);		
+		return $this->hasOne(Schedulegroup::className(), ['ID'=>'SCDL_GROUP']);
 	}
 
-	public function getGrp_nm()
-    {
-        return $this->custgrp->SCDL_GROUP_NM;
-    }
-	
-	
-	
+	// public function getGrp_nm()
+  //   {
+  //       return $this->custgrp->SCDL_GROUP_NM;
+  //   }
+
+
+
     /**
      * @inheritdoc
      */
