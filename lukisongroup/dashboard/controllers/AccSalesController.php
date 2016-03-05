@@ -13,10 +13,16 @@ use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter; 	
+use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
+use yii\db\Query;
+use \DateTime;
+
+ 	
 use lukisongroup\widget\models\Chat;
 use lukisongroup\widget\models\ChatSearch;
 use lukisongroup\widget\models\ChatroomSearch;
-
+use lukisongroup\dashboard\models\AccSalesSearch;
 		
 class AccSalesController extends Controller
 {
@@ -102,5 +108,29 @@ class AccSalesController extends Controller
             'dataProvider1' => $dataProvider1,
 			'ctrl_chat'=>'alg_sales',
 		]);		      
+    }
+	
+	public function actionCustTerm()
+    {
+		$date=new DateTime();
+		$thn=strlen($date->format('Y'));
+		$bln=strlen($date->format('m'));
+		$hri=strlen($date->format('d'));
+		$dateRlt=$thn."-".$bln."-".$hri;
+		$searchModel = new AccSalesSearch([
+			//'tgllog'=>Yii::$app->ambilKonvesi->tglSekarang()
+		]);
+				
+		/*REKAP ABSENSI*/
+		//Field Label
+		$dataProviderField = $searchModel->dailyFieldTglRange();
+		//Value row
+		$dataProvider = $searchModel->searchDailyTglRange(Yii::$app->request->queryParams);
+        return $this->render('cterm', [
+			/*Daily Absensi*/
+			'searchModel'=>$searchModel,
+			'dataProviderField'=>$dataProviderField,
+			'dataProvider'=>$dataProvider			
+        ]);
     }
 }
