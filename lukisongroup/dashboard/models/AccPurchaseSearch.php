@@ -10,12 +10,10 @@ use yii\debug\components\search\Filter;
 use yii\debug\components\search\matchers;
 
 
-use lukisongroup\hrd\models\Personallog;
-
 /**
  * PersonallogSearch represents the model behind the search form about `lukisongroup\hrd\models\Personallog`.
  */
-class AccSalesSearch extends Model
+class AccPurchaseSearch extends Model
 {	
 	public $TerminalID;
 	public $EMP_NM;
