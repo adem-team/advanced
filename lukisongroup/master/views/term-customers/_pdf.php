@@ -5,41 +5,38 @@ use kartik\grid\GridView;
 
 ?>
 
-
 <div class="container-fluid" style="font-family: tahoma ;font-size: 8pt;">
   <div style="width:240px; float:left;">
     <?php echo Html::img('@web/img_setting/kop/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
   </div>
   <div style="padding-top:40px;">
-
     <h4 class="text-left"><b><?= $data->NM_TERM ?> </b></h4>
   </div>
+  
   <hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
   <hr style="height:1px;margin-top: 1px; margin-bottom: 10px;">
-  <table class="table table-bordered">
-      <tr>
-
-          <td> Pihak/partilies</td>
-          <td> <br>1. <?= $datacus['CUST_NM'] ?>
-               <br>2. <?= $datadis['NM_DISTRIBUTOR']?>
-               <br>3. <?= $datacorp['CORP_NM']?>
-          </td>
-
-        </tr>
-
+  
+  <!-- BORDER PAGE!-->
+	<table class="table table-bordered">
+		<tr>
+			<td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> Pihak/partilies</td>
+			<td style="width:70%; padding-left:20px; padding-top:5px; padding-bottom:5px">
+				<br>1. <?= $datacus['CUST_NM'] ?>
+				<br>2. <?= $datadis['NM_DISTRIBUTOR']?>
+				<br>3. <?= $datacorp['CORP_NM']?>
+			</td>
+		</tr>
         <tr>
-              <td> Period/Jangka waktu</td>
-              <td> <?= $data->PERIOD_START ?> - <?= $data->PERIOD_END  ?></td>
-
-      </tr>
+			<td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> Period/Jangka waktu</td>
+			<td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> <?= $data->PERIOD_START ?> - <?= $data->PERIOD_END  ?></td>
+		</tr>
        <tr>
-           <td> Term of Payment</td>
-           <td> <?= $data->TOP  ?></td>
-
+			<td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> Term of Payment</td>
+			<td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:15px"> <?= $data->TOP  ?></td>
       </tr>
       <tr>
-          <td> Trade Investment</td>
-          <td> <?= $grid = GridView::widget([
+          <td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> Trade Investment</td>
+          <td style="width:30%; padding-left:20px; padding-top:15px; padding-bottom:15px;padding-right:15px"> <?= $grid = GridView::widget([
               'id'=>'gv-term-general',
               'dataProvider'=> $dataProvider,
               'columns' =>
@@ -250,15 +247,13 @@ use kartik\grid\GridView;
 
      </tr>
      <tr>
-         <td> Conditional Rabate </td>
-         <td>     <?= $data->RABATE_CNDT ?>  </td>
+         <td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> Conditional Rabate </td>
+         <td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"><?= $data->RABATE_CNDT ?></td>
 
     </tr>
     <tr>
-        <td> Purchase Target/Target
-            <br>Pembelian
-        </td>
-        <td>      <h3 style="text-align: center;"><?= $data->TARGET_VALUE ?></h3>
+        <td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> Purchase Target/Target Pembelian</td>
+        <td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px">      <h3 style="text-align: center;"><?= $data->TARGET_VALUE ?></h3>
                   <h3 style="text-align: center;"> <br><?= $data->TARGET_TEXT ?> Rupiah</h3>
 
         </td>
