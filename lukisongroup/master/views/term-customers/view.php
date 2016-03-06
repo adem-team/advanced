@@ -22,160 +22,155 @@ $this->sideMenu = 'esm_customers';                                      /* kd_me
 $this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;
 
-function pihak($model){
-  $title = Yii::t('app','');
-  $options = [ 'id'=>'phk',
-          'data-toggle'=>"modal",
-          'data-target'=>"#pihak",
-          'class'=>'btn btn-warning btn-xs',
-          //'style'=>['width'=>'150px'],
-          'title'=>'Set'
-  ];
-  $icon = '<span class="glyphicon glyphicon-open"></span>';
-  $label = $icon . ' ' . $title;
-  $url = Url::toRoute(['/master/term-customers/pihak','id'=>$model->ID_TERM]);
-  $content = Html::a($label,$url, $options);
-  return $content;
-}
+	function pihak($model){
+		$title = Yii::t('app','');
+		$options = [ 'id'=>'phk',
+			  'data-toggle'=>"modal",
+			  'data-target'=>"#pihak",
+			  'class'=>'btn btn-warning btn-xs',
+			  //'style'=>['width'=>'150px'],
+			  'title'=>'Set'
+		];
+		$icon = '<span class="glyphicon glyphicon-open"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/master/term-customers/pihak','id'=>$model->ID_TERM]);
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
 
-function periode($model){
-  $title = Yii::t('app','');
-  $options = [ 'id'=>'peirod',
-          'data-toggle'=>"modal",
-          'data-target'=>"#periode",
-          'class'=>'btn btn-warning btn-xs',
-          //'style'=>['width'=>'150px'],
-          'title'=>'Set'
-  ];
-  $icon = '<span class="glyphicon glyphicon-open"></span>';
-  $label = $icon . ' ' . $title;
-  $url = Url::toRoute(['/master/term-customers/periode','id'=>$model->ID_TERM]);
-  $content = Html::a($label,$url, $options);
-  return $content;
-}
+	function periode($model){
+		$title = Yii::t('app','');
+		$options = [ 'id'=>'peirod',
+			  'data-toggle'=>"modal",
+			  'data-target'=>"#periode",
+			  'class'=>'btn btn-warning btn-xs',
+			  //'style'=>['width'=>'150px'],
+			  'title'=>'Set'
+		];
+		$icon = '<span class="glyphicon glyphicon-open"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/master/term-customers/periode','id'=>$model->ID_TERM]);
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
 
-function TOP($model){
-  $title = Yii::t('app','');
-  $options = [ 'id'=>'top',
-          'data-toggle'=>"modal",
-          'data-target'=>"#TOP",
-          'class'=>'btn btn-warning btn-xs',
-          //'style'=>['width'=>'150px'],
-          'title'=>'Set'
-  ];
-  $icon = '<span class="glyphicon glyphicon-open"></span>';
-  $label = $icon . ' ' . $title;
-  $url = Url::toRoute(['/master/term-customers/top','id'=>$model->ID_TERM]);
-  $content = Html::a($label,$url, $options);
-  return $content;
-}
+	function TOP($model){
+		$title = Yii::t('app','');
+		$options = [ 'id'=>'top',
+			  'data-toggle'=>"modal",
+			  'data-target'=>"#TOP",
+			  'class'=>'btn btn-warning btn-xs',
+			  //'style'=>['width'=>'150px'],
+			  'title'=>'Set'
+		];
+		$icon = '<span class="glyphicon glyphicon-open"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/master/term-customers/top','id'=>$model->ID_TERM]);
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
 
-function RABATE($model){
-  $title = Yii::t('app','');
-  $options = [ 'id'=>'rabate',
-          'data-toggle'=>"modal",
-          'data-target'=>"#RABATE",
-          'class'=>'btn btn-warning btn-xs',
-          //'style'=>['width'=>'150px'],
-          'title'=>'Set'
-  ];
-  $icon = '<span class="glyphicon glyphicon-open"></span>';
-  $label = $icon . ' ' . $title;
-  $url = Url::toRoute(['/master/term-customers/rabate','id'=>$model->ID_TERM]);
-  $content = Html::a($label,$url, $options);
-  return $content;
-}
+	function RABATE($model){
+		$title = Yii::t('app','');
+		$options = [ 'id'=>'rabate',
+			  'data-toggle'=>"modal",
+			  'data-target'=>"#RABATE",
+			  'class'=>'btn btn-warning btn-xs',
+			  //'style'=>['width'=>'150px'],
+			  'title'=>'Set'
+		];
+		$icon = '<span class="glyphicon glyphicon-open"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/master/term-customers/rabate','id'=>$model->ID_TERM]);
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
 
-function target($model){
-  $title = Yii::t('app','');
-  $options = [ 'id'=>'target-id',
-          'data-toggle'=>"modal",
-          'data-target'=>"#TARGET",
-          'class'=>'btn btn-warning btn-xs',
-          //'style'=>['width'=>'150px'],
-          'title'=>'Set'
-  ];
-  $icon = '<span class="glyphicon glyphicon-open"></span>';
-  $label = $icon . ' ' . $title;
-  $url = Url::toRoute(['/master/term-customers/target','id'=>$model->ID_TERM]);
-  $content = Html::a($label,$url, $options);
-  return $content;
-}
+	function target($model){
+		$title = Yii::t('app','');
+		$options = [ 'id'=>'target-id',
+			  'data-toggle'=>"modal",
+			  'data-target'=>"#TARGET",
+			  'class'=>'btn btn-warning btn-xs',
+			  //'style'=>['width'=>'150px'],
+			  'title'=>'Set'
+		];
+		$icon = '<span class="glyphicon glyphicon-open"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/master/term-customers/target','id'=>$model->ID_TERM]);
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
 
-function growth($model){
-  $title = Yii::t('app','');
-  $options = [ 'id'=>'growth',
-          'data-toggle'=>"modal",
-          'data-target'=>"#Growth",
-          'class'=>'btn btn-warning btn-xs',
-          //'style'=>['width'=>'150px'],
-          'title'=>'Set'
-  ];
-  $icon = '<span class="glyphicon glyphicon-open"></span>';
-  $label = $icon . ' ' . $title;
-  $url = Url::toRoute(['/master/term-customers/growth','id'=>$model->ID_TERM]);
-  $content = Html::a($label,$url, $options);
-  return $content;
-}
+	function growth($model){
+		$title = Yii::t('app','');
+		$options = [ 'id'=>'growth',
+			  'data-toggle'=>"modal",
+			  'data-target'=>"#Growth",
+			  'class'=>'btn btn-warning btn-xs',
+			  //'style'=>['width'=>'150px'],
+			  'title'=>'Set'
+		];
+		$icon = '<span class="glyphicon glyphicon-open"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/master/term-customers/growth','id'=>$model->ID_TERM]);
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
 
-function ttd($model){
-  if($model->CUST_NM == '')
-  {
-    $title = Yii::t('app','-- -- --');
-  }
-  else {
-    # code...
-      $title = Yii::t('app',$model['CUST_NM']);
-  }
+	function ttd($model){
+		if($model->CUST_NM == ''){
+			$title = Yii::t('app','-- -- --');
+		}else {
+			# code...
+			$title = Yii::t('app',$model['CUST_NM']);
+		}
 
-  $options = [ 'id'=>'tdd-id',
-          'data-toggle'=>"modal",
-          'data-target'=>"#TTD1",
-          'title'=>'Set'
-  ];
-  $url = Url::toRoute(['/master/term-customers/set-cus','id'=>$model->ID_TERM]);
-  $content = Html::a($title,$url, $options);
-  return $content;
-}
+		$options = [ 'id'=>'tdd-id',
+			  'data-toggle'=>"modal",
+			  'data-target'=>"#TTD1",
+			  'title'=>'Set'
+		];
+		$url = Url::toRoute(['/master/term-customers/set-cus','id'=>$model->ID_TERM]);
+		$content = Html::a($title,$url, $options);
+		return $content;
+	}
 
-function ttd2($model){
-  if($model->DIST_NM == '')
-  {
-    $title = Yii::t('app','-- -- --');
-  }
-  else {
-    # code...
-      $title = Yii::t('app',$model['DIST_NM']);
-  }
-  $options = [ 'id'=>'tdd-id2',
-          'data-toggle'=>"modal",
-          'data-target'=>"#TTD2",
-          'title'=>'Set'
-  ];
-  $url = Url::toRoute(['/master/term-customers/set-dist','id'=>$model->ID_TERM]);
-  $content = Html::a($title,$url, $options);
-  return $content;
-}
+	function ttd2($model){
+		if($model->DIST_NM == ''){
+			$title = Yii::t('app','-- -- --');
+		}else {
+			# code...
+			$title = Yii::t('app',$model['DIST_NM']);
+		}
+		$options = [ 'id'=>'tdd-id2',
+			  'data-toggle'=>"modal",
+			  'data-target'=>"#TTD2",
+			  'title'=>'Set'
+		];
+		$url = Url::toRoute(['/master/term-customers/set-dist','id'=>$model->ID_TERM]);
+		$content = Html::a($title,$url, $options);
+		return $content;
+	}
 
-function ttd3($model){
-  if($model->JOBGRADE_ID == '')
-  {
-    $title = Yii::t('app','-- -- --');
-  }
-  else {
-    # code...
-      $title = Yii::t('app',$model['PRINCIPAL_NM']);
-  }
+	function ttd3($model){
+		if($model->JOBGRADE_ID == ''){
+			$title = Yii::t('app','-- -- --');
+		}else {
+			# code...
+			$title = Yii::t('app',$model['PRINCIPAL_NM']);
+		}
 
-  $options = [ 'id'=>'tdd-id3',
-          'data-toggle'=>"modal",
-          'data-target'=>"#TTD3",
-          'title'=>'Set'
-  ];
-  $url = Url::toRoute(['/master/term-customers/set-internal','id'=>$model->ID_TERM]);
-  $content = Html::a($title,$url, $options);
-  return $content;
-}
+		$options = [ 'id'=>'tdd-id3',
+			  'data-toggle'=>"modal",
+			  'data-target'=>"#TTD3",
+			  'title'=>'Set'
+		];
+		
+		$url = Url::toRoute(['/master/term-customers/set-internal','id'=>$model->ID_TERM]);
+		$content = Html::a($title,$url, $options);
+		return $content;
+	}
 
 
 
@@ -201,26 +196,27 @@ function ttd3($model){
 //
 // }
 // else{
-  function PrintPdf($model){
-      $title = Yii::t('app','Print');
-      $options = [ 'id'=>'pdf-print-id',
-              'class'=>'btn btn-default btn-xs',
-              'title'=>'Print PDF',
-              'target' => '_blank'
-      ];
-      $icon = '<span class="fa fa-print fa-fw"></span>';
-      $label = $icon . ' ' . $title;
-      $url = Url::toRoute(['/master/term-customers/cetakpdf','id'=>$model->ID_TERM]);
-      $content = Html::a($label,$url, $options);
-      return $content;
-  }
+	function PrintPdf($model){
+		$title = Yii::t('app','Print');
+		$options = [ 'id'=>'pdf-print-id',
+			  'class'=>'btn btn-default btn-xs',
+			  'title'=>'Print PDF',
+			  'target' => '_blank'
+		];
+		$icon = '<span class="fa fa-print fa-fw"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/master/term-customers/cetakpdf','id'=>$model->ID_TERM]);
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
 
 
 ?>
-<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
+<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;padding-bottom:20px;">
 
-  <div  class="row">
 	<!-- HEADER !-->
+	<div  class="row">
+		<!-- HEADER !-->
 		<div class="col-md-12">
 			<div class="col-md-1" style="float:left;">
 				<?php echo Html::img('@web/upload/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
@@ -233,582 +229,580 @@ function ttd3($model){
 			</div>
 
 		</div>
-
 	</div>
 
-  <div class="row">
-    <div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;">
-      <div>
-        <?php echo pihak($model); ?>
-      </div>
-      <dl>
-        <?php
-        $data = Customers::find()->where(['CUST_KD'=> $model->CUST_KD])
-                                ->asArray()
-                                ->one();
-        $datadis = Distributor::find()->where(['KD_DISTRIBUTOR'=> $model->DIST_KD])
-                                      ->asArray()
-                                      ->one();
-        $datacorp = Corp::find()->where(['CORP_ID'=> $model->PRINCIPAL_KD])
-                                                                    ->asArray()
-                                                                    ->one();
+	<!-- PARTIES/PIHAK !-->
+	<div class="row">
+		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+			<div>
+				<?php echo pihak($model); ?>
+			</div>
+			<dl>
+				<?php
+					$data = Customers::find()->where(['CUST_KD'=> $model->CUST_KD])
+											->asArray()
+											->one();
+					$datadis = Distributor::find()->where(['KD_DISTRIBUTOR'=> $model->DIST_KD])
+												  ->asArray()
+												  ->one();
+					$datacorp = Corp::find()->where(['CORP_ID'=> $model->PRINCIPAL_KD])
+																				->asArray()
+																				->one();
+				 ?>
+				<dt><h6><u><b>PARTIES/PIHAK BERSANGKUTAN :</b></u></h6></dt>
 
-         ?>
-
-        <dt><h6><u><b>Pihak :</b></u></h6></dt>
-
-        <dd>:	<?= $data['CUST_NM'] ?></dd>
-
-
-        <dd>:	<?= $datadis['NM_DISTRIBUTOR']?></dd>
+				<dd>1 :	<?= $data['CUST_NM'] ?></dd>
 
 
-        <dd>:	<?=$datacorp['CORP_NM']?></dd>
-      </dl>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;">
-      <div>
-        <?php echo periode($model); ?>
-      </div>
-      <dl>
-
-        <dt><h6><u><b>Period/Jangka Waktu :</b></u></h6></dt>
-        <dt style="width:80px; float:left;"> Dari: </dt>
-        <dd>:	<?=$model->PERIOD_START ?></dd>
-
-        <dt style="width:80px; float:left;">Sampai:</dt>
-        <dd>:	<?=$model->PERIOD_END?></dd>
-
-      </dl>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;">
-      <div>
-        <?php echo TOP($model); ?>
-      </div>
-      <dl>
-        <dt><h6><u><b>Term Of Payment : <?= $model->TOP ?></b></u></h6></dt>
-      </dl>
-    </div>
-  </div>
+				<dd>2 :	<?= $datadis['NM_DISTRIBUTOR']?></dd>
 
 
+				<dd>3 :	<?=$datacorp['CORP_NM']?></dd>
+			</dl>
+		</div>
+	</div>
 
+	<!-- PERIODE/JANGKA WAKTU !-->
+	<div class="row">
+		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+			<div>
+				<?php echo periode($model); ?>
+			</div>
+			<dl>
+				<dt><h6><u><b>PERIODE/JANGKA WAKTU :</b></u></h6></dt>
+				<dt style="width:80px; float:left;"> Dari: </dt>
+				<dd>:	<?=$model->PERIOD_START ?></dd>
 
-<?php
-$dataids = $_GET['id'];
+				<dt style="width:80px; float:left;">Sampai:</dt>
+				<dd>:	<?=$model->PERIOD_END?></dd>
+			</dl>
+		</div>
+	</div>
 
-?>
+	<!-- TERM OF PAYMENT !-->
+	<div class="row">
+		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+			<div>
+				<?php echo TOP($model); ?>
+			</div>
+			<dl>
+				<dt><h6><u><b>TERM OF PAYMENT :</b></u></h6></dt>
+				<dd> <?= $model->TOP ?></dd>
+			</dl>
+		</div>
+	</div>
 
-<?php
-  echo  $grid = GridView::widget([
-      'id'=>'gv-term-general',
-      'dataProvider'=> $dataProvider1,
-      'footerRowOptions'=>['style'=>'font-weight:bold;text-decoration: underline;'],
-      'columns' =>
-        [
-           [
-             'class'=>'kartik\grid\SerialColumn',
-             'contentOptions'=>['class'=>'kartik-sheet-style'],
-             'width'=>'10px',
-             'header'=>'No.',
-             'headerOptions'=>[
-               'style'=>[
-                 'text-align'=>'center',
-                 'width'=>'100px',
-                 'font-family'=>'verdana, arial, sans-serif',
-                 'font-size'=>'9pt',
-                 'background-color'=>'rgba(97, 211, 96, 0.3)',
-               ]
-             ],
-             'contentOptions'=>[
-               'style'=>[
-                 'text-align'=>'center',
-                 'width'=>'100px',
-                 'font-family'=>'tahoma, arial, sans-serif',
-                 'font-size'=>'9pt',
-               ]
-             ],
-           ],
-
-           [
-             'attribute' => 'INVES_TYPE',
-             'label'=>'Type Investasi',
-             'hAlign'=>'left',
-             'vAlign'=>'middle',
-             'headerOptions'=>[
-               'style'=>[
-                 'text-align'=>'center',
-                 'font-family'=>'tahoma, arial, sans-serif',
-                 'font-size'=>'9pt',
-                 'background-color'=>'rgba(97, 211, 96, 0.3)',
-               ]
-             ],
-             'contentOptions'=>[
-               'style'=>[
-                 'text-align'=>'left',
-                 'width'=>'100px',
-                 'font-family'=>'tahoma, arial, sans-serif',
-                 'font-size'=>'9pt',
-               ]
-             ],
-             'pageSummaryOptions' => [
-               'style'=>[
-                   'border-left'=>'0px',
-                   'border-right'=>'0px',
-               ]
-             ],
-             'pageSummary'=>function ($summary, $data, $widget){
-                     return '<div> Total :</div>';
-                   },
-             'pageSummaryOptions' => [
-               'style'=>[
-                   'font-family'=>'tahoma',
-                   'font-size'=>'8pt',
-                   'text-align'=>'center',
-                   'border-left'=>'0px',
-                   'border-right'=>'0px',
-               ]
-             ],
-           ],
-           [
-             'attribute' => 'BUDGET_VALUE',
-             'label'=>'Value',
-             'hAlign'=>'left',
-             'vAlign'=>'middle',
-             'headerOptions'=>[
-               'style'=>[
-                 'text-align'=>'center',
-                 'width'=>'100px',
-                 'font-family'=>'tahoma, arial, sans-serif',
-                 'font-size'=>'9pt',
-                 'background-color'=>'rgba(97, 211, 96, 0.3)',
-               ]
-             ],
-             'contentOptions'=>[
-               'style'=>[
-                 'text-align'=>'left',
-                 'width'=>'100px',
-                 'font-family'=>'tahoma, arial, sans-serif',
-                 'font-size'=>'9pt',
-               ]
-             ],
-             	'pageSummaryFunc'=>GridView::F_SUM,
-             'format'=>['decimal', 2],
-             	'pageSummary'=>true,
-             'pageSummaryOptions' => [
-               'style'=>[
-                   'font-family'=>'tahoma',
-                   'font-size'=>'8pt',
-                   'text-align'=>'left',
-                   'border-left'=>'0px',
-               ]
-             ],
-
-
-           ],
-            [
-              'attribute' => 'budget.TARGET_VALUE',
-              'label'=>'%',
-              'hAlign'=>'left',
-              'vAlign'=>'middle',
-              'value' => function($model) {
-                        if($model->budget->TARGET_VALUE == '')
-                        {
-                             return  $model->budget->TARGET_VALUE = 0.00;
-                        }
-                        else {
-                          # code...
-                           return $model->BUDGET_VALUE / $model->budget->TARGET_VALUE * 100;
-                        }
-                        ;},
-              'headerOptions'=>[
-                'style'=>[
-                  'text-align'=>'center',
-                  'width'=>'100px',
-                  'font-family'=>'tahoma, arial, sans-serif',
-                  'font-size'=>'9pt',
-                  'background-color'=>'rgba(97, 211, 96, 0.3)',
-                ]
-              ],
-              'contentOptions'=>[
-                'style'=>[
-                  'text-align'=>'left',
-                  'width'=>'100px',
-                  'font-family'=>'tahoma, arial, sans-serif',
-                  'font-size'=>'9pt',
-                ]
-              ],
-              'pageSummaryFunc'=>GridView::F_SUM,
-            'format'=>['decimal', 2],
-              'pageSummary'=>true,
-            'pageSummaryOptions' => [
-              'style'=>[
-                  'font-family'=>'tahoma',
-                  'font-size'=>'8pt',
-                  'text-align'=>'left',
-                  'border-left'=>'0px',
-              ]
-               ],
-            ],
-           [
-             'attribute' => 'PERIODE_END',
-             'label'=>'Periode',
-             'hAlign'=>'left',
-             'vAlign'=>'middle',
-             'value' => function($model) { return $model->PERIODE_START . "-" . $model->PERIODE_END;},
-             'headerOptions'=>[
-               'style'=>[
-                 'text-align'=>'center',
-                 'width'=>'100px',
-                 'font-family'=>'tahoma, arial, sans-serif',
-                 'font-size'=>'9pt',
-                 'background-color'=>'rgba(97, 211, 96, 0.3)',
-               ]
-             ],
-             'contentOptions'=>[
-               'style'=>[
-                 'text-align'=>'left',
-                 'width'=>'100px',
-                 'font-family'=>'tahoma, arial, sans-serif',
-                 'font-size'=>'9pt',
-               ]
-             ],
-           ],
-         ],
-      'showPageSummary' => true,
-      'pjax'=>true,
-        'pjaxSettings'=>[
-          'options'=>[
-            'enablePushState'=>false,
-            'id'=>'gv-term-general',
-          ],
-         ],
-      'toolbar' => [
-        '',
-      ],
-      'panel' => [
-        'heading'=>'<h3 class="panel-title">Type Investasi</h3>',
-        'type'=>'primary',
-        'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Investasi ',
-            ['modelClass' => 'Termcustomers',]),['/master/term-customers/create-budget','id'=>$dataids],[
-              'data-toggle'=>"modal",
-                'data-target'=>"#modal-create",
-                'data-title'=>'type Investasi',
-                  'class' => 'btn btn-info'
-                        ]),
-        'showFooter'=>true,
-
-      ],
-
-      'export' =>false,
-    ]);
-    ?>
+	<?php
+		$dataids = $_GET['id'];
+	?>
+	
+	<!-- TRADE INVESTMENT !-->
+	<div class="row">
+	  <div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">	
+		<?php
+			echo  $grid = GridView::widget([
+			  'id'=>'gv-term-general',
+			  'dataProvider'=> $dataProvider1,
+			  'footerRowOptions'=>['style'=>'font-weight:bold;text-decoration: underline;'],
+			  'columns' =>[
+					[
+						'class'=>'kartik\grid\SerialColumn',
+						'contentOptions'=>['class'=>'kartik-sheet-style'],
+						'width'=>'5%',
+						'header'=>'No.',
+						'headerOptions'=>[
+							'style'=>[
+							 'text-align'=>'center',
+							 'width'=>'100px',
+							 'font-family'=>'verdana, arial, sans-serif',
+							 'font-size'=>'9pt',
+							 'background-color'=>'rgba(97, 211, 96, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+							 'text-align'=>'center',
+							 'width'=>'100px',
+							 'font-family'=>'tahoma, arial, sans-serif',
+							 'font-size'=>'9pt',
+							]
+						],
+					],
+					[
+						'attribute' => 'INVES_TYPE',
+						'label'=>'Trade Investment',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						'headerOptions'=>[
+							'style'=>[
+								 'width'=>'45%',
+								 'text-align'=>'center',
+								 'font-family'=>'tahoma, arial, sans-serif',
+								 'font-size'=>'9pt',
+								 'background-color'=>'rgba(97, 211, 96, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								 'text-align'=>'left',
+								 'width'=>'45%',
+								 'font-family'=>'tahoma, arial, sans-serif',
+								 'font-size'=>'9pt',
+							]
+						],
+						'pageSummaryOptions' => [
+							'style'=>[
+							   'border-left'=>'0px',
+							   'border-right'=>'0px',
+							]
+						],
+						
+					],
+					[
+						'attribute' => 'PERIODE_END',
+						'label'=>'Periode',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						'noWrap'=>true,
+						'value' => function($model) { return $model->PERIODE_START . "-" . $model->PERIODE_END;},
+						'headerOptions'=>[
+							'style'=>[
+							 'text-align'=>'center',
+							 'width'=>'20%',
+							 'font-family'=>'tahoma, arial, sans-serif',
+							 'font-size'=>'9pt',
+							 'background-color'=>'rgba(97, 211, 96, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+							 'text-align'=>'left',
+							 'width'=>'20%',
+							 'font-family'=>'tahoma, arial, sans-serif',
+							 'font-size'=>'9pt',
+							]
+						],
+						'pageSummary'=>function ($summary, $data, $widget){
+							 return '<div> Total :</div>';
+					    },
+						'pageSummaryOptions' => [
+							'style'=>[
+							   'font-family'=>'tahoma',
+							   'font-size'=>'8pt',
+							   'text-align'=>'right',
+							   'border-left'=>'0px',
+							   
+							]
+						],
+					],
+					[
+						'attribute' => 'BUDGET_VALUE',
+						'label'=>'Budget',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						'headerOptions'=>[
+							'style'=>[
+							 'text-align'=>'center',
+							 'width'=>'15%',
+							 'font-family'=>'tahoma, arial, sans-serif',
+							 'font-size'=>'9pt',
+							 'background-color'=>'rgba(97, 211, 96, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+							 'text-align'=>'right',
+							 'width'=>'15%',
+							 'font-family'=>'tahoma, arial, sans-serif',
+							 'font-size'=>'9pt',
+							]
+						],
+						'pageSummaryFunc'=>GridView::F_SUM,
+						'format'=>['decimal', 2],
+						'pageSummary'=>true,
+						'pageSummaryOptions' => [
+							'style'=>[
+							   'font-family'=>'tahoma',
+							   'font-size'=>'8pt',
+							   'text-align'=>'right',
+							   'border-left'=>'0px',
+							]
+						],
+					],
+					[
+						'attribute' => 'budget.TARGET_VALUE',
+						'label'=>'Persent %',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						'value' => function($model) {
+								if($model->budget->TARGET_VALUE == '')
+								{
+									 return  $model->budget->TARGET_VALUE = 0.00;
+								}
+								else {
+								  # code...
+								   return $model->BUDGET_VALUE / $model->budget->TARGET_VALUE * 100;
+								}
+						;},
+						'headerOptions'=>[
+							'style'=>[
+							  'text-align'=>'center',
+							  'width'=>'15%',
+							  'font-family'=>'tahoma, arial, sans-serif',
+							  'font-size'=>'9pt',
+							  'background-color'=>'rgba(97, 211, 96, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+							  'text-align'=>'right',
+							   'width'=>'15%',
+							  'font-family'=>'tahoma, arial, sans-serif',
+							  'font-size'=>'9pt',
+							]
+						],
+						'pageSummaryFunc'=>GridView::F_SUM,
+						'format'=>['decimal', 2],
+						'pageSummary'=>true,
+						'pageSummaryOptions' => [
+							'style'=>[
+							  'font-family'=>'tahoma',
+							  'font-size'=>'8pt',
+							  'text-align'=>'right',
+							  'border-left'=>'0px',
+							]
+					   ],
+					],
+					
+			   ],
+				'showPageSummary' => true,
+				'pjax'=>true,
+				'pjaxSettings'=>[
+					'options'=>[
+						'enablePushState'=>false,
+						'id'=>'gv-term-general',
+					],
+				],
+				'toolbar' => [
+					'',
+				],
+				'panel' => [
+					'heading'=>'<h5 class="panel-title">TRADE INVESTMENT</h5>',
+					'type'=>'success',
+					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Investment ',
+						['modelClass' => 'Termcustomers',]),['/master/term-customers/create-budget','id'=>$dataids],[
+						  'data-toggle'=>"modal",
+							'data-target'=>"#modal-create",
+							'data-title'=>'type Investasi',
+							  'class' => 'btn btn-danger btn-xs'
+									]),
+					'showFooter'=>true,
+				],
+				'export' =>false,
+			]);
+		?>
+		</div>
+	</div>
+	
+	<!-- RABATE !-->
     <div class="row">
-      <div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;">
-        <div>
-          <?php echo RABATE($model); ?>
-        </div>
-        <dl>
-          <dt><h6><u><b>Conditional Rabate : <?= $model->RABATE_CNDT ?></b></u></h6></dt>
-        </dl>
-      </div>
+		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+			<div>
+				<?php echo RABATE($model); ?>
+			</div>
+			<dl>
+				<dt><h6><u><b>Conditional Rabate : <?= $model->RABATE_CNDT ?></b></u></h6></dt>
+			</dl>
+		</div>
     </div>
 
+	<!-- TARGET !-->
     <div class="row">
-    <div class="col-xs-5 col-sm-5 col-md-5" style="font-family: tahoma ;font-size: 9pt;">
-      <div>
-        <?php echo target($model); ?>
-      </div
-        <dl>
+		<div class="col-xs-5 col-sm-5 col-md-5" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+			<div>
+				<?php echo target($model); ?>
+			</div>
+			<dl>
+				<dt style="width:80px; float:left;"><h6><u><b>TARGET :</b></u></h6></dt>
+				<dd>:Rp.<?=$model->TARGET_VALUE?></dd>
+				<dd>:	<?=$model->TARGET_TEXT ?> Rupiah</dd>
 
-          <dt style="width:80px; float:left;"><h6><u><b>Target :</b></u></h6></dt>
-          <dd>:Rp.<?=$model->TARGET_VALUE?></dd>
-            <dd>:	<?=$model->TARGET_TEXT ?> Rupiah</dd>
+			</dl>
+		</div>
+	</div>
 
-        </dl>
-    </div>
-  </div>
+	<!-- GROWTH !-->
+	<div class="row">
+		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+			<div>
+			  <?php echo Growth($model); ?>
+			</div>
+			<dl>
+			  <dt><h6><u><b>Growth : <?= $model->GROWTH ?> %</b></u></h6></dt>
+			</dl>
+		</div>
+	</div>
 
-    <div class="row">
-      <div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;">
-        <div>
-          <?php echo Growth($model); ?>
-        </div>
-        <dl>
-          <dt><h6><u><b>Growth : <?= $model->GROWTH ?> %</b></u></h6></dt>
-        </dl>
-      </div>
-    </div>
+	<!-- GENERAL TERM !-->
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+			<?php
+				echo  $grid = GridView::widget([
+					'id'=>'gv-term',
+					'dataProvider'=> $dataProvider,
+					'footerRowOptions'=>['style'=>'font-weight:bold;text-decoration: underline;'],
+					// 'filterModel' => $searchModel1,
+					// 'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+					'columns' => [
+						 [
+							'class'=>'kartik\grid\SerialColumn',
+							'contentOptions'=>['class'=>'kartik-sheet-style'],
+							'width'=>'5%',
+							'header'=>'No.',
+							'headerOptions'=>[
+								 'style'=>[
+								   'text-align'=>'center',
+								   'width'=>'5%',
+								   'font-family'=>'verdana, arial, sans-serif',
+								   'font-size'=>'9pt',
+								   'background-color'=>'rgba(97, 211, 96, 0.3)',
+								 ]
+							],
+							'contentOptions'=>[
+								 'style'=>[
+								   'text-align'=>'center',
+								   'width'=>'5%',
+								   'font-family'=>'tahoma, arial, sans-serif',
+								   'font-size'=>'9pt',
+								 ]
+							],
+						 ],
+						 [
+							'attribute' => 'general.SUBJECT',
+							'label'=>'General Term',
+							'hAlign'=>'left',
+							'vAlign'=>'middle',
+							'headerOptions'=>[
+								 'style'=>[
+								   'width'=>'30%',
+								   'text-align'=>'center',
+								   'font-family'=>'tahoma, arial, sans-serif',
+								   'font-size'=>'9pt',
+								   'background-color'=>'rgba(97, 211, 96, 0.3)',
+								 ]
+							],
+							'contentOptions'=>[
+								 'style'=>[
+								   'text-align'=>'left',
+								   'width'=>'30%',
+								   'font-family'=>'tahoma, arial, sans-serif',
+								   'font-size'=>'9pt',
+								 ]
+							],
+						 ],
+						 [
+							'attribute' => 'general.ISI_TERM',
+							'label'=>'Isi Peraturan',
+							'hAlign'=>'left',
+							'vAlign'=>'middle',
+							'headerOptions'=>[
+								 'style'=>[
+								   'text-align'=>'center',
+								   'width'=>'75%',
+								   'font-family'=>'tahoma, arial, sans-serif',
+								   'font-size'=>'9pt',
+								   'background-color'=>'rgba(97, 211, 96, 0.3)',
+								 ]
+							],
+							'contentOptions'=>[
+								 'style'=>[
+								   'text-align'=>'left',
+								    'width'=>'75%',
+								   'font-family'=>'tahoma, arial, sans-serif',
+								   'font-size'=>'9pt',
+								 ]
+							],
+						 ],
+					],
+					'showPageSummary' => false,
+					'pjax'=>true,
+					  'pjaxSettings'=>[
+						'options'=>[
+						  'enablePushState'=>false,
+						  'id'=>'gv-term-general',
+						],
+					   ],
+					'toolbar' => [
+					  '',
+					],
+					'panel' => [
+					  'heading'=>'<h5 class="panel-title">GENERAL TERM</h5>',
+					  'type'=>'success',
+					  'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Regulation',
+						  ['modelClass' => 'Termcustomers',]),['/master/term-customers/create-general','id'=>$dataids],[
+							'data-toggle'=>"modal",
+							  'data-target'=>"#modal-create",
+								'class' => 'btn btn-danger btn-xs'
+									  ]),
+					  'showFooter'=>true,
+					],
+					'export' =>false,
+				]);
+			?>
+		</div>
+	</div>
 
+	<!-- PrintPdf !-->
+	<div style="text-align:right;float:right">
+		<?php echo PrintPdf($model); ?>
+	</div>
 
-    <?php
+	<!-- SIGNATURE PIHAK !-->
+	<div  class="col-md-12">
+		<div  class="row" >
+			<div class="col-md-7">
+				<table id="tblterm" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;padding-left:30px">
+					<!-- Tanggal!-->
+					<tr>
+						<th  class="col-md-1" style="text-align: center; height:20px">
+							<div style="text-align:center;">
+							   <?php
+								 $placeTgl1= date('Y-m-d');
+								 echo  $placeTgl1;
+							   ?>
+							</div>
+						</th>
+					
+						<!-- Tanggal Pembuat RO!-->
+						<th class="col-md-1" style="text-align: center; height:20px">
+							<div style="text-align:center;">
+								<?php
+									$placeTgl2 = date('Y-m-d');
+									echo $placeTgl2;
+								?>
+							</div>
+					   </th>
+					   <!-- Tanggal PO Approved!-->
+					   <th class="col-md-1" style="text-align: center; height:20px">
+							<div style="text-align:center;">
+							   <?php
+									$placeTgl3= date('Y-m-d');
+									echo  $placeTgl3;
+							   ?>
+							</div>
+					   </th>
+					</tr>
+					
+					<!-- Department|Jbatan !-->
+					<tr>
+						<th  class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+							<div>
+								<b><?php  echo $data['CUST_NM'] ; ?></b>
+							</div>
+					    </th>
+					    <th class="col-md-1"  style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+							<div>
+								<b><?php  echo $datadis['NM_DISTRIBUTOR']; ?></b>
+							</div>
+					    </th>
+						<th class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+							<div>
+							   <b><?php  echo $datacorp['CORP_NM']; ?></b>
+							</div>
+						</th>
+					</tr>
+			
+					<!-- Signature !-->
+					<tr>
+					   <th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
+					   </th>
+					   <th class="col-md-1" style="text-align: center; vertical-align:middle">
+					   </th>
+					   <th  class="col-md-1" style="text-align: center; vertical-align:middle">
+					   </th>
+					</tr>
+			
+					<!--Nama !-->
+					<tr>
+						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
+							<div>
 
-    echo  $grid = GridView::widget([
-        'id'=>'gv-term',
-        'dataProvider'=> $dataProvider,
-        'footerRowOptions'=>['style'=>'font-weight:bold;text-decoration: underline;'],
-        // 'filterModel' => $searchModel1,
-        // 'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
-        'columns' =>
-          [
-             [
-               'class'=>'kartik\grid\SerialColumn',
-               'contentOptions'=>['class'=>'kartik-sheet-style'],
-               'width'=>'10px',
-               'header'=>'No.',
-               'headerOptions'=>[
-                 'style'=>[
-                   'text-align'=>'center',
-                   'width'=>'100px',
-                   'font-family'=>'verdana, arial, sans-serif',
-                   'font-size'=>'9pt',
-                   'background-color'=>'rgba(97, 211, 96, 0.3)',
-                 ]
-               ],
-               'contentOptions'=>[
-                 'style'=>[
-                   'text-align'=>'center',
-                   'width'=>'100px',
-                   'font-family'=>'tahoma, arial, sans-serif',
-                   'font-size'=>'9pt',
-                 ]
-               ],
-             ],
+							</div>
+						</th>
+						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
+							<div>
 
-             [
-               'attribute' => 'general.SUBJECT',
-               'label'=>'General Term',
-               'hAlign'=>'left',
-               'vAlign'=>'middle',
-               'headerOptions'=>[
-                 'style'=>[
-                   'text-align'=>'center',
-                   'font-family'=>'tahoma, arial, sans-serif',
-                   'font-size'=>'9pt',
-                   'background-color'=>'rgba(97, 211, 96, 0.3)',
-                 ]
-               ],
-               'contentOptions'=>[
-                 'style'=>[
-                   'text-align'=>'left',
-                   'width'=>'100px',
-                   'font-family'=>'tahoma, arial, sans-serif',
-                   'font-size'=>'9pt',
-                 ]
-               ],
-             ],
-             [
-               'attribute' => 'general.ISI_TERM',
-               'label'=>'Isi Peraturan',
-               'hAlign'=>'left',
-               'vAlign'=>'middle',
-               'headerOptions'=>[
-                 'style'=>[
-                   'text-align'=>'center',
-                   'font-family'=>'tahoma, arial, sans-serif',
-                   'font-size'=>'9pt',
-                   'background-color'=>'rgba(97, 211, 96, 0.3)',
-                 ]
-               ],
-               'contentOptions'=>[
-                 'style'=>[
-                   'text-align'=>'left',
-                   'width'=>'100px',
-                   'font-family'=>'tahoma, arial, sans-serif',
-                   'font-size'=>'9pt',
-                 ]
-               ],
-             ],
+							</div>
+						</th>
+						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
+							<div>
 
-           ],
-        'showPageSummary' => false,
-        'pjax'=>true,
-          'pjaxSettings'=>[
-            'options'=>[
-              'enablePushState'=>false,
-              'id'=>'gv-term-general',
-            ],
-           ],
-        'toolbar' => [
-          '',
-        ],
-        'panel' => [
-          'heading'=>'<h3 class="panel-title">General Term</h3>',
-          'type'=>'primary',
-          'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Term ',
-              ['modelClass' => 'Termcustomers',]),['/master/term-customers/create-general','id'=>$dataids],[
-                'data-toggle'=>"modal",
-                  'data-target'=>"#modal-create",
-                    'class' => 'btn btn-info'
-                          ]),
-          'showFooter'=>true,
-
-        ],
-
-        'export' =>false,
-      ]);
-
- ?>
- <div style="text-align:right;float:right"">
-    <?php echo PrintPdf($model); ?>
-  </div>
-
- <div  class="col-md-12">
-   <div  class="row" >
-     <div class="col-md-6">
-       <table id="tblterm" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">
-         <!-- Tanggal!-->
-          <tr>
-           <th  class="col-md-1" style="text-align: center; height:20px">
-             <div style="text-align:center;">
-               <?php
-                 $placeTgl1= date('Y-m-d');
-                 echo  $placeTgl1;
-               ?>
-             </div>
-
-           </th>
-           <!-- Tanggal Pembuat RO!-->
-           <th class="col-md-1" style="text-align: center; height:20px">
-             <div style="text-align:center;">
-               <?php
-                 $placeTgl2 = date('Y-m-d');
-                 echo $placeTgl2;
-               ?>
-             </div>
-
-           </th>
-           <!-- Tanggal PO Approved!-->
-           <th class="col-md-1" style="text-align: center; height:20px">
-             <div style="text-align:center;">
-               <?php
-                 $placeTgl3= date('Y-m-d');
-                 echo  $placeTgl3;
-               ?>
-             </div>
-           </th>
-
-         </tr>
-         <!-- Department|Jbatan !-->
-          <tr>
-           <th  class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
-             <div>
-               <b><?php  echo $data['CUST_NM'] ; ?></b>
-             </div>
-           </th>
-           <th class="col-md-1"  style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
-             <div>
-               <b><?php  echo $datadis['NM_DISTRIBUTOR']; ?></b>
-             </div>
-           </th>
-           <th class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
-             <div>
-               <b><?php  echo $datacorp['CORP_NM']; ?></b>
-             </div>
-           </th>
-         </tr>
-         <!-- Signature !-->
-          <tr>
-           <th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
-
-           </th>
-           <th class="col-md-1" style="text-align: center; vertical-align:middle">
-
-           </th>
-           <th  class="col-md-1" style="text-align: center; vertical-align:middle">
-
-           </th>
-         </tr>
-         <!--Nama !-->
-          <tr>
-           <th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
-             <div>
-
-             </div>
-           </th>
-           <th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
-             <div>
-
-             </div>
-           </th>
-           <th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
-             <div>
-
-             </div>
-           </th>
-         </tr>
-         <!-- Department|Jbatan !-->
-          <tr>
-           <th style="text-align: center; vertical-align:middle;height:20">
-             <div>
-               <b><?php  echo 'Nama:  '.ttd($model) ?></b>
-               <?php
-               $barisjabatancus = count($model->JABATAN_CUS);
-               if($barisjabatancus == 0)
-               {
-               ?>
-               <br><b><?php  echo 'Jabatan:  ---' ?></b>
-               <?php
-              }
-              else{
-               ?>
-               <br><b><?php  echo 'Jabatan:  '.$model->JABATAN_CUS ?></b>
-               <?php
-             }
-               ?>
-             </div>
-           </th>
-           <th style="text-align: center; vertical-align:middle;height:20">
-             <div>
-               <b><?php  echo 'Nama:   '.ttd2($model) ?></b>
-               <?php
-               $barisjabatandis = count($model->JABATAN_DIST);
-               if($barisjabatandis == 0)
-               {
-               ?>
-               <br><b><?php  echo 'Jabatan:  ---' ?></b>
-               <?php
-              }
-              else{
-               ?>
-               <br><b><?php  echo 'Jabatan:  '.$model->JABATAN_DIST ?></b>
-               <?php
-             }
-               ?>
-             </div>
-           </th>
-           <th style="text-align: center; vertical-align:middle;height:20">
-             <div>
-                  <b><?php  echo 'Nama:   '.ttd3($model) ?></b>
-               <?php
-               $barisjabataninternal = count($model->JOBGRADE_ID);
-               if($barisjabataninternal == 0)
-               {
-               ?>
-
-               <br><b><?php  echo 'Jabatan:  ---' ?></b>
-               <?php
-              }
-              else{
-                $datainternal = Jobgrade::find()->where(['JOBGRADE_ID'=>$model->JOBGRADE_ID])->asArray()
-                                                                                              ->one();
-               ?>
-                <br><b><?php  echo 'Jabatan:  '.$datainternal['JOBGRADE_NM'] ?></b>
-
-               <?php
-             }
-               ?>
-             </div>
-           </th>
-         </tr>
-       </table>
-     </div>
+							</div>
+						</th>
+					</tr>
+					
+					<!-- Department|Jbatan CUSTOMER !-->
+					<tr>
+					   <th style="text-align: left; vertical-align:middle;height:20">
+							<div>
+								<dt style="float:left;width:50px"><b>Nama</b></dt>
+								<dd><?php  echo ": " . ttd($model); ?></dd>
+								<dt style="float:left;width:50px"><b>Jabatan</b></dt>
+								<dd>
+									<?php 
+										$barisjabatancus = count($model->JABATAN_CUS);
+										if($barisjabatancus == 0){
+											 echo ': ---';	
+										}else{
+											echo ': '.$model->JABATAN_CUS;
+										};
+									?>							
+								</dd>
+							</div>
+						</th>
+						<!-- Department|Jbatan DISTRIBUTOR !-->
+						<th style="text-align: left; vertical-align:middle;height:20">
+							<div>
+								<dt style="float:left;width:50px"><b>Nama</b></dt>
+								<dd><?php  echo ": " . ttd2($model); ?></dd>
+								<dt style="float:left;width:50px"><b>Jabatan</b></dt>
+								<dd>
+									<?php 
+										$barisjabatandis = count($model->JABATAN_DIST);
+										if($barisjabatandis == 0){
+											 echo ': ---';	
+										}else{
+											echo ': '.$model->JABATAN_DIST;
+										};
+									?>							
+								</dd>
+							</div>
+						</th>
+						<!-- Department|Jbatan PRINCIPAL !-->
+						<th style="text-align: left; vertical-align:middle;height:20">
+							<div>
+								<dt style="float:left;width:50px"><b>Nama</b></dt>
+								<dd><?php  echo ": " . ttd3($model); ?></dd>
+								<dt style="float:left;width:50px"><b>Jabatan</b></dt>
+								<dd>
+									<?php 
+										$barisjabataninternal = count($model->JOBGRADE_ID);
+										if($barisjabataninternal == 0){
+											 echo ': ---';	
+										}else{
+											$datainternal = Jobgrade::find()->where(['JOBGRADE_ID'=>$model->JOBGRADE_ID])->asArray()->one();
+											echo ': '.$datainternal['JOBGRADE_NM'];
+										};
+									?>							
+								</dd>
+							</div>
+						</th>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
 <?php
      $this->registerJs("
         $.fn.modal.Constructor.prototype.enforceFocus = function(){};
