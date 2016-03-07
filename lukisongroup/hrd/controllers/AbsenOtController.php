@@ -10,8 +10,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \DateTime;
-use lukisongroup\hrd\models\AbsenDaily;
-use lukisongroup\hrd\models\AbsenDailySearch;
+use lukisongroup\hrd\models\AbsenOtSearch;
 use lukisongroup\hrd\models\Kar_finger;
 
 
@@ -63,17 +62,17 @@ class AbsenOtController extends Controller
 		$bln=strlen($date->format('m'));
 		$hri=strlen($date->format('d'));
 		$dateRlt=$thn."-".$bln."-".$hri;
-		$searchModel = new AbsenDailySearch([
+		$searchModel = new AbsenOtSearch([
 			//'tgllog'=>Yii::$app->ambilKonvesi->tglSekarang()
 		]);
 				
-		/*REKAP ABSENSI*/
+		/*REKAP ABSENSI OVERTIME*/
 		//Field Label
-		$dataProviderField = $searchModel->dailyFieldTglRange();
+		$dataProviderField = $searchModel->overtimeFieldTglRange();
 		//Value row
-		$dataProvider = $searchModel->searchDailyTglRange(Yii::$app->request->queryParams);
+		$dataProvider = $searchModel->searchOvertimeTglRange(Yii::$app->request->queryParams);
         return $this->render('index', [
-			/*Daily Absensi*/
+			/*Overtime Absensi*/
 			'searchModel'=>$searchModel,
 			'dataProviderField'=>$dataProviderField,
 			'dataProvider'=>$dataProvider			

@@ -19,7 +19,6 @@ class PersonallogSearch extends Personallog
 {	
 	public $tgllog;
 	public $tgllate;
-	public $FingerPrintID;
 	public $TerminalID;
 	public $UserID;
 	public $FunctionKey;
@@ -40,7 +39,7 @@ class PersonallogSearch extends Personallog
     {
         return [
             [['idno'], 'integer'],
-            [['NAMA','tgllog','tgllate','TerminalID', 'UserID', 'FingerPrintID', 'FunctionKey', 'Edited', 'UserName', 'FlagAbsence', 'DateTime','DateTimeLate','tgl', 'waktu'], 'safe'],
+            [['NAMA','tgllog','tgllate','TerminalID', 'UserID', 'FunctionKey', 'Edited', 'UserName', 'FlagAbsence', 'DateTime','DateTimeLate','tgl', 'waktu'], 'safe'],
         ];
     }
 
@@ -54,16 +53,13 @@ class PersonallogSearch extends Personallog
     }
 
     /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
+     * ABSENSI MAINTAIN 
+     * @author ptr.nov [ptr.nov@gmail.com]
+	 * @since 1.2
      */
 	public function getScripts(){
-		return Yii::$app->db2->createCommand("CALL personallog_Employe()")->queryAll();             
-	}
-	
+		return Yii::$app->db2->createCommand("CALL absensi_maintain()")->queryAll();             
+	}	
 	public function search($params)
     {
         /* $query = Personallog::find();//->where("FunctionKey=0 OR FunctionKey=1");
@@ -79,7 +75,7 @@ class PersonallogSearch extends Personallog
 				'pageSize' => 200,
 			],
 			'sort'  => [
-				'attributes' => ['FingerPrintID'],
+				'attributes' => ['UserID'],
             ],
 		]);
 		
@@ -105,7 +101,6 @@ class PersonallogSearch extends Personallog
  		$this->addCondition($filter, 'idno', true);
  		$this->addCondition($filter, 'TerminalID', true);
  		$this->addCondition($filter, 'UserID', true);
- 		$this->addCondition($filter, 'FingerPrintID');
  	    $this->addCondition($filter, 'FunctionKey', true);
  		$this->addCondition($filter, 'Edited', true);
  		$this->addCondition($filter, 'FlagAbsence', true);
@@ -140,7 +135,6 @@ class PersonallogSearch extends Personallog
 			}  */
         /* $query->andFilterWhere(['like', 'TerminalID', $this->TerminalID])
             ->andFilterWhere(['like', 'UserID', $this->UserID])
-            ->andFilterWhere(['like', 'FingerPrintID', $this->FingerPrintID])
             ->andFilterWhere(['like', 'FunctionKey', $this->FunctionKey])
             ->andFilterWhere(['like', 'UserName', $this->UserName])
 			//->andFilterWhere(['like', 'DateTime', $this->DateTime!=''?date("Y-m-d",strtotime($this->DateTime)):date("Y-m-d")])
@@ -153,6 +147,13 @@ class PersonallogSearch extends Personallog
 		die(); */
     }
 	
+	
+	
+	/**
+     * LOG ABSENSI TELAT
+     * @author ptr.nov [ptr.nov@gmail.com]
+	 * @since 1.2
+     */
 	/*Employe Log late*/
 	public function search_telat($params)
     {		
@@ -163,7 +164,7 @@ class PersonallogSearch extends Personallog
 				'pageSize' => 200,
 			],
 			'sort'  => [
-				'attributes' => ['FingerPrintID'],
+				'attributes' => ['UserID'],
             ],
 		]);
 		
@@ -181,7 +182,6 @@ class PersonallogSearch extends Personallog
  		$this->addCondition($filter, 'idno', true);
  		$this->addCondition($filter, 'TerminalID', true);
  		$this->addCondition($filter, 'UserID', true);
- 		$this->addCondition($filter, 'FingerPrintID');
  	    $this->addCondition($filter, 'FunctionKey', true);
  		$this->addCondition($filter, 'Edited', true);
  		$this->addCondition($filter, 'FlagAbsence', true);
@@ -197,9 +197,9 @@ class PersonallogSearch extends Personallog
 		
 		
 		
-	   /* //$query = Personallog::find(['machine_nm','FingerPrintID','UserName','Keys_nm',['DateTime as DateTime1']])->where("FunctionKey=0 AND time(DateTime)>'08:45:00'");
-	   //$query = Personallog::find()->select('TerminalID,FingerPrintID,UserName,DateTime as DateTime1')->where("FunctionKey=0 AND time(DateTime)>'08:45:00'");
-      // $query = Personallog::find()->where("FunctionKey=0 AND time(DateTime)>'08:45:00'")->groupby('DateTime,FingerPrintID');
+	   /* //$query = Personallog::find(['machine_nm','UserID','UserName','Keys_nm',['DateTime as DateTime1']])->where("FunctionKey=0 AND time(DateTime)>'08:45:00'");
+	   //$query = Personallog::find()->select('TerminalID,UserID,UserName,DateTime as DateTime1')->where("FunctionKey=0 AND time(DateTime)>'08:45:00'");
+      // $query = Personallog::find()->where("FunctionKey=0 AND time(DateTime)>'08:45:00'")->groupby('DateTime,UserID');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -230,7 +230,6 @@ class PersonallogSearch extends Personallog
 			// }  
         $query->andFilterWhere(['like', 'TerminalID', $this->TerminalID])
             ->andFilterWhere(['like', 'UserID', $this->UserID])
-            ->andFilterWhere(['like', 'FingerPrintID', $this->FingerPrintID])
             ->andFilterWhere(['like', 'FunctionKey', $this->FunctionKey])
             ->andFilterWhere(['like', 'UserName', $this->UserName])
 			->andFilterWhere(['like', 'DateTime', $this->tgllate])

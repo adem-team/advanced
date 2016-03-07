@@ -99,7 +99,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		],
 		[  	//col-2
 			//CUSTOMER GRAOUP NAME
-			'attribute' => 'FingerPrintID',
+			'attribute' => 'UserID',
 			'label'=>'Finger',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
@@ -122,6 +122,31 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			],
 		],
 		[  	//col-3
+			//Employee-Name
+			'attribute' => 'UserName',
+			'label'=>'Finger-UserName',
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'noWrap'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'80px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+					'background-color'=>'rgba(0, 95, 218, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'left',
+					'width'=>'80px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+				]
+			],
+		],
+		[  	//col-4
 			//Employee-Name
 			'attribute' => 'NAMA',
 			'label'=>'Employee-Name',
@@ -146,7 +171,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 				]
 			],
 		],
-		[  	//col-4
+		[  	//col-5
 			//Finger.Key
 			'attribute' => 'FunctionKey',//'Keys_nm',
 			'label'=>'Key',
@@ -175,7 +200,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 				]
 			],
 		],
-		[  	//col-5
+		[  	//col-6
 			//DateTime
 			'attribute' => 'DateTime',
 			'label'=>'DateTime',
@@ -212,7 +237,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 				]
 			],
 		],
-		[  	//col-6
+		[  	//col-7
 			//FlagAbsence
 			'attribute' => 'FlagAbsence',
 			'label'=>'Key',
@@ -238,7 +263,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 				]
 			],
 		],
-		[	//col-7
+		[	//col-8
 			'class'=>'kartik\grid\ActionColumn',
 			'dropdown' => true,
 			'template' => '{karfinger}{edit}{delete}',
@@ -249,30 +274,30 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 														[	
 															'/hrd/absen-maintain/finger-emp',
 															'm'=>$model['TerminalID'],
-															'f'=>$model['FingerPrintID']
+															'f'=>$model['UserID']
 														
 														],[	
 														'data-toggle'=>"modal",
 														'data-target'=>"#modal-view",														
-														'data-title'=> 'RT0'.$model['FingerPrintID'],
+														'data-title'=> 'RT0'.$model['UserID'],
 														]). '</li>' . PHP_EOL;
 					},
 					'edit' =>function($url, $model, $key){
 							return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Edit'),
-														['/dashboard/warga-data-rt/edit','id'=>$model['FingerPrintID']],[	
+														['/dashboard/warga-data-rt/edit','id'=>$model['UserID']],[	
 														'data-toggle'=>"modal",
 														'data-target'=>"#modal-edit",														
-														'data-title'=> 'RT0'.$model['FingerPrintID'],
+														'data-title'=> 'RT0'.$model['UserID'],
 														]). '</li>' . PHP_EOL;					
 					},
 					'delete' =>function($url, $model, $key){
 						return  '<li>' .Html::a('<span class="fa fa-remove fa-dm"></span>'.Yii::t('app', 'delete'),
-													['/dashboard/warga-data-rt/delete','id'=>$model['FingerPrintID']],[
+													['/dashboard/warga-data-rt/delete','id'=>$model['UserID']],[
 													'data-method'=>'post',
 													//'data-toggle'=>"modal",
 													//'data-target'=>"#modal-del",
 													//'data-title'=>$model->KK_NM,
-													'data-confirm'=>'Anda yakin ingin menghapus data warga '. $model['FingerPrintID'].' ?',
+													'data-confirm'=>'Anda yakin ingin menghapus data warga '. $model['UserID'].' ?',
 													]). '</li>' . PHP_EOL;
 					},					
 			],
@@ -346,7 +371,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 
 <div class="body-content">
     <div class="row" style="padding-left: 5px; padding-right: 5px">
-        <div class="col-sm-8 col-md-8 col-lg-8" style="padding-left:25px;padding-right:25px;">
+        <div class="col-sm-11 col-md-11 col-lg-11" style="padding-left:25px;padding-right:25px;">
             <?php            		
 				echo $gvAbsenLog;
             ?>

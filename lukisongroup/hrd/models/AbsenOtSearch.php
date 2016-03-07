@@ -15,7 +15,7 @@ use lukisongroup\hrd\models\Personallog;
 /**
  * PersonallogSearch represents the model behind the search form about `lukisongroup\hrd\models\Personallog`.
  */
-class AbsenOtSearch extends Personallog
+class AbsenOtSearch extends Model
 {	
 	public $TerminalID;
 	public $EMP_NM;
@@ -31,7 +31,7 @@ class AbsenOtSearch extends Personallog
     }
 
    	public function getScripts(){
-		return Yii::$app->db2->createCommand("CALL absensi_log('bulan','2016-03-23');")->queryAll();             
+		return Yii::$app->db2->createCommand("CALL absensi_calender_ot('bulan','2016-03-23');")->queryAll();             
 	}
 		
 	/*
@@ -40,8 +40,8 @@ class AbsenOtSearch extends Personallog
 	 * @since 1.2
 	 *
 	*/
-	public function dailyFieldTglRange(){
-		$dailyAbsensi= Yii::$app->db2->createCommand("CALL absensi_calender('bulan','2016-03-23')")->queryAll();  
+	public function overtimeFieldTglRange(){
+		$dailyAbsensi= Yii::$app->db2->createCommand("CALL absensi_calender_ot('bulan','2016-03-23')")->queryAll();  
 		$aryData= new ArrayDataProvider([
 			'key' => 'ID',
 			'allModels'=>$dailyAbsensi,			
@@ -53,8 +53,8 @@ class AbsenOtSearch extends Personallog
 		
 		return $attributeField;
 	}	
-    public function searchDailyTglRange($params){
-		$dailyAbsensi= Yii::$app->db2->createCommand("CALL absensi_calender('bulan','2016-03-23')")->queryAll();  
+    public function searchOvertimeTglRange($params){
+		$dailyAbsensi= Yii::$app->db2->createCommand("CALL absensi_calender_ot('bulan','2016-03-23')")->queryAll();  
 		$dataProvider= new ArrayDataProvider([
 			//'key' => 'ID',
 			'allModels'=>$dailyAbsensi,			

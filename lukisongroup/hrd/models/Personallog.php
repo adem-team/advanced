@@ -54,7 +54,7 @@ class Personallog extends \yii\db\ActiveRecord
         return [
             [['tgllog','tgllate','Edited', 'DateTime', 'tgl', 'waktu'], 'safe'],
             [['TerminalID', 'UserName', 'FlagAbsence'], 'string', 'max' => 100],
-            [['UserID', 'FingerPrintID'], 'string', 'max' => 50],
+            [['UserID'], 'string', 'max' => 50],
             [['FunctionKey'], 'string', 'max' => 15]
         ];
     }
@@ -86,7 +86,6 @@ class Personallog extends \yii\db\ActiveRecord
             'idno' => 'Idno',
             'TerminalID' => 'Terminal ID',
             'UserID' => 'User ID',
-            'FingerPrintID' => 'Finger Print ID',
             'FunctionKey' => 'Function Key',
             'Edited' => 'Edited',
             'UserName' => 'User Name',

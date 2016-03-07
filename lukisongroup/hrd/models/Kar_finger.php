@@ -16,6 +16,7 @@ use Yii;
  */
 class Kar_finger extends \yii\db\ActiveRecord
 {
+	public $userNameFinger;
     /**
      * @inheritdoc
      */

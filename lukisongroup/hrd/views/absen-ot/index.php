@@ -188,8 +188,8 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 	{	
 		$i=2;
 		$kd = explode('.',$key);
-		if($key!='EMP_NM' AND $key!='TerminalID' AND $kd[0]!='OTIN' AND $kd[0]!='OTOUT'){			
-			if ($kd[0]=='IN'){$lbl='IN';} elseif($kd[0]=='OUT'){$lbl='OUT';}else {$lbl='';};
+		if($key!='EMP_NM' AND $key!='TerminalID' AND $kd[0]!='IN' AND $kd[0]!='OUT'){			
+			if ($kd[0]=='OTIN'){$lbl='OTIN';} elseif($kd[0]=='OTOUT'){$lbl='OTOUT';}else {$lbl='';};
 				$attDinamik[]=[		
 					'attribute'=>$key,
 					'label'=>$lbl,					
@@ -252,7 +252,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 					
 				];						
 			
-				if($kd[0]=='IN'){
+				if($kd[0]=='OTIN'){
 					$hdrLabel1[] =[	
 						'content'=>$kd[1],
 						'options'=>[
