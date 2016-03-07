@@ -23,7 +23,10 @@ use lukisongroup\widget\models\Chat;
 use lukisongroup\widget\models\ChatSearch;
 use lukisongroup\widget\models\ChatroomSearch;
 use lukisongroup\dashboard\models\AccSalesSearch;
-		
+
+
+use lukisongroup\master\models\TermReportSearch;
+
 class AccSalesController extends Controller
 {
     public function behaviors()
@@ -110,27 +113,27 @@ class AccSalesController extends Controller
 		]);		      
     }
 	
-	public function actionCustTerm()
+	public function actionCustTermRpt()
     {
 		$date=new DateTime();
 		$thn=strlen($date->format('Y'));
 		$bln=strlen($date->format('m'));
 		$hri=strlen($date->format('d'));
 		$dateRlt=$thn."-".$bln."-".$hri;
-		$searchModel = new AccSalesSearch([
+		$searchModel = new TermReportSearch([
 			//'tgllog'=>Yii::$app->ambilKonvesi->tglSekarang()
 		]);
 				
 		/*REKAP ABSENSI*/
 		//Field Label
-		$dataProviderField = $searchModel->dailyFieldTglRange();
+		//$dataProviderField = $searchModel->dailyFieldTglRange();
 		//Value row
-		$dataProvider = $searchModel->searchDailyTglRange(Yii::$app->request->queryParams);
-        return $this->render('cterm', [
+		$dataProvider = $searchModel->searchTermRpt(Yii::$app->request->queryParams);
+        return $this->render('cust_term_rpt', [
 			/*Daily Absensi*/
 			'searchModel'=>$searchModel,
-			'dataProviderField'=>$dataProviderField,
-			'dataProvider'=>$dataProvider			
+			//'totalCnt'=>$dataProvider->getModels(),
+			'dataProvider'=>$dataProvider	
         ]);
     }
 }

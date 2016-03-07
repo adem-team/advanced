@@ -14,8 +14,15 @@ use yii\debug\components\search\matchers;
  */
 class TermReportSearch extends Model
 {	
-	public $TerminalID;
-	public $EMP_NM;
+	public $ID_TERM;
+	public $CUST_KD;
+	public $INVES_TYPE;
+	public $BUDGET_SOURCE;
+	public $STATUS;
+	public $BUDGET_PLAN;
+	public $BUDGET_ACTUAL;
+	public $NM_TERM;
+	public $CUST_NM;
 	
     /**
      * @inheritdoc	
@@ -23,7 +30,7 @@ class TermReportSearch extends Model
     public function rules()
     {
         return [
-            [['EMP_NM','TerminalID'], 'safe'],
+            [['ID_TERM','CUST_KD','INVES_TYPE','BUDGET_SOURCE','BUDGET_PLAN','BUDGET_ACTUAL','CUST_NM','STATUS','NM_TERM'], 'safe'],
         ];
     }
 
@@ -37,8 +44,8 @@ class TermReportSearch extends Model
 	 * @since 1.2
 	 *
 	*/
-	public function dailyFieldTglRange(){
-		$dailyAbsensi= Yii::$app->db2->createCommand("CALL absensi_calender('bulan','2016-03-23')")->queryAll();  
+	/*public function dailyFieldTglRange(){
+	 	$dailyAbsensi= Yii::$app->esm->createCommand("CALL ESM_SALES_term_report()")->queryAll();  
 		$aryData= new ArrayDataProvider([
 			'key' => 'ID',
 			'allModels'=>$dailyAbsensi,			
@@ -49,12 +56,12 @@ class TermReportSearch extends Model
 		$attributeField=$aryData->allModels[0];
 		
 		return $attributeField;
-	}	
-    public function searchDailyTglRange($params){
-		$dailyAbsensi= Yii::$app->db2->createCommand("CALL absensi_calender('bulan','2016-03-23')")->queryAll();  
+	}	 */
+    public function searchTermRpt($params){
+		$termRpt= Yii::$app->db_esm->createCommand("CALL ESM_SALES_term_report()")->queryAll();  
 		$dataProvider= new ArrayDataProvider([
-			//'key' => 'ID',
-			'allModels'=>$dailyAbsensi,			
+			'key' => 'ID',
+			'allModels'=>$termRpt,			
 			'pagination' => [
 				'pageSize' => 500,
 			]
@@ -64,9 +71,9 @@ class TermReportSearch extends Model
  		}
 		
 		$filter = new Filter();
- 		$this->addCondition($filter, 'TerminalID', true);
- 		$this->addCondition($filter, 'EMP_NM', true);	
- 		$dataProvider->allModels = $filter->filter($dailyAbsensi);
+ 		$this->addCondition($filter,'CUST_NM',true);
+ 		$this->addCondition($filter, 'STATUS', true);	
+ 		$dataProvider->allModels = $filter->filter($termRpt); 
 		
 		return $dataProvider;
 	}

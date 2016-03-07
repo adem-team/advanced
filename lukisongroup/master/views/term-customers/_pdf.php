@@ -37,212 +37,317 @@ use kartik\grid\GridView;
 		<tr>
 			<td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px; vertical-align:top"> Trade Investment</td>
 			<td style="width:30%; padding-left:20px; padding-top:15px; padding-bottom:15px;padding-right:15px"> 
-			<?php
-				echo $grid = GridView::widget([
-					  'id'=>'gv-term-general',
-					  'dataProvider'=> $dataProvider,
-					  'columns' =>[
-						   [
-								'class'=>'kartik\grid\SerialColumn',
-								'contentOptions'=>['class'=>'kartik-sheet-style'],
-								'width'=>'10px',
-								'header'=>'No.',
-								'headerOptions'=>[
-									'style'=>[
-									 'text-align'=>'center',
-									 'width'=>'10px',
-									 'font-family'=>'verdana, arial, sans-serif',
-									 'font-size'=>'9pt',
-									 'background-color'=>'rgba(97, 211, 96, 0.3)',
-									]
-								],
-								'contentOptions'=>[
-									'style'=>[
-									 'text-align'=>'center',
-									 'width'=>'10px',
-									 'font-family'=>'tahoma, arial, sans-serif',
-									 'font-size'=>'9pt',
-									]
-								],
-						   ],
-						   [
-								'attribute' => 'INVES_TYPE',
-								'label'=>'Type Investasi',
-								'hAlign'=>'left',
-								'vAlign'=>'middle',
-								'headerOptions'=>[
-									'style'=>[
+				<div>
+					<?php
+					echo $grid = GridView::widget([
+						  'id'=>'gv-term-general',
+						  'dataProvider'=> $dataProvider,
+						  'columns' =>[
+							   [
+									'class'=>'kartik\grid\SerialColumn',
+									'contentOptions'=>['class'=>'kartik-sheet-style'],
+									'width'=>'10px',
+									'header'=>'No.',
+									'headerOptions'=>[
+										'style'=>[
 										 'text-align'=>'center',
+										 'width'=>'5%',
+										 'font-family'=>'verdana, arial, sans-serif',
+										 'font-size'=>'9pt',
+										 'background-color'=>'rgba(97, 211, 96, 0.3)',
+										]
+									],
+									'contentOptions'=>[
+										'style'=>[
+										 'text-align'=>'center',
+										 'width'=>'5%',
+										 'font-family'=>'tahoma, arial, sans-serif',
+										 'font-size'=>'9pt',
+										]
+									],
+							   ],
+							   [
+									'attribute' => 'INVES_TYPE',
+									'label'=>'Type Investasi',
+									'hAlign'=>'left',
+									'vAlign'=>'middle',
+									'headerOptions'=>[
+										'style'=>[
+											 'text-align'=>'center',
+											 'width'=>'20%',
+											 'font-family'=>'tahoma, arial, sans-serif',
+											 'font-size'=>'9pt',
+											 'background-color'=>'rgba(97, 211, 96, 0.3)',
+										]
+									],
+									'contentOptions'=>[
+										'style'=>[
+											 'text-align'=>'left',
+											 'width'=>'20%',
+											 'font-family'=>'tahoma, arial, sans-serif',
+											 'font-size'=>'9pt',
+										]
+									],								
+							   ],
+							   [
+									'attribute' => 'PERIODE_END',
+									'label'=>'Periode',
+									'hAlign'=>'left',
+									'vAlign'=>'middle',
+									'value' => function($model) { return $model['PERIODE_START'] . "-" . $model['PERIODE_END'] ;},
+									'headerOptions'=>[
+										'style'=>[
+											 'text-align'=>'center',
+											 'width'=>'21%',
+											 'font-family'=>'tahoma, arial, sans-serif',
+											 'font-size'=>'9pt',
+											 'background-color'=>'rgba(97, 211, 96, 0.3)',
+										]
+									],
+									'contentOptions'=>[
+										'style'=>[
+											 'text-align'=>'left',
+											 'width'=>'21%',
+											 'font-family'=>'tahoma, arial, sans-serif',
+											 'font-size'=>'9pt',
+										]
+									],
+									'pageSummaryOptions' => [
+										'style'=>[
+										   'border-left'=>'0px',
+										   'border-right'=>'0px',
+										]
+									],
+									'pageSummary'=>function ($summary, $data, $widget){
+										 return '<div> Total :</div>';
+									},
+									'pageSummaryOptions' => [
+										'style'=>[
+										   'font-family'=>'tahoma',
+										   'font-size'=>'8pt',
+										   'text-align'=>'right',
+										   'border-left'=>'0px',
+										   //'border-right'=>'0px',
+										]
+									],
+							   ],
+							   [	//BUDGET_PLAN
+									//coll
+									'attribute' => 'BUDGET_PLAN',
+									'label'=>'Budget Plan',
+									'hAlign'=>'left',
+									'vAlign'=>'middle',
+									'headerOptions'=>[
+										'style'=>[
+											 'text-align'=>'center',
+											 'width'=>'20%',
+											 'font-family'=>'tahoma, arial, sans-serif',
+											 'font-size'=>'9pt',
+											 'background-color'=>'rgba(97, 211, 96, 0.3)',
+										]
+									],
+									'contentOptions'=>[
+										'style'=>[
+											 'text-align'=>'right',
+											 'width'=>'20%',
+											 'font-family'=>'tahoma, arial, sans-serif',
+											 'font-size'=>'9pt',
+										]
+									],
+									'pageSummaryFunc'=>GridView::F_SUM,
+									'format'=>['decimal', 2],
+									'pageSummary'=>true,
+									'pageSummaryOptions' => [
+										'style'=>[
+										   'font-family'=>'tahoma',
+										   'font-size'=>'8pt',
+										   'text-align'=>'right',
+										   'border-left'=>'0px',
+										]
+									],
+							   ],
+							   [	//BUDGET_PLAN PERCENT
+									//coll
+									'label'=>'%',
+									'hAlign'=>'left',
+									'vAlign'=>'middle',
+									'value' => function($model) {
+											if($model['TARGET_VALUE'] == '')
+											{
+											   return $model['TARGET_VALUE'] = 0.00;
+											}
+											else {
+											  # code...
+											 return $model['BUDGET_PLAN'] / $model['TARGET_VALUE'] * 100;
+											}
+									},
+									'headerOptions'=>[
+										'style'=>[
+										 'text-align'=>'center',
+										 'width'=>'7%',
 										 'font-family'=>'tahoma, arial, sans-serif',
 										 'font-size'=>'9pt',
 										 'background-color'=>'rgba(97, 211, 96, 0.3)',
-									]
-								],
-								'contentOptions'=>[
-									'style'=>[
-										 'text-align'=>'left',
-										 'width'=>'80px',
-										 'font-family'=>'tahoma, arial, sans-serif',
-										 'font-size'=>'9pt',
-									]
-								],								
-						   ],
-						   [
-								'attribute' => 'PERIODE_END',
-								'label'=>'Periode',
-								'hAlign'=>'left',
-								'vAlign'=>'middle',
-								'value' => function($model) { return $model['PERIODE_START'] . "-" . $model['PERIODE_END'] ;},
-								'headerOptions'=>[
-									'style'=>[
+										]
+									],
+									'contentOptions'=>[
+										'style'=>[
+											 'text-align'=>'right',
+											 'width'=>'7%',
+											 'font-family'=>'tahoma, arial, sans-serif',
+											 'font-size'=>'9pt',
+										]
+									],
+									'pageSummaryFunc'=>GridView::F_SUM,
+									'format'=>['decimal', 2],
+									'pageSummary'=>true,
+									'pageSummaryOptions' => [
+										'style'=>[
+											 'font-family'=>'tahoma',
+											 'font-size'=>'8pt',
+											 'text-align'=>'right',
+											 'border-left'=>'0px',
+										]
+									],
+								],						
+								[	//BUDGET_ACTUAL
+									//coll
+									'attribute' => 'BUDGET_ACTUAL',
+									'label'=>'Budget Actual',
+									'hAlign'=>'left',
+									'vAlign'=>'middle',
+									'headerOptions'=>[
+										'style'=>[
+											 'text-align'=>'center',
+											 'width'=>'20%',
+											 'font-family'=>'tahoma, arial, sans-serif',
+											 'font-size'=>'9pt',
+											 'background-color'=>'rgba(97, 211, 96, 0.3)',
+										]
+									],
+									'contentOptions'=>[
+										'style'=>[
+											 'text-align'=>'right',
+											 'width'=>'20%',
+											 'font-family'=>'tahoma, arial, sans-serif',
+											 'font-size'=>'9pt',
+										]
+									],
+									'pageSummaryFunc'=>GridView::F_SUM,
+									'format'=>['decimal', 2],
+									'pageSummary'=>true,
+									'pageSummaryOptions' => [
+										'style'=>[
+										   'font-family'=>'tahoma',
+										   'font-size'=>'8pt',
+										   'text-align'=>'right',
+										   'border-left'=>'0px',
+										]
+									],
+							   ],
+							   [	//BUDGET_ACTUAL PERCENT
+									//coll
+									'label'=>'%',
+									'hAlign'=>'left',
+									'vAlign'=>'middle',
+									'value' => function($model) {
+											if($model['TARGET_VALUE'] == '')
+											{
+											   return $model['TARGET_VALUE'] = 0.00;
+											}
+											else {
+											  # code...
+											 return $model['BUDGET_ACTUAL'] / $model['TARGET_VALUE'] * 100;
+											}
+									},
+									'headerOptions'=>[
+										'style'=>[
 										 'text-align'=>'center',
-										 'width'=>'200px',
+										 'width'=>'7%',
 										 'font-family'=>'tahoma, arial, sans-serif',
 										 'font-size'=>'9pt',
 										 'background-color'=>'rgba(97, 211, 96, 0.3)',
-									]
-								],
-								'contentOptions'=>[
-									'style'=>[
-										 'text-align'=>'left',
-										 'width'=>'200px',
-										 'font-family'=>'tahoma, arial, sans-serif',
-										 'font-size'=>'9pt',
-									]
-								],
-								'pageSummaryOptions' => [
-									'style'=>[
-									   'border-left'=>'0px',
-									   'border-right'=>'0px',
-									]
-								],
-								'pageSummary'=>function ($summary, $data, $widget){
-									 return '<div> Total :</div>';
-								},
-								'pageSummaryOptions' => [
-									'style'=>[
-									   'font-family'=>'tahoma',
-									   'font-size'=>'8pt',
-									   'text-align'=>'right',
-									   'border-left'=>'0px',
-									   //'border-right'=>'0px',
-									]
-								],
-						   ],
-						   [
-								'attribute' => 'BUDGET_VALUE',
-								'label'=>'Budget',
-								'hAlign'=>'left',
-								'vAlign'=>'middle',
-								'headerOptions'=>[
-									'style'=>[
-										 'text-align'=>'center',
-										 'width'=>'200px',
-										 'font-family'=>'tahoma, arial, sans-serif',
-										 'font-size'=>'9pt',
-										 'background-color'=>'rgba(97, 211, 96, 0.3)',
-									]
-								],
-								'contentOptions'=>[
-									'style'=>[
-										 'text-align'=>'right',
-										 'width'=>'200px',
-										 'font-family'=>'tahoma, arial, sans-serif',
-										 'font-size'=>'9pt',
-									]
-								],
-								'pageSummaryFunc'=>GridView::F_SUM,
-								'format'=>['decimal', 2],
-								'pageSummary'=>true,
-								'pageSummaryOptions' => [
-									'style'=>[
-									   'font-family'=>'tahoma',
-									   'font-size'=>'8pt',
-									   'text-align'=>'right',
-									   'border-left'=>'0px',
-									]
-								],
-						   ],
-						   [
-								'label'=>'Persent %',
-								'hAlign'=>'left',
-								'vAlign'=>'middle',
-								'value' => function($model) {
-										if($model['TARGET_VALUE'] == '')
-										{
-										   return $model['TARGET_VALUE'] = 0.00;
-										}
-										else {
-										  # code...
-										 return $model['BUDGET_VALUE'] / $model['TARGET_VALUE'] * 100;
-										}
-								},
-								'headerOptions'=>[
-									'style'=>[
-									 'text-align'=>'center',
-									 'width'=>'200px',
-									 'font-family'=>'tahoma, arial, sans-serif',
-									 'font-size'=>'9pt',
-									 'background-color'=>'rgba(97, 211, 96, 0.3)',
-									]
-								],
-								'contentOptions'=>[
-									'style'=>[
-										 'text-align'=>'right',
-										 'width'=>'200px',
-										 'font-family'=>'tahoma, arial, sans-serif',
-										 'font-size'=>'9pt',
-									]
-								],
-								'pageSummaryFunc'=>GridView::F_SUM,
-								'format'=>['decimal', 2],
-								'pageSummary'=>true,
-								'pageSummaryOptions' => [
-									'style'=>[
-										 'font-family'=>'tahoma',
-										 'font-size'=>'8pt',
-										 'text-align'=>'right',
-										 'border-left'=>'0px',
-									]
-								],
-						   ],						   
-						],
-						'panel' => [
-						  'footer'=>false,
-						  'heading'=>false,
-						],
-						'toolbar'=> [
-						  //'{items}',
-						],
-						'showPageSummary' => true,
-						'showFooter'=>false,
-						'hover'=>true, //cursor select
-						'responsive'=>true,
-						'responsiveWrap'=>true,
-						'bordered'=>false,
-						'striped'=>'0px',
-						'autoXlFormat'=>true,
-						'export' => false,
+										]
+									],
+									'contentOptions'=>[
+										'style'=>[
+											 'text-align'=>'right',
+											 'width'=>'7%',
+											 'font-family'=>'tahoma, arial, sans-serif',
+											 'font-size'=>'9pt',
+										]
+									],
+									'pageSummaryFunc'=>GridView::F_SUM,
+									'format'=>['decimal', 2],
+									'pageSummary'=>true,
+									'pageSummaryOptions' => [
+										'style'=>[
+											 'font-family'=>'tahoma',
+											 'font-size'=>'8pt',
+											 'text-align'=>'right',
+											 'border-left'=>'0px',
+										]
+									],
+							   ],						   
+							],
+							'panel' => [
+							  'footer'=>false,
+							  'heading'=>false,
+							],
+							'toolbar'=> [
+							  //'{items}',
+							],
+							'showPageSummary' => true,
+							'showFooter'=>false,
+							'hover'=>true, //cursor select
+							'responsive'=>true,
+							'responsiveWrap'=>true,
+							'bordered'=>false,
+							'striped'=>'0px',
+							'autoXlFormat'=>true,
+							'export' => false,
 
-					]);
-				?>
-                  <p style="border:0px;">Running Rate base on percentage
-                  <br>Total Trade Investment    : RP. <?= $data->TARGET_VALUE ?>
-                  <?php
-                  if( $datasum['BUDGET_VALUE'] == '')
-                  {
-                    $percentage = 0.00;
-                  }
-                  else {
-                    # code...
-                    $percentage = ($datasum['BUDGET_VALUE'] / $data->TARGET_VALUE)*100;
+						]);
+					?>
+					</div>
+					<div>
+							  <p style="border:0px;">Planing Running Rate base on percentage
+							  <br>Total Trade Investment    : RP. <?= $data->TARGET_VALUE ?>
+							  <?php
+							  if( $datasum['BUDGET_PLAN'] == '')
+							  {
+								$percentage = 0.00;
+							  }
+							  else {
+								# code...
+								$percentage = ($datasum['BUDGET_PLAN'] / $data->TARGET_VALUE)*100;
 
-                  }
-                    $bulat = round($percentage);
+							  }
+								$bulat = round($percentage);
 
-                   ?>
-                  <br>Investment Percentage   :   <?= $bulat ?>%</p>
-		</td>
+							   ?>
+							  <br>Investment Percentage   :   <?= $bulat ?>%</p>
+							  <br>
+					
+							  <p style="border:0px;">Actually Running Rate base on percentage
+							  <br>Total Trade Investment    : RP. <?= $data->TARGET_VALUE ?>
+							  <?php
+							  if( $datasum['BUDGET_ACTUAL'] == '')
+							  {
+								$percentage = 0.00;
+							  }
+							  else {
+								# code...
+								$percentage = ($datasum['BUDGET_ACTUAL'] / $data->TARGET_VALUE)*100;
+
+							  }
+								$bulat = round($percentage);
+
+							   ?>
+							  <br>Investment Percentage   :   <?= $bulat ?>%</p>
+							  <br>
+						</div>										
+				</td>
 		</tr>
 		<tr>
 			 <td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> Conditional Rabate </td>
@@ -357,19 +462,19 @@ use kartik\grid\GridView;
 		</tr>
 		<!-- Department|Jbatan !-->
 		<tr>
-			<th style="text-align: center; vertical-align:middle;height:20">
+			<th style="text-align: left; vertical-align:middle;height:20">
 				<div>
 					<b><?php  echo 'NAMA:  '.$data['CUST_NM']; ?></b>
 					<br><b><?php  echo 'Jabatan:  '.$data['JABATAN_CUS'] ?></b>
 				</div>
 			</th>
-			<th style="text-align: center; vertical-align:middle;height:20">
+			<th style="text-align: left; vertical-align:middle;height:20">
 				<div>
 				   <b><?php  echo 'NAMA:  '.$data['DIST_NM']; ?></b>
 				   <br><b><?php  echo 'Jabatan:  '.$data['JABATAN_DIST'] ?></b>
 				</div>
 			</th>
-			<th style="text-align: center; vertical-align:middle;height:20">
+			<th style="text-align: left; vertical-align:middle;height:20">
 				<div>
 				 <b><?php  echo 'NAMA:  '.$data['PRINCIPAL_NM']; ?></b>
 				  <br><b><?php  echo 'Jabatan:  '.$datainternal['JOBGRADE_NM'] ?></b>

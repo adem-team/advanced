@@ -446,9 +446,9 @@ class TermCustomersController extends Controller
       $datacorp = Corp::find()->where(['CORP_ID'=> $data->PRINCIPAL_KD])
                                                                   ->asArray()
                                                                   ->one();
-      $sql = "SELECT c.INVES_TYPE,c.ID_TERM,c.BUDGET_VALUE,c.PERIODE_START,c.PERIODE_END,b.TARGET_VALUE from c0005 c LEFT JOIN c0003 b on c.ID_TERM = b.ID_TERM   where c.ID_TERM='".$id."'";
+      $sql = "SELECT c.INVES_TYPE,c.ID_TERM,c.BUDGET_PLAN,c.BUDGET_ACTUAL,c.PERIODE_START,c.PERIODE_END,b.TARGET_VALUE from c0005 c LEFT JOIN c0003 b on c.ID_TERM = b.ID_TERM   where c.ID_TERM='".$id."'";
       $data1 = Termbudget::findBySql($sql)->all();
-      $sqlsum = "SELECT SUM(BUDGET_VALUE) as BUDGET_VALUE from c0005 where ID_TERM='".$id."'";
+      $sqlsum = "SELECT SUM(BUDGET_PLAN) as BUDGET_PLAN,SUM(BUDGET_ACTUAL) as BUDGET_ACTUAL from c0005 where ID_TERM='".$id."'";
       $datasum = Termbudget::findBySql($sqlsum)->one();
 
      $dataProvider = new ArrayDataProvider([
