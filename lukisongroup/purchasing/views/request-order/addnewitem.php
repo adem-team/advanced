@@ -99,9 +99,6 @@ $brgUmum = ArrayHelper::map(Barang::find()->where(['PARENT'=>0,'STATUS'=>1,'KD_C
 				])->label('Nama Barang') ?>
 			</div>
 
-
-
-
 				<div id="Nbrg">
 				<?= $form->field($roDetail, 'nM_BARANG')->textInput(['maxlength' => true])->label('Nama Item Baru') ?>
 					</div>

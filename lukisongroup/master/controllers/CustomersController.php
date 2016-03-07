@@ -512,10 +512,25 @@ class CustomersController extends Controller
     public function actionMap()
     {
             $conn = Yii::$app->db3;
-            $hasil = $conn->createCommand("SELECT CUST_KD, ALAMAT, CUST_NM,MAP_LAT,MAP_LNG from c0001 order by SCDL_GROUP")->queryAll();
+            $hasil = $conn->createCommand("SELECT c.SCDL_GROUP,c.CUST_KD, c.ALAMAT, c.CUST_NM,c.MAP_LAT,c.MAP_LNG,b.SCDL_GROUP_NM from c0001 c
+                                          left join c0007 b on c.SCDL_GROUP = b.ID")->queryAll();
+            // $datadrop = $conn->createCommand("SELECT * from c0007")->queryAll();
             echo json_encode($hasil);
+            // echo json_encode($datadrop);
 
     }
+
+    // data json map
+      public function actionDrop()
+      {
+              $conn = Yii::$app->db3;
+
+              $datadrop = $conn->createCommand("SELECT * from c0007")->queryAll();
+              //  echo "<option>" . $row['admin_first_name'] . " " . $row['admin_last_name'] . "</option>";
+              echo json_encode($datadrop);
+              // echo json_encode($datadrop);
+
+      }
 
    // action depdrop
    public function actionLisdata() {
