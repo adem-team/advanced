@@ -63,6 +63,7 @@ class ScheduleGroupController extends Controller
 
 		      $searchModelCustGrp = new CustomersSearch();
           $dpListCustGrp = $searchModelCustGrp->searchCustGrp(Yii::$app->request->queryParams);
+          
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -106,6 +107,36 @@ class ScheduleGroupController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+    public function actionCreateGroup($CUST_KD)
+    {
+        $model = Customers::find()->where(['CUST_KD'=>$CUST_KD])->one();
+        // print_r($model);
+        // die();
+        // $KD = Yii::$app->request->post('custkd');
+        $group =  Yii::$app->request->post('group');
+        $model->SCDL_GROUP = $group;
+        // print_r(  $model->SCDL_GROUP );
+        // die();
+        // if ( $model->save()) {
+        //   # code..
+        //     return $this->redirect(['index']);
+        // }
+         $model->save();
+
+        // print_r( $model->getErrors());
+        // die();
+
+          // if($model->validate())
+          // {
+          //   $model->CREATE_BY = Yii::$app->user->identity->username;
+          //   $model->CREATE_AT =  date("Y-m-d H:i:s");
+          //   $model->save();
+          // }
+
+
+
     }
 
     /**

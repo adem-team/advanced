@@ -296,6 +296,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						'font-size'=>'9pt',
 					]
 				],
+				  'group'=>true,
 			],
 			[  	//col-2
 				//CUSTOMER GRAOUP NAME
@@ -513,9 +514,43 @@ $this->registerJs("
 
 ?>
 
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+					<?php
+					$form = ActiveForm::begin([
+						'id'=>'mapping',
+					]);
+					?>
+					<input type= text  name= custkd id="tes" readonly=true>
+
+					<div class="form-group">
+					  <!-- Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?> -->
+					  <?= Html::submitButton('SAVE',['class' => 'btn btn-primary','id'=>'btn']); ?>
+				</div>
+				<?php ActiveForm::end(); ?>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
 
 
 <?PHP
+// $this->registerJsFile('@web/js/slect.js');
+// $this->registerCssFile('@web/css/slect.css');
 /*js mapping */
 	$this->registerJs("
 		/*nampilin MAP*/
@@ -539,7 +574,7 @@ $this->registerJs("
 			}
 
 			$.each(json, function (i, point) {
-				// alert(point.MAP_LAT);
+
 
 		//set the icon
 		//     if(point.CUST_NM == 'asep')
@@ -557,50 +592,73 @@ $this->registerJs("
 
 				 public_markers[i] = marker;
 
-				 google.maps.event.addListener(public_markers[i], 'click', function () {
-					 var contentString = '<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM +
-					 '</p>'+ '<button type=button class=btn btn-info btn-sm id=myBtn>'+ point.CUST_NM
-					 +'</button>'
+
+				if(point.SCDL_GROUP == null)
+				{
+
+									 //
+									//  $.getJSON('/master/customers/drop', function(result){
+									// 	 $.each(result, function(i, data){
+									// 		 var options = '';
+									// 		 	 options +=	'<option value='+data.ID+'> text=' + data.SCDL_GROUP_NM + '</option>';
+									// 			 var div_data='<option value='+data.ID+'>'+data.SCDL_GROUP_NM+'</option>';
+									// 			  // alert(options);
+									// 			  // $('#ch_user1').html('');
+									// 				 $('#ch_user1').html(div_data);
+									// 						 // i++;
+									// 						  // $('#sel').append($('<option/>').attr('value', data.ID).text(data.SCDL_GROUP_NM));
+									 //
+									 //
+									// 		});
+									 //
+									//  });
+
 					var contentString = '<h1>' + point.ALAMAT + '</h1>'+'<p>' + point.CUST_NM + '</p>'+
-					 											'<input type= text  name= custkd value='+ point.CUST_KD+' readonly=true>'+'<br>'+
-					 											'<select>'+'<option value=1>GROUP BARAT</option>'+
-																					'<option value=2>GROUP TIMUR</option>'+
-																					'<option value=3>GROUP SELATAN</option>'+
-																					'<option value=4>GROUP UTARA</option>'+
-					 											'<select>'+'<br>'+
-																'<input id=btn type=submit value=save>'
+															'<form method=POST action=/master/schedule-group/create-group?CUST_KD='+point.CUST_KD+'>'+
+															 '<input type= text  name= custkd value='+ point.CUST_KD+' readonly=true>'+'<br>'+
+															 '<select id=sel name= group>'+'<option value=1>GROUP BARAT</option>'+
+																				 '<option value=2>GROUP TIMUR</option>'+
+																				 '<option value=3>GROUP SELATAN</option>'+
+																				 '<option value=4>GROUP UTARA</option>'+
+																	'</select>'+'<br>'+
+															 '<input id=btn type=submit value=save>'+
+															 '</form>'
 
 
-					 var infowindow = new google.maps.InfoWindow({
-							content: contentString
-					 });
-					//  infowindow.setContent('<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>'+ '<button type=button class=btn btn-info btn-sm id=myBtn>'+ point.CUST_NM+'</button>');
-					 infowindow.open(map, public_markers[i]);
-				 });
+	 													 google.maps.event.addListener(public_markers[i], 'click', function () {
+																 var infowindow = new google.maps.InfoWindow({
+																		content: contentString
+																 });
+																//  infowindow.setContent('<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>'+ '<button type=button class=btn btn-info btn-sm id=myBtn>'+ point.CUST_NM+'</button>');
+																 infowindow.open(map, public_markers[i]);
+															 });
+				}
+				else{
+						var contentString = '<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>'+'<p>'+ point.SCDL_GROUP_NM + '<p>' ;
+
+						google.maps.event.addListener(public_markers[i], 'click', function (event) {
+																	 var infowindow = new google.maps.InfoWindow({
+																			content: contentString
+																	 });
+																	//  alert(point.CUST_KD);
+																	$('#tes').val(point.CUST_KD);
+																	 $('#myModal').modal();
+
+																	//  infowindow.setContent('<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>'+ '<button type=button class=btn btn-info btn-sm id=myBtn>'+ point.CUST_NM+'</button>');
+																	 infowindow.open(map, public_markers[i]);
+																 });
+
+				}
+
+
+
 
 
 			});
 
 
 		 });
-		 $('#btn').click(function (e) {
-			 alert('tes');
-		        // if(e.target == this)
-		        // {
-		        //   // location.href = '" .Url::to(['accountinfo/update']) . "?id=' + id;
-		        //   // return false;
-		          // $.ajax({
-		          //   url:'/master/schedule-header/search-grid',
-		          //   type: 'GET',
-		          //   data:{id : id,},
-		          //   dataType:'json',
-		          //   success: function(result){
-		          //     // alert('ok');
-		          //       $.pjax.reload({container:'#gv-user-list-id'});
-		          //   }
-		          // });
-		        // }
-		        });
+
 		// console.trace();
      ",$this::POS_READY);
 

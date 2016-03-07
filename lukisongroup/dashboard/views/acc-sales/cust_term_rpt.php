@@ -26,9 +26,9 @@ $aryEmploye = ArrayHelper::map(Employe::find()->where("STATUS<>3 AND EMP_STS<>3"
 																							}
 			);
 
-$this->sideCorp = 'PT. Efenbi Sukses Makmur';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'esm_customers';                                      /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pada header page */
+$this->sideCorp = 'PT.Lukisongroup';                          /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'acc_sales';                                      /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Accounting');              /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
 	$aryStatus= [

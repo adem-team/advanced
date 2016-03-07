@@ -92,7 +92,7 @@ class AbsenMaintainController extends Controller
 	public function actionFingerEmp($m,$f)
     {
 		
-		$modelView = Personallog::find()->where(['TerminalID'=>$m,'FingerPrintID'=>$f])->one();
+		$modelView = Personallog::find()->where(['TerminalID'=>$m,'UserID'=>$f])->one();
         $model = new Kar_finger();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

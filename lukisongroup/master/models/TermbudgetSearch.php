@@ -21,7 +21,7 @@ class TermbudgetSearch extends Termbudget
         return [
             [['ID', 'STATUS'], 'integer'],
             [['ID_TERM', 'INVES_TYPE', 'BUDGET_SOURCE', 'PERIODE_START', 'PERIODE_END', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
-            [['BUDGET_VALUE'], 'number'],
+            [['BUDGET_PLAN','BUDGET_ACTUAL'], 'number'],
         ];
     }
 
@@ -59,7 +59,8 @@ class TermbudgetSearch extends Termbudget
 
         $query->andFilterWhere([
             'ID' => $this->ID,
-            'BUDGET_VALUE' => $this->BUDGET_VALUE,
+            'BUDGET_PLAN' => $this->BUDGET_PLAN,
+            'BUDGET_ACTUAL' => $this->BUDGET_ACTUAL,
             'PERIODE_START' => $this->PERIODE_START,
             'PERIODE_END' => $this->PERIODE_END,
             'STATUS' => $this->STATUS,
@@ -98,8 +99,8 @@ class TermbudgetSearch extends Termbudget
 
         $query->andFilterWhere([
             'ID' => $this->ID,
-            'BUDGET_VALUE' => $this->BUDGET_VALUE,
-            'PERIODE_START' => $this->PERIODE_START,
+			'BUDGET_PLAN' => $this->BUDGET_PLAN,
+            'BUDGET_ACTUAL' => $this->BUDGET_ACTUAL,
             'PERIODE_END' => $this->PERIODE_END,
             'STATUS' => $this->STATUS,
             'CREATE_AT' => $this->CREATE_AT,

@@ -96,8 +96,8 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			],
 		],
 		[  	//col-2
-			//FingerPrintID
-			'attribute' => 'FingerPrintID',
+			//UserID
+			'attribute' => 'UserID',
 			'label'=>'Finger',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
@@ -311,7 +311,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		],
 		[  	//col-2
 			//CUSTOMER GRAOUP NAME
-			'attribute' => 'FingerPrintID',
+			'attribute' => 'UserID',
 			'label'=>'Finger',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',

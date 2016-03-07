@@ -68,14 +68,14 @@ class TermReportController extends Controller
 				
 		/*REKAP ABSENSI*/
 		//Field Label
-		$dataProviderField = $searchModel->dailyFieldTglRange();
+		//$dataProviderField = $searchModel->dailyFieldTglRange();
 		//Value row
-		$dataProvider = $searchModel->searchDailyTglRange(Yii::$app->request->queryParams);
+		$dataProvider = $searchModel->searchTermRpt(Yii::$app->request->queryParams);
         return $this->render('index', [
 			/*Daily Absensi*/
 			'searchModel'=>$searchModel,
-			'dataProviderField'=>$dataProviderField,
-			'dataProvider'=>$dataProvider			
+			//'totalCnt'=>$dataProvider->getModels(),
+			'dataProvider'=>$dataProvider	
         ]);
     }
 

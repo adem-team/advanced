@@ -10,7 +10,13 @@ use yii\helpers\Url;
 
 use lukisongroup\hrd\models\Employe;
 
-$aryEmployee = ArrayHelper::map(Employe::find()->all(),'EMP_ID','EMP_NM');
+#$aryEmployee = ArrayHelper::map(Employe::find()->all(),'EMP_ID','EMP_NM');
+$aryEmployee = ArrayHelper::map(Employe::find()->all(), 'EMP_ID',function($model, $defaultValue) {
+															return $model->EMP_NM.'-'.$model->EMP_NM_BLK;
+														}
+			);
+
+
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\hrd\models\Kar_finger */
@@ -30,7 +36,8 @@ $aryEmployee = ArrayHelper::map(Employe::find()->all(),'EMP_ID','EMP_NM');
     <?= $form->field($model, 'TerminalID')->hiddenInput(['value'=>$modelView->TerminalID,'maxlength' => true])->label(false); ?>
 	  
 	<?= $form->field($model, 'mesinNm')->textInput(['value'=>$modelView->Machine_nm,'maxlength' => true,'readonly'=>true])->label('Machine ID'); ?>
-	<?= $form->field($model, 'FingerPrintID')->textInput(['value'=>$modelView->FingerPrintID,'maxlength' => true,'readonly'=>true])->label('Finger'); ?>
+	<?= $form->field($model, 'FingerPrintID')->textInput(['value'=>$modelView->UserID,'maxlength' => true,'readonly'=>true])->label('Finger'); ?>
+    <?= $form->field($model, 'userNameFinger')->textInput(['value'=>$modelView->UserName,'maxlength' => true,'readonly'=>true])->label('Finger'); ?>
     <?= $form->field($model, 'KAR_ID')->widget(Select2::classname(), [
 			'data' => $aryEmployee,
 			'options' => ['placeholder' => 'Pilih Employee ...'],
