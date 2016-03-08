@@ -319,7 +319,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		'responsiveWrap'=>true,
 		'bordered'=>true,
 		'striped'=>true,
-		'perfectScrollbar'=>true,
+		//'perfectScrollbar'=>true,
 		//'autoXlFormat'=>true,
 		//'export' => false,		
 	]);

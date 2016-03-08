@@ -4,6 +4,8 @@ use kartik\helpers\Html;
 use yii\widgets\DetailView;
 use yii\bootstrap\ActiveForm;
 use kartik\tabs\TabsX;
+use lukisongroup\assets\AppAssetDahboardHrmPersonalia;
+AppAssetDahboardHrmPersonalia::register($this);
 
 $this->sideCorp = 'PT. Efenbi Sukses Makmur';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = '';                                    /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -16,9 +18,13 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			<?php
 			
 				$content1='test ahhhhhhhhhhhhhhhhhhh';
+				//$content2=$modelCustPrn[1]['PARENT_NM'];
+				$content3=Yii::$app->controller->renderPartial('chart_customer',[
+							'modelCustPrn'=>$modelCustPrn,
+					]);
 				$items=[
 					[
-						'label'=>'<i class="glyphicon glyphicon-home"></i> Prodak','content'=>$content1,
+						'label'=>'<i class="glyphicon glyphicon-home"></i> Prodak','content'=>$content3,
 						'active'=>true,
 						
 					],
@@ -47,7 +53,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				echo TabsX::widget([
 						'items'=>$items,
 						'position'=>TabsX::POS_ABOVE,
-						'height'=>TabsX::SIZE_TINY,
+						//'height'=>TabsX::SIZE_TINY,
+						'height'=>'100%',
 						'bordered'=>true,
 						'encodeLabels'=>false,
 						'align'=>TabsX::ALIGN_LEFT,						
