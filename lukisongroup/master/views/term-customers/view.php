@@ -13,6 +13,7 @@ use yii\helpers\Url;
 use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use kartik\detail\DetailView;
+use kartik\money\MaskMoney;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Termcustomers */
@@ -21,15 +22,15 @@ $this->sideCorp = 'PT. Efenbi Sukses Makmur';                       /* Title Sel
 $this->sideMenu = 'esm_customers';                                      /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;
-	
+
 	$aryStatus= [
-		  ['STATUS' =>0, 'DESCRIP' => 'New'],		  
+		  ['STATUS' =>0, 'DESCRIP' => 'New'],
 		  ['STATUS' =>1, 'DESCRIP' => 'Approved'],
 		  ['STATUS' =>2, 'DESCRIP' => 'Reject']
-	];	
-	$valStatus = ArrayHelper::map($aryStatus, 'STATUS', 'DESCRIP'); 
- 
- 
+	];
+	$valStatus = ArrayHelper::map($aryStatus, 'STATUS', 'DESCRIP');
+
+
 	/*
 	 * STATUS FLOW DATA
 	 * 1. NEW		= 0 	| Create First
@@ -48,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			return Html::a('<i class="fa fa-remove fa-md"></i>Reject ', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Reject']);
 		};
 	}
-	
+
 	function pihak($model){
 		$title = Yii::t('app','');
 		$options = [ 'id'=>'phk',
@@ -193,10 +194,18 @@ $this->params['breadcrumbs'][] = $this->title;
 			  'data-target'=>"#TTD3",
 			  'title'=>'Set'
 		];
-		
+
 		$url = Url::toRoute(['/master/term-customers/set-internal','id'=>$model->ID_TERM]);
 		$content = Html::a($title,$url, $options);
 		return $content;
+	}
+
+	function getPermissionEmp(){
+		if (Yii::$app->getUserOpt->profile_user()){
+			return Yii::$app->getUserOpt->profile_user()->emp;
+		}else{
+			return false;
+		}
 	}
 
 
@@ -223,6 +232,9 @@ $this->params['breadcrumbs'][] = $this->title;
 //
 // }
 // else{
+
+
+
 	function PrintPdf($model){
 		$title = Yii::t('app','Print');
 		$options = [ 'id'=>'pdf-print-id',
@@ -333,15 +345,17 @@ $this->params['breadcrumbs'][] = $this->title;
 			</dl>
 		</div>
 	</div>
-	
+
 	<?php
 		$dataids = $_GET['id'];
 	?>
-	
+
 	<!-- TRADE INVESTMENT !-->
 	<div class="row">
-	  <div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">	
+	  <div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 		<?php
+		if(getPermissionEmp()->DEP_ID !== 'ACT')
+		{
 			echo  $grid = GridView::widget([
 				'id'=>'gv-term-general',
 				'dataProvider'=> $dataProvider1,
@@ -349,14 +363,14 @@ $this->params['breadcrumbs'][] = $this->title;
 				'beforeHeader'=>[
 					[
 						'columns'=>[
-							['content'=>'ITEMS TRAIDE INVESTMENT', 'options'=>['colspan'=>3,'class'=>'text-center info',]], 
-							['content'=>'PLAN BUDGET', 'options'=>['colspan'=>2, 'class'=>'text-center info']], 
-							['content'=>'ACTUAL BUDGET', 'options'=>['colspan'=>2, 'class'=>'text-center info']], 
-							['content'=>'', 'options'=>['colspan'=>1, 'class'=>'text-center info']], 
-							//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']], 
+							['content'=>'ITEMS TRAIDE INVESTMENT', 'options'=>['colspan'=>3,'class'=>'text-center info',]],
+							['content'=>'PLAN BUDGET', 'options'=>['colspan'=>2, 'class'=>'text-center info']],
+							['content'=>'ACTUAL BUDGET', 'options'=>['colspan'=>2, 'class'=>'text-center info']],
+							['content'=>'', 'options'=>['colspan'=>1, 'class'=>'text-center info']],
+							//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']],
 						],
 					]
-				], 
+				],
 				'columns' =>[
 					[
 						'class'=>'kartik\grid\SerialColumn',
@@ -405,11 +419,11 @@ $this->params['breadcrumbs'][] = $this->title;
 						],
 						'pageSummaryOptions' => [
 							'style'=>[
-							   'border-left'=>'0px',
-							   'border-right'=>'0px',
+								 'border-left'=>'0px',
+								 'border-right'=>'0px',
 							]
 						],
-						
+
 					],
 					[
 						'attribute' => 'PERIODE_END',
@@ -437,19 +451,19 @@ $this->params['breadcrumbs'][] = $this->title;
 						],
 						'pageSummary'=>function ($summary, $data, $widget){
 							 return '<div> Total :</div>';
-					    },
+							},
 						'pageSummaryOptions' => [
 							'style'=>[
-							   'font-family'=>'tahoma',
-							   'font-size'=>'8pt',
-							   'text-align'=>'right',
-							   'border-left'=>'0px',
-							   
+								 'font-family'=>'tahoma',
+								 'font-size'=>'8pt',
+								 'text-align'=>'right',
+								 'border-left'=>'0px',
+
 							]
 						],
 					],
 					[	//BUDGET_PLAN
-						//COL 
+						//COL
 						'attribute' => 'BUDGET_PLAN',
 						'label'=>'Budget Plan',
 						'hAlign'=>'left',
@@ -476,14 +490,14 @@ $this->params['breadcrumbs'][] = $this->title;
 						'pageSummary'=>true,
 						'pageSummaryOptions' => [
 							'style'=>[
-							   'font-family'=>'tahoma',
-							   'font-size'=>'8pt',
-							   'text-align'=>'right',
-							   'border-left'=>'0px',
+								 'font-family'=>'tahoma',
+								 'font-size'=>'8pt',
+								 'text-align'=>'right',
+								 'border-left'=>'0px',
 							]
 						],
 					],
-					[	
+					[
 						'attribute' => 'budget.TARGET_VALUE',
 						'label'=>'%',
 						'hAlign'=>'left',
@@ -494,8 +508,8 @@ $this->params['breadcrumbs'][] = $this->title;
 									 return  $model->budget->TARGET_VALUE = 0.00;
 								}
 								else {
-								  # code...
-								   return $model->BUDGET_PLAN / $model->budget->TARGET_VALUE * 100;
+									# code...
+									 return $model->BUDGET_PLAN / $model->budget->TARGET_VALUE * 100;
 								}
 						},
 						'headerOptions'=>[
@@ -525,10 +539,10 @@ $this->params['breadcrumbs'][] = $this->title;
 								'text-align'=>'right',
 								'border-left'=>'0px',
 							]
-					   ],
-					],					
-					[	//BUDGET_ACTUAL 
-						//COL 
+						 ],
+					],
+					[	//BUDGET_ACTUAL
+						//COL
 						'attribute' => 'BUDGET_ACTUAL',
 						'label'=>'Budget Actual',
 						'hAlign'=>'left',
@@ -555,15 +569,15 @@ $this->params['breadcrumbs'][] = $this->title;
 						'pageSummary'=>true,
 						'pageSummaryOptions' => [
 							'style'=>[
-							   'font-family'=>'tahoma',
-							   'font-size'=>'8pt',
-							   'text-align'=>'right',
-							   'border-left'=>'0px',
+								 'font-family'=>'tahoma',
+								 'font-size'=>'8pt',
+								 'text-align'=>'right',
+								 'border-left'=>'0px',
 							]
 						],
 					],
-					[	//PERCENT ACTUAL 
-						//COL 
+					[	//PERCENT ACTUAL
+						//COL
 						'attribute' => 'budget.TARGET_VALUE',
 						'label'=>'%',
 						'hAlign'=>'left',
@@ -574,25 +588,25 @@ $this->params['breadcrumbs'][] = $this->title;
 									 return  $model->budget->TARGET_VALUE = 0.00;
 								}
 								else {
-								  # code...
-								   return $model->BUDGET_ACTUAL / $model->budget->TARGET_VALUE * 100;
+									# code...
+									 return $model->BUDGET_ACTUAL / $model->budget->TARGET_VALUE * 100;
 								}
 						},
 						'headerOptions'=>[
 							'style'=>[
-							  'text-align'=>'center',
-							  'width'=>'10%',
-							  'font-family'=>'tahoma, arial, sans-serif',
-							  'font-size'=>'9pt',
-							  'background-color'=>'rgba(97, 211, 96, 0.3)',
+								'text-align'=>'center',
+								'width'=>'10%',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(97, 211, 96, 0.3)',
 							]
 						],
 						'contentOptions'=>[
 							'style'=>[
-							  'text-align'=>'right',
-							   'width'=>'10%',
-							  'font-family'=>'tahoma, arial, sans-serif',
-							  'font-size'=>'9pt',
+								'text-align'=>'right',
+								 'width'=>'10%',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
 							]
 						],
 						'pageSummaryFunc'=>GridView::F_SUM,
@@ -600,14 +614,14 @@ $this->params['breadcrumbs'][] = $this->title;
 						'pageSummary'=>true,
 						'pageSummaryOptions' => [
 							'style'=>[
-							  'font-family'=>'tahoma',
-							  'font-size'=>'8pt',
-							  'text-align'=>'right',
-							  'border-left'=>'0px',
+								'font-family'=>'tahoma',
+								'font-size'=>'8pt',
+								'text-align'=>'right',
+								'border-left'=>'0px',
 							]
-					   ],
-					],	
-					[		
+						 ],
+					],
+					[
 						'attribute'=>'STATUS',
 						'label'=>'Status',
 						'hAlign'=>'right',
@@ -644,16 +658,16 @@ $this->params['breadcrumbs'][] = $this->title;
 						//'pageSummary'=>true,
 						'pageSummaryOptions' => [
 							'style'=>[
-									'text-align'=>'right',		
+									'text-align'=>'right',
 									'font-family'=>'tahoma',
-									'font-size'=>'8pt',	
+									'font-size'=>'8pt',
 									'text-decoration'=>'underline',
 									'font-weight'=>'bold',
-									'border-left-color'=>'transparant',		
-									'border-left'=>'0px',									
+									'border-left-color'=>'transparant',
+									'border-left'=>'0px',
 							]
-						],											
-					],					
+						],
+					],
 				],
 				//'showPageSummary' => true,
 				'pjax'=>true,
@@ -671,19 +685,372 @@ $this->params['breadcrumbs'][] = $this->title;
 					'type'=>'success',
 					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Investment ',
 						['modelClass' => 'Termcustomers',]),['/master/term-customers/create-budget','id'=>$dataids],[
-						  'data-toggle'=>"modal",
+							'data-toggle'=>"modal",
 							'data-target'=>"#modal-create",
 							'data-title'=>'type Investasi',
-							  'class' => 'btn btn-danger btn-xs'
+								'class' => 'btn btn-danger btn-xs'
 									]),
 					'showFooter'=>false,
 				],
 				'export' =>false,
 			]);
+		}
+		else {
+			# code...
+			echo  $grid = GridView::widget([
+				'id'=>'gv-term-general',
+				'dataProvider'=> $dataProvider1,
+				'footerRowOptions'=>['style'=>'font-weight:bold;text-decoration: underline;'],
+				'beforeHeader'=>[
+					[
+						'columns'=>[
+							['content'=>'ITEMS TRAIDE INVESTMENT', 'options'=>['colspan'=>3,'class'=>'text-center info',]],
+							['content'=>'PLAN BUDGET', 'options'=>['colspan'=>2, 'class'=>'text-center info']],
+							['content'=>'ACTUAL BUDGET', 'options'=>['colspan'=>2, 'class'=>'text-center info']],
+							['content'=>'', 'options'=>['colspan'=>1, 'class'=>'text-center info']],
+							//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']],
+						],
+					]
+				],
+				'columns' =>[
+					[
+						'class'=>'kartik\grid\SerialColumn',
+						'contentOptions'=>['class'=>'kartik-sheet-style'],
+						'width'=>'5%',
+						'header'=>'No.',
+						'headerOptions'=>[
+							'style'=>[
+							 'text-align'=>'center',
+							 'width'=>'100px',
+							 'font-family'=>'verdana, arial, sans-serif',
+							 'font-size'=>'9pt',
+							 'background-color'=>'rgba(97, 211, 96, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+							 'text-align'=>'center',
+							 'width'=>'100px',
+							 'font-family'=>'tahoma, arial, sans-serif',
+							 'font-size'=>'9pt',
+							]
+						],
+					],
+					[
+						'attribute' => 'INVES_TYPE',
+						'label'=>'Trade Investment',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						'headerOptions'=>[
+							'style'=>[
+								 'width'=>'25%',
+								 'text-align'=>'center',
+								 'font-family'=>'tahoma, arial, sans-serif',
+								 'font-size'=>'9pt',
+								 'background-color'=>'rgba(97, 211, 96, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								 'text-align'=>'left',
+								 'width'=>'25%',
+								 'font-family'=>'tahoma, arial, sans-serif',
+								 'font-size'=>'9pt',
+							]
+						],
+						'pageSummaryOptions' => [
+							'style'=>[
+								 'border-left'=>'0px',
+								 'border-right'=>'0px',
+							]
+						],
+
+					],
+					[
+						'attribute' => 'PERIODE_END',
+						'label'=>'Periode',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						'noWrap'=>true,
+						'value' => function($model) { return $model->PERIODE_START . "-" . $model->PERIODE_END;},
+						'headerOptions'=>[
+							'style'=>[
+							 'text-align'=>'center',
+							 'width'=>'15%',
+							 'font-family'=>'tahoma, arial, sans-serif',
+							 'font-size'=>'9pt',
+							 'background-color'=>'rgba(97, 211, 96, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+							 'text-align'=>'center',
+							 'width'=>'15%',
+							 'font-family'=>'tahoma, arial, sans-serif',
+							 'font-size'=>'9pt',
+							]
+						],
+						'pageSummary'=>function ($summary, $data, $widget){
+							 return '<div> Total :</div>';
+							},
+						'pageSummaryOptions' => [
+							'style'=>[
+								 'font-family'=>'tahoma',
+								 'font-size'=>'8pt',
+								 'text-align'=>'right',
+								 'border-left'=>'0px',
+
+							]
+						],
+					],
+					[	//BUDGET_PLAN
+						//COL
+						'attribute' => 'BUDGET_PLAN',
+						'label'=>'Budget Plan',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						'headerOptions'=>[
+							'style'=>[
+							 'text-align'=>'center',
+							 'width'=>'17%',
+							 'font-family'=>'tahoma, arial, sans-serif',
+							 'font-size'=>'9pt',
+							 'background-color'=>'rgba(97, 211, 96, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+							 'text-align'=>'right',
+							 'width'=>'17%',
+							 'font-family'=>'tahoma, arial, sans-serif',
+							 'font-size'=>'9pt',
+							]
+						],
+						'pageSummaryFunc'=>GridView::F_SUM,
+						'format'=>['decimal', 2],
+						'pageSummary'=>true,
+						'pageSummaryOptions' => [
+							'style'=>[
+								 'font-family'=>'tahoma',
+								 'font-size'=>'8pt',
+								 'text-align'=>'right',
+								 'border-left'=>'0px',
+							]
+						],
+					],
+					[
+						'attribute' => 'budget.TARGET_VALUE',
+						'label'=>'%',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						'value' => function($model) {
+								if($model->budget->TARGET_VALUE == '')
+								{
+									 return  $model->budget->TARGET_VALUE = 0.00;
+								}
+								else {
+									# code...
+									 return $model->BUDGET_PLAN / $model->budget->TARGET_VALUE * 100;
+								}
+						},
+						'headerOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'10%',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(97, 211, 96, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'right',
+								'width'=>'10%',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						],
+						'pageSummaryFunc'=>GridView::F_SUM,
+						'format'=>['decimal', 2],
+						'pageSummary'=>true,
+						'pageSummaryOptions' => [
+							'style'=>[
+								'font-family'=>'tahoma',
+								'font-size'=>'8pt',
+								'text-align'=>'right',
+								'border-left'=>'0px',
+							]
+						 ],
+					],
+					[	//BUDGET_ACTUAL
+						//COL
+						'class'=>'kartik\grid\EditableColumn',
+						'attribute' => 'BUDGET_ACTUAL',
+						'label'=>'Budget Actual',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						'editableOptions' => [
+								'header' => 'Update Budget actual',
+								'inputType' => \kartik\editable\Editable::INPUT_MONEY,
+								'size' => 'sm',
+								 'asPopover' => true,
+								// 'options' => [
+								// 	'pluginOptions' => ['min'=>0, 'max'=>50000]
+								// ]
+							],
+						'headerOptions'=>[
+							'style'=>[
+								 'text-align'=>'center',
+								 'width'=>'15%',
+								 'font-family'=>'tahoma, arial, sans-serif',
+								 'font-size'=>'9pt',
+								 'background-color'=>'rgba(97, 211, 96, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								 'text-align'=>'right',
+								 'width'=>'15%',
+								 'font-family'=>'tahoma, arial, sans-serif',
+								 'font-size'=>'9pt',
+							]
+						],
+						'pageSummaryFunc'=>GridView::F_SUM,
+						'format'=>['decimal', 2],
+						'pageSummary'=>true,
+						'pageSummaryOptions' => [
+							'style'=>[
+								 'font-family'=>'tahoma',
+								 'font-size'=>'8pt',
+								 'text-align'=>'right',
+								 'border-left'=>'0px',
+							]
+						],
+					],
+					[	//PERCENT ACTUAL
+						//COL
+						'attribute' => 'budget.TARGET_VALUE',
+						'label'=>'%',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						'value' => function($model) {
+								if($model->budget->TARGET_VALUE == '')
+								{
+									 return  $model->budget->TARGET_VALUE = 0.00;
+								}
+								else {
+									# code...
+									 return $model->BUDGET_ACTUAL / $model->budget->TARGET_VALUE * 100;
+								}
+						},
+						'headerOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'10%',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+								'background-color'=>'rgba(97, 211, 96, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'right',
+								 'width'=>'10%',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'9pt',
+							]
+						],
+						'pageSummaryFunc'=>GridView::F_SUM,
+						'format'=>['decimal', 2],
+						'pageSummary'=>true,
+						'pageSummaryOptions' => [
+							'style'=>[
+								'font-family'=>'tahoma',
+								'font-size'=>'8pt',
+								'text-align'=>'right',
+								'border-left'=>'0px',
+							]
+						 ],
+					],
+					[
+						'attribute'=>'STATUS',
+						'label'=>'Status',
+						'hAlign'=>'right',
+						'vAlign'=>'middle',
+						'filter'=>$valStatus,
+						'filterOptions'=>[
+							'style'=>'background-color:rgba(0, 95, 218, 0.3); align:center;',
+							'vAlign'=>'middle',
+						],
+						'format' => 'html',
+						'value'=>function ($model, $key, $index, $widget) {
+							return statusTerm($model);
+						},
+						'noWrap'=>true,
+						'headerOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'15%',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'8pt',
+								'background-color'=>'rgba(97, 211, 96, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'15%',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'8pt',
+								//'background-color'=>'rgba(13, 127, 3, 0.1)',
+							]
+						],
+						//'pageSummaryFunc'=>GridView::F_SUM,
+						//'pageSummary'=>true,
+						'pageSummaryOptions' => [
+							'style'=>[
+									'text-align'=>'right',
+									'font-family'=>'tahoma',
+									'font-size'=>'8pt',
+									'text-decoration'=>'underline',
+									'font-weight'=>'bold',
+									'border-left-color'=>'transparant',
+									'border-left'=>'0px',
+							]
+						],
+					],
+				],
+				//'showPageSummary' => true,
+				'pjax'=>true,
+				'pjaxSettings'=>[
+					'options'=>[
+						'enablePushState'=>false,
+						'id'=>'gv-term-general',
+					],
+				],
+				'toolbar' => [
+					'',
+				],
+				'panel' => [
+					'heading'=>'<h5 class="panel-title">TRADE INVESTMENT</h5>',
+					'type'=>'success',
+					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Investment ',
+						['modelClass' => 'Termcustomers',]),['/master/term-customers/create-budget','id'=>$dataids],[
+							'data-toggle'=>"modal",
+							'data-target'=>"#modal-create",
+							'data-title'=>'type Investasi',
+								'class' => 'btn btn-danger btn-xs'
+									]),
+					'showFooter'=>false,
+				],
+				'export' =>false,
+			]);
+		}
+
 			?>
 		</div>
 	</div>
-	
+
 	<!-- RABATE !-->
     <div class="row">
 		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
@@ -694,7 +1061,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				<dt><h6><u><b>Conditional Rabate : <?= $model->RABATE_CNDT ?></b></u></h6></dt>
 			</dl>
 		</div>
-    </div>	
+    </div>
 
 	<!-- GROWTH !-->
 	<div class="row">
@@ -837,7 +1204,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							   ?>
 							</div>
 						</th>
-					
+
 						<!-- Tanggal Pembuat RO!-->
 						<th class="col-md-1" style="text-align: center; height:20px">
 							<div style="text-align:center;">
@@ -857,7 +1224,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							</div>
 					   </th>
 					</tr>
-					
+
 					<!-- Department|Jbatan !-->
 					<tr>
 						<th  class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
@@ -876,7 +1243,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							</div>
 						</th>
 					</tr>
-			
+
 					<!-- Signature !-->
 					<tr>
 					   <th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
@@ -886,7 +1253,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					   <th  class="col-md-1" style="text-align: center; vertical-align:middle">
 					   </th>
 					</tr>
-			
+
 					<!--Nama !-->
 					<tr>
 						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
@@ -905,7 +1272,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							</div>
 						</th>
 					</tr>
-					
+
 					<!-- Department|Jbatan CUSTOMER !-->
 					<tr>
 					   <th style="text-align: left; vertical-align:middle;height:20">
@@ -914,14 +1281,14 @@ $this->params['breadcrumbs'][] = $this->title;
 								<dd><?php  echo ": " . ttd($model); ?></dd>
 								<dt style="float:left;width:50px"><b>Jabatan</b></dt>
 								<dd>
-									<?php 
+									<?php
 										$barisjabatancus = count($model->JABATAN_CUS);
 										if($barisjabatancus == 0){
-											 echo ': ---';	
+											 echo ': ---';
 										}else{
 											echo ': '.$model->JABATAN_CUS;
 										};
-									?>							
+									?>
 								</dd>
 							</div>
 						</th>
@@ -932,14 +1299,14 @@ $this->params['breadcrumbs'][] = $this->title;
 								<dd><?php  echo ": " . ttd2($model); ?></dd>
 								<dt style="float:left;width:50px"><b>Jabatan</b></dt>
 								<dd>
-									<?php 
+									<?php
 										$barisjabatandis = count($model->JABATAN_DIST);
 										if($barisjabatandis == 0){
-											 echo ': ---';	
+											 echo ': ---';
 										}else{
 											echo ': '.$model->JABATAN_DIST;
 										};
-									?>							
+									?>
 								</dd>
 							</div>
 						</th>
@@ -950,15 +1317,15 @@ $this->params['breadcrumbs'][] = $this->title;
 								<dd><?php  echo ": " . ttd3($model); ?></dd>
 								<dt style="float:left;width:50px"><b>Jabatan</b></dt>
 								<dd>
-									<?php 
+									<?php
 										$barisjabataninternal = count($model->JOBGRADE_ID);
 										if($barisjabataninternal == 0){
-											 echo ': ---';	
+											 echo ': ---';
 										}else{
 											$datainternal = Jobgrade::find()->where(['JOBGRADE_ID'=>$model->JOBGRADE_ID])->asArray()->one();
 											echo ': '.$datainternal['JOBGRADE_NM'];
 										};
-									?>							
+									?>
 								</dd>
 							</div>
 						</th>
