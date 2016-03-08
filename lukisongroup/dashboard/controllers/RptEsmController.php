@@ -9,6 +9,7 @@ use app\models\dashboard\RptEsmSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ArrayDataProvider;
 
 /**
  * DashboardController implements the CRUD actions for Dashboard model.
@@ -77,13 +78,29 @@ class RptEsmController extends Controller
             }
     }
 	
+	public function getCountCustParent(){
+		return Yii::$app->db_esm->createCommand("CALL ESM_GRAPH_CUSTOMER_count('count_kategory_customer_parent')")->queryAll();           
+	}
+	
+	
     /**
      * Lists all Dashboard models.
      * @return mixed
      */
     public function actionIndex()
     {
-        return $this->render('index');
+		$dataProviderCntCustPrn= new ArrayDataProvider([
+			'key' => 'PARENT_ID',
+			'allModels'=>$this->getCountCustParent(),
+			 'pagination' => [
+				'pageSize' => 10,
+			]
+		]);
+		$modelCustPrn=$dataProviderCntCustPrn->getModels();
+		
+		return $this->render('index',[
+			'modelCustPrn'=>$modelCustPrn,
+		]);
 
     }
 	public function actionTabsData()

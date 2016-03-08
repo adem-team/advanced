@@ -7,6 +7,9 @@ use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 use yii\widgets\ActiveForm;
+use kartik\widgets\Select2;
+use lukisongroup\master\models\Schedulegroup;
+
 
 
 use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
@@ -28,6 +31,10 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		  ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
 	];
 	$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
+
+	$query = Schedulegroup::find()->all();
+
+	$data =  ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
 
 
 	/*
@@ -514,6 +521,11 @@ $this->registerJs("
 
 ?>
 
+<?php
+
+
+ ?>
+
 <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
 
@@ -521,7 +533,7 @@ $this->registerJs("
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Modal Header</h4>
+          <h4 class="modal-title">Group Customers</h4>
         </div>
         <div class="modal-body">
 					<?php
@@ -529,15 +541,24 @@ $this->registerJs("
 						'id'=>'mapping',
 					]);
 					?>
-					<input type= text  name= custkd id="tes" readonly=true>
+					<input type="hidden"  name= custkd id="tes">
+					<?php  echo '<label class="control-label">Group Name </label>';  ?>
+					<?= Select2::widget([
+    			'name' => 'group',
+    			'data' => $data,
+    			'options' => [
+							'id'=>'select-group',
+        			'placeholder' => 'Select Group ...',
+    					],
+					]) ?>
 
 					<div class="form-group">
 					  <!-- Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?> -->
-					  <?= Html::submitButton('SAVE',['class' => 'btn btn-primary','id'=>'btn']); ?>
+
 				</div>
-				<?php ActiveForm::end(); ?>
-        </div>
         <div class="modal-footer">
+					  <?= Html::submitButton('SAVE',['class' => 'btn btn-primary','id'=>'btn']); ?>
+							<?php ActiveForm::end(); ?>
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
@@ -549,11 +570,10 @@ $this->registerJs("
 
 
 <?PHP
-// $this->registerJsFile('@web/js/slect.js');
-// $this->registerCssFile('@web/css/slect.css');
 /*js mapping */
 	$this->registerJs("
 		/*nampilin MAP*/
+
 		 var map = new google.maps.Map(document.getElementById('map'),
 			  {
 				zoom: 12,
@@ -576,12 +596,6 @@ $this->registerJs("
 			$.each(json, function (i, point) {
 
 
-		//set the icon
-		//     if(point.CUST_NM == 'asep')
-		//         {
-		//             icon = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
-		//         }
-
 					var marker = new google.maps.Marker({
 					// icon: icon,
 					position: new google.maps.LatLng(point.MAP_LAT, point.MAP_LNG),
@@ -595,67 +609,136 @@ $this->registerJs("
 
 				if(point.SCDL_GROUP == null)
 				{
+						var contentString = '<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>'+'<p>'+ point.SCDL_GROUP_NM + '<p>' ;
 
-									 //
-									//  $.getJSON('/master/customers/drop', function(result){
-									// 	 $.each(result, function(i, data){
-									// 		 var options = '';
-									// 		 	 options +=	'<option value='+data.ID+'> text=' + data.SCDL_GROUP_NM + '</option>';
-									// 			 var div_data='<option value='+data.ID+'>'+data.SCDL_GROUP_NM+'</option>';
-									// 			  // alert(options);
-									// 			  // $('#ch_user1').html('');
-									// 				 $('#ch_user1').html(div_data);
-									// 						 // i++;
-									// 						  // $('#sel').append($('<option/>').attr('value', data.ID).text(data.SCDL_GROUP_NM));
-									 //
-									 //
-									// 		});
-									 //
-									//  });
-
-					var contentString = '<h1>' + point.ALAMAT + '</h1>'+'<p>' + point.CUST_NM + '</p>'+
-															'<form method=POST action=/master/schedule-group/create-group?CUST_KD='+point.CUST_KD+'>'+
-															 '<input type= text  name= custkd value='+ point.CUST_KD+' readonly=true>'+'<br>'+
-															 '<select id=sel name= group>'+'<option value=1>GROUP BARAT</option>'+
-																				 '<option value=2>GROUP TIMUR</option>'+
-																				 '<option value=3>GROUP SELATAN</option>'+
-																				 '<option value=4>GROUP UTARA</option>'+
-																	'</select>'+'<br>'+
-															 '<input id=btn type=submit value=save>'+
-															 '</form>'
-
-
-	 													 google.maps.event.addListener(public_markers[i], 'click', function () {
+	 													 google.maps.event.addListener(public_markers[i], 'mouseover', function () {
 																 var infowindow = new google.maps.InfoWindow({
 																		content: contentString
 																 });
-																//  infowindow.setContent('<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>'+ '<button type=button class=btn btn-info btn-sm id=myBtn>'+ point.CUST_NM+'</button>');
 																 infowindow.open(map, public_markers[i]);
 															 });
+
+															 google.maps.event.addListener(public_markers[i], 'click', function () {
+																	 $('#tes').val(point.CUST_KD);
+																		$('#myModal').modal();
+																 });
 				}
 				else{
 						var contentString = '<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>'+'<p>'+ point.SCDL_GROUP_NM + '<p>' ;
 
-						google.maps.event.addListener(public_markers[i], 'click', function (event) {
+						google.maps.event.addListener(public_markers[i], 'mouseover', function (event) {
 																	 var infowindow = new google.maps.InfoWindow({
 																			content: contentString
 																	 });
-																	//  alert(point.CUST_KD);
-																	$('#tes').val(point.CUST_KD);
-																	 $('#myModal').modal();
-
-																	//  infowindow.setContent('<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>'+ '<button type=button class=btn btn-info btn-sm id=myBtn>'+ point.CUST_NM+'</button>');
 																	 infowindow.open(map, public_markers[i]);
 																 });
+					google.maps.event.addListener(public_markers[i], 'click', function (event) {
+									 																		$('#tes').val(point.CUST_KD);
+									 																		 $('#myModal').modal();
+									 																	 });
 
 				}
 
-
-
-
-
 			});
 
+
+		 });
+
+		 $('#mapping').on('beforeSubmit',function(){
+			//  e.preventDefault();
+			 var idx = $('#tes').val();
+			 var name = $('#select-group').val();
+			 if(name == '')
+			 {
+				 alert('maaf tolong di pilih nama group');
+				 return false;
+			 }
+			 else
+			 {
+			 $.ajax({
+					 url: '/master/schedule-group/create-group?CUST_KD=' + idx,
+					//  url: '/purchasing/request-order/approved_rodetail',
+					 type: 'POST',
+					 //contentType: 'application/json; charset=utf-8',
+					//  data:'id='+idx,
+							data:'name='+name,
+					 dataType: 'json',
+					 success: function(result) {
+						 if (result == 1){
+							        $(document).find('#myModal').modal('hide');
+											var map = new google.maps.Map(document.getElementById('map'),
+												 {
+												 zoom: 12,
+												 center: new google.maps.LatLng(-6.229191531958687,106.65994325550469),
+												 mapTypeId: google.maps.MapTypeId.ROADMAP
+
+											 });
+											 $.getJSON('/master/customers/map', function(json) {
+
+												for (var i in public_markers)
+												{
+													public_markers[i].setMap(null);
+												}
+
+												$.each(json, function (i, point) {
+
+														var marker = new google.maps.Marker({
+														// icon: icon,
+														position: new google.maps.LatLng(point.MAP_LAT, point.MAP_LNG),
+														animation:google.maps.Animation.BOUNCE,
+														map: map,
+														 icon : 'http://labs.google.com/ridefinder/images/mm_20_red.png'
+													});
+
+													 public_markers[i] = marker;
+
+
+													if(point.SCDL_GROUP == null)
+													{
+																					var contentString = '<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>'+'<p>'+ point.SCDL_GROUP_NM + '<p>' ;
+
+																							 google.maps.event.addListener(public_markers[i], 'mouseover', function () {
+																									 var infowindow = new google.maps.InfoWindow({
+																										 	content: contentString
+																									 });
+																									 infowindow.open(map, public_markers[i]);
+																								 });
+
+																								 google.maps.event.addListener(public_markers[i], 'click', function (event) {
+																																		$('#tes').val(point.CUST_KD);
+																																		$('#myModal').modal();
+																																	});
+													}
+													else{
+
+															var contentString = '<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>'+'<p>'+ point.SCDL_GROUP_NM + '<p>' ;
+															google.maps.event.addListener(public_markers[i], 'mouseover', function (event) {
+																										 var infowindow = new google.maps.InfoWindow({
+																												content: contentString
+																										 });
+																										 infowindow.open(map, public_markers[i]);
+																									 });
+															 google.maps.event.addListener(public_markers[i], 'click', function (event) {
+																 									$('#tes').val(point.CUST_KD);
+																									$('#myModal').modal();
+								 																});
+
+
+													}
+
+
+												});
+
+
+											 });
+
+						 } else {
+							 // Fail
+						 }
+					 }
+				 });
+			 }
+				 return false;
 
 		 });
 

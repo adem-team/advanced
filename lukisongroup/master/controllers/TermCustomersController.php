@@ -20,7 +20,7 @@ use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Distributor;
 use lukisongroup\hrd\models\Corp;
 use yii\data\ArrayDataProvider;
-
+use yii\helpers\Json;
 /**
  * TermCustomersController implements the CRUD actions for Termcustomers model.
  */
@@ -88,6 +88,27 @@ class TermCustomersController extends Controller
       $searchModel1 = new TermbudgetSearch();
       $dataProvider1 = $searchModel1->searchbudget(Yii::$app->request->queryParams,$id);
 
+      	if (Yii::$app->request->post('hasEditable')) {
+          $id = Yii::$app->request->post('editableKey');
+          $model = Termbudget::findOne($id);
+          $out = Json::encode(['output'=>'', 'message'=>'']);
+          $post = [];
+          $posted = current($_POST['Termbudget']);
+
+          $post['Termbudget'] = $posted;
+          if ($model->load($post)) {
+              $model->save();
+              // print_r($model->getErrors());
+              // die();
+    				  $output = '';
+          if (isset($posted['BUDGET_ACTUAL'])) {
+              $output = $model->BUDGET_ACTUAL;
+            }
+              $out = Json::encode(['output'=>$output, 'message'=>'']);
+            echo $out;
+            return;
+        }
+      }
 
       // $data
 
@@ -138,7 +159,7 @@ class TermCustomersController extends Controller
     public function actionValidInves()
     {
       # code...
-      $budget = new Termbudget();
+      $budget = new Termbudget(['scenario'=>'insret']);
     if(Yii::$app->request->isAjax && $budget->load($_POST))
     {
       Yii::$app->response->format = 'json';
@@ -380,7 +401,7 @@ class TermCustomersController extends Controller
             $budget->save();
 
           }
-          // print_r($model->getErrors());
+        //   print_r($budget->getErrors());
         //  die();
 
             return $this->redirect(['view','id'=>$budget->ID_TERM]);
