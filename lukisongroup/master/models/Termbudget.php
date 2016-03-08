@@ -27,6 +27,9 @@ class Termbudget extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+     const SCENARIO_CREATE = 'insret';
+    //  const SCENARIO_UPDATE = 'update';
+
      public $TARGET_VALUE;
     public static function tableName()
     {
@@ -48,10 +51,10 @@ class Termbudget extends \yii\db\ActiveRecord
     {
         return [
 
-            [['BUDGET_VALUE'], 'number'],
-            [['INVES_TYPE'], 'cekdata'],
+            [['BUDGET_PLAN','BUDGET_ACTUAL'], 'number'],
+            [['INVES_TYPE'], 'cekdata','on'=>self::SCENARIO_CREATE],
             // [['PERIODE_START','PERIODE_END'], 'date', 'format' => 'php:F d Y'],
-            [['INVES_TYPE','BUDGET_PLAN','BUDGET_ACTUAL','PERIODE_START','PERIODE_END'], 'required'],
+            [['INVES_TYPE','BUDGET_PLAN','PERIODE_START','PERIODE_END'], 'required','on'=>self::SCENARIO_CREATE],
             [['PERIODE_END'], 'datevalid'],
             [['PERIODE_START', 'PERIODE_END', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
             [['STATUS'], 'integer'],
@@ -60,6 +63,14 @@ class Termbudget extends \yii\db\ActiveRecord
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100]
         ];
     }
+
+//     public function scenarios()
+// {
+//    $scenarios = parent::scenarios();
+//    $scenarios[self::SCENARIO_CREATE] = ['INVES_TYPE','BUDGET_PLAN','PERIODE_START','PERIODE_END'];
+//    $scenarios[self::SCENARIO_UPDATE] = ['INVES_TYPE'];
+//    return $scenarios;
+// }
 
     public function data($data,$to,$from)
     {

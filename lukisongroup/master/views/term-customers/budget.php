@@ -55,7 +55,7 @@ $form = ActiveForm::begin([
        'show' => "function(e) {error}",
            ],
 ])  ?>
-<?= $form->field($budget, 'BUDGET_VALUE')->widget(MaskMoney::classname(), [
+<?= $form->field($budget, 'BUDGET_PLAN')->widget(MaskMoney::classname(), [
   'pluginOptions' => [
       'prefix' => 'Rp',
      'precision' => 2,
