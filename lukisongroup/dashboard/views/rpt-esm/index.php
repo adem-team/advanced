@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					]);
 				$items=[
 					[
-						'label'=>'<i class="glyphicon glyphicon-home"></i> Prodak','content'=>$content3,
+						'label'=>'<i class="glyphicon glyphicon-home"></i> ESM Dashboard','content'=>$content3,
 						'active'=>true,
 						
 					],
@@ -55,7 +55,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						'position'=>TabsX::POS_ABOVE,
 						//'height'=>TabsX::SIZE_TINY,
 						'height'=>'100%',
-						'bordered'=>true,
+						//'height'=>'200%',
+						//'bordered'=>false,
 						'encodeLabels'=>false,
 						'align'=>TabsX::ALIGN_LEFT,						
 					]);											
