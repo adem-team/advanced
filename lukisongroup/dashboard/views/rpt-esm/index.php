@@ -4,9 +4,16 @@ use kartik\helpers\Html;
 use yii\widgets\DetailView;
 use yii\bootstrap\ActiveForm;
 use kartik\tabs\TabsX;
-use lukisongroup\assets\AppAssetDahboardHrmPersonalia;
-AppAssetDahboardHrmPersonalia::register($this);
+use yii\helpers\Json;
+use yii\web\Response;
+use yii\helpers\ArrayHelper;
 
+use lukisongroup\assets\AppAssetFusionChart;
+AppAssetFusionChart::register($this);
+
+
+
+//include("fusioncharts.php");
 $this->sideCorp = 'PT. Efenbi Sukses Makmur';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = '';                                    /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Reporting - PT.  Efembi Sukses Makmur');           /* title pada header page */
