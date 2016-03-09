@@ -84,25 +84,28 @@ class RptEsmController extends Controller
 	
 	
     /**
-     * Lists all Dashboard models.
-     * @return mixed
+     * CUSTOMER COUNT TOTAL KATEGORY
+     * @author ptr.nov [ptr.nov@gmail.com]
+	 * @since 1.2
      */
     public function actionIndex()
     {
-		$dataProviderCntCustPrn= new ArrayDataProvider([
+		$dataProvider_CustPrn= new ArrayDataProvider([
 			'key' => 'PARENT_ID',
 			'allModels'=>$this->getCountCustParent(),
 			 'pagination' => [
 				'pageSize' => 10,
 			]
 		]);
-		$modelCustPrn=$dataProviderCntCustPrn->getModels();
-		
+		$model_CustPrn=$dataProvider_CustPrn->getModels();
+		$count_CustPrn=$dataProvider_CustPrn->getCount();
 		return $this->render('index',[
-			'modelCustPrn'=>$modelCustPrn,
+			'model_CustPrn'=>$model_CustPrn,
+			'count_CustPrn'=>$count_CustPrn  // Condition  validation model_CustPrn offset array -ptr.nov-
 		]);
 
     }
+	
 	public function actionTabsData()
 	{    	$html = $this->renderPartial('tabContent');
 		return Json::encode($html);
