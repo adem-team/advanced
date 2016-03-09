@@ -27,7 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				$content1='test ahhhhhhhhhhhhhhhhhhh';
 				//$content2=$modelCustPrn[1]['PARENT_NM'];
 				$content3=Yii::$app->controller->renderPartial('chart_customer',[
-							'modelCustPrn'=>$modelCustPrn,
+							'model_CustPrn'=>$model_CustPrn,
+							'count_CustPrn'=>$count_CustPrn
 					]);
 				$items=[
 					[

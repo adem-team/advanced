@@ -22,8 +22,8 @@ AppAssetFusionChart::register($this);
 						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div class="huge"><?php echo $modelCustPrn[0]['COUNT_CUST']; ?> </div>
-							<div><?php echo 'Customers '.$modelCustPrn[0]['PARENT_NM']; ?></div>
+							<div class="huge"><?php echo $count_CustPrn>0?$model_CustPrn[0]['COUNT_CUST']:0;?> </div>
+							<div><?php echo $count_CustPrn>0?'Customers '.$model_CustPrn[0]['PARENT_NM']:'None';?></div>
 						</div>
 					</div>
 				</div>
@@ -45,8 +45,8 @@ AppAssetFusionChart::register($this);
 						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div class="huge"><?php echo $modelCustPrn[0]['COUNT_CUST']; ?> </div>
-							<div><?php echo 'Customers '.$modelCustPrn[0]['PARENT_NM']; ?></div>
+							<div class="huge"><?php echo $count_CustPrn>0?$model_CustPrn[0]['COUNT_CUST']:0; ?> </div>
+							<div><?php echo $count_CustPrn>0?'Customers '.$model_CustPrn[0]['PARENT_NM']:'None'; ?></div>
 						</div>
 					</div>
 				</div>
@@ -68,8 +68,8 @@ AppAssetFusionChart::register($this);
 						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div class="huge"><?php echo $modelCustPrn[1]['COUNT_CUST']; ?> </div>
-							<div><?php echo 'Customers '.$modelCustPrn[1]['PARENT_NM']; ?></div>
+							<div class="huge"><?php echo $count_CustPrn>1?$model_CustPrn[1]['COUNT_CUST']:0; ?> </div>
+							<div><?php echo $count_CustPrn>1? 'Customers '.$model_CustPrn[1]['PARENT_NM']:'None';?></div>
 						</div>
 					</div>
 				</div>
@@ -125,8 +125,8 @@ AppAssetFusionChart::register($this);
 						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div class="huge"><?php echo $modelCustPrn[2]['COUNT_CUST']; ?> </div>
-							<div><?php echo 'Customers '.$modelCustPrn[2]['PARENT_NM']; ?></div>
+							<div class="huge"><?php echo $count_CustPrn>2?$model_CustPrn[2]['COUNT_CUST']:0; ?> </div>
+							<div><?php echo $count_CustPrn>2? 'Customers '.$model_CustPrn[2]['PARENT_NM']:'None'; ?></div>
 						</div>
 					</div>
 				</div>
@@ -148,8 +148,8 @@ AppAssetFusionChart::register($this);
 						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div class="huge"><?php echo $modelCustPrn[2]['COUNT_CUST']; ?> </div>
-							<div><?php echo 'Customers '.$modelCustPrn[2]['PARENT_NM']; ?></div>
+							<div class="huge"><?php echo $count_CustPrn>2?$model_CustPrn[2]['COUNT_CUST']:0; ?> </div>
+							<div><?php echo $count_CustPrn>2? 'Customers '.$model_CustPrn[2]['PARENT_NM']:'None'; ?></div>
 						</div>
 					</div>
 				</div>
@@ -171,8 +171,8 @@ AppAssetFusionChart::register($this);
 						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div class="huge"><?php echo $modelCustPrn[2]['COUNT_CUST']; ?> </div>
-							<div><?php echo 'PRODAK '.$modelCustPrn[2]['PARENT_NM']; ?></div>
+							<div class="huge"><?php echo $count_CustPrn>2?$model_CustPrn[2]['COUNT_CUST']:0; ?> </div>
+							<div><?php $count_CustPrn>2? 'Customers '.$model_CustPrn[2]['PARENT_NM']:'None'; ?></div>
 						</div>
 					</div>
 				</div>
