@@ -29,7 +29,10 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				$content3=Yii::$app->controller->renderPartial('chart_customer',[
 							'model_CustPrn'=>$model_CustPrn,
 							'count_CustPrn'=>$count_CustPrn
-					]);
+				]);
+				
+				$exampleChart=Yii::$app->controller->renderPartial('fusionchart_example');
+				
 				$items=[
 					[
 						'label'=>'<i class="glyphicon glyphicon-home"></i> ESM Dashboard','content'=>$content3,
@@ -37,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						
 					],
 					[
-						'label'=>'<i class="glyphicon glyphicon-home"></i> SDM','content'=>'asdasd',//$content1,
+						'label'=>'<i class="glyphicon glyphicon-home"></i> SDM','content'=>$exampleChart,
 						//active'=>true
 					],
 					[
