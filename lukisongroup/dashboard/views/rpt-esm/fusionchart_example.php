@@ -5,6 +5,8 @@ use yii\helpers\ArrayHelper;
 use lukisongroup\assets\AppAssetFusionChart;
 AppAssetFusionChart::register($this);
 //use lukisongroup\dashboard\models\FusionCharts; 
+$xaxis=88;
+$canvasEndY=300;
 
 ?>
 
@@ -25,6 +27,7 @@ AppAssetFusionChart::register($this);
 			<div id="chart-column2d"></div>			
 			<div id="chart-bar2d"></div>			
 			<div id="chart-column2d-x"></div>			
+			<div id="chart-container-img"></div>			
 		</div>
 	</div>	
 	
@@ -690,8 +693,7 @@ FusionCharts.ready(function () {
     }).render();
 });
 	
-	
-	
+
 	
 	
 ",$this::POS_READY);

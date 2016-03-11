@@ -29,6 +29,9 @@ class AppAssetFusionChart extends AssetBundle
         'php/fusioncharts/fusioncharts.charts.js',               
         'php/fusioncharts/fusioncharts.theme.fint.js',               
         'php/fusioncharts/fusioncharts.widgets.js',               
+        'php/fusioncharts/fusioncharts.powercharts.js',               
+        'php/fusioncharts/fusioncharts.gantt.js',               
+        'php/fusioncharts/fusioncharts.maps.js',               
         //'php/fusioncharts/FusionChartsExportComponent.js',               
     ];
     public $depends = [
