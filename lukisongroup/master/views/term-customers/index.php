@@ -18,11 +18,12 @@ $this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pad
 $this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
 
-$aryStt= [
-    ['STATUS' => 0, 'STT_NM' => 'DISABLE'],
-    ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
-];
-$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
+// $aryStt= [
+//     ['STATUS' => 0, 'STT_NM' => 'DISABLE'],
+//     ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
+// ];
+// $valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
+
 
 $data = Termcustomers::find()->all();
 $to = "CUST_KD";
@@ -255,15 +256,19 @@ $gridColumns = [
     ],
     [
       'attribute' => 'STATUS',
-      'filter' => $valStt,
+      // 'filter' => $valStt,
       'format' => 'raw',
       'hAlign'=>'center',
       'value'=>function($model){
-         if ($model->STATUS == 1) {
-          return Html::a('<i class="fa fa-check"></i> &nbsp;Enable', '',['class'=>'btn btn-success btn-xs', 'title'=>'Aktif']);
-        } else if ($model->STATUS == 0) {
-          return Html::a('<i class="fa fa-close"></i> &nbsp;Disable', '',['class'=>'btn btn-danger btn-xs', 'title'=>'Deactive']);
-        }
+        if ($model->STATUS==101){
+          return Html::a('<i class="glyphicon glyphicon-time"></i> Proccess', '#',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+        }elseif ($model->STATUS==102){
+          return Html::a('<i class="glyphicon glyphicon-ok"></i> Checked', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+        }elseif ($model->STATUS==103){
+          return Html::a('<i class="glyphicon glyphicon-ok"></i> Approved', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+        }else{
+          return Html::a('<i class="glyphicon glyphicon-question-sign"></i> Unknown', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+        };
       },
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -285,6 +290,7 @@ $gridColumns = [
         ]
       ],
     ],
+
     [
       'class'=>'kartik\grid\ActionColumn',
       'dropdown' => true,

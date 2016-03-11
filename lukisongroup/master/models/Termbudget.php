@@ -51,14 +51,15 @@ class Termbudget extends \yii\db\ActiveRecord
     {
         return [
 
-            [['BUDGET_PLAN','BUDGET_ACTUAL'], 'number'],
+            [['BUDGET_PLAN','BUDGET_ACTUAL','PPN','PPH23'], 'number'],
+            [['BUDGET_PLAN','BUDGET_ACTUAL','PPN','PPH23'], 'default','value'=>0.00],
             [['INVES_TYPE'], 'cekdata','on'=>self::SCENARIO_CREATE],
             // [['PERIODE_START','PERIODE_END'], 'date', 'format' => 'php:F d Y'],
             [['INVES_TYPE','BUDGET_PLAN','PERIODE_START','PERIODE_END'], 'required','on'=>self::SCENARIO_CREATE],
             [['PERIODE_END'], 'datevalid'],
             [['PERIODE_START', 'PERIODE_END', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
             [['STATUS'], 'integer'],
-            [['ID_TERM','CORP_ID'], 'string', 'max' => 50],
+            [['ID_TERM','CORP_ID','KD_COSTCENTER','PROGRAM'], 'string', 'max' => 50],
             [['INVES_TYPE', 'BUDGET_SOURCE'], 'string', 'max' => 255],
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100]
         ];

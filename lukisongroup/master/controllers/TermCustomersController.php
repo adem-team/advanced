@@ -74,6 +74,61 @@ class TermCustomersController extends Controller
         ]);
     }
 
+
+    public function actionPoNote($ID)
+    {
+      # code...
+      $model = Termcustomers::find()->where(['ID_TERM' =>$ID])->one();
+
+      if ($model->load(Yii::$app->request->post())) {
+        if($model->validate())
+        {
+            $model->save();
+        }
+          return $this->redirect(['view','id'=>$model->ID_TERM]);
+      } else {
+          return $this->renderAjax('note', [
+              'model' => $model,
+          ]);
+      }
+    }
+
+    public function actionInvoce($id)
+    {
+      # code...
+      $model = Termcustomers::find()->where(['ID_TERM' =>$id])->one();
+
+      if ($model->load(Yii::$app->request->post())) {
+        if($model->validate())
+        {
+            $model->save();
+        }
+          return $this->redirect(['review-act','id'=>$model->ID_TERM]);
+      } else {
+          return $this->renderAjax('invoce', [
+              'model' => $model,
+          ]);
+      }
+    }
+
+    public function actionFakturPajak($id)
+    {
+      # code...
+      $model = Termcustomers::find()->where(['ID_TERM' =>$id])->one();
+
+      if ($model->load(Yii::$app->request->post())) {
+        if($model->validate())
+        {
+            $model->save();
+        }
+          return $this->redirect(['review-act','id'=>$model->ID_TERM]);
+      } else {
+          return $this->renderAjax('pajak', [
+              'model' => $model,
+          ]);
+      }
+    }
+
     /**
      * Displays a single Termcustomers model.
      * @param integer $id
@@ -104,6 +159,9 @@ class TermCustomersController extends Controller
           if (isset($posted['BUDGET_ACTUAL'])) {
               $output = $model->BUDGET_ACTUAL;
             }
+            if (isset($posted['KD_COSCENTER'])) {
+                $output = $model->KD_COSCENTER;
+              }
               $out = Json::encode(['output'=>$output, 'message'=>'']);
             echo $out;
             return;
@@ -114,12 +172,86 @@ class TermCustomersController extends Controller
 
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'Model'=> $this->findModelbudget($id),
             // 'searchModel'=>   $searchModel,
             'dataProvider' =>  $dataProvider,
             'searchModel1'=>   $searchModel1,
             'dataProvider1' =>  $dataProvider1
         ]);
     }
+
+// review accounting
+    public function actionReviewAct($id)
+    {
+
+      $searchModel = new TermcustomersSearch();
+      $dataProvider = $searchModel->searchcusbyid(Yii::$app->request->queryParams,$id);
+
+      $searchModel1 = new TermbudgetSearch();
+      $dataProvider1 = $searchModel1->searchbudget(Yii::$app->request->queryParams,$id);
+
+        if (Yii::$app->request->post('hasEditable')) {
+          $id = Yii::$app->request->post('editableKey');
+          $model = Termbudget::findOne($id);
+          $out = Json::encode(['output'=>'', 'message'=>'']);
+          $post = [];
+          $posted = current($_POST['Termbudget']);
+
+          $post['Termbudget'] = $posted;
+          if ($model->load($post)) {
+              $model->save();
+              // print_r($model->getErrors());
+              // die();
+              $output = '';
+          if (isset($posted['BUDGET_ACTUAL'])) {
+              $output = $model->BUDGET_ACTUAL;
+            }
+            if (isset($posted['KD_COSCENTER'])) {
+                $output = $model->KD_COSCENTER;
+              }
+              $out = Json::encode(['output'=>$output, 'message'=>'']);
+            echo $out;
+            return;
+        }
+      }
+        return $this->render('review-act', [
+            'model' => $this->findModel($id),
+            'Model'=> $this->findModelbudget($id),
+            // 'searchModel'=>   $searchModel,
+            'dataProvider' =>  $dataProvider,
+            'searchModel1'=>   $searchModel1,
+            'dataProvider1' =>  $dataProvider1
+        ]);
+    }
+
+// approved
+    public function actionApprovedRoTerm()
+    {
+      if (Yii::$app->request->isAjax) {
+  			$request= Yii::$app->request;
+  			$id=$request->post('id');
+  			$model = Termbudget::findOne($id);
+  			$model->STATUS = 1;
+  			$model->save();
+  			return true;
+  		}
+    }
+    public function actionRejectRoTerm()
+    {
+      if (Yii::$app->request->isAjax) {
+        $request= Yii::$app->request;
+        $id=$request->post('id');
+
+      	$model = Termbudget::findOne($id);
+        $model->STATUS = 3;
+        //$ro->NM_BARANG=''
+        $model->save();
+        return true;
+      }
+    }
+
+
+
 
     public function actionViewTermCus($id)
     {
@@ -154,6 +286,8 @@ class TermCustomersController extends Controller
       return ActiveForm::validate($model);
       }
     }
+
+
 
 
     public function actionValidInves()
@@ -572,6 +706,51 @@ class TermCustomersController extends Controller
         }
     }
 
+
+
+
+    public function actionPpn($id)
+    {
+        $Model = $this->findModelbudget($id);
+        if ($Model->load(Yii::$app->request->post())) {
+          if($Model->validate())
+  				{
+
+              $Model->save();
+          }
+            return $this->redirect(['view', 'id' => $Model->ID_TERM]);
+        } else {
+            return $this->renderAjax('ppn', [
+                'Model' => $Model,
+            ]);
+        }
+
+    }
+
+    public function actionPph($id)
+    {
+        $Model = $this->findModelbudget($id);
+
+        if ($Model->load(Yii::$app->request->post())) {
+          $checkbox = Yii::$app->request->post('pph');
+          if($checkbox == 1)
+          {
+            $Model->PPH23 = 0.00;
+          }
+          if($Model->validate())
+          {
+
+              $Model->save();
+          }
+            return $this->redirect(['view', 'id' => $Model->ID_TERM]);
+        } else {
+            return $this->renderAjax('pph', [
+                'Model' => $Model,
+            ]);
+        }
+
+    }
+
     /**
      * Deletes an existing Termcustomers model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -592,6 +771,15 @@ class TermCustomersController extends Controller
      * @return Termcustomers the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
+     protected function findModelbudget($id)
+     {
+         if (($Model = Termbudget::find()->where(['ID_TERM'=>$id])->one()) !== null) {
+             return $Model;
+         } else {
+             throw new NotFoundHttpException('The requested page does not exist.');
+         }
+     }
+
     protected function findModel($id)
     {
         if (($model = Termcustomers::findOne($id)) !== null) {

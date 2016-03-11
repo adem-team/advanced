@@ -502,7 +502,7 @@ $y=4;
 						'border-right'=>'0px',
 				]
 			]
-		],		
+		],
 		[	//COL-5
 			/* Attribute Items Barang */
 			'label'=>'Items Name',

@@ -66,7 +66,7 @@ class Termcustomers extends \yii\db\ActiveRecord
             [['TARGET_VALUE', 'GROWTH','GENERAL_TERM'], 'number'],
             [['STATUS'], 'integer'],
             [['NM_TERM', 'CREATED_BY', 'UPDATE_BY'], 'string', 'max' => 100],
-            [['CUST_KD', 'PRINCIPAL_KD', 'DIST_KD'], 'string', 'max' => 50],
+            [['CUST_KD', 'PRINCIPAL_KD', 'DIST_KD','KETERANGAN','NOMER_INVOCE','NOMER_FAKTURPAJAK','ID_TERM'], 'string', 'max' => 50],
             [['CUST_NM', 'CUST_SIGN', 'PRINCIPAL_NM', 'PRINCIPAL_SIGN', 'DIST_NM', 'DIST_SIGN'], 'string', 'max' => 255]
         ];
     }
@@ -82,17 +82,13 @@ class Termcustomers extends \yii\db\ActiveRecord
       # code...
       $datestart = $this->PERIOD_START;
       $dateend = $this->PERIOD_END;
-      // $date = strtotime($datestart);
-      // print_r($date);
-      // die();
-
-
       if(strtotime($dateend) < strtotime($datestart))
        {
            $this->addError($model, 'Tanggal harus lebih Besar'.$datestart);
        }
 
     }
+
 
     public function getGeneral()
     {
