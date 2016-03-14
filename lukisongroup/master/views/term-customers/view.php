@@ -275,6 +275,57 @@ $this->params['breadcrumbs'][] = $this->title;
 		return $content;
 	}
 
+	function SignCreated($model){
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'term-auth1',
+						'data-toggle'=>"modal",
+						'data-target'=>"#term-auth1-sign",
+						'class'=>'btn btn-warning btn-xs',
+						'style'=>['width'=>'100px'],
+						'title'=>'Detail'
+		];
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/master/term-customers/sign-auth1-view','id'=>$model->ID_TERM]);
+		//$options1['tabindex'] = '-1';
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
+
+	function SignChecked($model){
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'po-auth2',
+						'data-toggle'=>"modal",
+						'data-target'=>"#term-auth2-sign",
+						'class'=>'btn btn-warning btn-xs',
+						'style'=>['width'=>'100px'],
+						'title'=>'Detail'
+		];
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/purchase-order/sign-auth2-view','id'=>$model->ID_TERM]);
+		//$options1['tabindex'] = '-1';
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
+
+	function SignApproved($model){
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'term-auth2',
+						'data-toggle'=>"modal",
+						'data-target'=>"#term-auth2-sign",
+						'class'=>'btn btn-warning btn-xs',
+						'style'=>['width'=>'100px'],
+						'title'=>'Detail'
+		];
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/purchase-order/sign-auth2-view','id'=>$model->ID_TERM]);
+		//$options1['tabindex'] = '-1';
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
+
 
 ?>
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;padding-bottom:20px;">
@@ -356,7 +407,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			</dl>
 		</div>
 	</div>
-	
+
 
 
 	<!-- TARGET !-->
@@ -884,144 +935,129 @@ $this->params['breadcrumbs'][] = $this->title;
 		<?php echo PrintPdf($model); ?>
 	</div>
 
-	<!-- SIGNATURE PIHAK !-->
+	<!-- Signature !-->
 	<div  class="col-md-12">
 		<div  class="row" >
-			<div class="col-md-7">
-				<table id="tblterm" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;padding-left:30px">
+			<div class="col-md-6">
+				<table id="tblRo" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">
 					<!-- Tanggal!-->
-					<tr>
+					 <tr>
+						<!-- Tanggal Pembuat RO!-->
 						<th  class="col-md-1" style="text-align: center; height:20px">
 							<div style="text-align:center;">
-							   <?php
-								 $placeTgl1= date('Y-m-d');
-								 echo  $placeTgl1;
-							   ?>
+								<?php
+									$placeTgl1=$model->SIG1_TGL!=0 ? Yii::$app->ambilKonvesi->convert($model->SIG1_TGL,'date') :'';
+									echo '<b>Tangerang</b>,' . $placeTgl1;
+								?>
 							</div>
-						</th>
 
+						</th>
 						<!-- Tanggal Pembuat RO!-->
 						<th class="col-md-1" style="text-align: center; height:20px">
 							<div style="text-align:center;">
 								<?php
-									$placeTgl2 = date('Y-m-d');
-									echo $placeTgl2;
+									$placeTgl2=$model->SIG2_TGL!=0 ? Yii::$app->ambilKonvesi->convert($model->SIG2_TGL,'date') :'';
+									echo '<b>Tangerang</b>,' . $placeTgl2;
 								?>
 							</div>
-					   </th>
-					   <!-- Tanggal PO Approved!-->
-					   <th class="col-md-1" style="text-align: center; height:20px">
-							<div style="text-align:center;">
-							   <?php
-									$placeTgl3= date('Y-m-d');
-									echo  $placeTgl3;
-							   ?>
-							</div>
-					   </th>
-					</tr>
 
+						</th>
+						<!-- Tanggal PO Approved!-->
+						<th class="col-md-1" style="text-align: center; height:20px">
+							<div style="text-align:center;">
+								<?php
+									$placeTgl3=$model->SIG3_TGL!=0 ? Yii::$app->ambilKonvesi->convert($model->SIG3_TGL,'date') :'';
+									echo '<b>Tangerang</b>,' . $placeTgl3;
+								?>
+							</div>
+						</th>
+
+					</tr>
 					<!-- Department|Jbatan !-->
-					<tr>
+					 <tr>
 						<th  class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
 							<div>
-								<b><?php  echo $data['CUST_NM'] ; ?></b>
+								<b><?php  echo 'Created'; ?></b>
 							</div>
-					    </th>
-					    <th class="col-md-1"  style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+						</th>
+						<th class="col-md-1"  style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
 							<div>
-								<b><?php  echo $datadis['NM_DISTRIBUTOR']; ?></b>
+								<b><?php  echo 'Checked'; ?></b>
 							</div>
-					    </th>
+						</th>
 						<th class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
 							<div>
-							   <b><?php  echo $datacorp['CORP_NM']; ?></b>
+								<b><?php  echo 'Approved'; ?></b>
 							</div>
 						</th>
 					</tr>
-
 					<!-- Signature !-->
-					<tr>
-					   <th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
-					   </th>
-					   <th class="col-md-1" style="text-align: center; vertical-align:middle">
-					   </th>
-					   <th  class="col-md-1" style="text-align: center; vertical-align:middle">
-					   </th>
+					 <tr>
+						<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
+							<?php
+								$ttd1 = $model->SIG1_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$model->SIG1_SVGBASE64.'></img>' :SignCreated($model);
+								echo $ttd1;
+							?>
+						</th>
+						<th class="col-md-1" style="text-align: center; vertical-align:middle">
+							<?php
+								$ttd2 = $model->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$model->SIG2_SVGBASE64.'></img>' :SignChecked($model);
+								if ($model->STATUS==101){
+									echo $ttd2;
+								}
+							?>
+						</th>
+						<th  class="col-md-1" style="text-align: center; vertical-align:middle">
+							<?php
+								$ttd3 = $model->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$model->SIG3_SVGBASE64.'></img>' :SignApproved($model);
+								if ($model->STATUS==102){
+									echo $ttd3;
+								}
+							?>
+						</th>
 					</tr>
-
 					<!--Nama !-->
-					<tr>
+					 <tr>
 						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 							<div>
-
+								<?php
+									$sigNm1=$model->SIG1_NM!='none' ? '<b>'.$model->SIG1_NM.'</b>' : 'none';
+									echo $sigNm1;
+								?>
 							</div>
 						</th>
 						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 							<div>
-
+								<?php
+									$sigNm2=$model->SIG2_NM!='none' ? '<b>'.$model->SIG2_NM.'</b>' : 'none';
+									echo $sigNm2;
+								?>
 							</div>
 						</th>
 						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 							<div>
-
+								<?php
+									$sigNm3=$model->SIG3_NM!='none' ? '<b>'.$model->SIG3_NM.'</b>' : 'none';
+									echo $sigNm3;
+								?>
 							</div>
 						</th>
 					</tr>
-
-					<!-- Department|Jbatan CUSTOMER !-->
-					<tr>
-					   <th style="text-align: left; vertical-align:middle;height:20">
+					<!-- Department|Jbatan !-->
+					 <tr>
+						<th style="text-align: center; vertical-align:middle;height:20">
 							<div>
-								<dt style="float:left;width:50px"><b>Nama</b></dt>
-								<dd><?php  echo ": " . ttd($model); ?></dd>
-								<dt style="float:left;width:50px"><b>Jabatan</b></dt>
-								<dd>
-									<?php
-										$barisjabatancus = count($model->JABATAN_CUS);
-										if($barisjabatancus == 0){
-											 echo ': ---';
-										}else{
-											echo ': '.$model->JABATAN_CUS;
-										};
-									?>
-								</dd>
+								<b><?php  echo 'Marketing & Sales'; ?></b>
 							</div>
 						</th>
-						<!-- Department|Jbatan DISTRIBUTOR !-->
-						<th style="text-align: left; vertical-align:middle;height:20">
+						<th style="text-align: center; vertical-align:middle;height:20">
 							<div>
-								<dt style="float:left;width:50px"><b>Nama</b></dt>
-								<dd><?php  echo ": " . ttd2($model); ?></dd>
-								<dt style="float:left;width:50px"><b>Jabatan</b></dt>
-								<dd>
-									<?php
-										$barisjabatandis = count($model->JABATAN_DIST);
-										if($barisjabatandis == 0){
-											 echo ': ---';
-										}else{
-											echo ': '.$model->JABATAN_DIST;
-										};
-									?>
-								</dd>
+								<b><?php  echo 'F & A'; ?></b>
 							</div>
 						</th>
-						<!-- Department|Jbatan PRINCIPAL !-->
-						<th style="text-align: left; vertical-align:middle;height:20">
+						<th style="text-align: center; vertical-align:middle;height:20">
 							<div>
-								<dt style="float:left;width:50px"><b>Nama</b></dt>
-								<dd><?php  echo ": " . ttd3($model); ?></dd>
-								<dt style="float:left;width:50px"><b>Jabatan</b></dt>
-								<dd>
-									<?php
-										$barisjabataninternal = count($model->JOBGRADE_ID);
-										if($barisjabataninternal == 0){
-											 echo ': ---';
-										}else{
-											$datainternal = Jobgrade::find()->where(['JOBGRADE_ID'=>$model->JOBGRADE_ID])->asArray()->one();
-											echo ': '.$datainternal['JOBGRADE_NM'];
-										};
-									?>
-								</dd>
+								<b><?php  echo 'Director'; ?></b>
 							</div>
 						</th>
 					</tr>
@@ -1031,6 +1067,33 @@ $this->params['breadcrumbs'][] = $this->title;
 	</div>
 </div>
 <?php
+$this->registerJs("
+		$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+		$('#term-auth1-sign').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			}),
+",$this::POS_READY);
+Modal::begin([
+		'id' => 'term-auth1-sign',
+		//'header' => '<h4 class="modal-title">Signature Authorize</h4>',
+		'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+		//'size' => 'modal-xs'
+		'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+		]
+	]);
+Modal::end();
+
      $this->registerJs("
         $.fn.modal.Constructor.prototype.enforceFocus = function(){};
         $('#pihak').on('show.bs.modal', function (event) {

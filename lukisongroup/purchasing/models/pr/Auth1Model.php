@@ -22,8 +22,8 @@ class Auth1Model extends Model
 {
     public $empNm;
     public $kdpo;
-	public $status;
-	public $password;
+	  public $status;
+	  public $password;
 
 	//public $findPasswords; // @property Digunakan jika Form Attribute di gunakan
 	private $_empid = false;
@@ -61,7 +61,7 @@ class Auth1Model extends Model
 			 $empid = $this->getEmpid();
        $id = $this->kdpo;
        $data = Purchasedetail::find()->where('STATUS<>3 AND KD_PO="'.$id.'"')->count();
-    
+
 			if (!$empid || !$empid->validateOldPasswordCheck($this->password)) {
                 $this->addError($attribute, 'Incorrect password.');
             }

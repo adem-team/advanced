@@ -51,178 +51,9 @@ $this->params['breadcrumbs'][] = $this->title;
 		};
 	}
 
-  function tombolApproval($url, $Model){
-        $title = Yii::t('app', 'Approved');
-        $options = [ 'id'=>'approved',
-               'data-pjax' => true,
-               'data-toggle-approved'=>$Model->ID,
-        ];
-        $icon = '<span class="glyphicon glyphicon-ok"></span>';
-        $label = $icon . ' ' . $title;
-        return '<li>' . Html::a($label, '' , $options) . '</li>';
-  }
 
-  function tombolReject($url, $Model) {
-				$title = Yii::t('app', 'Reject');
-				$options = [ 'id'=>'reject',
-							 'data-pjax'=>true,
-							 'data-toggle-reject' =>$Model->ID
-				];
-				$icon = '<span class="glyphicon glyphicon-ok"></span>';
-				$label = $icon . ' ' . $title;
-				$options['tabindex'] = '-1';
-				return '<li>' . Html::a($label, '' , $options) . '</li>' ;
-	}
 
-	function pihak($model){
-		$title = Yii::t('app','');
-		$options = [ 'id'=>'phk',
-			  'data-toggle'=>"modal",
-			  'data-target'=>"#pihak",
-			  'class'=>'btn btn-warning btn-xs',
-			  //'style'=>['width'=>'150px'],
-			  'title'=>'Set'
-		];
-		$icon = '<span class="glyphicon glyphicon-open"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/master/term-customers/pihak','id'=>$model->ID_TERM]);
-		$content = Html::a($label,$url, $options);
-		return $content;
-	}
 
-	function periode($model){
-		$title = Yii::t('app','');
-		$options = [ 'id'=>'peirod',
-			  'data-toggle'=>"modal",
-			  'data-target'=>"#periode",
-			  'class'=>'btn btn-warning btn-xs',
-			  //'style'=>['width'=>'150px'],
-			  'title'=>'Set'
-		];
-		$icon = '<span class="glyphicon glyphicon-open"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/master/term-customers/periode','id'=>$model->ID_TERM]);
-		$content = Html::a($label,$url, $options);
-		return $content;
-	}
-
-	function TOP($model){
-		$title = Yii::t('app','');
-		$options = [ 'id'=>'top',
-			  'data-toggle'=>"modal",
-			  'data-target'=>"#TOP",
-			  'class'=>'btn btn-warning btn-xs',
-			  //'style'=>['width'=>'150px'],
-			  'title'=>'Set'
-		];
-		$icon = '<span class="glyphicon glyphicon-open"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/master/term-customers/top','id'=>$model->ID_TERM]);
-		$content = Html::a($label,$url, $options);
-		return $content;
-	}
-
-	function RABATE($model){
-		$title = Yii::t('app','');
-		$options = [ 'id'=>'rabate',
-			  'data-toggle'=>"modal",
-			  'data-target'=>"#RABATE",
-			  'class'=>'btn btn-warning btn-xs',
-			  //'style'=>['width'=>'150px'],
-			  'title'=>'Set'
-		];
-		$icon = '<span class="glyphicon glyphicon-open"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/master/term-customers/rabate','id'=>$model->ID_TERM]);
-		$content = Html::a($label,$url, $options);
-		return $content;
-	}
-
-	function target($model){
-		$title = Yii::t('app','');
-		$options = [ 'id'=>'target-id',
-			  'data-toggle'=>"modal",
-			  'data-target'=>"#TARGET",
-			  'class'=>'btn btn-warning btn-xs',
-			  //'style'=>['width'=>'150px'],
-			  'title'=>'Set'
-		];
-		$icon = '<span class="glyphicon glyphicon-open"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/master/term-customers/target','id'=>$model->ID_TERM]);
-		$content = Html::a($label,$url, $options);
-		return $content;
-	}
-
-	function growth($model){
-		$title = Yii::t('app','');
-		$options = [ 'id'=>'growth',
-			  'data-toggle'=>"modal",
-			  'data-target'=>"#Growth",
-			  'class'=>'btn btn-warning btn-xs',
-			  //'style'=>['width'=>'150px'],
-			  'title'=>'Set'
-		];
-		$icon = '<span class="glyphicon glyphicon-open"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/master/term-customers/growth','id'=>$model->ID_TERM]);
-		$content = Html::a($label,$url, $options);
-		return $content;
-	}
-
-	function ttd($model){
-		if($model->CUST_NM == ''){
-			$title = Yii::t('app','-- -- --');
-		}else {
-			# code...
-			$title = Yii::t('app',$model['CUST_NM']);
-		}
-
-		$options = [ 'id'=>'tdd-id',
-			  'data-toggle'=>"modal",
-			  'data-target'=>"#TTD1",
-			  'title'=>'Set'
-		];
-		$url = Url::toRoute(['/master/term-customers/set-cus','id'=>$model->ID_TERM]);
-		$content = Html::a($title,$url, $options);
-		return $content;
-	}
-
-	function ttd2($model){
-		if($model->DIST_NM == ''){
-			$title = Yii::t('app','-- -- --');
-		}else {
-			# code...
-			$title = Yii::t('app',$model['DIST_NM']);
-		}
-		$options = [ 'id'=>'tdd-id2',
-			  'data-toggle'=>"modal",
-			  'data-target'=>"#TTD2",
-			  'title'=>'Set'
-		];
-		$url = Url::toRoute(['/master/term-customers/set-dist','id'=>$model->ID_TERM]);
-		$content = Html::a($title,$url, $options);
-		return $content;
-	}
-
-	function ttd3($model){
-		if($model->JOBGRADE_ID == ''){
-			$title = Yii::t('app','-- -- --');
-		}else {
-			# code...
-			$title = Yii::t('app',$model['PRINCIPAL_NM']);
-		}
-
-		$options = [ 'id'=>'tdd-id3',
-			  'data-toggle'=>"modal",
-			  'data-target'=>"#TTD3",
-			  'title'=>'Set'
-		];
-
-		$url = Url::toRoute(['/master/term-customers/set-internal','id'=>$model->ID_TERM]);
-		$content = Html::a($title,$url, $options);
-		return $content;
-	}
 
 	function getPermissionEmp(){
 		if (Yii::$app->getUserOpt->profile_user()){
@@ -231,57 +62,6 @@ $this->params['breadcrumbs'][] = $this->title;
 			return false;
 		}
 	}
-
-	function INVOCE($model)
-	{
-		$title = Yii::t('app','');
-		$options = [ 'id'=>'term-invoce-id',
-						'data-toggle'=>"modal",
-						'data-target'=>"#term-invoce",
-						'class'=>'btn btn-info btn-xs',
-						//'style'=>['width'=>'150px'],
-						'title'=>'Invoce'
-		];
-		$icon = '<span class="fa fa-plus fa-lg"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/master/term-customers/invoce','id'=>$model->ID_TERM]);
-		$content = Html::a($label,$url, $options);
-		return $content;
-	}
-
-	function Faktur($model)
-	{
-		$title = Yii::t('app','');
-		$options = [ 'id'=>'term-faktur-id',
-						'data-toggle'=>"modal",
-						'data-target'=>"#term-faktur",
-						'class'=>'btn btn-info btn-xs',
-						//'style'=>['width'=>'150px'],
-						'title'=>'Faktur Pajak'
-		];
-		$icon = '<span class="fa fa-plus fa-lg"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/master/term-customers/faktur-pajak','id'=>$model->ID_TERM]);
-		$content = Html::a($label,$url, $options);
-		return $content;
-	}
-
-	function PoNote($model){
-			$title = Yii::t('app','');
-			$options = [ 'id'=>'po-note-id',
-						  'data-toggle'=>"modal",
-						  'data-target'=>"#po-note",
-						  'class'=>'btn btn-info btn-xs',
-						  //'style'=>['width'=>'150px'],
-						  'title'=>'PO Note'
-			];
-			$icon = '<span class="fa fa-plus fa-lg"></span>';
-			$label = $icon . ' ' . $title;
-			$url = Url::toRoute(['/master/term-customers/po-note','ID'=>$model->ID_TERM]);
-			$content = Html::a($label,$url, $options);
-			return $content;
-	}
-
 
 
 	function PrintPdf($model){
@@ -317,23 +97,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
 	function SignChecked($model){
 		$title = Yii::t('app', 'Sign Hire');
-		$options = [ 'id'=>'term-auth2',
-					  'data-toggle'=>"modal",
-					  'data-target'=>"#term-auth2-sign",
-					  'class'=>'btn btn-warning btn-xs',
-					  'style'=>['width'=>'100px'],
-					  'title'=>'Detail'
-		];
-		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/master/term-customers/sign-auth2-view','id'=>$model->ID_TERM]);
-		//$options1['tabindex'] = '-1';
-		$content = Html::a($label,$url, $options);
-		return $content;
-	}
-
-	function SignApproved($model){
-		$title = Yii::t('app', 'Sign Hire');
 		$options = [ 'id'=>'po-auth2',
 					  'data-toggle'=>"modal",
 					  'data-target'=>"#po-auth2-sign",
@@ -344,6 +107,23 @@ $this->params['breadcrumbs'][] = $this->title;
 		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 		$label = $icon . ' ' . $title;
 		$url = Url::toRoute(['/purchasing/purchase-order/sign-auth2-view','id'=>$model->ID_TERM]);
+		//$options1['tabindex'] = '-1';
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
+
+	function SignApproved($model){
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'term-auth3',
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#term-auth3-sign",
+					  'class'=>'btn btn-warning btn-xs',
+					  'style'=>['width'=>'100px'],
+					  'title'=>'Detail'
+		];
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/master/term-customers/sign-auth3-view','id'=>$model->ID_TERM]);
 		//$options1['tabindex'] = '-1';
 		$content = Html::a($label,$url, $options);
 		return $content;
@@ -374,7 +154,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div class="row">
 		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 			<div>
-				<?php echo pihak($model); ?>
+				 <!-- echo pihak($model); ?> -->
 			</div>
 			<dl>
 				<?php
@@ -405,7 +185,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div class="row">
 		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 			<div>
-				<?php echo periode($model); ?>
+				<!--  echo periode($model); ?> -->
 			</div>
 			<dl>
 				<dt><h6><u><b>PERIODE/JANGKA WAKTU :</b></u></h6></dt>
@@ -422,7 +202,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div class="row">
 		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 			<div>
-				<?php echo TOP($model); ?>
+				 <!-- echo TOP($model); ?> -->
 			</div>
 			<dl>
 				<dt><h6><u><b>TERM OF PAYMENT :</b></u></h6></dt>
@@ -433,7 +213,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div class="row">
 		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 			<div>
-				<?php echo INVOCE($model); ?>
+				<!-- < echo INVOCE($model); ?> -->
 			</div>
 			<dl>
 				<dt><h6><u><b> Invoice Nomer :</b></u></h6></dt>
@@ -445,7 +225,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div class="row">
 		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 			<div>
-				<?php echo Faktur($model); ?>
+				 <!-- echo Faktur($model); ?> -->
 			</div>
 			<dl>
 				<dt><h6><u><b> Nomer Faktur Pajak :</b></u></h6></dt>
@@ -458,7 +238,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
 		<div class="col-xs-5 col-sm-5 col-md-5" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 			<div>
-				<?php echo target($model); ?>
+				 <!-- echo target($model); ?> -->
 			</div>
 			<dl>
 				<dt style="width:80px;"><h6><u><b>TARGET :</b></u></h6></dt>
@@ -495,41 +275,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					]
 				],
 				'columns' =>[
-          [	//COL-0
-            'class'=>'kartik\grid\ActionColumn',
-            'dropdown' => true,
-            'template' => '{approved} {reject}',
-            'dropdownOptions'=>['class'=>'pull-left dropdown'],
-            //'headerOptions'=>['class'=>'kartik-sheet-style'],
-            'buttons' => [
-              'approved' => function ($url, $Model) {
-                        return tombolApproval($url, $Model);
-                    },
-              /* Reject RO | Permissian Status 4; | Dept = Dept login | GF >= M */
-              'reject' => function ($url, $Model) {
-                        return tombolReject($url, $Model);
 
-                    },
-            ],
-            'headerOptions'=>[
-              'style'=>[
-                'text-align'=>'center',
-                'width'=>'100px',
-                'font-family'=>'verdana, arial, sans-serif',
-                'font-size'=>'8pt',
-                'background-color'=>'rgba(247, 245, 64, 0.6)',
-              ]
-            ],
-            'contentOptions'=>[
-              'style'=>[
-                'text-align'=>'center',
-                'width'=>'100px',
-                'font-family'=>'verdana, arial, sans-serif',
-                'font-size'=>'8pt',
-                'background-color'=>'rgba(247, 245, 64, 0.6)',
-              ]
-            ],
-          ],
 					[
 						'class'=>'kartik\grid\SerialColumn',
 						'contentOptions'=>['class'=>'kartik-sheet-style'],
@@ -585,7 +331,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					],
 					[	//COL-3
 						/* Attribute Request KD_COSTCENTER */
-						'class'=>'kartik\grid\EditableColumn',
+						// 'class'=>'kartik\grid\EditableColumn',
 						'attribute'=>'KD_COSTCENTER',
 						'label'=>'CostCenter',
 						'vAlign'=>'middle',
@@ -615,22 +361,22 @@ $this->params['breadcrumbs'][] = $this->title;
 									'border-right'=>'0px',
 							]
 						],
-						'editableOptions' => [
-							'header' => 'Cost Center',
-							'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
-							'size' => 'md',
-							'options' => [
-								'data' => ArrayHelper::map(Costcenter::find()->where('KD_COSTCENTER IN ("1000","1001")' )->all(), 'KD_COSTCENTER', 'NM_COSTCENTER'),
-								'pluginOptions' => [
-									//'min'=>0,
-									//'max'=>5000,
-									'allowClear' => true,
-									'class'=>'pull-top dropup'
-								],
-							],
-							//Refresh Display
-							'displayValueConfig' => ArrayHelper::map(Costcenter::find()->all(), 'KD_COSTCENTER', 'KD_COSTCENTER'),
-						],
+						// 'editableOptions' => [
+						// 	'header' => 'Cost Center',
+						// 	'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+						// 	'size' => 'md',
+						// 	'options' => [
+						// 		'data' => ArrayHelper::map(Costcenter::find()->where('KD_COSTCENTER IN ("1000","1001")' )->all(), 'KD_COSTCENTER', 'NM_COSTCENTER'),
+						// 		'pluginOptions' => [
+						// 			//'min'=>0,
+						// 			//'max'=>5000,
+						// 			'allowClear' => true,
+						// 			'class'=>'pull-top dropup'
+						// 		],
+						// 	],
+						// 	//Refresh Display
+						// 	'displayValueConfig' => ArrayHelper::map(Costcenter::find()->all(), 'KD_COSTCENTER', 'KD_COSTCENTER'),
+						// ],
 					],
 					[
 						'attribute' => 'PERIODE_END',
@@ -706,59 +452,57 @@ $this->params['breadcrumbs'][] = $this->title;
 						'pageSummaryFunc'=>GridView::F_SUM,
 						'pageSummary'=>true,
 						'format'=>['decimal', 2],
-						'pageSummary'=>function ($summary, $data, $widget) use($dataProvider1)	{
-								$model=$dataProvider1->getModels();
+						'pageSummary'=>function ($summary, $data, $widget) use ($Model)	{
 								/*
 								 * Calculate SUMMARY TOTAL
 								 * @author ptrnov  <piter@lukison.com>
 								 * @since 1.1
 								 */
-								 $ppn_test=$model!=''?$model[0]['PPN']:'kosong';
-								 
-								  print_r($ppn_test);
-								  //die();
 								$Total=$summary!=''? $summary : 0.00;
+								if($Model->PPN =='')
+								{
+									$ttlpp = $Model->PPN = 0.00;
+								}
+								else{
+									$ttlpp = ($Model->PPN*$Total)/100;
+								}
 
-						// 		else{
-						// 			$ttlpp = ($Model->PPN*$Total)/100;
-						// 		}
-						//
-						// 		if($Model->PPH23 =='')
-						// 		{
-						// 				$ttlpph = $Model->PPH23 = 0.00;
-						// 		}
-						// 		else{
-						// 				$ttlpph = ($Model->PPH23*$Total)/100;
-						// 		}
-						// 		// $ttlpp = $Model->PPN!=''?$Model->PPN :0.00;
-						// 		// $ttlpph = $Model->PPH23!=''?$Model->PPH23 :0.00;
-						//
-						// 		// $ttlDiscount=$poHeader->DISCOUNT!=0 ? ($poHeader->DISCOUNT/100) * $subTotal:0.00;
-						// 		// $ttlTax = $poHeader->PAJAK!=0 ? ($poHeader->PAJAK / 100) * $subTotal  :0.00;
-						// 		// $ttlDelivery=$poHeader->DELIVERY_COST!=0 ? $poHeader->DELIVERY_COST:0.00;
-						// 		// $grandTotal=($subTotal + $ttlTax + $ttlDelivery) - $ttlDiscount;
-						//
-						// 		/*SEND TO DECIMAL*/
+								if($Model->PPH23 =='')
+								{
+										$ttlpph = $Model->PPH23 = 0.00;
+								}
+								else{
+										$ttlpph = ($Model->PPH23*$Total)/100;
+								}
+								// $ttlpp = $Model->PPN!=''?$Model->PPN :0.00;
+								// $ttlpph = $Model->PPH23!=''?$Model->PPH23 :0.00;
+
+								// $ttlDiscount=$poHeader->DISCOUNT!=0 ? ($poHeader->DISCOUNT/100) * $subTotal:0.00;
+								// $ttlTax = $poHeader->PAJAK!=0 ? ($poHeader->PAJAK / 100) * $subTotal  :0.00;
+								// $ttlDelivery=$poHeader->DELIVERY_COST!=0 ? $poHeader->DELIVERY_COST:0.00;
+								// $grandTotal=($subTotal + $ttlTax + $ttlDelivery) - $ttlDiscount;
+
+								/*SEND TO DECIMAL*/
 								$ttlSubtotal=number_format($Total,2);
-						// 		// print_r($ttlSubtotal);
-						// 		// die();
-						// 		// $totalppn = ($Total*10)/100;
-						// 		// print_r($totalppn);
-						// 		// die();
-						// 		$ttlppn=number_format($ttlpp,2);
-						// 		$ttlpph23=number_format($ttlpph,2);
-						// 		// $ttlDeliveryF=number_format($ttlDelivery,2);
-						// 		// $grandTotalF=number_format($grandTotal,2);
-						// 		/*
-						// 		 * DISPLAY SUMMARY TOTAL
-						// 		 * LINK Modal Editing Discount | tax
-						// 		 * @author ptrnov  <piter@lukison.com>
-						// 		 * @since 1.1
-						// 		 */
-								return '<div>'.$ttlSubtotal.'</div>';
-
-
-					},
+								// print_r($ttlSubtotal);
+								// die();
+								// $totalppn = ($Total*10)/100;
+								// print_r($totalppn);
+								// die();
+								$ttlppn=number_format($ttlpp,2);
+								$ttlpph23=number_format($ttlpph,2);
+								// $ttlDeliveryF=number_format($ttlDelivery,2);
+								// $grandTotalF=number_format($grandTotal,2);
+								/*
+								 * DISPLAY SUMMARY TOTAL
+								 * LINK Modal Editing Discount | tax
+								 * @author ptrnov  <piter@lukison.com>
+								 * @since 1.1
+								 */
+								return '<div>'.$ttlSubtotal.'</div>
+											  <div>'.$ttlppn.'</div>
+												<div>'.$ttlpph23.'</div>';
+						},
 						'pageSummaryOptions' => [
 							'style'=>[
 									'text-align'=>'right',
@@ -818,20 +562,20 @@ $this->params['breadcrumbs'][] = $this->title;
 					],
 					[	//BUDGET_ACTUAL
 						//COL
-						'class'=>'kartik\grid\EditableColumn',
+						// 'class'=>'kartik\grid\EditableColumn',
 						'attribute' => 'BUDGET_ACTUAL',
 						'label'=>'Budget Actual',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
-						'editableOptions' => [
-								'header' => 'Update Budget actual',
-								'inputType' => \kartik\editable\Editable::INPUT_MONEY,
-								'size' => 'sm',
-								 'asPopover' => true,
-								// 'options' => [
-								// 	'pluginOptions' => ['min'=>0, 'max'=>50000]
-								// ]
-							],
+						// 'editableOptions' => [
+						// 		'header' => 'Update Budget actual',
+						// 		'inputType' => \kartik\editable\Editable::INPUT_MONEY,
+						// 		'size' => 'sm',
+						// 		 'asPopover' => true,
+						// 		// 'options' => [
+						// 		// 	'pluginOptions' => ['min'=>0, 'max'=>50000]
+						// 		// ]
+						// 	],
 						'headerOptions'=>[
 							'style'=>[
 								 'text-align'=>'center',
@@ -999,13 +743,13 @@ $this->params['breadcrumbs'][] = $this->title;
 				'panel' => [
 					'heading'=>'<h5 class="panel-title">TRADE INVESTMENT</h5>',
 					'type'=>'success',
-					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Investment ',
-						['modelClass' => 'Termcustomers',]),['/master/term-customers/create-budget','id'=>$dataids],[
-							'data-toggle'=>"modal",
-							'data-target'=>"#modal-create",
-							'data-title'=>'type Investasi',
-								'class' => 'btn btn-danger btn-xs'
-									]),
+					// 'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Investment ',
+					// 	['modelClass' => 'Termcustomers',]),['/master/term-customers/create-budget','id'=>$dataids],[
+					// 		'data-toggle'=>"modal",
+					// 		'data-target'=>"#modal-create",
+					// 		'data-title'=>'type Investasi',
+					// 			'class' => 'btn btn-danger btn-xs'
+					// 				]),
 					'showFooter'=>false,
 				],
 				'export' =>false,
@@ -1020,7 +764,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
 		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 			<div>
-				<?php echo RABATE($model); ?>
+				 <!-- echo RABATE($model); ?> -->
 			</div>
 			<dl>
 				<dt><h6><u><b>Conditional Rabate : <?= $model->RABATE_CNDT ?></b></u></h6></dt>
@@ -1032,7 +776,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div class="row">
 		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 			<div>
-			  <?php echo Growth($model); ?>
+			  <!-- < Growth($model); ?> -->
 			</div>
 			<dl>
 			  <dt><h6><u><b>Growth : <?= $model->GROWTH ?> %</b></u></h6></dt>
@@ -1044,107 +788,107 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 			<?php
-				echo  $grid = GridView::widget([
-					'id'=>'gv-term',
-					'dataProvider'=> $dataProvider,
-					'footerRowOptions'=>['style'=>'font-weight:bold;text-decoration: underline;'],
-					// 'filterModel' => $searchModel1,
-					// 'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
-					'columns' => [
-						 [
-							'class'=>'kartik\grid\SerialColumn',
-							'contentOptions'=>['class'=>'kartik-sheet-style'],
-							'width'=>'5%',
-							'header'=>'No.',
-							'headerOptions'=>[
-								 'style'=>[
-								   'text-align'=>'center',
-								   'width'=>'5%',
-								   'font-family'=>'verdana, arial, sans-serif',
-								   'font-size'=>'9pt',
-								   'background-color'=>'rgba(97, 211, 96, 0.3)',
-								 ]
-							],
-							'contentOptions'=>[
-								 'style'=>[
-								   'text-align'=>'center',
-								   'width'=>'5%',
-								   'font-family'=>'tahoma, arial, sans-serif',
-								   'font-size'=>'9pt',
-								 ]
-							],
-						 ],
-						 [
-							'attribute' => 'general.SUBJECT',
-							'label'=>'General Term',
-							'hAlign'=>'left',
-							'vAlign'=>'middle',
-							'headerOptions'=>[
-								 'style'=>[
-								   'width'=>'30%',
-								   'text-align'=>'center',
-								   'font-family'=>'tahoma, arial, sans-serif',
-								   'font-size'=>'9pt',
-								   'background-color'=>'rgba(97, 211, 96, 0.3)',
-								 ]
-							],
-							'contentOptions'=>[
-								 'style'=>[
-								   'text-align'=>'left',
-								   'width'=>'30%',
-								   'font-family'=>'tahoma, arial, sans-serif',
-								   'font-size'=>'9pt',
-								 ]
-							],
-						 ],
-						 [
-							'attribute' => 'general.ISI_TERM',
-							'label'=>'Isi Peraturan',
-							'hAlign'=>'left',
-							'vAlign'=>'middle',
-							'headerOptions'=>[
-								 'style'=>[
-								   'text-align'=>'center',
-								   'width'=>'75%',
-								   'font-family'=>'tahoma, arial, sans-serif',
-								   'font-size'=>'9pt',
-								   'background-color'=>'rgba(97, 211, 96, 0.3)',
-								 ]
-							],
-							'contentOptions'=>[
-								 'style'=>[
-								   'text-align'=>'left',
-								    'width'=>'75%',
-								   'font-family'=>'tahoma, arial, sans-serif',
-								   'font-size'=>'9pt',
-								 ]
-							],
-						 ],
-					],
-					'showPageSummary' => false,
-					'pjax'=>true,
-					  'pjaxSettings'=>[
-						'options'=>[
-						  'enablePushState'=>false,
-						  'id'=>'gv-term-general',
-						],
-					   ],
-					'toolbar' => [
-					  '',
-					],
-					'panel' => [
-					  'heading'=>'<h5 class="panel-title">GENERAL TERM</h5>',
-					  'type'=>'success',
-					  'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Regulation',
-						  ['modelClass' => 'Termcustomers',]),['/master/term-customers/create-general','id'=>$dataids],[
-							'data-toggle'=>"modal",
-							  'data-target'=>"#modal-create",
-								'class' => 'btn btn-danger btn-xs'
-									  ]),
-					  'showFooter'=>true,
-					],
-					'export' =>false,
-				]);
+				//   $grid = GridView::widget([
+				// 	'id'=>'gv-term',
+				// 	'dataProvider'=> $dataProvider,
+				// 	'footerRowOptions'=>['style'=>'font-weight:bold;text-decoration: underline;'],
+				// 	// 'filterModel' => $searchModel1,
+				// 	// 'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+				// 	'columns' => [
+				// 		 [
+				// 			'class'=>'kartik\grid\SerialColumn',
+				// 			'contentOptions'=>['class'=>'kartik-sheet-style'],
+				// 			'width'=>'5%',
+				// 			'header'=>'No.',
+				// 			'headerOptions'=>[
+				// 				 'style'=>[
+				// 				   'text-align'=>'center',
+				// 				   'width'=>'5%',
+				// 				   'font-family'=>'verdana, arial, sans-serif',
+				// 				   'font-size'=>'9pt',
+				// 				   'background-color'=>'rgba(97, 211, 96, 0.3)',
+				// 				 ]
+				// 			],
+				// 			'contentOptions'=>[
+				// 				 'style'=>[
+				// 				   'text-align'=>'center',
+				// 				   'width'=>'5%',
+				// 				   'font-family'=>'tahoma, arial, sans-serif',
+				// 				   'font-size'=>'9pt',
+				// 				 ]
+				// 			],
+				// 		 ],
+				// 		 [
+				// 			'attribute' => 'general.SUBJECT',
+				// 			'label'=>'General Term',
+				// 			'hAlign'=>'left',
+				// 			'vAlign'=>'middle',
+				// 			'headerOptions'=>[
+				// 				 'style'=>[
+				// 				   'width'=>'30%',
+				// 				   'text-align'=>'center',
+				// 				   'font-family'=>'tahoma, arial, sans-serif',
+				// 				   'font-size'=>'9pt',
+				// 				   'background-color'=>'rgba(97, 211, 96, 0.3)',
+				// 				 ]
+				// 			],
+				// 			'contentOptions'=>[
+				// 				 'style'=>[
+				// 				   'text-align'=>'left',
+				// 				   'width'=>'30%',
+				// 				   'font-family'=>'tahoma, arial, sans-serif',
+				// 				   'font-size'=>'9pt',
+				// 				 ]
+				// 			],
+				// 		 ],
+				// 		 [
+				// 			'attribute' => 'general.ISI_TERM',
+				// 			'label'=>'Isi Peraturan',
+				// 			'hAlign'=>'left',
+				// 			'vAlign'=>'middle',
+				// 			'headerOptions'=>[
+				// 				 'style'=>[
+				// 				   'text-align'=>'center',
+				// 				   'width'=>'75%',
+				// 				   'font-family'=>'tahoma, arial, sans-serif',
+				// 				   'font-size'=>'9pt',
+				// 				   'background-color'=>'rgba(97, 211, 96, 0.3)',
+				// 				 ]
+				// 			],
+				// 			'contentOptions'=>[
+				// 				 'style'=>[
+				// 				   'text-align'=>'left',
+				// 				    'width'=>'75%',
+				// 				   'font-family'=>'tahoma, arial, sans-serif',
+				// 				   'font-size'=>'9pt',
+				// 				 ]
+				// 			],
+				// 		 ],
+				// 	],
+				// 	'showPageSummary' => false,
+				// 	'pjax'=>true,
+				// 	  'pjaxSettings'=>[
+				// 		'options'=>[
+				// 		  'enablePushState'=>false,
+				// 		  'id'=>'gv-term-general',
+				// 		],
+				// 	   ],
+				// 	'toolbar' => [
+				// 	  '',
+				// 	],
+				// 	'panel' => [
+				// 	  'heading'=>'<h5 class="panel-title">GENERAL TERM</h5>',
+				// 	  'type'=>'success',
+				// 	  'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Regulation',
+				// 		  ['modelClass' => 'Termcustomers',]),['/master/term-customers/create-general','id'=>$dataids],[
+				// 			'data-toggle'=>"modal",
+				// 			  'data-target'=>"#modal-create",
+				// 				'class' => 'btn btn-danger btn-xs'
+				// 					  ]),
+				// 	  'showFooter'=>true,
+				// 	],
+				// 	'export' =>false,
+				// ]);
 			?>
 		</div>
 	</div>
@@ -1156,7 +900,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
 			<div>
 				<div style="float:right;text-align:right;">
-					 <?php echo PoNote($model); ?>
+					  <!-- echo PoNote($model); ?> -->
 				</div>
 				<div style="margin-left:5px">
 					<dd> <?php echo $model->KETERANGAN; ?></dd>
@@ -1233,19 +977,20 @@ $this->params['breadcrumbs'][] = $this->title;
 						<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
 							<?php
 								$ttd1 = $model->SIG1_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$model->SIG1_SVGBASE64.'></img>' :SignCreated($model);
-                  echo $ttd1;
+                      echo $ttd1;
 							?>
 						</th>
 						<th class="col-md-1" style="text-align: center; vertical-align:middle">
 							<?php
 								$ttd2 = $model->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$model->SIG2_SVGBASE64.'></img>' :SignChecked($model);
-                echo $ttd2;
+                      echo $ttd2;
 							?>
 						</th>
 						<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 							<?php
 								$ttd3 = $model->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$model->SIG3_SVGBASE64.'></img>' :SignApproved($model);
-									echo $ttd3;
+                      echo $ttd3;
+
 							?>
 						</th>
 					</tr>
@@ -1300,7 +1045,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $this->registerJs("
 		$.fn.modal.Constructor.prototype.enforceFocus = function() {};
-		$('#term-auth2-sign').on('show.bs.modal', function (event) {
+		$('#term-auth3-sign').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget)
 			var modal = $(this)
 			var title = button.data('title')
@@ -1314,7 +1059,7 @@ $this->registerJs("
 			}),
 ",$this::POS_READY);
 Modal::begin([
-		'id' => 'term-auth1-sign',
+		'id' => 'term-auth3-sign',
 		//'header' => '<h4 class="modal-title">Signature Authorize</h4>',
 		'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
 		//'size' => 'modal-xs'
@@ -1324,30 +1069,29 @@ Modal::begin([
 		]
 	]);
 Modal::end();
-
-			 $this->registerJs("
-					$.fn.modal.Constructor.prototype.enforceFocus = function(){};
-					$('#pihak').on('show.bs.modal', function (event) {
-					 var button = $(event.relatedTarget)
-					 var modal = $(this)
-					 var title = button.data('title')
-					 var href = button.attr('href')
-					 //modal.find('.modal-title').html(title)
-					 modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-					 $.post(href)
-						 .done(function( data ) {
-							 modal.find('.modal-body').html(data)
-						 });
-					 })
-			 ",$this::POS_READY);
-				 Modal::begin([
-					'id' => 'pihak',
-				 'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title"> Pihak Terkait</h4></div>',
-				 'headerOptions'=>[
-						 'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
-				 ],
-				 ]);
-				 Modal::end();
+     $this->registerJs("
+        $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+        $('#pihak').on('show.bs.modal', function (event) {
+         var button = $(event.relatedTarget)
+         var modal = $(this)
+         var title = button.data('title')
+         var href = button.attr('href')
+         //modal.find('.modal-title').html(title)
+         modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+         $.post(href)
+           .done(function( data ) {
+             modal.find('.modal-body').html(data)
+           });
+         })
+     ",$this::POS_READY);
+       Modal::begin([
+        'id' => 'pihak',
+       'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title"> Pihak Terkait</h4></div>',
+       'headerOptions'=>[
+           'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+       ],
+       ]);
+       Modal::end();
 
 			 $this->registerJs("
 					$.fn.modal.Constructor.prototype.enforceFocus = function(){};

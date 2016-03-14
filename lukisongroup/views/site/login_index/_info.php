@@ -46,7 +46,7 @@ AppAssetQr::register($this);
 			<dd>: <?php echo  $model->EMP_JOIN_DATE; ?></dd>
 			
 			<dt style="width:100px; float:left;">Status</dt>
-			<dd>: <?php echo $dataProvider[0]['sttOne']->STS_NM; ?></dd>
+			<dd>: <?php echo $dataProvider[0]['sttOne']!=''?$dataProvider[0]['sttOne']->STS_NM:''; ?></dd>
 			
 			<dt style="width:100px; float:left;">Email</dt>
 			<dd>: <?php echo  $model->EMP_EMAIL; ?></dd>
