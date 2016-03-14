@@ -34,8 +34,6 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 
     <?php $form = ActiveForm::begin([
       'id'=>$model->formName(),
-
-
     ]); ?>
 
     <?= $form->field($model, 'NM_TERM', $config)->widget(LabelInPlace::classname())?>

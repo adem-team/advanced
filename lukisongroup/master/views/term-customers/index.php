@@ -7,6 +7,7 @@ use yii\bootstrap\Modal;
 use lukisongroup\master\models\Termcustomers;
 use lukisongroup\hrd\models\Corp;
 use lukisongroup\master\models\Distributor;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel lukisongroup\master\models\TermcustomersSearch */
@@ -18,11 +19,116 @@ $this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pad
 $this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
 
-$aryStt= [
-    ['STATUS' => 0, 'STT_NM' => 'DISABLE'],
-    ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
-];
-$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
+// $aryStt= [
+//     ['STATUS' => 0, 'STT_NM' => 'DISABLE'],
+//     ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
+// ];
+// $valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
+function getPermissionEmp(){
+  if (Yii::$app->getUserOpt->profile_user()){
+    return Yii::$app->getUserOpt->profile_user()->emp;
+  }else{
+    return false;
+  }
+}
+function getPermission(){
+  if (Yii::$app->getUserOpt->Modul_akses('3')){
+    return Yii::$app->getUserOpt->Modul_akses('3');
+  }else{
+    return false;
+  }
+}
+
+function tombolCreate(){
+  if(getPermission()){
+    if(getPermission()->BTN_CREATE==1 OR getPermissionEmp()->DEP_ID == 'ACT'){
+      $title1 = Yii::t('app', 'Add Term');
+      $options1 = [ 'id'=>'po-create',
+              'data-toggle'=>"modal",
+              'data-target'=>"#modal-create",
+              'class' => 'btn btn-success',
+      ];
+      $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+      $url = Url::toRoute(['/master/term-customers/create-act']);
+      $label1 = $icon1 .'' . $title1;
+      $content = Html::a($label1,$url,$options1);
+      return $content;
+     }else{
+      $title1 = Yii::t('app', 'Add Term');
+      $options1 = [ 'id'=>'po-create',
+      'data-toggle'=>"modal",
+      'data-target'=>"#modal-create",
+      'class' => 'btn btn-success',
+      ];
+      $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+      $label1 = $icon1 . ' ' . $title1;
+      $url = Url::toRoute(['/master/term-customers/create']);
+      $content = Html::a($label1,$url, $options1);
+      return $content;
+    };
+  }else{
+      $title1 = Yii::t('app', 'Add Term');
+      $options1 = [ 'id'=>'ro-create',
+              'class' => 'btn btn-warning btn-sm',
+              'data-toggle'=>"modal",
+              'data-target'=>"#confirm-permission-alert",
+      ];
+      $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+      $label1 = $icon1 . ' ' . $title1;
+      $content = Html::button($label1,$options1);
+      return $content;
+  }
+}
+
+function review($url,$model)
+{
+  if(getPermission()->BTN_REVIEW==1)
+  {
+  if( getPermissionEmp()->DEP_ID == 'ACT')
+  {
+    $title1 = Yii::t('app', 'Review');
+    $options1 = [ 'id'=>'term-Review',
+              // 'data-toggle'=>"modal",
+              // 'data-target'=>"#review-term",
+              // 'class' => 'btn btn-warning btn-sm',
+    ];
+    $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+    $label = $icon1 . ' ' . $title1;
+    $url = Url::toRoute(['/master/term-customers/review-act','id'=>$model->ID_TERM]);
+    $options1['tabindex'] = '-1';
+    return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
+  }
+  elseif (getPermissionEmp()->DEP_ID == 'GM'|| getPermissionEmp()->DEP_ID == 'DRC') {
+    # code...
+    $title1 = Yii::t('app', 'Review');
+    $options1 = [ 'id'=>'term-Review',
+              // 'data-toggle'=>"modal",
+              // 'data-target'=>"#review-term",
+              // 'class' => 'btn btn-warning btn-sm',
+    ];
+    $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+    $label = $icon1 . ' ' . $title1;
+    $url = Url::toRoute(['/master/term-customers/review-drc','id'=>$model->ID_TERM]);
+    $options1['tabindex'] = '-1';
+    return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
+  }
+  else{
+    $title1 = Yii::t('app', 'Review');
+    $options1 = [ 'id'=>'term-Review',
+            // 'data-toggle'=>"modal",
+            // 'data-target'=>"#review-term",
+            // 'class' => 'btn btn-warning btn-sm',
+    ];
+    $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+    $label = $icon1 . ' ' . $title1;
+    $url = Url::toRoute(['/master/term-customers/view','id'=>$model->ID_TERM]);
+    // $options1['tabindex'] = '-1';
+    return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
+  }
+}
+
+}
+
 
 $data = Termcustomers::find()->all();
 $to = "CUST_KD";
@@ -255,15 +361,19 @@ $gridColumns = [
     ],
     [
       'attribute' => 'STATUS',
-      'filter' => $valStt,
+      // 'filter' => $valStt,
       'format' => 'raw',
       'hAlign'=>'center',
       'value'=>function($model){
-         if ($model->STATUS == 1) {
-          return Html::a('<i class="fa fa-check"></i> &nbsp;Enable', '',['class'=>'btn btn-success btn-xs', 'title'=>'Aktif']);
-        } else if ($model->STATUS == 0) {
-          return Html::a('<i class="fa fa-close"></i> &nbsp;Disable', '',['class'=>'btn btn-danger btn-xs', 'title'=>'Deactive']);
-        }
+        if ($model->STATUS==100){
+          return Html::a('<i class="glyphicon glyphicon-time"></i> Proccess', '#',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+        }elseif ($model->STATUS==101){
+          return Html::a('<i class="glyphicon glyphicon-ok"></i> Checked', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+        }elseif ($model->STATUS==102){
+          return Html::a('<i class="glyphicon glyphicon-ok"></i> Approved', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+        }else{
+          return Html::a('<i class="glyphicon glyphicon-sign"></i> NEW', '#',['class'=>'btn btn-info btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+        };
       },
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -285,20 +395,16 @@ $gridColumns = [
         ]
       ],
     ],
+
     [
       'class'=>'kartik\grid\ActionColumn',
       'dropdown' => true,
       'template' => '{view}{update}',
       'dropdownOptions'=>['class'=>'pull-right dropup'],
       'buttons' => [
-          'view' =>function($url, $model, $key){
-              return  '<li>' .Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Review'),
-                            ['/master/term-customers/view','id'=>$model->ID_TERM],[
-                            // 'data-toggle'=>"modal",
-                            // 'data-target'=>"#modal-view",
-                            // 'data-title'=> $model->ID_TERM,
-                            ]). '</li>' . PHP_EOL;
-          },
+        'view' => function ($url, $model) {
+                return review($url, $model);
+              },
           'update' =>function($url, $model, $key){
               return  '<li>' . Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
                             ['/master/term-customers/view-term-cus','id'=>$model->ID_TERM],[
@@ -351,16 +457,13 @@ $gridColumns = [
 					 ],
 				'toolbar' => [
 					'{export}',
+          // 'content'=> tombolCreate()
+
 				],
 				'panel' => [
 					'heading'=>'<h3 class="panel-title">LIST PERJANJIAN</h3>',
-					'type'=>'warning',
-					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Term ',
-							['modelClass' => 'Termcustomers',]),'/master/term-customers/create',[
-								'data-toggle'=>"modal",
-									'data-target'=>"#modal-create",
-										'class' => 'btn btn-success'
-													]),
+					// 'type'=>'warning',
+					'before'=>tombolCreate(),
 					'showFooter'=>false,
 				],
 

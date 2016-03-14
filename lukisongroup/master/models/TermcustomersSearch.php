@@ -96,7 +96,19 @@ class TermcustomersSearch extends Termcustomers
 
     public function search($params)
     {
-        $query = Termcustomers::find();
+      	$profile=Yii::$app->getUserOpt->Profile_user();
+        if($profile->emp->DEP_ID == 'ACT')
+          {
+            $query = Termcustomers::find()->where(['STATUS'=>100]);
+          }
+        elseif($profile->emp->DEP_ID == 'GM'|| $profile->emp->DEP_ID == 'DRC')
+          {
+            $query = Termcustomers::find()->where(['STATUS'=>101]);
+          }
+          else{
+              $query = Termcustomers::find();
+          }
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

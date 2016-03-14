@@ -8,12 +8,13 @@ use kartik\widgets\DatePicker;
 use lukisongroup\master\models\Terminvest;
 use kartik\money\MaskMoney;
 use yii\helpers\Url;
+use kartik\label\LabelInPlace;
 
 $data = Terminvest::find()->all();
 $to = "INVES_TYPE";
 $from = "INVES_TYPE";
 
-
+$config = ['template'=>"{input}\n{error}\n{hint}"];
 ?>
 
 <?php
@@ -61,6 +62,10 @@ $form = ActiveForm::begin([
      'precision' => 2,
       'allowNegative' => false
   ]
+]) ?>
+
+<?= $form->field($budget, 'PROGRAM', $config)->widget(LabelInPlace::classname(), [
+   'type' => LabelInPlace::TYPE_TEXTAREA
 ]) ?>
 
 <div class="form-group">
