@@ -28,7 +28,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				//$content2=$modelCustPrn[1]['PARENT_NM'];
 				$content3=Yii::$app->controller->renderPartial('chart_customer',[
 							'model_CustPrn'=>$model_CustPrn,
-							'count_CustPrn'=>$count_CustPrn
+							'count_CustPrn'=>$count_CustPrn,
+							'dataEsmStockAll'=>$dataEsmStockAll,
+							'graphEsmStockPerSku'=>$graphEsmStockPerSku
 				]);
 				
 				$exampleChart=Yii::$app->controller->renderPartial('fusionchart_example');

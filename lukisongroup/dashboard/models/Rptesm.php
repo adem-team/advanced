@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models\dashboard;
+namespace lukisongroup\models\dashboard;
 
 use Yii;
 
