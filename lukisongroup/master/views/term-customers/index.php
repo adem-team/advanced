@@ -40,8 +40,9 @@ function getPermission(){
 }
 
 function tombolCreate(){
-  if(getPermission()){
-    if(getPermission()->BTN_CREATE==1 OR getPermissionEmp()->DEP_ID == 'ACT'){
+  if(getPermission() && getPermission()->BTN_CREATE==1)
+  {
+    if(getPermission()->BTN_CREATE==1 && getPermissionEmp()->DEP_ID == 'ACT'){
       $title1 = Yii::t('app', 'Add Term');
       $options1 = [ 'id'=>'po-create',
               'data-toggle'=>"modal",
@@ -67,24 +68,25 @@ function tombolCreate(){
       return $content;
     };
   }else{
-      $title1 = Yii::t('app', 'Add Term');
-      $options1 = [ 'id'=>'ro-create',
-              'class' => 'btn btn-warning btn-sm',
-              'data-toggle'=>"modal",
-              'data-target'=>"#confirm-permission-alert",
-      ];
-      $icon1 = '<span class="fa fa-plus fa-lg"></span>';
-      $label1 = $icon1 . ' ' . $title1;
-      $content = Html::button($label1,$options1);
-      return $content;
+    $title1 = Yii::t('app', 'Add Term ');
+    $options1 = [ 'id'=>'action-denied-id',
+            'data-toggle'=>"modal",
+            'data-target'=>"#confirm-permission-alert",
+              'class' => 'btn btn-success',
+    ];
+    $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+    $label1 = $icon1 . ' ' . $title1;
+    $content = Html::a($label1,'',$options1);
+    return $content;
   }
+
 }
 
 function review($url,$model)
 {
-  if(getPermission()->BTN_REVIEW==1)
-  {
-  if( getPermissionEmp()->DEP_ID == 'ACT')
+
+
+  if( getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1)
   {
     $title1 = Yii::t('app', 'Review');
     $options1 = [ 'id'=>'term-Review',
@@ -94,17 +96,14 @@ function review($url,$model)
     ];
     $icon1 = '<span class="fa fa-plus fa-lg"></span>';
     $label = $icon1 . ' ' . $title1;
-    $url = Url::toRoute(['/master/term-customers/review-act','id'=>$model->ID_TERM]);
+    $url = Url::toRoute(['/master/term-customers/review-act-update','id'=>$model->ID_TERM]);
     $options1['tabindex'] = '-1';
     return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
   }
-  elseif (getPermissionEmp()->DEP_ID == 'GM'|| getPermissionEmp()->DEP_ID == 'DRC') {
+  elseif (getPermissionEmp()->DEP_ID == 'GM'|| getPermissionEmp()->DEP_ID == 'DRC' && getPermission()->BTN_REVIEW==1) {
     # code...
     $title1 = Yii::t('app', 'Review');
     $options1 = [ 'id'=>'term-Review',
-              // 'data-toggle'=>"modal",
-              // 'data-target'=>"#review-term",
-              // 'class' => 'btn btn-warning btn-sm',
     ];
     $icon1 = '<span class="fa fa-plus fa-lg"></span>';
     $label = $icon1 . ' ' . $title1;
@@ -112,7 +111,7 @@ function review($url,$model)
     $options1['tabindex'] = '-1';
     return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
   }
-  else{
+  elseif(getPermission()->BTN_REVIEW==1){
     $title1 = Yii::t('app', 'Review');
     $options1 = [ 'id'=>'term-Review',
             // 'data-toggle'=>"modal",
@@ -125,7 +124,6 @@ function review($url,$model)
     // $options1['tabindex'] = '-1';
     return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
   }
-}
 
 }
 
@@ -169,36 +167,6 @@ $gridColumns = [
         ]
       ],
     ],
-
-    [
-      'attribute' => 'cus.CUST_NM',
-      'label'=>'Nama Customers',
-      'filter' =>$val,
-      'filterType'=>GridView::FILTER_SELECT2,
-      'filterWidgetOptions'=>[
-        'pluginOptions'=>['allowClear'=>true],
-      ],
-      'filterInputOptions'=>['placeholder'=>'Nama CUstomers'],
-      'hAlign'=>'left',
-      'vAlign'=>'middle',
-      'headerOptions'=>[
-        'style'=>[
-          'text-align'=>'center',
-          'width'=>'150px',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-          'background-color'=>'rgba(97, 211, 96, 0.3)',
-        ]
-      ],
-      'contentOptions'=>[
-        'style'=>[
-          'text-align'=>'left',
-          'width'=>'150px',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-        ]
-      ],
-    ],
     [
       'attribute' => 'NM_TERM',
       'label'=>'Nama Perjanjian',
@@ -223,63 +191,108 @@ $gridColumns = [
       ],
     ],
     [
-      'attribute' => 'dis.NM_DISTRIBUTOR',
-      'label'=>'Nama Distributor',
-      'filter' =>$val2,
-      'filterType'=>GridView::FILTER_SELECT2,
-      'filterWidgetOptions'=>[
-        'pluginOptions'=>['allowClear'=>true],
-      ],
-      'filterInputOptions'=>['placeholder'=>'Nama Distributor'],
-      'hAlign'=>'left',
-      'vAlign'=>'middle',
-      'headerOptions'=>[
-        'style'=>[
-          'text-align'=>'center',
-          'width'=>'150px',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-          'background-color'=>'rgba(97, 211, 96, 0.3)',
-        ]
-      ],
-      'contentOptions'=>[
-        'style'=>[
-          'text-align'=>'left',
-          'width'=>'150px',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-        ]
-      ],
+  'attribute'=>'SIG1_NM',
+  'label'=>'Created By',
+  'hAlign'=>'left',
+  'vAlign'=>'middle',
+  'value'=>function($model){
+    /*
+     * max String Disply
+     * @author ptrnov <piter@lukison.com>
+    */
+    if (strlen($model->SIG1_NM) <=16){
+      return substr($model->SIG1_NM, 0, 16);
+    }else{
+      return substr($model->SIG1_NM, 0, 14). '..';
+    }
+  },
+  'headerOptions'=>[
+    'style'=>[
+      'text-align'=>'center',
+      'width'=>'125px',
+      'font-family'=>'verdana, arial, sans-serif',
+      'font-size'=>'9pt',
+      'background-color'=>'rgba(97, 211, 96, 0.3)',
+    ]
+  ],
+  'contentOptions'=>[
+    'style'=>[
+      'text-align'=>'left',
+      'width'=>'125px',
+      'font-family'=>'tahoma, arial, sans-serif',
+      'font-size'=>'9pt'
     ],
-    [
-      'attribute' =>'corp.CORP_NM',
-      'label'=>'Nama Pihak 2',
-      'filter' =>$val1,
-      'filterType'=>GridView::FILTER_SELECT2,
-      'filterWidgetOptions'=>[
-        'pluginOptions'=>['allowClear'=>true],
-      ],
-      'filterInputOptions'=>['placeholder'=>'Nama Perusahaan'],
-      'hAlign'=>'left',
-      'vAlign'=>'middle',
-      'headerOptions'=>[
-        'style'=>[
-          'text-align'=>'center',
-          'width'=>'150px',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-          'background-color'=>'rgba(97, 211, 96, 0.3)',
-        ]
-      ],
-      'contentOptions'=>[
-        'style'=>[
-          'text-align'=>'left',
-          'width'=>'150px',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-        ]
-      ],
-    ],
+
+  ],
+],
+[
+  'attribute'=>'SIG2_NM',
+  'label'=>'Sumbition By',
+  'hAlign'=>'left',
+  'vAlign'=>'middle',
+  'value'=>function($model){
+    /*
+     * max String Disply
+     * @author ptrnov <piter@lukison.com>
+    */
+    if (strlen($model->SIG2_NM) <=16){
+      return substr($model->SIG2_NM, 0, 16);
+    }else{
+      return substr($model->SIG2_NM, 0, 14). '..';
+    }
+  },
+  'headerOptions'=>[
+    'style'=>[
+      'text-align'=>'center',
+      'width'=>'125px',
+      'font-family'=>'verdana, arial, sans-serif',
+      'font-size'=>'9pt',
+      'background-color'=>'rgba(97, 211, 96, 0.3)',
+    ]
+  ],
+  'contentOptions'=>[
+    'style'=>[
+      'text-align'=>'left',
+      'width'=>'125px',
+      'font-family'=>'tahoma, arial, sans-serif',
+      'font-size'=>'9pt',
+    ]
+  ],
+],
+[
+  'attribute'=>'SIG3_NM',
+  'label'=>'Approved By',
+  'hAlign'=>'left',
+  'vAlign'=>'middle',
+  'value'=>function($model){
+    /*
+     * max String Disply
+     * @author ptrnov <piter@lukison.com>
+    */
+    if (strlen($model->SIG3_NM) <=16){
+      return substr($model->SIG3_NM, 0, 16);
+    }else{
+      return substr($model->SIG3_NM, 0, 14). '..';
+    }
+  },
+  'headerOptions'=>[
+    'style'=>[
+      'text-align'=>'center',
+      'width'=>'125px',
+      'font-family'=>'verdana, arial, sans-serif',
+      'font-size'=>'9pt',
+      'background-color'=>'rgba(97, 211, 96, 0.3)',
+    ]
+  ],
+  'contentOptions'=>[
+    'style'=>[
+      'text-align'=>'left',
+      'width'=>'125px',
+      'font-family'=>'tahoma, arial, sans-serif',
+      'font-size'=>'9pt',
+    ]
+  ],
+],
     [
       'attribute' => 'PERIOD_END',
       'label'=>'Tanggal Berakhir Perjanjian',
@@ -477,6 +490,36 @@ $gridColumns = [
 	</div>
 </div>
 <?php
+$this->registerJs("
+    $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+    $('#confirm-permission-alert').on('show.bs.modal', function (event) {
+      //var button = $(event.relatedTarget)
+      //var modal = $(this)
+      //var title = button.data('title')
+      //var href = button.attr('href')
+      //modal.find('.modal-title').html(title)
+      //modal.find('.modal-body').html('')
+      /* $.post(href)
+        .done(function( data ) {
+          modal.find('.modal-body').html(data)
+        }); */
+      }),
+",$this::POS_READY);
+Modal::begin([
+    'id' => 'confirm-permission-alert',
+    'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/warning/denied.png',  ['class' => 'pnjg', 'style'=>'width:40px;height:40px;']).'</div><div style="margin-top:10px;"><h4><b>Permmission Confirm !</b></h4></div>',
+    'size' => Modal::SIZE_SMALL,
+    'headerOptions'=>[
+      'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+    ]
+  ]);
+  echo "<div>You do not have permission for this module.
+      <dl>
+        <dt>Contact : itdept@lukison.com</dt>
+      </dl>
+    </div>";
+Modal::end();
+
 $this->registerJs("
    $.fn.modal.Constructor.prototype.enforceFocus = function(){};
    $('#modal-create').on('show.bs.modal', function (event) {

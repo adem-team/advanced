@@ -9,12 +9,15 @@ use lukisongroup\master\models\Terminvest;
 use kartik\money\MaskMoney;
 use yii\helpers\Url;
 use kartik\label\LabelInPlace;
+use kartik\checkbox\CheckboxX;
 
-$data = Terminvest::find()->all();
-$to = "INVES_TYPE";
-$from = "INVES_TYPE";
+
+$data1 = Terminvest::find()->all();
+$to1 = "INVES_TYPE";
+$from1 = "INVES_TYPE";
 
 $config = ['template'=>"{input}\n{error}\n{hint}"];
+
 ?>
 
 <?php
@@ -31,7 +34,7 @@ $form = ActiveForm::begin([
 <?= $form->field($budget, 'INVES_TYPE')->widget(Select2::classname(),[
   'options'=>[  'placeholder' => 'Select Type Investasi ...'
   ],
-  'data' =>$budget->data($data,$to,$from)
+  'data' =>$budget->data($data1,$to1,$from1)
 ]);?>
 
 <?= $form->field($budget, 'PERIODE_START')->widget(DatePicker::classname(), [
@@ -56,6 +59,10 @@ $form = ActiveForm::begin([
        'show' => "function(e) {error}",
            ],
 ])  ?>
+
+<?= $form->field($budget, 'PROGRAM', $config)->widget(LabelInPlace::classname(), [
+   'type' => LabelInPlace::TYPE_TEXTAREA
+]) ?>
 <?= $form->field($budget, 'BUDGET_PLAN')->widget(MaskMoney::classname(), [
   'pluginOptions' => [
       'prefix' => 'Rp',
@@ -64,9 +71,7 @@ $form = ActiveForm::begin([
   ]
 ]) ?>
 
-<?= $form->field($budget, 'PROGRAM', $config)->widget(LabelInPlace::classname(), [
-   'type' => LabelInPlace::TYPE_TEXTAREA
-]) ?>
+>
 
 <div class="form-group">
     <?= Html::submitButton($budget->isNewRecord ? 'Create' : 'Update', ['class' => $budget->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

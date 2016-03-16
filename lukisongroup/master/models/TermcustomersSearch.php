@@ -26,7 +26,7 @@ class TermcustomersSearch extends Termcustomers
     {
         return [
             [[ 'STATUS'], 'integer'],
-            [['NM_TERM','ID_TERM','GENERAL_TERM','cus.CUST_NM','CUST_KD','dis.NM_DISTRIBUTOR','corp.CORP_NM', 'CUST_NM', 'CUST_SIGN', 'PRINCIPAL_KD', 'PRINCIPAL_NM', 'PRINCIPAL_SIGN', 'DIST_KD', 'DIST_NM', 'DIST_SIGN', 'DCRP_SIGNARURE', 'PERIOD_START', 'PERIOD_END', 'TARGET_TEXT', 'RABATE_CNDT', 'TOP', 'CREATED_BY', 'CREATED_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
+            [['NM_TERM','ID_TERM','GENERAL_TERM','SIG1_NM','SIG2_NM','SIG3_NM','cus.CUST_NM','CUST_KD','dis.NM_DISTRIBUTOR','corp.CORP_NM', 'CUST_NM', 'CUST_SIGN', 'PRINCIPAL_KD', 'PRINCIPAL_NM', 'PRINCIPAL_SIGN', 'DIST_KD', 'DIST_NM', 'DIST_SIGN', 'DCRP_SIGNARURE', 'PERIOD_START', 'PERIOD_END', 'TARGET_TEXT', 'RABATE_CNDT', 'TOP', 'CREATED_BY', 'CREATED_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
             [['TARGET_VALUE', 'GROWTH'], 'number'],
         ];
     }
