@@ -39,6 +39,7 @@ class Termcustomers extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+     public $term;
 
     public static function tableName()
     {

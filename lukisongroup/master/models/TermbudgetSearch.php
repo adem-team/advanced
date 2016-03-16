@@ -77,13 +77,13 @@ class TermbudgetSearch extends Termbudget
         return $dataProvider;
     }
 
-    public function searchbudget($params)
+    public function searchbudget($params,$id)
     {
 
       // Customers::find()->joinWith('cus',true,'JOIN')
       //           ->where('c0001.STATUS <> 3');
-        $query = Termbudget::find()->joinWith('budget',true,'JOIN');
-                                 // ->where(['c0003.ID_TERM'=>$id]);
+        $query = Termbudget::find()->joinWith('budget',true,'JOIN')
+                                 ->where(['c0003.ID_TERM'=>$id]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

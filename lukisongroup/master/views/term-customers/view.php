@@ -147,59 +147,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		return $content;
 	}
 
-	function ttd($model){
-		if($model->CUST_NM == ''){
-			$title = Yii::t('app','-- -- --');
-		}else {
-			# code...
-			$title = Yii::t('app',$model['CUST_NM']);
-		}
 
-		$options = [ 'id'=>'tdd-id',
-			  'data-toggle'=>"modal",
-			  'data-target'=>"#TTD1",
-			  'title'=>'Set'
-		];
-		$url = Url::toRoute(['/master/term-customers/set-cus','id'=>$model->ID_TERM]);
-		$content = Html::a($title,$url, $options);
-		return $content;
-	}
-
-	function ttd2($model){
-		if($model->DIST_NM == ''){
-			$title = Yii::t('app','-- -- --');
-		}else {
-			# code...
-			$title = Yii::t('app',$model['DIST_NM']);
-		}
-		$options = [ 'id'=>'tdd-id2',
-			  'data-toggle'=>"modal",
-			  'data-target'=>"#TTD2",
-			  'title'=>'Set'
-		];
-		$url = Url::toRoute(['/master/term-customers/set-dist','id'=>$model->ID_TERM]);
-		$content = Html::a($title,$url, $options);
-		return $content;
-	}
-
-	function ttd3($model){
-		if($model->JOBGRADE_ID == ''){
-			$title = Yii::t('app','-- -- --');
-		}else {
-			# code...
-			$title = Yii::t('app',$model['PRINCIPAL_NM']);
-		}
-
-		$options = [ 'id'=>'tdd-id3',
-			  'data-toggle'=>"modal",
-			  'data-target'=>"#TTD3",
-			  'title'=>'Set'
-		];
-
-		$url = Url::toRoute(['/master/term-customers/set-internal','id'=>$model->ID_TERM]);
-		$content = Html::a($title,$url, $options);
-		return $content;
-	}
 
 	function getPermissionEmp(){
 		if (Yii::$app->getUserOpt->profile_user()){
@@ -209,40 +157,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		}
 	}
 
-	function INVOCE($model)
-	{
-		$title = Yii::t('app','');
-		$options = [ 'id'=>'term-invoce-id',
-						'data-toggle'=>"modal",
-						'data-target'=>"#term-invoce",
-						'class'=>'btn btn-info btn-xs',
-						//'style'=>['width'=>'150px'],
-						'title'=>'Invoce'
-		];
-		$icon = '<span class="fa fa-plus fa-lg"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/master/term-customers/invoce','id'=>$model->ID_TERM]);
-		$content = Html::a($label,$url, $options);
-		return $content;
-	}
-
-	function Faktur($model)
-	{
-		$title = Yii::t('app','');
-		$options = [ 'id'=>'term-faktur-id',
-						'data-toggle'=>"modal",
-						'data-target'=>"#term-faktur",
-						'class'=>'btn btn-info btn-xs',
-						//'style'=>['width'=>'150px'],
-						'title'=>'Faktur Pajak'
-		];
-		$icon = '<span class="fa fa-plus fa-lg"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/master/term-customers/faktur-pajak','id'=>$model->ID_TERM]);
-		$content = Html::a($label,$url, $options);
-		return $content;
-	}
-
+	
 	function PoNote($model){
 			$title = Yii::t('app','');
 			$options = [ 'id'=>'po-note-id',
@@ -807,107 +722,107 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 			<?php
-				echo  $grid = GridView::widget([
-					'id'=>'gv-term',
-					'dataProvider'=> $dataProvider,
-					'footerRowOptions'=>['style'=>'font-weight:bold;text-decoration: underline;'],
-					// 'filterModel' => $searchModel1,
-					// 'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
-					'columns' => [
-						 [
-							'class'=>'kartik\grid\SerialColumn',
-							'contentOptions'=>['class'=>'kartik-sheet-style'],
-							'width'=>'5%',
-							'header'=>'No.',
-							'headerOptions'=>[
-								 'style'=>[
-								   'text-align'=>'center',
-								   'width'=>'5%',
-								   'font-family'=>'verdana, arial, sans-serif',
-								   'font-size'=>'9pt',
-								   'background-color'=>'rgba(97, 211, 96, 0.3)',
-								 ]
-							],
-							'contentOptions'=>[
-								 'style'=>[
-								   'text-align'=>'center',
-								   'width'=>'5%',
-								   'font-family'=>'tahoma, arial, sans-serif',
-								   'font-size'=>'9pt',
-								 ]
-							],
-						 ],
-						 [
-							'attribute' => 'general.SUBJECT',
-							'label'=>'General Term',
-							'hAlign'=>'left',
-							'vAlign'=>'middle',
-							'headerOptions'=>[
-								 'style'=>[
-								   'width'=>'30%',
-								   'text-align'=>'center',
-								   'font-family'=>'tahoma, arial, sans-serif',
-								   'font-size'=>'9pt',
-								   'background-color'=>'rgba(97, 211, 96, 0.3)',
-								 ]
-							],
-							'contentOptions'=>[
-								 'style'=>[
-								   'text-align'=>'left',
-								   'width'=>'30%',
-								   'font-family'=>'tahoma, arial, sans-serif',
-								   'font-size'=>'9pt',
-								 ]
-							],
-						 ],
-						 [
-							'attribute' => 'general.ISI_TERM',
-							'label'=>'Isi Peraturan',
-							'hAlign'=>'left',
-							'vAlign'=>'middle',
-							'headerOptions'=>[
-								 'style'=>[
-								   'text-align'=>'center',
-								   'width'=>'75%',
-								   'font-family'=>'tahoma, arial, sans-serif',
-								   'font-size'=>'9pt',
-								   'background-color'=>'rgba(97, 211, 96, 0.3)',
-								 ]
-							],
-							'contentOptions'=>[
-								 'style'=>[
-								   'text-align'=>'left',
-								    'width'=>'75%',
-								   'font-family'=>'tahoma, arial, sans-serif',
-								   'font-size'=>'9pt',
-								 ]
-							],
-						 ],
-					],
-					'showPageSummary' => false,
-					'pjax'=>true,
-					  'pjaxSettings'=>[
-						'options'=>[
-						  'enablePushState'=>false,
-						  'id'=>'gv-term-general',
-						],
-					   ],
-					'toolbar' => [
-					  '',
-					],
-					'panel' => [
-					  'heading'=>'<h5 class="panel-title">GENERAL TERM</h5>',
-					  'type'=>'success',
-					  'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Regulation',
-						  ['modelClass' => 'Termcustomers',]),['/master/term-customers/create-general','id'=>$dataids],[
-							'data-toggle'=>"modal",
-							  'data-target'=>"#modal-create",
-								'class' => 'btn btn-danger btn-xs'
-									  ]),
-					  'showFooter'=>true,
-					],
-					'export' =>false,
-				]);
+				// echo  $grid = GridView::widget([
+				// 	'id'=>'gv-term',
+				// 	'dataProvider'=> $dataProvider,
+				// 	'footerRowOptions'=>['style'=>'font-weight:bold;text-decoration: underline;'],
+				// 	// 'filterModel' => $searchModel1,
+				// 	// 'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+				// 	'columns' => [
+				// 		 [
+				// 			'class'=>'kartik\grid\SerialColumn',
+				// 			'contentOptions'=>['class'=>'kartik-sheet-style'],
+				// 			'width'=>'5%',
+				// 			'header'=>'No.',
+				// 			'headerOptions'=>[
+				// 				 'style'=>[
+				// 				   'text-align'=>'center',
+				// 				   'width'=>'5%',
+				// 				   'font-family'=>'verdana, arial, sans-serif',
+				// 				   'font-size'=>'9pt',
+				// 				   'background-color'=>'rgba(97, 211, 96, 0.3)',
+				// 				 ]
+				// 			],
+				// 			'contentOptions'=>[
+				// 				 'style'=>[
+				// 				   'text-align'=>'center',
+				// 				   'width'=>'5%',
+				// 				   'font-family'=>'tahoma, arial, sans-serif',
+				// 				   'font-size'=>'9pt',
+				// 				 ]
+				// 			],
+				// 		 ],
+				// 		 [
+				// 			'attribute' => 'general.SUBJECT',
+				// 			'label'=>'General Term',
+				// 			'hAlign'=>'left',
+				// 			'vAlign'=>'middle',
+				// 			'headerOptions'=>[
+				// 				 'style'=>[
+				// 				   'width'=>'30%',
+				// 				   'text-align'=>'center',
+				// 				   'font-family'=>'tahoma, arial, sans-serif',
+				// 				   'font-size'=>'9pt',
+				// 				   'background-color'=>'rgba(97, 211, 96, 0.3)',
+				// 				 ]
+				// 			],
+				// 			'contentOptions'=>[
+				// 				 'style'=>[
+				// 				   'text-align'=>'left',
+				// 				   'width'=>'30%',
+				// 				   'font-family'=>'tahoma, arial, sans-serif',
+				// 				   'font-size'=>'9pt',
+				// 				 ]
+				// 			],
+				// 		 ],
+				// 		 [
+				// 			'attribute' => 'general.ISI_TERM',
+				// 			'label'=>'Isi Peraturan',
+				// 			'hAlign'=>'left',
+				// 			'vAlign'=>'middle',
+				// 			'headerOptions'=>[
+				// 				 'style'=>[
+				// 				   'text-align'=>'center',
+				// 				   'width'=>'75%',
+				// 				   'font-family'=>'tahoma, arial, sans-serif',
+				// 				   'font-size'=>'9pt',
+				// 				   'background-color'=>'rgba(97, 211, 96, 0.3)',
+				// 				 ]
+				// 			],
+				// 			'contentOptions'=>[
+				// 				 'style'=>[
+				// 				   'text-align'=>'left',
+				// 				    'width'=>'75%',
+				// 				   'font-family'=>'tahoma, arial, sans-serif',
+				// 				   'font-size'=>'9pt',
+				// 				 ]
+				// 			],
+				// 		 ],
+				// 	],
+				// 	'showPageSummary' => false,
+				// 	'pjax'=>true,
+				// 	  'pjaxSettings'=>[
+				// 		'options'=>[
+				// 		  'enablePushState'=>false,
+				// 		  'id'=>'gv-term-general',
+				// 		],
+				// 	   ],
+				// 	'toolbar' => [
+				// 	  '',
+				// 	],
+				// 	'panel' => [
+				// 	  'heading'=>'<h5 class="panel-title">GENERAL TERM</h5>',
+				// 	  'type'=>'success',
+				// 	  'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Regulation',
+				// 		  ['modelClass' => 'Termcustomers',]),['/master/term-customers/create-general','id'=>$dataids],[
+				// 			'data-toggle'=>"modal",
+				// 			  'data-target'=>"#modal-create",
+				// 				'class' => 'btn btn-danger btn-xs'
+				// 					  ]),
+				// 	  'showFooter'=>true,
+				// 	],
+				// 	'export' =>false,
+				// ]);
 			?>
 		</div>
 	</div>
