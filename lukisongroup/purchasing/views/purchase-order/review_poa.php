@@ -697,7 +697,7 @@ $y=4;
 			'value'=>function ($model, $key, $index, $widget) {
 				$p = compact('model', 'key', 'index');
 				//return $widget->col(6, $p) != 0 ? $widget->col(6, $p) * round($model->UNIT_QTY * $widget->col(8, $p),0,PHP_ROUND_HALF_UP) : 0;
-				return $widget->col(6, $p) != 0 ? $widget->col(6, $p) * $widget->col(8, $p): 0;
+				return $widget->col(6, $p) != 0 ? round($widget->col(6, $p) * $widget->col(8, $p),0,PHP_ROUND_HALF_UP): 0;
 				//return $widget->col(3, $p) != 0 ? $widget->col(5 ,$p) * 100 / $widget->col(3, $p) : 0;
 			},
 			'headerOptions'=>[

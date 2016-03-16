@@ -41,6 +41,9 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 			return false;
 		}
 	}
+	
+	$getPermissionCheeck = getPermission();
+	
 	//print_r(getPermission());
 	/*
 	 * Declaration Componen User Permission
@@ -821,7 +824,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 					[
 						'class'=>'kartik\grid\ActionColumn',
 						'dropdown' => true,
-						'template' => '{view}{tambahEdit}{delete}{review}',
+						'template' => '{view}{tambahEdit}{delete}{review}{closed}',
 						'dropdownOptions'=>['class'=>'pull-right dropup'],
 						//'headerOptions'=>['class'=>'kartik-sheet-style'],
 						'buttons' => [
@@ -844,6 +847,13 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 							'review' => function ($url, $model) {
 											return tombolReview($url, $model);
 										},
+							 'closed' => function ($url, $model) use ($getPermissionCheeck){																				
+											if ($getPermissionCheeck['BTN_VIEW']==0) {
+												return Html::label('<i class="glyphicon glyphicon-lock dm"></i> LOCKED','',['class'=>'label label-danger','style'=>['align'=>'center']]);
+												//return  tombolKonci($url, $model);
+											}
+										}, 						
+										
 						],
 						'headerOptions'=>[
 							'style'=>[

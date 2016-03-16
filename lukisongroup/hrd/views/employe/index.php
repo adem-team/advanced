@@ -21,7 +21,7 @@ use lukisongroup\hrd\models\Jobgrade;
 use lukisongroup\hrd\models\Groupseqmen;
 use lukisongroup\hrd\models\Groupfunction;
 use lukisongroup\hrd\models\Deptsub;
-use lukisongroup\models\system\side_menu\M1000;
+//use lukisongroup\models\system\side_menu\M1000;
 
 /*	KARTIK WIDGET -> Penambahan componen dari yii2 dan nampak lebih cantik*/
 use kartik\grid\GridView;
@@ -29,7 +29,7 @@ use kartik\widgets\ActiveForm;
 use kartik\tabs\TabsX;
 //use kartik\date\DatePicker;
 use kartik\builder\Form;
-use kartik\sidenav\SideNav;
+//use kartik\sidenav\SideNav;
 
 //use backend\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
 //AppAsset::register($this);		/* INDEPENDENT CSS/JS/THEME FOR PAGE  Author: -ptr.nov-*/
@@ -147,12 +147,12 @@ $tab_employe= GridView::widget([
 						'opens'=>'left'
 					],
 
-				//'pluginEvents' => [
-				//	"apply.daterangepicker" => "function() { aplicarDateRangeFilter('EMP_JOIN_DATE') }",
-				//] 
+				// 'pluginEvents' => [
+					// "apply.daterangepicker" => "function() { aplicarDateRangeFilter('EMP_JOIN_DATE') }",
+				// ] 
 				]),
 				
-			],
+			], 
 			/*[
 				'class' => 'yii\grid\ActionColumn',
 				'template' => '{view}',
@@ -322,7 +322,7 @@ $tab_employe_resign= GridView::widget([
                     //]
                 ]),
 
-        ],
+        ], 
         [
             'attribute' =>'EMP_RESIGN_DATE',
             'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
@@ -341,7 +341,7 @@ $tab_employe_resign= GridView::widget([
                     //]
                 ]),
 
-        ],
+        ], 
         //['class' => 'yii\grid\CheckboxColumn'],
         //['class' => '\kartik\grid\RadioColumn'],
     ],
@@ -391,14 +391,14 @@ $tab_employe_resign= GridView::widget([
 
 
 <?php
-use kartik\rating\StarRating;
+//use kartik\rating\StarRating;
 
-use kartik\sortable\Sortable;
+//use kartik\sortable\Sortable;
 // With model & without ActiveForm
-	$strRat= StarRating::widget([
-		'name' => 'rating_1',
-		'pluginOptions' => ['disabled'=>true, 'showClear'=>false]
-	]);
+	// $strRat= StarRating::widget([
+		// 'name' => 'rating_1',
+		// 'pluginOptions' => ['disabled'=>true, 'showClear'=>false]
+	// ]);
 /*
 	use kartik\sortinput\SortableInput;
 	
@@ -413,58 +413,58 @@ $sortImg= SortableInput::widget([
 ]);
 */
 
-use kartik\affix\Affix;
-	$content = 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.';
-	$items = [[
-		'url' => '#sec-1',
-		'label' => 'Section 1',
-		'icon' => 'play-circle',
-		'content' => $content,
-		'items' => [
-			['url' => '#sec-1-1', 'label' => 'Section 1.1', 'content' => $content],
-			['url' => '#sec-1-2', 'label' => 'Section 1.2', 'content' => $content],
-			['url' => '#sec-1-3', 'label' => 'Section 1.3', 'content' => $content],
-			['url' => '#sec-1-4', 'label' => 'Section 1.4', 'content' => $content],
-			['url' => '#sec-1-5', 'label' => 'Section 1.5', 'content' => $content],
-		],
-	],
-	[
-		'url' => '#sec-2',
-		'label' => 'Section 2',
-		'icon' => 'play-circle',
-		'content' => $content,
-		'items' => [
-			['url' => '#sec-2-1', 'label' => 'Section 2.1', 'content' => $content],
-			['url' => '#sec-2-2', 'label' => 'Section 2.2', 'content' => $content],
-			['url' => '#sec-2-3', 'label' => 'Section 2.3', 'content' => $content],
-			['url' => '#sec-2-4', 'label' => 'Section 2.4', 'content' => $content],
-			['url' => '#sec-2-5', 'label' => 'Section 2.5', 'content' => $content],
-		],
-	]];
-	$KiriMenu= Affix::widget([
-		'items' => $items, 
-		'type' => 'menu'
-	]);
+// use kartik\affix\Affix;
+	// $content = 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.';
+	// $items = [[
+		// 'url' => '#sec-1',
+		// 'label' => 'Section 1',
+		// 'icon' => 'play-circle',
+		// 'content' => $content,
+		// 'items' => [
+			// ['url' => '#sec-1-1', 'label' => 'Section 1.1', 'content' => $content],
+			// ['url' => '#sec-1-2', 'label' => 'Section 1.2', 'content' => $content],
+			// ['url' => '#sec-1-3', 'label' => 'Section 1.3', 'content' => $content],
+			// ['url' => '#sec-1-4', 'label' => 'Section 1.4', 'content' => $content],
+			// ['url' => '#sec-1-5', 'label' => 'Section 1.5', 'content' => $content],
+		// ],
+	// ],
+	// [
+		// 'url' => '#sec-2',
+		// 'label' => 'Section 2',
+		// 'icon' => 'play-circle',
+		// 'content' => $content,
+		// 'items' => [
+			// ['url' => '#sec-2-1', 'label' => 'Section 2.1', 'content' => $content],
+			// ['url' => '#sec-2-2', 'label' => 'Section 2.2', 'content' => $content],
+			// ['url' => '#sec-2-3', 'label' => 'Section 2.3', 'content' => $content],
+			// ['url' => '#sec-2-4', 'label' => 'Section 2.4', 'content' => $content],
+			// ['url' => '#sec-2-5', 'label' => 'Section 2.5', 'content' => $content],
+		// ],
+	// ]];
+	// $KiriMenu= Affix::widget([
+		// 'items' => $items, 
+		// 'type' => 'menu'
+	// ]);
 	
-	$affk= Affix::widget([
-		'items' => $items, 
-		'type' => 'body'
-	]);
+	// $affk= Affix::widget([
+		// 'items' => $items, 
+		// 'type' => 'body'
+	// ]);
 	
-use kartik\alert\Alert;
+// use kartik\alert\Alert;
 
-	$ingatan= Alert::widget([
-		'type' => Alert::TYPE_INFO,
-		'title' => 'Note',
-		'titleOptions' => ['icon' => 'info-sign'],
-		'body' => 'This is an informative alert sss'
-	]);
-	use kartik\alert\AlertBlock;
+	// $ingatan= Alert::widget([
+		// 'type' => Alert::TYPE_INFO,
+		// 'title' => 'Note',
+		// 'titleOptions' => ['icon' => 'info-sign'],
+		// 'body' => 'This is an informative alert sss'
+	// ]);
+	// use kartik\alert\AlertBlock;
 
-	$ingatanBlock= AlertBlock::widget([
-		'type' => AlertBlock::TYPE_ALERT,
-		'useSessionFlash' => true
-	]);
+	// $ingatanBlock= AlertBlock::widget([
+		// 'type' => AlertBlock::TYPE_ALERT,
+		// 'useSessionFlash' => true
+	// ]);
 
 
 
@@ -547,7 +547,7 @@ use kartik\alert\Alert;
 		
 		/*ViewDelate
 		$this->registerJs("
-		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
+			$.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		    $('#view-emp').on('show.bs.modal', function (event) {
 		        var button = $(event.relatedTarget)
 		        var modal = $(this)
