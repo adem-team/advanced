@@ -8,25 +8,37 @@
 
 namespace lukisongroup\hrd\controllers;
 
-/* VARIABLE BASE YII2 Author: -YII2- */
+	/* VARIABLE BASE YII2 Author: -YII2- */
 	use Yii;
+	use yii\helpers\Html;
 	use yii\web\Controller;
 	use yii\web\NotFoundHttpException;
 	use yii\filters\VerbFilter;
-
-/* VARIABLE PRIMARY JOIN/SEARCH/FILTER/SORT Author: -ptr.nov- */
+	use yii\web\UploadedFile;
+	use yii\helpers\Json;
+	use yii\helpers\ArrayHelper;
+	use kartik\grid\GridView;
+	
+	/* VARIABLE PRIMARY JOIN/SEARCH/FILTER/SORT Author: -ptr.nov- */
 	use lukisongroup\hrd\models\Employe;			/* TABLE CLASS JOIN */
 	use lukisongroup\hrd\models\EmployeSearch;	/* TABLE CLASS SEARCH */
 	use lukisongroup\hrd\models\Deptsub;
 	use lukisongroup\hrd\models\Jobgrademodul;
-    use yii\helpers\Json;
+    
 
 /* VARIABLE SIDE MENU Author: -Eka- */
 	//use lukisongroup\models\system\side_menu\M1000;			/* TABLE CLASS */
 	//use lukisongroup\models\system\side_menu\M1000Search;	/* TABLE CLASS SEARCH */
 /* CLASS SIDE MENU Author: -ptr.nov- */
-	use yii\web\UploadedFile;
 	
+	use lukisongroup\hrd\models\Corp;
+	use lukisongroup\hrd\models\Dept;
+	//use lukisongroup\hrd\models\Jabatan;
+	use lukisongroup\hrd\models\Status;
+	use lukisongroup\hrd\models\Jobgrade;
+	use lukisongroup\hrd\models\Groupseqmen;
+	use lukisongroup\hrd\models\Groupfunction;
+
 /**
  * HRD | CONTROLLER EMPLOYE .
  */
@@ -45,6 +57,50 @@ class EmployeController extends Controller
         ];
     }
 
+	private function aryCorp(){
+		return ArrayHelper::map(Corp::find()->orderBy('SORT')->asArray()->all(), 'CORP_NM','CORP_NM');		
+	}	
+	private function aryCorpID(){
+		return ArrayHelper::map(Corp::find()->orderBy('SORT')->asArray()->all(), 'CORP_ID','CORP_NM');			
+	}
+	private function aryDept(){
+		return ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 'DEP_NM','DEP_NM');		
+	}
+	private function aryDeptID(){
+		return ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 'DEP_ID','DEP_NM');		
+	}
+	private function aryDeptSub(){
+		return ArrayHelper::map(Deptsub::find()->orderBy('SORT')->asArray()->all(), 'DEP_SUB_NM','DEP_SUB_NM');
+	}
+	private function aryDeptSubID(){
+		return ArrayHelper::map(Deptsub::find()->orderBy('SORT')->asArray()->all(), 'DEP_SUB_ID','DEP_SUB_NM');	
+	}
+	private function aryGrpFnc(){
+		return ArrayHelper::map(Groupfunction::find()->orderBy('SORT')->asArray()->all(), 'GF_NM','GF_NM');
+	}
+	private function aryGrpFncID(){
+		return ArrayHelper::map(Groupfunction::find()->orderBy('SORT')->asArray()->all(), 'GF_ID','GF_NM');
+	}
+	private function arySeq(){
+		return ArrayHelper::map(Groupseqmen::find()->orderBy('SEQ_NM')->asArray()->all(), 'SEQ_NM','SEQ_NM');
+	}
+	private function arySeqID(){
+		return ArrayHelper::map(Groupseqmen::find()->orderBy('SEQ_NM')->asArray()->all(), 'SEQ_ID','SEQ_NM');
+	}
+	private function aryJab(){
+		return ArrayHelper::map(Jobgrade::find()->orderBy('SORT')->asArray()->all(), 'JOBGRADE_NM','JOBGRADE_NM');
+	}
+	private function aryJabID(){
+		return ArrayHelper::map(Jobgrade::find()->orderBy('SORT')->asArray()->all(), 'JOBGRADE_ID','JOBGRADE_NM');
+	}
+	private function aryStt(){
+		return ArrayHelper::map(Status::find()->orderBy('SORT')->asArray()->all(), 'STS_NM','STS_NM');
+	}
+	private function arySttID(){
+		return ArrayHelper::map(Status::find()->orderBy('SORT')->asArray()->all(), 'STS_ID','STS_NM');
+	}
+		
+	
     /**
      * ACTION INDEX
      */
@@ -72,13 +128,20 @@ class EmployeController extends Controller
 		
     public function actionIndex()
     {
-		/*	variable content View Side Menu Author: -Eka- */
-		//set menu side menu index - Array Jeson Decode
-       // $side_menu=M1000::find()->findMenu('sss_berita_acara')->one()->jval;
-        //$side_menu=json_decode($side_menu,true);
+		/*
+		 * SEARCH FIRST AND DIRECT 
+		 * @author piter [ptr.nov@gmail.com]
+		 * @since 1.2
+		*/
+		$paramCari=Yii::$app->getRequest()->getQueryParam('id');
+		if ($paramCari!=''){
+			$cari=['EMP_ID'=>$paramCari];			
+		}else{
+			$cari='';			
+		};
 		
 		/*	variable content View Employe Author: -ptr.nov- */
-        $searchModel = new EmployeSearch();
+        $searchModel = new EmployeSearch($cari);
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		 
 		/*	variable content View Additional Author: -ptr.nov- */ 
@@ -141,12 +204,19 @@ class EmployeController extends Controller
 		//print_r($generate_key_emp);
 		 //$model = $this->findModel('ALG.2015.000056');
 		return $this->render('index', [
-			//'side_menu'=>$side_menu,			/* Content variable Array -SideMenu- */
-            'searchModel' => $searchModel, 		/* Content variable Array -Filter Search- */
-            'dataProvider' => $dataProvider,	/* Content variable Array -Class Table Join- */
+			'searchModel' => $searchModel, 		
+			'dinamkkColumn1'=>$this->gvColumn1(),	
+			'dinamkkColumn2'=>$this->gvColumn2(),	
+            'dataProvider' => $dataProvider,	
             'searchModel1' => $searchModel1,
-            'dataProvider1' => $dataProvider1,  /* Content variable Array Aditional -Class Table Join- */
-			 //'model' => $model,
+            'dataProvider1' => $dataProvider1, 
+			'aryCorpID'=>$this->aryCorpID(),
+			'aryDept'=>$this->aryDept(),
+			'aryDeptSub'=>$this->aryDeptSub(),
+			'aryGrpFnc'=>$this->aryGrpFnc(),
+			'arySeq'=>$this->arySeq(),
+			'aryJab'=>$this->aryJab(),
+			'aryStt'=>$this->aryStt()	
         ]);
     }
 
@@ -255,6 +325,41 @@ class EmployeController extends Controller
         }
     }
 
+	/**
+     * View & Update -> EMPLOYEE IDENTITY
+     * @author piter [ptr.nov@gmail.com]
+     * @since 1.2 
+     */
+	public function actionEditIdentity($id){
+        $model = $this->findModel($id);
+		
+		if (!$model->load(Yii::$app->request->post())) {
+			return $this->renderAjax('_form_edit_identity', [
+					'model' => $model,
+					'aryCorpID'=>$this->aryCorpID(),
+				]); 				
+		}else{
+				
+			if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}else{
+				if ($model->load(Yii::$app->request->post())) {
+					//$model->save();
+					$image = $model->uploadImage();
+					if ($model->save()) {
+						// upload only if valid uploaded file instance found
+						if ($image !== false) {
+							$path = $model->getImageFile();
+							$image->saveAs($path);
+						} 
+					}
+					return $this->redirect(['index','id'=>$model->EMP_ID]);			
+				}
+			}	
+		}
+	}
+	
     /**
      * ACTION UPDATE -> $id=PrimaryKey
      */
@@ -412,5 +517,336 @@ class EmployeController extends Controller
 			   }
 			   echo Json::encode(['output'=>'', 'selected'=>'']);
         }
+	
+	
+	/*
+	 * PENGUNAAN DALAM GRID
+	 * Arry Setting Attribute
+	 * @author ptrnov [ptr.nov@gmail.com]
+	 * @since 1.2
+		foreach($valFields as $key =>$value[])
+		{
+			print_r($value[0]['FIELD'].','.$value[0]['SIZE']);		//SATU
+			print_r($value[$key]['FIELD'].','.$value[0]['SIZE']);	//ARRAY 0-end		
+		} 
+	*/	
+	private function gvAttribute(){		
+		$aryField= [
+			//['ID' =>0, 'ATTR' =>['FIELD'=>'EMP_IMG','SIZE' => '10px','label'=>'Image','align'=>'left']],
+			['ID' =>0, 'ATTR' =>['FIELD'=>'EMP_ID','SIZE' => '10px','label'=>'Employee.ID','align'=>'left']],		  
+			['ID' =>1, 'ATTR' =>['FIELD'=>'EMP_NM','SIZE' => '20px','label'=>'Name','align'=>'left']],
+			['ID' =>2, 'ATTR' =>['FIELD'=>'corpOne.CORP_NM','SIZE' => '20px','label'=>'Company','align'=>'left']],
+			['ID' =>3, 'ATTR' =>['FIELD'=>'deptOne.DEP_NM','SIZE' => '20px','label'=>'Department','align'=>'left']],
+			['ID' =>4, 'ATTR' =>['FIELD'=>'deptsub.DEP_SUB_NM','SIZE' => '20px','label'=>'Dept.Sub','align'=>'left']],
+			['ID' =>5, 'ATTR' =>['FIELD'=>'groupfunction.GF_NM','SIZE' => '10px','label'=>'GroupFunction','align'=>'left']],
+			['ID' =>6, 'ATTR' =>['FIELD'=>'groupseqmen.SEQ_NM','SIZE' => '10px','label'=>'Seqment','align'=>'left']],
+			['ID' =>7, 'ATTR' =>['FIELD'=>'jobgrade.JOBGRADE_NM','SIZE' => '10px','label'=>'Greding','align'=>'left']],
+			['ID' =>8, 'ATTR' =>['FIELD'=>'sttOne.STS_NM','SIZE' => '10px','label'=>'Status','align'=>'left']],
+			['ID' =>9, 'ATTR' =>['FIELD'=>'EMP_JOIN_DATE','SIZE' => '10px','label'=>'Join.Date','align'=>'left']]	  
+		];	
+		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
+			
+		return $valFields;
+	}
+	
+	
+	
+	public function gvColumn1() {
+		/*NO ATTRIBUTE*/
+		$attDinamik[] =[			
+				'class'=>'kartik\grid\SerialColumn',
+				'contentOptions'=>['class'=>'kartik-sheet-style'],
+				'width'=>'10px',
+				'header'=>'No.',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],					
+		];
+		
+		$attDinamik[]=[
+			'class'=>'kartik\grid\ActionColumn',
+			'dropdown' => true,
+			'template' => '{view}{edit0}{edit1}{edit2}{edit3}{lihat}',
+			'dropdownOptions'=>['class'=>'pull-left dropdown'],
+			'buttons' => [	
+				'view' =>function($url, $model, $key){
+						return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
+													['/hrd/employe/view','id'=>$model->EMP_ID],[
+													'data-toggle'=>"modal",
+													'data-target'=>"#activity-emp",
+													'data-title'=> $model->EMP_ID,
+													]). '</li>' . PHP_EOL;
+				},	
+				// BUTTON EMPLOYEE IDENTITY
+				'edit0' =>function($url, $model, $key){
+						return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Set Identity'),
+													['/hrd/employe/edit-identity','id'=>$model->EMP_ID],[
+													'data-toggle'=>"modal",
+													'data-target'=>"#edit-identity",
+													'data-title'=> $model->EMP_ID,
+													]). '</li>' . PHP_EOL;
+				},
+				'edit1' =>function($url, $model, $key){
+						return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Set Title'),
+													['/master/employe/edit-titel','id'=>$model->EMP_ID],[
+													'data-toggle'=>"modal",
+													'data-target'=>"#edit-title",
+													'data-title'=> $model->EMP_ID,
+													]). '</li>' . PHP_EOL;
+				},
+				'edit2' =>function($url, $model, $key){
+						return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Set Profile'),
+													['/master/employe/edit','id'=>$model->EMP_ID],[
+													'data-toggle'=>"modal",
+													'data-target'=>"#edit-profile",
+													'data-title'=> $model->EMP_ID,
+													]). '</li>' . PHP_EOL;
+				},
+				'edit3' =>function($url, $model, $key) {
+						//$gF=getPermissionEmp()->GF_ID;
+						//if ($gF<=4){
+							return  '<li>' . Html::a('<span class="fa fa-money fa-dm"></span>'.Yii::t('app', 'Set Payroll'),
+													['/master/employe/edit','id'=>$model->EMP_ID],[
+													'data-toggle'=>"modal",
+													'data-target'=>"#edit-payroll",
+													]). '</li>' . PHP_EOL;
+						//}
+				}			
+			],
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'10px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'10px',
+					'height'=>'10px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+				]
+			],
+		
+		];
+		return array_merge($attDinamik,$this->gvColumn());
+	}
+	public function gvColumn2() {
+		$attDinamik[] =[			
+				'class'=>'kartik\grid\SerialColumn',
+				'contentOptions'=>['class'=>'kartik-sheet-style'],
+				'width'=>'10px',
+				'header'=>'No.',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],					
+		];
+		return array_merge($attDinamik,$this->gvColumn());
+	}
+	
+	
+	/*
+	 * GRIDVIEW COLUMN
+	 * @author ptrnov [ptr.nov@gmail.com]
+	 * @since 1.2
+	*/	
+	public function gvColumn() {
+		$attDinamik =[];
+		/*Image*/
+		$attDinamik[] =[			
+				'attribute'=>'EMP_IMG',
+				'label'=>'Image',
+				'format' => 'html',
+				'value'=>function($model){
+					// return Html::img(Yii::getAlias('@HRD_EMP_UploadUrl') . '/'. $model->EMP_IMG, ['width'=>'20']);
+					 return Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/'.$model->EMP_IMG,['width'=>'20']);
+				},
+				'width'=>'10px',
+				'header'=>'No.',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],					
+		];	
+		/*OTHER ATTRIBUTE*/
+		foreach($this->gvAttribute() as $key =>$value[]){
+			$filterWidgetOpt='';
+			if ($value[$key]['FIELD']=='corpOne.CORP_NM'){				
+				$gvfilterType=GridView::FILTER_SELECT2;
+				//$gvfilterType=false;
+				$gvfilter =$this->aryCorp();
+				 // $filterWidgetOpt=[				
+					// 'pluginOptions'=>['allowClear'=>true],	
+					//'placeholder'=>'Any author'					
+				// ]; 
+				//$filterInputOpt=['placeholder'=>'Any author'];
+			}elseif($value[$key]['FIELD']=='deptOne.DEP_NM'){				
+				$gvfilterType=false;
+				$gvfilter =$this->aryDept();				
+			}elseif($value[$key]['FIELD']=='deptsub.DEP_SUB_NM'){				
+				$gvfilterType=false;
+				$gvfilter =$this->aryDeptSub();				
+			}elseif($value[$key]['FIELD']=='groupfunction.GF_NM'){				
+				$gvfilterType=false;
+				$gvfilter =$this->aryGrpFnc();				
+			}elseif($value[$key]['FIELD']=='groupseqmen.SEQ_NM'){				
+				$gvfilterType=false;
+				$gvfilter =$this->arySeq();				
+			}elseif($value[$key]['FIELD']=='jobgrade.JOBGRADE_NM'){				
+				$gvfilterType=false;
+				$gvfilter =$this->aryJab();				
+			}elseif($value[$key]['FIELD']=='sttOne.STS_NM'){				
+				$gvfilterType=false;
+				$gvfilter =$this->aryStt();				
+			}
+			// elseif($value[$key]['FIELD']=='EMP_JOIN_DATE'){
+				// $gvfilterType=GridView::FILTER_DATE_RANGE;		
+				// $filterWidgetOpt=[
+					//'attribute' =>'EMP_JOIN_DATE',
+					// 'presetDropdown'=>true,
+					// 'convertFormat'=>true,
+						// 'pluginOptions'=>[
+							// 'format'=>'Y-m-d',
+							// 'separator' => ' TO ',
+							// 'opens'=>'left'
+						// ],
+				// ];				
+			// }
+			
+			/*
+			elseif($value[$key]['FIELD']=='cabOne.CAB_NM'){
+				$gvfilterType=false;
+				$gvfilter =$this->aryCbg();
+			}elseif($value[$key]['FIELD']=='jabOne.JAB_NM'){
+				$gvfilterType=false;
+				$gvfilter =$this->aryJab();
+			}elseif($value[$key]['FIELD']=='stsOne.KAR_STS_NM'){
+				$gvfilterType=false;
+				$gvfilter =$this->aryStt();
+			}elseif($value[$key]['FIELD']=='golonganOne.TT_GRP_NM'){
+				$gvfilterType=false;
+				$gvfilter=$this->aryGol();
+			// }elseif($value[$key]['FIELD']=='KAR_TGLM'){
+				// $gvfilterType=GridView::FILTER_DATE_RANGE;
+				// $gvfilter=true;
+				// $filterWidgetOpt=[
+					'attribute' =>'KAR_TGLM',
+					// 'presetDropdown'=>TRUE,
+					// 'convertFormat'=>true,
+						// 'pluginOptions'=>[
+							// 'format'=>'Y-m-d',
+							// 'separator' => ' TO ',
+							// 'opens'=>'left'
+						// ],
+				// ];
+			// }
+			 */	
+			else{
+				$gvfilterType=false;
+				$gvfilter=true;
+				$filterWidgetOpt=false;		
+				//$filterInputOpt=false;						
+			};			
+				
+			$attDinamik[]=[		
+				'attribute'=>$value[$key]['FIELD'],
+				'label'=>$value[$key]['label'],
+				//'format' => 'html',
+				/* 'value'=>function($model)use($value,$key){
+					if ($value[$key]['FIELD']=='EMP_IMG'){
+						 return Html::img(Yii::getAlias('@HRD_EMP_UploadUrl') . '/'. $model->EMP_IMG, ['width'=>'20']);
+					}
+				}, */
+				'filterType'=>$gvfilterType,
+				'filter'=>$gvfilter,
+				'filterWidgetOptions'=>$filterWidgetOpt,	
+				//'filterInputOptions'=>$filterInputOpt,				
+				'hAlign'=>'right',
+				'vAlign'=>'middle',
+				//'mergeHeader'=>true,
+				'noWrap'=>true,			
+				'headerOptions'=>[		
+						'style'=>[									
+						'text-align'=>'center',
+						'width'=>$value[$key]['FIELD'],
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],  
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>$value[$key]['align'],
+						//'width'=>'12px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(13, 127, 3, 0.1)',
+					]
+				],
+				//'pageSummaryFunc'=>GridView::F_SUM,
+				//'pageSummary'=>true,
+				'pageSummaryOptions' => [
+					'style'=>[
+							'text-align'=>'right',		
+							//'width'=>'12px',
+							'font-family'=>'tahoma',
+							'font-size'=>'8pt',	
+							'text-decoration'=>'underline',
+							'font-weight'=>'bold',
+							'border-left-color'=>'transparant',		
+							'border-left'=>'0px',									
+					]
+				],	
+			];	
+		}	
+		
+		return $attDinamik;
+	}
+	
 	
 }
