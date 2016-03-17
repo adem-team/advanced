@@ -10,12 +10,22 @@ namespace lukisongroup\hrd\models;
 use Yii;
 use yii\web\UploadedFile;
 
+
+Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/upload/hrd/Employee/';
+Yii::$app->params['uploadUrl'] = Yii::$app->urlManager->baseUrl . '/web/upload/hrd/Employee/';
+
 /**
  * EMPLOYE CLASS  Author: -ptr.nov-
  */
 class Employe extends \yii\db\ActiveRecord
 {
 	public $upload_file;
+	public $image;
+	
+	public $vKarId;
+	public $vKarNm;
+	public $vCorpID;
+	public $vIMAGE;
 	
 	/* [1] SOURCE DB */
     public static function getDb()
@@ -35,6 +45,7 @@ class Employe extends \yii\db\ActiveRecord
     {
         return [
             // [['EMP_NM','EMP_KTP','EMP_ALAMAT'], 'required'],
+            [['image'], 'required'],
             [['EMP_ID','EMP_ZIP','EMP_CORP_ID'], 'string', 'max' => 20],
             [['EMP_NM','EMP_NM_BLK','EMP_IMG','EMP_KTP','GRP_NM'], 'string', 'max' => 20], 
 			[['DEP_ID','JOBGRADE_ID'], 'string', 'max' => 5], 
@@ -185,6 +196,54 @@ class Employe extends \yii\db\ActiveRecord
 			$pic = isset($this->EMP_IMG) ? $this->EMP_IMG : 'default.jpg';
 			return Yii::$app->params['HRD_EMP_UploadUrl'].$pic;
 		}
+		
+		public function getImageFile()
+    {
+        return isset($this->EMP_IMG) ? Yii::$app->params['uploadPath'] . $this->EMP_IMG : null;
+    }
+
+    public function getImageUrl()
+    {
+        // return a default image placeholder if your source image is not found
+        $image = isset($this->EMP_IMG) ? $this->EMP_IMG : 'default.jpg';
+        return Yii::$app->params['uploadUrl'] . $image;
+    }
+
+	public function uploadImage() {
+        // get the uploaded file instance. for multiple file uploads
+        // the following data will return an array (you may need to use
+        // getInstances method)
+        $image = UploadedFile::getInstance($this, 'image');
+
+        // if no image was uploaded abort the upload
+        if (empty($image)) {
+            return false;
+        }
+
+        // store the source file name
+        //$this->filename = $image->name;
+        $ext = end((explode(".", $image->name)));
+
+        // generate a unique file name
+        $this->EMP_IMG = 'wan-'.date('ymdHis').".{$ext}"; //$image->name;//Yii::$app->security->generateRandomString().".{$ext}";
+
+        // the uploaded image instance
+        return $image;
+    }
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 
     //public static function primaryKey()
    // {

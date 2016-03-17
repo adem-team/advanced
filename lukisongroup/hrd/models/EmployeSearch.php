@@ -142,12 +142,12 @@ class EmployeSearch extends Employe
 					
 		/*[5.4] FILTER WHERE LIKE (date)*/	
 			/* FILTER COLUMN DATE RANGE Author -ptr.nov-*/
-			if(isset($this->EMP_JOIN_DATE) && $this->EMP_JOIN_DATE!=''){
-				$date_explode = explode("TO", $this->EMP_JOIN_DATE);
-				$date1 = trim($date_explode[0]);
-				$date2= trim($date_explode[1]);
-				$query->andFilterWhere(['between', 'a0001.EMP_JOIN_DATE', $date1,$date2]);
-			}
+			// if(isset($this->EMP_JOIN_DATE) && $this->EMP_JOIN_DATE!=''){
+				// $date_explode = explode("-", $this->EMP_JOIN_DATE);
+				// $date1 = trim($date_explode[0]);
+				// $date2= trim($date_explode[1]);
+				// $query->andFilterWhere(['between', 'a0001.EMP_JOIN_DATE', $date1,$date2]);
+			// }
 			
         return $dataProvider;
     }
@@ -251,18 +251,18 @@ class EmployeSearch extends Employe
 
         /*[5.4] FILTER WHERE LIKE (date)*/
         /* FILTER COLUMN DATE RANGE Author -ptr.nov-*/
-        if(isset($this->EMP_JOIN_DATE) && $this->EMP_JOIN_DATE!=''){
-            $date_explode = explode("TO", $this->EMP_JOIN_DATE);
-            $date1 = trim($date_explode[0]);
-            $date2= trim($date_explode[1]);
-            $query1->andFilterWhere(['between', 'a0001.EMP_JOIN_DATE', $date1,$date2]);
-        }
-        if(isset($this->EMP_RESIGN_DATE) && $this->EMP_RESIGN_DATE!=''){
-            $date_explode = explode("TO", $this->EMP_RESIGN_DATE);
-            $date3 = trim($date_explode[0]);
-            $date4= trim($date_explode[1]);
-            $query1->andFilterWhere(['between', 'a0001.EMP_RESIGN_DATE', $date3,$date4]);
-        }
+        // if(isset($this->EMP_JOIN_DATE) && $this->EMP_JOIN_DATE!=''){
+            // $date_explode = explode("-", $this->EMP_JOIN_DATE);
+            // $date1 = trim($date_explode[0]);
+            // $date2= trim($date_explode[1]);
+            // $query1->andFilterWhere(['between', 'a0001.EMP_JOIN_DATE', $date1,$date2]);
+        // }
+        // if(isset($this->EMP_RESIGN_DATE) && $this->EMP_RESIGN_DATE!=''){
+            // $date_explode = explode("-", $this->EMP_RESIGN_DATE);
+            // $date3 = trim($date_explode[0]);
+            // $date4= trim($date_explode[1]);
+            // $query1->andFilterWhere(['between', 'a0001.EMP_RESIGN_DATE', $date3,$date4]);
+        // }
         return $dataProvider1;
     }
 
