@@ -119,7 +119,8 @@ use kartik\grid\GridView;
 										]
 									],
 									'pageSummary'=>function ($summary, $data, $widget){
-										 return '<div> Total :</div>';
+										 return '<div> Total :</div>'
+                     ;
 									},
 									'pageSummaryOptions' => [
 										'style'=>[
@@ -172,9 +173,10 @@ use kartik\grid\GridView;
 									'hAlign'=>'left',
 									'vAlign'=>'middle',
 									'value' => function($model) {
-											if($model['TARGET_VALUE'] == '')
+											if($model['TARGET_VALUE'] == ''|| $model['BUDGET_PLAN'] == '')
 											{
 											   return $model['TARGET_VALUE'] = 0.00;
+                        return $model['BUDGET_PLAN'] = 0.00;
 											}
 											else {
 											  # code...
@@ -210,6 +212,64 @@ use kartik\grid\GridView;
 										]
 									],
 								],
+                [	//COL-3
+                  /* Attribute Request KD_COSTCENTER */
+                  'class'=>'kartik\grid\EditableColumn',
+                  'attribute'=>'KD_COSTCENTER',
+                  'label'=>'CostCenter',
+                  'vAlign'=>'middle',
+                  // 'hAlign'=>'center',
+                  'mergeHeader'=>true,
+                  'headerOptions'=>[
+                    'style'=>[
+                      'text-align'=>'center',
+                      'width'=>'60px',
+                      'font-family'=>'tahoma',
+                      'font-size'=>'8pt',
+                       'background-color'=>'rgba(97, 211, 96, 0.3)',
+                    ]
+                  ],
+                  'contentOptions'=>[
+                    'style'=>[
+                        'text-align'=>'center',
+                        'width'=>'60px',
+                        'font-family'=>'tahoma',
+                        'font-size'=>'8pt',
+                        //'border-right'=>'0px',
+                    ]
+                  ],
+                  'pageSummary'=>function ($summary, $data, $widget){
+                     return '<div>Total:</div>
+                            <div> PPN :</div>
+                            <div> PPH23 :</div>
+                            <div> Sub Total:</div>'
+                            ;
+                    },
+                  'pageSummaryOptions' => [
+                    'style'=>[
+                      'font-family'=>'tahoma',
+                      'font-size'=>'8pt',
+                      'text-align'=>'right',
+                      'border-left'=>'0px',
+                    ]
+                  ],
+                  'editableOptions' => [
+                    'header' => 'Cost Center',
+                    'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+                    'size' => 'md',
+                    'options' => [
+                      'data' => ArrayHelper::map(Costcenter::find()->where('KD_COSTCENTER IN ("1000","1001")' )->all(), 'KD_COSTCENTER', 'NM_COSTCENTER'),
+                      'pluginOptions' => [
+                        //'min'=>0,
+                        //'max'=>5000,
+                        'allowClear' => true,
+                        'class'=>'pull-top dropup'
+                      ],
+                    ],
+                    //Refresh Display
+                    'displayValueConfig' => ArrayHelper::map(Costcenter::find()->all(), 'KD_COSTCENTER', 'KD_COSTCENTER'),
+                  ],
+                ],
 								[	//BUDGET_ACTUAL
 									//coll
 									'attribute' => 'BUDGET_ACTUAL',
@@ -289,6 +349,36 @@ use kartik\grid\GridView;
 										]
 									],
 							   ],
+                 [
+                   'attribute' => 'PROGRAM',
+                   'label'=>'PROGRAM',
+                   'hAlign'=>'left',
+                   'vAlign'=>'middle',
+                   'headerOptions'=>[
+                     'style'=>[
+                        'width'=>'25%',
+                        'text-align'=>'center',
+                        'font-family'=>'tahoma, arial, sans-serif',
+                        'font-size'=>'9pt',
+                        'background-color'=>'rgba(97, 211, 96, 0.3)',
+                     ]
+                   ],
+                   'contentOptions'=>[
+                     'style'=>[
+                        'text-align'=>'left',
+                        'width'=>'25%',
+                        'font-family'=>'tahoma, arial, sans-serif',
+                        'font-size'=>'9pt',
+                     ]
+                   ],
+                   'pageSummaryOptions' => [
+                     'style'=>[
+                        'border-left'=>'0px',
+                        'border-right'=>'0px',
+                     ]
+                   ],
+
+                 ],
 							],
 							'panel' => [
 							  'footer'=>false,
@@ -314,7 +404,7 @@ use kartik\grid\GridView;
 							  <p style="border:0px;">Planing Running Rate base on percentage
 							  <br>Total Trade Investment    : RP. <?= $data->TARGET_VALUE ?>
 							  <?php
-							  if( $datasum['BUDGET_PLAN'] == '' || $data->TARGET_VALUE == '')
+							  if( $datasum['BUDGET_PLAN'] == '' || $data->TARGET_VALUE = '')
 							  {
 								$percentage = 0.00;
 							  }
