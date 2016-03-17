@@ -24,6 +24,7 @@ use lukisongroup\master\models\Distributor;
 use lukisongroup\hrd\models\Corp;
 use yii\data\ArrayDataProvider;
 use yii\helpers\Json;
+use yii\helpers\ArrayHelper;
 /**
  * TermCustomersController implements the CRUD actions for Termcustomers model.
  */
@@ -70,10 +71,18 @@ class TermCustomersController extends Controller
     {
         $searchModel = new TermcustomersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $aryStt= [
+            ['STATUS' => 0, 'STT_NM' => 'New'],
+            ['STATUS' => 100, 'STT_NM' => 'Proses'],
+            ['STATUS' => 101, 'STT_NM' => 'Checked'],
+            ['STATUS' => 102, 'STT_NM' => 'Aprroved'],
+        ];
+        $valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'valStt'=>$valStt
         ]);
     }
 
@@ -221,8 +230,12 @@ class TermCustomersController extends Controller
       $searchModel1 = new TermbudgetSearch();
       $dataProvider1 = $searchModel1->searchbudget(Yii::$app->request->queryParams,$id);
 
+      $sql1 = "SELECT SUM(BUDGET_ACTUAL) as Total from c0005 where  (ID_TERM='" .$id. "' AND STATUS =1) OR (STATUS =0 AND ID_TERM='" .$id. "')";
+      $modelnewaprov = Yii::$app->db3->createCommand($sql1)->queryscalar();
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'modelnewaprov'=>$modelnewaprov,
             'dataProvider' =>  $dataProvider,
             'searchModel1'=>   $searchModel1,
             'dataProvider1' =>  $dataProvider1
@@ -232,13 +245,16 @@ class TermCustomersController extends Controller
 // review accounting jika accounting create Ro-term sendiri
     public function actionReviewAct($id)
     {
+
       $searchModel1 = new TermbudgetSearch();
       $dataProvider1 = $searchModel1->searchbudget(Yii::$app->request->queryParams,$id);
       $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
-      $sql = "SELECT SUM(BUDGET_ACTUAL) as Total from c0005 where STATUS = 3 AND  ID_TERM='" .$id. "'";
+
+      $sql = "SELECT SUM(BUDGET_PLAN) as Total from c0005 where  (ID_TERM='" .$id. "' AND STATUS =1) OR (STATUS =0 AND ID_TERM='" .$id. "')";
       $model2 = Yii::$app->db3->createCommand($sql)->queryscalar();
-      $sql1 = "SELECT SUM(BUDGET_ACTUAL) as Total from c0005 where STATUS = 1 OR STATUS = 0 AND  ID_TERM='" .$id. "'";
+      $sql1 = "SELECT SUM(BUDGET_ACTUAL) as Total from c0005 where  (ID_TERM='" .$id. "' AND STATUS =1) OR (STATUS =0 AND ID_TERM='" .$id. "')";
       $modelnewaprov = Yii::$app->db3->createCommand($sql1)->queryscalar();
+
 
         if (Yii::$app->request->post('hasEditable')) {
           $id = Yii::$app->request->post('editableKey');
@@ -271,47 +287,7 @@ class TermCustomersController extends Controller
         ]);
     }
 
-// review accounting atau auth btn=1
-    public function actionReviewActUpdate($id)
-    {
 
-      $searchModel1 = new TermbudgetSearch();
-      $dataProvider1 = $searchModel1->searchbudget(Yii::$app->request->queryParams,$id);
-      $sql = "SELECT SUM(PPN)+SUM(PPH23) as Total from c0005 where STATUS=3 AND  ID_TERM='" .$id. "'";
-      $model2 = Yii::$app->db3->createCommand($sql)->queryscalar();
-      // $model2 = Termbudget::findBysql($sql)->one();
-      //  $model2 = Termbudget::findBysql($sql)->all();
-
-        if (Yii::$app->request->post('hasEditable')) {
-          $id = Yii::$app->request->post('editableKey');
-          $model = Termbudget::findOne($id);
-          $out = Json::encode(['output'=>'', 'message'=>'']);
-          $post = [];
-          $posted = current($_POST['Termbudget']);
-
-          $post['Termbudget'] = $posted;
-          if ($model->load($post)) {
-              $model->save();
-              $output = '';
-          if (isset($posted['BUDGET_ACTUAL'])) {
-              $output = $model->BUDGET_ACTUAL;
-            }
-            if (isset($posted['KD_COSCENTER'])) {
-                $output = $model->KD_COSCENTER;
-              }
-              $out = Json::encode(['output'=>$output, 'message'=>'']);
-            echo $out;
-            return;
-        }
-      }
-        return $this->render('review-act-update', [
-            'model1'=>$this->findModelbudget($id),
-            'model2'=>$model2,
-              'model' => $this->findModel($id),
-            'searchModel1'=>   $searchModel1,
-            'dataProvider1' =>  $dataProvider1
-        ]);
-    }
 
     // review Director
         public function actionReviewDrc($id)
@@ -322,6 +298,12 @@ class TermCustomersController extends Controller
 
           $searchModel1 = new TermbudgetSearch();
           $dataProvider1 = $searchModel1->searchbudget(Yii::$app->request->queryParams,$id);
+
+          $sql = "SELECT SUM(BUDGET_PLAN) as Total from c0005 where  (ID_TERM='" .$id. "' AND STATUS =1) OR (STATUS =0 AND ID_TERM='" .$id. "')";
+          $model2 = Yii::$app->db3->createCommand($sql)->queryscalar();
+
+          $sql1 = "SELECT SUM(BUDGET_ACTUAL) as Total from c0005 where  (ID_TERM='" .$id. "' AND STATUS =1) OR (STATUS =0 AND ID_TERM='" .$id. "')";
+          $modelnewaprov = Yii::$app->db3->createCommand($sql1)->queryscalar();
 
             if (Yii::$app->request->post('hasEditable')) {
               $id = Yii::$app->request->post('editableKey');
@@ -347,7 +329,8 @@ class TermCustomersController extends Controller
           }
             return $this->render('review-drc', [
                 'model' => $this->findModel($id),
-                'Model'=> $this->findModelbudget($id),
+                'model2' => $model2,
+                'modelnewaprov'=>$modelnewaprov,
                 // 'searchModel'=>   $searchModel,
                 'dataProvider' =>  $dataProvider,
                 'searchModel1'=>   $searchModel1,
@@ -515,18 +498,73 @@ class TermCustomersController extends Controller
 
       $searchModel1 = new TermbudgetSearch();
       $dataProvider1 = $searchModel1->searchbudget(Yii::$app->request->queryParams,$id);
+      $sql1 = "SELECT SUM(BUDGET_ACTUAL) as Total from c0005 where  (ID_TERM='" .$id. "' AND STATUS =1) OR (STATUS =0 AND ID_TERM='" .$id. "')";
+      $modelnewaprov = Yii::$app->db3->createCommand($sql1)->queryscalar();
+
 
 
       // $data
 
         return $this->render('viewterm', [
             'model' => $this->findModel($id),
+            'modelnewaprov'=>$modelnewaprov,
             // 'searchModel'=>   $searchModel,
             'dataProvider' =>  $dataProvider,
             'searchModel1'=>   $searchModel1,
             'dataProvider1' =>  $dataProvider1
         ]);
     }
+
+    public function actionViewAct($id)
+    {
+
+      $searchModel = new TermcustomersSearch();
+      $dataProvider = $searchModel->searchcusbyid(Yii::$app->request->queryParams,$id);
+
+      $searchModel1 = new TermbudgetSearch();
+      $dataProvider1 = $searchModel1->searchbudget(Yii::$app->request->queryParams,$id);
+
+      $sql = "SELECT SUM(BUDGET_PLAN) as Total from c0005 where  (ID_TERM='" .$id. "' AND STATUS =1) OR (STATUS =0 AND ID_TERM='" .$id. "')";
+      $model2 = Yii::$app->db3->createCommand($sql)->queryscalar();
+      $sql1 = "SELECT SUM(BUDGET_ACTUAL) as Total from c0005 where  (ID_TERM='" .$id. "' AND STATUS =1) OR (STATUS =0 AND ID_TERM='" .$id. "')";
+      $modelnewaprov = Yii::$app->db3->createCommand($sql1)->queryscalar();
+      // $data
+
+        return $this->render('view-act', [
+            'model' => $this->findModel($id),
+            'model2'=>$model2,
+            'modelnewaprov'=>$modelnewaprov,
+            'dataProvider' =>  $dataProvider,
+            'searchModel1'=>   $searchModel1,
+            'dataProvider1' =>  $dataProvider1
+        ]);
+    }
+
+    public function actionViewDrc($id)
+    {
+
+      $searchModel = new TermcustomersSearch();
+      $dataProvider = $searchModel->searchcusbyid(Yii::$app->request->queryParams,$id);
+
+      $searchModel1 = new TermbudgetSearch();
+      $dataProvider1 = $searchModel1->searchbudget(Yii::$app->request->queryParams,$id);
+
+      $sql = "SELECT SUM(BUDGET_PLAN) as Total from c0005 where  (ID_TERM='" .$id. "' AND STATUS =1) OR (STATUS =0 AND ID_TERM='" .$id. "')";
+      $model2 = Yii::$app->db3->createCommand($sql)->queryscalar();
+      $sql1 = "SELECT SUM(BUDGET_ACTUAL) as Total from c0005 where  (ID_TERM='" .$id. "' AND STATUS =1) OR (STATUS =0 AND ID_TERM='" .$id. "')";
+      $modelnewaprov = Yii::$app->db3->createCommand($sql1)->queryscalar();
+      // $data
+
+        return $this->render('view-drc', [
+            'model' => $this->findModel($id),
+            'model2'=>$model2,
+            'modelnewaprov'=>$modelnewaprov,
+            'dataProvider' =>  $dataProvider,
+            'searchModel1'=>   $searchModel1,
+            'dataProvider1' =>  $dataProvider1
+        ]);
+    }
+
 
 
 
@@ -618,31 +656,7 @@ class TermCustomersController extends Controller
 
     }
 
-    public function actionRabateUpdate($id)
-    {
-      # code...
-      $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
 
-      if ($model->load(Yii::$app->request->post())) {
-        if($model->validate())
-        {
-
-            $model->save();
-        }
-
-
-
-            return  $this->redirect(['review-act-update','id'=> $model->ID_TERM]);
-
-      }
-      else {
-          return $this->renderAjax('_rabate', [
-              'model' => $model,
-
-          ]);
-      }
-
-    }
 
     public function actionGrowth($id)
     {
@@ -674,34 +688,6 @@ class TermCustomersController extends Controller
       }
 
     }
-
-    public function actionGrowthUpdate($id)
-    {
-      # code...
-      $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
-
-      if ($model->load(Yii::$app->request->post())) {
-        if($model->validate())
-        {
-
-            $model->save();
-        }
-
-
-            return  $this->redirect(['review-act-update','id'=> $model->ID_TERM]);
-
-      }
-      else {
-          return $this->renderAjax('growth', [
-              'model' => $model,
-
-          ]);
-      }
-
-    }
-
-
-
 
 
 
@@ -742,31 +728,7 @@ class TermCustomersController extends Controller
         }
     }
 
-    public function actionPeriodeUpdate($id)
-    {
-      # code...
-        $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
-        if ($model->load(Yii::$app->request->post())) {
 
-          $tanggal = \Yii::$app->formatter->asDate($model->PERIOD_START,'Y-M-d');
-          $tanggalend = \Yii::$app->formatter->asDate($model->PERIOD_END,'Y-M-d');
-          $model->PERIOD_START = $tanggal;
-          $model->PERIOD_END = $tanggalend;
-
-          if($model->validate())
-          {
-
-              $model->save();
-          }
-            return  $this->redirect(['review-act-update','id'=> $model->ID_TERM]);
-        }
-        else {
-            return $this->renderAjax('_periode', [
-                'model' => $model,
-
-            ]);
-        }
-    }
 
     public function actionTop($id)
     {
@@ -803,39 +765,7 @@ class TermCustomersController extends Controller
         }
     }
 
-    public function actionTopUpdate($id)
-    {
-      # code...
-        $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
-        $post = Yii::$app->request->post();
 
-        if ($model->load(Yii::$app->request->post())) {
-          $datatop = $post['Termcustomers']['term'];
-
-           $datasavetop = $datatop != "Potong Tagihan" ?  "Transfer ".$model->TOP : "Potong Tagihan";
-           $model->TOP = $datasavetop;
-
-          if($model->validate())
-          {
-
-            // print_r($model->term);
-            // die();
-
-              $model->save();
-          }
-
-
-              return  $this->redirect(['review-act-update','id'=> $model->ID_TERM]);
-
-
-        }
-        else {
-            return $this->renderAjax('_top', [
-                'model' => $model,
-
-            ]);
-        }
-    }
 
 
 
@@ -869,30 +799,7 @@ class TermCustomersController extends Controller
         }
     }
 
-    public function actionTargetUpdate($id)
-    {
-      # code...
-        $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
-        if ($model->load(Yii::$app->request->post())) {
-          $model->TARGET_TEXT =  Yii::$app->mastercode->terbilang($model->TARGET_VALUE);
-          if($model->validate())
-          {
 
-              $model->save();
-          }
-
-
-              return $this->redirect(['review-act-update','id'=>$model->ID_TERM]);
-
-
-        }
-        else {
-            return $this->renderAjax('target', [
-                'model' => $model,
-
-            ]);
-        }
-    }
 
 
     public function actionCreateBudget($id)
@@ -931,76 +838,79 @@ class TermCustomersController extends Controller
 
     }
 
-    // special case jika acounting bisa create
 
-    public function actionCreateBudgetAct($id)
+    public function actionCetakpdfAct($id)
     {
       # code...
-        $budget = new  Termbudget();
-        $profile= Yii::$app->getUserOpt->Profile_user();
+      $data = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
+      $datainternal = Jobgrade::find()->where(['JOBGRADE_ID'=>$data['JOBGRADE_ID']])->asArray()
+                                                                                    ->one();
+      $datacus = Customers::find()->where(['CUST_KD'=> $data->CUST_KD])
+                              ->asArray()
+                              ->one();
 
-        if ($budget->load(Yii::$app->request->post())) {
+      $term = Termgeneral::find()->where(['ID'=>$data['GENERAL_TERM']])->asArray()
+                                                          ->one();
 
-          $tanggal = \Yii::$app->formatter->asDate($budget->PERIODE_START,'Y-M-d');
-          $tanggalend = \Yii::$app->formatter->asDate($budget->PERIODE_END,'Y-M-d');
-          $budget->PERIODE_START = $tanggal;
-          $budget->PERIODE_END = $tanggalend;
-          // print_r($tanggal);
-          // die();
-          $budget->CORP_ID = $profile->emp->EMP_CORP_ID;
-          $budget->STATUS = 0;
-          if($budget->validate())
-          {
-            $budget->CREATE_AT = date("Y-m-d H:i:s");
-            $budget->CREATE_BY = Yii::$app->user->identity->username;
-            $budget->save();
+      $datadis = Distributor::find()->where(['KD_DISTRIBUTOR'=> $data->DIST_KD])
+                                    ->asArray()
+                                    ->one();
+      $datacorp = Corp::find()->where(['CORP_ID'=> $data->PRINCIPAL_KD])
+                                                                  ->asArray()
+                                                                  ->one();
+      $sql = "SELECT c.INVES_TYPE,c.ID_TERM,c.BUDGET_PLAN,c.BUDGET_ACTUAL,c.PERIODE_START,c.PERIODE_END,b.TARGET_VALUE from c0005 c LEFT JOIN c0003 b on c.ID_TERM = b.ID_TERM   where c.ID_TERM='".$id."'";
+      $data1 = Termbudget::findBySql($sql)->all();
+      $sqlsum = "SELECT SUM(BUDGET_PLAN) as BUDGET_PLAN,SUM(BUDGET_ACTUAL) as BUDGET_ACTUAL from c0005 where ID_TERM='".$id."'";
+      $datasum = Termbudget::findBySql($sqlsum)->one();
 
-          }
-        //   print_r($budget->getErrors());
-        //  die();
+     $dataProvider = new ArrayDataProvider([
+       'key' => 'ID_TERM',
+       'allModels'=>$data1,
+       'pagination' => [
+         'pageSize' => 20,
+       ],
+        ]);
 
-            return $this->redirect(['review-act','id'=>$budget->ID_TERM]);
+      $content = $this->renderPartial( '_pdf', [
+        'data' => $data,
+        'datainternal'=>$datainternal,
+        'datacus'=>  $datacus,
+        'datadis'=>$datadis,
+        'datacorp'=>$datacorp,
+        'term'=>$term,
+        'datasum'=>$datasum,
+        'dataProvider'=>$dataProvider
 
-        }
-        else {
-            return $this->renderAjax('budget', [
-                'budget' => $budget,
-                'id'=>$id
+          ]);
 
-            ]);
-        }
-
+      $pdf = new Pdf([
+        // set to use core fonts only
+        'mode' => Pdf::MODE_CORE,
+        // A4 paper format
+        'format' => Pdf::FORMAT_A4,
+        // portrait orientation
+        'orientation' => Pdf::ORIENT_PORTRAIT,
+        // stream to browser inline
+        'destination' => Pdf::DEST_BROWSER,
+        // your html content input
+        'content' => $content,
+        // format content from your own css file if needed or use the
+        // enhanced bootstrap css built by Krajee for mPDF formatting
+        //D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+        'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+        // any css to be embedded if required
+        'cssInline' => '.kv-heading-1{font-size:12px}',
+         // set mPDF properties on the fly
+        'options' => ['title' => 'Term-Customers','subject'=>'Term'],
+         // call mPDF methods on the fly
+        'methods' => [
+          'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
+          'SetFooter'=>['{PAGENO}'],
+        ]
+      ]);
+      return $pdf->render();
     }
 
-    // public function actionCreateGeneral($id)
-    // {
-    //   # code...
-    //     $model = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
-    //
-    //     if ($model->load(Yii::$app->request->post())) {
-    //
-    //       if($model->validate())
-    //       {
-    //
-    //         $model->save();
-    //
-    //
-    //       }
-    //     //   print_r($model->getErrors());
-    //     //  die();
-    //
-    //         return $this->redirect(['view','id'=>$id]);
-    //
-    //     }
-    //     else {
-    //         return $this->renderAjax('term', [
-    //             'model' => $model,
-    //
-    //
-    //         ]);
-    //     }
-    //
-    // }
 
 
     public function actionCetakpdf($id)
@@ -1196,50 +1106,9 @@ class TermCustomersController extends Controller
 
     }
 
-    public function actionPpnUpdate($id)
-    {
-        $Model = $this->findModelbudget($id);
-        if ($Model->load(Yii::$app->request->post())) {
-          if($Model->validate())
-          {
 
-              $Model->save();
 
-          }
-            return $this->redirect(['review-act-update', 'id' => $Model->ID_TERM]);
-        } else {
-            return $this->renderAjax('ppn', [
-                'Model' => $Model,
-            ]);
-        }
 
-    }
-
-    public function actionPphUpdate($id)
-    {
-        $Model = $this->findModelbudget($id);
-
-        if ($Model->load(Yii::$app->request->post())) {
-          $checkbox = Yii::$app->request->post('pph');
-          if($checkbox == 1)
-          {
-            $Model->PPH23 = 0.00;
-          }
-          if($Model->validate())
-          {
-
-              $Model->save();
-              // print_r  ($Model->save());
-              // die();
-          }
-            return $this->redirect(['review-act-update', 'id' => $Model->ID_TERM]);
-        } else {
-            return $this->renderAjax('pph', [
-                'Model' => $Model,
-            ]);
-        }
-
-    }
 
     /**
      * Deletes an existing Termcustomers model.

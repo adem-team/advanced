@@ -321,7 +321,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				<?php echo Html::img('@web/upload/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
 			</div>
 			<div class="col-md-9" style="padding-top:15px;">
-				<h3 class="text-center"><b> <?= $model->NM_TERM ?> <?php echo date('Y')  ?> </b></h3>
+				<h3 class="text-center"><b> <?php echo ucwords($model->NM_TERM)  ?>  </b></h3>
 			</div>
 			<div class="col-md-12">
 				<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
@@ -624,32 +624,20 @@ $this->params['breadcrumbs'][] = $this->title;
 								$model=$dataProvider1->getModels();
 								/*
 								 * Calculate SUMMARY TOTAL
-								 * @author ptrnov  <piter@lukison.com>
-								 * @since 1.1
+								 * @author wawan
+								 * @since 1.0
 								 */
-								//  print_r($model2);
-								//  die();
-								// <div>.Html::a($ppn,Url::toRoute(['/master/term-customers/ppn','id'=>$id]),['id'=>'PPn','data-toggle'=>'modal','data-target'=>'#PPN']).'</div>
-								// <div>.Html::a($pph23,Url::toRoute(['/master/term-customers/pph','id'=>$id]),['id'=>'PPh','data-toggle'=>'modal','data-target'=>'#PPH']).'</div>'
 							$baris = count($model);
 						if($baris == 0)
 						{
-							// $defaultppn = $model[0]['PPN'] = 0.00;
-							// $ppn = number_format($defaultppn,2);
-							// $defaultpph23 = $model[0]['PPH23'] = 0.00;
-							// $pph23 = number_format($defaultpph23,2);
 							$total = $summary =  0.00;
 							$ttlSubtotal=number_format($total,2);
 							return '<div>'.$ttlSubtotal.'</div'
 							;
 						}
 						else{
-								// $id =  $model[0]['ID_TERM'];
-								$ttlSubtotal = $summary-$model2;
-								// $defaultpph23=$model!=''?($model[0]['PPH23']*10)/100:0.00;
-								// $pph23 = number_format($defaultpph23,2);
-								// $defaultppn=$model!=''?($model[0]['PPN']*10)/100:0.00;
-								// $ppn =  number_format($defaultppn,2);
+								$total = $model2;
+								$ttlSubtotal=number_format($total,2);
 							return '<div>'.$ttlSubtotal.'</div>'
 
 							;
@@ -829,11 +817,9 @@ $this->params['breadcrumbs'][] = $this->title;
 								$model=$dataProvider1->getModels();
 								/*
 								 * Calculate SUMMARY TOTAL
-								 * @author ptrnov  <piter@lukison.com>
-								 * @since 1.1
+								 * @author wawan
+								 * @since 1.0
 								 */
-								//  print_r($modelnewaprov);
-								//  die();
 							$baris = count($model);
 						if($baris == 0)
 						{
@@ -847,23 +833,24 @@ $this->params['breadcrumbs'][] = $this->title;
 							$Subtotal=number_format($total,2);
 							return '<div>'.$ttlSubtotal.'</div>
 											<div>'.$ppn.'</div>
-											<div>'.$pph23.'</div>'
+											<div>'.$pph23.'</div>
+											<div>'.$Subtotal.'</div>'
 							;
 						}
 						else{
-							// print_r($summary);
-							// die();
 								$id =  $model[0]['ID_TERM'];
-								$ttlSubtotal = $modelnewaprov-$model2;
-								$defaultpph23=$model!=''?($model[0]['PPH23']*10)/100:0.00;
+								$ttlSubtotal = $modelnewaprov;
+								$defaultpph23=$model!=''?($model[0]['PPH23']*$ttlSubtotal)/100:0.00;
 								$pph23 = number_format($defaultpph23,2);
-								$defaultppn=$model!=''?($model[0]['PPN']*10)/100:0.00;
+								$defaultppn=$model!=''?($model[0]['PPN']*$ttlSubtotal)/100:0.00;
 								$ppn =  number_format($defaultppn,2);
-								$Subtotal = $ttlSubtotal-$pph23-$ppn;
+								$Subtotal = ($ttlSubtotal+$ppn)-$pph23;
+								$Totalsub = number_format($Subtotal,2);
+
 							return '<div>'.$ttlSubtotal.'</div>
 							<div>'.Html::a($ppn,Url::toRoute(['/master/term-customers/ppn','id'=>$id]),['id'=>'PPn','data-toggle'=>'modal','data-target'=>'#PPN']).'</div>
 							<div>'.Html::a($pph23,Url::toRoute(['/master/term-customers/pph','id'=>$id]),['id'=>'PPh','data-toggle'=>'modal','data-target'=>'#PPH']).'</div>
-								<div>'.$Subtotal.'</div>'
+								<div>'.$Totalsub.'</div>'
 							;
 						}
 

@@ -157,7 +157,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		}
 	}
 
-	
+
 	function PoNote($model){
 			$title = Yii::t('app','');
 			$options = [ 'id'=>'po-note-id',
@@ -253,7 +253,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				<?php echo Html::img('@web/upload/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
 			</div>
 			<div class="col-md-9" style="padding-top:15px;">
-				<h3 class="text-center"><b> <?= $model->NM_TERM ?> <?php echo date('Y')  ?> </b></h3>
+				<h3 class="text-center"><b> <?php echo 	ucwords($model->NM_TERM)  ?> </b></h3>
 			</div>
 			<div class="col-md-12">
 				<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
@@ -534,6 +534,10 @@ $this->params['breadcrumbs'][] = $this->title;
 								'border-left'=>'0px',
 							]
 						 ],
+						 'pageSummary'=>function ($summary, $data, $widget){
+								return '<div> Total:</div>'
+											 ;
+							 },
 					],
 					[	//BUDGET_ACTUAL
 						//COL
@@ -569,6 +573,17 @@ $this->params['breadcrumbs'][] = $this->title;
 								 'border-left'=>'0px',
 							]
 						],
+					'pageSummary'=>function ($summary, $data, $widget) use($dataProvider1,$modelnewaprov)	{
+							$model=$dataProvider1->getModels();
+							if(count($model) == 0)
+							{
+							  $total = $summary;
+							}
+							else{
+								$total = $modelnewaprov;
+							}
+							return '<div>'.$total.'</div>';
+							}
 					],
 					[	//PERCENT ACTUAL
 						//COL

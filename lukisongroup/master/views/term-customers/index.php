@@ -19,11 +19,6 @@ $this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pad
 $this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
 
-// $aryStt= [
-//     ['STATUS' => 0, 'STT_NM' => 'DISABLE'],
-//     ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
-// ];
-// $valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
 function getPermissionEmp(){
   if (Yii::$app->getUserOpt->profile_user()){
     return Yii::$app->getUserOpt->profile_user()->emp;
@@ -81,26 +76,67 @@ function tombolCreate(){
   }
 
 }
+// return  '<li>' . Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
+//               ['/master/term-customers/view-term-cus','id'=>$model->ID_TERM],[
+//               // 'data-toggle'=>"modal",
+//               // 'data-target'=>"#modal-create",
+//               'data-title'=> $model->ID_TERM,
+//               ]). '</li>' . PHP_EOL;
+function tombolview($url,$model)
+{
+  if( getPermissionEmp()->DEP_ID == 'ACT')
+  {
+    $title1 = Yii::t('app', 'view');
+    $options1 = [ 'id'=>'term-view',
+    ];
+    $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+    $label = $icon1 . ' ' . $title1;
+    $url = Url::toRoute(['/master/term-customers/view-act','id'=>$model->ID_TERM]);
+    $options1['tabindex'] = '-1';
+    return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
+  }
+  elseif (getPermissionEmp()->DEP_ID == 'GM'|| getPermissionEmp()->DEP_ID == 'DRC') {
+    # code...
+    $title1 = Yii::t('app', 'view');
+    $options1 = [ 'id'=>'term-view',
+    ];
+    $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+    $label = $icon1 . ' ' . $title1;
+    $url = Url::toRoute(['/master/term-customers/view-drc','id'=>$model->ID_TERM]);
+    $options1['tabindex'] = '-1';
+    return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
+  }
+  elseif(getPermission()->BTN_VIEW==1){
+    $title1 = Yii::t('app', 'view');
+    $options1 = [ 'id'=>'term-view',
+    ];
+    $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+    $label = $icon1 . ' ' . $title1;
+    $url = Url::toRoute(['/master/term-customers/view-term-cus','id'=>$model->ID_TERM]);
+    $options1['tabindex'] = '-1';
+    return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
+  }
+
+}
+
+// print_r(getPermissionEmp()->DEP_ID);
+// die();
 
 function review($url,$model)
 {
 
-
-  if( getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1)
+  if( getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 && $model->SIG3_NM == "none" || getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 &&  $model->SIG2_NM == "none" || getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 && $model->SIG2_NM == "none"  )
   {
     $title1 = Yii::t('app', 'Review');
     $options1 = [ 'id'=>'term-Review',
-              // 'data-toggle'=>"modal",
-              // 'data-target'=>"#review-term",
-              // 'class' => 'btn btn-warning btn-sm',
     ];
     $icon1 = '<span class="fa fa-plus fa-lg"></span>';
     $label = $icon1 . ' ' . $title1;
-    $url = Url::toRoute(['/master/term-customers/review-act-update','id'=>$model->ID_TERM]);
+    $url = Url::toRoute(['/master/term-customers/review-act','id'=>$model->ID_TERM]);
     $options1['tabindex'] = '-1';
     return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
   }
-  elseif (getPermissionEmp()->DEP_ID == 'GM'|| getPermissionEmp()->DEP_ID == 'DRC' && getPermission()->BTN_REVIEW==1) {
+  elseif (getPermissionEmp()->DEP_ID == 'GM' && getPermission()->BTN_REVIEW == 1 && $model->SIG3_NM == "none" || getPermissionEmp()->DEP_ID == 'DRC' && getPermission()->BTN_REVIEW==1  && $model->SIG3_NM == "none" ) {
     # code...
     $title1 = Yii::t('app', 'Review');
     $options1 = [ 'id'=>'term-Review',
@@ -111,12 +147,9 @@ function review($url,$model)
     $options1['tabindex'] = '-1';
     return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
   }
-  elseif(getPermission()->BTN_REVIEW==1){
+  elseif(getPermission()->BTN_REVIEW == 1 && $model->SIG2_NM == "none"  || getPermission()->BTN_REVIEW == 1 && $model->SIG1_NM == "none" ){
     $title1 = Yii::t('app', 'Review');
     $options1 = [ 'id'=>'term-Review',
-            // 'data-toggle'=>"modal",
-            // 'data-target'=>"#review-term",
-            // 'class' => 'btn btn-warning btn-sm',
     ];
     $icon1 = '<span class="fa fa-plus fa-lg"></span>';
     $label = $icon1 . ' ' . $title1;
@@ -128,20 +161,20 @@ function review($url,$model)
 }
 
 
-$data = Termcustomers::find()->all();
-$to = "CUST_KD";
-$from = "cus.CUST_NM";
-$val = ArrayHelper::map($data, $to,$from);
-
-$data1 = Termcustomers::find()->all();
-$to1 = "PRINCIPAL_KD";
-$from1 = "corp.CORP_NM";
-$val1 = ArrayHelper::map($data1, $to1,$from1);
-
-$data2 = Termcustomers::find()->all();
-$to2 = 'DIST_KD';
-$from2 = "dis.NM_DISTRIBUTOR";
-$val2 = ArrayHelper::map($data2, $to2, $from2);
+// $data = Termcustomers::find()->all();
+// $to = "CUST_KD";
+// $from = "cus.CUST_NM";
+// $val = ArrayHelper::map($data, $to,$from);
+//
+// $data1 = Termcustomers::find()->all();
+// $to1 = "PRINCIPAL_KD";
+// $from1 = "corp.CORP_NM";
+// $val1 = ArrayHelper::map($data1, $to1,$from1);
+//
+// $data2 = Termcustomers::find()->all();
+// $to2 = 'DIST_KD';
+// $from2 = "dis.NM_DISTRIBUTOR";
+// $val2 = ArrayHelper::map($data2, $to2, $from2);
 
 $gridColumns = [
     [
@@ -374,7 +407,7 @@ $gridColumns = [
     ],
     [
       'attribute' => 'STATUS',
-      // 'filter' => $valStt,
+      'filter' => $valStt,
       'format' => 'raw',
       'hAlign'=>'center',
       'value'=>function($model){
@@ -412,19 +445,20 @@ $gridColumns = [
     [
       'class'=>'kartik\grid\ActionColumn',
       'dropdown' => true,
-      'template' => '{view}{update}',
+      'template' => '{review}{view}',
       'dropdownOptions'=>['class'=>'pull-right dropup'],
       'buttons' => [
-        'view' => function ($url, $model) {
+        'review' => function ($url, $model) {
                 return review($url, $model);
               },
-          'update' =>function($url, $model, $key){
-              return  '<li>' . Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
-                            ['/master/term-customers/view-term-cus','id'=>$model->ID_TERM],[
-                            // 'data-toggle'=>"modal",
-                            // 'data-target'=>"#modal-create",
-                            'data-title'=> $model->ID_TERM,
-                            ]). '</li>' . PHP_EOL;
+          'view' =>function($url, $model, $key){
+            return  tombolview($url, $model);
+              // return  '<li>' . Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
+              //               ['/master/term-customers/view-term-cus','id'=>$model->ID_TERM],[
+              //               // 'data-toggle'=>"modal",
+              //               // 'data-target'=>"#modal-create",
+              //               'data-title'=> $model->ID_TERM,
+              //               ]). '</li>' . PHP_EOL;
           },
 
               ],

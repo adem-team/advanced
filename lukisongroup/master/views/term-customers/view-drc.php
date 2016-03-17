@@ -1,4 +1,5 @@
 <?php
+
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;;
 use lukisongroup\master\models\Terminvest;
@@ -48,6 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 
 
 
+
 	function PrintPdf($model){
 		$title = Yii::t('app','Print');
 		$options = [ 'id'=>'pdf-print-id',
@@ -73,7 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				<?php echo Html::img('@web/upload/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
 			</div>
 			<div class="col-md-9" style="padding-top:15px;">
-				<h3 class="text-center"><b> <?php echo  ucfirst($model->NM_TERM)  ?> </b></h3>
+				<h3 class="text-center"><b> <?php ucfirst($model->NM_TERM) ?>  </b></h3>
 			</div>
 			<div class="col-md-12">
 				<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
@@ -297,8 +299,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 											 return  $model->budget->TARGET_VALUE = 0.00;
 										}
 										else {
-											# code...
-											 return $model->BUDGET_PLAN / $model->budget->TARGET_VALUE * 100;
+										  # code...
+										   return $model->BUDGET_PLAN / $model->budget->TARGET_VALUE * 100;
 										}
 								},
 								'headerOptions'=>[
@@ -328,12 +330,49 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 										'text-align'=>'right',
 										'border-left'=>'0px',
 									]
-								 ],
-								 'pageSummary'=>function ($summary, $data, $widget){
-										return '<div> Total:</div>'
-													 ;
-									 },
+							   ],
 							],
+              [	//COL-3
+                /* Attribute Request KD_COSTCENTER */
+                // 'class'=>'kartik\grid\EditableColumn',
+                'attribute'=>'KD_COSTCENTER',
+                'label'=>'CostCenter',
+                'vAlign'=>'middle',
+                // 'hAlign'=>'center',
+                // 'mergeHeader'=>true,
+                'headerOptions'=>[
+                  'style'=>[
+                    'text-align'=>'center',
+                    'width'=>'60px',
+                    'font-family'=>'tahoma',
+                    'font-size'=>'8pt',
+                     'background-color'=>'rgba(97, 211, 96, 0.3)',
+                  ]
+                ],
+                'contentOptions'=>[
+                  'style'=>[
+                      'text-align'=>'center',
+                      'width'=>'60px',
+                      'font-family'=>'tahoma',
+                      'font-size'=>'8pt',
+                  ]
+                ],
+                'pageSummaryOptions' => [
+                  'style'=>[
+                    'font-family'=>'tahoma',
+                    'font-size'=>'8pt',
+                    'text-align'=>'right',
+                    'border-left'=>'0px',
+                  ]
+                ],
+                'pageSummary'=>function ($summary, $data, $widget){
+                   return '<div> Total:</div>
+                          <div> PPN :</div>
+                          <div> PPH23 :</div>
+                          <div> Sub Total:</div>'
+                          ;
+                  },
+              ],
 							[	//BUDGET_ACTUAL
 								//COL
 								'attribute' => 'BUDGET_ACTUAL',
@@ -360,25 +399,57 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								'pageSummaryFunc'=>GridView::F_SUM,
 								'format'=>['decimal', 2],
 								'pageSummary'=>true,
+
 								'pageSummaryOptions' => [
 									'style'=>[
-										 'font-family'=>'tahoma',
-										 'font-size'=>'8pt',
-										 'text-align'=>'right',
-										 'border-left'=>'0px',
+									   'font-family'=>'tahoma',
+									   'font-size'=>'8pt',
+									   'text-align'=>'right',
+									   'border-left'=>'0px',
 									]
 								],
-							'pageSummary'=>function ($summary, $data, $widget) use($dataProvider1,$modelnewaprov)	{
-									$model=$dataProvider1->getModels();
-									if(count($model) == 0)
-									{
-									  $total = $summary;
-									}
-									else{
-										$total = $modelnewaprov;
-									}
-									return '<div>'.$total.'</div>';
-									}
+                'pageSummary'=>function ($summary, $data, $widget) use($dataProvider1,$model2,$modelnewaprov)	{
+    								$model=$dataProvider1->getModels();
+    								/*
+    								 * Calculate SUMMARY TOTAL
+    								 * @author wawan
+    								 * @since 1.0
+    								 */
+    							$baris = count($model);
+    						if($baris == 0)
+    						{
+    							$defaultppn = $model[0]['PPN'] = 0.00;
+    							$ppn = number_format($defaultppn,2);
+    							$defaultpph23 = $model[0]['PPH23'] = 0.00;
+    							$pph23 = number_format($defaultpph23,2);
+    							$total = $summary = 0.00;
+    							$ttlSubtotal=number_format($total,2);
+    							$total = $summary = 0.00;
+    							$Subtotal=number_format($total,2);
+    							return '<div>'.$ttlSubtotal.'</div>
+    											<div>'.$ppn.'</div>
+    											<div>'.$pph23.'</div>
+    											<div>'.$Subtotal.'</div>'
+    							;
+    						}
+    						else{
+    								$id =  $model[0]['ID_TERM'];
+    								$ttlSubtotal = $modelnewaprov;
+
+    								$defaultpph23=$model!=''?($model[0]['PPH23']*$ttlSubtotal)/100:0.00;
+    								$pph23 = number_format($defaultpph23,2);
+    								$defaultppn=$model!=''?($model[0]['PPN']*$ttlSubtotal)/100:0.00;
+    								$ppn =  number_format($defaultppn,2);
+    								$Subtotal = ($ttlSubtotal+$ppn)-$pph23;
+										$totalsubformat = number_format($Subtotal);
+    								return '<div>'.$totalsubformat.'</div>
+    												<div>'.$ppn.'</div>
+    												<div>'.$pph23.'</div>
+    												<div>'.$totalsubformat.'</div>'
+    							;
+    						}
+
+    					}
 							],
 							[	//PERCENT ACTUAL
 								//COL
@@ -514,7 +585,108 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	</div>
 
     <!-- GENERAL TERM !-->
-
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt;padding-bottom:10px;padding-left:30px">
+			<?php
+				// echo '<h6><u><b>GENERAL TERM</b></u></h6>';
+				// echo  $grid = GridView::widget([
+				// 	'id'=>'gv-term',
+				// 	'dataProvider'=> $dataProvider,
+				// 	'footerRowOptions'=>['style'=>'font-weight:bold;text-decoration: underline;'],
+				// 	// 'filterModel' => $searchModel1,
+				// 	// 'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+				// 	'columns' =>[
+				// 		 [
+				// 			'class'=>'kartik\grid\SerialColumn',
+				// 			'contentOptions'=>['class'=>'kartik-sheet-style'],
+				// 			'width'=>'5%',
+				// 			'header'=>'No.',
+				// 			'headerOptions'=>[
+				// 				'style'=>[
+				// 					'text-align'=>'center',
+				// 					'width'=>'100px',
+				// 					'font-family'=>'verdana, arial, sans-serif',
+				// 					'font-size'=>'9pt',
+				// 					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				// 				]
+				// 			],
+				// 			'contentOptions'=>[
+				// 				'style'=>[
+				// 					'text-align'=>'center',
+				// 					'width'=>'100px',
+				// 					'font-family'=>'tahoma, arial, sans-serif',
+				// 					'font-size'=>'9pt',
+				// 				]
+				// 			],
+				// 		],
+				// 		[
+				// 			'attribute' => 'general.SUBJECT',
+				// 			'label'=>'General Term',
+				// 			'hAlign'=>'left',
+				// 			'vAlign'=>'middle',
+				// 			'headerOptions'=>[
+				// 				'style'=>[
+				// 					 'width'=>'30%',
+				// 					'text-align'=>'center',
+				// 					'font-family'=>'tahoma, arial, sans-serif',
+				// 					'font-size'=>'9pt',
+				// 					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				// 				]
+				// 			],
+				// 			'contentOptions'=>[
+				// 				'style'=>[
+				// 					'text-align'=>'left',
+				// 					'width'=>'30%',
+				// 					'font-family'=>'tahoma, arial, sans-serif',
+				// 					'font-size'=>'9pt',
+				// 				]
+				// 			],
+				// 		],
+				// 		[
+				// 			'attribute' => 'general.ISI_TERM',
+				// 			'label'=>'Isi Peraturan',
+				// 			'hAlign'=>'left',
+				// 			'vAlign'=>'middle',
+				// 			'headerOptions'=>[
+				// 				'style'=>[
+				// 					'width'=>'75%',
+				// 					'text-align'=>'center',
+				// 					'font-family'=>'tahoma, arial, sans-serif',
+				// 					'font-size'=>'9pt',
+				// 					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				// 				]
+				// 			],
+				// 			'contentOptions'=>[
+				// 				'style'=>[
+				// 					'text-align'=>'left',
+				// 					'width'=>'75%',
+				// 					'font-family'=>'tahoma, arial, sans-serif',
+				// 					'font-size'=>'9pt',
+				// 				]
+				// 			],
+				// 		],
+				// 	],
+				// 	'showPageSummary' => false,
+				// 	'pjax'=>true,
+				// 	'pjaxSettings'=>[
+				// 		'options'=>[
+				// 		'enablePushState'=>false,
+				// 		'id'=>'gv-term-general',
+				// 		],
+				// 	],
+				// 	/* 'toolbar' => [
+				// 	  '',
+				// 	],
+				// 	'panel' => [
+				// 	  'heading'=>'<h3 class="panel-title">General Term</h3>',
+				// 	  'type'=>'success',
+				// 	  'showFooter'=>false,
+				// 	], */
+				// 	'export' =>false,
+				// ]);
+			?>
+		</div>
+	</div>
 
 	<div style="text-align:right;float:right">
 		<?php echo PrintPdf($model); ?>
@@ -524,7 +696,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	<div  class="col-md-12">
 		<div  class="row" >
 			<div class="col-md-6">
-				<table id="tbl" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">
+				<table id="tblRo" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">
 					<!-- Tanggal!-->
 					 <tr>
 						<!-- Tanggal Pembuat RO!-->
@@ -577,27 +749,27 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						</th>
 					</tr>
 					<!-- Signature !-->
-					 <tr>
-						<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
-							<?php
-							$ttd1 =  $model->SIG1_SVGBASE64 !='' ? '<img style="width:80; height:40px" src='.$model->SIG1_SVGBASE64.'></img>':'';
-								?>
-							  <?= $ttd1 ?>;
+					<tr>
+					 <th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
+						 <?php
+						 $ttd1 =  $model->SIG1_SVGBASE64 !='' ? '<img style="width:80; height:40px" src='.$model->SIG1_SVGBASE64.'></img>':'';
+							 ?>
+							 <?= $ttd1 ?>;
 
-						</th>
-						<th class="col-md-1" style="text-align: center; vertical-align:middle">
-							<?php
-								$ttd2 =  $model->SIG2_SVGBASE64 !='' ? '<img style="width:80; height:40px" src='.$model->SIG2_SVGBASE64.'></img>':'';
-								echo $ttd2;
-							?>
-						</th>
-						<th  class="col-md-1" style="text-align: center; vertical-align:middle">
-							<?php
-									$ttd3 = $model->SIG3_SVGBASE64 !='' ? '<img style="width:80; height:40px" src='.$model->SIG3_SVGBASE64.'></img>':'';
-								  echo $ttd3;
-							?>
-						</th>
-					</tr>
+					 </th>
+					 <th class="col-md-1" style="text-align: center; vertical-align:middle">
+						 <?php
+							 $ttd2 =  $model->SIG2_SVGBASE64 !='' ? '<img style="width:80; height:40px" src='.$model->SIG2_SVGBASE64.'></img>':'';
+							 echo $ttd2;
+						 ?>
+					 </th>
+					 <th  class="col-md-1" style="text-align: center; vertical-align:middle">
+						 <?php
+								 $ttd3 = $model->SIG3_SVGBASE64 !='' ? '<img style="width:80; height:40px" src='.$model->SIG3_SVGBASE64.'></img>':'';
+								 echo $ttd3;
+						 ?>
+					 </th>
+				 </tr>
 					<!--Nama !-->
 					 <tr>
 						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
@@ -647,7 +819,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			</div>
 		</div>
 	</div>
-		  </div>
+    </div>
 <?php
      $this->registerJs("
         $.fn.modal.Constructor.prototype.enforceFocus = function(){};

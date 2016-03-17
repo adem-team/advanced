@@ -128,6 +128,40 @@ $this->params['breadcrumbs'][] = $this->title;
 		$content = Html::a($label,$url, $options);
 		return $content;
 	}
+	function tombolApproval($url, $Model){
+				$title = Yii::t('app', 'Approved');
+				$options = [ 'id'=>'approved',
+							 'data-pjax' => true,
+							 'data-toggle-approved'=>$Model->ID,
+				];
+				$icon = '<span class="glyphicon glyphicon-ok"></span>';
+				$label = $icon . ' ' . $title;
+				return '<li>' . Html::a($label, '' , $options) . '</li>';
+	}
+
+	function tombolReject($url, $Model) {
+				$title = Yii::t('app', 'Reject');
+				$options = [ 'id'=>'reject',
+							 'data-pjax'=>true,
+							 'data-toggle-reject' =>$Model->ID
+				];
+				$icon = '<span class="glyphicon glyphicon-ok"></span>';
+				$label = $icon . ' ' . $title;
+				$options['tabindex'] = '-1';
+				return '<li>' . Html::a($label, '' , $options) . '</li>' ;
+	}
+
+	function tombolCancel($url, $Model) {
+				$title = Yii::t('app', 'cancel');
+				$options = [ 'id'=>'cancel',
+							 'data-pjax'=>true,
+							 'data-toggle-cancel' =>$Model->ID
+				];
+				$icon = '<span class="glyphicon glyphicon-ok"></span>';
+				$label = $icon . ' ' . $title;
+				$options['tabindex'] = '-1';
+				return '<li>' . Html::a($label, '' , $options) . '</li>' ;
+	}
 
 
 ?>
@@ -141,7 +175,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				<?php echo Html::img('@web/upload/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
 			</div>
 			<div class="col-md-9" style="padding-top:15px;">
-				<h3 class="text-center"><b> <?= $model->NM_TERM ?> <?php echo date('Y')  ?> </b></h3>
+				<h3 class="text-center"><b> <?php echo ucwords($model->NM_TERM) ?> </b></h3>
 			</div>
 			<div class="col-md-12">
 				<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
@@ -268,14 +302,52 @@ $this->params['breadcrumbs'][] = $this->title;
 						'columns'=>[
 							['content'=>'ITEMS TRAIDE INVESTMENT', 'options'=>['colspan'=>3,'class'=>'text-center info',]],
 							['content'=>'PLAN BUDGET', 'options'=>['colspan'=>2, 'class'=>'text-center info']],
-							['content'=>'ACTUAL BUDGET', 'options'=>['colspan'=>2, 'class'=>'text-center info']],
+							['content'=>'ACTUAL BUDGET', 'options'=>['colspan'=>3, 'class'=>'text-center info']],
 							['content'=>'', 'options'=>['colspan'=>1, 'class'=>'text-center info']],
 							//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']],
 						],
 					]
 				],
 				'columns' =>[
+					[	//COL-0
+						'class'=>'kartik\grid\ActionColumn',
+						'dropdown' => true,
+						'template' => '{approved} {reject} {cancel}',
+						'dropdownOptions'=>['class'=>'pull-left dropdown'],
+						//'headerOptions'=>['class'=>'kartik-sheet-style'],
+						'buttons' => [
+							'approved' => function ($url, $Model) {
+												return tombolApproval($url, $Model);
+										},
+							/* Reject RO | Permissian Status 4; | Dept = Dept login | GF >= M */
+							'reject' => function ($url, $Model) {
+												return tombolReject($url, $Model);
 
+										},
+							'cancel' => function ($url, $Model) {
+													return tombolCancel($url, $Model);
+
+													},
+						],
+						'headerOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'100px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+								'background-color'=>'rgba(247, 245, 64, 0.6)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'100px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+								'background-color'=>'rgba(247, 245, 64, 0.6)',
+							]
+						],
+					],
 					[
 						'class'=>'kartik\grid\SerialColumn',
 						'contentOptions'=>['class'=>'kartik-sheet-style'],
@@ -329,55 +401,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						],
 
 					],
-					[	//COL-3
-						/* Attribute Request KD_COSTCENTER */
-						// 'class'=>'kartik\grid\EditableColumn',
-						'attribute'=>'KD_COSTCENTER',
-						'label'=>'CostCenter',
-						'vAlign'=>'middle',
-						// 'hAlign'=>'center',
-						'mergeHeader'=>true,
-						'headerOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'60px',
-								'font-family'=>'tahoma',
-								'font-size'=>'8pt',
-								 'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-									'text-align'=>'center',
-									'width'=>'60px',
-									'font-family'=>'tahoma',
-									'font-size'=>'8pt',
-									//'border-right'=>'0px',
-							]
-						],
-						'pageSummaryOptions' => [
-							'style'=>[
-									'border-left'=>'0px',
-									'border-right'=>'0px',
-							]
-						],
-						// 'editableOptions' => [
-						// 	'header' => 'Cost Center',
-						// 	'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
-						// 	'size' => 'md',
-						// 	'options' => [
-						// 		'data' => ArrayHelper::map(Costcenter::find()->where('KD_COSTCENTER IN ("1000","1001")' )->all(), 'KD_COSTCENTER', 'NM_COSTCENTER'),
-						// 		'pluginOptions' => [
-						// 			//'min'=>0,
-						// 			//'max'=>5000,
-						// 			'allowClear' => true,
-						// 			'class'=>'pull-top dropup'
-						// 		],
-						// 	],
-						// 	//Refresh Display
-						// 	'displayValueConfig' => ArrayHelper::map(Costcenter::find()->all(), 'KD_COSTCENTER', 'KD_COSTCENTER'),
-						// ],
-					],
+
 					[
 						'attribute' => 'PERIODE_END',
 						'label'=>'Periode',
@@ -403,9 +427,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							]
 						],
 						'pageSummary'=>function ($summary, $data, $widget){
-							 return '<div> Total :</div>
-							 				<div> PPN :</div>
-							 				<div> PPH23 :</div>';
+							 return '<div> Total :</div>';
 							},
 						'pageSummaryOptions' => [
 							'style'=>[
@@ -418,7 +440,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						],
 					],
 					[	//COL-9
-						'class'=>'kartik\grid\FormulaColumn',
+						// 'class'=>'kartik\grid\FormulaColumn',
 						'header'=>'BUDGET_PLAN',
 						'attribute'=>'BUDGET_PLAN',
 						'mergeHeader'=>true,
@@ -438,7 +460,7 @@ $this->params['breadcrumbs'][] = $this->title;
 								'width'=>'150px',
 								'font-family'=>'tahoma',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(0, 95, 218, 0.3)',
+								'background-color'=>'rgba(97, 211, 96, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -452,56 +474,35 @@ $this->params['breadcrumbs'][] = $this->title;
 						'pageSummaryFunc'=>GridView::F_SUM,
 						'pageSummary'=>true,
 						'format'=>['decimal', 2],
-						'pageSummary'=>function ($summary, $data, $widget) use ($Model)	{
-								/*
-								 * Calculate SUMMARY TOTAL
-								 * @author ptrnov  <piter@lukison.com>
-								 * @since 1.1
-								 */
-								$Total=$summary!=''? $summary : 0.00;
-								if($Model->PPN =='')
+						'pageSummary'=>function ($summary, $data, $widget) use($model2,$dataProvider1)	{
+							$model=$dataProvider1->getModels();
+							/*
+							 * Calculate SUMMARY TOTAL
+							 * @author wawan
+							 * @since 1.0
+							 */
+						    $baris = count($model);
+								if($baris == 0)
 								{
-									$ttlpp = $Model->PPN = 0.00;
+									$total = $summary =  0.00;
+									$ttlSubtotal=number_format($total,2);
+									return '<div>'.$ttlSubtotal.'</div'
+									;
 								}
 								else{
-									$ttlpp = ($Model->PPN*$Total)/100;
-								}
+										$total = $model2;
+										$ttlSubtotal=number_format($total,2);
+									return '<div>'.$ttlSubtotal.'</div>'
 
-								if($Model->PPH23 =='')
-								{
-										$ttlpph = $Model->PPH23 = 0.00;
+									;
 								}
-								else{
-										$ttlpph = ($Model->PPH23*$Total)/100;
-								}
-								// $ttlpp = $Model->PPN!=''?$Model->PPN :0.00;
-								// $ttlpph = $Model->PPH23!=''?$Model->PPH23 :0.00;
-
-								// $ttlDiscount=$poHeader->DISCOUNT!=0 ? ($poHeader->DISCOUNT/100) * $subTotal:0.00;
-								// $ttlTax = $poHeader->PAJAK!=0 ? ($poHeader->PAJAK / 100) * $subTotal  :0.00;
-								// $ttlDelivery=$poHeader->DELIVERY_COST!=0 ? $poHeader->DELIVERY_COST:0.00;
-								// $grandTotal=($subTotal + $ttlTax + $ttlDelivery) - $ttlDiscount;
 
 								/*SEND TO DECIMAL*/
 								$ttlSubtotal=number_format($Total,2);
-								// print_r($ttlSubtotal);
-								// die();
-								// $totalppn = ($Total*10)/100;
-								// print_r($totalppn);
-								// die();
-								$ttlppn=number_format($ttlpp,2);
-								$ttlpph23=number_format($ttlpph,2);
-								// $ttlDeliveryF=number_format($ttlDelivery,2);
-								// $grandTotalF=number_format($grandTotal,2);
-								/*
-								 * DISPLAY SUMMARY TOTAL
-								 * LINK Modal Editing Discount | tax
-								 * @author ptrnov  <piter@lukison.com>
-								 * @since 1.1
-								 */
-								return '<div>'.$ttlSubtotal.'</div>
-											  <div>'.$ttlppn.'</div>
-												<div>'.$ttlpph23.'</div>';
+
+
+								return '<div>'.$ttlSubtotal.'</div>';
+
 						},
 						'pageSummaryOptions' => [
 							'style'=>[
@@ -560,6 +561,80 @@ $this->params['breadcrumbs'][] = $this->title;
 							]
 						 ],
 					],
+					[
+						'attribute' => 'PROGRAM',
+						'label'=>'PROGRAM',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
+						'headerOptions'=>[
+							'style'=>[
+								 'width'=>'25%',
+								 'text-align'=>'center',
+								 'font-family'=>'tahoma, arial, sans-serif',
+								 'font-size'=>'9pt',
+								 'background-color'=>'rgba(97, 211, 96, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								 'text-align'=>'left',
+								 'width'=>'25%',
+								 'font-family'=>'tahoma, arial, sans-serif',
+								 'font-size'=>'9pt',
+							]
+						],
+
+						'pageSummaryOptions' => [
+							'style'=>[
+								'font-family'=>'tahoma',
+								'font-size'=>'8pt',
+								'text-align'=>'right',
+								'border-left'=>'0px',
+							]
+						],
+
+					],
+					[	//COL-3
+						/* Attribute Request KD_COSTCENTER */
+						// 'class'=>'kartik\grid\EditableColumn',
+						'attribute'=>'KD_COSTCENTER',
+						'label'=>'CostCenter',
+						'vAlign'=>'middle',
+						// 'hAlign'=>'center',
+						// 'mergeHeader'=>true,
+						'headerOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'60px',
+								'font-family'=>'tahoma',
+								'font-size'=>'8pt',
+								 'background-color'=>'rgba(97, 211, 96, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+									'text-align'=>'center',
+									'width'=>'60px',
+									'font-family'=>'tahoma',
+									'font-size'=>'8pt',
+							]
+						],
+						'pageSummaryOptions' => [
+							'style'=>[
+								'font-family'=>'tahoma',
+								'font-size'=>'8pt',
+								'text-align'=>'right',
+								'border-left'=>'0px',
+							]
+						],
+						'pageSummary'=>function ($summary, $data, $widget){
+							 return '<div> Total:</div>
+											<div> PPN :</div>
+											<div> PPH23 :</div>
+											<div> Sub Total:</div>'
+											;
+							},
+					],
 					[	//BUDGET_ACTUAL
 						//COL
 						// 'class'=>'kartik\grid\EditableColumn',
@@ -601,9 +676,50 @@ $this->params['breadcrumbs'][] = $this->title;
 								 'font-family'=>'tahoma',
 								 'font-size'=>'8pt',
 								 'text-align'=>'right',
-								 'border-left'=>'0px',
+								//  'border-left'=>'0px',
 							]
 						],
+						'pageSummary'=>function ($summary, $data, $widget) use($dataProvider1,$model2,$modelnewaprov)	{
+								$model=$dataProvider1->getModels();
+								/*
+								 * Calculate SUMMARY TOTAL
+								 * @author ptrnov  <piter@lukison.com>
+								 * @since 1.1
+								 */
+							$baris = count($model);
+						if($baris == 0)
+						{
+							$defaultppn = $model[0]['PPN'] = 0.00;
+							$ppn = number_format($defaultppn,2);
+							$defaultpph23 = $model[0]['PPH23'] = 0.00;
+							$pph23 = number_format($defaultpph23,2);
+							$total = $summary =  0.00;
+							$ttlSubtotal=number_format($total,2);
+							$total = $summary =  0.00;
+							$Subtotal=number_format($total,2);
+							return '<div>'.$ttlSubtotal.'</div>
+											<div>'.$ppn.'</div>
+											<div>'.$pph23.'</div>
+											<div>'.$Subtotal.'</div>'
+							;
+						}
+						else{
+								$id =  $model[0]['ID_TERM'];
+								$ttlSubtotal = $modelnewaprov;
+								$defaultpph23=$model!=''?($model[0]['PPH23']*$ttlSubtotal)/100:0.00;
+								$pph23 = number_format($defaultpph23,2);
+								$defaultppn=$model!=''?($model[0]['PPN']*$ttlSubtotal)/100:0.00;
+								$ppn =  number_format($defaultppn,2);
+								$Subtotal = ($ttlSubtotal+$ppn)-$pph23;
+								$Totalsub = number_format($Subtotal,2);
+								return '<div>'.$ttlSubtotal.'</div>
+												<div>'.$ppn.'</div>
+												<div>'.$pph23.'</div>
+												<div>'.$Totalsub.'</div>'
+							;
+						}
+
+					}
 					],
 
 					[	//PERCENT ACTUAL
@@ -651,36 +767,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							]
 						 ],
 					],
-					[
-						'attribute' => 'PROGRAM',
-						'label'=>'PROGRAM',
-						'hAlign'=>'left',
-						'vAlign'=>'middle',
-						'headerOptions'=>[
-							'style'=>[
-								 'width'=>'25%',
-								 'text-align'=>'center',
-								 'font-family'=>'tahoma, arial, sans-serif',
-								 'font-size'=>'9pt',
-								 'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								 'text-align'=>'left',
-								 'width'=>'25%',
-								 'font-family'=>'tahoma, arial, sans-serif',
-								 'font-size'=>'9pt',
-							]
-						],
-						'pageSummaryOptions' => [
-							'style'=>[
-								 'border-left'=>'0px',
-								 'border-right'=>'0px',
-							]
-						],
 
-					],
 					[
 						'attribute'=>'STATUS',
 						'label'=>'Status',
