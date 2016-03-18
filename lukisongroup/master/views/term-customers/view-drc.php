@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		];
 		$icon = '<span class="fa fa-print fa-fw"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/master/term-customers/cetakpdf','id'=>$model->ID_TERM]);
+		$url = Url::toRoute(['/master/term-customers/cetakpdf-act','id'=>$model->ID_TERM]);
 		$content = Html::a($label,$url, $options);
 		return $content;
 	}
@@ -129,6 +129,33 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			</dl>
 		</div>
 	</div>
+
+	<!-- Invoce Number  -->
+	<div class="row">
+		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+			<div>
+				 <!-- echo INVOCE($model); ?> -->
+			</div>
+			<dl>
+				<dt><h6><u><b> Invoice Nomer :</b></u></h6></dt>
+				<dd> <?= $model->NOMER_INVOCE ?></dd>
+			</dl>
+		</div>
+	</div>
+	<!-- Faktur Pajak Number  -->
+	<div class="row">
+		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+			<div>
+				 <!-- echo Faktur($model); ?> -->
+			</div>
+			<dl>
+				<dt><h6><u><b> Nomer Faktur Pajak :</b></u></h6></dt>
+				<dd> <?= $model->NOMER_FAKTURPAJAK ?></dd>
+			</dl>
+		</div>
+	</div>
+
+
 
 	<!-- TARGET !-->
     <div class="row">
@@ -685,6 +712,24 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				// 	'export' =>false,
 				// ]);
 			?>
+		</div>
+	</div>
+
+	<!-- PO Note !-->
+	<div  class="row">
+		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
+			<dt><b>General Notes :</b></dt>
+			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
+			<div>
+				<div style="float:right;text-align:right;">
+					  <!-- echo PoNote($model); ?> -->
+				</div>
+				<div style="margin-left:5px">
+					<dd> <?php echo $model->KETERANGAN; ?></dd>
+					<dt>Invoice exchange can be performed on Monday through Tuesday time of 09:00AM-16:00PM</dt>
+				</div>
+			</div>
+			<hr style="height:1px;margin-top: 1px;">
 		</div>
 	</div>
 

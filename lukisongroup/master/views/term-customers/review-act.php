@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\helpers\ArrayHelper;;
+use yii\helpers\ArrayHelper;
 use lukisongroup\master\models\Terminvest;
 use lukisongroup\master\models\Termgeneral;
 use lukisongroup\master\models\Customers;
@@ -253,7 +253,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		];
 		$icon = '<span class="fa fa-print fa-fw"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/master/term-customers/cetakpdf','id'=>$model->ID_TERM]);
+		$url = Url::toRoute(['/master/term-customers/cetakpdf-act','id'=>$model->ID_TERM]);
 		$content = Html::a($label,$url, $options);
 		return $content;
 	}
@@ -390,6 +390,8 @@ $this->params['breadcrumbs'][] = $this->title;
 			</dl>
 		</div>
 	</div>
+
+	<!-- Invoce Number  -->
 	<div class="row">
 		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 			<div>
@@ -401,7 +403,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			</dl>
 		</div>
 	</div>
-
+	<!-- Faktur Pajak Number  -->
 	<div class="row">
 		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 			<div>

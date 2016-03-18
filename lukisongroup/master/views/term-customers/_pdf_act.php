@@ -2,6 +2,8 @@
 <?php
 use yii\helpers\Html;
 use kartik\grid\GridView;
+use yii\helpers\ArrayHelper;
+use lukisongroup\purchasing\models\pr\Costcenter;
 
 ?>
 
@@ -10,7 +12,7 @@ use kartik\grid\GridView;
     <?php echo Html::img('@web/img_setting/kop/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
   </div>
   <div style="padding-top:40px;">
-    <h4 class="text-left"><b><?php echo ucfirst($data->NM_TERM ) ?> </b></h4>
+    <h4 class="text-left"><b><?php echo ucwords($data->NM_TERM) ?> </b></h4>
   </div>
 
   <hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
@@ -34,6 +36,14 @@ use kartik\grid\GridView;
 			<td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> Term of Payment</td>
 			<td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:15px"> <?= $data->TOP  ?></td>
 		</tr>
+    <tr>
+      <td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> Invoce Number</td>
+      <td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:15px"> <?= $data->NOMER_INVOCE  ?></td>
+    </tr>
+    <tr>
+      <td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> Faktur Pajak Number</td>
+      <td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:15px"> <?= $data->NOMER_FAKTURPAJAK  ?></td>
+    </tr>
 		<tr>
 			<td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px; vertical-align:top"> Trade Investment</td>
 			<td style="width:30%; padding-left:20px; padding-top:15px; padding-bottom:15px;padding-right:15px">
@@ -304,6 +314,47 @@ use kartik\grid\GridView;
 										   'border-left'=>'0px',
 										]
 									],
+                  'pageSummary'=>function ($summary, $data, $widget) use($dataProvider,$modelnewaprov)	{
+                      $model=$dataProvider->getModels();
+                      /*
+                       * Calculate SUMMARY TOTAL
+                       * @author wawan
+                       * @since 1.0
+                       */
+                    $baris = count($model);
+                  if($baris == 0)
+                  {
+                    $defaultppn = $model[0]['PPN'] = 0.00;
+                    $ppn = number_format($defaultppn,2);
+                    $defaultpph23 = $model[0]['PPH23'] = 0.00;
+                    $pph23 = number_format($defaultpph23,2);
+                    $total = $summary =  0.00;
+                    $ttlSubtotal=number_format($total,2);
+                    $total = $summary =  0.00;
+                    $Subtotal=number_format($total,2);
+                    return '<div>'.$ttlSubtotal.'</div>
+                            <div>'.$ppn.'</div>
+                            <div>'.$pph23.'</div>
+                            <div>'.$Subtotal.'</div>'
+                    ;
+                  }
+                  else{
+                      $id =  $model[0]['ID_TERM'];
+                      $ttlSubtotal = $modelnewaprov;
+                      $defaultpph23=$model!=''?($model[0]['PPH23']*$ttlSubtotal)/100:0.00;
+                      $pph23 = number_format($defaultpph23,2);
+                      $defaultppn=$model!=''?($model[0]['PPN']*$ttlSubtotal)/100:0.00;
+                      $ppn =  number_format($defaultppn,2);
+                      $Subtotal = ($ttlSubtotal+$ppn)-$pph23;
+                      $Totalsub = number_format($Subtotal,2);
+
+                      return '<div>'.$ttlSubtotal.'</div>
+                              <div>'.$ppn.'</div>
+                              <div>'.$pph23.'</div>
+                              <div>'.$Totalsub.'</div>'
+                      ;
+                  }
+                }
 							   ],
 							   [	//BUDGET_ACTUAL PERCENT
 									//coll
@@ -404,7 +455,7 @@ use kartik\grid\GridView;
 							  <p style="border:0px;">Planing Running Rate base on percentage
 							  <br>Total Trade Investment    : RP. <?= $data->TARGET_VALUE ?>
 							  <?php
-							  if( $datasum['BUDGET_PLAN'] == '' || $data->TARGET_VALUE = '')
+							  if( $datasum['BUDGET_PLAN'] == '' || $data->TARGET_VALUE == '')
 							  {
 								$percentage = 0.00;
 							  }
@@ -453,11 +504,16 @@ use kartik\grid\GridView;
 			<td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> Growth </td>
 			<td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> <?= $data->GROWTH ?> % </td>
 		</tr>
-		<tr>
+		<!-- <tr>
 		   <td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> General Terms/Aturan
-				<br><?= $term['SUBJECT'] ?>
+				<br> $term['SUBJECT'] ?>
 		   </td>
-		   <td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> <?= $term['ISI_TERM'] ?></td>
+		   <td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> < $term['ISI_TERM'] ?></td>
+		</tr> -->
+
+    <<tr>
+			<td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> General Note </td>
+			<td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> <?= $data->KETERANGAN ?> </td>
 		</tr>
 	</table>
 

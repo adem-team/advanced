@@ -147,7 +147,7 @@ function review($url,$model)
     $options1['tabindex'] = '-1';
     return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
   }
-  elseif(getPermission()->BTN_REVIEW == 1 && $model->SIG2_NM == "none"  || getPermission()->BTN_REVIEW == 1 && $model->SIG1_NM == "none" ){
+  elseif(getPermission()->BTN_REVIEW == 1 && $model->SIG2_NM == "none"  || getPermission()->BTN_REVIEW == 1 && $model->SIG1_NM == "none" || getPermission()->BTN_REVIEW == 1 && $model->SIG3_NM == "none" ){
     $title1 = Yii::t('app', 'Review');
     $options1 = [ 'id'=>'term-Review',
     ];
@@ -159,22 +159,6 @@ function review($url,$model)
   }
 
 }
-
-
-// $data = Termcustomers::find()->all();
-// $to = "CUST_KD";
-// $from = "cus.CUST_NM";
-// $val = ArrayHelper::map($data, $to,$from);
-//
-// $data1 = Termcustomers::find()->all();
-// $to1 = "PRINCIPAL_KD";
-// $from1 = "corp.CORP_NM";
-// $val1 = ArrayHelper::map($data1, $to1,$from1);
-//
-// $data2 = Termcustomers::find()->all();
-// $to2 = 'DIST_KD';
-// $from2 = "dis.NM_DISTRIBUTOR";
-// $val2 = ArrayHelper::map($data2, $to2, $from2);
 
 $gridColumns = [
     [

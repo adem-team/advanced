@@ -862,6 +862,8 @@ class TermCustomersController extends Controller
       $data1 = Termbudget::findBySql($sql)->all();
       $sqlsum = "SELECT SUM(BUDGET_PLAN) as BUDGET_PLAN,SUM(BUDGET_ACTUAL) as BUDGET_ACTUAL from c0005 where ID_TERM='".$id."'";
       $datasum = Termbudget::findBySql($sqlsum)->one();
+      $sql1 = "SELECT SUM(BUDGET_ACTUAL) as Total from c0005 where  (ID_TERM='" .$id. "' AND STATUS =1) OR (STATUS =0 AND ID_TERM='" .$id. "')";
+      $modelnewaprov = Yii::$app->db3->createCommand($sql1)->queryscalar();
 
      $dataProvider = new ArrayDataProvider([
        'key' => 'ID_TERM',
@@ -871,7 +873,7 @@ class TermCustomersController extends Controller
        ],
         ]);
 
-      $content = $this->renderPartial( '_pdf', [
+      $content = $this->renderPartial( '_pdf_act', [
         'data' => $data,
         'datainternal'=>$datainternal,
         'datacus'=>  $datacus,
@@ -879,7 +881,8 @@ class TermCustomersController extends Controller
         'datacorp'=>$datacorp,
         'term'=>$term,
         'datasum'=>$datasum,
-        'dataProvider'=>$dataProvider
+        'dataProvider'=>$dataProvider,
+        'modelnewaprov'=>$modelnewaprov
 
           ]);
 

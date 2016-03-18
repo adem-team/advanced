@@ -26,16 +26,6 @@ $this->title = Yii::t('app', 'ESM - Group');          /* title pada header page 
 $this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
 
-	$aryStt= [
-		  ['STATUS' => 0, 'STT_NM' => 'DISABLE'],
-		  ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
-	];
-	$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
-
-	$query = Schedulegroup::find()->all();
-
-	$data =  ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
-
 
 	/*
 	 * GRIDVIEW Group CUSTOMER
@@ -174,7 +164,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					'buttons' => [
 							'view' =>function($url, $model, $key){
 									return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
-																['/master/barang/view','id'=>$model->ID],[
+																['/master/schedule-group/view','id'=>$model->ID],[
 																'data-toggle'=>"modal",
 																'data-target'=>"#modal-view",
 																'data-title'=> '',//$model->KD_BARANG,
@@ -472,6 +462,30 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 
 $this->registerJs("
 	 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+	 $('#modal-view').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget)
+		var modal = $(this)
+		var title = button.data('title')
+		var href = button.attr('href')
+		//modal.find('.modal-title').html(title)
+		modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+		$.post(href)
+			.done(function( data ) {
+				modal.find('.modal-body').html(data)
+			});
+		})
+",$this::POS_READY);
+	Modal::begin([
+			'id' => 'modal-view',
+	'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+	'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+	],
+	]);
+	Modal::end();
+
+$this->registerJs("
+	 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
 	 $('#modal-create').on('show.bs.modal', function (event) {
 		var button = $(event.relatedTarget)
 		var modal = $(this)
@@ -536,12 +550,19 @@ $this->registerJs("
           <h4 class="modal-title">Group Customers</h4>
         </div>
         <div class="modal-body">
+
 					<?php
 					$form = ActiveForm::begin([
 						'id'=>'mapping',
 					]);
 					?>
 					<input type="hidden"  name= custkd id="tes">
+					<div class="form-group">
+    			<label for="pwd">Nama Customers:</label>
+    			<input type="text" class="form-control" id="cusnm" readonly="true">
+					<label for="pwd">Alamat:</label>
+					<input type="text" class="form-control" id="alam" readonly="true">
+  				</div>
 					<?php  echo '<label class="control-label">Group Name </label>';  ?>
 					<?= Select2::widget([
     			'name' => 'group',
@@ -552,10 +573,8 @@ $this->registerJs("
     					],
 					]) ?>
 
-					<div class="form-group">
-					  <!-- Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?> -->
 
-				</div>
+
         <div class="modal-footer">
 					  <?= Html::submitButton('SAVE',['class' => 'btn btn-primary','id'=>'btn']); ?>
 							<?php ActiveForm::end(); ?>
@@ -634,6 +653,8 @@ $this->registerJs("
 																 });
 					google.maps.event.addListener(public_markers[i], 'click', function (event) {
 									 																		$('#tes').val(point.CUST_KD);
+																											$('#cusnm').val(point.CUST_NM);
+																											$('#alam').val(point.ALAMAT);
 									 																		 $('#myModal').modal();
 									 																	 });
 
