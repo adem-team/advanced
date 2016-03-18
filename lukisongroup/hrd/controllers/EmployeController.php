@@ -147,7 +147,7 @@ class EmployeController extends Controller
 		/*	variable content View Additional Author: -ptr.nov- */ 
 		//$searchFilter = $searchModel->searchALL(Yii::$app->request->queryParams);
         $searchModel1 = new EmployeSearch();
-        $dataProvider1 = $searchModel->search_resign(Yii::$app->request->queryParams);
+        $dataProvider1 = $searchModel1->search_resign(Yii::$app->request->queryParams);
 		
 		/*SHOW ARRAY YII Author: -Devandro-*/
 		//print_r($dataProvider->getModels());
@@ -673,6 +673,7 @@ class EmployeController extends Controller
 					]
 				],					
 		];
+		//return array_merge($attDinamik,$this->gvColumn());
 		return array_merge($attDinamik,$this->gvColumn());
 	}
 	
@@ -717,7 +718,7 @@ class EmployeController extends Controller
 		foreach($this->gvAttribute() as $key =>$value[]){
 			$filterWidgetOpt='';
 			if ($value[$key]['FIELD']=='corpOne.CORP_NM'){				
-				$gvfilterType=GridView::FILTER_SELECT2;
+				//$gvfilterType=GridView::FILTER_SELECT2;
 				//$gvfilterType=false;
 				$gvfilter =$this->aryCorp();
 				 // $filterWidgetOpt=[				

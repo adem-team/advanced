@@ -8,16 +8,44 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use kartik\icons\Icon;
 use dmstr\widgets\Alert;
+use yii\helpers\Json;
+use yii\helpers\Url;
+use yii\web\JsExpression;
 use lukisongroup\sistem\models\UserloginSearch;
 use lukisongroup\sistem\models\M1000;			
 //use lukisongroup\assets\AppAsset;
 use mdm\admin\components\MenuHelper;
 use yii\bootstrap\Modal;
+use machour\yii2\notifications\widgets\NotificationsWidget;
+use common\components\Notification;
+//use lukisongroup\models\Notification;
 //AppAsset::register($this);
 dmstr\web\AdminLteAsset::register($this);
 use lukisongroup\assets\AppAsset_style;
 AppAsset_style::register($this);
 
+$recipient_id=1;
+//Notification::notify(Notification::KEY_NEW_MESSAGE, $recipient_id, 1);
+//Notification::warning(Notification::KEY_NEW_MESSAGE, $recipient_id, 1);
+//NotificationsWidget::THEME_GROWL:
+$test=NotificationsWidget::widget([
+	'theme' => NotificationsWidget::THEME_GROWL,
+	'clientOptions' => [
+		'location' => 'br',
+	], 
+	'counters' => [
+		//'.notifications-header-count',
+		//'.notifications-icon-count',
+		'.notifications-count'
+	],
+	'clientOptions' => [
+		  'size' => 'large',
+	  ],
+	'listSelector' => '#notifications',
+	]);		
+//$userid=Yii::$app->user->identity->id;
+//print_r($test.$userid);
+//die();
 ?>
 <?php $this->beginPage() ?>
 	<!DOCTYPE html>
@@ -95,14 +123,59 @@ AppAsset_style::register($this);
                                     // echo  \yii\helpers\Json::encode($menuItems);
                                     if (!Yii::$app->user->isGuest) {
                                         //$menuItems  = MenuHelper::getAssignedMenu(Yii::$app->user->id);
-                                        $menuItems = MenuHelper::getAssignedMenu(Yii::$app->user->id, null, $callback);
+                                        $menuItems = MenuHelper::getAssignedMenu(Yii::$app->user->id, null, $callback);										
                                         $menuItems[] = [
                                             'label' => Icon::show('power-off') ,//. 'Logout',// (' . Yii::$app->user->identity->username . ')',
                                             //'label' => Icon::showStack('twitter', 'square-o', ['class'=>'fa-lg']) . 'Logout (' . Yii::$app->user->identity->username . ')',
                                             'url' => ['/site/logout'],
                                             'linkOptions' => ['data-method' => 'post']
                                         ];
-
+										$menuItems[] ='<li class="dropdown messages-menu">
+														<a href="#" class="dropdown-toggle" data-toggle="dropdown1">
+															<i class="fa fa-envelope-o"></i>
+															<span class="label label-success">1</span>
+														</a>
+														<ul class="dropdown-menu">
+															<li class="header">You have 1 notification(s)</li>
+															<li>
+																<!-- inner menu: contains the actual data -->
+																<ul class="menu">
+																	<li>
+																		<a href="#">
+																			<i class="ion ion-ios7-people info"></i> Welcome to Phundament 4!
+																		</a>
+																	</li>
+																</ul>
+															</li>
+														</ul>
+													</li>';
+										 $menuItems[] =NotificationsWidget::widget([
+														'theme' => NotificationsWidget::THEME_NOTIFY,
+														'clientOptions' => [
+															'location' => 'br',
+														],
+														'counters' => [
+															'.notifications-header-count',
+															'.notifications-icon-count',
+															'.notifications-count'
+														],
+														'clientOptions' => [
+															  'size' => 'large',
+														  ],
+														'listSelector' => '#notifications',
+													]);			
+										$menuItems[] ='<li class="dropdown notifications-menu">
+														<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+															<i class="fa fa-bell-o full-right"></i>
+															<span class="label label-warning notifications-icon-count">0</span>
+														</a>
+														<ul class="dropdown-menu">
+															<li class="header">You have <span class="notifications-header-count">0</span> notifications</li>
+															<li>
+																<div id="notifications"></div>
+															</li>
+														</ul>
+													</li>';  
                                         NavBar::begin([
                                             //'brandLabel' => 'LukisonGroup',
                                             //'brandUrl' => Yii::$app->homeUrl,

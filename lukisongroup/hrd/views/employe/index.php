@@ -38,8 +38,8 @@ $tab_employe= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
 		'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],	
-        'columns' => $dinamkkColumn1,		
-        'panel'=>[
+        'columns' => $dinamkkColumn1,
+		'panel'=>[
             //'heading' =>true,// $hdr,//<div class="col-lg-4"><h8>'. $hdr .'</h8></div>',
             'type' =>GridView::TYPE_SUCCESS,
           	'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
