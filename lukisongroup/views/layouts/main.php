@@ -24,28 +24,52 @@ dmstr\web\AdminLteAsset::register($this);
 use lukisongroup\assets\AppAsset_style;
 AppAsset_style::register($this);
 
-$recipient_id=1;
-//Notification::notify(Notification::KEY_NEW_MESSAGE, $recipient_id, 1);
-//Notification::warning(Notification::KEY_NEW_MESSAGE, $recipient_id, 1);
-//NotificationsWidget::THEME_GROWL:
-$test=NotificationsWidget::widget([
-	'theme' => NotificationsWidget::THEME_GROWL,
-	'clientOptions' => [
-		'location' => 'br',
-	], 
-	'counters' => [
-		//'.notifications-header-count',
-		//'.notifications-icon-count',
-		'.notifications-count'
-	],
-	'clientOptions' => [
-		  'size' => 'large',
-	  ],
-	'listSelector' => '#notifications',
-	]);		
-//$userid=Yii::$app->user->identity->id;
-//print_r($test.$userid);
-//die();
+
+	/*
+	 * NOTIFY TRIGER ATAU SET
+	 * @author piter [ptr.nov@gmail.com]
+	 * @since 1.2
+	 * // $message was just created by the logged in user, and sent to $recipient_id
+	 * Notification::notify(Notification::KEY_NEW_MESSAGE, $recipient_id, $message->id);
+	 * // You may also use the following static methods to set the notification type:
+	 * Notification::warning(Notification::KEY_NEW_MESSAGE, $recipient_id, $message->id);
+	 * Notification::success(Notification::ORDER_PLACED, $admin_id, $order->id);
+	 * Notification::error(Notification::KEY_NO_DISK_SPACE, $admin_id);
+	*/
+	//$recipient_id=1;
+	//Notification::notify(Notification::KEY_NEW_MESSAGE, $recipient_id, 2);
+	//Notification::warning(Notification::KEY_NEW_MESSAGE, $recipient_id, 3);
+	
+
+
+	/*
+	 * NOTIFY LISTENER
+	 * @author piter [ptr.nov@gmail.com]
+	 * @since 1.2
+	 * THEME
+	 *	'theme' => NotificationsWidget::THEME_NOTIFY,
+	 *	'theme' => NotificationsWidget::THEME_PNOTIFY,
+	 *	'theme' => NotificationsWidget::THEME_TOASTR,
+	 *	'theme' => NotificationsWidget::THEME_NOTIFIT,
+	 *	'theme' => NotificationsWidget::THEME_NOTY,
+	 *	'theme' => NotificationsWidget::THEME_GROWL,
+	*/
+	NotificationsWidget::widget([
+		'theme' => NotificationsWidget::THEME_PNOTIFY,
+		 'clientOptions' => [
+			'location' => 'id',
+		], 
+		'counters' => [
+			'.notifications-header-count',
+			'.notifications-icon-count',
+			'.notifications-count'
+		],
+		'clientOptions' => [
+			  'size' => 'large',
+		  ],
+		'listSelector' => '#notifications',
+	]);			
+
 ?>
 <?php $this->beginPage() ?>
 	<!DOCTYPE html>
@@ -130,7 +154,8 @@ $test=NotificationsWidget::widget([
                                             'url' => ['/site/logout'],
                                             'linkOptions' => ['data-method' => 'post']
                                         ];
-										$menuItems[] ='<li class="dropdown messages-menu">
+										/*SURAT*/
+										/* $menuItems[] ='<li class="dropdown messages-menu">
 														<a href="#" class="dropdown-toggle" data-toggle="dropdown1">
 															<i class="fa fa-envelope-o"></i>
 															<span class="label label-success">1</span>
@@ -148,22 +173,8 @@ $test=NotificationsWidget::widget([
 																</ul>
 															</li>
 														</ul>
-													</li>';
-										 $menuItems[] =NotificationsWidget::widget([
-														'theme' => NotificationsWidget::THEME_NOTIFY,
-														'clientOptions' => [
-															'location' => 'br',
-														],
-														'counters' => [
-															'.notifications-header-count',
-															'.notifications-icon-count',
-															'.notifications-count'
-														],
-														'clientOptions' => [
-															  'size' => 'large',
-														  ],
-														'listSelector' => '#notifications',
-													]);			
+													</li>';		 */	
+										/*LONCENG*/
 										$menuItems[] ='<li class="dropdown notifications-menu">
 														<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 															<i class="fa fa-bell-o full-right"></i>
@@ -175,7 +186,7 @@ $test=NotificationsWidget::widget([
 																<div id="notifications"></div>
 															</li>
 														</ul>
-													</li>';  
+													</li>';   
                                         NavBar::begin([
                                             //'brandLabel' => 'LukisonGroup',
                                             //'brandUrl' => Yii::$app->homeUrl,
