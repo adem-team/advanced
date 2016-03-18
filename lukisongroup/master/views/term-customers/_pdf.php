@@ -10,7 +10,7 @@ use kartik\grid\GridView;
     <?php echo Html::img('@web/img_setting/kop/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
   </div>
   <div style="padding-top:40px;">
-    <h4 class="text-left"><b><?php echo ucfirst($data->NM_TERM ) ?> </b></h4>
+    <h4 class="text-left"><b><?php echo ucwords($data->NM_TERM ) ?> </b></h4>
   </div>
 
   <hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">

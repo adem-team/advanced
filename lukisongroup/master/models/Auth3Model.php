@@ -76,13 +76,24 @@ class Auth3Model extends Model
   public function auth3_saved(){
 		if ($this->validate()) {
 			$model = Termcustomers::find()->where(['ID_TERM' =>$this->id])->one();
-			// $poSignStt = Statuspo::find()->where(['KD_PO'=>$this->kdpo,'ID_USER'=>$this->getProfile()->EMP_ID])->one();
+			$termSignStt = Statusterm::find()->where(['ID_TERM'=>$this->id,'ID_USER'=>$this->getProfile()->EMP_ID])->one();
 				$model->STATUS = $this->status;
 				$model->SIG3_SVGBASE64 = $this->getProfile()->SIGSVGBASE64;
 				$model->SIG3_SVGBASE30 = $this->getProfile()->SIGSVGBASE30;
 				$model->SIG3_NM = $this->getProfile()->EMP_NM . ' ' . $this->getProfile()->EMP_NM_BLK;
 				$model->SIG3_TGL = date('Y-m-d');
-		    $model->save();
+		    if($model->save())
+        {
+          if(!$termSignStt)
+          {
+            $statusterm = new Statusterm();
+            $statusterm->STATUS = $this->status; //required
+            $statusterm->ID_TERM = $this->id; //required
+            $statusterm->ID_USER = $this->getProfile()->EMP_ID; //required
+            $statusterm->UPDATE_AT =  date('Y-m-d H:m:s');
+            $statusterm->save();
+          }
+        }
 
 			return $model;
 		}

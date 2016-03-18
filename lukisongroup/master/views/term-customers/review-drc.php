@@ -73,7 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		];
 		$icon = '<span class="fa fa-print fa-fw"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/master/term-customers/cetakpdf','id'=>$model->ID_TERM]);
+		$url = Url::toRoute(['/master/term-customers/cetakpdf-act','id'=>$model->ID_TERM]);
 		$content = Html::a($label,$url, $options);
 		return $content;
 	}

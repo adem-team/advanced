@@ -12,6 +12,7 @@ use lukisongroup\master\models\SchedulegroupSearch;
 
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\CustomersSearch;
+use yii\helpers\ArrayHelper;
 
 /**
  * ScheduleGroupController implements the CRUD actions for Schedulegroup model.
@@ -64,10 +65,22 @@ class ScheduleGroupController extends Controller
 		      $searchModelCustGrp = new CustomersSearch();
           $dpListCustGrp = $searchModelCustGrp->searchCustGrp(Yii::$app->request->queryParams);
 
+          $aryStt= [
+              ['STATUS' => 0, 'STT_NM' => 'DISABLE'],
+              ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
+          ];
+          $valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
+
+          $query = Schedulegroup::find()->all();
+
+          $data =  ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
 			      'dpListCustGrp'=>$dpListCustGrp,
+              'data' =>  $data,
+              'valStt' => $valStt
         ]);
     }
 
@@ -78,7 +91,7 @@ class ScheduleGroupController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        return $this->renderAjax('view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -131,28 +144,7 @@ class ScheduleGroupController extends Controller
           }
           // return true;
         }
-        // print_r($model);
-        // die();
-        // $KD = Yii::$app->request->post('custkd');
-        // $group =  Yii::$app->request->post('group');
-        // $model->SCDL_GROUP = $group;
-        // print_r(  $model->SCDL_GROUP );
-        // die();
-        // if ( $model->save()) {
-        //   # code..
-        //     return $this->redirect(['index']);
-        // }
-        //  $model->save();
 
-        // print_r( $model->getErrors());
-        // die();
-
-          // if($model->validate())
-          // {
-          //   $model->CREATE_BY = Yii::$app->user->identity->username;
-          //   $model->CREATE_AT =  date("Y-m-d H:i:s");
-          //   $model->save();
-          // }
 
 
 
