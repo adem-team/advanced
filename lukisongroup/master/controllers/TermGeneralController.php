@@ -8,6 +8,7 @@ use lukisongroup\master\models\TermgeneralSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * TermGeneralController implements the CRUD actions for Termgeneral model.
@@ -81,18 +82,44 @@ class TermGeneralController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
+
+     public function saveimage($base64)
+     {
+       $base64 = str_replace('data:image/png;base64,', '', $base64);
+          $base64 = base64_encode($base64);
+       print_r($base64);
+       die();
+      //  $base64 = str_replace(' ', '+', $base64);
+      //
+
+
+
+     }
+
     public function actionCreate()
     {
         $model = new Termgeneral();
 
         if ($model->load(Yii::$app->request->post()) ) {
+          //
+          // $base64 = $model->ISI_TERM;
+          //
+           $model->image = UploadedFile::getInstance($model, 'image');
+           $this->saveimage( $model->image);
 
-          if($model->validate())
-          {
-              $model->CREATE_AT = date("Y-m-d H:i:s");
-              $model->CREATE_BY = Yii::$app->user->identity->username;
-              $model->save();
-          }
+          // print_r($model->image);
+          // die();
+          // // print_r($base64);
+          // // die();
+          // $this->saveimage($base64);
+          // if($model->validate())
+          // {
+          //     $model->CREATE_AT = date("Y-m-d H:i:s");
+          //     $model->CREATE_BY = Yii::$app->user->identity->username;
+          //     $model->save();
+          //     print_r(  $model->save());
+          //     die();
+          // }
             return $this->redirect(['index']);
         } else {
             return $this->renderAjax('create', [
@@ -100,6 +127,8 @@ class TermGeneralController extends Controller
             ]);
         }
     }
+
+
 
     /**
      * Updates an existing Termgeneral model.
