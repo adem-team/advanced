@@ -11,13 +11,19 @@ use yii\widgets\ActiveForm;
 <div class="termgeneral-form">
 
     <?php $form = ActiveForm::begin([
+      'options' => ['enctype' => 'multipart/form-data'],
       'id'=>$model->formName(),
-      'enableClientValidation' => true,
+      // 'enableClientValidation' => true,
+      // 'options'=>[
+      //     'enctype' => 'multipart/form-data'
+      // ],
+
     ]); ?>
 
-    <?= $form->field($model, 'SUBJECT')->textInput(['maxlength' => true]) ?>
+     <!-- $form->field($model, 'SUBJECT')->textInput(['maxlength' => true]) ?> -->
+      <?= $form->field($model, 'image')->fileInput(['multiple' => false]) ?>
 
-    <?= $form->field($model, 'ISI_TERM')->textarea(['rows' => 6]) ?>
+    <!-- < $form->field($model, 'ISI_TERM')->textarea(['rows' => 6]) ?> -->
 
     <?php
       if(!$model->IsNewRecord)

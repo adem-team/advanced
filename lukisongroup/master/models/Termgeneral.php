@@ -23,6 +23,7 @@ class Termgeneral extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+public $image;
     public static function tableName()
     {
         return 'c0004';
@@ -39,11 +40,13 @@ class Termgeneral extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+
     public function rules()
     {
         return [
-            [['ISI_TERM','SUBJECT'], 'required'],
-            [['ISI_TERM'], 'string'],
+            // [['ISI_TERM','SUBJECT'], 'required'],
+               [['image'], 'file','extensions' => 'png, jpg'],
+            // [['ISI_TERM'], 'file'],
             [['STATUS'], 'integer'],
             [['CREATE_AT', 'UPDATE_AT'], 'safe'],
             [['SUBJECT'], 'string', 'max' => 255],

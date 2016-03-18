@@ -27,15 +27,16 @@ function getPermissionEmp(){
   }
 }
 function getPermission(){
-  if (Yii::$app->getUserOpt->Modul_akses('3')){
-    return Yii::$app->getUserOpt->Modul_akses('3');
-  }else{
-    return false;
-  }
+    if (Yii::$app->getUserOpt->Modul_akses('3')){
+      return Yii::$app->getUserOpt->Modul_akses('3');
+    }else{
+      return false;
+    }
+
 }
 
 function tombolCreate(){
-  if(getPermission() && getPermission()->BTN_CREATE==1)
+  if(getPermission())
   {
     if(getPermission()->BTN_CREATE==1 && getPermissionEmp()->DEP_ID == 'ACT'){
       $title1 = Yii::t('app', 'Add Term');
@@ -84,29 +85,43 @@ function tombolCreate(){
 //               ]). '</li>' . PHP_EOL;
 function tombolview($url,$model)
 {
-  if( getPermissionEmp()->DEP_ID == 'ACT')
+  if(getPermission())
   {
-    $title1 = Yii::t('app', 'view');
-    $options1 = [ 'id'=>'term-view',
-    ];
-    $icon1 = '<span class="fa fa-plus fa-lg"></span>';
-    $label = $icon1 . ' ' . $title1;
-    $url = Url::toRoute(['/master/term-customers/view-act','id'=>$model->ID_TERM]);
-    $options1['tabindex'] = '-1';
-    return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
-  }
-  elseif (getPermissionEmp()->DEP_ID == 'GM'|| getPermissionEmp()->DEP_ID == 'DRC') {
-    # code...
-    $title1 = Yii::t('app', 'view');
-    $options1 = [ 'id'=>'term-view',
-    ];
-    $icon1 = '<span class="fa fa-plus fa-lg"></span>';
-    $label = $icon1 . ' ' . $title1;
-    $url = Url::toRoute(['/master/term-customers/view-drc','id'=>$model->ID_TERM]);
-    $options1['tabindex'] = '-1';
-    return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
-  }
-  elseif(getPermission()->BTN_VIEW==1){
+    if( getPermissionEmp()->DEP_ID == 'ACT')
+    {
+      $title1 = Yii::t('app', 'view');
+      $options1 = [ 'id'=>'term-view',
+      ];
+      $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+      $label = $icon1 . ' ' . $title1;
+      $url = Url::toRoute(['/master/term-customers/view-act','id'=>$model->ID_TERM]);
+      $options1['tabindex'] = '-1';
+      return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
+    }
+    elseif (getPermissionEmp()->DEP_ID == 'GM'|| getPermissionEmp()->DEP_ID == 'DRC') {
+      # code...
+      $title1 = Yii::t('app', 'view');
+      $options1 = [ 'id'=>'term-view',
+      ];
+      $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+      $label = $icon1 . ' ' . $title1;
+      $url = Url::toRoute(['/master/term-customers/view-drc','id'=>$model->ID_TERM]);
+      $options1['tabindex'] = '-1';
+      return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
+    }
+    elseif(getPermission()->BTN_VIEW==1){
+      $title1 = Yii::t('app', 'view');
+      $options1 = [ 'id'=>'term-view',
+      ];
+      $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+      $label = $icon1 . ' ' . $title1;
+      $url = Url::toRoute(['/master/term-customers/view-term-cus','id'=>$model->ID_TERM]);
+      $options1['tabindex'] = '-1';
+      return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
+    }
+
+  }else {
+
     $title1 = Yii::t('app', 'view');
     $options1 = [ 'id'=>'term-view',
     ];
@@ -115,6 +130,8 @@ function tombolview($url,$model)
     $url = Url::toRoute(['/master/term-customers/view-term-cus','id'=>$model->ID_TERM]);
     $options1['tabindex'] = '-1';
     return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
+    // # code..
+
   }
 
 }
@@ -124,30 +141,41 @@ function tombolview($url,$model)
 
 function review($url,$model)
 {
-
-  if( getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 && $model->SIG3_NM == "none" || getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 &&  $model->SIG2_NM == "none" || getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 && $model->SIG2_NM == "none"  )
+  if(getPermission())
   {
-    $title1 = Yii::t('app', 'Review');
-    $options1 = [ 'id'=>'term-Review',
-    ];
-    $icon1 = '<span class="fa fa-plus fa-lg"></span>';
-    $label = $icon1 . ' ' . $title1;
-    $url = Url::toRoute(['/master/term-customers/review-act','id'=>$model->ID_TERM]);
-    $options1['tabindex'] = '-1';
-    return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
-  }
-  elseif (getPermissionEmp()->DEP_ID == 'GM' && getPermission()->BTN_REVIEW == 1 && $model->SIG3_NM == "none" || getPermissionEmp()->DEP_ID == 'DRC' && getPermission()->BTN_REVIEW==1  && $model->SIG3_NM == "none" ) {
-    # code...
-    $title1 = Yii::t('app', 'Review');
-    $options1 = [ 'id'=>'term-Review',
-    ];
-    $icon1 = '<span class="fa fa-plus fa-lg"></span>';
-    $label = $icon1 . ' ' . $title1;
-    $url = Url::toRoute(['/master/term-customers/review-drc','id'=>$model->ID_TERM]);
-    $options1['tabindex'] = '-1';
-    return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
-  }
-  elseif(getPermission()->BTN_REVIEW == 1 && $model->SIG2_NM == "none"  || getPermission()->BTN_REVIEW == 1 && $model->SIG1_NM == "none" || getPermission()->BTN_REVIEW == 1 && $model->SIG3_NM == "none" ){
+    if( getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 && $model->SIG3_NM == "none" || getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 &&  $model->SIG2_NM == "none" || getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 && $model->SIG2_NM == "none"  )
+    {
+      $title1 = Yii::t('app', 'Review');
+      $options1 = [ 'id'=>'term-Review',
+      ];
+      $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+      $label = $icon1 . ' ' . $title1;
+      $url = Url::toRoute(['/master/term-customers/review-act','id'=>$model->ID_TERM]);
+      $options1['tabindex'] = '-1';
+      return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
+    }
+    elseif(getPermissionEmp()->DEP_ID == 'GM' && getPermission()->BTN_REVIEW == 1 && $model->SIG3_NM == "none" || getPermissionEmp()->DEP_ID == 'DRC' && getPermission()->BTN_REVIEW==1  && $model->SIG3_NM == "none" ) {
+      # code...
+      $title1 = Yii::t('app', 'Review');
+      $options1 = [ 'id'=>'term-Review',
+      ];
+      $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+      $label = $icon1 . ' ' . $title1;
+      $url = Url::toRoute(['/master/term-customers/review-drc','id'=>$model->ID_TERM]);
+      $options1['tabindex'] = '-1';
+      return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
+    }
+    elseif(getPermission()->BTN_REVIEW == 1 && $model->SIG2_NM == "none"  || getPermission()->BTN_REVIEW == 1 && $model->SIG1_NM == "none" || getPermission()->BTN_REVIEW == 1 && $model->SIG3_NM == "none" ){
+      $title1 = Yii::t('app', 'Review');
+      $options1 = [ 'id'=>'term-Review',
+      ];
+      $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+      $label = $icon1 . ' ' . $title1;
+      $url = Url::toRoute(['/master/term-customers/view','id'=>$model->ID_TERM]);
+      // $options1['tabindex'] = '-1';
+      return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
+    }
+  }else{
     $title1 = Yii::t('app', 'Review');
     $options1 = [ 'id'=>'term-Review',
     ];
@@ -156,7 +184,10 @@ function review($url,$model)
     $url = Url::toRoute(['/master/term-customers/view','id'=>$model->ID_TERM]);
     // $options1['tabindex'] = '-1';
     return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
+
   }
+
+
 
 }
 

@@ -209,9 +209,7 @@ WHERE db2.NM_TYPE = 'FDSFDG'
 				$model->KD_BARANG = $kd;
 		if($model->validate())
 		{
-
 				$model->CREATED_BY = Yii::$app->user->identity->username;
-
 				$image = $model->uploadImage();
 		if ($model->save()) {
 			// upload only if valid uploaded file instance found

@@ -35,13 +35,13 @@ class UserProfileController extends Controller
                } else {
                    //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
 				   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
-                   return true; 
+                   return true;
                }
             } else {
                 return true;
             }
     }
-	
+
     public function actionIndex()
     {
 		$model = $this->findModel(Yii::$app->user->identity->EMP_ID);
@@ -50,18 +50,18 @@ class UserProfileController extends Controller
 			'model'=> $model,
 		]);
     }
-	
+
 	/*
 	 * FORM LOGIN UTAMA | FORM CHANGE PASSWORD
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
 	*/
 	public function actionPasswordUtamaView()
-    {	
+    {
 		$validationFormLogin = new ValidationLoginForm();
 		return $this->renderAjax('_changePasswordUtama',[
 					'validationFormLogin'=>$validationFormLogin,
-			]);	
+			]);
 	}
 	/*
 	 * FORM LOGIN UTAMA | SAVE PASSWORD
@@ -69,9 +69,9 @@ class UserProfileController extends Controller
 	 * @since 1.1
 	*/
 	public function actionPasswordUtamaSave()
-    {	
+    {
 		$validationFormLogin = new ValidationLoginForm();
-		
+
 		/*
 		 * Ajax validate Old password Signature
 		 * @author ptrnov  <piter@lukison.com>
@@ -81,8 +81,8 @@ class UserProfileController extends Controller
 			$validationFormLogin->load(Yii::$app->request->post());
 			return Json::encode(\yii\widgets\ActiveForm::validate($validationFormLogin));
 		}
-				
-		if($validationFormLogin->load(Yii::$app->request->post())){						
+
+		if($validationFormLogin->load(Yii::$app->request->post())){
 			if ($validationFormLogin->addpassword()) {
 				$model = $this->findModel(Yii::$app->user->identity->EMP_ID);
 				$newPassword=$validationFormLogin->repassword;
@@ -90,7 +90,7 @@ class UserProfileController extends Controller
 								//'model'=>$model,
 								'newPassword'=>$newPassword
 							]);
-				if($model->EMP_EMAIL!=''){			
+				if($model->EMP_EMAIL!=''){
 					 Yii::$app->mailer->compose()
 					 ->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
 					 //->setTo(['piter@lukison.com'])
@@ -103,11 +103,11 @@ class UserProfileController extends Controller
 				return $this->redirect('index');
 			}else{
 				 $model = $this->findModel(Yii::$app->user->identity->EMP_ID);
-				return $this->redirect('index'); 				
-			}			
+				return $this->redirect('index');
+			}
 		}
 	}
-	
+
 	/*
 	 * View | Create Signature Password
 	 * @author ptrnov  <piter@lukison.com>
@@ -121,24 +121,24 @@ class UserProfileController extends Controller
 			'model'=> $model,
 		]);
     }
-	
+
 	/*
 	 * Index Signature Password
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
 	*/
 	public function actionSignatureSaved()
-    {		
+    {
 		$hsl = \Yii::$app->request->post();
 		$model = $this->findModel($hsl['Employe']['EMP_ID']);
-			
-		if ($model->load(Yii::$app->request->post())){	
+
+		if ($model->load(Yii::$app->request->post())){
 			//$hsl = \Yii::$app->request->post();
 			$model->UPDATED_BY=Yii::$app->user->identity->username;
 			$model->SIGSVGBASE64=$hsl['Employe']['SIGSVGBASE64'];
 			$model->SIGSVGBASE30=$hsl['Employe']['SIGSVGBASE30'];
 			$model->save();
-			if($model->save()) {				
+			if($model->save()) {
 				return $this->render('index',[
 					'model'=> $model,
 				]);
@@ -146,21 +146,21 @@ class UserProfileController extends Controller
 		}else{
 			return $this->render('_signature_form',[
                 '$model' => $model
-            ] );	
+            ] );
 		}
     }
-	
+
 	/*
 	 * Form Signature Password
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
 	*/
 	public function actionPasswordSignatureForm()
-    {	
+    {
 		$modelform = new SignatureForm();
 		return $this->renderAjax('_signupPassword',[
 					'modelform'=>$modelform,
-			]);	
+			]);
 	}
 	/*
 	 * Validation | Saved Entry Signature Password
@@ -168,9 +168,9 @@ class UserProfileController extends Controller
 	 * @since 1.1
 	*/
 	public function actionPasswordSignatureSaved()
-    {	
+    {
 		$modelform = new SignatureForm();
-		
+
 		/*
 		 * Ajax validate Old password Signature
 		 * @author ptrnov  <piter@lukison.com>
@@ -180,8 +180,8 @@ class UserProfileController extends Controller
 			$modelform->load(Yii::$app->request->post());
 			return Json::encode(\yii\widgets\ActiveForm::validate($modelform));
 		}
-				
-		if($modelform->load(Yii::$app->request->post())){						
+
+		if($modelform->load(Yii::$app->request->post())){
 			if ($modelform->addpassword()) {
 				$model = $this->findModel(Yii::$app->user->identity->EMP_ID);
 				$newPassword=$modelform->repassword;
@@ -189,7 +189,7 @@ class UserProfileController extends Controller
 								//'model'=>$model,
 								'newPassword'=>$newPassword
 							]);
-				if($model->EMP_EMAIL!=''){			
+				if($model->EMP_EMAIL!=''){
 					 Yii::$app->mailer->compose()
 					 ->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
 					 //->setTo(['piter@lukison.com'])
@@ -202,64 +202,64 @@ class UserProfileController extends Controller
 				return $this->redirect('signature',[
 					'model'=>$model,
 				]);
-				
+
 			}else{
 				 $model = $this->findModel(Yii::$app->user->identity->EMP_ID);
 				return $this->redirect('signature',[
 					'model'=>$model,
-				]); 				
-			}			
+				]);
+			}
 		}
-	
-		
+
+
 		/*Versi 0.1*/
-		/* 
+		/*
 		$model = Employe::find()->where(['EMP_ID' => Yii::$app->user->identity->EMP_ID])->one();
 		if($model->load(Yii::$app->request->post())){
-				$hsl = \Yii::$app->request->post();			
+				$hsl = \Yii::$app->request->post();
 				$passmd5 = $hsl['Employe']['SIGPASSWORD'];
 				$oldpassmd5 = $hsl['Employe']['SIGPASSWORD'];
 				$modelform = new SignatureForm();
-				$modelform->password=$passmd5;			
+				$modelform->password=$passmd5;
 				if ($modelform->addpassword()) {
 					return $this->renderAjax('_signupPassword',[
 						'model'=>$model,
 					]);
-				}			
-		}else{		  
+				}
+		}else{
 		   return $this->renderAjax('_signupPassword',[
 					'model'=>$model,
-			]);		
+			]);
 		}
 		 */
 		/* Ver 0.0*/
 		/* $model = Employe::find()->where(['EMP_ID' => Yii::$app->user->identity->EMP_ID])->one();
 		if($model->load(Yii::$app->request->post())){
 			$hsl = \Yii::$app->request->post();
-			
+
 			$passmd5 = $hsl['Employe']['SIGPASSWORD'];
-			//$model->SIGPASSWORD = 
+			//$model->SIGPASSWORD =
 			$model->setPassword_signature($passmd5); //Yii::$app->security->generatePasswordHash($passmd5);
 			//$model->SIGPASSWORD = Yii::$app->security->generatePasswordHash($passmd5);
-			$model->save();			
-		}else{		
+			$model->save();
+		}else{
 			return $this->renderAjax('_signupPassword',[
 				'model'=>$model,
 			]);
 		} */
-		
+
     }
-	
+
 	public function actionCreate()
-    {		
+    {
 		return $this->renderAjax('_signature_form'
 		/* , [
 			'roDetail' => $roDetail,
 			'roHeader' => $roHeader,
 		] */
-		);			
+		);
     }
-	
+
 	/**
      * CLASS TABLE FIND PrimaryKey
      * Example:  Employe::find()

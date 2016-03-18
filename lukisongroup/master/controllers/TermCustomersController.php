@@ -988,6 +988,8 @@ class TermCustomersController extends Controller
       return $pdf->render();
     }
 
+  
+
     /**
      * Creates a new Termcustomers model.
      * If creation is successful, the browser will be redirected to the 'view' page.
