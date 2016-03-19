@@ -56,12 +56,14 @@ class TermGeneralController extends Controller
      */
     public function actionIndex()
     {
+        // $data = Termgeneral::find()->where('ID')->one();
         $searchModel = new TermgeneralSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'data'=>$data
         ]);
     }
 
@@ -83,43 +85,20 @@ class TermGeneralController extends Controller
      * @return mixed
      */
 
-     public function saveimage($base64)
-     {
-       $base64 = str_replace('data:image/png;base64,', '', $base64);
-          $base64 = base64_encode($base64);
-       print_r($base64);
-       die();
-      //  $base64 = str_replace(' ', '+', $base64);
-      //
 
-
-
-     }
 
     public function actionCreate()
     {
         $model = new Termgeneral();
 
         if ($model->load(Yii::$app->request->post()) ) {
-          //
-          // $base64 = $model->ISI_TERM;
-          //
-           $model->image = UploadedFile::getInstance($model, 'image');
-           $this->saveimage( $model->image);
 
-          // print_r($model->image);
-          // die();
-          // // print_r($base64);
-          // // die();
-          // $this->saveimage($base64);
-          // if($model->validate())
-          // {
-          //     $model->CREATE_AT = date("Y-m-d H:i:s");
-          //     $model->CREATE_BY = Yii::$app->user->identity->username;
-          //     $model->save();
-          //     print_r(  $model->save());
-          //     die();
-          // }
+           $model->image = UploadedFile::getInstance($model, 'image');
+
+           $data = $this->saveimage(file_get_contents($model->image->tempName));
+
+           $model->ISI_TERM =$data ;
+           $model->save();
             return $this->redirect(['index']);
         } else {
             return $this->renderAjax('create', [

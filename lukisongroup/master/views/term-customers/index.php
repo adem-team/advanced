@@ -176,15 +176,7 @@ function review($url,$model)
       return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
     }
   }else{
-    $title1 = Yii::t('app', 'Review');
-    $options1 = [ 'id'=>'term-Review',
-    ];
-    $icon1 = '<span class="fa fa-plus fa-lg"></span>';
-    $label = $icon1 . ' ' . $title1;
-    $url = Url::toRoute(['/master/term-customers/view','id'=>$model->ID_TERM]);
-    // $options1['tabindex'] = '-1';
-    return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
-
+  
   }
 
 

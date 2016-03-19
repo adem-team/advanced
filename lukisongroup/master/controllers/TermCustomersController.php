@@ -63,6 +63,45 @@ class TermCustomersController extends Controller
             }
     }
 
+    public function saveimage($base64)
+    {
+      $base64 = str_replace('data:image/jpg;base64,', '', $base64);
+      $base64 = base64_encode($base64);
+      $base64 = str_replace(' ', '+', $base64);
+
+      return $base64;
+
+    }
+
+    public function actionUpload()
+    {
+      # code...
+      $fileName = 'file';
+    $uploadPath = './downloads';
+
+    if (isset($_FILES[$fileName])) {
+        $model = new Termgeneral();
+        $file = \yii\web\UploadedFile::getInstanceByName($fileName);
+
+         $data = $this->saveimage(file_get_contents($fileName));
+
+         $model->ISI_TERM = $data;
+
+         if($model->save())
+         {
+             echo \yii\helpers\Json::encode($file);
+         }
+
+        //Print file data
+        //print_r($file);
+
+
+            //Now save file data to database
+
+
+        }
+    }
+
     /**
      * Lists all Termcustomers models.
      * @return mixed
@@ -79,10 +118,12 @@ class TermCustomersController extends Controller
         ];
         $valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
 
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'valStt'=>$valStt
+            'valStt'=>$valStt,
+
         ]);
     }
 
@@ -278,12 +319,14 @@ class TermCustomersController extends Controller
             return;
         }
       }
+        $term = new Termgeneral();
         return $this->render('review-act', [
             'model'=> $model,
             'model2'=>$model2,
             'modelnewaprov'=>$modelnewaprov ,
             'searchModel1'=>   $searchModel1,
-            'dataProvider1' =>  $dataProvider1
+            'dataProvider1' =>  $dataProvider1,
+            'term'=>$term,
         ]);
     }
 
@@ -988,7 +1031,7 @@ class TermCustomersController extends Controller
       return $pdf->render();
     }
 
-  
+
 
     /**
      * Creates a new Termcustomers model.
