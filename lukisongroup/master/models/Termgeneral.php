@@ -45,10 +45,10 @@ public $image;
     {
         return [
             // [['ISI_TERM','SUBJECT'], 'required'],
-               [['image'], 'file','extensions' => 'png, jpg'],
-            // [['ISI_TERM'], 'file'],
+               [['image'], 'file'],
+            // [['ISI_TERM'], 'safe'],
             [['STATUS'], 'integer'],
-            [['CREATE_AT', 'UPDATE_AT'], 'safe'],
+            [['CREATE_AT', 'UPDATE_AT','ISI_TERM'], 'safe'],
             [['SUBJECT'], 'string', 'max' => 255],
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100]
         ];
