@@ -171,8 +171,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 																]). '</li>' . PHP_EOL;
 							},
 							'edit' =>function($url, $model, $key){
-									return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Create Kode Alias'),
-																['createalias','id'=>$model->ID],[
+									return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Update'),
+																['/master/schedule-group/update','id'=>$model->ID],[
 																'data-toggle'=>"modal",
 																'data-target'=>"#modal-create",
 																'data-title'=>'',// $model->KD_BARANG,
@@ -359,22 +359,22 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'template' => '{view}{edit}',
 				'dropdownOptions'=>['class'=>'pull-right dropup'],
 				'buttons' => [
-						/* 'view' =>function($url, $model, $key){
+					 'view' =>function($url, $model, $key){
 								return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
-															['/master/barang/view','id'=>$model->ID],[
+															['/master/schedule-group/view-group','id'=>$model->CUST_KD],[
 															'data-toggle'=>"modal",
 															'data-target'=>"#modal-view",
 															'data-title'=> '',//$model->KD_BARANG,
 															]). '</li>' . PHP_EOL;
 						},
 						'edit' =>function($url, $model, $key){
-								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Create Kode Alias'),
-															['createalias','id'=>$model->ID],[
+								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Update'),
+															['/master/schedule-group/update-group','id'=>$model->CUST_KD],[
 															'data-toggle'=>"modal",
 															'data-target'=>"#modal-create",
 															'data-title'=>'',// $model->KD_BARANG,
 															]). '</li>' . PHP_EOL;
-						}, */
+						},
 				],
 				'headerOptions'=>[
 					'style'=>[
@@ -628,7 +628,7 @@ $this->registerJs("
 
 				if(point.SCDL_GROUP == null)
 				{
-						var contentString = '<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>'+'<p>'+ point.SCDL_GROUP_NM + '<p>' ;
+						var contentString = '<p>' + point.ALAMAT + '</p>' + '<p>' + point.CUST_NM + '</p>'+'<p>'+ point.SCDL_GROUP_NM + '<p>' ;
 
 	 													 google.maps.event.addListener(public_markers[i], 'mouseover', function () {
 																 var infowindow = new google.maps.InfoWindow({
@@ -643,7 +643,7 @@ $this->registerJs("
 																 });
 				}
 				else{
-						var contentString = '<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>'+'<p>'+ point.SCDL_GROUP_NM + '<p>' ;
+						var contentString = '<p>' + point.ALAMAT + '</p>' + '<p>' + point.CUST_NM + '</p>'+'<p>'+ point.SCDL_GROUP_NM + '<p>' ;
 
 						google.maps.event.addListener(public_markers[i], 'mouseover', function (event) {
 																	 var infowindow = new google.maps.InfoWindow({
@@ -716,7 +716,7 @@ $this->registerJs("
 
 													if(point.SCDL_GROUP == null)
 													{
-																					var contentString = '<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>'+'<p>'+ point.SCDL_GROUP_NM + '<p>' ;
+																					var contentString = '<p>' + point.ALAMAT + '</p>' + '<p>' + point.CUST_NM + '</p>'+'<p>'+ point.SCDL_GROUP_NM + '<p>' ;
 
 																							 google.maps.event.addListener(public_markers[i], 'mouseover', function () {
 																									 var infowindow = new google.maps.InfoWindow({
@@ -732,7 +732,7 @@ $this->registerJs("
 													}
 													else{
 
-															var contentString = '<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>'+'<p>'+ point.SCDL_GROUP_NM + '<p>' ;
+															var contentString = '<p>' + point.ALAMAT + '</p>' + '<p>' + point.CUST_NM + '</p>'+'<p>'+ point.SCDL_GROUP_NM + '<p>' ;
 															google.maps.event.addListener(public_markers[i], 'mouseover', function (event) {
 																										 var infowindow = new google.maps.InfoWindow({
 																												content: contentString

@@ -31,24 +31,24 @@ $this->title = Yii::t('app', 'HRM - Absensi	 Dashboard');             /* title p
 $this->params['breadcrumbs'][] = $this->title;                          /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
 	/* $aryFlag= [
-		  ['ID' =>0, 'DESCRIP' => 'Online'],		  
+		  ['ID' =>0, 'DESCRIP' => 'Online'],
 		  ['ID' =>1, 'DESCRIP' => 'Offline'],
 		  ['ID' =>2, 'DESCRIP' => 'USB']
-	];	
-	$valFlag = ArrayHelper::map($aryFlag, 'DESCRIP', 'DESCRIP'); 
+	];
+	$valFlag = ArrayHelper::map($aryFlag, 'DESCRIP', 'DESCRIP');
  */
 
 	$attDinamik =[];
 	$hdrLabel1=[];
 	//$hdrLabel2=[];
 	$getHeaderLabelWrap=[];
-	
+
 
 	/*
 	 * Terminal ID | Mashine
 	 * Colomn 1
 	*/
-	$attDinamik[]=[		
+	$attDinamik[]=[
 		'attribute'=>'TerminalID','label'=>'Source Machine',
 		'hAlign'=>'right',
 		'vAlign'=>'middle',
@@ -84,30 +84,32 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		//'pageSummary'=>true,
 		'pageSummaryOptions' => [
 			'style'=>[
-					'text-align'=>'right',		
+					'text-align'=>'right',
 					'width'=>'20px',
 					'font-family'=>'tahoma',
-					'font-size'=>'8pt',	
+					'font-size'=>'8pt',
 					'text-decoration'=>'underline',
 					'font-weight'=>'bold',
-					'border-left-color'=>'transparant',		
-					'border-left'=>'0px',									
+					'border-left-color'=>'transparant',
+					'border-left'=>'0px',
 			]
-		],											
-		//'footer'=>true,			
+		],
+		//'footer'=>true,
 	];
-	$hdrLabel1[] =[	
+
+
+	$hdrLabel1[] =[
 		'content'=>'Employee Data',
 		'options'=>[
 			'noWrap'=>true,
 			'colspan'=>2,
-			'class'=>'text-center info',								
+			'class'=>'text-center info',
 			'style'=>[
 				 'text-align'=>'center',
 				 'width'=>'20px',
 				 'font-family'=>'tahoma',
 				 'font-size'=>'8pt',
-				 'background-color'=>'rgba(0, 95, 218, 0.3)',								
+				 'background-color'=>'rgba(0, 95, 218, 0.3)',
 			 ]
 		 ],
 	];
@@ -115,7 +117,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 	 * Employe name
 	 * Colomn 2
 	*/
-	$attDinamik[]=[		
+	$attDinamik[]=[
 		'attribute'=>'EMP_NM','label'=>'Employee',
 		'hAlign'=>'right',
 		'vAlign'=>'middle',
@@ -147,36 +149,36 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		//'pageSummary'=>true,
 		'pageSummaryOptions' => [
 			'style'=>[
-					'text-align'=>'right',		
+					'text-align'=>'right',
 					'width'=>'10px',
 					'font-family'=>'tahoma',
-					'font-size'=>'8pt',	
+					'font-size'=>'8pt',
 					'text-decoration'=>'underline',
 					'font-weight'=>'bold',
-					'border-left-color'=>'transparant',		
-					'border-left'=>'0px',									
+					'border-left-color'=>'transparant',
+					'border-left'=>'0px',
 			]
-		],											
-		//'footer'=>true,			
+		],
+		//'footer'=>true,
 	];
-	/* $hdrLabel1[] =[	
+	/* $hdrLabel1[] =[
 		'content'=>'Employee Data',
 		'options'=>[
 			'noWrap'=>true,
 			'colspan'=>1,
-			'class'=>'text-center info',								
+			'class'=>'text-center info',
 			'style'=>[
 				 'text-align'=>'center',
 				 'width'=>'20px',
 				 'font-family'=>'tahoma',
 				 'font-size'=>'8pt',
-				 'background-color'=>'rgba(240, 195, 59, 0.4)',								
+				 'background-color'=>'rgba(240, 195, 59, 0.4)',
 			 ]
 		 ],
 	];  */
-	
-	
-	
+
+
+
 	/*
 	* === REKAP =========================
 	* Key-FIND : AttDinamik-Clalender
@@ -184,15 +186,16 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 	* @since 1.2
 	* ===================================
 	*/
+
 	foreach($dataProviderField as $key =>$value)
-	{	
+	{
 		$i=2;
 		$kd = explode('.',$key);
-		if($key!='EMP_NM' AND $key!='TerminalID' AND $kd[0]!='OTIN' AND $kd[0]!='OTOUT'){			
+		if($key!='EMP_NM' AND $key!='TerminalID' AND $kd[0]!='OTIN' AND $kd[0]!='OTOUT'){
 			if ($kd[0]=='IN'){$lbl='IN';} elseif($kd[0]=='OUT'){$lbl='OUT';}else {$lbl='';};
-				$attDinamik[]=[		
+				$attDinamik[]=[
 					'attribute'=>$key,
-					'label'=>$lbl,					
+					'label'=>$lbl,
 					/* function(){
 							return html::encode($lbl);
 					}, */
@@ -202,7 +205,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 						return $model[$key]!=''?$model[$key]:'x';
 					},
 					/* 'filter'=>function()use($kd[1]){
-						$date = '2011/10/14'; 
+						$date = '2011/10/14';
 						$day = date('l', strtotime($date));
 						echo $day;
 					}, */
@@ -213,19 +216,19 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 						'vAlign'=>'middle',
 					], */
 					'mergeHeader'=>true,
-					'noWrap'=>true,			
-					'headerOptions'=>[		
-						//'colspan'=>$kd[0]=='IN'? true:false,			
+					'noWrap'=>true,
+					'headerOptions'=>[
+						//'colspan'=>$kd[0]=='IN'? true:false,
 						//'colspan'=>$kd[0]=='IN'? $i:'0',
 						//'headerHtmlOptions'=>array('colspan'=>'2'),
-						'style'=>[									
+						'style'=>[
 							'text-align'=>'center',
 							//'width'=>'12px',
 							'font-family'=>'tahoma, arial, sans-serif',
 							'font-size'=>'8pt',
 							'background-color'=>'rgba(97, 211, 96, 0.3)',
 						]
-					],  
+					],
 					'contentOptions'=>[
 						'style'=>[
 							'text-align'=>'center',
@@ -239,41 +242,41 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 					//'pageSummary'=>true,
 					'pageSummaryOptions' => [
 						'style'=>[
-								'text-align'=>'right',		
+								'text-align'=>'right',
 								//'width'=>'12px',
 								'font-family'=>'tahoma',
-								'font-size'=>'8pt',	
+								'font-size'=>'8pt',
 								'text-decoration'=>'underline',
 								'font-weight'=>'bold',
-								'border-left-color'=>'transparant',		
-								'border-left'=>'0px',									
+								'border-left-color'=>'transparant',
+								'border-left'=>'0px',
 						]
-					],											
-					
-				];						
-			
+					],
+
+				];
+
 				if($kd[0]=='IN'){
-					$hdrLabel1[] =[	
+					$hdrLabel1[] =[
 						'content'=>$kd[1],
 						'options'=>[
 							'noWrap'=>true,
 							'colspan'=>2,
-							'class'=>'text-center info',								
+							'class'=>'text-center info',
 							'style'=>[
 								 'text-align'=>'center',
 								 //'width'=>'24px',
 								 'font-family'=>'tahoma',
 								 'font-size'=>'8pt',
-								 'background-color'=>'rgba(0, 95, 218, 0.3)',								
+								 'background-color'=>'rgba(0, 95, 218, 0.3)',
 							 ]
 						 ],
-					];		
+					];
 				}
 		}
-		
+
 		$i=$i+1;
 	}
-	
+
 	$hdrLabel1_ALL =[
 		'columns'=>array_merge($hdrLabel1),
 	];
@@ -288,7 +291,7 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 	$gvAbsenLog=GridView::widget([
 		'id'=>'absen-rekap',
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,		
+        'filterModel' => $searchModel,
 		'beforeHeader'=>$getHeaderLabelWrap,
 		//'showPageSummary' => true,
 		'columns' =>$attDinamik,
@@ -308,12 +311,12 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 								// 'data-toggle'=>"modal",
 									// 'data-target'=>"#modal-create",
 										// 'class' => 'btn btn-success'
-													// ]), 
+													// ]),
 					'showFooter'=>false,
 		],
 		'toolbar'=> [
 			//'{items}',
-		],  
+		],
 		'hover'=>true, //cursor select
 		'responsive'=>true,
 		'responsiveWrap'=>true,
@@ -321,15 +324,15 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		'striped'=>true,
 		//'perfectScrollbar'=>true,
 		//'autoXlFormat'=>true,
-		//'export' => false,		
+		//'export' => false,
 	]);
-	
-	
+
+
 ?>
 
 
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;margin-right:5px">
-	<?php 
+	<?php
 		/* $items=[
 			[
 				'label'=>'<i class="glyphicon glyphicon-home"></i> Daily Absensi','content'=>$gvAbsenLog,
@@ -344,10 +347,10 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 					]
 				],
 				//'active'=>true,
-			],		
+			],
 			[
 				'label'=>'<i class="glyphicon glyphicon-home"></i> OverTime','content'=>'',
-			],		
+			],
 			[
 				'label'=>'<i class="glyphicon glyphicon-home"></i> Absensi Rekap','content'=>'',
 			],
@@ -363,15 +366,15 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'encodeLabels'=>false,
 			//'align'=>TabsX::ALIGN_LEFT,
 		]); */
-	?>   
+	?>
 </div>
 <?php
 	$this->registerJs("
          $('#modal-create').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
-            var title = button.data('title') 
-            var href = button.attr('href') 
+            var title = button.data('title')
+            var href = button.attr('href')
             //modal.find('.modal-title').html(title)
             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
             $.post(href)
@@ -383,8 +386,8 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 	 Modal::begin([
         'id' => 'modal-create',
       	'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Masukan Data Warga</h4></div>',
-		'headerOptions'=>[								
-				'style'=> 'border-radius:5px; background-color: rgba(0, 95, 218, 0.3)',	
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(0, 95, 218, 0.3)',
 		],
     ]);
     Modal::end();
@@ -394,8 +397,8 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
          $('#modal-view').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
-            var title = button.data('title') 
-            var href = button.attr('href') 
+            var title = button.data('title')
+            var href = button.attr('href')
             //modal.find('.modal-title').html(title)
             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
             $.post(href)
@@ -407,18 +410,18 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 	 Modal::begin([
         'id' => 'modal-view',
       	'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">View Data Warga</h4></div>',
-		'headerOptions'=>[								
-				'style'=> 'border-radius:5px; background-color: rgba(0, 95, 218, 0.3)',	
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(0, 95, 218, 0.3)',
 		],
     ]);
     Modal::end();
-	
+
 	$this->registerJs("
          $('#modal-edit').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
-            var title = button.data('title') 
-            var href = button.attr('href') 
+            var title = button.data('title')
+            var href = button.attr('href')
             //modal.find('.modal-title').html(title)
             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
             $.post(href)
@@ -430,8 +433,8 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 	 Modal::begin([
         'id' => 'modal-edit',
       	'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Edit Data Warga</h4></div>',
-		'headerOptions'=>[								
-				'style'=> 'border-radius:5px; background-color: rgba(0, 95, 218, 0.3)',	
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(0, 95, 218, 0.3)',
 		],
     ]);
     Modal::end();
@@ -463,5 +466,3 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 		});
 	",$this::POS_READY); */
 ?>
-
-

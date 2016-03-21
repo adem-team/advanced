@@ -40,6 +40,7 @@ class Termcustomers extends \yii\db\ActiveRecord
      * @inheritdoc
      */
      public $term;
+     public $image;
 
     public static function tableName()
     {
@@ -61,10 +62,11 @@ class Termcustomers extends \yii\db\ActiveRecord
     {
         return [
             [['CUST_KD', 'PRINCIPAL_KD', 'DIST_KD'], 'required'],
+               [['image'], 'file'],
             [['DCRP_SIGNARURE', 'TARGET_TEXT', 'RABATE_CNDT', 'TOP','JOBGRADE_ID','JABATAN_CUS','JABATAN_DIST'], 'string'],
-            [['PERIOD_START', 'PERIOD_END', 'CREATED_AT', 'UPDATE_AT'], 'safe'],
+            [['PERIOD_START', 'PERIOD_END', 'CREATED_AT', 'UPDATE_AT','GENERAL_TERM'], 'safe'],
             [['PERIOD_END'], 'cekdate'],
-            [['TARGET_VALUE', 'GROWTH','GENERAL_TERM','ID_TERM'], 'number'],
+            [['TARGET_VALUE', 'GROWTH','ID_TERM'], 'number'],
             [['STATUS'], 'integer'],
             [['NM_TERM', 'CREATED_BY', 'UPDATE_BY'], 'string', 'max' => 100],
             [['CUST_KD', 'PRINCIPAL_KD', 'DIST_KD','KETERANGAN','NOMER_INVOCE','NOMER_FAKTURPAJAK',], 'string', 'max' => 50],
@@ -76,6 +78,13 @@ class Termcustomers extends \yii\db\ActiveRecord
     {
       # code...
       return ArrayHelper::map($data, $to, $from);
+    }
+
+    public function imagedisplay($id)
+    {
+      # code...
+      $data = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
+      return $data;
     }
 
     public function cekdate($model)

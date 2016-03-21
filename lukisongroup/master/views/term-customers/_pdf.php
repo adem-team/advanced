@@ -363,12 +363,6 @@ use kartik\grid\GridView;
 			<td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> Growth </td>
 			<td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> <?= $data->GROWTH ?> % </td>
 		</tr>
-		<tr>
-		   <td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> General Terms/Aturan
-				<br><?= $term['SUBJECT'] ?>
-		   </td>
-		   <td style="width:30%; padding-left:20px; padding-top:5px; padding-bottom:5px"> <?= $term['ISI_TERM'] ?></td>
-		</tr>
 	</table>
 
 

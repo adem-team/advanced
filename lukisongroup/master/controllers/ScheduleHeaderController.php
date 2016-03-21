@@ -225,22 +225,23 @@ class ScheduleHeaderController extends Controller
 
         //Demo
         $Event = new \yii2fullcalendar\models\Event();
-        $Event->id = 1;
-        $Event->title = 'Testing';
-        $Event->start = date('Y-m-d\TH:m:s\Z');
-        $events[] = $Event;
-        $Event = new \yii2fullcalendar\models\Event();
-        $Event->id = 2;
-        $Event->title = 'Testing';
-        $Event->start = date('Y-m-d\TH:m:s\Z',strtotime('tomorrow 8am'));
-        $events[] = $Event;
-        $event3 = new DateTime('+2days 10am');
-        $Event = new \yii2fullcalendar\models\Event();
-        $Event->id = 2;
-        $Event->title = 'Testing';
-        $Event->start = $event3->format('Y-m-d\Th:m:s\Z');
-        $Event->end = $event3->modify('+3 hours')->format('Y-m-d\TH:m:s\Z');
-        $events[] = $Event;
+
+        // $Event->id = 1;
+        // $Event->title = 'Testing';
+        // $Event->start = date('Y-m-d\TH:m:s\Z');
+        // $events[] = $Event;
+        // $Event = new \yii2fullcalendar\models\Event();
+        // $Event->id = 2;
+        // $Event->title = 'Testing';
+        // $Event->start = date('Y-m-d\TH:m:s\Z',strtotime('tomorrow 8am'));
+        // $events[] = $Event;
+        // $event3 = new DateTime('+2days 10am');
+        // $Event = new \yii2fullcalendar\models\Event();
+        // $Event->id = 2;
+        // $Event->title = 'Testing';
+        // $Event->start = $event3->format('Y-m-d\Th:m:s\Z');
+        // $Event->end = $event3->modify('+3 hours')->format('Y-m-d\TH:m:s\Z');
+        // $events[] = $Event;
         header('Content-type: application/json');
         echo Json::encode($events);
         Yii::$app->end();
@@ -251,9 +252,11 @@ class ScheduleHeaderController extends Controller
 		if (Yii::$app->request->isAjax) {
 			$request= Yii::$app->request;
 			$model =  new Scheduleheader();
-			$start=$request->post('start');
+			$end=$request->post('end');
+      $start=$request->post('start');
 			$title=$request->post('title');
 			$model->TGL1 = $start;
+      $model->TGL2 = $end;
 			$model->USER_ID = $title;
 			$model->save();
 
