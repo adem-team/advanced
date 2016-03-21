@@ -24,7 +24,7 @@ dmstr\web\AdminLteAsset::register($this);
 use lukisongroup\assets\AppAsset_style;
 AppAsset_style::register($this);
 
-
+$this->title = 'LukisonGroup.com';
 	/*
 	 * NOTIFY TRIGER ATAU SET
 	 * @author piter [ptr.nov@gmail.com]
