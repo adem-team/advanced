@@ -582,6 +582,7 @@ class EmployeController extends Controller
 			'dropdown' => true,
 			'template' => '{view}{edit0}{edit1}{edit2}{edit3}{lihat}',
 			'dropdownOptions'=>['class'=>'pull-left dropdown'],
+			'dropdownButton'=>['class' => 'btn btn-default btn-xs'],
 			'buttons' => [	
 				'view' =>function($url, $model, $key){
 						return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),

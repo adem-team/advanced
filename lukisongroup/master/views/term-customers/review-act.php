@@ -15,6 +15,8 @@ use kartik\grid\GridView;
 use kartik\detail\DetailView;
 use kartik\money\MaskMoney;
 use lukisongroup\purchasing\models\pr\Costcenter;
+use yii\widgets\ActiveForm;
+use kartik\widgets\FileInput;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Termcustomers */
@@ -1041,107 +1043,14 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 			<?php
-				//  $grid = GridView::widget([
-				// 	'id'=>'gv-term',
-				// 	'dataProvider'=> $dataProvider,
-				// 	'footerRowOptions'=>['style'=>'font-weight:bold;text-decoration: underline;'],
-				// 	// 'filterModel' => $searchModel1,
-				// 	// 'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
-				// 	'columns' => [
-				// 		 [
-				// 			'class'=>'kartik\grid\SerialColumn',
-				// 			'contentOptions'=>['class'=>'kartik-sheet-style'],
-				// 			'width'=>'5%',
-				// 			'header'=>'No.',
-				// 			'headerOptions'=>[
-				// 				 'style'=>[
-				// 				   'text-align'=>'center',
-				// 				   'width'=>'5%',
-				// 				   'font-family'=>'verdana, arial, sans-serif',
-				// 				   'font-size'=>'9pt',
-				// 				   'background-color'=>'rgba(97, 211, 96, 0.3)',
-				// 				 ]
-				// 			],
-				// 			'contentOptions'=>[
-				// 				 'style'=>[
-				// 				   'text-align'=>'center',
-				// 				   'width'=>'5%',
-				// 				   'font-family'=>'tahoma, arial, sans-serif',
-				// 				   'font-size'=>'9pt',
-				// 				 ]
-				// 			],
-				// 		 ],
-				// 		 [
-				// 			'attribute' => 'general.SUBJECT',
-				// 			'label'=>'General Term',
-				// 			'hAlign'=>'left',
-				// 			'vAlign'=>'middle',
-				// 			'headerOptions'=>[
-				// 				 'style'=>[
-				// 				   'width'=>'30%',
-				// 				   'text-align'=>'center',
-				// 				   'font-family'=>'tahoma, arial, sans-serif',
-				// 				   'font-size'=>'9pt',
-				// 				   'background-color'=>'rgba(97, 211, 96, 0.3)',
-				// 				 ]
-				// 			],
-				// 			'contentOptions'=>[
-				// 				 'style'=>[
-				// 				   'text-align'=>'left',
-				// 				   'width'=>'30%',
-				// 				   'font-family'=>'tahoma, arial, sans-serif',
-				// 				   'font-size'=>'9pt',
-				// 				 ]
-				// 			],
-				// 		 ],
-				// 		 [
-				// 			'attribute' => 'general.ISI_TERM',
-				// 			'label'=>'Isi Peraturan',
-				// 			'hAlign'=>'left',
-				// 			'vAlign'=>'middle',
-				// 			'headerOptions'=>[
-				// 				 'style'=>[
-				// 				   'text-align'=>'center',
-				// 				   'width'=>'75%',
-				// 				   'font-family'=>'tahoma, arial, sans-serif',
-				// 				   'font-size'=>'9pt',
-				// 				   'background-color'=>'rgba(97, 211, 96, 0.3)',
-				// 				 ]
-				// 			],
-				// 			'contentOptions'=>[
-				// 				 'style'=>[
-				// 				   'text-align'=>'left',
-				// 				    'width'=>'75%',
-				// 				   'font-family'=>'tahoma, arial, sans-serif',
-				// 				   'font-size'=>'9pt',
-				// 				 ]
-				// 			],
-				// 		 ],
-				// 	],
-				// 	'showPageSummary' => false,
-				// 	'pjax'=>true,
-				// 	  'pjaxSettings'=>[
-				// 		'options'=>[
-				// 		  'enablePushState'=>false,
-				// 		  'id'=>'gv-term-general',
-				// 		],
-				// 	   ],
-				// 	'toolbar' => [
-				// 	  '',
-				// 	],
-				// 	'panel' => [
-				// 	  'heading'=>'<h5 class="panel-title">GENERAL TERM</h5>',
-				// 	  'type'=>'success',
-				// 	  'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Regulation',
-				// 		  ['modelClass' => 'Termcustomers',]),['/master/term-customers/create-general','id'=>$dataids],[
-				// 			'data-toggle'=>"modal",
-				// 			  'data-target'=>"#modal-create",
-				// 				'class' => 'btn btn-danger btn-xs'
-				// 					  ]),
-				// 	  'showFooter'=>true,
-				// 	],
-				// 	'export' =>false,
-				// ]);
+
+			 $form = ActiveForm::begin([
+				'id'=>$term->formName(),
+			]);
+			echo $form->field($term, 'imageFile')->widget(FileInput::classname(), [
+    'options' => ['accept' => 'image/*'],
+]);
+  ActiveForm::end();
 			?>
 		</div>
 	</div>
