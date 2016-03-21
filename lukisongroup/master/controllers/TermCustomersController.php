@@ -25,6 +25,7 @@ use lukisongroup\hrd\models\Corp;
 use yii\data\ArrayDataProvider;
 use yii\helpers\Json;
 use yii\helpers\ArrayHelper;
+use yii\web\UploadedFile;
 /**
  * TermCustomersController implements the CRUD actions for Termcustomers model.
  */
@@ -73,34 +74,45 @@ class TermCustomersController extends Controller
 
     }
 
-    public function actionUpload()
+
+    public function actionUpload($id)
     {
       # code...
-      $fileName = 'file';
-    $uploadPath = './downloads';
 
-    if (isset($_FILES[$fileName])) {
-        $model = new Termgeneral();
-        $file = \yii\web\UploadedFile::getInstanceByName($fileName);
+        $model =  TermCustomers::find()->where(['ID_TERM'=>$id])->one();
+        if ($model->load(Yii::$app->request->post()) ) {
+         $model->image = UploadedFile::getInstance($model, 'image');
 
-         $data = $this->saveimage(file_get_contents($fileName));
+         $data = $this->saveimage(file_get_contents( $model->image->tempName));
 
-         $model->ISI_TERM = $data;
+         $model->GENERAL_TERM = $data;
 
-         if($model->save())
+
+         $model->save();
+
+        //  print_r($model->getErrors());
+        //  die();
+
+         if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT'&&Yii::$app->getUserOpt->Modul_akses('3')->BTN_CREATE==1)
          {
-             echo \yii\helpers\Json::encode($file);
+             return $this->redirect(['review-act','id'=>$id]);
          }
+         else{
 
-        //Print file data
-        //print_r($file);
+             return  $this->redirect(['view','id'=> $id]);
+         }
+        //  {
+        //      echo \yii\helpers\Json::encode($file);
+        //  }
+      }else{
+        return $this->renderAjax('_term', [
+            'model' => $model
 
-
-            //Now save file data to database
-
-
-        }
+        ]);
+      }
     }
+
+
 
     /**
      * Lists all Termcustomers models.
@@ -892,8 +904,8 @@ class TermCustomersController extends Controller
                               ->asArray()
                               ->one();
 
-      $term = Termgeneral::find()->where(['ID'=>$data['GENERAL_TERM']])->asArray()
-                                                          ->one();
+      // $term = Termgeneral::find()->where(['ID'=>$data['GENERAL_TERM']])->asArray()
+      //                                                     ->one();
 
       $datadis = Distributor::find()->where(['KD_DISTRIBUTOR'=> $data->DIST_KD])
                                     ->asArray()
@@ -922,7 +934,7 @@ class TermCustomersController extends Controller
         'datacus'=>  $datacus,
         'datadis'=>$datadis,
         'datacorp'=>$datacorp,
-        'term'=>$term,
+        // 'term'=>$term,
         'datasum'=>$datasum,
         'dataProvider'=>$dataProvider,
         'modelnewaprov'=>$modelnewaprov
@@ -969,8 +981,8 @@ class TermCustomersController extends Controller
                               ->asArray()
                               ->one();
 
-      $term = Termgeneral::find()->where(['ID'=>$data['GENERAL_TERM']])->asArray()
-                                                          ->one();
+      // $term = Termgeneral::find()->where(['ID'=>$data['GENERAL_TERM']])->asArray()
+      //                                                     ->one();
 
       $datadis = Distributor::find()->where(['KD_DISTRIBUTOR'=> $data->DIST_KD])
                                     ->asArray()
@@ -997,7 +1009,7 @@ class TermCustomersController extends Controller
         'datacus'=>  $datacus,
         'datadis'=>$datadis,
         'datacorp'=>$datacorp,
-        'term'=>$term,
+        // 'term'=>$term,
         'datasum'=>$datasum,
         'dataProvider'=>$dataProvider
 

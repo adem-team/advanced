@@ -35,17 +35,17 @@ class Schedulegroup extends \yii\db\ActiveRecord
         return Yii::$app->get('db_esm');
     }
 
-	
+
 	// public function getCust(){
-		 // return $this->hasMany(Customers::className(), ['SCDL_GROUP' => 'ID']);		
+		 // return $this->hasMany(Customers::className(), ['SCDL_GROUP' => 'ID']);
 	// }
-	
+
 	// public function getCust_nm()
     // {
         // return $this->cust->CUST_NM;
     // }
-	
-	
+
+
     /**
      * @inheritdoc
      */

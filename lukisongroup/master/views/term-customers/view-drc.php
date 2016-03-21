@@ -612,108 +612,24 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	</div>
 
     <!-- GENERAL TERM !-->
-	<div class="row">
-		<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt;padding-bottom:10px;padding-left:30px">
-			<?php
-				// echo '<h6><u><b>GENERAL TERM</b></u></h6>';
-				// echo  $grid = GridView::widget([
-				// 	'id'=>'gv-term',
-				// 	'dataProvider'=> $dataProvider,
-				// 	'footerRowOptions'=>['style'=>'font-weight:bold;text-decoration: underline;'],
-				// 	// 'filterModel' => $searchModel1,
-				// 	// 'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
-				// 	'columns' =>[
-				// 		 [
-				// 			'class'=>'kartik\grid\SerialColumn',
-				// 			'contentOptions'=>['class'=>'kartik-sheet-style'],
-				// 			'width'=>'5%',
-				// 			'header'=>'No.',
-				// 			'headerOptions'=>[
-				// 				'style'=>[
-				// 					'text-align'=>'center',
-				// 					'width'=>'100px',
-				// 					'font-family'=>'verdana, arial, sans-serif',
-				// 					'font-size'=>'9pt',
-				// 					'background-color'=>'rgba(97, 211, 96, 0.3)',
-				// 				]
-				// 			],
-				// 			'contentOptions'=>[
-				// 				'style'=>[
-				// 					'text-align'=>'center',
-				// 					'width'=>'100px',
-				// 					'font-family'=>'tahoma, arial, sans-serif',
-				// 					'font-size'=>'9pt',
-				// 				]
-				// 			],
-				// 		],
-				// 		[
-				// 			'attribute' => 'general.SUBJECT',
-				// 			'label'=>'General Term',
-				// 			'hAlign'=>'left',
-				// 			'vAlign'=>'middle',
-				// 			'headerOptions'=>[
-				// 				'style'=>[
-				// 					 'width'=>'30%',
-				// 					'text-align'=>'center',
-				// 					'font-family'=>'tahoma, arial, sans-serif',
-				// 					'font-size'=>'9pt',
-				// 					'background-color'=>'rgba(97, 211, 96, 0.3)',
-				// 				]
-				// 			],
-				// 			'contentOptions'=>[
-				// 				'style'=>[
-				// 					'text-align'=>'left',
-				// 					'width'=>'30%',
-				// 					'font-family'=>'tahoma, arial, sans-serif',
-				// 					'font-size'=>'9pt',
-				// 				]
-				// 			],
-				// 		],
-				// 		[
-				// 			'attribute' => 'general.ISI_TERM',
-				// 			'label'=>'Isi Peraturan',
-				// 			'hAlign'=>'left',
-				// 			'vAlign'=>'middle',
-				// 			'headerOptions'=>[
-				// 				'style'=>[
-				// 					'width'=>'75%',
-				// 					'text-align'=>'center',
-				// 					'font-family'=>'tahoma, arial, sans-serif',
-				// 					'font-size'=>'9pt',
-				// 					'background-color'=>'rgba(97, 211, 96, 0.3)',
-				// 				]
-				// 			],
-				// 			'contentOptions'=>[
-				// 				'style'=>[
-				// 					'text-align'=>'left',
-				// 					'width'=>'75%',
-				// 					'font-family'=>'tahoma, arial, sans-serif',
-				// 					'font-size'=>'9pt',
-				// 				]
-				// 			],
-				// 		],
-				// 	],
-				// 	'showPageSummary' => false,
-				// 	'pjax'=>true,
-				// 	'pjaxSettings'=>[
-				// 		'options'=>[
-				// 		'enablePushState'=>false,
-				// 		'id'=>'gv-term-general',
-				// 		],
-				// 	],
-				// 	/* 'toolbar' => [
-				// 	  '',
-				// 	],
-				// 	'panel' => [
-				// 	  'heading'=>'<h3 class="panel-title">General Term</h3>',
-				// 	  'type'=>'success',
-				// 	  'showFooter'=>false,
-				// 	], */
-				// 	'export' =>false,
-				// ]);
-			?>
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+				<?php
+	 		// 	 image($model);
+				$image = $model->imagedisplay($model->ID_TERM);
+				 ?>
+				 <div>
+					 <?php
+					 $img = Url::to('@web/upload/barang/').'df.jpg';
+
+					 $dataimage = $image->GENERAL_TERM !=''? '<img src="data:image/jpeg;base64,' . $image->GENERAL_TERM . '" />' : '<img src="'.$img.'" width="50" />';;
+					 	echo  $dataimage;
+
+				?>
+			</div>
+
+			</div>
 		</div>
-	</div>
 
 	<!-- PO Note !-->
 	<div  class="row">

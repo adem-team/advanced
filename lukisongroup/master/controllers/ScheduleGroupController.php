@@ -79,8 +79,8 @@ class ScheduleGroupController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
 			      'dpListCustGrp'=>$dpListCustGrp,
-              'data' =>  $data,
-              'valStt' => $valStt
+            'data' =>  $data,
+            'valStt' => $valStt
         ]);
     }
 
@@ -129,12 +129,8 @@ class ScheduleGroupController extends Controller
         if (Yii::$app->request->isAjax) {
           $request= Yii::$app->request;
           $nama=$request->post('name');
-          // print_r($nama);
-          // die();
-          //\Yii::$app->response->format = Response::FORMAT_JSON;
           $model->SCDL_GROUP = $nama;
 
-          //$ro->NM_BARANG=''
           if($model->save())
           {
             echo 1;
@@ -142,7 +138,6 @@ class ScheduleGroupController extends Controller
           else{
             echo 0;
           }
-          // return true;
         }
 
 
@@ -161,12 +156,37 @@ class ScheduleGroupController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
+            return $this->redirect('index');
         } else {
-            return $this->render('update', [
+            return $this->renderAjax('update', [
                 'model' => $model,
             ]);
         }
+    }
+
+    public function actionUpdateGroup($id)
+    {
+        $model = $this->findModelGroup($id);
+
+        $query = Schedulegroup::find()->all();
+
+        $data =  ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect('index');
+        } else {
+            return $this->renderAjax('update-group', [
+                'model' => $model,
+                'data'=>$data
+            ]);
+        }
+    }
+
+    public function actionViewGroup($id)
+    {
+      return $this->renderAjax('view-group',[
+            'model'=>$this->findModelGroup($id),
+      ]);
     }
 
     /**
@@ -196,5 +216,21 @@ class ScheduleGroupController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+
+    protected function findModelGroup($id)
+    {
+      $model = Customers::findOne($id);
+
+      if($model !== null)
+      {
+          return $model;
+      }
+      else{
+          throw new NotFoundHttpException('The requested page does not exist.');
+      }
+
+
     }
 }
