@@ -7,7 +7,7 @@ $profile=Yii::$app->getUserOpt->Profile_user();
 ?>
 	<?php
 		$form = ActiveForm::begin([
-				'id'=>'signature-login',
+				'id'=>'signature-id',
 				'enableClientValidation' => true,
 				'enableAjaxValidation' => true,
 				'method' => 'post',

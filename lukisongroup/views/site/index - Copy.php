@@ -73,29 +73,33 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 										[
 											'content' => '<span class="fa fa-folder-open fa-lg"></span>'. '   '. 'Berita Acara',
 											'url' => '/widget/berita',
-											'badge' => ''
+											'badge' => '14'
 										],
 										[
 											'content' => '<span class="fa fa-comments fa-lg"></span>'. '   '.'Chating ',
 											'url' => '/widget/chat',
-											'badge' => ''
+											'badge' => '14'
 										],
 										[
 											'content' => '<span class="fa fa-sticky-note-o fa-lg"></span>'. '   '.'Memo',
 											'url' => '/widget/memo',
-											'badge' => ''
+											'badge' => '2'
 										],
 										[
 											'content' => '<span class="fa fa-desktop fa-lg"></span>'. '   '.'Notulen',
 											'url' => '/widget/notulen',
-											'badge' => ''
+											'badge' => '2'
 										],
 										[
 											'content' => '<span class="fa fa-envelope-o fa-lg"></span>'. '   '.'email',
 											'url' => '/email/mail-box',
-											'badge' => ''
+											'badge' => '2'
 										],	
-																				
+										[
+											'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. 'Profile',
+											'url' => '/sistem/user-profile',
+											
+										],										
 
 									]),
 							],
@@ -113,33 +117,34 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 										[
 											'content' => '<span class="fa fa-calendar-check-o fa-lg"></span>'. '   '.'Pilot Project',
 											'url' => '/widget/pilotproject',
-											'badge' => ''
+											'badge' => '2'
 										],	
 										[
 											'content' => '<span class="fa fa-edit fa-lg"></span>'. '   '.'Daily Jobs',
 											'url' => '/widget/jobsdaily',
-											'badge' => ''
+											'badge' => '14'
 										],									
 										[
 											'content' =>'<span class="fa fa-tags fa-lg"></span>'. '   '. 'Head Jobs ',
 											'url' => '/widget/headjob',
-											'badge' => ''
+											'badge' => '14'
+										],									
+										[
+											'content' => '<span class="fa fa-sign-in fa-lg"></span>'. '   '.'Additional Jobs',
+											'url' => '/widget/addjob',
+											'badge' => '2'
 										],
 										[
 											'content' => '<span class="fa fa-upload fa-lg"></span>'. '   '.'Arsip File',
 											'url' => '/widget/arsip',
-											'badge' => ''
+											'badge' => '2'
 										],
-										/* [
+										[
 											'content' => '<span class="fa fa-book fa-lg"></span>'. '   '.'Documentation',
 											'url' => '/widget/docdba',
-											'badge' => ''
-										],	 */								
-										[
-											'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. 'Profile',
-											'url' => '/sistem/user-profile',
-											
-										],
+											'badge' => '2'
+										],									
+
 									]),
 							],
 							Html::TYPE_DANGER
@@ -159,24 +164,28 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 										[
 											'content' => '<span class="fa fa-cart-arrow-down fa-lg"></span>'. '   '.'Request Order',
 											'url' => '/purchasing/request-order',
-											'badge' => ''
+											'badge' => '1'
 										],	
 										[
 											'content' => '<span class="fa fa-cart-plus fa-lg"></span>'. '   '.'Sales Order',
 											'url' => '/purchasing/sales-order',
-											'badge' => ''
+											'badge' => '14'
 										],											
 										[
 											'content' => '<span class="fa fa-shopping-cart fa-lg"></span>'. '   '.'Purchase Order',
 											'url' => '/purchasing/purchase-order',
-											'badge' => ''
-										],										
-										[
-											'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Request TERM',
-											'url' => '/master/term-customers',
-											'badge' => ''
+											'badge' => '2'
 										],
-										
+										[
+											'content' => '<span class="fa fa-calculator fa-lg"></span>'. '   '.'Reimburse',
+											'url' => '/accounting/raimburse',
+											'badge' => '2'
+										],
+										[
+											'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'SPJD',
+											'url' => '/accounting/dinas',
+											'badge' => '2'
+										],
 									]),
 							],
 							Html::TYPE_DANGER
@@ -185,9 +194,9 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 					
 				</div>				
 			</div>		
-			<div class="row" style="padding-bottom:40px" >
+			<div class="row" >
 				<div class="col-xs-12 col-sm-12 col-dm-12  col-lg-12" >
-					<div class="pre-scrollable alert alert-info" style="height:95px; padding-bottom:50px">				  
+					<div class="pre-scrollable alert alert-info" style="height:75px">				  
 					  <strong> Lentera Lukison </strong> <span class='fa fa-fire fa-lg'> </span>
 						<br> 
 							Let's try to use ERP (Enterprise resource planning), hopefully this can !, remember, simplify, speed up and tidying your work.
