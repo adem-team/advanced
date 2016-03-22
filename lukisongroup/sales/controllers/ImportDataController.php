@@ -42,6 +42,32 @@ class ImportDataController extends Controller
         ];
     }
 	
+	/**
+     * Before Action Index
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	public function beforeAction(){
+			if (Yii::$app->user->isGuest)  {
+				 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+			}
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+				   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true;
+               }
+            } else {
+                return true;
+            }
+    }
+	
 	 /**
      * IMPORT DATA EXCEL
      * @return mixed
@@ -55,10 +81,10 @@ class ImportDataController extends Controller
 		
 		
 		return $this->render('index',[
+			/*VIEW ARRAY FILE*/
 			'getArryFile'=>$this->getArryFile($paramFile),
-			//'dataFile'=>$this->getArryFIle(),
+			'fileName'=>$paramFile,
 			'gvColumnAryFile'=>$this->gvColumnAryFile(),
-			//'dataImport'=>$this->getArryImport(),
 			/*GRID VALIDATE*/
 			'gvValidateColumn'=>$this->gvValidateColumn(),
 			'gvValidateArrayDataProvider'=>$this->gvValidateArrayDataProvider(),
@@ -190,7 +216,7 @@ class ImportDataController extends Controller
 				//'key' => 'ID',
 				'allModels'=>$data,
 				 'pagination' => [
-					'pageSize' => 500,
+					'pageSize' => 1000,
 				]
 			]);
 			
@@ -303,7 +329,8 @@ class ImportDataController extends Controller
 	}
 	/*GRID ARRAY DATA PROVIDER*/
 	private function gvValidateArrayDataProvider(){
-		$data=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','2016-01-23','O041','EF001','DIS.001')")->queryAll(); 
+		$user= Yii::$app->user->identity->username;
+		$data=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$user."')")->queryAll(); 
 		$aryDataProvider= new ArrayDataProvider([
 			'key' => 'ID',
 			'allModels'=>$data,
@@ -367,13 +394,62 @@ class ImportDataController extends Controller
 	 
 	
 	/**====================================
-     * IMPORT DATA EXCEL >> LIVE
+     * IMPORT DATA EXCEL >> TEMP VALIDATION
      * @return mixed
 	 * @author piter [ptr.nov@gmail.com]
 	 * ====================================
      */
-	public function getArryImport(){		
-		$data=$this->getArryFIle();
+	public function actionImport_temp_validation(){
+		if (Yii::$app->request->isAjax) {
+			$request= Yii::$app->request;
+			$id=$request->post('id');
+			$username=  Yii::$app->user->identity->username;
+			$data=$this->getArryFile($id)->getModels();
+			//'STOCK','2016-01-23','O041','ROBINSON MALL TATURA PALU','EF001','MAXI Cassava Crackers Hot Spicy','1','admin'
+			$stt=0;
+			foreach($data as $key => $value){
+				
+				//$cmd->reset();
+				$tgl=$value['DATE'];
+				$cust_kd= $value['CUST_KD'];
+				$cust_nm= $value['CUST_NM'];
+				$item_kd= $value['ITEM_ID'];
+				$item_nm=$value['ITEM_NM'];
+				$qty=$value['QTY_PCS'];
+				$user_id=$username;
+				//$result='('."'".$a."','".$b."')";
+				
+				/*DELETE STORED FIRST EXECUTE*/
+				if ($stt==0){
+					$cmd1=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
+									'STOCK_DELETE','".$tgl."','".$cust_kd."','".$cust_nm."','".$item_kd."','".$item_nm."','".$qty."','".$user_id."'					
+								);				
+						");
+					$cmd1->execute();					
+				};
+				//print_r($result);
+				$cmd=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
+								'STOCK','".$tgl."','".$cust_kd."','".$cust_nm."','".$item_kd."','".$item_nm."','".$qty."','".$user_id."'					
+						);				
+				");
+				$cmd->execute();
+				//$spinnerVal=false;
+				$stt=$stt+1;
+			} 
+				
+			
+			
+			
+			
+			return '[{'.$tgl.'}]';
+			//return true;
+			//return $this->redirect(['index','id'=>$model->FILE_NM,'tg'=>$tgl]);
+		}
+		
+		
+		//$paramFile=Yii::$app->getRequest()->getQueryParam('id');
+		//echo $paramCari;		
+		/* $data=$this->getArryFIle();
 		$spinnerVal=true;
 		foreach($data as $key => $value){
 			//$cmd->reset();
@@ -386,7 +462,7 @@ class ImportDataController extends Controller
 			//$cmd->execute();
 			$spinnerVal=false;
 		} 
-		return Spinner::widget(['preset' => 'medium', 'align' => 'center', 'color' => 'blue','hidden'=>$spinnerVal]);
+		return Spinner::widget(['preset' => 'medium', 'align' => 'center', 'color' => 'blue','hidden'=>$spinnerVal]); */
 	}
 	
 }
