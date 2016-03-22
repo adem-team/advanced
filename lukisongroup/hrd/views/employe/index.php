@@ -37,7 +37,7 @@ $tab_employe= GridView::widget([
         'id'=>'active',
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-		'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],	
+		'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
         'columns' => $dinamkkColumn1,
 		'panel'=>[
             //'heading' =>true,// $hdr,//<div class="col-lg-4"><h8>'. $hdr .'</h8></div>',
@@ -48,12 +48,12 @@ $tab_employe= GridView::widget([
 															'data-target'=>"#activity-emp",
 															'class' => 'btn btn-success'
 															])
-        ], 
+        ],
         'pjax'=>true,
         'pjaxSettings'=>[
             'options'=>[
                 'enablePushState'=>false,
-                'id'=>'active',               
+                'id'=>'active',
 			],
 		],
         'hover'=>true, //cursor select
@@ -129,12 +129,12 @@ $tab_employe_resign= GridView::widget([
 			'label'=>'<i class="glyphicon glyphicon-home"></i> Employe Active','content'=>$tab_employe,
 			//'active'=>true,
 		],
-		
+
 		[
 			'label'=>'<i class="glyphicon glyphicon-home"></i> Employe Resign','content'=>$tab_employe_resign,//$tab_profile,
 		],
 	];
-	
+
 	echo TabsX::widget([
 		'id'=>'tab-emp',
 		'items'=>$items,
@@ -145,22 +145,22 @@ $tab_employe_resign= GridView::widget([
 		//'align'=>TabsX::ALIGN_LEFT,
 
 	]);
-	 
-	$this->registerJs("	
-		$.fn.modal.Constructor.prototype.enforceFocus = function(){};	 
+
+	$this->registerJs("
+		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		$('#activity-emp').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget)
 			var modal = $(this)
-			var title = button.data('title') 
-			var href = button.attr('href') 
+			var title = button.data('title')
+			var href = button.attr('href')
 			modal.find('.modal-title').html(title)
 			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
 			$.post(href)
-				.done(function( data ) {						
-					modal.find('.modal-body').html(data)					
-				});		
-			 
-		})				
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+
+		})
 		//$(#activity-emp).datepicker('disable');
 	",$this::POS_READY);
 	Modal::begin([
@@ -168,14 +168,13 @@ $tab_employe_resign= GridView::widget([
 		'header' => '<h4 class="modal-title">LukisonGroup</h4>',
 	]);
 	Modal::end();
-	
+
 	/*
 	 * EDIT EMPLOYEE IEDNTITY
 	 * @author ptrnov [ptr.nov@gmail.com]
 	 * @since 1.2
 	 */
 	$this->registerJs("
-		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		 $('#edit-identity').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget)
 			var modal = $(this)
@@ -197,38 +196,91 @@ $tab_employe_resign= GridView::widget([
 		],
     ]);
     Modal::end();
-	
+
+
+    $this->registerJs("
+       $('#edit-profile').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        var modal = $(this)
+        var title = button.data('title')
+        var href = button.attr('href')
+        //modal.find('.modal-title').html(title)
+        modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+        $.post(href)
+          .done(function( data ) {
+            modal.find('.modal-body').html(data)
+          });
+        })
+    ",$this::POS_READY);
+      Modal::begin([
+          'id' => 'edit-profile',
+      'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">EMPLOYEE IDENTIFICATION</h4></div>',
+      'headerOptions'=>[
+          'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+      ],
+      ]);
+      Modal::end();
+
+      $this->registerJs("
+         $('#edit-resign').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget)
+          var modal = $(this)
+          var title = button.data('title')
+          var href = button.attr('href')
+          //modal.find('.modal-title').html(title)
+          modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+          $.post(href)
+            .done(function( data ) {
+              modal.find('.modal-body').html(data)
+            });
+          })
+      ",$this::POS_READY);
+        Modal::begin([
+            'id' => 'edit-resign',
+        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">EMPLOYEE IDENTIFICATION</h4></div>',
+        'headerOptions'=>[
+            'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+        ],
+        ]);
+        Modal::end();
+
+    /*
+     * EDIT EMPLOYEE Title
+     * @author wawan [aditiya2003@yahoo.com]
+     * @since 1.2
+     */
+
+
 		/*ViewDelate
 		$this->registerJs("
 		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		    $('#view-emp').on('show.bs.modal', function (event) {
 		        var button = $(event.relatedTarget)
 		        var modal = $(this)
-		        var title = button.data('title') 				
-		        var href = button.attr('href') 
+		        var title = button.data('title')
+		        var href = button.attr('href')
 		        modal.find('.modal-title').html(title)
 		        modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
 				$.post(href)
 		            .done(function( data ) {
 		                modal.find('.modal-body').html(data)
-												
-					});						
+
+					});
 		    });
 			//$(this).datepicker();
 			//$('#my_datepicker').datepicker('destroy')
-			
+
 		",$this::POS_READY);
-		
+
 		$js='$("#view-emp").modal("show")';
 		$this->registerJs($js);
-		
+
 		Modal::begin([
 		    'id' => 'view-emp',
 		    'header' => '<h4 class="modal-title">LukisonGroup</h4>',
 		]);
-		
+
 		Modal::end();
 */
-			
-?>
 
+?>

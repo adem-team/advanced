@@ -1,11 +1,11 @@
 <?php
 
-namespace lukisongroup\sistem\models\erpmodul;
+namespace lukisongroup\sistem\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-//use lukisongroup\sistem\models\Modulerp;
+// use lukisongroup\sistem\models\Modulerp;
 
 /**
  * ModulerpSearch represents the model behind the search form about `lukisongroup\sistem\models\erpmodul\Modulerp`.

@@ -76,41 +76,28 @@ class TermCustomersController extends Controller
 
 
     public function actionUpload($id)
-    {
-      # code...
+{
+    $fileName = 'file';
+    // $uploadPath = 'upload/hrd/Employee';
+    $model = new Termgeneral();
 
-        $model =  TermCustomers::find()->where(['ID_TERM'=>$id])->one();
-        if ($model->load(Yii::$app->request->post()) ) {
-         $model->image = UploadedFile::getInstance($model, 'image');
+    if (isset($_FILES[$fileName])) {
+        $file = \yii\web\UploadedFile::getInstanceByName($fileName);
 
-         $data = $this->saveimage(file_get_contents( $model->image->tempName));
+        $data = $this->saveimage(file_get_contents( $file->tempName));
+           $model->ID_TERM = $id;
+           $model->ISI_TERM = $data;
 
-         $model->GENERAL_TERM = $data;
 
+        if ($model->save()) {
+            //Now save file data to database
 
-         $model->save();
-
-        //  print_r($model->getErrors());
-        //  die();
-
-         if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT'&&Yii::$app->getUserOpt->Modul_akses('3')->BTN_CREATE==1)
-         {
-             return $this->redirect(['review-act','id'=>$id]);
-         }
-         else{
-
-             return  $this->redirect(['view','id'=> $id]);
-         }
-        //  {
-        //      echo \yii\helpers\Json::encode($file);
-        //  }
-      }else{
-        return $this->renderAjax('_term', [
-            'model' => $model
-
-        ]);
-      }
+            echo \yii\helpers\Json::encode($file);
+        }
     }
+
+    return false;
+}
 
 
 
