@@ -18,6 +18,9 @@ use lukisongroup\purchasing\models\pr\Costcenter;
 use yii\widgets\ActiveForm;
 use kartik\widgets\FileInput;
 
+
+
+
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Termcustomers */
 
@@ -185,21 +188,6 @@ $this->params['breadcrumbs'][] = $this->title;
 		return $content;
 	}
 
-	function image($model){
-		$title = Yii::t('app','');
-		$options = [ 'id'=>'term-image',
-			  'data-toggle'=>"modal",
-			  'data-target'=>"#Growth",
-			  'class'=>'btn btn-warning btn-xs',
-			  //'style'=>['width'=>'150px'],
-			  'title'=>'Set'
-		];
-		$icon = '<span class="glyphicon glyphicon-open"></span>';
-		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/master/term-customers/upload','id'=>$model->ID_TERM]);
-		$content = Html::a($label,$url, $options);
-		return $content;
-	}
 
 
 	function getPermissionEmp(){
@@ -1058,14 +1046,37 @@ $this->params['breadcrumbs'][] = $this->title;
 	<!-- GENERAL TERM !-->
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+
 			<?php
- 			echo image($model);
-			$image = $model->imagedisplay($model->ID_TERM);
+		// 	$items = [];
+		// 	$data = Termgeneral::find()->where(['ID_TERM'=>$model->ID_TERM])
+		// 														->asArray()
+		// 														->all();
+		// 	foreach ($data as $value) {
+		// 	$items []= ['url' => $value['ISI_TERM'],'src' => $value['ISI_TERM']];
+		// }
+
+			 ?>
+
+			 <!-- dosamigos\gallery\Gallery::widget(['items' => $items]);?> -->
+
+			<?php
+			echo \kato\DropZone::widget([
+       'options' => [
+           'maxFilesize' => '2',
+					 'url'=>'/master/term-customers/upload?id='.$model->ID_TERM.''
+       ],
+       'clientEvents' => [
+           'complete' => "function(file){console.log(file)}",
+           'removedfile' => "function(file){alert(file.name + ' is removed')}"
+       ],
+   ]);
+			// $image = $model->imagedisplay($model->ID_TERM);
 			 ?>
 			 <div>
 				 <?php
-				 $dataimage = $image->GENERAL_TERM !=''? '<img src="data:image/jpeg;base64,' . $image->GENERAL_TERM . '" />' : '<u><h6><b>Upload Aturan</h6></b></u>';
-				 	echo  $dataimage;
+				//  $dataimage = $image->GENERAL_TERM !=''? '<img src="data:image/jpeg;base64,' . $image->GENERAL_TERM . '" />' : '<u><h6><b>Upload Aturan</h6></b></u>';
+				//  	echo  $dataimage;
 
 			?>
 		</div>

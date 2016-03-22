@@ -18,19 +18,19 @@ namespace lukisongroup\hrd\controllers;
 	use yii\helpers\Json;
 	use yii\helpers\ArrayHelper;
 	use kartik\grid\GridView;
-	
+
 	/* VARIABLE PRIMARY JOIN/SEARCH/FILTER/SORT Author: -ptr.nov- */
 	use lukisongroup\hrd\models\Employe;			/* TABLE CLASS JOIN */
 	use lukisongroup\hrd\models\EmployeSearch;	/* TABLE CLASS SEARCH */
 	use lukisongroup\hrd\models\Deptsub;
 	use lukisongroup\hrd\models\Jobgrademodul;
-    
+
 
 /* VARIABLE SIDE MENU Author: -Eka- */
 	//use lukisongroup\models\system\side_menu\M1000;			/* TABLE CLASS */
 	//use lukisongroup\models\system\side_menu\M1000Search;	/* TABLE CLASS SEARCH */
 /* CLASS SIDE MENU Author: -ptr.nov- */
-	
+
 	use lukisongroup\hrd\models\Corp;
 	use lukisongroup\hrd\models\Dept;
 	//use lukisongroup\hrd\models\Jabatan;
@@ -58,22 +58,23 @@ class EmployeController extends Controller
     }
 
 	private function aryCorp(){
-		return ArrayHelper::map(Corp::find()->orderBy('SORT')->asArray()->all(), 'CORP_NM','CORP_NM');		
-	}	
+		return ArrayHelper::map(Corp::find()->orderBy('SORT')->asArray()->all(), 'CORP_NM','CORP_NM');
+	}
 	private function aryCorpID(){
-		return ArrayHelper::map(Corp::find()->orderBy('SORT')->asArray()->all(), 'CORP_ID','CORP_NM');			
+		$datacorp =  ArrayHelper::map(Corp::find()->orderBy('SORT')->asArray()->all(), 'CORP_ID','CORP_NM');
+		return $datacorp;
 	}
 	private function aryDept(){
-		return ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 'DEP_NM','DEP_NM');		
+		return ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 'DEP_NM','DEP_NM');
 	}
 	private function aryDeptID(){
-		return ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 'DEP_ID','DEP_NM');		
+		return ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 'DEP_ID','DEP_NM');
 	}
 	private function aryDeptSub(){
 		return ArrayHelper::map(Deptsub::find()->orderBy('SORT')->asArray()->all(), 'DEP_SUB_NM','DEP_SUB_NM');
 	}
 	private function aryDeptSubID(){
-		return ArrayHelper::map(Deptsub::find()->orderBy('SORT')->asArray()->all(), 'DEP_SUB_ID','DEP_SUB_NM');	
+		return ArrayHelper::map(Deptsub::find()->orderBy('SORT')->asArray()->all(), 'DEP_SUB_ID','DEP_SUB_NM');
 	}
 	private function aryGrpFnc(){
 		return ArrayHelper::map(Groupfunction::find()->orderBy('SORT')->asArray()->all(), 'GF_NM','GF_NM');
@@ -99,8 +100,8 @@ class EmployeController extends Controller
 	private function arySttID(){
 		return ArrayHelper::map(Status::find()->orderBy('SORT')->asArray()->all(), 'STS_ID','STS_NM');
 	}
-		
-	
+
+
     /**
      * ACTION INDEX
      */
@@ -119,39 +120,39 @@ class EmployeController extends Controller
                } else {
                    //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
 				   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
-                   return true; 
+                   return true;
                }
             } else {
                 return true;
             }
     }
-		
+
     public function actionIndex()
     {
 		/*
-		 * SEARCH FIRST AND DIRECT 
+		 * SEARCH FIRST AND DIRECT
 		 * @author piter [ptr.nov@gmail.com]
 		 * @since 1.2
 		*/
 		$paramCari=Yii::$app->getRequest()->getQueryParam('id');
 		if ($paramCari!=''){
-			$cari=['EMP_ID'=>$paramCari];			
+			$cari=['EMP_ID'=>$paramCari];
 		}else{
-			$cari='';			
+			$cari='';
 		};
-		
+
 		/*	variable content View Employe Author: -ptr.nov- */
         $searchModel = new EmployeSearch($cari);
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-		 
-		/*	variable content View Additional Author: -ptr.nov- */ 
+
+		/*	variable content View Additional Author: -ptr.nov- */
 		//$searchFilter = $searchModel->searchALL(Yii::$app->request->queryParams);
         $searchModel1 = new EmployeSearch();
         $dataProvider1 = $searchModel1->search_resign(Yii::$app->request->queryParams);
-		
+
 		/*SHOW ARRAY YII Author: -Devandro-*/
 		//print_r($dataProvider->getModels());
-		
+
 		/*SHOW ARRAY JESON Author: -ptr.nov-*/
 		//echo  \yii\helpers\Json::encode($dataProvider->getModels());
         if (Yii::$app->request->post('hasEditable')) {
@@ -204,19 +205,19 @@ class EmployeController extends Controller
 		//print_r($generate_key_emp);
 		 //$model = $this->findModel('ALG.2015.000056');
 		return $this->render('index', [
-			'searchModel' => $searchModel, 		
-			'dinamkkColumn1'=>$this->gvColumn1(),	
-			'dinamkkColumn2'=>$this->gvColumn2(),	
-            'dataProvider' => $dataProvider,	
+			'searchModel' => $searchModel,
+			'dinamkkColumn1'=>$this->gvColumn1(),
+			'dinamkkColumn2'=>$this->gvColumn2(),
+            'dataProvider' => $dataProvider,
             'searchModel1' => $searchModel1,
-            'dataProvider1' => $dataProvider1, 
+            'dataProvider1' => $dataProvider1,
 			'aryCorpID'=>$this->aryCorpID(),
 			'aryDept'=>$this->aryDept(),
 			'aryDeptSub'=>$this->aryDeptSub(),
 			'aryGrpFnc'=>$this->aryGrpFnc(),
 			'arySeq'=>$this->arySeq(),
 			'aryJab'=>$this->aryJab(),
-			'aryStt'=>$this->aryStt()	
+			'aryStt'=>$this->aryStt()
         ]);
     }
 
@@ -238,34 +239,34 @@ class EmployeController extends Controller
 					}
 					//return $this->redirect(['view', 'id' => $model->EMP_ID]);
 					return $this->redirect(['index']);
-				} 
+				}
 			}
 		}else {
 			 $js1="$.fn.modal.Constructor.prototype.enforceFocus = function(){};
 			 $('#view-emp').on('show.bs.modal', function (event) {
 		        var button = $(event.relatedTarget)
 		        var modal = $(this)
-		        var title = button.data('title') 				
-		        var href = button.attr('href') 
+		        var title = button.data('title')
+		        var href = button.attr('href')
 		        modal.find('.modal-title').html(title)
 		        modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
 				$.post(href)
 		            .done(function( data ) {
-		                modal.find('.modal-body').html(data)						
-					});				
+		                modal.find('.modal-body').html(data)
+					});
 				})";
-				$this->enableCsrfValidation = false; 
+				$this->enableCsrfValidation = false;
 			//$js='$("#view-emp").modal("show")';
 			//$this->getView(['index'])->registerJs($js);
             //return $this->render('view', [
             //return $this->renderAjax('_view', [
 
             return $this->renderAjax('_view', [
-                'model' => $model,				
+                'model' => $model,
             ]);
         }
     }
-	
+
 	/*
 	public function actionViewedit($id)
     {
@@ -282,7 +283,7 @@ class EmployeController extends Controller
 					}
 					//return $this->redirect(['view', 'id' => $model->EMP_ID]);
 					return $this->redirect(['index']);
-				} 
+				}
 			}
 		}else {
             //return $this->render('view', [
@@ -296,12 +297,12 @@ class EmployeController extends Controller
      * ACTION CREATE note | $id=PrimaryKey -> TRIGER FROM VIEW  -ptr.nov-
      */
     public function actionCreate()
-    {		
+    {
         $model = new Employe();
 
-        if ($model->load(Yii::$app->request->post())){			
-			$upload_file=$model->uploadFile();
-			var_dump($model->validate());
+        if ($model->load(Yii::$app->request->post())){
+			$upload_file=$model->uploadImage();
+			// var_dump($model->validate());
 			if($model->validate()){
 				if($model->save()) {
 					$model->CREATED_BY=Yii::$app->user->identity->username;
@@ -310,9 +311,11 @@ class EmployeController extends Controller
 						$path=$model->getUploadedFile();
 						$upload_file->saveAs($path);
 					}
-					//return $this->redirect(['view', 'id' => $model->EMP_ID]);	
-					return $this->redirect(['index']);	
-				} 
+					// print_r($model->save());
+					// die();
+					//return $this->redirect(['view', 'id' => $model->EMP_ID]);
+					return $this->redirect(['index']);
+				}
 			}
 		}else {
 			//$js='$("#create-emp").modal("show")';
@@ -328,18 +331,18 @@ class EmployeController extends Controller
 	/**
      * View & Update -> EMPLOYEE IDENTITY
      * @author piter [ptr.nov@gmail.com]
-     * @since 1.2 
+     * @since 1.2
      */
 	public function actionEditIdentity($id){
         $model = $this->findModel($id);
-		
+
 		if (!$model->load(Yii::$app->request->post())) {
 			return $this->renderAjax('_form_edit_identity', [
 					'model' => $model,
-					'aryCorpID'=>$this->aryCorpID(),
-				]); 				
+					// 'aryCorpID'=>$,
+				]);
 		}else{
-				
+
 			if(Yii::$app->request->isAjax){
 				$model->load(Yii::$app->request->post());
 				return Json::encode(\yii\widgets\ActiveForm::validate($model));
@@ -352,14 +355,116 @@ class EmployeController extends Controller
 						if ($image !== false) {
 							$path = $model->getImageFile();
 							$image->saveAs($path);
-						} 
+						}
 					}
-					return $this->redirect(['index','id'=>$model->EMP_ID]);			
+					return $this->redirect(['index','id'=>$model->EMP_ID]);
 				}
-			}	
+			}
 		}
 	}
-	
+// edit-titel
+	public function actionEditTitel($id){
+        $model = $this->findModel($id);
+				$datacorp =  ArrayHelper::map(Corp::find()->orderBy('SORT')->asArray()->all(), 'CORP_ID','CORP_NM');
+				$datadep = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 'DEP_ID','DEP_NM');
+				$aryGrpFnc =ArrayHelper::map(Groupfunction::find()->orderBy('SORT')->asArray()->all(), 'GF_ID','GF_NM');
+				$arySeqID = ArrayHelper::map(Groupseqmen::find()->orderBy('SEQ_NM')->asArray()->all(), 'SEQ_ID','SEQ_NM');
+				$emp_sts =  ArrayHelper::map(Status::find()->orderBy('SORT')->asArray()->all(), 'STS_ID','STS_NM');
+
+		if (!$model->load(Yii::$app->request->post())) {
+			return $this->renderAjax('_form_edit_title', [
+					'model' => $model,
+					'datacorp'=>$datacorp,
+					'datadep'=>$datadep,
+					'aryGrpFnc'=>$aryGrpFnc,
+					'arySeqID' =>$arySeqID,
+					'emp_sts'=>$emp_sts
+				]);
+		}else{
+
+			if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}else{
+				if ($model->load(Yii::$app->request->post())) {
+					//$model->save();
+					$image = $model->uploadImage();
+					if ($model->save()) {
+						// upload only if valid uploaded file instance found
+						if ($image !== false) {
+							$path = $model->getImageFile();
+							$image->saveAs($path);
+						}
+					}
+					return $this->redirect(['index','id'=>$model->EMP_ID]);
+				}
+			}
+		}
+	}
+
+	public function actionEditProfile($id){
+				$model = $this->findModel($id);
+
+
+		if (!$model->load(Yii::$app->request->post())) {
+			return $this->renderAjax('_form_profile', [
+					'model' => $model,
+
+				]);
+		}else{
+
+			if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}else{
+				if ($model->load(Yii::$app->request->post())) {
+					//$model->save();
+					$image = $model->uploadImage();
+					if ($model->save()) {
+						// upload only if valid uploaded file instance found
+						if ($image !== false) {
+							$path = $model->getImageFile();
+							$image->saveAs($path);
+						}
+					}
+					return $this->redirect(['index','id'=>$model->EMP_ID]);
+				}
+			}
+		}
+	}
+
+	public function actionResign($id){
+				$model = $this->findModel($id);
+				$emp_sts =  ArrayHelper::map(Status::find()->orderBy('SORT')->asArray()->all(), 'STS_ID','STS_NM');
+
+		if (!$model->load(Yii::$app->request->post())) {
+			return $this->renderAjax('form_resign', [
+					'model' => $model,
+					'emp_sts'=>$emp_sts
+				]);
+		}else{
+
+			if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}else{
+				if ($model->load(Yii::$app->request->post())) {
+					//$model->save();
+					$image = $model->uploadImage();
+					if ($model->save()) {
+						// upload only if valid uploaded file instance found
+						if ($image !== false) {
+							$path = $model->getImageFile();
+							$image->saveAs($path);
+						}
+					}
+					return $this->redirect(['index','id'=>$model->EMP_ID]);
+				}
+			}
+		}
+	}
+
+
     /**
      * ACTION UPDATE -> $id=PrimaryKey
      */
@@ -385,7 +490,7 @@ class EmployeController extends Controller
 		$model->STATUS = 3;
 		$model->UPDATED_BY = Yii::$app->user->identity->username;
 		$model->save();
-		
+
         return $this->redirect(['index']);
     }
 
@@ -432,7 +537,7 @@ class EmployeController extends Controller
         //return $this->render('view', ['model'=>$model]);
     }
 	*/
-	
+
 	   /*GENERATE CODE EMPLOYE DEPDROP*/
 	   public function actionSubcat() {
             $out = [];
@@ -463,62 +568,62 @@ class EmployeController extends Controller
             }
             echo Json::encode(['output'=>'', 'selected'=>'']);
         }
-		
+
 		/*DEPARTMENT - SUB DEPARTMENT DEPDROP*/
 		public function actionSubdept() {
              $out = [];
 			if (isset($_POST['depdrop_parents'])) {
 				$parents = $_POST['depdrop_parents'];
-				if ($parents != null) {					
+				if ($parents != null) {
 					$DEP_ID = $parents[0];
 					$param1 = null;
 					if (!empty($_POST['depdrop_params'])) {
 						$params = $_POST['depdrop_params'];
-						$param1 = $params[0]; // get the value of sub dept =js value/html							
-					}					
-										
+						$param1 = $params[0]; // get the value of sub dept =js value/html
+					}
+
 					$model = Deptsub::find()->asArray()->where(['DEP_ID'=>$DEP_ID])->all();
-					
+
 						foreach ($model as $key => $value) {
 							   $out[] = ['id'=>$value['DEP_SUB_ID'],'name'=> $value['DEP_SUB_NM']];
-						   }					
-						
+						   }
+
 					   echo json_encode(['output'=>$out, 'selected'=>$param1]);
 					   return;
 				   }
 			   }
 			   echo Json::encode(['output'=>'', 'selected'=>'']);
         }
-		
+
 		/* JOBGRADE DEPDROP*/
 		public function actionGrading() {
              $out = [];
 			if (isset($_POST['depdrop_parents'])) {
 				$parents = $_POST['depdrop_parents'];
 				if ($parents != null) {
-					$GRP_FNC = $parents[0];	
+					$GRP_FNC = $parents[0];
 					$GRP_SEQ = $parents[1];
 					$grd_param1 = null;
 					if (!empty($_POST['depdrop_params'])) {
 						$params = $_POST['depdrop_params'];
 						$grd_param1 = $params[0]; // get the value of grading_id  = js/html value								}
 					}
-					
-					$model = Jobgrademodul::find()->asArray()->where(['GF_ID'=>$GRP_FNC,'SEQ_ID'=>$GRP_SEQ])->all();					
+
+					$model = Jobgrademodul::find()->asArray()->where(['GF_ID'=>$GRP_FNC,'SEQ_ID'=>$GRP_SEQ])->all();
 						foreach ($model as $key => $value) {
 							   $out[] = ['id'=>$value['JOBGRADE_ID'],'name'=> $value['JOBGRADE_NM']];
 						   }
-						   
+
 					   echo json_encode(['output'=>$out, 'selected'=>$grd_param1]);
 					   //echo json_encode(['output'=>$out, 'selected'=>'']);
-					    
+
 					   return;
 				   }
 			   }
 			   echo Json::encode(['output'=>'', 'selected'=>'']);
         }
-	
-	
+
+
 	/*
 	 * PENGUNAAN DALAM GRID
 	 * Arry Setting Attribute
@@ -527,13 +632,13 @@ class EmployeController extends Controller
 		foreach($valFields as $key =>$value[])
 		{
 			print_r($value[0]['FIELD'].','.$value[0]['SIZE']);		//SATU
-			print_r($value[$key]['FIELD'].','.$value[0]['SIZE']);	//ARRAY 0-end		
-		} 
-	*/	
-	private function gvAttribute(){		
+			print_r($value[$key]['FIELD'].','.$value[0]['SIZE']);	//ARRAY 0-end
+		}
+	*/
+	private function gvAttribute(){
 		$aryField= [
 			//['ID' =>0, 'ATTR' =>['FIELD'=>'EMP_IMG','SIZE' => '10px','label'=>'Image','align'=>'left']],
-			['ID' =>0, 'ATTR' =>['FIELD'=>'EMP_ID','SIZE' => '10px','label'=>'Employee.ID','align'=>'left']],		  
+			['ID' =>0, 'ATTR' =>['FIELD'=>'EMP_ID','SIZE' => '10px','label'=>'Employee.ID','align'=>'left']],
 			['ID' =>1, 'ATTR' =>['FIELD'=>'EMP_NM','SIZE' => '20px','label'=>'Name','align'=>'left']],
 			['ID' =>2, 'ATTR' =>['FIELD'=>'corpOne.CORP_NM','SIZE' => '20px','label'=>'Company','align'=>'left']],
 			['ID' =>3, 'ATTR' =>['FIELD'=>'deptOne.DEP_NM','SIZE' => '20px','label'=>'Department','align'=>'left']],
@@ -542,18 +647,18 @@ class EmployeController extends Controller
 			['ID' =>6, 'ATTR' =>['FIELD'=>'groupseqmen.SEQ_NM','SIZE' => '10px','label'=>'Seqment','align'=>'left']],
 			['ID' =>7, 'ATTR' =>['FIELD'=>'jobgrade.JOBGRADE_NM','SIZE' => '10px','label'=>'Greding','align'=>'left']],
 			['ID' =>8, 'ATTR' =>['FIELD'=>'sttOne.STS_NM','SIZE' => '10px','label'=>'Status','align'=>'left']],
-			['ID' =>9, 'ATTR' =>['FIELD'=>'EMP_JOIN_DATE','SIZE' => '10px','label'=>'Join.Date','align'=>'left']]	  
-		];	
-		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
-			
+			['ID' =>9, 'ATTR' =>['FIELD'=>'EMP_JOIN_DATE','SIZE' => '10px','label'=>'Join.Date','align'=>'left']]
+		];
+		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR');
+
 		return $valFields;
 	}
-	
-	
-	
+
+
+
 	public function gvColumn1() {
 		/*NO ATTRIBUTE*/
-		$attDinamik[] =[			
+		$attDinamik[] =[
 				'class'=>'kartik\grid\SerialColumn',
 				'contentOptions'=>['class'=>'kartik-sheet-style'],
 				'width'=>'10px',
@@ -574,16 +679,16 @@ class EmployeController extends Controller
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				],					
+				],
 		];
-		
+
 		$attDinamik[]=[
 			'class'=>'kartik\grid\ActionColumn',
 			'dropdown' => true,
 			'template' => '{view}{edit0}{edit1}{edit2}{edit3}{lihat}',
 			'dropdownOptions'=>['class'=>'pull-left dropdown'],
 			'dropdownButton'=>['class' => 'btn btn-default btn-xs'],
-			'buttons' => [	
+			'buttons' => [
 				'view' =>function($url, $model, $key){
 						return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
 													['/hrd/employe/view','id'=>$model->EMP_ID],[
@@ -591,7 +696,7 @@ class EmployeController extends Controller
 													'data-target'=>"#activity-emp",
 													'data-title'=> $model->EMP_ID,
 													]). '</li>' . PHP_EOL;
-				},	
+				},
 				// BUTTON EMPLOYEE IDENTITY
 				'edit0' =>function($url, $model, $key){
 						return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Set Identity'),
@@ -603,15 +708,15 @@ class EmployeController extends Controller
 				},
 				'edit1' =>function($url, $model, $key){
 						return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Set Title'),
-													['/master/employe/edit-titel','id'=>$model->EMP_ID],[
+													['/hrd/employe/edit-titel','id'=>$model->EMP_ID],[
 													'data-toggle'=>"modal",
-													'data-target'=>"#edit-title",
+													'data-target'=>"#activity-emp",
 													'data-title'=> $model->EMP_ID,
 													]). '</li>' . PHP_EOL;
 				},
 				'edit2' =>function($url, $model, $key){
 						return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Set Profile'),
-													['/master/employe/edit','id'=>$model->EMP_ID],[
+													['/hrd/employe/edit-profile','id'=>$model->EMP_ID],[
 													'data-toggle'=>"modal",
 													'data-target'=>"#edit-profile",
 													'data-title'=> $model->EMP_ID,
@@ -621,13 +726,23 @@ class EmployeController extends Controller
 						//$gF=getPermissionEmp()->GF_ID;
 						//if ($gF<=4){
 							return  '<li>' . Html::a('<span class="fa fa-money fa-dm"></span>'.Yii::t('app', 'Set Payroll'),
-													['/master/employe/edit','id'=>$model->EMP_ID],[
+													['/hrd/employe/payrol','id'=>$model->EMP_ID],[
 													'data-toggle'=>"modal",
 													'data-target'=>"#edit-payroll",
 													]). '</li>' . PHP_EOL;
 						//}
-				}			
-			],
+				},
+			'lihat' =>function($url, $model, $key) {
+					//$gF=getPermissionEmp()->GF_ID;
+					//if ($gF<=4){
+						return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Set Resign'),
+												['/hrd/employe/resign','id'=>$model->EMP_ID],[
+												'data-toggle'=>"modal",
+												'data-target'=>"#edit-resign",
+												]). '</li>' . PHP_EOL;
+					//}
+			}
+		],
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
@@ -646,12 +761,12 @@ class EmployeController extends Controller
 					'font-size'=>'9pt',
 				]
 			],
-		
+
 		];
 		return array_merge($attDinamik,$this->gvColumn());
 	}
 	public function gvColumn2() {
-		$attDinamik[] =[			
+		$attDinamik[] =[
 				'class'=>'kartik\grid\SerialColumn',
 				'contentOptions'=>['class'=>'kartik-sheet-style'],
 				'width'=>'10px',
@@ -672,22 +787,22 @@ class EmployeController extends Controller
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				],					
+				],
 		];
 		//return array_merge($attDinamik,$this->gvColumn());
 		return array_merge($attDinamik,$this->gvColumn());
 	}
-	
-	
+
+
 	/*
 	 * GRIDVIEW COLUMN
 	 * @author ptrnov [ptr.nov@gmail.com]
 	 * @since 1.2
-	*/	
+	*/
 	public function gvColumn() {
 		$attDinamik =[];
 		/*Image*/
-		$attDinamik[] =[			
+		$attDinamik[] =[
 				'attribute'=>'EMP_IMG',
 				'label'=>'Image',
 				'format' => 'html',
@@ -713,41 +828,41 @@ class EmployeController extends Controller
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
-				],					
-		];	
+				],
+		];
 		/*OTHER ATTRIBUTE*/
 		foreach($this->gvAttribute() as $key =>$value[]){
 			$filterWidgetOpt='';
-			if ($value[$key]['FIELD']=='corpOne.CORP_NM'){				
+			if ($value[$key]['FIELD']=='corpOne.CORP_NM'){
 				//$gvfilterType=GridView::FILTER_SELECT2;
 				//$gvfilterType=false;
 				$gvfilter =$this->aryCorp();
-				 // $filterWidgetOpt=[				
-					// 'pluginOptions'=>['allowClear'=>true],	
-					//'placeholder'=>'Any author'					
-				// ]; 
+				 // $filterWidgetOpt=[
+					// 'pluginOptions'=>['allowClear'=>true],
+					//'placeholder'=>'Any author'
+				// ];
 				//$filterInputOpt=['placeholder'=>'Any author'];
-			}elseif($value[$key]['FIELD']=='deptOne.DEP_NM'){				
+			}elseif($value[$key]['FIELD']=='deptOne.DEP_NM'){
 				$gvfilterType=false;
-				$gvfilter =$this->aryDept();				
-			}elseif($value[$key]['FIELD']=='deptsub.DEP_SUB_NM'){				
+				$gvfilter =$this->aryDept();
+			}elseif($value[$key]['FIELD']=='deptsub.DEP_SUB_NM'){
 				$gvfilterType=false;
-				$gvfilter =$this->aryDeptSub();				
-			}elseif($value[$key]['FIELD']=='groupfunction.GF_NM'){				
+				$gvfilter =$this->aryDeptSub();
+			}elseif($value[$key]['FIELD']=='groupfunction.GF_NM'){
 				$gvfilterType=false;
-				$gvfilter =$this->aryGrpFnc();				
-			}elseif($value[$key]['FIELD']=='groupseqmen.SEQ_NM'){				
+				$gvfilter =$this->aryGrpFnc();
+			}elseif($value[$key]['FIELD']=='groupseqmen.SEQ_NM'){
 				$gvfilterType=false;
-				$gvfilter =$this->arySeq();				
-			}elseif($value[$key]['FIELD']=='jobgrade.JOBGRADE_NM'){				
+				$gvfilter =$this->arySeq();
+			}elseif($value[$key]['FIELD']=='jobgrade.JOBGRADE_NM'){
 				$gvfilterType=false;
-				$gvfilter =$this->aryJab();				
-			}elseif($value[$key]['FIELD']=='sttOne.STS_NM'){				
+				$gvfilter =$this->aryJab();
+			}elseif($value[$key]['FIELD']=='sttOne.STS_NM'){
 				$gvfilterType=false;
-				$gvfilter =$this->aryStt();				
+				$gvfilter =$this->aryStt();
 			}
 			// elseif($value[$key]['FIELD']=='EMP_JOIN_DATE'){
-				// $gvfilterType=GridView::FILTER_DATE_RANGE;		
+				// $gvfilterType=GridView::FILTER_DATE_RANGE;
 				// $filterWidgetOpt=[
 					//'attribute' =>'EMP_JOIN_DATE',
 					// 'presetDropdown'=>true,
@@ -757,9 +872,9 @@ class EmployeController extends Controller
 							// 'separator' => ' TO ',
 							// 'opens'=>'left'
 						// ],
-				// ];				
+				// ];
 			// }
-			
+
 			/*
 			elseif($value[$key]['FIELD']=='cabOne.CAB_NM'){
 				$gvfilterType=false;
@@ -787,15 +902,15 @@ class EmployeController extends Controller
 						// ],
 				// ];
 			// }
-			 */	
+			 */
 			else{
 				$gvfilterType=false;
 				$gvfilter=true;
-				$filterWidgetOpt=false;		
-				//$filterInputOpt=false;						
-			};			
-				
-			$attDinamik[]=[		
+				$filterWidgetOpt=false;
+				//$filterInputOpt=false;
+			};
+
+			$attDinamik[]=[
 				'attribute'=>$value[$key]['FIELD'],
 				'label'=>$value[$key]['label'],
 				//'format' => 'html',
@@ -806,21 +921,21 @@ class EmployeController extends Controller
 				}, */
 				'filterType'=>$gvfilterType,
 				'filter'=>$gvfilter,
-				'filterWidgetOptions'=>$filterWidgetOpt,	
-				//'filterInputOptions'=>$filterInputOpt,				
+				'filterWidgetOptions'=>$filterWidgetOpt,
+				//'filterInputOptions'=>$filterInputOpt,
 				'hAlign'=>'right',
 				'vAlign'=>'middle',
 				//'mergeHeader'=>true,
-				'noWrap'=>true,			
-				'headerOptions'=>[		
-						'style'=>[									
+				'noWrap'=>true,
+				'headerOptions'=>[
+						'style'=>[
 						'text-align'=>'center',
 						'width'=>$value[$key]['FIELD'],
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'8pt',
 						'background-color'=>'rgba(97, 211, 96, 0.3)',
 					]
-				],  
+				],
 				'contentOptions'=>[
 					'style'=>[
 						'text-align'=>$value[$key]['align'],
@@ -834,21 +949,21 @@ class EmployeController extends Controller
 				//'pageSummary'=>true,
 				'pageSummaryOptions' => [
 					'style'=>[
-							'text-align'=>'right',		
+							'text-align'=>'right',
 							//'width'=>'12px',
 							'font-family'=>'tahoma',
-							'font-size'=>'8pt',	
+							'font-size'=>'8pt',
 							'text-decoration'=>'underline',
 							'font-weight'=>'bold',
-							'border-left-color'=>'transparant',		
-							'border-left'=>'0px',									
+							'border-left-color'=>'transparant',
+							'border-left'=>'0px',
 					]
-				],	
-			];	
-		}	
-		
+				],
+			];
+		}
+
 		return $attDinamik;
 	}
-	
-	
+
+
 }

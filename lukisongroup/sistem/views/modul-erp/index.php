@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use lukisongroup\sistem\models\Modulerp;
 
 $this->sideCorp = 'PT.Lukisongroup';                        /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'admin';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
