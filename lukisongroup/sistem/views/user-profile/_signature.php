@@ -6,7 +6,8 @@ use yii\bootstrap\Modal;
 use yii\helpers\Url;
 use lukisongroup\assets\AppAssetJqueryJSignature;
 AppAssetJqueryJSignature::register($this); 
-
+use lukisongroup\assets\HomeWorkbench;
+HomeWorkbench::register($this);
 $this->registerCss("	
 	/*This is the div within which the signature canvas is fitted*/
 	#sig-disply-input {
@@ -28,13 +29,13 @@ $this->registerCss("
 		$title1 = Yii::t('app', 'Set Signature Secure Password');
 		$options1 = [ 'id'=>'signature-signup',	
 					  'data-toggle'=>"modal",
-					  'data-target'=>"#sig-signup-password",											
+					  'data-target'=>"#signature-password",											
 					  'class' => 'btn btn-warning',
 		]; 
 		$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 		$label1 = $icon1 . ' ' . $title1;
 		$url1 = Url::toRoute(['/sistem/user-profile/password-signature-form']);
-		//$options1['tabindex'] = '-1';
+		$options1['tabindex'] = '-1';
 		$content = Html::a($label1,$url1, $options1);
 		return $content;	
 	};
@@ -173,7 +174,7 @@ $this->registerCss("
 <?php
 	$this->registerJs("					
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
-			$('#sig-signup-password').on('show.bs.modal', function (event) {
+			$('#signature-password').on('show.bs.modal', function (event) {
 				var button = $(event.relatedTarget)
 				var modal = $(this)
 				var title = button.data('title') 
@@ -188,7 +189,7 @@ $this->registerCss("
 	",$this::POS_END);
 		
 	Modal::begin([
-		'id' => 'sig-signup-password',
+		'id' => 'signature-password',
 		'header' => '<h4 class="modal-title">Set Signature Password</h4>',
 		'size' => Modal::SIZE_SMALL,
 	]);

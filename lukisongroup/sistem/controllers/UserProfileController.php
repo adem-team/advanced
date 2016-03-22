@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
+use yii\bootstrap\Modal;
 use lukisongroup\sistem\models\SignatureForm;
 use lukisongroup\sistem\models\ValidationLoginForm;
 use lukisongroup\hrd\models\Employe;			/* TABLE CLASS JOIN */
