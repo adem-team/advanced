@@ -15,8 +15,13 @@ use yii\filters\VerbFilter;
 use kartik\widgets\Spinner;
 use \moonland\phpexcel\Excel;
 
+use yii\helpers\Url;
+use yii\widgets\Pjax;
+use yii\web\Response;
 
-use lukisongroup\master\models\Barang;
+
+use lukisongroup\sales\models\UserFile;
+use lukisongroup\sales\models\UserFileSearch;
 // use lukisongroup\sales\models\Sot2;
 // use lukisongroup\sales\models\Sot2Search;
 
@@ -44,14 +49,20 @@ class ImportDataController extends Controller
      */
     public function actionIndex()
     {
+		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
+		//echo $paramCari;
+		$model = new UserFile();
+		
+		
 		return $this->render('index',[
-			'getArryFile'=>$this->getArryFile(),
-			'dataFile'=>$this->getArryFIle(),
+			'getArryFile'=>$this->getArryFile($paramFile),
+			//'dataFile'=>$this->getArryFIle(),
 			'gvColumnAryFile'=>$this->gvColumnAryFile(),
 			//'dataImport'=>$this->getArryImport(),
 			/*GRID VALIDATE*/
 			'gvValidateColumn'=>$this->gvValidateColumn(),
 			'gvValidateArrayDataProvider'=>$this->gvValidateArrayDataProvider(),
+			'modelFile'=>$model,
 			
 			
 		]);
@@ -135,6 +146,24 @@ class ImportDataController extends Controller
         }
     }
 	
+	public function actionUpload(){
+		$model = new UserFile();
+		if ($model->load(Yii::$app->request->post()) ) {
+			if($model->validate()){
+				$model->USER_ID = Yii::$app->user->identity->username;
+				$exportFile = $model->uploadFile();
+				if ($model->save()) {
+				 //upload only if valid uploaded file instance found
+					 if ($exportFile !== false) {
+						$path = $model->getImageFile();
+						$exportFile->saveAs($path);
+						return $this->redirect(['index','id'=>$model->FILE_NM]);
+					} 
+				}				
+			}			
+		}
+	}
+	
 	
 	/**=====================================
      * GET ARRAY FROM FILE 
@@ -142,8 +171,9 @@ class ImportDataController extends Controller
 	 * @author piter [ptr.nov@gmail.com]
 	 * =====================================
      */
-	public function getArryFile(){
-			$fileName=Yii::$app->basePath . '/web/upload/sales_import/default_import_sales.xlsx';
+	public function getArryFile($paramFile){
+			$fileData=$paramFile!=''?$paramFile:'default_import_sales.xlsx';
+			$fileName=Yii::$app->basePath . '/web/upload/sales_import/'.$fileData;
 			$config='';
 			//$data = \moonland\phpexcel\Excel::import($fileName, $config); 
 			
@@ -273,7 +303,7 @@ class ImportDataController extends Controller
 	}
 	/*GRID ARRAY DATA PROVIDER*/
 	private function gvValidateArrayDataProvider(){
-		$data=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_view('STOCK','2016-01-23','O041','EF001','DIS.001')")->queryAll(); 
+		$data=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','2016-01-23','O041','EF001','DIS.001')")->queryAll(); 
 		$aryDataProvider= new ArrayDataProvider([
 			'key' => 'ID',
 			'allModels'=>$data,
