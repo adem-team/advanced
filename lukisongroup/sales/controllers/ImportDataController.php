@@ -388,15 +388,13 @@ class ImportDataController extends Controller
 		}
 		return $attDinamik;
 	}
-	
-	 
-	 
 	 
 	
 	/**====================================
      * IMPORT DATA EXCEL >> TEMP VALIDATION
      * @return mixed
 	 * @author piter [ptr.nov@gmail.com]
+	 * @since 1.2
 	 * ====================================
      */
 	public function actionImport_temp_validation(){
@@ -436,33 +434,9 @@ class ImportDataController extends Controller
 				//$spinnerVal=false;
 				$stt=$stt+1;
 			} 
-				
-			
-			
-			
-			
-			return '[{'.$tgl.'}]';
-			//return true;
-			//return $this->redirect(['index','id'=>$model->FILE_NM,'tg'=>$tgl]);
-		}
-		
-		
-		//$paramFile=Yii::$app->getRequest()->getQueryParam('id');
-		//echo $paramCari;		
-		/* $data=$this->getArryFIle();
-		$spinnerVal=true;
-		foreach($data as $key => $value){
-			//$cmd->reset();
-			$a= $value['PROVINCE_ID'];
-			$b= $value['PROVINCE'];
-			//$result='('."'".$a."','".$b."')";
-			
-			//print_r($result);
-			$cmd=Yii::$app->db1->createCommand("CALL import_test('".$a."','".$b."');");
-			//$cmd->execute();
-			$spinnerVal=false;
-		} 
-		return Spinner::widget(['preset' => 'medium', 'align' => 'center', 'color' => 'blue','hidden'=>$spinnerVal]); */
+			//return '[{'.$tgl.'}]';
+			return true;
+		}		
 	}
 	
 }
