@@ -11,7 +11,7 @@ use kartik\grid\GridView;
 use kartik\widgets\ActiveForm;
 use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
-use kartik\builder\Form;
+//use kartik\builder\Form;
 
 //use backend\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
 //AppAsset::register($this);		/* INDEPENDENT CSS/JS/THEME FOR PAGE  Author: -ptr.nov-*/
@@ -55,7 +55,7 @@ use yii\widgets\Pjax;
 					'autoXlFormat'=>true,
 					'export' => false,
 					'panel' => [
-						'heading'=>'<h3 class="panel-title">LIST VIEW FILES</h3>',
+						'heading'=>'<h3 class="panel-title">VIEW FILES STOCK</h3>',
 						'type'=>'danger',
 						'before'=> Html::a('<i class="fa fa-upload"></i> '.Yii::t('app', 'Import File',
 											['modelClass' => 'Kategori',]),'',[
@@ -140,28 +140,38 @@ use yii\widgets\Pjax;
 				'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
 			]
 		]);
-			$form1 = ActiveForm::begin([
-					'options'=>['enctype'=>'multipart/form-data'] // important
+			$form = ActiveForm::begin([
+					'options'=>['enctype'=>'multipart/form-data'], // important,
+					'method' => 'post',
+					'action' => ['/sales/import-data/upload'],
 				]);
-				echo FileInput::widget([
-					'name'=>'kartiks_file',
+				echo $form->field($modelFile, 'uploadExport')->widget(FileInput::classname(), [
+					'options' => ['accept' => '*'],
+					/* 'pluginOptions' => [
+						'uploadUrl' => Url::to(['/sales/import-data/upload']),
+					] */
+				]);
+				
+				
+				// echo FileInput::widget([
+					// 'name'=>'import_file',
 					 // 'name' => 'attachment_48[]',
 					// 'options'=>[
 						// 'multiple'=>true
 					// ],
-					'pluginOptions' => [
-						'uploadUrl' => Url::to(['/sales/import-data/upload']),
-						'showPreview' => false,
-						'showUpload' => false,
-						'showCaption' => true,
-						'showRemove' => true,
+					// 'pluginOptions' => [
+						// 'uploadUrl' => Url::to(['/sales/import-data/upload']),
+						// 'showPreview' => false,
+						// 'showUpload' => false,
+						// 'showCaption' => true,
+						// 'showRemove' => true,
 						// 'uploadExtraData' => [
 							// 'album_id' => 20,
 							// 'cat_id' => 'Nature'
 						// ],
 						// 'maxFileCount' => 10
-					]
-				]);
+					// ]
+				// ]);
 			echo '<div style="text-align:right; padding-top:10px">';
 			echo Html::submitButton('Upload',['class' => 'btn btn-success']);
 			echo '</div>';
