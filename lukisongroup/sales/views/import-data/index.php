@@ -27,6 +27,25 @@ use kartik\widgets\FileInput;
 use yii\helpers\Json;
 use yii\web\Response;
 use yii\widgets\Pjax;
+
+
+	/* function tombolCheck(){
+		$title = Yii::t('app', 'Approved');
+		$options = [ 'id'=>'approved',
+					 'data-pjax' => true,
+					 'data-toggle-approved'=>$fileName,
+		];
+		$icon = '<span class="glyphicon glyphicon-ok"></span>';
+		$label = $icon . ' ' . $title;
+		return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
+	} */
+
+
+
+
+
+
+
 			?>
 
 
@@ -63,11 +82,14 @@ use yii\widgets\Pjax;
 												'data-target'=>"#file-import",
 												'class' => 'btn btn-danger btn-sm'
 											]
-									).' '.
-									Html::a('<i class="fa fa-check-square"></i> '.Yii::t('app', 'Check',
-											['modelClass' => 'Kategori',]),'/master/barang/create',[
-												'data-toggle'=>"modal",
-												'data-target'=>"#modal-create",
+									).' '.								
+									Html::a('<i class="fa fa-check-square"></i> '.
+											Yii::t('app', 'Check',['modelClass' => 'check',]),'',[
+												//'data-toggle'=>"modal",
+												//'data-target'=>"#modal-create",
+												'id'=>'approved',
+												'data-pjax' => true,
+												'data-toggle-approved'=>$fileName,
 												'class' => 'btn btn-success btn-sm'
 											]
 									).' '.
@@ -178,4 +200,29 @@ use yii\widgets\Pjax;
 			ActiveForm::end();
 		Modal::end();
 
+?>
+
+<?php
+$this->registerJs("
+		$(document).on('click', '[data-toggle-approved]', function(e){
+			e.preventDefault();
+			var idx = $(this).data('toggle-approved');
+			$.ajax({
+					url: '/sales/import-data/import_temp_validation',
+					type: 'POST',
+					//contentType: 'application/json; charset=utf-8',
+					data:'id='+idx,
+					dataType: 'json',
+					success: function(result) {
+						if (result == 1){
+							// Success
+							$.pjax.reload({container:'#gv-validate'});
+						} else {
+							// Fail
+						}
+					}
+				});
+
+		});
+	",$this::POS_READY);
 ?>
