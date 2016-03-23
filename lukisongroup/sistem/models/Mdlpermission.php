@@ -27,7 +27,7 @@ use Yii;
  * @property integer $BTN_SIGN5
  * @property integer $CREATED_BY
  * @property integer $UPDATED_BY
- * @property integer $UPDATED_TIME  
+ * @property integer $UPDATED_TIME
  */
 class Mdlpermission extends \yii\db\ActiveRecord
 {
@@ -88,4 +88,9 @@ class Mdlpermission extends \yii\db\ActiveRecord
 			'UPDATED_TIME' => 'Updatetime',
         ];
     }
+
+    public function getModul()
+      {
+          return $this->hasOne(Modulerp::className(), ['MODUL_ID' => 'MODUL_ID']);
+      }
 }

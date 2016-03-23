@@ -407,12 +407,13 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		'panel' => [
 					'heading'=>'<h3 class="panel-title">LIST CUSTOMER GROUP</h3>',
 					'type'=>'warning',
-					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Customer ',
-							['modelClass' => 'Kategori',]),'/master/barang/create',[
-								'data-toggle'=>"modal",
-									'data-target'=>"#modal-create",
-										'class' => 'btn btn-success'
-													]),
+					// 'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Customer ',
+					// 		['modelClass' => 'Kategori',]),'/master/barang/create',[
+					// 			'data-toggle'=>"modal",
+					// 				'data-target'=>"#modal-create",
+					// 					'class' => 'btn btn-success'
+					// 								]),
+
 					'showFooter'=>false,
 		],
 		'toolbar'=> [
@@ -477,7 +478,7 @@ $this->registerJs("
 ",$this::POS_READY);
 	Modal::begin([
 			'id' => 'modal-view',
-	'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+	'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">View Schedule Group</h4></div>',
 	'headerOptions'=>[
 			'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
 	],
@@ -501,7 +502,7 @@ $this->registerJs("
 ",$this::POS_READY);
 	Modal::begin([
 			'id' => 'modal-create',
-	'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+	'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Schedule Group</h4></div>',
 	'headerOptions'=>[
 			'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
 	],

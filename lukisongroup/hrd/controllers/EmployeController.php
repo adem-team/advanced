@@ -314,7 +314,7 @@ class EmployeController extends Controller
 					// print_r($model->save());
 					// die();
 					//return $this->redirect(['view', 'id' => $model->EMP_ID]);
-					return $this->redirect(['index']);
+					return $this->redirect(['index','id'=>$model->EMP_ID]);
 				}
 			}
 		}else {
