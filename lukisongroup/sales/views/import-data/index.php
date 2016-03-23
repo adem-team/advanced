@@ -73,6 +73,9 @@ use yii\widgets\Pjax;
 					'striped'=>'4px',
 					'autoXlFormat'=>true,
 					'export' => false,
+					'toolbar' => [
+						''
+					],
 					'panel' => [
 						'heading'=>'<h3 class="panel-title">VIEW FILES STOCK</h3>',
 						'type'=>'danger',
@@ -85,8 +88,6 @@ use yii\widgets\Pjax;
 									).' '.								
 									Html::a('<i class="fa fa-check-square"></i> '.
 											Yii::t('app', 'Check',['modelClass' => 'check',]),'',[
-												//'data-toggle'=>"modal",
-												//'data-target'=>"#modal-create",
 												'id'=>'approved',
 												'data-pjax' => true,
 												'data-toggle-approved'=>$fileName,
@@ -111,7 +112,7 @@ use yii\widgets\Pjax;
 				echo GridView::widget([
 					'id'=>'gv-validate',
 					'dataProvider' => $gvValidateArrayDataProvider,
-					//'filterModel' => $searchModel,
+					'filterModel' => $searchModelValidate,
 					'columns'=>$gvValidateColumn,					
 					'pjax'=>true,
 					'pjaxSettings'=>[
@@ -129,17 +130,26 @@ use yii\widgets\Pjax;
 					'export' => false,
 					'panel'=>[''],
 					'toolbar' => [
-						'{export}',
+						''
 					],
 					'panel' => [
 						'heading'=>'<h3 class="panel-title">LIST VALIDATION IMPORT DATA</h3>',
 						'type'=>'warning',
-						'before'=> Html::a('<i class="fa fa-save"></i> '.Yii::t('app', 'Send Data',
-										['modelClass' => 'Kategori',]),'/master/barang/create',[
-											'data-toggle'=>"modal",
-											'data-target'=>"#modal-create",
+						'before'=> Html::a('<i class="fa fa-database"></i> '.Yii::t('app', 'Send Data',
+										['modelClass' => 'Kategori',]),'',[												
+												'id'=>'fix',
+												'data-pjax' => true,
+												'data-toggle-fix'=>'1',
 											'class' => 'btn btn-success btn-sm'
 										]
+									).' '.								
+									Html::a('<i class="fa fa-remove"></i> '.
+											Yii::t('app', 'Clear',['modelClass' => 'Clear',]),'',[
+												'id'=>'clear',
+												'data-pjax' => true,
+												'data-toggle-clear'=>'1',
+												'class' => 'btn btn-danger btn-sm'
+											]
 									),
 						'showFooter'=>false,
 					],
@@ -203,26 +213,157 @@ use yii\widgets\Pjax;
 ?>
 
 <?php
-$this->registerJs("
+	
+	$this->registerJs("
+		/**====================================
+		 * ACTION : VALIDATION 
+		 * @return mixed
+		 * @author piter [ptr.nov@gmail.com]
+		 * @since 1.2
+		 * ====================================
+		 */
 		$(document).on('click', '[data-toggle-approved]', function(e){
 			e.preventDefault();
 			var idx = $(this).data('toggle-approved');
 			$.ajax({
-					url: '/sales/import-data/import_temp_validation',
-					type: 'POST',
-					//contentType: 'application/json; charset=utf-8',
-					data:'id='+idx,
-					dataType: 'json',
-					success: function(result) {
-						if (result == 1){
-							// Success
-							$.pjax.reload({container:'#gv-validate'});
-						} else {
-							// Fail
-						}
+				url: '/sales/import-data/import_temp_validation',
+				type: 'POST',
+				//contentType: 'application/json; charset=utf-8',
+				data:'id='+idx,
+				dataType: 'json',
+				success: function(result) {
+					if (result == 1){
+						// Success
+						$.pjax.reload({container:'#gv-validate'});
+					} else {
+						// Fail
 					}
-				});
+				}
+			});
+		});
+		
+		/**====================================
+		 * ACTION : DELETE & CLEAR VALIDATION 
+		 * @return mixed
+		 * @author piter [ptr.nov@gmail.com]
+		 * @since 1.2
+		 * ====================================
+		 */
+		$(document).on('click', '[data-toggle-clear]', function(e){
+			e.preventDefault();
+			var idx = $(this).data('toggle-clear');
+			$.ajax({
+				url: '/sales/import-data/clear_temp_validation',
+				type: 'POST',
+				//contentType: 'application/json; charset=utf-8',
+				data:'id='+idx,
+				dataType: 'json',
+				success: function(result) {
+					if (result == 1){
+						// Success
+						$.pjax.reload({container:'#gv-validate'});
+					} else {
+						// Fail
+					}
+				}
+			});
+
+		});
+		
+		/**====================================
+		 * ACTION : SEND DATA TO STORED
+		 * @return mixed
+		 * @author piter [ptr.nov@gmail.com]
+		 * @since 1.2
+		 * ====================================
+		 */
+		$(document).on('click', '[data-toggle-fix]', function(e){
+			e.preventDefault();
+			var idx = $(this).data('toggle-fix');
+			$.ajax({
+				url: '/sales/import-data/send_temp_validation',
+				type: 'POST',
+				//contentType: 'application/json; charset=utf-8',
+				data:'id='+idx,
+				dataType: 'json',
+				success: function(result) {
+					if (result == 1){
+						// Success
+						$.pjax.reload({container:'#gv-validate'});
+					} else {
+						// Fail
+					}
+				}
+			});
 
 		});
 	",$this::POS_READY);
+	
+	$this->registerJs("
+		/**====================================
+		 * ACTION : Alias Customer
+		 * @return mixed
+		 * @author piter [ptr.nov@gmail.com]
+		 * @since 1.2
+		 * ====================================
+		 */
+		$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+		$('#alias-cust').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+			});
+		}),
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'alias-cust',
+			'header' => '<h4 class="modal-title">Setting Alias Code Customers</h4>',
+			//'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			//'size' => 'modal-xs'
+			//'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+	
+	$this->registerJs("
+		/**====================================
+		 * ACTION : Alias Prodak
+		 * @return mixed
+		 * @author piter [ptr.nov@gmail.com]
+		 * @since 1.2
+		 * ====================================
+		 */
+		$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+		$('#alias-prodak').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+			});
+		}),
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'alias-prodak',
+			'header' => '<h4 class="modal-title">Setting Alias Code Product</h4>',
+			//'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			//'size' => Modal::SIZE_MEDIUM,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+	
 ?>
