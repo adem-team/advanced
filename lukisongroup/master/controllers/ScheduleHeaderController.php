@@ -61,73 +61,20 @@ class ScheduleHeaderController extends Controller
      */
     public function actionIndex()
     {
-      	// if (Yii::$app->request->isAjax) {
-        //   	$request= Yii::$app->request;
-        //     $ID=$request->post('id');
-        //
-        // }
-        // print_r($id);
-        // die();
+
         $searchModel = new ScheduleheaderSearch();
-              $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-              $searchModelUser = new UserloginSearch();
-              $dataProviderUser = $searchModelUser->searchCustGroup(Yii::$app->request->queryParams);
-
-    //     if($id == NULL)
-    //     {
-    //       $searchModel = new ScheduleheaderSearch();
-    //       $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-    //
-    //       $searchModelUser = new UserloginSearch();
-    //       $dataProviderUser = $searchModelUser->searchCustGroup(Yii::$app->request->queryParams);
-    //     }
-    //     else {
-    //       # code...
-    //       $searchModel = new ScheduleheaderSearch();
-    //       $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-    //       $searchModelUser = new UserloginSearch();
-    //       $dataProviderUser = $searchModelUser->searchCust(Yii::$app->request->queryParams,$id);
-    //       \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-    // return [
-    //     'message' => 'SUCCES',
-    //     'code' => 100,
-    // ];
-    //     }
-
-
+        $searchModelUser = new UserloginSearch();
+        $dataProviderUser = $searchModelUser->searchCustGroup(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-			'dataProviderUser'=>$dataProviderUser,
-			'searchModelUser'=>$searchModelUser,
+			       'dataProviderUser'=>$dataProviderUser,
+			       'searchModelUser'=>$searchModelUser,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
-    //
-    // public function actionSearchGrid($id)
-    // {
-    //             # code...
-    //             $searchModel = new ScheduleheaderSearch();
-    //             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-    //             $searchModelUser = new UserloginSearch();
-    //             $dataProviderUser = $searchModelUser->searchCust(Yii::$app->request->queryParams,$id);
-    //             // print_r($dataProviderUser);
-    //             // die();
-    //             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-    //       return [
-    //           'message' => 'SUCCES',
-    //           'code' => 100,
-    //       ];
-    //     //
-    //       return $this->renderAjax('index', [
-    //         'dataProviderUser'=>$dataProviderUser,
-    //          'searchModelUser'=>$searchModelUser,
-    //           'searchModel' => $searchModel,
-    //           'dataProvider' => $dataProvider,
-    //         ]);
-    //           	// return true;
-    //   }
 
 
 
@@ -159,6 +106,42 @@ class ScheduleHeaderController extends Controller
             return $this->redirect(['view', 'id' => $model->ID]);
         } else {
             return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    /**
+     * Creates a new User Login.
+     * If creation is successful, the browser will be redirected to the 'index' page.
+     * @return mixed
+     */
+
+    public function actionCreateUser()
+    {
+        $model = new Userlogin();
+        $model->scenario = 'createuser';
+        if ($model->load(Yii::$app->request->post())  ) {
+          $post = Yii::$app->request->post();
+          $datapostion = $post['Userlogin']['POSITION_LOGIN'];
+          if($datapostion == 1)
+          {
+              $auth = "SALESMAN";// auth key untuk salesmen
+          }
+          else{
+            $auth = "SALES PROMOTION";// auth key untuk sales promotion
+          }
+          $model->POSITION_LOGIN = $datapostion;
+          $model->POSITION_SITE = "CRM"; // untuk login crm
+          $pass = $model->password_hash;
+          $security = Yii::$app->security->generatePasswordHash($pass);
+          $authkey =  Yii::$app->security->generatePasswordHash($auth);
+          $model->password_hash = $security;
+          $model->auth_key = $authkey;
+          $model->save();
+            return $this->redirect(['index']);
+        } else {
+            return $this->renderAjax('create', [
                 'model' => $model,
             ]);
         }

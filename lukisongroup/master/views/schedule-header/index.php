@@ -9,6 +9,7 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 use yii\web\JsExpression;
 
+
 $this->sideCorp = 'PT.Effembi Sukses Makmur';                          /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_customers';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'ESM - Produk');          /* title pada header page */
@@ -125,7 +126,7 @@ EOF;
 			[  	//col-1
 				//CUSTOMER GRAOUP NAME
 				'attribute' => 'username',
-				'label'=>'Customer Groups',
+				'label'=>'User',
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
 				'headerOptions'=>[
@@ -248,8 +249,8 @@ EOF;
 		'panel' => [
 					'heading'=>'<h3 class="panel-title">USER LIST</h3>',
 					'type'=>'warning',
-					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Group ',
-							['modelClass' => 'Kategori',]),'/master/barang/create',[
+					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add User ',
+							['modelClass' => 'Kategori',]),'/master/schedule-header/create-user',[
 								'data-toggle'=>"modal",
 									'data-target'=>"#modal-create",
 										'class' => 'btn btn-success'
@@ -545,6 +546,30 @@ EOF;
 //
 //
 // ");
+
+$this->registerJs("
+	 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+	 $('#modal-create').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget)
+		var modal = $(this)
+		var title = button.data('title')
+		var href = button.attr('href')
+		//modal.find('.modal-title').html(title)
+		modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+		$.post(href)
+			.done(function( data ) {
+				modal.find('.modal-body').html(data)
+			});
+		})
+",$this::POS_READY);
+	Modal::begin([
+			'id' => 'modal-create',
+	'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">User</h4></div>',
+	'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+	],
+	]);
+	Modal::end();
 
 
 ?>

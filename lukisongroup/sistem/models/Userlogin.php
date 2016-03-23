@@ -8,13 +8,14 @@ use Yii;
 
 class Userlogin extends \yii\db\ActiveRecord
 {
-	
+	 const SCENARIO_USER = 'createuser';
+
 	 public static function getDb()
 	{
 		/* Author -ptr.nov- : HRD | Dashboard I */
-		return \Yii::$app->db1;  
+		return \Yii::$app->db1;
 	}
-	
+
     public static function tableName()
     {
         return '{{dbm001.user}}';
@@ -23,12 +24,19 @@ class Userlogin extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id','username','auth_key','password_hash'], 'required'],
+      [['id','username','auth_key','password_hash'], 'required','on' => self::SCENARIO_USER],
 			[['username','auth_key','password_hash','password_reset_token','EMP_ID'], 'string'],
             [['email','avatar','avatarImage'], 'string'],
-			[['id','status','created_at','updated_at'],'integer'], 
+			[['id','status','created_at','updated_at'],'integer'],
 			[['POSITION_SITE','POSITION_LOGIN'], 'safe'],
 		];
+    }
+
+		public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_USER] = ['username', 'password_hash'];
+        return $scenarios;
     }
 
     public function attributeLabels()
@@ -46,19 +54,19 @@ class Userlogin extends \yii\db\ActiveRecord
 			'avatar' => Yii::t('app', 'Avatar'),
 			'avatarImage' => Yii::t('app', 'Avatar Image'),
         ];
-    } 
+    }
 	public function getEmp()
 	{
 		return $this->hasOne(Employe::className(), ['EMP_ID' => 'EMP_ID']);
 	}
-	
+
 	public function getMdlpermission()
 	{
 		return $this->hasOne(Mdlpermission::className(), ['USER_ID' => 'id']);
 	}
-	
-	
-	
+
+
+
 	/**
      * Generates password hash from password signature
      *
@@ -70,7 +78,7 @@ class Userlogin extends \yii\db\ActiveRecord
     {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
     }
-	
+
 	/**
      * return Password Signature
      *
@@ -81,9 +89,7 @@ class Userlogin extends \yii\db\ActiveRecord
 	public function validateOldPassword($password)
     {
         return Yii::$app->security->validatePassword($password, $this->password_hash);
-		
+
     }
-     
+
 }
-
-

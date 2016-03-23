@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\password\PasswordInput;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Scheduleheader */
@@ -11,32 +12,25 @@ use yii\widgets\ActiveForm;
 <div class="scheduleheader-form">
 
     <?php $form = ActiveForm::begin([
-      'id'=>$model->formName()
+      'id'=>$model->formName(),
+      'enableClientValidation'=>true
     ]); ?>
 
-    <?= $form->field($model, 'TGL')->textInput() ?>
+     <?= $form->field($model, 'username')->textInput() ?>
 
-    <?= $form->field($model, 'SCDL_GROUP')->textInput() ?>
+     <?= $form->field($model, 'password_hash')->passwordInput()?>
 
-    <?= $form->field($model, 'USER_ID')->textInput(['maxlength' => true]) ?>
+     <?php echo $form->field($model, 'POSITION_LOGIN')->dropDownList([1 => 'SALESMAN', 2 => 'SALES PROMOTION']); ?>
 
-    <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>
 
     <?php
       if(!$model->IsNewRecord)
       {
-          echo $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']);
+          echo $form->field($model, 'status')->dropDownList(['' => ' -- Silahkan Pilih --', '1' => 'Tidak Aktif', '10' => 'Aktif']);
       }
 
      ?>
-
-     <!-- $form->field($model, 'CREATE_BY')->textInput(['maxlength' => true]) ?> -->
-
-    <!-- $form->field($model, 'CREATE_AT')->textInput() ?> -->
-
-     <!-- $form->field($model, 'UPDATE_BY')->textInput(['maxlength' => true]) ?> -->
-
-     <!-- $form->field($model, 'UPDATE_AT')->textInput() ?> -->
+     <?= $form->field($model, 'POSITION_SITE')->hiddenInput(['value'=>'CRM'])->label(false) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
