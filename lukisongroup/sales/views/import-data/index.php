@@ -115,7 +115,7 @@ use yii\widgets\Pjax;
 					'filterModel' => $searchModelValidate,
 					'columns'=>$gvValidateColumn,	
 					'rowOptions' => function($model, $key, $index, $grid){
-							if ($model->CUST_KD=='NotSet'){
+							if ($model->CUST_KD=='NotSet' or $model->ITEM_NM=='NotSet'){
 								return ['class' => 'danger'];
 							};
 					},					
