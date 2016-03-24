@@ -493,6 +493,7 @@ class ImportDataController extends Controller
 			$request= Yii::$app->request;
 			$id=$request->post('id');
 			$username=  Yii::$app->user->identity->username;
+			$pos='WEB_LUKISONGROUP';
 			$data=$this->getArryFile($id)->getModels();
 			//'STOCK','2016-01-23','O041','ROBINSON MALL TATURA PALU','EF001','MAXI Cassava Crackers Hot Spicy','1','admin'
 			$stt=0;
@@ -512,14 +513,14 @@ class ImportDataController extends Controller
 				/*DELETE TEMPORARY FIRST EXECUTE*/
 				if ($stt==0){
 					$cmd1=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-									'STOCK_DELETE','','','','','','','','".$user_id."'					
+									'STOCK_DELETE','','','','','','','','','".$user_id."'					
 								);				
 						");
 					$cmd1->execute();					
 				};
 				//print_r($result);
 				$cmd=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-								'STOCK','".$tgl."','".$cust_kd."','".$cust_nm."','".$item_kd."','".$item_nm."','".$qty."','".$dis_ref."','".$user_id."'					
+								'STOCK','".$tgl."','".$cust_kd."','".$cust_nm."','".$item_kd."','".$item_nm."','".$qty."','".$dis_ref."','".$pos."','".$user_id."'					
 						);				
 				");
 				$cmd->execute();
@@ -544,7 +545,7 @@ class ImportDataController extends Controller
 			$username=  Yii::$app->user->identity->username;
 				/*DELETE STORED FIRST EXECUTE*/
 				$cmd_clear=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-									'STOCK_DELETE','','','','','','','','".$username."'					
+									'STOCK_DELETE','','','','','','','','','".$username."'					
 								);				
 						");
 				$cmd_clear->execute();		
@@ -555,7 +556,7 @@ class ImportDataController extends Controller
 	}
 	
 	/**====================================
-     * Action SEND DATA TO STORED
+     * Action SEND DATA TO STORED LIVE
      * @return mixed
 	 * @author piter [ptr.nov@gmail.com]
 	 * @since 1.2
@@ -570,7 +571,7 @@ class ImportDataController extends Controller
 			
 				/*SEND STORED FROM TMP-> EXECUTE*/
 				$cmd_send=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-									'STOCK_DELETE','','','','','','','','".$username."'					
+									'STOCK_DELETE','','','','','','','','','".$username."'					
 								);				
 						");
 				$cmd_send->execute();		
