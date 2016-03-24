@@ -19,7 +19,7 @@ class TempDataSearch extends TempData
     {
         return [
             [['ID', 'SO_TYPE', 'STATUS'], 'integer'],
-            [['TGL', 'CUST_KD', 'CUST_KD_ALIAS', 'CUST_NM', 'CUST_NM_ALIAS', 'ITEM_ID', 'ITEM_ID_ALIAS', 'ITEM_NM', 'ITEM_NM_ALIAS', 'DIS_KD', 'DIS_NM', 'POS', 'USER_ID', 'NOTED'], 'safe'],
+            [['TGL', 'CUST_KD', 'CUST_KD_ALIAS', 'CUST_NM', 'CUST_NM_ALIAS', 'ITEM_ID', 'ITEM_ID_ALIAS', 'ITEM_NM', 'ITEM_NM_ALIAS', 'DIS_REF', 'DIS_REF_NM', 'POS', 'USER_ID'], 'safe'],
             [['QTY_PCS', 'QTY_UNIT'], 'number'],
         ];
     }
@@ -77,11 +77,9 @@ class TempDataSearch extends TempData
             ->andFilterWhere(['like', 'ITEM_ID_ALIAS', $this->ITEM_ID_ALIAS])
             ->andFilterWhere(['like', 'ITEM_NM', $this->ITEM_NM])
             ->andFilterWhere(['like', 'ITEM_NM_ALIAS', $this->ITEM_NM_ALIAS])
-            ->andFilterWhere(['like', 'DIS_KD', $this->DIS_KD])
-            ->andFilterWhere(['like', 'DIS_NM', $this->DIS_NM])
-            ->andFilterWhere(['like', 'POS', $this->POS])
-           // ->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
-            ->andFilterWhere(['like', 'NOTED', $this->NOTED]);
+            ->andFilterWhere(['like', 'DIS_REF', $this->DIS_REF])
+            ->andFilterWhere(['like', 'DIS_REF_NM', $this->DIS_REF_NM])
+            ->andFilterWhere(['like', 'POS', $this->POS]);
 
         return $dataProvider;
     }
