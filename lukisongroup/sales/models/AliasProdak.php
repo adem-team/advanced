@@ -11,19 +11,15 @@ class AliasProdak extends Model
     public $nM_BARANG;
 	public $kD_BARANG_ALIAS;
     public $nM_BARANG_ALIAS;
+    public $kD_REF;
 	
 	public function rules()
     {
         return [
 			[['kD_BARANG','kD_BARANG_ALIAS'], 'required'],
+			[['kD_REF'], 'safe'],
         ];
     }
-	
-	public function distributor(){
-		$customersData = Customers::find()->where(['CUST_KD' =>$this->kD_CUST])->one();
-		$distributor=$customersData!=''?$customersData['KD_DISTRIBUTOR']:'none';
-		return $distributor;
-	}
 	
 	public function alias_barang_save(){
 		//if ($this->validate()) {
@@ -37,7 +33,7 @@ class AliasProdak extends Model
 			$rcBarangalias->KD_BARANG=$this->kD_BARANG;
 			$rcBarangalias->KD_ALIAS=$this->kD_BARANG_ALIAS;
 			//$rcBarangalias->KD_PARENT = '1';
-			$aliasCustomr->KD_DISTRIBUTOR=$this->distributor();
+			$rcBarangalias->KD_DISTRIBUTOR=$this->kD_REF;
 			$rcBarangalias->CREATED_AT = date('Y-m-d');
 			$rcBarangalias->CREATED_BY =$username=Yii::$app->user->identity->username;
 			$rcBarangalias->save();

@@ -24,15 +24,6 @@ class AliasCustomer extends Model
         return [
 			[['kD_CUST','kD_CUST_ALIAS'], 'required'],
 			[['kD_REF','kD_REF_NM'], 'safe'],
-			
-			//[['nM_CUST','nM_CUST_ALIAS','kD_DIST'], 'string'],
-			/* ['password', 'number','numberPattern' => '/^[0-9]*$/i'],
-			['password', 'string', 'min' => 8,  'message'=> 'Please enter 8 digit'],
-			['password', 'findPasswords'],
-			['status', 'required'],
-			['status', 'integer'],
-			[['kdpo'], 'required'],
-			[['kdpo','empNm'], 'string'] */
         ];
     }
 	public function alias_customer_save(){

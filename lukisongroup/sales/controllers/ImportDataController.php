@@ -59,7 +59,7 @@ class ImportDataController extends Controller
 	}
 	
 	private function aryBrgID(){
-		$dataCust =  ArrayHelper::map(Barang::find()->orderBy('NM_BARANG')->asArray()->all(), 'KD_BARANG','NM_BARANG');
+		$dataCust =  ArrayHelper::map(Barang::find()->where(['KD_CORP'=>'ESM','KD_TYPE'=>'01','KD_KATEGORi'=>'01'])->orderBy('NM_BARANG')->asArray()->all(), 'KD_BARANG','NM_BARANG');
 		return $dataCust;
 	}
 	
@@ -391,6 +391,7 @@ class ImportDataController extends Controller
 				'cust' =>function($url, $model, $key){
 						return  '<li>' .Html::a('<span class="fa fa-random fa-dm"></span>'.Yii::t('app', 'Set Alias Customer'),
 													['/sales/import-data/alias_cust','id'=>$model['ID']],[
+													'id'=>'alias-cust-id',
 													'data-toggle'=>"modal",
 													'data-target'=>"#alias-cust",
 													]). '</li>' . PHP_EOL;
@@ -398,6 +399,7 @@ class ImportDataController extends Controller
 				'prodak' =>function($url, $model, $key){
 						return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'Set Alias Prodak'),
 													['/sales/import-data/alias_prodak','id'=>$model['ID']],[
+													'id'=>'alias-prodak-id',
 													'data-toggle'=>"modal",
 													'data-target'=>"#alias-prodak",
 													]). '</li>' . PHP_EOL;
@@ -592,7 +594,7 @@ class ImportDataController extends Controller
 			'AliasCustomer'=>$AliasCustomer,
 			'tempDataImport'=>$tempDataImport,
 			'aryCustID'=>$this->aryCustID(),
-			'test'=>Yii::$app->request->referrer
+			//'test'=>Yii::$app->request->referrer
 		]);
 	}
 	public function actionAlias_cust_save(){
@@ -609,7 +611,7 @@ class ImportDataController extends Controller
 					// $kdpo = $hsl['AliasCustomer']['kdpo'];
 					// $this->Sendmail2($kdpo);
 					 //$paramFile=Yii::$app->getRequest()->getQueryParam('id');
-					 $paramFile=Yii::$app->request->referrer;
+					// $paramFile=Yii::$app->request->referrer;
 					//return $this->redirect(['index', 'id'=>$paramFile]);
 					//return Yii::$app->request->referrer;
 					//return true;
@@ -630,16 +632,32 @@ class ImportDataController extends Controller
 	 * ====================================
      */
 	public function actionAlias_prodak($id){
-		$aliasProdak = new AliasProdak();
+		$AliasProdak = new AliasProdak();
 		$tempDataImport = TempData::find()->where(['ID' =>$id])->one();
 		return $this->renderAjax('alias_prodak',[
-			'aliasCodeProdak'=>$aliasProdak,
+			'AliasProdak'=>$AliasProdak,
 			'tempDataImport'=>$tempDataImport,
 			'aryBrgID'=>$this->aryBrgID()
 		]);
 	}
-	public function actionAlias_prodakSave(){
-		
+	public function actionAlias_prodak_save(){
+		$AliasProdak = new AliasProdak();
+		/*Ajax Load*/
+		if(Yii::$app->request->isAjax){
+			$AliasProdak->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($AliasProdak));
+		}else{	
+			/*Normal Load*/
+			if($AliasProdak->load(Yii::$app->request->post())){
+			 	if ($AliasProdak->alias_barang_save()){
+					if(Yii::$app->request->referrer){
+						return $this->redirect(Yii::$app->request->referrer);
+					}else{
+						return $this->goHome();
+					}
+				}
+			}
+		}
 	}
 	
 }
