@@ -113,7 +113,12 @@ use yii\widgets\Pjax;
 					'id'=>'gv-validate',
 					'dataProvider' => $gvValidateArrayDataProvider,
 					'filterModel' => $searchModelValidate,
-					'columns'=>$gvValidateColumn,					
+					'columns'=>$gvValidateColumn,	
+					'rowOptions' => function($model, $key, $index, $grid){
+							if ($model->CUST_KD=='NotSet'){
+								return ['class' => 'danger'];
+							};
+					},					
 					'pjax'=>true,
 					'pjaxSettings'=>[
 					'options'=>[

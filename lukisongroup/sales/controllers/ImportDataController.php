@@ -351,7 +351,7 @@ class ImportDataController extends Controller
 			['ID' =>6, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'CUST ALIAS','align'=>'left','warna'=>'255, 154, 48, 1']],
 			['ID' =>7, 'ATTR' =>['FIELD'=>'ITEM_ID_ALIAS','SIZE' => '10px','label'=>'SKU ID','align'=>'left','warna'=>'255, 255, 48, 4']],
 			['ID' =>8, 'ATTR' =>['FIELD'=>'ITEM_ID','SIZE' => '10px','label'=>'SKU.ID.ALIAS','align'=>'left','warna'=>'255, 255, 48, 4']],			
-			['ID' =>9, 'ATTR' =>['FIELD'=>'DIS_REF','SIZE' => '10px','label'=>'DIS_REF','align'=>'left','warna'=>'215, 255, 48, 1']],			
+			['ID' =>9, 'ATTR' =>['FIELD'=>'DIS_REF','SIZE' => '10px','label'=>'DIS_REF','align'=>'left','warna'=>'215, 255, 48, 1']],	
 		];	
 		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
 			
@@ -373,13 +373,20 @@ class ImportDataController extends Controller
 	// }
 	/*GRID ROWS VALIDATE*/
 	public function gvValidateColumn() {
+		$actionClass='btn btn-info btn-xs';
+		$actionLabel='Update';
 		$attDinamik =[];
 		$attDinamik[]=[
 			'class'=>'kartik\grid\ActionColumn',
 			'dropdown' => true,
 			'template' => '{cust}{prodak}',
-			'dropdownOptions'=>['class'=>'pull-left dropdown'],
-			'dropdownButton'=>['class' => 'btn btn-info btn-xs'],
+			//'template' => '{cust}{prodak}{customer}',
+			'dropdownOptions'=>['class'=>'pull-left dropdown','style'=>['disable'=>true]],
+			'dropdownButton'=>[
+				'class' => $actionClass,
+				'label'=>$actionLabel,
+				//'caret'=>'<span class="caret"></span>',
+			],
 			'buttons' => [
 				'cust' =>function($url, $model, $key){
 						return  '<li>' .Html::a('<span class="fa fa-random fa-dm"></span>'.Yii::t('app', 'Set Alias Customer'),
@@ -394,8 +401,15 @@ class ImportDataController extends Controller
 													'data-toggle'=>"modal",
 													'data-target'=>"#alias-prodak",
 													]). '</li>' . PHP_EOL;
-				},				
-		],
+				},	
+				/* 'customer' =>function($url, $model, $key){
+						return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'new Customer'),
+													['/sales/import-data/new_customer','id'=>$model['ID']],[
+													'data-toggle'=>"modal",
+													'data-target'=>"#alias-prodak",
+													]). '</li>' . PHP_EOL;
+				},	 */				
+			],
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
@@ -572,25 +586,25 @@ class ImportDataController extends Controller
 	 * ====================================
      */
 	public function actionAlias_cust($id){
-		$aliasCustomer = new AliasCustomer();
+		$AliasCustomer = new AliasCustomer();
 		$tempDataImport = TempData::find()->where(['ID' =>$id])->one();
 		return $this->renderAjax('alias_customer',[
-			'aliasCodeCustomer'=>$aliasCustomer,
+			'AliasCustomer'=>$AliasCustomer,
 			'tempDataImport'=>$tempDataImport,
 			'aryCustID'=>$this->aryCustID(),
 			'test'=>Yii::$app->request->referrer
 		]);
 	}
 	public function actionAlias_cust_save(){
-		$aliasCustomer = new AliasCustomer;
+		$AliasCustomer = new AliasCustomer;
 		/*Ajax Load*/
 		if(Yii::$app->request->isAjax){
-			$aliasCustomer->load(Yii::$app->request->post());
-			return Json::encode(\yii\widgets\ActiveForm::validate($aliasCustomer));
+			$AliasCustomer->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($AliasCustomer));
 		}else{	/*Normal Load*/
-			if($aliasCustomer->load(Yii::$app->request->post())){
+			if($AliasCustomer->load(Yii::$app->request->post())){
 			   //$aliasCustomer->alias_customer_save();
-				if ($aliasCustomer->alias_customer_save()){
+				if ($AliasCustomer->alias_customer_save()){
 					//$hsl = \Yii::$app->request->post();
 					// $kdpo = $hsl['AliasCustomer']['kdpo'];
 					// $this->Sendmail2($kdpo);
