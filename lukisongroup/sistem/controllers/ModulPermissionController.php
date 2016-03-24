@@ -87,10 +87,12 @@ class ModulPermissionController extends Controller
           $model->scenario = 'createuser';
 
         if ($model->load(Yii::$app->request->post()) ) {
+            $datax = $this->save();
+
 
             if($model->save())
             {
-              
+
             }
 
             return $this->redirect('index');
