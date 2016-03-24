@@ -17,30 +17,30 @@ use kartik\widgets\Select2;
 		]);
 		//print_r($test);
 	?>	
-		<?php echo  $form->field($aliasCodeCustomer, 'nM_CUST_ALIAS')->textInput([
+		<?php echo  $form->field($AliasCustomer, 'nM_CUST_ALIAS')->textInput([
 						'value' =>$tempDataImport->CUST_NM_ALIAS,
 						'maxlength' => true, 
 						'readonly' => true
 					])->label('Customer :'); ?>
-		<?php echo  $form->field($aliasCodeCustomer, 'kD_CUST_ALIAS')->textInput([
+		<?php echo  $form->field($AliasCustomer, 'kD_CUST_ALIAS')->textInput([
 						'value' =>$tempDataImport->CUST_KD_ALIAS ,
 						'maxlength' => true, 
 						'readonly' => true
 					])->label('Customer.ID :'); 
 		?>		
-		<?php echo  $form->field($aliasCodeCustomer, 'kD_REF')->textInput([
+		<?php echo  $form->field($AliasCustomer, 'kD_REF')->textInput([
 						'value' =>$tempDataImport->DIS_REF ,
 						'maxlength' => true, 
 						'readonly' => true
 					])->label('Distribution'); 
 		?>
-		<?php echo  $form->field($aliasCodeCustomer, 'kD_REF_NM')->textInput([
+		<?php echo  $form->field($AliasCustomer, 'kD_REF_NM')->textInput([
 						'value' =>$tempDataImport->DIS_REF_NM ,
 						'maxlength' => true, 
 						'readonly' => true
 					])->label('Distribution'); 
 		?>
-		<?php echo $form->field($aliasCodeCustomer, 'kD_CUST')->widget(Select2::classname(), [
+		<?php echo $form->field($AliasCustomer, 'kD_CUST')->widget(Select2::classname(), [
 					'data' => $aryCustID,
 					'options' => ['placeholder' => 'Search  Customer ...'],
 					'pluginOptions' => [
