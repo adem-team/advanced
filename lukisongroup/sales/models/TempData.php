@@ -19,12 +19,11 @@ use Yii;
  * @property string $ITEM_NM_ALIAS
  * @property string $QTY_PCS
  * @property string $QTY_UNIT
- * @property string $DIS_KD
- * @property string $DIS_NM
+ * @property string $DIS_REF
+ * @property string $DIS_REF_NM
  * @property integer $SO_TYPE
  * @property string $POS
  * @property string $USER_ID
- * @property string $NOTED
  * @property integer $STATUS
  */
 class TempData extends \yii\db\ActiveRecord
@@ -54,9 +53,8 @@ class TempData extends \yii\db\ActiveRecord
             [['TGL'], 'safe'],
             [['QTY_PCS', 'QTY_UNIT'], 'number'],
             [['SO_TYPE', 'STATUS'], 'integer'],
-            [['NOTED'], 'string'],
-            [['CUST_KD', 'CUST_KD_ALIAS', 'ITEM_ID_ALIAS', 'DIS_KD', 'USER_ID'], 'string', 'max' => 50],
-            [['CUST_NM', 'CUST_NM_ALIAS', 'ITEM_NM', 'ITEM_NM_ALIAS', 'DIS_NM', 'POS'], 'string', 'max' => 255],
+            [['CUST_KD', 'CUST_KD_ALIAS', 'ITEM_ID_ALIAS', 'DIS_REF', 'USER_ID'], 'string', 'max' => 50],
+            [['CUST_NM', 'CUST_NM_ALIAS', 'ITEM_NM', 'ITEM_NM_ALIAS', 'DIS_REF_NM', 'POS'], 'string', 'max' => 255],
             [['ITEM_ID'], 'string', 'max' => 30],
         ];
     }
@@ -79,12 +77,11 @@ class TempData extends \yii\db\ActiveRecord
             'ITEM_NM_ALIAS' => 'Item  Nm  Alias',
             'QTY_PCS' => 'Qty  Pcs',
             'QTY_UNIT' => 'Qty  Unit',
-            'DIS_KD' => 'Dis  Kd',
-            'DIS_NM' => 'Dis  Nm',
+            'DIS_REF' => 'Dis  Kd',
+            'DIS_REF_NM' => 'Dis  Nm',
             'SO_TYPE' => 'So  Type',
             'POS' => 'Pos',
             'USER_ID' => 'User  ID',
-            'NOTED' => 'Noted',
             'STATUS' => 'Status',
         ];
     }
