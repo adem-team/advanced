@@ -256,12 +256,13 @@ class ImportDataController extends Controller
 	*/		
 	private function gvAttribute(){		
 		$aryField= [
-			['ID' =>0, 'ATTR' =>['FIELD'=>'DATE','SIZE' => '10px','label'=>'Date','align'=>'center']],		  
-			['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'Customer.ID','align'=>'left']],		  
-			['ID' =>2, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '20px','label'=>'Customer','align'=>'left']],
-			['ID' =>3, 'ATTR' =>['FIELD'=>'ITEM_ID','SIZE' => '20px','label'=>'Item.ID','align'=>'left']],
-			['ID' =>4, 'ATTR' =>['FIELD'=>'ITEM_NM','SIZE' => '20px','label'=>'Name','align'=>'left']],
-			['ID' =>5, 'ATTR' =>['FIELD'=>'QTY_PCS','SIZE' => '20px','label'=>'Qty_PCS','align'=>'right']],
+			['ID' =>0, 'ATTR' =>['FIELD'=>'DATE','SIZE' => '10px','label'=>'DATE','align'=>'center']],		  
+			['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'CUST_KD','align'=>'left']],		  
+			['ID' =>2, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '20px','label'=>'CUST_NM','align'=>'left']],
+			['ID' =>3, 'ATTR' =>['FIELD'=>'SKU_ID','SIZE' => '20px','label'=>'SKU_ID','align'=>'left']],
+			['ID' =>4, 'ATTR' =>['FIELD'=>'SKU_NM','SIZE' => '20px','label'=>'SKU_NM','align'=>'left']],
+			['ID' =>5, 'ATTR' =>['FIELD'=>'QTY_PCS','SIZE' => '20px','label'=>'QTY_PCS','align'=>'right']],
+			['ID' =>6, 'ATTR' =>['FIELD'=>'DIS_REF','SIZE' => '20px','label'=>'DIS_REF','align'=>'right']],
 		];	
 		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
 			
@@ -340,13 +341,17 @@ class ImportDataController extends Controller
 	 /*GRID HEADER COLUMN*/
 	 private function gvValidateAttribute(){		
 		$aryField= [				  
-			['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'left']],		  			
-			['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '20px','label'=>'Cust.Id','align'=>'left']],
-			['ID' =>2, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '20px','label'=>'Customer','align'=>'left']],
-			['ID' =>3, 'ATTR' =>['FIELD'=>'ITEM_ID','SIZE' => '20px','label'=>'ITEM_ID','align'=>'left']],
-			['ID' =>4, 'ATTR' =>['FIELD'=>'ITEM_NM','SIZE' => '20px','label'=>'ITEM_NM','align'=>'left']],
-			['ID' =>5, 'ATTR' =>['FIELD'=>'QTY_PCS','SIZE' => '20px','label'=>'QTY.PCS','align'=>'left']],
-			['ID' =>6, 'ATTR' =>['FIELD'=>'DIS_NM','SIZE' => '10px','label'=>'Distributor','align'=>'left']]
+			['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'left','warna'=>'97, 211, 96, 0.3']],				
+			['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '10px','label'=>'Customer','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+			['ID' =>2, 'ATTR' =>['FIELD'=>'ITEM_NM','SIZE' => '10px','label'=>'SKU NM','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+			['ID' =>3, 'ATTR' =>['FIELD'=>'QTY_PCS','SIZE' => '10px','label'=>'QTY.PCS','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+			['ID' =>4, 'ATTR' =>['FIELD'=>'DIS_REF_NM','SIZE' => '10px','label'=>'DIS_REF','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+			/*REFRENSI ALIAS*/
+			['ID' =>5, 'ATTR' =>['FIELD'=>'CUST_KD_ALIAS','SIZE' => '10px','label'=>'CUST_KD','align'=>'left','warna'=>'255, 154, 48, 1']],
+			['ID' =>6, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'CUST ALIAS','align'=>'left','warna'=>'255, 154, 48, 1']],
+			['ID' =>7, 'ATTR' =>['FIELD'=>'ITEM_ID_ALIAS','SIZE' => '10px','label'=>'SKU ID','align'=>'left','warna'=>'255, 255, 48, 4']],
+			['ID' =>8, 'ATTR' =>['FIELD'=>'ITEM_ID','SIZE' => '10px','label'=>'SKU.ID.ALIAS','align'=>'left','warna'=>'255, 255, 48, 4']],			
+			['ID' =>9, 'ATTR' =>['FIELD'=>'DIS_REF','SIZE' => '10px','label'=>'DIS_REF','align'=>'left','warna'=>'215, 255, 48, 1']],			
 		];	
 		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
 			
@@ -427,7 +432,8 @@ class ImportDataController extends Controller
 						'width'=>$value[$key]['FIELD'],
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'8pt',
-						'background-color'=>'rgba(97, 211, 96, 0.3)',
+						//'background-color'=>'rgba(97, 211, 96, 0.3)',
+						'background-color'=>'rgba('.$value[$key]['warna'].')',
 					]
 				],  
 				'contentOptions'=>[
@@ -480,23 +486,24 @@ class ImportDataController extends Controller
 				$tgl=$value['DATE'];
 				$cust_kd= $value['CUST_KD'];
 				$cust_nm= $value['CUST_NM'];
-				$item_kd= $value['ITEM_ID'];
-				$item_nm=$value['ITEM_NM'];
+				$item_kd= $value['SKU_ID'];
+				$item_nm=$value['SKU_NM'];
 				$qty=$value['QTY_PCS'];
+				$dis_ref=$value['DIS_REF'];
 				$user_id=$username;
 				//$result='('."'".$a."','".$b."')";
 				
 				/*DELETE TEMPORARY FIRST EXECUTE*/
 				if ($stt==0){
 					$cmd1=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-									'STOCK_DELETE','','','','','','','".$user_id."'					
+									'STOCK_DELETE','','','','','','','','".$user_id."'					
 								);				
 						");
 					$cmd1->execute();					
 				};
 				//print_r($result);
 				$cmd=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-								'STOCK','".$tgl."','".$cust_kd."','".$cust_nm."','".$item_kd."','".$item_nm."','".$qty."','".$user_id."'					
+								'STOCK','".$tgl."','".$cust_kd."','".$cust_nm."','".$item_kd."','".$item_nm."','".$qty."','".$dis_ref."','".$user_id."'					
 						);				
 				");
 				$cmd->execute();
@@ -521,7 +528,7 @@ class ImportDataController extends Controller
 			$username=  Yii::$app->user->identity->username;
 				/*DELETE STORED FIRST EXECUTE*/
 				$cmd_clear=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-									'STOCK_DELETE','','','','','','','".$username."'					
+									'STOCK_DELETE','','','','','','','','".$username."'					
 								);				
 						");
 				$cmd_clear->execute();		
@@ -547,7 +554,7 @@ class ImportDataController extends Controller
 			
 				/*SEND STORED FROM TMP-> EXECUTE*/
 				$cmd_send=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-									'STOCK_DELETE','','','','','','','".$username."'					
+									'STOCK_DELETE','','','','','','','','".$username."'					
 								);				
 						");
 				$cmd_send->execute();		
