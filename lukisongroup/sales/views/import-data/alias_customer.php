@@ -49,7 +49,7 @@ use kartik\widgets\Select2;
 				])->label('Own Customer');
 		?>
 		<div style="text-align: right;"">
-			<?php echo Html::submitButton('Update Alias Customer',['class' => 'btn btn-primary']); ?>
+			<?php echo Html::submitButton('Sync Alias Customer',['class' => 'btn btn-primary']); ?>
 		</div>    
 <?php ActiveForm::end(); ?>	
 
