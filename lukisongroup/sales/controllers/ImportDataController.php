@@ -28,6 +28,7 @@ use lukisongroup\sales\models\TempDataSearch;
 
 use lukisongroup\sales\models\AliasCustomer;
 use lukisongroup\sales\models\AliasProdak;
+use lukisongroup\sales\models\ImportViewSearch;
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Barang;
 //use lukisongroup\master\models\Customersalias;
@@ -102,8 +103,12 @@ class ImportDataController extends Controller
 		
 		$username=  Yii::$app->user->identity->username;
 		$user_id=['USER_ID'=>$username];
+		/*IMPORT VALIDATION*/
 		$searchModel = new TempDataSearch($user_id);
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		/*VIEW IMPORT*/		
+		$searchModelViewImport = new ImportViewSearch();
+		$dataProviderViewImport = $searchModelViewImport->search(Yii::$app->request->queryParams);
 		
 		return $this->render('index',[
 			/*VIEW ARRAY FILE*/
@@ -115,7 +120,11 @@ class ImportDataController extends Controller
 			//'gvValidateArrayDataProvider'=>$this->gvValidateArrayDataProvider(),
 			'gvValidateArrayDataProvider'=>$dataProvider,
 			'searchModelValidate'=>$searchModel,
-			'modelFile'=>$model,			
+			'modelFile'=>$model,
+			/*VIEW IMPORT*/
+			'gvRows'=>$this->gvRows(),
+			'searchModelViewImport'=>$searchModelViewImport,
+			'dataProviderViewImport'=>$dataProviderViewImport,			
 		]);
     }
 
@@ -564,21 +573,43 @@ class ImportDataController extends Controller
      */
 	public function actionSend_temp_validation(){
 		if (Yii::$app->request->isAjax) {
-			$request= Yii::$app->request;
-			$user_id=$request->post('id');
-			
 			$username=  Yii::$app->user->identity->username;
+			$data_view=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$username."')")->queryAll(); 
+	
+			$viewDataProvider= new ArrayDataProvider([
+				'key' => 'ID',
+				 'allModels'=>$data_view,
+				  'pagination' => [
+					 'pageSize' => 1000,
+				]
+			]);
+			$dataImport=$viewDataProvider->allModels;	
+			// print_r($viewDataProvider->allModels);
+			// die();
 			
-				/*SEND STORED FROM TMP-> EXECUTE*/
-				$cmd_send=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
+			foreach($dataImport as $key => $value){				
+				//$cmd->reset();
+				$tgl=$value['TGL'];
+				$cust_kd= $value['CUST_KD_ALIAS'];
+				$item_kd= $value['ITEM_ID_ALIAS'];
+				$item_qty= $value['QTY_PCS'];
+				$import_live=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_LIVE_create(
+									'STOCK','".$tgl."','".$cust_kd."','".$item_kd."','".$item_qty."','WEB_IMPORT','".$username."'
+								)");
+				$import_live->execute();
+				$stt=1;
+			}
+			/*Delete After Import*/
+			$cmd_del=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
 									'STOCK_DELETE','','','','','','','','','".$username."'					
 								);				
 						");
-				$cmd_send->execute();		
-			
+			$cmd_del->execute();	
 			return true;
+		}else{			
+			return $this->redirect(['index']);
 		}
-		
+		return $this->redirect(['index']);
 	}
 	
 	/**====================================
@@ -660,5 +691,102 @@ class ImportDataController extends Controller
 			}
 		}
 	}
+	
+	
+	/**=====================================
+     * VIEW IMPORT DATA STORAGE
+     * @return mixed
+	 * @author piter [ptr.nov@gmail.com]
+	 * =====================================
+     */
+	 /*GRID HEADER COLUMN*/
+	 private function gvHeadColomn(){		
+		$aryField= [	
+			/*MAIN DATA*/
+			['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'left','warna'=>'97, 211, 96, 0.3']],				
+			['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_KD_ALIAS','SIZE' => '10px','label'=>'CUST.KD','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+			['ID' =>2, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '10px','label'=>'CUSTOMER','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+			['ID' =>3, 'ATTR' =>['FIELD'=>'NM_BARANG','SIZE' => '10px','label'=>'SKU','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+			['ID' =>4, 'ATTR' =>['FIELD'=>'SO_QTY','SIZE' => '10px','label'=>'QTY.PCS','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+			['ID' =>5, 'ATTR' =>['FIELD'=>'NM_DIS','SIZE' => '10px','label'=>'DISTRIBUTION','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+			['ID' =>6, 'ATTR' =>['FIELD'=>'SO_TYPE','SIZE' => '10px','label'=>'TYPE','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+			['ID' =>7, 'ATTR' =>['FIELD'=>'USER_ID','SIZE' => '10px','label'=>'IMPORT.BY','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+			/*REFRENSI DATA*/
+			['ID' =>8, 'ATTR' =>['FIELD'=>'UNIT_BARANG','SIZE' => '10px','label'=>'UNIT','align'=>'left','warna'=>'255, 255, 48, 4']],
+			['ID' =>9, 'ATTR' =>['FIELD'=>'UNIT_QTY','SIZE' => '10px','label'=>'UNIT.QTY','align'=>'left','warna'=>'255, 255, 48, 4']],
+			['ID' =>10, 'ATTR' =>['FIELD'=>'UNIT_BERAT','SIZE' => '10px','label'=>'WEIGHT','align'=>'left','warna'=>'255, 255, 48, 4']],
+			['ID' =>11, 'ATTR' =>['FIELD'=>'HARGA_PABRIK','SIZE' => '10px','label'=>'FACTORY.PRICE','align'=>'right','warna'=>'255, 255, 48, 4']],
+			['ID' =>12, 'ATTR' =>['FIELD'=>'HARGA_DIS','SIZE' => '10px','label'=>'DIST.PRICE','align'=>'right','warna'=>'255, 255, 48, 4']],
+			['ID' =>13, 'ATTR' =>['FIELD'=>'HARGA_SALES','SIZE' => '10px','label'=>'SALES.PRICE','align'=>'right','warna'=>'255, 255, 48, 4']],
+			/*SUPPORT DATA ID*/
+			['ID' =>14, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'CUST.KD_ALIAS','align'=>'left','warna'=>'255, 255, 48, 4']],
+			['ID' =>15, 'ATTR' =>['FIELD'=>'KD_BARANG','SIZE' => '10px','label'=>'SKU.ID.ALIAS','align'=>'left','warna'=>'255, 255, 48, 4']],			
+			['ID' =>16, 'ATTR' =>['FIELD'=>'KD_DIS','SIZE' => '10px','label'=>'KD_DIS','align'=>'left','warna'=>'215, 255, 48, 1']],	
+		];	
+		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
+			
+		return $valFields;
+	}	
+	public function gvRows() {
+		$actionClass='btn btn-info btn-xs';
+		$actionLabel='Update';
+		$attDinamik =[];
+		foreach($this->gvHeadColomn() as $key =>$value[]){
+			$attDinamik[]=[		
+				'attribute'=>$value[$key]['FIELD'],
+				'label'=>$value[$key]['label'],
+				'filter'=>true,
+				'hAlign'=>'right',
+				'vAlign'=>'middle',
+				//'mergeHeader'=>true,
+				'noWrap'=>true,			
+				'headerOptions'=>[		
+						'style'=>[									
+						'text-align'=>'center',
+						'width'=>$value[$key]['FIELD'],
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(97, 211, 96, 0.3)',
+						'background-color'=>'rgba('.$value[$key]['warna'].')',
+					]
+				],  
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>$value[$key]['align'],
+						//'width'=>'12px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(13, 127, 3, 0.1)',
+					]
+				],
+				//'pageSummaryFunc'=>GridView::F_SUM,
+				//'pageSummary'=>true,
+				// 'pageSummaryOptions' => [
+					// 'style'=>[
+							// 'text-align'=>'right',		
+							'width'=>'12px',
+							// 'font-family'=>'tahoma',
+							// 'font-size'=>'8pt',	
+							// 'text-decoration'=>'underline',
+							// 'font-weight'=>'bold',
+							// 'border-left-color'=>'transparant',		
+							// 'border-left'=>'0px',									
+					// ]
+				// ],	
+			];	
+		}
+		return $attDinamik;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

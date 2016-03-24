@@ -77,7 +77,7 @@ use yii\widgets\Pjax;
 						''
 					],
 					'panel' => [
-						'heading'=>'<h3 class="panel-title">VIEW FILES STOCK</h3>',
+						'heading'=>'<h3 class="panel-title">IMPORT FILES STOCK</h3>',
 						'type'=>'danger',
 						'before'=> Html::a('<i class="fa fa-upload"></i> '.Yii::t('app', 'Import File',
 											['modelClass' => 'Kategori',]),'',[
@@ -138,24 +138,77 @@ use yii\widgets\Pjax;
 						''
 					],
 					'panel' => [
-						'heading'=>'<h3 class="panel-title">LIST VALIDATION IMPORT DATA</h3>',
+						'heading'=>'<h3 class="panel-title">VALIDATION IMPORT DATA</h3>',
 						'type'=>'warning',
-						'before'=> Html::a('<i class="fa fa-database"></i> '.Yii::t('app', 'Send Data',
-										['modelClass' => 'Kategori',]),'',[												
-												'id'=>'fix',
-												'data-pjax' => true,
-												'data-toggle-fix'=>'1',
-											'class' => 'btn btn-success btn-sm'
-										]
-									).' '.								
-									Html::a('<i class="fa fa-remove"></i> '.
+						'before'=> Html::a('<i class="fa fa-remove"></i> '.
 											Yii::t('app', 'Clear',['modelClass' => 'Clear',]),'',[
 												'id'=>'clear',
 												'data-pjax' => true,
 												'data-toggle-clear'=>'1',
 												'class' => 'btn btn-danger btn-sm'
 											]
-									),
+									).' '.
+									Html::a('<i class="fa fa-database"></i> '.Yii::t('app', 'Send Data',
+										['modelClass' => 'Kategori',]),'',[												
+												'id'=>'fix',
+												'data-pjax' => true,
+												'data-toggle-fix'=>'1',
+											'class' => 'btn btn-success btn-sm'
+										]
+									),								
+									
+						'showFooter'=>false,
+					],
+				]); 
+            ?>
+        </div>
+		<!--VIEW IMPORT!-->
+		<div class="col-sm-12 col-md-12 col-lg-12">
+            <?php
+				//print_r($gvValidateColumn);
+				echo GridView::widget([
+					'id'=>'gv-view-import',
+					'dataProvider' => $dataProviderViewImport,
+					'filterModel' => $searchModelViewImport,
+					'columns'=>$gvRows,					
+					'pjax'=>true,
+					'pjaxSettings'=>[
+					'options'=>[
+						'enablePushState'=>false,
+						'id'=>'gv-validate',
+					   ],						  
+					],
+					'hover'=>true, //cursor select
+					'responsive'=>true,
+					'responsiveWrap'=>true,
+					'bordered'=>true,
+					'striped'=>'4px',
+					'autoXlFormat'=>true,
+					'export' => false,
+					'panel'=>[''],
+					'toolbar' => [
+						''
+					],
+					'panel' => [
+						'heading'=>'<h3 class="panel-title">LIST DATA</h3>',
+						'type'=>'info',
+						'before'=> Html::a('<i class="fa fa-remove"></i> '.
+											Yii::t('app', 'Clear',['modelClass' => 'Clear',]),'',[
+												'id'=>'clear',
+												'data-pjax' => true,
+												'data-toggle-clear'=>'1',
+												'class' => 'btn btn-danger btn-sm'
+											]
+									).' '.
+									Html::a('<i class="fa fa-database"></i> '.Yii::t('app', 'Send Data',
+										['modelClass' => 'Kategori',]),'',[												
+												'id'=>'fix',
+												'data-pjax' => true,
+												'data-toggle-fix'=>'1',
+											'class' => 'btn btn-success btn-sm'
+										]
+									),								
+									
 						'showFooter'=>false,
 					],
 				]); 
