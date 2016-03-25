@@ -278,6 +278,7 @@ $this->title = Yii::t('app', 'Umum - Barang ');
 				'dropdown' => true,
 				'template' => '{view}{update}{price}',
 				'dropdownOptions'=>['class'=>'pull-right dropup'],
+				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 				'buttons' => [
 						'view' =>function($url, $model, $key){
 								return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
