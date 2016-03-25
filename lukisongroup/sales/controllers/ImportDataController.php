@@ -264,7 +264,7 @@ class ImportDataController extends Controller
 				'fileName' => $fileName, 
 				'setFirstRecordAsKeys' => true, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel. 
 				'setIndexSheetByName' => true, // set this if your excel data with multiple worksheet, the index of array will be set with the sheet name. If this not set, the index will use numeric. 
-				'getOnlySheet' => 'Stock', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
+				'getOnlySheet' => 'IMPORT FORMAT STOCK', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
 				]);
 				
 			//print_r($data);	
@@ -571,17 +571,16 @@ class ImportDataController extends Controller
 	 * ====================================
      */
 	public function actionExport_format(){
-		$username=  Yii::$app->user->identity->username;
-		$data_view1=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$username."')")->queryAll(); 
+		$data_format=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_format()")->queryAll(); 
 
-		 $viewDataProvider1= new ArrayDataProvider([
+		 $DataProviderFormat= new ArrayDataProvider([
 			 'key' => 'ID',
-			  'allModels'=>$data_view1,
+			  'allModels'=>$data_format,
 			   'pagination' => [
-				 'pageSize' => 1000,
+				 'pageSize' => 10,
 			 ]
 		 ]);
-		 $dataImport1=$viewDataProvider1->allModels;
+		 $aryDataProviderFormat=$DataProviderFormat->allModels;
 		
 		/* PR
 		 * $model->field dan $model['field']
@@ -659,33 +658,45 @@ class ImportDataController extends Controller
 			//		}
 		//}
 		
-		$excel_data = Export2ExcelBehavior::excelDataFormat(TempData::find()->asArray()->all());
+		$excel_data = Export2ExcelBehavior::excelDataFormat($aryDataProviderFormat);
         $excel_title = $excel_data['excel_title'];
         $excel_ceils = $excel_data['excel_ceils'];
 		$excel_content = [
 			 [
 				'sheet_name' => 'IMPORT FORMAT STOCK',
-                'sheet_title' => ['as','asd'], //$excel_ceils,//'sad',//[$excel_title],
-                'ceils' => $excel_ceils,
+                'sheet_title' => ['DATE','CUST_KD','CUST_NM','SKU_ID','SKU_NM','QTY_PCS','DIS_REF'], //$excel_ceils,//'sad',//[$excel_title],
+			    'ceils' => $excel_ceils,
                 //'freezePane' => 'E2',
                 'headerColor' => Export2ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-                    //'id' => Export2ExcelBehavior::getCssClass('blue'),
-                     'TGL' => Export2ExcelBehavior::getCssClass('grey'),
-                 //    'CUST_KD_ALIAS' => Export2ExcelBehavior::getCssClass('grey'),
-                    // 'ITEM_ID_ALIAS' => Export2ExcelBehavior::getCssClass('grey'),
+					 'TGL' => Export2ExcelBehavior::getCssClass('header'),
+                     'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
+                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
+                     'SKU_ID' => Export2ExcelBehavior::getCssClass('header'),
+                     'SKU_NM' => Export2ExcelBehavior::getCssClass('header'),
+                     'QTY_PCS' => Export2ExcelBehavior::getCssClass('header'),
+                     'DIS_REF' => Export2ExcelBehavior::getCssClass('header'),
                 ], //define each column's cssClass for header line only.  You can set as blank.
                'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
                'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
 			],
 			[
-				'sheet_name' => 'Important Note',
-                'sheet_title' => ["Important Note For Region Template"],
+				'sheet_name' => 'IMPORTANT NOTE ',
+                'sheet_title' => ["Important Note For Import Stock Customer"],
                 'ceils' => [
-                    ["1.Column Platform,Part,Region must need update."],
-					["2.Column Regional_Status only as Regional_Green,Regional_Yellow,Regional_Red,Regional_Ready."],
-					["3.Column RTS_Date, Master_Desc, Functional_Desc, Commodity, Part_Status are only for your reference, will not be uploaded into NPI tracking system."]
-					
+					["1.pastikan tidak merubah format hanya menambahkan data, karena import versi 1.2 masih butuhkan pengembangan validasi"],
+                    ["2.Berikut beberapa format nama yang tidak di anjurkan di ganti:"],
+                    ["  A. Nama dari Sheet1: IMPORT FORMAT STOCK "],
+					["  B. Nama Header seperti column : DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF"],
+					["3.Refrensi."],					
+					["  'IMPORT FORMAT STOCK'= Nama dari Sheet1 yang aktif untuk di import "],					
+					["  'DATE'= Tanggal dari data stok yang akan di import "],					
+					["  'CUST_KD'= Kode dari customer, dimana setiap customer memiliki kode sendiri sendiri sesuai yang mereka miliki "],					
+					["  'CUST_NM'= Nama dari customer "],					
+					["  'SKU_ID'=  Kode dari Item yang mana customer memiliku kode items yang berbeda beda "],					
+					["  'SKU_NM'=  Nama dari Item, sebaiknya disamakan dengan nama yang dimiliki lukisongroup"],					
+					["  'QTY_PCS'= Quantity dalam unit PCS "],					
+					["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],					
 				],
 			],
 			 
