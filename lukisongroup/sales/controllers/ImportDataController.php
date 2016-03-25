@@ -109,7 +109,7 @@ class ImportDataController extends Controller
 		/*VIEW IMPORT*/		
 		$searchModelViewImport = new ImportViewSearch();
 		$dataProviderViewImport = $searchModelViewImport->search(Yii::$app->request->queryParams);
-		
+		//echo $this->actionExport_format();
 		return $this->render('index',[
 			/*VIEW ARRAY FILE*/
 			'getArryFile'=>$this->getArryFile($paramFile),
@@ -238,6 +238,7 @@ class ImportDataController extends Controller
 			//$data = \moonland\phpexcel\Excel::import($fileName, $config); 
 			
 			$data = \moonland\phpexcel\Excel::widget([
+				'id'=>'export',
 				'mode' => 'import', 
 				'fileName' => $fileName, 
 				'setFirstRecordAsKeys' => true, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel. 
@@ -539,6 +540,103 @@ class ImportDataController extends Controller
 			//return '[{'.$tgl.'}]';
 			return true;
 		}		
+	}
+	
+	/**====================================
+     * EXPORT FORMAT
+     * @return mixed
+	 * @author piter [ptr.nov@gmail.com]
+	 * @since 1.2
+	 * ====================================
+     */
+	public function actionExport_format(){
+		$username=  Yii::$app->user->identity->username;
+		// $data_view1=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$username."')")->queryAll(); 
+
+		// $viewDataProvider1= new ArrayDataProvider([
+			// 'key' => 'ID',
+			 // 'allModels'=>$data_view1,
+			  // 'pagination' => [
+				 // 'pageSize' => 1000,
+			// ]
+		// ]);
+		// $dataImport1=$viewDataProvider1->getModels();
+		
+		/* PR
+		 * $model->field dan $model['field']
+		*/
+		
+		$searchModelX = new TempDataSearch();
+		$dataProviderX = $searchModelX->search(Yii::$app->request->queryParams);
+		$dataProvider1= $dataProviderX->getModels();
+		$dataProvider2= $dataProviderX->getModels();
+		$dataProvider3= $dataProviderX->getModels();
+		
+		
+		//if (Yii::$app->request->isAjax) {
+		echo  \moonland\phpexcel\Excel::widget([ 
+				'id'=>'export',
+				'isMultipleSheet' => true, 
+				 'models' => [ 
+					'sheet1' => $dataProvider1,
+					//'sheet2' => $dataProvider2, 
+					//'sheet3' => $dataProvider3
+				],  
+				'mode' => 'export', 
+				'fileName'=>'FORMAT IMPORT STOCK',
+				'setFirstTitle'=>true,//'IMPORT STOCK',
+				//default value as 'export' 
+				'properties'=>[
+					//'sheet1.name'=>'ere'		
+				],
+				'columns' => [ 
+					'sheet1' => [
+						[
+							'attribute'=>'TGL',
+							'header' => 'DATE',
+							'format' => 'date',
+							
+						],
+						[
+							'attribute'=>'CUST_KD_ALIAS',
+							'header' => 'CUST_KD',
+							'format' => 'text',
+						],
+						[
+							'attribute'=>'ITEM_ID_ALIAS',
+							'header' => 'SKU_KD',
+							'format' => 'text',
+						],
+					],
+				],
+				// 'columns' => [ 
+					// 'sheet1' => [
+						// 'column1'=>'TGL',
+						// 'column2'=>'CUST_KD_ALIAS',
+						// 'column3'=>'ITEM_ID_ALIAS'
+					// ],
+					//'sheet1' => ['column1'=>'TGL','column2'=>'CUST_KD_ALIAS','column3'=>'ITEM_ID_ALIAS'],
+					//'sheet2' => ['column1'=>'TGL','column2'=>'CUST_KD_ALIAS','column3'=>'ITEM_ID_ALIAS'],
+					//'sheet3' => ['column1'=>'TGL','column2'=>'CUST_KD_ALIAS','column3'=>'ITEM_ID_ALIAS']
+				// ],
+					//without header working, because the header will be get label from attribute label. 
+				/* 'header' => [ 
+					 'sheet1' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3']
+					// 'sheet2' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3'], 
+					// 'sheet3' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3'] 
+				 ],  */
+				////'sheet1' => ['TGL','CUST_KD_ALIAS','ITEM_ID_ALIAS'], 
+				
+			]);	
+			//return true;
+			//return $this->redirect('index');
+			//echo $data1;
+			//if(Yii::$app->request->referrer){
+			//			return $this->redirect(Yii::$app->request->referrer);
+			//		}else{
+			//			return $this->goHome();
+			//		}
+		//}
 	}
 	/**====================================
      * DELETE & CLEAR >> TEMP VALIDATION
