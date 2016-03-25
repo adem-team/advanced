@@ -19,7 +19,7 @@ use \moonland\phpexcel\Excel;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 use yii\web\Response;
-
+use scotthuangzl\export2excel\Export2ExcelBehavior;
 
 use lukisongroup\sales\models\UserFile;
 use lukisongroup\sales\models\UserFileSearch;
@@ -45,6 +45,10 @@ class ImportDataController extends Controller
     public function behaviors()
     {
         return [
+			/*EXCEl IMPORT*/
+			'export2excel' => [
+				'class' => Export2ExcelBehavior::className(),
+			],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -54,6 +58,23 @@ class ImportDataController extends Controller
         ];
     }
 	
+	/*EXCEl IMPORT*/
+	public function actions()
+    {
+        return [
+            /* 'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ], */
+            /* 'captcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ], */
+            //new add download action
+            'download' => [
+                'class' => 'scotthuangzl\export2excel\DownloadAction',
+            ],
+        ];
+    }
 	private function aryCustID(){
 		$dataCust =  ArrayHelper::map(Customers::find()->orderBy('CUST_NM')->asArray()->all(), 'CUST_KD','CUST_NM');
 		return $dataCust;
@@ -109,7 +130,7 @@ class ImportDataController extends Controller
 		/*VIEW IMPORT*/		
 		$searchModelViewImport = new ImportViewSearch();
 		$dataProviderViewImport = $searchModelViewImport->search(Yii::$app->request->queryParams);
-		
+		//echo $this->actionExport_format();
 		return $this->render('index',[
 			/*VIEW ARRAY FILE*/
 			'getArryFile'=>$this->getArryFile($paramFile),
@@ -238,11 +259,12 @@ class ImportDataController extends Controller
 			//$data = \moonland\phpexcel\Excel::import($fileName, $config); 
 			
 			$data = \moonland\phpexcel\Excel::widget([
+				'id'=>'export',
 				'mode' => 'import', 
 				'fileName' => $fileName, 
 				'setFirstRecordAsKeys' => true, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel. 
 				'setIndexSheetByName' => true, // set this if your excel data with multiple worksheet, the index of array will be set with the sheet name. If this not set, the index will use numeric. 
-				'getOnlySheet' => 'Stock', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
+				'getOnlySheet' => 'IMPORT FORMAT STOCK', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
 				]);
 				
 			//print_r($data);	
@@ -539,6 +561,154 @@ class ImportDataController extends Controller
 			//return '[{'.$tgl.'}]';
 			return true;
 		}		
+	}
+	
+	/**====================================
+     * EXPORT FORMAT
+     * @return mixed
+	 * @author piter [ptr.nov@gmail.com]
+	 * @since 1.2
+	 * ====================================
+     */
+	public function actionExport_format(){
+		$data_format=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_format()")->queryAll(); 
+
+		 $DataProviderFormat= new ArrayDataProvider([
+			 'key' => 'ID',
+			  'allModels'=>$data_format,
+			   'pagination' => [
+				 'pageSize' => 10,
+			 ]
+		 ]);
+		 $aryDataProviderFormat=$DataProviderFormat->allModels;
+		
+		/* PR
+		 * $model->field dan $model['field']
+		*/
+		
+		$searchModelX = new TempDataSearch();
+		$dataProviderX = $searchModelX->search(Yii::$app->request->queryParams);
+		$dataProvider1= $dataProviderX->getModels();
+		$dataProvider2= $dataProviderX->getModels();
+		$dataProvider3= $dataProviderX->getModels();
+		
+		
+		//if (Yii::$app->request->isAjax) {
+		/* echo  \moonland\phpexcel\Excel::widget([ 
+				'id'=>'export',
+				'isMultipleSheet' => true, 
+				 'models' => [ 
+					'sheet1' => $dataProvider1,
+					//'sheet2' => $dataProvider2, 
+					//'sheet3' => $dataProvider3
+				],  
+				'mode' => 'export', 
+				'fileName'=>'FORMAT IMPORT STOCK',
+				'setFirstTitle'=>true,//'IMPORT STOCK',
+				//default value as 'export' 
+				'properties'=>[
+					//'sheet1.name'=>'ere'		
+				],
+				'columns' => [ 
+					'sheet1' => [
+						[
+							'attribute'=>'TGL',
+							'header' => 'DATE',
+							'format' => 'date',
+							
+						],
+						[
+							'attribute'=>'CUST_KD_ALIAS',
+							'header' => 'CUST_KD',
+							'format' => 'text',
+						],
+						[
+							'attribute'=>'ITEM_ID_ALIAS',
+							'header' => 'SKU_KD',
+							'format' => 'text',
+						],
+					],
+				],
+				// 'columns' => [ 
+					// 'sheet1' => [
+						// 'column1'=>'TGL',
+						// 'column2'=>'CUST_KD_ALIAS',
+						// 'column3'=>'ITEM_ID_ALIAS'
+					// ],
+					//'sheet1' => ['column1'=>'TGL','column2'=>'CUST_KD_ALIAS','column3'=>'ITEM_ID_ALIAS'],
+					//'sheet2' => ['column1'=>'TGL','column2'=>'CUST_KD_ALIAS','column3'=>'ITEM_ID_ALIAS'],
+					//'sheet3' => ['column1'=>'TGL','column2'=>'CUST_KD_ALIAS','column3'=>'ITEM_ID_ALIAS']
+				// ],
+					//without header working, because the header will be get label from attribute label. 
+				//'header' => [ 
+					// 'sheet1' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3']
+					// 'sheet2' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3'], 
+					// 'sheet3' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3'] 
+				 //], 
+				////'sheet1' => ['TGL','CUST_KD_ALIAS','ITEM_ID_ALIAS'], 
+				
+			]);	 */
+			//return true;
+			//return $this->redirect('index');
+			//echo $data1;
+			//if(Yii::$app->request->referrer){
+			//			return $this->redirect(Yii::$app->request->referrer);
+			//		}else{
+			//			return $this->goHome();
+			//		}
+		//}
+		
+		$excel_data = Export2ExcelBehavior::excelDataFormat($aryDataProviderFormat);
+        $excel_title = $excel_data['excel_title'];
+        $excel_ceils = $excel_data['excel_ceils'];
+		$excel_content = [
+			 [
+				'sheet_name' => 'IMPORT FORMAT STOCK',
+                'sheet_title' => ['DATE','CUST_KD','CUST_NM','SKU_ID','SKU_NM','QTY_PCS','DIS_REF'], //$excel_ceils,//'sad',//[$excel_title],
+			    'ceils' => $excel_ceils,
+                //'freezePane' => 'E2',
+                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColumnCssClass' => [
+					 'TGL' => Export2ExcelBehavior::getCssClass('header'),
+                     'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
+                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
+                     'SKU_ID' => Export2ExcelBehavior::getCssClass('header'),
+                     'SKU_NM' => Export2ExcelBehavior::getCssClass('header'),
+                     'QTY_PCS' => Export2ExcelBehavior::getCssClass('header'),
+                     'DIS_REF' => Export2ExcelBehavior::getCssClass('header'),
+                ], //define each column's cssClass for header line only.  You can set as blank.
+               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+			],
+			[
+				'sheet_name' => 'IMPORTANT NOTE ',
+                'sheet_title' => ["Important Note For Import Stock Customer"],
+                'ceils' => [
+					["1.pastikan tidak merubah format hanya menambahkan data, karena import versi 1.2 masih butuhkan pengembangan validasi"],
+                    ["2.Berikut beberapa format nama yang tidak di anjurkan di ganti:"],
+                    ["  A. Nama dari Sheet1: IMPORT FORMAT STOCK "],
+					["  B. Nama Header seperti column : DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF"],
+					["3.Refrensi."],					
+					["  'IMPORT FORMAT STOCK'= Nama dari Sheet1 yang aktif untuk di import "],					
+					["  'DATE'= Tanggal dari data stok yang akan di import "],					
+					["  'CUST_KD'= Kode dari customer, dimana setiap customer memiliki kode sendiri sendiri sesuai yang mereka miliki "],					
+					["  'CUST_NM'= Nama dari customer "],					
+					["  'SKU_ID'=  Kode dari Item yang mana customer memiliku kode items yang berbeda beda "],					
+					["  'SKU_NM'=  Nama dari Item, sebaiknya disamakan dengan nama yang dimiliki lukisongroup"],					
+					["  'QTY_PCS'= Quantity dalam unit PCS "],					
+					["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],					
+				],
+			],
+			 
+		];
+		
+		 $excel_file = "StockImportFormat";
+			 $this->export2excel($excel_content, $excel_file);
+		
+		
+		
+		
+		
 	}
 	/**====================================
      * DELETE & CLEAR >> TEMP VALIDATION

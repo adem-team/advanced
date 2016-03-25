@@ -11,6 +11,7 @@ use kartik\grid\GridView;
 use kartik\widgets\ActiveForm;
 use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
+
 //use kartik\builder\Form;
 
 //use backend\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
@@ -94,12 +95,12 @@ use yii\widgets\Pjax;
 												'class' => 'btn btn-success btn-sm'
 											]
 									).' '.
-									Html::a('<i class="fa fa-clone"></i> '.Yii::t('app', 'Get Format',
-											['modelClass' => 'Kategori',]),'/master/barang/create',[
-												'data-toggle'=>"modal",
-												'data-target'=>"#modal-create",
-												'class' => 'btn btn-info btn-sm'
-											]
+									Html::a('<i class="fa fa-clone"></i> '.Yii::t('app', 'Get Format1'),'/sales/import-data/export_format',
+												[
+													'id'=>'export-x-id',
+													'data-pjax' => true,
+													'class' => 'btn btn-info btn-sm'
+												]
 									),										
 						'showFooter'=>false,
 					],
@@ -299,6 +300,7 @@ use yii\widgets\Pjax;
 				}
 			});
 		});
+		
 		
 		/**====================================
 		 * ACTION : DELETE & CLEAR VALIDATION 
