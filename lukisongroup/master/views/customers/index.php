@@ -36,6 +36,7 @@ $tabkota = \kartik\grid\GridView::widget([
                         'header'=>'Action',
                          'dropdown' => true,
                          'dropdownOptions'=>['class'=>'pull-right dropup'],
+						 'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
                         'buttons' => [
                             'view' =>function($url, $model, $key){
                                     return '<li>'. Html::a('<span class="glyphicon glyphicon-eye-open"></span>'.Yii::t('app', 'View'),
@@ -110,6 +111,7 @@ $tabprovince = \kartik\grid\GridView::widget([
                         'header'=>'Action',
                           'dropdown' => true,
                             'dropdownOptions'=>['class'=>'pull-right dropup'],
+							'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
                         'buttons' => [
                             'view' =>function($url, $model, $key){
                                     return '<li>'.Html::a('<span class="glyphicon glyphicon-eye-open"></span>'.Yii::t('app', 'View'),
@@ -213,6 +215,7 @@ $tabcrud = \kartik\grid\GridView::widget([
           'template' => ' {edit} {view} {update}',
           'dropdown' => true,
           'dropdownOptions'=>['class'=>'pull-right dropup'],
+		  'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
            'header'=>'Action',
            'buttons' => [
 
@@ -517,6 +520,7 @@ $tabcrud = \kartik\grid\GridView::widget([
 				'header'=>'Action',
 				'dropdown' => true,
 				'dropdownOptions'=>['class'=>'pull-right dropup'],
+				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 				'buttons' => [
 					'view' =>function($url, $model, $key){
 							return'<li>'.  Html::a('<span class="glyphicon glyphicon-eye-open"></span> '.Yii::t('app', 'View'),
@@ -799,6 +803,7 @@ $tabcrud = \kartik\grid\GridView::widget([
 				'header'=>'Action',
 				'dropdown' => true,
 				'dropdownOptions'=>['class'=>'pull-right dropup'],
+				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 				'buttons' => [
 					'view' =>function($url, $model, $key){
 							return'<li>'.  Html::a('<span class="glyphicon glyphicon-eye-open"></span> '.Yii::t('app', 'View'),

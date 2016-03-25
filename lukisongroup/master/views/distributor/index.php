@@ -128,7 +128,8 @@ $this->title = Yii::t('app', 'Distributor');    /* title pada header page */
             'class'=>'kartik\grid\ActionColumn',
 			'dropdown' => true,
 			'template' => '{view}{update}',
-			'dropdownOptions'=>['class'=>'pull-right dropup'],									
+			'dropdownOptions'=>['class'=>'pull-right dropup'],	
+			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],			
 			'buttons' => [
 				'view' =>function($url, $model, $key){
 						return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
