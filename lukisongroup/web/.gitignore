@@ -3,6 +3,7 @@ db
 api
 angular
 upload
+uploads
 artikel
 pdf_tmp
 !.gitignore
