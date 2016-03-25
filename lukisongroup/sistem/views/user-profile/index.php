@@ -5,6 +5,11 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
 
+$this->sideCorp = 'User Profile';                          /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'profile';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Profile');          /* title pada header page */
+$this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+
 
 	/*
 	 * Declaration Componen User Permission
@@ -98,7 +103,7 @@ use yii\helpers\Url;
 	 * @since 1.1
      */
 	function tombolPersonalia(){		
-		$title1 = Yii::t('app', 'Personalia');
+		$title1 = Yii::t('app', 'My Personalia');
 		$options1 = [ 'id'=>'personalia',	
 					  //'data-toggle'=>"modal",
 					  'data-target'=>"#profile-personalia",											
@@ -106,7 +111,7 @@ use yii\helpers\Url;
 		]; 
 		$icon1 = '<span class="fa fa-group fa-md"></span>';
 		$label1 = $icon1 . ' ' . $title1;
-		$url1 = Url::toRoute(['/sistem/user-profile/personalia']);//,'kd'=>$kd]);
+		$url1 = Url::toRoute(['/sistem/personalia']);//,'kd'=>$kd]);
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
@@ -117,7 +122,7 @@ use yii\helpers\Url;
 	 * @since 1.1
      */
 	function tombolPerformance(){		
-		$title1 = Yii::t('app', 'Performance');
+		$title1 = Yii::t('app', 'My Performance');
 		$options1 = [ 'id'=>'performance',	
 					  //'data-toggle'=>"modal",
 					  'data-target'=>"#profile-performance",											
@@ -125,7 +130,7 @@ use yii\helpers\Url;
 		]; 
 		$icon1 = '<span class="fa fa-graduation-cap fa-md"></span>';
 		$label1 = $icon1 . ' ' . $title1;
-		$url1 = Url::toRoute(['/sistem/user-profile/performance']);//,'kd'=>$kd]);
+		$url1 = Url::toRoute(['/sistem/performance']);//,'kd'=>$kd]);
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
