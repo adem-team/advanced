@@ -19,7 +19,7 @@ use \moonland\phpexcel\Excel;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 use yii\web\Response;
-
+use scotthuangzl\export2excel\Export2ExcelBehavior;
 
 use lukisongroup\sales\models\UserFile;
 use lukisongroup\sales\models\UserFileSearch;
@@ -45,6 +45,10 @@ class ImportDataController extends Controller
     public function behaviors()
     {
         return [
+			/*EXCEl IMPORT*/
+			'export2excel' => [
+				'class' => Export2ExcelBehavior::className(),
+			],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -54,6 +58,23 @@ class ImportDataController extends Controller
         ];
     }
 	
+	/*EXCEl IMPORT*/
+	public function actions()
+    {
+        return [
+            /* 'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ], */
+            /* 'captcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ], */
+            //new add download action
+            'download' => [
+                'class' => 'scotthuangzl\export2excel\DownloadAction',
+            ],
+        ];
+    }
 	private function aryCustID(){
 		$dataCust =  ArrayHelper::map(Customers::find()->orderBy('CUST_NM')->asArray()->all(), 'CUST_KD','CUST_NM');
 		return $dataCust;
@@ -551,16 +572,16 @@ class ImportDataController extends Controller
      */
 	public function actionExport_format(){
 		$username=  Yii::$app->user->identity->username;
-		// $data_view1=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$username."')")->queryAll(); 
+		$data_view1=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$username."')")->queryAll(); 
 
-		// $viewDataProvider1= new ArrayDataProvider([
-			// 'key' => 'ID',
-			 // 'allModels'=>$data_view1,
-			  // 'pagination' => [
-				 // 'pageSize' => 1000,
-			// ]
-		// ]);
-		// $dataImport1=$viewDataProvider1->getModels();
+		 $viewDataProvider1= new ArrayDataProvider([
+			 'key' => 'ID',
+			  'allModels'=>$data_view1,
+			   'pagination' => [
+				 'pageSize' => 1000,
+			 ]
+		 ]);
+		 $dataImport1=$viewDataProvider1->allModels;
 		
 		/* PR
 		 * $model->field dan $model['field']
@@ -574,7 +595,7 @@ class ImportDataController extends Controller
 		
 		
 		//if (Yii::$app->request->isAjax) {
-		echo  \moonland\phpexcel\Excel::widget([ 
+		/* echo  \moonland\phpexcel\Excel::widget([ 
 				'id'=>'export',
 				'isMultipleSheet' => true, 
 				 'models' => [ 
@@ -620,14 +641,14 @@ class ImportDataController extends Controller
 					//'sheet3' => ['column1'=>'TGL','column2'=>'CUST_KD_ALIAS','column3'=>'ITEM_ID_ALIAS']
 				// ],
 					//without header working, because the header will be get label from attribute label. 
-				/* 'header' => [ 
-					 'sheet1' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3']
+				//'header' => [ 
+					// 'sheet1' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3']
 					// 'sheet2' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3'], 
 					// 'sheet3' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3'] 
-				 ],  */
+				 //], 
 				////'sheet1' => ['TGL','CUST_KD_ALIAS','ITEM_ID_ALIAS'], 
 				
-			]);	
+			]);	 */
 			//return true;
 			//return $this->redirect('index');
 			//echo $data1;
@@ -637,6 +658,46 @@ class ImportDataController extends Controller
 			//			return $this->goHome();
 			//		}
 		//}
+		
+		$excel_data = Export2ExcelBehavior::excelDataFormat(TempData::find()->asArray()->all());
+        $excel_title = $excel_data['excel_title'];
+        $excel_ceils = $excel_data['excel_ceils'];
+		$excel_content = [
+			 [
+				'sheet_name' => 'IMPORT FORMAT STOCK',
+                'sheet_title' => ['as','asd'], //$excel_ceils,//'sad',//[$excel_title],
+                'ceils' => $excel_ceils,
+                //'freezePane' => 'E2',
+                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColumnCssClass' => [
+                    //'id' => Export2ExcelBehavior::getCssClass('blue'),
+                     'TGL' => Export2ExcelBehavior::getCssClass('grey'),
+                 //    'CUST_KD_ALIAS' => Export2ExcelBehavior::getCssClass('grey'),
+                    // 'ITEM_ID_ALIAS' => Export2ExcelBehavior::getCssClass('grey'),
+                ], //define each column's cssClass for header line only.  You can set as blank.
+               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+			],
+			[
+				'sheet_name' => 'Important Note',
+                'sheet_title' => ["Important Note For Region Template"],
+                'ceils' => [
+                    ["1.Column Platform,Part,Region must need update."],
+					["2.Column Regional_Status only as Regional_Green,Regional_Yellow,Regional_Red,Regional_Ready."],
+					["3.Column RTS_Date, Master_Desc, Functional_Desc, Commodity, Part_Status are only for your reference, will not be uploaded into NPI tracking system."]
+					
+				],
+			],
+			 
+		];
+		
+		 $excel_file = "StockImportFormat";
+			 $this->export2excel($excel_content, $excel_file);
+		
+		
+		
+		
+		
 	}
 	/**====================================
      * DELETE & CLEAR >> TEMP VALIDATION
