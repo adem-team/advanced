@@ -1,23 +1,18 @@
 <?php
 
-namespace lukisongroup\sistem\controllers;
+namespace lukisongroup\sales\controllers;
 
 use Yii;
-
+use lukisongroup\sales\models\SecheduleHeader;
+use lukisongroup\sales\models\SecheduleHeaderSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use \DateTime;
 
-use lukisongroup\hrd\models\AbsenDaily;
-use lukisongroup\hrd\models\AbsenDailySearch;
-use lukisongroup\hrd\models\Kar_finger;
-use lukisongroup\sistem\models\Absensi;
-use lukisongroup\sistem\models\AbsensiSearch;
 /**
- * PersonaliaController implements the CRUD actions for Absensi model.
+ * SalesmanReportController implements the CRUD actions for SecheduleHeader model.
  */
-class PersonaliaController extends Controller
+class SalesmanReportController extends Controller
 {
     /**
      * @inheritdoc
@@ -35,41 +30,22 @@ class PersonaliaController extends Controller
     }
 
     /**
-     * Lists all Absensi models.
+     * Lists all SecheduleHeader models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new AbsensiSearch();
+        $searchModel = new SecheduleHeaderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-		$date=new DateTime();
-		$thn=strlen($date->format('Y'));
-		$bln=strlen($date->format('m'));
-		$hri=strlen($date->format('d'));
-		$dateRlt=$thn."-".$bln."-".$hri;
-		$searchModel = new AbsenDailySearch([
-			//'tgllog'=>Yii::$app->ambilKonvesi->tglSekarang()
-		]);
-				
-		/*REKAP ABSENSI*/
-		//Field Label
-		$dataProviderField = $searchModel->dailyFieldTglRange();
-		//Value row
-		$dataProvider = $searchModel->searchDailyTglRange(Yii::$app->request->queryParams);
-		
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-			/*Daily Absensi*/
-			'searchModel'=>$searchModel,
-			'dataProviderField'=>$dataProviderField,
-			'dataProvider'=>$dataProvider	
         ]);
     }
 
     /**
-     * Displays a single Absensi model.
+     * Displays a single SecheduleHeader model.
      * @param string $id
      * @return mixed
      */
@@ -81,16 +57,16 @@ class PersonaliaController extends Controller
     }
 
     /**
-     * Creates a new Absensi model.
+     * Creates a new SecheduleHeader model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Absensi();
+        $model = new SecheduleHeader();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->idno]);
+            return $this->redirect(['view', 'id' => $model->ID]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -99,7 +75,7 @@ class PersonaliaController extends Controller
     }
 
     /**
-     * Updates an existing Absensi model.
+     * Updates an existing SecheduleHeader model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
@@ -109,7 +85,7 @@ class PersonaliaController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->idno]);
+            return $this->redirect(['view', 'id' => $model->ID]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -118,7 +94,7 @@ class PersonaliaController extends Controller
     }
 
     /**
-     * Deletes an existing Absensi model.
+     * Deletes an existing SecheduleHeader model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
@@ -131,15 +107,15 @@ class PersonaliaController extends Controller
     }
 
     /**
-     * Finds the Absensi model based on its primary key value.
+     * Finds the SecheduleHeader model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return Absensi the loaded model
+     * @return SecheduleHeader the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Absensi::findOne($id)) !== null) {
+        if (($model = SecheduleHeader::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
