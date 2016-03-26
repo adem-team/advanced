@@ -1018,7 +1018,7 @@ class PurchaseOrderController extends Controller
 		}
     }
 
-	
+
 	/*
 	 * Auth 1 Created
 	*/
@@ -1045,7 +1045,7 @@ class PurchaseOrderController extends Controller
 			'dataProvider' => $dataProvider,
         ]);
 		# code...
-      
+
 		/*Attachment*/
 		$contentMailAttach= $this->renderPartial('sendmailcontent',[
 			'poHeader' => $poHeader,
@@ -1084,13 +1084,13 @@ class PurchaseOrderController extends Controller
 			  'SetFooter'=>['{PAGENO}'],
 			]
 		]);
-		
+
 		/* KIRIM ATTACH emaiL */
 		$to=['purchasing@lukison.com'];
 		\Yii::$app->kirim_email->pdf($contentMailAttach,'PO',$to,'Purchase-Order',$contentMailAttachBody);
     }
-        
-		
+
+
 	/*
 	 * Auth 2 Checked
 	*/
@@ -1159,7 +1159,7 @@ class PurchaseOrderController extends Controller
 		\Yii::$app->kirim_email->pdf($contentMailAttach,'PO',$to,'Purchase-Order',$contentMailAttachBody);
 	}
 
-		
+
 	/*
 	 * Auth 3 Approved
 	*/
@@ -1224,7 +1224,7 @@ class PurchaseOrderController extends Controller
 			  'SetFooter'=>['{PAGENO}'],
 			]
 		]);
-		
+
 		/* KIRIM ATTACH emaiL */
 		$to=['purchasing@lukison.com'];//,'piter@lukison.com','ridwan@lukison.com'];
 		\Yii::$app->kirim_email->pdf($contentMailAttach,'PO',$to,'Purchase-Order',$contentMailAttachBody);
@@ -1470,7 +1470,7 @@ class PurchaseOrderController extends Controller
 			// 'poHeader' => $poHeader,
 			// 'dataProvider' => $dataProvider,
 		// ]);
-		
+
 		// $contentMailAttachBody= $this->renderPartial('postman_body',[
 			// 'poHeader' => $poHeader,
 			// 'dataProvider' => $dataProvider,
