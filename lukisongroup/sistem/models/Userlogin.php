@@ -10,12 +10,14 @@ class Userlogin extends \yii\db\ActiveRecord
 {
 	 const SCENARIO_USER = 'createuser';
 
+
+
 	 public static function getDb()
 	{
 		/* Author -ptr.nov- : HRD | Dashboard I */
 		return \Yii::$app->db1;
 	}
-
+	 public $new_pass;
     public static function tableName()
     {
         return '{{dbm001.user}}';
@@ -25,8 +27,9 @@ class Userlogin extends \yii\db\ActiveRecord
     {
         return [
       [['id','username','auth_key','password_hash'], 'required','on' => self::SCENARIO_USER],
+			[['new_pass','username','status'], 'required','on' =>'updateuser'],
 			[['username','auth_key','password_hash','password_reset_token','EMP_ID'], 'string'],
-            [['email','avatar','avatarImage'], 'string'],
+      [['email','avatar','avatarImage'], 'string'],
 			[['id','status','created_at','updated_at'],'integer'],
 			[['POSITION_SITE','POSITION_LOGIN'], 'safe'],
 		];

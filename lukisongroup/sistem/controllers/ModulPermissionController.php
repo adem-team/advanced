@@ -4,12 +4,15 @@ namespace lukisongroup\sistem\controllers;
 
 use Yii;
 use lukisongroup\sistem\models\Mdlpermission;
+use lukisongroup\sistem\models\Modulerp;
 use lukisongroup\sistem\models\MdlpermissionSearch;
 use lukisongroup\sistem\models\UserloginSearch;
 use lukisongroup\sistem\models\Userlogin;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
+use yii\helpers\Json;
 
 /**
  * MdlpermissionController implements the CRUD actions for Mdlpermission model.
@@ -39,6 +42,138 @@ class ModulPermissionController extends Controller
 
         $searchModelpermision = new MdlpermissionSearch();
         $dataProviderpermision = $searchModelpermision->search(Yii::$app->request->queryParams);
+        // $paramCari=Yii::$app->getRequest()->getQueryParam('USER_ID');
+        // if(count(Yii::$app->request->queryParams) == 0)
+        // {
+        //   return $this->render('index', [
+        //       'searchModel' => $searchModel,
+        //       'dataProvider' => $dataProvider,
+        //       'searchModelpermision'=>$searchModelpermision,
+        //       'dataProviderpermision'=>$dataProviderpermision
+        //   ]);
+        // }else{
+        //     $paramCari = Yii::$app->request->queryParams['MdlpermissionSearch']["USER_ID"];
+        // }
+        //
+        // if ($paramCari!=''){
+        //   // $cari=['USER_ID'=>$paramCari];
+        //
+        //   $datauser = Mdlpermission::find()->where(['USER_ID'=>$paramCari])->count();
+        //
+        //   // ;
+        //
+        //   $bariserp = Modulerp::find()->count();
+          // print_r($datauser);
+          // die();
+
+        //   if($datauser < $bariserp )
+        //   {
+        //     // die();
+        //     $totalbaris = $bariserp-$datauser;
+        //
+        //     // print_r($totalbaris);
+        //     // die();
+        //     for($a = 0; $a<=$totalbaris;$a++)
+        //     {
+        //         $datamodul = Mdlpermission::find()->where(['USER_ID'=>$paramCari])->asArray()->all();
+        //         $datamodul[$a]['MODUL_ID'];
+        //         // print_r($datamodul[0]['MODUL_ID']);
+        //         // die();
+        //         $conn = Yii::$app->db;
+        //         $sql = "SELECT * FROM modul_permission WHERE MODUL_ID IN (SELECT MODUL_ID FROM modul WHERE MODUL_ID <> ".$datamodul[$a]["MODUL_ID"].")" ;
+        //         // $sql = "SELECT * FROM modul WHERE MODUL_ID NOT LIKE '%'".$datamodul[$a]['MODUL_ID']."'%' AND NOT LIKE '%'".$datamodul['MODUL_ID']."'%' ";
+        //         $hasil = $conn->createCommand($sql)->queryAll();
+        //         // print_r($hasil[0]);
+        //         // die();
+        //
+        //         foreach ($hasil as $hasil1) {
+        //             $connection = Yii::$app->db;
+        //             $connection->createCommand()->batchInsert('modul_permission',['USER_ID','MODUL_ID'],[[$paramCari,$hasil1['MODUL_ID']]])->execute();
+        //
+        //           }
+        //   }
+        // }
+
+            // $data = Modulerp::find()->asArray()->all();
+
+        // }else{
+        //   $cari='';
+        // };
+
+        	if (Yii::$app->request->post('hasEditable')) {
+            $id = Yii::$app->request->post('editableKey');
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $model = Mdlpermission::findOne($id);
+            $out = Json::encode(['output'=>'', 'message'=>'']);
+
+            $post = [];
+            $posted = current($_POST['Mdlpermission']);
+            $post['Mdlpermission'] = $posted;
+            if ($model->load($post)) {
+              	$output = '';
+
+            if (isset($posted['BTN_CREATE'])) {
+                $model->save();
+              $output =$model->BTN_CREATE;
+            }
+            if (isset($posted['BTN_EDIT'])) {
+              $model->save();
+              $output = $model->BTN_EDIT;;
+            }
+            if (isset($posted['BTN_DELETE'])) {
+              $model->save();
+              $output = $model->BTN_DELETE;
+            }
+            if (isset($posted['BTN_VIEW'])) {
+              $model->save();
+              $output = $model->BTN_VIEW;
+            }
+            if (isset($posted['BTN_PROCESS1'])) {
+              $model->save();
+              $output = $model->BTN_PROCESS1;
+            }
+            if (isset($posted['BTN_PROCESS2'])) {
+              $model->save();
+              $output = $model->BTN_PROCESS2;
+            }
+            if (isset($posted['BTN_PROCESS3'])) {
+              $model->save();
+              $output = $model->BTN_PROCESS3;
+            }
+            if (isset($posted['BTN_PROCESS4'])) {
+                $model->save();
+              $output = $model->BTN_PROCESS4;
+            }
+            if (isset($posted['BTN_PROCESS5'])) {
+                $model->save();
+              $output = $model->BTN_PROCESS5;
+            }
+            if (isset($posted['BTN_SIGN1'])) {
+                $model->save();
+              $output = $model->BTN_SIGN1;
+            }
+            if (isset($posted['BTN_SIGN2'])) {
+                $model->save();
+              $output = $model->BTN_SIGN2;
+            }
+            if (isset($posted['BTN_SIGN3'])) {
+                $model->save();
+              $output = $model->BTN_SIGN3;
+            }
+            if (isset($posted['BTN_SIGN4'])) {
+                $model->save();
+              $output = $model->BTN_SIGN4;
+            }
+            if (isset($posted['BTN_SIGN5'])) {
+                $model->save();
+              $output = $model->BTN_SIGN5;
+            }
+            	$out = Json::encode(['output'=>$output, 'message'=>'']);
+          }
+          echo $out;
+          return;
+        }
+
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -48,33 +183,7 @@ class ModulPermissionController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Mdlpermission model.
-     * @param string $id
-     * @return mixed
-     */
-    // public function actionView($id)
-    // {
-    //     return $this->render('view', [
-    //         'model' => $this->findModel($id),
-    //     ]);
-    // }
 
-    public function save()
-    {
-      # code...
-
-      $data = Mdlpermission::find()->asArray()->all();
-      $temp = [];
-      foreach ($data as $hasil) {
-      //     # code...
-        // ;
-         $temp[] = $hasil['MODUL_ID'];
-
-
-        }
-      return $temp;
-    }
 
     /**
      * Creates a new Mdlpermission model.
@@ -83,16 +192,21 @@ class ModulPermissionController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Userlogin();
+          $model = new Userlogin();
           $model->scenario = 'createuser';
 
         if ($model->load(Yii::$app->request->post()) ) {
-            $datax = $this->save();
-
-
+          $hash = Yii::$app->getSecurity()->generatePasswordHash($model->password_hash);
+          $model->password_hash = $hash;
+          $model->created_at = strtotime(date('Y-m-d'));
             if($model->save())
             {
+              $data = Modulerp::find()->asArray()->all();
+              foreach ($data as $hasil) {
+                  $connection = Yii::$app->db;
+                  $connection->createCommand()->batchInsert('modul_permission',['USER_ID','MODUL_ID'],[[$model->id,$hasil['MODUL_ID']]])->execute();
 
+                }
             }
 
             return $this->redirect('index');
@@ -113,6 +227,7 @@ class ModulPermissionController extends Controller
     {
         $model = $this->findModel($id);
 
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->ID]);
         } else {
@@ -120,6 +235,25 @@ class ModulPermissionController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+    public function actionUpdatePass($id)
+    {
+      # code...
+      $model = $this->findModelUser($id);
+      $model->scenario = 'updateuser';
+      if ($model->load(Yii::$app->request->post()) ) {
+        $post = Yii::$app->request->post();
+        $newpass = $post['Userlogin']['new_pass'];
+        $hash = Yii::$app->getSecurity()->generatePasswordHash($newpass);
+        $model->password_hash = $hash;
+         $model->save();
+          return $this->redirect('index');
+      } else {
+          return $this->renderAjax('update', [
+              'model' => $model,
+          ]);
+      }
     }
 
     /**
@@ -144,7 +278,15 @@ class ModulPermissionController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Mdlpermission::findOne($id)) !== null) {
+        if (($model = Mdlpermission::find()->where(['ID'=>$id])->one()) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+    protected function findModelUser($id)
+    {
+        if (($model = Userlogin::find()->where(['id'=>$id])->one()) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

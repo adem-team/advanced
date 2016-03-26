@@ -53,8 +53,9 @@ class Mdlpermission extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'MODUL_ID','USER_ID', 'STATUS', 'BTN_CREATE', 'BTN_EDIT', 'BTN_DELETE', 'BTN_VIEW', 'BTN_PROCESS1', 'BTN_PROCESS2', 'BTN_PROCESS3', 'BTN_PROCESS4', 'BTN_PROCESS5', 'BTN_SIGN1', 'BTN_SIGN2', 'BTN_SIGN3','BTN_SIGN4','BTN_SIGN5'], 'integer'],
-			[['CREATED_BY','UPDATED_BY'],'string'],
+      [[ 'MODUL_ID','USER_ID', 'STATUS', 'BTN_CREATE','BTN_REVIEW', 'BTN_EDIT', 'BTN_DELETE', 'BTN_VIEW', 'BTN_PROCESS1', 'BTN_PROCESS2', 'BTN_PROCESS3', 'BTN_PROCESS4', 'BTN_PROCESS5', 'BTN_SIGN1', 'BTN_SIGN2', 'BTN_SIGN3','BTN_SIGN4','BTN_SIGN5'], 'integer'],
+      // ['STATUS', 'BTN_CREATE', 'BTN_EDIT', 'BTN_DELETE', 'BTN_VIEW', 'BTN_PROCESS1', 'BTN_PROCESS2', 'BTN_PROCESS3', 'BTN_PROCESS4', 'BTN_PROCESS5', 'BTN_SIGN1', 'BTN_SIGN2', 'BTN_SIGN3','BTN_SIGN4','BTN_SIGN5','default','value'=>1],
+      [['CREATED_BY','UPDATED_BY'],'string'],
 			[['UPDATED_TIME'],'safe'],
         ];
     }
