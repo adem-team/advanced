@@ -56,7 +56,7 @@ class PersonaliaController extends Controller
 		//Field Label
 		$dataProviderField = $searchModel->dailyFieldTglRange();
 		//Value row
-		$dataProvider = $searchModel->searchDailyTglRange(Yii::$app->request->queryParams);
+		$dataProvider = $searchModel->searchDailyTglRangeUser(Yii::$app->request->queryParams);
 		
         return $this->render('index', [
             'searchModel' => $searchModel,
