@@ -3,16 +3,16 @@
 namespace lukisongroup\widget\controllers;
 
 use Yii;
-use lukisongroup\widget\models\Notulen;
-use lukisongroup\widget\models\NotulenSearch;
+use lukisongroup\widget\models\NotulenModul;
+use lukisongroup\widget\models\NotulenModulSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * NotulenController implements the CRUD actions for Notulen model.
+ * NotulenModulController implements the CRUD actions for NotulenModul model.
  */
-class NotulenController extends Controller
+class NotulenModulController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,22 +30,22 @@ class NotulenController extends Controller
     }
 
     /**
-     * Lists all Notulen models.
+     * Lists all NotulenModul models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new NotulenSearch();
+        $searchModel = new NotulenModulSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-			'searchModelNotulen' => $searchModel,
-            'dataProviderNotulen' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single Notulen model.
+     * Displays a single NotulenModul model.
      * @param string $id
      * @return mixed
      */
@@ -57,16 +57,16 @@ class NotulenController extends Controller
     }
 
     /**
-     * Creates a new Notulen model.
+     * Creates a new NotulenModul model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Notulen();
+        $model = new NotulenModul();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->ID]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -75,7 +75,7 @@ class NotulenController extends Controller
     }
 
     /**
-     * Updates an existing Notulen model.
+     * Updates an existing NotulenModul model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
@@ -85,7 +85,7 @@ class NotulenController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->ID]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -94,7 +94,7 @@ class NotulenController extends Controller
     }
 
     /**
-     * Deletes an existing Notulen model.
+     * Deletes an existing NotulenModul model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
@@ -107,15 +107,15 @@ class NotulenController extends Controller
     }
 
     /**
-     * Finds the Notulen model based on its primary key value.
+     * Finds the NotulenModul model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return Notulen the loaded model
+     * @return NotulenModul the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Notulen::findOne($id)) !== null) {
+        if (($model = NotulenModul::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
