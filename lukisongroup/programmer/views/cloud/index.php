@@ -8,6 +8,7 @@ use kartik\widgets\ActiveForm;
 use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
 use kartik\builder\Form;
+use ho96\extplorer\Extplorer;
 //use scotthuangzl\googlechart\GoogleChart;
 
 use lukisongroup\assets\AppAssetSig;  	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
@@ -23,10 +24,27 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 
 ?>
 <div class="container" >
-	<div class="col-sm-3" ></div>
-	<div class="col-sm-6" > LukisonGroup Cloud Arsif
-				  
+    <div class="row" style="padding-left: 5px; padding-right: 5px">
+        <div class="col-sm-12 col-md-12 col-lg-12 ">
+		LukisonGroup Cloud Arsif
+			<?php
+				echo Extplorer::widget();
+								// echo Html::panel(
+									// ['heading' => 'Employee Status', 'body' => $pertama],
+									// Html::TYPE_SUCCESS
+								// );
+								/* echo \navatech\roxymce\widgets\RoxyMceWidget::widget([
+					'name'        => 'content', //default name of textarea which will be auto generated, REQUIRED if not using 'model' section
+					'value'       => isset($_POST['content']) ? $_POST['content'] : '', //default value of current textarea, NOT REQUIRED
+					'action'      => Url::to(['roxymce/default']), //default roxymce action route, NOT REQUIRED
+					'options'     => [//TinyMce options, NOT REQUIRED, see https://www.tinymce.com/docs/
+						'title' => 'RoxyMCE',//title of roxymce dialog, NOT REQUIRED
+					],
+					'htmlOptions' => [],//html options of this widget, NOT REQUIRED
+				]); */
+
+			?>		
 		
+		</div>
 	</div>
 </div>
-
