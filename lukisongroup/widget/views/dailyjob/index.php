@@ -106,7 +106,7 @@ EOF;
 				]);
 				
 				echo Html::panel(
-					['heading' => 'NOTULEN CLENDER ', 'body' =>$calenderRt],
+					['heading' => 'PERSONAL CALENDAR DAILY WORK', 'body' =>$calenderRt],
 					Html::TYPE_DANGER
 				);	
 			?>
@@ -121,16 +121,16 @@ EOF;
 				*/
 				$actionClass='btn btn-info btn-xs';
 				$actionLabel='Update';
-				$attDinamikNotulen =[];				
+				$attDinamikDailyjob =[];				
 				/*GRIDVIEW ARRAY FIELD HEAD*/
-				$headColomnNotulen=[
+				$headColomnDailyjob=[
 					['ID' =>0, 'ATTR' =>['FIELD'=>'start','SIZE' => '10px','label'=>'DATE START','align'=>'left','warna'=>'97, 211, 96, 0.3']],				
 					['ID' =>1, 'ATTR' =>['FIELD'=>'end','SIZE' => '10px','label'=>'DATE END','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 					['ID' =>2, 'ATTR' =>['FIELD'=>'title','SIZE' => '10px','label'=>'TITLE','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 				];
-				$gvHeadColomnNotulen = ArrayHelper::map($headColomnNotulen, 'ID', 'ATTR');
+				$gvHeadColomnDailyjob = ArrayHelper::map($headColomnDailyjob, 'ID', 'ATTR');
 				/*GRIDVIEW ARRAY ACTION*/
-				$attDinamikNotulen[]=[
+				$attDinamikDailyjob[]=[
 					'class'=>'kartik\grid\ActionColumn',
 					'dropdown' => true,
 					'template' => '{view}{review}{delete}',
@@ -185,8 +185,8 @@ EOF;
 					],
 				];
 				/*GRIDVIEW ARRAY ROWS*/
-				foreach($gvHeadColomnNotulen as $key =>$value[]){
-					$attDinamikNotulen[]=[		
+				foreach($gvHeadColomnDailyjob as $key =>$value[]){
+					$attDinamikDailyjob[]=[		
 						'attribute'=>$value[$key]['FIELD'],
 						'label'=>$value[$key]['label'],
 						'filter'=>true,
@@ -230,10 +230,10 @@ EOF;
 				};
 				/*SHOW GRID VIEW LIST EVENT*/
 				echo GridView::widget([
-					'dataProvider' => $dataProviderNotulen,
-					'filterModel' => $searchModelNotulen,
+					'dataProvider' => $dataProviderDailyJob,
+					'filterModel' => $searchModelDailyJob,
 					'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
-					'columns' => $attDinamikNotulen,
+					'columns' => $attDinamikDailyjob,
 					/* [
 						['class' => 'yii\grid\SerialColumn'],
 						'start',
@@ -249,7 +249,7 @@ EOF;
 						],
 					],
 					'panel' => [
-								'heading'=>'<h3 class="panel-title">LIST NOTULEN</h3>',
+								'heading'=>'<h3 class="panel-title">List Daily Work</h3>',
 								'type'=>'warning',
 								'showFooter'=>false,
 					],
@@ -267,7 +267,7 @@ EOF;
 		<div class="col-sm-12 col-md-12 col-lg-12">
 			<?php
 			
-				print_r($dataProviderNotulen);
+				print_r($searchModelDailyJob);
 			?>
 		</div>
 	</div>
