@@ -127,7 +127,8 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 										],
 										[
 											'content' => '<span class="fa fa-upload fa-lg"></span>'. '   '.'Arsip File',
-											'url' => '/widget/arsip',
+											//'url' => '/widget/arsip',
+											'url' => '/filemanager/files',
 											'badge' => ''
 										],
 										/* [

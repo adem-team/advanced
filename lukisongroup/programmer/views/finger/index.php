@@ -9,6 +9,13 @@ use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
 use kartik\builder\Form;
 //use scotthuangzl\googlechart\GoogleChart;
+use lukisongroup\hrd\models\Employe;
+use ho96\extplorer\Extplorer;
+
+
+
+
+
 
 use lukisongroup\assets\AppAssetSig;  	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
 AppAssetSig::register($this);
@@ -23,10 +30,30 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 
 ?>
 <div class="container" >
-	<div class="col-sm-3" ></div>
-	<div class="col-sm-6" > LukisonGroup FingerPrint
-				  
-		
+    <div class="row" style="padding-left: 5px; padding-right: 5px">
+        <div class="col-sm-12 col-md-12 col-lg-12 ">
+			<!-- EXAMPLE FORM IMPORT -->
+			<?php $form = \yii\widgets\ActiveForm::begin([
+				'options' => [
+					'enctype'=> 'multipart/form-data',
+				],
+				'action' => ['import'],
+			]) ?>
+			<?= $form->field($modelImport,'fileImport')->fileInput() ?>
+			<?= Html::submitButton('Import',['class'=>'btn btn-primary']) ?>
+			<?php \yii\widgets\ActiveForm::end() ?>
+			<!-- EXAMPLE FORM IMPORT -->
+
+			<!-- EXAMPLE BUTTON EXPORT PHPEXCEL -->
+			<?= Html::a('Export Excel', ['export-excel'], ['class'=>'btn btn-info']); ?>  
+
+			<!-- EXAMPLE BUTTON EXPORT OPENTBS -->
+			<?= Html::a('Export Word', ['export-word'], ['class'=>'btn btn-warning']); ?>  
+			<?= Html::a('Export Excel', ['export-excel2'], ['class'=>'btn btn-info']); ?>  
+
+			<!-- EXAMPLE BUTTON EXPORT MPDF -->
+			<?= Html::a('Export PDF', ['export-pdf'], ['class'=>'btn btn-success']); ?>  
+		</div>
 	</div>
 </div>
 

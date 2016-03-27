@@ -5,6 +5,10 @@ var components = {
             "main": "ui-select-built.js"
         },
         {
+            "name": "tinymce",
+            "main": "tinymce-built.js"
+        },
+        {
             "name": "jquery",
             "main": "jquery-built.js"
         },
