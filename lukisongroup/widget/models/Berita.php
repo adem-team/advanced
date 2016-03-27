@@ -29,7 +29,7 @@ class Berita extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'a1000';
+        return 'bt0001';
     }
 
     /**
@@ -37,7 +37,7 @@ class Berita extends \yii\db\ActiveRecord
      */
     public static function getDb()
     {
-        return Yii::$app->get('db_sss');
+        return Yii::$app->get('db_widget');
     }
 
     /**
