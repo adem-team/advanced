@@ -1,50 +1,123 @@
 <?php
-/**
- * NOTE: Nama Class harus diawali Hurup Besar
- * Server Linux 	: hurup besar/kecil bermasalah -case sensitif-
- * Server Windows 	: hurup besar/kecil tidak bermasalah
- * Author: -ptr.nov-
-*/
 
 namespace lukisongroup\widget\controllers;
 
-/* VARIABLE BASE YII2 Author: -YII2- */
 use Yii;
+use lukisongroup\widget\models\Memo;
+use lukisongroup\widget\models\MemolSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter; 	
-/* VARIABLE PRIMARY JOIN/SEARCH/FILTER/SORT Author: -ptr.nov- */
-//use app\models\hrd\Dept;			/* TABLE CLASS JOIN */
-//use app\models\hrd\DeptSearch;		/* TABLE CLASS SEARCH */
-	
+use yii\filters\VerbFilter;
+
 /**
- * HRD | CONTROLLER EMPLOYE .
+ * MemoController implements the CRUD actions for Memo model.
  */
 class MemoController extends Controller
 {
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(['prodak']),
+                'class' => VerbFilter::className(),
                 'actions' => [
-                    //'delete' => ['post'],
-					'save' => ['post'],
+                    'delete' => ['POST'],
                 ],
             ],
         ];
     }
 
     /**
-     * ACTION INDEX
+     * Lists all Memo models.
+     * @return mixed
      */
     public function actionIndex()
     {
-		/*	variable content View Employe Author: -ptr.nov- */
-       // $searchModel_Dept = new DeptSearch();
-		//$dataProvider_Dept = $searchModel_Dept->search(Yii::$app->request->queryParams);
-		
-		return $this->render('index');
+        $searchModel = new MemolSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        return $this->render('index', [
+            'searchModelmemo' => $searchModel,
+            'dataProviderMemo' => $dataProvider,
+        ]);
     }
-	
+
+    /**
+     * Displays a single Memo model.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
+    /**
+     * Creates a new Memo model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $model = new Memo();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    /**
+     * Updates an existing Memo model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    /**
+     * Deletes an existing Memo model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionDelete($id)
+    {
+        $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * Finds the Memo model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return Memo the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Memo::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
 }

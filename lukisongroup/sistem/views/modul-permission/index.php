@@ -24,7 +24,7 @@ $gvmdlpermission= GridView::widget([
        return ['id' => $model->id,'onclick' => '$.pjax.reload({
             url: "'.Url::to(['/sistem/modul-permission/index']).'?MdlpermissionSearch[USER_ID]="+this.id,
             container: "#gv-custgrp-list",
-            timeout: 10,
+            timeout: 1000,
         });'];
       //  return ['data-id' => $model->USER_ID];
    },
@@ -118,25 +118,17 @@ $gvmdlpermission= GridView::widget([
       [
         'class'=>'kartik\grid\ActionColumn',
         'dropdown' => true,
-        'template' => '{view}{edit}',
+        'template' => '{edit}',
         'dropdownOptions'=>['class'=>'pull-right dropup'],
         'buttons' => [
-            // 'view' =>function($url, $model, $key){
-            //     return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
-            //                   ['/master/schedule-group/view','id'=>$model->ID],[
-            //                   'data-toggle'=>"modal",
-            //                   'data-target'=>"#modal-view",
-            //                   'data-title'=> '',//$model->KD_BARANG,
-            //                   ]). '</li>' . PHP_EOL;
-            // },
-            // 'edit' =>function($url, $model, $key){
-            //     return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Update'),
-            //                   ['/master/schedule-group/update','id'=>$model->ID],[
-            //                   'data-toggle'=>"modal",
-            //                   'data-target'=>"#modal-create",
-            //                   'data-title'=>'',// $model->KD_BARANG,
-            //                   ]). '</li>' . PHP_EOL;
-            // },
+            'edit' =>function($url, $model, $key){
+                return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Change Password'),
+                              ['/sistem/modul-permission/update-pass','id'=>$model->id],[
+                              'data-toggle'=>"modal",
+                              'data-target'=>"#modal-create",
+                              'data-title'=>'',// $model->KD_BARANG,
+                              ]). '</li>' . PHP_EOL;
+            },
         ],
         'headerOptions'=>[
           'style'=>[
@@ -195,7 +187,7 @@ $gvmdlpermission= GridView::widget([
    * @since 1.1
    */
   $gvCustGroupList= GridView::widget([
-  'id'=>'gv-custgrp-list',
+  'id'=>'gv-user-list',
   'dataProvider' => $dataProviderpermision,
   'filterModel' => $searchModelpermision,
   'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
@@ -287,10 +279,14 @@ $gvmdlpermission= GridView::widget([
       'label'=>'BTN CREATE',
       'editableOptions' => [
                'header' => 'Update Permission',
-               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX,
+               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
                'size'=>'sm',
                'options' => [
-                 ]
+               ],
+               'displayValueConfig'=> [
+                       '0' => '<i class="fa fa-unlock "></i>',
+                       '1' => '<i class="fa fa-lock"></i>',
+                     ],
              ],
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -319,10 +315,14 @@ $gvmdlpermission= GridView::widget([
       'label'=>'BTN EDIT',
       'editableOptions' => [
                'header' => 'Update Permission',
-               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX,
+               'inputType' =>\kartik\editable\Editable::INPUT_CHECKBOX_X,
                'size'=>'sm',
                'options' => [
-                 ]
+               ],
+               'displayValueConfig'=> [
+                       '0' => '<i class="fa fa-unlock "></i>',
+                       '1' => '<i class="fa fa-lock"></i>',
+                     ],
              ],
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -351,10 +351,14 @@ $gvmdlpermission= GridView::widget([
       'label'=>'BTN DELETE',
       'editableOptions' => [
                'header' => 'Update Permission',
-               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX,
+               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
                'size'=>'sm',
                'options' => [
-                 ]
+               ],
+               'displayValueConfig'=> [
+                       '0' => '<i class="fa fa-unlock "></i>',
+                       '1' => '<i class="fa fa-lock"></i>',
+                     ],
              ],
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -383,10 +387,17 @@ $gvmdlpermission= GridView::widget([
       'label'=>'BTN VIEW',
       'editableOptions' => [
                'header' => 'Update Permission',
-               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX,
+               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
                'size'=>'sm',
+
                'options' => [
-                 ]
+                  // 'value' => 'Kartik Visweswaran',
+                ],
+                'displayValueConfig'=> [
+                        '0' => '<i class="fa fa-unlock "></i>',
+                        '1' => '<i class="fa fa-lock"></i>',
+                      ],
+                //  'editableValueOptions'=>['class'=>'Kartik Visweswaran']
              ],
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -415,10 +426,14 @@ $gvmdlpermission= GridView::widget([
       'label'=>'BTN REVIEW',
       'editableOptions' => [
                'header' => 'Update Permission',
-               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX,
+               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
                'size'=>'sm',
                'options' => [
-                 ]
+               ],
+                 'displayValueConfig'=> [
+                         '0' => '<i class="fa fa-unlock "></i>',
+                         '1' => '<i class="fa fa-lock"></i>',
+                       ],
              ],
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -447,10 +462,14 @@ $gvmdlpermission= GridView::widget([
       'label'=>'BTN PROCESS1',
       'editableOptions' => [
                'header' => 'Update Permission',
-               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX,
+               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
                'size'=>'sm',
                'options' => [
-                 ]
+               ],
+               'displayValueConfig'=> [
+                       '0' => '<i class="fa fa-unlock "></i>',
+                       '1' => '<i class="fa fa-lock"></i>',
+                     ],
              ],
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -479,10 +498,14 @@ $gvmdlpermission= GridView::widget([
       'label'=>'BTN PROCESS2',
       'editableOptions' => [
                'header' => 'Update Permission',
-               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX,
+               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
                'size'=>'sm',
                'options' => [
-                 ]
+               ],
+               'displayValueConfig'=> [
+                       '0' => '<i class="fa fa-unlock "></i>',
+                       '1' => '<i class="fa fa-lock"></i>',
+                     ],
              ],
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -511,10 +534,14 @@ $gvmdlpermission= GridView::widget([
       'label'=>'BTN PROCESS3',
       'editableOptions' => [
                'header' => 'Update Permission',
-               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX,
+               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
                'size'=>'sm',
                'options' => [
-                 ]
+               ],
+               'displayValueConfig'=> [
+                       '0' => '<i class="fa fa-unlock "></i>',
+                       '1' => '<i class="fa fa-lock"></i>',
+                     ],
              ],
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -543,10 +570,14 @@ $gvmdlpermission= GridView::widget([
       'label'=>'BTN PROCESS4',
       'editableOptions' => [
                'header' => 'Update Permission',
-               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX,
+               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
                'size'=>'sm',
                'options' => [
-                 ]
+               ],
+               'displayValueConfig'=> [
+                       '0' => '<i class="fa fa-unlock "></i>',
+                       '1' => '<i class="fa fa-lock"></i>',
+                     ],
              ],
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -575,10 +606,14 @@ $gvmdlpermission= GridView::widget([
       'label'=>'BTN PROCESS5',
       'editableOptions' => [
                'header' => 'Update Permission',
-               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX,
+               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
                'size'=>'sm',
                'options' => [
-                 ]
+               ],
+               'displayValueConfig'=> [
+                       '0' => '<i class="fa fa-unlock "></i>',
+                       '1' => '<i class="fa fa-lock"></i>',
+                     ],
              ],
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -607,10 +642,14 @@ $gvmdlpermission= GridView::widget([
       'label'=>'BTN SIGN1',
       'editableOptions' => [
                'header' => 'Update Permission',
-               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX,
+               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
                'size'=>'sm',
                'options' => [
-                 ]
+               ],
+               'displayValueConfig'=> [
+                       '0' => '<i class="fa fa-unlock "></i>',
+                       '1' => '<i class="fa fa-lock"></i>',
+                     ],
              ],
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -639,10 +678,14 @@ $gvmdlpermission= GridView::widget([
       'label'=>'BTN SIGN2',
       'editableOptions' => [
                'header' => 'Update Permission',
-               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX,
+               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
                'size'=>'sm',
                'options' => [
-                 ]
+               ],
+               'displayValueConfig'=> [
+                       '0' => '<i class="fa fa-unlock "></i>',
+                       '1' => '<i class="fa fa-lock"></i>',
+                     ],
              ],
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -671,10 +714,14 @@ $gvmdlpermission= GridView::widget([
       'label'=>'BTN SIGN3',
       'editableOptions' => [
                'header' => 'Update Permission',
-               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX,
+               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
                'size'=>'sm',
                'options' => [
-                 ]
+               ],
+               'displayValueConfig'=> [
+                       '0' => '<i class="fa fa-unlock "></i>',
+                       '1' => '<i class="fa fa-lock"></i>',
+                     ],
              ],
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -703,10 +750,14 @@ $gvmdlpermission= GridView::widget([
       'label'=>'BTN SIGN4',
       'editableOptions' => [
                'header' => 'Update Permission',
-               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX,
+               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
                'size'=>'sm',
                'options' => [
-                 ]
+               ],
+               'displayValueConfig'=> [
+                       '0' => '<i class="fa fa-unlock "></i>',
+                       '1' => '<i class="fa fa-lock"></i>',
+                     ],
              ],
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -735,10 +786,14 @@ $gvmdlpermission= GridView::widget([
       'label'=>'BTN SIGN5',
       'editableOptions' => [
                'header' => 'Update Permission',
-               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX,
+               'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
                'size'=>'sm',
                'options' => [
-                 ]
+               ],
+               'displayValueConfig'=> [
+                       '0' => '<i class="fa fa-unlock "></i>',
+                       '1' => '<i class="fa fa-lock"></i>',
+                     ],
              ],
       'hAlign'=>'left',
       'vAlign'=>'middle',
@@ -796,7 +851,7 @@ $gvmdlpermission= GridView::widget([
     [
       'class'=>'kartik\grid\ActionColumn',
       'dropdown' => true,
-      'template' => '{view}{edit}',
+      'template' => '{update}',
       'dropdownOptions'=>['class'=>'pull-right dropup'],
       'buttons' => [
         //  'view' =>function($url, $model, $key){
@@ -807,9 +862,9 @@ $gvmdlpermission= GridView::widget([
         //                     'data-title'=> '',//$model->KD_BARANG,
         //                     ]). '</li>' . PHP_EOL;
           // },
-          // 'edit' =>function($url, $model, $key){
-          //     return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Update'),
-          //                   ['/master/schedule-group/update-group','id'=>$model->CUST_KD],[
+          // 'update' =>function($url, $model, $key){
+          //     return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Change Password'),
+          //                   ['/master/schedule-group/update-group','id'=>$model->USER_ID],[
           //                   'data-toggle'=>"modal",
           //                   'data-target'=>"#modal-create",
           //                   'data-title'=>'',// $model->KD_BARANG,

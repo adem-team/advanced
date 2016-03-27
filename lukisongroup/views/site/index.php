@@ -117,7 +117,7 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 										],	
 										[
 											'content' => '<span class="fa fa-edit fa-lg"></span>'. '   '.'Daily Jobs',
-											'url' => '/widget/jobsdaily',
+											'url' => '/widget/dailyjob',
 											'badge' => ''
 										],									
 										[

@@ -19,6 +19,7 @@ class AbsenDailySearch extends Personallog
 {
 	public $TerminalID;
 	public $EMP_NM;
+	public $EMP_ID;
 
     /**
      * @inheritdoc
@@ -26,7 +27,7 @@ class AbsenDailySearch extends Personallog
     public function rules()
     {
         return [
-            [['EMP_NM','TerminalID'], 'safe'],
+            [['EMP_NM','TerminalID','EMP_ID'], 'safe'],
         ];
     }
 
@@ -77,7 +78,27 @@ class AbsenDailySearch extends Personallog
 		return $dataProvider;
 	}
 
+	public function searchDailyTglRangeUser($params){
+		$user_id=  Yii::$app->user->identity->id;
+		$dailyAbsensi= Yii::$app->db2->createCommand("CALL absensi_calender_user('bulan','2016-03-23','".$user_id."')")->queryAll();
+		$dataProvider= new ArrayDataProvider([
+			//'key' => 'ID',
+			'allModels'=>$dailyAbsensi,
+			'pagination' => [
+				'pageSize' => 500,
+			]
+		]);
+		if (!($this->load($params) && $this->validate())) {
+ 			return $dataProvider;
+ 		}
 
+		$filter = new Filter();
+ 		$this->addCondition($filter, 'TerminalID', true);
+ 		$this->addCondition($filter, 'EMP_NM', true);
+ 		$dataProvider->allModels = $filter->filter($dailyAbsensi);
+
+		return $dataProvider;
+	}
 
 
 

@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\password\PasswordInput;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\models\system\erpmodul\Mdlpermission */
@@ -15,8 +16,11 @@ use yii\widgets\ActiveForm;
       'enableClientValidation'=>true
     ]); ?>
 
+     <?= $form->field($model, 'username')->textInput()?>
 
-     <?= $form->field($model, 'password_hash')->passwordInput()?>
+     <!-- $form->field($model, 'password_hash')->passwordInput()?> -->
+
+       <?= $form->field($model, 'password_hash')->widget(PasswordInput::classname()) ?>
 
 
 
