@@ -12,14 +12,16 @@ use lukisongroup\hrd\models\ModulEvent;
  */
 class ModulEventSearch extends ModulEvent
 {
+	public $modul_nm;
+	
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['ID', 'MODUL_HIRS', 'STATUS'], 'integer'],
-            [['TGL_START', 'TGL_END', 'TITLE', 'USER_ID', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
+            [['id', 'MODUL_HIRS', 'STATUS'], 'integer'],
+            [['start', 'end', 'title', 'USER_ID', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT','modul_nm'], 'safe'],
         ];
     }
 
@@ -58,20 +60,58 @@ class ModulEventSearch extends ModulEvent
         }
 
         // grid filtering conditions
-        $query->andFilterWhere([
-            'ID' => $this->ID,
-            'TGL_START' => $this->TGL_START,
-            'TGL_END' => $this->TGL_END,
+         $query->andFilterWhere([
+            'id' => $this->id,
+            'start' => $this->start,
+            'end' => $this->end,
             'MODUL_HIRS' => $this->MODUL_HIRS,
             'STATUS' => $this->STATUS,
             'CREATE_AT' => $this->CREATE_AT,
             'UPDATE_AT' => $this->UPDATE_AT,
         ]);
 
-        $query->andFilterWhere(['like', 'TITLE', $this->TITLE])
+        $query->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
             ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
+
+        return $dataProvider;
+    }
+	
+	public function searchPersonal($params)
+    {
+		$EMP_ID=Yii::$app->user->identity->EMP_ID;
+        $query = ModulEvent::find()->where("USER_ID='".$EMP_ID."'");
+
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'start' => $this->start,
+            'end' => $this->end,
+            'MODUL_HIRS' => $this->MODUL_HIRS,
+            'STATUS' => $this->STATUS,
+            'CREATE_AT' => $this->CREATE_AT,
+            'UPDATE_AT' => $this->UPDATE_AT,
+        ]);
+
+        $query->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
+            ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
+            ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]); 
 
         return $dataProvider;
     }

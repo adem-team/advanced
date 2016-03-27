@@ -8,10 +8,17 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \DateTime;
+use yii\helpers\Json;
+use yii\web\Request;
+use yii\web\Response;
+use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
 
 use lukisongroup\hrd\models\AbsenDaily;
 use lukisongroup\hrd\models\AbsenDailySearch;
 use lukisongroup\hrd\models\Kar_finger;
+use lukisongroup\hrd\models\ModulEvent;
+use lukisongroup\hrd\models\ModulEventSearch;
 use lukisongroup\sistem\models\Absensi;
 use lukisongroup\sistem\models\AbsensiSearch;
 /**
@@ -33,41 +40,121 @@ class PersonaliaController extends Controller
             ],
         ];
     }
-
-    /**
+	
+	/**
+     * Before Action Index
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	public function beforeAction(){
+			if (Yii::$app->user->isGuest)  {
+				 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+			}
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+				   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true;
+               }
+            } else {
+                return true;
+            }
+    }
+	
+	/**
      * Lists all Absensi models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new AbsensiSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		if (!Yii::$app->user->isGuest){
+			$searchModel = new AbsensiSearch();
+			$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-		$date=new DateTime();
-		$thn=strlen($date->format('Y'));
-		$bln=strlen($date->format('m'));
-		$hri=strlen($date->format('d'));
-		$dateRlt=$thn."-".$bln."-".$hri;
-		$searchModel = new AbsenDailySearch([
-			//'tgllog'=>Yii::$app->ambilKonvesi->tglSekarang()
-		]);
-				
-		/*REKAP ABSENSI*/
-		//Field Label
-		$dataProviderField = $searchModel->dailyFieldTglRange();
-		//Value row
-		$dataProvider = $searchModel->searchDailyTglRangeUser(Yii::$app->request->queryParams);
-		
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-			/*Daily Absensi*/
-			'searchModel'=>$searchModel,
-			'dataProviderField'=>$dataProviderField,
-			'dataProvider'=>$dataProvider	
-        ]);
+			$date=new DateTime();
+			$thn=strlen($date->format('Y'));
+			$bln=strlen($date->format('m'));
+			$hri=strlen($date->format('d'));
+			$dateRlt=$thn."-".$bln."-".$hri;
+			$searchModel = new AbsenDailySearch([
+				//'tgllog'=>Yii::$app->ambilKonvesi->tglSekarang()
+			]);
+					
+			/*REKAP ABSENSI*/
+			//Field Label
+			$dataProviderField = $searchModel->dailyFieldTglRange();
+			//Value row
+			$dataProvider = $searchModel->searchDailyTglRangeUser(Yii::$app->request->queryParams);
+			/*EVENT SEARCH*/
+			$searchModelEvent = new ModulEventSearch();
+			$dataProviderEvent = $searchModelEvent->searchPersonal(Yii::$app->request->queryParams);
+			return $this->render('index', [
+				'searchModel' => $searchModel,
+				'dataProvider' => $dataProvider,
+				/*Daily Absensi*/
+				'searchModel'=>$searchModel,
+				'dataProviderField'=>$dataProviderField,
+				'dataProvider'=>$dataProvider,
+				/*EVENT SEARCH*/
+				'searchModelEvent'=>$searchModelEvent,
+				'dataProviderEvent'=>$dataProviderEvent,
+			]);
+		}else{			
+			 Yii::$app->user->logout();
+		}
     }
 
+	 /**
+	 * EVENT CALENDAR
+     * [actionJsoncalendar description]
+     * @param  [type] $start [description]
+     * @param  [type] $end   [description]
+     * @param  [type] $_     [description]
+     * @return [type]        [description]
+	 * @author piter [ptr.nov@gmail.com]
+	 * @since	1.2
+     */
+	/*SHOW JSON*/
+    public function actionJsoncalendar($start=NULL,$end=NULL,$_=NULL){
+    //public function actionJsoncalendar(){
+        $events = array();
+		$eventCalendar= ModulEvent::find()->all();
+		//print_r($eventCalendar);
+		//die();
+        //Demo
+        $Event = new \yii2fullcalendar\models\Event();
+		//FIELD HARUS [id,start,end,title]
+        header('Content-type: application/json');
+        echo Json::encode($eventCalendar);
+        Yii::$app->end();
+    }
+	/*INSERT AJAX*/
+	public function actionJsoncalendar_add(){
+		if (Yii::$app->request->isAjax) {
+			$request= Yii::$app->request;
+			$model =  new ModulEvent;
+			$end=$request->post('end');
+			$start=$request->post('start');
+			$title=$request->post('title');			
+			$model->start = $start;
+			$model->end = $end;
+			$model->title = $title;
+			$model->USER_ID =Yii::$app->user->identity->EMP_ID;
+			// $model->CREATE_AT = date('Y-m-d H:i:s');
+			$model->UPDATE_BY = Yii::$app->user->identity->username;
+			$model->save();
+			return true;
+		}
+		
+	}
+	
+	
     /**
      * Displays a single Absensi model.
      * @param string $id
