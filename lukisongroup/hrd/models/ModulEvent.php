@@ -1,7 +1,7 @@
 <?php
 
 namespace lukisongroup\hrd\models;
-
+use lukisongroup\hrd\models\ModulPersonalia;
 use Yii;
 
 /**
@@ -43,10 +43,9 @@ class ModulEvent extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['TGL_START', 'TGL_END', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
+            [['id','USER_ID','start', 'end', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
             [['MODUL_HIRS', 'STATUS'], 'integer'],
-            [['TITLE'], 'string', 'max' => 255],
-            [['USER_ID'], 'string', 'max' => 50],
+            [['title'], 'string', 'max' => 255],
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100],
         ];
     }
@@ -57,10 +56,10 @@ class ModulEvent extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'ID' => Yii::t('app', 'ID'),
-            'TGL_START' => Yii::t('app', 'Tgl  Start'),
-            'TGL_END' => Yii::t('app', 'Tgl  End'),
-            'TITLE' => Yii::t('app', 'Title'),
+            'id' => Yii::t('app', 'ID'),
+            'start' => Yii::t('app', 'Tgl  Start'),
+            'end' => Yii::t('app', 'Tgl  End'),
+            'title' => Yii::t('app', 'Title'),
             'USER_ID' => Yii::t('app', 'User  ID'),
             'MODUL_HIRS' => Yii::t('app', 'MODUL -> P0002'),
             'STATUS' => Yii::t('app', 'Status'),
@@ -69,5 +68,14 @@ class ModulEvent extends \yii\db\ActiveRecord
             'UPDATE_BY' => Yii::t('app', 'Update  By'),
             'UPDATE_AT' => Yii::t('app', 'Update  At'),
         ];
+    }
+	
+	public function getModulPesonalia()
+    {
+        return $this->hasOne(ModulPersonalia::className(), ['MODUL_HIRS' => 'ID']);
+    }
+    public function getModul_nm()
+    {
+        return $this->getModulPesonalia->MODUL_NM;
     }
 }

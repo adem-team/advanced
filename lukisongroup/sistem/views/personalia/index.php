@@ -40,13 +40,14 @@ function(start, end) {
 	tgl2 = moment(dateTime2).format("YYYY-MM-DD HH:mm:ss");
 	if (title) {
 		$.ajax({
-			url:'/master/schedule-header/jsoncalendar_add',
+			url:'/sistem/personalia/jsoncalendar_add',
 			type: 'POST',
 			data:'title=' + title + '&start='+ tgl1 + '&end=' + tgl2,
 			dataType:'json',
 			success: function(result){
-        alert('ok')
-			  $.pjax.reload({container:'#gv-schedule-id'});
+        //alert('ok')
+			  $.pjax.reload({container:'#calendar-user'});
+			  //$.pjax.reload({container:'#gv-schedule-id'});
 			}
 		});
 		/* calendar.fullCalendar('renderEvent', {
@@ -81,14 +82,14 @@ function(date) {
 EOF;
 $JSEventClick = <<<EOF
 function(calEvent, jsEvent, view) {
-    alert('Event: ' + calEvent.title);
-    alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-    alert('View: ' + view.name);
+    alert('Event: ' + calEvent.id);
+   // alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+    //alert('View: ' + view.name);
     // change the border color just for fun
     $(this).css('border-color', 'red');
 }
 EOF;
-/*
+	/*
 	* === REKAP =========================
 	* Key-FIND : AttDinamik-Clalender
 	* @author ptrnov [piter@lukison.com]
@@ -99,6 +100,7 @@ EOF;
 	$hdrLabel1=[];
 	//$hdrLabel2=[];
 	$getHeaderLabelWrap=[];
+	
 	/*
 	 * Terminal ID | Mashine
 	 * Colomn 1
@@ -168,6 +170,7 @@ EOF;
 			 ]
 		 ],
 	];
+	
 	/*
 	 * Employe name
 	 * Colomn 2
@@ -216,6 +219,8 @@ EOF;
 		],
 		//'footer'=>true,
 	];
+	
+	
 	foreach($dataProviderField as $key =>$value)
 	{
 		$i=2;
@@ -312,12 +317,18 @@ EOF;
 	$getHeaderLabelWrap =[
 		'rows'=>$hdrLabel1_ALL
 	];
-
 ?>
+
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
     <div  class="row" style="margin-top:15px">
         <div class="col-sm-4 col-md-4 col-lg-4">
 			<?php
+				/*
+				 * EVENT CALENDAR ABSENSI
+				 * PERIODE 23-22
+				 * @author ptrnov  [piter@lukison.com]
+				 * @since 1.2
+				*/
 				$events = array();
 				//Testing
 				$Event = new \yii2fullcalendar\models\Event();
@@ -333,13 +344,13 @@ EOF;
 				$events[] = $Event;
 
 				$calenderRt=yii2fullcalendar\yii2fullcalendar::widget([
-					'id'=>'calendar',
+					'id'=>'calendar-user',
 					'options' => [
 					'lang' => 'id',
 					//... more options to be defined here!
 					],
 					// 'events'=> $events,
-					'ajaxEvents' => Url::to(['/master/schedule-header/jsoncalendar']),
+					'ajaxEvents' => Url::to(['/sistem/personalia/jsoncalendar']),
 					'clientOptions' => [
 						'selectable' => true,
 						'selectHelper' => true,
@@ -348,7 +359,7 @@ EOF;
 						//'drop' => new JsExpression($JSDropEvent),
 						'selectHelper'=>true,
 						'select' => new JsExpression($JSCode),
-						//'eventClick' => new JsExpression($JSEventClick),
+						'eventClick' => new JsExpression($JSEventClick),
 						//'defaultDate' => date('Y-m-d')
 					],
 					//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
@@ -357,27 +368,156 @@ EOF;
 				echo Html::panel(
 					['heading' => 'CLENDER', 'body' =>$calenderRt],
 					Html::TYPE_DANGER
-				);
+				);				
 				
 				/*
-				 * LIST REQUEST ABSENSI
+				 * LIST EVENT CALENDAR 
 				 * PERIODE 23-22
 				 * @author ptrnov  [piter@lukison.com]
 				 * @since 1.2
 				*/
-				echo GridView::widget([
-					'dataProvider' => $dataProvider,
-					'filterModel' => $searchModel,
-					'columns' => [
-						['class' => 'yii\grid\SerialColumn'],
-
-						'idno',
-						'TerminalID',
-						'UserID',
-						'FunctionKey',
-						'Edited',
-						['class' => 'yii\grid\ActionColumn'],
+				$actionClass='btn btn-info btn-xs';
+				$actionLabel='Update';
+				$attDinamikEvent =[];				
+				/*GRIDVIEW ARRAY FIELD HEAD*/
+				$headColomnEvent=[
+					['ID' =>0, 'ATTR' =>['FIELD'=>'start','SIZE' => '10px','label'=>'DATE START','align'=>'left','warna'=>'97, 211, 96, 0.3']],				
+					['ID' =>1, 'ATTR' =>['FIELD'=>'end','SIZE' => '10px','label'=>'DATE END','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+					['ID' =>2, 'ATTR' =>['FIELD'=>'title','SIZE' => '10px','label'=>'TITLE','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+				];
+				$gvHeadColomnEvent = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');
+				/*GRIDVIEW ARRAY ACTION*/
+				$attDinamikEvent[]=[
+					'class'=>'kartik\grid\ActionColumn',
+					'dropdown' => true,
+					'template' => '{view}{review}{delete}',
+					'dropdownOptions'=>['class'=>'pull-left dropdown','style'=>['disable'=>true]],
+					'dropdownButton'=>[
+						'class' => $actionClass,
+						'label'=>$actionLabel,
+						//'caret'=>'<span class="caret"></span>',
 					],
+					'buttons' => [
+						'view' =>function($url, $model, $key){
+								return  '<li>' .Html::a('<span class="fa fa-random fa-dm"></span>'.Yii::t('app', 'Set Alias Customer'),
+															['/sistem/personalia/view','id'=>$model->id],[
+															'id'=>'alias-cust-id',
+															'data-toggle'=>"modal",
+															'data-target'=>"#alias-cust",
+															]). '</li>' . PHP_EOL;
+						},				
+						'review' =>function($url, $model, $key){
+								return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'Set Alias Prodak'),
+															['/sistem/personalia/view','id'=>$model->id],[
+															'id'=>'alias-prodak-id',
+															'data-toggle'=>"modal",
+															'data-target'=>"#alias-prodak",
+															]). '</li>' . PHP_EOL;
+						},	
+						'delete' =>function($url, $model, $key){
+								return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'new Customer'),
+															['/sistem/personalia/view','id'=>$model->id],[
+															'data-toggle'=>"modal",
+															'data-target'=>"#alias-prodak",
+															]). '</li>' . PHP_EOL;
+						},				
+					],
+					'headerOptions'=>[
+						'style'=>[
+							'text-align'=>'center',
+							'width'=>'10px',
+							'font-family'=>'tahoma, arial, sans-serif',
+							'font-size'=>'9pt',
+							'background-color'=>'rgba(97, 211, 96, 0.3)',
+						]
+					],
+					'contentOptions'=>[
+						'style'=>[
+							'text-align'=>'center',
+							'width'=>'10px',
+							'height'=>'10px',
+							'font-family'=>'tahoma, arial, sans-serif',
+							'font-size'=>'9pt',
+						]
+					],
+				];
+				/*GRIDVIEW ARRAY ROWS*/
+				foreach($gvHeadColomnEvent as $key =>$value[]){
+					$attDinamikEvent[]=[		
+						'attribute'=>$value[$key]['FIELD'],
+						'label'=>$value[$key]['label'],
+						'filter'=>true,
+						'hAlign'=>'right',
+						'vAlign'=>'middle',
+						//'mergeHeader'=>true,
+						'noWrap'=>true,			
+						'headerOptions'=>[		
+								'style'=>[									
+								'text-align'=>'center',
+								'width'=>$value[$key]['FIELD'],
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'8pt',
+								//'background-color'=>'rgba(97, 211, 96, 0.3)',
+								'background-color'=>'rgba('.$value[$key]['warna'].')',
+							]
+						],  
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>$value[$key]['align'],
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'8pt',
+								//'background-color'=>'rgba(13, 127, 3, 0.1)',
+							]
+						],
+						//'pageSummaryFunc'=>GridView::F_SUM,
+						//'pageSummary'=>true,
+						// 'pageSummaryOptions' => [
+							// 'style'=>[
+									// 'text-align'=>'right',		
+									'width'=>'12px',
+									// 'font-family'=>'tahoma',
+									// 'font-size'=>'8pt',	
+									// 'text-decoration'=>'underline',
+									// 'font-weight'=>'bold',
+									// 'border-left-color'=>'transparant',		
+									// 'border-left'=>'0px',									
+							// ]
+						// ],	
+					];	
+				};
+				/*SHOW GRID VIEW LIST EVENT*/
+				echo GridView::widget([
+					'dataProvider' => $dataProviderEvent,
+					'filterModel' => $searchModelEvent,
+					'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+					'columns' => $attDinamikEvent,
+					/* [
+						['class' => 'yii\grid\SerialColumn'],
+						'start',
+						'end',
+						'title',
+						['class' => 'yii\grid\ActionColumn'],
+					], */
+					'pjax'=>true,
+					'pjaxSettings'=>[
+						'options'=>[
+							'enablePushState'=>false,
+							'id'=>'absen-rekap',
+						],
+					],
+					'panel' => [
+								'heading'=>'<h3 class="panel-title">List Event</h3>',
+								'type'=>'warning',
+								'showFooter'=>false,
+					],
+					'toolbar'=> [
+						//'{items}',
+					],
+					'hover'=>true, //cursor select
+					'responsive'=>true,
+					'responsiveWrap'=>true,
+					'bordered'=>true,
+					'striped'=>true,
 				]); 				
 			?>
 		</div>
@@ -392,7 +532,7 @@ EOF;
 				echo GridView::widget([
 					'id'=>'daily-personal-rekap',
 					'dataProvider' => $dataProvider,
-					'filterModel' => $searchModel,
+					//'filterModel' => $searchModel,
 					'beforeHeader'=>$getHeaderLabelWrap,
 					//'showPageSummary' => true,
 					'columns' =>$attDinamik,
@@ -404,8 +544,8 @@ EOF;
 							'id'=>'absen-rekap',
 						],
 					],
-					 'panel' => [
-								'heading'=>'<h3 class="panel-title">Daily Absensi</h3>',
+					'panel' => [
+								'heading'=>'<h3 class="panel-title">DAILY ATTENDANCE PERIODE</h3>',
 								'type'=>'warning',
 								// 'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Customer ',
 										// ['modelClass' => 'Kategori',]),'/master/barang/create',[
