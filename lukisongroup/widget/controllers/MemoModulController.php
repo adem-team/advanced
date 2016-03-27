@@ -3,16 +3,16 @@
 namespace lukisongroup\widget\controllers;
 
 use Yii;
-use lukisongroup\widget\models\Memo;
-use lukisongroup\widget\models\MemolSearch;
+use lukisongroup\widget\models\MemoModul;
+use lukisongroup\widget\models\MemoModulSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * MemoController implements the CRUD actions for Memo model.
+ * MemoModulController implements the CRUD actions for MemoModul model.
  */
-class MemoController extends Controller
+class MemoModulController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,21 +30,22 @@ class MemoController extends Controller
     }
 
     /**
-     * Lists all Memo models.
+     * Lists all MemoModul models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new MemolSearch();
+        $searchModel = new MemoModulSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
         return $this->render('index', [
-            'searchModelmemo' => $searchModel,
-            'dataProviderMemo' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single Memo model.
+     * Displays a single MemoModul model.
      * @param string $id
      * @return mixed
      */
@@ -56,16 +57,16 @@ class MemoController extends Controller
     }
 
     /**
-     * Creates a new Memo model.
+     * Creates a new MemoModul model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Memo();
+        $model = new MemoModul();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->ID]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -74,7 +75,7 @@ class MemoController extends Controller
     }
 
     /**
-     * Updates an existing Memo model.
+     * Updates an existing MemoModul model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
@@ -84,7 +85,7 @@ class MemoController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->ID]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -93,7 +94,7 @@ class MemoController extends Controller
     }
 
     /**
-     * Deletes an existing Memo model.
+     * Deletes an existing MemoModul model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
@@ -106,15 +107,15 @@ class MemoController extends Controller
     }
 
     /**
-     * Finds the Memo model based on its primary key value.
+     * Finds the MemoModul model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return Memo the loaded model
+     * @return MemoModul the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Memo::findOne($id)) !== null) {
+        if (($model = MemoModul::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
