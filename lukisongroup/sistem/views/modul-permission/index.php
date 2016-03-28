@@ -10,6 +10,10 @@ use yii\widgets\ActiveForm;
 use kartik\widgets\Select2;
 use lukisongroup\master\models\Schedulegroup;
 use lukisongroup\sistem\models\Mdlpermission;
+
+$this->sideCorp = 'PT.Lukisongroup';                        /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'admin';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'ERP Modul - Administrator');  /* title pada header page */
 /*
  * GRIDVIEW modul permission
  * @author wawan
@@ -19,7 +23,7 @@ $gvmdlpermission= GridView::widget([
     'id'=>'gv-perimisson-id',
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
-    'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+  	'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
     'rowOptions'   => function ($model, $key, $index, $grid) {
        return ['id' => $model->id,'onclick' => '$.pjax.reload({
             url: "'.Url::to(['/sistem/modul-permission/index']).'?MdlpermissionSearch[USER_ID]="+this.id,
