@@ -4,6 +4,7 @@ namespace lukisongroup\sistem\controllers;
 
 use Yii;
 use lukisongroup\sistem\models\Modulerp;
+use lukisongroup\sistem\models\Userlogin;
 use lukisongroup\sistem\models\ModulerpSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -25,6 +26,27 @@ class ModulErpController extends Controller
             ],
         ];
     }
+
+    public function beforeAction(){
+  			if (Yii::$app->user->isGuest)  {
+  				 Yii::$app->user->logout();
+                     $this->redirect(array('/site/login'));  //
+  			}
+              // Check only when the user is logged in
+              if (!Yii::$app->user->isGuest)  {
+                 if (Yii::$app->session['userSessionTimeout']< time() ) {
+                     // timeout
+                     Yii::$app->user->logout();
+                     $this->redirect(array('/site/login'));  //
+                 } else {
+                     //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+  				   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                     return true;
+                 }
+              } else {
+                  return true;
+              }
+      }
 
     /**
      * Lists all Modulerp models.
@@ -62,10 +84,22 @@ class ModulErpController extends Controller
     {
         $model = new Modulerp();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->MODUL_ID]);
+        if ($model->load(Yii::$app->request->post())) {
+
+           if($model->save())
+           {
+             $datauser = Userlogin::find()->all();
+             foreach ($datauser as $key => $value) {
+               # code...
+               $connection = Yii::$app->db;
+               $profile=Yii::$app->getUserOpt->Profile_user();
+               $usercreate = $profile->username;
+               $connection->createCommand()->batchInsert('modul_permission',['USER_ID','MODUL_ID','CREATED_BY'],[[$value['id'],$model->MODUL_ID,$usercreate]])->execute();
+             }
+           }
+            return $this->redirect('index');
         } else {
-            return $this->render('create', [
+            return $this->renderAjax('create', [
                 'model' => $model,
             ]);
         }
