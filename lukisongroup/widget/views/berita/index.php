@@ -8,6 +8,22 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 use yii\web\JsExpression;
 use yii\widgets\Pjax;
+use lukisongroup\widget\models\Berita;
+use lukisongroup\widget\models\Commentberita;
+$this->registerCss('
+.media
+{
+	// padding:20px;
+  //
+	// width:250px;
+	// height:350px;
+	// margin-top:20px;
+	// float:left;
+	// // margin:20px;
+	// position:relative;
+}
+
+')
 ?>
 
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
@@ -194,4 +210,45 @@ use yii\widgets\Pjax;
     ?>
 		</div>
 	</div>
+  <div class="row">
+      <div class="col-sm-12">
+<?php
+    // $body = 'Cras sit amet nibh libero, in gravida nulla. '.
+    // 'Nulla vel metus scelerisque ante sollicitudin commodo. '.
+    // 'Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.';
+    $media = [];
+    $databerita = Berita::find()->all();
+    foreach ($databerita as $key => $value) {
+      # code...
+     $media[]= [
+       'heading' => $value['JUDUL'],
+       'body' => $value['ISI'],
+       'src' => '#',
+       'img' => 'http://placehold.it/64x64',
+       'options'=>[
+         'id'=>'med'
+       ],
+       'items' => [
+           [
+               'heading' => $value['JUDUL'],
+               'body' => $value['ISI'],
+               'src' => '#',
+               'img' => 'http://placehold.it/64x64'
+           ],
+           [
+               'heading' => $value['JUDUL'],
+               'body' => $value['ISI'],
+               'src' => '#',
+               'img' => 'http://placehold.it/64x64'
+           ],
+       ]
+     ];
+    }
+echo Html::mediaList($media
+);
+?>
+
+      </div>
+
+  </div>
 </div>
