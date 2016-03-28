@@ -19,7 +19,7 @@ use lukisongroup\hrd\models\employe;
 
 	<?php
 		$form = ActiveForm::begin([
-				'id'=>'auth1Mdl-ro',
+				'id'=>'auth1Mdl-so',
 				'enableClientValidation' => true,
 				'enableAjaxValidation' => true,
 				'method' => 'post',
