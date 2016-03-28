@@ -40,7 +40,7 @@ class PersonaliaController extends Controller
             ],
         ];
     }
-	
+
 	/**
      * Before Action Index
 	 * @author ptrnov  <piter@lukison.com>
@@ -66,7 +66,7 @@ class PersonaliaController extends Controller
                 return true;
             }
     }
-	
+
 	/**
      * Lists all Absensi models.
      * @return mixed
@@ -85,7 +85,7 @@ class PersonaliaController extends Controller
 			$searchModel = new AbsenDailySearch([
 				//'tgllog'=>Yii::$app->ambilKonvesi->tglSekarang()
 			]);
-					
+
 			/*REKAP ABSENSI*/
 			//Field Label
 			$dataProviderField = $searchModel->dailyFieldTglRange();
@@ -105,7 +105,7 @@ class PersonaliaController extends Controller
 				'searchModelEvent'=>$searchModelEvent,
 				'dataProviderEvent'=>$dataProviderEvent,
 			]);
-		}else{			
+		}else{
 			 Yii::$app->user->logout();
 		}
     }
@@ -141,7 +141,7 @@ class PersonaliaController extends Controller
 			$model =  new ModulEvent;
 			$end=$request->post('end');
 			$start=$request->post('start');
-			$title=$request->post('title');			
+			$title=$request->post('title');
 			$model->start = $start;
 			$model->end = $end;
 			$model->title = $title;
@@ -151,10 +151,10 @@ class PersonaliaController extends Controller
 			$model->save();
 			return true;
 		}
-		
+
 	}
-	
-	
+
+
     /**
      * Displays a single Absensi model.
      * @param string $id
@@ -232,7 +232,7 @@ class PersonaliaController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-	
+
 	/**=====================================
      * VIEW IMPORT DATA STORAGE
      * @return mixed
@@ -240,10 +240,10 @@ class PersonaliaController extends Controller
 	 * =====================================
      */
 	 /*GRID HEADER COLUMN*/
-	 private function gvHeadColomnEvent(){		
-		$aryField= [	
+	 private function gvHeadColomnEvent(){
+		$aryField= [
 			/*MAIN DATA*/
-			['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'left','warna'=>'97, 211, 96, 0.3']],				
+			['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 			['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_KD_ALIAS','SIZE' => '10px','label'=>'CUST.KD','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 			['ID' =>2, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '10px','label'=>'CUSTOMER','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 			['ID' =>3, 'ATTR' =>['FIELD'=>'NM_BARANG','SIZE' => '10px','label'=>'SKU','align'=>'left','warna'=>'97, 211, 96, 0.3']],
@@ -260,28 +260,28 @@ class PersonaliaController extends Controller
 			['ID' =>13, 'ATTR' =>['FIELD'=>'HARGA_SALES','SIZE' => '10px','label'=>'SALES.PRICE','align'=>'right','warna'=>'255, 255, 48, 4']],
 			/*SUPPORT DATA ID*/
 			['ID' =>14, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'CUST.KD_ALIAS','align'=>'left','warna'=>'255, 255, 48, 4']],
-			['ID' =>15, 'ATTR' =>['FIELD'=>'KD_BARANG','SIZE' => '10px','label'=>'SKU.ID.ALIAS','align'=>'left','warna'=>'255, 255, 48, 4']],			
-			['ID' =>16, 'ATTR' =>['FIELD'=>'KD_DIS','SIZE' => '10px','label'=>'KD_DIS','align'=>'left','warna'=>'215, 255, 48, 1']],	
-		];	
-		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
-			
+			['ID' =>15, 'ATTR' =>['FIELD'=>'KD_BARANG','SIZE' => '10px','label'=>'SKU.ID.ALIAS','align'=>'left','warna'=>'255, 255, 48, 4']],
+			['ID' =>16, 'ATTR' =>['FIELD'=>'KD_DIS','SIZE' => '10px','label'=>'KD_DIS','align'=>'left','warna'=>'215, 255, 48, 1']],
+		];
+		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR');
+
 		return $valFields;
-	}	
+	}
 	public function gvRowsEvent() {
 		$actionClass='btn btn-info btn-xs';
 		$actionLabel='Update';
 		$attDinamik =[];
 		foreach($this->gvHeadColomnEvent() as $key =>$value[]){
-			$attDinamik[]=[		
+			$attDinamik[]=[
 				'attribute'=>$value[$key]['FIELD'],
 				'label'=>$value[$key]['label'],
 				'filter'=>true,
 				'hAlign'=>'right',
 				'vAlign'=>'middle',
 				//'mergeHeader'=>true,
-				'noWrap'=>true,			
-				'headerOptions'=>[		
-						'style'=>[									
+				'noWrap'=>true,
+				'headerOptions'=>[
+						'style'=>[
 						'text-align'=>'center',
 						'width'=>$value[$key]['FIELD'],
 						'font-family'=>'tahoma, arial, sans-serif',
@@ -289,7 +289,7 @@ class PersonaliaController extends Controller
 						//'background-color'=>'rgba(97, 211, 96, 0.3)',
 						'background-color'=>'rgba('.$value[$key]['warna'].')',
 					]
-				],  
+				],
 				'contentOptions'=>[
 					'style'=>[
 						'text-align'=>$value[$key]['align'],
@@ -298,13 +298,13 @@ class PersonaliaController extends Controller
 						'font-size'=>'8pt',
 						//'background-color'=>'rgba(13, 127, 3, 0.1)',
 					]
-				],					
-			];	
+				],
+			];
 		}
 		return $attDinamik;
 	}
-	
-	
-	
-	
+
+
+
+
 }

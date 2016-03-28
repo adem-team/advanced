@@ -35,9 +35,14 @@ class BeritaController extends Controller
         $searchModel = new BeritaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $searchModel1 = new BeritaSearch();
+        $dataProvider1 = $searchModel1->searchdetailberita(Yii::$app->request->queryParams);
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'searchModel1' => $searchModel1,
+            'dataProvider1' => $dataProvider1
         ]);
     }
 
@@ -64,17 +69,17 @@ class BeritaController extends Controller
         $model = new Berita();
 
         if ($model->load(Yii::$app->request->post())  ) {
-            
-			
+
+
 			$query = Berita::find()->select('KD_BERITA')->orderBy(['KD_BERITA'=> SORT_DESC])->limit(1)->all();
 		if(count($query) == 0)
 		{
 			$lastKd = 0;
 		}
-		else { 
+		else {
 			$lastKd = $query[0]['KD_BERITA'];
 			}
-		
+
 		$nKD = $lastKd +1;
 		$pnjg = strlen($nKD);
 		if($pnjg == 1){
@@ -82,7 +87,7 @@ class BeritaController extends Controller
 			}
 		else if($pnjg == 2)
 		{		 $kd = "00".$nKD;
-	
+
 			}
 		else if($pnjg == 3)
 		{
@@ -91,20 +96,20 @@ class BeritaController extends Controller
 		else if($pnjg >= 4 )
 		{ $kd = $nKD;
 		}
-		
-		
+
+
 		$kode = 'B.'. date('Y.m.d').'.'.$kd;
 		$model->KD_BERITA = $kode;
-	
+
 		$model->KD_CORP =  	Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;;
 		$model->KD_DEP = 	 Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
-		
-		
-		
+
+
+
 			// $db = \Yii::$app->db_sss;
 			// $sql ="select count(KD_BERITA) from a1000";
 			// $baris = $db->createCommand($sql)->queryScalar();
-			
+
 			// if($baris == 0)
 			// {
 				// $model->KD_BERITA = "B201511000001";
@@ -112,28 +117,28 @@ class BeritaController extends Controller
 			// else{
 						// $sql = $db->createCommand("SELECT CONCAT('B',DATE_FORMAT(NOW(),'%Y%m'),LPAD((RIGHT(max(KD_BERITA),4)+1),6,'0')) from a1000");
 						// $beritacode = $sql->queryScalar();
-			
-						// $model->KD_BERITA = $beritacode ; 
+
+						// $model->KD_BERITA = $beritacode ;
 			// }
-			
+
 			$model->CREATED_BY = Yii::$app->user->identity->username;
-			
+
 
 
 			$model->save();
 			print_r($model->save());
 			die();
-			
-		
 
-			
-			
-					
-			
-			
-			
-			
-			
+
+
+
+
+
+
+
+
+
+
 			return $this->redirect(['view', 'ID' => $model->ID, 'KD_BERITA' => $model->KD_BERITA]);
         } else {
             return $this->render('create', [
@@ -154,9 +159,9 @@ class BeritaController extends Controller
         $model = $this->findModel($ID, $KD_BERITA);
 
         if ($model->load(Yii::$app->request->post()) ) {
-			
-			$model->UPDATE_AT = date('Y-m-d h:i:s'); 	
-			
+
+			$model->UPDATE_AT = date('Y-m-d h:i:s');
+
 			 $model->save();
             return $this->redirect(['view', 'ID' => $model->ID, 'KD_BERITA' => $model->KD_BERITA]);
         } else {
