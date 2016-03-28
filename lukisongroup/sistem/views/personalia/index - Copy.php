@@ -34,14 +34,43 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 $JSCode = <<<EOF
 
 function(start, end) {
+	 var title = prompt('Event Title:');
+    var eventData;
+	var dateTime1 = new Date(start);
 	var dateTime2 = new Date(end);
-	var dateTime1 = new Date(start);	
 	tgl1 = moment(dateTime1).format("YYYY-MM-DD HH:mm:ss");
 	tgl2 = moment(dateTime2).format("YYYY-MM-DD HH:mm:ss");
+	if (title) {
+		$.ajax({
+			url:'/sistem/personalia/jsoncalendar_add',
+			type: 'POST',
+			data:'title=' + title + '&start='+ tgl1 + '&end=' + tgl2,
+			dataType:'json',
+			success: function(result){
+        //alert('ok')
+			  $.pjax.reload({container:'#calendar-user'});
+			  //$.pjax.reload({container:'#gv-schedule-id'});
+			}
+		});
+		/* calendar.fullCalendar('renderEvent', {
+				title:title,
+				start:start,
+				end:end
+			},
+			true
+		); */
 
-	 $('#modalTitle').html(tgl1);
-	 $('#modalBody').html(tgl2);
-    $('#confirm-permission-alert').modal();
+       /*  eventData = {
+            title: title,
+            start: start,
+            end: end
+        };
+        //$('#w0').fullCalendar('renderEvent', eventData, true);
+		*/
+    }
+
+	//$('#w0').fullCalendar('unselect');
+    //$('#w0').fullCalendar('unselect');
 }
 EOF;
 $JSDropEvent = <<<EOF
@@ -55,25 +84,11 @@ function(date) {
 EOF;
 $JSEventClick = <<<EOF
 function(calEvent, jsEvent, view) {
-	 $('#modalTitle').html(calEvent.title);
-	$('#modalBody').html(calEvent.id);
-    $('#confirm-permission-alert').modal();
-	
-	
-	
-	//$.fn.modal.Constructor.prototype.enforceFocus = function() {};
-	// $('#confirm-permission-alert').on('show.bs.modal', function (event) {
-		// var button = $(event.relatedTarget)
-		// var modal = $(this)
-		// var title = button.data('title')
-		// var href = button.attr('href')
-		// modal.find('.modal-title').html(title)
-		// modal.find('.modal-body').html('')
-		// $.post(href)
-			// .done(function( data ) {
-				// modal.find('.modal-body').html(data)
-			// }); 
-		// }),
+    alert('Event: ' + calEvent.id);
+   // alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+    //alert('View: ' + view.name);
+    // change the border color just for fun
+    $(this).css('border-color', 'red');
 }
 EOF;
 
@@ -462,7 +477,6 @@ EOF;
 						'editable' => true,
 						//'drop' => new JsExpression($JSDropEvent),
 						'selectHelper'=>true,
-						//'select' =>'confirm-permission-alert',
 						'select' => new JsExpression($JSCode),
 						'eventClick' => new JsExpression($JSEventClick),
 						//'defaultDate' => date('Y-m-d')
@@ -734,22 +748,33 @@ EOF;
 	 * @author ptrnov [piter@lukison]
 	 * @since 1.2
 	*/
-
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#confirm-permission-alert').on('show.bs.modal', function (event) {
+				//var button = $(event.relatedTarget)
+				//var modal = $(this)
+				//var title = button.data('title')
+				//var href = button.attr('href')
+				//modal.find('.modal-title').html(title)
+				//modal.find('.modal-body').html('')
+				/* $.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					}); */
+				}),
+	",$this::POS_READY);
 	Modal::begin([
 			'id' => 'confirm-permission-alert',
-			//'header' =>['id'=>'modelHeader'],
-			//'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/warning/denied.png',  ['class' => 'pnjg', 'style'=>'width:40px;height:40px;']).'</div><div style="margin-top:10px;"><h4><b>Permmission Confirm !</b></h4></div>',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/warning/denied.png',  ['class' => 'pnjg', 'style'=>'width:40px;height:40px;']).'</div><div style="margin-top:10px;"><h4><b>Permmission Confirm !</b></h4></div>',
 			'size' => Modal::SIZE_SMALL,
-			// 'headerOptions'=>[
-				// 'id'=>'modelHeader',
-				// 'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
-			// ]
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+			]
 		]);
-		echo  '<div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
-                <h4 id="modalTitle" class="modal-title"></h4>
-            </div>
-			 <div id="modalBody" class="modal-body"></div>
-			';
+		echo "<div>You do not have permission for this module.
+				<dl>
+					<dt>Contact : itdept@lukison.com</dt>
+				</dl>
+			</div>";
 	Modal::end();
 ?>
