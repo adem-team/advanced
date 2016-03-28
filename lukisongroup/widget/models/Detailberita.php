@@ -23,7 +23,7 @@ class Detailberita extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'a1001';
+        return 'bt0002';
     }
 
     /**
@@ -31,7 +31,7 @@ class Detailberita extends \yii\db\ActiveRecord
      */
     public static function getDb()
     {
-        return Yii::$app->get('db_sss');
+        return Yii::$app->get('db_widget');
     }
 
     /**

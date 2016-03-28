@@ -166,8 +166,8 @@ use yii\widgets\Pjax;
       /*SHOW GRID Detail Berita acara */
       echo GridView::widget([
         'id'=>'berita-acara-id',
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        'dataProvider' => $dataProvider1,
+        'filterModel' => $searchModel1,
         'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
         'columns' => $attDinamik,
         'pjax'=>true,
@@ -178,7 +178,7 @@ use yii\widgets\Pjax;
           ],
         ],
         'panel' => [
-              'heading'=>'<h3 class="panel-title">LIST BERITA ACARA </h3>',
+              'heading'=>'<h3 class="panel-title">LIST Detail BERITA  </h3>',
               'type'=>'warning',
               'showFooter'=>false,
         ],
