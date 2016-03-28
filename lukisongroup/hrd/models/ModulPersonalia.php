@@ -43,7 +43,7 @@ class ModulPersonalia extends \yii\db\ActiveRecord
     {
         return [
             [['MODUL_POLICY'], 'string'],
-            [['STATUS'], 'integer'],
+            [['STATUS','MODUL_PRN'], 'integer'],
             [['CREATE_AT', 'UPDATE_AT'], 'safe'],
             [['MODUL_NM', 'MODUL_DEST'], 'string', 'max' => 255],
             [['USER_ID'], 'string', 'max' => 50],
@@ -58,6 +58,7 @@ class ModulPersonalia extends \yii\db\ActiveRecord
     {
         return [
             'ID' => Yii::t('app', 'ID'),
+			'MODUL_PRN' => Yii::t('app', 'MODUL.PRN'),
             'MODUL_NM' => Yii::t('app', 'NAMA MODUL HIRS'),
             'MODUL_DEST' => Yii::t('app', 'Modul  Dest'),
             'MODUL_POLICY' => Yii::t('app', 'Modul  Policy'),

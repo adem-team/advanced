@@ -20,7 +20,7 @@ class ModulEventSearch extends ModulEvent
     public function rules()
     {
         return [
-            [['id', 'MODUL_HIRS', 'STATUS'], 'integer'],
+            [['id', 'MODUL_ID','MODUL_PRN', 'STATUS'], 'integer'],
             [['start', 'end', 'title', 'USER_ID', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT','modul_nm'], 'safe'],
         ];
     }
@@ -64,7 +64,8 @@ class ModulEventSearch extends ModulEvent
             'id' => $this->id,
             'start' => $this->start,
             'end' => $this->end,
-            'MODUL_HIRS' => $this->MODUL_HIRS,
+            'MODUL_PRN' => $this->MODUL_PRN,
+            'MODUL_ID' => $this->MODUL_ID,
             'STATUS' => $this->STATUS,
             'CREATE_AT' => $this->CREATE_AT,
             'UPDATE_AT' => $this->UPDATE_AT,
@@ -102,7 +103,8 @@ class ModulEventSearch extends ModulEvent
             'id' => $this->id,
             'start' => $this->start,
             'end' => $this->end,
-            'MODUL_HIRS' => $this->MODUL_HIRS,
+            'MODUL_PRN' => $this->MODUL_PRN,
+            'MODUL_ID' => $this->MODUL_ID,
             'STATUS' => $this->STATUS,
             'CREATE_AT' => $this->CREATE_AT,
             'UPDATE_AT' => $this->UPDATE_AT,

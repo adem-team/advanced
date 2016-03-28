@@ -10,11 +10,11 @@ AppAssetFusionChart::register($this);
 
 <div  class="row">
 	<div class="col-sm-3 col-md-3 col-lg-3">
-		<div class="panel  panel-green">
+		<div class="panel  panel-red">
 			<div class="panel-heading">
 				<div class="row">
 					<div class="col-lg-3">
-						<i class="fa fa-users fa-2x"></i>
+						<i class="fa fa-book fa-3x"></i>
 					</div>
 					<div class="col-lg-9 text-right">
 						<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
@@ -25,7 +25,7 @@ AppAssetFusionChart::register($this);
 			</div>
 			<a href="/master/barang">
 				<div class="panel-footer">
-					<span class="pull-left">View Details</span>
+					<span class="pull-left">Cuti Sekarang</span>
 					<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 					<div class="clearfix"></div>
 				</div>
@@ -33,11 +33,11 @@ AppAssetFusionChart::register($this);
 		</div>
 	</div>
 	<div class="col-sm-3 col-md-3 col-lg-3">
-		<div class="panel  panel-green">
+		<div class="panel  panel-red">
 			<div class="panel-heading">
 				<div class="row">
 					<div class="col-lg-3">
-						<i class="fa fa-users fa-2x"></i>
+						<i class="fa fa-bookmark fa-3x"></i>
 					</div>
 					<div class="col-lg-9 text-right">
 						<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
@@ -48,7 +48,7 @@ AppAssetFusionChart::register($this);
 			</div>
 			<a href="/master/barang">
 				<div class="panel-footer">
-					<span class="pull-left">View Details</span>
+					<span class="pull-left">Cuti Lalu</span>
 					<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 					<div class="clearfix"></div>
 				</div>
@@ -56,11 +56,11 @@ AppAssetFusionChart::register($this);
 		</div>
 	</div>
 	<div class="col-sm-3 col-md-3 col-lg-3">
-		<div class="panel  panel-green">
+		<div class="panel  panel-red">
 			<div class="panel-heading">
 				<div class="row">
 					<div class="col-lg-3">
-						<i class="fa fa-users fa-2x"></i>
+						<i class="fa fa-clone fa-3x"></i>
 					</div>
 					<div class="col-lg-9 text-right">
 						<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
@@ -71,7 +71,7 @@ AppAssetFusionChart::register($this);
 			</div>
 			<a href="/master/barang">
 				<div class="panel-footer">
-					<span class="pull-left">View Details</span>
+					<span class="pull-left">Sisa Cuti</span>
 					<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 					<div class="clearfix"></div>
 				</div>
@@ -79,11 +79,11 @@ AppAssetFusionChart::register($this);
 		</div>
 	</div>
 	<div class="col-sm-3 col-md-3 col-lg-3">
-		<div class="panel  panel-green">
+		<div class="panel  panel-red">
 			<div class="panel-heading">
 				<div class="row">
 					<div class="col-lg-3">
-						<i class="fa fa-users fa-2x"></i>
+						<i class="fa fa-users fa-3x"></i>
 					</div>
 					<div class="col-lg-9 text-right">
 						<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
@@ -94,7 +94,7 @@ AppAssetFusionChart::register($this);
 			</div>
 			<a href="/master/barang">
 				<div class="panel-footer">
-					<span class="pull-left">View Details</span>
+					<span class="pull-left">penggunaan Cuti</span>
 					<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 					<div class="clearfix"></div>
 				</div>
