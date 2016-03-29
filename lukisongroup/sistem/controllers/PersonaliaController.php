@@ -104,13 +104,22 @@ class PersonaliaController extends Controller
 			/*EVENT SEARCH*/
 			$searchModelEvent = new ModulEventSearch();
 			$dataProviderEvent = $searchModelEvent->searchPersonal(Yii::$app->request->queryParams);
+
+      // print_r($searchModelEvent);
+      // die();
 			/*EVENT MODEL FORM*/
-			$modelEvent = new ModulEvent;
+			$modelEvent = new ModulEvent();
 			/*Model View Ijin,cuti,Absensi*/
-			$model =  ModulPersonalia::find()->where([ID=>'15'])->one();
+			// $model =  ModulPersonalia::find()->where([ID=>'15'])->one();
+      $searchModelpersonalia = new ModulEventSearch();
+      $dataProviderpersonali = $searchModelpersonalia->searchPersonalia(Yii::$app->request->queryParams);
+
 			return $this->render('index', [
 				'searchModel' => $searchModel,
 				'dataProvider' => $dataProvider,
+        'searchModelpersonalia'=>$searchModelpersonalia,
+        'dataProviderpersonali'=>$dataProviderpersonali,
+
 				/*Daily Absensi*/
 				'searchModel'=>$searchModel,
 				'dataProviderField'=>$dataProviderField,
@@ -230,8 +239,22 @@ class PersonaliaController extends Controller
     {
       if (Yii::$app->request->isAjax) {
   			$request= Yii::$app->request;
+        $profile= Yii::$app->getUserOpt->Profile_user();
+        $tgl2 = $request->post('title');
+        $modulid =  $request->post('modulid');
+        $tgl1 = $request->post('tgl1');
+        $mdl_parent = $request->post('parent');
+        // echo $title;
 
-  			$model = new Absensi();
+  			$model = new ModulEvent();
+        $model->MODUL_ID = $modulid;
+        $model->MODUL_PRN = $mdl_parent;
+        $model->start = $tgl1;
+        $model->end = $tgl2;
+        $model->CREATE_BY = $profile->emp->EMP_ID ;
+        $model->CREATE_AT = date('Y-m-d H:i:s') ;
+        $model->USER_ID = $profile->emp->EMP_ID;
+        // $model->
 
   			$model->save();
   			return true;
