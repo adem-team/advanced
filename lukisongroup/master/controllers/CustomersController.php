@@ -150,16 +150,6 @@ class CustomersController extends Controller
 	/*ESM INDEX*/
 	public function actionEsmIndex()
     {
-       // city data
-        $searchmodelkota = new KotaSearch();
-        $dataproviderkota = $searchmodelkota->search(Yii::$app->request->queryParams);
-
-        // province data
-        $searchmodelpro = new ProvinceSearch();
-        $dataproviderpro = $searchmodelpro->search(Yii::$app->request->queryParams);
-
-        $searchModel1 = new KategoricusSearch();
-        $dataProviderkat  = $searchModel1->searchparent(Yii::$app->request->queryParams);
 
         $searchModel = new CustomersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -219,17 +209,81 @@ class CustomersController extends Controller
 		$sideMenu_control='esm_customers';
 		return $this->render('index', [
 			'sideMenu_control'=> $sideMenu_control,
-			'searchModel1' => $searchModel1,
-			'dataProviderkat'  =>$dataProviderkat ,
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
-			'searchmodelkota' => $searchmodelkota,
-			'searchmodelpro' => $searchmodelpro,
-			'dataproviderpro' =>  $dataproviderpro,
-			'dataproviderkota' => $dataproviderkota,
-
 		]);
 	}
+
+
+  /*ESM INDEX Kategori Customesr*/
+  public function actionEsmIndexKategori()
+    {
+
+      $searchModel1 = new KategoricusSearch();
+      $dataProviderkat  = $searchModel1->searchparent(Yii::$app->request->queryParams);
+
+
+    /*Tambahal menu side Dinamik */
+    $sideMenu_control='esm_customers';
+    return $this->render('index-kategori', [
+      'sideMenu_control'=> $sideMenu_control,
+      'searchModel1' => $searchModel1,
+      'dataProviderkat'  =>$dataProviderkat ,
+
+    ]);
+  }
+
+
+  /*ESM INDEX City */
+  public function actionEsmIndexCity()
+    {
+
+      // city data
+       $searchmodelkota = new KotaSearch();
+       $dataproviderkota = $searchmodelkota->search(Yii::$app->request->queryParams);
+
+
+    /*Tambahal menu side Dinamik */
+    $sideMenu_control='esm_customers';
+    return $this->render('index-city', [
+      'sideMenu_control'=> $sideMenu_control,
+      'searchmodelkota' => $searchmodelkota,
+      'dataproviderkota'  =>$dataproviderkota ,
+
+    ]);
+  }
+
+
+  /*ESM INDEX Provinsi */
+  public function actionEsmIndexProvinsi()
+    {
+
+      // province data
+      $searchmodelpro = new ProvinceSearch();
+      $dataproviderpro = $searchmodelpro->search(Yii::$app->request->queryParams);
+
+
+    /*Tambahal menu side Dinamik */
+    $sideMenu_control='esm_customers';
+    return $this->render('index-province', [
+      'sideMenu_control'=> $sideMenu_control,
+      'searchmodelpro' => $searchmodelpro,
+      'dataproviderpro' =>  $dataproviderpro,
+
+    ]);
+  }
+
+  /*ESM INDEX Provinsi */
+  public function actionEsmMap()
+    {
+
+    /*Tambahal menu side Dinamik */
+    $sideMenu_control='esm_customers';
+    return $this->render('index-map', [
+      'sideMenu_control'=> $sideMenu_control,
+
+    ]);
+  }
 
 
 

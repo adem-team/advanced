@@ -18,6 +18,8 @@ use kartik\widgets\DepDrop;
 use lukisongroup\hrd\models\Machine;
 use lukisongroup\hrd\models\Key_list;
 use lukisongroup\hrd\models\Employe;
+use yii\widgets\ListView;
+// use yii\widgets\DetailView;
 use lukisongroup\assets\AppAssetFusionChart;
 AppAssetFusionChart::register($this);
 
@@ -44,8 +46,10 @@ function(start, end) {
 	tgl1 = moment(dateTime1).format("YYYY-MM-DD HH:mm:ss");
 	tgl2 = moment(dateTime2).format("YYYY-MM-DD HH:mm:ss");
 	$('#modalTitle').val(tgl2);
-	$('#modalTitle2').val(tgl1);
-	$('#modalBody').html(tgl2);
+	// $('#modalTitle').val(tgl2);
+	$('#tglawal').val(tgl1);
+	// $('#tglawal').html(calEvent.start);
+	// $('#modalBody').html(tgl2);
     $('#confirm-permission-alert').modal();
 }
 EOF;
@@ -60,9 +64,10 @@ function(date) {
 EOF;
 $JSEventClick = <<<EOF
 function(calEvent, jsEvent, view) {
-	 $('#modalTitle').html(calEvent.start);
-	$('#modalBody4').html(calEvent.id);
-	$('#modalTitle3').val(tgl1);
+	//  $('#modalTitle').html(calEvent.end);
+		// 	$('#tglawal').html(calEvent.start);
+	// $('#modalBody4').html(calEvent.id);
+	// $('#tglawal').val(tgl1);
     $('#confirm-permission-alert').modal();
 
 
@@ -494,7 +499,8 @@ EOF;
 				$headColomnEvent=[
 					['ID' =>0, 'ATTR' =>['FIELD'=>'start','SIZE' => '10px','label'=>'DATE START','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 					['ID' =>1, 'ATTR' =>['FIELD'=>'end','SIZE' => '10px','label'=>'DATE END','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-					['ID' =>2, 'ATTR' =>['FIELD'=>'title','SIZE' => '10px','label'=>'TITLE','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+					// ['ID' =>2, 'ATTR' =>['FIELD'=>'title','SIZE' => '10px','label'=>'TITLE','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+				  // ['ID' =>2, 'ATTR' =>['FIELD'=>'modulPesonalia.MODUL_NM','SIZE' => '10px','label'=>'TITLE','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 				];
 				$gvHeadColomnEvent = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');
 				/*GRIDVIEW ARRAY ACTION*/
@@ -557,7 +563,7 @@ EOF;
 					$attDinamikEvent[]=[
 						'attribute'=>$value[$key]['FIELD'],
 						'label'=>$value[$key]['label'],
-						'filter'=>true,
+						// 'filterType'=> \kartik\grid\GridView::FILTER_DATE,
 						'hAlign'=>'right',
 						'vAlign'=>'middle',
 						//'mergeHeader'=>true,
@@ -600,7 +606,15 @@ EOF;
 				echo GridView::widget([
 					'dataProvider' => $dataProviderEvent,
 					'filterModel' => $searchModelEvent,
+					'id'=>'gv-event',
 					'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+					'rowOptions'   => function ($model, $key, $index, $grid) {
+						 return ['id' => $model->MODUL_ID,'onclick' => '$.pjax.reload({
+									url: "'.Url::to(['/sistem/personalia/index']).'?ModulEventSearch[MODUL_ID]="+this.id,
+									container: "#gv-modul",
+									timeout: 100,
+							});'];
+						},
 					'columns' => $attDinamikEvent,
 					/* [
 						['class' => 'yii\grid\SerialColumn'],
@@ -613,7 +627,7 @@ EOF;
 					'pjaxSettings'=>[
 						'options'=>[
 							'enablePushState'=>false,
-							'id'=>'absen-rekap',
+							'id'=>'gv-event',
 						],
 					],
 					'panel' => [
@@ -721,7 +735,7 @@ EOF;
 							<span class="sr-only">Toggle Dropdown</span>
 						</button>
 						  <ul class="dropdown-menu" role="menu">
-							<li><?php echo tombolSetting(); ?></li>
+							<li><?php  tombolSetting(); ?></li>
 							<li><?php echo tombolPasswordUtama();?></li>
 							<li><?php echo tombolSignature(); ?></li>
 							<li><?php //echo tombolPersonalia(); ?></li>
@@ -734,11 +748,137 @@ EOF;
 		</div>
 		<div class="col-sm-8 col-md-8 col-lg-8" style="margin-top:15px" >
 				<?php
-					echo Yii::$app->controller->renderPartial('_form_cuti',[
-								'model'=>$model,
-								//'count_CustPrn'=>$count_CustPrn
-						]);
-				?>
+
+				echo $gv= GridView::widget([
+			     'id'=>'gv-modul',
+			     'dataProvider' => $dataProviderpersonali,
+			    //  'filterModel' => $searchModelEvent,
+			   	'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
+
+			     'columns' => [
+			       [	//COL-2
+			         /* Attribute Serial No */
+			         'class'=>'kartik\grid\SerialColumn',
+			         'width'=>'10px',
+			         'header'=>'No.',
+			         'hAlign'=>'center',
+			         'headerOptions'=>[
+			           'style'=>[
+			             'text-align'=>'center',
+			             'width'=>'10px',
+			             'font-family'=>'tahoma',
+			             'font-size'=>'8pt',
+			             'background-color'=>'rgba(0, 95, 218, 0.3)',
+			           ]
+			         ],
+			         'contentOptions'=>[
+			           'style'=>[
+			             'text-align'=>'center',
+			             'width'=>'10px',
+			             'font-family'=>'tahoma',
+			             'font-size'=>'8pt',
+			           ]
+			         ],
+			         'pageSummaryOptions' => [
+			           'style'=>[
+			               'border-right'=>'0px',
+			           ]
+			         ]
+			       ],
+			       [  	//col-1
+			         //MODUL_NM
+			         'attribute' => 'modulPesonalia.MODUL_NM',
+			         'label'=>'Keterangan',
+			         'hAlign'=>'left',
+			         'vAlign'=>'middle',
+			         'headerOptions'=>[
+			           'style'=>[
+			             'text-align'=>'center',
+			             'width'=>'200px',
+			             'font-family'=>'tahoma, arial, sans-serif',
+			             'font-size'=>'9pt',
+			             'background-color'=>'rgba(97, 211, 96, 0.3)',
+			           ]
+			         ],
+			         'contentOptions'=>[
+			           'style'=>[
+			             'text-align'=>'left',
+			             'width'=>'200px',
+			             'font-family'=>'tahoma, arial, sans-serif',
+			             'font-size'=>'9pt',
+			           ]
+			         ],
+			       ],
+						//  [  	//col-1
+						// 	//MODUL_NM
+						// 	'attribute' => 'MODUL_PRN',
+						// 	'label'=>'Keterangan Detail',
+						// 	// 'value'=>function ($model, $key, $index, $widget) {
+						// 	//  $kategori = ModulPersonalia::find()->where(['MODUL_PRN'=>$model->ID])
+						// 	// 															 ->one();
+						// 	//
+						// 	// 	return $kategori->MODUL_NM;
+						// // },
+						// 	'hAlign'=>'left',
+						// 	'vAlign'=>'middle',
+						// 	'headerOptions'=>[
+						// 		'style'=>[
+						// 			'text-align'=>'center',
+						// 			'width'=>'200px',
+						// 			'font-family'=>'tahoma, arial, sans-serif',
+						// 			'font-size'=>'9pt',
+						// 			'background-color'=>'rgba(97, 211, 96, 0.3)',
+						// 		]
+						// 	],
+						// 	'contentOptions'=>[
+						// 		'style'=>[
+						// 			'text-align'=>'left',
+						// 			'width'=>'200px',
+						// 			'font-family'=>'tahoma, arial, sans-serif',
+						// 			'font-size'=>'9pt',
+						// 		]
+						// 	],
+						// ],
+
+			     ],
+			     'pjax'=>true,
+			     'pjaxSettings'=>[
+			     'options'=>[
+			       'enablePushState'=>false,
+			       'id'=>'gv-modul',
+			        ],
+			     ],
+			    //  'panel' => [
+			    //        'heading'=>'<h3 class="panel-title">User List</h3>',
+			    //        'type'=>'warning',
+			    //        'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add User',
+			    //            ['modelClass' => 'Kategori',]),'/sistem/modul-permission/create',[
+			    //              'data-toggle'=>"modal",
+			    //                'data-target'=>"#modal-create",
+			    //                  'class' => 'btn btn-success'
+			    //                        ]),
+			    //        'showFooter'=>false,
+			    //  ],
+			     'toolbar'=> [
+			       //'{items}',
+			     ],
+			     'hover'=>true, //cursor select
+			     'responsive'=>true,
+			     'responsiveWrap'=>true,
+			     'bordered'=>true,
+			     'striped'=>'4px',
+			     'autoXlFormat'=>true,
+			     'export' => false,
+			   ]);
+
+
+
+
+				// 	<!-- // echo Yii::$app->controller->renderPartial('_form_cuti',[
+				// 	// 			'model'=>$model,
+				// 	// 			//'count_CustPrn'=>$count_CustPrn
+				// 	// 	]); -->
+				// <!-- ?> -->
 
 		</div>
 
@@ -753,17 +893,19 @@ EOF;
 
 			 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
 				 $('#ModulEvent').on('beforeSubmit',function(){
-					 var form = $(this);
+					 var tgl2 = $('#modalTitle').val();
+					 var tgl1 = $('#tglawal').val();
+					 var parent = $('#modelevent-modul_prn').val();
+					 var modulid = $('#modelevent-modul_id').val();
 					$.ajax({
 							url: '/sistem/personalia/save-event',
 							type: 'POST',
-							// data:'name='+name,
-							data : form.serialize(),
+							data: {title :tgl2,modulid :modulid,tgl1:tgl1,parent:parent},
 							dataType: 'json',
 							success: function(result) {
 								if (result == 1){
-												 $(document).find('#myModal').modal('hide');
-
+												 $(document).find('#confirm-permission-alert').modal('hide');
+												    $.pjax.reload({container:'#gv-event'});
 											 }
 
 													}
@@ -792,14 +934,18 @@ EOF;
 			'id'=>$modelEvent->formName(),
 					// 'options'=>['enctype'=>'multipart/form-data'], // important,
 					// 'method' => 'post',
-					'action' => ['/sistem/personalia/save-event'],
+					// 'action' => ['/sistem/personalia/save-event'],
 				]);
-				echo $form->field($modelEvent, 'title')->textInput([
+				echo $form->field($modelEvent, 'title')->Hiddeninput([
 					// 'value'=>$_GET['modalTitle'],
 
 						'id'=>'modalTitle'
 
-				]);//->lebel('Title');
+				])->label(false);
+				?>
+				<input type="hidden" id="tglawal">
+				<?php
+
 				echo $form->field($modelEvent, 'MODUL_ID')->dropDownList($aryModulID,[
 					'id'=>'modelevent-modul_id',
 					//'prompt'=>$model->cabOne['CAB_NM'],

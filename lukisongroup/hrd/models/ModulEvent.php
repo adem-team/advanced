@@ -70,13 +70,13 @@ class ModulEvent extends \yii\db\ActiveRecord
             'UPDATE_AT' => Yii::t('app', 'Update  At'),
         ];
     }
-	
+
 	public function getModulPesonalia()
     {
-        return $this->hasOne(ModulPersonalia::className(), ['MODUL_ID' => 'ID']);
+        return $this->hasOne(ModulPersonalia::className(), ['id' => 'MODUL_ID']);
     }
-    public function getModul_nm()
-    {
-        return $this->getModulPesonalia->MODUL_NM;
-    }
+    // public function getModul_nm()
+    // {
+    //     return $this->modulPesonalia->MODUL_NM;
+    // }
 }
