@@ -18,7 +18,7 @@ use kartik\password\PasswordInput;
 
      <?= $form->field($model, 'username')->textInput() ?>
 
-     <?= $form->field($model, 'password_hash')->passwordInput()?>
+     <?=  $form->field($model, 'password_hash')->widget(PasswordInput::classname(), []) ?>
 
      <?php echo $form->field($model, 'POSITION_LOGIN')->dropDownList([1 => 'SALESMAN', 2 => 'SALES PROMOTION']); ?>
 

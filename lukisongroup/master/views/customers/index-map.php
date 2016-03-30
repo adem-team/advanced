@@ -8,17 +8,23 @@ MapAsset::register($this);
 
 
 
+$this->params['breadcrumbs'][] = $this->title;
+$this->sideCorp = 'Customers';                 				 /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = $sideMenu_control;//'umum_datamaster';   	 /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Customers');   	 			 /* title pada header page */
+
+
 function tombolCustomers(){
   $title1 = Yii::t('app', 'Customers');
   $options1 = [ 'id'=>'setting',
           //'data-toggle'=>"modal",
-          'data-target'=>"#profile-setting",
+          // 'data-target'=>"#",
           //'class' => 'btn btn-default',
           'style' => 'text-align:left',
   ];
   $icon1 = '<span class="fa fa-cogs fa-md"></span>';
   $label1 = $icon1 . ' ' . $title1;
-  $url1 = Url::toRoute(['/master/customers/index']);//,'kd'=>$kd]);
+  $url1 = Url::toRoute(['/master/customers/esm-index']);//,'kd'=>$kd]);
   $content = Html::a($label1,$url1, $options1);
   return $content;
 }
@@ -31,14 +37,14 @@ function tombolCustomers(){
 function tombolKota(){
   $title1 = Yii::t('app', 'Kota');
   $options1 = [ 'id'=>'password',
-          'data-toggle'=>"modal",
-          'data-target'=>"#profile-password",
+          // 'data-toggle'=>"modal",
+          // 'data-target'=>"#profile-passwrd",
           //'class' => 'btn btn-default',
          // 'style' => 'text-align:left',
   ];
   $icon1 = '<span class="fa fa-shield fa-md"></span>';
   $label1 = $icon1 . ' ' . $title1;
-  $url1 = Url::toRoute(['/sistem/user-profile/password-utama-view']);
+  $url1 = Url::toRoute(['/master/customers/esm-index-city']);
   $content = Html::a($label1,$url1, $options1);
   return $content;
 }
@@ -52,12 +58,12 @@ function tombolProvince(){
   $title1 = Yii::t('app', 'Province');
   $options1 = [ 'id'=>'signature',
           //'data-toggle'=>"modal",
-          'data-target'=>"#profile-signature",
+          // 'data-target'=>"#profile-signature",
           //'class' => 'btn btn-default',
   ];
   $icon1 = '<span class="fa fa-pencil-square-o fa-md"></span>';
   $label1 = $icon1 . ' ' . $title1;
-  $url1 = Url::toRoute(['/sistem/user-profile/signature']);//,'kd'=>$kd]);
+  $url1 = Url::toRoute(['/master/customers/esm-index-provinsi']);//,'kd'=>$kd]);
   $content = Html::a($label1,$url1, $options1);
   return $content;
 }
@@ -71,7 +77,7 @@ function tombolKategori(){
   $title1 = Yii::t('app', 'Kategori Customers');
   $options1 = [ 'id'=>'personalia',
           //'data-toggle'=>"modal",
-          'data-target'=>"#profile-personalia",
+          // 'data-target'=>"#profile-personalia",
           // 'class' => 'btn btn-primary',
   ];
   $icon1 = '<span class="fa fa-group fa-md"></span>';
@@ -90,7 +96,7 @@ function tombolMap(){
   $title1 = Yii::t('app', 'Map');
   $options1 = [ 'id'=>'performance',
           //'data-toggle'=>"modal",
-          'data-target'=>"#profile-performance",
+          // 'data-target'=>"#profile-performance",
           // 'class' => 'btn btn-danger',
   ];
   $icon1 = '<span class="fa fa-graduation-cap fa-md"></span>';
@@ -100,33 +106,40 @@ function tombolMap(){
   return $content;
 }
 
+?>
 
- ?>
 
- <div class="col-sm-8 col-md-8 col-lg-8" >
-   <div  class="row" style="margin-left:5px;">
-       <!-- CUTI !-->
-       <div class="btn-group pull-left">
-         <button type="button" class="btn btn-info">MENU</button>
-         <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
-           <span class="caret"></span>
-           <span class="sr-only">Toggle Dropdown</span>
-         </button>
-           <ul class="dropdown-menu" role="menu">
-           <li><?php echo tombolCustomers(); ?></li>
-           <li><?php echo tombolKota();?></li>
-           <li><?php echo tombolProvince(); ?></li>
-           <li><?php echo tombolKategori(); ?></li>
-           <li><?php echo tombolMap(); ?></li>
-           <li class="divider"></li>
-             <!-- <ul>as</ul> -->
-           <!-- <li> tombolLogoff();?></li> -->
-           </ul>
-       </div>
-       <!-- CUTI !-->
-   </div>
- </div>
 
+
+<div class="col-sm-8 col-md-8 col-lg-8" >
+  <div  class="row" style="margin-left:5px;">
+      <!-- IJIN !-->
+      <?php
+        // echo Yii::$app->controller->renderPartial('button',[
+            //'model_CustPrn'=>$model_CustPrn,
+            //'count_CustPrn'=>$count_CustPrn
+        // ]);
+      ?>
+      <!-- CUTI !-->
+      <div class="btn-group pull-left">
+        <button type="button" class="btn btn-info">MENU</button>
+        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+          <span class="caret"></span>
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+          <ul class="dropdown-menu" role="menu">
+            <li><?php echo tombolCustomers(); ?></li>
+            <li><?php echo tombolKota();?></li>
+            <li><?php echo tombolProvince(); ?></li>
+            <li><?php echo tombolKategori(); ?></li>
+            <li><?php echo tombolMap(); ?></li>
+          <li class="divider"></li>
+            <!-- <ul>as</ul> -->
+          <!-- <li> tombolLogoff();?></li> -->
+          </ul>
+      </div>
+  </div>
+</div>
 <div class="row">
   <div class="col-sm-12">
     <?php

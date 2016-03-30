@@ -16,6 +16,7 @@ use lukisongroup\master\models\Customers;
  * Function profile_user
 */
 
+
 $datatype =  ArrayHelper::map(Customers::find()->where('STATUS<>3')->groupBy('CUST_NM')->all(), 'CUST_KD', 'CUST_NM');
 
 
