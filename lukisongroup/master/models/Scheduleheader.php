@@ -3,6 +3,7 @@
 namespace lukisongroup\master\models;
 
 use Yii;
+use lukisongroup\sistem\models\Userlogin;
 
 /**
  * This is the model class for table "c0002scdl_header".
@@ -42,7 +43,7 @@ class Scheduleheader extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['TGL1', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
+            [['TGL1', 'CREATE_AT', 'UPDATE_AT','TGL2'], 'safe'],
             //[['CREATE_AT', 'UPDATE_AT'], 'safe'],
             [['SCDL_GROUP', 'STATUS'], 'integer'],
             [['NOTE'], 'string'],
@@ -69,4 +70,12 @@ class Scheduleheader extends \yii\db\ActiveRecord
             'UPDATE_AT' => 'Update  At',
         ];
     }
+
+    public function getScdlgroup(){
+      return $this->hasOne(Schedulegroup::className(), ['ID' => 'SCDL_GROUP']);
+   }
+
+   public function getUser(){
+     return $this->hasOne(Userlogin::className(), ['id' => 'USER_ID']);
+  }
 }

@@ -65,7 +65,9 @@ class Customers extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-			       [['CUST_NM','STT_TOKO','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID'], 'required'],
+			      //  [['CUST_NM','STT_TOKO','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID'], 'required'],
+              [['CUST_NM','ALAMAT','TLP1','JOIN_DATE','PIC'], 'required','on'=>'create'],
+              [['TLP2','PROVINCE_ID','CITY_ID','PROVINCE_ID','CITY_ID','KD_DISTRIBUTOR'], 'required','on'=>'detail'],
             // [['CUST_NM','CUST_KTG','JOIN_DATE','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID','NPWP', 'TLP1','STT_TOKO'], 'required'],
             [['CUST_TYPE','CUST_KTG', 'TLP1', 'TLP2', 'FAX', 'STT_TOKO', 'STATUS','PROVINCE_ID','SCDL_GROUP','CITY_ID'], 'integer'],
             [['JOIN_DATE', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
@@ -76,6 +78,17 @@ class Customers extends \yii\db\ActiveRecord
             [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 100]
         ];
     }
+
+    // get parent query : author wawan
+public function getParent() {
+    return $this->hasOne(self::classname(),
+           ['CUST_KD'=>'CUST_GRP'])->
+           from(self::tableName() . ' AS parent');
+}
+/* Getter for parent name */
+public function getParentName() {
+    return $this->parent->CUST_NM;
+}
 
 	public function getCus()
 	{

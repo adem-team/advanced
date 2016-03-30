@@ -13,6 +13,7 @@ use yii\web\Response;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use lukisongroup\master\models\Scheduleheader;
+use lukisongroup\master\models\Schedulegroup;
 use lukisongroup\master\models\ScheduleheaderSearch;
 use lukisongroup\sistem\models\Userlogin;
 use lukisongroup\sistem\models\UserloginSearch;
@@ -68,17 +69,26 @@ class ScheduleHeaderController extends Controller
         $searchModelUser = new UserloginSearch();
         $dataProviderUser = $searchModelUser->searchCustGroup(Yii::$app->request->queryParams);
 
+        $model = new Scheduleheader();
+
+        // data select2 for SCDL_GROUP
+        $query = Schedulegroup::find()->all();
+        $datagroup = ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
+
+        // data select2 for USER_ID where CRM and STATUS 10(active)
+        $query1 = Userlogin::find()->where('POSITION_SITE = "CRM" AND STATUS = 10')->all();
+        $datauser = ArrayHelper::map($query1, 'id', 'username');
+
         return $this->render('index', [
 			       'dataProviderUser'=>$dataProviderUser,
 			       'searchModelUser'=>$searchModelUser,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'model'=>$model,
+            'datagroup'=>$datagroup,
+            'datauser'=>$datauser
         ]);
     }
-
-
-
-
 
 
     /**
@@ -114,7 +124,7 @@ class ScheduleHeaderController extends Controller
     /**
      * Creates a new User Login.
      * If creation is successful, the browser will be redirected to the 'index' page.
-     * @return mixed
+     * quthor wawan
      */
 
     public function actionCreateUser()
@@ -203,62 +213,46 @@ class ScheduleHeaderController extends Controller
      * @param  [type] $_     [description]
      * @return [type]        [description]
      */
-    public function actionJsoncalendar($start=NULL,$end=NULL,$_=NULL){
-        $events = array();
+     /*SHOW JSON*/
+       public function actionJsoncalendar($start=NULL,$end=NULL,$_=NULL){
+       //public function actionJsoncalendar(){
+           $events = array();
+   		$eventCalendar= Scheduleheader::find()->all();
+   		//print_r($eventCalendar);
+   		//die();
+           //Demo
+           $Event = new \yii2fullcalendar\models\Event();
+   		//FIELD HARUS [id,start,end,title]
+           header('Content-type: application/json');
+           echo Json::encode($eventCalendar);
+           Yii::$app->end();
+       }
 
-        //Demo
-        $Event = new \yii2fullcalendar\models\Event();
-
-        // $Event->id = 1;
-        // $Event->title = 'Testing';
-        // $Event->start = date('Y-m-d\TH:m:s\Z');
-        // $events[] = $Event;
-        // $Event = new \yii2fullcalendar\models\Event();
-        // $Event->id = 2;
-        // $Event->title = 'Testing';
-        // $Event->start = date('Y-m-d\TH:m:s\Z',strtotime('tomorrow 8am'));
-        // $events[] = $Event;
-        // $event3 = new DateTime('+2days 10am');
-        // $Event = new \yii2fullcalendar\models\Event();
-        // $Event->id = 2;
-        // $Event->title = 'Testing';
-        // $Event->start = $event3->format('Y-m-d\Th:m:s\Z');
-        // $Event->end = $event3->modify('+3 hours')->format('Y-m-d\TH:m:s\Z');
-        // $events[] = $Event;
-        header('Content-type: application/json');
-        echo Json::encode($events);
-        Yii::$app->end();
-    }
+// save using ajax: author wawan
 
 	 public function actionJsoncalendar_add(){
 
 		if (Yii::$app->request->isAjax) {
 			$request= Yii::$app->request;
 			$model =  new Scheduleheader();
-			$end=$request->post('end');
-      $start=$request->post('start');
-			$title=$request->post('title');
+      $profile=Yii::$app->getUserOpt->Profile_user();
+      $usercreate = $profile->username;
+			$end=$request->post('tgl2');
+      $start=$request->post('tgl1');
+			$scdl_group=$request->post('scdl_group');
+      $user_id = $request->post('user_id');
+      $note = $request->post('note');
 			$model->TGL1 = $start;
       $model->TGL2 = $end;
-			$model->USER_ID = $title;
+      $model->CREATE_BY = $usercreate;
+      $model->CREATE_AT = date("Y-m-d H:i:s");
+      $model->NOTE = $note;
+      $model->SCDL_GROUP = $scdl_group;
+			$model->USER_ID = $user_id;
 			$model->save();
 
 		}
 		return true;
 
-		//$model->TGL = $_POST['start'];
-		//
-		//$end = explode('+', $_POST['end']);
-		//$model->end_date = urldecode($end[0]);
-		//
-
-		//$model->SCDL_GROUP = $_POST['title'];
-		//$model->resource_id = $_POST['resourse'];
-
-		// if ($model->save()) {
-			// echo 'saved';
-		// } else {
-			// echo 'error';
-		// }
 	 }
 }

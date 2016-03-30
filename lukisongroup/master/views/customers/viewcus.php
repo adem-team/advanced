@@ -20,12 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     <!-- <h1> Html::encode($this->title) ?></h1> -->
-    
-<p>
-       <?= Html::a('BACK', ['index'], ['class' => 'btn btn-primary']) ?>
-  
-        
-    </p>
+
 
     <?php
    $sts = $model->STATUS;
@@ -34,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
     } else {
         $stat = 'Tidak Aktif';
     }
-    
+
     $ststoko = $model->STT_TOKO;
     if($ststoko == 0)
     {
@@ -48,36 +43,35 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
 
     <?php
-if(!$model->MAP_LNG == NULL )
- {
-    $coord = new LatLng(['lat' => $model->MAP_LAT, 'lng' => $model->MAP_LNG]);
-    $map = new Map([
-        'center' => $coord,
-        'zoom' => 22,
-        'width'=>1000,
-        'height'=>580,
-    ]);    
-    $marker = new Marker([
-        'position' => $coord,
-        'title' => $model->CUST_NM,
-    ]);
-    // Add marker to the map
-
-    $marker->attachInfoWindow(
-    new InfoWindow([
-        'content' => $model->CUST_NM,
-    ])
-);
-    $map->addOverlay($marker);
-    $maping =  $map->display();    
-  } else {
-    $maping = 'No location coordinates for this place could be found.';
-  }
+// if(!$model->MAP_LNG == NULL )
+//  {
+//     $coord = new LatLng(['lat' => $model->MAP_LAT, 'lng' => $model->MAP_LNG]);
+//     $map = new Map([
+//         'center' => $coord,
+//         'zoom' => 22,
+//         'width'=>1000,
+//         'height'=>580,
+//     ]);
+//     $marker = new Marker([
+//         'position' => $coord,
+//         'title' => $model->CUST_NM,
+//     ]);
+//     // Add marker to the map
+//
+//     $marker->attachInfoWindow(
+//     new InfoWindow([
+//         'content' => $model->CUST_NM,
+//     ])
+// );
+//     $map->addOverlay($marker);
+//     $maping =  $map->display();
+//   } else {
+//     $maping = 'No location coordinates for this place could be found.';
+//   }
   ?>
 
-<div class="col-sm-12">
 <?php
-    $tabview =  DetailView::widget([
+  echo  $tabview =  DetailView::widget([
         'model' => $model,
         'attributes' => [
             'CUST_KD',
@@ -86,11 +80,11 @@ if(!$model->MAP_LNG == NULL )
             // 'CUST_GRP',
             'cus.CUST_KTG_NM',
 
-            
+
             'JOIN_DATE',
             // 'MAP_LAT',
              // 'MAP_LNG',
-          
+
             'PIC',
             'ALAMAT:ntext',
             'TLP1',
@@ -115,49 +109,42 @@ if(!$model->MAP_LNG == NULL )
                 'label' => 'Status',
                 'value' => $stat,
             ],
-            
+
         ],
     ]) ?>
 
-    
-    </div>
 
-    
 
-	
-	
-	
+
+
+
+
+
+
 <?php
-     $items2=[
-        [
-            'label'=>'<i class="glyphicon glyphicon-user"></i> View Customers ','content'=> $tabview, //   $tabcustomers,
-           
-
-        ],
-        
-        [
-            'label'=>'<i class="glyphicon glyphicon-map-marker"></i> Lokasi Customer','content'=>  $maping, //$tab_profile,
-             'active'=>true,
-        ],
-       
-    ];
-
-    
-
-echo TabsX::widget([
-        'id'=>'tab2',
-        'items'=>$items2,
-        'position'=>TabsX::POS_LEFT,
-        //'height'=>'tab-height-xs',
-        'bordered'=>true,
-        'encodeLabels'=>false,
-        //'align'=>TabsX::ALIGN_LEFT,
-
-    ]);
-
-    
- 
+    //  $items2=[
+    //     [
+    //         'label'=>'<i class="glyphicon glyphicon-user"></i> View Customers ','content'=> $tabview, //   $tabcustomers,
+    //
+    //
+    //     ],
+    //
+    //     [
+    //         'label'=>'<i class="glyphicon glyphicon-map-marker"></i> Lokasi Customer','content'=>  $maping, //$tab_profile,
+    //          'active'=>true,
+    //     ],
+    //
+    // ];
 
 
 
-
+// TabsX::widget([
+//         'id'=>'tab2',
+//         'items'=>$items2,
+//         'position'=>TabsX::POS_LEFT,
+//         //'height'=>'tab-height-xs',
+//         'bordered'=>true,
+//         'encodeLabels'=>false,
+//         //'align'=>TabsX::ALIGN_LEFT,
+//
+//     ]);
