@@ -15,8 +15,8 @@ use kartik\daterange\DateRangePicker;
 
 $this->params['breadcrumbs'][] = $this->title;
 
-$this->sideCorp = 'ESM Sales Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'esm_esm';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->sideCorp = 'Purchasing Report';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'purchasing_rpt';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Purchase Report');      /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 ?>
