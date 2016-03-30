@@ -53,15 +53,11 @@ class TipeStock extends \yii\db\ActiveRecord
     {
         return [
             'ID' => Yii::t('app', 'ID'),
-            'TYPE_PARENT' => Yii::t('app', 'PARENT_TYPE
-A=RECEVED (REVD|RJK  [IN])
-B=RETURE|USAGE [OUT]
-C=TABLE JUSTMENT|CLOSING [IN/OUT]
-D= INVENTARIS  [HABIS DIPAKAI,PENYUSUTAN]'),
-            'TYPE_KAT' => Yii::t('app', 'TYPE_KAT:[IN,OUT]'),
-            'TYPE_ID' => Yii::t('app', 'TYPE = ID TYPE'),
-            'TYPE_NAME' => Yii::t('app', 'NAMA DARI TYPE'),
-            'NOTE' => Yii::t('app', 'KETERANGAN'),
+            'TYPE_PARENT' => Yii::t('app', 'TYPE_PARENT'),
+            'TYPE_KAT' => Yii::t('app', 'TYPE_KAT'),
+            'TYPE_ID' => Yii::t('app', 'TYPE_ID'),
+            'TYPE_NAME' => Yii::t('app', 'TYPE_NAME'),
+            'NOTE' => Yii::t('app', 'NOTE'),
         ];
     }
 }
