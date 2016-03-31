@@ -65,7 +65,7 @@ class StockRcvdController extends Controller
     {
         $model = new StockRcvd();
 		$searchModel = new StockRcvdSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->searchRcvd(Yii::$app->request->queryParams);
         
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->ID]);

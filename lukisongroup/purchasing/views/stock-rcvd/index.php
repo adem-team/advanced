@@ -218,6 +218,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 		'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
 		],
+		'size'=>Modal::SIZE_LARGE,
     ]);
 	 Modal::end();	
 	/*RCVD VIEW DETAIL*/

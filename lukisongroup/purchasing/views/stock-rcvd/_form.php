@@ -22,8 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
     <div  class="row">
-        <div class="col-sm-12 col-md-12 col-lg-12">
-			<?php
+      	<?php
 				/*
 				 * PURCHASE REPORT ALL
 				 * @author ptrnov  [piter@lukison.com]
@@ -35,15 +34,14 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 				/*GRIDVIEW ARRAY FIELD HEAD*/
 				$headColomn=[
 					// ['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','DATE'=>'DATE','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>$aryCorpID,'filterType'=>GridView::FILTER_SELECT2,'filterwarna'=>'249, 215, 100, 1']],
-					['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','DATE'=>'DATE','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>$true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-					['ID' =>1, 'ATTR' =>['FIELD'=>'KD_PO','SIZE' => '10px','label'=>'PO','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-					['ID' =>2, 'ATTR' =>['FIELD'=>'KD_REF','SIZE' => '10px','label'=>'KD.PO','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-					['ID' =>3, 'ATTR' =>['FIELD'=>'KD_SPL','SIZE' => '10px','label'=>'Supplier','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-					// ['ID' =>4, 'ATTR' =>['FIELD'=>'SUPPLIER','SIZE' => '10px','label'=>'SUPPLIER','align'=>'left','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
-					// ['ID' =>5, 'ATTR' =>['FIELD'=>'NM_BARANG','SIZE' => '10px','label'=>'NM_BARANG','align'=>'left','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
-					// ['ID' =>6, 'ATTR' =>['FIELD'=>'QTY','SIZE' => '10px','label'=>'QTY','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
-					// ['ID' =>7, 'ATTR' =>['FIELD'=>'UNIT','SIZE' => '10px','label'=>'UNIT','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],					
-					// ['ID' =>8, 'ATTR' =>['FIELD'=>'HARGA','SIZE' => '10px','label'=>'HARGA','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'decimal','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
+					['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','DATE'=>'DATE','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+					['ID' =>1, 'ATTR' =>['FIELD'=>'KD_PO','SIZE' => '10px','label'=>'PO','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+					['ID' =>2, 'ATTR' =>['FIELD'=>'NM_BARANG','SIZE' => '12px','label'=>'NM_BARANG','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+					['ID' =>3, 'ATTR' =>['FIELD'=>'UNIT','SIZE' => '11px','label'=>'UNIT','align'=>'right','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'decimal','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
+					['ID' =>4, 'ATTR' =>['FIELD'=>'PO_QTY','SIZE' => '10px','label'=>'QTY_PO','align'=>'left','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
+					['ID' =>5, 'ATTR' =>['FIELD'=>'QTY_RCVD','SIZE' => '10px','label'=>'QTY_RCVD','align'=>'left','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
+					['ID' =>6, 'ATTR' =>['FIELD'=>'QTY_REJECT','SIZE' => '10px','label'=>'QTY_REJECT','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
+					['ID' =>7, 'ATTR' =>['FIELD'=>'QTY_RETURE','SIZE' => '10px','label'=>'QTY_RETURE','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],					
 					// ['ID' =>9, 'ATTR' =>['FIELD'=>'SUB_TTL','SIZE' => '10px','label'=>'Sub Total','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'decimal','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],					
 					// ['ID' =>10, 'ATTR' =>['FIELD'=>'PAJAK','SIZE' => '10px','label'=>'PPN','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],					
 				];
@@ -52,47 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 						'UPDATE_AT',  
 				*/
 				$gvHeadColomn = ArrayHelper::map($headColomn, 'ID', 'ATTR');
-				
-				/*GRIDVIEW ARRAY ACTION*/
-				$attDinamik[]=[
-					'class'=>'kartik\grid\ActionColumn',
-					'dropdown' => true,
-					'template' => '{view}',
-					'dropdownOptions'=>['class'=>'pull-left dropdown','style'=>['disable'=>true]],
-					'dropdownButton'=>[
-						'class' => $actionClass,
-						'label'=>$actionLabel,
-						//'caret'=>'<span class="caret"></span>',
-					],
-					'buttons' => [
-						'view' =>function($url, $model, $key){
-								return  '<li>' .Html::a('<span class="fa fa-search-plus fa-dm"></span>'.Yii::t('app', 'View Detail'),
-															['/sistem/personalia/view','id'=>$model->ID],[
-															'id'=>'purchase-rcvd-view-id',
-															'data-toggle'=>"modal",
-															'data-target'=>"#purchase-rcvd-view",
-															]). '</li>' . PHP_EOL;
-						},
-					],
-					'headerOptions'=>[
-						'style'=>[
-							'text-align'=>'center',
-							'width'=>'10px',
-							'font-family'=>'tahoma, arial, sans-serif',
-							'font-size'=>'9pt',
-							'background-color'=>'rgba(74, 206, 231, 1)',
-						]
-					],
-					'contentOptions'=>[
-						'style'=>[
-							'text-align'=>'center',
-							'width'=>'10px',
-							'height'=>'10px',
-							'font-family'=>'tahoma, arial, sans-serif',
-							'font-size'=>'9pt',
-						]
-					],
-				];
+							
 										
 				/*GRIDVIEW ARRAY ROWS*/
 				foreach($gvHeadColomn as $key =>$value[]){
@@ -145,9 +103,9 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 				
 				/*SHOW GRID VIEW LIST EVENT*/
 				echo GridView::widget([
-					'id'=>'puchase-rcvd-list',
+					'id'=>'puchase-rcvd-form',
 					'dataProvider' => $dataProvider,
-					'filterModel' => $searchModel,					
+					//'filterModel' => $searchModel,					
 					//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
 					'columns' => $attDinamik,
 					/* [
@@ -161,25 +119,16 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 					'pjaxSettings'=>[
 						'options'=>[
 							'enablePushState'=>false,
-							'id'=>'puchase-rcvd-list',
+							'id'=>'puchase-rcvd-form',
 						],
 					],
 					'panel' => [
-								'heading'=>'<h3 class="panel-title">STOCK RECIVED</h3>',
+								'heading'=>'<h3 class="panel-title">FORM RECIVED STOCK</h3>',
 								'type'=>'info',
-								'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Items ',['modelClass' => 'Recived',]),
-												'/purchasing/stock-rcvd/create',
-												[
-													'data-toggle'=>"modal",
-													'data-target'=>"#purchase-rcvd-add",
-													'class' => 'btn btn-success btn-sm'												
-												]
-											),
 								'showFooter'=>false,
 					],
 					'toolbar'=> [
-						'{export}',
-						//''//'{items}',
+						''
 					],
 					'hover'=>true, //cursor select
 					'responsive'=>true,
@@ -193,7 +142,6 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 						],
 					]);
 				?>
-		</div>
 	</div>	
 </div>
 

@@ -36,8 +36,17 @@ $this->title = 'LukisonGroup.com';
 	 * Notification::success(Notification::ORDER_PLACED, $admin_id, $order->id);
 	 * Notification::error(Notification::KEY_NO_DISK_SPACE, $admin_id);
 	*/
-	//$recipient_id=1;
+	
+	/*
+	 * @author piter [ptr.nov@gmail.com]
+	 * notify($notification, $key, $user_id, $key_id = null,$ref, $type = Notification::TYPE_WARNING)
+	 * Notification::notify(Notification::KEY_NEW_MESSAGE, 1, 2,'123');
+	 * Notification::notify(Notification::KEY_NEW_MESSAGE, $id_Pengirim, $id_penerima(user_login),$ref_kode);
+	 * Message ()
+	 */
+	$recipient_id=1;
 	//Notification::notify(Notification::KEY_NEW_MESSAGE, $recipient_id, 2);
+	Notification::notify(Notification::KEY_NEW_MESSAGE, 1, 2,'123');
 	//Notification::warning(Notification::KEY_NEW_MESSAGE, $recipient_id, 3);
 	
 

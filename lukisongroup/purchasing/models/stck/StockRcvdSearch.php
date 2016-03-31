@@ -5,6 +5,7 @@ namespace lukisongroup\purchasing\models\stck;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use lukisongroup\purchasing\models\stck\StockRcvd;
 
 /**
@@ -35,7 +36,7 @@ class StockRcvdSearch extends StockRcvd
             [['ID', 'TYPE', 'STATUS'], 'integer'],
             [['TGL', 'KD_PO', 'KD_REF', 'KD_SPL', 'ID_BARANG', 'NM_BARANG', 'UNIT', 'UNIT_NM', 'NOTE', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
             [['UNIT_QTY', 'UNIT_WIGHT', 'QTY'], 'number'],
-			[['TGL','TGL','KD_PO','KD_BARANG','NM_BARANG','PO_QTY','QTY_RCVD','QTY_REJECT',''],'safe],
+			[['TGL','TGL','KD_PO','KD_BARANG','NM_BARANG','PO_QTY','QTY_RCVD','QTY_REJECT','QTY_RETURE','QTY_CANCEL','UNIT','UNIT_QTY','UNIT_WIGHT'],safe],
         ];
     }
 
@@ -101,8 +102,8 @@ class StockRcvdSearch extends StockRcvd
     }
 	
 	/*GET STOCK PO ->VALIDATION FORM*/
-	public function searchPODetailForm($params){
-		$data= Yii::$app->db_esm->createCommand("CALL PURCHASING_po_detail_form()")->queryAll();  
+	public function searchRcvd($params){
+		$data= Yii::$app->db_esm->createCommand("CALL PURCHASING_po_recive_form()")->queryAll();  
 		$dataProvider= new ArrayDataProvider([
 			'key' => 'ID',
 			'allModels'=>$data,			
