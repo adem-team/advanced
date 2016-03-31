@@ -49,32 +49,34 @@ use kartik\widgets\DepDrop;
 			  'loadingText' => 'Loading data ...',
 			]
 	]);
-	echo $form->field($model, 'CUST_TYPE')->widget(Select2::classname(),[
-		'options'=>[  'placeholder' => 'Select Customers parent ...'
-		],
-		'data' => $dropparentkategori
-	]);
 
-	echo $form->field($model, 'CUST_KTG')->widget(DepDrop::classname(), [
-		'options' => [//'id'=>'customers-cust_ktg',
-		'placeholder' => 'Select Customers kategory'],
-		'type' => DepDrop::TYPE_SELECT2,
-		'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-		'pluginOptions'=>[
-			'depends'=>['customers-cust_type'],
-			'url' => Url::to(['/master/customers/lisdata']),
-		  'loadingText' => 'Loading data ...',
-		]
-	]);
-  echo $form->field($model, 'TLP2', $config)->widget(LabelInPlace::classname());
-
-  echo $form->field($model, 'EMAIL', $config)->widget(LabelInPlace::classname());
-
-  echo $form->field($model, 'FAX', $config)->widget(LabelInPlace::classname());
-
-  echo $form->field($model, 'NPWP', $config)->widget(LabelInPlace::classname());
-
-    echo $form->field($model, 'WEBSITE', $config)->widget(LabelInPlace::classname());
+		echo $form->field($model, 'ALAMAT', $config)->widget(LabelInPlace::classname());
+	// echo $form->field($model, 'CUST_TYPE')->widget(Select2::classname(),[
+	// 	'options'=>[  'placeholder' => 'Select Customers parent ...'
+	// 	],
+	// 	'data' => $dropparentkategori
+	// ]);
+	//
+	// echo $form->field($model, 'CUST_KTG')->widget(DepDrop::classname(), [
+	// 	'options' => [//'id'=>'customers-cust_ktg',
+	// 	'placeholder' => 'Select Customers kategory'],
+	// 	'type' => DepDrop::TYPE_SELECT2,
+	// 	'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+	// 	'pluginOptions'=>[
+	// 		'depends'=>['customers-cust_type'],
+	// 		'url' => Url::to(['/master/customers/lisdata']),
+	// 	  'loadingText' => 'Loading data ...',
+	// 	]
+	// ]);
+  // echo $form->field($model, 'TLP2', $config)->widget(LabelInPlace::classname());
+	//
+  // echo $form->field($model, 'EMAIL', $config)->widget(LabelInPlace::classname());
+	//
+  // echo $form->field($model, 'FAX', $config)->widget(LabelInPlace::classname());
+	//
+  // echo $form->field($model, 'NPWP', $config)->widget(LabelInPlace::classname());
+	//
+  //   echo $form->field($model, 'WEBSITE', $config)->widget(LabelInPlace::classname());
 
 ?>
 

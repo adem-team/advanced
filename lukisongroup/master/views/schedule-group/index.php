@@ -559,10 +559,10 @@ $this->registerJs("
 					?>
 					<input type="hidden"  name= custkd id="tes">
 					<div class="form-group">
-    			<label for="pwd">Nama Customers:</label>
-    			<input type="text" class="form-control" id="cusnm" readonly="true">
-					<label for="pwd">Alamat:</label>
-					<input type="text" class="form-control" id="alam" readonly="true">
+    			<!-- <label for="pwd">Nama Customers:</label> -->
+    			<input type="hidden" class="form-control" id="cusnm">
+					<!-- <label for="hidden">Alamat:</label> -->
+					<input type="hidden" class="form-control" id="alam" >
   				</div>
 					<?php  echo '<label class="control-label">Group Name </label>';  ?>
 					<?= Select2::widget([
@@ -629,7 +629,8 @@ $this->registerJs("
 
 				if(point.SCDL_GROUP == null)
 				{
-						var contentString = '<p>' + point.ALAMAT + '</p>' + '<p>' + point.CUST_NM + '</p>'+'<p>'+ point.SCDL_GROUP_NM + '<p>' ;
+						// var contentString = '<p>' + point.ALAMAT + '</p>' + '<p>' + point.CUST_NM + '</p>'+'<p>'+ point.SCDL_GROUP_NM + '<p>' ;
+							var contentString = '<p>' + point.ALAMAT + '</p>' + '<p>' + point.CUST_NM + '</p>';
 
 	 													 google.maps.event.addListener(public_markers[i], 'mouseover', function () {
 																 var infowindow = new google.maps.InfoWindow({

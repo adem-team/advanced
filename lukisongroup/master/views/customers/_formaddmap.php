@@ -8,11 +8,11 @@ use yii\helpers\BaseHtml;
 ?>
 <?php $form = ActiveForm::begin([
 'id'=>$model->formName(),
-'method'=>'post'
+// 'method'=>'post'
 
 ]); ?>
  <?= $form->field($model, 'CUST_KD')->textInput(['value' => $id,'disabled'=>true]) ?>
- 
+
    <?= $form->field($model, 'ALAMAT')->textInput(['readonly' => true]) ?>
 
    <?= BaseHtml::activeHiddenInput($model, 'MAP_LAT'); ?>

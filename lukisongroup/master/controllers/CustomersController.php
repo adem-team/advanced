@@ -461,7 +461,7 @@ class CustomersController extends Controller
         // print_r($model->getErrors());
         // die();
 
-           return $this->redirect(['viewcust','id'=>$model->CUST_KD]);
+           return $this->redirect('esm-index');
          }
          else {
            # code...
@@ -569,6 +569,9 @@ class CustomersController extends Controller
             $conn = Yii::$app->db3;
             $hasil = $conn->createCommand("SELECT c.SCDL_GROUP,c.CUST_KD, c.ALAMAT, c.CUST_NM,c.MAP_LAT,c.MAP_LNG,b.SCDL_GROUP_NM from c0001 c
                                           left join c0007 b on c.SCDL_GROUP = b.ID")->queryAll();
+
+            //  $hasil = $conn->createCommand("SELECT * from c0001 ")->queryAll();
+
             echo json_encode($hasil);
 
     }
@@ -725,12 +728,30 @@ class CustomersController extends Controller
     {
         $model = new Customers();
         $model->scenario = "create";
+        $datacus = Customers::find()->where('CUST_GRP = CUST_KD')->asArray()->all();
+        $parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
 
     if ($model->load(Yii::$app->request->post()) ) {
+        $post =Yii::$app->request->post();
+        $val = $post['Customers']['parentnama'];
         $kdcity = $model->CITY_ID;
 			  $kdpro = $model->PROVINCE_ID;
-			  $kode = Yii::$app->ambilkonci->getkeycustomers($kdpro,$kdcity);
-			  $model->CUST_KD = $kode;
+        if($val == 1)
+        {
+          	$kode = Yii::$app->ambilkonci->getkeycustomers($kdpro,$kdcity);
+            $model->CUST_KD = $kode;
+            $model->CUST_GRP = $kode;
+        }
+        else{
+          $kode = Yii::$app->ambilkonci->getkeycustomers($kdpro,$kdcity);
+          $model->CUST_KD = $kode;
+
+        }
+        // print_r($val);
+        // die();
+
+
+
         $tanggal = \Yii::$app->formatter->asDate($model->JOIN_DATE,'Y-M-d');
         $model->JOIN_DATE = $tanggal;
 			if($model->validate())
@@ -751,7 +772,20 @@ class CustomersController extends Controller
         } else {
             return $this->renderAjax('_formcustomer', [
                 'model' => $model,
+                'parent'=>$parent
             ]);
+        }
+      }
+
+      // validasi ajax for _formcustomer
+      public function actionValid()
+      {
+        # code...
+          $model = new Customers();
+        if(Yii::$app->request->isAjax && $model->load($_POST))
+        {
+          Yii::$app->response->format = 'json';
+          return ActiveForm::validate($model);
         }
       }
 
@@ -796,10 +830,16 @@ class CustomersController extends Controller
     public function actionUpdateCust($id)
     {
         $model = $this->findModelcust($id);
-
+        $datacus = Customers::find()->where('CUST_GRP = CUST_KD')->asArray()->all();
+        $parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
+        $dropparentkategori = ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT = CUST_KTG')
+                                                                   ->asArray()
+                                                                   ->all(),'CUST_KTG', 'CUST_KTG_NM');
+        $readonly = Customers::find()->where(['CUST_KD'=>$id])->asArray()->one(); // data for view type
         if ($model->load(Yii::$app->request->post()) ) {
 
-
+        $tanggal = \Yii::$app->formatter->asDate($model->JOIN_DATE,'Y-M-d');
+        $model->JOIN_DATE = $tanggal;
         if($model->validate())
         {
             $model->UPDATED_AT = date("Y-m-d H:i:s");
@@ -815,8 +855,45 @@ class CustomersController extends Controller
 
           //  return $this->redirect(['index']);
         } else {
-            return $this->renderAjax('_formcustomer', [
+            return $this->renderAjax('update', [
                 'model' => $model,
+                'parent'=>$parent,
+                'dropparentkategori'=>$dropparentkategori,
+                'readonly'=>$readonly
+            ]);
+        }
+    }
+
+    public function actionUpdatekat($id)
+    {
+
+        $model = $this->findModelcust($id);
+        $model->scenario = "updatekat";
+        $dropparentkategori = ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT = CUST_KTG')
+                                                                   ->asArray()
+                                                                   ->all(),'CUST_KTG', 'CUST_KTG_NM');
+        if ($model->load(Yii::$app->request->post()) ) {
+
+        $tanggal = \Yii::$app->formatter->asDate($model->JOIN_DATE,'Y-M-d');
+        $model->JOIN_DATE = $tanggal;
+        if($model->validate())
+        {
+            $model->UPDATED_AT = date("Y-m-d H:i:s");
+            $model->UPDATED_BY = Yii::$app->user->identity->username;
+          if($model->save())
+          {
+            echo 1;
+          }
+          else{
+            echo 0;
+          }
+        }
+
+          //  return $this->redirect(['index']);
+        } else {
+            return $this->renderAjax('type', [
+                'model' => $model,
+                'dropparentkategori'=>$dropparentkategori
             ]);
         }
     }
@@ -857,6 +934,7 @@ class CustomersController extends Controller
                                                                    ->asArray()
                                                                    ->all(),'CUST_KTG', 'CUST_KTG_NM');
       	$droppro = ArrayHelper::map(Province::find()->asArray()->all(),'PROVINCE_ID','PROVINCE');
+
         $dropdis = ArrayHelper::map(\lukisongroup\master\models\Distributor::find()->all(), 'KD_DISTRIBUTOR', 'NM_DISTRIBUTOR');
 
 
@@ -866,15 +944,19 @@ class CustomersController extends Controller
             {
               $model->UPDATED_AT = date("Y-m-d H:i:s");
 						  $model->UPDATED_BY = Yii::$app->user->identity->username;
-              $model->UPDATED_BY = Yii::$app->user->identity->username;
+              // $model->save();
+
 					         if($model->save())
                    {
                      echo 1;
+
                     }
                   else{
                       echo 0;
                     }
             }
+            // print_r($model->save());
+            // die();
 
             //  return $this->redirect(['index']);
         } else {
@@ -882,8 +964,8 @@ class CustomersController extends Controller
                 'model' => $model,
                 'dropparentkategori'=>$dropparentkategori,
                 'droppro'=>$droppro,
-                'dropdis'=>$dropdis
-
+                'dropdis'=>$dropdis,
+                // 'readonly'=>$readonly
             ]);
         }
     }
