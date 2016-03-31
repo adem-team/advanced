@@ -109,6 +109,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Status',
                 'value' => $stat,
             ],
+            'custprov.PROVINCE',
+            'custkota.CITY_NAME'
 
         ],
     ]) ?>

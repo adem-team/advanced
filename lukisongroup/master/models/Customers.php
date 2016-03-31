@@ -45,7 +45,8 @@ class Customers extends \yii\db\ActiveRecord
      */
 	// public $tipenm;
 
-
+    public $parentnama;
+    public $CusNm;
     public static function tableName()
     {
         return 'c0001';
@@ -54,6 +55,7 @@ class Customers extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\Connection the database connection used by this AR class.
      */
+    //
     public static function getDb()
     {
         return Yii::$app->get('db3');
@@ -67,7 +69,14 @@ class Customers extends \yii\db\ActiveRecord
         return [
 			      //  [['CUST_NM','STT_TOKO','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID'], 'required'],
               [['CUST_NM','ALAMAT','TLP1','JOIN_DATE','PIC'], 'required','on'=>'create'],
-              [['TLP2','PROVINCE_ID','CITY_ID','PROVINCE_ID','CITY_ID','KD_DISTRIBUTOR'], 'required','on'=>'detail'],
+              [['CUST_GRP'], 'required','on'=>'create','when' => function ($model) {
+                  return $model->parentnama == 0; },
+                  'whenClient' => "function (attribute, value) {
+                      return $('#customers-parentnama:checked').val() == '0';
+                  }"
+                  ],
+              [['PROVINCE_ID','CITY_ID'], 'required','on'=>'detail'],
+              [['CUST_TYPE','CUST_KTG'], 'required','on'=>'updatekat'],// for action updatekat scenario
             // [['CUST_NM','CUST_KTG','JOIN_DATE','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID','NPWP', 'TLP1','STT_TOKO'], 'required'],
             [['CUST_TYPE','CUST_KTG', 'TLP1', 'TLP2', 'FAX', 'STT_TOKO', 'STATUS','PROVINCE_ID','SCDL_GROUP','CITY_ID'], 'integer'],
             [['JOIN_DATE', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
@@ -106,6 +115,13 @@ public function getParentName() {
 		return $this->hasOne(Schedulegroup::className(), ['ID'=>'SCDL_GROUP']);
 	}
 
+  public function getCustprov(){
+    return $this->hasOne(Province::className(), ['PROVINCE_ID'=>'PROVINCE_ID']);
+  }
+  public function getCustkota(){
+    return $this->hasOne(Kota::className(), ['POSTAL_CODE'=>'CITY_ID']);
+  }
+
 	// public function getGrp_nm()
   //   {
   //       return $this->custgrp->SCDL_GROUP_NM;
@@ -120,17 +136,16 @@ public function getParentName() {
     {
         return [
             'CUST_KTG_NM' => 'Kategori Customers',
-            'PARENT' => 'Parent Customer',
+            'parentnama' => 'Is Parent',
             'CITY_ID' => 'KOTA',
             'PROVINCE_ID' => 'PROVINCE',
             'CUST_KD' => 'Kode Customers',
             'CUST_KD_ALIAS' => 'Kode Customers Alias',
             'CUST_NM' => 'Nama Customer',
-            'CUST_GRP' => 'Cust  Grp',
+            'CUST_GRP' => 'Customers Group',
             'CUST_KTG' => 'Category',
             'cus.CUST_KTG_NM' => 'Category',
             'CUST_TYPE' => 'Type',
-
             'JOIN_DATE' => 'Tanggal Gabung',
             'MAP_LAT' => 'Map  Lat',
             'MAP_LNG' => 'Map  Lng',

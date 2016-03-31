@@ -31,9 +31,29 @@ use kartik\widgets\DepDrop;
 	$form = ActiveForm::begin([
 			'id'=>$model->formName(),
 			'enableClientValidation' => true,
+			  'enableAjaxValidation'=>true,
+				  'validationUrl'=>Url::toRoute('/master/customers/valid')
 	]);
 
+	echo  $form->field($model, 'parentnama')->checkbox();
+
 	echo $form->field($model, 'CUST_NM', $config)->widget(LabelInPlace::classname());
+
+		?>
+		<div id="grp">
+			<?php
+	echo $form->field($model, 'CUST_GRP')->widget(Select2::classname(), [
+		     'data' => $parent,
+        'options' => [
+        'placeholder' => 'Pilih Group Customers ...'],
+        'pluginOptions' => [
+            'allowClear' => true
+             ],
+
+    ]);
+		?>
+	</div>
+	<?php
 
 	echo $form->field($model, 'TLP1', $config)->widget(LabelInPlace::classname());
 
@@ -75,6 +95,7 @@ use kartik\widgets\DepDrop;
 	// ]);
 
 	echo $form->field($model, 'PIC', $config)->widget(LabelInPlace::classname());
+
 	echo $form->field($model, 'JOIN_DATE')->widget(DatePicker::classname(), [
 	'options' => ['placeholder' => 'Dari  ...'],
 	'pluginOptions' => [
@@ -115,7 +136,25 @@ use kartik\widgets\DepDrop;
 
     <?php ActiveForm::end(); ?>
 <?php
+$this->registerJs("
 
+
+$('#customers-parentnama').click(function(){
+ var checkedValue = $('#customers-parentnama:checked').val();
+
+	if(checkedValue == 1)
+	{
+		$('#grp').hide();
+	}
+	else
+	{
+			$('#grp').show();
+	}
+
+});
+
+
+ ",$this::POS_READY);
 
 
 
@@ -150,4 +189,4 @@ return false;
 });
 
 
- ",$this::POS_END);
+ ",$this::POS_READY);

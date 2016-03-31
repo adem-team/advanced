@@ -4,6 +4,10 @@ use yii\helpers\Url;
 use kartik\helpers\Html;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
+use lukisongroup\master\models\Customers;
+use yii\helpers\ArrayHelper;
+// use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
+// MapAsset::register($this);
 
 
 $this->params['breadcrumbs'][] = $this->title;
@@ -117,6 +121,10 @@ function tombolLoginalias(){
   $content = Html::a($label1,$url1, $options1);
   return $content;
 }
+// $datacus = Customers::find()->where('CUST_GRP = CUST_KD')->asArray()->all();
+//   $parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
+// print_r($parent);
+// die();
 
 
 ?>
@@ -153,7 +161,7 @@ function tombolLoginalias(){
 <?php
 /*CUSTOMER DATA*/
 echo $tabcustomersData = \kartik\grid\GridView::widget([
-  'id'=>'gv-cus-data',
+  'id'=>'gv-cus',
   'dataProvider' => $dataProvider,
   'filterModel' => $searchModel,
   'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.9); align:center'],
@@ -356,7 +364,7 @@ echo $tabcustomersData = \kartik\grid\GridView::widget([
     ],
     [
       'class' => 'kartik\grid\ActionColumn',
-      'template' => '{view}{update}{delete}{edit}{alias}{update2}',
+      'template' => '{view}{update}{edit}{alias}{update2}{type}',
       'header'=>'Action',
       'dropdown' => true,
       'dropdownOptions'=>['class'=>'pull-right dropdown'],
@@ -371,35 +379,48 @@ echo $tabcustomersData = \kartik\grid\GridView::widget([
                             ]).'</li>';
             },
         'update' =>function($url, $model, $key){
-            return '<li>'. Html::a('<span class="glyphicon glyphicon-user"></span>'.Yii::t('app', 'Set Detail'),
+            return '<li>'. Html::a('<span class="glyphicon glyphicon-user"></span>'.Yii::t('app', 'Update Alamat'),
                           ['updatecus','id'=>$model->CUST_KD],[
                           'data-toggle'=>"modal",
                           'data-target'=>"#createcus",
                           'data-title'=> $model->CUST_KD,
                           ]).'</li>';
             },
+          'type' =>function($url, $model, $key){
+                return '<li>'. Html::a('<span class="glyphicon glyphicon-user"></span>'.Yii::t('app', 'Update Kategori'),
+                              ['updatekat','id'=>$model->CUST_KD],[
+                              'data-toggle'=>"modal",
+                              'data-target'=>"#createcus",
+                              'data-title'=> $model->CUST_KD,
+                              ]).'</li>';
+                },
             'update2' =>function($url, $model, $key){
-                return '<li>'. Html::a('<span class="glyphicon glyphicon-user"></span>'.Yii::t('app', 'update'),
+                return '<li>'. Html::a('<span class="glyphicon glyphicon-user"></span>'.Yii::t('app', 'Update Detail'),
                               ['update-cust','id'=>$model->CUST_KD],[
                               'data-toggle'=>"modal",
                               'data-target'=>"#createcus",
                               'data-title'=> $model->CUST_KD,
                               ]).'</li>';
                 },
-        'delete' =>function($url, $model, $key){
-            return '<li>'. Html::a('<i class="glyphicon glyphicon-trash"></i>'.Yii::t('app', 'Delete'),
-                            ['deletecus','id'=>$model->CUST_KD],[
-                            // 'data-toggle'=>"modal",
-                            // 'data-target'=>"#form",
-                            // 'data-title'=> $model->CUST_KD,
-                            ]).'</li>';
-            },
-          'edit' =>function($url, $model,$key){
-            return '<li>'. Html::a('<i class="glyphicon glyphicon-globe"></i>'.Yii::t('app', 'Create Map'),
-                          ['create-map','id'=>$model->CUST_KD],
-                          []).'</li>';
+                'edit' =>function($url, $model,$key){
+                  return '<li>'. Html::a('<i class="glyphicon glyphicon-globe"></i>'.Yii::t('app', 'Create Map'),
+                                ['create-map','id'=>$model->CUST_KD],
+                                 [
 
-             },
+                                ]).'</li>';
+
+                   },
+          // 'edit' =>function($url, $model,$key){
+          //   return '<li>'. Html::a('<i class="glyphicon glyphicon-globe"></i>'.Yii::t('app', 'Create Map'),
+          //                 [''],
+          //                  [ 'id'=>'approved',
+          //                     'data-pjax' => true,
+          //                       // 'data'=>['idc'=>$model->ID],
+          //                        'data-target'=>'mod',
+          //                        'data-toggle-approved'=>$model->CUST_KD,
+          //                 ]).'</li>';
+          //
+          //    },
           'alias' =>function($url, $model, $key){
             return  '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Set alias'),['create-alias-customers','id'=>$model->CUST_KD],[
                             'data-toggle'=>"modal",
@@ -466,9 +487,45 @@ echo $tabcustomersData = \kartik\grid\GridView::widget([
 
 </div>
 
-</div>
+<!-- div class="modal fade" id="myModal" role="dialog"> -->
+    <!-- <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <!-- <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+                        <div id="map-canvas" class=""></div>
+                    </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div> -->
+
+    <!-- </div>
+  </div> -->
+
+
+
 
 <?php
+
+// $this->registerJs("
+// $(document).on('click', '[data-toggle-approved]', function(e){
+//   e.preventDefault();
+//   var idx = $(this).data('toggle-approved');
+//   $('#myModal').modal('show');
+//
+// });
+//
+// ",$this::POS_READY);
+
+
+
 /* Login alias*/
 $this->registerJs("
   $.fn.modal.Constructor.prototype.enforceFocus = function(){};
