@@ -1176,7 +1176,7 @@ class RequestOrderController extends Controller
 
     }
 
-    public function Sendmail($kd,$empid)
+    public function Sendmail($kd)
     {
       // $profile=Yii::$app->getUserOpt->Profile_user();
       // $dep = $profile->emp->DEP_ID;
@@ -1257,7 +1257,7 @@ class RequestOrderController extends Controller
     ]);
     // aditiya@lukison.com
     // $to=[$dataemail['email'],$email,'purchasing@lukison.com',$datamanager['EMP_EMAIL']];
-    $to=['it-dept@lukison.com'];
+    $to=['request_order@lukison.com'];
 
     \Yii::$app->kirim_email->pdf($contentMail,'RO',$to,'Request-Order',$content);
 
@@ -1294,8 +1294,8 @@ class RequestOrderController extends Controller
 				if ($auth1Mdl->auth1_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth1Model']['kdro'];
-          $userid =  $hsl['Auth1Model']['empID'];
-          $this->Sendmail($kdro,$userid);
+          // $userid =  $hsl['Auth1Model']['empID'];
+          $this->Sendmail($kdro);
 					return $this->redirect(['/purchasing/request-order/view','kd'=>$kdro]);
 				}
 			}
@@ -1332,6 +1332,7 @@ class RequestOrderController extends Controller
 				if ($auth2Mdl->auth2_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth2Model']['kdro'];
+					 $this->Sendmail($kdro);
 					return $this->redirect(['/purchasing/request-order/review','kd'=>$kdro]);
 				}
 			}
@@ -1368,6 +1369,7 @@ class RequestOrderController extends Controller
 				if ($auth3Mdl->auth3_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth3Model']['kdro'];
+					 $this->Sendmail($kdro);
 					return $this->redirect(['/purchasing/request-order/review','kd'=>$kdro]);
 				}
 			}

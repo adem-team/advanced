@@ -370,13 +370,13 @@ $this->params['breadcrumbs'][] = $this->title;
 			<!-- Signature !-->
 			 <tr>
 				<th style="text-align: center; vertical-align:middle;width:120; height:60px">
-					<img src="<?php echo $roHeader->SIG1_SVGBASE64;?> height='120' width='150'"></img>
+					<?php echo '<img style="width:80; height:40px" src='.$roHeader->SIG1_SVGBASE64.'></img>';?> 
 				</th>
 				<th style="text-align: center; vertical-align:middle;width:120">
-					<img src="<?php echo $roHeader->SIG2_SVGBASE64;?> height='120' width='150'"></img>
+					<?php echo '<img style="width:80; height:40px" src='.$roHeader->SIG2_SVGBASE64.'></img>';?> 
 				</th>
 				<th style="text-align: center; vertical-align:middle;width:120">
-					<img src="<?=$roHeader->SIG3_SVGBASE64;?> height='120' width='150'"></img>
+					<?php echo '<img style="width:80; height:40px" src='.$roHeader->SIG3_SVGBASE64.'></img>';?> 
 				</th>
 			</tr>
 			<!--Nama !-->

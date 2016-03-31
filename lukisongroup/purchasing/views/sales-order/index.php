@@ -828,6 +828,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 						'template' => '{view}{tambahEdit}{delete}{review}{closed}',
 						'dropdownOptions'=>['class'=>'pull-right dropup'],
 						//'headerOptions'=>['class'=>'kartik-sheet-style'],
+						'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 						'buttons' => [
 							/* View RO | Permissian All */
 							'view' => function ($url, $model) {

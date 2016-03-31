@@ -413,6 +413,7 @@ use lukisongroup\master\models\Unitbarang;
 			'template' => '{approved} {reject} {cancel} {delete} {closed}',
 			'dropdownOptions'=>['class'=>'pull-left dropdown'],
 			//'headerOptions'=>['class'=>'kartik-sheet-style'],
+			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 			'buttons' => [
 				'approved' => function ($url, $model) use ($poHeader) {
 								if ($poHeader->STATUS!==103) {
@@ -1049,6 +1050,7 @@ use lukisongroup\master\models\Unitbarang;
 				'template' => '{view}{sendPo}',
 				'dropdownOptions'=>['class'=>'pull-right dropup'],
 				//'headerOptions'=>['class'=>'kartik-sheet-style'],
+				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 				'buttons' => [
 					// View RO | Permissian All
 					'view' => function ($url, $model) {
