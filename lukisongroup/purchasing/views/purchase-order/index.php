@@ -621,6 +621,7 @@ function submitform()
 			'dropdown' => true,
 			'template' => '{view}{tambahEdit}{delete}{approved}{no_akses}',
 			'dropdownOptions'=>['class'=>'pull-right dropup'],
+			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 			'buttons' => [
 				/* View RO | Permissian All */
 				'view' => function ($url, $model) {

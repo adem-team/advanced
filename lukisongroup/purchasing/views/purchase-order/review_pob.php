@@ -285,6 +285,7 @@ $y=4;
 			'template' => '{approved} {reject} {cancel} {delete} {closed}',
 			'dropdownOptions'=>['class'=>'pull-left dropdown'],
 			//'headerOptions'=>['class'=>'kartik-sheet-style'],
+			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 			'buttons' => [
 				'approved' => function ($url, $model) use ($poHeader) {
 								if ($poHeader->STATUS!==103) {

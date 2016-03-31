@@ -55,6 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 					'dropdown' => true,
 					'template' => '{view}',
 					'dropdownOptions'=>['class'=>'pull-left dropdown','style'=>['disable'=>true]],
+					'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 					'dropdownButton'=>[
 						'class' => $actionClass,
 						'label'=>$actionLabel,

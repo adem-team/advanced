@@ -64,12 +64,16 @@ class StockRcvdController extends Controller
     public function actionCreate()
     {
         $model = new StockRcvd();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+		$searchModel = new StockRcvdSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->ID]);
         } else {
-            return $this->render('create', [
+            return $this->renderAjax('_form', [
                 'model' => $model,
+				'searchModel' => $searchModel,
+				'dataProvider' => $dataProvider,
             ]);
         }
     }

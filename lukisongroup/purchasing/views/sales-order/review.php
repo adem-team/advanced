@@ -645,6 +645,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 						'template' => '{approved} {reject} {cancel} {closed}',
 						'dropdownOptions'=>['class'=>'pull-right dropup'],
 						//'headerOptions'=>['class'=>'kartik-sheet-style'],
+						'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 						'buttons' => [
 							/* Approved RO | Permissian Status 101 | Dept = Dept login | GF >= M ($roHeader->STATUS!=101 or $roHeader->STATUS!=10)*/
 							'approved' => function ($url, $model) use ($headerStatus) {

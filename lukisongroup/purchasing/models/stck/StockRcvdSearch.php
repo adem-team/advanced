@@ -12,6 +12,20 @@ use lukisongroup\purchasing\models\stck\StockRcvd;
  */
 class StockRcvdSearch extends StockRcvd
 {
+	
+	public $ID; 
+	public $TGL;
+	public $KD_PO;
+	public $KD_BARANG;
+	public $NM_BARANG;
+	public $PO_QTY;
+	public $QTY_RCVD;
+	public $QTY_REJECT;
+	public $QTY_RETURE;
+	public $QTY_CANCEL;
+	public $UNIT;
+	public $UNIT_QTY;
+	public $UNIT_WIGHT;
     /**
      * @inheritdoc
      */
@@ -21,6 +35,7 @@ class StockRcvdSearch extends StockRcvd
             [['ID', 'TYPE', 'STATUS'], 'integer'],
             [['TGL', 'KD_PO', 'KD_REF', 'KD_SPL', 'ID_BARANG', 'NM_BARANG', 'UNIT', 'UNIT_NM', 'NOTE', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
             [['UNIT_QTY', 'UNIT_WIGHT', 'QTY'], 'number'],
+			[['TGL','TGL','KD_PO','KD_BARANG','NM_BARANG','PO_QTY','QTY_RCVD','QTY_REJECT',''],'safe],
         ];
     }
 
@@ -84,4 +99,51 @@ class StockRcvdSearch extends StockRcvd
 
         return $dataProvider;
     }
+	
+	/*GET STOCK PO ->VALIDATION FORM*/
+	public function searchPODetailForm($params){
+		$data= Yii::$app->db_esm->createCommand("CALL PURCHASING_po_detail_form()")->queryAll();  
+		$dataProvider= new ArrayDataProvider([
+			'key' => 'ID',
+			'allModels'=>$data,			
+			'pagination' => [
+				'pageSize' => 100,
+			]
+		]);
+		//if (!($this->load($params) && $this->validate())) {
+		if (!($this->load($params))) {
+ 			return $dataProvider;
+ 		}
+		
+		$filter = new Filter();
+ 		$this->addCondition($filter, 'ID', true);
+ 		$this->addCondition($filter, 'CREATE_AT', true);
+ 		$this->addCondition($filter, 'KD_PO', true);	
+ 		$this->addCondition($filter, 'KD_CORP', true);	
+ 		$this->addCondition($filter, 'PARENT_PO', false);	
+ 		$this->addCondition($filter, 'SUPPLIER', true);	
+ 		$this->addCondition($filter, 'TOP_TYPE', true);	
+ 		$this->addCondition($filter, 'TOP_DURATION', true);	
+ 		$this->addCondition($filter, 'PAJAK', true);	
+ 		$this->addCondition($filter, 'DELIVERY_COST', true);	
+ 		$this->addCondition($filter, 'NOTE', true);	
+ 		$this->addCondition($filter, 'SIG1_NM', true);	
+ 		$this->addCondition($filter, 'SIG2_NM', true);	
+ 		$this->addCondition($filter, 'SIG3_NM', true);	
+ 		$this->addCondition($filter, 'KD_RO', true);	
+ 		$this->addCondition($filter, 'KD_COSTCENTER', true);	
+ 		$this->addCondition($filter, 'KD_BARANG', true);	
+ 		$this->addCondition($filter, 'NM_BARANG', true);	
+ 		$this->addCondition($filter, 'QTY', true);	
+ 		$this->addCondition($filter, 'HARGA', true);	
+ 		$this->addCondition($filter, 'UNIT', true);	
+ 		$this->addCondition($filter, 'HARGA', true);	
+ 		$this->addCondition($filter, 'UNIT_QTY', true);	
+ 		$this->addCondition($filter, 'UNIT_WIGHT', true);	
+ 		$this->addCondition($filter, 'STT_HDR', true);	
+ 		$this->addCondition($filter, 'STT_DTL', true);	
+ 		$this->addCondition($filter, 'SUB_TTL', true);	
+ 		$dataProvider->allModels = $filter->filter($data);   
+		return $dataProvider;
+	}
 }
