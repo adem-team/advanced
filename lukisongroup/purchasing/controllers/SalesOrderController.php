@@ -994,6 +994,12 @@ class SalesOrderController extends Controller
         'dataProvider' => $dataProvider,
       ]);
 
+	  /*Body Notify*/
+		$contentMailAttachBody= $this->renderPartial('postman_body',[
+			'roHeader' => $roHeader,
+			'dataProvider' => $dataProvider,
+		]);
+		
   $pdf = new Pdf([
     // set to use core fonts only
     'mode' => Pdf::MODE_CORE,
@@ -1023,7 +1029,7 @@ class SalesOrderController extends Controller
   // $to=[$dataemail['email'],$email,'purchasing@lukison.com',$datamanager['EMP_EMAIL']];
   $to=['sales_order@lukison.com'];
 
-  \Yii::$app->kirim_email->pdf($contentMail,'SO',$to,'Sales-Order',$content);
+  \Yii::$app->kirim_email->pdf($contentMail,'SO',$to,'Sales-Order',$contentMailAttachBody);
 
   }
 

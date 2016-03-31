@@ -1229,6 +1229,12 @@ class RequestOrderController extends Controller
           'dept' => $dept,
           'dataProvider' => $dataProvider,
         ]);
+		
+		/*Body Notify*/
+		$contentMailAttachBody= $this->renderPartial('postman_body',[
+			'roHeader' => $roHeader,
+			'dataProvider' => $dataProvider,
+		]);
 
     $pdf = new Pdf([
       // set to use core fonts only
@@ -1259,7 +1265,7 @@ class RequestOrderController extends Controller
     // $to=[$dataemail['email'],$email,'purchasing@lukison.com',$datamanager['EMP_EMAIL']];
     $to=['request_order@lukison.com'];
 
-    \Yii::$app->kirim_email->pdf($contentMail,'RO',$to,'Request-Order',$content);
+    \Yii::$app->kirim_email->pdf($contentMail,'RO',$to,'Request-Order',$contentMailAttachBody);
 
     }
 
