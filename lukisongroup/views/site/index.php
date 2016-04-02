@@ -127,7 +127,8 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 										],
 										[
 											'content' => '<span class="fa fa-upload fa-lg"></span>'. '   '.'Arsip File',
-											'url' => '/widget/arsip',
+											//'url' => '/widget/arsip',
+											'url' => '/filemanager/files',
 											'badge' => ''
 										],
 										/* [
@@ -172,7 +173,7 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 											'badge' => ''
 										],										
 										[
-											'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Request TERM',
+											'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Request Trade',
 											'url' => '/master/term-customers',
 											'badge' => ''
 										],

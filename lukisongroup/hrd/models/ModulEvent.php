@@ -44,7 +44,7 @@ class ModulEvent extends \yii\db\ActiveRecord
     {
         return [
             [['id','USER_ID','start', 'end', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
-            [['MODUL_HIRS', 'STATUS'], 'integer'],
+            [['MODUL_ID','MODUL_PRN', 'STATUS'], 'integer'],
             [['title'], 'string', 'max' => 255],
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100],
         ];
@@ -61,7 +61,8 @@ class ModulEvent extends \yii\db\ActiveRecord
             'end' => Yii::t('app', 'Tgl  End'),
             'title' => Yii::t('app', 'Title'),
             'USER_ID' => Yii::t('app', 'User  ID'),
-            'MODUL_HIRS' => Yii::t('app', 'MODUL -> P0002'),
+            'MODUL_PRN' => Yii::t('app', 'MODUL.PRN'),
+            'MODUL_ID' => Yii::t('app', 'MODUL.ID'),
             'STATUS' => Yii::t('app', 'Status'),
             'CREATE_BY' => Yii::t('app', 'Create  By'),
             'CREATE_AT' => Yii::t('app', 'Create  At'),
@@ -69,13 +70,13 @@ class ModulEvent extends \yii\db\ActiveRecord
             'UPDATE_AT' => Yii::t('app', 'Update  At'),
         ];
     }
-	
+
 	public function getModulPesonalia()
     {
-        return $this->hasOne(ModulPersonalia::className(), ['MODUL_HIRS' => 'ID']);
+        return $this->hasOne(ModulPersonalia::className(), ['id' => 'MODUL_ID']);
     }
-    public function getModul_nm()
-    {
-        return $this->getModulPesonalia->MODUL_NM;
-    }
+    // public function getModul_nm()
+    // {
+    //     return $this->modulPesonalia->MODUL_NM;
+    // }
 }

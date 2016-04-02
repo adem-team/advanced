@@ -19,7 +19,7 @@ class ScheduleheaderSearch extends Scheduleheader
     {
         return [
             //[['ID', 'SCDL_GROUP', 'STATUS'], 'integer'],
-            [['TGL1', 'USER_ID', 'NOTE', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
+            [['TGL1', 'USER_ID', 'NOTE', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT','TGL2'], 'safe'],
             [['USER_ID', 'NOTE', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
         ];
     }

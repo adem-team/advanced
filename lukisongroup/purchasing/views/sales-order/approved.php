@@ -4,11 +4,11 @@ use kartik\grid\GridView;
 use yii\helpers\Url;
 use yii\bootstrap\Modal;
 use yii\helpers\ArrayHelper;
+// use lukisongroup\assets\AppAssetJqueryJSignature;
+// AppAssetJqueryJSignature::register($this); 
 
 use lukisongroup\master\models\Unitbarang;
-use lukisongroup\assets\AppAssetJqueryJSignature;
 
-AppAssetJqueryJSignature::register($this); 
 $this->sideCorp = 'Request Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'mDefault';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Data Master');         		 /* title pada header page */
@@ -561,6 +561,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 						'template' => '{approved} {reject} {cancel} {closed}',
 						'dropdownOptions'=>['class'=>'pull-right dropup'],									
 						//'headerOptions'=>['class'=>'kartik-sheet-style'],
+						'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 						'buttons' => [						
 							/* Approved RO | Permissian Status 101 | Dept = Dept login | GF >= M ($roHeader->STATUS!=101 or $roHeader->STATUS!=10)*/
 							'approved' => function ($url, $model) use ($headerStatus) {

@@ -16,9 +16,16 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'MODUL_DCRP')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'MODUL_STS')->textInput() ?>
+    <!-- $form->field($model, 'MODUL_STS')->textInput() ?> -->
+    <?php
+    if(!$model->isNewRecord)
+    {
+     ?>
+      <?= $form->field($model, 'MODUL_STS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']) ?>
 
-    <?= $form->field($model, 'SORT')->textInput(['maxlength' => true]) ?>
+      <?php
+    }
+       ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

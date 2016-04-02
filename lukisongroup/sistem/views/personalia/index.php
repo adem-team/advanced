@@ -9,10 +9,19 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 use yii\web\JsExpression;
 use yii\widgets\Pjax;
+use kartik\export\ExportMenu;
+use kartik\widgets\ActiveForm;
+use kartik\widgets\Select2;
+use kartik\widgets\FileInput;
+use kartik\widgets\DepDrop;
 
 use lukisongroup\hrd\models\Machine;
 use lukisongroup\hrd\models\Key_list;
 use lukisongroup\hrd\models\Employe;
+use yii\widgets\ListView;
+// use yii\widgets\DetailView;
+use lukisongroup\assets\AppAssetFusionChart;
+AppAssetFusionChart::register($this);
 
 $aryMachine = ArrayHelper::map(Machine::find()->all(),'TerminalID','MESIN_NM');
 $aryKeylist = ArrayHelper::map(Key_list::find()->all(),'FunctionKey','FunctionKeyNM');
@@ -32,43 +41,16 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 $JSCode = <<<EOF
 
 function(start, end) {
-    var title = prompt('Event Title:');
-    var eventData;
-	var dateTime1 = new Date(start);
 	var dateTime2 = new Date(end);
+	var dateTime1 = new Date(start);
 	tgl1 = moment(dateTime1).format("YYYY-MM-DD HH:mm:ss");
 	tgl2 = moment(dateTime2).format("YYYY-MM-DD HH:mm:ss");
-	if (title) {
-		$.ajax({
-			url:'/sistem/personalia/jsoncalendar_add',
-			type: 'POST',
-			data:'title=' + title + '&start='+ tgl1 + '&end=' + tgl2,
-			dataType:'json',
-			success: function(result){
-        //alert('ok')
-			  $.pjax.reload({container:'#calendar-user'});
-			  //$.pjax.reload({container:'#gv-schedule-id'});
-			}
-		});
-		/* calendar.fullCalendar('renderEvent', {
-				title:title,
-				start:start,
-				end:end
-			},
-			true
-		); */
-
-       /*  eventData = {
-            title: title,
-            start: start,
-            end: end
-        };
-        //$('#w0').fullCalendar('renderEvent', eventData, true);
-		*/
-    }
-
-	//$('#w0').fullCalendar('unselect');
-    //$('#w0').fullCalendar('unselect');
+	$('#modalTitle').val(tgl2);
+	// $('#modalTitle').val(tgl2);
+	$('#tglawal').val(tgl1);
+	// $('#tglawal').html(calEvent.start);
+	// $('#modalBody').html(tgl2);
+    $('#confirm-permission-alert').modal();
 }
 EOF;
 $JSDropEvent = <<<EOF
@@ -82,13 +64,146 @@ function(date) {
 EOF;
 $JSEventClick = <<<EOF
 function(calEvent, jsEvent, view) {
-    alert('Event: ' + calEvent.id);
-   // alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-    //alert('View: ' + view.name);
-    // change the border color just for fun
-    $(this).css('border-color', 'red');
+	//  $('#modalTitle').html(calEvent.end);
+		// 	$('#tglawal').html(calEvent.start);
+	// $('#modalBody4').html(calEvent.id);
+	// $('#tglawal').val(tgl1);
+    $('#confirm-permission-alert').modal();
+
+
+
+	//$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+	// $('#confirm-permission-alert').on('show.bs.modal', function (event) {
+		// var button = $(event.relatedTarget)
+		// var modal = $(this)
+		// var title = button.data('title')
+		// var href = button.attr('href')
+		// modal.find('.modal-title').html(title)
+		// modal.find('.modal-body').html('')
+		// $.post(href)
+			// .done(function( data ) {
+				// modal.find('.modal-body').html(data)
+			// });
+		// }),
 }
 EOF;
+
+	/**
+     * Setting
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	function tombolSetting(){
+		$title1 = Yii::t('app', 'Setting');
+		$options1 = [ 'id'=>'setting',
+					  //'data-toggle'=>"modal",
+					  'data-target'=>"#profile-setting",
+					  //'class' => 'btn btn-default',
+					  'style' => 'text-align:left',
+		];
+		$icon1 = '<span class="fa fa-cogs fa-md"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/sistem/user-profile/setting']);//,'kd'=>$kd]);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
+
+	/**
+     * New|Change|Reset| Password Login
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	function tombolPasswordUtama(){
+		$title1 = Yii::t('app', 'Password');
+		$options1 = [ 'id'=>'password',
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#profile-password",
+					  //'class' => 'btn btn-default',
+					 // 'style' => 'text-align:left',
+		];
+		$icon1 = '<span class="fa fa-shield fa-md"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/sistem/user-profile/password-utama-view']);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
+
+	/**
+     * Create Signature
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	function tombolSignature(){
+		$title1 = Yii::t('app', 'Signature');
+		$options1 = [ 'id'=>'signature',
+					  //'data-toggle'=>"modal",
+					  'data-target'=>"#profile-signature",
+					  //'class' => 'btn btn-default',
+		];
+		$icon1 = '<span class="fa fa-pencil-square-o fa-md"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/sistem/user-profile/signature']);//,'kd'=>$kd]);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
+
+	/**
+     * Persinalia Employee
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	function tombolPersonalia(){
+		$title1 = Yii::t('app', 'My Personalia');
+		$options1 = [ 'id'=>'personalia',
+					  //'data-toggle'=>"modal",
+					  'data-target'=>"#profile-personalia",
+					  'class' => 'btn btn-primary',
+		];
+		$icon1 = '<span class="fa fa-group fa-md"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/sistem/personalia']);//,'kd'=>$kd]);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
+
+	/**
+     * Performance Employee
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	function tombolPerformance(){
+		$title1 = Yii::t('app', 'My Performance');
+		$options1 = [ 'id'=>'performance',
+					  //'data-toggle'=>"modal",
+					  'data-target'=>"#profile-performance",
+					  'class' => 'btn btn-danger',
+		];
+		$icon1 = '<span class="fa fa-graduation-cap fa-md"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/sistem/performance']);//,'kd'=>$kd]);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
+	/**
+     * Logoff
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	function tombolLogoff(){
+		$title1 = Yii::t('app', 'Logout');
+		$options1 = [ 'id'=>'logout',
+					  //'data-toggle'=>"modal",
+					  'data-target'=>"#profile-logout",
+					  //'class' => 'btn btn-default',
+		];
+		$icon1 = '<span class="fa fa-power-off fa-lg"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/sistem/user-profile/logoff']);//,'kd'=>$kd]);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
+
+
 	/*
 	* === REKAP =========================
 	* Key-FIND : AttDinamik-Clalender
@@ -100,7 +215,7 @@ EOF;
 	$hdrLabel1=[];
 	//$hdrLabel2=[];
 	$getHeaderLabelWrap=[];
-	
+
 	/*
 	 * Terminal ID | Mashine
 	 * Colomn 1
@@ -170,7 +285,7 @@ EOF;
 			 ]
 		 ],
 	];
-	
+
 	/*
 	 * Employe name
 	 * Colomn 2
@@ -219,8 +334,8 @@ EOF;
 		],
 		//'footer'=>true,
 	];
-	
-	
+
+
 	foreach($dataProviderField as $key =>$value)
 	{
 		$i=2;
@@ -358,32 +473,34 @@ EOF;
 						'editable' => true,
 						//'drop' => new JsExpression($JSDropEvent),
 						'selectHelper'=>true,
+						//'select' =>'confirm-permission-alert',
 						'select' => new JsExpression($JSCode),
 						'eventClick' => new JsExpression($JSEventClick),
 						//'defaultDate' => date('Y-m-d')
 					],
 					//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
 				]);
-				
+
 				echo Html::panel(
 					['heading' => 'CLENDER', 'body' =>$calenderRt],
 					Html::TYPE_DANGER
-				);				
-				
+				);
+
 				/*
-				 * LIST EVENT CALENDAR 
+				 * LIST EVENT CALENDAR
 				 * PERIODE 23-22
 				 * @author ptrnov  [piter@lukison.com]
 				 * @since 1.2
 				*/
 				$actionClass='btn btn-info btn-xs';
 				$actionLabel='Update';
-				$attDinamikEvent =[];				
+				$attDinamikEvent =[];
 				/*GRIDVIEW ARRAY FIELD HEAD*/
 				$headColomnEvent=[
-					['ID' =>0, 'ATTR' =>['FIELD'=>'start','SIZE' => '10px','label'=>'DATE START','align'=>'left','warna'=>'97, 211, 96, 0.3']],				
+					['ID' =>0, 'ATTR' =>['FIELD'=>'start','SIZE' => '10px','label'=>'DATE START','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 					['ID' =>1, 'ATTR' =>['FIELD'=>'end','SIZE' => '10px','label'=>'DATE END','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-					['ID' =>2, 'ATTR' =>['FIELD'=>'title','SIZE' => '10px','label'=>'TITLE','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+					// ['ID' =>2, 'ATTR' =>['FIELD'=>'title','SIZE' => '10px','label'=>'TITLE','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+				  // ['ID' =>2, 'ATTR' =>['FIELD'=>'modulPesonalia.MODUL_NM','SIZE' => '10px','label'=>'TITLE','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 				];
 				$gvHeadColomnEvent = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');
 				/*GRIDVIEW ARRAY ACTION*/
@@ -405,7 +522,7 @@ EOF;
 															'data-toggle'=>"modal",
 															'data-target'=>"#alias-cust",
 															]). '</li>' . PHP_EOL;
-						},				
+						},
 						'review' =>function($url, $model, $key){
 								return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'Set Alias Prodak'),
 															['/sistem/personalia/view','id'=>$model->id],[
@@ -413,14 +530,14 @@ EOF;
 															'data-toggle'=>"modal",
 															'data-target'=>"#alias-prodak",
 															]). '</li>' . PHP_EOL;
-						},	
+						},
 						'delete' =>function($url, $model, $key){
 								return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'new Customer'),
 															['/sistem/personalia/view','id'=>$model->id],[
 															'data-toggle'=>"modal",
 															'data-target'=>"#alias-prodak",
 															]). '</li>' . PHP_EOL;
-						},				
+						},
 					],
 					'headerOptions'=>[
 						'style'=>[
@@ -443,16 +560,16 @@ EOF;
 				];
 				/*GRIDVIEW ARRAY ROWS*/
 				foreach($gvHeadColomnEvent as $key =>$value[]){
-					$attDinamikEvent[]=[		
+					$attDinamikEvent[]=[
 						'attribute'=>$value[$key]['FIELD'],
 						'label'=>$value[$key]['label'],
-						'filter'=>true,
+						// 'filterType'=> \kartik\grid\GridView::FILTER_DATE,
 						'hAlign'=>'right',
 						'vAlign'=>'middle',
 						//'mergeHeader'=>true,
-						'noWrap'=>true,			
-						'headerOptions'=>[		
-								'style'=>[									
+						'noWrap'=>true,
+						'headerOptions'=>[
+								'style'=>[
 								'text-align'=>'center',
 								'width'=>$value[$key]['FIELD'],
 								'font-family'=>'tahoma, arial, sans-serif',
@@ -460,7 +577,7 @@ EOF;
 								//'background-color'=>'rgba(97, 211, 96, 0.3)',
 								'background-color'=>'rgba('.$value[$key]['warna'].')',
 							]
-						],  
+						],
 						'contentOptions'=>[
 							'style'=>[
 								'text-align'=>$value[$key]['align'],
@@ -473,23 +590,31 @@ EOF;
 						//'pageSummary'=>true,
 						// 'pageSummaryOptions' => [
 							// 'style'=>[
-									// 'text-align'=>'right',		
-									'width'=>'12px',
+									// 'text-align'=>'right',
+									//'width'=>'12px',
 									// 'font-family'=>'tahoma',
-									// 'font-size'=>'8pt',	
+									// 'font-size'=>'8pt',
 									// 'text-decoration'=>'underline',
 									// 'font-weight'=>'bold',
-									// 'border-left-color'=>'transparant',		
-									// 'border-left'=>'0px',									
+									// 'border-left-color'=>'transparant',
+									// 'border-left'=>'0px',
 							// ]
-						// ],	
-					];	
+						// ],
+					];
 				};
 				/*SHOW GRID VIEW LIST EVENT*/
 				echo GridView::widget([
 					'dataProvider' => $dataProviderEvent,
 					'filterModel' => $searchModelEvent,
+					'id'=>'gv-event',
 					'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+					'rowOptions'   => function ($model, $key, $index, $grid) {
+						 return ['id' => $model->MODUL_ID,'onclick' => '$.pjax.reload({
+									url: "'.Url::to(['/sistem/personalia/index']).'?ModulEventSearch[MODUL_ID]="+this.id,
+									container: "#gv-modul",
+									timeout: 100,
+							});'];
+						},
 					'columns' => $attDinamikEvent,
 					/* [
 						['class' => 'yii\grid\SerialColumn'],
@@ -502,29 +627,35 @@ EOF;
 					'pjaxSettings'=>[
 						'options'=>[
 							'enablePushState'=>false,
-							'id'=>'absen-rekap',
+							'id'=>'gv-event',
 						],
 					],
 					'panel' => [
 								'heading'=>'<h3 class="panel-title">List Event</h3>',
 								'type'=>'warning',
-								'showFooter'=>false,
+								//'showFooter'=>false,
 					],
 					'toolbar'=> [
-						//'{items}',
+						''//'{items}',
 					],
 					'hover'=>true, //cursor select
 					'responsive'=>true,
 					'responsiveWrap'=>true,
 					'bordered'=>true,
 					'striped'=>true,
-				]); 				
+				]);
 			?>
 		</div>
 		<div class="col-sm-8 col-md-8 col-lg-8" >
-			<?php 
+			<?php
+				echo Yii::$app->controller->renderPartial('_head_chart',[
+							//'model_CustPrn'=>$model_CustPrn,
+							//'count_CustPrn'=>$count_CustPrn
+				]);
+			?>
+			<?php
 				/*
-				 * DAILY LOG PERSONAL ABSENSI 
+				 * DAILY LOG PERSONAL ABSENSI
 				 * PERIODE 23-22
 				 * @author ptrnov  [piter@lukison.com]
 				 * @since 1.2
@@ -569,6 +700,291 @@ EOF;
 				]);
 			?>
 		</div>
-	</div>
-</div>
+		<div class="col-sm-8 col-md-8 col-lg-8" >
+			<div  class="row" style="margin-left:5px">
+					<!-- IJIN !-->
+					<?php
+						echo Yii::$app->controller->renderPartial('_button_ijin',[
+								//'model_CustPrn'=>$model_CustPrn,
+								//'count_CustPrn'=>$count_CustPrn
+						]);
+					?>
+					<!-- CUTI !-->
+					<div class="btn-group pull-left">
+						<button type="button" class="btn btn-info">CUTI</button>
+						<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+							<span class="caret"></span>
+							<span class="sr-only">Toggle Dropdown</span>
+						</button>
+						  <ul class="dropdown-menu" role="menu">
+							<li><?php echo tombolSetting(); ?></li>
+							<li><?php echo tombolPasswordUtama();?></li>
+							<li><?php echo tombolSignature(); ?></li>
+							<li><?php //echo tombolPersonalia(); ?></li>
+							<li><?php //echo tombolPerformance(); ?></li>
+							<li class="divider"></li>
+								<ul>as</ul>
+							<li><?php echo tombolLogoff();?></li>
+						  </ul>
+					</div>
+					<!-- CUTI !-->
+					<div class="btn-group pull-left">
+						<button type="button" class="btn btn-info">KEHADIRAN</button>
+						<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+							<span class="caret"></span>
+							<span class="sr-only">Toggle Dropdown</span>
+						</button>
+						  <ul class="dropdown-menu" role="menu">
+							<li><?php  tombolSetting(); ?></li>
+							<li><?php echo tombolPasswordUtama();?></li>
+							<li><?php echo tombolSignature(); ?></li>
+							<li><?php //echo tombolPersonalia(); ?></li>
+							<li><?php //echo tombolPerformance(); ?></li>
+							<li class="divider"></li>
+							<li><?php echo tombolLogoff();?></li>
+						  </ul>
+					</div>
+			</div>
+		</div>
+		<div class="col-sm-8 col-md-8 col-lg-8" style="margin-top:15px" >
+				<?php
 
+				echo $gv= GridView::widget([
+			     'id'=>'gv-modul',
+			     'dataProvider' => $dataProviderpersonali,
+			    //  'filterModel' => $searchModelEvent,
+			   	'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
+
+			     'columns' => [
+			       [	//COL-2
+			         /* Attribute Serial No */
+			         'class'=>'kartik\grid\SerialColumn',
+			         'width'=>'10px',
+			         'header'=>'No.',
+			         'hAlign'=>'center',
+			         'headerOptions'=>[
+			           'style'=>[
+			             'text-align'=>'center',
+			             'width'=>'10px',
+			             'font-family'=>'tahoma',
+			             'font-size'=>'8pt',
+			             'background-color'=>'rgba(0, 95, 218, 0.3)',
+			           ]
+			         ],
+			         'contentOptions'=>[
+			           'style'=>[
+			             'text-align'=>'center',
+			             'width'=>'10px',
+			             'font-family'=>'tahoma',
+			             'font-size'=>'8pt',
+			           ]
+			         ],
+			         'pageSummaryOptions' => [
+			           'style'=>[
+			               'border-right'=>'0px',
+			           ]
+			         ]
+			       ],
+			       [  	//col-1
+			         //MODUL_NM
+			         'attribute' => 'modulPesonalia.MODUL_NM',
+			         'label'=>'Keterangan',
+			         'hAlign'=>'left',
+			         'vAlign'=>'middle',
+			         'headerOptions'=>[
+			           'style'=>[
+			             'text-align'=>'center',
+			             'width'=>'200px',
+			             'font-family'=>'tahoma, arial, sans-serif',
+			             'font-size'=>'9pt',
+			             'background-color'=>'rgba(97, 211, 96, 0.3)',
+			           ]
+			         ],
+			         'contentOptions'=>[
+			           'style'=>[
+			             'text-align'=>'left',
+			             'width'=>'200px',
+			             'font-family'=>'tahoma, arial, sans-serif',
+			             'font-size'=>'9pt',
+			           ]
+			         ],
+			       ],
+						//  [  	//col-1
+						// 	//MODUL_NM
+						// 	'attribute' => 'MODUL_PRN',
+						// 	'label'=>'Keterangan Detail',
+						// 	// 'value'=>function ($model, $key, $index, $widget) {
+						// 	//  $kategori = ModulPersonalia::find()->where(['MODUL_PRN'=>$model->ID])
+						// 	// 															 ->one();
+						// 	//
+						// 	// 	return $kategori->MODUL_NM;
+						// // },
+						// 	'hAlign'=>'left',
+						// 	'vAlign'=>'middle',
+						// 	'headerOptions'=>[
+						// 		'style'=>[
+						// 			'text-align'=>'center',
+						// 			'width'=>'200px',
+						// 			'font-family'=>'tahoma, arial, sans-serif',
+						// 			'font-size'=>'9pt',
+						// 			'background-color'=>'rgba(97, 211, 96, 0.3)',
+						// 		]
+						// 	],
+						// 	'contentOptions'=>[
+						// 		'style'=>[
+						// 			'text-align'=>'left',
+						// 			'width'=>'200px',
+						// 			'font-family'=>'tahoma, arial, sans-serif',
+						// 			'font-size'=>'9pt',
+						// 		]
+						// 	],
+						// ],
+
+			     ],
+			     'pjax'=>true,
+			     'pjaxSettings'=>[
+			     'options'=>[
+			       'enablePushState'=>false,
+			       'id'=>'gv-modul',
+			        ],
+			     ],
+			    //  'panel' => [
+			    //        'heading'=>'<h3 class="panel-title">User List</h3>',
+			    //        'type'=>'warning',
+			    //        'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add User',
+			    //            ['modelClass' => 'Kategori',]),'/sistem/modul-permission/create',[
+			    //              'data-toggle'=>"modal",
+			    //                'data-target'=>"#modal-create",
+			    //                  'class' => 'btn btn-success'
+			    //                        ]),
+			    //        'showFooter'=>false,
+			    //  ],
+			     'toolbar'=> [
+			       //'{items}',
+			     ],
+			     'hover'=>true, //cursor select
+			     'responsive'=>true,
+			     'responsiveWrap'=>true,
+			     'bordered'=>true,
+			     'striped'=>'4px',
+			     'autoXlFormat'=>true,
+			     'export' => false,
+			   ]);
+
+
+
+
+				// 	<!-- // echo Yii::$app->controller->renderPartial('_form_cuti',[
+				// 	// 			'model'=>$model,
+				// 	// 			//'count_CustPrn'=>$count_CustPrn
+				// 	// 	]); -->
+				// <!-- ?> -->
+
+		</div>
+
+</div>
+<?php
+	/*
+	 * Button Modal Confirm PERMISION DENAID
+	 * @author ptrnov [piter@lukison]
+	 * @since 1.2
+	*/
+	$this->registerJs("
+
+			 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+				 $('#ModulEvent').on('beforeSubmit',function(){
+					 var tgl2 = $('#modalTitle').val();
+					 var tgl1 = $('#tglawal').val();
+					 var parent = $('#modelevent-modul_prn').val();
+					 var modulid = $('#modelevent-modul_id').val();
+					$.ajax({
+							url: '/sistem/personalia/save-event',
+							type: 'POST',
+							data: {title :tgl2,modulid :modulid,tgl1:tgl1,parent:parent},
+							dataType: 'json',
+							success: function(result) {
+								if (result == 1){
+												 $(document).find('#confirm-permission-alert').modal('hide');
+												    $.pjax.reload({container:'#gv-event'});
+											 }
+
+													}
+
+												});
+												return false;
+										});
+		",$this::POS_READY);
+	Modal::begin([
+			'id' => 'confirm-permission-alert',
+			//'header' =>['id'=>'modelHeader'],
+			//'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/warning/denied.png',  ['class' => 'pnjg', 'style'=>'width:40px;height:40px;']).'</div><div style="margin-top:10px;"><h4><b>Permmission Confirm !</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			// 'headerOptions'=>[
+				// 'id'=>'modelHeader',
+				// 'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+			// ]
+		]);
+		/* echo  '<div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4 id="modalTitle" class="modal-title"></h4>
+            </div>
+			 <div id="modalBody" class="modal-body"></div>
+			'; */
+		$form = ActiveForm::begin([
+			'id'=>$modelEvent->formName(),
+					// 'options'=>['enctype'=>'multipart/form-data'], // important,
+					// 'method' => 'post',
+					// 'action' => ['/sistem/personalia/save-event'],
+				]);
+				echo $form->field($modelEvent, 'title')->Hiddeninput([
+					// 'value'=>$_GET['modalTitle'],
+
+						'id'=>'modalTitle'
+
+				])->label(false);
+				?>
+				<input type="hidden" id="tglawal">
+				<?php
+
+				echo $form->field($modelEvent, 'MODUL_ID')->dropDownList($aryModulID,[
+					'id'=>'modelevent-modul_id',
+					//'prompt'=>$model->cabOne['CAB_NM'],
+				])->label('Attendance Parent');
+
+				echo $form->field($modelEvent, 'MODUL_PRN')->widget(DepDrop::classname(),[
+					'type'=>DepDrop::TYPE_SELECT2,
+					'data' => $droptype,
+					'options' => ['id'=>'modelevent-modul_prn'],
+					'pluginOptions' => [
+						'depends'=>['modelevent-modul_id'],
+						'url'=>Url::to(['/sistem/personalia/modul-child']), /*Parent=0 barang Umum*/
+						'initialize'=>true,
+					],
+				])->label('Attendance Child');
+
+
+				// echo FileInput::widget([
+					// 'name'=>'import_file',
+					 // 'name' => 'attachment_48[]',
+					// 'options'=>[
+						// 'multiple'=>true
+					// ],
+					// 'pluginOptions' => [
+						// 'uploadUrl' => Url::to(['/sales/import-data/upload']),
+						// 'showPreview' => false,
+						// 'showUpload' => false,
+						// 'showCaption' => true,
+						// 'showRemove' => true,
+						// 'uploadExtraData' => [
+							// 'album_id' => 20,
+							// 'cat_id' => 'Nature'
+						// ],
+						// 'maxFileCount' => 10
+					// ]
+				// ]);
+			echo '<div style="text-align:right; padding-top:10px">';
+			echo Html::submitButton('Upload',['class' => 'btn btn-success']);
+			echo '</div>';
+		ActiveForm::end();
+	Modal::end();
+?>

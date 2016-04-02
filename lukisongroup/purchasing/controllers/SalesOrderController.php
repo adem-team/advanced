@@ -940,7 +940,7 @@ class SalesOrderController extends Controller
 			]);
 	}
 
-  public function Sendmail($kd,$empid)
+  public function Sendmail($kd)
   {
     // $profile=Yii::$app->getUserOpt->Profile_user();
     // $dep = $profile->emp->DEP_ID;
@@ -994,6 +994,12 @@ class SalesOrderController extends Controller
         'dataProvider' => $dataProvider,
       ]);
 
+	  /*Body Notify*/
+		$contentMailAttachBody= $this->renderPartial('postman_body',[
+			'roHeader' => $roHeader,
+			'dataProvider' => $dataProvider,
+		]);
+		
   $pdf = new Pdf([
     // set to use core fonts only
     'mode' => Pdf::MODE_CORE,
@@ -1021,9 +1027,9 @@ class SalesOrderController extends Controller
   ]);
   // aditiya@lukison.com
   // $to=[$dataemail['email'],$email,'purchasing@lukison.com',$datamanager['EMP_EMAIL']];
-  $to=['purchasing@lukison.com'];
+  $to=['sales_order@lukison.com'];
 
-  \Yii::$app->kirim_email->pdf($contentMail,'SO',$to,'Sales-Order',$content);
+  \Yii::$app->kirim_email->pdf($contentMail,'SO',$to,'Sales-Order',$contentMailAttachBody);
 
   }
 
@@ -1039,8 +1045,8 @@ class SalesOrderController extends Controller
 				if ($auth1Mdl->auth1_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth1Model']['kdro'];
-          $empid = $hsl['Auth1Model']['empID'];
-          $this->Sendmail($kdro, $empid);
+          // $empid = $hsl['Auth1Model']['empID'];
+          $this->Sendmail($kdro);
 					return $this->redirect(['/purchasing/sales-order/view','kd'=>$kdro]);
 				}
 			}
@@ -1076,8 +1082,8 @@ class SalesOrderController extends Controller
 				if ($auth2Mdl->auth2_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth2Model']['kdro'];
-          $empid = $hsl['Auth1Model']['empID'];
-          $this->Sendmail($kdro, $empid);
+          // $empid = $hsl['Auth1Model']['empID'];
+          $this->Sendmail($kdro);
 					return $this->redirect(['/purchasing/sales-order/review','kd'=>$kdro]);
 				}
 			}
@@ -1113,8 +1119,8 @@ class SalesOrderController extends Controller
 				if ($auth3Mdl->auth3_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth3Model']['kdro'];
-          $empid = $hsl['Auth1Model']['empID'];
-          $this->Sendmail($kdro, $empid);
+          // $empid = $hsl['Auth1Model']['empID'];
+          $this->Sendmail($kdro);
 					return $this->redirect(['/purchasing/sales-order/review','kd'=>$kdro]);
 				}
 			}

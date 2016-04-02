@@ -285,6 +285,7 @@ $y=4;
 			'template' => '{approved} {reject} {cancel} {delete} {closed}',
 			'dropdownOptions'=>['class'=>'pull-left dropdown'],
 			//'headerOptions'=>['class'=>'kartik-sheet-style'],
+			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 			'buttons' => [
 				'approved' => function ($url, $model) use ($poHeader) {
 								if ($poHeader->STATUS!==103) {
@@ -1079,7 +1080,8 @@ $y=4;
 						</th>
 						<th style="text-align: center; vertical-align:middle;width:180">
 							<?php
-								$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG2_SVGBASE64.'" height="60" width="150"></img>' : SignChecked($poHeader);
+							  //$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src="'.$poHeader->SIG2_SVGBASE64.'"></img>' : SignChecked($poHeader);
+								$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG2_SVGBASE64.'</img>' : SignChecked($poHeader);
 								echo $ttd2
 							?>
 						</th>

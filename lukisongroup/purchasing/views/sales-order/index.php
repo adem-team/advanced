@@ -41,9 +41,9 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 			return false;
 		}
 	}
-	
+
 	$getPermissionCheeck = getPermission();
-	
+
 	//print_r(getPermission());
 	/*
 	 * Declaration Componen User Permission
@@ -510,6 +510,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 						'template' => '{view}{tambahEdit}{delete}{review}',
 						'dropdownOptions'=>['class'=>'pull-right dropup'],
 						//'headerOptions'=>['class'=>'kartik-sheet-style'],
+						'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 						'buttons' => [
 							/* View RO | Permissian All */
 							'view' => function ($url, $model) {
@@ -827,6 +828,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 						'template' => '{view}{tambahEdit}{delete}{review}{closed}',
 						'dropdownOptions'=>['class'=>'pull-right dropup'],
 						//'headerOptions'=>['class'=>'kartik-sheet-style'],
+						'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 						'buttons' => [
 							/* View RO | Permissian All */
 							'view' => function ($url, $model) {
@@ -847,13 +849,13 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 							'review' => function ($url, $model) {
 											return tombolReview($url, $model);
 										},
-							 'closed' => function ($url, $model) use ($getPermissionCheeck){																				
+							 'closed' => function ($url, $model) use ($getPermissionCheeck){
 											if ($getPermissionCheeck['BTN_VIEW']==0) {
 												return Html::label('<i class="glyphicon glyphicon-lock dm"></i> LOCKED','',['class'=>'label label-danger','style'=>['align'=>'center']]);
 												//return  tombolKonci($url, $model);
 											}
-										}, 						
-										
+										},
+
 						],
 						'headerOptions'=>[
 							'style'=>[

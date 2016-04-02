@@ -41,12 +41,13 @@ use dosamigos\ckeditor\CKEditor;
 			'fromt' =>'Term Of Payment',
 		])->label('Type Of Payment');?>
 	
-	
+	<div id="tOp">
    	<?= $form->field($poHeader, 'TOP_DURATION')->dropDownList($valTop,[
 			'id'=>'purchaseorder-top',
 			'placeholder' =>'Term Of Payment',
 			//'style'=>'display: none'
 		])->label('Duration Of Payment');?>
+		</div>
 	
 	
     <div style="text-align: right;"">
@@ -63,9 +64,11 @@ $this->registerJs("
 		//alert(val);	 
 		if(val === 'Credit')
 		{
-			$('select#purchaseorder-top').show();
+			// $('select#purchaseorder-top').show();
+			$('#tOp').show();
 		}else{
-			$('select#purchaseorder-top').hide().label(false);
+			// $('select#purchaseorder-top').hide().label(false);
+			$('#tOp').hide();
 		}
 	});
 ",$this::POS_READY);

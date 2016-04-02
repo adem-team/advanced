@@ -6,7 +6,10 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Terminvest */
 
-$this->title = $model->INVES_TYPE;
+$this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Trading Terms ');   
+
 $this->params['breadcrumbs'][] = ['label' => 'Terminvests', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

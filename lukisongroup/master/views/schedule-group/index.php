@@ -161,6 +161,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					'dropdown' => true,
 					'template' => '{view}{edit}',
 					'dropdownOptions'=>['class'=>'pull-right dropup'],
+					'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 					'buttons' => [
 							'view' =>function($url, $model, $key){
 									return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
@@ -182,7 +183,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					'headerOptions'=>[
 						'style'=>[
 							'text-align'=>'center',
-							'width'=>'150px',
+							//'width'=>'150px',
 							'font-family'=>'tahoma, arial, sans-serif',
 							'font-size'=>'9pt',
 							'background-color'=>'rgba(97, 211, 96, 0.3)',
@@ -190,9 +191,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					],
 					'contentOptions'=>[
 						'style'=>[
-							'text-align'=>'left',
-							'width'=>'150px',
-							'height'=>'10px',
+							'text-align'=>'center',
+							//'width'=>'150px',
+							//'height'=>'10px',
 							'font-family'=>'tahoma, arial, sans-serif',
 							'font-size'=>'9pt',
 						]
@@ -214,7 +215,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								['modelClass' => 'Kategori',]),'/master/schedule-group/create',[
 									'data-toggle'=>"modal",
 										'data-target'=>"#modal-create",
-											'class' => 'btn btn-success'
+											'class' => 'btn btn-success btn-sm'
 														]),
 						'showFooter'=>false,
 			],
@@ -358,6 +359,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'dropdown' => true,
 				'template' => '{view}{edit}',
 				'dropdownOptions'=>['class'=>'pull-right dropup'],
+				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 				'buttons' => [
 					 'view' =>function($url, $model, $key){
 								return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
@@ -379,7 +381,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
-						'width'=>'150px',
+						//'width'=>'150px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 						'background-color'=>'rgba(97, 211, 96, 0.3)',
@@ -387,9 +389,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				],
 				'contentOptions'=>[
 					'style'=>[
-						'text-align'=>'left',
-						'width'=>'150px',
-						'height'=>'10px',
+						'text-align'=>'center',
+						//'width'=>'150px',
+						//'height'=>'10px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
@@ -559,10 +561,10 @@ $this->registerJs("
 					?>
 					<input type="hidden"  name= custkd id="tes">
 					<div class="form-group">
-    			<label for="pwd">Nama Customers:</label>
-    			<input type="text" class="form-control" id="cusnm" readonly="true">
-					<label for="pwd">Alamat:</label>
-					<input type="text" class="form-control" id="alam" readonly="true">
+    			<!-- <label for="pwd">Nama Customers:</label> -->
+    			<input type="hidden" class="form-control" id="cusnm">
+					<!-- <label for="hidden">Alamat:</label> -->
+					<input type="hidden" class="form-control" id="alam" >
   				</div>
 					<?php  echo '<label class="control-label">Group Name </label>';  ?>
 					<?= Select2::widget([
@@ -629,7 +631,8 @@ $this->registerJs("
 
 				if(point.SCDL_GROUP == null)
 				{
-						var contentString = '<p>' + point.ALAMAT + '</p>' + '<p>' + point.CUST_NM + '</p>'+'<p>'+ point.SCDL_GROUP_NM + '<p>' ;
+						// var contentString = '<p>' + point.ALAMAT + '</p>' + '<p>' + point.CUST_NM + '</p>'+'<p>'+ point.SCDL_GROUP_NM + '<p>' ;
+							var contentString = '<p>' + point.ALAMAT + '</p>' + '<p>' + point.CUST_NM + '</p>';
 
 	 													 google.maps.event.addListener(public_markers[i], 'mouseover', function () {
 																 var infowindow = new google.maps.InfoWindow({

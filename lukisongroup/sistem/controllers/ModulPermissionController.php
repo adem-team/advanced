@@ -31,6 +31,27 @@ class ModulPermissionController extends Controller
         ];
     }
 
+    public function beforeAction(){
+  			if (Yii::$app->user->isGuest)  {
+  				 Yii::$app->user->logout();
+                     $this->redirect(array('/site/login'));  //
+  			}
+              // Check only when the user is logged in
+              if (!Yii::$app->user->isGuest)  {
+                 if (Yii::$app->session['userSessionTimeout']< time() ) {
+                     // timeout
+                     Yii::$app->user->logout();
+                     $this->redirect(array('/site/login'));  //
+                 } else {
+                     //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+  				   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                     return true;
+                 }
+              } else {
+                  return true;
+              }
+      }
+
     /**
      * Lists all Mdlpermission models and Modul Erp models.
      * @return mixed
@@ -42,64 +63,6 @@ class ModulPermissionController extends Controller
 
         $searchModelpermision = new MdlpermissionSearch();
         $dataProviderpermision = $searchModelpermision->search(Yii::$app->request->queryParams);
-        // $paramCari=Yii::$app->getRequest()->getQueryParam('USER_ID');
-        // if(count(Yii::$app->request->queryParams) == 0)
-        // {
-        //   return $this->render('index', [
-        //       'searchModel' => $searchModel,
-        //       'dataProvider' => $dataProvider,
-        //       'searchModelpermision'=>$searchModelpermision,
-        //       'dataProviderpermision'=>$dataProviderpermision
-        //   ]);
-        // }else{
-        //     $paramCari = Yii::$app->request->queryParams['MdlpermissionSearch']["USER_ID"];
-        // }
-        //
-        // if ($paramCari!=''){
-        //   // $cari=['USER_ID'=>$paramCari];
-        //
-        //   $datauser = Mdlpermission::find()->where(['USER_ID'=>$paramCari])->count();
-        //
-        //   // ;
-        //
-        //   $bariserp = Modulerp::find()->count();
-          // print_r($datauser);
-          // die();
-
-        //   if($datauser < $bariserp )
-        //   {
-        //     // die();
-        //     $totalbaris = $bariserp-$datauser;
-        //
-        //     // print_r($totalbaris);
-        //     // die();
-        //     for($a = 0; $a<=$totalbaris;$a++)
-        //     {
-        //         $datamodul = Mdlpermission::find()->where(['USER_ID'=>$paramCari])->asArray()->all();
-        //         $datamodul[$a]['MODUL_ID'];
-        //         // print_r($datamodul[0]['MODUL_ID']);
-        //         // die();
-        //         $conn = Yii::$app->db;
-        //         $sql = "SELECT * FROM modul_permission WHERE MODUL_ID IN (SELECT MODUL_ID FROM modul WHERE MODUL_ID <> ".$datamodul[$a]["MODUL_ID"].")" ;
-        //         // $sql = "SELECT * FROM modul WHERE MODUL_ID NOT LIKE '%'".$datamodul[$a]['MODUL_ID']."'%' AND NOT LIKE '%'".$datamodul['MODUL_ID']."'%' ";
-        //         $hasil = $conn->createCommand($sql)->queryAll();
-        //         // print_r($hasil[0]);
-        //         // die();
-        //
-        //         foreach ($hasil as $hasil1) {
-        //             $connection = Yii::$app->db;
-        //             $connection->createCommand()->batchInsert('modul_permission',['USER_ID','MODUL_ID'],[[$paramCari,$hasil1['MODUL_ID']]])->execute();
-        //
-        //           }
-        //   }
-        // }
-
-            // $data = Modulerp::find()->asArray()->all();
-
-        // }else{
-        //   $cari='';
-        // };
-
         	if (Yii::$app->request->post('hasEditable')) {
             $id = Yii::$app->request->post('editableKey');
             Yii::$app->response->format = Response::FORMAT_JSON;

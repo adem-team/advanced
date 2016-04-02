@@ -6,7 +6,8 @@ use yii\base\Model;
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\purchasing\models\pr\Purchaseorder;
 use lukisongroup\purchasing\models\pr\Statuspo;
-
+use common\components\Notification;
+use common\models\MessageNotify;
 /**
  * @author ptrnov  <piter@lukison.com>
  * @since 1.1
@@ -99,7 +100,20 @@ class Auth1Model extends Model
 						$poHeaderStt->STATUS = 101;
 						$poHeaderStt->UPDATE_AT = date('Y-m-d H:m:s');
 						if ($poHeaderStt->save()) {
-
+								
+							//Notification::notify(Notification::KEY_NEW_MESSAGE, $id_Pengirim, $id_penerima(user_login),$ref_kode);	
+							Notification::notify(Notification::KEY_NEW_MESSAGE, 25,Yii::$app->user->identity->id,$this->kdpo);
+							
+							$msgNotify = new MessageNotify;
+							$msgNotify->USER_CREATE=Yii::$app->user->identity->id; 				//integer
+							$msgNotify->USER_FROM= $this->getProfile()->EMP_NM; 			//varchar 50
+							$msgNotify->USER_TO='Melissa'; 			//varchar 50
+							$msgNotify->SUBJECT='PO'; 				//varchar 10
+							$msgNotify->CREATE_AT=date('Y-m-d H:m:s'); 		//varchar 10
+							$msgNotify->IMG=''; 						//TEXT
+							$msgNotify->REF = $this->kdpo; 				//TEXT
+							$msgNotify->save();
+							
 						}
 					}
                 return $poHeader;

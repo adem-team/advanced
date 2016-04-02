@@ -85,8 +85,10 @@ class CustomersSearch extends Customers
 
     public function search($params)
     {
-        $query = Customers::find()->joinWith('cus',true,'JOIN')
-								  ->where('c0001.STATUS <> 3');
+        // $query = Customers::find()->joinWith('cus',true,'JOIN')
+				// 				  ->where('c0001.STATUS <> 3');
+        $query = Customers::find();
+
 									// ->orderBy(['CUST_KD'=>SORT_ASC]);
 
         $dataProvider = new ActiveDataProvider([
@@ -97,7 +99,7 @@ class CustomersSearch extends Customers
         ]);
 
 
-            $dataProvider->sort->attributes['cus.CUST_KTG_NM'] = [
+      $dataProvider->sort->attributes['cus.CUST_KTG_NM'] = [
                 'asc' => ['c0001k.CUST_KTG_NM' => SORT_ASC],
                 'desc' => ['c0001k.CUST_KTG_NM' => SORT_DESC],
             ];

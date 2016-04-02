@@ -5,10 +5,10 @@ use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 
-$this->sideCorp = 'PT. Efenbi Sukses Makmur';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'esm_customers';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pada header page */
-$this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+$this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Trading Terms ');   
+
 $tes = '<img style="width:80; height:40px" src=data:image/jpeg;'.$data->ISI_TERM.'></img>';
 echo $tes;
 

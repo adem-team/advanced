@@ -283,6 +283,7 @@ $y=4;
 			'dropdown' => true,
 			'template' => '{approved} {reject} {cancel} {delete} {closed}',
 			'dropdownOptions'=>['class'=>'pull-left dropdown'],
+			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 			//'headerOptions'=>['class'=>'kartik-sheet-style'],
 			'buttons' => [
 				'approved' => function ($url, $model) use ($poHeader) {

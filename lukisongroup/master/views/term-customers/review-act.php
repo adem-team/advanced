@@ -20,14 +20,9 @@ use kartik\widgets\FileInput;
 
 
 
-
-/* @var $this yii\web\View */
-/* @var $model lukisongroup\master\models\Termcustomers */
-
-$this->sideCorp = 'PT. Efenbi Sukses Makmur';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'esm_customers';                                      /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pada header page */
-$this->params['breadcrumbs'][] = $this->title;
+$this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Trading Terms ');   
 
 	$aryStatus= [
 		  ['STATUS' =>0, 'DESCRIP' => 'New'],
@@ -785,7 +780,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						'editableOptions' => [
 							'header' => 'Cost Center',
 							'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
-							'size' => 'md',
+							'size' => 'sm',
 							'options' => [
 								'data' => ArrayHelper::map(Costcenter::find()->where('KD_COSTCENTER IN ("1000","1001")' )->all(), 'KD_COSTCENTER', 'NM_COSTCENTER'),
 								'pluginOptions' => [

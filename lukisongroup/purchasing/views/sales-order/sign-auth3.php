@@ -21,7 +21,7 @@ $profile=Yii::$app->getUserOpt->Profile_user();
 				'enableClientValidation' => true,
 				'enableAjaxValidation' => true,
 				'method' => 'post',
-				'action' => ['/purchasing/request-order/sign-auth3-save'],
+				'action' => ['/purchasing/sales-order/sign-auth3-save'],
 		]);
 	?>	
 	
