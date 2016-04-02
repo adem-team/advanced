@@ -67,7 +67,7 @@ class Auth3Model extends Model
 			if (!$empid || !$empid->validateOldPasswordCheck($this->password)) {
                 $this->addError($attribute, 'Incorrect password.');
             }
-            elseif ($status != 103  ) {
+            elseif ($status != 102  ) {
               # code...
               $this->addError($attribute, 'Sorry Need Signature');
             }
