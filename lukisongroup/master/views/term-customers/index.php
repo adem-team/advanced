@@ -13,11 +13,9 @@ use yii\helpers\Url;
 /* @var $searchModel lukisongroup\master\models\TermcustomersSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->sideCorp = 'PT. Efenbi Sukses Makmur';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'esm_customers';                                      /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pada header page */
-$this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
-
+$this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Trading Terms ');   
 
 function getPermissionEmp(){
   if (Yii::$app->getUserOpt->profile_user()){
@@ -165,7 +163,9 @@ function review($url,$model)
       $options1['tabindex'] = '-1';
       return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
     }
-    elseif(getPermission()->BTN_REVIEW == 1 && $model->SIG2_NM == "none"  || getPermission()->BTN_REVIEW == 1 && $model->SIG1_NM == "none" || getPermission()->BTN_REVIEW == 1 && $model->SIG3_NM == "none" ){
+    elseif(getPermission()->BTN_REVIEW == 1 && $model->SIG2_NM == "none"  || getPermission()->BTN_REVIEW == 1 && $model->SIG1_NM == "none")
+    // elseif(getPermission()->BTN_REVIEW == 1 && $model->SIG2_NM == "none"  || getPermission()->BTN_REVIEW == 1 && $model->SIG1_NM == "none" || getPermission()->BTN_REVIEW == 1 && $model->SIG3_NM == "none" )
+    {
       $title1 = Yii::t('app', 'Review');
       $options1 = [ 'id'=>'term-Review',
       ];

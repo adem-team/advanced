@@ -880,6 +880,42 @@ class TermCustomersController extends Controller
 
     }
 
+    public function actionCreateBudgetAct($id)
+    {
+      # code...
+        $budget = new  Termbudget();
+        $profile= Yii::$app->getUserOpt->Profile_user();
+
+        if ($budget->load(Yii::$app->request->post())) {
+
+
+          $budget->CORP_ID = $profile->emp->EMP_CORP_ID;
+          $tanggal = \Yii::$app->formatter->asDate($budget->PERIODE_START,'Y-M-d');
+          $tanggalend = \Yii::$app->formatter->asDate($budget->PERIODE_END,'Y-M-d');
+          $budget->PERIODE_START = $tanggal;
+          $budget->PERIODE_END = $tanggalend;
+          if($budget->validate())
+          {
+
+            $budget->CREATE_AT = date("Y-m-d H:i:s");
+            $budget->CREATE_BY = Yii::$app->user->identity->username;
+            $budget->save();
+
+          }
+
+            return $this->redirect(['review-act','id'=>$budget->ID_TERM]);
+
+        }
+        else {
+            return $this->renderAjax('budget', [
+                'budget' => $budget,
+                'id'=>$id
+
+            ]);
+        }
+
+    }
+
 
     public function actionCetakpdfAct($id)
     {
