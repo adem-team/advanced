@@ -169,7 +169,6 @@ EOF;
 				'dropdown' => true,
 				'template' => '{view}{edit}',
 				'dropdownOptions'=>['class'=>'pull-right dropup'],
-				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 				'buttons' => [
 						'view' =>function($url, $model, $key){
 								return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
@@ -199,7 +198,7 @@ EOF;
 				],
 				'contentOptions'=>[
 					'style'=>[
-						'text-align'=>'center',
+						'text-align'=>'left',
 						'width'=>'150px',
 						'height'=>'10px',
 						'font-family'=>'tahoma, arial, sans-serif',
@@ -360,7 +359,6 @@ EOF;
 				'dropdown' => true,
 				'template' => '{view}{edit}',
 				'dropdownOptions'=>['class'=>'pull-right dropup'],
-				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 				'buttons' => [
 						'view' =>function($url, $model, $key){
 								return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
@@ -388,7 +386,7 @@ EOF;
 				],
 				'contentOptions'=>[
 					'style'=>[
-						'text-align'=>'center',
+						'text-align'=>'left',
 						'width'=>'150px',
 						'height'=>'10px',
 						'font-family'=>'tahoma, arial, sans-serif',
@@ -429,77 +427,70 @@ EOF;
     ]);
 
 ?>
-<?php
-	$calenderRt=yii2fullcalendar\yii2fullcalendar::widget([
-	  'id'=>'calendar',
-	  'options' => [
-		'lang' => 'id',
-		//... more options to be defined here!
-	  ],
-	   // 'events'=> $events,
-	  'ajaxEvents' => Url::to(['/master/schedule-header/jsoncalendar']),
-	  'clientOptions' => [
-			'selectable' => true,
-			'selectHelper' => true,
-			'droppable' => true,
-			'editable' => true,
-			//'drop' => new JsExpression($JSDropEvent),
-			'selectHelper'=>true,
-			'select' => new JsExpression($JSCode),
-			'eventClick' => new JsExpression($JSEventClick),
-			//'defaultDate' => date('Y-m-d')
-		],
-		//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
-		
-	]);
-	
-?>
+
 </div>
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
-	<div  class="row">
-		<div class="col-md-4">
+	<div  class="row" style="margin-top:15px">
+		<!-- GROUP LOCALTION !-->
+		<div class="col-md-6">
 			<?php
 				echo $gvUser;
 			?>
 		</div>
-		<div class="col-md-8">
-			<div  class="row">
-				<div class="col-md-12">
-					<div  class="row">
-						<div class="col-md-6">
-							<?php
-								echo Html::panel(
-										['heading' => 'Calendar Visit	', 'body' =>$calenderRt,
-											'options' => [
-											'style'=>['height'=>'150px'],
-											],
-										],
-										Html::TYPE_INFO
-										
-									);
-							?>
-						</div>
-						<div class="col-md-6">
-							<?php
-								echo Html::panel(
-										['heading' => 'User Profile', 'body' =>'data user ',
-											'options' => [
-											'style'=>['height'=>'150px'],
-											],
-										],
-										Html::TYPE_INFO
-										
-									);	
-							?>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-12">
-					<?php
-						 echo $gvScdlHeader;
-					?>
-				</div>
-			</div>
+		<div class="col-md-6">
+
+			<?php
+				// $events = array();
+				//   //Testing
+				//   $Event = new \yii2fullcalendar\models\Event();
+				//   $Event->id = 1;
+				//   $Event->title = 'Testing';
+				//   $Event->start = date('Y-m-d\Th:m:s\Z');
+				//   $events[] = $Event;
+        //
+				//   $Event = new \yii2fullcalendar\models\Event();
+				//   $Event->id = 2;
+				//   $Event->title = 'pergi ke mana';
+				//   $Event->start = date('Y-m-d\Th:m:s\Z',strtotime('tomorrow 6am'));
+				//   $events[] = $Event;
+
+
+				$calenderRt=yii2fullcalendar\yii2fullcalendar::widget([
+				  'id'=>'calendar',
+				  'options' => [
+					'lang' => 'id',
+					//... more options to be defined here!
+				  ],
+				   // 'events'=> $events,
+				  'ajaxEvents' => Url::to(['/master/schedule-header/jsoncalendar']),
+				  'clientOptions' => [
+						'selectable' => true,
+						'selectHelper' => true,
+						'droppable' => true,
+						'editable' => true,
+						//'drop' => new JsExpression($JSDropEvent),
+						'selectHelper'=>true,
+						'select' => new JsExpression($JSCode),
+						'eventClick' => new JsExpression($JSEventClick),
+						//'defaultDate' => date('Y-m-d')
+					],
+					//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
+				]);
+				echo Html::panel(
+						['heading' => 'Kalender RW ', 'body' =>$calenderRt],
+						Html::TYPE_DANGER
+					);
+
+
+			?>
+
+		</div>
+	</div>
+	<div  class="row">
+		<div class="col-md-12">
+			<?php
+				 echo $gvScdlHeader;
+			?>
 		</div>
 	</div>
 </div>

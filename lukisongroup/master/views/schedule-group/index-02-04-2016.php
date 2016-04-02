@@ -161,7 +161,6 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					'dropdown' => true,
 					'template' => '{view}{edit}',
 					'dropdownOptions'=>['class'=>'pull-right dropup'],
-					'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 					'buttons' => [
 							'view' =>function($url, $model, $key){
 									return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
@@ -183,7 +182,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					'headerOptions'=>[
 						'style'=>[
 							'text-align'=>'center',
-							//'width'=>'150px',
+							'width'=>'150px',
 							'font-family'=>'tahoma, arial, sans-serif',
 							'font-size'=>'9pt',
 							'background-color'=>'rgba(97, 211, 96, 0.3)',
@@ -191,9 +190,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					],
 					'contentOptions'=>[
 						'style'=>[
-							'text-align'=>'center',
-							//'width'=>'150px',
-							//'height'=>'10px',
+							'text-align'=>'left',
+							'width'=>'150px',
+							'height'=>'10px',
 							'font-family'=>'tahoma, arial, sans-serif',
 							'font-size'=>'9pt',
 						]
@@ -215,7 +214,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								['modelClass' => 'Kategori',]),'/master/schedule-group/create',[
 									'data-toggle'=>"modal",
 										'data-target'=>"#modal-create",
-											'class' => 'btn btn-success btn-sm'
+											'class' => 'btn btn-success'
 														]),
 						'showFooter'=>false,
 			],
@@ -359,7 +358,6 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'dropdown' => true,
 				'template' => '{view}{edit}',
 				'dropdownOptions'=>['class'=>'pull-right dropup'],
-				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 				'buttons' => [
 					 'view' =>function($url, $model, $key){
 								return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
@@ -381,7 +379,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
-						//'width'=>'150px',
+						'width'=>'150px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 						'background-color'=>'rgba(97, 211, 96, 0.3)',
@@ -389,9 +387,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				],
 				'contentOptions'=>[
 					'style'=>[
-						'text-align'=>'center',
-						//'width'=>'150px',
-						//'height'=>'10px',
+						'text-align'=>'left',
+						'width'=>'150px',
+						'height'=>'10px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
