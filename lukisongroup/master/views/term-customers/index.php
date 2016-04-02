@@ -163,7 +163,9 @@ function review($url,$model)
       $options1['tabindex'] = '-1';
       return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
     }
-    elseif(getPermission()->BTN_REVIEW == 1 && $model->SIG2_NM == "none"  || getPermission()->BTN_REVIEW == 1 && $model->SIG1_NM == "none" || getPermission()->BTN_REVIEW == 1 && $model->SIG3_NM == "none" ){
+    elseif(getPermission()->BTN_REVIEW == 1 && $model->SIG2_NM == "none"  || getPermission()->BTN_REVIEW == 1 && $model->SIG1_NM == "none")
+    // elseif(getPermission()->BTN_REVIEW == 1 && $model->SIG2_NM == "none"  || getPermission()->BTN_REVIEW == 1 && $model->SIG1_NM == "none" || getPermission()->BTN_REVIEW == 1 && $model->SIG3_NM == "none" )
+    {
       $title1 = Yii::t('app', 'Review');
       $options1 = [ 'id'=>'term-Review',
       ];
