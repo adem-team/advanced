@@ -127,16 +127,16 @@ function statusRadius($model){
 					'value'=>function ($model, $key, $index, $column) {
 						return GridView::ROW_COLLAPSED;
 					},
-					'detail'=>function ($model, $key, $index, $column){//use($dataProviderX1,$attributeField1) {	
-						/* $mengapa=Yii::$app->db_esm->createCommand("CALL esm_account_stock_detail('". $model['TGL']."')")->queryAll();
-						$plsql_exp1= new ArrayDataProvider([
-							'key' => 'ID',
-							'allModels'=>$mengapa,
+					'detail'=>function ($model, $key, $index, $column){						
+						$dataInventory=Yii::$app->db_esm->createCommand("CALL CUSTOMER_VISIT_inventory()")->queryAll();
+						$inventoryProvider= new ArrayDataProvider([
+							//'key' => 'ID',
+							'allModels'=>$dataInventory,
 							  'pagination' => [
-								'pageSize' =>80,
+								'pageSize' =>50,
 							] 
 						]);
-						$attributeField=$plsql_exp1->allModels[0]; */
+						
 						
 						/*INFO*/
 							$modelInfo=$model;
@@ -165,9 +165,13 @@ function statusRadius($model){
 							/* 'tgl'=>$model->TGL,
 							'cust_id'=>$model->CUST_ID,
 							'user_id'=>$model->USER_ID, */
+							/*INFO*/
 							'modelInfo'=>$modelInfo,
+							/*INVENTORY*/
 							'dataProviderInventory'=>$aryDataProvider,
 							'searchModelImage'=>$searchModel,
+							'inventoryProvider'=>$inventoryProvider,							
+							/*IMAGE*/
 							'dataProviderImage'=>$dataProviderImage,
 													
 						]);

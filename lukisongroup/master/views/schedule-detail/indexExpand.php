@@ -2,9 +2,9 @@
 use yii\helpers\Html;
 use kartik\detail\DetailView;
 use kartik\grid\GridView;
-	//print_r($modelInvntory);
+	//print_r($inventoryProvider);
 
-	echo $cust_id;
+	//echo $cust_id;
 	$userInfo=DetailView::widget([		
         'model' => $modelInfo,
         'attributes' => [
@@ -36,11 +36,11 @@ use kartik\grid\GridView;
 
 	$inventory=GridView::widget([
 		'id'=>'inventory-list',
-        'dataProvider' => $dataProviderInventory,
-		'filterModel' => $searchModelInventory,
+        'dataProvider' => $inventoryProvider,
+		//'filterModel' => $searchModelInventory,
         'columns' => [
 			[
-				'attribute'=>'KD_BARANG',
+				'attribute'=>'NAME_ITEM',
 				'label'=>'ITEMS',
 				'headerOptions'=>[
 					'style'=>[
@@ -58,7 +58,7 @@ use kartik\grid\GridView;
 				],
 			],
 			[
-				'attribute'=>'TGL',
+				'attribute'=>'STOCK',
 				'label'=>'STOCK/Pcs',
 				'headerOptions'=>[
 					'style'=>[
@@ -70,13 +70,14 @@ use kartik\grid\GridView;
 				'contentOptions'=>[
 					'style'=>[
 						'text-align'=>'right',
+						'width'=>'11px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
 				],
 			],
 			[
-				'attribute'=>'TGL',
+				'attribute'=>'SELL_IN',
 				'label'=>'SELL IN/Pcs',
 				'headerOptions'=>[
 					'style'=>[
@@ -94,7 +95,7 @@ use kartik\grid\GridView;
 				],
 			],
 			[
-				'attribute'=>'TGL',
+				'attribute'=>'SELL_OUT',
 				'label'=>'SELL OUT/Pcs',
 				'headerOptions'=>[
 					'style'=>[
@@ -112,7 +113,7 @@ use kartik\grid\GridView;
 				],
 			],
 			[
-				'attribute'=>'TGL',
+				'attribute'=>'ED',
 				'label'=>'EXPIRED DATE',
 				'headerOptions'=>[
 					'style'=>[
