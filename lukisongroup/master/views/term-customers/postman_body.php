@@ -27,13 +27,13 @@
 						<table style="font-size: 12px; font-family: Verdana, sans-serif;">
 							<tr>
 								<td style="width: 80px; color:black; background:white;text-align:left">
-									RT.No
+								Nama Term:
 								</td>
 								<td style="color:black; background:white;text-align:left">
 									:
 								</td>
 								<td style="color:black; background:white;text-align:left">
-									<?php echo $data->ID_TERM; ?>
+									<?php echo $data->NM_TERM; ?>
 								</td>
 							</tr>
 							<tr>
