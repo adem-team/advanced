@@ -40,7 +40,7 @@ use kartik\grid\GridView;
 		'filterModel' => $searchModelInventory,
         'columns' => [
 			[
-				'attribute'=>'NM_BARANG',
+				'attribute'=>'KD_BARANG',
 				'label'=>'ITEMS',
 				'headerOptions'=>[
 					'style'=>[
@@ -59,7 +59,7 @@ use kartik\grid\GridView;
 			],
 			[
 				'attribute'=>'TGL',
-				'label'=>'STOCK',
+				'label'=>'STOCK/Pcs',
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -77,7 +77,7 @@ use kartik\grid\GridView;
 			],
 			[
 				'attribute'=>'TGL',
-				'label'=>'SELL IN',
+				'label'=>'SELL IN/Pcs',
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -95,7 +95,7 @@ use kartik\grid\GridView;
 			],
 			[
 				'attribute'=>'TGL',
-				'label'=>'SELL OUT',
+				'label'=>'SELL OUT/Pcs',
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
