@@ -1,77 +1,52 @@
 <?php
+
 namespace lukisongroup\master\controllers;
 
 use Yii;
+use lukisongroup\master\models\CustomerVisitImage;
+use lukisongroup\master\models\CustomerVisitImageSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\widgets\Pjax;
-use yii\helpers\ArrayHelper;
 
-use lukisongroup\master\models\Scheduledetail;
-use lukisongroup\master\models\ScheduledetailSearch;
-use lukisongroup\master\models\Schedulegroup;
-
-class ScheduleDetailController extends Controller
+/**
+ * CustomerVisitImageController implements the CRUD actions for CustomerVisitImage model.
+ */
+class CustomerVisitImageController extends Controller
 {
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    'delete' => ['POST'],
                 ],
             ],
         ];
     }
-	
-	 public function beforeAction(){
-            if (Yii::$app->user->isGuest)  {
-                 Yii::$app->user->logout();
-                   $this->redirect(array('/site/login'));  //
-            }
-            // Check only when the user is logged in
-            if (!Yii::$app->user->isGuest)  {
-               if (Yii::$app->session['userSessionTimeout']< time() ) {
-                   // timeout
-                   Yii::$app->user->logout();
-                   $this->redirect(array('/site/login'));  //
-               } else {
-                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
-                   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
-                   return true;
-               }
-            } else {
-                return true;
-            }
-    }
-	
-	private function aryGroupID(){
-		$dataGroup =  ArrayHelper::map(Schedulegroup::find()->orderBy('SCDL_GROUP_NM')->asArray()->all(), 'ID','SCDL_GROUP_NM');
-		return $dataGroup;
-	}
-	
-	
+
     /**
-     * Lists all Scheduledetail models.
+     * Lists all CustomerVisitImage models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ScheduledetailSearch();
+        $searchModel = new CustomerVisitImageSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-			'nmGroup'=>$this->aryGroupID(),
         ]);
     }
 
     /**
-     * Displays a single Scheduledetail model.
-     * @param integer $id
+     * Displays a single CustomerVisitImage model.
+     * @param string $id
      * @return mixed
      */
     public function actionView($id)
@@ -81,30 +56,14 @@ class ScheduleDetailController extends Controller
         ]);
     }
 
-	public function actionImg1()
-	{
-		return $this->renderAjax('image1', [
-				// 'searchModel' => $searchModel,
-				// 'dataProvider' => $dataProvider,
-			]);
-	}
-	
-	public function actionImg2()
-	{
-		return $this->renderAjax('image2', [
-				// 'searchModel' => $searchModel,
-				// 'dataProvider' => $dataProvider,
-			]);
-	}
-	
     /**
-     * Creates a new Scheduledetail model.
+     * Creates a new CustomerVisitImage model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Scheduledetail();
+        $model = new CustomerVisitImage();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->ID]);
@@ -116,9 +75,9 @@ class ScheduleDetailController extends Controller
     }
 
     /**
-     * Updates an existing Scheduledetail model.
+     * Updates an existing CustomerVisitImage model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
+     * @param string $id
      * @return mixed
      */
     public function actionUpdate($id)
@@ -135,9 +94,9 @@ class ScheduleDetailController extends Controller
     }
 
     /**
-     * Deletes an existing Scheduledetail model.
+     * Deletes an existing CustomerVisitImage model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
+     * @param string $id
      * @return mixed
      */
     public function actionDelete($id)
@@ -148,15 +107,15 @@ class ScheduleDetailController extends Controller
     }
 
     /**
-     * Finds the Scheduledetail model based on its primary key value.
+     * Finds the CustomerVisitImage model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Scheduledetail the loaded model
+     * @param string $id
+     * @return CustomerVisitImage the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Scheduledetail::findOne($id)) !== null) {
+        if (($model = CustomerVisitImage::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
