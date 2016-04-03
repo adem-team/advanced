@@ -19,6 +19,27 @@ $this->sideCorp = 'PT.Effembi Sukses Makmur';                          /* Title 
 $this->sideMenu = 'esm_customers';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'ESM - Group');          /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+
+
+	$SttFilterArray= [
+		  ['ID' => '1', 'DESCRIP' => 'Suitable'],
+		  ['ID' => '2', 'DESCRIP' => 'Deviate'],
+		  ['ID' => '3', 'DESCRIP' => 'Missing'],
+	];
+	$SttFilter = ArrayHelper::map($SttFilterArray, 'ID', 'DESCRIP');
+
+function statusRadius($model){
+		if($model->sttKoordinat==1){
+			return Html::a('<i class="glyphicon glyphicon-ok"></i> Suitable', '#',['class'=>'btn btn-success btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
+		}elseif ($model->sttKoordinat==2){
+			return Html::a('<i class="glyphicon glyphicon-time"></i> Deviate', '#',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+		}elseif ($model->sttKoordinat==3){
+			return Html::a('<i class="glyphicon glyphicon-thumbs-down"></i> Missing', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+		};
+	}
+
+
+
 ?>
 
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
@@ -41,10 +62,10 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					['ID' =>2, 'ATTR' =>['FIELD'=>'nmgroup','SIZE' => '10px','label'=>'Group','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 					['ID' =>3, 'ATTR' =>['FIELD'=>'nmcust','SIZE' => '10px','label'=>'Customer','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 					['ID' =>4, 'ATTR' =>['FIELD'=>'CREATE_AT','SIZE' => '10px','label'=>'DateTime','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-					['ID' =>5, 'ATTR' =>['FIELD'=>'LAT','SIZE' => '10px','label'=>'Latitute','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-					['ID' =>6, 'ATTR' =>['FIELD'=>'LAG','SIZE' => '10px','label'=>'Logitute','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-					['ID' =>7, 'ATTR' =>['FIELD'=>'RADIUS','SIZE' => '10px','label'=>'Radius','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-					['ID' =>8, 'ATTR' =>['FIELD'=>'sttKoordinat','SIZE' => '10px','label'=>'Status','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+					['ID' =>5, 'ATTR' =>['FIELD'=>'LAT','SIZE' => '10px','label'=>'Latitute','align'=>'right','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+					['ID' =>6, 'ATTR' =>['FIELD'=>'LAG','SIZE' => '10px','label'=>'Logitute','align'=>'right','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+					['ID' =>7, 'ATTR' =>['FIELD'=>'radiusMeter','SIZE' => '10px','label'=>'Radius/Meter','align'=>'right','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+					//['ID' =>8, 'ATTR' =>['FIELD'=>'sttKoordinat','SIZE' => '10px','label'=>'Status','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 				];
 				$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');
 				
@@ -106,23 +127,24 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					'value'=>function ($model, $key, $index, $column) {
 						return GridView::ROW_COLLAPSED;
 					},
-					'detail'=>function ($model, $key, $index, $column){//use($dataProviderX1,$attributeField1) {	
-						/* $mengapa=Yii::$app->db_esm->createCommand("CALL esm_account_stock_detail('". $model['TGL']."')")->queryAll();
-						$plsql_exp1= new ArrayDataProvider([
-							'key' => 'ID',
-							'allModels'=>$mengapa,
+					'detail'=>function ($model, $key, $index, $column){						
+						$dataInventory=Yii::$app->db_esm->createCommand("CALL CUSTOMER_VISIT_inventory('".$model->TGL."','".$model->CUST_ID."','".$model->USER_ID."')")->queryAll();
+						$inventoryProvider= new ArrayDataProvider([
+							//'key' => 'ID',
+							'allModels'=>$dataInventory,
 							  'pagination' => [
-								'pageSize' =>80,
+								'pageSize' =>50,
 							] 
 						]);
-						$attributeField=$plsql_exp1->allModels[0]; */
+						
 						
 						/*INFO*/
 							$modelInfo=$model;
 						/*INVENTORY*/
 							//Sot2Search
-							//$modelInvntory =Sot2::find()->where('TGL="'.$model->TGL.'" AND CUST_KD="'.$model->CUST_ID.'" AND USER_ID="'.$model->USER_ID.'"')->One();
-							$modelInvntory =Sot2::find()->where('USER_ID="'.$model->USER_ID.'"')->all();
+							//$modelInvntory =Sot2::find()->where('TGL="'.$model->TGL.'" AND CUST_KD="'.$model->CUST_ID.'" AND USER_ID="'.$model->USER_ID.'"')->All();
+							$modelInvntory =Sot2::find()->where('TGL="'.$model->TGL.'" AND USER_ID="'.$model->USER_ID.'"')->All();
+							//$modelInvntory =Sot2::find()->where('USER_ID="'.$model->USER_ID.'"')->all();
 							//$modelImage =CustomerVisitImage::find()->where('ID="'.$model->ID.'"')->One();
 							$aryDataProvider= new ArrayDataProvider([
 								'key' => 'ID',
@@ -134,17 +156,24 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							
 						/*IMAGE VISIT*/
 							$searchModel = new CustomerVisitImageSearch([
-								'ID_DETAIL'=>$model->ID
+								'ID_DETAIL'=>''.$model->ID.'',
 							]);
 							$dataProviderImage = $searchModel->search(Yii::$app->request->queryParams);
 			
 						return Yii::$app->controller->renderPartial('indexExpand',[
+							'cust_id'=>$model->ID,
 							/* 'tgl'=>$model->TGL,
 							'cust_id'=>$model->CUST_ID,
 							'user_id'=>$model->USER_ID, */
+							/*INFO*/
 							'modelInfo'=>$modelInfo,
+							/*INVENTORY*/
 							'dataProviderInventory'=>$aryDataProvider,
-							'dataProviderImage'=>$dataProviderImage,							
+							'searchModelImage'=>$searchModel,
+							'inventoryProvider'=>$inventoryProvider,							
+							/*IMAGE*/
+							'dataProviderImage'=>$dataProviderImage,
+													
 						]);
 					},
 					'headerOptions'=>['class'=>'kartik-sheet-style'] ,
@@ -218,6 +247,41 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					];
 				};
 				
+				/*STATUS RADIUS*/
+				$attDinamik[]=[
+						'attribute'=>'sttKoordinat',
+						'label'=>'STATUS',
+						'filter'=>$SttFilter,
+					    'filterOptions'=>['style'=>'background-color:rgba(249, 215, 100, 1); align:center'],
+						'hAlign'=>'right',
+						'vAlign'=>'middle',
+						'value' => function ($model) {
+							return statusRadius($model);
+						},
+						'noWrap'=>true,
+						//'group'=>$value[$key]['GRP'],
+						'format'=>'html',						
+						'headerOptions'=>[
+								'style'=>[
+								'text-align'=>'center',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'8pt',
+								'background-color'=>'rgba(249, 215, 100, 1)',								
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'8pt',
+								//'background-color'=>'rgba(13, 127, 3, 0.1)',
+							]
+						],
+					];
+				
+				
+				
+				
 				/*SHOW GRID VIEW LIST EVENT*/
 				echo GridView::widget([
 					'id'=>'cust-visit-list',
@@ -253,6 +317,11 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					'bordered'=>true,
 					'striped'=>true,
 				]);
+				
+				
+				
+				
+				
 			?>
 		</div>
 	</div>

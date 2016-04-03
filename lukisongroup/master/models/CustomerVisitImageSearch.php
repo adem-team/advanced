@@ -49,7 +49,7 @@ class CustomerVisitImageSearch extends CustomerVisitImage
      */
     public function search($params)
     {
-        $query = CustomerVisitImage::find();
+        $query = CustomerVisitImage::find();//->where(['ID_DETAIL'=>$id])->one();
 
         // add conditions that should always apply here
 
@@ -67,14 +67,15 @@ class CustomerVisitImageSearch extends CustomerVisitImage
 
         // grid filtering conditions
          $query->andFilterWhere([
-            'ID' => $this->ID,
-            'STATUS' => $this->STATUS,
-            'CREATE_AT' => $this->CREATE_AT,
-            'UPDATE_AT' => $this->UPDATE_AT,
+            //'ID' => $this->ID,
+			'ID_DETAIL'=>$this->ID_DETAIL,
+            //'STATUS' => $this->STATUS,
+            //'CREATE_AT' => $this->CREATE_AT,
+            //'UPDATE_AT' => $this->UPDATE_AT,
         ]);
 
-        $query->andFilterWhere(['like', 'ID_DETAIL', $this->ID_DETAIL])
-            ->andFilterWhere(['like', 'IMG_NM_START', $this->IMG_NM_START])
+       // $query->andFilterWhere(['like', 'ID_DETAIL', $this->ID_DETAIL])
+            $query->andFilterWhere(['like', 'IMG_NM_START', $this->IMG_NM_START])
             ->andFilterWhere(['like', 'IMG_DECODE_START', $this->IMG_DECODE_START])
             ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);

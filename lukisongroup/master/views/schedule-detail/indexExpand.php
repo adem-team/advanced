@@ -2,9 +2,9 @@
 use yii\helpers\Html;
 use kartik\detail\DetailView;
 use kartik\grid\GridView;
-	//print_r($modelInvntory);
+	//print_r($inventoryProvider);
 
-
+	//echo $cust_id;
 	$userInfo=DetailView::widget([		
         'model' => $modelInfo,
         'attributes' => [
@@ -36,10 +36,11 @@ use kartik\grid\GridView;
 
 	$inventory=GridView::widget([
 		'id'=>'inventory-list',
-        'dataProvider' => $dataProviderInventory,
+        'dataProvider' => $inventoryProvider,
+		//'filterModel' => $searchModelInventory,
         'columns' => [
 			[
-				'attribute'=>'NM_BARANG',
+				'attribute'=>'NAME_ITEM',
 				'label'=>'ITEMS',
 				'headerOptions'=>[
 					'style'=>[
@@ -57,8 +58,27 @@ use kartik\grid\GridView;
 				],
 			],
 			[
-				'attribute'=>'TGL',
-				'label'=>'STOCK',
+				'attribute'=>'STOCK',
+				'label'=>'STOCK/Pcs',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'right',
+						'width'=>'11px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			[
+				'attribute'=>'SELL_IN',
+				'label'=>'SELL IN/Pcs',
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -75,8 +95,8 @@ use kartik\grid\GridView;
 				],
 			],
 			[
-				'attribute'=>'TGL',
-				'label'=>'SELL IN',
+				'attribute'=>'SELL_OUT',
+				'label'=>'SELL OUT/Pcs',
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -93,25 +113,7 @@ use kartik\grid\GridView;
 				],
 			],
 			[
-				'attribute'=>'TGL',
-				'label'=>'SELL OUT',
-				'headerOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>'right',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-					]
-				],
-			],
-			[
-				'attribute'=>'TGL',
+				'attribute'=>'ED',
 				'label'=>'EXPIRED DATE',
 				'headerOptions'=>[
 					'style'=>[
@@ -141,6 +143,7 @@ use kartik\grid\GridView;
 	$visitImage=GridView::widget([
 		'id'=>'img-list',
         'dataProvider' => $dataProviderImage,
+		'filterModel' => $searchModelImage,
         'columns' => [
 			[
 				'attribute'=>'image_start',
@@ -206,7 +209,7 @@ use kartik\grid\GridView;
 		],
 		'panel' => [
 			'heading'=>'<h3 class="panel-title">LIST IMAGE VISITING</h3>',
-			'type'=>'warning',
+			'type'=>'danger',
 		],
     ]);
 

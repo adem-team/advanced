@@ -17,6 +17,7 @@ class ScheduledetailSearch extends Scheduledetail
 	public $nmuser;
 	public $nmcust;
 	public $sttKoordinat;
+	public $radiusMeter;
     /**
      * @inheritdoc
      */
@@ -24,7 +25,7 @@ class ScheduledetailSearch extends Scheduledetail
     {
         return [
             [['ID', 'SCDL_GROUP', 'STATUS'], 'integer'],
-            [['sttKoordinat','nmgroup','nmuser','nmcust','TGL', 'CUST_ID', 'USER_ID', 'NOTE', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
+            [['sttKoordinat','radiusMeter','nmgroup','nmuser','nmcust','TGL', 'CUST_ID', 'USER_ID', 'NOTE', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
             [['LAT', 'LAG', 'RADIUS'], 'number'],
         ];
     }

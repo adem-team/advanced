@@ -71,8 +71,23 @@ class Scheduledetail extends \yii\db\ActiveRecord
 	
 	public function getSttKoordinat()
     {
-        return $this->TGL;
+        $radius =  $this->RADIUS * 1000;
+		
+		if ($radius<=30){
+			$stt_Chekin=1;			
+		}elseif ($radius>30 AND $radius <=60){
+			$stt_Chekin=2;	
+		}elseif($radius>60){
+			$stt_Chekin=3;				
+		};
+				
+		return $stt_Chekin;
     }
+	
+	public function getRadiusMeter()
+    {
+		return $this->RADIUS * 1000;;		
+	}
 	
     /**
      * @inheritdoc
