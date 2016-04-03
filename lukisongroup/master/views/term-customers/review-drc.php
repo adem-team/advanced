@@ -21,7 +21,7 @@ use lukisongroup\purchasing\models\pr\Costcenter;
 
 $this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'Trading Terms ');   
+$this->title = Yii::t('app', 'Trading Terms ');
 
 	$aryStatus= [
 		  ['STATUS' =>0, 'DESCRIP' => 'New'],
@@ -303,7 +303,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 							['content'=>'PLAN BUDGET', 'options'=>['colspan'=>2, 'class'=>'text-center info']],
 							['content'=>'ACTUAL BUDGET', 'options'=>['colspan'=>3, 'class'=>'text-center info']],
 							['content'=>'', 'options'=>['colspan'=>1, 'class'=>'text-center info']],
-							//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']],
+							['content'=>'Status ', 'options'=>['colspan'=>2,  'class'=>'text-center info']],
 						],
 					]
 				],
@@ -879,10 +879,10 @@ $this->title = Yii::t('app', 'Trading Terms ');
 			 ?>
 			 <div>
 				 <?php
-				 $img = Url::to('@web/upload/barang/').'df.jpg';
-
-				 $dataimage = $image->GENERAL_TERM !=''? '<img src="data:image/jpeg;base64,' . $image->GENERAL_TERM . '" />' : '<img src="'.$img.'" width="50" />';;
-					echo  $dataimage;
+				//  $img = Url::to('@web/upload/barang/').'df.jpg';
+				 //
+				//  $dataimage = $image->GENERAL_TERM !=''? '<img src="data:image/jpeg;base64,' . $image->GENERAL_TERM . '" />' : '<img src="'.$img.'" width="50" />';;
+				// 	echo  $dataimage;
 
 			?>
 		</div>
