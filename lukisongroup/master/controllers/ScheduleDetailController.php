@@ -11,6 +11,7 @@ use yii\helpers\ArrayHelper;
 use lukisongroup\master\models\Scheduledetail;
 use lukisongroup\master\models\ScheduledetailSearch;
 use lukisongroup\master\models\Schedulegroup;
+use lukisongroup\master\models\CustomerVisitImage;
 
 class ScheduleDetailController extends Controller
 {
@@ -81,19 +82,19 @@ class ScheduleDetailController extends Controller
         ]);
     }
 
-	public function actionImg1()
+	public function actionImg1($id)
 	{
+		$model = CustomerVisitImage::find()->where(['ID_DETAIL'=>$id])->one();
 		return $this->renderAjax('image1', [
-				// 'searchModel' => $searchModel,
-				// 'dataProvider' => $dataProvider,
+				'model' => $model,
 			]);
 	}
 	
-	public function actionImg2()
+	public function actionImg2($id)
 	{
+		$model = CustomerVisitImage::find()->where(['ID_DETAIL'=>$id])->one();
 		return $this->renderAjax('image2', [
-				// 'searchModel' => $searchModel,
-				// 'dataProvider' => $dataProvider,
+				'model' => $model,
 			]);
 	}
 	

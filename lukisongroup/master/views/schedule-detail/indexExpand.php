@@ -4,7 +4,7 @@ use kartik\detail\DetailView;
 use kartik\grid\GridView;
 	//print_r($modelInvntory);
 
-
+	echo $cust_id;
 	$userInfo=DetailView::widget([		
         'model' => $modelInfo,
         'attributes' => [
@@ -37,6 +37,7 @@ use kartik\grid\GridView;
 	$inventory=GridView::widget([
 		'id'=>'inventory-list',
         'dataProvider' => $dataProviderInventory,
+		'filterModel' => $searchModelInventory,
         'columns' => [
 			[
 				'attribute'=>'NM_BARANG',
@@ -141,6 +142,7 @@ use kartik\grid\GridView;
 	$visitImage=GridView::widget([
 		'id'=>'img-list',
         'dataProvider' => $dataProviderImage,
+		'filterModel' => $searchModelImage,
         'columns' => [
 			[
 				'attribute'=>'image_start',
@@ -206,7 +208,7 @@ use kartik\grid\GridView;
 		],
 		'panel' => [
 			'heading'=>'<h3 class="panel-title">LIST IMAGE VISITING</h3>',
-			'type'=>'warning',
+			'type'=>'danger',
 		],
     ]);
 
