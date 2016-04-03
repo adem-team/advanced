@@ -49,6 +49,7 @@ class TermcustomersSearch extends Termcustomers
      */
      public function searchcusbyid($params,$id)
      {
+
          $query = Termcustomers::find()->where(['ID_TERM'=>$id]);
 
          $dataProvider = new ActiveDataProvider([
@@ -102,8 +103,11 @@ class TermcustomersSearch extends Termcustomers
           {
             $query = Termcustomers::find()->where('STATUS = 101 OR STATUS = 102');
           }
-          else{
-              $query = Termcustomers::find();
+        elseif($profile->emp->DEP_ID == 'ACT')
+        {
+            $query = Termcustomers::find();
+        }else{
+              $query = Termcustomers::find()->where(['CREATED_BY'=>$profile->username]);
           }
 
 

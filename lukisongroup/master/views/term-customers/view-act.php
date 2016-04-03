@@ -610,14 +610,14 @@ $this->title = Yii::t('app', 'Trading Terms ');                    /* belum di g
 		<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 			<?php
 		// 	 image($model);
-			$image = $model->imagedisplay($model->ID_TERM);
+			// $image = $model->imagedisplay($model->ID_TERM);
 			 ?>
 			 <div>
 				 <?php
-				 $img = Url::to('@web/upload/barang/').'df.jpg';
-
-				 $dataimage = $image->GENERAL_TERM !=''? '<img src="data:image/jpeg;base64,' . $image->GENERAL_TERM . '" />' : '<img src="'.$img.'" width="50" />';;
-					echo  $dataimage;
+				//  $img = Url::to('@web/upload/barang/').'df.jpg';
+				 //
+				//  $dataimage = $image->GENERAL_TERM !=''? '<img src="data:image/jpeg;base64,' . $image->GENERAL_TERM . '" />' : '<img src="'.$img.'" width="50" />';;
+				// 	echo  $dataimage;
 
 			?>
 		</div>

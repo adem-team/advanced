@@ -15,13 +15,14 @@ use kartik\grid\GridView;
 use kartik\detail\DetailView;
 use kartik\money\MaskMoney;
 use lukisongroup\purchasing\models\pr\Costcenter;
+use kartik\widgets\FileInput;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Termcustomers */
 
 $this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'Trading Terms ');   
+$this->title = Yii::t('app', 'Trading Terms ');
 
 	$aryStatus= [
 		  ['STATUS' =>0, 'DESCRIP' => 'New'],
@@ -224,21 +225,6 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	}
 
 
-		function image($model){
-			$title = Yii::t('app','');
-			$options = [ 'id'=>'term-image',
-				  'data-toggle'=>"modal",
-				  'data-target'=>"#Growth",
-				  'class'=>'btn btn-warning btn-xs',
-				  //'style'=>['width'=>'150px'],
-				  'title'=>'Set'
-			];
-			$icon = '<span class="glyphicon glyphicon-open"></span>';
-			$label = $icon . ' ' . $title;
-			$url = Url::toRoute(['/master/term-customers/upload','id'=>$model->ID_TERM]);
-			$content = Html::a($label,$url, $options);
-			return $content;
-		}
 
 	function SignApproved($model){
 		$title = Yii::t('app', 'Sign Hire');
@@ -753,13 +739,23 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 			<?php
- 			echo  image($model);
-			$image = $model->imagedisplay($model->ID_TERM);
+			echo \kato\DropZone::widget([
+       'options' => [
+           'maxFilesize' => '2',
+					 'url'=>'/master/term-customers/upload?id='.$model->ID_TERM.''
+       ],
+       'clientEvents' => [
+           'complete' => "function(file){console.log(file)}",
+           'removedfile' => "function(file){alert(file.name + ' is removed')}"
+       ],
+   ]);
+ 		// 	echo  image($model);
+			// $image = $model->imagedisplay($model->ID_TERM);
 			 ?>
-			 <div>
-				 <?php
-				 $dataimage = $image->GENERAL_TERM !=''? '<img src="data:image/jpeg;base64,' . $image->GENERAL_TERM . '" />' : '<u><h6><b>Upload Aturan</h6></b></u>';
-				 	echo  $dataimage;
+			<!-- //  <div> -->
+			<!-- // 	 <?php
+			// 	 $dataimage = $image->GENERAL_TERM !=''? '<img src="data:image/jpeg;base64,' . $image->GENERAL_TERM . '" />' : '<u><h6><b>Upload Aturan</h6></b></u>';
+			// 	 	echo  $dataimage;
 
 			?>
 		</div>

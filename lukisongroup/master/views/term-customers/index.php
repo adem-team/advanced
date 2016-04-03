@@ -15,7 +15,7 @@ use yii\helpers\Url;
 
 $this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'Trading Terms ');   
+$this->title = Yii::t('app', 'Trading Terms ');
 
 function getPermissionEmp(){
   if (Yii::$app->getUserOpt->profile_user()){
@@ -25,8 +25,8 @@ function getPermissionEmp(){
   }
 }
 function getPermission(){
-    if (Yii::$app->getUserOpt->Modul_akses('3')){
-      return Yii::$app->getUserOpt->Modul_akses('3');
+    if (Yii::$app->getUserOpt->Modul_akses('4')){
+      return Yii::$app->getUserOpt->Modul_akses('4');
     }else{
       return false;
     }
@@ -48,7 +48,18 @@ function tombolCreate(){
       $label1 = $icon1 .'' . $title1;
       $content = Html::a($label1,$url,$options1);
       return $content;
-     }else{
+    }elseif(getPermission()->BTN_CREATE !=1){
+      $title1 = Yii::t('app', 'Add Term ');
+      $options1 = [ 'id'=>'action-denied-id',
+              'data-toggle'=>"modal",
+              'data-target'=>"#confirm-permission-alert",
+                'class' => 'btn btn-success',
+      ];
+      $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+      $label1 = $icon1 . ' ' . $title1;
+      $content = Html::a($label1,'',$options1);
+      return $content;
+    }else{
       $title1 = Yii::t('app', 'Add Term');
       $options1 = [ 'id'=>'po-create',
       'data-toggle'=>"modal",
@@ -60,7 +71,7 @@ function tombolCreate(){
       $url = Url::toRoute(['/master/term-customers/create']);
       $content = Html::a($label1,$url, $options1);
       return $content;
-    };
+    }
   }else{
     $title1 = Yii::t('app', 'Add Term ');
     $options1 = [ 'id'=>'action-denied-id',
@@ -141,7 +152,7 @@ function review($url,$model)
 {
   if(getPermission())
   {
-    if( getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 && $model->SIG3_NM == "none" || getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 &&  $model->SIG2_NM == "none" || getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 && $model->SIG2_NM == "none"  )
+    if( getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 && $model->SIG3_NM == "none" || getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 &&  $model->SIG2_NM == "none")
     {
       $title1 = Yii::t('app', 'Review');
       $options1 = [ 'id'=>'term-Review',
