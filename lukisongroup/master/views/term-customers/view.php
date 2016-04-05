@@ -536,10 +536,10 @@ $this->title = Yii::t('app', 'Trading Terms ');
 								'border-left'=>'0px',
 							]
 						 ],
-						 'pageSummary'=>function ($summary, $data, $widget){
-								return '<div> Total:</div>'
-											 ;
-							 },
+						 // 'pageSummary'=>function ($summary, $data, $widget){
+								// return '<div> Total:</div>' ;
+											
+							 // },
 					],
 					[	//BUDGET_ACTUAL
 						//COL

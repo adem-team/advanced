@@ -34,7 +34,7 @@ class Auth1Model extends Model
     {
         return [
 			[['password','empID'], 'required'],
-			['password', 'number','numberPattern' => '/^[0-9]*$/i'],
+			//['password', 'number','numberPattern' => '/^[0-9]*$/i'],
 			['password', 'string', 'min' => 8,  'message'=> 'Please enter 8 digit'],
 			['password', 'findPasswords'],
 			['status', 'required'],
@@ -60,7 +60,8 @@ class Auth1Model extends Model
 			 $emp_data = $this->getEmpid(Yii::$app->user->identity->EMP_ID);
 			if (!$emp_data || !$emp_data->validateOldPasswordCheck($this->password)) {
                 $this->addError($attribute, 'Incorrect password.');
-            } elseif($this->getPermission()->BTN_SIGN1!=1){
+            } 
+			elseif($this->getPermission()->BTN_SIGN1!=1){
 				 $this->addError($attribute, 'Wrong Permission');
 			}
        }
@@ -143,11 +144,11 @@ class Auth1Model extends Model
 	/*
 	 * Declaration Componen User Permission
 	 * Function getPermission
-	 * Modul Name[1=RO]
+	 * Modul Name 1=RO,2=SO, 3 = PO,4 = term
 	*/
 	function getPermission(){
-		if (Yii::$app->getUserOpt->Modul_akses(1)){
-			return Yii::$app->getUserOpt->Modul_akses(1);
+		if (Yii::$app->getUserOpt->Modul_akses(2)){
+			return Yii::$app->getUserOpt->Modul_akses(2);
 		}else{
 			return false;
 		}

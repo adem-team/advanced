@@ -64,15 +64,16 @@ class Auth3Model extends Model
 			  $roAuth2CheckStt=$roAuth2Check!=''?$roAuth2Check->TYPE:0;
 			if (!$empid || !$empid->validateOldPasswordCheck($this->password)) {
                 $this->addError($attribute, 'Incorrect password.');	
-			}elseif((!$roAuth1CheckStt==101)){	
-				 $this->addError($attribute, 'Needed Signature created, then signature approved Available'.$roAuth1CheckStt);
-			}elseif(($roAuth2CheckStt!=102)){		
-				 $this->addError($attribute, 'Wait Signature Checked first, then signature approved Available');						 
-            }elseif($roAuth1CheckStt!=101 and $roAuth2CheckStt!=102){
-				  $this->addError($attribute, 'Wait Signature Created and Checked first, then signature approved Available');		
-			}elseif(!$this->getPermission()->BTN_SIGN3==1 || $empid->DEP_ID!=$roHeaderCheck->KD_DEP){			
-				 $this->addError($attribute, 'Wrong Permission,the undersigned is checked by a head of the department');		
-			} 
+			}
+			// elseif((!$roAuth1CheckStt==101)){	
+				 // $this->addError($attribute, 'Needed Signature created, then signature approved Available'.$roAuth1CheckStt);
+			// }elseif(($roAuth2CheckStt!=102)){		
+				 // $this->addError($attribute, 'Wait Signature Checked first, then signature approved Available');						 
+            // }elseif($roAuth1CheckStt!=101 and $roAuth2CheckStt!=102){
+				  // $this->addError($attribute, 'Wait Signature Created and Checked first, then signature approved Available');		
+			// }elseif(!$this->getPermission()->BTN_SIGN3==1 || $empid->DEP_ID!=$roHeaderCheck->KD_DEP){			
+				 // $this->addError($attribute, 'Wrong Permission,the undersigned is checked by a head of the department');		
+			// } 
        }
    	} 
 	

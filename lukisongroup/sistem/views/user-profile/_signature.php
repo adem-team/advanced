@@ -79,98 +79,121 @@ $this->registerCss("
 			});
 		
 	 ',$this::POS_BEGIN);
+	 
+	 function getPermissionEmp(){
+		if (Yii::$app->getUserOpt->profile_user()){
+			return Yii::$app->getUserOpt->profile_user()->emp;
+		}else{
+			return false;
+		}
+	}
 
 ?>
-<div class="container-fluid text-center" style="padding-left: 20px; padding-right: 20px" >
-<div style="font-style: italic;"><u><h1>Sign Your Sinature</h1></u></div>
-	<div class="row">
-		<div class="col-md-4" style="padding-top:15px"> </div>
-		<div class="col-md-4" style="padding-top:15px" > 			
-			<div >Fill your Signature</div>
-			<div style="float:right">
-				<button id="btnBersihkan" type="button">Clear</button>
+<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;padding-bottom:20px;">
+	<!-- RESULT SIGNATURE !-->
+	<div  class="row">
+		<div class="col-md-12 text-center" style="font-style: italic;padding-bottom:15px"><u><h3>Your Sinature</h3></u>
+			<div  class="col-md-5"></div>
+			<div>
+				<table class="col-md-2 table-bordered text-center" style="background-color:rgba(146, 143, 138, 0.3)">
+					<tbody>
+						<tr>
+							<td>
+								<?php
+									$ttd1 = getPermissionEmp()->SIGSVGBASE64!='' ?  '<img style="width:120; height:70px" src='.getPermissionEmp()->SIGSVGBASE64.'></img>' :'';
+									echo $ttd1;
+								?>
+							 </td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
-			<div id="sig-disply-input"></div> 
-			
+			<div  class="col-md-12"  style="padding-top:25px">
+				<div class="col-md-12 " >
+					<?php echo tombolSigLoginForm($model->EMP_ID); ?>
+				</div>
+			</div>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-md-4" style="padding-top:15px"> </div>
-		<div class="col-md-4" style="padding-top:15px" >
-		<!--
-			<button id="btnambil" type="button">test get </button>
-			<button id="btnclear" type="button">clear</button>
-		!-->
-			<div>Capture Your Signature</div>
-			<div id="sig-disply-old" readonly></div> 
-		</div>
-	</div>
-	<!--FORM SAVED!-->
-	<div class="row">
-		<div class="col-md-4" style="padding-top:15px"> </div>
-		<div class="col-md-4" style="padding-top:15px" > 
-			
-			<?php $form = ActiveForm::begin([
-						'id'=>'roInput',
-						'enableClientValidation' => true,
-						'method' => 'post',
-						'action' => ['/sistem/user-profile/signature-saved'],
-					]);
-					 echo $form->field($model, 'EMP_ID')->hiddenInput(['value'=>$model->EMP_ID])->label(false);
-					 echo $form->field($model, 'SIGSVGBASE30')->hiddenInput(['id'=>'txtBase30'])->label(false);
-					 echo $form->field($model, 'SIGSVGBASE64')->hiddenInput(['id'=>'txtSvgbase64'])->label(false);
-			?>
+	
+	<!-- SIGNATURE INPUT!-->
+	<div  class="row">
+		<!-- SIGNATURE MANUAL !-->
+		<div class="col-md-6">
+			<div class="col-md-12 text-center"><u><h5>Manual Sign Sinature</h5></u></div>
+			<div class="col-md-12" style="padding-top:15px" > 			
+				<div >Fill your Signature</div>
+				<div style="float:right">
+					<button id="btnBersihkan" type="button">Clear</button>
+				</div>
+				<div id="sig-disply-input"></div> 
+				<!--DISPLAY	!-->
+				<div>Capture Your Signature</div>
+				<div id="sig-disply-old" readonly></div> 
+			</div>			
+			<div class="col-md-4" style="padding-top:15px" > 			
+				<?php $form = ActiveForm::begin([
+							'id'=>'roInput',
+							'enableClientValidation' => true,
+							'method' => 'post',
+							'action' => ['/sistem/user-profile/signature-saved'],
+						]);
+						 echo $form->field($model, 'EMP_ID')->hiddenInput(['value'=>$model->EMP_ID])->label(false);
+						 echo $form->field($model, 'SIGSVGBASE30')->hiddenInput(['id'=>'txtBase30'])->label(false);
+						 echo $form->field($model, 'SIGSVGBASE64')->hiddenInput(['id'=>'txtSvgbase64'])->label(false);
+				?>
 				<div class="form-group">
 				<?= Html::submitButton($model->isNewRecord ? 'SimpanSignature' : 'SAVED', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary','title'=>'Detail','data-confirm'=>'Anda Yakin Akan di Simpan ?']) ?>
 				
 				</div>
-			<?php ActiveForm::end(); ?>		
-			<?php /* echo Html::a('<i class="fa fa-plus fa-lg"></i> '.Yii::t('app', 'SAVED',
-									['modelClass' => 'customer',]),'/sistem/user-profile/create',[
-										'data-toggle'=>"modal",
-											'data-target'=>"#Sig-New",							
-											'class' => 'btn btn-warning',
-											"modal-size"=>"large",											
-														]); */
-			?>			
+				<?php ActiveForm::end(); ?>		
+				<?php /* echo Html::a('<i class="fa fa-plus fa-lg"></i> '.Yii::t('app', 'SAVED',
+										['modelClass' => 'customer',]),'/sistem/user-profile/create',[
+											'data-toggle'=>"modal",
+												'data-target'=>"#Sig-New",							
+												'class' => 'btn btn-warning',
+												"modal-size"=>"large",											
+															]); */
+				?>			
+			</div>
 		</div>
-	</div>
-	
-	<div class="row">
-		<div class="col-md-4" style="padding-top:15px"> </div>
-		<div class="col-md-4" style="padding-top:15px" >
-		<!--
-			<button id="btnambil" type="button">test get </button>
-			<button id="btnclear" type="button">clear</button>
-		!-->
-			<div>Exist Signature</div>
-			<div id="sig-disply-db" readonly></div> 
-			<?php echo tombolSigLoginForm($model->EMP_ID); ?>
-		</div>
-	</div>
-	
-	<div class="row">
-		<div class="col-md-4" style="padding-top:15px">
-			<div name="hide" style="height:150px; display:none;">Decode encription Svgbase64</div>
-			<div>
-				<textarea id="txtSvgbase64" class="col-lg-12" name="hide" style="height:150px; display:none;"></textarea> 
+		
+		<!-- SIGNATURE UPLOAD!-->
+		<div class="col-md-6">
+			<div class="col-md-12 text-center"><u><h5>Upload Sign Sinature</h5></u></div>
+			<div class="col-md-6"  style="padding-top:25px">	
+				<div style="padding-bottom:15px">
+					<?php
+					 echo Html::a('<i class="fa fa-upload"></i> '.Yii::t('app', 'Import Image Signature',
+											['modelClass' => 'Kategori',]),'',[
+												'data-toggle'=>"modal",
+												'data-target'=>"#file-import",
+												'class' => 'btn btn-danger btn-sm'
+											]
+									);
+					?>
+				</div>
+				<!-- DISPLY SIGNATURE!-->
+				<div>
+					<table class="table-bordered" style="background-color:rgba(146, 143, 138, 0.3)">
+						<tbody>
+							<tr>
+								<td>
+									<?php
+										$ttd1 = getPermissionEmp()->SIGSVGBASE64!='' ?  '<img style="width:120; height:70px" src='.getPermissionEmp()->SIGSVGBASE64.'></img>' :'';
+										echo $ttd1;
+									?>
+								 </td>
+							</tr>
+						</tbody>
+					</table>
+				</div>					
 			</div>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-md-4" style="padding-top:15px">
-			<div name="hide" style="height:150px; display:none;">Decode encription Base30</div>		
-			<div>
-				<!--
-					<textarea id="txtBase30" class="col-lg-12" name="hide" style="height:150px; display:none;"></textarea> 
-				
-				<textarea id="txtBase30" class="col-lg-12"style="height:150px;"></textarea> 
-				!-->				
-			</div>
-		</div>
-	</div>
-</div>	
-	
+</div>
+
+
 <?php
 	$this->registerJs("					
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
