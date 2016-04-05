@@ -260,7 +260,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			$auth3=getPermission()->BTN_SIGN3;
 
 			//if(getPermissionEmp()->JOBGRADE_ID == 'S' OR getPermissionEmp()->JOBGRADE_ID == 'M' OR getPermissionEmp()->JOBGRADE_ID == 'SM' AND getPermission()->BTN_SIGN1==1 ){
-			if(getPermission()->BTN_REVIEW==1){ //($a == 'EVP' OR $a == 'SVP' OR $a == 'VP') OR
+			if(getPermission()->BTN_REVIEW==1 && $model->STATUS == 0  || getPermission()->BTN_REVIEW==1 && $model->STATUS != 102 ){ //($a == 'EVP' OR $a == 'SVP' OR $a == 'VP') OR
 				 //if($model->STATUS == 1 | $model->STATUS != 0){ //STATUS!=0 ATAU STATUS=1 Available to Revview for Approved
 					$title = Yii::t('app','Review');
 					$options = [ //'id'=>'ro-approved',
@@ -277,6 +277,41 @@ $this->params['breadcrumbs'][] = $this->title;
 					$options['tabindex'] = '-1';
 					return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
 				//}
+			}
+			elseif(getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 && $model->STATUS <>102 )
+			{
+				$title = Yii::t('app','Review');
+				$options = [ //'id'=>'ro-approved',
+							//'data-method' => 'post',
+							 //'data-pjax'=>true,
+							 //'data'=>$model->KD_PO,
+							 //'data-pjax' => '0',
+							 //'data-toggle-active' => $model->KD_PO
+							//'data-confirm'=>'Anda yakin ingin menghapus RO ini?',
+				];
+				$icon = '<span class="glyphicon glyphicon-ok"></span>';
+				$label = $icon . ' ' . $title;
+				$url = Url::toRoute(['/purchasing/purchase-order/review','kdpo'=>$model->KD_PO]);
+				$options['tabindex'] = '-1';
+				return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
+			//}
+			}
+			elseif(getPermissionEmp()->DEP_ID == 'DRC' && getPermission()->BTN_REVIEW==1 && $model->STATUS <>102  || getPermissionEmp()->DEP_ID == 'GM' && getPermission()->BTN_REVIEW==1 && $model->STATUS <>102  )
+			{
+				$options = [ //'id'=>'ro-approved',
+							//'data-method' => 'post',
+							 //'data-pjax'=>true,
+							 //'data'=>$model->KD_PO,
+							 //'data-pjax' => '0',
+							 //'data-toggle-active' => $model->KD_PO
+							//'data-confirm'=>'Anda yakin ingin menghapus RO ini?',
+				];
+				$icon = '<span class="glyphicon glyphicon-ok"></span>';
+				$label = $icon . ' ' . $title;
+				$url = Url::toRoute(['/purchasing/purchase-order/review','kdpo'=>$model->KD_PO]);
+				$options['tabindex'] = '-1';
+				return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
+			//}
 			}
 		}
 	}
@@ -326,21 +361,46 @@ $this->params['breadcrumbs'][] = $this->title;
 	 * 6. REJECT	=4		| Ro tidak di setujui oleh Atasan manager keatas
 	 * 7. UNKNOWN	<>		| Ro tidak valid
 	*/
+	// function statusProcessPo($model){
+	// 	if($model->STATUS==100){
+	// 		return Html::a('<i class="glyphicon glyphicon-retweet"></i> PROCESS', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
+	// 	}elseif ($model->STATUS==1){
+	// 		return Html::a('<i class="glyphicon glyphicon-time"></i> PENDING', '#',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+	// 	}elseif ($model->STATUS==101){
+	// 		return Html::a('<i class="glyphicon glyphicon-ok"></i> PROCESS 1', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+	// 	}elseif ($model->STATUS==102){
+	// 		return Html::a('<i class="glyphicon glyphicon-ok"></i> APPROVED', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+	// 	}elseif ($model->STATUS==10){
+	// 		return Html::a('<i class="glyphicon glyphicon-ok"></i> COMPLETED', '#',['class'=>'btn btn-info btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+	// 	}elseif ($model->STATUS==3){
+	// 		return Html::a('<i class="glyphicon glyphicon-remove"></i> DELETE', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+	// 	}elseif ($model->STATUS==4){
+	// 		return Html::a('<i class="glyphicon glyphicon-thumbs-down"></i> REJECT', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+	// 	}else{
+	// 		return Html::a('<i class="glyphicon glyphicon-question-sign"></i> UNKNOWN', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+	// 	};
+	// }
+
+
+
+	/*author:wawan
+	 * STATUS Prosess Purchase Order
+	 * 1. New	= 0 		| Pertama PO di buat
+	 * 2. PROCESS	= 100 		| Prosess PO di buat
+	 * 3. Checked	=101	| PO Sudah Di Checked
+	 * 4. Approved	=102		| PO Sudah Aprrove | RO->PO->RCVD
+	 * 7. UNKNOWN	<>		| PO tidak valid
+	*/
+
 	function statusProcessPo($model){
-		if($model->STATUS==0){
-			return Html::a('<i class="glyphicon glyphicon-retweet"></i> PROCESS', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
-		}elseif ($model->STATUS==1){
-			return Html::a('<i class="glyphicon glyphicon-time"></i> PENDING', '#',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+		if($model->STATUS == 0){
+			return Html::a('<i class="glyphicon glyphicon-retweet"></i> New', '#',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
+		}elseif ($model->STATUS==100){
+			return Html::a('<i class="glyphicon glyphicon-ok"></i> PROCESS', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif ($model->STATUS==101){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> PROCESS 1', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+			return Html::a('<i class="glyphicon glyphicon-ok"></i> CHECKED', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif ($model->STATUS==102){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> APPROVED', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==10){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> COMPLETED', '#',['class'=>'btn btn-info btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==3){
-			return Html::a('<i class="glyphicon glyphicon-remove"></i> DELETE', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==4){
-			return Html::a('<i class="glyphicon glyphicon-thumbs-down"></i> REJECT', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+			return Html::a('<i class="glyphicon glyphicon-ok"></i> APPROVED', '#',['class'=>'btn btn-info btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}else{
 			return Html::a('<i class="glyphicon glyphicon-question-sign"></i> UNKNOWN', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		};

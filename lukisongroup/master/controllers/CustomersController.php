@@ -866,7 +866,7 @@ class CustomersController extends Controller
 
     public function actionUpdatekat($id)
     {
-
+        $readonly = Customers::find()->where(['CUST_KD'=>$id])->asArray()->one(); // data for view
         $model = $this->findModelcust($id);
         $model->scenario = "updatekat";
         $dropparentkategori = ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT = CUST_KTG')
@@ -893,7 +893,8 @@ class CustomersController extends Controller
         } else {
             return $this->renderAjax('type', [
                 'model' => $model,
-                'dropparentkategori'=>$dropparentkategori
+                'dropparentkategori'=>$dropparentkategori,
+                'readonly'=>$readonly
             ]);
         }
     }
@@ -928,6 +929,7 @@ class CustomersController extends Controller
 
 	 public function actionUpdatecus($id)
     {
+        $readonly = Customers::find()->where(['CUST_KD'=>$id])->asArray()->one(); // data for view
         $model = $this->findModelcust($id);
         $model->scenario = "detail";
         $dropparentkategori = ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT = CUST_KTG')
@@ -965,7 +967,7 @@ class CustomersController extends Controller
                 'dropparentkategori'=>$dropparentkategori,
                 'droppro'=>$droppro,
                 'dropdis'=>$dropdis,
-                // 'readonly'=>$readonly
+                'readonly'=>$readonly
             ]);
         }
     }

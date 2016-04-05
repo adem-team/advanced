@@ -1087,8 +1087,22 @@ $y=4;
 						</th>
 						<th style="text-align: center; vertical-align:middle;width:180">
 							<?php
-								$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : SignApproved($poHeader);
+							if(getPermission())
+							{
+								if(getPermission()->BTN_SIGN3 == 0)
+								{
+									$ttd3 = '';
+									echo $ttd3;
+
+								}else{
+									$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : SignApproved($poHeader);
+									echo $ttd3;
+								}
+							}else{
+								$ttd3 = '';
 								echo $ttd3;
+							}
+
 							?>
 						</th>
 					</tr>

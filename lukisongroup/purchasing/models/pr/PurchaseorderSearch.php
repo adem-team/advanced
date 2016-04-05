@@ -44,19 +44,11 @@ class PurchaseorderSearch extends Purchaseorder
       {
         $profile=Yii::$app->getUserOpt->Profile_user();
     		$id = $profile->emp->EMP_ID;
-        if($id == 'LG.2016.000003')
-        {
-          $query = Purchaseorder::find()->where(['p0001.STATUS'=>101])
+          $query = Purchaseorder::find()->where(['p0001.CREATE_BY'=>$id])
                                         ->orderBy(['CREATE_AT'=> SORT_DESC]);
           $query->joinWith(['suplier' => function ($q) {
                   $q->where('s1000.NM_SUPPLIER LIKE "%' . $this->namasuplier . '%"');
               }]);
-
-        }
-        else{
-          $query = Purchaseorder::find()->where('STATUS = 200');
-        }
-
 
 
     		$dataprovider = new ActiveDataProvider([
@@ -212,10 +204,10 @@ class PurchaseorderSearch extends Purchaseorder
   	public function searchPoInbox($params)
       {
   		$profile=Yii::$app->getUserOpt->Profile_user();
-  		if($profile->emp->GF_ID == 3 || $profile->emp->GF_ID == 2 ){
-  			$query = Purchaseorder::find()->where('STATUS = 101');
-      }elseif($profile->emp->GF_ID == 1){
-  			$query = Purchaseorder::find()->where('STATUS = 102');
+  		if($profile->emp->GF_ID == 3  ){
+  			$query = Purchaseorder::find()->where('STATUS <> 0');
+      }elseif($profile->emp->GF_ID == 1 || $profile->emp->GF_ID == 2){
+  			$query = Purchaseorder::find()->where('STATUS = 101 OR STATUS = 102');
   		}
       else{
 

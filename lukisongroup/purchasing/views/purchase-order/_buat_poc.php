@@ -42,6 +42,14 @@ use lukisongroup\master\models\Unitbarang;
  * tombolSendPo
 */
 
+function getPermission(){
+	if (Yii::$app->getUserOpt->Modul_akses('3')){
+		return Yii::$app->getUserOpt->Modul_akses('3');
+	}else{
+		return false;
+	}
+}
+
 	/*
 	 * LINK ETD
 	 * _Buat = GET permission ETD
@@ -959,26 +967,40 @@ use lukisongroup\master\models\Unitbarang;
 		'export' => false,
 	]);
 
-
-
-
 	/*
-	 * Tombol Modul View
+	 * Tombol Modul View ver ptr.nov
 	 * permission View [BTN_VIEW==1]
 	 * Check By User login
 	*/
+	// function tombolView($url, $model){
+	// 	//if(getPermission()){
+	// 		//if(getPermission()->BTN_VIEW==1){
+	// 			$title = Yii::t('app', 'View');
+	// 			$options = [ 'id'=>'ro-view'];
+	// 			$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
+	// 			$label = $icon . ' ' . $title;
+	// 			$url = Url::toRoute(['/purchasing/request-order/view','kd'=>$model->KD_RO]);
+	// 			$options['tabindex'] = '-1';
+	// 			return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
+	// 		//}
+	// 	//}
+	// }
+
+	/*
+	 * Tombol  View ver wawan
+	*/
+
 	function tombolView($url, $model){
-		//if(getPermission()){
-			//if(getPermission()->BTN_VIEW==1){
 				$title = Yii::t('app', 'View');
-				$options = [ 'id'=>'ro-view'];
+				$options = [ 'id'=>'ro-view',
+											'data-toggle'=>'modal',
+											'data-target'=>"#so-view",
+											'data-title'=> $model->KD_RO];
 				$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
 				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/request-order/view','kd'=>$model->KD_RO]);
+				$url = Url::toRoute(['/purchasing/purchase-order/view-so','kd'=>$model->KD_RO]);
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
-			//}
-		//}
 	}
 
 	/*
@@ -1111,6 +1133,34 @@ use lukisongroup\master\models\Unitbarang;
 	",$this::POS_READY);
 	Modal::begin([
 		'id' => 'ro-sendpo',
+		'header' => '<h4 class="modal-title">...</h4>',
+		'size' => Modal::SIZE_LARGE,
+	]);
+		//echo '...';
+	Modal::end();
+
+	/*
+	 * MODAL View Sales ORDER
+	 * @author wawan
+     * @since 1.1
+     */
+	$this->registerJs("
+		$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+		$('#so-view').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			});
+	",$this::POS_READY);
+	Modal::begin([
+		'id' => 'so-view',
 		'header' => '<h4 class="modal-title">...</h4>',
 		'size' => Modal::SIZE_LARGE,
 	]);
@@ -1280,7 +1330,7 @@ use lukisongroup\master\models\Unitbarang;
 			<div style="text-align:right;float:right">
 				<?php echo PoView($poHeader); ?>
 			</div>
-			<div style="text-align:right;float:right"">
+			<div style="text-align:right;float:right">
 				<?php echo PrintPdf($poHeader); ?>
 			</div>
 			<div style="text-align:right;">
@@ -1455,10 +1505,25 @@ use lukisongroup\master\models\Unitbarang;
 							</th>
 							<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 								<?php
-									$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :SignApproved($poHeader);
+									//$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :SignApproved($poHeader);
 									//if ($poHeader->STATUS==101 OR $poHeader->STATUS==10){
-										echo $ttd3;
+										//echo $ttd3;
 									//}
+									if(getPermission())
+									{
+										if(getPermission()->BTN_SIGN3 == 0)
+										{
+											$ttd3 = '';
+											echo $ttd3;
+
+										}else{
+											$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : SignApproved($poHeader);
+											echo $ttd3;
+										}
+									}else{
+										$ttd3 = '';
+										echo $ttd3;
+									}
 								?>
 							</th>
 						</tr>

@@ -248,6 +248,14 @@ use lukisongroup\master\models\Unitbarang;
 			return $content;
 	}
 
+	function getPermission(){
+		if (Yii::$app->getUserOpt->Modul_akses('3')){
+			return Yii::$app->getUserOpt->Modul_akses('3');
+		}else{
+			return false;
+		}
+	}
+
 	/*
 	 * LINK PO Note Term of Payment
 	 * @author ptrnov  <piter@lukison.com>
@@ -988,6 +996,182 @@ use lukisongroup\master\models\Unitbarang;
 		'export' => false,
 	]);
 
+
+	/*
+	 * GRID VIEW CREATE PO -> BY REQUEST ORDER
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	// $gvROSendPO=GridView::widget([
+	// 	'id'=>'gv-ro-detail',
+	// 	'dataProvider' => $dataProviderRo,
+	// 	'filterModel' => $searchModel,
+	// 	'columns' => [
+	// 		[/* Attribute KD RO */
+	// 			'attribute'=>'KD_RO',
+	// 			'label'=>'Kode RO',
+	// 			'hAlign'=>'left',
+	// 			'vAlign'=>'middle',
+	// 			//'mergeHeader'=>true,
+	// 			'format' => 'raw',
+	// 			'headerOptions'=>[
+	// 				//'class'=>'kartik-sheet-style'
+	// 				'style'=>[
+	// 					'text-align'=>'center',
+	// 					'width'=>'150px',
+	// 					'font-family'=>'tahoma',
+	// 					'font-size'=>'8pt',
+	// 					'background-color'=>'rgba(0, 95, 218, 0.3)',
+	// 				]
+	// 			],
+	// 			'contentOptions'=>[
+	// 				'style'=>[
+	// 					'width'=>'150px',
+	// 					'font-family'=>'tahoma',
+	// 					'font-size'=>'8pt',
+	// 				]
+	// 			],
+	// 			'pageSummaryOptions' => [
+	// 				'style'=>[
+	// 						'border-left'=>'0px',
+	// 						'border-right'=>'0px',
+	// 				]
+	// 			]
+	// 		],
+	// 		[
+	// 			'class'=>'kartik\grid\ActionColumn',
+	// 			'dropdown' => true,
+	// 			'template' => '{view}{sendPo}',
+	// 			'dropdownOptions'=>['class'=>'pull-right dropup'],
+	// 			//'headerOptions'=>['class'=>'kartik-sheet-style'],
+	// 			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
+	// 			'buttons' => [
+	// 				// View RO | Permissian All
+	// 				'view' => function ($url, $model) {
+	// 								return tombolView($url, $model);
+	// 						  },
+	//
+	// 				// SEND RO TO PO | Permissian Status 0; 0=process | User created = user login
+	// 				'sendPo' => function ($url, $model) use ($poHeader) {
+	// 								return tombolSendPo($url, $model,$poHeader);
+	// 							},
+	// 			],
+	// 		],
+	// 	],
+	// 	'pjax'=>true,
+	// 	'pjaxSettings'=>[
+	// 	 'options'=>[
+	// 		'enablePushState'=>false,
+	// 		'id'=>'gv-ro-detail',
+	// 	   ],
+	// 		'refreshGrid' => true,
+	// 		'neverTimeout'=>true,
+	// 	],
+	// 	'panel' => [
+	// 		//'footer'=>false,
+	// 		'heading'=>false,
+	// 	],
+	// 	/* 'toolbar'=> [
+	// 		//'{items}',
+	// 	],  */
+	// 	'hover'=>true, //cursor select
+	// 	'responsive'=>true,
+	// 	'responsiveWrap'=>true,
+	// 	'bordered'=>true,
+	// 	'striped'=>'4px',
+	// 	'autoXlFormat'=>true,
+	// 	'export' => false,
+	// ]);
+
+
+	/*
+	 * GRID VIEW CREATE PO -> BY Sales ORDER
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	// $gvSOSendPO=GridView::widget([
+	// 	'id'=>'gv-ro-detail',
+	// 	'dataProvider' => $dataProviderSo,
+	// 	'filterModel' => $searchModel,
+	// 	'columns' => [
+	// 		[/* Attribute KD RO */
+	// 			'attribute'=>'KD_RO',
+	// 			'label'=>'Kode RO',
+	// 			'hAlign'=>'left',
+	// 			'vAlign'=>'middle',
+	// 			//'mergeHeader'=>true,
+	// 			'format' => 'raw',
+	// 			'headerOptions'=>[
+	// 				//'class'=>'kartik-sheet-style'
+	// 				'style'=>[
+	// 					'text-align'=>'center',
+	// 					'width'=>'150px',
+	// 					'font-family'=>'tahoma',
+	// 					'font-size'=>'8pt',
+	// 					'background-color'=>'rgba(0, 95, 218, 0.3)',
+	// 				]
+	// 			],
+	// 			'contentOptions'=>[
+	// 				'style'=>[
+	// 					'width'=>'150px',
+	// 					'font-family'=>'tahoma',
+	// 					'font-size'=>'8pt',
+	// 				]
+	// 			],
+	// 			'pageSummaryOptions' => [
+	// 				'style'=>[
+	// 						'border-left'=>'0px',
+	// 						'border-right'=>'0px',
+	// 				]
+	// 			]
+	// 		],
+	// 		[
+	// 			'class'=>'kartik\grid\ActionColumn',
+	// 			'dropdown' => true,
+	// 			'template' => '{view}{sendPo}',
+	// 			'dropdownOptions'=>['class'=>'pull-right dropup'],
+	// 			//'headerOptions'=>['class'=>'kartik-sheet-style'],
+	// 			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
+	// 			'buttons' => [
+	// 				// View RO | Permissian All
+	// 				'view' => function ($url, $model) {
+	// 								return tombolView($url, $model);
+	// 						  },
+	//
+	// 				// SEND RO TO PO | Permissian Status 0; 0=process | User created = user login
+	// 				'sendPo' => function ($url, $model) use ($poHeader) {
+	// 								return tombolSendPo($url, $model,$poHeader);
+	// 							},
+	// 			],
+	// 		],
+	// 	],
+	// 	'pjax'=>true,
+	// 	'pjaxSettings'=>[
+	// 	 'options'=>[
+	// 		'enablePushState'=>false,
+	// 		'id'=>'gv-ro-detail',
+	// 	   ],
+	// 		'refreshGrid' => true,
+	// 		'neverTimeout'=>true,
+	// 	],
+	// 	'panel' => [
+	// 		//'footer'=>false,
+	// 		'heading'=>false,
+	// 	],
+	// 	/* 'toolbar'=> [
+	// 		//'{items}',
+	// 	],  */
+	// 	'hover'=>true, //cursor select
+	// 	'responsive'=>true,
+	// 	'responsiveWrap'=>true,
+	// 	'bordered'=>true,
+	// 	'striped'=>'4px',
+	// 	'autoXlFormat'=>true,
+	// 	'export' => false,
+	// ]);
+
+
+
 	/*
 	 * Tombol Modul View
 	 * permission View [BTN_VIEW==1]
@@ -1012,22 +1196,23 @@ use lukisongroup\master\models\Unitbarang;
 	 * permission View [BTN_VIEW==1]
 	 * Check By User login
 	*/
-	function tombolSendPo($url, $model,$poHeader) {
-		$kdPo = explode('.',$poHeader->KD_PO);
-		if($kdPo[0]!='POA'){
-				$title = Yii::t('app', 'SendPo');
-				$options = [ 'id'=>'ro-sendpo-id',
-							 'data-toggle'=>'modal',
-							 'data-target'=>"#ro-sendpo",
-							 'data-title'=> $model->KD_RO,
-				];
-				$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
-				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/purchase-order/detail','kd_ro'=>$model->KD_RO,'kdpo'=>$_GET['kdpo']]);
-				$options['tabindex'] = '-1';
-				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
-			}
-	}
+
+	// function tombolSendPo($url, $model,$poHeader) {
+	// 	$kdPo = explode('.',$poHeader->KD_PO);
+	// 	if($kdPo[0]!='POA'){
+	// 			$title = Yii::t('app', 'SendPo');
+	// 			$options = [ 'id'=>'ro-sendpo-id',
+	// 						 'data-toggle'=>'modal',
+	// 						 'data-target'=>"#ro-sendpo",
+	// 						 'data-title'=> $model->KD_RO,
+	// 			];
+	// 			$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
+	// 			$label = $icon . ' ' . $title;
+	// 			$url = Url::toRoute(['/purchasing/purchase-order/detail','kd_ro'=>$model->KD_RO,'kdpo'=>$_GET['kdpo']]);
+	// 			$options['tabindex'] = '-1';
+	// 			return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
+	// 		}
+	// }
 
 	/*
 	 * MODAL SELECT REQUEST ORDER
@@ -1125,11 +1310,13 @@ use lukisongroup\master\models\Unitbarang;
 	}
 ?>
 
+
 <!-- Stack the columns on mobile by making one full-width and the other half-width -->
 <div class="row">
-	<!-- SIDE LEFT | REQUEST ORDER | SALES ORDER !-->
-	<div class="col-xs-12 col-md-12">
-			<div class="row">
+
+		<div class="col-xs-12 col-md-12">
+				<div class="row">
+
 			<!-- Title Left Side Descript Supplier !-->
 			<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;">
 				<div>
@@ -1183,6 +1370,9 @@ use lukisongroup\master\models\Unitbarang;
 					<dd>:	<?php echo link_eta($poHeader); ?></dd>
 				</dl>
 			</div>
+
+
+
 			<!-- Button Select |Supplier|Shipping|Billing !-->
 			<div class="col-xs-1 col-sm-1 col-md-1" style="font-family: tahoma ;font-size: 9pt;">
 				<div>
@@ -1204,7 +1394,7 @@ use lukisongroup\master\models\Unitbarang;
 			<div style="text-align:right;float:right">
 				<?php echo PoView($poHeader); ?>
 			</div>
-			<div style="text-align:right;float:right"">
+			<div style="text-align:right;float:right">
 				<?php echo PrintPdf($poHeader); ?>
 			</div>
 			<div style="text-align:right;">
@@ -1216,8 +1406,9 @@ use lukisongroup\master\models\Unitbarang;
 		<div>
 			<?php  echo $gvPoDetail; ?>
 		</div>
-		<!-- Title BOTTEM Descript !-->
+
 		<div  class="row">
+
 				<div class="col-md-5" style="font-family: tahoma ;font-size: 9pt;float:left;">
 					<div  Style="margin-top:2px">
 						<?php echo ShippingSearch($poHeader); ?>
@@ -1243,7 +1434,9 @@ use lukisongroup\master\models\Unitbarang;
 						<dd>:	<?=$shipPic; ?></dd>
 					</dl>
 				</div>
-				<div class="col-md-2"></div>
+				<div class="col-md-2">
+
+				</div>
 				<div class="col-md-5" style="font-family: tahoma ;font-size: 9pt;float:left;">
 					<div Style="margin-top:2px">
 						<?php echo BillingSearch($poHeader); ?>
@@ -1273,6 +1466,9 @@ use lukisongroup\master\models\Unitbarang;
 					</dl>
 				</div>
 		</div>
+
+
+
 		<!-- PO Term Of Payment !-->
 		<div  class="row">
 			<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
@@ -1291,8 +1487,10 @@ use lukisongroup\master\models\Unitbarang;
 			</div>
 		</div>
 		<!-- PO Note !-->
-		<div  class="row">
+
+		<div class="row">
 			<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
+
 				<dt><b>General Notes :</b></dt>
 				<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
 				<div>
@@ -1307,6 +1505,7 @@ use lukisongroup\master\models\Unitbarang;
 				<hr style="height:1px;margin-top: 1px;">
 			</div>
 		</div>
+
 		<!-- Signature !-->
 		<div  class="col-md-12">
 			<div  class="row" >
@@ -1379,10 +1578,25 @@ use lukisongroup\master\models\Unitbarang;
 							</th>
 							<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 								<?php
-									$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :SignApproved($poHeader);
+									// $ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :SignApproved($poHeader);
 									//if ($poHeader->STATUS==101 OR $poHeader->STATUS==10){
-										echo $ttd3;
+										// echo $ttd3;
 									//}
+									if(getPermission())
+									{
+										if(getPermission()->BTN_SIGN3 == 0)
+										{
+											$ttd3 = '';
+											echo $ttd3;
+
+										}else{
+											$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : SignApproved($poHeader);
+											echo $ttd3;
+										}
+									}else{
+										$ttd3 = '';
+										echo $ttd3;
+									}
 								?>
 							</th>
 						</tr>

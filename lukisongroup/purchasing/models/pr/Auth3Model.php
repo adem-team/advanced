@@ -56,25 +56,25 @@ class Auth3Model extends Model
 		*/
 		if (!$this->hasErrors()) {
 			 $empid = $this->getEmpid();
-       $pocheckgf =  $this->getProfile()->GF_ID;
-       $empID =  $this->getProfile()->EMP_ID;
+       $pocheckdep =  $this->getProfile()->DEP_ID;
+       //
+      //  print_r($pocheckdep);
+      //  die();
+       $empID =  $this->getProfile()->EMP_ID->GF_ID;
        $kdpo = $this->kdpo;
        $checkstatus =  Purchaseorder::find()->where(['KD_PO'=> $kdpo])->asArray()
                                                                 ->one();
-
-
        $status = $checkstatus['STATUS'];
 			if (!$empid || !$empid->validateOldPasswordCheck($this->password)) {
                 $this->addError($attribute, 'Incorrect password.');
             }
-            elseif ($status != 102  ) {
-              # code...
-              $this->addError($attribute, 'Sorry Need Signature');
-            }
-            elseif ($pocheckgf != 1 ) {
-              # code...
-              $this->addError($attribute, 'Sorry Only Director');
-            }
+            // elseif($pocheckdep !='DRC' || $pocheckdep !='GM' ) {
+            //   # if not director can not signature
+            //   $this->addError($attribute, 'Sorry Only Director');
+            // }
+            // else{
+            //   return true;
+            // }
        }
     }
 
@@ -99,7 +99,8 @@ class Auth3Model extends Model
 						$poHeaderStt->KD_PO = $this->kdpo;
 						$poHeaderStt->ID_USER = $this->getProfile()->EMP_ID;
 						//$poHeaderStt->TYPE
-						$poHeaderStt->STATUS = 103;
+						$poHeaderStt->STATUS = 102;
+            // $poHeaderStt->STATUS = 103;
 						$poHeaderStt->UPDATE_AT = date('Y-m-d H:m:s');
 						if ($poHeaderStt->save()) {
 
