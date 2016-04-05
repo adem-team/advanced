@@ -68,9 +68,9 @@ class Auth2Model extends Model
 			if (!$empid || !$empid->validateOldPasswordCheck($this->password)) {
                 $this->addError($attribute, 'Incorrect password.');
             }
-      elseif($status != 101 ){
-                $this->addError($attribute, 'Need Signature ');
-      }
+      // elseif($status != 100 ){
+      //           $this->addError($attribute, 'Need Signature ');
+      // }
       elseif( $pocheckdep !='ACT' &&  $pocheckgf == 3 || $pocheckgf == 4 ){
               $this->addError($attribute, 'Sorry Only  Acounting');
       }
@@ -98,12 +98,12 @@ class Auth2Model extends Model
 						$poHeaderStt->KD_PO = $this->kdpo;
 						$poHeaderStt->ID_USER = $this->getProfile()->EMP_ID;
 						//$poHeaderStt->TYPE
-						$poHeaderStt->STATUS = 102;
+						$poHeaderStt->STATUS = 101;
 						$poHeaderStt->UPDATE_AT = date('Y-m-d H:m:s');
 						if ($poHeaderStt->save()) {
-								
+
 							Notification::notify(Notification::KEY_NEW_MESSAGE, 23,Yii::$app->user->identity->id,$this->kdpo);
-							
+
 							$msgNotify = new MessageNotify;
 							$msgNotify->USER_CREATE=Yii::$app->user->identity->id; 				//integer
 							$msgNotify->USER_FROM= $this->getProfile()->EMP_NM; 			//varchar 50

@@ -528,7 +528,7 @@ class RequestOrderController extends Controller
         $corp = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
         $hsl = \Yii::$app->request->post();
          $radio =  $hsl['Rodetail']['NEW'];
-        
+
 				//if($roDetail->load(Yii::$app->request->post()) && $roDetail->validate()){
 			if($roDetail->load(Yii::$app->request->post())){
 
@@ -1229,7 +1229,7 @@ class RequestOrderController extends Controller
           'dept' => $dept,
           'dataProvider' => $dataProvider,
         ]);
-		
+
 		/*Body Notify*/
 		$contentMailAttachBody= $this->renderPartial('postman_body',[
 			'roHeader' => $roHeader,

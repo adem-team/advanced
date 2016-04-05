@@ -420,7 +420,7 @@ $y=4;
 			},
 
 		], */
-		[	//COL-3	
+		[	//COL-3
 			/* Attribute Request KD_COSTCENTER */
 			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'KD_COSTCENTER',
@@ -500,7 +500,7 @@ $y=4;
 						'border-right'=>'0px',
 				]
 			]
-		],		
+		],
 		[	//COL-5
 			/* Attribute Items Barang */
 			'label'=>'Items Name',
@@ -1082,10 +1082,26 @@ $y=4;
 						</th>
 						<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 							<?php
-								$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :SignApproved($poHeader);
+								// $ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :SignApproved($poHeader);
 								//if ($poHeader->STATUS==101 OR $poHeader->STATUS==10){
-									echo $ttd3;
+									// echo $ttd3;
 								//}
+								if(getPermission())
+								{
+									if(getPermission()->BTN_SIGN3 == 0)
+									{
+										$ttd3 = '';
+										echo $ttd3;
+
+									}else{
+										$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : SignApproved($poHeader);
+										echo $ttd3;
+									}
+								}else{
+									$ttd3 = '';
+									echo $ttd3;
+								}
+
 							?>
 						</th>
 					</tr>

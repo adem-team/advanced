@@ -46,6 +46,7 @@ use lukisongroup\purchasing\models\ro\RequestorderSearch;
 use lukisongroup\purchasing\models\ro\Rodetail;
 use lukisongroup\purchasing\models\ro\RodetailSearch;
 
+use lukisongroup\purchasing\models\so\Salesorder;
 use lukisongroup\purchasing\models\so\SalesorderSearch;
 
 
@@ -155,18 +156,21 @@ class PurchaseOrderController extends Controller
 	*/
     public function actionCreate($kdpo)
     {
-        $searchModel = new RequestorderSearch();
-        $dataProviderRo = $searchModel->cariHeaderRO_SendPO(Yii::$app->request->queryParams);
+        $searchModel1 = new RequestorderSearch();
+        $dataProviderRo = $searchModel1->cariHeaderRO_SendPO(Yii::$app->request->queryParams);
 
 		    $searchModel = new SalesorderSearch();
         $dataProviderSo = $searchModel->cariHeaderSO_SendPO(Yii::$app->request->queryParams);
+
+
 
 		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
 		$supplier = $poHeader->suplier;
 		$bill = $poHeader->bill;
 		$ship = $poHeader->ship;
 		$employee= $poHeader->employe;
-        $poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->andWhere('STATUS <> 3')->all();
+
+    $poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->andWhere('STATUS <> 3')->all();
 
 		$poDetailProvider = new ArrayDataProvider([
 			'key' => 'ID',//'key' => 'KD_PO',
@@ -225,7 +229,7 @@ class PurchaseOrderController extends Controller
 
 
 						/*Sum QTY PoDetail */
-						$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO='" .$roDetail->KD_RO. "' AND KD_BARANG='" .$roDetail->KD_BARANG."' GROUP BY KD_BARANG";
+						$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO='" .$roDetail->KD_RO. "' AND KD_BARANG='" .$roDetail->KD_BARANG."' AND STATUS<>3 GROUP BY KD_BARANG";
 						//$pqtyTaken= 'SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO="RO.2015.12.000001" AND KD_BARANG="BRGU.LG.03.06.E07.0001"';
 						$poDetailQtySum=Purchasedetail::findBySql($pqtyTaken)->one();
 						$poQty=$poDetailQtySum->QTY!=0?$poDetailQtySum->QTY:0;
@@ -302,6 +306,7 @@ class PurchaseOrderController extends Controller
 
         return $this->render('create', [
       'searchModel' => $searchModel,
+      'searchModel1' => $searchModel1,
       'dataProviderRo' => $dataProviderRo,
 			'dataProviderSo'=>$dataProviderSo,
 			'poDetailProvider'=>$poDetailProvider,
@@ -311,6 +316,81 @@ class PurchaseOrderController extends Controller
 			'ship' => $ship,
 			'employee'=>$employee,
         ]);
+    }
+
+
+
+    public function actionViewRo($kd)
+    {
+      $ro = new Requestorder();
+    $roHeader = Requestorder::find()->where(['KD_RO' => $kd])->one();
+    if(count($roHeader['KD_RO'])<>0){
+      $detro = $roHeader->detro;
+      $employ = $roHeader->employe;
+      $dept = $roHeader->dept;
+
+      /*
+       * Convert $roHeader->detro to ArrayDataProvider | Identity 'key' => 'ID',
+       * @author ptrnov  <piter@lukison.com>
+       * @since 1.1
+      **/
+      $detroProvider = new ArrayDataProvider([
+        'key' => 'ID',
+        'allModels'=>$detro,
+        'pagination' => [
+          'pageSize' => 10,
+        ],
+      ]);
+
+      return $this->renderAjax('view_ro', [
+        'roHeader' => $roHeader,
+        'detro' => $detro,
+        'employ' => $employ,
+        'dept' => $dept,
+        'dataProvider'=>$detroProvider,
+      ]);
+    }else{
+      return $this->redirect('index');
+    }
+    }
+
+
+    public function actionViewSo($kd)
+    {
+      $ro = new Salesorder();
+
+      $roHeader = Salesorder::find()->where(['KD_RO'=>$kd])->one();
+
+    if(count($roHeader['KD_RO'])<>0){
+      $detro = $roHeader->detro;
+
+
+      $employ = $roHeader->employe;
+      $dept = $roHeader->dept;
+
+      /*
+       * Convert $roHeader->detro to ArrayDataProvider | Identity 'key' => 'ID',
+       * @author ptrnov  <piter@lukison.com>
+       * @since 1.1
+      **/
+      $detroProvider = new ArrayDataProvider([
+        'key' => 'ID',
+        'allModels'=>$detro,
+        'pagination' => [
+          'pageSize' => 10,
+        ],
+      ]);
+
+      return $this->renderAjax('view_so', [
+        'roHeader' => $roHeader,
+        'detro' => $detro,
+        'employ' => $employ,
+        'dept' => $dept,
+        'dataProvider'=>$detroProvider,
+      ]);
+    }else{
+      return $this->redirect('index');
+    }
     }
 
 	/*
@@ -417,7 +497,7 @@ class PurchaseOrderController extends Controller
 
 
 						/*Sum QTY PoDetail */
-						$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO='" .$roDetail->KD_RO. "' AND KD_BARANG='" .$roDetail->KD_BARANG ."' GROUP BY KD_BARANG";
+						$pqtyTaken= "SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO='" .$roDetail->KD_RO. "' AND KD_BARANG='" .$roDetail->KD_BARANG ."'  AND STATUS<>3 GROUP BY KD_BARANG";
 						//$pqtyTaken= 'SELECT SUM(QTY) as QTY FROM p0002 WHERE KD_RO="RO.2015.12.000001" AND KD_BARANG="BRGU.LG.03.06.E07.0001"';
 						$poDetailQtySum=Purchasedetail::findBySql($pqtyTaken)->one();
 						$poQty=$poDetailQtySum->QTY!=0?$poDetailQtySum->QTY:0;
@@ -689,7 +769,7 @@ class PurchaseOrderController extends Controller
 	 * @author ptrnov <piter@lukison.com>
 	 * @since 1.2
 	 * @categoty : AJAX
-	*/
+	// */
 	public function actionCk() {
 		if (Yii::$app->request->isAjax) {
 			Yii::$app->response->format = Response::FORMAT_JSON;
@@ -767,6 +847,7 @@ class PurchaseOrderController extends Controller
 			return $res;
 		}
 	}
+
 
 	/*
 	 * ALAMAT Supplier Edit
@@ -1261,7 +1342,7 @@ class PurchaseOrderController extends Controller
 
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth1Model']['kdpo'];
-          $this->Sendmail($kdpo);
+          // $this->Sendmail($kdpo);
 					return $this->redirect(['create', 'kdpo'=>$kdpo]);
 				}
 			}
@@ -1295,8 +1376,8 @@ class PurchaseOrderController extends Controller
 				if ($auth2Mdl->auth2_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth2Model']['kdpo'];
-          $this->Sendmail2($kdpo);
-					return $this->redirect(['create', 'kdpo'=>$kdpo]);
+          // $this->Sendmail2($kdpo);
+					return $this->redirect(['review', 'kdpo'=>$kdpo]);
 				}
 			}
 		}
@@ -1329,8 +1410,8 @@ class PurchaseOrderController extends Controller
 				if ($auth3Mdl->auth3_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth3Model']['kdpo'];
-            $this->Sendmail3($kdpo);
-					return $this->redirect(['create', 'kdpo'=>$kdpo]);
+            // $this->Sendmail3($kdpo);
+					return $this->redirect(['review', 'kdpo'=>$kdpo]);
 				}
 			}
 		}

@@ -43,6 +43,7 @@ $checkPOCode = explode('.',$poHeader->KD_PO);
 		}elseif($checkPOCode[0]=='POB'){
 			 echo $this->render('_buat_pob', [
 				'searchModel' => $searchModel,
+				'searchModel1' => $searchModel1,
 				'dataProviderRo' => $dataProviderRo,
 				'dataProviderSo'=>$dataProviderSo,
 				'poDetailProvider'=>$poDetailProvider,
