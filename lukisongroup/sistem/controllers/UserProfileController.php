@@ -9,11 +9,13 @@ use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 use yii\bootstrap\Modal;
+use zyx\phpmailer\Mailer;
+
 use lukisongroup\sistem\models\SignatureForm;
 use lukisongroup\sistem\models\ValidationLoginForm;
 use lukisongroup\hrd\models\Employe;			/* TABLE CLASS JOIN */
 use lukisongroup\hrd\models\EmployeSearch;	/* TABLE CLASS SEARCH */
-use zyx\phpmailer\Mailer;
+use lukisongroup\sistem\models\FileManage;
 
 class UserProfileController extends Controller
 {
@@ -117,12 +119,54 @@ class UserProfileController extends Controller
 	public function actionSignature()
     {
 		$model = $this->findModel(Yii::$app->user->identity->EMP_ID);
+		$modelUpload = new FileManage();
 		//print_r($model->SIGSVGBASE30);
         return $this->render('_signature',[
 			'model'=> $model,
+			'modelUpload'=>$modelUpload
 		]);
     }
 
+	public function saveimage($base64)
+    {
+      $base64 = str_replace('data:image/jpg;charset=utf-8;base64,', '', $base64);
+      $base64 = base64_encode($base64);
+      $base64 = str_replace(' ', '+', $base64);
+
+      return $base64;
+
+    }
+	
+	public function actionUploadInput()
+    {
+		$fileName = 'file';
+		 
+		$model = new FileManage();
+		if ($model->load(Yii::$app->request->post()) ) {
+			//if($model->validate()){
+				$model->USER_ID = Yii::$app->user->identity->username;
+				$model->FILE_PATH = 'signature';
+				$exportFile = $model->uploadFile();
+				//$base64File = \yii\web\UploadedFile::getInstance($model, 'uploadDataFile');
+				// $dateFile=\yii\web\UploadedFile::getInstanceByName($fileName);
+				
+				$exportFile64 = $this->saveimage(file_get_contents($exportFile->tempName));
+				$model->FILE_NM64 = $exportFile64;
+				//print_r($exportFile64);
+				//die();
+				if ($model->save()) {
+					//upload only if valid uploaded file instance found
+					if ($exportFile !== false) {
+						$path = $model->getImageFile();
+						$exportFile->saveAs($path);
+						return $this->redirect(['index','id'=>$model->FILE_NM]);
+					} 
+				}				
+			//}			
+		}
+	}
+	
+	
 	/*
 	 * Index Signature Password
 	 * @author ptrnov  <piter@lukison.com>

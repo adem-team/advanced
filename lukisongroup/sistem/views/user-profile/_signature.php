@@ -4,6 +4,12 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Json;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
+use kartik\widgets\FileInput;
+use yii\web\Response;
+use yii\widgets\Pjax;
+
+
+
 use lukisongroup\assets\AppAssetJqueryJSignature;
 AppAssetJqueryJSignature::register($this); 
 use lukisongroup\assets\HomeWorkbench;
@@ -166,8 +172,9 @@ $this->registerCss("
 					<?php
 					 echo Html::a('<i class="fa fa-upload"></i> '.Yii::t('app', 'Import Image Signature',
 											['modelClass' => 'Kategori',]),'',[
+												'id'=>'signature-file-id',
 												'data-toggle'=>"modal",
-												'data-target'=>"#file-import",
+												'data-target'=>"#signature-import",
 												'class' => 'btn btn-danger btn-sm'
 											]
 									);
@@ -195,6 +202,73 @@ $this->registerCss("
 
 
 <?php
+
+	Modal::begin([
+		'id' => 'signature-import',
+		'header' => '<div style="float:left;margin-right:10px">'. 
+						Html::img('@web/img_setting/warning/upload1.png',  
+						['class' => 'pnjg', 'style'=>'width:40px;height:40px;'])
+					.'</div><div style="margin-top:10px;"><h4><b>Upload path of Signature Image!</b></h4></div>',
+		//'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+		]
+	]);
+		$form = ActiveForm::begin([
+			'options'=>['enctype'=>'multipart/form-data'], // important,
+			'method' => 'post',
+			'action' => ['/sistem/user-profile/upload-input'],
+		]);
+			echo $form->field($modelUpload, 'uploadDataFile')->widget(FileInput::classname(), [
+				'options' => ['accept' => '*'],
+				/* 'pluginOptions' => [
+					'uploadUrl' => Url::to(['/sales/import-data/upload']),
+				] */
+			]);
+			//echo $form->field($modelUpload, 'FILE_PATH')->hiddenInput(['value' => 'signature'])->label(false);
+			
+			// echo FileInput::widget([
+				// 'name'=>'import_file',
+				 // 'name' => 'attachment_48[]',
+				// 'options'=>[
+					// 'multiple'=>true
+				// ],
+				// 'pluginOptions' => [
+					// 'uploadUrl' => Url::to(['/sales/import-data/upload']),
+					// 'showPreview' => false,
+					// 'showUpload' => false,
+					// 'showCaption' => true,
+					// 'showRemove' => true,
+					// 'uploadExtraData' => [
+						// 'album_id' => 20,
+						// 'cat_id' => 'Nature'
+					// ],
+					// 'maxFileCount' => 10
+				// ]
+			// ]);
+			echo '<div style="text-align:right; padding-top:10px">';
+			echo Html::submitButton('Upload',['class' => 'btn btn-success']);
+			echo '</div>';
+		ActiveForm::end();
+	Modal::end();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	$this->registerJs("					
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
 			$('#signature-password').on('show.bs.modal', function (event) {
