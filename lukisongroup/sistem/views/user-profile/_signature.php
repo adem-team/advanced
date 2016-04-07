@@ -7,13 +7,11 @@ use yii\helpers\Url;
 use kartik\widgets\FileInput;
 use yii\web\Response;
 use yii\widgets\Pjax;
-
-
-
 use lukisongroup\assets\AppAssetJqueryJSignature;
 AppAssetJqueryJSignature::register($this); 
 use lukisongroup\assets\HomeWorkbench;
 HomeWorkbench::register($this);
+
 $this->registerCss("	
 	/*This is the div within which the signature canvas is fitted*/
 	#sig-disply-input {
@@ -115,7 +113,7 @@ $this->registerCss("
 				</table>
 			</div>
 			<div  class="col-md-12"  style="padding-top:25px">
-				<div class="col-md-12 " >
+				<div class="col-md-12 ">
 					<?php echo tombolSigLoginForm($model->EMP_ID); ?>
 				</div>
 			</div>
@@ -139,8 +137,8 @@ $this->registerCss("
 			</div>			
 			<div class="col-md-4" style="padding-top:15px" > 			
 				<?php $form = ActiveForm::begin([
-							'id'=>'roInput',
-							'enableClientValidation' => true,
+							'id'=>'save-manual-signature-id',
+							//'enableClientValidation' => true,
 							'method' => 'post',
 							'action' => ['/sistem/user-profile/signature-saved'],
 						]);
@@ -187,14 +185,33 @@ $this->registerCss("
 							<tr>
 								<td>
 									<?php
-										$ttd1 = getPermissionEmp()->SIGSVGBASE64!='' ?  '<img style="width:120; height:70px" src='.getPermissionEmp()->SIGSVGBASE64.'></img>' :'';
+										//$ttd1 = getPermissionEmp()->SIGSVGBASE64!='' ?  '<img style="width:120; height:70px" src='.getPermissionEmp()->SIGSVGBASE64.'></img>' :'';
+										$ttd1 =$modelUpload->FILE_NM64!='' ?  '<img style="width:120; height:70px" src='.$modelUpload->FILE_NM64.'></img>' :'';
 										echo $ttd1;
 									?>
 								 </td>
 							</tr>
 						</tbody>
 					</table>
-				</div>					
+				</div>
+				<div>
+					<?php 
+					
+						$form = ActiveForm::begin([
+							'id'=>'dignature-set-input',
+							'enableClientValidation' => true,
+							'method' => 'post',
+							'action' => ['/sistem/user-profile/signature-saved'],
+						]);
+						 echo $form->field($model, 'EMP_ID')->hiddenInput(['value'=>$model->EMP_ID])->label(false);
+						 echo $form->field($model, 'SIGSVGBASE30')->hiddenInput(['id'=>'txtBase30'])->label(false);
+						 echo $form->field($model, 'SIGSVGBASE64')->hiddenInput(['value'=>$modelUpload->FILE_NM64])->label(false);
+					
+					
+						echo Html::submitButton($model->isNewRecord ? 'simpan_' : 'SAVED', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary','title'=>'Detail','data-confirm'=>'Anda Yakin Akan di Simpan ?']);
+						ActiveForm::end() 
+					?>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -202,7 +219,11 @@ $this->registerCss("
 
 
 <?php
-
+	/*
+	 * MODAL INPUT FILE Signature
+	 * @author piter [ptr.nov@gmail.com]
+	 * @since 1.2
+	*/
 	Modal::begin([
 		'id' => 'signature-import',
 		'header' => '<div style="float:left;margin-right:10px">'. 
@@ -215,6 +236,7 @@ $this->registerCss("
 		]
 	]);
 		$form = ActiveForm::begin([
+			'id'=>'signature-import',
 			'options'=>['enctype'=>'multipart/form-data'], // important,
 			'method' => 'post',
 			'action' => ['/sistem/user-profile/upload-input'],
@@ -225,49 +247,14 @@ $this->registerCss("
 					'uploadUrl' => Url::to(['/sales/import-data/upload']),
 				] */
 			]);
-			//echo $form->field($modelUpload, 'FILE_PATH')->hiddenInput(['value' => 'signature'])->label(false);
-			
-			// echo FileInput::widget([
-				// 'name'=>'import_file',
-				 // 'name' => 'attachment_48[]',
-				// 'options'=>[
-					// 'multiple'=>true
-				// ],
-				// 'pluginOptions' => [
-					// 'uploadUrl' => Url::to(['/sales/import-data/upload']),
-					// 'showPreview' => false,
-					// 'showUpload' => false,
-					// 'showCaption' => true,
-					// 'showRemove' => true,
-					// 'uploadExtraData' => [
-						// 'album_id' => 20,
-						// 'cat_id' => 'Nature'
-					// ],
-					// 'maxFileCount' => 10
-				// ]
-			// ]);
+			// echo $form->field($modelUpload, 'FILE_PATH')->hiddenInput(['value' => 'signature'])->label(false);
 			echo '<div style="text-align:right; padding-top:10px">';
 			echo Html::submitButton('Upload',['class' => 'btn btn-success']);
 			echo '</div>';
+			//echo Html::submitButton($modelUpload->isNewRecord ? 'simpan_' : 'SAVED', ['class' => $modelUpload->isNewRecord ? 'btn btn-success' : 'btn btn-primary','title'=>'Detail']);
+			
 		ActiveForm::end();
 	Modal::end();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	$this->registerJs("					
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};	
