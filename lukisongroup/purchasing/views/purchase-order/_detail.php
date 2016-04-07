@@ -405,7 +405,7 @@ use lukisongroup\master\models\Unitbarang;
 					 data:{keysSelect:keysSelect,kdRo:roKode,kdpo:poKode},
 					 dataType: 'json',
 					 success: function(response) {
-						 if (response.status=='true'){
+						 if (response.status== true ){
 								 $.pjax.reload('#gv-po-detail');
 								//  $.pjax.reload({container:'#gv-po-detail', timeout: 1000});
 								 //alert(response.status);

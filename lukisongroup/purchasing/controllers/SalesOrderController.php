@@ -630,11 +630,16 @@ class SalesOrderController extends Controller
         $employ = $roHeader->employe;
 		$dept = $roHeader->dept;
 		if ($v==101){
-			$filterPdf="KD_RO='".$kd."' AND (STATUS='101' OR STATUS='10')";
+			// $filterPdf="KD_RO='".$kd."' AND (STATUS='101' OR STATUS='10')";
+      	$filterPdf="KD_RO='".$kd."' AND STATUS='1'";
 		}elseif($v!=101){
 			$filterPdf="KD_RO='".$kd."' AND STATUS<>'3'";
 		}
+    // print_r($filterPdf);
+    // die();
 		$roDetail = Sodetail::find()->where($filterPdf)->all();
+    // print_r($roDetail);
+    // die();
 
 		/* PR Filter Status Output to Grid print*/
 		$dataProvider = new ArrayDataProvider([
@@ -999,7 +1004,7 @@ class SalesOrderController extends Controller
 			'roHeader' => $roHeader,
 			'dataProvider' => $dataProvider,
 		]);
-		
+
   $pdf = new Pdf([
     // set to use core fonts only
     'mode' => Pdf::MODE_CORE,

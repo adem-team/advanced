@@ -390,7 +390,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			 </th>
 			 <th style="text-align: center; vertical-align:middle;width:180">
 				 <?php
-					 $ttd3 = $roHeader->SIG3_SVGBASE64!=0 ?  '<img src="'.$roHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : '';
+					 $ttd3 = $roHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$roHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : '';
 					 echo $ttd3;
 				 ?>
 			 </th>

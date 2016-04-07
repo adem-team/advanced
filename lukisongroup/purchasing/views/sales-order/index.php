@@ -32,7 +32,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 	/*
 	 * Declaration Componen User Permission
 	 * Function getPermission
-	 * Modul Name[1=RO]
+	 * Modul Name[2=SO]
 	*/
 	function getPermission(){
 		if (Yii::$app->getUserOpt->Modul_akses(2)){
@@ -114,7 +114,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 	$options = ['id'=>'ro-barang',
 				'data-toggle'=>"modal",
 				'data-target'=>"#check-barang",
-				'class' => 'btn btn-default  btn-sm'
+				'class' => 'btn btn-default  btn-xs'
 	];
 	$icon = '<span class="glyphicon glyphicon-search"></span>';
 	$label = $icon . ' ' . $title;
@@ -132,7 +132,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 	$options = ['id'=>'ro-kategori',
 				'data-toggle'=>"modal",
 				'data-target'=>"#check-kategori",
-				'class' => 'btn btn-default  btn-sm'
+				'class' => 'btn btn-default  btn-xs'
 	];
 	$icon = '<span class="glyphicon glyphicon-search"></span>';
 	$label = $icon . ' ' . $title;
@@ -249,6 +249,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 			}
 		}
 	}
+
 
 	//Pjax::end();
 	/*
@@ -920,7 +921,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			'autoXlFormat'=>true,
 			'export' => false,
 			'toolbar'=> [
-					['content'=>tombolCreate().tombolBarang().tombolKategori()],
+					['content'=>''],
 					//'{export}',
 					'{toggleData}',
 				],

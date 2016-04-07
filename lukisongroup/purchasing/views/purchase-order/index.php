@@ -260,7 +260,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			$auth3=getPermission()->BTN_SIGN3;
 
 			//if(getPermissionEmp()->JOBGRADE_ID == 'S' OR getPermissionEmp()->JOBGRADE_ID == 'M' OR getPermissionEmp()->JOBGRADE_ID == 'SM' AND getPermission()->BTN_SIGN1==1 ){
-			if(getPermission()->BTN_REVIEW==1 && $model->STATUS == 0  || getPermission()->BTN_REVIEW==1 && $model->STATUS != 102 ){ //($a == 'EVP' OR $a == 'SVP' OR $a == 'VP') OR
+			if(getPermission()->BTN_REVIEW==1 && $model->STATUS == 0  || getPermission()->BTN_REVIEW==1 && ($model->STATUS != 101 && $model->STATUS != 102) ){ //($a == 'EVP' OR $a == 'SVP' OR $a == 'VP') OR
 				 //if($model->STATUS == 1 | $model->STATUS != 0){ //STATUS!=0 ATAU STATUS=1 Available to Revview for Approved
 					$title = Yii::t('app','Review');
 					$options = [ //'id'=>'ro-approved',
@@ -298,6 +298,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			}
 			elseif(getPermissionEmp()->DEP_ID == 'DRC' && getPermission()->BTN_REVIEW==1 && $model->STATUS <>102  || getPermissionEmp()->DEP_ID == 'GM' && getPermission()->BTN_REVIEW==1 && $model->STATUS <>102  )
 			{
+				$title = Yii::t('app','Review');
 				$options = [ //'id'=>'ro-approved',
 							//'data-method' => 'post',
 							 //'data-pjax'=>true,
