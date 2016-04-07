@@ -26,6 +26,7 @@ class Purchaseorder extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+
     public static function tableName()
     {
         return 'p0001';
@@ -83,6 +84,7 @@ class Purchaseorder extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Nmperusahaan::className(), ['ID' => 'SHIPPING']);
     }
+
 
 	/*
 	 * Attribute class getEmploye

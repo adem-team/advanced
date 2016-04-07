@@ -157,8 +157,21 @@ class PurchaseOrderController extends Controller
     public function actionCreate($kdpo)
     {
         $searchModel1 = new RequestorderSearch();
-        $dataProviderRo = $searchModel1->cariHeaderRO_SendPO(Yii::$app->request->queryParams);
 
+        	// $q = Rodetail::find()->select('RQTY');
+          // $kd = Rodetail::find()->select('KD_RO');
+          // $ids = ArrayHelper::getColumn($q, 'KD_RO');
+          // $re = Purchasedetail::find()->
+          //                             ->where(['not in','QTY',$q])
+          //                             ->andWhere(['in','KD_RO',$kd])
+          //                             ->all();
+          // print_r($re);
+          // die();
+        // $query1 = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->asArray()->all();
+				// print_r(count($query1));
+        // die();
+        $dataProviderRo = $searchModel1->cariHeaderRO_SendPO(Yii::$app->request->queryParams);
+        // $dataProviderRo = $searchModel1->cariHeaderRO_SendPO(Yii::$app->request->queryParams,$kdpo);
 		    $searchModel = new SalesorderSearch();
         $dataProviderSo = $searchModel->cariHeaderSO_SendPO(Yii::$app->request->queryParams);
 
@@ -821,6 +834,8 @@ class PurchaseOrderController extends Controller
 											}else{
 												$qtyInPo=0;
 											}
+                      // print_r($qtyInPo);
+                      // die();
 											//$qtyInPo=$countQtyTaken->QTY!=''? $countQtyTaken->QTY :0;
 											$actualQty=$roDetail->SQTY - $qtyInPo;
 											if($actualQty>0){
@@ -834,9 +849,24 @@ class PurchaseOrderController extends Controller
 											//	$poDetailModel->HARGA=$roDetail->HARGA_PABRIK; //SO
 											//}
 										$poDetailModel->STATUS=0;
+                    // validasi if po
+                    // print_r($roDetail->KD_BARANG);
+                    // die();
+                    $rorqty= "SELECT SUM(RQTY) as RQTY FROM r0003 WHERE STATUS<>3 AND KD_RO='" .$dataKdRo. "' AND KD_BARANG='" .$roDetail->KD_BARANG."' GROUP BY KD_BARANG";
+                    $countQtyro=Rodetail::findBySql($rorqty)->one();
+                    $Rqty = $countQtyro->RQTY;
+                    if($Rqty == $qtyInPo )
+                    {
+                        	$res = array('status' => false);
+                    }
+                    else{
+                      $roDetail->save();
+                    $poDetailModel->save();
+                    }
+
 										//$poDetailModel->STATUS_DATE =date;//\Yii::$app->formatter->asDate(date,'Y-M-d hh:mm:ss');
-										$roDetail->save();
-									$poDetailModel->save();
+									// 	$roDetail->save();
+									// $poDetailModel->save();
 
 							}else{
 								$res = array('status' => false); /* sudah ada Data pada Purchasedetail |KD_RO&KD_BARANG */

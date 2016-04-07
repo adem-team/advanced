@@ -17,8 +17,6 @@ use lukisongroup\purchasing\models\ro\Rodetail;
 
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\hrd\models\Employe;
-use lukisongroup\hrd\models\Dept;
-use lukisongroup\hrd\models\Corp;
 use lukisongroup\purchasing\models\ro\Requestorder;
 use yii\widgets\ListView;
 
@@ -31,7 +29,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 //$this->title = Yii::t('app', 'List Permintaan Barang');      /* title pada header page */
 //$this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
-	$AryCorp = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM');
+
 	/*
 	 * Declaration Componen User Permission
 	 * Function getPermission
@@ -214,7 +212,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 		}
 	}
 
-	/*
+	/* ver ptr.nov
 	 * Tombol Modul Approval -> Check By User login
 	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 101=Approved]
 	 * EMP_ID=UserLogin & BTN_SIGN1==1 &  Status 0 = Action Edit Show/bisa edit
@@ -250,8 +248,12 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 		}
 	}
 
+
+
+
+
 	/*
-	 * STATUS FLOW DATA
+	 * STATUS FLOW DATA ver ptr.nov
 	 * 1. NEW		= 0 	| Create First
 	 * 2. APPROVED	= 1 	| Item Approved
 	 * 3. PROCESS	= 101	| Sign Auth1 | Data Sudah di buat dan di tanda tangani
@@ -283,7 +285,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 		};
 	}
 
-$Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 'DEP_NM','DEP_NM');
+
 ?>
 
 

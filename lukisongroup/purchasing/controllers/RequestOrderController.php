@@ -38,6 +38,8 @@ use lukisongroup\master\models\Tipebarang;
 use yii\data\ActiveDataProvider;
 use lukisongroup\sistem\models\Userlogin;
 use lukisongroup\purchasing\models\ro\Validateitem;
+use lukisongroup\hrd\models\Dept;
+use lukisongroup\hrd\models\Corp;
 // use lukisongroup\hrd\models\Employe;
 
 /**
@@ -110,6 +112,12 @@ class RequestOrderController extends Controller
 		$dataProviderInbox = $searchModel->searchRoInbox(Yii::$app->request->queryParams);
 		$dataProviderOutbox = $searchModel->searchRoOutbox(Yii::$app->request->queryParams);
     $profile=Yii::$app->getUserOpt->Profile_user();
+
+    // data for search index RO//
+    $AryCorp = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM');
+    $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 'DEP_NM','DEP_NM');
+    // ** //
+
     $datachecked = Requestorder::find()->where("PARENT_ROSO = 0 AND STATUS = 101 AND STATUS <> 3 AND USER_CC='".$profile->emp->EMP_ID."'")
                                         ->count();
     $datacreate = Requestorder::find()->where("PARENT_ROSO = 0 AND STATUS <> 3 AND STATUS = 0 AND ID_USER = '".$profile->emp->EMP_ID."'")
@@ -145,7 +153,9 @@ class RequestOrderController extends Controller
       'dataCreate'=>$dataCreate,
       'dataapprove'=>$dataapprove,
       'dataAprrove'=>$dataAprrove,
-      'dataChecked' => $dataChecked
+      'dataChecked' => $dataChecked,
+      'Combo_Dept'=>$Combo_Dept,
+      'AryCorp'=>$AryCorp
 			//'getPermission'=> $getPermission,
         ]);
 
@@ -160,6 +170,7 @@ class RequestOrderController extends Controller
      */
     public function actionCreate()
     {
+
       // $model = new \yii\base\DynamicModel(['NEW']);
       // $model->addRule(['NEW'], 'required');
 		  $roDetail = new Rodetail();
