@@ -47,13 +47,45 @@ class UserProfileController extends Controller
 
     public function actionIndex()
     {
+		$ttlheader="EMPLOYEE SUMMARY";
+		$fileLink="_empSummary";
+		
+		/*UPLOAD SIGNATURE*/
+		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
+		$paramID =$paramFile!=false?$paramFile:'0';
+		if ($paramFile==true){
+			$modelUpload = FileManage::find()->where(['ID'=>$paramID])->One();
+		}else{
+			$modelUpload = new FileManage();
+		}
+		
+		/*USER LOGIN*/
 		$model = $this->findModel(Yii::$app->user->identity->EMP_ID);
 		//print_r($model->SIGSVGBASE30);
         return $this->render('index',[
+			'ttlheader'=>$ttlheader,
+			'fileLink'=>$fileLink,			
 			'model'=> $model,
+			'modelUpload'=>$modelUpload
+		]);
+		
+    }
+	
+	public function actionPribadi()
+    {
+		$ttlheader="INFORMASI PRIBADI";
+		$fileLink="_empPribadi";
+		$modelUpload = new FileManage();
+		$model = $this->findModel(Yii::$app->user->identity->EMP_ID);
+		//print_r($model->SIGSVGBASE30);
+        return $this->render('index',[
+			'ttlheader'=>$ttlheader,
+			'fileLink'=>$fileLink,			
+			'model'=> $model,
+			'modelUpload'=>$modelUpload
 		]);
     }
-
+	
 	/*
 	 * FORM LOGIN UTAMA | FORM CHANGE PASSWORD
 	 * @author ptrnov  <piter@lukison.com>

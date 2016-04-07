@@ -2,40 +2,22 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
+use yii\widgets\ActiveForm;
+use yii\helpers\Json;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
+use kartik\widgets\FileInput;
+use yii\web\Response;
+use yii\widgets\Pjax;
+
+
+
 
 $this->sideCorp = 'User Profile';                          /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'profile';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Profile');          /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
-
-	/*
-	 * Declaration Componen User Permission
-	 * Function getPermission
-	 * Modul Name[3=PO]
-	*/
-	function getPermission(){
-		if (Yii::$app->getUserOpt->Modul_akses('1')){
-			return Yii::$app->getUserOpt->Modul_akses('1');
-		}else{
-			return false;
-		}
-	}
-	//print_r(getPermission());
-	/*
-	 * Declaration Componen User Permission
-	 * Function profile_user
-	 * Modul Name[3=PO]
-	*/
-	function getPermissionEmp(){
-		if (Yii::$app->getUserOpt->profile_user()){
-			return Yii::$app->getUserOpt->profile_user()->emp;
-		}else{
-			return false;
-		}
-	}
 
 	$profile=Yii::$app->getUserOpt->Profile_user();
 	/**
@@ -64,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * @since 1.1
      */
 	function tombolPasswordUtama(){
-		$title1 = Yii::t('app', 'Password');
+		$title1 = Yii::t('app','Change Login-Password');
 		$options1 = [ 'id'=>'password',
 					  'data-toggle'=>"modal",
 					  'data-target'=>"#profile-password",
@@ -84,21 +66,50 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * @since 1.1
      */
 	function tombolSignature(){
-		$title1 = Yii::t('app', 'Signature');
+		$title1 = Yii::t('app','Change Login-Signature');
 		$options1 = [ 'id'=>'signature',
 					  //'data-toggle'=>"modal",
 					  'data-target'=>"#profile-signature",
 					  //'class' => 'btn btn-default',
 		];
-		$icon1 = '<span class="fa fa-pencil-square-o fa-md"></span>';
+		$icon1 = '<span class="fa fa-shield fa-md"></span>';
 		$label1 = $icon1 . ' ' . $title1;
 		$url1 = Url::toRoute(['/sistem/user-profile/signature']);//,'kd'=>$kd]);
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
+	
+	
+	/*
+	 * Declaration Componen User Permission
+	 * Function getPermission
+	 * Modul Name[3=PO]
+	*/
+	function getPermission(){
+		if (Yii::$app->getUserOpt->Modul_akses('1')){
+			return Yii::$app->getUserOpt->Modul_akses('1');
+		}else{
+			return false;
+		}
+	}
+	//print_r(getPermission());
+	/*
+	 * Declaration Componen User Permission
+	 * Function profile_user
+	 * Modul Name[3=PO]
+	*/
+	function getPermissionEmp(){
+		if (Yii::$app->getUserOpt->profile_user()){
+			return Yii::$app->getUserOpt->profile_user()->emp;
+		}else{
+			return false;
+		}
+	}
+
+	
 
 	/**
-     * Persinalia Employee
+     * TOMBOL LINK
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
      */
@@ -115,25 +126,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
-
-	/**
-     * Performance Employee
-	 * @author ptrnov  <piter@lukison.com>
-	 * @since 1.1
-     */
-	function tombolPerformance(){
-		$title1 = Yii::t('app', 'My Performance');
-		$options1 = [ 'id'=>'performance',
-					  //'data-toggle'=>"modal",
-					  'data-target'=>"#profile-performance",
-					  'class' => 'btn btn-danger',
-		];
-		$icon1 = '<span class="fa fa-graduation-cap fa-md"></span>';
-		$label1 = $icon1 . ' ' . $title1;
-		$url1 = Url::toRoute(['/sistem/performance']);//,'kd'=>$kd]);
-		$content = Html::a($label1,$url1, $options1);
-		return $content;
-	}
+	
+	
+	
 	/**
      * Logoff
 	 * @author ptrnov  <piter@lukison.com>
@@ -152,125 +147,174 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
+	/* Performance */
+	function tombolPerformance(){
+		$title1 = Yii::t('app', 'My Performance');
+		$options1 = [ 'id'=>'performance',
+					  //'data-toggle'=>"modal",
+					  'data-target'=>"#profile-performance",
+					  'class' => 'btn btn-danger',
+		];
+		$icon1 = '<span class="fa fa-graduation-cap fa-md"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/sistem/performance']);//,'kd'=>$kd]);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
+	
+	/* Summary*/
+	function tombolSummary(){
+		$title1 = Yii::t('app', 'My Summary');
+		$options1 = [ 'id'=>'summary'];
+		$icon1 = '<span class="fa fa-graduation-cap fa-md"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/sistem/user-profile']);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
+	
+	/* PRIBADI*/
+	function tombolPeribadi(){
+		$title1 = Yii::t('app', 'Informasi Pribadi');
+		$options1 = [ 'id'=>'pribadi'];
+		$icon1 = '<span class="fa fa-graduation-cap fa-md"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/sistem/user-profile/pribadi']);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
+	
+	/* TEMPAT TINGGAL & TELPHON*/
+	function tombolTempat(){
+		$title1 = Yii::t('app', 'Informasi Tempat & Telepon');
+		$options1 = [ 'id'=>'pendidikan'];
+		$icon1 = '<span class="fa fa-graduation-cap fa-md"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/sistem/user-profile/tempat']);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
+	
+	/* PENDIDIKAN*/
+	function tombolPendidikan(){
+		$title1 = Yii::t('app', 'Informasi Pendidikan');
+		$options1 = [ 'id'=>'pendidikan'];
+		$icon1 = '<span class="fa fa-graduation-cap fa-md"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/sistem/user-profile/pendidikan']);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
+	
+	/* KONTAK DARURAT*/
+	function tombolDarurat(){
+		$title1 = Yii::t('app', 'Kontak Darurat');
+		$options1 = [ 'id'=>'darurat'];
+		$icon1 = '<span class="fa fa-graduation-cap fa-md"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/sistem/user-profile/darurat']);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
+	
+	/* KELUARGA & TANGGUNGAN*/
+	function tombolTanggungan(){
+		$title1 = Yii::t('app', 'Keluarga & Tanggungan');
+		$options1 = [ 'id'=>'tanggungan'];
+		$icon1 = '<span class="fa fa-graduation-cap fa-md"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/sistem/user-profile/pendidikan']);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
 
+	/* KELUARGA & TANGGUNGAN*/
+	function tombolUploadSig(){
+		$title1 = Yii::t('app', 'Import Image Signature');
+		$options1 = [ 'id'=>'import-sig',
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#signature-import-image",
+					  'class' => 'btn btn-danger'
+					];
+		$icon1 = '<span class="fa fa-graduation-cap fa-md"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['']);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
+	
+
+	
+	
 ?>
-<div class="container">
-	<div class="row text-center">
-        	<div class="col-md-12" style="font-family: tahoma ;font-size: 16pt;">
-             		<strong>USER PROFILE</strong>
-             		<br/>
-           	<hr/>
-		</div>
-        </div>
-	<div class="row ">
-		<div class="col-md-3">
-			<img src="<?=Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$profile->emp->EMP_IMG; ?>" class="img-responsive img-thumbnail" />
-
-		</div>
-		<div class="col-md-8" style="font-family: tahoma ;font-size: 10pt;">
-			<div class="alert alert-info">
-				Your profile is only 45% complete, to enjoy full feaures you have to complete it 100%.
-				<div class="progress" style="height:10px">
-					<div class="progress-bar progress-bar-striped active progress-bar-danger"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%;">
-						<span class="sr-only">45% Complete</span>
-					</div>
-				</div>
-           			<!--To complete your profile please <a href="#">click here</a> .!-->
-			</div>
-			<div class="btn-group pull-right">
-				<button type="button" class="btn btn-success">My Settings</button>
-				<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+<div class="body-content">
+	<div class="row" style="padding-left: 5px; padding-right: 5px">
+		<div class="col-sm-12 col-md-12 col-lg-12 text-left" style="font-family: tahoma ;font-size: 16pt;">
+			<div class="col-sm-6 col-md-4 col-lg-4 btn-group pull-left">
+				<button type="button" class="btn btn-success">My Account</button>
+				<button id="asd" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
 					<span class="caret"></span>
-					<span class="sr-only">Toggle Dropdown</span>
+					<span id="asdasd" class="sr-only">Toggle Dropdown</span>
 				</button>
 				  <ul class="dropdown-menu" role="menu">
+					<li><?php echo tombolSummary(); ?></li>
+					<li><?php echo tombolPeribadi(); ?></li>
+					<li><?php echo tombolTempat(); ?></li>
+					<li><?php echo tombolPendidikan(); ?></li>
+					<li><?php echo tombolDarurat(); ?></li>
+					<li><?php echo tombolTanggungan(); ?></li>
+					<li class="divider"></li>
 					<li><?php echo tombolSetting(); ?></li>
 					<li><?php echo tombolPasswordUtama();?></li>
 					<li><?php echo tombolSignature(); ?></li>
 					<li><?php //echo tombolPersonalia(); ?></li>
 					<li><?php //echo tombolPerformance(); ?></li>
-					<li class="divider"></li>
+					
 					<li><?php echo tombolLogoff();?></li>
 				  </ul>
-			</div>
-			<br/>
-			<hr />
-			<div class="col-md-8" >
-				<div class="col-md-6"style="float:left">
-					<dl>
-						<?php
-							if($profile){
-								$namaLengkap=$profile->emp!=''? $profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK:'';
-								$tPhone=$profile->emp!=''?$profile->emp->EMP_TLP:'';
-								$joinDate=$profile->emp!=''? $profile->emp->EMP_JOIN_DATE:'';
-								$depRole=$profile->emp!=''? $profile->emp->DEP_ID.'.'.$profile->emp->DEP_SUB_ID:'';
-								$nPWP='xxx.xxx.xxx.xxx';
-								$jamSostek='xxx.xxx.xx.xx';
-								$noReg='xxx-xxx-xxx-xx';
-							}
-						?>
-						<dt style="width:100px; float:left">Name</dt>
-						<dd>:	<?=$namaLengkap; ?></dd>
-						<dt style="width:100px;float:left">Phone</dt>
-						<dd>:	<?=$tPhone; ?></dd>
-						<dt style="width:100px; float:left">Registered On</dt>
-						<dd>:	<?=$profile->emp->EMP_JOIN_DATE; ?></dd>
-						<dt style="width:100px; float:left">Role</dt>
-						<dd>:	<?=$profile->emp->DEP_ID.'.'.$profile->emp->DEP_SUB_ID; ?></dd>
-						<dt style="width:100px; float:left">NPWP</dt>
-						<dd>:	<?=$nPWP; ?></dd>
-						<dt style="width:100px; float:left">Jamsostek</dt>
-						<dd>:	<?=$jamSostek; ?></dd>
-						<dt style="width:100px; float:left">NoReg</dt>
-						<dd>:	<?=$noReg; ?></dd>
-					</dl>
-				</div>
-				<div class="col-md-2 full-right" style="margin-left:30%; margin-top:80px">
-					<?php
-						$ttd1 = getPermissionEmp()->SIGSVGBASE64!='' ?  '<img style="width:120; height:70px" src='.getPermissionEmp()->SIGSVGBASE64.'></img>' :'';
-						echo $ttd1;
-					?>
-					<hr style="width:300px; margin-top:-15px">
-				</div>
-
-			</div>
-			<div class="col-md-8" >
-				<h3>  <strong> Access Links :</strong></h3>
-				   <br />
-				   <?=tombolPersonalia();?>
-				   <?=tombolPerformance();?>
-			</div>
+				  
+			</div >
+				<?=$ttlheader;?>
+				<br/>
+				<hr/>
+				
 		</div>
-	</div>
-	<div class="row " >
-		<div class="col-md-6">
-			<h3>Small Biography :</h3>
-			   <hr />
-			   <p>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-					Mauris ac nisl tempus, sollicitudin elit vel, pellentesque lorem.
-					Maecenas hendrerit laoreet lectus a feugiat. Nunc sodales id ipsum ut maximus.
-					Morbi pellentesque quis diam nec ullamcorper. Nulla facilisi. Donec non nunc augue.
-					Integer tincidunt consequat porta.
-			   </p>
+	
+		<div class="col-sm-3 col-md-3 col-lg-3">
+			<!-- EMPLOYEE IMAGE !-->
+			<div class="col-sm-12 col-md-12 col-lg-12  text-center ">
+				<img src="<?=Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$profile->emp->EMP_IMG; ?>" class="img-responsive img-thumbnail" style="width:80%; height:80%" />
+			</div>			
+			
+			<!-- EMPLOYEE SIGNATURE !-->
+			<div class="col-sm-12 col-md-12 col-lg-12">
+				<table  class="col-md-12 table-bordered  text-center" style="margin-top:20px;margin-bottom:20px;">
+					<tbody>
+						<tr>
+							<td>
+								<?php
+									$ttd1 = getPermissionEmp()->SIGSVGBASE64!='' ?  '<img style="width:60%; height:60%" src='.getPermissionEmp()->SIGSVGBASE64.'></img>' :'';
+									echo $ttd1;
+								?>
+							 </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-sm-12 col-md-12 col-lg-12  text-center ">
+				<?php echo tombolUploadSig()?>
+			</div>	
 		</div>
-		<div class="col-md-6" style="padding-bottom:80px;">
-		  <h3>Registered Address  :</h3>
-		   <hr />
-		   <div>
-				<?php
-					if($profile){
-						$alamatLengkap=$profile->emp!=''? $profile->emp->EMP_ALAMAT:'';
-						$zip=$profile->emp!=''? $profile->emp->EMP_ZIP:'';
-					}
-				?>
-				<h5><?=$alamatLengkap;?></h5>
-				<h5>  Kode Pos <?=$zip;?></h5>
-		   </div>
-
-	   	</div>
+		
+		<?php
+			echo Yii::$app->controller->renderPartial($fileLink,[
+					'profile'=>$profile,
+					//'model_CustPrn'=>$model_CustPrn,
+					//'count_CustPrn'=>$count_CustPrn
+			]);		
+		?>	
 	</div>
-</div>
+</div>	
 <?php
 	/*
 	 * CHANGE PASSWORD UTAMA
@@ -302,6 +346,41 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		]);
 	Modal::end();
 
-
+	/*
+	 * MODAL INPUT FILE Signature
+	 * @author piter [ptr.nov@gmail.com]
+	 * @since 1.2
+	*/
+	Modal::begin([
+		'id' => 'signature-import-image',
+		'header' => '<div style="float:left;margin-right:10px">'. 
+						Html::img('@web/img_setting/warning/upload1.png',  
+						['class' => 'pnjg', 'style'=>'width:40px;height:40px;'])
+					.'</div><div style="margin-top:10px;"><h4><b>Upload path of Signature Image!</b></h4></div>',
+		//'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+		]
+	]);
+		$form = ActiveForm::begin([
+			'id'=>'signature-import-image',
+			'options'=>['enctype'=>'multipart/form-data'], // important,
+			'method' => 'post',
+			'action' => ['/sistem/user-profile/upload-input'],
+		]);
+			echo $form->field($modelUpload, 'uploadDataFile')->widget(FileInput::classname(), [
+				'options' => ['accept' => '*'],
+				/* 'pluginOptions' => [
+					'uploadUrl' => Url::to(['/sales/import-data/upload']),
+				] */
+			]);
+			// echo $form->field($modelUpload, 'FILE_PATH')->hiddenInput(['value' => 'signature'])->label(false);
+			echo '<div style="text-align:right; padding-top:10px">';
+			echo Html::submitButton('Upload',['class' => 'btn btn-success']);
+			echo '</div>';
+			//echo Html::submitButton($modelUpload->isNewRecord ? 'simpan_' : 'SAVED', ['class' => $modelUpload->isNewRecord ? 'btn btn-success' : 'btn btn-primary','title'=>'Detail']);
+			
+		ActiveForm::end();
+	Modal::end();
 
 ?>
