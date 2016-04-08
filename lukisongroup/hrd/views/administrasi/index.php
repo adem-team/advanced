@@ -25,19 +25,21 @@ AppAssetOrg1::register($this);
 	
 	$diagramOrg = '<div class="body-content" id="orgdiagram-administation" style="overflow: hidden;"></div>';
 	//$diagramOrg = '<div class="content-wrapper" id="orgdiagram-administation" style="position: absolute; overflow: hidden; left: 0px; padding: 0px; margin: 0px; border-style: solid; border-color: navy; border-width: 1px;"></div>';
-$items=[
-	[
-		'label'=>'<i class="glyphicon glyphicon-home"></i>VisiMisi','content'=>'asdsad',
-		
-	],
-	[
-		'label'=>'<i class="glyphicon glyphicon-home"></i>Struktur Organisasi','content'=>$diagramOrg,
-		
-	],
-	[
-		'label'=>'<i class="glyphicon glyphicon-home"></i>Regulations','content'=>'asdasdsadasd',             
-	],
-];
+	
+	
+	$items=[
+		[
+			'label'=>'<i class="fa fa-sitemap fa-1x"></i> Struktur Organisasi','content'=>$diagramOrg,
+			'active'=>true,
+		],
+		[
+			'label'=>'<i class="fa fa-soccer-ball-o fa-1x"></i> Visi Misi','content'=>'asdas',
+			
+		],
+		[
+			'label'=>'<i class="fa fa-tags fa-1x"></i>Regulations','content'=>'asdasdsadasd',             
+		],
+	];
 
 echo TabsX::widget([
 	'id'=>'tab-org-administrator',
