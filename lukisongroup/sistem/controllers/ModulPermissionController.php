@@ -63,6 +63,28 @@ class ModulPermissionController extends Controller
 
         $searchModelpermision = new MdlpermissionSearch();
         $dataProviderpermision = $searchModelpermision->search(Yii::$app->request->queryParams);
+        $params = Yii::$app->request->queryParams;
+        $baris = Modulerp::find()->count();
+        if(count($params) == 0)
+        {
+
+        }else {
+          # code...
+          if(count($params) < $baris )
+          {
+            $user_id = $params['MdlpermissionSearch']["USER_ID"];
+            $modul = Mdlpermission::find()->select('MODUL_ID')->where(['USER_ID'=>$user_id])->asArray()->all();
+            $erp = Modulerp::find()->where(['not in','MODUL_ID',$modul])->all();
+            foreach ($erp as $key => $value) {
+              # code...
+              $connection = Yii::$app->db;
+              $connection->createCommand()->batchInsert('modul_permission',['USER_ID','MODUL_ID'],[[$user_id,$value['MODUL_ID']]])->execute();
+            }
+          }
+        }
+
+        // print_r(count($params));
+        // die();
         	if (Yii::$app->request->post('hasEditable')) {
             $id = Yii::$app->request->post('editableKey');
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -145,6 +167,9 @@ class ModulPermissionController extends Controller
             'dataProviderpermision'=>$dataProviderpermision
         ]);
     }
+
+
+
 
 
 
