@@ -13,6 +13,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
 use yii\helpers\Json;
+use yii\helpers\ArrayHelper;
+use lukisongroup\hrd\models\Employe;
 
 /**
  * MdlpermissionController implements the CRUD actions for Mdlpermission model.
@@ -182,6 +184,7 @@ class ModulPermissionController extends Controller
     {
           $model = new Userlogin();
           $model->scenario = 'createuser';
+          $data = ArrayHelper::map(Employe::find()->orderBy('EMP_NM')->asArray()->all(), 'EMP_ID','EMP_NM');
 
         if ($model->load(Yii::$app->request->post()) ) {
           $hash = Yii::$app->getSecurity()->generatePasswordHash($model->password_hash);
@@ -201,6 +204,7 @@ class ModulPermissionController extends Controller
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,
+                'data'=>$data
             ]);
         }
     }

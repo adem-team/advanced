@@ -9,6 +9,7 @@ $this->title = Yii::t('app', 'ERP - Administrator');        /* title pada header
 
     <?= $this->render('_form', [
         'model' => $model,
+        'data'=>$data
     ]) ?>
 
 </div>

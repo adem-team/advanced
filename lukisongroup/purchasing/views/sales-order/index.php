@@ -81,7 +81,8 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 				$title1 = Yii::t('app', 'New');
 				$options1 = [ 'id'=>'so-create',
 							  'class' => 'btn btn-warning btn-xs',
-							  'data-confirm'=>'Permission Failed !',
+								'data-toggle'=>"modal",
+							  'data-target'=>"#confirm-permission-alert-so",
 				];
 				$icon1 = '<span class="fa fa-plus fa-xs"></span>';
 				$label1 = $icon1 . ' ' . $title1;
@@ -94,7 +95,8 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 				$title1 = Yii::t('app', 'New');
 				$options1 = [ 'id'=>'so-create',
 							  'class' => 'btn btn-warning  btn-xs',
-							  'data-confirm'=>'Permission Failed !',
+								'data-toggle'=>"modal",
+								'data-target'=>"#confirm-permission-alert-so",
 				];
 				$icon1 = '<span class="fa fa-plus fa-xs"></span>';
 				$label1 = $icon1 . ' ' . $title1;
@@ -934,6 +936,36 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 
 
 	<?php
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#confirm-permission-alert-so').on('show.bs.modal', function (event) {
+				//var button = $(event.relatedTarget)
+				//var modal = $(this)
+				//var title = button.data('title')
+				//var href = button.attr('href')
+				//modal.find('.modal-title').html(title)
+				//modal.find('.modal-body').html('')
+				/* $.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					}); */
+				}),
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'confirm-permission-alert-so',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/warning/denied.png',  ['class' => 'pnjg', 'style'=>'width:40px;height:40px;']).'</div><div style="margin-top:10px;"><h4><b>Permmission Confirm !</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+			]
+		]);
+		echo "<div>You do not have permission for this module.
+				<dl>
+					<dt>Contact : itdept@lukison.com</dt>
+				</dl>
+			</div>";
+	Modal::end();
+
 		$this->registerJs("
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
 			$('#new-so').on('show.bs.modal', function (event) {

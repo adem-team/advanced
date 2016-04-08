@@ -124,6 +124,7 @@ $gvmdlpermission= GridView::widget([
         'dropdown' => true,
         'template' => '{edit}',
         'dropdownOptions'=>['class'=>'pull-right dropup'],
+        'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
         'buttons' => [
             'edit' =>function($url, $model, $key){
                 return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Change Password'),
