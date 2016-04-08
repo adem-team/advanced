@@ -16,7 +16,6 @@ use lukisongroup\sistem\models\ValidationLoginForm;
 use lukisongroup\hrd\models\Employe;			/* TABLE CLASS JOIN */
 use lukisongroup\hrd\models\EmployeSearch;	/* TABLE CLASS SEARCH */
 use lukisongroup\sistem\models\FileManage;
-
 class UserProfileController extends Controller
 {
 	/**
@@ -200,6 +199,11 @@ class UserProfileController extends Controller
 					if ($exportFile !== false) {
 						$path = $model->getImageFile();
 						$exportFile->saveAs($path);
+						
+						
+						
+						
+						
 						return $this->redirect(['signature','id'=>$model->ID]);
 					} 
 				}				
@@ -207,6 +211,37 @@ class UserProfileController extends Controller
 		}
 	}
 	
+	public function actionUploadSignatureFile()
+    {
+		$model = new FileManage();
+		
+		if ($model->load(Yii::$app->request->post()) ) {
+			//if($model->validate()){
+				$model->USER_ID = Yii::$app->user->identity->username;
+				$model->FILE_PATH = 'signature';
+				$exportFile = $model->uploadFile();
+				//$base64File = \yii\web\UploadedFile::getInstance($model, 'uploadDataFile');
+				// $dateFile=\yii\web\UploadedFile::getInstanceByName($fileName);
+				
+				$exportFile64 = $this->saveimage(file_get_contents($exportFile->tempName));
+				$exportFile64Image='data:image/jpg;charset=utf-8;base64,'.$exportFile64;
+				$model->FILE_NM64 = $exportFile64Image;
+				//print_r($exportFile64);
+				//die();
+				if ($model->save()) {
+					//upload only if valid uploaded file instance found
+					if ($exportFile !== false) {
+						$path = $model->getImageFile();
+						$exportFile->saveAs($path);		
+						$employeUpdate =Employe::find()->where(['EMP_ID'=>Yii::$app->user->identity->EMP_ID])->one();						
+						$employeUpdate->SIGSVGBASE64=$exportFile64Image;
+						$employeUpdate->save();
+						return $this->redirect(['index']);
+					} 
+				}				
+			//}			
+		}
+	}
 	
 	/*
 	 * Index Signature Password

@@ -307,6 +307,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		</div>
 		
 		<?php
+			$profile=$profile!=''?$profile:false;
 			echo Yii::$app->controller->renderPartial($fileLink,[
 					'profile'=>$profile,
 					//'model_CustPrn'=>$model_CustPrn,
@@ -366,7 +367,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			'id'=>'signature-import-image',
 			'options'=>['enctype'=>'multipart/form-data'], // important,
 			'method' => 'post',
-			'action' => ['/sistem/user-profile/upload-input'],
+			'action' => ['/sistem/user-profile/upload-signature-file'],
 		]);
 			echo $form->field($modelUpload, 'uploadDataFile')->widget(FileInput::classname(), [
 				'options' => ['accept' => '*'],
