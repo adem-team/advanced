@@ -162,10 +162,11 @@ echo $gvmdlpermission= GridView::widget([
         'dropdown' => true,
         'template' => '{edit}',
         'dropdownOptions'=>['class'=>'pull-right dropup'],
+        'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
         'buttons' => [
             'edit' =>function($url, $model, $key){
-                return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Change Password'),
-                              ['/sistem/modul-permission/update-pass','id'=>$model->MODUL_ID],[
+                return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Update'),
+                              ['/sistem/modul-erp/update','id'=>$model->MODUL_ID],[
                               'data-toggle'=>"modal",
                               'data-target'=>"#modal-create",
                               'data-title'=>'',// $model->KD_BARANG,
