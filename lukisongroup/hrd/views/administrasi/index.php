@@ -22,14 +22,17 @@ AppAssetOrg1::register($this);
 	//echo  \yii\helpers\Json::encode($dataProvider->getModels());
 	$orgJsonStr = encodeURIComponent(Json::encode($dataProviderOrg->getModels()));
 	//$itemJsonStr2 = Json::encode($dataProviderOrg->getModels());
-	$diagramOrg = '<div class="body-content" id="orgdiagram"></div>';
-
+	
+	$diagramOrg = '<div class="body-content" id="orgdiagram-administation" style="overflow: hidden;"></div>';
+	//$diagramOrg = '<div class="content-wrapper" id="orgdiagram-administation" style="position: absolute; overflow: hidden; left: 0px; padding: 0px; margin: 0px; border-style: solid; border-color: navy; border-width: 1px;"></div>';
 $items=[
 	[
 		'label'=>'<i class="glyphicon glyphicon-home"></i>VisiMisi','content'=>'asdsad',
+		
 	],
 	[
 		'label'=>'<i class="glyphicon glyphicon-home"></i>Struktur Organisasi','content'=>$diagramOrg,
+		
 	],
 	[
 		'label'=>'<i class="glyphicon glyphicon-home"></i>Regulations','content'=>'asdasdsadasd',             
@@ -56,16 +59,17 @@ echo TabsX::widget([
 	 * @author ptrnov [ptr.nov@gmail.com]
 	 * @since 1.1
 	*/
-	$this->registerJs('		
-		(function($) {
+	$this->registerJs('	
+		$.noConflict();
+		jQuery(document).ready(function($) {
 			var m_timer = null;
 			var datax=\'' . $orgJsonStr . '\';	
 			$(document).ready(function () {
 				$.ajaxSetup({
-					cache: false
+					cache: true
 				});
 				ResizePlaceholder();
-				orgDiagram = $("#orgdiagram").orgDiagram({
+				orgDiagram = $("#orgdiagram-administation").orgDiagram({
 					//graphicsType: primitives.common.GraphicsType.SVG,
 					pageFitMode: primitives.common.PageFitMode.FitToPage,
 					verticalAlignment: primitives.common.VerticalAlignmentType.Middle,
@@ -95,11 +99,12 @@ echo TabsX::widget([
 				var bodyHeight = $(window).height() - (-65) //height 
 				var titleHeight = 93;
 				
-				$("#orgdiagram").css(
+				$("#orgdiagram-administation").css(
 				{
-					"width": (bodyWidth - 193) + "%",
-					"height": (bodyHeight - titleHeight) + "%",
-					"top": titleHeight + "%"
+					"left": "230px",
+					"width": (bodyWidth - 193) + "px",
+					"height": (bodyHeight - titleHeight) + "px",
+					"top": titleHeight + "px"
 				});
 			}
 		})(jQuery);
