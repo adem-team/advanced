@@ -13,6 +13,7 @@ use yii\web\Response;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use lukisongroup\master\models\Scheduleheader;
+use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Schedulegroup;
 use lukisongroup\master\models\ScheduleheaderSearch;
 use lukisongroup\sistem\models\Userlogin;
@@ -249,7 +250,15 @@ class ScheduleHeaderController extends Controller
       $model->NOTE = $note;
       $model->SCDL_GROUP = $scdl_group;
 			$model->USER_ID = $user_id;
-			$model->save();
+			if($model->save())
+      {
+          $Customers = Customers::find()->where(['SCDL_GROUP'=>$scdl_group])->asArray()->all();
+          foreach ($Customers as $key => $value) {
+            # code...
+            $connection = Yii::$app->db_esm;
+            $connection->createCommand()->batchInsert('c0002scdl_detail',['TGL','CUST_ID','SCDL_GROUP','USER_ID'],[[$start,$value['CUST_KD'],$scdl_group,$user_id]])->execute();
+          }
+      }
 
 		}
 		return true;
