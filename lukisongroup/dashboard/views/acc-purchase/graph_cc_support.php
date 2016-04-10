@@ -6,12 +6,32 @@ use kartik\tabs\TabsX;
 use yii\helpers\Json;
 use yii\web\Response;
 use yii\helpers\ArrayHelper;
+use yii\data\ArrayDataProvider;
+use yii\db\Query;
 // use lukisongroup\assets\AppAssetFusionChart;
 // AppAssetFusionChart::register($this);
 ?>
 
+<?php
+	$dataGraphCcSupport=Yii::$app->db_esm->createCommand("CALL PURCHASING_report_cc('CC_SUPPORT','CORP')")->queryAll(); 
+	$provider= new ArrayDataProvider([
+	'allModels'=>$dataGraphCcSupport,
+	 'pagination' => [
+		'pageSize' => 1000,
+		]
+	]);
+	$dataJson=(Json::encode($provider->getModels()));
+	$dataJsonSupportDept='data:'.$dataJson;
+	//print_r($dataJsonSupportDept);
+	//print_r(Json::encode($provider->getModels()));
+	//print_r($provider);
+?>
+
+
+
 
 <div id="column2d-cc-support"></div>
+
 <?php
 	$this->registerJs("
 		FusionCharts.ready(function () {
@@ -25,20 +45,22 @@ use yii\helpers\ArrayHelper;
 				chart: {
 					caption: 'COST CENTER SUPPORT',
 					//subCaption: 'Top 5 stores in last month by revenue',
-					subcaption: 'Daily Actual Total Stock sell-out',
+					subcaption: 'Yearly Actual Total Stock sell-out',
 					subcaptionFontBold: '0',
 					subcaptionFontSize: '14',
-					numberPrefix: '',
-					yaxismaxvalue: '900000',
-					
-					borderAlpha: '20',
+					//numberPrefix: 'IDR ',
+					//yaxismaxvalue: '9000000',
+					numberscalevalue:'1000,1000,1000',
+					numberscaleunit:'R,Jt,M',
+					borderAlpha: '0',
 					bgColor: '#ffffff',
 					usePlotGradientColor: '0',
 					plotBorderAlpha: '10', 
 					showAlternateHGridColor: '0',
 					showXAxisLine: '1'						
 				},
-				data:[{
+				$dataJsonSupportDept
+				/* data:[{
 					label: 'Bakersfield Central',
 					value: '880000'
 				},
@@ -57,7 +79,7 @@ use yii\helpers\ArrayHelper;
 				{
 					label: 'Daly City Serramonte',
 					value: '330000'
-				}]
+				}] */
 			}
 		});
 		// Render the chart.

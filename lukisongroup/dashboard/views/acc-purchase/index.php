@@ -23,16 +23,16 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 <?php
 	
 	
-	echo Html::panel(
+	/* echo Html::panel(
 		['heading' => 'Employee Properties', 'body' =>$kedua],
 		Html::TYPE_SUCCESS
-	);
+	); */
 
 ?>
 
-<div class="body-content">
+<div style="backgroud:black">
     <div class="row" style="padding-left: 5px; padding-right: 5px">
-        <div class="col-sm-6 col-md-6 col-lg-6 ">
+        <div class="col-sm-6 col-md-6 col-lg-6 ">			
 			<?php
 				$content_cc_support=Yii::$app->controller->renderPartial('graph_cc_support',[
 					// 'model_CustPrn'=>$model_CustPrn,
