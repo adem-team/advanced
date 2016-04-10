@@ -1,10 +1,10 @@
 <?php
-use crm\sistem\models\Userlogin;
+use dashboard\sistem\models\Userlogin;
 /*
  * Login Dashboard user Permission
  * login user account berdasarkan POSITION_LOGIN
- * 1 = Salesman
- * 2 = SPG
+ * 1 = PT. Efenbi Sukses Makmur
+ * 2 = PT. Sarana Sinar Surya
  * 3 = Customer
  * 4 = Distributor
  * 5 = Factory/Pabrik
@@ -13,14 +13,14 @@ use crm\sistem\models\Userlogin;
 */
 
 /* $model = Userlogin::findOne(Yii::$app->user->identity->id); */
- $model=Yii::$app->getUserOptcrm->Profile_user();
+ $model=Yii::$app->getUserDashBoard->Profile_user();
  //print_r($model);
 if (count($model)<>0){
 	//$Val_Corp='none'
 	if($model->POSITION_LOGIN==1){
-		include('_index_salesman.php');		
+		include('_index_efembi.php');		
 	}elseif($model->POSITION_LOGIN==2){
-		include('_index_salespromo.php');
+		include('_index_foodtown.php');
 	}elseif($model->POSITION_LOGIN==3){
 		include('_index_customer.php');
 	}elseif($model->POSITION_LOGIN==4){

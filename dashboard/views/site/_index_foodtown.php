@@ -8,12 +8,11 @@ use kartik\builder\Form;
 use kartik\widgets\FileInput;
 use kartik\builder\FormGrid;
 use kartik\tabs\TabsX;
-use yii\widgets\Pjax;
 $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctype'=>'multipart/form-data']]);
 $ProfAttribute1 = [
     [
         'label'=>'',
-        'attribute' =>'EMP_IMG',
+        //'attribute' =>'EMP_IMG',
         //'value'=>Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$model->EMP_IMG,
         //'group'=>true ,
         //'groupOptions'=>[
@@ -32,20 +31,27 @@ $ProfAttribute1 = [
 $EmpDashboard=$this->render('login_index/_dashboard', [
     'model' => $model,
 ]);
+
+$this->sideCorp = 'PT. Sarana Sinar Surya';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'foodtown';                                      /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'SSS - Sales Dashboard');              /* title pada header page */
+$this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+
+
+
+
 ?>
-
-
 
 <div class="container-fluid" style="padding-left: 20px; padding-right: 20px" >
 		<div class="row">
 			<div class="col-xs-12 col-sm-12 col-dm-12  col-lg-12">
 					<?php
-					echo Html::panel(
+					 echo Html::panel(
 						[
-							'heading' => '<div>DASHBOARD - SALES PROMO </div>',
+							'heading' => '<div>DASHBOARD - Daily Sales</div>',
 							'body'=>'',//$prof,
 						],
-						Html::TYPE_WARNING
+						Html::TYPE_INFO
 					);
 					?>
 			</div>
@@ -53,48 +59,46 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
        <div class="row" >
 			<div class="col-xs-12 col-sm-6 col-dm-4  col-lg-4">
 				<?php
-					Pjax::begin();
 					echo Html::panel([
 							'id'=>'home1',
 							'heading' => '<b>DATA PROSESS</b>',
 							'postBody' => Html::listGroup([
 									[
 										/* 
-										 * Modul Sales Promotion - Stock Gudang | input data stock gudang di customer
+										 * Modul Salesman - Customer  | Buka customer Baru
 										*/
-										'content' => 'Stock Gudang',
-										'url' => '/salespromo/stock-gudang',										
+										'content' => 'New Customer',
+										'url' => '/salespromo/stock-gudang',
 										'badge' => '0'
-									],
+									],									
 									[
 										/* 
-										 * Modul Sales Promotion - Stock Gudang | input data stock promo di customer
+										 * Modul Salesman - Customer  | Rekap Penjualan Customer -> Rekap under report penjualan sales promotion
 										*/
-										'content' => 'Stock Promo',
-										'url' => '/salespromo/stock-promo',
-										'badge' => '0'
-									],
-									[
-										/* 
-										 * Modul Sales Promotion - Stock Penjualan | input Penjualan harian di Customer
-										*/
-										'content' => 'Penjualan',
+										'content' => 'Selling Out Maintain',
 										'url' => '/salespromo/penjualan',
 										'badge' => '0'
 									],
 									[
 										/* 
-										 * Modul Sales Promotion - Stock Penjualan | input penualan Promo di Customer
+										 * Modul Salesman - Customer  | Pengeluaran/pencairan  stock ke customer | new coustomer/repeat order
 										*/
-										'content' => 'Promo',
-										'url' => '/salespromo/penjualan-promo',
+										'content' => 'Stock Maintain',
+										'url' => '/salespromo/penjualan',
 										'badge' => '0'
-									],									
+									],	
+									[
+										/* 
+										 * Modul Salesman - Sales Promoton  | maintenance jadwal Spg | User login Spg | Absensi | Bonus 
+										*/
+										'content' => 'SalasPromotion Maintain',
+										'url' => '/salespromo/stock-promo',
+										'badge' => '0'
+									],
 								]),
 						],
-						Html::TYPE_WARNING
+						Html::TYPE_INFO
 					);
-					Pjax::end();
 				?>
 			</div>
 			<div class="col-xs-12 col-sm-6 col-dm-4  col-lg-4" >
@@ -103,10 +107,10 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 					echo Html::panel([
 							'id'=>'home1',
 							'heading' => '<b>WIDGET</b>',
-							'postBody' => Html::listGroup([
+							'postBody' => Html::listGroup([									
 									[
 										/* 
-										 * Modul Sales Promotion | report Jadwal kunjungan yang di berikan oleh salesmen untuk kunjungan ke customer per-minggu/bulan
+										 * Modul Salesman - Salesman  | maintenance jadwal kunjungan salesman 
 										*/
 										'content' => 'Jadwal Kunjungan',
 										'url' => '/salespromo/schadule',
@@ -114,7 +118,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									],
 									[
 										/* 
-										 * Modul Sales Promotion | Peta posisi alamat customer yang akan di kunjungi, check validasi kunjungan Porsquare
+										 * Modul Salesman - IT/Admin/Salesman  | Map input
 										*/
 										'content' => 'Peta Customer',
 										'url' => '/salespromo/customer-map',
@@ -122,7 +126,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									],
 									[
 										/* 
-										 * Modul Sales Promotion | Salespromo check absensi pribadi | Bonus | Fasilitas
+										 * Modul Salesman - IT/Admin/Salesman  | Absensi Salesman
 										*/
 										'content' => 'Absensi',
 										'url' => '/salespromo/absensi',
@@ -130,15 +134,15 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 									],
 									[
 										/* 
-										 * Modul Sales Promotion | Salespromo Profile Pribadi | change password Account
+										 * Modul Salesman - Salesman  | Profile Salesman | Change Password
 										*/
-										'content' => 'Profile',	
+										'content' => 'Profile',
 										'url' => '/salespromo/profile',
 										'badge' => '0'
 									],
 								]),
 						],
-						Html::TYPE_WARNING
+						Html::TYPE_INFO
 					);
 				?>
 			</div>
@@ -150,39 +154,39 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 							'postBody' => Html::listGroup([
 									[
 										/* 
-										 * Modul Sales Promotion | Reporting Prodak yang akan di jual oleh sales promotion
+										 * Modul Salesman - Sales Promotion  | Reporting total penjualan(normal/promo) harian Under report Sales promotion
 										*/
-										'content' => 'Prodak',
-										'url' => '/salespromo/prodak',
+										'content' => 'Daily Selling Out',
+										'url' => '/salespromo/report-daily',
 										'badge' => '0'
 									],	
 									[
 										/* 
-										 * Modul Sales Promotion | Reporting pejualan harian semua sales promotion [Topdaily|BottemDaily]
+										 * Modul Salesman - Sales Promotion  | Reporting total Stock (normal/promo) gudang harian di customer under report Sales promotion
 										*/
-										'content' => 'Penjualan Harian',
+										'content' => 'Daily Stock Harian',
 										'url' => '/salespromo/report-daily',
-										'badge' => '0'
-									],									
-									[
-										/* 
-										 * Modul Sales Promotion | Reporting pejualan bulanan semua sales promotion [Topdaily|BottemDaily]
-										*/
-										'content' => 'Penjualan Bulanan',
-										'url' => '/salespromo/report-monthly',
 										'badge' => '0'
 									],
 									[
 										/* 
-										 * Modul Sales Promotion | Reporting pejualan tahunan semua sales promotion [Topdaily|BottemDaily]
+										 * Modul Salesman - Sales Promotion  | Reporting total penjualan(normal/promo) harian bulanan report Sales promotion
 										*/
-										'content' => 'Penjualan perTahun',
-										'url' => '/salespromo/report-monthly',
+										'content' => 'monthly Selling Out',
+										'url' => '/salespromo/report-daily',
 										'badge' => '0'
-									],									
+									],	
+									[
+										/* 
+										 * Modul Salesman - Sales Promotion  | Reporting total Stock (normal/promo) gudang bulanan di customer under report Sales promotion
+										*/
+										'content' => 'monthly Stock Harian',
+										'url' => '/salespromo/report-daily',
+										'badge' => '0'
+									],							
 								]),
 						],
-						Html::TYPE_WARNING
+						Html::TYPE_INFO
 					);
 				?>
 				

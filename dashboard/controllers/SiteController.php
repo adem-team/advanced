@@ -4,10 +4,10 @@ namespace dashboard\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
-use crm\sistem\models\LoginForm;
+use dashboard\sistem\models\LoginForm;
 use Yii\web\User;
 use yii\filters\VerbFilter;
-use crm\sistem\models\UserloginSearch;
+use dashboard\sistem\models\UserloginSearch;
 //use lukisongroup\models\hrd\Employe;
 //use lukisongroup\models\hrd\EmployeSearch;
 //use lukisongroup\models\system\user\UserloginSearch;
@@ -81,7 +81,7 @@ class SiteController extends Controller
         }
     }
 	
-	public function beforeAction($action)
+	/* public function beforeAction($action)
 	{
 
 		if (!parent::beforeAction($action)) {
@@ -99,7 +99,7 @@ class SiteController extends Controller
 		} else {
 			return true;
 		}
-	}
+	} */
 	
 	
 	

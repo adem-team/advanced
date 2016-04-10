@@ -8,14 +8,14 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use kartik\icons\Icon;
 use dmstr\widgets\Alert;
-use crm\sistem\models\UserloginSearch;
-use crm\sistem\models\M1000;			
+use dashboard\sistem\models\UserloginSearch;
+use dashboard\sistem\models\M1000;			
 //use lukisongroup\assets\AppAsset;
 use mdm\admin\components\MenuHelper;
 use yii\bootstrap\Modal;
 //AppAsset::register($this);
 dmstr\web\AdminLteAsset::register($this);
-use lukisongroup\assets\AppAsset_style;
+use dashboard\assets\AppAsset_style;
 AppAsset_style::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -83,11 +83,13 @@ AppAsset_style::register($this);
                 <div class="wrapper">
                     <header class="main-header">
                         <a  class="logo bg-red">
-                            <?php
-                            //echo Html::img('http://lukisongroup.com/favicon.ico', ['width'=>'20']);
-                            ?>
-                            <!-- LOGO -->
-                            CRM LukisonGroup
+                             <?php
+                                        if ($this->sideCorp != '') {
+                                            echo $this->sideCorp;
+                                        }else{
+                                            echo 'PT. Lukison Group';
+                                        };
+                                    ?>
                         </a>
                            <!--  <div class="navbar-custom-menu">!-->
                                 <?php
@@ -96,7 +98,7 @@ AppAsset_style::register($this);
                                         //$menuItems  = MenuHelper::getAssignedMenu(Yii::$app->user->id);
                                         $menuItems = MenuHelper::getAssignedMenu(Yii::$app->user->id, null, $callback);
                                         $menuItems[] = [
-                                            'label' => Icon::show('power-off') . ' ' . Yii::$app->user->identity->username . ' ',
+                                            'label' => Icon::show('power-off'),
                                             //'label' => Icon::showStack('twitter', 'square-o', ['class'=>'fa-lg']) . 'Logout (' . Yii::$app->user->identity->username . ')',
                                             'url' => ['/site/logout'],
                                             'linkOptions' => ['data-method' => 'post']
@@ -138,43 +140,7 @@ AppAsset_style::register($this);
 
                     </header>
                     <aside class="main-sidebar">
-                        <section class="sidebar">
-                            <!-- User Login -->
-                                <div class="user-panel">
-                                    <div class="pull-left" style="text-align: left">
-                                        <img src="<?= Yii::getAlias('@HRD_EMP_UploadUrl') .'/'. $MainAvatar; ?>" class="img-circle" alt="Cinque Terre" width="80" height="80"/>
-                                    </div>
-                                    <div class="pull-left info" style="margin-left: 40px" >
-                                        <p><?php echo $MainUserProfile; ?></p>
-                                    
-                                        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-                                    </div>
-                                </div>
-                            <div class="user-panel bg-red">
-                                <!-- /.Company Select Dashboard -->
-                                 <p>
-                                    <?php
-                                        if ($this->sideCorp != '') {
-                                            echo $this->sideCorp;
-                                        }else{
-                                            echo 'PT. Lukison Group';
-                                        };
-                                    ?>
-                                 </p>
-                            </div>
-                               
-                            <!-- /.User Login -->
-                            <!-- search form -->
-                                <form action="#" method="get" class="sidebar-form skin-blue">
-                                    <div class="input-group">
-                                        <input type="text" name="q" class="form-control" placeholder="Search..."/>
-                                      <span class="input-group-btn">
-                                        <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i>
-                                        </button>
-                                      </span>
-                                    </div>
-                                </form>
-                            <!-- /.search form -->
+                        <section class="sidebar">                           
                                 <?php
                                     /**
                                      * Author: -ptr.nov-
