@@ -22,9 +22,9 @@ use yii\helpers\Url;
 			]);
 		?>
 			<?php // $form->field($model, 'cabID')->hiddenInput(['value'=>1,'maxlength' => true])->label(false) ?>
-			
+
 			<div class="col-lg-8 pull-right">
-				
+
 					<?php
 						echo $form->field($model, 'vCorpID')->textInput([
 						'value'=>$model['corpOne']['CORP_NM'],
@@ -33,9 +33,9 @@ use yii\helpers\Url;
 						'style'=>[
 							//'width'=>'50%'
 						],
-					])->label('Corp'); 
+					])->label('Corp');
 					?>
-					
+
 					<?php
 						echo $form->field($model, 'vKarId')->textInput([
 								'value'=>$model->EMP_ID,
@@ -47,9 +47,9 @@ use yii\helpers\Url;
 								],
 							])->label('Emp.Id');
 					?>
-				
-				<?php 
-				
+
+				<?php
+
 					echo $form->field($model, 'vKarNm')->textInput([
 								'value'=>$model->EMP_NM,
 								'maxlength' => true,
@@ -60,37 +60,40 @@ use yii\helpers\Url;
 									//'padding-top'=>'0px'
 								],
 							])->label('Name');
-				?>				
+				?>
 			</div>
 			<div class="col-lg-4">
 				<?php
-					echo Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/'.$model->EMP_IMG, ['width'=>'130','height'=>'130', 'align'=>'right'])
+					echo Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/'.$model->EMP_IMG, ['width'=>'130','height'=>'130', 'align'=>'right']);
+
 				?>
 			</div>
+					<div class="col-lg-2">
+					</div>
 			<div class="col-lg-12">
 				<?php
-			
-				
-					
+
+
+
 				/* echo $form->field($model, 'vCabID')->dropDownList($aryCbgID,[
 					'id'=>'emp-cab',
 					'prompt'=>$model->cabOne['CAB_NM'],
 				])->label('Cabang'); */
-				
-				
+
+
 				echo $form->field($model, 'EMP_NM')->textInput(['maxlength' => true,'style'=>[
 								'width'=>'100%'
 							],])->label('Nama');
 				//CABANG -> Source Generate code  Compponen
-				
-				
+
+
 				//echo $form->field($model, 'KAR_NM')->textInput(['maxlength' => true])->label('Nama');
-				
+
 				//INPUT FILE IMAGE
 				 echo $form->field($model, 'image')->widget(FileInput::classname(), [
 						'options'=>['accept'=>'image/*'],
 						'pluginOptions'=>['allowedFileExtensions'=>['jpg','gif','png']]
-					]);  
+					]);
 			?>
 			</div>
 	<div  class="col-lg-12" style="text-align: right;">
@@ -98,5 +101,14 @@ use yii\helpers\Url;
 		</div>
 
     <?php ActiveForm::end(); ?>
+	</div>
+<div class="row">
+	<div class="col-sm-12">
+		<?php
+		$ttd1 = $model->SIGSVGBASE64!='' ?  '<img style="width:60%; height:60%" src='.$model->SIGSVGBASE64.'></img>' :'';
+		echo $ttd1
+		?>
+
+	</div>
 	</div>
 </div>

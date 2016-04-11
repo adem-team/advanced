@@ -28,7 +28,7 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 ?>
 
 
-<?php	
+<?php
 	$Corp_MDL = Corp::find()->where(['CORP_ID'=>$model->EMP_CORP_ID])->orderBy('SORT')->one();
 	$Dept_MDL = Dept::find()->where(['DEP_ID'=>$model->DEP_ID])->orderBy('SORT')->one();
 	$DeptSub_MDL = Deptsub::find()->where(['DEP_SUB_ID'=>$model->DEP_SUB_ID])->orderBy('SORT')->one();
@@ -36,49 +36,49 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 	$GSeqmen_MDL = Groupseqmen::find()->where(['SEQ_ID'=>$model->SEQ_ID])->one();
 	$Jabatan_MDL = Jobgrade::find()->where(['JOBGRADE_ID'=>$model->JOBGRADE_ID])->orderBy('SORT')->one();
 	$Status_MDL = Status::find()->where(['STS_ID'=>$model->EMP_STS])->orderBy('SORT')->one();
-	
+
 	/*COORPORATE*/
 	if (count($Corp_MDL)==0){
 		$Val_Corp='none';
 	}else{
 		$Val_Corp=$Corp_MDL->CORP_NM;
 	}
-	
+
 	/*DEPARTMENT*/
 	if (count($Dept_MDL)==0){
 		$Val_Dept='none';
 	}else{
 		$Val_Dept=$Dept_MDL->DEP_NM;
 	}
-	
+
 	/*DEPARTMENT-SUB*/
 	if (count($DeptSub_MDL)==0){
 		$Val_DeptSub='none';
 	}else{
 		$Val_DeptSub=$DeptSub_MDL->DEP_SUB_NM;
 	}
-	
+
 	/*GROUP-FUNCTION*/
 	if (count($Gf_MDL)==0){
 		$Val_GF='none';
 	}else{
 		$Val_GF=$Gf_MDL->GF_NM;
 	}
-	
+
 	/*GROUP-SEQUEN*/
 	if (count($GSeqmen_MDL)==0){
 		$Val_SQMEN='none';
 	}else{
 		$Val_SQMEN=$GSeqmen_MDL->SEQ_NM;
 	}
-	
+
 	/*JOBGRADE*/
 	if (count($Jabatan_MDL)==0){
 		$Val_Jabatan='none';
 	}else{
 		$Val_Jabatan=$Jabatan_MDL->JOBGRADE_NM;
 	}
-	
+
 	/*STATUS*/
 	if (count($Status_MDL)==0){
 		$Val_Status='none';
@@ -101,7 +101,7 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 			//'value'=>('<img src =' . Yii::getAlias('@HRD_EMP_UploadUrl') .'/'. $model->EMP_IMG. ' height="100" width="100"' . '>' )
 			'value'=>Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$model->EMP_IMG,
 			'format'=>['image',['width'=>'100','height'=>'120']],
-			//'format'=>'raw', 
+			//'format'=>'raw',
 			'type' => DetailView::INPUT_FILEINPUT,
 			'widgetOptions'=>[
 						'pluginOptions' => [
@@ -110,7 +110,7 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 							'showRemove' => false,
 							'showUpload' => false
 						],
-					
+
 			],
 			//'inputContainer' => ['class'=>'col-md-2'],
 			//'format' => 'html', //'format' => 'image',
@@ -123,16 +123,16 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 			'options'=>['readonly'=>true,],
 			//'inputWidth'=>'20%'
 			//'inputContainer' => ['class'=>'col-md-1'],
-		],	
+		],
 		[
 			'attribute' =>	'EMP_NM',
-			//'inputWidth'=>'40%'					
+			//'inputWidth'=>'40%'
 		],
 		[
 			'attribute' =>	'EMP_NM_BLK',
 			//'inputWidth'=>'40%'
 		],
-		
+
 		/* SUB INPUT*/
 		[
 			'group'=>true,
@@ -141,12 +141,12 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 			//'groupOptions'=>['class'=>'text-center']
 		],
 		// COORPORATE - Author: -ptr.nov-
-		[ 			
+		[
 			'label'=>'Coorporate',
 			'attribute' =>'EMP_CORP_ID',
 			'format'=>'raw',
 			'value'=>Html::a($Val_Corp, '#', ['class'=>'kv-author-link']),
-			'type'=>DetailView::INPUT_SELECT2, 
+			'type'=>DetailView::INPUT_SELECT2,
 			'widgetOptions'=>[
 				'data'=> ArrayHelper::map(Corp::find()->orderBy('SORT')->asArray()->all(), 'CORP_ID','CORP_NM'),
 				'options'=>['placeholder'=>'Select ...'],
@@ -158,12 +158,12 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 			'label'=>'Department',
 			'attribute' =>'DEP_ID',
 			'format'=>'raw',
-			'value'=>Html::a($Val_Dept, '#', ['class'=>'kv-author-link']),			
+			'value'=>Html::a($Val_Dept, '#', ['class'=>'kv-author-link']),
 			'type'=>DetailView::INPUT_SELECT2,
 			 'widgetOptions'=>[
 					'data'=>ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 'DEP_ID','DEP_NM'),
 					'options' => [ 'id'=>'dept-id',],
-							
+
 			],
 		],
 		// SUB DEPARTMENT - Author: -ptr.nov-
@@ -172,7 +172,7 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 			'attribute' =>'DEP_SUB_ID',
 			'format'=>'raw',
 			'value'=>Html::a($Val_DeptSub, '#', ['class'=>'kv-author-link']),
-			'type'=>DetailView::INPUT_DEPDROP,	
+			'type'=>DetailView::INPUT_DEPDROP,
 			'widgetOptions' => [
 				'options'=>['id'=>'subdept-id'],//,'readonly'=>true,'selected'=>false], //PR VISIBLE DROP DOWN
 				'pluginOptions'=>[
@@ -188,44 +188,44 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 
 			],
 		],
-		// GROUP FUNCTION - Author: -ptr.nov-		
-		[ 
+		// GROUP FUNCTION - Author: -ptr.nov-
+		[
 			'label'=>'Group Function',
 			'attribute' =>'GF_ID',
 			'format'=>'raw',
 			'value'=>Html::a($Val_GF, '#', ['class'=>'kv-author-link']),
-			'type'=>DetailView::INPUT_SELECT2, 
+			'type'=>DetailView::INPUT_SELECT2,
 			'widgetOptions'=>[
 				'data'=> ArrayHelper::map(Groupfunction::find()->orderBy('SORT')->asArray()->all(), 'GF_ID','GF_NM'),
 				'options' => [ 'id'=>'Groupfnc-id'],
-			],			
-		],	
+			],
+		],
 		// GROUP SEQMEN - Author: -ptr.nov-
 		[
 			'label'=>'Group Seqmen',
 			'attribute' =>'SEQ_ID',
 			'format'=>'raw',
 			'value'=>Html::a($Val_SQMEN, '#', ['class'=>'kv-author-link']),
-			'type'=>DetailView::INPUT_SELECT2, 
+			'type'=>DetailView::INPUT_SELECT2,
 			'widgetOptions'=>[
 				'data'=> ArrayHelper::map(Groupseqmen::find()->orderBy('SEQ_NM')->asArray()->all(), 'SEQ_ID','SEQ_NM'),
 				'options' => [ 'id'=>'Groupseq-id'],
-			],			
-		],			
+			],
+		],
 		// JOBGRADE - Author: -ptr.nov-
 		[
 			'label'=>'Grading',
 			'attribute' =>'JOBGRADE_ID',
 			'format'=>'raw',
 			'value'=>Html::a($Val_Jabatan, '#', ['class'=>'kv-author-link']),
-			'type'=>DetailView::INPUT_DEPDROP, 
+			'type'=>DetailView::INPUT_DEPDROP,
 			'widgetOptions'=>[
 				'options'=>['id'=>'grading-id'],
 				//'data'=>ArrayHelper::map(Jobgrade::find()->orderBy('SORT')->asArray()->all(), 'JOBGRADE_ID','JOBGRADE_NM'),
 				//'options'=>['placeholder'=>'Select ...'],
 				//'pluginOptions'=>['allowClear'=>true],
 				'pluginOptions'=>[
-					'depends'=>['Groupfnc-id','Groupseq-id'],					
+					'depends'=>['Groupfnc-id','Groupseq-id'],
 					'url'=>Url::to(['/hrd/employe/grading']),
 					'initialize'=>true, //loding First //
 					//'initDepends'=>$model->DEP_SUB_ID,
@@ -236,13 +236,13 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 			],
 			//'inputContainer' => ['class'=>'col-sm-3'],
 			//'inputWidth'=>'40%'
-		],	
+		],
 		// STATUS - Author: -ptr.nov-
 		[
 			'attribute' =>'EMP_STS',
 			'format'=>'raw',
 			'value'=>Html::a($Val_Status, '#', ['class'=>'kv-author-link']),
-			'type'=>DetailView::INPUT_SELECT2, 
+			'type'=>DetailView::INPUT_SELECT2,
 			'widgetOptions'=>[
 				'data'=>ArrayHelper::map(Status::find()->orderBy('SORT')->asArray()->all(), 'STS_ID','STS_NM'),
 				'options'=>['placeholder'=>'Select ...'],
@@ -250,7 +250,7 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 			],
 			//'inputContainer' => ['class'=>'col-sm-3'],
 			//'inputWidth'=>'40%'
-			
+
 		],
 		[
 			'id'=>'my_datepicker',
@@ -275,7 +275,7 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 			//'inputWidth'=>'40%'
 		//	'inputContainer' => ['class'=>'col-sm-3'],
 		],
-		
+
 		/* SUB INPUT*/
 		[
 			'group'=>true,
@@ -283,12 +283,12 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 			'rowOptions'=>['class'=>'info'],
 			//'groupOptions'=>['class'=>'text-center']
 		],
-		
+
 		//Employe Profile - Author: -ptr.nov-
 		[
 			'attribute' =>	'EMP_KTP' ,
 		],
-		[	
+		[
 			'attribute' =>	'EMP_ALAMAT',
 		],
 		[
@@ -321,13 +321,13 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 			'attribute' =>	'GRP_NM',
 		],
 		*/
-		
+
 	];
 
 		$form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,
 		'id'=>'viewedit',
 		'enableClientValidation' => true,
-		
+
 		'options'=>['enctype'=>'multipart/form-data']]);
 			echo DetailView::widget([
 				'id'=>'dv-view-emp',
@@ -338,20 +338,17 @@ $this->title = Yii::t('app', 'Personalia - Detail & Edit Employee');   /* title 
 				'panel'=>[
 					'heading'=>$model->EMP_NM . ' '.$model->EMP_NM_BLK,
 					'type'=>DetailView::TYPE_INFO,
-				],	
-				
+				],
+
 					'attributes'=>$attribute,
-				
-				
+
+
 				'deleteOptions'=>[
 					'url'=>['delete', 'id' => $model->EMP_ID],
 					'data'=>[
 						'confirm'=>Yii::t('app', 'Are you sure to deleted this record Name =' . $model->EMP_NM .'?'),
 						'method'=>'post',
 					],
-				],		
-			]);		
-		ActiveForm::end();	
-		
-	
-
+				],
+			]);
+		ActiveForm::end();

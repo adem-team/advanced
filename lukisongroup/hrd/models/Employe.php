@@ -26,6 +26,7 @@ class Employe extends \yii\db\ActiveRecord
 	public $vKarNm;
 	public $vCorpID;
 	public $vIMAGE;
+	public $EMP_IMG_64;
 
 	/* [1] SOURCE DB */
     public static function getDb()
