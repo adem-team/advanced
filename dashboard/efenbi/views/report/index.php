@@ -28,16 +28,18 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	]);
 ?>
 
-<div class="container-fluid" style="padding-left: 20px; padding-right: 20px;background-color:black;padding-top:0" >
+<!--<div class="container-fluid" style="padding-left: 20px; padding-right: 20px;background-color:black;padding-top:0" >!-->
+<div class="container-fluid" style="padding-left: 20px; padding-right: 20px" >
 		<div class="row">
 			<div class="col-xs-12 col-sm-12 col-dm-12  col-lg-12">
 					<?php
 					 echo Html::panel(
 						[
 							'heading' => '<div>DASHBOARD - Saleman Visit</div>',
-							'body'=>'<div style="background-color:black">'.$contentCustomer.'</div>',
+							//'body'=>'<div style="background-color:black">'.$contentCustomer.'</div>',
+							'body'=>$contentCustomer,
 							'options'=>[
-								'style'=>'background-color:black',
+								//'style'=>'background-color:black',
 							],
 						],
 						Html::TYPE_INFO

@@ -102,13 +102,24 @@ use yii\helpers\Url;
 
     <?php ActiveForm::end(); ?>
 	</div>
-<div class="row">
-	<div class="col-sm-12">
-		<?php
-		$ttd1 = $model->SIGSVGBASE64!='' ?  '<img style="width:60%; height:60%" src='.$model->SIGSVGBASE64.'></img>' :'';
-		echo $ttd1
-		?>
-
-	</div>
+	<div class="row">
+		<div class="col-sm-6">
+			<?php
+			// $ttd1 = $model->SIGSVGBASE64!='' ?  '<img style="width:60%; height:60%" src='.$model->SIGSVGBASE64.'></img>' :'';
+			// echo $ttd1
+			?>
+			<table  class="col-md-12 table-bordered  text-center" style="margin-top:20px;margin-bottom:20px;">
+				<tbody>
+					<tr>
+						<td>
+							<?php
+								$ttd1 = $model->SIGSVGBASE64!='' ?  '<img style="width:60%; height:40%" src='.$model->SIGSVGBASE64.'></img>' :'';
+								echo $ttd1;
+							?>
+						 </td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
