@@ -1372,7 +1372,7 @@ class PurchaseOrderController extends Controller
 
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth1Model']['kdpo'];
-          // $this->Sendmail($kdpo);
+          $this->Sendmail($kdpo);
 					return $this->redirect(['create', 'kdpo'=>$kdpo]);
 				}
 			}
@@ -1406,7 +1406,7 @@ class PurchaseOrderController extends Controller
 				if ($auth2Mdl->auth2_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth2Model']['kdpo'];
-          // $this->Sendmail2($kdpo);
+          $this->Sendmail2($kdpo);
 					return $this->redirect(['review', 'kdpo'=>$kdpo]);
 				}
 			}
@@ -1440,7 +1440,7 @@ class PurchaseOrderController extends Controller
 				if ($auth3Mdl->auth3_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth3Model']['kdpo'];
-            // $this->Sendmail3($kdpo);
+          $this->Sendmail3($kdpo);
 					return $this->redirect(['review', 'kdpo'=>$kdpo]);
 				}
 			}

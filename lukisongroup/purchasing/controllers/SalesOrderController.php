@@ -945,14 +945,15 @@ class SalesOrderController extends Controller
 			]);
 	}
 
-  public function Sendmail($kd)
+  public function Sendmail($kd,$empid)
   {
-    // $profile=Yii::$app->getUserOpt->Profile_user();
-    // $dep = $profile->emp->DEP_ID;
-    // $datamanager = Employe::find()->where(['DEP_ID'=>$dep,'JOBGRADE_ID'=>'M'])->asArray()->one();
-    // $datamanager['EMP_EMAIL'];
-    // print_r(  $datamanager['EMP_EMAIL']);
-    // die();
+    $profile = Yii::$app->getUserOpt->Profile_user(); // create ro
+    $user = $profile->username;
+    $dep_id = $profile->emp->DEP_ID;
+    $gf_id = $profile->emp->GF_ID;
+
+    $usercc = Userlogin::find()->where(['EMP_ID'=>$empid])->asArray()->one(); // usercc
+    $approve = Employe::find()->where(['DEP_ID'=>$dep_id])->andwhere('GF_ID<=3')->asArray()->one();//approve ro
 
     // $email = Yii::$app->user->identity->email;
     $roHeader = Salesorder::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
@@ -1032,7 +1033,8 @@ class SalesOrderController extends Controller
   ]);
   // aditiya@lukison.com
   // $to=[$dataemail['email'],$email,'purchasing@lukison.com',$datamanager['EMP_EMAIL']];
-  $to=['sales_order@lukison.com'];
+  // $to=['sales_order@lukison.com'];
+    $to=[$user,$usercc['username'],$approve['EMP_EMAIL']];
 
   \Yii::$app->kirim_email->pdf($contentMail,'SO',$to,'Sales-Order',$contentMailAttachBody);
 
@@ -1050,8 +1052,8 @@ class SalesOrderController extends Controller
 				if ($auth1Mdl->auth1_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth1Model']['kdro'];
-          // $empid = $hsl['Auth1Model']['empID'];
-          $this->Sendmail($kdro);
+          $empid = $hsl['Auth1Model']['empID'];
+          $this->Sendmail($kdro,$empid);
 					return $this->redirect(['/purchasing/sales-order/view','kd'=>$kdro]);
 				}
 			}
@@ -1087,8 +1089,8 @@ class SalesOrderController extends Controller
 				if ($auth2Mdl->auth2_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth2Model']['kdro'];
-          // $empid = $hsl['Auth1Model']['empID'];
-          $this->Sendmail($kdro);
+          $empid = $hsl['Auth1Model']['empID'];
+          $this->Sendmail($kdro,$empid);
 					return $this->redirect(['/purchasing/sales-order/review','kd'=>$kdro]);
 				}
 			}
@@ -1124,8 +1126,8 @@ class SalesOrderController extends Controller
 				if ($auth3Mdl->auth3_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth3Model']['kdro'];
-          // $empid = $hsl['Auth1Model']['empID'];
-          $this->Sendmail($kdro);
+          $empid = $hsl['Auth1Model']['empID'];
+          $this->Sendmail($kdro,$empid);
 					return $this->redirect(['/purchasing/sales-order/review','kd'=>$kdro]);
 				}
 			}
