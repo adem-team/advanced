@@ -1196,8 +1196,6 @@ class RequestOrderController extends Controller
 
       $usercc = Userlogin::find()->where(['EMP_ID'=>$empid])->asArray()->one(); // usercc
       $approve = Employe::find()->where(['DEP_ID'=>$dep_id])->andwhere('GF_ID<=3')->asArray()->one();//approve ro
-
-
       $roHeader = Requestorder::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
       $detro = $roHeader->detro;
       $employ = $roHeader->employe;
@@ -1346,7 +1344,8 @@ class RequestOrderController extends Controller
 				if ($auth2Mdl->auth2_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth2Model']['kdro'];
-					 $this->Sendmail($kdro);
+          $user =  $hsl['Auth1Model']['empID'];
+          $this->Sendmail($kdro,$user);
 					return $this->redirect(['/purchasing/request-order/review','kd'=>$kdro]);
 				}
 			}
@@ -1383,7 +1382,8 @@ class RequestOrderController extends Controller
 				if ($auth3Mdl->auth3_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth3Model']['kdro'];
-					 $this->Sendmail($kdro);
+          $user =  $hsl['Auth1Model']['empID'];
+          $this->Sendmail($kdro,$user);
 					return $this->redirect(['/purchasing/request-order/review','kd'=>$kdro]);
 				}
 			}
