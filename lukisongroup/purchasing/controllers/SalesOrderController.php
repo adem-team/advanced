@@ -32,6 +32,7 @@ use lukisongroup\hrd\models\Employe;
 use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Tipebarang;
+use lukisongroup\sistem\models\Userlogin;
 use yii\data\ActiveDataProvider;
 
 
