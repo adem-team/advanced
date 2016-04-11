@@ -1,4 +1,5 @@
 <?php
+use \Yii;
 use dashboard\sistem\models\Userlogin;
 /*
  * Login Dashboard user Permission
@@ -18,7 +19,11 @@ use dashboard\sistem\models\Userlogin;
 if (count($model)<>0){
 	//$Val_Corp='none'
 	if($model->POSITION_LOGIN==1){
-		include('_index_efembi.php');		
+		//include('_index_efembi.php');
+		Yii::$app->controller->redirect('/efenbi/report');
+
+
+		
 	}elseif($model->POSITION_LOGIN==2){
 		include('_index_foodtown.php');
 	}elseif($model->POSITION_LOGIN==3){

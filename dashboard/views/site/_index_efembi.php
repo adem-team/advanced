@@ -1,5 +1,10 @@
 <?php
 use kartik\helpers\Html;
+use yii\helpers\Json;
+use yii\web\Response;
+use yii\helpers\ArrayHelper;
+use yii\data\ArrayDataProvider;
+
 use kartik\detail\DetailView;
 use yii\bootstrap\Modal;
 use kartik\widgets\ActiveField;
@@ -16,6 +21,11 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 
 ?>
 
+<?php
+	$contentCustomer=Yii::$app->controller->renderPartial('_efenbi_chart_customer');
+?>
+
+
 <div class="container-fluid" style="padding-left: 20px; padding-right: 20px" >
 		<div class="row">
 			<div class="col-xs-12 col-sm-12 col-dm-12  col-lg-12">
@@ -23,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					 echo Html::panel(
 						[
 							'heading' => '<div>DASHBOARD - Saleman Visit</div>',
-							'body'=>'',//$prof,
+							'body'=>$contentCustomer,
 						],
 						Html::TYPE_INFO
 					);
