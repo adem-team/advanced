@@ -1187,22 +1187,19 @@ class RequestOrderController extends Controller
 
     }
 
-    public function Sendmail($kd)
+    public function Sendmail($kd,$empid)
     {
-      // $profile=Yii::$app->getUserOpt->Profile_user();
-      // $dep = $profile->emp->DEP_ID;
-      // $datamanager = Employe::find()->where(['DEP_ID'=>$dep,'JOBGRADE_ID'=>'M'])->asArray()->one();
-      // $datamanager['EMP_EMAIL'];
-      // print_r(  $datamanager['EMP_EMAIL']);
-      // die();
+      $profile = Yii::$app->getUserOpt->Profile_user(); // create ro
+      $user = $profile->username;
+      $dep_id = $profile->emp->DEP_ID;
+      $gf_id = $profile->emp->GF_ID;
 
-      // $email = Yii::$app->user->identity->email;
+      $usercc = Userlogin::find()->where(['EMP_ID'=>$empid])->asArray()->one(); // usercc
+      $approve = Employe::find()->where(['DEP_ID'=>$dep_id])->andwhere('GF_ID<=3')->asArray()->one();//approve ro
+
+
       $roHeader = Requestorder::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
       $detro = $roHeader->detro;
-      // $dataemail = Userlogin::find()->where(['EMP_ID'=>$empid])->asArray()->one();
-      // print_r($email);
-      // die();
-
       $employ = $roHeader->employe;
       $dept = $roHeader->dept;
       $roDetail = Rodetail::find()->where(['KD_RO'=>$kd])->all();
@@ -1274,7 +1271,7 @@ class RequestOrderController extends Controller
     ]);
     // aditiya@lukison.com
     // $to=[$dataemail['email'],$email,'purchasing@lukison.com',$datamanager['EMP_EMAIL']];
-    $to=['request_order@lukison.com'];
+    $to=[$user,$usercc['username'],$approve['EMP_EMAIL']];
 
     \Yii::$app->kirim_email->pdf($contentMail,'RO',$to,'Request-Order',$contentMailAttachBody);
 
@@ -1311,8 +1308,8 @@ class RequestOrderController extends Controller
 				if ($auth1Mdl->auth1_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth1Model']['kdro'];
-          // $userid =  $hsl['Auth1Model']['empID'];
-          $this->Sendmail($kdro);
+          $user =  $hsl['Auth1Model']['empID'];
+          $this->Sendmail($kdro,$user);
 					return $this->redirect(['/purchasing/request-order/view','kd'=>$kdro]);
 				}
 			}
