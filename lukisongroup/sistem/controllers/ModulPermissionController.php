@@ -115,6 +115,10 @@ class ModulPermissionController extends Controller
               $model->save();
               $output = $model->BTN_VIEW;
             }
+            if (isset($posted['BTN_REVIEW'])) {
+              $model->save();
+              $output = $model->BTN_REVIEW;
+            }
             if (isset($posted['BTN_PROCESS1'])) {
               $model->save();
               $output = $model->BTN_PROCESS1;
