@@ -19,6 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 	/* LOCK STATUS TOMBOL */
 	/* LOCK STATUS TOMBOL */
 	 $headerStatus=$roHeader->STATUS;
+	 $barangStatus = $roDetail->STATUS;
 
  $this->registerJs('
 		$(document).ready(function($) {
@@ -548,9 +549,9 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 						'vAlign'=>'middle',
 						'hAlign'=>'center',
 						'mergeHeader'=>true,
-						'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+						'readonly'=>function($model, $key, $index, $widget) use ($barangStatus) {
 							//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
-							return (0 <> $model->STATUS || 0<> $headerStatus); // Allow Status Process = 0);
+							return (0 <> $model->STATUS || 0<> $barangStatus); // Allow Status Process = 0);
 						},
 						'editableOptions' => [
 							'header' => 'Update Price',
@@ -649,7 +650,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 						'class'=>'kartik\grid\ActionColumn',
 						'dropdown' => true,
 						'template' => '{approved} {reject} {cancel} {closed}',
-						'dropdownOptions'=>['class'=>'pull-right dropup'],									
+						'dropdownOptions'=>['class'=>'pull-right dropup'],
 						//'headerOptions'=>['class'=>'kartik-sheet-style'],
 						'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 						'buttons' => [
