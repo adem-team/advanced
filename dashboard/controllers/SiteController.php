@@ -105,7 +105,7 @@ class SiteController extends Controller
 	
     public function actionLogin()
     {
-		Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+		//Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -123,10 +123,10 @@ class SiteController extends Controller
         }
     }
 
-	 protected  function afterLogin(){
+	/*  protected  function afterLogin(){
 		 
 		 yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']); 
-	 }
+	 } */
 	
     public function actionLogout()
     {

@@ -13,32 +13,36 @@ use yii\data\ArrayDataProvider;
 use lukisongroup\dashboard\models\RptesmGraph;
 
 class ReportController extends Controller
-{
-	
-	/*CUSTOMER DATA*/
-	public function getCountCustParent(){
-		return Yii::$app->db_esm->createCommand("CALL ESM_GRAPH_CUSTOMER_count('count_kategory_customer_parent')")->queryAll();           
-	}
-	
-    public function actionIndex()
+{	
+	public function actionIndex()
     {
 		 if (\Yii::$app->user->isGuest) {
             return $this->render('../../../views/site/index_nologin'
             );
-        }else{
+        }else{		
+		
+			/* CUSTOMER CATEHORI COUNT [modern,general,horeca,other]*/
 			$dataProvider_CustPrn= new ArrayDataProvider([
-			'key' => 'PARENT_ID',
-			'allModels'=>$this->getCountCustParent(),
-			 'pagination' => [
-				'pageSize' => 10,
-				]
-			]);
+				'key' => 'PARENT_ID',
+				'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_custromer_ktg('count_kategory_customer_parent')")->queryAll(),
+				'pagination' => [
+					'pageSize' => 50,
+					]
+			]);			
 			$model_CustPrn=$dataProvider_CustPrn->getModels();
 			$count_CustPrn=$dataProvider_CustPrn->getCount();
 			
+			/* COUNTER SALESMAN VISIT */
+			$dataCntrVisit=Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_customer_visit('COUNTER_DAILY','". date('Y-m-d')."','','')")->queryAll();
+			$CntrVisit=$dataCntrVisit[0]['CNT_DAY']!=''? $dataCntrVisit[0]['CNT_DAY']:0;
+			
 			return $this->render('index',[
+				/*COUNTER VISIT DAILY*/
+				'CntrVisit'=>$CntrVisit,
+				/* CUSTOMER CATEHORI COUNT [modern,general,horeca,other]*/
 				'model_CustPrn'=>$model_CustPrn,
-				'count_CustPrn'=>$count_CustPrn,  // Condition  validation model_CustPrn offset array -ptr.nov-
+				'count_CustPrn'=>$count_CustPrn,  						// Condition  validation model_CustPrn offset array -ptr.nov-
+				/*CHART*/
 				'dataEsmStockAll'=>$this->graphEsmStockAll(),
 				'graphEsmStockPerSku'=>$this->graphEsmStockPerSku()
 			]);
@@ -54,7 +58,7 @@ class ReportController extends Controller
 	protected function graphEsmStockAll(){
 		$AryDataProvider= new ArrayDataProvider([
 			//'key' => 'PARENT_ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL ESM_GRAPH_stock_all()")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_customer_visit('GRAPH_COUNTER_DAILY','". date('Y-m-d')."','','')")->queryAll(),
 			 'pagination' => [
 				'pageSize' => 100,
 			]
@@ -62,36 +66,23 @@ class ReportController extends Controller
 		$dataProvider=Json::encode($AryDataProvider->getModels());		
 		$prn='{
 			"chart": {
-				"caption": "UPDATE ESM ALL STOCK",
-               // "subcaption": "Last six months",
-				"xAxisName": "Date",
-                "yAxisName": "Qty Unit",
-				"showValues": "1" , 			//MENAMPILKAN VALUE 
-				"showBorder": "1", 				//Border side Out 
-				"showCanvasBorder": "0",		//Border side inside
-				"showAlternateHGridColor": "0",	//
-				//"paletteColors": "#FF0033,#F9FB10,#0075c2,#1aaf5d",	//color line
-				 //"showShadow": "1", 
-                //"yaxisminvalue": "0",
-                //"yaxismaxvalue": "10",
-                //"anchorAlpha": "100",
-               // "theme":"fint",
-               // "captionFontSize": "14",
-               // "subcaptionFontSize": "14",
-               // "subcaptionFontBold": "0",
-                "paletteColors": "#FF0033,#F9FB10,#0075c2,#1aaf5d",
-                "bgcolor": "#ffffff",
-                           
-                //"usePlotGradientColor": "0",
-                //"legendBorderAlpha": "",
-               // "legendShadow": "0",
-               // "showAxisLines": "0",
-                
-                "divlineThickness": "1",
-                "divLineIsDashed": "2",
-                "divLineDashLen": "1",
-                //"divLineGapLen": "1"
-                
+				caption: "VISIT PROCESS",           
+				 theme: "fint",					 
+                showValues: "1",
+                showZeroPlane: "1",                                
+                zeroPlaneColor:"#003366",
+                zeroPlaneAlpha: "100",
+                zeroPlaneThickness: "3",
+                divLineIsDashed: "0",
+                divLineAlpha: "40",
+				xAxisName: "time",
+                yAxisName: "Visit",
+				showValues: "1" , 			//MENAMPILKAN VALUE 
+				showBorder: "1", 				//Border side Out 
+				showCanvasBorder: "0",		//Border side inside
+				showAlternateHGridColor: "0",	//
+				bgcolor: "#ffffff"
+			                  
                  
             },
 			

@@ -21,6 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 
 <?php
 	$contentCustomer=Yii::$app->controller->renderPartial('_efenbi_chart_customer',[
+			'CntrVisit'=>$CntrVisit,
 			'model_CustPrn'=>$model_CustPrn,
 			'count_CustPrn'=>$count_CustPrn,
 			'dataEsmStockAll'=>$dataEsmStockAll,

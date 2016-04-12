@@ -28,7 +28,7 @@ global $canvasEndY;
 						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div class="huge"><?php echo $count_CustPrn>0?$model_CustPrn[0]['COUNT_ALL_CUST']:0;?> </div>
+							<div id="cust-all-id" class="huge"><h4><?php echo $count_CustPrn>0?$model_CustPrn[0]['COUNT_ALL_CUST']:0;?> </h4></div>
 							<div><?php echo 'All Customers';?></div>
 						</div>
 					</div>
@@ -47,18 +47,17 @@ global $canvasEndY;
 					<div class="row">
 						<div class="col-lg-3">
 							<i class="fa fa-list-alt fa-4x"></i>
-						</div>
-						
+						</div>						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div class="huge"><?php echo $count_CustPrn>0?$model_CustPrn[0]['COUNT_CUST']:0; ?> </div>
-							<div><?php echo $count_CustPrn>0?'Customers '.$model_CustPrn[0]['PARENT_NM']:'None'; ?></div>
+							<div  id="cust-medern-id" class="huge"><h4><?php echo $count_CustPrn>0?$model_CustPrn[1]['COUNT_CUST']:0; ?><h4></div>
+							<div><?php echo $count_CustPrn>0? $model_CustPrn[1]['PARENT_NM']:'None'; ?></div>
 						</div>
 					</div>
 				</div>
 				<a href="/master/barangumum">
 					<div class="panel-footer">
-						<span class="pull-left">View Details</span>
+						<span class="pull-left">Modern Details</span>
 						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 						<div class="clearfix"></div>
 					</div>
@@ -70,18 +69,17 @@ global $canvasEndY;
 					<div class="row">
 						<div class="col-lg-3">
 							<i class="fa fa-exchange  fa-4x"></i>
-						</div>
-						
+						</div>						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div class="huge"><?php echo $count_CustPrn>1?$model_CustPrn[1]['COUNT_CUST']:0; ?> </div>
-							<div><?php echo $count_CustPrn>1? 'Customers '.$model_CustPrn[1]['PARENT_NM']:'None';?></div>
+							<div  id="cust-general-id" class="huge"><h4><?php echo $count_CustPrn>0?$model_CustPrn[2]['COUNT_CUST']:0; ?> <h4></div>
+							<div><?php echo $count_CustPrn>1? $model_CustPrn[2]['PARENT_NM']:'None';?></div>
 						</div>
 					</div>
 				</div>
 				<a href="/master/unitbarang">
 					<div class="panel-footer">
-						<span class="pull-left">View Details</span>
+						<span class="pull-left">General Details</span>
 						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 						<div class="clearfix"></div>
 					</div>
@@ -93,9 +91,11 @@ global $canvasEndY;
 	<div class="col-lg-6 col-md-6">
 		<div class="panel panel-danger text-center">
 			<div class="panel-heading">
-				<div class="row">			
+				<div class="row">							
 						<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-						<div ><h1><?php echo $count_CustPrn>1?$model_CustPrn[1]['COUNT_CUST']:0; ?></h1> </div>				
+						<!--<div class="col-lg-6 col-md-6 text-center"  id="cnt-visit-tes"><h1><?php //echo $CntrVisit; ?></h1> </div>
+						<div class="col-lg-6 col-md-6 text-center"  id="cnt-visit-tes"><h1><?php //echo $CntrVisit; ?></h1> </div>!-->
+						<div id="cnt-sales-visits-id"><h1><?php echo $CntrVisit; ?></h1> </div>							
 				</div>
 			</div>
 			<div class="panel-footer">Daily visits</div>			
@@ -138,14 +138,14 @@ global $canvasEndY;
 						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div class="huge"><?php echo $count_CustPrn>2?$model_CustPrn[2]['COUNT_CUST']:0; ?> </div>
-							<div><?php echo $count_CustPrn>2? 'Customers '.$model_CustPrn[2]['PARENT_NM']:'None'; ?></div>
+							<div  id="cust-horeca-id" class="huge"><h4><?php echo $count_CustPrn>0?$model_CustPrn[3]['COUNT_CUST']:0; ?></h4></div>
+							<div><?php echo $count_CustPrn>2? $model_CustPrn[3]['PARENT_NM']:'None'; ?></div>
 						</div>
 					</div>
 				</div>
 				<a href="/master/unitbarang">
 					<div class="panel-footer">
-						<span class="pull-left">View Details</span>
+						<span class="pull-left">Horeca Details</span>
 						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 						<div class="clearfix"></div>
 					</div>
@@ -157,18 +157,17 @@ global $canvasEndY;
 					<div class="row">
 						<div class="col-lg-3">
 							<i class="fa fa-link fa-4x"></i>
-						</div>
-						
+						</div>						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div class="huge"><?php echo $count_CustPrn>2?$model_CustPrn[2]['COUNT_CUST']:0; ?> </div>
-							<div><?php echo $count_CustPrn>2? 'Customers '.$model_CustPrn[2]['PARENT_NM']:'None'; ?></div>
+							<div id="cust-other-id" class="huge"><h4><?php echo $model_CustPrn[4]['COUNT_CUST']!=''?$model_CustPrn[4]['COUNT_CUST']:0; ?> </h4></div>
+							<div><?php echo 'Others';?></div>
 						</div>
 					</div>
 				</div>
 				<a href="/master/unitbarang">
 					<div class="panel-footer">
-						<span class="pull-left">View Details</span>
+						<span class="pull-left">Others Details</span>
 						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 						<div class="clearfix"></div>
 					</div>
@@ -180,18 +179,17 @@ global $canvasEndY;
 					<div class="row">
 						<div class="col-lg-3">
 							<i class="fa fa-cubes fa-4x"></i>
-						</div>
-						
+						</div>						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div class="huge"><?php echo $count_CustPrn>2?$model_CustPrn[2]['COUNT_CUST']:0; ?> </div>
+							<div class="huge"><h4><?php echo $count_CustPrn>2?$model_CustPrn[2]['COUNT_CUST']:0; ?></h4></div>
 							<div><?php $count_CustPrn>2? 'Customers '.$model_CustPrn[2]['PARENT_NM']:'None'; ?></div>
 						</div>
 					</div>
 				</div>
 				<a href="/master/unitbarang">
 					<div class="panel-footer">
-						<span class="pull-left">View Details</span>
+						<span class="pull-left">Inventory Details</span>
 						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 						<div class="clearfix"></div>
 					</div>
@@ -229,10 +227,20 @@ global $canvasEndY;
 
 <?php
 
-print_r($dataEsmStockAll);
+//print_r($dataEsmStockAll);
 
 $this->registerJs('
+	setInterval(function(){ 
+		$("#cnt-sales-visits-id").load(location.href + " #cnt-sales-visits-id"); 
+		$("#cust-all-id").load(location.href + " #cust-all-id"); 
+		$("#cust-modern-id").load(location.href + " #cust-modern-id"); 
+		$("#cust-general-id").load(location.href + " #cust-general-id"); 
+		$("#cust-horeca-id").load(location.href + " #cust-horeca-id"); 
+		$("#cust-other-id").load(location.href + " #cust-other-id"); 
+	}, 3000);
+',$this::POS_BEGIN);
 
+$this->registerJs('
 	/* 
 	 * GRAPH ESM ALL STOCK
 	 * @author piter [ptr.nov@gmail.com]

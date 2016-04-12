@@ -128,7 +128,7 @@ function statusRadius($model){
 						return GridView::ROW_COLLAPSED;
 					},
 					'detail'=>function ($model, $key, $index, $column){						
-						$dataInventory=Yii::$app->db_esm->createCommand("CALL DASHBOARD_CUSTOMER_VISIT_inventory('".$model->TGL."','".$model->CUST_ID."','".$model->USER_ID."')")->queryAll();
+						$dataInventory=Yii::$app->db_esm->createCommand("CALL ERP_CUSTOMER_VISIT_inventory('".$model->TGL."','".$model->CUST_ID."','".$model->USER_ID."')")->queryAll();
 						$inventoryProvider= new ArrayDataProvider([
 							//'key' => 'ID',
 							'allModels'=>$dataInventory,
