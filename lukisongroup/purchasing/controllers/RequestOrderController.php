@@ -1124,6 +1124,8 @@ class RequestOrderController extends Controller
 		$employ = $roHeader->employe;
 		$dept = $roHeader->dept;
 
+    $roDetail = Rodetail::find()->where(['KD_RO' =>$kd])->one();
+
 		/*
 		 * Convert $roHeader->detro to ArrayDataProvider | Identity 'key' => 'ID',
 		 * @author ptrnov  <piter@lukison.com>
@@ -1183,6 +1185,7 @@ class RequestOrderController extends Controller
             'employ' => $employ,
 			'dept' => $dept,
 			'dataProvider'=>$detroProvider,
+      'roDetail'=>$roDetail
         ]);
 
     }
