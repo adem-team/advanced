@@ -13,11 +13,14 @@ use yii\web\Response;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use lukisongroup\master\models\Scheduleheader;
+use lukisongroup\master\models\Scheduledetail;
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Schedulegroup;
 use lukisongroup\master\models\ScheduleheaderSearch;
 use lukisongroup\sistem\models\Userlogin;
 use lukisongroup\sistem\models\UserloginSearch;
+use DateInterval;
+use DatePeriod;
 
 /**
  * ScheduleHeaderController implements the CRUD actions for Scheduleheader model.
@@ -229,6 +232,21 @@ class ScheduleHeaderController extends Controller
            Yii::$app->end();
        }
 
+  //   public function getDatesFromRange($start, $end) {
+  //          $interval = new DateInterval('P1D');
+  //          $realEnd = new DateTime($end);
+  //          $realEnd->add($interval);
+  //          $period = new DatePeriod(
+  //          new DateTime($start),
+  //          $interval,
+  //          $realEnd
+  //      );
+  //    foreach($period as $date) {
+  //      $array[] = $date->format('Y-m-d');
+  //    }
+  //      return $array;
+  //  }
+
 // save using ajax: author wawan
 
 	 public function actionJsoncalendar_add(){
@@ -244,14 +262,29 @@ class ScheduleHeaderController extends Controller
       $user_id = $request->post('user_id');
       $note = $request->post('note');
 			$model->TGL1 = $start;
+
       $model->TGL2 = $end;
       $model->CREATE_BY = $usercreate;
       $model->CREATE_AT = date("Y-m-d H:i:s");
       $model->NOTE = $note;
       $model->SCDL_GROUP = $scdl_group;
 			$model->USER_ID = $user_id;
+      // print_r($model->TGL1);
+      // die();
+      $carisdl = ScheduleDetail::find()->where(['TGL'=>$model->TGL1])->count();
+      if($carisdl >0)
+      {
+        echo 2;
+      }
+      else{
+
 			if($model->save())
       {
+
+        // Call the function
+        // $dates = $this->getDatesFromRange($start, $end);
+        // print_r($dates);
+        // die();
           $Customers = Customers::find()->where(['SCDL_GROUP'=>$scdl_group])->asArray()->all();
           foreach ($Customers as $key => $value) {
             # code...
@@ -259,6 +292,7 @@ class ScheduleHeaderController extends Controller
             $connection->createCommand()->batchInsert('c0002scdl_detail',['TGL','CUST_ID','SCDL_GROUP','USER_ID'],[[$start,$value['CUST_KD'],$scdl_group,$user_id]])->execute();
           }
       }
+    }
 
 		}
 		return true;

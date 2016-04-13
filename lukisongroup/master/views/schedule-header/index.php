@@ -22,8 +22,10 @@ $JSCode = <<<EOF
 function(start, end) {
 	var dateTime2 = new Date(end);
 	var dateTime1 = new Date(start);
-	var tgl1 = moment(dateTime1).format("YYYY-MM-DD HH:mm:ss");
-	var tgl2 = moment(dateTime2).format("YYYY-MM-DD HH:mm:ss");
+	// var tgl1 = moment(dateTime1).format("YYYY-MM-DD HH:mm:ss");
+	// var tgl2 = moment(dateTime2).format("YYYY-MM-DD HH:mm:ss");
+	var tgl1 = moment(dateTime1).format("YYYY-MM-DD");
+	var tgl2 = moment(dateTime2).format("YYYY-MM-DD");
 	$('#tglakhir').val(tgl2);
 	$('#tglawal').val(tgl1);
     $('#confirm-permission-alert').modal();
@@ -450,9 +452,9 @@ EOF;
 			//'defaultDate' => date('Y-m-d')
 		],
 		//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
-		
+
 	]);
-	
+
 ?>
 </div>
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
@@ -475,7 +477,7 @@ EOF;
 											],
 										],
 										Html::TYPE_INFO
-										
+
 									);
 							?>
 						</div>
@@ -488,8 +490,8 @@ EOF;
 											],
 										],
 										Html::TYPE_INFO
-										
-									);	
+
+									);
 							?>
 						</div>
 					</div>
@@ -525,6 +527,12 @@ $this->registerJs("
                        $(document).find('#confirm-permission-alert').modal('hide');
                           $.pjax.reload({container:'#gv-schedule-id'});
                      }
+							else{
+								alert('maaf untuk tanggal ini sudah di booking');
+								   $('form#Scheduleheader').trigger('reset');
+									 $(document).find('#confirm-permission-alert').modal('hide');
+											$.pjax.reload({container:'#gv-schedule-id'});
+							}
 
                         }
 
