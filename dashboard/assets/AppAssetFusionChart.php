@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace lukisongroup\assets;
+namespace dashboard\assets;
 
 use yii\web\AssetBundle;
 
