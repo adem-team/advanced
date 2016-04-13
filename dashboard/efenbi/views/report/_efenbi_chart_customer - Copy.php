@@ -2,11 +2,8 @@
 use yii\helpers\Json;
 use yii\web\Response;
 use yii\helpers\ArrayHelper;
-/* use dashboard\assets\AppAssetLazyLoad;
-AppAssetLazyLoad::register($this); */
-use dashboard\assets\AppAssetFusionChart;
+use lukisongroup\assets\AppAssetFusionChart;
 AppAssetFusionChart::register($this);
-
 //use lukisongroup\dashboard\models\FusionCharts; 
 
 // $xaxis=0;
@@ -17,7 +14,7 @@ global $canvasEndY;
 
 ?>
 
-<div id="xxx" class="row" style="padding-left:15px; padding-right:15px;">
+<div class="row" style="padding-left:15px; padding-right:15px;">
 	<!-- KIRI !-->
 	<div class="col-lg-3 col-md-3">
 		<div class="row">		
@@ -98,7 +95,7 @@ global $canvasEndY;
 						<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
 						<!--<div class="col-lg-6 col-md-6 text-center"  id="cnt-visit-tes"><h1><?php //echo $CntrVisit; ?></h1> </div>
 						<div class="col-lg-6 col-md-6 text-center"  id="cnt-visit-tes"><h1><?php //echo $CntrVisit; ?></h1> </div>!-->
-						<div id="cnt-sales-visits-id"><h1><B><?php echo $CntrVisit; ?></B></h1> </div>							
+						<div id="cnt-sales-visits-id"><h1><?php echo $CntrVisit; ?></h1> </div>							
 				</div>
 			</div>
 			<div class="panel-footer">Daily visits</div>			
@@ -230,96 +227,56 @@ global $canvasEndY;
 
 <?php
 
-
-
 //print_r($dataEsmStockAll);
 
- $this->registerJs('
-	setTimeout(function(){ 
-		$("#cnt-sales-visits-id").load(location.href + " #cnt-sales-visits-id");
-		$("#chart-daily-visit").load(location.href + "#chart-daily-visit");
-		//alert("#cnt-sales-visits-id");
+$this->registerJs('
+	setInterval(function(){ 
+		$("#cnt-sales-visits-id").load(location.href + " #cnt-sales-visits-id"); 
+		$("#cust-all-id").load(location.href + " #cust-all-id"); 
+		$("#cust-modern-id").load(location.href + " #cust-modern-id"); 
+		$("#cust-general-id").load(location.href + " #cust-general-id"); 
+		$("#cust-horeca-id").load(location.href + " #cust-horeca-id"); 
+		$("#cust-other-id").load(location.href + " #cust-other-id"); 
 	}, 3000);
-',$this::POS_HEAD);
-
- $this->registerJs('
-	/*  setInterval(function(){ 
-		$("#chart-daily-visit").load(location.href + "#chart-daily-visit");
-	}, 3000);
-	  */
-	/* var func = function (eventObj) {
-	   console.log("Data was updated for the first time in chart");
-	   // Call detachHandler to stop listening to this event
-	   eventObj.detachHandler(a, b);
-	}; */
-	
-	
-',$this::POS_HEAD);  
+',$this::POS_BEGIN);
 
 $this->registerJs('
-	/* $.noConflict();
-	$(function() {
-		$("cnt-sales-visits-id").lazyload();
-	}); 
- */
-	/* $(window).bind("load", function() {
-		var timeout = setTimeout(function() {
-			$("cnt-sales-visits-id").trigger("sporty")
-		}, 3000);
-	}); */
-
-
 	/* 
 	 * GRAPH ESM ALL STOCK
 	 * @author piter [ptr.nov@gmail.com]
 	 * @since 1.1
 	*/
-	$(document).ready(function () {
-		
-		var data = '.$dataEsmStockAll.';
-		
+	FusionCharts.ready(function () {
 		var ratingsChart = new FusionCharts({
-			id: "mychart",
 			type: "line",
 			renderAt: "chart-daily-visit",
 			width: "100%",
 			height: "250",
-			//updateInterval:"5",
-			//refreshInterval:"5",
 			dataFormat: "json",
-			dataSource: {
-				"chart": {				
-					caption: "VISIT PROCESS",           
-					// theme: "fint",					 
-					showValues: "1",
-					showZeroPlane: "1",                                
-					zeroPlaneColor:"#003366",
-					zeroPlaneAlpha: "100",
-					zeroPlaneThickness: "3",
-					divLineIsDashed: "0",
-					divLineAlpha: "40",
-					xAxisName: "time",
-					yAxisName: "Visit",
-					showValues: "1" , 			//MENAMPILKAN VALUE 
-					showBorder: "1", 				//Border side Out 
-					showCanvasBorder: "0",		//Border side inside
-					paletteColors: "#0075c2",	// WARNA GARIS	
-					showAlternateHGridColor: "0",	//
-					bgcolor: "#ffffff"
-			    }, 
-				"dataset": [{
-					 "data":data
-				}],              
-			},
-			
-
+			dataSource: '.$dataEsmStockAll.'
 		});
 
 		ratingsChart.render();
 	});
 	
 	
-	
+	/* 
+	 * GRAPH ESM ALL STOCK PER SKU 
+	 * @author piter ]ptr.nov@gmail.com]
+	 * @since 1.1
+	*/
+	FusionCharts.ready(function () {
+		var ratingsChart1 = new FusionCharts({
+			type: "msline",
+			renderAt: "chart-esm-stock-per-sku",
+			width: "100%",
+			height: "300",
+			dataFormat: "json",
+			dataSource: '.$graphEsmStockPerSku.'
+		});
+
+		ratingsChart1.render();
+	});
 	
 	
 ',$this::POS_READY);

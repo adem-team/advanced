@@ -64,30 +64,7 @@ class ReportController extends Controller
 			]
 		]);
 		$dataProvider=Json::encode($AryDataProvider->getModels());		
-		$prn='{
-			"chart": {
-				caption: "VISIT PROCESS",           
-				 theme: "fint",					 
-                showValues: "1",
-                showZeroPlane: "1",                                
-                zeroPlaneColor:"#003366",
-                zeroPlaneAlpha: "100",
-                zeroPlaneThickness: "3",
-                divLineIsDashed: "0",
-                divLineAlpha: "40",
-				xAxisName: "time",
-                yAxisName: "Visit",
-				showValues: "1" , 			//MENAMPILKAN VALUE 
-				showBorder: "1", 				//Border side Out 
-				showCanvasBorder: "0",		//Border side inside
-				showAlternateHGridColor: "0",	//
-				bgcolor: "#ffffff"
-			                  
-                 
-            },
-			
-			"data":'.$dataProvider.'
-		}';
+		$prn=$dataProvider;
 		return $prn;
 	}
 	

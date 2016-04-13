@@ -9,7 +9,8 @@ use yii\helpers\Json;
 use yii\web\Request;
 use kartik\daterange\DateRangePicker;
 use yii\widgets\ActiveForm;
-
+use kartik\widgets\DatePicker;
+use kartik\widgets\Select2;
 
 
 $this->params['breadcrumbs'][] = $this->title;
@@ -17,7 +18,9 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->sideCorp = 'Purchasing Stock';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'purchasing_stock';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Purchase Stock');      /* title pada header page */
-$this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+$this->params['breadcrumbs'][] = $this->title;
+// print_r($tipe);
+// die();             /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 ?>
 
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
@@ -41,17 +44,17 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 					['ID' =>4, 'ATTR' =>['FIELD'=>'PO_QTY','SIZE' => '10px','label'=>'QTY_PO','align'=>'left','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
 					['ID' =>5, 'ATTR' =>['FIELD'=>'QTY_RCVD','SIZE' => '10px','label'=>'QTY_RCVD','align'=>'left','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
 					['ID' =>6, 'ATTR' =>['FIELD'=>'QTY_REJECT','SIZE' => '10px','label'=>'QTY_REJECT','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
-					['ID' =>7, 'ATTR' =>['FIELD'=>'QTY_RETURE','SIZE' => '10px','label'=>'QTY_RETURE','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],					
-					// ['ID' =>9, 'ATTR' =>['FIELD'=>'SUB_TTL','SIZE' => '10px','label'=>'Sub Total','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'decimal','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],					
-					// ['ID' =>10, 'ATTR' =>['FIELD'=>'PAJAK','SIZE' => '10px','label'=>'PPN','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],					
+					['ID' =>7, 'ATTR' =>['FIELD'=>'QTY_RETURE','SIZE' => '10px','label'=>'QTY_RETURE','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
+					// ['ID' =>9, 'ATTR' =>['FIELD'=>'SUB_TTL','SIZE' => '10px','label'=>'Sub Total','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'decimal','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
+					// ['ID' =>10, 'ATTR' =>['FIELD'=>'PAJAK','SIZE' => '10px','label'=>'PPN','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
 				];
 				/* 'ID','TGL','TYPE','KD_PO','KD_REF','KD_SPL','ID_BARANG','NM_BARANG','UNIT','UNIT_NM','UNIT_QTY','UNIT_WIGHT','QTY','NOTE:ntext','STATUS','CREATE_BY',
 						'CREATE_AT','UPDATE_BY',
-						'UPDATE_AT',  
+						'UPDATE_AT',
 				*/
 				$gvHeadColomn = ArrayHelper::map($headColomn, 'ID', 'ATTR');
-							
-										
+
+
 				/*GRIDVIEW ARRAY ROWS*/
 				foreach($gvHeadColomn as $key =>$value[]){
 					$attDinamik[]=[
@@ -65,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 						//'mergeHeader'=>true,
 						'noWrap'=>true,
 						'group'=>$value[$key]['GRP'],
-						'format'=>$value[$key]['FORMAT'],						
+						'format'=>$value[$key]['FORMAT'],
 						'headerOptions'=>[
 								'style'=>[
 								'text-align'=>'center',
@@ -100,12 +103,12 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 						// ],
 					];
 				};
-				
+
 				/*SHOW GRID VIEW LIST EVENT*/
 				echo GridView::widget([
 					'id'=>'puchase-rcvd-form',
 					'dataProvider' => $dataProvider,
-					//'filterModel' => $searchModel,					
+					//'filterModel' => $searchModel,
 					//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
 					'columns' => $attDinamik,
 					/* [
@@ -142,16 +145,36 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 						],
 					]);
 				?>
-	</div>	
+	</div>
 </div>
 
 <div class="stock-rcvd-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'TGL')->textInput() ?>
+     <!-- $form->field($model, 'TGL')->textInput() ?> -->
+    <?= $form->field($model, 'TGL')->widget(DatePicker::classname(), [
+    'options' => ['placeholder' => 'Dari  ...'],
+    'pluginOptions' => [
+       'autoclose'=>true,
+       'format' => 'dd-mm-yyyy',
+    ],
 
-    <?= $form->field($model, 'TYPE')->textInput() ?>
+    'pluginEvents'=>[
+           'show' => "function(e) {errror}",
+               ],
+
+    ])  ?>
+
+     <!-- $form->field($model, 'TYPE')->textInput() ?> -->
+     <!-- $form->field() -->
+     <?= $form->field($model, 'TYPE')->widget(Select2::classname(), [
+      'data' => $tipe,
+      'options' => ['placeholder' => 'Select Type ...'],
+      'pluginOptions' => [
+            'allowClear' => true
+       ],
+      ]) ?>
 
     <?= $form->field($model, 'KD_PO')->textInput(['maxlength' => true]) ?>
 
@@ -159,7 +182,14 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 
     <?= $form->field($model, 'KD_SPL')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'ID_BARANG')->textInput(['maxlength' => true]) ?>
+     <!-- $form->field($model, 'ID_BARANG')->textInput(['maxlength' => true]) ?> -->
+     <?= $form->field($model, 'ID_BARANG')->widget(Select2::classname(), [
+      'data' => $brg,
+      'options' => ['placeholder' => 'Select Type ...'],
+      'pluginOptions' => [
+            'allowClear' => true
+       ],
+      ]) ?>
 
     <?= $form->field($model, 'NM_BARANG')->textInput(['maxlength' => true]) ?>
 
@@ -175,15 +205,23 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 
     <?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'STATUS')->textInput() ?>
+    <?php
+    if(!$model->isNewRecord)
+    {
+       echo $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']);
+    }
 
-    <?= $form->field($model, 'CREATE_BY')->textInput(['maxlength' => true]) ?>
+     ?>
 
-    <?= $form->field($model, 'CREATE_AT')->textInput() ?>
 
-    <?= $form->field($model, 'UPDATE_BY')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'UPDATE_AT')->textInput() ?>
+     <!-- $form->field($model, 'CREATE_BY')->textInput(['maxlength' => true]) ?> -->
+
+     <!-- $form->field($model, 'CREATE_AT')->textInput() ?> -->
+
+     <!-- $form->field($model, 'UPDATE_BY')->textInput(['maxlength' => true]) ?> -->
+
+     <!-- $form->field($model, 'UPDATE_AT')->textInput() ?> -->
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
@@ -192,3 +230,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+
+
+ ?>
