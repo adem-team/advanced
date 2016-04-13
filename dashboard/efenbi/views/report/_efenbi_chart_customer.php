@@ -2,7 +2,7 @@
 use yii\helpers\Json;
 use yii\web\Response;
 use yii\helpers\ArrayHelper;
-use lukisongroup\assets\AppAssetFusionChart;
+use dashboard\assets\AppAssetFusionChart;
 AppAssetFusionChart::register($this);
 //use lukisongroup\dashboard\models\FusionCharts; 
 
