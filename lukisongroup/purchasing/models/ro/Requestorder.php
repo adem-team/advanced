@@ -126,7 +126,7 @@ class Requestorder extends \yii\db\ActiveRecord
     {
         return [
             'KD_RO' => 'Kode RO',
-			'TGL'  => 'Tanggal',
+			      'TGL'  => 'Tanggal',
             'NOTE' => 'Notes',
             'ID_USER' => 'Id.User',
             'KD_CORP' => 'Kd.Corp',
