@@ -14,7 +14,11 @@ AppAssetFusionChart::register($this);
 
 global $xaxis;
 global $canvasEndY;
-
+	$valCustAll=$count_CustPrn>0?$model_CustPrn[0]['COUNT_ALL_CUST']:0;
+	$valCustModern=$count_CustPrn>0?$model_CustPrn[1]['COUNT_CUST']:0;
+	$valCustGeneral=$count_CustPrn>0?$model_CustPrn[2]['COUNT_CUST']:0;
+	$valCustHoreca=$count_CustPrn>0?$model_CustPrn[3]['COUNT_CUST']:0;
+	$valCustOther=$count_CustPrn>0?$model_CustPrn[4]['COUNT_CUST']:0;
 ?>
 
 <div id="xxx" class="row" style="padding-left:15px; padding-right:15px;">
@@ -27,11 +31,10 @@ global $canvasEndY;
 					<div class="row">
 						<div class="col-lg-3">
 							<i class="fa fa-users fa-4x"></i>
-						</div>
-						
+						</div>						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div id="cust-all-id" class="huge"><h4><?php echo $count_CustPrn>0?$model_CustPrn[0]['COUNT_ALL_CUST']:0;?> </h4></div>
+							<div id="cust-all-id" class="huge"><h2></h2></div>
 							<div><?php echo 'All Customers';?></div>
 						</div>
 					</div>
@@ -53,7 +56,7 @@ global $canvasEndY;
 						</div>						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div  id="cust-medern-id" class="huge"><h4><?php echo $count_CustPrn>0?$model_CustPrn[1]['COUNT_CUST']:0; ?><h4></div>
+							<div  id="cust-medern-id" class="huge"><h2><?php //echo $count_CustPrn>0?$model_CustPrn[1]['COUNT_CUST']:0; ?><h2></div>
 							<div><?php echo $count_CustPrn>0? $model_CustPrn[1]['PARENT_NM']:'None'; ?></div>
 						</div>
 					</div>
@@ -75,7 +78,7 @@ global $canvasEndY;
 						</div>						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div  id="cust-general-id" class="huge"><h4><?php echo $count_CustPrn>0?$model_CustPrn[2]['COUNT_CUST']:0; ?> <h4></div>
+							<div  id="cust-general-id" class="huge"><h4><?php //echo $count_CustPrn>0?$model_CustPrn[2]['COUNT_CUST']:0; ?> <h4></div>
 							<div><?php echo $count_CustPrn>1? $model_CustPrn[2]['PARENT_NM']:'None';?></div>
 						</div>
 					</div>
@@ -141,7 +144,7 @@ global $canvasEndY;
 						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div  id="cust-horeca-id" class="huge"><h4><?php echo $count_CustPrn>0?$model_CustPrn[3]['COUNT_CUST']:0; ?></h4></div>
+							<div  id="cust-horeca-id" class="huge"><h4><?php //echo $count_CustPrn>0?$model_CustPrn[3]['COUNT_CUST']:0; ?></h4></div>
 							<div><?php echo $count_CustPrn>2? $model_CustPrn[3]['PARENT_NM']:'None'; ?></div>
 						</div>
 					</div>
@@ -163,7 +166,7 @@ global $canvasEndY;
 						</div>						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div id="cust-other-id" class="huge"><h4><?php echo $model_CustPrn[4]['COUNT_CUST']!=''?$model_CustPrn[4]['COUNT_CUST']:0; ?> </h4></div>
+							<div id="cust-other-id" class="huge"><h4><?php //echo $model_CustPrn[4]['COUNT_CUST']!=''?$model_CustPrn[4]['COUNT_CUST']:0; ?> </h4></div>
 							<div><?php echo 'Others';?></div>
 						</div>
 					</div>
@@ -234,27 +237,35 @@ global $canvasEndY;
 
 //print_r($dataEsmStockAll);
 
- $this->registerJs('
+$this->registerJs('
 	setTimeout(function(){ 
 		$("#cnt-sales-visits-id").load(location.href + " #cnt-sales-visits-id");
-		$("#chart-daily-visit").load(location.href + "#chart-daily-visit");
-		//alert("#cnt-sales-visits-id");
-	}, 3000);
+		//$("#cust-medern-id").load("#cust-medern-id");			
+		$("#chart-daily-visit").load(location.href + "#chart-daily-visit");			
+	}, 3100);
 ',$this::POS_HEAD);
 
- $this->registerJs('
-	/*  setInterval(function(){ 
-		$("#chart-daily-visit").load(location.href + "#chart-daily-visit");
-	}, 3000);
-	  */
-	/* var func = function (eventObj) {
-	   console.log("Data was updated for the first time in chart");
-	   // Call detachHandler to stop listening to this event
-	   eventObj.detachHandler(a, b);
-	}; */
+$this->registerJs('
 	
-	
-',$this::POS_HEAD);  
+	/*Set Value ptr.nov*/
+	//Custommer All
+		var x1 = document.getElementById("cust-all-id");	
+		setTimeout(function(){ x1.innerHTML="'.$valCustAll.'"}, 3000);
+	//Custommer Modern
+		var x2 = document.getElementById("cust-medern-id");
+		setTimeout(function(){ x2.innerHTML="'.$valCustModern.'"}, 3000);
+	//Custommer General
+		var x3 = document.getElementById("cust-general-id");
+		setTimeout(function(){ x3.innerHTML="'.$valCustGeneral.'"}, 3000);
+	//Custommer Horeca
+		var x4 = document.getElementById("cust-horeca-id");
+		setTimeout(function(){ x4.innerHTML="'.$valCustHoreca.'"}, 3000);
+	//Custommer Other
+		var x5 = document.getElementById("cust-other-id");
+		setTimeout(function(){ x5.innerHTML="'.$valCustOther.'"}, 3000);	
+',$this::POS_READY);	
+
+ 
 
 $this->registerJs('
 	/* $.noConflict();
