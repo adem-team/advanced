@@ -247,6 +247,14 @@ class ScheduleHeaderController extends Controller
   //      return $array;
   //  }
 
+//   public function datediffInWeeks($date1, $date2)
+// {
+//     if($date1 > $date2) return datediffInWeeks($date2, $date1);
+//     $first = DateTime::createFromFormat('m/d/Y', $date1);
+//     $second = DateTime::createFromFormat('m/d/Y', $date2);
+//     return floor($first->diff($second)->days/7);
+// }
+
 // save using ajax: author wawan
 
 	 public function actionJsoncalendar_add(){
@@ -262,17 +270,15 @@ class ScheduleHeaderController extends Controller
       $user_id = $request->post('user_id');
       $note = $request->post('note');
 			$model->TGL1 = $start;
-
       $model->TGL2 = $end;
       $model->CREATE_BY = $usercreate;
       $model->CREATE_AT = date("Y-m-d H:i:s");
       $model->NOTE = $note;
       $model->SCDL_GROUP = $scdl_group;
 			$model->USER_ID = $user_id;
-      // print_r($model->TGL1);
-      // die();
       $carisdl = ScheduleDetail::find()->where(['TGL'=>$model->TGL1])->count();
-      if($carisdl >0)
+      // if exist data customers
+      if($carisdl > 0)
       {
         echo 2;
       }
@@ -281,17 +287,17 @@ class ScheduleHeaderController extends Controller
 			if($model->save())
       {
 
-        // Call the function
-        // $dates = $this->getDatesFromRange($start, $end);
-        // print_r($dates);
-        // die();
-          $Customers = Customers::find()->where(['SCDL_GROUP'=>$scdl_group])->asArray()->all();
-          foreach ($Customers as $key => $value) {
-            # code...
-            $connection = Yii::$app->db_esm;
-            $connection->createCommand()->batchInsert('c0002scdl_detail',['TGL','CUST_ID','SCDL_GROUP','USER_ID'],[[$start,$value['CUST_KD'],$scdl_group,$user_id]])->execute();
-          }
-      }
+        // foreach date :author wawan
+          for ($date = strtotime($start); $date < strtotime($end); $date = strtotime("+1 day", $date)) {
+                    $tgl =  date("Y-m-d", $date);
+                    $Customers = Customers::find()->where(['SCDL_GROUP'=>$scdl_group])->asArray()->all();
+                    foreach ($Customers as $key => $value) {
+                      # code...
+                      $connection = Yii::$app->db_esm;
+                      $connection->createCommand()->batchInsert('c0002scdl_detail',['TGL','CUST_ID','SCDL_GROUP','USER_ID'],[[$tgl,$value['CUST_KD'],$scdl_group,$user_id]])->execute();
+                    }
+              }
+        }
     }
 
 		}

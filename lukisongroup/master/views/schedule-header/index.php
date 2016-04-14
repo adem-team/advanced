@@ -512,33 +512,46 @@ EOF;
 $this->registerJs("
      $.fn.modal.Constructor.prototype.enforceFocus = function(){};
        $('#Scheduleheader').on('beforeSubmit',function(){
-         var tgl2 = $('#tglakhir').val();
-         var tgl1 = $('#tglawal').val();
-         var scdl_group = $('#scheduleheader-scdl_group').val();
-         var user_id = $('#scheduleheader-user_id').val();
-         var note = $('#note').val();
-        $.ajax({
-            url: '/master/schedule-header/jsoncalendar_add',
-            type: 'POST',
-            data: {tgl2 :tgl2,scdl_group :scdl_group,tgl1:tgl1,user_id:user_id,note:note},
-            dataType: 'json',
-            success: function(result) {
-              if (result == 1){
-                       $(document).find('#confirm-permission-alert').modal('hide');
-                          $.pjax.reload({container:'#gv-schedule-id'});
-                     }
-							else{
-								alert('maaf untuk tanggal ini sudah di booking');
-								   $('form#Scheduleheader').trigger('reset');
-									 $(document).find('#confirm-permission-alert').modal('hide');
-											$.pjax.reload({container:'#gv-schedule-id'});
-							}
+				 var val = $('#scheduleheader-scdl_group').val();
+				 var val1 = $('#scheduleheader-user_id').val();
+				 if(val == '' && val1 == '')
+				 {
+					 	alert('your check field dont exist');
+				 }
+				 else{
+					 var tgl2 = $('#tglakhir').val();
+					 var tgl1 = $('#tglawal').val();
+					 var scdl_group = $('#scheduleheader-scdl_group').val();
+					 var user_id = $('#scheduleheader-user_id').val();
+					 var note = $('#note').val();
+					$.ajax({
+							url: '/master/schedule-header/jsoncalendar_add',
+							type: 'POST',
+							data: {tgl2 :tgl2,scdl_group :scdl_group,tgl1:tgl1,user_id:user_id,note:note},
+							dataType: 'json',
+							success: function(result) {
+								if (result == 1){
+													$(document).find('#confirm-permission-alert').modal('hide');
+													$.pjax.reload({container:'#gv-schedule-id'});
+												 $('form#Scheduleheader').trigger('reset');
+												 $.pjax.reload({container:'#calendar'});
+											 }
+							 else{
+								 alert('maaf untuk tanggal ini sudah di booking');
+										$('form#Scheduleheader').trigger('reset');
+									 //  $(document).find('#confirm-permission-alert').modal('hide');
+											 // $.pjax.reload({container:'#gv-schedule-id'});
+											 // $.pjax.reload({container:'#calendar'});
+							 }
 
-                        }
+									}
 
-                      });
-                      return false;
-                  });
+							});
+
+				 }
+
+          return false;
+        });
   ",$this::POS_READY);
 
 // author wawan
