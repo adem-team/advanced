@@ -28,10 +28,7 @@ AppAsset_style::register($this);
 			<title><?= Html::encode($this->title) ?></title>
             <!-- tambahan variable untuk template Author: --ptr.nov-- !-->
             <title><?= Html::encode($this->sideMenu) ?></title>
-            <title><?= Html::encode($this->sideCorp) ?></title>
-			<?php if (!Yii::$app->user->isGuest) { ?>
-            <meta http-equiv="refresh" content="<?php echo Yii::$app->params['sessionTimeoutSeconds'];?>;"/>
-			<?php } ?>	
+            <title><?= Html::encode($this->sideCorp) ?></title>				
 			<?php $this->head() ?>
 		</head>
 

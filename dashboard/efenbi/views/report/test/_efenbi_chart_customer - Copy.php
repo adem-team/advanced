@@ -2,11 +2,8 @@
 use yii\helpers\Json;
 use yii\web\Response;
 use yii\helpers\ArrayHelper;
-/* use dashboard\assets\AppAssetLazyLoad;
-AppAssetLazyLoad::register($this); */
-use dashboard\assets\AppAssetFusionChart;
+use lukisongroup\assets\AppAssetFusionChart;
 AppAssetFusionChart::register($this);
-
 //use lukisongroup\dashboard\models\FusionCharts; 
 
 // $xaxis=0;
@@ -14,14 +11,10 @@ AppAssetFusionChart::register($this);
 
 global $xaxis;
 global $canvasEndY;
-	$valCustAll=$count_CustPrn>0?$model_CustPrn[0]['COUNT_ALL_CUST']:0;
-	$valCustModern=$count_CustPrn>0?$model_CustPrn[1]['COUNT_CUST']:0;
-	$valCustGeneral=$count_CustPrn>0?$model_CustPrn[2]['COUNT_CUST']:0;
-	$valCustHoreca=$count_CustPrn>0?$model_CustPrn[3]['COUNT_CUST']:0;
-	$valCustOther=$count_CustPrn>0?$model_CustPrn[4]['COUNT_CUST']:0;
+
 ?>
 
-<div id="xxx" class="row" style="padding-left:15px; padding-right:15px;">
+<div class="row" style="padding-left:15px; padding-right:15px;">
 	<!-- KIRI !-->
 	<div class="col-lg-3 col-md-3">
 		<div class="row">		
@@ -31,10 +24,11 @@ global $canvasEndY;
 					<div class="row">
 						<div class="col-lg-3">
 							<i class="fa fa-users fa-4x"></i>
-						</div>						
+						</div>
+						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div id="cust-all-id" class="huge"><h2></h2></div>
+							<div id="cust-all-id" class="huge"><h4><?php echo $count_CustPrn>0?$model_CustPrn[0]['COUNT_ALL_CUST']:0;?> </h4></div>
 							<div><?php echo 'All Customers';?></div>
 						</div>
 					</div>
@@ -56,7 +50,7 @@ global $canvasEndY;
 						</div>						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div  id="cust-medern-id" class="huge"><h2><?php //echo $count_CustPrn>0?$model_CustPrn[1]['COUNT_CUST']:0; ?><h2></div>
+							<div  id="cust-medern-id" class="huge"><h4><?php echo $count_CustPrn>0?$model_CustPrn[1]['COUNT_CUST']:0; ?><h4></div>
 							<div><?php echo $count_CustPrn>0? $model_CustPrn[1]['PARENT_NM']:'None'; ?></div>
 						</div>
 					</div>
@@ -78,7 +72,7 @@ global $canvasEndY;
 						</div>						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div  id="cust-general-id" class="huge"><h4><?php //echo $count_CustPrn>0?$model_CustPrn[2]['COUNT_CUST']:0; ?> <h4></div>
+							<div  id="cust-general-id" class="huge"><h4><?php echo $count_CustPrn>0?$model_CustPrn[2]['COUNT_CUST']:0; ?> <h4></div>
 							<div><?php echo $count_CustPrn>1? $model_CustPrn[2]['PARENT_NM']:'None';?></div>
 						</div>
 					</div>
@@ -101,7 +95,7 @@ global $canvasEndY;
 						<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
 						<!--<div class="col-lg-6 col-md-6 text-center"  id="cnt-visit-tes"><h1><?php //echo $CntrVisit; ?></h1> </div>
 						<div class="col-lg-6 col-md-6 text-center"  id="cnt-visit-tes"><h1><?php //echo $CntrVisit; ?></h1> </div>!-->
-						<div id="cnt-sales-visits-id"><h1><B><?php echo $CntrVisit; ?></B></h1> </div>							
+						<div id="cnt-sales-visits-id"><h1><?php echo $CntrVisit; ?></h1> </div>							
 				</div>
 			</div>
 			<div class="panel-footer">Daily visits</div>			
@@ -144,7 +138,7 @@ global $canvasEndY;
 						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div  id="cust-horeca-id" class="huge"><h4><?php //echo $count_CustPrn>0?$model_CustPrn[3]['COUNT_CUST']:0; ?></h4></div>
+							<div  id="cust-horeca-id" class="huge"><h4><?php echo $count_CustPrn>0?$model_CustPrn[3]['COUNT_CUST']:0; ?></h4></div>
 							<div><?php echo $count_CustPrn>2? $model_CustPrn[3]['PARENT_NM']:'None'; ?></div>
 						</div>
 					</div>
@@ -166,7 +160,7 @@ global $canvasEndY;
 						</div>						
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
-							<div id="cust-other-id" class="huge"><h4><?php //echo $model_CustPrn[4]['COUNT_CUST']!=''?$model_CustPrn[4]['COUNT_CUST']:0; ?> </h4></div>
+							<div id="cust-other-id" class="huge"><h4><?php echo $model_CustPrn[4]['COUNT_CUST']!=''?$model_CustPrn[4]['COUNT_CUST']:0; ?> </h4></div>
 							<div><?php echo 'Others';?></div>
 						</div>
 					</div>
@@ -233,111 +227,56 @@ global $canvasEndY;
 
 <?php
 
-
-
 //print_r($dataEsmStockAll);
 
 $this->registerJs('
-	setTimeout(function(){ 
-		//$("#cnt-sales-visits-id").load(location.href + " #cnt-sales-visits-id");
-		//$("#cust-medern-id").load("#cust-medern-id");
-		//alert(document.getElementById("chart-daily-visit").innerHTML);
-		//$("#chart-daily-visit").load(location.href + "#chart-daily-visit");	
-		$("#chart-sales-inventory").load(location.href + "#chart-sales-inventory");	
-		
-	}, 3100); 
-	
-	
-',$this::POS_HEAD); 
+	setInterval(function(){ 
+		$("#cnt-sales-visits-id").load(location.href + " #cnt-sales-visits-id"); 
+		$("#cust-all-id").load(location.href + " #cust-all-id"); 
+		$("#cust-modern-id").load(location.href + " #cust-modern-id"); 
+		$("#cust-general-id").load(location.href + " #cust-general-id"); 
+		$("#cust-horeca-id").load(location.href + " #cust-horeca-id"); 
+		$("#cust-other-id").load(location.href + " #cust-other-id"); 
+	}, 3000);
+',$this::POS_BEGIN);
 
 $this->registerJs('
-	
-	/*Set Value ptr.nov*/
-	//Custommer All
-		//var x1 = document.getElementById("cust-all-id");	
-		//setTimeout(function(){ x1.innerHTML="'.$valCustAll.'"}, 3000);
-	//Custommer Modern
-		//var x2 = document.getElementById("cust-medern-id");
-		//setTimeout(function(){ x2.innerHTML="'.$valCustModern.'"}, 3000);
-		//setTimeout(function(){ document.getElementById("cust-medern-id").innerHTML="'.$valCustModern.'"}, 3000);
-	//Custommer General
-		//var x3 = document.getElementById("cust-general-id");
-		//setTimeout(function(){ x3.innerHTML="'.$valCustGeneral.'"}, 3000);
-	//Custommer Horeca
-		//var x4 = document.getElementById("cust-horeca-id");
-		//setTimeout(function(){ x4.innerHTML="'.$valCustHoreca.'"}, 3000);
-	//Custommer Other
-		//var x5 = document.getElementById("cust-other-id");
-		//setTimeout(function(){ x5.innerHTML="'.$valCustOther.'"}, 3000);
-	//setTimeout(function(){mycharts1()}, 1000);		
-',$this::POS_HEAD);	
-
- 
-
-$this->registerJs('
-	/* $.noConflict();
-	$(function() {
-		$("cnt-sales-visits-id").lazyload();
-	}); 
- */
-	/* $(window).bind("load", function() {
-		var timeout = setTimeout(function() {
-			$("cnt-sales-visits-id").trigger("sporty")
-		}, 3000);
-	}); */
-
-
 	/* 
 	 * GRAPH ESM ALL STOCK
 	 * @author piter [ptr.nov@gmail.com]
 	 * @since 1.1
 	*/
-	$(document).ready(function () {
-		
-		var data = '.$dataEsmStockAll.';
-		
+	FusionCharts.ready(function () {
 		var ratingsChart = new FusionCharts({
-			id: "chart-visit-cnt-id",
 			type: "line",
 			renderAt: "chart-daily-visit",
 			width: "100%",
 			height: "250",
-			//updateInterval:"5",
-			//refreshInterval:"5",
 			dataFormat: "json",
-			dataSource: {
-				"chart": {				
-					caption: "VISIT PROCESS",           
-					// theme: "fint",					 
-					showValues: "1",
-					showZeroPlane: "1",                                
-					zeroPlaneColor:"#003366",
-					zeroPlaneAlpha: "100",
-					zeroPlaneThickness: "3",
-					divLineIsDashed: "0",
-					divLineAlpha: "40",
-					xAxisName: "time",
-					yAxisName: "Visit",
-					showValues: "1" , 			//MENAMPILKAN VALUE 
-					showBorder: "1", 				//Border side Out 
-					showCanvasBorder: "0",		//Border side inside
-					paletteColors: "#0075c2",	// WARNA GARIS	
-					showAlternateHGridColor: "0",	//
-					bgcolor: "#ffffff"
-			    }, 
-				"dataset": [{
-					 "data":data
-				}],              
-			},
-			
-
+			dataSource: '.$dataEsmStockAll.'
 		});
 
 		ratingsChart.render();
 	});
 	
 	
-	
+	/* 
+	 * GRAPH ESM ALL STOCK PER SKU 
+	 * @author piter ]ptr.nov@gmail.com]
+	 * @since 1.1
+	*/
+	FusionCharts.ready(function () {
+		var ratingsChart1 = new FusionCharts({
+			type: "msline",
+			renderAt: "chart-esm-stock-per-sku",
+			width: "100%",
+			height: "300",
+			dataFormat: "json",
+			dataSource: '.$graphEsmStockPerSku.'
+		});
+
+		ratingsChart1.render();
+	});
 	
 	
 ',$this::POS_READY);

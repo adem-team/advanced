@@ -27,9 +27,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			'dataEsmStockAll'=>$dataEsmStockAll,
 			'graphEsmStockPerSku'=>$graphEsmStockPerSku
 	]);
-	  $contentSalesInventory=Yii::$app->controller->renderPartial('_efenbi_chart_sales_inventory',[
-			//'dataSalesInventory'=>$dataSalesInventory
-	]);  	
+	 $contentSalesInventory=Yii::$app->controller->renderPartial('_efenbi_chart_sales_inventory',[
+			'dataSalesInventory'=>$dataSalesInventory
+	]); 	
 	
 	
 	

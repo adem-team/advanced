@@ -18,7 +18,7 @@ class AppAssetFusionChart extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/sb-admin.css',
+        //'css/sb-admin.css',
 		'angular/XenonChat/fonts/linecons/css/linecons.css',
         'angular/XenonChat/xenon-components.css',
         'angular/XenonChat/xenon-skins.css',
@@ -27,7 +27,7 @@ class AppAssetFusionChart extends AssetBundle
     public $js = [
         'php/fusioncharts/fusioncharts.js',
         'php/fusioncharts/fusioncharts.charts.js',               
-        'php/fusioncharts/fusioncharts.theme.fint.js',               
+        //'php/fusioncharts/fusioncharts.theme.fint.js',               
         'php/fusioncharts/fusioncharts.widgets.js',               
         'php/fusioncharts/fusioncharts.powercharts.js',               
         'php/fusioncharts/fusioncharts.gantt.js',               

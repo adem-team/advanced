@@ -9,22 +9,11 @@ use yii\helpers\Json;
 use yii\web\Response;
 use yii\helpers\ArrayHelper;
 use yii\data\ArrayDataProvider;
-use yii\filters\auth\CompositeAuth;
-use yii\filters\auth\QueryParamAuth;
-use yii\filters\auth\HttpBasicAuth;
-use yii\filters\auth\HttpBearerAuth;
-use yii\filters\ContentNegotiator;
-use yii\filters\VerbFilter;
-
 
 use lukisongroup\dashboard\models\RptesmGraph;
 
 class ReportController extends Controller
 {	
-
-	
-
-
 	public function actionIndex()
     {
 		 if (\Yii::$app->user->isGuest) {
@@ -56,7 +45,7 @@ class ReportController extends Controller
 				/*CHART*/
 				'dataEsmStockAll'=>$this->graphEsmStockAll(),				
 				/*CHART SALES INVENTORY */
-				//'dataSalesInventory'=>$this->graphEsmSalesInventory()				
+				'dataSalesInventory'=>$this->graphEsmSalesInventory()				
 			]);
 		};	
     }
@@ -86,18 +75,10 @@ class ReportController extends Controller
 	 * @since 1.2
 	 * =======================================
 	*/
-	
-	
-	/* ========== ESM-STOCK-PER-SKU =========
-	 * Chart Type MSLINE
-	 * @author ptr.nov [ptr.nov@gmail.com]
-	 * @since 1.2
-	 * =======================================
-	*/
-	public function actionInventoriSales(){		
+	protected function graphEsmSalesInventory(){		
 		/*Category*/
 		$AryDataProviderCtg= new ArrayDataProvider([
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('kategory_label','')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('kategory_label')")->queryAll(),
 			 'pagination' => [
 				'pageSize' => 100,
 			],
@@ -108,7 +89,7 @@ class ReportController extends Controller
 		/*Item Value 1*/
 		$AryDataProviderVal1= new ArrayDataProvider([
 			//'key' => 'PARENT_ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value','BRG.ESM.2016.01.0001')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value')")->queryAll(),
 			 'pagination' => [
 				'pageSize' => 100,
 			]
@@ -119,7 +100,7 @@ class ReportController extends Controller
 		/*Item Value 2*/
 		$AryDataProviderVal2= new ArrayDataProvider([
 			//'key' => 'PARENT_ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value','BRG.ESM.2016.01.0002')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value')")->queryAll(),
 			 'pagination' => [
 				'pageSize' => 100,
 			]
@@ -130,7 +111,7 @@ class ReportController extends Controller
 		/*Item Value 3*/
 		$AryDataProviderVal3= new ArrayDataProvider([
 			//'key' => 'PARENT_ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value','BRG.ESM.2016.01.0003')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value')")->queryAll(),
 			 'pagination' => [
 				'pageSize' => 100,
 			]
@@ -141,7 +122,7 @@ class ReportController extends Controller
 		/*Item Value 4*/
 		$AryDataProviderVal4= new ArrayDataProvider([
 			//'key' => 'PARENT_ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value','BRG.ESM.2016.01.0004')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value')")->queryAll(),
 			 'pagination' => [
 				'pageSize' => 100,
 			]
@@ -152,7 +133,7 @@ class ReportController extends Controller
 		/*Item Value 5*/
 		$AryDataProviderVal5= new ArrayDataProvider([
 			//'key' => 'PARENT_ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value','BRG.ESM.2016.01.0005')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value')")->queryAll(),
 			 'pagination' => [
 				'pageSize' => 100,
 			]
@@ -160,30 +141,33 @@ class ReportController extends Controller
 		$dataProviderVal5=$AryDataProviderVal5->getModels();
 		$resultVal5=Json::encode($dataProviderVal5); 
 		
-		$prn='{
-			"chart": {				
-				"caption":"VISIT PROCESS",     											 
-				"showValues":"1",
-				"showZeroPlane":"1",                                
-				"zeroPlaneColor":"#003366",
-				"zeroPlaneAlpha":"100",
-				"zeroPlaneThickness":"3",
-				"divLineIsDashed":"0",
-				"divLineAlpha":"40",
-				"xAxisName":"time",
-				"yAxisName":"Visit",
-				"showValues":"1" , 			
-				"showBorder":"1", 				
-				"showCanvasBorder":"0",		
-				"paletteColors":"#0075c2",	
-				"showAlternateHGridColor":"0",	
-				"bgcolor": "#ffffff"
-			},
-			"categories": 
-				{"category":'.$resultCtg.'}
-			,
+		$prn='
+			"categories": [{
+				"category":'.$resultCtg.'
+			}],
+			"chart": {
+					"caption": "UPDATE SALESMAN STOCK",
+					"showValues": "1" , 
+					"captionFontSize": "14",
+					"subcaptionFontSize": "14",
+					"subcaptionFontBold": "0",
+					"paletteColors": "#FF0033,#0B2536,#0075c2,#9E466B,#C5E323",
+					"bgcolor": "#ffffff",
+					"showBorder": "1",
+					"showShadow": "0",
+					"showCanvasBorder": "0",
+					"usePlotGradientColor": "0",
+					"legendBorderAlpha": "1",
+					"legendShadow": "1",
+					"showAxisLines": "0",
+					"showAlternateHGridColor": "0",
+					"divlineThickness": "1",
+					"divLineIsDashed": "1",
+					"divLineDashLen": "1",
+					"divLineGapLen": "1"			
+				},
 			"dataset": [
-				{
+				 {
                     "seriesname": "MAXI Cassava Chips Balado",
                     "data": '.$resultVal1.'
                 }, 
@@ -203,8 +187,108 @@ class ReportController extends Controller
                     "seriesname": "MAXI mixed Roots",
                     "data": '.$resultVal5.'
                 }
+			]';
+		return $prn;
+	}
+	
+	/* ========== ESM-STOCK-PER-SKU =========
+	 * Chart Type MSLINE
+	 * @author ptr.nov [ptr.nov@gmail.com]
+	 * @since 1.2
+	 * =======================================
+	*/
+	public function actionInventoriSales(){		
+		/*Category*/
+		$AryDataProviderCtg= new ArrayDataProvider([
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('kategory_label')")->queryAll(),
+			 'pagination' => [
+				'pageSize' => 100,
+			],
+		]);
+		$dataProviderCtg=$AryDataProviderCtg->getModels();
+		$resultCtg=Json::encode($dataProviderCtg);
+		
+		/*Item Value 1*/
+		$AryDataProviderVal1= new ArrayDataProvider([
+			//'key' => 'PARENT_ID',
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value')")->queryAll(),
+			 'pagination' => [
+				'pageSize' => 100,
 			]
-		}';
+		]);
+		$dataProviderVal1=$AryDataProviderVal1->getModels();
+		$resultVal1=Json::encode($dataProviderVal1); 
+		
+		/*Item Value 2*/
+		$AryDataProviderVal2= new ArrayDataProvider([
+			//'key' => 'PARENT_ID',
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value')")->queryAll(),
+			 'pagination' => [
+				'pageSize' => 100,
+			]
+		]);
+		$dataProviderVal2=$AryDataProviderVal2->getModels();
+		$resultVal2=Json::encode($dataProviderVal2); 
+		
+		/*Item Value 3*/
+		$AryDataProviderVal3= new ArrayDataProvider([
+			//'key' => 'PARENT_ID',
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value')")->queryAll(),
+			 'pagination' => [
+				'pageSize' => 100,
+			]
+		]);
+		$dataProviderVal3=$AryDataProviderVal3->getModels();
+		$resultVal3=Json::encode($dataProviderVal3); 
+		
+		/*Item Value 4*/
+		$AryDataProviderVal4= new ArrayDataProvider([
+			//'key' => 'PARENT_ID',
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value')")->queryAll(),
+			 'pagination' => [
+				'pageSize' => 100,
+			]
+		]);
+		$dataProviderVal4=$AryDataProviderVal4->getModels();
+		$resultVal4=Json::encode($dataProviderVal4); 
+		
+		/*Item Value 5*/
+		$AryDataProviderVal5= new ArrayDataProvider([
+			//'key' => 'PARENT_ID',
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value')")->queryAll(),
+			 'pagination' => [
+				'pageSize' => 100,
+			]
+		]);
+		$dataProviderVal5=$AryDataProviderVal5->getModels();
+		$resultVal5=Json::encode($dataProviderVal5); 
+		
+		$prn='
+			"categories": [{
+				"category":'.$resultCtg.'
+			}],
+			"dataset": [
+				 {
+                    "seriesname": "MAXI Cassava Chips Balado",
+                    "data": '.$resultVal1.'
+                }, 
+                {
+                    "seriesname": "MAXI Talos Chips Black Paper",
+                    "data":'.$resultVal2.'
+                },
+				{
+                    "seriesname": "MAXI Talos Roasted Corn",
+                    "data":'.$resultVal3.'
+                },
+				{
+                    "seriesname": "MAXI Cassava Crackers Hot Spicy",
+                    "data": '.$resultVal4.'
+                },
+				{
+                    "seriesname": "MAXI mixed Roots",
+                    "data": '.$resultVal5.'
+                }
+			]';
 		return $prn;
 	}
 }

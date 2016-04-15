@@ -239,38 +239,32 @@ global $canvasEndY;
 
 $this->registerJs('
 	setTimeout(function(){ 
-		//$("#cnt-sales-visits-id").load(location.href + " #cnt-sales-visits-id");
+		$("#cnt-sales-visits-id").load(location.href + " #cnt-sales-visits-id");
 		//$("#cust-medern-id").load("#cust-medern-id");
 		//alert(document.getElementById("chart-daily-visit").innerHTML);
-		//$("#chart-daily-visit").load(location.href + "#chart-daily-visit");	
-		$("#chart-sales-inventory").load(location.href + "#chart-sales-inventory");	
-		
-	}, 3100); 
-	
-	
+		$("#chart-daily-visit").load(location.href + "#chart-daily-visit");			
+	}, 3100);
 ',$this::POS_HEAD); 
 
 $this->registerJs('
 	
 	/*Set Value ptr.nov*/
 	//Custommer All
-		//var x1 = document.getElementById("cust-all-id");	
-		//setTimeout(function(){ x1.innerHTML="'.$valCustAll.'"}, 3000);
+		var x1 = document.getElementById("cust-all-id");	
+		setTimeout(function(){ x1.innerHTML="'.$valCustAll.'"}, 3000);
 	//Custommer Modern
-		//var x2 = document.getElementById("cust-medern-id");
-		//setTimeout(function(){ x2.innerHTML="'.$valCustModern.'"}, 3000);
-		//setTimeout(function(){ document.getElementById("cust-medern-id").innerHTML="'.$valCustModern.'"}, 3000);
+		var x2 = document.getElementById("cust-medern-id");
+		setTimeout(function(){ x2.innerHTML="'.$valCustModern.'"}, 3000);
 	//Custommer General
-		//var x3 = document.getElementById("cust-general-id");
-		//setTimeout(function(){ x3.innerHTML="'.$valCustGeneral.'"}, 3000);
+		var x3 = document.getElementById("cust-general-id");
+		setTimeout(function(){ x3.innerHTML="'.$valCustGeneral.'"}, 3000);
 	//Custommer Horeca
-		//var x4 = document.getElementById("cust-horeca-id");
-		//setTimeout(function(){ x4.innerHTML="'.$valCustHoreca.'"}, 3000);
+		var x4 = document.getElementById("cust-horeca-id");
+		setTimeout(function(){ x4.innerHTML="'.$valCustHoreca.'"}, 3000);
 	//Custommer Other
-		//var x5 = document.getElementById("cust-other-id");
-		//setTimeout(function(){ x5.innerHTML="'.$valCustOther.'"}, 3000);
-	//setTimeout(function(){mycharts1()}, 1000);		
-',$this::POS_HEAD);	
+		var x5 = document.getElementById("cust-other-id");
+		setTimeout(function(){ x5.innerHTML="'.$valCustOther.'"}, 3000);	
+',$this::POS_READY);	
 
  
 
