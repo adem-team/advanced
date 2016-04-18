@@ -13,6 +13,8 @@ use kartik\builder\Form;
 use kartik\widgets\FileInput;
 use kartik\builder\FormGrid;
 use kartik\tabs\TabsX;
+use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
+MapAsset::register($this);
 
 $this->sideCorp = 'PT. ESM';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'effenbi_dboard';                                      /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -22,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 ?>
 
 <?php
-	$contentCustomer=Yii::$app->controller->renderPartial('_efenbi_chart_customer');
+	 $map = '<div id ="map" style="width:100%;height:820px"></div>';
 ?>
 
 
@@ -33,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					 echo Html::panel(
 						[
 							'heading' => '<div>DASHBOARD - Saleman Visit</div>',
-							'body'=>$contentCustomer,
+							'body'=> $map,
 						],
 						Html::TYPE_INFO
 					);
@@ -44,3 +46,46 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			
 		</div>
  </div>
+ 
+ <?php
+ $this->registerJs("
+		/*nampilin MAP*/
+		 var map = new google.maps.Map(document.getElementById('map'),
+			  {
+				zoom: 12,
+				center: new google.maps.LatLng(-6.229191531958687,106.65994325550469),
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+
+			});
+			
+			var public_markers = [];
+			
+		/*data json*/
+		$.getJSON('http://dashboard.lukisongroup.com/efenbi/report/map', function(json) {
+			for (var i in public_markers){
+				public_markers[i].setMap(null);
+			}
+
+			$.each(json, function (i, point) {
+					var marker = new google.maps.Marker({
+					// icon: icon,
+					position: new google.maps.LatLng(point.MAP_LAT, point.MAP_LNG),
+					animation:google.maps.Animation.BOUNCE,
+					map: map,
+					 icon : 'http://labs.google.com/ridefinder/images/mm_20_red.png'
+				});
+				 public_markers[i] = marker;
+			});
+		});	
+			
+			
+",$this::POS_READY);
+ ?>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

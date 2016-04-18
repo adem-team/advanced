@@ -233,60 +233,7 @@ global $canvasEndY;
 
 <?php
 
-
-
-//print_r($dataEsmStockAll);
-
 $this->registerJs('
-	setTimeout(function(){ 
-		//$("#cnt-sales-visits-id").load(location.href + " #cnt-sales-visits-id");
-		//$("#cust-medern-id").load("#cust-medern-id");
-		//alert(document.getElementById("chart-daily-visit").innerHTML);
-		//$("#chart-daily-visit").load(location.href + "#chart-daily-visit");	
-		$("#chart-sales-inventory").load(location.href + "#chart-sales-inventory");	
-		
-	}, 3100); 
-	
-	
-',$this::POS_HEAD); 
-
-$this->registerJs('
-	
-	/*Set Value ptr.nov*/
-	//Custommer All
-		//var x1 = document.getElementById("cust-all-id");	
-		//setTimeout(function(){ x1.innerHTML="'.$valCustAll.'"}, 3000);
-	//Custommer Modern
-		//var x2 = document.getElementById("cust-medern-id");
-		//setTimeout(function(){ x2.innerHTML="'.$valCustModern.'"}, 3000);
-		//setTimeout(function(){ document.getElementById("cust-medern-id").innerHTML="'.$valCustModern.'"}, 3000);
-	//Custommer General
-		//var x3 = document.getElementById("cust-general-id");
-		//setTimeout(function(){ x3.innerHTML="'.$valCustGeneral.'"}, 3000);
-	//Custommer Horeca
-		//var x4 = document.getElementById("cust-horeca-id");
-		//setTimeout(function(){ x4.innerHTML="'.$valCustHoreca.'"}, 3000);
-	//Custommer Other
-		//var x5 = document.getElementById("cust-other-id");
-		//setTimeout(function(){ x5.innerHTML="'.$valCustOther.'"}, 3000);
-	//setTimeout(function(){mycharts1()}, 1000);		
-',$this::POS_HEAD);	
-
- 
-
-$this->registerJs('
-	/* $.noConflict();
-	$(function() {
-		$("cnt-sales-visits-id").lazyload();
-	}); 
- */
-	/* $(window).bind("load", function() {
-		var timeout = setTimeout(function() {
-			$("cnt-sales-visits-id").trigger("sporty")
-		}, 3000);
-	}); */
-
-
 	/* 
 	 * GRAPH ESM ALL STOCK
 	 * @author piter [ptr.nov@gmail.com]
@@ -294,11 +241,14 @@ $this->registerJs('
 	*/
 	$(document).ready(function () {
 		
-		var data = '.$dataEsmStockAll.';
-		
+		var data = '.$graphSchaduleWinLoss.';
+		 if(FusionCharts("chart-visit-cnt-id")){
+			FusionCharts("chart-visit-cnt-id").dispose();
+		}  
 		var ratingsChart = new FusionCharts({
 			id: "chart-visit-cnt-id",
-			type: "line",
+			//type: "line",
+			type: "column2d",
 			renderAt: "chart-daily-visit",
 			width: "100%",
 			height: "250",
@@ -310,18 +260,20 @@ $this->registerJs('
 					caption: "VISIT PROCESS",           
 					// theme: "fint",					 
 					showValues: "1",
-					showZeroPlane: "1",                                
+					showZeroPlane: "1",       
+					paletteColors: "#FF0033,#0B2536,#0075c2,#9E466B,#C5E323",
+					usePlotGradientColor: "0",					
 					zeroPlaneColor:"#003366",
 					zeroPlaneAlpha: "100",
 					zeroPlaneThickness: "3",
-					divLineIsDashed: "0",
+					divLineIsDashed: "1",
 					divLineAlpha: "40",
 					xAxisName: "time",
 					yAxisName: "Visit",
 					showValues: "1" , 			//MENAMPILKAN VALUE 
 					showBorder: "1", 				//Border side Out 
 					showCanvasBorder: "0",		//Border side inside
-					paletteColors: "#0075c2",	// WARNA GARIS	
+					//paletteColors: "#0075c2",	// WARNA GARIS	
 					showAlternateHGridColor: "0",	//
 					bgcolor: "#ffffff"
 			    }, 
@@ -334,7 +286,7 @@ $this->registerJs('
 		});
 
 		ratingsChart.render();
-	});
+	}); 
 	
 	
 	

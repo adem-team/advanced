@@ -19,8 +19,9 @@ use dashboard\sistem\models\Userlogin;
 if (count($model)<>0){
 	//$Val_Corp='none'
 	if($model->POSITION_LOGIN==1){
-		//include('_index_efembi.php');
-		Yii::$app->controller->redirect('/efenbi/report');
+		include('_index_efembi.php');
+		//Yii::$app->controller->redirect('/efenbi/report');
+		//Yii::$app->controller->redirect('_index_efembi.php');
 
 
 		

@@ -15,22 +15,73 @@ $this->sideCorp = 'PT. ESM';                       /* Title Select Company pada 
 $this->sideMenu = 'effenbi_dboard';                                      /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+
+
+	$valCustAll=$count_CustPrn>0?$model_CustPrn[0]['COUNT_ALL_CUST']:0;
+	$valCustModern=$count_CustPrn>0?$model_CustPrn[1]['COUNT_CUST']:0;
+	$valCustGeneral=$count_CustPrn>0?$model_CustPrn[2]['COUNT_CUST']:0;
+	$valCustHoreca=$count_CustPrn>0?$model_CustPrn[3]['COUNT_CUST']:0;
+	$valCustOther=$count_CustPrn>0?$model_CustPrn[4]['COUNT_CUST']:0;
 ?>
 
 
 
 <?php
-	$contentCustomer=Yii::$app->controller->renderPartial('_efenbi_chart_customer',[
+	   $contentCustomer=Yii::$app->controller->renderPartial('_efenbi_chart_customer',[
 			'CntrVisit'=>$CntrVisit,
 			'model_CustPrn'=>$model_CustPrn,
 			'count_CustPrn'=>$count_CustPrn,
-			'dataEsmStockAll'=>$dataEsmStockAll,
+			'graphSchaduleWinLoss'=>$graphSchaduleWinLoss,
 			'graphEsmStockPerSku'=>$graphEsmStockPerSku
-	]);
-	  $contentSalesInventory=Yii::$app->controller->renderPartial('_efenbi_chart_sales_inventory',[
-			//'dataSalesInventory'=>$dataSalesInventory
-	]);  	
+	]);   
+	   $contentSalesInventory=Yii::$app->controller->renderPartial('_efenbi_chart_sales_inventory',[
+			'dataSalesInventory'=>$dataSalesInventory
+	]);   	
+	 $this->registerJs('
+			/*
+			 * AUTO LOAD
+			 * @author piter [ptr.nov@gmail.com]
+			 * @since 1.2
+			*/
+			jQuery(document).ready(function($)
+				{	
+					//Custommer All
+					setTimeout(function(){ document.getElementById("cust-all-id").innerHTML="'.$valCustAll.'"}, 3000);
+					//Custommer Modern		
+					setTimeout(function(){ document.getElementById("cust-medern-id").innerHTML="'.$valCustModern.'"}, 3000);
+					//Custommer General
+					setTimeout(function(){ document.getElementById("cust-general-id").innerHTML="'.$valCustGeneral.'"}, 3000);
+					//Custommer Horeca
+					setTimeout(function(){ document.getElementById("cust-horeca-id").innerHTML="'.$valCustHoreca.'"}, 3000);
+					//Custommer Other
+					setTimeout(function(){ document.getElementById("cust-other-id").innerHTML="'.$valCustOther.'"}, 3000);
 	
+					$(function() {
+                        startRefresh();
+                    });
+
+                    //auto reload data
+                    function startRefresh() {
+                        //setTimeout(startRefresh,500000);
+						//$("#cnt-sales-visits-id").load(location.href + " #cnt-sales-visits-id");
+                       //$("#chart-visit-cnt-id").load(location.href + "#chart-visit-cnt-id");	
+						//$("#sales-inventory").load(location.href + "#sales-inventory");
+											
+						$("#sales-inventory").load(location.href + "#sales-inventory");	
+						//window.addEventListener("load", ubahData()); 	
+						
+                    }
+					
+					
+					
+				}); 
+
+			
+			
+					
+			
+				
+',$this::POS_READY); 
 	
 	
 ?>
@@ -41,7 +92,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			<div class="col-xs-12 col-sm-12 col-dm-12  col-lg-12">
 					<?php
 					//print_r($dataSalesInventory);
-					echo Html::panel(
+					  echo Html::panel(
 						[
 							'heading' => '<div>SALESMAN VISIT</div>',
 							//'body'=>'<div style="background-color:black">'.$contentCustomer.'</div>',
@@ -51,9 +102,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							],
 						],
 						Html::TYPE_INFO
-					);
-					
-					echo Html::panel(
+					); 
+					  
+					 echo Html::panel(
 						[
 							'heading' => '<div>INVENTORY</div>',
 							//'body'=>'<div style="background-color:black">'.$contentCustomer.'</div>',
@@ -63,12 +114,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							],
 						],
 						Html::TYPE_INFO
-					);
+					); 
 					?>
 			</div>
-		</div>
-       <div class="row" >
-			
 		</div>
  </div>
 
