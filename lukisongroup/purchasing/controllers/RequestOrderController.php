@@ -1208,6 +1208,9 @@ class RequestOrderController extends Controller
       $dept = $roHeader->dept;
       $roDetail = Rodetail::find()->where(['KD_RO'=>$kd])->all();
 
+      print_r($approve['EMP_EMAIL']);
+      die();
+
     /* PR Filter Status Output to Grid print*/
     $dataProvider = new ArrayDataProvider([
       'key' => 'ID',

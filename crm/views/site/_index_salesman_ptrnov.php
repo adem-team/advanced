@@ -59,14 +59,14 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										 * Modul Salesman - Customer  | Buka customer Baru
 										*/
 										'content' => 'New Customers',
-										'url' => '/salesman/customers-crm',
+										'url' => '/salespromo/stock-gudang',
 										'badge' => '0'
 									],
 									[
 										/*
 										 * Modul Salesman - Customer  | Rekap Penjualan Customer -> Rekap under report penjualan sales promotion
 										*/
-										'content' => 'Customers Visit Group',
+										'content' => 'Selling Out Maintain',
 										'url' => '/salespromo/penjualan',
 										'badge' => '0'
 									],
@@ -74,7 +74,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										/*
 										 * Modul Salesman - Customer  | Pengeluaran/pencairan  stock ke customer | new coustomer/repeat order
 										*/
-										'content' => 'Customers Visit Schedule',
+										'content' => 'Stock Maintain',
 										'url' => '/salespromo/penjualan',
 										'badge' => '0'
 									],

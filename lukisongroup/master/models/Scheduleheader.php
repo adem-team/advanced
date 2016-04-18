@@ -59,7 +59,8 @@ class Scheduleheader extends \yii\db\ActiveRecord
     {
         return [
             'ID' => 'ID',
-            'TGL' => 'Tgl',
+            'TGL1' => 'start',
+            'TGL2' => 'end',
             'SCDL_GROUP' => 'Scdl  Group',
             'USER_ID' => 'User  ID',
             'NOTE' => 'Note',

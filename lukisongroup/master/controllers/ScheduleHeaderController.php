@@ -221,7 +221,7 @@ class ScheduleHeaderController extends Controller
        public function actionJsoncalendar($start=NULL,$end=NULL,$_=NULL){
        //public function actionJsoncalendar(){
            $events = array();
-   		$eventCalendar= Scheduleheader::find()->all();
+   		      $eventCalendar= Scheduleheader::find()->all();
    		//print_r($eventCalendar);
    		//die();
            //Demo
@@ -276,9 +276,11 @@ class ScheduleHeaderController extends Controller
       $model->NOTE = $note;
       $model->SCDL_GROUP = $scdl_group;
 			$model->USER_ID = $user_id;
-      $carisdl = ScheduleDetail::find()->where(['TGL'=>$model->TGL1])->count();
+      $carisdl = ScheduleDetail::find()->where(['TGL'=>$model->TGL1,'SCDL_GROUP'=>$scdl_group])->one();
+      // print_r($carisdl);
+      // die();
       // if exist data customers
-      if($carisdl > 0)
+      if($carisdl)
       {
         echo 2;
       }
