@@ -16,8 +16,7 @@ class SchedulegroupSearch extends Schedulegroup
     /**
      * @inheritdoc
      */
-	public $cust; 
-	 
+	
     public function rules()
     {
         return [
@@ -72,7 +71,7 @@ class SchedulegroupSearch extends Schedulegroup
 
         return $dataProvider;
     }
-	
+
 	// public function searchListCust($params)
     // {
         // $query = Schedulegroup::find()
@@ -83,14 +82,14 @@ class SchedulegroupSearch extends Schedulegroup
         // $dataProvider = new ActiveDataProvider([
             // 'query' => $query,
         // ]);
-		
+
 		// $modelTmp = $dataProviderTmp->cust();
-		
+
 		// $dataProvider = new ActiveDataProvider([
            // 'query' => $modelTmp,
        // ]);
-		
-		
+
+
 
         // $this->load($params);
 
