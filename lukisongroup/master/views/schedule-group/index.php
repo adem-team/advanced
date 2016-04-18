@@ -9,8 +9,7 @@ use yii\bootstrap\Modal;
 use yii\widgets\ActiveForm;
 use kartik\widgets\Select2;
 use lukisongroup\master\models\Schedulegroup;
-
-
+use lukisongroup\master\models\Customers;
 
 use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
 MapAsset::register($this);
@@ -373,7 +372,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Update'),
 															['/master/schedule-group/update-group','id'=>$model->CUST_KD],[
 															'data-toggle'=>"modal",
-															'data-target'=>"#modal-create",
+															'data-target'=>"#modalmap",
 															'data-title'=>'',// $model->KD_BARANG,
 															]). '</li>' . PHP_EOL;
 						},
@@ -409,12 +408,12 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		'panel' => [
 					'heading'=>'<h3 class="panel-title">LIST CUSTOMER GROUP</h3>',
 					'type'=>'warning',
-					// 'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Customer ',
-					// 		['modelClass' => 'Kategori',]),'/master/barang/create',[
-					// 			'data-toggle'=>"modal",
-					// 				'data-target'=>"#modal-create",
-					// 					'class' => 'btn btn-success'
-					// 								]),
+					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Customer ',
+							['modelClass' => 'Kategori',]),'/master/schedule-group/create-scdl',[
+								'data-toggle'=>"modal",
+									'data-target'=>"#modal-create",
+										'class' => 'btn btn-success'
+													]),
 
 					'showFooter'=>false,
 		],
@@ -527,8 +526,8 @@ $this->registerJs("
 			})
 	",$this::POS_READY);
 		Modal::begin([
-				'id' => 'modal-create',
-		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+				'id' => 'modalmap',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Change Customers Group</h4></div>',
 		'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
 		],

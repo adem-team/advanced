@@ -87,7 +87,7 @@ class StockRcvdController extends Controller
     public function actionCreate()
     {
         $model = new StockRcvd();
-		$searchModel = new StockRcvdSearch();
+		    $searchModel = new StockRcvdSearch();
         $dataProvider = $searchModel->searchRcvd(Yii::$app->request->queryParams);
         // * data tipe for form stock rcvd
 

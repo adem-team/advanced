@@ -22,7 +22,7 @@ use kartik\widgets\Select2;
     <?= $form->field($model, 'SCDL_GROUP')->widget(Select2::classname(), [
     'data' => $data,
     'language' => 'us',
-    'options' => ['placeholder' => 'Select a state ...'],
+    'options' => ['placeholder' => 'Select  ...'],
     'pluginOptions' => [
         'allowClear' => true
     ],
@@ -38,7 +38,10 @@ use kartik\widgets\Select2;
 
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary',
+        'data' => [
+            'confirm' => 'Are you sure Change Group?',
+        ],]) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
