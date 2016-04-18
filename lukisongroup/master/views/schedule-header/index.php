@@ -26,6 +26,8 @@ function(start, end) {
 	// var tgl2 = moment(dateTime2).format("YYYY-MM-DD HH:mm:ss");
 	var tgl1 = moment(dateTime1).format("YYYY-MM-DD");
 	var tgl2 = moment(dateTime2).format("YYYY-MM-DD");
+	// var tgl1 = moment(dateTime1).format("DD/MM/yyyy hh:mm");
+	// var tgl2 = moment(dateTime2).format("DD/MM/yyyy hh:mm");
 	$('#tglakhir').val(tgl2);
 	$('#tglawal').val(tgl1);
     $('#confirm-permission-alert').modal();
@@ -438,7 +440,7 @@ EOF;
 		'lang' => 'id',
 		//... more options to be defined here!
 	  ],
-	   // 'events'=> $events,
+	   'events'=> $events,
 	  'ajaxEvents' => Url::to(['/master/schedule-header/jsoncalendar']),
 	  'clientOptions' => [
 			'selectable' => true,

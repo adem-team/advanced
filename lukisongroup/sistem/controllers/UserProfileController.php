@@ -48,7 +48,7 @@ class UserProfileController extends Controller
     {
 		$ttlheader="EMPLOYEE SUMMARY";
 		$fileLink="_empSummary";
-		
+
 		/*UPLOAD SIGNATURE*/
 		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
 		$paramID =$paramFile!=false?$paramFile:'0';
@@ -57,19 +57,19 @@ class UserProfileController extends Controller
 		}else{
 			$modelUpload = new FileManage();
 		}
-		
+
 		/*USER LOGIN*/
 		$model = $this->findModel(Yii::$app->user->identity->EMP_ID);
 		//print_r($model->SIGSVGBASE30);
         return $this->render('index',[
 			'ttlheader'=>$ttlheader,
-			'fileLink'=>$fileLink,			
+			'fileLink'=>$fileLink,
 			'model'=> $model,
 			'modelUpload'=>$modelUpload
 		]);
-		
+
     }
-	
+
 	public function actionPribadi()
     {
 		$ttlheader="INFORMASI PRIBADI";
@@ -79,12 +79,12 @@ class UserProfileController extends Controller
 		//print_r($model->SIGSVGBASE30);
         return $this->render('index',[
 			'ttlheader'=>$ttlheader,
-			'fileLink'=>$fileLink,			
+			'fileLink'=>$fileLink,
 			'model'=> $model,
 			'modelUpload'=>$modelUpload
 		]);
     }
-	
+
 	/*
 	 * FORM LOGIN UTAMA | FORM CHANGE PASSWORD
 	 * @author ptrnov  <piter@lukison.com>
@@ -150,8 +150,11 @@ class UserProfileController extends Controller
 	public function actionSignature()
     {
 		$model = $this->findModel(Yii::$app->user->identity->EMP_ID);
-		
+
 		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
+
+
+
 		$paramID =$paramFile!=false?$paramFile:'0';
 		if ($paramFile==true){
 			$modelUpload = FileManage::find()->where(['ID'=>$paramID])->One();
@@ -159,7 +162,7 @@ class UserProfileController extends Controller
 			$modelUpload = new FileManage();
 		}
 		//$modelUpload = new FileManage();
-		
+
 		//print_r($model->SIGSVGBASE30);
         return $this->render('_signature',[
 			'model'=> $model,
@@ -176,11 +179,11 @@ class UserProfileController extends Controller
       return $base64;
 
     }
-	
+
 	public function actionUploadInput()
     {
 		//$fileName = 'file';
-		 
+
 		$model = new FileManage();
 		if ($model->load(Yii::$app->request->post()) ) {
 			//if($model->validate()){
@@ -189,7 +192,7 @@ class UserProfileController extends Controller
 				$exportFile = $model->uploadFile();
 				//$base64File = \yii\web\UploadedFile::getInstance($model, 'uploadDataFile');
 				// $dateFile=\yii\web\UploadedFile::getInstanceByName($fileName);
-				
+
 				$exportFile64 = $this->saveimage(file_get_contents($exportFile->tempName));
 				$model->FILE_NM64 = 'data:image/jpg;charset=utf-8;base64,'.$exportFile64;
 				//print_r($exportFile64);
@@ -199,22 +202,22 @@ class UserProfileController extends Controller
 					if ($exportFile !== false) {
 						$path = $model->getImageFile();
 						$exportFile->saveAs($path);
-						
-						
-						
-						
-						
+
+
+
+
+
 						return $this->redirect(['signature','id'=>$model->ID]);
-					} 
-				}				
-			//}			
+					}
+				}
+			//}
 		}
 	}
-	
+
 	public function actionUploadSignatureFile()
     {
 		$model = new FileManage();
-		
+
 		if ($model->load(Yii::$app->request->post()) ) {
 			//if($model->validate()){
 				$model->USER_ID = Yii::$app->user->identity->username;
@@ -222,7 +225,7 @@ class UserProfileController extends Controller
 				$exportFile = $model->uploadFile();
 				//$base64File = \yii\web\UploadedFile::getInstance($model, 'uploadDataFile');
 				// $dateFile=\yii\web\UploadedFile::getInstanceByName($fileName);
-				
+
 				$exportFile64 = $this->saveimage(file_get_contents($exportFile->tempName));
 				$exportFile64Image='data:image/jpg;charset=utf-8;base64,'.$exportFile64;
 				$model->FILE_NM64 = $exportFile64Image;
@@ -232,17 +235,17 @@ class UserProfileController extends Controller
 					//upload only if valid uploaded file instance found
 					if ($exportFile !== false) {
 						$path = $model->getImageFile();
-						$exportFile->saveAs($path);		
-						$employeUpdate =Employe::find()->where(['EMP_ID'=>Yii::$app->user->identity->EMP_ID])->one();						
+						$exportFile->saveAs($path);
+						$employeUpdate =Employe::find()->where(['EMP_ID'=>Yii::$app->user->identity->EMP_ID])->one();
 						$employeUpdate->SIGSVGBASE64=$exportFile64Image;
 						$employeUpdate->save();
 						return $this->redirect(['index']);
-					} 
-				}				
-			//}			
+					}
+				}
+			//}
 		}
 	}
-	
+
 	/*
 	 * Index Signature Password
 	 * @author ptrnov  <piter@lukison.com>
@@ -254,13 +257,16 @@ class UserProfileController extends Controller
 		$model = $this->findModel($hsl['Employe']['EMP_ID']);
 
 		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
+
 		$paramID =$paramFile!=false?$paramFile:'0';
 		if ($paramFile==true){
 			$modelUpload = FileManage::find()->where(['ID'=>$paramID])->One();
 		}else{
 			$modelUpload = new FileManage();
 		}
-		
+
+
+
 		if ($model->load(Yii::$app->request->post())){
 			//$hsl = \Yii::$app->request->post();
 			$model->UPDATED_BY=Yii::$app->user->identity->username;
@@ -275,7 +281,7 @@ class UserProfileController extends Controller
 				}
 		}else{
 			return $this->render('_signature_form',[
-                '$model' => $model
+                'model' => $model
             ] );
 		}
     }
@@ -306,6 +312,19 @@ class UserProfileController extends Controller
 		 * @author ptrnov  <piter@lukison.com>
 		 * @since 1.1
 		*/
+		// $paramFile=Yii::$app->getRequest()->getQueryParam('id');
+		// print_r($paramFile);
+		// die();
+
+		// $paramID =$paramFile!=false?$paramFile:'0';
+		// if ($paramFile==true){
+		// 	$modelUpload = FileManage::find()->where(['ID'=>$paramID])->One();
+		// }else{
+		// 	$modelUpload = new FileManage();
+		// }
+
+			$modelUpload = new FileManage();
+
 		if(Yii::$app->request->isAjax){
 			$modelform->load(Yii::$app->request->post());
 			return Json::encode(\yii\widgets\ActiveForm::validate($modelform));
@@ -319,6 +338,7 @@ class UserProfileController extends Controller
 								//'model'=>$model,
 								'newPassword'=>$newPassword
 							]);
+							// die();
 				if($model->EMP_EMAIL!=''){
 					 Yii::$app->mailer->compose()
 					 ->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
@@ -330,15 +350,25 @@ class UserProfileController extends Controller
 					 ->send();
 				}
 				return $this->redirect('signature',[
-					'model'=>$model,
-					'modelUpload'=>$modelUpload,
+					// 'model'=>$model,
+					// 'modelUpload'=>$modelUpload,
 				]);
+
+				// return $this->render('_signature',[
+				// 	'model'=>$model,
+				// 	'modelUpload'=>$modelUpload,
+				// ]);
 
 			}else{
 				 $model = $this->findModel(Yii::$app->user->identity->EMP_ID);
 				return $this->redirect('signature',[
-					'model'=>$model,
+					// 'model'=>$model,
+					// 'modelUpload'=>$modelUpload,
 				]);
+				// return $this->render('_signature',[
+				// 	'model'=>$model,
+				// 	'modelUpload'=>$modelUpload,
+				// ]);
 			}
 		}
 
