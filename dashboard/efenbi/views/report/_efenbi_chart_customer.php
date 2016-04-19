@@ -39,7 +39,7 @@ global $canvasEndY;
 						</div>
 					</div>
 				</div>
-				<a href="/master/barang">
+				<a href="/efenbi/report/view-all-customer">
 					<div class="panel-footer">
 						<span class="pull-left">View Details</span>
 						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -61,7 +61,7 @@ global $canvasEndY;
 						</div>
 					</div>
 				</div>
-				<a href="/master/barangumum">
+				<a href="/efenbi/report/view-modern-customer">
 					<div class="panel-footer">
 						<span class="pull-left">Modern Details</span>
 						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -83,7 +83,7 @@ global $canvasEndY;
 						</div>
 					</div>
 				</div>
-				<a href="/master/unitbarang">
+				<a href="/efenbi/report/view-general-customer">
 					<div class="panel-footer">
 						<span class="pull-left">General Details</span>
 						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -104,7 +104,7 @@ global $canvasEndY;
 						<div id="cnt-sales-visits-id"><h1><B><?php echo $CntrVisit; ?></B></h1> </div>							
 				</div>
 			</div>
-			<div class="panel-footer">Daily visits</div>			
+			<div class="panel-footer"><b>DAILY VISIT</b></div>			
 		</div>
 		<!-- <div class="panel panel-yellow">
 				<div class="panel-heading">
@@ -128,7 +128,7 @@ global $canvasEndY;
 		</div>
 			<div id="chart-container">Fusion Charts will render here</div>-->
 			<div id="chart-daily-visit"></div>		
-				
+			<a class="btn btn-warning btn-xs" href="/efenbi/report/view-visit">Detail >></a>	
 	</div>
 	
 	<!-- KANAN !-->
@@ -149,7 +149,7 @@ global $canvasEndY;
 						</div>
 					</div>
 				</div>
-				<a href="/master/unitbarang">
+				<a href="/efenbi/report/view-horeca-customer">
 					<div class="panel-footer">
 						<span class="pull-left">Horeca Details</span>
 						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -171,7 +171,7 @@ global $canvasEndY;
 						</div>
 					</div>
 				</div>
-				<a href="/master/unitbarang">
+				<a href="/efenbi/report/view-other-customer">
 					<div class="panel-footer">
 						<span class="pull-left">Others Details</span>
 						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -179,7 +179,7 @@ global $canvasEndY;
 					</div>
 				</a>
 			</div>
-			<!-- PRODAK SKU!-->
+			<!-- SALESMAN!-->
 			<div class="panel " style="background-color:rgba(174, 255, 0, 0.6)">
 				<div class="panel-heading">
 					<div class="row">
@@ -189,13 +189,13 @@ global $canvasEndY;
 						<div class="col-lg-9 text-right">
 							<!--<div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div>!-->
 							<div class="huge"><h4><?php echo $count_CustPrn>2?$model_CustPrn[2]['COUNT_CUST']:0; ?></h4></div>
-							<div><?php $count_CustPrn>2? 'Customers '.$model_CustPrn[2]['PARENT_NM']:'None'; ?></div>
+							<div><?php $count_CustPrn>2? 'Salesman '.$model_CustPrn[2]['PARENT_NM']:'None'; ?></div>
 						</div>
 					</div>
 				</div>
-				<a href="/master/unitbarang">
+				<a href="/efenbi/report/view-salesman">
 					<div class="panel-footer">
-						<span class="pull-left">Inventory Details</span>
+						<span class="pull-left">Salesman Details</span>
 						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 						<div class="clearfix"></div>
 					</div>

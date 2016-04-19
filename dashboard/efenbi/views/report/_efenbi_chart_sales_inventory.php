@@ -42,10 +42,10 @@ global $canvasEndY;
 	<!-- TENGAH !-->
 	<div class="col-lg-12 col-md-12">
 		<div id="chart-sales-inventory"></div>
-		
+		<a class="btn btn-warning btn-xs" href="/efenbi/report/view-stock">Detail >></a>
 	</div>
 	<div class="col-lg-12 col-md-12">
-	 <input id="coba" type="button" onClick="changeMonth();" value="Change Month">
+	
 	 </div>
 </div>
 
@@ -71,7 +71,8 @@ global $canvasEndY;
 					}   
 					var salesStockChart = new FusionCharts({
 					id:"sales-inventory",
-					type: "mscolumn2D",
+					type: "msstackedcolumn2dlinedy",
+					//type: "mscolumn2D",
 					renderAt: "chart-sales-inventory",
 					width: "100%",
 					height: "250",					

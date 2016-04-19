@@ -45,16 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			*/
 			jQuery(document).ready(function($)
 				{	
-					//Custommer All
-					setTimeout(function(){ document.getElementById("cust-all-id").innerHTML="'.$valCustAll.'"}, 3000);
-					//Custommer Modern		
-					setTimeout(function(){ document.getElementById("cust-medern-id").innerHTML="'.$valCustModern.'"}, 3000);
-					//Custommer General
-					setTimeout(function(){ document.getElementById("cust-general-id").innerHTML="'.$valCustGeneral.'"}, 3000);
-					//Custommer Horeca
-					setTimeout(function(){ document.getElementById("cust-horeca-id").innerHTML="'.$valCustHoreca.'"}, 3000);
-					//Custommer Other
-					setTimeout(function(){ document.getElementById("cust-other-id").innerHTML="'.$valCustOther.'"}, 3000);
+					
 	
 					$(function() {
                         startRefresh();
@@ -66,8 +57,21 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						//$("#cnt-sales-visits-id").load(location.href + " #cnt-sales-visits-id");
                        //$("#chart-visit-cnt-id").load(location.href + "#chart-visit-cnt-id");	
 						//$("#sales-inventory").load(location.href + "#sales-inventory");
-											
-						$("#sales-inventory").load(location.href + "#sales-inventory");	
+						//Custommer All
+						setTimeout(function(){ document.getElementById("cust-all-id").innerHTML="'.$valCustAll.'"}, 3000);
+						//Custommer Modern		
+						setTimeout(function(){ document.getElementById("cust-medern-id").innerHTML="'.$valCustModern.'"}, 3000);
+						//Custommer General
+						setTimeout(function(){ document.getElementById("cust-general-id").innerHTML="'.$valCustGeneral.'"}, 3000);
+						//Custommer Horeca
+						setTimeout(function(){ document.getElementById("cust-horeca-id").innerHTML="'.$valCustHoreca.'"}, 3000);
+						//Custommer Other
+						setTimeout(function(){ document.getElementById("cust-other-id").innerHTML="'.$valCustOther.'"}, 3000);
+					
+						setTimeout(function(){
+							$("#sales-inventory").load(location.href + "#sales-inventory");	
+						},30000);					
+						
 						//window.addEventListener("load", ubahData()); 	
 						
                     }
@@ -94,7 +98,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					//print_r($dataSalesInventory);
 					  echo Html::panel(
 						[
-							'heading' => '<div>SALESMAN VISIT</div>',
+							'heading' => '<div>SALESMAN  VISIT</div>',
 							//'body'=>'<div style="background-color:black">'.$contentCustomer.'</div>',
 							'body'=>$contentCustomer,
 							'options'=>[

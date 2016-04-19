@@ -17,15 +17,9 @@ use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
 
 
-//use lukisongroup\dashboard\models\RptesmGraph;
-use dashboard\efenbi\models\Scheduledetail;
-use dashboard\efenbi\models\ScheduledetailSearch;
-use dashboard\efenbi\models\Schedulegroup;
-use dashboard\efenbi\models\CustomerVisitImage;
+use lukisongroup\dashboard\models\RptesmGraph;
 
-
-
-class ReportController extends Controller
+class ImportReportController extends Controller
 {	
 
 	public function behaviors()    {
@@ -84,17 +78,7 @@ class ReportController extends Controller
 			$dataCntrVisit=Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_customer_visit_winloss('COUNTER_DAILY','". date('Y-m-d')."','','')")->queryAll();
 			$CntrVisit=$dataCntrVisit[0]['CNT_DAY']!=''? $dataCntrVisit[0]['CNT_DAY']:0;
 			
-			return $this->render('index',[
-				/*COUNTER VISIT DAILY*/
-				'CntrVisit'=>$CntrVisit,
-				/* CUSTOMER CATEHORI COUNT [modern,general,horeca,other]*/
-				'model_CustPrn'=>$model_CustPrn,
-				'count_CustPrn'=>$count_CustPrn,  						// Condition  validation model_CustPrn offset array -ptr.nov-
-				/*CHART*/
-				'graphSchaduleWinLoss'=>$this->graphSchaduleWinLoss(),				
-				/*CHART SALES INVENTORY */
-				'dataSalesInventory'=>$this->graphEsmSalesInventory()				
-			]);
+			return $this->render('index');
 		};	
     }
 	
@@ -204,7 +188,7 @@ class ReportController extends Controller
 		
 		$prn='{
 			"chart": {				
-				"caption":"MONTHLY  STOCK",     											 
+				"caption":"SALESMAN DAILY STOCK",     											 
 				"plotgradientcolor": "",
 				"bgcolor": "FFFFFF",
 				"showalternatehgridcolor": "0",
@@ -232,8 +216,7 @@ class ReportController extends Controller
 					"dataset": [
 						{
 							"seriesname": "MAXI Cassava Chips Balado",
-							"data": '.$resultVal1.',
-							"link": "JavaScript:showAlert(asdasd)"
+							"data": '.$resultVal1.'
 						}, 
 						{
 							"seriesname": "MAXI Talos Chips Black Paper",
@@ -266,19 +249,6 @@ class ReportController extends Controller
 		return $prn;
 	}
 	
-	/*SALESMAN VISIT REPORT*/
-	public function actionViewVisit(){
-		$searchModel = new ScheduledetailSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-		$dataGroup =  ArrayHelper::map(Schedulegroup::find()->orderBy('SCDL_GROUP_NM')->asArray()->all(), 'ID','SCDL_GROUP_NM');
-	    
-		return $this->render('_view_visit', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-			'nmGroup'=>$dataGroup,
-        ]);		
-	}
-	
 	/*SALESMAN REPORT*/
 	public function actionViewSalesman(){
 		return $this->render('_view_sales');		
@@ -287,31 +257,6 @@ class ReportController extends Controller
 	/*STOCK REPORT*/
 	public function actionViewStock(){
 		return $this->render('_view_stock');		
-	}	
-	
-	/*STOCK ALL CUSTOMER*/
-	public function actionViewAllCustomer(){
-		return $this->render('_view_all_customer');		
-	}
-	
-	/*STOCK MEDERN CUSTOMER*/
-	public function actionViewModernCustomer(){
-		return $this->render('_view_modern_customer');		
-	}
-	
-	/*STOCK GENERAL CUSTOMER*/
-	public function actionViewGeneralCustomer(){
-		return $this->render('_view_general_customer');		
-	}
-	
-	/*STOCK HORECA CUSTOMER*/
-	public function actionViewHorecaCustomer(){
-		return $this->render('_view_horeca_customer');		
-	}
-	
-	/*STOCK OTHER CUSTOMER*/
-	public function actionViewOtherCustomer(){
-		return $this->render('_view_other_customer');		
 	}	
 	
 }

@@ -209,9 +209,9 @@ AppAsset_style::register($this);
                        </div>
                     </div>
                 </div>
-                <div class="box-footer bg-black" style="color: blue">
-                    <p> <?php echo $corp .'-'. date('Y') ?></p>
-                </div>
+                <!--<div class="box-footer bg-black" style="color: blue">
+                    <p> <?php //echo $corp .'-'. date('Y') ?></p>
+                </div> !-->
 			<?php $this->endBody() ?>
 		</body>
 	<?php }; ?>
