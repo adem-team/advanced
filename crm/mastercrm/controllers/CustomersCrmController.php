@@ -1,6 +1,6 @@
 <?php
 
-namespace crm\salesman\controllers;
+namespace crm\mastercrm\controllers;
 
 use Yii;
 use lukisongroup\master\models\KategoricusSearch;
@@ -8,10 +8,10 @@ use lukisongroup\master\models\DistributorSearch;
 use lukisongroup\master\models\Kategoricus;
 use lukisongroup\master\models\KotaSearch;
 use lukisongroup\master\models\Kota;
-use lukisongroup\master\models\ProvinceSearch;
+use crm\mastercrm\models\ProvinceSearch;
 use lukisongroup\master\models\Province;
-use crm\salesman\models\Customers;
-use crm\salesman\models\CustomersSearch;
+use crm\mastercrm\models\Customers;
+use crm\mastercrm\models\CustomersSearch;
 use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -68,16 +68,7 @@ class CustomersCrmController extends Controller
 
     public function actionIndex()
     {
-       // city data
-        $searchmodelkota = new KotaSearch();
-        $dataproviderkota = $searchmodelkota->search(Yii::$app->request->queryParams);
 
-        // province data
-        $searchmodelpro = new ProvinceSearch();
-        $dataproviderpro = $searchmodelpro->search(Yii::$app->request->queryParams);
-
-        $searchModel1 = new KategoricusSearch();
-        $dataProviderkat  = $searchModel1->searchparent(Yii::$app->request->queryParams);
 
         $searchModel = new CustomersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -133,149 +124,15 @@ class CustomersCrmController extends Controller
 
         }
 
-		// /*Tambahal menu side Dinamik */
-		// $sideMenu_control='umum_datamaster';
 		return $this->render('index', [
-			// 'sideMenu_control'=> $sideMenu_control,
-			'searchModel1' => $searchModel1,
-			'dataProviderkat'  =>$dataProviderkat ,
-			'searchModel' => $searchModel,
-			'dataProvider' => $dataProvider,
-			'searchmodelkota' => $searchmodelkota,
-			'searchmodelpro' => $searchmodelpro,
-			'dataproviderpro' =>  $dataproviderpro,
-			'dataproviderkota' => $dataproviderkota,
-		]);
-	}
-
-	/*ESM INDEX*/
-	public function actionEsmIndex()
-    {
-
-        $searchModel = new CustomersSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-           if(Yii::$app->request->post('hasEditable'))
-        {
-            $ID = \Yii::$app->request->post('editableKey');
-            $model = Customers::findOne($ID);
-            $out = Json::encode(['output'=>'', 'message'=>'']);
-
-            // fetch the first entry in posted data (there should
-            // only be one entry anyway in this array for an
-            // editable submission)
-            // - $posted is the posted data for Book without any indexes
-            // - $post is the converted array for single model validation
-            $post = [];
-            $posted = current($_POST['Customers']);
-            $post['Customers'] = $posted;
-
-
-
-            // load model like any single model validation
-            if ($model->load($post)) {
-                // can save model or do something before saving model
-                $model->save();
-
-                // custom output to return to be displayed as the editable grid cell
-                // data. Normally this is empty - whereby whatever value is edited by
-                // in the input by user is updated automatically.
-                $output = '';
-
-                // specific use case where you need to validate a specific
-                // editable column posted when you have more than one
-                // EditableColumn in the grid view. We evaluate here a
-                // check to see if buy_amount was posted for the Book model
-                if (isset($posted['CUST_KD_ALIAS'])) {
-                   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-                    $output =$model->CUST_KD_ALIAS;
-                }
-
-                // similarly you can check if the name attribute was posted as well
-                // if (isset($posted['name'])) {
-                //   $output =  ''; // process as you need
-                // }
-                $out = Json::encode(['output'=>$output, 'message'=>'']);
-
-
-            // return ajax json encoded response and exit
-            echo $out;
-
-            return;
-          }
-
-        }
-
-		/*Tambahal menu side Dinamik */
-		$sideMenu_control='esm_customers';
-		return $this->render('index', [
-			'sideMenu_control'=> $sideMenu_control,
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
 		]);
 	}
 
 
-  /*ESM INDEX Kategori Customesr*/
-  public function actionEsmIndexKategori()
-    {
-
-      $searchModel1 = new KategoricusSearch();
-      $dataProviderkat  = $searchModel1->searchparent(Yii::$app->request->queryParams);
-
-
-    /*Tambahal menu side Dinamik */
-    $sideMenu_control='esm_customers';
-    return $this->render('index-kategori', [
-      'sideMenu_control'=> $sideMenu_control,
-      'searchModel1' => $searchModel1,
-      'dataProviderkat'  =>$dataProviderkat ,
-
-    ]);
-  }
-
-
-  /*ESM INDEX City */
-  public function actionEsmIndexCity()
-    {
-
-      // city data
-       $searchmodelkota = new KotaSearch();
-       $dataproviderkota = $searchmodelkota->search(Yii::$app->request->queryParams);
-
-
-    /*Tambahal menu side Dinamik */
-    $sideMenu_control='esm_customers';
-    return $this->render('index-city', [
-      'sideMenu_control'=> $sideMenu_control,
-      'searchmodelkota' => $searchmodelkota,
-      'dataproviderkota'  =>$dataproviderkota ,
-
-    ]);
-  }
-
-
-  /*ESM INDEX Provinsi */
-  public function actionEsmIndexProvinsi()
-    {
-
-      // province data
-      $searchmodelpro = new ProvinceSearch();
-      $dataproviderpro = $searchmodelpro->search(Yii::$app->request->queryParams);
-
-
-    /*Tambahal menu side Dinamik */
-    $sideMenu_control='esm_customers';
-    return $this->render('index-province', [
-      'sideMenu_control'=> $sideMenu_control,
-      'searchmodelpro' => $searchmodelpro,
-      'dataproviderpro' =>  $dataproviderpro,
-
-    ]);
-  }
-
-  /*ESM INDEX map */
-  public function actionEsmMap()
+  /*CRM INDEX map */
+  public function actionCrmMap()
     {
 
     /*Tambahal menu side Dinamik */
@@ -289,24 +146,6 @@ class CustomersCrmController extends Controller
 
 
 
-    /**
-     * Displays a single Customer model.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionViewkota($id)
-    {
-        return $this->renderAjax('viewkota', [
-            'model' => $this->findModelkota($id),
-        ]);
-    }
-
-	 public function actionViewpro($id)
-    {
-        return $this->renderAjax('viewpro', [
-            'model' => $this->findModelpro($id),
-        ]);
-    }
 
 
 	  public function actionViewcust($id)
@@ -316,12 +155,7 @@ class CustomersCrmController extends Controller
         ]);
     }
 
-    public function actionView($id)
-    {
-        return $this->renderAjax('viewkat', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+
     public function actionViewAlias($id)
     {
         return $this->renderAjax('view_alias', [
@@ -472,96 +306,6 @@ class CustomersCrmController extends Controller
          }
      }
 
-      public function actionCreateprovnce()
-    {
-        $model = new Province();
-
-        if ($model->load(Yii::$app->request->post()) ) {
-
-				if($model->validate())
-				{
-
-					if($model->save())
-          {
-                echo 1;
-          }
-          else{
-                echo 0;
-          }
-				}
-
-            // return $this->redirect(['index']);
-		}
-         else {
-            return $this->renderAjax('_formprovince', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-     public function actionCreatekota()
-    {
-        $model = new Kota();
-
-        if ($model->load(Yii::$app->request->post()) ) {
-
-                if($model->validate())
-                {
-
-                  if($model->save())
-                  {
-                    echo 1;
-                  }
-                  else{
-                    echo 0;
-                  }
-
-                }
-
-            // return $this->redirect(['index']);
-        }
-         else {
-            return $this->renderAjax('_formkota', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-
-    public function actionCreate($id)
-    {
-
-        $model = new Kategoricus();
-
-        $cus = Kategoricus::find()->where(['CUST_KTG'=> $id ])->one();
-        $par = $cus['CUST_KTG'];
-
-        if ($model->load(Yii::$app->request->post()) ) {
-
-          $model->CUST_KTG_PARENT = $par;
-
-				if($model->validate())
-				{
-            $model->STATUS = 1;
-					  $model->CREATED_BY =  Yii::$app->user->identity->username;
-						$model->CREATED_AT = date("Y-m-d H:i:s");
-            if($model->save())
-            {
-              echo 1;
-            }
-            else{
-              echo 0;
-            }
-
-				}
-
-            // return $this->redirect(['index']);
-        } else {
-            return $this->renderAjax('_form', [
-                'model' => $model,
-            ]);
-        }
-    }
 
  // data json map
     public function actionMap()
@@ -684,46 +428,6 @@ class CustomersCrmController extends Controller
 
 
 
-     public function actionCreateparent()
-    {
-        $model = new Kategoricus();
-
-        if ($model->load(Yii::$app->request->post()) ) {
-          $data = Kategoricus::find()->count();
-          if($data == 0)
-          {
-
-              $model->CUST_KTG_PARENT = 1;
-          }
-          else{
-              $datax = Kategoricus::find()->MAX('CUST_KTG');
-
-                $model->CUST_KTG_PARENT = $datax+1;
-          }
-
-       	    if($model->validate())
-            {
-
-
-                $model->CREATED_BY =  Yii::$app->user->identity->username;
-                $model->CREATED_AT = date("Y-m-d H:i:s");
-                if($model->save())
-                {
-                  echo 1;
-                }
-                else{
-                  echo 0;
-                }
-
-            }
-        } else {
-            return $this->renderAjax('_formparent', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-
     public function actionCreatecustomers()
     {
         $model = new Customers();
@@ -756,7 +460,7 @@ class CustomersCrmController extends Controller
         $model->JOIN_DATE = $tanggal;
 			if($model->validate())
 			{
-				$model->CORP_ID = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
+				$model->CORP_ID = Yii::$app->getUserOptcrm->Profile_user()->userprofile->CORP_ID;
 				$model->CREATED_BY =  Yii::$app->user->identity->username;
 				$model->CREATED_AT = date("Y-m-d H:i:s");
 
@@ -855,7 +559,7 @@ class CustomersCrmController extends Controller
 
           //  return $this->redirect(['index']);
         } else {
-            return $this->renderAjax('update', [
+            return $this->renderAjax('_updatedetail', [
                 'model' => $model,
                 'parent'=>$parent,
                 'dropparentkategori'=>$dropparentkategori,
@@ -891,7 +595,7 @@ class CustomersCrmController extends Controller
 
           //  return $this->redirect(['index']);
         } else {
-            return $this->renderAjax('type', [
+            return $this->renderAjax('_updatekategori', [
                 'model' => $model,
                 'dropparentkategori'=>$dropparentkategori,
                 'readonly'=>$readonly
@@ -962,7 +666,7 @@ class CustomersCrmController extends Controller
 
             //  return $this->redirect(['index']);
         } else {
-            return $this->renderAjax('set_detail', [
+            return $this->renderAjax('_updatealamat', [
                 'model' => $model,
                 'dropparentkategori'=>$dropparentkategori,
                 'droppro'=>$droppro,
@@ -972,99 +676,6 @@ class CustomersCrmController extends Controller
         }
     }
 
-	public function actionUpdatekota($id)
-    {
-        $model = $this->findModelkota($id);
-
-        if ($model->load(Yii::$app->request->post()) ) {
-
-			    if($model->validate())
-              {
-                      if($model->save())
-                      {
-                        echo 1;
-                      }
-                      else{
-                        echo 0;
-                      }
-
-              }
-
-            //  return $this->redirect(['index']);
-        } else {
-            return $this->renderAjax('_formkota', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-	public function actionUpdatepro($id)
-    {
-        $model = $this->findModelpro($id);
-
-        if ($model->load(Yii::$app->request->post()) ) {
-
-			    if($model->validate())
-              {
-                      if($model->save())
-                      {
-                        echo 1;
-                      }
-                      else{
-                        echo 0;
-                      }
-            }
-
-            //  return $this->redirect(['index']);
-        } else {
-            return $this->renderAjax('_formprovince', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Deletes an existing Kategori model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
-     * @return mixed
-     */
-	  // public function actionDeletepro($id)
-    // {
-     	// $model = Province::find()->where(['PROVINCE_ID'=>$id])->one();
-		// $model->STATUS = 3;
-		// $model->save();
-        // return $this->redirect(['index']);
-    // }
-
-	  // public function actionDeletekota($id)
-    // {
-     	// $model = Kota::find()->where(['CITY_ID'=>$id])->one();
-		// $model->STATUS = 3;
-		// $model->save();
-        // return $this->redirect(['index']);
-    // }
-
-    public function actionDelete($id)
-    {
-     	$model = Kategoricus::find()->where(['CUST_KTG'=>$id])->one();
-		  $model->STATUS = 3;
-		  $model->save();
-        return $this->redirect(['index']);
-    }
-
-
-	   public function actionDeletecus($id)
-    {
-
-
-		$model = Customers::find()->where(['CUST_KD'=>$id])->one();
-
-		$model->STATUS = 3;
-		$model->save();
-
-        return $this->redirect(['index']);
-    }
 
 
     /**
@@ -1074,22 +685,7 @@ class CustomersCrmController extends Controller
      * @return Kategoricus the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-	  protected function findModelpro($id)
-    {
-        if (($model = Province::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
-	  protected function findModelkota($id)
-    {
-        if (($model = Kota::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
+
 
     protected function findModelalias($id)
     {
@@ -1109,14 +705,4 @@ class CustomersCrmController extends Controller
         }
     }
 
-
-
-    protected function findModel($id)
-    {
-        if (($model = Kategoricus::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
 }

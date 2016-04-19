@@ -1,6 +1,6 @@
 <?php
 
-namespace lukisongroup\master\controllers;
+namespace crm\salesman\controllers;
 
 use Yii;
 use yii\web\Controller;
@@ -12,11 +12,11 @@ use yii\web\Request;
 use yii\web\Response;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
-use lukisongroup\master\models\Scheduleheader;
-use lukisongroup\master\models\Scheduledetail;
-use lukisongroup\master\models\Customers;
-use lukisongroup\master\models\Schedulegroup;
-use lukisongroup\master\models\ScheduleheaderSearch;
+use crm\salesman\models\Scheduleheader;
+use crm\salesman\models\Scheduledetail;
+use crm\mastercrm\models\Customers;
+use crm\salesman\models\Schedulegroup;
+use crm\salesman\models\ScheduleheaderSearch;
 use lukisongroup\sistem\models\Userlogin;
 use lukisongroup\sistem\models\UserloginSearch;
 use DateInterval;
@@ -25,7 +25,7 @@ use DatePeriod;
 /**
  * ScheduleHeaderController implements the CRUD actions for Scheduleheader model.
  */
-class ScheduleHeaderController extends Controller
+class ScheduleHeaderCrmController extends Controller
 {
     public function behaviors()
     {
@@ -262,7 +262,7 @@ class ScheduleHeaderController extends Controller
 		if (Yii::$app->request->isAjax) {
 			$request= Yii::$app->request;
 			$model =  new Scheduleheader();
-      $profile=Yii::$app->getUserOpt->Profile_user();
+      $profile=Yii::$app->getUserOptcrm->Profile_user();
       $usercreate = $profile->username;
 			$end=$request->post('tgl2');
       $start=$request->post('tgl1');
@@ -276,8 +276,7 @@ class ScheduleHeaderController extends Controller
       $model->NOTE = $note;
       $model->SCDL_GROUP = $scdl_group;
 			$model->USER_ID = $user_id;
-      $carisdl = Scheduleheader::find()->where(['TGL1'=>$model->TGL1,'SCDL_GROUP'=>$scdl_group])->one();
-
+      $carisdl = ScheduleDetail::find()->where(['TGL'=>$model->TGL1,'SCDL_GROUP'=>$scdl_group])->one();
       // print_r($carisdl);
       // die();
       // if exist data customers

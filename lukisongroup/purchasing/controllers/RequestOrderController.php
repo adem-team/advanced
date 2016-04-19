@@ -1199,17 +1199,13 @@ class RequestOrderController extends Controller
       $dep_id = $profile->emp->DEP_ID;
       $gf_id = $profile->emp->GF_ID;
       $usercc = Userlogin::find()->where(['EMP_ID'=>$empid])->asArray()->one(); // usercc
-      $approve = Employe::find()->where(['DEP_ID'=>$dep_id])->andwhere('GF_ID<=3')->asArray()->one();//approve ro
-
+      $approve = Employe::find()->where("DEP_ID='".$dep_id."'AND GF_ID <=3")->asArray()->one();//approve ro
 
       $roHeader = Requestorder::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
       $detro = $roHeader->detro;
       $employ = $roHeader->employe;
       $dept = $roHeader->dept;
       $roDetail = Rodetail::find()->where(['KD_RO'=>$kd])->all();
-
-      print_r($approve['EMP_EMAIL']);
-      die();
 
     /* PR Filter Status Output to Grid print*/
     $dataProvider = new ArrayDataProvider([
@@ -1301,7 +1297,8 @@ class RequestOrderController extends Controller
       $user = Userlogin::find()->where(['EMP_ID'=>$roHeader->SIG1_ID])->asArray()->one();
       $usersign1 = $user['username']; // send mail user create ro
       $caridep_id = Employe::find()->where(['EMP_ID'=>$user['EMP_ID']])->asArray()->one();
-      $approve = Employe::find()->where(['DEP_ID'=>$caridep_id['DEP_ID']])->andwhere('GF_ID<=3')->asArray()->one();
+      // $approve = Employe::find()->where(['DEP_ID'=>$caridep_id['DEP_ID']])->andwhere('GF_ID<=3')->asArray()->one();
+      $approve = Employe::find()->where("DEP_ID='".$caridep_id['DEP_ID']."'AND GF_ID <=3")->asArray()->one();//approve ro
       $dep_head = $approve['EMP_EMAIL']; // send mail  deph_head approve ro
 
 

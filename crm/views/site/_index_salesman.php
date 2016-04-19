@@ -39,7 +39,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 					<?php
 					 echo Html::panel(
 						[
-							'heading' => '<div>DASHBOARD - SALESMEN</div>',
+							'heading' => '<div>DASHBOARD - SALESMAN</div>',
 							'body'=>'',//$prof,
 						],
 						Html::TYPE_INFO
@@ -52,38 +52,38 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 				<?php
 					echo Html::panel([
 							'id'=>'home1',
-							'heading' => '<b>DATA PROSESS</b>',
+							'heading' => '<b>DATA MASTER</b>',
 							'postBody' => Html::listGroup([
 									[
 										/*
-										 * Modul Salesman - Customer  | Buka customer Baru
+										 * Modul mastercrm - Customer  | Buka customer Baru
 										*/
 										'content' => 'New Customers',
-										'url' => '/salesman/customers-crm',
+										'url' => '/mastercrm/customers-crm',
 										'badge' => '0'
 									],
 									[
 										/*
-										 * Modul Salesman - Customer  | Rekap Penjualan Customer -> Rekap under report penjualan sales promotion
+										 * Modul mastercrm - Customer  |  Customer Category -> all Category Customers
 										*/
-										'content' => 'Customers Visit Group',
-										'url' => '/salespromo/penjualan',
+										'content' => 'Customers Category',
+										'url' => '/mastercrm/kategori-customers-crm',
 										'badge' => '0'
 									],
 									[
 										/*
 										 * Modul Salesman - Customer  | Pengeluaran/pencairan  stock ke customer | new coustomer/repeat order
 										*/
-										'content' => 'Customers Visit Schedule',
-										'url' => '/salespromo/penjualan',
+										'content' => 'City Customers',
+										'url' => '/mastercrm/kota-customers-crm',
 										'badge' => '0'
 									],
 									[
 										/*
 										 * Modul Salesman - Sales Promoton  | maintenance jadwal Spg | User login Spg | Absensi | Bonus
 										*/
-										'content' => 'SalasPromotion Maintain',
-										'url' => '/salespromo/stock-promo',
+										'content' => 'Province Customers',
+										'url' => '/mastercrm/provinsi-customers-crm',
 										'badge' => '0'
 									],
 								]),
@@ -97,38 +97,38 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 				<?php
 					echo Html::panel([
 							'id'=>'home1',
-							'heading' => '<b>WIDGET</b>',
+							'heading' => '<b>DATA PROSES</b>',
 							'postBody' => Html::listGroup([
 									[
 										/*
 										 * Modul Salesman - Salesman  | maintenance jadwal kunjungan salesman
 										*/
-										'content' => 'Jadwal Kunjungan',
-										'url' => '/salespromo/schadule',
+										'content' => 'Import data',
+										'url' => '/salesman/import-data',
 										'badge' => '0'
 									],
 									[
 										/*
 										 * Modul Salesman - IT/Admin/Salesman  | Map input
 										*/
-										'content' => 'Peta Customer',
-										'url' => '/salespromo/customer-map',
+										'content' => 'Jadwal Kunjungan',
+										'url' => '/salesman/schedule-header-crm',
 										'badge' => '0'
 									],
 									[
 										/*
 										 * Modul Salesman - IT/Admin/Salesman  | Absensi Salesman
 										*/
-										'content' => 'Absensi',
-										'url' => '/salespromo/absensi',
+										'content' => 'Customers Visit Group',
+										'url' => '/salesman/schedule-group-crm',
 										'badge' => '0'
 									],
 									[
 										/*
 										 * Modul Salesman - Salesman  | Profile Salesman | Change Password
 										*/
-										'content' => 'Profile',
-										'url' => '/salespromo/profile',
+										'content' => 'Customers Map',
+										'url' => '/mastercrm/customers-crm/crm-map',
 										'badge' => '0'
 									],
 								]),
@@ -145,10 +145,10 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 							'postBody' => Html::listGroup([
 									[
 										/*
-										 * Modul Salesman - Sales Promotion  | Reporting total penjualan(normal/promo) harian Under report Sales promotion
+										 * Modul Salesman - Salesman | Reporting total penjualan(normal/promo) harian Under report Salesman
 										*/
-										'content' => 'Daily Selling Out',
-										'url' => '/salespromo/report-daily',
+										'content' => 'Sales Daily',
+										'url' => '/salesman/sales-daily-crm',
 										'badge' => '0'
 									],
 									[
@@ -156,7 +156,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										 * Modul Salesman - Sales Promotion  | Reporting total Stock (normal/promo) gudang harian di customer under report Sales promotion
 										*/
 										'content' => 'Daily Stock Harian',
-										'url' => '/salespromo/report-daily',
+										'url' => '/salesman/sales-detail-crm',
 										'badge' => '0'
 									],
 									[
