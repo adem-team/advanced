@@ -1,22 +1,22 @@
 <?php
 
-namespace lukisongroup\sales\controllers;
+namespace crm\salesman\controllers;
 
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\db\Query;
-use lukisongroup\sales\models\Sot2;
-use lukisongroup\sales\models\Sot2Search;
+use crm\salesman\models\Sot2;
+use crm\salesman\models\Sot2Search;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-use lukisongroup\master\models\Barang;
+// use crm\master\models\Barang;
 /**
  * SalesDetailController implements the CRUD actions for Sot2 model.
  */
-class SalesDailyController extends Controller
+class SalesDailyCrmController extends Controller
 {
     public function behaviors()
     {

@@ -3,94 +3,49 @@
 namespace lukisongroup\sales\controllers;
 
 use Yii;
-use yii\data\ActiveDataProvider;
-use yii\data\ArrayDataProvider;
-use yii\db\Query;
-use lukisongroup\sales\models\Sot2;
-use lukisongroup\sales\models\Sot2Search;
+use lukisongroup\sales\models\ImportView;
+use lukisongroup\sales\models\ImportViewSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-use lukisongroup\master\models\Barang;
 /**
- * SalesDetailController implements the CRUD actions for Sot2 model.
+ * ImportViewController implements the CRUD actions for ImportView model.
  */
-class SalesDailyController extends Controller
+class ImportViewController extends Controller
 {
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    'delete' => ['POST'],
                 ],
             ],
         ];
     }
 
-	 /**
-     * PLSQL ! GET DATA SALES
-     * @author ptrnov [piter@lukison.com]
-     * @since 2.1
-     */
-	public function getScripts(){
-		return Yii::$app->db_esm->createCommand("CALL so_1()")->queryAll();
-	}
-	/* public function getScriptsa(){
-		return Yii::$app->db_esm->createCommand('call so_1()')->queryColumn();
-	} */
-	/* public function getEsmbrg(){
-		return Yii::$app->db_esm->createCommand('call BarangMaxi_Colomn()')->queryAll();
-	} */
-
     /**
-     * Lists all Sot2 models.
+     * Lists all ImportView models.
      * @return mixed
      */
     public function actionIndex()
     {
-		//print_r($this->getScripts());
-
-		/**
-		 * PLSQL ! Array Data Provider
-		 * @author ptrnov [piter@lukison.com]
-		 * @since 2.1
-		 */
-		$plsql_so_1= new ArrayDataProvider([
-			'key' => 'ID',
-			'allModels'=>$this->getScripts(),
-			 'pagination' => [
-				'pageSize' => 20,
-			]
-		]);
-
-		/**
-		 * PLSQL ! Column Label
-		 * @author ptrnov [piter@lukison.com]
-		 * @since 2.1
-		 */
-		$attributeField=$plsql_so_1->allModels[0]; //get label Array 0
-		//print_r($attributeField);
-
-        $searchModel = new Sot2Search();
+        $searchModel = new ImportViewSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'dataProviderX' => $plsql_so_1,
-			'attributeField'=>$attributeField,
-			//'brgEsmProdak'=>$brgEsmProdak,
-			//'brgEsmProdak'=>$this->getEsmbrg(),
-			//'clmKdBarang'=>$clmKdBarang,
-
         ]);
     }
 
     /**
-     * Displays a single Sot2 model.
+     * Displays a single ImportView model.
      * @param string $id
      * @return mixed
      */
@@ -102,13 +57,13 @@ class SalesDailyController extends Controller
     }
 
     /**
-     * Creates a new Sot2 model.
+     * Creates a new ImportView model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Sot2();
+        $model = new ImportView();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->ID]);
@@ -120,7 +75,7 @@ class SalesDailyController extends Controller
     }
 
     /**
-     * Updates an existing Sot2 model.
+     * Updates an existing ImportView model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
@@ -139,7 +94,7 @@ class SalesDailyController extends Controller
     }
 
     /**
-     * Deletes an existing Sot2 model.
+     * Deletes an existing ImportView model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
@@ -152,15 +107,15 @@ class SalesDailyController extends Controller
     }
 
     /**
-     * Finds the Sot2 model based on its primary key value.
+     * Finds the ImportView model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return Sot2 the loaded model
+     * @return ImportView the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Sot2::findOne($id)) !== null) {
+        if (($model = ImportView::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
