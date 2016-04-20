@@ -122,8 +122,8 @@ class ImportDataController extends Controller
 		//echo $paramCari;
 		$model = new UserFile();
 
-		$username=  Yii::$app->user->identity->username;
-		$user_id=['USER_ID'=>$username];
+		$username =  Yii::$app->user->identity->username;
+		$user_id = ['USER_ID'=>$username];
 		/*IMPORT VALIDATION*/
 		$searchModel = new TempDataSearch($user_id);
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);

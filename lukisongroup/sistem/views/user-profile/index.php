@@ -78,8 +78,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
-	
-	
+
+
 	/*
 	 * Declaration Componen User Permission
 	 * Function getPermission
@@ -106,7 +106,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		}
 	}
 
-	
+
 
 	/**
      * TOMBOL LINK
@@ -126,9 +126,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
-	
-	
-	
+
+
+
 	/**
      * Logoff
 	 * @author ptrnov  <piter@lukison.com>
@@ -161,7 +161,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
-	
+
 	/* Summary*/
 	function tombolSummary(){
 		$title1 = Yii::t('app', 'My Summary');
@@ -172,7 +172,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
-	
+
 	/* PRIBADI*/
 	function tombolPeribadi(){
 		$title1 = Yii::t('app', 'Informasi Pribadi');
@@ -183,7 +183,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
-	
+
 	/* TEMPAT TINGGAL & TELPHON*/
 	function tombolTempat(){
 		$title1 = Yii::t('app', 'Informasi Tempat & Telepon');
@@ -194,7 +194,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
-	
+
 	/* PENDIDIKAN*/
 	function tombolPendidikan(){
 		$title1 = Yii::t('app', 'Informasi Pendidikan');
@@ -205,7 +205,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
-	
+
 	/* KONTAK DARURAT*/
 	function tombolDarurat(){
 		$title1 = Yii::t('app', 'Kontak Darurat');
@@ -216,7 +216,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
-	
+
 	/* KELUARGA & TANGGUNGAN*/
 	function tombolTanggungan(){
 		$title1 = Yii::t('app', 'Keluarga & Tanggungan');
@@ -242,10 +242,10 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
-	
 
-	
-	
+
+
+
 ?>
 <div class="body-content">
 	<div class="row" style="padding-left: 5px; padding-right: 5px">
@@ -269,23 +269,23 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					<li><?php echo tombolSignature(); ?></li>
 					<li><?php //echo tombolPersonalia(); ?></li>
 					<li><?php //echo tombolPerformance(); ?></li>
-					
+
 					<li><?php echo tombolLogoff();?></li>
 				  </ul>
-				  
+
 			</div >
 				<?=$ttlheader;?>
 				<br/>
 				<hr/>
-				
+
 		</div>
-	
+
 		<div class="col-sm-3 col-md-3 col-lg-3">
 			<!-- EMPLOYEE IMAGE !-->
 			<div class="col-sm-12 col-md-12 col-lg-12  text-center ">
 				<img src="<?=Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$profile->emp->EMP_IMG; ?>" class="img-responsive img-thumbnail" style="width:80%; height:80%" />
-			</div>			
-			
+			</div>
+
 			<!-- EMPLOYEE SIGNATURE !-->
 			<div class="col-sm-12 col-md-12 col-lg-12">
 				<table  class="col-md-12 table-bordered  text-center" style="margin-top:20px;margin-bottom:20px;">
@@ -303,19 +303,19 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			</div>
 			<div class="col-sm-12 col-md-12 col-lg-12  text-center ">
 				<?php echo tombolUploadSig()?>
-			</div>	
+			</div>
 		</div>
-		
+
 		<?php
 			$profile=$profile!=''?$profile:false;
 			echo Yii::$app->controller->renderPartial($fileLink,[
 					'profile'=>$profile,
 					//'model_CustPrn'=>$model_CustPrn,
 					//'count_CustPrn'=>$count_CustPrn
-			]);		
-		?>	
+			]);
+		?>
 	</div>
-</div>	
+</div>
 <?php
 	/*
 	 * CHANGE PASSWORD UTAMA
@@ -354,8 +354,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	*/
 	Modal::begin([
 		'id' => 'signature-import-image',
-		'header' => '<div style="float:left;margin-right:10px">'. 
-						Html::img('@web/img_setting/warning/upload1.png',  
+		'header' => '<div style="float:left;margin-right:10px">'.
+						Html::img('@web/img_setting/warning/upload1.png',
 						['class' => 'pnjg', 'style'=>'width:40px;height:40px;'])
 					.'</div><div style="margin-top:10px;"><h4><b>Upload path of Signature Image!</b></h4></div>',
 		//'size' => Modal::SIZE_SMALL,
@@ -380,7 +380,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			echo Html::submitButton('Upload',['class' => 'btn btn-success']);
 			echo '</div>';
 			//echo Html::submitButton($modelUpload->isNewRecord ? 'simpan_' : 'SAVED', ['class' => $modelUpload->isNewRecord ? 'btn btn-success' : 'btn btn-primary','title'=>'Detail']);
-			
+
 		ActiveForm::end();
 	Modal::end();
 

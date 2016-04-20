@@ -59,13 +59,13 @@ use yii\widgets\Pjax;
 					'id'=>'gv-arryFile',
 					'dataProvider' => $getArryFile,
 					//'filterModel' => $searchModel,
-					'columns'=>$gvColumnAryFile,						
+					'columns'=>$gvColumnAryFile,
 					'pjax'=>true,
 					'pjaxSettings'=>[
 					'options'=>[
 						'enablePushState'=>false,
 						'id'=>'gv-arryFile',
-					   ],						  
+					   ],
 					],
 					'hover'=>true, //cursor select
 					'responsive'=>true,
@@ -86,7 +86,7 @@ use yii\widgets\Pjax;
 												'data-target'=>"#file-import",
 												'class' => 'btn btn-danger btn-sm'
 											]
-									).' '.								
+									).' '.
 									Html::a('<i class="fa fa-check-square"></i> '.
 											Yii::t('app', 'Check',['modelClass' => 'check',]),'',[
 												'id'=>'approved',
@@ -95,16 +95,16 @@ use yii\widgets\Pjax;
 												'class' => 'btn btn-success btn-sm'
 											]
 									).' '.
-									Html::a('<i class="fa fa-clone"></i> '.Yii::t('app', 'Get Format1'),'/sales/import-data/export_format',
+									Html::a('<i class="fa fa-clone"></i> '.Yii::t('app', 'Get Format1'),'/salesman/import-data/export_format',
 												[
 													'id'=>'export-x-id',
 													'data-pjax' => true,
 													'class' => 'btn btn-info btn-sm'
 												]
-									),										
+									),
 						'showFooter'=>false,
 					],
-				]); 
+				]);
             ?>
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6">
@@ -114,18 +114,18 @@ use yii\widgets\Pjax;
 					'id'=>'gv-validate',
 					'dataProvider' => $gvValidateArrayDataProvider,
 					'filterModel' => $searchModelValidate,
-					'columns'=>$gvValidateColumn,	
+					'columns'=>$gvValidateColumn,
 					'rowOptions' => function($model, $key, $index, $grid){
 							if ($model->CUST_KD=='NotSet' or $model->ITEM_NM=='NotSet'){
 								return ['class' => 'danger'];
 							};
-					},					
+					},
 					'pjax'=>true,
 					'pjaxSettings'=>[
 					'options'=>[
 						'enablePushState'=>false,
 						'id'=>'gv-validate',
-					   ],						  
+					   ],
 					],
 					'hover'=>true, //cursor select
 					'responsive'=>true,
@@ -150,17 +150,17 @@ use yii\widgets\Pjax;
 											]
 									).' '.
 									Html::a('<i class="fa fa-database"></i> '.Yii::t('app', 'Send Data',
-										['modelClass' => 'Kategori',]),'',[												
+										['modelClass' => 'Kategori',]),'',[
 												'id'=>'fix',
 												'data-pjax' => true,
 												'data-toggle-fix'=>'1',
 											'class' => 'btn btn-success btn-sm'
 										]
-									),								
-									
+									),
+
 						'showFooter'=>false,
 					],
-				]); 
+				]);
             ?>
         </div>
 		<!--VIEW IMPORT!-->
@@ -171,13 +171,13 @@ use yii\widgets\Pjax;
 					'id'=>'gv-view-import',
 					'dataProvider' => $dataProviderViewImport,
 					'filterModel' => $searchModelViewImport,
-					'columns'=>$gvRows,					
+					'columns'=>$gvRows,
 					'pjax'=>true,
 					'pjaxSettings'=>[
 					'options'=>[
 						'enablePushState'=>false,
 						'id'=>'gv-validate',
-					   ],						  
+					   ],
 					],
 					'hover'=>true, //cursor select
 					'responsive'=>true,
@@ -202,17 +202,17 @@ use yii\widgets\Pjax;
 											]
 									).' '.
 									Html::a('<i class="fa fa-database"></i> '.Yii::t('app', 'Send Data',
-										['modelClass' => 'Kategori',]),'',[												
+										['modelClass' => 'Kategori',]),'',[
 												'id'=>'fix',
 												'data-pjax' => true,
 												'data-toggle-fix'=>'1',
 											'class' => 'btn btn-success btn-sm'
 										]
-									),								
-									
+									),
+
 						'showFooter'=>false,
 					],
-				]); 
+				]);
             ?>
         </div>
     </div>
@@ -222,8 +222,8 @@ use yii\widgets\Pjax;
 
 		Modal::begin([
 			'id' => 'file-import',
-			'header' => '<div style="float:left;margin-right:10px">'. 
-							Html::img('@web/img_setting/warning/upload1.png',  
+			'header' => '<div style="float:left;margin-right:10px">'.
+							Html::img('@web/img_setting/warning/upload1.png',
 							['class' => 'pnjg', 'style'=>'width:40px;height:40px;'])
 						.'</div><div style="margin-top:10px;"><h4><b>Upload Path Of File!</b></h4></div>',
 			//'size' => Modal::SIZE_SMALL,
@@ -242,8 +242,8 @@ use yii\widgets\Pjax;
 						'uploadUrl' => Url::to(['/sales/import-data/upload']),
 					] */
 				]);
-				
-				
+
+
 				// echo FileInput::widget([
 					// 'name'=>'import_file',
 					 // 'name' => 'attachment_48[]',
@@ -272,10 +272,10 @@ use yii\widgets\Pjax;
 ?>
 
 <?php
-	
+
 	$this->registerJs("
 		/**====================================
-		 * ACTION : VALIDATION 
+		 * ACTION : VALIDATION
 		 * @return mixed
 		 * @author piter [ptr.nov@gmail.com]
 		 * @since 1.2
@@ -285,7 +285,7 @@ use yii\widgets\Pjax;
 			e.preventDefault();
 			var idx = $(this).data('toggle-approved');
 			$.ajax({
-				url: '/sales/import-data/import_temp_validation',
+				url: '/salesman/import-data/import_temp_validation',
 				type: 'POST',
 				//contentType: 'application/json; charset=utf-8',
 				data:'id='+idx,
@@ -300,10 +300,10 @@ use yii\widgets\Pjax;
 				}
 			});
 		});
-		
-		
+
+
 		/**====================================
-		 * ACTION : DELETE & CLEAR VALIDATION 
+		 * ACTION : DELETE & CLEAR VALIDATION
 		 * @return mixed
 		 * @author piter [ptr.nov@gmail.com]
 		 * @since 1.2
@@ -313,7 +313,7 @@ use yii\widgets\Pjax;
 			e.preventDefault();
 			var idx = $(this).data('toggle-clear');
 			$.ajax({
-				url: '/sales/import-data/clear_temp_validation',
+				url: '/salesman/import-data/clear_temp_validation',
 				type: 'POST',
 				//contentType: 'application/json; charset=utf-8',
 				data:'id='+idx,
@@ -329,7 +329,7 @@ use yii\widgets\Pjax;
 			});
 
 		});
-		
+
 		/**====================================
 		 * ACTION : SEND DATA TO STORED
 		 * @return mixed
@@ -341,7 +341,7 @@ use yii\widgets\Pjax;
 			e.preventDefault();
 			var idx = $(this).data('toggle-fix');
 			$.ajax({
-				url: '/sales/import-data/send_temp_validation',
+				url: '/salesman/import-data/send_temp_validation',
 				type: 'POST',
 				//contentType: 'application/json; charset=utf-8',
 				data:'id='+idx,
@@ -358,7 +358,7 @@ use yii\widgets\Pjax;
 
 		});
 	",$this::POS_READY);
-	
+
 	$this->registerJs("
 		/**====================================
 		 * ACTION : Alias Customer
@@ -392,7 +392,7 @@ use yii\widgets\Pjax;
 			]
 		]);
 	Modal::end();
-	
+
 	$this->registerJs("
 		/**====================================
 		 * ACTION : Alias Prodak
@@ -425,5 +425,5 @@ use yii\widgets\Pjax;
 			]
 		]);
 	Modal::end();
-	
+
 ?>
