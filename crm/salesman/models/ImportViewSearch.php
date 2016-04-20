@@ -42,7 +42,8 @@ class ImportViewSearch extends ImportView
      */
     public function search($params)
     {
-        $query = ImportView::find()->orderBy('TGL DESC');
+        $profile=Yii::$app->getUserOptcrm->Profile_user(); //component Crm
+        $query = ImportView::find()->where(['USER_ID'=>$profile->username])->orderBy('TGL DESC');
 
         // add conditions that should always apply here
 

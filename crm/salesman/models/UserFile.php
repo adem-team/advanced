@@ -1,6 +1,6 @@
 <?php
 
-namespace lukisongroup\sales\models;
+namespace crm\salesman\models;
 
 use Yii;
 use yii\web\UploadedFile;
@@ -17,7 +17,7 @@ use yii\web\UploadedFile;
  Yii::$app->params['uploadUrl'] = Yii::$app->urlManager->baseUrl . '/web/upload/sales_import/';
 class UserFile extends \yii\db\ActiveRecord
 {
-	
+
 	public $uploadExport;
     /**
      * @inheritdoc
@@ -63,7 +63,7 @@ class UserFile extends \yii\db\ActiveRecord
             'STATUS' => 'Status',
         ];
     }
-	
+
 	public function getImageFile()
     {
         return isset($this->FILE_NM) ? Yii::$app->params['uploadPath'] . $this->FILE_NM : null;
@@ -97,9 +97,9 @@ class UserFile extends \yii\db\ActiveRecord
         // the uploaded image instance
         return $uploadData;
     }
-	
-	
-	
-	
-	
+
+
+
+
+
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace lukisongroup\sales\models;
+namespace crm\salesman\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use lukisongroup\sales\models\UserFile;
+use crm\salesman\models\UserFile;
 
 /**
  * UserFileSearch represents the model behind the search form about `lukisongroup\sales\models\UserFile`.

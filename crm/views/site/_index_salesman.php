@@ -86,6 +86,14 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										'url' => '/mastercrm/provinsi-customers-crm',
 										'badge' => '0'
 									],
+                  [
+                    /*
+                     * Modul Salesman - Sales Promoton  | maintenance jadwal Spg | User login Spg | Absensi | Bonus
+                    */
+                    'content' => 'Profile',
+                    'url' => '/crmsistem/crm-user-profile',
+                    'badge' => '0'
+                  ],
 								]),
 						],
 						Html::TYPE_INFO
