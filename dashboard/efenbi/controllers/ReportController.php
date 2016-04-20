@@ -289,9 +289,44 @@ class ReportController extends Controller
 		return $this->render('_view_stock');		
 	}	
 	
+	/* TOTAl CHILD OF PARENT CUSTOMER */
+	public function CountChildCustomer(){		
+		$countChildParen= new ArrayDataProvider([
+			'key' => 'CUST_KD',
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_custromer_ktg('ParentChildCountCustomer')")->queryAll(),
+			'pagination' => [
+				'pageSize' => 50,
+				]
+		]);		
+		//print_r(json_encode($resultCountChildParen));
+		//print_r(json_decode($resultCountChildParen));
+		//die(); 
+		return Json::encode($countChildParen->getModels());
+	}	
+		
 	/*STOCK ALL CUSTOMER*/
 	public function actionViewAllCustomer(){
-		return $this->render('_view_all_customer');		
+		/* CUSTOMER CATEHORI COUNT [modern,general,horeca,other]*/
+		$dataProvider_CustPrn= new ArrayDataProvider([
+			//'key' => 'PARENT_ID',
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_custromer_ktg('count_kategory_customer_parent')")->queryAll(),
+			'pagination' => [
+				'pageSize' => 50,
+				]
+		]);			
+		$model_CustPrn=$dataProvider_CustPrn->getModels();
+		$count_CustPrn=$dataProvider_CustPrn->getCount();
+		
+		
+		//print_r($this->CountChildCustomer());
+		//die();
+		return $this->render('_view_all_customer',[
+			/* CUSTOMER CATEHORI COUNT [modern,general,horeca,other]*/
+			'model_CustPrn'=>$model_CustPrn,
+			'count_CustPrn'=>$count_CustPrn,  						// Condition  validation model_CustPrn offset array -ptr.nov-
+			'resultCountChildParen'=>$this->CountChildCustomer()
+				
+		]);		
 	}
 	
 	/*STOCK MEDERN CUSTOMER*/

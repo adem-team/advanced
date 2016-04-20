@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			<div class="row">
 				<!-- KIRI !-->
 				<div class="col-lg-4 col-md-4" style="padding-top:10px">
-					<div id="chart-piramid"></div>
+					<div id="chart-kue-salesman"></div>
 				</div>
 				<!-- KANAN !-->
 				<div class="col-lg-8 col-md-8" style="padding-top:10px">
@@ -56,58 +56,47 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 	$this->registerJs('
 		/* 
-		 * GRAPH PIRAMIT ALL CUSTOMER
+		 * KUE SALESMAN SPG CAM
 		 * @author piter [ptr.nov@gmail.com]
 		 * @since 1.1
 		*/
 		$(document).ready(function () {
-			var myPiramidChart = new FusionCharts({
-				type: "pyramid",
+			var kueChartCustomer = new FusionCharts({
+				type: "pie3d",
+				renderAt: "chart-kue-salesman",
 				width: "100%",
-				//height: "100%",
-				dataFormat: "jsonurl",			
-				renderAt: "chart-piramid",
+				height: "300",
 				dataFormat: "json",
 				dataSource: {
-					chart: {
-						//theme: "fint",
-						caption: "All Customer Category",
-						//subcaption: "Credit Suisse 2013",
-						//captionOnTop: "1",
-						//captionPadding: "25",
-						//alignCaptionWithCanvas: "1",						
-						//subCaptionFontSize: "12",
-						borderAlpha: "0",
-						is2D: "0",
-						bgColor: "#ffffff",
-						showValues: "0",
-						showLegend: "1",
-						numberPrefix: "$",
-						numberSuffix: "M",
-						showPercentValues: "1",
-						//chartLeftMargin: "40"
+					"chart": {
+						"caption": "SALES TEAM",
+						"subCaption": "Last Year",
+						"startingAngle": "120",
+						"showLabels": "0",
+						"showLegend": "1",
+						"enableMultiSlicing": "0",
+						"slicingDistance": "15",
+						//To show the values in percentage
+						"showPercentValues": "1",
+						"showPercentInTooltip": "0",
+					   "theme": "fint"
 					},
-					data: [
-							  {
-								 label: "Modern",
-								 value: "98.7"
-							  },
-							  {
-								 label: "Horeca",
-								 value: "101.8"
-							  },
-							  {
-								 label: "General",
-								 value: "33"
-							  },
-							  {
-								 label: "Other",
-								 value: "7.3"
-							  }
-					   ]
+					"data": [{
+						"label": "Teenage",
+						"value": "1250400"
+					}, {
+						"label": "Adult",
+						"value": "1463300"
+					}, {
+						"label": "Mid-age",
+						"value": "1050700"
+					}, {
+						"label": "Senior",
+						"value": "491000"
+					}]
 				}
 			});
-			myPiramidChart.render();
+			kueChartCustomer.render();
 		});
 	',$this::POS_READY);
 ?>

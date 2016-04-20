@@ -39,7 +39,7 @@ global $canvasEndY;
 						</div>
 					</div>
 				</div>
-				<a href="/efenbi/report/view-all-customer">
+				<a href="/efenbi/customer-all">
 					<div class="panel-footer">
 						<span class="pull-left">View Details</span>
 						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -61,7 +61,7 @@ global $canvasEndY;
 						</div>
 					</div>
 				</div>
-				<a href="/efenbi/report/view-modern-customer">
+				<a href="/efenbi/customer-modern">
 					<div class="panel-footer">
 						<span class="pull-left">Modern Details</span>
 						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -83,7 +83,7 @@ global $canvasEndY;
 						</div>
 					</div>
 				</div>
-				<a href="/efenbi/report/view-general-customer">
+				<a href="/efenbi/customer-general">
 					<div class="panel-footer">
 						<span class="pull-left">General Details</span>
 						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -128,7 +128,7 @@ global $canvasEndY;
 		</div>
 			<div id="chart-container">Fusion Charts will render here</div>-->
 			<div id="chart-daily-visit"></div>		
-			<a class="btn btn-warning btn-xs" href="/efenbi/report/view-visit">Detail >></a>	
+			<a class="btn btn-warning btn-xs" href="/efenbi/review-visit">Detail >></a>	
 	</div>
 	
 	<!-- KANAN !-->
@@ -149,7 +149,7 @@ global $canvasEndY;
 						</div>
 					</div>
 				</div>
-				<a href="/efenbi/report/view-horeca-customer">
+				<a href="/efenbi/customer-horeca">
 					<div class="panel-footer">
 						<span class="pull-left">Horeca Details</span>
 						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -171,7 +171,7 @@ global $canvasEndY;
 						</div>
 					</div>
 				</div>
-				<a href="/efenbi/report/view-other-customer">
+				<a href="/efenbi/customer-other">
 					<div class="panel-footer">
 						<span class="pull-left">Others Details</span>
 						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -193,7 +193,7 @@ global $canvasEndY;
 						</div>
 					</div>
 				</div>
-				<a href="/efenbi/report/view-salesman">
+				<a href="/efenbi/review-salesman">
 					<div class="panel-footer">
 						<span class="pull-left">Salesman Details</span>
 						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>

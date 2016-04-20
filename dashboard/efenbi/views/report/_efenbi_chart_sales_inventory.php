@@ -42,7 +42,7 @@ global $canvasEndY;
 	<!-- TENGAH !-->
 	<div class="col-lg-12 col-md-12">
 		<div id="chart-sales-inventory"></div>
-		<a class="btn btn-warning btn-xs" href="/efenbi/report/view-stock">Detail >></a>
+		<a class="btn btn-warning btn-xs" href="/efenbi/review-stock">Detail >></a>
 	</div>
 	<div class="col-lg-12 col-md-12">
 	
