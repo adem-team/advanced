@@ -234,7 +234,7 @@ use yii\widgets\Pjax;
 			$form = ActiveForm::begin([
 					'options'=>['enctype'=>'multipart/form-data'], // important,
 					'method' => 'post',
-					'action' => ['/sales/import-data/upload'],
+					'action' => ['/salesman/import-data/upload'],
 				]);
 				echo $form->field($modelFile, 'uploadExport')->widget(FileInput::classname(), [
 					'options' => ['accept' => '*'],
