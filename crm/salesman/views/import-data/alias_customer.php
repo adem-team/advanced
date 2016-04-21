@@ -13,32 +13,32 @@ use kartik\widgets\Select2;
 				'enableClientValidation' => true,
 				'enableAjaxValidation' => true,
 				'method' => 'post',
-				'action' => ['/sales/import-data/alias_cust_save'],
+				'action' => ['/salesman/import-data/alias_cust_save'],
 		]);
 		//print_r($test);
-	?>	
+	?>
 		<?php echo  $form->field($AliasCustomer, 'nM_CUST_ALIAS')->textInput([
 						'value' =>$tempDataImport->CUST_NM_ALIAS,
-						'maxlength' => true, 
+						'maxlength' => true,
 						'readonly' => true
 					])->label('Customer :'); ?>
 		<?php echo  $form->field($AliasCustomer, 'kD_CUST_ALIAS')->textInput([
 						'value' =>$tempDataImport->CUST_KD_ALIAS ,
-						'maxlength' => true, 
+						'maxlength' => true,
 						'readonly' => true
-					])->label('Customer.ID :'); 
-		?>		
+					])->label('Customer.ID :');
+		?>
 		<?php echo  $form->field($AliasCustomer, 'kD_REF')->textInput([
 						'value' =>$tempDataImport->DIS_REF ,
-						'maxlength' => true, 
+						'maxlength' => true,
 						'readonly' => true
-					])->label('Distribution'); 
+					])->label('Distribution');
 		?>
 		<?php echo  $form->field($AliasCustomer, 'kD_REF_NM')->textInput([
 						'value' =>$tempDataImport->DIS_REF_NM ,
-						'maxlength' => true, 
+						'maxlength' => true,
 						'readonly' => true
-					])->label('Distribution'); 
+					])->label('Distribution');
 		?>
 		<?php echo $form->field($AliasCustomer, 'kD_CUST')->widget(Select2::classname(), [
 					'data' => $aryCustID,
@@ -50,12 +50,5 @@ use kartik\widgets\Select2;
 		?>
 		<div style="text-align: right;"">
 			<?php echo Html::submitButton('Sync Alias Customer',['class' => 'btn btn-primary']); ?>
-		</div>    
-<?php ActiveForm::end(); ?>	
-
-	
-
-
-
-
-
+		</div>
+<?php ActiveForm::end(); ?>

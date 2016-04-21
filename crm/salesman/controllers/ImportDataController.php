@@ -23,11 +23,11 @@ use scotthuangzl\export2excel\Export2ExcelBehavior;
 
 use lukisongroup\sales\models\UserFile;
 use lukisongroup\sales\models\UserFileSearch;
-use lukisongroup\sales\models\TempData;
-use lukisongroup\sales\models\TempDataSearch;
+use crm\salesman\models\TempData;
+use crm\salesman\models\TempDataSearch;
 
-use lukisongroup\sales\models\AliasCustomer;
-use lukisongroup\sales\models\AliasProdak;
+use crm\salesman\models\AliasCustomer;
+use crm\salesman\models\AliasProdak;
 use lukisongroup\sales\models\ImportViewSearch;
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Barang;
@@ -421,7 +421,7 @@ class ImportDataController extends Controller
 			'buttons' => [
 				'cust' =>function($url, $model, $key){
 						return  '<li>' .Html::a('<span class="fa fa-random fa-dm"></span>'.Yii::t('app', 'Set Alias Customer'),
-													['/sales/import-data/alias_cust','id'=>$model['ID']],[
+													['/salesman/import-data/alias_cust','id'=>$model['ID']],[
 													'id'=>'alias-cust-id',
 													'data-toggle'=>"modal",
 													'data-target'=>"#alias-cust",
@@ -429,7 +429,7 @@ class ImportDataController extends Controller
 				},
 				'prodak' =>function($url, $model, $key){
 						return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'Set Alias Prodak'),
-													['/sales/import-data/alias_prodak','id'=>$model['ID']],[
+													['/salesman/import-data/alias_prodak','id'=>$model['ID']],[
 													'id'=>'alias-prodak-id',
 													'data-toggle'=>"modal",
 													'data-target'=>"#alias-prodak",

@@ -1,9 +1,9 @@
 <?php
-namespace lukisongroup\sales\models;
+namespace crm\salesman\models;
 
 use Yii;
 use yii\base\Model;
-use lukisongroup\master\models\Barangalias;
+use crm\mastercrm\models\Barangalias;
 
 class AliasProdak extends Model
 {

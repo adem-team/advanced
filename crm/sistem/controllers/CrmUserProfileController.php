@@ -1,6 +1,6 @@
 <?php
 
-namespace crm\crmsistem\controllers;
+namespace crm\sistem\controllers;
 
 use Yii;
 use yii\helpers\Html;
@@ -10,7 +10,7 @@ use yii\helpers\Url;
 use yii\widgets\Pjax;
 use yii\bootstrap\Modal;
 use zyx\phpmailer\Mailer;
-use crm\crmsistem\models\ValidationLoginFormCrm;
+use crm\sistem\models\ValidationLoginFormCrm;
 
 class CrmUserProfileController extends Controller
 {
@@ -109,12 +109,12 @@ class CrmUserProfileController extends Controller
 								//'model'=>$model,
 								'newPassword'=>$newPassword
 							]);
-				if($profile->EMP_EMAIL!=''){
+				if($profile->EMAIL!=''){
 					 Yii::$app->mailer->compose()
 					 ->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
 					 //->setTo(['piter@lukison.com'])
 					 //->setTo(['it-dept@lukison.com'])
-					 ->setTo($profile->EMP_EMAIL)
+					 ->setTo($profile->EMAIL)
 					 ->setSubject('Change Login Password')
 					 ->setHtmlBody($dataHtml)
 					 ->send();

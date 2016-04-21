@@ -12,24 +12,24 @@ use kartik\widgets\Select2;
 				'enableClientValidation' => true,
 				'enableAjaxValidation' => true,
 				'method' => 'post',
-				'action' => ['/sales/import-data/alias_prodak_save'],
+				'action' => ['/salesman/import-data/alias_prodak_save'],
 				//'action' => [Yii::$app->request->baseUrl.'/alias_prodak_save'],
 		]);
-	?>	
-		
+	?>
+
 	<?php echo  $form->field($AliasProdak, 'kD_BARANG_ALIAS')->textInput([
 					'value' =>$tempDataImport->ITEM_ID_ALIAS ,
-					'maxlength' => true, 
+					'maxlength' => true,
 					'readonly' => true
 				])->label('Alias.ID Product'); ?>
 	<?php echo  $form->field($AliasProdak, 'nM_BARANG_ALIAS')->textInput([
 					'value' =>$tempDataImport->ITEM_NM_ALIAS  ,
-					'maxlength' => true, 
+					'maxlength' => true,
 					'readonly' => true
 				])->label('Customer'); ?>
 	<?php echo  $form->field($AliasProdak, 'kD_REF')->hiddenInput([
 					'value' =>$tempDataImport->DIS_REF,
-					'maxlength' => true, 
+					'maxlength' => true,
 					'readonly' => true
 				])->label(false); ?>
 	<?php echo 	$form->field($AliasProdak, 'kD_BARANG')->widget(Select2::classname(), [
@@ -40,15 +40,8 @@ use kartik\widgets\Select2;
 					 ],
 				]);
 	?>
-	
+
 	<div style="text-align: right;"">
 		<?php echo Html::submitButton('Sync Alias Product',['class' => 'btn btn-primary']); ?>
 	</div>
-<?php ActiveForm::end(); ?>	
-
-	
-
-
-
-
-
+<?php ActiveForm::end(); ?>

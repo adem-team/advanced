@@ -1,5 +1,5 @@
 <?php
-namespace crm\crmsistem\models;
+namespace crm\sistem\models;
 
 use Yii;
 use yii\base\Model;
