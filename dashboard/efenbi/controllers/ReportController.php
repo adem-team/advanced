@@ -64,11 +64,13 @@ class ReportController extends Controller
 
 	public function actionIndex()
     {
+		//print_r($this->graphSchaduleWinLoss());
+		//die();
 		 if (\Yii::$app->user->isGuest) {
             return $this->render('../../../views/site/index_nologin'
             );
         }else{		
-		
+			
 			/* CUSTOMER CATEHORI COUNT [modern,general,horeca,other]*/
 			$dataProvider_CustPrn= new ArrayDataProvider([
 				'key' => 'PARENT_ID',
@@ -113,8 +115,34 @@ class ReportController extends Controller
 				'pageSize' => 100,
 			]
 		]);
-		$dataProvider=Json::encode($AryDataProvider->getModels());		
-		$prn=$dataProvider;
+		$dataProvider=$AryDataProvider->getModels();		
+		$resultWinLost=Json::encode($dataProvider);	
+		$prn='{
+				"chart": {				
+					caption: "VISIT PROCESS",           
+					// theme: "fint",					 
+					showValues: "1",
+					showZeroPlane: "1",       
+					paletteColors: "#FF0033,#0B2536,#0075c2,#9E466B,#C5E323",
+					usePlotGradientColor: "0",					
+					zeroPlaneColor:"#003366",
+					zeroPlaneAlpha: "100",
+					zeroPlaneThickness: "3",
+					divLineIsDashed: "1",
+					divLineAlpha: "40",
+					xAxisName: "time",
+					yAxisName: "Visit",
+					showValues: "1" , 			//MENAMPILKAN VALUE 
+					showBorder: "1", 				//Border side Out 
+					showCanvasBorder: "0",		//Border side inside
+					//paletteColors: "#0075c2",	// WARNA GARIS	
+					showAlternateHGridColor: "0",	//
+					bgcolor: "#ffffff"
+			    }, 
+				"dataset": [{
+					 "data":'.$resultWinLost.'
+				}]              
+			}';		
 		return $prn;
 	}
 	

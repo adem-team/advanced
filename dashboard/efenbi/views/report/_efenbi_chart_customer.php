@@ -242,9 +242,9 @@ $this->registerJs('
 	$(document).ready(function () {
 		
 		var data = '.$graphSchaduleWinLoss.';
-		 if(FusionCharts("chart-visit-cnt-id")){
+		  if(FusionCharts("chart-visit-cnt-id")){
 			FusionCharts("chart-visit-cnt-id").dispose();
-		}  
+		}   
 		var ratingsChart = new FusionCharts({
 			id: "chart-visit-cnt-id",
 			//type: "line",
@@ -252,37 +252,10 @@ $this->registerJs('
 			renderAt: "chart-daily-visit",
 			width: "100%",
 			height: "250",
-			//updateInterval:"5",
-			//refreshInterval:"5",
+			updateInterval:"5",
+			refreshInterval:"5",
 			dataFormat: "json",
-			dataSource: {
-				"chart": {				
-					caption: "VISIT PROCESS",           
-					// theme: "fint",					 
-					showValues: "1",
-					showZeroPlane: "1",       
-					paletteColors: "#FF0033,#0B2536,#0075c2,#9E466B,#C5E323",
-					usePlotGradientColor: "0",					
-					zeroPlaneColor:"#003366",
-					zeroPlaneAlpha: "100",
-					zeroPlaneThickness: "3",
-					divLineIsDashed: "1",
-					divLineAlpha: "40",
-					xAxisName: "time",
-					yAxisName: "Visit",
-					showValues: "1" , 			//MENAMPILKAN VALUE 
-					showBorder: "1", 				//Border side Out 
-					showCanvasBorder: "0",		//Border side inside
-					//paletteColors: "#0075c2",	// WARNA GARIS	
-					showAlternateHGridColor: "0",	//
-					bgcolor: "#ffffff"
-			    }, 
-				"dataset": [{
-					 "data":data
-				}],              
-			},
-			
-
+			dataSource: data
 		});
 
 		ratingsChart.render();
