@@ -57,7 +57,7 @@ class ImportDataController extends Controller
             ],
         ];
     }
-	
+
 	/*EXCEl IMPORT*/
 	public function actions()
     {
@@ -79,12 +79,12 @@ class ImportDataController extends Controller
 		$dataCust =  ArrayHelper::map(Customers::find()->orderBy('CUST_NM')->asArray()->all(), 'CUST_KD','CUST_NM');
 		return $dataCust;
 	}
-	
+
 	private function aryBrgID(){
 		$dataCust =  ArrayHelper::map(Barang::find()->where(['KD_CORP'=>'ESM','KD_TYPE'=>'01','KD_KATEGORi'=>'01'])->orderBy('NM_BARANG')->asArray()->all(), 'KD_BARANG','NM_BARANG');
 		return $dataCust;
 	}
-	
+
 	/**
      * Before Action Index
 	 * @author ptrnov  <piter@lukison.com>
@@ -110,7 +110,7 @@ class ImportDataController extends Controller
                 return true;
             }
     }
-	
+
 	 /**
      * IMPORT DATA EXCEL
      * @return mixed
@@ -121,13 +121,13 @@ class ImportDataController extends Controller
 		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
 		//echo $paramCari;
 		$model = new UserFile();
-		
+
 		$username=  Yii::$app->user->identity->username;
 		$user_id=['USER_ID'=>$username];
 		/*IMPORT VALIDATION*/
 		$searchModel = new TempDataSearch($user_id);
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-		/*VIEW IMPORT*/		
+		/*VIEW IMPORT*/
 		$searchModelViewImport = new ImportViewSearch();
 		$dataProviderViewImport = $searchModelViewImport->search(Yii::$app->request->queryParams);
 		//echo $this->actionExport_format();
@@ -145,7 +145,7 @@ class ImportDataController extends Controller
 			/*VIEW IMPORT*/
 			'gvRows'=>$this->gvRows(),
 			'searchModelViewImport'=>$searchModelViewImport,
-			'dataProviderViewImport'=>$dataProviderViewImport,			
+			'dataProviderViewImport'=>$dataProviderViewImport,
 		]);
     }
 
@@ -226,7 +226,7 @@ class ImportDataController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-	
+
 	public function actionUpload(){
 		$model = new UserFile();
 		if ($model->load(Yii::$app->request->post()) ) {
@@ -239,15 +239,15 @@ class ImportDataController extends Controller
 						$path = $model->getImageFile();
 						$exportFile->saveAs($path);
 						return $this->redirect(['index','id'=>$model->FILE_NM]);
-					} 
-				}				
-			}			
+					}
+				}
+			}
 		}
 	}
-	
-	
+
+
 	/**=====================================
-     * GET ARRAY FROM FILE 
+     * GET ARRAY FROM FILE
      * @return mixed
 	 * @author piter [ptr.nov@gmail.com]
 	 * =====================================
@@ -256,18 +256,18 @@ class ImportDataController extends Controller
 			$fileData=$paramFile!=''?$paramFile:'default_import_sales.xlsx';
 			$fileName=Yii::$app->basePath . '/web/upload/sales_import/'.$fileData;
 			$config='';
-			//$data = \moonland\phpexcel\Excel::import($fileName, $config); 
-			
+			//$data = \moonland\phpexcel\Excel::import($fileName, $config);
+
 			$data = \moonland\phpexcel\Excel::widget([
 				'id'=>'export',
-				'mode' => 'import', 
-				'fileName' => $fileName, 
-				'setFirstRecordAsKeys' => true, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel. 
-				'setIndexSheetByName' => true, // set this if your excel data with multiple worksheet, the index of array will be set with the sheet name. If this not set, the index will use numeric. 
+				'mode' => 'import',
+				'fileName' => $fileName,
+				'setFirstRecordAsKeys' => true, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel.
+				'setIndexSheetByName' => true, // set this if your excel data with multiple worksheet, the index of array will be set with the sheet name. If this not set, the index will use numeric.
 				'getOnlySheet' => 'IMPORT FORMAT STOCK', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
 				]);
-				
-			//print_r($data);	
+
+			//print_r($data);
 			$aryDataProvider= new ArrayDataProvider([
 				//'key' => 'ID',
 				'allModels'=>$data,
@@ -275,31 +275,31 @@ class ImportDataController extends Controller
 					'pageSize' => 1000,
 				]
 			]);
-			
+
 			//return Spinner::widget(['preset' => 'medium', 'align' => 'center', 'color' => 'blue','hidden'=>false]);
-			return $aryDataProvider;		
+			return $aryDataProvider;
 	}
 	/*
 	 * HEADER GRID DINAMIK | FORM GET ARRAY FILE
 	 * Arry Setting Attribute
 	 * @author ptrnov [ptr.nov@gmail.com]
 	 * @since 1.2
-	*/		
-	private function gvAttribute(){		
+	*/
+	private function gvAttribute(){
 		$aryField= [
-			['ID' =>0, 'ATTR' =>['FIELD'=>'DATE','SIZE' => '10px','label'=>'DATE','align'=>'center']],		  
-			['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'CUST_KD','align'=>'left']],		  
+			['ID' =>0, 'ATTR' =>['FIELD'=>'DATE','SIZE' => '10px','label'=>'DATE','align'=>'center']],
+			['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'CUST_KD','align'=>'left']],
 			['ID' =>2, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '20px','label'=>'CUST_NM','align'=>'left']],
 			['ID' =>3, 'ATTR' =>['FIELD'=>'SKU_ID','SIZE' => '20px','label'=>'SKU_ID','align'=>'left']],
 			['ID' =>4, 'ATTR' =>['FIELD'=>'SKU_NM','SIZE' => '20px','label'=>'SKU_NM','align'=>'left']],
 			['ID' =>5, 'ATTR' =>['FIELD'=>'QTY_PCS','SIZE' => '20px','label'=>'QTY_PCS','align'=>'right']],
 			['ID' =>6, 'ATTR' =>['FIELD'=>'DIS_REF','SIZE' => '20px','label'=>'DIS_REF','align'=>'right']],
-		];	
-		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
-			
+		];
+		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR');
+
 		return $valFields;
 	}
-	
+
 	/**
      * GRID ROWS | FORM GET ARRAY FILE
      * @return mixed
@@ -308,7 +308,7 @@ class ImportDataController extends Controller
 	public function gvColumnAryFile() {
 		$attDinamik =[];
 		foreach($this->gvAttribute() as $key =>$value[]){
-			$attDinamik[]=[		
+			$attDinamik[]=[
 				'attribute'=>$value[$key]['FIELD'],
 				'label'=>$value[$key]['label'],
 				//'format' => 'html',
@@ -319,21 +319,21 @@ class ImportDataController extends Controller
 				}, */
 				//'filterType'=>$gvfilterType,
 				//'filter'=>$gvfilter,
-				//'filterWidgetOptions'=>$filterWidgetOpt,	
-				//'filterInputOptions'=>$filterInputOpt,				
+				//'filterWidgetOptions'=>$filterWidgetOpt,
+				//'filterInputOptions'=>$filterInputOpt,
 				'hAlign'=>'right',
 				'vAlign'=>'middle',
 				//'mergeHeader'=>true,
-				'noWrap'=>true,			
-				'headerOptions'=>[		
-						'style'=>[									
+				'noWrap'=>true,
+				'headerOptions'=>[
+						'style'=>[
 						'text-align'=>'center',
 						'width'=>$value[$key]['FIELD'],
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'8pt',
 						'background-color'=>'rgba(97, 211, 96, 0.3)',
 					]
-				],  
+				],
 				'contentOptions'=>[
 					'style'=>[
 						'text-align'=>$value[$key]['align'],
@@ -347,22 +347,22 @@ class ImportDataController extends Controller
 				//'pageSummary'=>true,
 				'pageSummaryOptions' => [
 					'style'=>[
-							'text-align'=>'right',		
+							'text-align'=>'right',
 							//'width'=>'12px',
 							'font-family'=>'tahoma',
-							'font-size'=>'8pt',	
+							'font-size'=>'8pt',
 							'text-decoration'=>'underline',
 							'font-weight'=>'bold',
-							'border-left-color'=>'transparant',		
-							'border-left'=>'0px',									
+							'border-left-color'=>'transparant',
+							'border-left'=>'0px',
 					]
-				],	
-			];	
+				],
+			];
 		}
 		return $attDinamik;
 	}
-	
-		
+
+
 	/**=====================================
      * GET ARRAY FROM FILE | TO VALIDATE
      * @return mixed
@@ -370,9 +370,9 @@ class ImportDataController extends Controller
 	 * =====================================
      */
 	 /*GRID HEADER COLUMN*/
-	 private function gvValidateAttribute(){		
-		$aryField= [				  
-			['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'left','warna'=>'97, 211, 96, 0.3']],				
+	 private function gvValidateAttribute(){
+		$aryField= [
+			['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 			['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '10px','label'=>'Customer','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 			['ID' =>2, 'ATTR' =>['FIELD'=>'ITEM_NM','SIZE' => '10px','label'=>'SKU NM','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 			['ID' =>3, 'ATTR' =>['FIELD'=>'QTY_PCS','SIZE' => '10px','label'=>'QTY.PCS','align'=>'left','warna'=>'97, 211, 96, 0.3']],
@@ -381,17 +381,17 @@ class ImportDataController extends Controller
 			['ID' =>5, 'ATTR' =>['FIELD'=>'CUST_KD_ALIAS','SIZE' => '10px','label'=>'CUST_KD','align'=>'left','warna'=>'255, 154, 48, 1']],
 			['ID' =>6, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'CUST ALIAS','align'=>'left','warna'=>'255, 154, 48, 1']],
 			['ID' =>7, 'ATTR' =>['FIELD'=>'ITEM_ID_ALIAS','SIZE' => '10px','label'=>'SKU ID','align'=>'left','warna'=>'255, 255, 48, 4']],
-			['ID' =>8, 'ATTR' =>['FIELD'=>'ITEM_ID','SIZE' => '10px','label'=>'SKU.ID.ALIAS','align'=>'left','warna'=>'255, 255, 48, 4']],			
-			['ID' =>9, 'ATTR' =>['FIELD'=>'DIS_REF','SIZE' => '10px','label'=>'DIS_REF','align'=>'left','warna'=>'215, 255, 48, 1']],	
-		];	
-		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
-			
+			['ID' =>8, 'ATTR' =>['FIELD'=>'ITEM_ID','SIZE' => '10px','label'=>'SKU.ID.ALIAS','align'=>'left','warna'=>'255, 255, 48, 4']],
+			['ID' =>9, 'ATTR' =>['FIELD'=>'DIS_REF','SIZE' => '10px','label'=>'DIS_REF','align'=>'left','warna'=>'215, 255, 48, 1']],
+		];
+		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR');
+
 		return $valFields;
 	}
 	/*GRID ARRAY DATA PROVIDER*/
 	// private function gvValidateArrayDataProvider(){
 		// $user= Yii::$app->user->identity->username;
-		// $data=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$user."')")->queryAll(); 
+		// $data=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$user."')")->queryAll();
 		// $aryDataProvider= new ArrayDataProvider([
 			// 'key' => 'ID',
 			// 'allModels'=>$data,
@@ -399,8 +399,8 @@ class ImportDataController extends Controller
 				// 'pageSize' => 500,
 			// ]
 		// ]);
-		
-		// return $aryDataProvider;  
+
+		// return $aryDataProvider;
 	// }
 	/*GRID ROWS VALIDATE*/
 	public function gvValidateColumn() {
@@ -426,7 +426,7 @@ class ImportDataController extends Controller
 													'data-toggle'=>"modal",
 													'data-target'=>"#alias-cust",
 													]). '</li>' . PHP_EOL;
-				},				
+				},
 				'prodak' =>function($url, $model, $key){
 						return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'Set Alias Prodak'),
 													['/sales/import-data/alias_prodak','id'=>$model['ID']],[
@@ -434,14 +434,14 @@ class ImportDataController extends Controller
 													'data-toggle'=>"modal",
 													'data-target'=>"#alias-prodak",
 													]). '</li>' . PHP_EOL;
-				},	
+				},
 				/* 'customer' =>function($url, $model, $key){
 						return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'new Customer'),
 													['/sales/import-data/new_customer','id'=>$model['ID']],[
 													'data-toggle'=>"modal",
 													'data-target'=>"#alias-prodak",
 													]). '</li>' . PHP_EOL;
-				},	 */				
+				},	 */
 			],
 			'headerOptions'=>[
 				'style'=>[
@@ -463,18 +463,18 @@ class ImportDataController extends Controller
 			],
 
 		];
-		
+
 		foreach($this->gvValidateAttribute() as $key =>$value[]){
-			$attDinamik[]=[		
+			$attDinamik[]=[
 				'attribute'=>$value[$key]['FIELD'],
 				'label'=>$value[$key]['label'],
 				'filter'=>true,
 				'hAlign'=>'right',
 				'vAlign'=>'middle',
 				//'mergeHeader'=>true,
-				'noWrap'=>true,			
-				'headerOptions'=>[		
-						'style'=>[									
+				'noWrap'=>true,
+				'headerOptions'=>[
+						'style'=>[
 						'text-align'=>'center',
 						'width'=>$value[$key]['FIELD'],
 						'font-family'=>'tahoma, arial, sans-serif',
@@ -482,7 +482,7 @@ class ImportDataController extends Controller
 						//'background-color'=>'rgba(97, 211, 96, 0.3)',
 						'background-color'=>'rgba('.$value[$key]['warna'].')',
 					]
-				],  
+				],
 				'contentOptions'=>[
 					'style'=>[
 						'text-align'=>$value[$key]['align'],
@@ -496,22 +496,22 @@ class ImportDataController extends Controller
 				//'pageSummary'=>true,
 				// 'pageSummaryOptions' => [
 					// 'style'=>[
-							// 'text-align'=>'right',		
+							// 'text-align'=>'right',
 							'width'=>'12px',
 							// 'font-family'=>'tahoma',
-							// 'font-size'=>'8pt',	
+							// 'font-size'=>'8pt',
 							// 'text-decoration'=>'underline',
 							// 'font-weight'=>'bold',
-							// 'border-left-color'=>'transparant',		
-							// 'border-left'=>'0px',									
+							// 'border-left-color'=>'transparant',
+							// 'border-left'=>'0px',
 					// ]
-				// ],	
-			];	
+				// ],
+			];
 		}
 		return $attDinamik;
 	}
-	 
-	
+
+
 	/**====================================
      * IMPORT DATA EXCEL >> TEMP VALIDATION
      * @return mixed
@@ -529,7 +529,7 @@ class ImportDataController extends Controller
 			//'STOCK','2016-01-23','O041','ROBINSON MALL TATURA PALU','EF001','MAXI Cassava Crackers Hot Spicy','1','admin'
 			$stt=0;
 			foreach($data as $key => $value){
-				
+
 				//$cmd->reset();
 				$tgl=$value['DATE'];
 				$cust_kd= $value['CUST_KD'];
@@ -540,29 +540,29 @@ class ImportDataController extends Controller
 				$dis_ref=$value['DIS_REF'];
 				$user_id=$username;
 				//$result='('."'".$a."','".$b."')";
-				
+
 				/*DELETE TEMPORARY FIRST EXECUTE*/
 				if ($stt==0){
 					$cmd1=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-									'STOCK_DELETE','','','','','','','','','".$user_id."'					
-								);				
+									'STOCK_DELETE','','','','','','','','','".$user_id."'
+								);
 						");
-					$cmd1->execute();					
+					$cmd1->execute();
 				};
 				//print_r($result);
 				$cmd=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-								'STOCK','".$tgl."','".$cust_kd."','".$cust_nm."','".$item_kd."','".$item_nm."','".$qty."','".$dis_ref."','".$pos."','".$user_id."'					
-						);				
+								'STOCK','".$tgl."','".$cust_kd."','".$cust_nm."','".$item_kd."','".$item_nm."','".$qty."','".$dis_ref."','".$pos."','".$user_id."'
+						);
 				");
 				$cmd->execute();
 				//$spinnerVal=false;
 				$stt=$stt+1;
-			} 
+			}
 			//return '[{'.$tgl.'}]';
 			return true;
-		}		
+		}
 	}
-	
+
 	/**====================================
      * EXPORT FORMAT
      * @return mixed
@@ -571,7 +571,7 @@ class ImportDataController extends Controller
 	 * ====================================
      */
 	public function actionExport_format(){
-		$data_format=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_format()")->queryAll(); 
+		$data_format=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_format()")->queryAll();
 
 		 $DataProviderFormat= new ArrayDataProvider([
 			 'key' => 'ID',
@@ -581,41 +581,41 @@ class ImportDataController extends Controller
 			 ]
 		 ]);
 		 $aryDataProviderFormat=$DataProviderFormat->allModels;
-		
+
 		/* PR
 		 * $model->field dan $model['field']
 		*/
-		
+
 		$searchModelX = new TempDataSearch();
 		$dataProviderX = $searchModelX->search(Yii::$app->request->queryParams);
 		$dataProvider1= $dataProviderX->getModels();
 		$dataProvider2= $dataProviderX->getModels();
 		$dataProvider3= $dataProviderX->getModels();
-		
-		
+
+
 		//if (Yii::$app->request->isAjax) {
-		/* echo  \moonland\phpexcel\Excel::widget([ 
+		/* echo  \moonland\phpexcel\Excel::widget([
 				'id'=>'export',
-				'isMultipleSheet' => true, 
-				 'models' => [ 
+				'isMultipleSheet' => true,
+				 'models' => [
 					'sheet1' => $dataProvider1,
-					//'sheet2' => $dataProvider2, 
+					//'sheet2' => $dataProvider2,
 					//'sheet3' => $dataProvider3
-				],  
-				'mode' => 'export', 
+				],
+				'mode' => 'export',
 				'fileName'=>'FORMAT IMPORT STOCK',
 				'setFirstTitle'=>true,//'IMPORT STOCK',
-				//default value as 'export' 
+				//default value as 'export'
 				'properties'=>[
-					//'sheet1.name'=>'ere'		
+					//'sheet1.name'=>'ere'
 				],
-				'columns' => [ 
+				'columns' => [
 					'sheet1' => [
 						[
 							'attribute'=>'TGL',
 							'header' => 'DATE',
 							'format' => 'date',
-							
+
 						],
 						[
 							'attribute'=>'CUST_KD_ALIAS',
@@ -629,7 +629,7 @@ class ImportDataController extends Controller
 						],
 					],
 				],
-				// 'columns' => [ 
+				// 'columns' => [
 					// 'sheet1' => [
 						// 'column1'=>'TGL',
 						// 'column2'=>'CUST_KD_ALIAS',
@@ -639,14 +639,14 @@ class ImportDataController extends Controller
 					//'sheet2' => ['column1'=>'TGL','column2'=>'CUST_KD_ALIAS','column3'=>'ITEM_ID_ALIAS'],
 					//'sheet3' => ['column1'=>'TGL','column2'=>'CUST_KD_ALIAS','column3'=>'ITEM_ID_ALIAS']
 				// ],
-					//without header working, because the header will be get label from attribute label. 
-				//'header' => [ 
+					//without header working, because the header will be get label from attribute label.
+				//'header' => [
 					// 'sheet1' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3']
-					// 'sheet2' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3'], 
-					// 'sheet3' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3'] 
-				 //], 
-				////'sheet1' => ['TGL','CUST_KD_ALIAS','ITEM_ID_ALIAS'], 
-				
+					// 'sheet2' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3'],
+					// 'sheet3' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3']
+				 //],
+				////'sheet1' => ['TGL','CUST_KD_ALIAS','ITEM_ID_ALIAS'],
+
 			]);	 */
 			//return true;
 			//return $this->redirect('index');
@@ -657,7 +657,7 @@ class ImportDataController extends Controller
 			//			return $this->goHome();
 			//		}
 		//}
-		
+
 		$excel_data = Export2ExcelBehavior::excelDataFormat($aryDataProviderFormat);
         $excel_title = $excel_data['excel_title'];
         $excel_ceils = $excel_data['excel_ceils'];
@@ -688,27 +688,27 @@ class ImportDataController extends Controller
                     ["2.Berikut beberapa format nama yang tidak di anjurkan di ganti:"],
                     ["  A. Nama dari Sheet1: IMPORT FORMAT STOCK "],
 					["  B. Nama Header seperti column : DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF"],
-					["3.Refrensi."],					
-					["  'IMPORT FORMAT STOCK'= Nama dari Sheet1 yang aktif untuk di import "],					
-					["  'DATE'= Tanggal dari data stok yang akan di import "],					
-					["  'CUST_KD'= Kode dari customer, dimana setiap customer memiliki kode sendiri sendiri sesuai yang mereka miliki "],					
-					["  'CUST_NM'= Nama dari customer "],					
-					["  'SKU_ID'=  Kode dari Item yang mana customer memiliku kode items yang berbeda beda "],					
-					["  'SKU_NM'=  Nama dari Item, sebaiknya disamakan dengan nama yang dimiliki lukisongroup"],					
-					["  'QTY_PCS'= Quantity dalam unit PCS "],					
-					["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],					
+					["3.Refrensi."],
+					["  'IMPORT FORMAT STOCK'= Nama dari Sheet1 yang aktif untuk di import "],
+					["  'DATE'= Tanggal dari data stok yang akan di import "],
+					["  'CUST_KD'= Kode dari customer, dimana setiap customer memiliki kode sendiri sendiri sesuai yang mereka miliki "],
+					["  'CUST_NM'= Nama dari customer "],
+					["  'SKU_ID'=  Kode dari Item yang mana customer memiliku kode items yang berbeda beda "],
+					["  'SKU_NM'=  Nama dari Item, sebaiknya disamakan dengan nama yang dimiliki lukisongroup"],
+					["  'QTY_PCS'= Quantity dalam unit PCS "],
+					["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],
 				],
 			],
-			 
+
 		];
-		
+
 		 $excel_file = "StockImportFormat";
 			 $this->export2excel($excel_content, $excel_file);
-		
-		
-		
-		
-		
+
+
+
+
+
 	}
 	/**====================================
      * DELETE & CLEAR >> TEMP VALIDATION
@@ -724,16 +724,16 @@ class ImportDataController extends Controller
 			$username=  Yii::$app->user->identity->username;
 				/*DELETE STORED FIRST EXECUTE*/
 				$cmd_clear=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-									'STOCK_DELETE','','','','','','','','','".$username."'					
-								);				
+									'STOCK_DELETE','','','','','','','','','".$username."'
+								);
 						");
-				$cmd_clear->execute();		
-			
+				$cmd_clear->execute();
+
 			return true;
 		}
-		
+
 	}
-	
+
 	/**====================================
      * Action SEND DATA TO STORED LIVE
      * @return mixed
@@ -744,8 +744,8 @@ class ImportDataController extends Controller
 	public function actionSend_temp_validation(){
 		if (Yii::$app->request->isAjax) {
 			$username=  Yii::$app->user->identity->username;
-			$data_view=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$username."')")->queryAll(); 
-	
+			$data_view=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$username."')")->queryAll();
+
 			$viewDataProvider= new ArrayDataProvider([
 				'key' => 'ID',
 				 'allModels'=>$data_view,
@@ -753,11 +753,11 @@ class ImportDataController extends Controller
 					 'pageSize' => 1000,
 				]
 			]);
-			$dataImport=$viewDataProvider->allModels;	
+			$dataImport=$viewDataProvider->allModels;
 			// print_r($viewDataProvider->allModels);
 			// die();
-			
-			foreach($dataImport as $key => $value){				
+
+			foreach($dataImport as $key => $value){
 				//$cmd->reset();
 				$tgl=$value['TGL'];
 				$cust_kd= $value['CUST_KD_ALIAS'];
@@ -771,17 +771,17 @@ class ImportDataController extends Controller
 			}
 			/*Delete After Import*/
 			$cmd_del=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-									'STOCK_DELETE','','','','','','','','','".$username."'					
-								);				
+									'STOCK_DELETE','','','','','','','','','".$username."'
+								);
 						");
-			$cmd_del->execute();	
+			$cmd_del->execute();
 			return true;
-		}else{			
+		}else{
 			return $this->redirect(['index']);
 		}
 		return $this->redirect(['index']);
 	}
-	
+
 	/**====================================
      * Action Set Alias Customer
      * @return mixed
@@ -848,7 +848,7 @@ class ImportDataController extends Controller
 		if(Yii::$app->request->isAjax){
 			$AliasProdak->load(Yii::$app->request->post());
 			return Json::encode(\yii\widgets\ActiveForm::validate($AliasProdak));
-		}else{	
+		}else{
 			/*Normal Load*/
 			if($AliasProdak->load(Yii::$app->request->post())){
 			 	if ($AliasProdak->alias_barang_save()){
@@ -861,8 +861,8 @@ class ImportDataController extends Controller
 			}
 		}
 	}
-	
-	
+
+
 	/**=====================================
      * VIEW IMPORT DATA STORAGE
      * @return mixed
@@ -870,10 +870,10 @@ class ImportDataController extends Controller
 	 * =====================================
      */
 	 /*GRID HEADER COLUMN*/
-	 private function gvHeadColomn(){		
-		$aryField= [	
+	 private function gvHeadColomn(){
+		$aryField= [
 			/*MAIN DATA*/
-			['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'left','warna'=>'97, 211, 96, 0.3']],				
+			['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 			['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_KD_ALIAS','SIZE' => '10px','label'=>'CUST.KD','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 			['ID' =>2, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '10px','label'=>'CUSTOMER','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 			['ID' =>3, 'ATTR' =>['FIELD'=>'NM_BARANG','SIZE' => '10px','label'=>'SKU','align'=>'left','warna'=>'97, 211, 96, 0.3']],
@@ -890,28 +890,28 @@ class ImportDataController extends Controller
 			['ID' =>13, 'ATTR' =>['FIELD'=>'HARGA_SALES','SIZE' => '10px','label'=>'SALES.PRICE','align'=>'right','warna'=>'255, 255, 48, 4']],
 			/*SUPPORT DATA ID*/
 			['ID' =>14, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'CUST.KD_ALIAS','align'=>'left','warna'=>'255, 255, 48, 4']],
-			['ID' =>15, 'ATTR' =>['FIELD'=>'KD_BARANG','SIZE' => '10px','label'=>'SKU.ID.ALIAS','align'=>'left','warna'=>'255, 255, 48, 4']],			
-			['ID' =>16, 'ATTR' =>['FIELD'=>'KD_DIS','SIZE' => '10px','label'=>'KD_DIS','align'=>'left','warna'=>'215, 255, 48, 1']],	
-		];	
-		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
-			
+			['ID' =>15, 'ATTR' =>['FIELD'=>'KD_BARANG','SIZE' => '10px','label'=>'SKU.ID.ALIAS','align'=>'left','warna'=>'255, 255, 48, 4']],
+			['ID' =>16, 'ATTR' =>['FIELD'=>'KD_DIS','SIZE' => '10px','label'=>'KD_DIS','align'=>'left','warna'=>'215, 255, 48, 1']],
+		];
+		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR');
+
 		return $valFields;
-	}	
+	}
 	public function gvRows() {
 		$actionClass='btn btn-info btn-xs';
 		$actionLabel='Update';
 		$attDinamik =[];
 		foreach($this->gvHeadColomn() as $key =>$value[]){
-			$attDinamik[]=[		
+			$attDinamik[]=[
 				'attribute'=>$value[$key]['FIELD'],
 				'label'=>$value[$key]['label'],
 				'filter'=>true,
 				'hAlign'=>'right',
 				'vAlign'=>'middle',
 				//'mergeHeader'=>true,
-				'noWrap'=>true,			
-				'headerOptions'=>[		
-						'style'=>[									
+				'noWrap'=>true,
+				'headerOptions'=>[
+						'style'=>[
 						'text-align'=>'center',
 						'width'=>$value[$key]['FIELD'],
 						'font-family'=>'tahoma, arial, sans-serif',
@@ -919,7 +919,7 @@ class ImportDataController extends Controller
 						//'background-color'=>'rgba(97, 211, 96, 0.3)',
 						'background-color'=>'rgba('.$value[$key]['warna'].')',
 					]
-				],  
+				],
 				'contentOptions'=>[
 					'style'=>[
 						'text-align'=>$value[$key]['align'],
@@ -933,30 +933,30 @@ class ImportDataController extends Controller
 				//'pageSummary'=>true,
 				// 'pageSummaryOptions' => [
 					// 'style'=>[
-							// 'text-align'=>'right',		
+							// 'text-align'=>'right',
 							'width'=>'12px',
 							// 'font-family'=>'tahoma',
-							// 'font-size'=>'8pt',	
+							// 'font-size'=>'8pt',
 							// 'text-decoration'=>'underline',
 							// 'font-weight'=>'bold',
-							// 'border-left-color'=>'transparant',		
-							// 'border-left'=>'0px',									
+							// 'border-left-color'=>'transparant',
+							// 'border-left'=>'0px',
 					// ]
-				// ],	
-			];	
+				// ],
+			];
 		}
 		return $attDinamik;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
 }

@@ -14,7 +14,7 @@ use kartik\password\PasswordInput;
 				'enableClientValidation' => true,
 				'enableAjaxValidation' => true,
 				'method' => 'post',
-				'action' => ['/crmsistem/crm-user-profile/password-utama-save'],
+				'action' => ['/sistem/crm-user-profile/password-utama-save'],
 				// 'device'=>''
 		]);
 	?>

@@ -91,7 +91,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
                      * Modul Salesman - Sales Promoton  | maintenance jadwal Spg | User login Spg | Absensi | Bonus
                     */
                     'content' => 'Profile',
-                    'url' => '/crmsistem/crm-user-profile',
+                    'url' => '/sistem/crm-user-profile',
                     'badge' => '0'
                   ],
 								]),

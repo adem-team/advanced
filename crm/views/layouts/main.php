@@ -9,7 +9,7 @@ use yii\widgets\Breadcrumbs;
 use kartik\icons\Icon;
 use dmstr\widgets\Alert;
 use crm\sistem\models\UserloginSearch;
-use crm\sistem\models\M1000;			
+use crm\sistem\models\M1000;
 //use lukisongroup\assets\AppAsset;
 use mdm\admin\components\MenuHelper;
 use yii\bootstrap\Modal;
@@ -31,7 +31,7 @@ AppAsset_style::register($this);
             <title><?= Html::encode($this->sideCorp) ?></title>
 			<?php if (!Yii::$app->user->isGuest) { ?>
             <meta http-equiv="refresh" content="<?php echo Yii::$app->params['sessionTimeoutSeconds'];?>;"/>
-			<?php } ?>	
+			<?php } ?>
 			<?php $this->head() ?>
 		</head>
 
@@ -43,7 +43,7 @@ AppAsset_style::register($this);
 			$callback = function($menu){
 				$data1=($menu['data']);
 				$data2=str_replace("'",'',$data1);
-				$data3=str_replace(";",'',$data2);	
+				$data3=str_replace(";",'',$data2);
                 $data1=$menu['data'];
 				$data = eval($menu['data']);
                 //echo $data;
@@ -56,9 +56,9 @@ AppAsset_style::register($this);
 			};
 
 			/**
-			 * Validasi database Default EMP_ID =0 
+			 * Validasi database Default EMP_ID =0
 			 * note error : lost left join Field unn\known attribute properties
-			 * Author: -ptr.nov-, 
+			 * Author: -ptr.nov-,
 			 */
 			if (!Yii::$app->user->isGuest) {
 				$ModelUserAttr = UserloginSearch::findUserAttr(Yii::$app->user->id)->one();
@@ -66,11 +66,11 @@ AppAsset_style::register($this);
 				//echo $ModelUserAttr->emp->EMP_IMG;
 				$MainAvatar =  $ModelUserAttr->userprofile['EMP_IMG'];
 				$MainUserProfile = $ModelUserAttr->userprofile['NM_FIRST'] . '  '. $ModelUserAttr->userprofile['NM_MIDDLE'] . '  '. $ModelUserAttr->userprofile['NM_END'];
-			
+
 			}
 			$corp="<p class='pull-left'>&copy; LukisonGroup <?= date('Y') ?></p>";
 		?>
-		
+
 		<! - NOT LOGIN- Author : -ptr.nov- >
 		<?php if (Yii::$app->user->isGuest) { ?>
 			<?php include('_front.php');?>
@@ -146,7 +146,7 @@ AppAsset_style::register($this);
                                     </div>
                                     <div class="pull-left info" style="margin-left: 40px" >
                                         <p><?php echo $MainUserProfile; ?></p>
-                                    
+
                                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                                     </div>
                                 </div>
@@ -162,7 +162,7 @@ AppAsset_style::register($this);
                                     ?>
                                  </p>
                             </div>
-                               
+
                             <!-- /.User Login -->
                             <!-- search form -->
                                 <form action="#" method="get" class="sidebar-form skin-blue">

@@ -45,7 +45,7 @@ use yii\widgets\Pjax;
 		];
 		$icon1 = '<span class="fa fa-shield fa-md"></span>';
 		$label1 = $icon1 . ' ' . $title1;
-		$url1 = Url::toRoute(['/crmsistem/crm-user-profile/password-utama-view']);
+		$url1 = Url::toRoute(['/sistem/crm-user-profile/password-utama-view']);
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}

@@ -56,7 +56,7 @@ use yii\widgets\Pjax;
         <div class="col-sm-6 col-md-6 col-lg-6 ">
             <?php
 				 echo GridView::widget([
-					'id'=>'gv-arryFile',
+					'id'=>'gv-arryFile-salesman',
 					'dataProvider' => $getArryFile,
 					//'filterModel' => $searchModel,
 					'columns'=>$gvColumnAryFile,
@@ -64,7 +64,7 @@ use yii\widgets\Pjax;
 					'pjaxSettings'=>[
 					'options'=>[
 						'enablePushState'=>false,
-						'id'=>'gv-arryFile',
+						'id'=>'gv-arryFile-salesman',
 					   ],
 					],
 					'hover'=>true, //cursor select
@@ -111,7 +111,7 @@ use yii\widgets\Pjax;
             <?php
 				//print_r($gvValidateColumn);
 				echo GridView::widget([
-					'id'=>'gv-validate',
+					'id'=>'gv-validate-salesman',
 					'dataProvider' => $gvValidateArrayDataProvider,
 					'filterModel' => $searchModelValidate,
 					'columns'=>$gvValidateColumn,
@@ -124,7 +124,7 @@ use yii\widgets\Pjax;
 					'pjaxSettings'=>[
 					'options'=>[
 						'enablePushState'=>false,
-						'id'=>'gv-validate',
+						'id'=>'gv-validate-salesman',
 					   ],
 					],
 					'hover'=>true, //cursor select
@@ -168,7 +168,7 @@ use yii\widgets\Pjax;
             <?php
 				//print_r($gvValidateColumn);
 				echo GridView::widget([
-					'id'=>'gv-view-import',
+					'id'=>'gv-view-import-salesman',
 					'dataProvider' => $dataProviderViewImport,
 					'filterModel' => $searchModelViewImport,
 					'columns'=>$gvRows,
@@ -176,7 +176,7 @@ use yii\widgets\Pjax;
 					'pjaxSettings'=>[
 					'options'=>[
 						'enablePushState'=>false,
-						'id'=>'gv-validate',
+						'id'=>'gv-view-import-salesman',
 					   ],
 					],
 					'hover'=>true, //cursor select
@@ -293,7 +293,7 @@ use yii\widgets\Pjax;
 				success: function(result) {
 					if (result == 1){
 						// Success
-						$.pjax.reload({container:'#gv-validate'});
+						$.pjax.reload({container:'#gv-validate-salesman'});
 					} else {
 						// Fail
 					}
@@ -321,7 +321,7 @@ use yii\widgets\Pjax;
 				success: function(result) {
 					if (result == 1){
 						// Success
-						$.pjax.reload({container:'#gv-validate'});
+						$.pjax.reload({container:'#gv-validate-salesman'});
 					} else {
 						// Fail
 					}
@@ -349,7 +349,7 @@ use yii\widgets\Pjax;
 				success: function(result) {
 					if (result == 1){
 						// Success
-						$.pjax.reload({container:'#gv-validate'});
+						$.pjax.reload({container:'#gv-validate-salesman'});
 					} else {
 						// Fail
 					}
