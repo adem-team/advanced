@@ -75,13 +75,6 @@ class ScheduleHeaderCrmController extends Controller
 
         $model = new Scheduleheader();
 
-        // data select2 for SCDL_GROUP
-        $query = Schedulegroup::find()->all();
-        $datagroup = ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
-
-        // data select2 for USER_ID where CRM and STATUS 10(active)
-        $query1 = Userlogin::find()->where('POSITION_SITE = "CRM" AND STATUS = 10')->all();
-        $datauser = ArrayHelper::map($query1, 'id', 'username');
 
         return $this->render('index', [
 			       'dataProviderUser'=>$dataProviderUser,
@@ -121,6 +114,62 @@ class ScheduleHeaderCrmController extends Controller
         } else {
             return $this->render('create', [
                 'model' => $model,
+            ]);
+        }
+    }
+
+    /** author : wawan
+     * Creates a new Scheduleheader model.
+     * If creation is successful,batch insert table c0002scdl_detail.
+     * @return mixed
+     */
+
+    public function actionCreateGroup($tgl1,$tgl2)
+    {
+        $model = new Scheduleheader();
+        // data select2 for USER_ID where CRM and STATUS 10(active)
+        $connection = \Yii::$app->db_esm;
+        $querycariuser = 'SELECT * FROM dbm001.user  where id  NOT IN (SELECT DISTINCT(USER_ID) from dbc002.c0002scdl_detail WHERE TGL="'.$tgl1.'") AND POSITION_SITE = "CRM" AND STATUS = 10';
+        $user = $connection->createCommand($querycariuser)->queryAll();
+        $datauser = ArrayHelper::map($user, 'id', 'username');
+
+        // data select2 for SCDL_GROUP
+        $connection = \Yii::$app->db_esm;
+        $model1 = $connection->createCommand('SELECT * from c0007 where ID NOT IN (SELECT DISTINCT(SCDL_GROUP) FROM c0002scdl_detail  WHERE TGL="'.$tgl1.'")');
+	      $query = $model1->queryAll();
+        $datagroup = ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
+
+        //componen
+        $profile=Yii::$app->getUserOptcrm->Profile_user();
+        $usercreate = $profile->username;
+        //proses save
+        if ($model->load(Yii::$app->request->post())) {
+
+          $model->TGL1 = $tgl1;
+          $model->TGL2 = $tgl2;
+          $model->CREATE_BY = $usercreate;
+          $model->CREATE_AT = date("Y-m-d H:i:s");
+           if($model->save())
+           {
+             // foreach date :author wawan
+               for ($date = strtotime($tgl1); $date < strtotime($tgl2); $date = strtotime("+1 day", $date)) {
+                         $tgl =  date("Y-m-d", $date);
+                         //batch insert customers author :wawan
+                         $Customers = Customers::find()->where(['SCDL_GROUP'=>$model->SCDL_GROUP])->asArray()->all();
+                         foreach ($Customers as $key => $value) {
+                           # code...
+                           $connection = Yii::$app->db_esm;
+                           $connection->createCommand()->batchInsert('c0002scdl_detail',['TGL','CUST_ID','SCDL_GROUP','USER_ID'],[[$tgl,$value['CUST_KD'],$model->SCDL_GROUP,$model->USER_ID]])->execute();
+                         }
+                   }
+           }
+           	return true;
+
+        } else {
+            return $this->renderAjax('_formschedule', [
+                'model' => $model,
+                'datagroup'=>$datagroup,
+                'datauser'=>$datauser
             ]);
         }
     }

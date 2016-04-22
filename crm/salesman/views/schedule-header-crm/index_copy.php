@@ -10,9 +10,6 @@ use yii\widgets\ActiveForm;
 use lukisongroup\sistem\models\Userlogin;
 
 
-?>
-<!-- <!DOCTYPE html> -->
-<?php
 $this->sideCorp = 'PT.Effembi Sukses Makmur';                          /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 // $this->sideMenu = 'esm_customers';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'ESM - Produk');          /* title pada header page */
@@ -36,7 +33,7 @@ function(start, end) {
 		$.get('/salesman/schedule-header-crm/create-group',{'tgl1':tgl1,'tgl2':tgl2},function(data){
 						$('#modal').modal('show')
 						.find('#modalContent')
-						.html(data);
+						.load(data);
 		});
 
     // $('#confirm-permission-alert').modal();
@@ -55,7 +52,6 @@ $JSEventClick = <<<EOF
 function(calEvent, jsEvent, view) {
   $('#tglakhir').val(tgl2);
   $('#tglawal').val(tgl1);
-  $('#confirm-permission-alert').modal();
 
 
 // $('#confirm-permission-alert').modal();
@@ -66,7 +62,7 @@ EOF;
 	Modal::begin([
     'headerOptions' => ['id' => 'modalHeader'],
     'id' => 'modal',
-    'size' => 'modal-sm',
+    'size' => 'modal-lg',
     //keeps from closing modal with esc key or by clicking out of the modal.
     // user must click cancel or X to close
     // 'clientOptions' => ['backdrop' => 'static', 'keyboard' => FALSE]
@@ -469,7 +465,7 @@ Modal::end();
 			'selectHelper' => true,
 			'droppable' => true,
 			'editable' => true,
-			// 'drop' => new JsExpression($JSDropEvent),
+			//'drop' => new JsExpression($JSDropEvent),
 			'selectHelper'=>true,
 			'select' => new JsExpression($JSCode),
 			'eventClick' => new JsExpression($JSEventClick),
@@ -532,20 +528,6 @@ Modal::end();
 
 <?php
 
-
-// // save via ajax : author wawan
-// $this->registerJs("
-//   $(document).on('click','.fc-day-number',function(){
-//     var date = $(this).attr('data-date');
-//     $.get('/salesman/schedule-header-crm/create-group',{'date':date},function(data){
-//     						$('#modal').modal('show')
-//     						.find('#modalContent')
-//     					 .html(data);
-//     		});
-//   });
-//
-//   ",$this::POS_READY);
-
 // save via ajax : author wawan
 $this->registerJs("
      $.fn.modal.Constructor.prototype.enforceFocus = function(){};
@@ -593,41 +575,41 @@ $this->registerJs("
   ",$this::POS_READY);
 
 // author wawan
-// Modal::begin([
-//     'id' => 'confirm-permission-alert',
-//     'size' => Modal::SIZE_SMALL,
-//   ]);
-//   $form = ActiveForm::begin([
-//             'id'=>$model->formName(),
-//       ]);
-//       echo $form->field($model, 'TGL1')->Hiddeninput(['id'=>'tglawal'])->label(false);
-//
-//       echo $form->field($model, 'TGL2')->Hiddeninput(['id'=>'tglakhir'])->label(false);
-//
-//       echo $form->field($model, 'SCDL_GROUP')->widget(Select2::classname(), [
-//           'data' => $datagroup,
-//           'options' => ['placeholder' => 'Select Group ...'],
-//           'pluginOptions' => [
-//               'allowClear' => true
-//               ],
-//           ]);
-//
-//       echo $form->field($model, 'USER_ID')->widget(Select2::classname(), [
-//               'data' => $datauser,
-//               'options' => ['placeholder' => 'Select User ...'],
-//               'pluginOptions' => [
-//                   'allowClear' => true
-//                   ],
-//               ]);
-//       echo $form->field($model, 'NOTE')->Textarea(['rows'=>2,'id'=>'note'])->label('KETERANGAN');
-//
-//
-//     echo '<div style="text-align:right; padding-top:10px">';
-//     echo Html::submitButton('save',['class' => 'btn btn-success']);
-//     echo '</div>';
-//   ActiveForm::end();
-//
-// Modal::end();
+Modal::begin([
+    'id' => 'confirm-permission-alert',
+    'size' => Modal::SIZE_SMALL,
+  ]);
+  $form = ActiveForm::begin([
+            'id'=>$model->formName(),
+      ]);
+      echo $form->field($model, 'TGL1')->Hiddeninput(['id'=>'tglawal'])->label(false);
+
+      echo $form->field($model, 'TGL2')->Hiddeninput(['id'=>'tglakhir'])->label(false);
+
+      echo $form->field($model, 'SCDL_GROUP')->widget(Select2::classname(), [
+          'data' => $datagroup,
+          'options' => ['placeholder' => 'Select Group ...'],
+          'pluginOptions' => [
+              'allowClear' => true
+              ],
+          ]);
+
+      echo $form->field($model, 'USER_ID')->widget(Select2::classname(), [
+              'data' => $datauser,
+              'options' => ['placeholder' => 'Select User ...'],
+              'pluginOptions' => [
+                  'allowClear' => true
+                  ],
+              ]);
+      echo $form->field($model, 'NOTE')->Textarea(['rows'=>2,'id'=>'note'])->label('KETERANGAN');
+
+
+    echo '<div style="text-align:right; padding-top:10px">';
+    echo Html::submitButton('save',['class' => 'btn btn-success']);
+    echo '</div>';
+  ActiveForm::end();
+
+Modal::end();
 
 // create user crm via modal : author wawan
 $this->registerJs("
