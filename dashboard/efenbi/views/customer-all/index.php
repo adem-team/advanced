@@ -227,32 +227,33 @@ $this->params['breadcrumbs'][] = $this->title;
 							]
 						}
 					],
-					"dataset": [
-						{
-							"seriesname": "Bakersfield Central",
-							"data": [
-								{ "value": "15123" }, 
-								{ "value": "14233" }, 
-								{ "value": "25507" }, 
-								{ "value": "9110" }, 
-								{ "value": "15529" }, 
-								{ "value": "20803" }, 
-								{ "value": "19202" }
-							]
-						}, 
-						{
-							"seriesname": "Los Angeles Topanga",
-							"data": [
-								{ "value": "13400" }, 
-								{ "value": "12800" }, 
-								{ "value": "22800" }, 
-								{ "value": "12400" }, 
-								{ "value": "15800" }, 
-								{ "value": "19800" }, 
-								{ "value": "21800" }
-							]
-						}
-					], 
+					"dataset": '.$cac.'
+						/* [
+							{
+								"seriesname": "Bakersfield Central",
+								"data": [
+									{ "value": "15123" }, 
+									{ "value": "14233" }, 
+									{ "value": "25507" }, 
+									{ "value": "9110" }, 
+									{ "value": "15529" }, 
+									{ "value": "20803" }, 
+									{ "value": "19202" }
+								]
+							}, 
+							{
+								"seriesname": "Los Angeles Topanga",
+								"data": [
+									{ "value": "13400" }, 
+									{ "value": "12800" }, 
+									{ "value": "22800" }, 
+									{ "value": "12400" }, 
+									{ "value": "15800" }, 
+									{ "value": "19800" }, 
+									{ "value": "21800" }
+								]
+							}
+						],  */
 					"trendlines": [
 						{
 							"line": [

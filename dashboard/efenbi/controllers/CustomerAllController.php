@@ -54,10 +54,43 @@ class CustomerAllController extends Controller
 		//die(); 
 		return Json::encode($countChildParen->getModels());
 	}	
+	
+	/* Count Customer Active */
+	public function CountCustomerActiveCall(){		
+		$dataCAC= new ArrayDataProvider([
+			'key' => 'TGL_STATUS',
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_detail_status('all_value_parent_count_visit')")->queryAll(),
+			'pagination' => [
+				'pageSize' => 500,
+				]
+		]);		
+		//print_r(json_encode($resultCountChildParen));
+		//print_r(json_decode($resultCountChildParen));
+		//die(); 
+		/*SET Models*/
+		$modelCAC=$dataCAC->getModels();
+		/*SET GROUP*/
+		$modelGrp = ArrayHelper::map($modelCAC,'CUST_GRP','label');
+		foreach($modelGrp as $key1 ){								
+			$dataX=[];
+			foreach($modelCAC as $key2 =>$value[]){
+				if ($key1==$value[$key2]['label']){
+					$dataX[]=['value'=>$value[$key2]['value']];					
+				}				
+			};
+			$data[]=['seriesname'=>$key1,'data'=> $dataX];
+		}
+		//return Json::encode($dataCAC->getModels());
+		return Json::encode($data);
 		
+		
+		
+	}
+	
 	public function actionIndex()
     {
-		
+		//print_r($this->CountCustomerActiveCall());
+		//die();
 		if (\Yii::$app->user->isGuest) {
             return $this->render('../../../views/site/index_nologin'
             );
@@ -81,7 +114,8 @@ class CustomerAllController extends Controller
 				'model_CustPrn'=>$model_CustPrn,
 				'count_CustPrn'=>$count_CustPrn,  						
 				/*STOCK ALL CUSTOMER*/
-				'resultCountChildParen'=>$this->CountChildCustomer()
+				'resultCountChildParen'=>$this->CountChildCustomer(),
+				'cac'=>$this->CountCustomerActiveCall()
 					
 			]);		
 		};	
