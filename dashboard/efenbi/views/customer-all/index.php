@@ -173,7 +173,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				dataFormat: "json",
 				dataSource: {
 					"chart": {
-						"caption": "Sales Compare",
+						"caption": "Visit Compare",
 						//"subCaption": "Customers Modern",
 						//"subCaption": "Sales Compare",
 						"captionFontSize": "14",
