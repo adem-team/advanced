@@ -227,7 +227,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							]
 						}
 					],
-					"dataset": '.$cac.'
+					"dataset": '.$cac.',
 						/* [
 							{
 								"seriesname": "Bakersfield Central",
