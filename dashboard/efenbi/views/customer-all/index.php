@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						 echo Html::panel(
 							[
 							//'heading' => '<a class="btn btn-info btn-xs full-right" href="/efenbi/report"><< BACK MENU </a> All Customer Category',
-								'body'=> '<div id="chart-cust-parent" style="height:200px"></div> <div id="chart-Sales-compare"></div>',
+								'body'=> '<div id="chart-cust-parent" style="height:200px"></div> <div id="chart-cust-active-call"></div>',
 							],
 							Html::TYPE_INFO
 						);
@@ -50,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				 echo Html::panel(
 					[
 						'heading' => 'SALES COMPARE',
-						'body'=> '<div id="chart-Sales-compare"></div>',
+						'body'=> '<div id="chart-cust-active-call"></div>',
 					],
 					Html::TYPE_INFO
 				);
@@ -133,7 +133,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			dataFormat: "json",
 			dataSource: {
 				chart: {
-					caption: "Modern Parent Customers",
+					caption: "Customers Modern Parent",
 					//subcaption: "Daily Actual Total Stock sell-out",
 					subcaptionFontBold: "0",
 					subcaptionFontSize: "14",
@@ -167,13 +167,13 @@ $this->params['breadcrumbs'][] = $this->title;
 		$(document).ready(function () {
 			var ChartSalesCompare = new FusionCharts({
 				type: "msline",
-				renderAt: "chart-Sales-compare",
+				renderAt: "chart-cust-active-call",
 				width: "100%",
 				height: "80%",
 				dataFormat: "json",
 				dataSource: {
 					"chart": {
-						"caption": "Visit Compare",
+						"caption": "Customer Active Call",
 						//"subCaption": "Customers Modern",
 						//"subCaption": "Sales Compare",
 						"captionFontSize": "14",
