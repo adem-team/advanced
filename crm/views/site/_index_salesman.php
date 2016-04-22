@@ -139,6 +139,14 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										'url' => '/mastercrm/customers-crm/crm-map',
 										'badge' => '0'
 									],
+                  [
+										/*
+										 * Modul Salesman - Salesman  | maintenance jadwal kunjungan salesman
+										*/
+										'content' => 'Import data Customers',
+										'url' => '/salesman/import-data',
+										'badge' => '0'
+									]
 								]),
 						],
 						Html::TYPE_INFO
