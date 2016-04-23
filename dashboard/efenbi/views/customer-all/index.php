@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						 echo Html::panel(
 							[
 							//'heading' => '<a class="btn btn-info btn-xs full-right" href="/efenbi/report"><< BACK MENU </a> All Customer Category',
-								'body'=> '<div id="chart-cust-parent" style="height:200px"></div> <div id="chart-cust-active-call"></div>',
+								'body'=> '<div id="chart-cust-parent" style="height:200px"></div> <div id="chart-cust-active-call"  style="height:200px"></div>',
 							],
 							Html::TYPE_INFO
 						);
@@ -207,7 +207,8 @@ $this->params['breadcrumbs'][] = $this->title;
 					},
 					"categories": [
 						{
-							"category": [
+							"category": '.$cac_ctg.',
+							/* [
 								{ "label": "Mon" }, 
 								{ "label": "Tue" }, 
 								{ "label": "Wed" },
@@ -224,10 +225,10 @@ $this->params['breadcrumbs'][] = $this->title;
 								{ "label": "Fri" }, 
 								{ "label": "Sat" }, 
 								{ "label": "Sun" }
-							]
+							] */
 						}
 					],
-					"dataset": '.$cac.',
+					"dataset": '.$cac_val.',
 						/* [
 							{
 								"seriesname": "Bakersfield Central",

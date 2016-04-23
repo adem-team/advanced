@@ -55,18 +55,15 @@ class CustomerAllController extends Controller
 		return Json::encode($countChildParen->getModels());
 	}	
 	
-	/* Count Customer Active */
-	public function CountCustomerActiveCall(){		
+	/* Value Customer Active */
+	public function ValueCustomerActiveCall(){		
 		$dataCAC= new ArrayDataProvider([
 			'key' => 'TGL_STATUS',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_detail_status('all_value_parent_count_visit')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_detail_status('all_value_parent_cust_active')")->queryAll(),
 			'pagination' => [
 				'pageSize' => 500,
 				]
 		]);		
-		//print_r(json_encode($resultCountChildParen));
-		//print_r(json_decode($resultCountChildParen));
-		//die(); 
 		/*SET Models*/
 		$modelCAC=$dataCAC->getModels();
 		/*SET GROUP*/
@@ -81,16 +78,27 @@ class CustomerAllController extends Controller
 			$data[]=['seriesname'=>$key1,'data'=> $dataX];
 		}
 		//return Json::encode($dataCAC->getModels());
-		return Json::encode($data);
-		
-		
-		
+		return Json::encode($data);	
+	}
+	
+	/* Category Customer Active */
+	public function CtgCustomerActiveCall(){		
+		$dataCAC= new ArrayDataProvider([
+			'key' => 'TGL_STATUS',
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_detail_status('all_ctg_cust_active')")->queryAll(),
+			'pagination' => [
+				'pageSize' => 500,
+				]
+		]);		
+		/*SET Models*/
+		$modelCAC_ctg=$dataCAC->getModels();
+		return Json::encode($modelCAC_ctg);	
 	}
 	
 	public function actionIndex()
     {
-		//print_r($this->CountCustomerActiveCall());
-		//die();
+		// print_r($this->CtgCustomerActiveCall());
+		// die();
 		if (\Yii::$app->user->isGuest) {
             return $this->render('../../../views/site/index_nologin'
             );
@@ -115,7 +123,8 @@ class CustomerAllController extends Controller
 				'count_CustPrn'=>$count_CustPrn,  						
 				/*STOCK ALL CUSTOMER*/
 				'resultCountChildParen'=>$this->CountChildCustomer(),
-				'cac'=>$this->CountCustomerActiveCall()
+				'cac_val'=>$this->ValueCustomerActiveCall(),
+				'cac_ctg'=>$this->CtgCustomerActiveCall()
 					
 			]);		
 		};	
