@@ -1,7 +1,7 @@
 <?php
 
 namespace lukisongroup\purchasing\controllers;
-
+/*extensions */
 use Yii;
 use yii\helpers\Html;
 use yii\web\Request;
@@ -16,11 +16,11 @@ use kartik\mpdf\Pdf;
 use yii\helpers\Url;
 use zyx\phpmailer\Mailer;
 
+/* namespace models */
 use lukisongroup\purchasing\models\pr\Purchaseorder;
 use lukisongroup\purchasing\models\pr\PurchaseorderSearch;
 use lukisongroup\purchasing\models\pr\Purchasedetail;
 
-//use lukisongroup\purchasing\models\pr\Podetail;
 use lukisongroup\purchasing\models\pr\DiscountValidation;
 use lukisongroup\purchasing\models\pr\PajakValidation;
 use lukisongroup\purchasing\models\pr\DeliveryValidation;
@@ -39,7 +39,7 @@ use lukisongroup\purchasing\models\pr\Auth3Model;
 use lukisongroup\purchasing\models\pr\NewPoValidation;
 use lukisongroup\purchasing\models\pr\SendPoValidation;
 use lukisongroup\purchasing\models\pr\PoPlusValidation;
-//use lukisongroup\purchasing\models\pr\SendPoQtyValidation;
+
 
 use lukisongroup\purchasing\models\ro\Requestorder;
 use lukisongroup\purchasing\models\ro\RequestorderSearch;
@@ -108,14 +108,19 @@ class PurchaseOrderController extends Controller
         $dataProvider = $searchModel->searchPoInbox(Yii::$app->request->queryParams);
         $searchmodel = new PurchaseorderSearch();
         $dataprovider = $searchmodel->searchpoOutbox(Yii::$app->request->queryParams);
+        $searchmodelHistory = new PurchaseorderSearch();
+        $dataproviderHistory = $searchmodelHistory->searchPoHistory(Yii::$app->request->queryParams);
         $poHeader = new Purchaseorder();
-		/*Model Validasi Generate Code*/
-		$poHeaderVal = new NewPoValidation();
+
+		    /*Model Validasi Generate Code*/
+		    $poHeaderVal = new NewPoValidation();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataprovider' => $dataprovider,
             'searchmodel' => $searchmodel,
             'dataProvider' => $dataProvider,
+            'searchmodelHistory' => $searchmodelHistory,
+            'dataproviderHistory' => $dataproviderHistory,
             'poHeader' => $poHeader,
 			      'poHeaderVal'=>$poHeaderVal,
         ]);
@@ -583,6 +588,7 @@ class PurchaseOrderController extends Controller
 			echo $out;
 			return;
 		}
+
 
 		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
         $poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->andWhere('STATUS <> 3')->all();
@@ -1372,7 +1378,7 @@ class PurchaseOrderController extends Controller
 
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth1Model']['kdpo'];
-          $this->Sendmail($kdpo);
+          $this->Sendmail($kdpo); //call function email
 					return $this->redirect(['create', 'kdpo'=>$kdpo]);
 				}
 			}
@@ -1406,7 +1412,7 @@ class PurchaseOrderController extends Controller
 				if ($auth2Mdl->auth2_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth2Model']['kdpo'];
-          $this->Sendmail2($kdpo);
+          $this->Sendmail2($kdpo);//call function email
 					return $this->redirect(['review', 'kdpo'=>$kdpo]);
 				}
 			}
@@ -1440,7 +1446,7 @@ class PurchaseOrderController extends Controller
 				if ($auth3Mdl->auth3_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth3Model']['kdpo'];
-          $this->Sendmail3($kdpo);
+          $this->Sendmail3($kdpo);//call function email
 					return $this->redirect(['review', 'kdpo'=>$kdpo]);
 				}
 			}

@@ -125,6 +125,63 @@ class ScheduleHeaderController extends Controller
         }
     }
 
+
+  /**
+    * Creates a new schedule header and schedule detail.
+    * If creation is successful, bacth insert to schedule detail.
+    * usage save ajax ver 1.1 author : wawan
+ */
+    public function actionCreateGroup($tgl1,$tgl2)
+    {
+        $model = new Scheduleheader();
+        // data select2 for USER_ID where CRM and STATUS 10(active)
+        $connection = \Yii::$app->db_esm;
+        $querycariuser = 'SELECT * FROM dbm001.user  where id  NOT IN (SELECT DISTINCT(USER_ID) from dbc002.c0002scdl_detail WHERE TGL="'.$tgl1.'") AND POSITION_SITE = "CRM" AND STATUS = 10';
+        $user = $connection->createCommand($querycariuser)->queryAll();
+        $datauser = ArrayHelper::map($user, 'id', 'username');
+
+        // data select2 for SCDL_GROUP
+        $connection = \Yii::$app->db_esm;
+        $model1 = $connection->createCommand('SELECT * from c0007 where ID NOT IN (SELECT DISTINCT(SCDL_GROUP) FROM c0002scdl_detail  WHERE TGL="'.$tgl1.'")');
+        $query = $model1->queryAll();
+        $datagroup = ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
+
+        //componen user option
+        $profile=Yii::$app->getUserOpt->Profile_user();
+        $usercreate = $profile->username;
+        //proses save
+        if ($model->load(Yii::$app->request->post())) {
+
+          $model->TGL1 = $tgl1;
+          $model->TGL2 = $tgl2;
+          $model->CREATE_BY = $usercreate;
+          $model->CREATE_AT = date("Y-m-d H:i:s");
+           if($model->save())
+           {
+             // foreach date :author wawan
+               for ($date = strtotime($tgl1); $date < strtotime($tgl2); $date = strtotime("+1 day", $date)) {
+                         $tgl =  date("Y-m-d", $date);
+                         //batch insert customers author :wawan
+                         $Customers = Customers::find()->where(['SCDL_GROUP'=>$model->SCDL_GROUP])->asArray()->all();
+                         foreach ($Customers as $key => $value) {
+                           # code...
+                           $connection = Yii::$app->db_esm;
+                           $connection->createCommand()->batchInsert('c0002scdl_detail',['TGL','CUST_ID','SCDL_GROUP','USER_ID'],[[$tgl,$value['CUST_KD'],$model->SCDL_GROUP,$model->USER_ID]])->execute();
+                         }
+                   }
+           }
+            return true;
+
+        } else {
+            return $this->renderAjax('_formschedule', [
+                'model' => $model,
+                'datagroup'=>$datagroup,
+                'datauser'=>$datauser
+            ]);
+        }
+    }
+
+
     /**
      * Creates a new User Login.
      * If creation is successful, the browser will be redirected to the 'index' page.
@@ -232,79 +289,58 @@ class ScheduleHeaderController extends Controller
            Yii::$app->end();
        }
 
-  //   public function getDatesFromRange($start, $end) {
-  //          $interval = new DateInterval('P1D');
-  //          $realEnd = new DateTime($end);
-  //          $realEnd->add($interval);
-  //          $period = new DatePeriod(
-  //          new DateTime($start),
-  //          $interval,
-  //          $realEnd
-  //      );
-  //    foreach($period as $date) {
-  //      $array[] = $date->format('Y-m-d');
-  //    }
-  //      return $array;
-  //  }
+  /**
+    * Creates a new schedule header and schedule detail.
+    * If creation is successful, bacth insert to schedule detail.
+    * not in use again save ajax ver 1.0 author : wawan
+  */
 
-//   public function datediffInWeeks($date1, $date2)
-// {
-//     if($date1 > $date2) return datediffInWeeks($date2, $date1);
-//     $first = DateTime::createFromFormat('m/d/Y', $date1);
-//     $second = DateTime::createFromFormat('m/d/Y', $date2);
-//     return floor($first->diff($second)->days/7);
-// }
+	//  public function actionJsoncalendar_add(){
+   //
+	// 	if (Yii::$app->request->isAjax) {
+	// 		$request= Yii::$app->request;
+	// 		$model =  new Scheduleheader();
+  //     $profile=Yii::$app->getUserOpt->Profile_user();
+  //     $usercreate = $profile->username;
+	// 		$end=$request->post('tgl2');
+  //     $start=$request->post('tgl1');
+	// 		$scdl_group=$request->post('scdl_group');
+  //     $user_id = $request->post('user_id');
+  //     $note = $request->post('note');
+	// 		$model->TGL1 = $start;
+  //     $model->TGL2 = $end;
+  //     $model->CREATE_BY = $usercreate;
+  //     $model->CREATE_AT = date("Y-m-d H:i:s");
+  //     $model->NOTE = $note;
+  //     $model->SCDL_GROUP = $scdl_group;
+	// 		$model->USER_ID = $user_id;
+  //     $carisdl = Scheduleheader::find()->where(['TGL1'=>$model->TGL1,'SCDL_GROUP'=>$scdl_group])->one();
 
-// save using ajax: author wawan
-
-	 public function actionJsoncalendar_add(){
-
-		if (Yii::$app->request->isAjax) {
-			$request= Yii::$app->request;
-			$model =  new Scheduleheader();
-      $profile=Yii::$app->getUserOpt->Profile_user();
-      $usercreate = $profile->username;
-			$end=$request->post('tgl2');
-      $start=$request->post('tgl1');
-			$scdl_group=$request->post('scdl_group');
-      $user_id = $request->post('user_id');
-      $note = $request->post('note');
-			$model->TGL1 = $start;
-      $model->TGL2 = $end;
-      $model->CREATE_BY = $usercreate;
-      $model->CREATE_AT = date("Y-m-d H:i:s");
-      $model->NOTE = $note;
-      $model->SCDL_GROUP = $scdl_group;
-			$model->USER_ID = $user_id;
-      $carisdl = Scheduleheader::find()->where(['TGL1'=>$model->TGL1,'SCDL_GROUP'=>$scdl_group])->one();
-
-      // print_r($carisdl);
-      // die();
       // if exist data customers
-      if($carisdl)
-      {
-        echo 2;
-      }
-      else{
-
-			if($model->save())
-      {
-
-        // foreach date :author wawan
-          for ($date = strtotime($start); $date < strtotime($end); $date = strtotime("+1 day", $date)) {
-                    $tgl =  date("Y-m-d", $date);
-                    $Customers = Customers::find()->where(['SCDL_GROUP'=>$scdl_group])->asArray()->all();
-                    foreach ($Customers as $key => $value) {
-                      # code...
-                      $connection = Yii::$app->db_esm;
-                      $connection->createCommand()->batchInsert('c0002scdl_detail',['TGL','CUST_ID','SCDL_GROUP','USER_ID'],[[$tgl,$value['CUST_KD'],$scdl_group,$user_id]])->execute();
-                    }
-              }
-        }
-    }
-
-		}
-		return true;
-
-	 }
+  //     if($carisdl)
+  //     {
+  //       echo 2;
+  //     }
+  //     else{
+   //
+	// 		if($model->save())
+  //     {
+   //
+  //       // foreach date :author wawan
+  //         for ($date = strtotime($start); $date < strtotime($end); $date = strtotime("+1 day", $date)) {
+  //                   $tgl =  date("Y-m-d", $date);
+  //                   $Customers = Customers::find()->where(['SCDL_GROUP'=>$scdl_group])->asArray()->all();
+  //                   foreach ($Customers as $key => $value) {
+  //                     # code...
+  //                     $connection = Yii::$app->db_esm;
+  //                     $connection->createCommand()->batchInsert('c0002scdl_detail',['TGL','CUST_ID','SCDL_GROUP','USER_ID'],[[$tgl,$value['CUST_KD'],$scdl_group,$user_id]])->execute();
+  //                   }
+  //             }
+  //       }
+  //   }
+   //
+	// 	}
+	// 	return true;
+   //
+	//  }
 }
