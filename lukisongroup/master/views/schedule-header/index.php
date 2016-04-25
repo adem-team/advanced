@@ -30,7 +30,12 @@ function(start, end) {
 	// var tgl2 = moment(dateTime2).format("DD/MM/yyyy hh:mm");
 	$('#tglakhir').val(tgl2);
 	$('#tglawal').val(tgl1);
-    $('#confirm-permission-alert').modal();
+    // $('#confirm-permission-alert').modal();
+		$.get('/master/schedule-header/create-group',{'tgl1':tgl1,'tgl2':tgl2},function(data){
+						$('#modal').modal('show')
+						.find('#modalContent')
+						.html(data);
+		});
 }
 EOF;
 $JSDropEvent = <<<EOF
@@ -46,13 +51,25 @@ $JSEventClick = <<<EOF
 function(calEvent, jsEvent, view) {
   $('#tglakhir').val(tgl2);
   $('#tglawal').val(tgl1);
-$('#confirm-permission-alert').modal();
+// $('#confirm-permission-alert').modal();
 
 }
 EOF;
 
+
+Modal::begin([
+	'headerOptions' => ['id' => 'modalHeader'],
+	'id' => 'modal',
+	'size' => 'modal-sm',
+	//keeps from closing modal with esc key or by clicking out of the modal.
+	// user must click cancel or X to close
+	// 'clientOptions' => ['backdrop' => 'static', 'keyboard' => FALSE]
+]);
+echo "<div id='modalContent'></div>";
+Modal::end();
+
 	/*
-	 * GRIDVIEW USER LIST CRM : author wawan
+	 * GRIDVIEW USER LIST  : author wawan
      */
 	$gvUser=GridView::widget([
 		'id'=>'gv-user-list-id',
@@ -97,7 +114,7 @@ EOF;
 				]
 			],
 			[  	//col-1
-				//CUSTOMER GRAOUP NAME
+				//username
 				'attribute' => 'username',
 				'label'=>'User',
 				'hAlign'=>'left',

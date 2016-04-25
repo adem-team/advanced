@@ -111,6 +111,28 @@ class ImportDataController extends Controller
             }
     }
 
+    public function actionImportExcelCustomers()
+    {
+        $inputfile;
+        try{
+            $inputFileType = \PHPExcel_IOFactory::identify($inputfile);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $objphpexcel = $objReader->load($inputfile);
+
+        }catch(exception $e)
+        {
+          die('error');
+        }
+        $sheet = $objphpexcel->getSheet(0);
+        $hightrow = $sheet->getHighestRow();
+        $hightColumn = $sheet->getHighestColumn();
+        for($row = 1; $row <= $hightrow;$row++ )
+        {
+            $rowData = $sheet->rangeToArray('A'.$row.':'.$hightColumn.$row,NULL,TRUE,FALSE);
+
+        }
+    }
+
 	 /**
      * IMPORT DATA EXCEL
      * @return mixed
