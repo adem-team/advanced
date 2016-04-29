@@ -25,7 +25,9 @@ function(start, end) {
 	// var tgl1 = moment(dateTime1).format("YYYY-MM-DD HH:mm:ss");
 	// var tgl2 = moment(dateTime2).format("YYYY-MM-DD HH:mm:ss");
 	var tgl1 = moment(dateTime1).format("YYYY-MM-DD");
-	var tgl2 = moment(dateTime2).format("YYYY-MM-DD");
+	var tgl2 = moment(dateTime2).subtract(1, "days").format("YYYY-MM-DD");
+
+
 	// var tgl1 = moment(dateTime1).format("DD/MM/yyyy hh:mm");
 	// var tgl2 = moment(dateTime2).format("DD/MM/yyyy hh:mm");
 	$('#tglakhir').val(tgl2);

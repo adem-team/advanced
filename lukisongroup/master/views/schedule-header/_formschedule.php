@@ -45,37 +45,3 @@ use kartik\widgets\Select2;
     <?php ActiveForm::end(); ?>
 
 </div>
-<?php
-$this->registerJs("
-
-   $('form#{$model->formName()}').on('beforeSubmit',function(e)
-    {
-        var \$form = $(this);
-        $.post(
-            \$form.attr('action'),
-            \$form.serialize()
-
-        )
-
-            .done(function(result){
-			        if(result == 1 )
-                                          {
-
-                                            $(document).find('#modal').modal('hide');
-                  												 $('form#Scheduleheader').trigger('reset');
-                                          }
-                                        else{
-                                           console.log(result)
-                                        }
-
-            });
-
-return false;
-
-
-});
-
-
- ",$this::POS_READY);
-
- ?>
