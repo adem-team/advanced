@@ -11,7 +11,7 @@ use lukisongroup\sistem\models\Userlogin;
 
 
 ?>
-<!-- <!DOCTYPE html> -->
+
 <?php
 $this->sideCorp = 'PT.Effembi Sukses Makmur';                          /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 // $this->sideMenu = 'esm_customers';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -29,8 +29,6 @@ function(start, end) {
 	// var tgl2 = moment(dateTime2).format("YYYY-MM-DD HH:mm:ss");
 	var tgl1 = moment(dateTime1).format("YYYY-MM-DD");
 	var tgl2 = moment(dateTime2).format("YYYY-MM-DD");
-	// var tgl1 = moment(dateTime1).format("DD/MM/yyyy hh:mm");
-	// var tgl2 = moment(dateTime2).format("DD/MM/yyyy hh:mm");
 	$('#tglakhir').val(tgl2);
 	$('#tglawal').val(tgl1);
 		$.get('/salesman/schedule-header-crm/create-group',{'tgl1':tgl1,'tgl2':tgl2},function(data){
@@ -53,12 +51,6 @@ function(date) {
 EOF;
 $JSEventClick = <<<EOF
 function(calEvent, jsEvent, view) {
-  $('#tglakhir').val(tgl2);
-  $('#tglawal').val(tgl1);
-  $('#confirm-permission-alert').modal();
-
-
-// $('#confirm-permission-alert').modal();
 
 }
 EOF;
@@ -464,16 +456,15 @@ Modal::end();
 	  ],
 	   'events'=> $events,
 	  'ajaxEvents' => Url::to(['/salesman/schedule-header-crm/jsoncalendar']),
-	  'clientOptions' => [
-			'selectable' => true,
-			'selectHelper' => true,
-			'droppable' => true,
-			'editable' => true,
-			// 'drop' => new JsExpression($JSDropEvent),
-			'selectHelper'=>true,
-			'select' => new JsExpression($JSCode),
-			'eventClick' => new JsExpression($JSEventClick),
-			//'defaultDate' => date('Y-m-d')
+    'clientOptions' => [
+      'selectable' => true,
+      'selectHelper' => true,
+      'droppable' => true,
+      'editable' => true,
+      // 'drop' => new JsExpression($JSDropEvent),
+      'selectHelper'=>true,
+      'select' => new JsExpression($JSCode),
+      'eventClick' => new JsExpression($JSEventClick),
 		],
 		//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
 

@@ -27,6 +27,8 @@ class Purchaseorder extends \yii\db\ActiveRecord
      * @inheritdoc
      */
 
+     public $CREATE_AT1;
+     public $CREATE_AT2;
     public static function tableName()
     {
         return 'p0001';
@@ -113,6 +115,16 @@ class Purchaseorder extends \yii\db\ActiveRecord
         return $this->corp->CORP_NM;
     }
 
+public function getNmcorphistory()
+    {
+          return $this->corp->CORP_NM;
+    }
+
+public function getNmcorpoutbox()
+    {
+         return $this->corp->CORP_NM;
+    }
+
 	/*
 	 * Same above
 	 * @author ptrnov <piter@lukison>
@@ -160,6 +172,7 @@ class Purchaseorder extends \yii\db\ActiveRecord
             return $this->approve->EMP_NM.' '.$this->approve->EMP_NM_BLK;
         }
     }
+
 
     public function rules()
     {

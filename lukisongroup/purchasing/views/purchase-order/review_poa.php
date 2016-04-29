@@ -878,6 +878,7 @@ $y=4;
 			</div>
 		</div>
 	</div>
+
 	<!-- PO Term Of Payment !-->
 	<div  class="row">
 		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">

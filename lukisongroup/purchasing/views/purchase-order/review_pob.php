@@ -191,6 +191,7 @@ $y=4;
 			return $content;
 	}
 
+
 	/*
 	 * LINK PO Note TOP
 	 * @author ptrnov  <piter@lukison.com>
@@ -214,9 +215,6 @@ $y=4;
 ?>
 
  <?php
-
-
-
 		/*
 	 * COLUMN GRID VIEW Items
 	 * @author ptrnov  <piter@lukison.com>
@@ -883,6 +881,7 @@ $y=4;
 			</div>
 		</div>
 	</div>
+
 	<!-- PO Term Of Payment !-->
 	<div  class="row">
 		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
@@ -1134,6 +1133,8 @@ $y=4;
 		]);
 	Modal::end();
 
+
+
 	/*
 	 * JS AUTH3 | APPROVED
 	 * @author ptrnov <piter@lukison.com>
@@ -1159,6 +1160,37 @@ $y=4;
 			'id' => 'po-auth3-sign',
 			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
 			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+
+	/*
+	 * JS ATTACH FILE |
+	 * @author wawan
+	 * @since 1.0
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#po-attach-review').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+	",$this::POS_READY);
+
+	Modal::begin([
+			'id' => 'po-attach-review',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Attach file</b></h4></div>',
+			// 'size' => Modal::SIZE_SMALL,
 			'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
 			]

@@ -15,11 +15,13 @@ use yii\helpers\ArrayHelper;
 use kartik\mpdf\Pdf;
 use yii\helpers\Url;
 use zyx\phpmailer\Mailer;
+use yii\web\UploadedFile;
 
 /* namespace models */
 use lukisongroup\purchasing\models\pr\Purchaseorder;
 use lukisongroup\purchasing\models\pr\PurchaseorderSearch;
 use lukisongroup\purchasing\models\pr\Purchasedetail;
+use lukisongroup\purchasing\models\pr\FilePo;
 
 use lukisongroup\purchasing\models\pr\DiscountValidation;
 use lukisongroup\purchasing\models\pr\PajakValidation;
@@ -410,6 +412,50 @@ class PurchaseOrderController extends Controller
       return $this->redirect('index');
     }
     }
+
+    /* convert base 64 author:wawan since 1.0 */
+    public function saveimage($base64)
+    {
+      $base64 = str_replace('data:image/jpg;base64,', '', $base64);
+      $base64 = base64_encode($base64);
+      $base64 = str_replace(' ', '+', $base64);
+
+      return $base64;
+
+    }
+
+    /* render ajax file for upload po*/
+    public function actionPoAttachFile($kdpo)
+    {
+          return $this->renderAjax('attach_po_file', [
+              'model' => $model,
+              'kdpo'=>$kdpo
+          ]);
+    }
+
+
+/* upload ajax using dropzone js author : wawan */
+    public function actionUpload($kdpo)
+{
+    $fileName = 'file';
+    $model = new FilePo();
+
+    if (isset($_FILES[$fileName])) {
+        $file = \yii\web\UploadedFile::getInstanceByName($fileName);
+
+        $data = $this->saveimage(file_get_contents( $file->tempName));
+           $model->KD_PO = $kdpo;
+           $model->IMG_BASE64 = $data;
+        if ($model->save()) {
+            //Now save file data to database
+
+            echo \yii\helpers\Json::encode($file);
+        }
+    }
+
+    return false;
+}
+
 
 	/*
 	 * View PO
@@ -1412,7 +1458,7 @@ class PurchaseOrderController extends Controller
 				if ($auth2Mdl->auth2_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth2Model']['kdpo'];
-          $this->Sendmail2($kdpo);//call function email
+					$this->Sendmail2($kdpo);//call function email
 					return $this->redirect(['review', 'kdpo'=>$kdpo]);
 				}
 			}

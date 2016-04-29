@@ -16,6 +16,7 @@ use lukisongroup\purchasing\models\ro\Rodetail;
 use lukisongroup\purchasing\models\ro\RodetailSearch;
 use lukisongroup\purchasing\models\pr\Costcenter;
 use lukisongroup\master\models\Unitbarang;
+use lukisongroup\purchasing\models\pr\FilePo;
 
 /*
  * =========== KEY SEARCH ================
@@ -69,6 +70,26 @@ function getPermission(){
 		$content = Html::a($title,$url, $options);
 		return $content;
 	}
+
+	/*
+   * LINK POC Attach File
+   * @author : wawan
+     * @since 1.0
+  */
+  function PoAttach_file_poc($poHeader){
+      $title = Yii::t('app','');
+      $options = [ 'id'=>'poc-attach-id',
+              'data-toggle'=>"modal",
+              'data-target'=>"#po-attach-buat-poc",
+              'class'=>'btn btn-info btn-xs',
+              'title'=>'PO Attach File'
+      ];
+      $icon = '<span class="fa fa-plus fa-lg"></span>';
+      $label = $icon . ' ' . $title;
+      $url = Url::toRoute(['/purchasing/purchase-order/po-attach-file','kdpo'=>$poHeader->KD_PO]);
+      $content = Html::a($label,$url, $options);
+      return $content;
+  }
 
 	/*
 	 * LINK ETA
@@ -281,12 +302,6 @@ function getPermission(){
 	 * @since 1.2
 	*/
 	function tombolReject($url, $model) {
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Reject');
 				$options = [ 'id'=>'reject',
 							 'data-pjax'=>true,
@@ -1139,6 +1154,38 @@ function getPermission(){
 		//echo '...';
 	Modal::end();
 
+
+  /*
+   * JS ATTACH FILE |
+   * @author wawan
+   * @since 1.0
+  */
+  $this->registerJs("
+      $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+      $('#po-attach-buat-poc').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        var modal = $(this)
+        var title = button.data('title')
+        var href = button.attr('href')
+        modal.find('.modal-title').html(title)
+        modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+        $.post(href)
+          .done(function( data ) {
+            modal.find('.modal-body').html(data)
+          });
+        }),
+  ",$this::POS_READY);
+
+  Modal::begin([
+      'id' => 'po-attach-buat-poc',
+      'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Attach file</b></h4></div>',
+      'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+      ]
+    ]);
+  Modal::end();
+
+
 	/*
 	 * MODAL View Sales ORDER
 	 * @author wawan
@@ -1584,6 +1631,50 @@ function getPermission(){
 			</div>
 		</div>
 	</div>
+</div>
+
+<!-- attach file_po  !-->
+<div  class="row">
+  <div  class="col-md-3" style="font-family: tahoma ;font-size: 9pt;">
+  </div>
+	<div  class="col-md-9" style="font-family: tahoma ;font-size: 9pt;">
+		<dt><b>Attach File :</b></dt>
+		<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
+		<div>
+			<div style="float:right;text-align:right;">
+				<?php echo PoAttach_file_poc($poHeader); ?>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- // attachment file on view -->
+<?php
+$items = [];
+$po_file = FilePo::find()->where(['KD_PO'=>$poHeader->KD_PO])->asArray()->all();
+
+foreach ($po_file as $key => $value) {
+  # code...
+  $items[] = [
+                'src'=>'data:image/jpeg;base64,'.$value['IMG_BASE64'],
+				        'imageOptions'=>['width'=>"150px"] //setting image display
+		];
+}
+
+
+?>
+<div class="row">
+<div class="col-sm-3">
+
+</div>
+<div class="col-sm-9">
+<?php
+
+/* 2 amigos two galerry author mix:wawan and ptr.nov ver 1.0*/
+	echo dosamigos\gallery\Gallery::widget([
+				'items' =>  $items]);
+?>
+</div>
 </div>
 
 

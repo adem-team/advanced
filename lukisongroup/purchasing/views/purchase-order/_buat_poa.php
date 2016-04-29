@@ -1,5 +1,5 @@
 <?php
-
+/* extensions*/
 use yii\helpers\Html;
 use yii\bootstrap\Modal;
 use yii\widgets\ActiveForm;
@@ -11,8 +11,10 @@ use kartik\grid\GridView;
 use kartik\tabs\TabsX;
 use kartik\money\MaskMoney;
 
+/* namespace models*/
 use lukisongroup\purchasing\models\ro\Requestorder;
 use lukisongroup\purchasing\models\pr\Costcenter;
+use lukisongroup\purchasing\models\pr\FilePo;
 use lukisongroup\purchasing\models\ro\Rodetail;
 use lukisongroup\purchasing\models\ro\RodetailSearch;
 use lukisongroup\master\models\Unitbarang;
@@ -49,6 +51,7 @@ use lukisongroup\master\models\Unitbarang;
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.2
 	*/
+
 	function link_etd($poHeader){
 		$ttlEtd=$poHeader->ETD!=0? $poHeader->ETD:'---- -- --';
 		$title = Yii::t('app',$ttlEtd);
@@ -82,6 +85,26 @@ use lukisongroup\master\models\Unitbarang;
 		$content = Html::a($title,$url, $options);
 		return $content;
 	}
+
+  /*
+   * LINK PO Attach File
+   * @author : wawan
+     * @since 1.0
+  */
+  function PoAttach_file($poHeader){
+      $title = Yii::t('app','');
+      $options = [ 'id'=>'po-attach-id',
+              'data-toggle'=>"modal",
+              'data-target'=>"#po-attach-review",
+              'class'=>'btn btn-info btn-xs',
+              'title'=>'PO Attach File'
+      ];
+      $icon = '<span class="fa fa-plus fa-lg"></span>';
+      $label = $icon . ' ' . $title;
+      $url = Url::toRoute(['/purchasing/purchase-order/po-attach-file','kdpo'=>$poHeader->KD_PO]);
+      $content = Html::a($label,$url, $options);
+      return $content;
+  }
 
 	/*
 	 * LINK BUTTON SELECT SUPPLIER
@@ -267,7 +290,6 @@ use lukisongroup\master\models\Unitbarang;
 						  'data-toggle'=>"modal",
 						  'data-target'=>"#po-notetop",
 						  'class'=>'btn btn-info btn-xs',
-						  //'style'=>['width'=>'150px'],
 						  'title'=>'PO Note'
 			];
 			$icon = '<span class="fa fa-plus fa-lg"></span>';
@@ -285,12 +307,6 @@ use lukisongroup\master\models\Unitbarang;
 	 * @since 1.2
 	*/
 	function tombolApproval($url, $model){
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Approved');
 				$options = [ 'id'=>'approved',
 							 'data-pjax' => true,
@@ -299,8 +315,6 @@ use lukisongroup\master\models\Unitbarang;
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';
 				$label = $icon . ' ' . $title;
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
 	}
 	/*
 	 * Tombol Reject Item
@@ -310,12 +324,6 @@ use lukisongroup\master\models\Unitbarang;
 	 * @since 1.2
 	*/
 	function tombolReject($url, $model) {
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Reject');
 				$options = [ 'id'=>'reject',
 							 'data-pjax'=>true,
@@ -325,8 +333,6 @@ use lukisongroup\master\models\Unitbarang;
 				$label = $icon . ' ' . $title;
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
 	}
 	/*
 	 * Tombol Reject Item
@@ -336,12 +342,6 @@ use lukisongroup\master\models\Unitbarang;
 	 * @since 1.2
 	*/
 	function tombolDelete($url, $model) {
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Delete');
 				$options = [ 'id'=>'delete',
 							 'data-pjax'=>true,
@@ -351,8 +351,6 @@ use lukisongroup\master\models\Unitbarang;
 				$label = $icon . ' ' . $title;
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
 	}
 	/*
 	 * Tombol Cancel Item
@@ -362,12 +360,6 @@ use lukisongroup\master\models\Unitbarang;
 	 * @since 1.2
 	*/
 	function tombolCancel($url, $model){
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Cancel');
 				$options = [ 'id'=>'cancel',
 							 'data-pjax'=>true,
@@ -376,8 +368,6 @@ use lukisongroup\master\models\Unitbarang;
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';
 				$label = $icon . ' ' . $title;
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
 	}
 
 	/*
@@ -475,19 +465,6 @@ use lukisongroup\master\models\Unitbarang;
 									return tombolDelete($url, $model);
 								}
 							},
-
-				'closed' => function ($url, $model) use ($poHeader){
-								/*Check Status Checked on Requestorderstatus TYPE=102*/
-								/* $checkedMdl=Requestorderstatus::find()->where([
-									'KD_RO'=>$model->KD_RO,
-									'TYPE'=>102,
-									'ID_USER'=>getPermissionEmp()->EMP_ID,
-								])->one();
-								if ($headerStatus==103 or $checkedMdl<>''  ) {
-									//return Html::label('<i class="glyphicon glyphicon-lock dm"></i> LOCKED','',['class'=>'label label-danger','style'=>['align'=>'center']]);
-									return  tombolKonci($url, $model);
-								} */
-							},
 			],
 			'headerOptions'=>[
 				'style'=>[
@@ -570,22 +547,7 @@ use lukisongroup\master\models\Unitbarang;
 				]
 			]
 		],
-		/* [
-			'attribute'=>'KD_PO',
-			'hidden'=>true,
-			'group'=>false,
-			'groupFooter'=>function ($model, $key, $index, $widget) {
-				$subttl=[
-					 'mergeColumns'=>[[1,5]],
-					  'content'=>[             // content to show in each summary cell
-                        1=>'Summary',
-                        6=>GridView::F_SUM,
-                    ],
-				 ];
-				return $subttl;
-			},
 
-		], */
 		[	//COL-3
 			/* Attribute Request KD_COSTCENTER */
 			'class'=>'kartik\grid\EditableColumn',
@@ -831,7 +793,6 @@ use lukisongroup\master\models\Unitbarang;
 			'vAlign'=>'middle',
 			'hAlign'=>'right',
 			'headerOptions'=>[
-				//'class'=>'kartik-sheet-style'
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'100px',
@@ -952,9 +913,6 @@ use lukisongroup\master\models\Unitbarang;
 						'width'=>'100px',
 						'font-family'=>'tahoma',
 						'font-size'=>'8pt',
-						//'text-decoration'=>'underline',
-						//'font-weight'=>'bold',
-						//'border-left-color'=>'transparant',
 						'border-left'=>'0px',
 				]
 			],
@@ -996,179 +954,6 @@ use lukisongroup\master\models\Unitbarang;
 		'export' => false,
 	]);
 
-
-	/*
-	 * GRID VIEW CREATE PO -> BY REQUEST ORDER
-	 * @author ptrnov  <piter@lukison.com>
-     * @since 1.1
-     */
-	// $gvROSendPO=GridView::widget([
-	// 	'id'=>'gv-ro-detail',
-	// 	'dataProvider' => $dataProviderRo,
-	// 	'filterModel' => $searchModel,
-	// 	'columns' => [
-	// 		[/* Attribute KD RO */
-	// 			'attribute'=>'KD_RO',
-	// 			'label'=>'Kode RO',
-	// 			'hAlign'=>'left',
-	// 			'vAlign'=>'middle',
-	// 			//'mergeHeader'=>true,
-	// 			'format' => 'raw',
-	// 			'headerOptions'=>[
-	// 				//'class'=>'kartik-sheet-style'
-	// 				'style'=>[
-	// 					'text-align'=>'center',
-	// 					'width'=>'150px',
-	// 					'font-family'=>'tahoma',
-	// 					'font-size'=>'8pt',
-	// 					'background-color'=>'rgba(0, 95, 218, 0.3)',
-	// 				]
-	// 			],
-	// 			'contentOptions'=>[
-	// 				'style'=>[
-	// 					'width'=>'150px',
-	// 					'font-family'=>'tahoma',
-	// 					'font-size'=>'8pt',
-	// 				]
-	// 			],
-	// 			'pageSummaryOptions' => [
-	// 				'style'=>[
-	// 						'border-left'=>'0px',
-	// 						'border-right'=>'0px',
-	// 				]
-	// 			]
-	// 		],
-	// 		[
-	// 			'class'=>'kartik\grid\ActionColumn',
-	// 			'dropdown' => true,
-	// 			'template' => '{view}{sendPo}',
-	// 			'dropdownOptions'=>['class'=>'pull-right dropup'],
-	// 			//'headerOptions'=>['class'=>'kartik-sheet-style'],
-	// 			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
-	// 			'buttons' => [
-	// 				// View RO | Permissian All
-	// 				'view' => function ($url, $model) {
-	// 								return tombolView($url, $model);
-	// 						  },
-	//
-	// 				// SEND RO TO PO | Permissian Status 0; 0=process | User created = user login
-	// 				'sendPo' => function ($url, $model) use ($poHeader) {
-	// 								return tombolSendPo($url, $model,$poHeader);
-	// 							},
-	// 			],
-	// 		],
-	// 	],
-	// 	'pjax'=>true,
-	// 	'pjaxSettings'=>[
-	// 	 'options'=>[
-	// 		'enablePushState'=>false,
-	// 		'id'=>'gv-ro-detail',
-	// 	   ],
-	// 		'refreshGrid' => true,
-	// 		'neverTimeout'=>true,
-	// 	],
-	// 	'panel' => [
-	// 		//'footer'=>false,
-	// 		'heading'=>false,
-	// 	],
-	// 	/* 'toolbar'=> [
-	// 		//'{items}',
-	// 	],  */
-	// 	'hover'=>true, //cursor select
-	// 	'responsive'=>true,
-	// 	'responsiveWrap'=>true,
-	// 	'bordered'=>true,
-	// 	'striped'=>'4px',
-	// 	'autoXlFormat'=>true,
-	// 	'export' => false,
-	// ]);
-
-
-	/*
-	 * GRID VIEW CREATE PO -> BY Sales ORDER
-	 * @author ptrnov  <piter@lukison.com>
-     * @since 1.1
-     */
-	// $gvSOSendPO=GridView::widget([
-	// 	'id'=>'gv-ro-detail',
-	// 	'dataProvider' => $dataProviderSo,
-	// 	'filterModel' => $searchModel,
-	// 	'columns' => [
-	// 		[/* Attribute KD RO */
-	// 			'attribute'=>'KD_RO',
-	// 			'label'=>'Kode RO',
-	// 			'hAlign'=>'left',
-	// 			'vAlign'=>'middle',
-	// 			//'mergeHeader'=>true,
-	// 			'format' => 'raw',
-	// 			'headerOptions'=>[
-	// 				//'class'=>'kartik-sheet-style'
-	// 				'style'=>[
-	// 					'text-align'=>'center',
-	// 					'width'=>'150px',
-	// 					'font-family'=>'tahoma',
-	// 					'font-size'=>'8pt',
-	// 					'background-color'=>'rgba(0, 95, 218, 0.3)',
-	// 				]
-	// 			],
-	// 			'contentOptions'=>[
-	// 				'style'=>[
-	// 					'width'=>'150px',
-	// 					'font-family'=>'tahoma',
-	// 					'font-size'=>'8pt',
-	// 				]
-	// 			],
-	// 			'pageSummaryOptions' => [
-	// 				'style'=>[
-	// 						'border-left'=>'0px',
-	// 						'border-right'=>'0px',
-	// 				]
-	// 			]
-	// 		],
-	// 		[
-	// 			'class'=>'kartik\grid\ActionColumn',
-	// 			'dropdown' => true,
-	// 			'template' => '{view}{sendPo}',
-	// 			'dropdownOptions'=>['class'=>'pull-right dropup'],
-	// 			//'headerOptions'=>['class'=>'kartik-sheet-style'],
-	// 			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
-	// 			'buttons' => [
-	// 				// View RO | Permissian All
-	// 				'view' => function ($url, $model) {
-	// 								return tombolView($url, $model);
-	// 						  },
-	//
-	// 				// SEND RO TO PO | Permissian Status 0; 0=process | User created = user login
-	// 				'sendPo' => function ($url, $model) use ($poHeader) {
-	// 								return tombolSendPo($url, $model,$poHeader);
-	// 							},
-	// 			],
-	// 		],
-	// 	],
-	// 	'pjax'=>true,
-	// 	'pjaxSettings'=>[
-	// 	 'options'=>[
-	// 		'enablePushState'=>false,
-	// 		'id'=>'gv-ro-detail',
-	// 	   ],
-	// 		'refreshGrid' => true,
-	// 		'neverTimeout'=>true,
-	// 	],
-	// 	'panel' => [
-	// 		//'footer'=>false,
-	// 		'heading'=>false,
-	// 	],
-	// 	/* 'toolbar'=> [
-	// 		//'{items}',
-	// 	],  */
-	// 	'hover'=>true, //cursor select
-	// 	'responsive'=>true,
-	// 	'responsiveWrap'=>true,
-	// 	'bordered'=>true,
-	// 	'striped'=>'4px',
-	// 	'autoXlFormat'=>true,
-	// 	'export' => false,
-	// ]);
 
 
 
@@ -1578,10 +1363,6 @@ use lukisongroup\master\models\Unitbarang;
 							</th>
 							<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 								<?php
-									// $ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :SignApproved($poHeader);
-									//if ($poHeader->STATUS==101 OR $poHeader->STATUS==10){
-										// echo $ttd3;
-									//}
 									if(getPermission())
 									{
 										if(getPermission()->BTN_SIGN3 == 0)
@@ -1659,6 +1440,41 @@ use lukisongroup\master\models\Unitbarang;
 	</div>
 </div>
 
+<!-- attach file_po  !-->
+<div  class="row">
+	<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
+		<dt><b>Attach File :</b></dt>
+		<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
+		<div>
+			<div style="float:right;text-align:right;">
+				<?php echo PoAttach_file($poHeader); ?>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- // attachment file on view -->
+<?php
+$items = [];
+$po_file = FilePo::find()->where(['KD_PO'=>$poHeader->KD_PO])->asArray()->all();
+
+foreach ($po_file as $key => $value) {
+  # code...
+  $items[] = [
+                'src'=>'data:image/jpeg;base64,'.$value['IMG_BASE64'],
+				        'imageOptions'=>['width'=>"150px"] //setting image display
+		];
+}
+
+
+?>
+<?php
+
+/* 2 amigos two galerry author mix:wawan and ptr.nov ver 1.0*/
+	echo dosamigos\gallery\Gallery::widget([
+				'items' =>  $items]);
+?>
+
 
 
 <?php
@@ -1700,6 +1516,38 @@ use lukisongroup\master\models\Unitbarang;
 		}); */
 
 	",$this::POS_READY);
+
+  /*
+   * JS ATTACH FILE |
+   * @author wawan
+   * @since 1.0
+  */
+  $this->registerJs("
+      $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+      $('#po-attach-review').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        var modal = $(this)
+        var title = button.data('title')
+        var href = button.attr('href')
+        modal.find('.modal-title').html(title)
+        modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+        $.post(href)
+          .done(function( data ) {
+            modal.find('.modal-body').html(data)
+          });
+        }),
+  ",$this::POS_READY);
+
+  Modal::begin([
+      'id' => 'po-attach-review',
+      'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Attach file</b></h4></div>',
+      // 'size' => Modal::SIZE_SMALL,
+      'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+      ]
+    ]);
+  Modal::end();
+
 
 	/*
 	 * JS MODAL Discount

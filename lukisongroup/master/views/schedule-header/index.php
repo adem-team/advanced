@@ -9,11 +9,11 @@ use kartik\widgets\Select2;
 use yii\widgets\ActiveForm;
 use lukisongroup\sistem\models\Userlogin;
 
-
 $this->sideCorp = 'PT.Effembi Sukses Makmur';                          /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_customers';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'ESM - Produk');          /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;                     /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+
 
 
 $JSCode = <<<EOF
@@ -49,8 +49,6 @@ function(date) {
 EOF;
 $JSEventClick = <<<EOF
 function(calEvent, jsEvent, view) {
-  $('#tglakhir').val(tgl2);
-  $('#tglawal').val(tgl1);
 // $('#confirm-permission-alert').modal();
 
 }
