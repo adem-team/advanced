@@ -45,39 +45,3 @@ use kartik\widgets\Select2;
     <?php ActiveForm::end(); ?>
 
 </div>
-
-<?php
-
-$this->registerJs("
-
-   $('form#{$model->formName()}').on('beforeSubmit',function(e)
-    {
-        var \$form = $(this);
-        $.post(
-            \$form.attr('action'),
-            \$form.serialize()
-
-        )
-
-            .done(function(result){
-			        if(result == 1 )
-                                          {
-
-                                            $(document).find('#modal').modal('hide');
-                  													// $.pjax.reload({container:'#gv-schedule-id'});
-                  												 $('form#Scheduleheader').trigger('reset');
-                  												//  $.pjax.reload({container:'#calendar'});
-                                          }
-                                        else{
-                                           console.log(result)
-                                        }
-
-            });
-
-return false;
-
-
-});
-
-
- ",$this::POS_READY);

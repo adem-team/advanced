@@ -160,7 +160,7 @@ class ScheduleHeaderController extends Controller
            if($model->save())
            {
              // foreach date :author wawan
-               for ($date = strtotime($tgl1); $date < strtotime($tgl2); $date = strtotime("+1 day", $date)) {
+               for ($date = strtotime($tgl1); $date <= strtotime($tgl2); $date = strtotime("+1 day", $date)) {
                          $tgl =  date("Y-m-d", $date);
                          //batch insert customers author :wawan
                          $Customers = Customers::find()->where(['SCDL_GROUP'=>$model->SCDL_GROUP])->asArray()->all();
@@ -171,7 +171,7 @@ class ScheduleHeaderController extends Controller
                          }
                    }
            }
-            return true;
+            return $this->redirect(['index']);
 
         } else {
             return $this->renderAjax('_formschedule', [

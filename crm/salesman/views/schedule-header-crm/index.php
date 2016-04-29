@@ -28,7 +28,7 @@ function(start, end) {
 	// var tgl1 = moment(dateTime1).format("YYYY-MM-DD HH:mm:ss");
 	// var tgl2 = moment(dateTime2).format("YYYY-MM-DD HH:mm:ss");
 	var tgl1 = moment(dateTime1).format("YYYY-MM-DD");
-	var tgl2 = moment(dateTime2).format("YYYY-MM-DD");
+  var tgl2 = moment(dateTime2).subtract(1, "days").format("YYYY-MM-DD");
 	$('#tglakhir').val(tgl2);
 	$('#tglawal').val(tgl1);
 		$.get('/salesman/schedule-header-crm/create-group',{'tgl1':tgl1,'tgl2':tgl2},function(data){
