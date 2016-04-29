@@ -242,13 +242,14 @@ $this->params['breadcrumbs'][] = $this->title;
 		}
 	}
 
-	/*
-	 * BUTTON "Review" FOR CHECKED AND APPROVAL -> Check By User login
-	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 101=Approved]
-	 * EMP_ID=UserLogin & BTN_SIGN1==1 &  Status 0 = Action Edit Show/bisa edit
-	 * EMP_ID=UserLogin & BTN_SIGN1==1 &  Status 0 = Action Edit Hide/tidak bisa edit
-	 * 1. Hanya User login dengan permission modul PO=3 dengan BTN_SIGN1==1
-	 * 2. Action APPROVAL Akan close atau tidak bisa di lakukan jika sudah Approved | status Approved =101 | Permission sign1
+	/*  permission author : wawan ver 1.0
+	 * BUTTON "Review" FOR CHECKED AND APPROVAL
+   * one condition handling error if you modul not equal 3(po)
+    1 if not permission modul po equal 3 then not action review
+   * three condition you can review
+	 1 if BTN_REVIEW equal 1 and status equal 0 or BTN_REVIEW equal 1 and STATUS not equal 101 and STATUS not equal 102
+   2 if DEP_ID equal ACT and BTN_REVIEW equal 1 and not equal 102
+   3 if DEP_ID equal DRC and BTN_REVIEW equal 1 and not equal 102 AND DEP_ID equal GM and BTN_REVIEW equal 1 and not equal 102
 	*/
 	function tombolReview($url, $model){
 		if(getPermission()){
@@ -420,18 +421,14 @@ $gridColumnshistory = [
 			*/
 			return substr($model->CREATE_AT, 0, 10);
 		},
-		'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
-					'filterWidgetOptions' =>([
-						'attribute' =>'CREATE_AT',
-						'presetDropdown'=>TRUE,
-						'convertFormat'=>true,
-						'pluginOptions'=>[
-							'id'=>'tglpo',
-							'format'=>'Y/m/d',
-							'separator' => ' - ',
-							'opens'=>'right'
-						]
-		]),
+    'filterType' => GridView::FILTER_DATE,
+           'filterWidgetOptions' => [
+               'pluginOptions' => [
+                   'format' => 'yyyy-mm-dd',
+                   'autoclose' => true,
+                   'todayHighlight' => true,
+               ]
+           ],
 		'headerOptions'=>[
 			'style'=>[
 				'text-align'=>'center',
@@ -521,7 +518,7 @@ $gridColumnshistory = [
 	],
 	[
 		'attribute'=>'SIG2_NM',
-		'label'=>'Sumbition By',
+		'label'=>'Checked By',
 		'hAlign'=>'left',
 		'vAlign'=>'middle',
 		'value'=>function($model){
@@ -588,7 +585,7 @@ $gridColumnshistory = [
 		],
 	],
 	[
-		'attribute'=>'nmcorp',
+		'attribute'=>'nmcorphistory',
 		'label'=>'Corporation',
 		'filterType'=>GridView::FILTER_SELECT2,
 			'filter' => $selectCorp,
@@ -619,7 +616,7 @@ $gridColumnshistory = [
 	[
 		'class'=>'kartik\grid\ActionColumn',
 		'dropdown' => true,
-		'template' => '{view}{tambahEdit}{delete}{approved}{no_akses}',
+		'template' => '{view}',
 		'dropdownOptions'=>['class'=>'pull-right dropup'],
 		'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 		'buttons' => [
@@ -701,6 +698,7 @@ $gridLisHistory= GridView::widget([
 		],
 	]);
 
+/* grid columns inbox po */
 	$gridColumns = [
 		[
 			'class'=>'kartik\grid\SerialColumn',
@@ -749,7 +747,7 @@ $gridLisHistory= GridView::widget([
 			],
 		],
 		[
-			'attribute'=>'CREATE_AT',
+			'attribute'=>'CREATE_AT2',
 			'label'=>'DateTime',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
@@ -760,18 +758,15 @@ $gridLisHistory= GridView::widget([
 				*/
 				return substr($model->CREATE_AT, 0, 10);
 			},
-			'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
-						'filterWidgetOptions' =>([
-							'attribute' =>'CREATE_AT',
-							'presetDropdown'=>TRUE,
-							'convertFormat'=>true,
-							'pluginOptions'=>[
-								'id'=>'tglpo',
-								'format'=>'Y/m/d',
-								'separator' => ' - ',
-								'opens'=>'right'
-							]
-			]),
+      'filterType' => GridView::FILTER_DATE,
+             'filterWidgetOptions' => [
+
+                 'pluginOptions' => [
+                     'format' => 'yyyy-mm-dd',
+                     'autoclose' => true,
+                     'todayHighlight' => true,
+                 ]
+             ],
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
@@ -861,7 +856,7 @@ $gridLisHistory= GridView::widget([
 		],
 		[
 			'attribute'=>'SIG2_NM',
-			'label'=>'Sumbition By',
+			'label'=>'Checked By',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
 			'value'=>function($model){
@@ -1026,6 +1021,331 @@ $gridLisHistory= GridView::widget([
 
 	];
 
+
+  /* grid columns outbox po author : wawan */
+  	$gridColumnsOutbox = [
+  		[
+  			'class'=>'kartik\grid\SerialColumn',
+  			'contentOptions'=>['class'=>'kartik-sheet-style'],
+  			'width'=>'10px',
+  			'header'=>'No.',
+  			'headerOptions'=>[
+  				'style'=>[
+  					'text-align'=>'center',
+  					'width'=>'10px',
+  					'font-family'=>'verdana, arial, sans-serif',
+  					'font-size'=>'9pt',
+  					'background-color'=>'rgba(0, 95, 218, 0.3)',
+  				]
+  			],
+  			'contentOptions'=>[
+  				'style'=>[
+  					'text-align'=>'center',
+  					'width'=>'10px',
+  					'font-family'=>'tahoma, arial, sans-serif',
+  					'font-size'=>'9pt',
+  				]
+  			],
+  		],
+  		[
+  			'attribute'=>'KD_PO',
+  			'label'=>'Kode PO',
+  			'hAlign'=>'left',
+  			'vAlign'=>'middle',
+  			'headerOptions'=>[
+  				'style'=>[
+  					'text-align'=>'center',
+  					'width'=>'130px',
+  					'font-family'=>'verdana, arial, sans-serif',
+  					'font-size'=>'9pt',
+  					'background-color'=>'rgba(0, 95, 218, 0.3)',
+  				]
+  			],
+  			'contentOptions'=>[
+  				'style'=>[
+  					'text-align'=>'left',
+  					'width'=>'130px',
+  					'font-family'=>'tahoma, arial, sans-serif',
+  					'font-size'=>'9pt',
+  				]
+  			],
+  		],
+  		[
+  			'attribute'=>'CREATE_AT1',
+  			'label'=>'DateTime',
+  			'hAlign'=>'left',
+  			'vAlign'=>'middle',
+  			'value'=>function($model){
+  				/*
+  				 * max String Disply
+  				 * @author ptrnov <piter@lukison.com>
+  				*/
+  				return substr($model->CREATE_AT, 0, 10);
+  			},
+        'filterType' => GridView::FILTER_DATE,
+               'filterWidgetOptions' => [
+                   'pluginOptions' => [
+                       'format' => 'yyyy-mm-dd',
+                       'autoclose' => true,
+                       'todayHighlight' => true,
+                   ]
+               ],
+  			'headerOptions'=>[
+  				'style'=>[
+  					'text-align'=>'center',
+  					'width'=>'80px',
+  					'font-family'=>'verdana, arial, sans-serif',
+  					'font-size'=>'9pt',
+  					'background-color'=>'rgba(0, 95, 218, 0.3)',
+  				]
+  			],
+  			'contentOptions'=>[
+  				'style'=>[
+  					'text-align'=>'left',
+  					'width'=>'80px',
+  					'font-family'=>'tahoma, arial, sans-serif',
+  					'font-size'=>'9pt'
+  				]
+  			],
+  		],
+  		[
+  			'attribute'=>'namasuplier',
+  			'label'=>'Supplier',
+  			'hAlign'=>'left',
+  			'vAlign'=>'middle',
+  			'value'=>function($model){
+  				/*
+  				 * max String Disply
+  				 * @author ptrnov <piter@lukison.com>
+  				*/
+  				if (strlen($model->namasuplier) <=26){
+  					return substr($model->namasuplier, 0, 26);
+  				}else{
+  					return substr($model->namasuplier, 0, 24). '..';
+  				}
+  			},
+  			'headerOptions'=>[
+  				'style'=>[
+  					'text-align'=>'center',
+  					'width'=>'190px',
+  					'font-family'=>'verdana, arial, sans-serif',
+  					'font-size'=>'9pt',
+  					'background-color'=>'rgba(0, 95, 218, 0.3)',
+  				]
+  			],
+  			'contentOptions'=>[
+  				'style'=>[
+  					'text-align'=>'left',
+  					'width'=>'190px',
+  					'font-family'=>'tahoma, arial, sans-serif',
+  					'font-size'=>'9pt',
+  				]
+  			],
+  		],
+          [
+  			'attribute'=>'SIG1_NM',
+  			'label'=>'Created By',
+  			'hAlign'=>'left',
+  			'vAlign'=>'middle',
+  			'value'=>function($model){
+  				/*
+  				 * max String Disply
+  				 * @author ptrnov <piter@lukison.com>
+  				*/
+  				if (strlen($model->SIG1_NM) <=16){
+  					return substr($model->SIG1_NM, 0, 16);
+  				}else{
+  					return substr($model->SIG1_NM, 0, 14). '..';
+  				}
+  			},
+  			'headerOptions'=>[
+  				'style'=>[
+  					'text-align'=>'center',
+  					'width'=>'125px',
+  					'font-family'=>'verdana, arial, sans-serif',
+  					'font-size'=>'9pt',
+  					'background-color'=>'rgba(0, 95, 218, 0.3)',
+  				]
+  			],
+  			'contentOptions'=>[
+  				'style'=>[
+  					'text-align'=>'left',
+  					'width'=>'125px',
+  					'font-family'=>'tahoma, arial, sans-serif',
+  					'font-size'=>'9pt'
+  				],
+
+  			],
+  		],
+  		[
+  			'attribute'=>'SIG2_NM',
+  			'label'=>'Checked By',
+  			'hAlign'=>'left',
+  			'vAlign'=>'middle',
+  			'value'=>function($model){
+  				/*
+  				 * max String Disply
+  				 * @author ptrnov <piter@lukison.com>
+  				*/
+  				if (strlen($model->SIG2_NM) <=16){
+  					return substr($model->SIG2_NM, 0, 16);
+  				}else{
+  					return substr($model->SIG2_NM, 0, 14). '..';
+  				}
+  			},
+  			'headerOptions'=>[
+  				'style'=>[
+  					'text-align'=>'center',
+  					'width'=>'125px',
+  					'font-family'=>'verdana, arial, sans-serif',
+  					'font-size'=>'9pt',
+  					'background-color'=>'rgba(0, 95, 218, 0.3)',
+  				]
+  			],
+  			'contentOptions'=>[
+  				'style'=>[
+  					'text-align'=>'left',
+  					'width'=>'125px',
+  					'font-family'=>'tahoma, arial, sans-serif',
+  					'font-size'=>'9pt',
+  				]
+  			],
+  		],
+  		[
+  			'attribute'=>'SIG3_NM',
+  			'label'=>'Approved By',
+  			'hAlign'=>'left',
+  			'vAlign'=>'middle',
+  			'value'=>function($model){
+  				/*
+  				 * max String Disply
+  				 * @author ptrnov <piter@lukison.com>
+  				*/
+  				if (strlen($model->SIG3_NM) <=16){
+  					return substr($model->SIG3_NM, 0, 16);
+  				}else{
+  					return substr($model->SIG3_NM, 0, 14). '..';
+  				}
+  			},
+  			'headerOptions'=>[
+  				'style'=>[
+  					'text-align'=>'center',
+  					'width'=>'125px',
+  					'font-family'=>'verdana, arial, sans-serif',
+  					'font-size'=>'9pt',
+  					'background-color'=>'rgba(0, 95, 218, 0.3)',
+  				]
+  			],
+  			'contentOptions'=>[
+  				'style'=>[
+  					'text-align'=>'left',
+  					'width'=>'125px',
+  					'font-family'=>'tahoma, arial, sans-serif',
+  					'font-size'=>'9pt',
+  				]
+  			],
+  		],
+  		[
+  			'attribute'=>'nmcorpoutbox',
+  			'label'=>'Corporation',
+  			'filterType'=>GridView::FILTER_SELECT2,
+  				'filter' => $selectCorp,
+  				'filterWidgetOptions'=>[
+  					'pluginOptions'=>['allowClear'=>true],
+  				],
+  				'filterInputOptions'=>['placeholder'=>'Any author'],
+  			'hAlign'=>'left',
+  			'vAlign'=>'middle',
+  			'headerOptions'=>[
+  				'style'=>[
+  					'text-align'=>'center',
+  					'width'=>'125px',
+  					'font-family'=>'verdana, arial, sans-serif',
+  					'font-size'=>'9pt',
+  					'background-color'=>'rgba(0, 95, 218, 0.3)',
+  				]
+  			],
+  			'contentOptions'=>[
+  				'style'=>[
+  					'text-align'=>'left',
+  					'width'=>'125px',
+  					'font-family'=>'tahoma, arial, sans-serif',
+  					'font-size'=>'9pt',
+  				]
+  			],
+  		],
+  		[
+  			'class'=>'kartik\grid\ActionColumn',
+  			'dropdown' => true,
+  			'template' => '{view}{tambahEdit}{delete}{approved}{no_akses}',
+  			'dropdownOptions'=>['class'=>'pull-right dropup'],
+  			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
+  			'buttons' => [
+  				/* View PO | Permissian All */
+  				'view' => function ($url, $model) {
+  								return tombolView($url, $model);
+  						  },
+
+  				/* Edit PO | Permissian Status 0; 0=NEW */
+  				'tambahEdit' => function ($url, $model) {
+  								return tombolEdit($url, $model);
+  							},
+
+  				/* Delete RO | Permissian Status 0; 3=delete | User created = user login */
+  				'delete' => function ($url, $model) {
+  								return tombolDelete($url, $model);
+  							},
+
+  				/* Approved PO | Permissian Status 0; 102=Approved | Dept = Dept login | GF >= M */
+  				'approved' => function ($url, $model) {
+  								return tombolReview($url, $model);
+  							},
+  				'no_akses' => function ($url, $model) {
+  								return tombolDenaid($url, $model);
+  				},
+  			],
+  			'headerOptions'=>[
+  				'style'=>[
+  					'text-align'=>'center',
+  					'width'=>'150px',
+  					'font-family'=>'verdana, arial, sans-serif',
+  					'font-size'=>'9pt',
+  					'background-color'=>'rgba(0, 95, 218, 0.3)',
+  				]
+  			],
+  			'contentOptions'=>[
+  				'style'=>[
+  					'text-align'=>'left',
+  					'width'=>'150px',
+  					'height'=>'10px',
+  					'font-family'=>'tahoma, arial, sans-serif',
+  					'font-size'=>'9pt',
+  				]
+  			],
+  		],
+  		[
+  			'label'=>'Notification',
+  			'mergeHeader'=>true,
+  			'format' => 'raw',
+  			'hAlign'=>'center',
+  			'value' => function ($model) {
+  							return statusProcessPo($model);
+  			},
+  			'headerOptions'=>[
+  				'style'=>[
+  					'text-align'=>'center',
+  					'width'=>'50px',
+  					'font-family'=>'verdana, arial, sans-serif',
+  					'font-size'=>'9pt',
+  					'background-color'=>'rgba(0, 95, 218, 0.3)',
+  				]
+  			],
+  		],
+
+  	];
+
+
+/* grid view inbox */
 	$gridLisPo= GridView::widget([
 			'id'=>'po-list',
 			'dataProvider'=> $dataProvider,
@@ -1057,11 +1377,12 @@ $gridLisHistory= GridView::widget([
 			],
 		]);
 
+/* grid view outbox */
 		$outboxpo = GridView::widget([
 					'id'=>'po',
 					'dataProvider'=> $dataprovider,
 					'filterModel' => $searchmodel,
-					'columns' => $gridColumns,
+					'columns' => $gridColumnsOutbox,
 					'filterRowOptions'=>['style'=>'background-color:rgba(0, 95, 218, 0.3); align:center'],
 					'pjax'=>true,
 					'pjaxSettings'=>[
@@ -1161,14 +1482,17 @@ $gridLisHistory= GridView::widget([
 		$items=[
 			[
 				'label'=>'<i class="fa fa-sign-in fa-lg"></i>  Inbox','content'=>$gridLisPo,
-				'active'=>true,
+				// 'active'=>true,
+         'options' => ['id' => 'in-box'],
 			],
 			[
 				'label'=>'<i class="fa fa-sign-out fa-lg"></i>  Outbox','content'=>$outboxpo, // Checked/approved Ro
-			],
+        'options' => ['id' => 'out-tab'],
+      ],
 			[
 				'label'=>'<i class="glyphicon glyphicon-briefcase"></i>  History','content'=>$gridLisHistory, // History approved po
-			],
+          'options' => ['id' => 'history-tab'],
+      ],
 		];
 		echo TabsX::widget([
 			'id'=>'tab-index-po',

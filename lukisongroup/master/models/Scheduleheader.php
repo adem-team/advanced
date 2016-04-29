@@ -24,6 +24,7 @@ class Scheduleheader extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+
     public static function tableName()
     {
         return 'c0002scdl_header';
@@ -51,6 +52,21 @@ class Scheduleheader extends \yii\db\ActiveRecord
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100]
         ];
     }
+
+/* not usage manipulate field models for name author :wawan*/
+//     public function fields()
+// {
+//     return [
+//         // field end is the same as the attribute TGL2
+//         // 'end'=>'TGL2',
+//         //
+//         // // field name is "start", the corresponding attribute name is "TGL1"
+//         // 'start' => 'TGL1',
+//
+//         // field name is "title", the corresponding attribute name is "SCDL_GROUP"
+//         // 'title' => 'SCDL_GROUP_NM',
+//     ];
+// }
 
     /**
      * @inheritdoc

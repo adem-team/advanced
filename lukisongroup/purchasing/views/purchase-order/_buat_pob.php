@@ -1,5 +1,5 @@
 <?php
-
+/* extensions*/
 use yii\helpers\Html;
 use yii\bootstrap\Modal;
 use yii\widgets\ActiveForm;
@@ -11,11 +11,13 @@ use kartik\grid\GridView;
 use kartik\tabs\TabsX;
 use kartik\money\MaskMoney;
 
+/* namespace models*/
 use lukisongroup\purchasing\models\ro\Requestorder;
 use lukisongroup\purchasing\models\ro\Rodetail;
 use lukisongroup\purchasing\models\ro\RodetailSearch;
 use lukisongroup\purchasing\models\pr\Costcenter;
 use lukisongroup\master\models\Unitbarang;
+use lukisongroup\purchasing\models\pr\FilePo;
 
 /*
  * =========== KEY SEARCH ================
@@ -70,6 +72,28 @@ use lukisongroup\master\models\Unitbarang;
 		return $content;
 	}
 
+
+  /*
+   * LINK PO Attach File
+   * @author : wawan
+     * @since 1.0
+  */
+  function PoAttach_file_pob($poHeader){
+      $title = Yii::t('app','');
+      $options = [ 'id'=>'po-attach-id-buat-pob',
+              'data-toggle'=>"modal",
+              'data-target'=>"#po-attach-buatpob",
+              'class'=>'btn btn-info btn-xs',
+              'title'=>'PO Attach File'
+      ];
+      $icon = '<span class="fa fa-plus fa-lg"></span>';
+      $label = $icon . ' ' . $title;
+      $url = Url::toRoute(['/purchasing/purchase-order/po-attach-file','kdpo'=>$poHeader->KD_PO]);
+      $content = Html::a($label,$url, $options);
+      return $content;
+  }
+
+
 	/*
 	 * LINK ETA
 	 * _Buat = GET permission ETA
@@ -85,7 +109,6 @@ use lukisongroup\master\models\Unitbarang;
 					  'title'=>'Estimate Time Arriver'
 		];
 		$url = Url::toRoute(['/purchasing/purchase-order/eta-view','kdpo'=>$poHeader->KD_PO]);
-		//$options1['tabindex'] = '-1';
 		$content = Html::a($title,$url, $options);
 		return $content;
 	}
@@ -256,12 +279,6 @@ use lukisongroup\master\models\Unitbarang;
 	 * @since 1.2
 	*/
 	function tombolApproval($url, $model){
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Approved');
 				$options = [ 'id'=>'approved',
 							 'data-pjax' => true,
@@ -270,8 +287,6 @@ use lukisongroup\master\models\Unitbarang;
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';
 				$label = $icon . ' ' . $title;
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
 	}
 	/*
 	 * Tombol Reject Item
@@ -281,12 +296,6 @@ use lukisongroup\master\models\Unitbarang;
 	 * @since 1.2
 	*/
 	function tombolReject($url, $model) {
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Reject');
 				$options = [ 'id'=>'reject',
 							 'data-pjax'=>true,
@@ -341,12 +350,6 @@ use lukisongroup\master\models\Unitbarang;
 	 * @since 1.2
 	*/
 	function tombolCancel($url, $model){
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Cancel');
 				$options = [ 'id'=>'cancel',
 							 'data-pjax'=>true,
@@ -355,8 +358,6 @@ use lukisongroup\master\models\Unitbarang;
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';
 				$label = $icon . ' ' . $title;
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
 	}
 
 	/*
@@ -1497,10 +1498,7 @@ use lukisongroup\master\models\Unitbarang;
 							</th>
 							<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 								<?php
-									// $ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :SignApproved($poHeader);
-									//if ($poHeader->STATUS==101 OR $poHeader->STATUS==10){
-										// echo $ttd3;
-									//}
+
 									if(getPermission())
 									{
 										if(getPermission()->BTN_SIGN3 == 0)
@@ -1578,7 +1576,49 @@ use lukisongroup\master\models\Unitbarang;
 	</div>
 </div>
 
+<!-- attach file_po  !-->
+<div  class="row">
+  <div  class="col-md-3" style="font-family: tahoma ;font-size: 9pt;">
+  </div>
+	<div  class="col-md-9" style="font-family: tahoma ;font-size: 9pt;">
+		<dt><b>Attach File :</b></dt>
+		<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
+		<div>
+			<div style="float:right;text-align:right;">
+				<?php echo PoAttach_file_pob($poHeader); ?>
+			</div>
+		</div>
+	</div>
+</div>
 
+<!-- // attachment file on view -->
+<?php
+$items = [];
+$po_file = FilePo::find()->where(['KD_PO'=>$poHeader->KD_PO])->asArray()->all();
+
+foreach ($po_file as $key => $value) {
+  # code...
+  $items[] = [
+                'src'=>'data:image/jpeg;base64,'.$value['IMG_BASE64'],
+				        'imageOptions'=>['width'=>"150px"] //setting image display
+		];
+}
+
+
+?>
+<div class="row">
+<div class="col-sm-3">
+
+</div>
+<div class="col-sm-9">
+<?php
+
+/* 2 amigos two galerry author mix:wawan and ptr.nov ver 1.0*/
+	echo dosamigos\gallery\Gallery::widget([
+				'items' =>  $items]);
+?>
+</div>
+</div>
 
 <?php
 	$this->registerJs("
@@ -1619,6 +1659,36 @@ use lukisongroup\master\models\Unitbarang;
 		}); */
 
 	",$this::POS_READY);
+
+  /*
+	 * JS ATTACH FILE |
+	 * @author wawan
+	 * @since 1.0
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#po-attach-buatpob').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+	",$this::POS_READY);
+
+	Modal::begin([
+			'id' => 'po-attach-buatpob',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Attach file</b></h4></div>',
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
 
 	/*
 	 * JS MODAL Discount

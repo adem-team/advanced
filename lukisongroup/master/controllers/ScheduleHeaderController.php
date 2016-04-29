@@ -19,6 +19,7 @@ use lukisongroup\master\models\Schedulegroup;
 use lukisongroup\master\models\ScheduleheaderSearch;
 use lukisongroup\sistem\models\Userlogin;
 use lukisongroup\sistem\models\UserloginSearch;
+use yii\data\ArrayDataProvider;
 use DateInterval;
 use DatePeriod;
 
@@ -278,9 +279,18 @@ class ScheduleHeaderController extends Controller
        public function actionJsoncalendar($start=NULL,$end=NULL,$_=NULL){
        //public function actionJsoncalendar(){
            $events = array();
-   		      $eventCalendar= Scheduleheader::find()->all();
-   		//print_r($eventCalendar);
-   		//die();
+
+           /*array dataprovider from ScheduleDetail author :wawan*/
+           $AryDataProviderVal= new ArrayDataProvider([
+    			'allModels'=>Yii::$app->db_esm->createCommand("SELECT DISTINCT
+    					TGL as start, (SELECT SCDL_GROUP_NM FROM c0007 WHERE ID=SCDL_GROUP) as title
+    					FROM c0002scdl_detail;")->queryAll(),
+    			 'pagination' => [
+    				'pageSize' => 100,
+    			]
+    			]);
+           /*event calender from ScheduleDetail author :wawan*/
+    			$eventCalendar=$AryDataProviderVal->getModels();
            //Demo
            $Event = new \yii2fullcalendar\models\Event();
    		//FIELD HARUS [id,start,end,title]
