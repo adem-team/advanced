@@ -148,6 +148,16 @@ class ScheduleHeaderCrmController extends Controller
 
           $model->TGL1 = $tgl1;
           $model->TGL2 = $tgl2;
+          $cari_groupName = Schedulegroup::find()->where(['ID'=>$model->SCDL_GROUP])->asArray()->one();
+
+            /* split array author : wawan*/
+            $temp = explode(" ",$cari_groupName['SCDL_GROUP_NM']);
+            $result = '';
+            foreach($temp as $t)
+            {
+              $result .= $t[0];
+            }
+          $model->NOTE = $result;
           $model->CREATE_BY = $usercreate;
           $model->CREATE_AT = date("Y-m-d H:i:s");
            if($model->save())
@@ -292,28 +302,6 @@ class ScheduleHeaderCrmController extends Controller
            Yii::$app->end();
        }
 
-  //   public function getDatesFromRange($start, $end) {
-  //          $interval = new DateInterval('P1D');
-  //          $realEnd = new DateTime($end);
-  //          $realEnd->add($interval);
-  //          $period = new DatePeriod(
-  //          new DateTime($start),
-  //          $interval,
-  //          $realEnd
-  //      );
-  //    foreach($period as $date) {
-  //      $array[] = $date->format('Y-m-d');
-  //    }
-  //      return $array;
-  //  }
-
-//   public function datediffInWeeks($date1, $date2)
-// {
-//     if($date1 > $date2) return datediffInWeeks($date2, $date1);
-//     $first = DateTime::createFromFormat('m/d/Y', $date1);
-//     $second = DateTime::createFromFormat('m/d/Y', $date2);
-//     return floor($first->diff($second)->days/7);
-// }
 
 // save using ajax: author wawan
 

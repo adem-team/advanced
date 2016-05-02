@@ -17,17 +17,17 @@ use yii\widgets\Pjax;
 	 * @author wawan
 	 * @since 1.0
      */
-	function tombolSetting(){
+	function tombolSetting($id){
 		$title1 = Yii::t('app', 'Setting');
 		$options1 = [ 'id'=>'setting',
-					  //'data-toggle'=>"modal",
-					  'data-target'=>"#profile-setting",
-					  //'class' => 'btn btn-default',
-					  'style' => 'text-align:left',
+					         'data-toggle'=>"modal",
+					         'data-target'=>"#profile-setting",
+					      	 'style' => 'text-align:left',
+
 		];
 		$icon1 = '<span class="fa fa-cogs fa-md"></span>';
 		$label1 = $icon1 . ' ' . $title1;
-		$url1 = Url::toRoute(['/sistem/user-profile/setting']);//,'kd'=>$kd]);
+		$url1 = Url::toRoute(['/sistem/crm-user-profile/setting-profile','id'=>$id]);//,'kd'=>$kd]);
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
@@ -64,7 +64,7 @@ use yii\widgets\Pjax;
 		];
 		$icon1 = '<span class="fa fa-shield fa-md"></span>';
 		$label1 = $icon1 . ' ' . $title1;
-		$url1 = Url::toRoute(['/sistem/user-profile/signature']);//,'kd'=>$kd]);
+		$url1 = Url::toRoute(['/sistem/user-profile/signature']);
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
@@ -78,13 +78,13 @@ use yii\widgets\Pjax;
 	function tombolPersonalia(){
 		$title1 = Yii::t('app', 'My Personalia');
 		$options1 = [ 'id'=>'personalia',
-					  //'data-toggle'=>"modal",
-					  'data-target'=>"#profile-personalia",
-					  'class' => 'btn btn-primary',
+					        'data-toggle'=>"modal",
+					        'data-target'=>"#profile-personalia",
+					        'class' => 'btn btn-primary',
 		];
 		$icon1 = '<span class="fa fa-group fa-md"></span>';
 		$label1 = $icon1 . ' ' . $title1;
-		$url1 = Url::toRoute(['/sistem/personalia']);//,'kd'=>$kd]);
+		$url1 = Url::toRoute(['/sistem/crm-user-profile/create-add-profile']);//,'kd'=>$kd]);
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
@@ -224,7 +224,7 @@ use yii\widgets\Pjax;
 					<li><?php echo tombolDarurat(); ?></li>
 					<li><?php echo tombolTanggungan(); ?></li>
 					<li class="divider"></li>
-					<li><?php echo tombolSetting(); ?></li>
+					<li><?php echo tombolSetting($id); ?></li>
 					<li><?php echo tombolPasswordUtama();?></li>
 					<li><?php echo tombolSignature(); ?></li>
 					<li><?php //echo tombolPersonalia(); ?></li>
@@ -294,6 +294,98 @@ use yii\widgets\Pjax;
 			]
 		]);
 	Modal::end();
+
+	/*
+	 * profile
+	 * @author wawan
+	 * @since 1.0
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#profile-personalia').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'profile-personalia',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Profile</b></h4></div>',
+			// 'size' => Modal::SIZE_MIDLE,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+
+	/*
+	 * profile
+	 * @author wawan
+	 * @since 1.0
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#profile-personalia').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'profile-personalia',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Profile</b></h4></div>',
+			// 'size' => Modal::SIZE_MIDLE,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+
+	/*
+	 * profile
+	 * @author wawan
+	 * @since 1.0
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#profile-setting').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'profile-setting',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Profile Setting</b></h4></div>',
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+
+
+
 
 
 ?>

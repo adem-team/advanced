@@ -28,7 +28,7 @@
 						$namaLengkap=$profile!=''? $profile->NM_MIDDLE . ' ' . $profile->NM_END:'';
 						$tPhone=$profile!=''?$profile->TLP_HOME:'';
 						$joinDate=$profile!=''? $profile->JOIN_DATE:'';
-						$kdis =$profile!=''? $profile->KD_DISTRIBUTOR.'.'.$profile->KD_DISTRIBUTOR:'';
+						$kdis =$profile!=''? $profile->KD_SRC:'';
 						$ktp ='xxx.xxx.xxx.xxx';
 						$kode_subdis ='xxx.xxx.xx.xx';
 						$kode_OUTSRC ='xxx-xxx-xxx-xx';

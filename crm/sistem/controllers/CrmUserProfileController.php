@@ -2,6 +2,7 @@
 
 namespace crm\sistem\controllers;
 
+/* extensions */
 use Yii;
 use yii\helpers\Html;
 use yii\web\Controller;
@@ -10,7 +11,12 @@ use yii\helpers\Url;
 use yii\widgets\Pjax;
 use yii\bootstrap\Modal;
 use zyx\phpmailer\Mailer;
+use yii\helpers\ArrayHelper;
+
+/* namespace models*/
+use crm\mastercrm\models\Distributor;
 use crm\sistem\models\ValidationLoginFormCrm;
+use crm\sistem\models\Userprofile;
 
 class CrmUserProfileController extends Controller
 {
@@ -44,13 +50,63 @@ class CrmUserProfileController extends Controller
     {
 			$fileLink="data_userprofile";
 		  $profile=Yii::$app->getUserOptcrm->Profile_user()->userprofile; //component Crm
+			$id = Yii::$app->getUserOptcrm->Profile_user()->id; //component Crm
 
        return $this->render('index',[
 			      'profile'=> $profile,
+						'id'=>$id,
 						 'fileLink'=>$fileLink
 		      ]);
 
     }
+
+/*
+		*author : wawan
+		*create new user profile if creation succes,redirect index */
+		public function actionCreateAddProfile()
+		{
+			$model = new Userprofile();
+
+			if ($model->load(Yii::$app->request->post())){
+					$model->CREATED_BY=Yii::$app->user->identity->username;
+					$model->UPDATED_TIME=date('Y-m-d h:i:s');
+					$model->save();
+			if($model->save()){
+				 return $this->redirect('index');
+			}
+	}else {
+					return $this->renderAjax('_form_add-profile', [
+							'model' => $model,
+					]);
+			}
+		}
+
+		/*
+				*author : wawan
+				*create update user profile if creation succes,redirect index */
+				public function actionSettingProfile($id)
+				{
+					$model =  Userprofile::find()->where(['ID'=>$id])->one();
+					$distributor = ArrayHelper::map(Distributor::find()->where('STATUS <>3')->all(), 'KD_DISTRIBUTOR', 'NM_DISTRIBUTOR');
+					$username = Yii::$app->getUserOptcrm->Profile_user()->username; //component Crm
+
+					if ($model->load(Yii::$app->request->post())){
+							$model->CREATED_BY = $username;
+							$model->UPDATED_TIME = date('Y-m-d h:i:s');
+							$base64File = \yii\web\UploadedFile::getInstance($model, 'image');
+							$File64 = $this->saveimage(file_get_contents($base64File->tempName));
+							$model->IMG_BASE64 = 'data:'.$base64File->type.';charset=utf-8;base64,'.$File64;
+							$model->save();
+
+						 return $this->redirect('index');
+			}else {
+							return $this->renderAjax('set_profile', [
+									'model' => $model,
+									'distributor'=>$distributor
+							]);
+					}
+				}
+
 
 
 	public function actionPribadi()
@@ -155,6 +211,7 @@ class CrmUserProfileController extends Controller
 		]);
     }
 
+/* base 64 convert function author:wawan*/
 	public function saveimage($base64)
     {
       $base64 = str_replace('data:image/jpg;charset=utf-8;base64,', '', $base64);
@@ -349,41 +406,6 @@ class CrmUserProfileController extends Controller
 		}
 
 
-		/*Versi 0.1*/
-		/*
-		$model = Employe::find()->where(['EMP_ID' => Yii::$app->user->identity->EMP_ID])->one();
-		if($model->load(Yii::$app->request->post())){
-				$hsl = \Yii::$app->request->post();
-				$passmd5 = $hsl['Employe']['SIGPASSWORD'];
-				$oldpassmd5 = $hsl['Employe']['SIGPASSWORD'];
-				$modelform = new SignatureForm();
-				$modelform->password=$passmd5;
-				if ($modelform->addpassword()) {
-					return $this->renderAjax('_signupPassword',[
-						'model'=>$model,
-					]);
-				}
-		}else{
-		   return $this->renderAjax('_signupPassword',[
-					'model'=>$model,
-			]);
-		}
-		 */
-		/* Ver 0.0*/
-		/* $model = Employe::find()->where(['EMP_ID' => Yii::$app->user->identity->EMP_ID])->one();
-		if($model->load(Yii::$app->request->post())){
-			$hsl = \Yii::$app->request->post();
-
-			$passmd5 = $hsl['Employe']['SIGPASSWORD'];
-			//$model->SIGPASSWORD =
-			$model->setPassword_signature($passmd5); //Yii::$app->security->generatePasswordHash($passmd5);
-			//$model->SIGPASSWORD = Yii::$app->security->generatePasswordHash($passmd5);
-			$model->save();
-		}else{
-			return $this->renderAjax('_signupPassword',[
-				'model'=>$model,
-			]);
-		} */
 
     }
 

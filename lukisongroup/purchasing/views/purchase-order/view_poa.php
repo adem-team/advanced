@@ -1,5 +1,6 @@
 <?php
-use yii\helpers\Html;
+//use yii\helpers\Html;
+use kartik\helpers\Html;
 use yii\widgets\DetailView;
 use kartik\grid\GridView;
 use yii\helpers\Url;
@@ -9,6 +10,7 @@ use lukisongroup\master\models\Barangumum;
 use lukisongroup\master\models\Nmperusahaan;
 use lukisongroup\purchasing\models\Purchasedetail;
 use lukisongroup\esm\models\Barang;
+use lukisongroup\purchasing\models\pr\FilePo;
 /* @var $this yii\web\View */
 /* @var $poHeader lukisongroup\poHeaders\esm\po\Purchaseorder */
 
@@ -156,7 +158,7 @@ $y=4;
 						'border-right'=>'0px',
 				]
 			]
-		],    
+		],
 		[	//COL-3
 			/* Attribute Items Barang */
 			'label'=>'Items Name',
@@ -727,6 +729,53 @@ $y=4;
 				<?php echo Html::a('<i class="fa fa-print fa-fw"></i> tmp Print', ['temp-cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
 
 			</div>
+      <!--   attachment file on view -->
+      <?php
+		  $items = [];
+		  $po_file = FilePo::find()->where(['KD_PO'=>$poHeader->KD_PO])->asArray()->all();
+
+		  /* display image author : wawan
+			if count po file equal 0 then default jpg show*/
+		  if(count($po_file) == 0)
+		  {
+			for($a = 0; $a < 2; $a++)
+			{
+			  $items[] = ['src'=>'/upload/barang/df.jpg',
+			  'imageOptions'=>['width'=>"150px"]
+			];
+			}
+		  }else{
+			foreach ($po_file as $key => $value) {
+			  # code...
+			  $items[] = [
+							'src'=>'data:image/jpeg;base64,'.$value['IMG_BASE64'],
+							'imageOptions'=>['width'=>"120px",'height'=>"120px",'class'=>'img-rounded'], //setting image display
+					];
+			}
+		  }
+      ?>
+
+      <!-- image qotation-->
+      <div  class="row">
+        <div class="col-xs-1 col-sm-1 col-lg-1">
+        </div>
+      	<div  class="col-xs-12 col-sm-12 col-lg-12" style="font-family: tahoma ;font-size: 9pt;">
+      		<hr style="height:1px;margin-top: 3px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
+        </hr>
+              <?php
+              /* 2 amigos two galerry author mix:wawan and ptr.nov ver 1.0*/
+              	$viewItemImge =dosamigos\gallery\Gallery::widget([
+                      'items' =>  $items]);
+				echo Html::panel([
+						'heading' => '<div> view Quotation/Penawaran </div>',
+						'body'=>$viewItemImge,
+					],
+					Html::TYPE_INFO
+				);
+              ?>
+
+      	</div>
+      </div>
 		</div>
 	</div>
 </div>

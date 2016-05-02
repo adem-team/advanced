@@ -1,6 +1,7 @@
 <?php
 /* extensions*/
-use yii\helpers\Html;
+use kartik\helpers\Html;
+//use yii\helpers\Html;
 use yii\bootstrap\Modal;
 use yii\widgets\ActiveForm;
 use kartik\detail\DetailView;
@@ -1534,7 +1535,7 @@ use lukisongroup\purchasing\models\pr\FilePo;
 	</div>
 </div>
 
-<!-- attach file_po  !-->
+<!-- attach file_po 
 <div  class="row">
   <div  class="col-md-3" style="font-family: tahoma ;font-size: 9pt;">
   </div>
@@ -1543,26 +1544,27 @@ use lukisongroup\purchasing\models\pr\FilePo;
 		<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
 		<div>
 			<div style="float:right;text-align:right;">
-				<?php echo PoAttach_file_pob($poHeader); ?>
+				<?php //echo PoAttach_file_pob($poHeader); ?>
 			</div>
 		</div>
 	</div>
 </div>
-
+ !-->
 <!-- // attachment file on view -->
 <?php
 $items = [];
 $po_file = FilePo::find()->where(['KD_PO'=>$poHeader->KD_PO])->asArray()->all();
 
-foreach ($po_file as $key => $value) {
-  # code...
-  $items[] = [
-                'src'=>'data:image/jpeg;base64,'.$value['IMG_BASE64'],
-				        'imageOptions'=>['width'=>"150px"] //setting image display
-		];
-}
+	foreach ($po_file as $key => $value) {
+	  # code...
+	  $items[] = [
+					'src'=>'data:image/pdf;base64,'.$value['IMG_BASE64'],
+					'imageOptions'=>['width'=>"120px",'height'=>"120px",'class'=>'img-rounded'], //setting image display
+			];
+	}
 
-
+$itemAllimge= dosamigos\gallery\Gallery::widget([
+				'items' =>  $items]);
 ?>
 <div class="row">
 <div class="col-sm-3">
@@ -1572,8 +1574,15 @@ foreach ($po_file as $key => $value) {
 <?php
 
 /* 2 amigos two galerry author mix:wawan and ptr.nov ver 1.0*/
-	echo dosamigos\gallery\Gallery::widget([
-				'items' =>  $items]);
+	// echo dosamigos\gallery\Gallery::widget([
+				// 'items' =>  $items]);
+	echo Html::panel(
+		[
+			'heading' => '<div>'.PoAttach_file_pob($poHeader).'   Quotation/Penawaran</div>',
+			'body'=>$itemAllimge,
+		],
+		Html::TYPE_INFO
+	);
 ?>
 </div>
 </div>

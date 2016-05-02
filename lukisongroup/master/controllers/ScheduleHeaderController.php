@@ -155,6 +155,16 @@ class ScheduleHeaderController extends Controller
 
           $model->TGL1 = $tgl1;
           $model->TGL2 = $tgl2;
+          // cari group nama
+          $cari_groupName = Schedulegroup::find()->where(['ID'=>$model->SCDL_GROUP])->asArray()->one();
+            /* split array author : wawan*/
+            $temp = explode(" ",$cari_groupName['SCDL_GROUP_NM']);
+            $result = '';
+            foreach($temp as $t)
+            {
+              $result .= $t[0];
+            }
+          $model->NOTE = $result;
           $model->CREATE_BY = $usercreate;
           $model->CREATE_AT = date("Y-m-d H:i:s");
            if($model->save())
