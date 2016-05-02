@@ -14,6 +14,7 @@ use kartik\widgets\FileInput;
      <?php echo \kato\DropZone::widget([
       'options' => [
           'maxFilesize' => '2',
+          'acceptedFiles'=>'image/*,application/pdf',
           'url'=>'/purchasing/purchase-order/upload?kdpo='.$kdpo.''
       ],
       'clientEvents' => [

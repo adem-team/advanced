@@ -68,7 +68,7 @@ $form = ActiveForm::begin([
                       'removeLabel'=> '',
                       'removeIcon'=> '<i class="glyphicon glyphicon-remove"></i>',
                       'removeTitle'=> 'Cancel or reset changes',
-                        // 'showUpload' => false,
+                       'showUpload' => false,
                         'defaultPreviewContent' => '<img src="https://www.mautic.org/media/images/default_avatar.png" alt="Your Avatar" style="width:160px">'
 
                     ]
@@ -140,7 +140,7 @@ $EmployeeInput= FormGrid::widget([
                           'type'=>Form::INPUT_TEXT,
                           'options'=>['placeholder'=>'Enter Last Name...'],
                           'columnOptions'=>['colspan'=>1],
-                        ],		
+                        ],
 					]
 				],
 			],

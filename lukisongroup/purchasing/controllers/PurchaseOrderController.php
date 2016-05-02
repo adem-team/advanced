@@ -416,7 +416,7 @@ class PurchaseOrderController extends Controller
     /* convert base 64 author:wawan since 1.0 */
     public function saveimage($base64)
     {
-      $base64 = str_replace('data:image/jpg;base64,', '', $base64);
+      $base64 = str_replace('data:application/pdf;base64,', '', $base64);
       $base64 = base64_encode($base64);
       $base64 = str_replace(' ', '+', $base64);
 
