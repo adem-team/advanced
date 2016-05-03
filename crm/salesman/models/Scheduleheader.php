@@ -52,20 +52,20 @@ class Scheduleheader extends \yii\db\ActiveRecord
         ];
     }
 
-    /* manipulate field models for name author :wawan*/
-    //     public function fields()
-    // {
-    //     return [
-    //         // field end is the same as the attribute TGL2
-    //         'end'=>'TGL2',
-    //
-    //         // field name is "start", the corresponding attribute name is "TGL1"
-    //         'start' => 'TGL1',
-    //
-    //         // field name is "title", the corresponding attribute name is "SCDL_GROUP"
-    //         'title' => 'SCDL_GROUP',
-    //     ];
-    // }
+    // /* manipulate field models for name author :wawan*/
+        public function fields()
+    {
+        return [
+            // field end is the same as the attribute TGL2
+            'end'=>'TGL2',
+
+            // field name is "start", the corresponding attribute name is "TGL1"
+            'start' => 'TGL1',
+
+            // field name is "title", the corresponding attribute name is "SCDL_GROUP"
+            'title' => 'NOTE',
+        ];
+    }
 
     /**
      * @inheritdoc

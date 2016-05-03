@@ -1377,7 +1377,7 @@ $gridLisHistory= GridView::widget([
 			],
 		]);
 
-/* grid view outbox */
+   /* grid view outbox */
 		$outboxpo = GridView::widget([
 					'id'=>'po',
 					'dataProvider'=> $dataprovider,
