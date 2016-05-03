@@ -39,9 +39,11 @@ class BeritaSearch extends Berita
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function searchBeritaInbox($params)
     {
-        $query = Berita::find();
+        $profile = Yii::$app->getUserOpt->profile_user(); //componen
+        $emp_id = $profile->EMP_ID;
+        $query = Berita::find()->where(['USER_CC'=>$emp_id]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -75,9 +77,49 @@ class BeritaSearch extends Berita
 
         return $dataProvider;
     }
-    public function searchdetailberita($params)
+
+    public function searchBeritaOutbox($params)
     {
-        $query = Detailberita::find();
+        $profile = Yii::$app->getUserOpt->profile_user(); //componen
+        $emp_id = $profile->EMP_ID;
+        $query = Berita::find()->where(['CREATED_BY'=>$emp_id]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            // 'ID' => $this->ID,
+            // 'STATUS' => $this->STATUS,
+            // 'CREATED_ATCREATED_BY' => $this->CREATED_ATCREATED_BY,
+            // 'UPDATE_AT' => $this->UPDATE_AT,
+        ]);
+
+        // $query->andFilterWhere(['like', 'KD_BERITA', $this->KD_BERITA])
+        //     ->andFilterWhere(['like', 'JUDUL', $this->JUDUL])
+        //     ->andFilterWhere(['like', 'ISI', $this->ISI])
+        //     ->andFilterWhere(['like', 'KD_CORP', $this->KD_CORP])
+        //     ->andFilterWhere(['like', 'KD_CAB', $this->KD_CAB])
+        //     ->andFilterWhere(['like', 'KD_DEP', $this->KD_DEP])
+        //     ->andFilterWhere(['like', 'DATA_PICT', $this->DATA_PICT])
+        //     ->andFilterWhere(['like', 'DATA_FILE', $this->DATA_FILE])
+        //     ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
+        //     ->andFilterWhere(['like', 'DATA_ALL', $this->DATA_ALL]);
+
+        return $dataProvider;
+    }
+
+    public function searchBeritaClose($params)
+    {
+        $query = Berita::find()->where('STATUS<>1');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

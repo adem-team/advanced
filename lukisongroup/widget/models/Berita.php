@@ -27,6 +27,7 @@ class Berita extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+     public $alluser;
     public static function tableName()
     {
         return 'bt0001';
@@ -46,9 +47,14 @@ class Berita extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            // [['KD_BERITA'], 'required'],
-            [['ISI', 'DATA_PICT', 'DATA_FILE', 'DATA_ALL','KD_BERITA'], 'string'],
-            [['STATUS'], 'integer'],
+                // [['JUDUL','USER_CC','KD_DEP'], 'required','when' => function ($attribute) {
+                //     return $attribute->alluser == 0; },
+                //     'whenClient' => "function (attribute, value) {
+                //         return $(this).is(':checked') == '0';
+                //     }"
+                //     ],
+            [['ISI', 'DATA_PICT', 'DATA_FILE', 'DATA_ALL','KD_BERITA','USER_CC'], 'string'],
+            [['STATUS','alluser'], 'integer'],
             [['CREATED_ATCREATED_BY', 'UPDATE_AT'], 'safe'],
             [['KD_BERITA', 'KD_CORP', 'KD_CAB', 'KD_DEP'], 'string', 'max' => 20],
             [['JUDUL'], 'string', 'max' => 200],
@@ -62,6 +68,7 @@ class Berita extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+          'alluser'=>'',
             'ID' => 'ID',
             'KD_BERITA' => 'Kd  Berita',
             'JUDUL' => 'Judul',

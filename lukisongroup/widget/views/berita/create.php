@@ -5,10 +5,6 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\widget\models\Berita */
-
-$this->title = 'Create Berita';
-$this->params['breadcrumbs'][] = ['label' => 'Beritas', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="berita-create">
 
@@ -16,6 +12,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'datadep'=> $datadep,
+        'emp_img'=>$emp_img,
     ]) ?>
 
 </div>
