@@ -18,6 +18,7 @@ use yii\widgets\Pjax;
  * @author ptrnov  [piter@lukison.com]
  * @since 1.2
 */
+
 $actionClass='btn btn-info btn-xs';
 $actionLabel='Update';
 $attDinamik =[];
@@ -38,12 +39,12 @@ $attDinamik[]=[
   'dropdownOptions'=>['class'=>'pull-left dropdown','style'=>['disable'=>true]],
   'dropdownButton'=>[
     'class' => $actionClass,
-    'label'=>$actionLabel,
+    // 'label'=>$actionLabel,
     //'caret'=>'<span class="caret"></span>',
   ],
   'buttons' => [
     'view' =>function($url, $model, $key){
-        return  '<li>' .Html::a('<span class="fa fa-random fa-dm"></span>'.Yii::t('app', 'open'),
+        return  '<li>' .Html::a('<span class="fa fa-random fa-dm"></span>'.Yii::t('app', 'View'),
                       ['/widget/berita/detail-berita','KD_BERITA'=>$model->KD_BERITA],[
                       'id'=>'inbox-berita-id',
                       ]). '</li>' . PHP_EOL;

@@ -43,7 +43,13 @@ class BeritaSearch extends Berita
     {
         $profile = Yii::$app->getUserOpt->profile_user(); //componen
         $emp_id = $profile->EMP_ID;
-        $query = Berita::find()->where(['USER_CC'=>$emp_id]);
+        $dep_id = $profile->emp->DEP_ID;
+        $query = Berita::find()->where(['OR',
+                          ['USER_CC'=>$emp_id],
+                          ['KD_DEP'=>"0"],
+                          ['KD_DEP'=>$dep_id],
+                          ])->andwhere('STATUS<>0');
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -82,7 +88,8 @@ class BeritaSearch extends Berita
     {
         $profile = Yii::$app->getUserOpt->profile_user(); //componen
         $emp_id = $profile->EMP_ID;
-        $query = Berita::find()->where(['CREATED_BY'=>$emp_id]);
+        $query = Berita::find()->where(['CREATED_BY'=>$emp_id])
+                               ->andwhere('STATUS<>0');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

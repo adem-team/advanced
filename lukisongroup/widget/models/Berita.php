@@ -47,15 +47,11 @@ class Berita extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-                // [['JUDUL','USER_CC','KD_DEP'], 'required','when' => function ($attribute) {
-                //     return $attribute->alluser == 0; },
-                //     'whenClient' => "function (attribute, value) {
-                //         return $(this).is(':checked') == '0';
-                //     }"
-                //     ],
-            [['ISI', 'DATA_PICT', 'DATA_FILE', 'DATA_ALL','KD_BERITA','USER_CC'], 'string'],
+            [['JUDUL'], 'required','on' => 'true'], // ajax validation checkbox value equal true
+            [['JUDUL','USER_CC','KD_DEP'], 'required','on' => 'false'],// ajax validation checkbox value equal false
+            [['ISI', 'DATA_PICT', 'DATA_FILE', 'DATA_ALL','KD_BERITA'], 'string'],
             [['STATUS','alluser'], 'integer'],
-            [['CREATED_ATCREATED_BY', 'UPDATE_AT'], 'safe'],
+            [['CREATED_ATCREATED_BY', 'UPDATE_AT','USER_CC'], 'safe'],
             [['KD_BERITA', 'KD_CORP', 'KD_CAB', 'KD_DEP'], 'string', 'max' => 20],
             [['JUDUL'], 'string', 'max' => 200],
             [['CREATED_BY'], 'string', 'max' => 100]

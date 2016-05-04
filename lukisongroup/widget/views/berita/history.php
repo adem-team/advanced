@@ -19,7 +19,6 @@ use yii\widgets\Pjax;
  * @since 1.2
 */
 $actionClass='btn btn-info btn-xs';
-$actionLabel='Update';
 $attDinamik =[];
 /*GRIDVIEW ARRAY FIELD HEAD*/
 $headColomnBT=[
@@ -34,35 +33,17 @@ $gvHeadColomnBT = ArrayHelper::map($headColomnBT, 'ID', 'ATTR');
 $attDinamik[]=[
   'class'=>'kartik\grid\ActionColumn',
   'dropdown' => true,
-  'template' => '{view}{review}{delete}',
+  'template' => '{view}',
   'dropdownOptions'=>['class'=>'pull-left dropdown','style'=>['disable'=>true]],
   'dropdownButton'=>[
     'class' => $actionClass,
-    'label'=>$actionLabel,
     //'caret'=>'<span class="caret"></span>',
   ],
   'buttons' => [
     'view' =>function($url, $model, $key){
-        return  '<li>' .Html::a('<span class="fa fa-random fa-dm"></span>'.Yii::t('app', 'Set Alias Customer'),
-                      ['/sistem/personalia/view','id'=>$model->ID],[
-                      'id'=>'alias-cust-id',
-                      'data-toggle'=>"modal",
-                      'data-target'=>"#alias-cust",
-                      ]). '</li>' . PHP_EOL;
-    },
-    'review' =>function($url, $model, $key){
-        return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'Set Alias Prodak'),
-                      ['/sistem/personalia/view','id'=>$model->ID],[
-                      'id'=>'alias-prodak-id',
-                      'data-toggle'=>"modal",
-                      'data-target'=>"#alias-prodak",
-                      ]). '</li>' . PHP_EOL;
-    },
-    'delete' =>function($url, $model, $key){
-        return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'new Customer'),
-                      ['/sistem/personalia/view','id'=>$model->ID],[
-                      'data-toggle'=>"modal",
-                      'data-target'=>"#alias-prodak",
+        return  '<li>' .Html::a('<span class="fa fa-random fa-dm"></span>'.Yii::t('app', 'view'),
+                      ['/widget/berita/detail-berita','KD_BERITA'=>$model->KD_BERITA],[
+                      'id'=>'berita-acara-view-id-history',
                       ]). '</li>' . PHP_EOL;
     },
   ],
