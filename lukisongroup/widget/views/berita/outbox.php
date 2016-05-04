@@ -19,7 +19,6 @@ use yii\widgets\Pjax;
  * @since 1.2
 */
 $actionClass='btn btn-info btn-xs';
-$actionLabel='Update';
 $attDinamik =[];
 /*GRIDVIEW ARRAY FIELD HEAD*/
 $headColomnBT=[
@@ -38,12 +37,11 @@ $attDinamik[]=[
   'dropdownOptions'=>['class'=>'pull-left dropdown','style'=>['disable'=>true]],
   'dropdownButton'=>[
     'class' => $actionClass,
-    'label'=>$actionLabel,
     //'caret'=>'<span class="caret"></span>',
   ],
   'buttons' => [
     'view' =>function($url, $model, $key){
-        return  '<li>' .Html::a('<span class="fa fa-random fa-dm"></span>'.Yii::t('app', 'Open'),
+        return  '<li>' .Html::a('<span class="fa fa-random fa-dm"></span>'.Yii::t('app', 'view'),
                       ['/widget/berita/detail-berita','KD_BERITA'=>$model->KD_BERITA],[
                       'id'=>'berita-acara-view-id',
                       ]). '</li>' . PHP_EOL;

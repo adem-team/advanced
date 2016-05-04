@@ -9,21 +9,12 @@ use yii\helpers\Url;
 /* @var $model lukisongroup\widget\models\Berita */
 /* @var $form yii\widgets\ActiveForm */
 
-
-/* foto profile */
-if($emp_img == '')
-{
- $foto_profile = Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/default.jpg', ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
-}else{
- $foto_profile = Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/'.$emp_img, ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
-}
 ?>
 
 
     <?php $form = ActiveForm::begin([
       'id'=>$model->formName(),
       'enableClientValidation' => true,
-      // 'enableAjaxValidation'=>true,
     ]); ?>
 
 

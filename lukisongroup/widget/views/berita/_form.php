@@ -11,20 +11,17 @@ use yii\helpers\Url;
 /* @var $form yii\widgets\ActiveForm */
 
 
-/* foto profile */
-if($emp_img == '')
-{
- $foto_profile = Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/default.jpg', ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
-}else{
- $foto_profile = Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/'.$emp_img, ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
-}
+
 ?>
 
 
     <?php $form = ActiveForm::begin([
       'id'=>$model->formName(),
       'enableClientValidation' => true,
-      // 'enableAjaxValidation'=>true,
+      'enableAjaxValidation'=>true,
+      // 'method' => 'post',
+      // 'action' => ['/widget/berita/save-berita'],
+      'validationUrl'=>Url::toRoute('/widget/berita/valid-berita-acara')
     ]); ?>
 
 
@@ -42,7 +39,10 @@ if($emp_img == '')
         <div id="berita-hide">
         <?=  $form->field($model, 'KD_DEP')->widget(Select2::classname(),['data' => $datadep,'options' => ['placeholder' => 'Select ...'],]) ?>
 
-        <?= $form->field($model, 'USER_CC')->widget(DepDrop::classname(), [
+          <?=  $form->field($model, 'USER_CC')->widget(Select2::classname(),['data' =>$dataemploye,
+          'options' => ['placeholder' => 'Select ...'],]) ?>
+
+         <!-- $form->field($model, 'USER_CC')->widget(DepDrop::classname(), [
            'options' => ['placeholder' => 'Select ...'],
            'type' => DepDrop::TYPE_SELECT2,
            'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
@@ -51,7 +51,7 @@ if($emp_img == '')
                 'url' => Url::to(['/widget/berita/cari-user-berita']),
                 'loadingText' => 'Loading ...',
         ]
-        ]) ?>
+        ]) ?> -->
       </div>
 
       </div>
@@ -77,7 +77,9 @@ if($emp_img == '')
       $("#berita-hide").hide();
     }else{
         $("#berita-hide").show();
+
     }
+
   });
 
   ',$this::POS_READY);

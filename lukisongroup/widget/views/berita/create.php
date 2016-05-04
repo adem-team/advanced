@@ -14,6 +14,8 @@ use yii\helpers\Html;
         'model' => $model,
         'datadep'=> $datadep,
         'emp_img'=>$emp_img,
+        'foto_profile'=>$foto_profile,
+        'dataemploye'=>$dataemploye
     ]) ?>
 
 </div>

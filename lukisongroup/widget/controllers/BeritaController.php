@@ -10,9 +10,11 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\widgets\ActiveForm;
+use yii\helpers\Html;
 
 /* namespace models */
 use lukisongroup\widget\models\Berita;
+use lukisongroup\widget\models\BeritaNotify;
 use lukisongroup\widget\models\Commentberita;
 use lukisongroup\widget\models\BeritaSearch;
 use lukisongroup\hrd\models\Dept;
@@ -92,13 +94,18 @@ class BeritaController extends Controller
 
     /**
      * Displays a single Berita model.
-     * @param integer $ID
      * @param string $KD_BERITA
      * @return mixed
      */
     public function actionDetailBerita($KD_BERITA)
     {
+      $profile = Yii::$app->getUserOpt->profile_user()->emp;
+      $id = $profile->EMP_ID;
       $model = Berita::find()->where(['KD_BERITA' => $KD_BERITA])->one();
+      $connection = Yii::$app->db_widget;
+	    $command =  $connection->createCommand('UPDATE bt0001notify set TYPE = 0 where KD_BERITA="'.$KD_BERITA.'" AND ID_USER="'.$id.'"');
+      $command->execute();
+
         return $this->render('view_detailberita', [
             'model' => $model,
         ]);
@@ -106,52 +113,100 @@ class BeritaController extends Controller
 
     /**
      * Creates a new Berita model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
+     * If creation is successful, the browser will be redirected to the 'detail-berita' page.
      * @return mixed
      */
     public function actionCreate()
     {
         $model = new Berita();
-
         /* data departement using select 2 */
         $datadep = ArrayHelper::map(Dept::find()->where('DEP_STS <>3')->asArray()->all(), 'DEP_ID', 'DEP_NM');
+
+        /* data Employe using select 2 */
+        $dataemploye = ArrayHelper::map(Employe::find()->where('EMP_STS <>3')->asArray()->all(), 'EMP_ID', 'EMP_NM');
 
         /* componen user */
         $profile = Yii::$app->getUserOpt->profile_user()->emp;
         $emp_img = $profile->EMP_IMG;
+
+        /* foto profile */
+        if($emp_img == '')
+        {
+         $foto_profile = Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/default.jpg', ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
+        }else{
+         $foto_profile = Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/'.$emp_img, ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
+        }
+
+          /* proses save */
         if ($model->load(Yii::$app->request->post())) {
+
+          /*  *checkbox using filter author : wawan
+              *if checkbox equal 1 then kd_dep result 0
+          */
           $post = Yii::$app->request->post();
           $checkbox = $post['Berita']['alluser'];
+          if($checkbox == 1)
+          {
+            $model->KD_DEP = '0';
+          }
 
           /* generate kode berita*/
           $GneratekodeBerita=\Yii::$app->ambilkonci->getBeritaCode();
 
           $model->KD_BERITA = $GneratekodeBerita;
+
           //componen
           $model->KD_CORP =  	Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
-		      $model->KD_DEP = 	 Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
 	        $model->CREATED_BY = Yii::$app->user->identity->EMP_ID;
-          if($checkbox == 1)
+
+          if($model->save())
           {
-            $employe = employe::find()->where('STATUS<>3')->all();
-            foreach ($employe as $key => $value) {
-              # code...
-              $connection = Yii::$app->db_widget;
-              $connection->createCommand()->batchInsert('bt0001',['KD_BERITA','JUDUL','ISI','KD_CORP','KD_DEP','CREATED_BY','USER_CC'],[[$model->KD_BERITA,$model->JUDUL,$model->ISI,$model->KD_CORP,$model->KD_DEP,$model->CREATED_BY,$value['EMP_ID']]])->execute();
-                 }
-            }else{
-                $model->save();
+
+              $departement = Berita::find()->where(['KD_BERITA'=>$model->KD_BERITA])->asArray()->one();
+              if($departement['KD_DEP'] != "0")
+              {
+                $date =  date('Y-m-d');
+                $connection = Yii::$app->db_widget;
+                $connection->createCommand()
+                          ->insert('bt0001notify', [
+                                  'KD_BERITA' =>$model->KD_BERITA,
+                                   'ID_USER' =>$model->USER_CC,
+                                    'CREATED_BY' => $model->CREATED_BY,
+                                    'CREATED_AT' => $date,
+                                    ])->execute();
+
+
+                $notif = Employe::find()->where(['DEP_ID'=>$model->KD_DEP])->asArray()->all();
+                foreach ($notif as $key => $value) {
+                  # code...
+                  $connection->createCommand()->batchInsert('bt0001notify',['KD_BERITA','ID_USER','CREATED_BY','CREATED_AT'],[[$model->KD_BERITA,$value['EMP_ID'],$model->CREATED_BY,$date]])->execute();
+                }
+              }
+
+
             }
-			       return $this->redirect(['detail-berita', 'ID' => $model->ID, 'KD_BERITA' => $model->KD_BERITA]);
+
+              return $this->redirect(['detail-berita','KD_BERITA' => $model->KD_BERITA]);
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,
                 'datadep'=>$datadep,
                 'emp_img'=>$emp_img,
+                'foto_profile'=>$foto_profile,
+                'dataemploye'=>$dataemploye
             ]);
         }
     }
 
+
+
+
+    /**
+     * Creates a new Commentberita model.
+     * If creation is successful, the browser will be redirected to the 'detail-berita' page.
+     * @param string $KD_BERITA
+     * @return mixed
+     */
     public function actionJoinComment($KD_BERITA)
     {
         $model = new Commentberita();
@@ -159,6 +214,16 @@ class BeritaController extends Controller
         /* componen user */
         $profile = Yii::$app->getUserOpt->profile_user()->emp;
         $emp_img = $profile->EMP_IMG;
+
+        /* foto profile */
+        if($emp_img == '')
+        {
+         $foto_profile = Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/default.jpg', ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
+        }else{
+         $foto_profile = Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/'.$emp_img, ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
+        }
+
+        /* proses save */
         if ($model->load(Yii::$app->request->post())) {
           $model->KD_BERITA = $KD_BERITA;
           $model->EMP_IMG = $emp_img;
@@ -172,20 +237,29 @@ class BeritaController extends Controller
         } else {
             return $this->renderAjax('commentar', [
                 'model' => $model,
-                'emp_img'=>$emp_img
+                'emp_img'=>$emp_img,
+                'foto_profile'=>$foto_profile
             ]);
         }
     }
 
 
 
-
+    /* ajax validation using checkbox author:wawan*/
     public function actionValidBeritaAcara()
     {
       # code...
         $model = new Berita();
       if(Yii::$app->request->isAjax && $model->load($_POST))
       {
+        /* if checkbox equal false then scenario validation false
+            else checkbox equal true then scenario validation true
+        */
+        if($_POST['Berita']['alluser'] == 0){
+            $model->scenario = 'false';
+        }else{
+            $model->scenario = 'true';
+        }
         Yii::$app->response->format = 'json';
         return ActiveForm::validate($model);
       }
@@ -198,51 +272,51 @@ class BeritaController extends Controller
      * @param string $KD_BERITA
      * @return mixed
      */
-    public function actionUpdate($ID, $KD_BERITA)
-    {
-        $model = $this->findModel($ID, $KD_BERITA);
+     public function actionCloseBerita()
+       {
+   		if (Yii::$app->request->isAjax) {
+   			$request= Yii::$app->request;
+   			$id=$request->post('id');
+   			$model = Berita::find()->where(['KD_BERITA'=>$id])->one();
+   	    $model->STATUS = 0;
+   			$model->save();
+        $connection = Yii::$app->db_widget;
+        $close = $connection->createCommand('DELETE FROM bt0001notify WHERE KD_BERITA=:kd_berita');
+        $close->bindParam(':kd_berita', $kd_berita);
+        $kd_berita = $model->KD_BERITA;
+        $close->execute();
+   			return true;
+   		}
+      }
 
-        if ($model->load(Yii::$app->request->post()) ) {
+/* get user cc usage depdrop not used anymore */
+    // public function getusercc($id)
+    // {
+    //       $out = [];
+    //       $model = Employe::find()->asArray()
+    //                               ->where(['DEP_ID'=>$id])
+    //                               ->andwhere('STATUS<>3')
+    //                               ->all();
+    //       foreach ($model as $key => $value) {
+    //             $out[] = ['id'=>$value['EMP_ID'],'name'=> $value['EMP_NM']];
+    //      }
+    //      return $out;
+    // }
 
-			$model->UPDATE_AT = date('Y-m-d h:i:s');
-
-			 $model->save();
-            return $this->redirect(['view', 'ID' => $model->ID, 'KD_BERITA' => $model->KD_BERITA]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-/* get user cc usage depdrop */
-    public function getusercc($id)
-    {
-          $out = [];
-          $model = Employe::find()->asArray()
-                                  ->where(['DEP_ID'=>$id])
-                                  ->andwhere('STATUS<>3')
-                                  ->all();
-          foreach ($model as $key => $value) {
-                $out[] = ['id'=>$value['EMP_ID'],'name'=> $value['EMP_NM']];
-         }
-         return $out;
-    }
-
-/* depdrop author : wawan*/
-    public function actionCariUserBerita() {
-
-    if (isset($_POST['depdrop_parents'])) {
-        $parents = $_POST['depdrop_parents'];
-        if ($parents != null) {
-            $id = $parents[0];
-             $out = $this->getusercc($id); //call function getusercc
-            echo Json::encode(['output'=>$out, 'selected'=>'']);
-            return;
-        }
-    }
-    echo Json::encode(['output'=>'', 'selected'=>'']);
-}
+/* not used anymore depdrop author : wawan*/
+//     public function actionCariUserBerita() {
+//
+//     if (isset($_POST['depdrop_parents'])) {
+//         $parents = $_POST['depdrop_parents'];
+//         if ($parents != null) {
+//             $id = $parents[0];
+//              $out = $this->getusercc($id); //call function getusercc
+//             echo Json::encode(['output'=>$out, 'selected'=>'']);
+//             return;
+//         }
+//     }
+//     echo Json::encode(['output'=>'', 'selected'=>'']);
+// }
 
 
 
@@ -265,13 +339,12 @@ class BeritaController extends Controller
      * Finds the Berita model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $ID
-     * @param string $KD_BERITA
      * @return Berita the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($KD_BERITA)
+    protected function findModel($ID)
     {
-        if (($model = Berita::find()->where(['KD_BERITA' => $KD_BERITA])) !== null) {
+        if (($model = Berita::findOne(['ID' => $ID])) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

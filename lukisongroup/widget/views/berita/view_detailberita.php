@@ -5,6 +5,7 @@ use yii\widgets\DetailView;
 use kartik\grid\GridView;
 use yii\helpers\Url;
 use yii\bootstrap\Modal;
+use yii\widgets\Pjax;
 
 /* namespace models */
 use lukisongroup\hrd\models\Employe;
@@ -33,26 +34,27 @@ if(count($queryCariEmploye) == 0 || $queryCariEmploye =='')
   * @author : wawan
     * @since 1.0
  */
- function Add_berita_isi($model){
+
+ function Add_close($model){
      $title = Yii::t('app','');
-     $options = [ 'id'=>'berita-isi-id',
-             'data-toggle'=>"modal",
-             'data-target'=>"#berita-isi-id-add",
-             'class'=>'btn btn-info btn-xs',
-             'title'=>'PO Attach File'
+     $options = [ 'id'=>'berita-isi-id-close',
+               'data-pjax' => true,
+               'data-toggle-close'=>$model->KD_BERITA,
+               'class'=>'btn btn-danger btn-xs',
      ];
-     $icon = '<span class="fa fa-plus fa-lg">Add News</span>';
+     $icon = '<span class="glyphicon glyphicon-remove-sign">Close</span>';
      $label = $icon . ' ' . $title;
-     $url = Url::toRoute(['/widget/berita/news-value','ID'=>$model->ID,'KD_BERITA'=>$model->KD_BERITA]);
-     $content = Html::a($label,$url, $options);
+     $content = Html::a($label,'', $options);
      return $content;
  }
+
+
 
  /*
   * @author : wawan
     * @since 1.0
  */
- 
+
  function berita_reply($model){
      $title = Yii::t('app','');
      $options = [ 'id'=>'berita-reply-id',
@@ -66,6 +68,13 @@ if(count($queryCariEmploye) == 0 || $queryCariEmploye =='')
      $url = Url::toRoute(['/widget/berita/join-comment','KD_BERITA'=>$model->KD_BERITA]);
      $content = Html::a($label,$url, $options);
      return $content;
+ }
+
+ if($model->STATUS == 0)
+ {
+   $btnreply = "";
+ }else{
+   $btnreply = berita_reply($model);
  }
 
 
@@ -115,6 +124,7 @@ if(count($queryCariEmploye) == 0 || $queryCariEmploye =='')
 
      ];
     }
+    Pjax::begin(['id'=>'diva']);
 
     echo Html::panel(
       [
@@ -131,18 +141,42 @@ if(count($queryCariEmploye) == 0 || $queryCariEmploye =='')
        ],
 
    ]),
-   'footer'=> '<div>'.berita_reply($model).'</div>',
+   'footer'=> '<div>'.$btnreply.' '.Add_close($model).'</div>',
     'headingTitle' => true,
     'footerTitle' => true,
       ],
       Html::TYPE_INFO
     );
+    Pjax::end();
     ?>
 </div>
 </div>
 
 
 <?php
+$this->registerJs("
+  $('#berita-isi-id-close').click(function(e){
+    e.preventDefault();
+    var idx = $(this).data('toggle-close');
+    $.ajax({
+        url: '/widget/berita/close-berita',
+        type: 'POST',
+        data:'id='+idx,
+        dataType: 'json',
+        success: function(result) {
+          if (result == 1){
+            // Success
+            $('#berita-reply-id').hide(); //TO hide
+          } else {
+            // Fail
+          }
+        }
+      });
+
+  });
+  ",$this::POS_READY);
+
+
 $this->registerJs("
   $.fn.modal.Constructor.prototype.enforceFocus = function() {};
   $('#berita-reply-id-join').on('show.bs.modal', function (event) {
