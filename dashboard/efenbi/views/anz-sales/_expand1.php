@@ -1,6 +1,6 @@
 <?php
 use kartik\helpers\Html;
-use yii\widgets\DetailView;
+use kartik\detail\DetailView;
 use kartik\grid\GridView;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
@@ -14,6 +14,96 @@ use yii\web\Request;
 use kartik\daterange\DateRangePicker;
 use yii\db\ActiveRecord;
 use yii\data\ArrayDataProvider;
+	
+	//print_r($dataModelsHeader1);
+	$vwHeader1=DetailView::widget([		
+        'model' => $dataModelsHeader1[0],
+        'attributes' => [
+    		[
+				'columns' => [
+					[
+						'attribute'=>'TGL', 
+						'label'=>'DATE',
+						'displayOnly'=>true,
+						'valueColOptions'=>['style'=>'width:30%']
+					],
+					[
+						//JAM MEMULAI PERJALANAN DARI DISTRIBUTOR/OTHER
+						'attribute'=>'TIME_DAYEND', 
+						'format'=>'raw',
+						'value'=>$model['TIME_DAYSTART']!=''?$model['TIME_DAYSTART']:"<span class='badge' style='background-color:#ff0000'>ABSENT </span>",
+						'label'=>'TIME START',
+						'valueColOptions'=>['style'=>'width:30%'], 
+						'displayOnly'=>true
+					],
+				],
+			],
+			[
+				'columns' => [
+					[
+						'attribute'=>'USER_NM', 
+						'label'=>'USER NAME',
+						'valueColOptions'=>['style'=>'width:30%'], 
+						'displayOnly'=>true
+					],
+					[
+						//JAM SELESAI PERJALANAN DARI DISTRIBUTOR/OTHER
+						'attribute'=>'TIME_DAYEND',
+						'format'=>'raw',
+						'value'=>$model['TIME_DAYEND']!=''?$model['TIME_DAYEND']:"<span class='badge' style='background-color:#ff0000'>ABSENT </span>",						
+						'label'=>'TIME END',
+						'valueColOptions'=>['style'=>'width:30%'], 
+						'displayOnly'=>true
+					],
+				],
+			],
+			[
+				'columns' => [
+					[
+						'attribute'=>'SCDL_GRP_NM', 
+						'label'=>'GROUP',
+						'displayOnly'=>true,
+						'valueColOptions'=>['style'=>'width:30%']
+					],
+					[
+						'attribute'=>'CUST_TIPE_NM', 
+						'label'=>'TYPE',
+						//'format'=>'raw', 
+						//'value'=>'<kbd>'.$model->book_code.'</kbd>',
+						'valueColOptions'=>['style'=>'width:30%'], 
+						'displayOnly'=>true
+					],
+				],
+			],
+			[
+				'columns' => [
+					[
+						'attribute'=>'CUST_TIPE_NM', 
+						'label'=>'TYPE',
+						'valueColOptions'=>['style'=>'width:30%'], 
+						'displayOnly'=>true
+					],
+					[
+						'attribute'=>'CUST_TIPE_NM', 
+						'label'=>'TYPE',
+						//'format'=>'raw', 
+						//'value'=>'<kbd>'.$model->book_code.'</kbd>',
+						'valueColOptions'=>['style'=>'width:30%'], 
+						'displayOnly'=>true
+					],
+				],
+			],					
+        ],
+		'mode'=>DetailView::MODE_VIEW,
+		'enableEditMode'=>false,
+		'mainTemplate'=>'{detail}',
+		'panel'=>[
+			'heading'=>'USER INFO',
+			'type'=>DetailView::TYPE_DANGER,
+		],		
+		
+    ]); 
+	
 	
 	$actionClass='btn btn-info btn-xs';
 	$actionLabel='View';
@@ -113,17 +203,11 @@ use yii\data\ArrayDataProvider;
 	echo $cust_id;
 	echo "</br></br>";
 	echo $user_id; */
-?>
 
-<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
-    <div  class="row" style="margin-top:15px">
-        <div class="col-sm-12 col-md-12 col-lg-12">
-			<?php
-				/*SHOW GRID VIEW LIST*/
-				echo GridView::widget([
+	$gvCustDaily= GridView::widget([
 					'id'=>'header2-id',
-					 'export' => false,
-  'panel' => false,
+					'export' => false,
+					'panel' => false,
 					'dataProvider' => $dataProviderHeader2,
 					//'filterModel' => $searchModel,					
 					//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
@@ -148,6 +232,22 @@ use yii\data\ArrayDataProvider;
 					//'bordered'=>true,
 					//'striped'=>true,
 				]);			
+?>
+	
+
+
+
+<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
+    <div  class="row" style="margin-top:15px">
+        <div class="col-sm-8 col-md-8 col-lg-8">
+			<?php
+				echo $vwHeader1;
+				echo $gvCustDaily;
+			?>
+		</div>
+		<div class="col-sm-4 col-md-4 col-lg-4">
+			<?php
+				//echo $visitImage;
 			?>
 		</div>
 	</div>

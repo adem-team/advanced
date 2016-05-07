@@ -66,7 +66,7 @@ class AnzSalesController extends Controller
 			/* CUSTOMER CATEHORI COUNT [modern,general,horeca,other]*/
 			$dataProvider= new ArrayDataProvider([
 				//'key' => 'PARENT_ID',
-				'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_header1('ALL_HEAD1')")->queryAll(),
+				'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_header1('ALL_HEAD1','','')")->queryAll(),
 				'pagination' => [
 					'pageSize' => 5,
 					]
@@ -79,7 +79,7 @@ class AnzSalesController extends Controller
 			//$CntrVisit=$dataCntrVisit[0]['CNT_DAY']!=''? $dataCntrVisit[0]['CNT_DAY']:0;
 			
 			return $this->render('index',[
-				'dataProviderX'=>$dataProvider,
+				'dataProviderHeader1'=>$dataProvider,
 			]);
 		};	
     }
