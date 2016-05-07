@@ -122,7 +122,16 @@ $this->params['breadcrumbs'][] = $this->title;
 					'value'=>function ($model, $key, $index, $column) {
 						return GridView::ROW_COLLAPSED;
 					},
-					'detail'=>function ($model, $key, $index, $column){						
+					'detail'=>function ($model, $key, $index, $column){
+						$dataModelsHeader1= new ArrayDataProvider([
+							//'key' => 'ID',
+							'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_header1('ALL_HEAD1','".$model['TGL']."','".$model['CUST_ID']."')")->queryAll(),
+							//'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_header1('ALL_HEAD1','2016-04-01','CUS.2016.000009')")->queryAll(),
+							  'pagination' => [
+								'pageSize' =>50,
+							] 
+						]);
+						
 						$dataProviderHeader2= new ArrayDataProvider([
 							//'key' => 'ID',
 							'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_header2('ALL_HEAD2','".$model['USER_ID']."','".$model['TGL']."')")->queryAll(),
@@ -132,6 +141,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						]);				
 						
 						return Yii::$app->controller->renderPartial('_expand1',[
+							'dataModelsHeader1'=>$dataModelsHeader1->getModels(),
 							'dataProviderHeader2'=>$dataProviderHeader2
 						]);
 					},
@@ -240,7 +250,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				/*SHOW GRID VIEW LIST*/
 				echo GridView::widget([
 					'id'=>'cust-visit-list',
-					'dataProvider' => $dataProviderX,
+					'dataProvider' => $dataProviderHeader1,
 					//'filterModel' => $searchModel,					
 					//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
 					'columns' => $attDinamik,
