@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						 echo Html::panel(
 							[
 							//'heading' => '<a class="btn btn-info btn-xs full-right" href="/efenbi/report"><< BACK MENU </a> All Customer Category',
-								'body'=> '<div id="chart-cust-parent" style="height:200px"></div> <div id="chart-Sales-compare"></div>',
+								'body'=> '<div id="chart-cust-parent" style="height:200px"></div> <div id="chart-cust-active-call"  style="height:200px"></div>',
 							],
 							Html::TYPE_INFO
 						);
@@ -45,16 +45,44 @@ $this->params['breadcrumbs'][] = $this->title;
 				</div>
 			</div>
 		</div>
-		<div class="col-xs-12 col-sm-12 col-dm-12  col-lg-12 full-right">			
-			<?php
-				 echo Html::panel(
-					[
-						'heading' => 'SALES COMPARE',
-						'body'=> '<div id="chart-Sales-compare"></div>',
-					],
-					Html::TYPE_INFO
-				);
-			?>
+		<div class="col-xs-12 col-sm-12 col-dm-12  col-lg-12 full-right">	
+			<div class="row">
+				<!-- KIRI !-->
+				<div class="col-lg-4 col-md-4" style="padding-top:10px">
+					<?php
+						 echo Html::panel(
+							[
+								'heading' => 'Monthly Top 5 Plan & Actual Visited',
+								'body'=> '<div id="chart-top5-plan-actual"></div>',
+							],
+							Html::TYPE_INFO
+						);
+					?>
+				</div>		
+				<div class="col-lg-4 col-md-4" style="padding-top:10px">
+					<?php
+						 echo Html::panel(
+							[
+								'heading' => 'Monthly Top 5 Inventory Visited',
+								'body'=> '<div id="chart-top5-inventory"></div>',
+							],
+							Html::TYPE_INFO
+						);
+					?>
+				</div>		
+				<div class="col-lg-4 col-md-4" style="padding-top:10px">
+					<?php
+						 echo Html::panel(
+							[
+								'heading' => 'Monthly Top 5 Salesman Visited',
+								//'heading' => 'Monthly Top 5 Reauest Order Visited',
+								'body'=> '<div id="chart-top5-request-order"></div>',
+							],
+							Html::TYPE_INFO
+						);
+					?>
+				</div>		
+			</div>
 		</div>
 	</div>
 </div>
@@ -133,7 +161,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			dataFormat: "json",
 			dataSource: {
 				chart: {
-					caption: "Modern Parent Customers",
+					caption: "Customers Modern Parent",
 					//subcaption: "Daily Actual Total Stock sell-out",
 					subcaptionFontBold: "0",
 					subcaptionFontSize: "14",
@@ -160,117 +188,282 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 	$this->registerJs('
 		/* 
-		 * GRAPH MODERN CUSTOMER PARENT VS SALES COMPARE
+		 * GRAPH MODERN CUSTOMER ACTIVE
 		 * @author piter [ptr.nov@gmail.com]
 		 * @since 1.1
 		*/
 		$(document).ready(function () {
 			var ChartSalesCompare = new FusionCharts({
 				type: "msline",
-				renderAt: "chart-Sales-compare",
+				renderAt: "chart-cust-active-call",
 				width: "100%",
 				height: "80%",
 				dataFormat: "json",
-				dataSource: {
-					"chart": {
-						"caption": "Sales Compare",
-						//"subCaption": "Customers Modern",
-						//"subCaption": "Sales Compare",
-						"captionFontSize": "14",
-						"subcaptionFontSize": "14",
-						"subcaptionFontBold": "0",
-						"palettecolors": "#583e78,#008ee4,#f8bd19,#e44a00,#6baa01,#ff2e2e",
-						"bgcolor": "#ffffff",
-						"showBorder": "1",
-						"showShadow": "0",
-						"showCanvasBorder": "0",
-						"usePlotGradientColor": "0",
-						"legendBorderAlpha": "0",
-						"legendShadow": "0",
-						"showAxisLines": "0",
-						"showAlternateHGridColor": "0",
-						"divlineThickness": "1",
-						"divLineIsDashed": "1",
-						"divLineDashLen": "1",
-						"divLineGapLen": "1",
-						"xAxisName": "Day",
-						"showValues": "0", 
-						"showXAxisLine": "1",
-						"plotBorderAlpha": "10",
-						borderAlpha: "20",
-						bgColor: "#ffffff",
-						usePlotGradientColor: "0",
-						plotBorderAlpha: "10", 
-						showAlternateHGridColor: "0",
-						showXAxisLine: "1",
-						
-					},
-					"categories": [
-						{
-							"category": [
-								{ "label": "Mon" }, 
-								{ "label": "Tue" }, 
-								{ "label": "Wed" },
-								{
-									"vline": "true",
-									"lineposition": "0",
-									"color": "#6baa01",
-									"labelHAlign": "center",
-									"labelPosition": "0",
-									"label": "National holiday",
-									"dashed":"1"
-								},
-								{ "label": "Thu" }, 
-								{ "label": "Fri" }, 
-								{ "label": "Sat" }, 
-								{ "label": "Sun" }
-							]
-						}
-					],
-					"dataset": [
-						{
-							"seriesname": "Bakersfield Central",
-							"data": [
-								{ "value": "15123" }, 
-								{ "value": "14233" }, 
-								{ "value": "25507" }, 
-								{ "value": "9110" }, 
-								{ "value": "15529" }, 
-								{ "value": "20803" }, 
-								{ "value": "19202" }
-							]
-						}, 
-						{
-							"seriesname": "Los Angeles Topanga",
-							"data": [
-								{ "value": "13400" }, 
-								{ "value": "12800" }, 
-								{ "value": "22800" }, 
-								{ "value": "12400" }, 
-								{ "value": "15800" }, 
-								{ "value": "19800" }, 
-								{ "value": "21800" }
-							]
-						}
-					], 
-					"trendlines": [
-						{
-							"line": [
-								{
-									"startvalue": "17022",
-									"color": "#6baa01",
-									"valueOnRight": "1",
-									"displayvalue": "Average"
-								}
-							]
-						}
-					]
-				}
+				dataSource: '.$cac.'
 			}).render();
 		});
 	',$this::POS_READY);
 ?>
 
-
+<?php
+	$this->registerJs('
+		$(document).ready(function () {
+			/* 
+			 * GRAPH MODERN CUSTOMER TOP 5 SCHADULE & VISITING
+			 * @author piter [ptr.nov@gmail.com]
+			 * @since 1.1
+			*/
+			var top5PlanActual = new FusionCharts({
+				type: "msbar2d",
+				renderAt: "chart-top5-plan-actual",
+				width: "100%",
+				height: "420",
+				dataFormat: "json",
+				dataSource: {
+					"chart": {
+						//"caption": "Top % Plan & Actual Visited",
+						//"subCaption": "In top 5 stores last month",
+						//"yAxisname": "Sales (In USD)",
+						"numberPrefix": "$",
+						"paletteColors": "#0075c2,#1aaf5d",
+						"bgColor": "#ffffff",
+						"showBorder": "0",
+						"showHoverEffect":"1",
+						"showCanvasBorder": "0",
+						"usePlotGradientColor": "0",
+						"plotBorderAlpha": "10",
+						"legendBorderAlpha": "0",
+						"legendShadow": "0",
+						"placevaluesInside": "1",
+						"valueFontColor": "#ffffff",
+						"showXAxisLine": "1",
+						"xAxisLineColor": "#999999",
+						"divlineColor": "#999999",               
+						"divLineIsDashed": "1",
+						"showAlternateVGridColor": "0",
+						"subcaptionFontBold": "0",
+						"subcaptionFontSize": "14"
+					},            
+					"categories": [
+						{
+							"category": [
+								{
+									"label": "Bakersfield Central"
+								}, 
+								{
+									"label": "Garden Groove harbour"
+								}, 
+								{
+									"label": "Los Angeles Topanga"
+								}, 
+								{
+									"label": "Compton-Rancho Dom"
+								}, 
+								{
+									"label": "Daly City Serramonte"
+								}
+							]
+						}
+					],            
+					"dataset": [
+						{
+							"seriesname": "Food Products",
+							"data": [
+								{
+									"value": "17000"
+								}, 
+								{
+									"value": "19500"
+								}, 
+								{
+									"value": "12500"
+								}, 
+								{
+									"value": "14500"
+								}, 
+								{
+									"value": "17500"
+								}
+							]
+						}, 
+						{
+							"seriesname": "Non-Food Products",
+							"data": [
+								{
+									"value": "25400"
+								}, 
+								{
+									"value": "29800"
+								}, 
+								{
+									"value": "21800"
+								}, 
+								{
+									"value": "19500"
+								}, 
+								{
+									"value": "11500"
+								}
+							]
+						}
+					],
+					/* "trendlines": [
+						{
+							"line": [
+								{
+									"startvalue": "15000",
+									"color": "#0075c2",
+									"valueOnRight": "1",
+									"displayvalue": "Avg. for{br}Food"
+								},
+								{
+									"startvalue": "22000",
+									"color": "#1aaf5d",
+									"valueOnRight": "1",
+									"displayvalue": "Avg. for{br}Non-food"
+								}
+							]
+						}
+					] */
+				}
+			}).render(); 
+			
+			/* 
+			 * GRAPH MODERN CUSTOMER TOP 5 INVENTORY
+			 * @author piter [ptr.nov@gmail.com]
+			 * @since 1.1
+			*/
+			var top5Inventory = new FusionCharts({
+				type: "bar2d",
+				renderAt: "chart-top5-inventory",
+				width: "100%",
+				height: "300",
+				dataFormat: "json",
+				dataSource: {
+					"chart": {
+						//"caption": "Top 5 Stores by Sales",
+						//"subCaption": "Last month",
+						//"yAxisName": "Sales (In USD)",
+						"numberPrefix": "$",
+						"paletteColors": "#0075c2",
+						"bgColor": "#ffffff",
+						"showBorder": "0",
+						"showCanvasBorder": "0",
+						"usePlotGradientColor": "0",
+						"plotBorderAlpha": "10",
+						"placeValuesInside": "1",
+						"valueFontColor": "#ffffff",
+						"showAxisLines": "1",
+						"axisLineAlpha": "25",
+						"divLineAlpha": "10",
+						"alignCaptionWithCanvas": "0",
+						"showAlternateVGridColor": "0",
+						"captionFontSize": "14",
+						"subcaptionFontSize": "14",
+						"subcaptionFontBold": "0",
+						"toolTipColor": "#ffffff",
+						"toolTipBorderThickness": "0",
+						"toolTipBgColor": "#000000",
+						"toolTipBgAlpha": "80",
+						"toolTipBorderRadius": "2",
+						"toolTipPadding": "5"
+					},
+					
+					"data": [
+						{
+							"label": "Bakersfield Central",
+							"value": "880000"
+						}, 
+						{
+							"label": "Garden Groove harbour",
+							"value": "730000"
+						}, 
+						{
+							"label": "Los Angeles Topanga",
+							"value": "590000"
+						}, 
+						{
+							"label": "Compton-Rancho Dom",
+							"value": "520000"
+						}, 
+						{
+							"label": "Daly City Serramonte",
+							"value": "330000"
+						}
+					]
+				}
+			}).render();
+			
+			/* 
+			 * GRAPH MODERN CUSTOMER TOP 5 Request Ouder
+			 * @author piter [ptr.nov@gmail.com]
+			 * @since 1.1
+			*/
+			var top5RequestOrder = new FusionCharts({
+				type: "bar2d",
+				renderAt: "chart-top5-request-order",
+				width: "100%",
+				height: "300",
+				dataFormat: "json",
+				dataSource: {
+					"chart": {
+						//"caption": "Top 5 Stores by Sales",
+						//"subCaption": "Last month",
+						//"yAxisName": "Sales (In USD)",
+						"numberPrefix": "$",
+						"paletteColors": "#0075c2",
+						"bgColor": "#ffffff",
+						"showBorder": "0",
+						"showCanvasBorder": "0",
+						"usePlotGradientColor": "0",
+						"plotBorderAlpha": "10",
+						"placeValuesInside": "1",
+						"valueFontColor": "#ffffff",
+						"showAxisLines": "1",
+						"axisLineAlpha": "25",
+						"divLineAlpha": "10",
+						"alignCaptionWithCanvas": "0",
+						"showAlternateVGridColor": "0",
+						"captionFontSize": "14",
+						"subcaptionFontSize": "14",
+						"subcaptionFontBold": "0",
+						"toolTipColor": "#ffffff",
+						"toolTipBorderThickness": "0",
+						"toolTipBgColor": "#000000",
+						"toolTipBgAlpha": "80",
+						"toolTipBorderRadius": "2",
+						"toolTipPadding": "5"
+					},
+					
+					"data": [
+						{
+							"label": "Bakersfield Central",
+							"value": "880000"
+						}, 
+						{
+							"label": "Garden Groove harbour",
+							"value": "730000"
+						}, 
+						{
+							"label": "Los Angeles Topanga",
+							"value": "590000"
+						}, 
+						{
+							"label": "Compton-Rancho Dom",
+							"value": "520000"
+						}, 
+						{
+							"label": "Daly City Serramonte",
+							"value": "330000"
+						}
+					]
+				}
+			}).render();
+			
+		});
+		
+		
+	',$this::POS_READY);
+?>
 
 
