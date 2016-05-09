@@ -47,6 +47,17 @@ if(count($queryCariEmploye) == 0 || $queryCariEmploye =='')
      $content = Html::a($label,'', $options);
      return $content;
  }
+ // print_r($model->CREATED_BY);
+ // die();
+
+ if($model->CREATED_BY != $id )
+ {
+    $btnclose = "";
+
+ }else{
+
+   $btnclose = Add_close($model);
+ }
 
 
 
@@ -141,7 +152,7 @@ if(count($queryCariEmploye) == 0 || $queryCariEmploye =='')
        ],
 
    ]),
-   'footer'=> '<div>'.$btnreply.' '.Add_close($model).'</div>',
+   'footer'=> '<div>'.$btnreply.' '.$btnclose.'</div>',
     'headingTitle' => true,
     'footerTitle' => true,
       ],

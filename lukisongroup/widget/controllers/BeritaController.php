@@ -79,8 +79,10 @@ class BeritaController extends Controller
         $dataProviderInbox = $searchModelInbox->searchBeritaInbox(Yii::$app->request->queryParams);
 
           /* History dataprovider */
-          $searchModelHistory = new BeritaSearch();
-          $dataProviderHistory = $searchModelHistory->searchBeritaClose(Yii::$app->request->queryParams);
+        $searchModelHistory = new BeritaSearch();
+        $dataProviderHistory = $searchModelHistory->searchBeritaClose(Yii::$app->request->queryParams);
+
+
 
         return $this->render('index', [
             'searchModelOutbox' => $searchModelOutbox,
@@ -99,8 +101,10 @@ class BeritaController extends Controller
      */
     public function actionDetailBerita($KD_BERITA)
     {
+      //componen
       $profile = Yii::$app->getUserOpt->profile_user()->emp;
       $id = $profile->EMP_ID;
+
       $model = Berita::find()->where(['KD_BERITA' => $KD_BERITA])->one();
       $connection = Yii::$app->db_widget;
 	    $command =  $connection->createCommand('UPDATE bt0001notify set TYPE = 0 where KD_BERITA="'.$KD_BERITA.'" AND ID_USER="'.$id.'"');
@@ -108,6 +112,7 @@ class BeritaController extends Controller
 
         return $this->render('view_detailberita', [
             'model' => $model,
+            'id'=>$id
         ]);
     }
 
@@ -140,15 +145,16 @@ class BeritaController extends Controller
           /* proses save */
         if ($model->load(Yii::$app->request->post())) {
 
-          /*  *checkbox using filter author : wawan
+          /*  not usage
+              *checkbox using filter author : wawan
               *if checkbox equal 1 then kd_dep result 0
           */
-          $post = Yii::$app->request->post();
-          $checkbox = $post['Berita']['alluser'];
-          if($checkbox == 1)
-          {
-            $model->KD_DEP = '0';
-          }
+          // $post = Yii::$app->request->post();
+          // $checkbox = $post['Berita']['alluser'];
+          // if($checkbox == 1)
+          // {
+          //   $model->KD_DEP = '0';
+          // }
 
           /* generate kode berita*/
           $GneratekodeBerita=\Yii::$app->ambilkonci->getBeritaCode();
@@ -158,15 +164,21 @@ class BeritaController extends Controller
           //componen
           $model->KD_CORP =  	Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
 	        $model->CREATED_BY = Yii::$app->user->identity->EMP_ID;
+          // print_r($model->USER_CC);
+          // die();
+
 
           if($model->save())
           {
 
+
               $departement = Berita::find()->where(['KD_BERITA'=>$model->KD_BERITA])->asArray()->one();
-              if($departement['KD_DEP'] != "0")
-              {
-                $date =  date('Y-m-d');
+
+                /* connection db widget */
                 $connection = Yii::$app->db_widget;
+
+                $date =  date('Y-m-d');
+
                 $connection->createCommand()
                           ->insert('bt0001notify', [
                                   'KD_BERITA' =>$model->KD_BERITA,
@@ -174,15 +186,6 @@ class BeritaController extends Controller
                                     'CREATED_BY' => $model->CREATED_BY,
                                     'CREATED_AT' => $date,
                                     ])->execute();
-
-
-                $notif = Employe::find()->where(['DEP_ID'=>$model->KD_DEP])->asArray()->all();
-                foreach ($notif as $key => $value) {
-                  # code...
-                  $connection->createCommand()->batchInsert('bt0001notify',['KD_BERITA','ID_USER','CREATED_BY','CREATED_AT'],[[$model->KD_BERITA,$value['EMP_ID'],$model->CREATED_BY,$date]])->execute();
-                }
-              }
-
 
             }
 
@@ -201,9 +204,9 @@ class BeritaController extends Controller
 
 
 
-    /**
+    /** author :wawan
      * Creates a new Commentberita model.
-     * If creation is successful, the browser will be redirected to the 'detail-berita' page.
+     * If creation is successful,update bt0001notify type equal 1 and the browser will be redirected to the 'detail-berita' page.
      * @param string $KD_BERITA
      * @return mixed
      */
@@ -232,7 +235,12 @@ class BeritaController extends Controller
           $model->ID_USER = Yii::$app->user->identity->id;
 		      $model->CREATED_AT = date('Y-m-d h:i:s');
 	        $model->CREATED_BY = Yii::$app->user->identity->EMP_ID;
-		      $model->save();
+		      if($model->save())
+          {
+            /* update read or unread  notifikasion */
+            $notifupdateread = BeritaNotify::updateAll(['TYPE' => 1], ['KD_BERITA'=>$model->KD_BERITA]);
+
+          }
 			    return $this->redirect(['detail-berita','KD_BERITA' => $model->KD_BERITA]);
         } else {
             return $this->renderAjax('commentar', [
@@ -245,31 +253,30 @@ class BeritaController extends Controller
 
 
 
-    /* ajax validation using checkbox author:wawan*/
+    /* ajax validation  author:wawan*/
     public function actionValidBeritaAcara()
     {
       # code...
         $model = new Berita();
       if(Yii::$app->request->isAjax && $model->load($_POST))
       {
-        /* if checkbox equal false then scenario validation false
+        /* not usage
+        if checkbox equal false then scenario validation false
             else checkbox equal true then scenario validation true
         */
-        if($_POST['Berita']['alluser'] == 0){
-            $model->scenario = 'false';
-        }else{
-            $model->scenario = 'true';
-        }
+        // if($_POST['Berita']['alluser'] == 0){
+        //     $model->scenario = 'false';
+        // }else{
+        //     $model->scenario = 'true';
+        // }
         Yii::$app->response->format = 'json';
         return ActiveForm::validate($model);
       }
     }
 
-    /**
-     * Updates an existing Berita model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $ID
-     * @param string $KD_BERITA
+    /** author wawan
+     * close Berita model.
+     * If close is successful, delete bt0001notify and return true.
      * @return mixed
      */
      public function actionCloseBerita()
@@ -277,13 +284,15 @@ class BeritaController extends Controller
    		if (Yii::$app->request->isAjax) {
    			$request= Yii::$app->request;
    			$id=$request->post('id');
-   			$model = Berita::find()->where(['KD_BERITA'=>$id])->one();
-   	    $model->STATUS = 0;
-   			$model->save();
         $connection = Yii::$app->db_widget;
+
+        $connection->createCommand()
+	            ->update('bt0001', ['STATUS' => 0], 'KD_BERITA="'.$id.'"')
+	            ->execute();
+
         $close = $connection->createCommand('DELETE FROM bt0001notify WHERE KD_BERITA=:kd_berita');
         $close->bindParam(':kd_berita', $kd_berita);
-        $kd_berita = $model->KD_BERITA;
+        $kd_berita = $id;
         $close->execute();
    			return true;
    		}
@@ -318,22 +327,6 @@ class BeritaController extends Controller
 //     echo Json::encode(['output'=>'', 'selected'=>'']);
 // }
 
-
-
-
-    /**
-     * Deletes an existing Berita model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $ID
-     * @param string $KD_BERITA
-     * @return mixed
-     */
-    public function actionDelete($ID, $KD_BERITA)
-    {
-        $this->findModel($ID, $KD_BERITA)->delete();
-
-        return $this->redirect(['index']);
-    }
 
     /**
      * Finds the Berita model based on its primary key value.

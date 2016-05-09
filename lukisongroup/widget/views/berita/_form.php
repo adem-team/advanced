@@ -19,8 +19,6 @@ use yii\helpers\Url;
       'id'=>$model->formName(),
       'enableClientValidation' => true,
       'enableAjaxValidation'=>true,
-      // 'method' => 'post',
-      // 'action' => ['/widget/berita/save-berita'],
       'validationUrl'=>Url::toRoute('/widget/berita/valid-berita-acara')
     ]); ?>
 
@@ -34,13 +32,12 @@ use yii\helpers\Url;
 
         <?= $form->field($model, 'ISI')->textArea(['options' => ['rows' => 6]])?>
 
-        <?= $form->field($model, 'alluser')->checkbox()->label('All'); ?>
+         <!-- $form->field($model, 'alluser')->checkbox()->label('All'); ?> -->
 
-        <div id="berita-hide">
         <?=  $form->field($model, 'KD_DEP')->widget(Select2::classname(),['data' => $datadep,'options' => ['placeholder' => 'Select ...'],]) ?>
 
           <?=  $form->field($model, 'USER_CC')->widget(Select2::classname(),['data' =>$dataemploye,
-          'options' => ['placeholder' => 'Select ...'],]) ?>
+          'options' => ['placeholder' => 'Select ...','multiple'=>true],]) ?>
 
          <!-- $form->field($model, 'USER_CC')->widget(DepDrop::classname(), [
            'options' => ['placeholder' => 'Select ...'],
@@ -52,7 +49,7 @@ use yii\helpers\Url;
                 'loadingText' => 'Loading ...',
         ]
         ]) ?> -->
-      </div>
+  
 
       </div>
       </div>
@@ -65,23 +62,3 @@ use yii\helpers\Url;
     <?php ActiveForm::end(); ?>
 
 </div>
-
-<?php
-/* js news author :wawan
-*/
-  $this->registerJs('
-  $("#berita-alluser").click(function()
-  {
-    if(this.checked == 1)
-    {
-      $("#berita-hide").hide();
-    }else{
-        $("#berita-hide").show();
-
-    }
-
-  });
-
-  ',$this::POS_READY);
-
- ?>

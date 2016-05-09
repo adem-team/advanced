@@ -8,6 +8,10 @@ use yii\bootstrap\Modal;
 use yii\web\JsExpression;
 use yii\widgets\Pjax;
 
+/* namespace models */
+use lukisongroup\widget\models\BeritaNotify;
+
+
 
 ?>
 
@@ -28,6 +32,7 @@ $headColomnBT=[
   ['ID' =>1, 'ATTR' =>['FIELD'=>'JUDUL','SIZE' => '10px','label'=>'SUBJECT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
   ['ID' =>2, 'ATTR' =>['FIELD'=>'KD_CORP','SIZE' => '10px','label'=>'CORP','align'=>'left','warna'=>'97, 211, 96, 0.3']],
   ['ID' =>3, 'ATTR' =>['FIELD'=>'KD_DEP','SIZE' => '10px','label'=>'DEPT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>4, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'Status Berita','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 ];
 $gvHeadColomnBT = ArrayHelper::map($headColomnBT, 'ID', 'ATTR');
 
@@ -39,8 +44,6 @@ $attDinamik[]=[
   'dropdownOptions'=>['class'=>'pull-left dropdown','style'=>['disable'=>true]],
   'dropdownButton'=>[
     'class' => $actionClass,
-    // 'label'=>$actionLabel,
-    //'caret'=>'<span class="caret"></span>',
   ],
   'buttons' => [
     'view' =>function($url, $model, $key){
@@ -72,31 +75,72 @@ $attDinamik[]=[
 
 /*GRIDVIEW ARRAY ROWS*/
 foreach($gvHeadColomnBT as $key =>$value[]){
-  $attDinamik[]=[
-    'attribute'=>$value[$key]['FIELD'],
-    'label'=>$value[$key]['label'],
-    'filter'=>true,
-    'hAlign'=>'right',
-    'vAlign'=>'middle',
-    'noWrap'=>true,
-    'headerOptions'=>[
+  if($value[$key]['FIELD'] == 'STATUS')
+  {
+    $attDinamik[]=[
+      'attribute'=>$value[$key]['FIELD'],
+      'label'=>$value[$key]['label'],
+      'filter'=>true,
+      'format' => 'raw',
+      'value'=>function($model){
+        $id = Yii::$app->user->identity->EMP_ID; // componen
+        $notif = BeritaNotify::find()->where(['KD_BERITA'=>$model->KD_BERITA,'ID_USER'=>$id])->one();
+         if ($notif->TYPE == 1) {
+          return Html::a('<i class="fa fa-check"></i> &nbsp;Unread', '',['class'=>'btn btn-success btn-xs', 'title'=>'Aktif']);
+        } else if ($notif->TYPE == 0) {
+          return Html::a('<i class="fa fa-close"></i> &nbsp;Read', '',['class'=>'btn btn-danger btn-xs', 'title'=>'Deactive']);
+        }
+      },
+      'hAlign'=>'right',
+      'vAlign'=>'middle',
+      'noWrap'=>true,
+      'headerOptions'=>[
+          'style'=>[
+          'text-align'=>'center',
+          'width'=>$value[$key]['FIELD'],
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+          'background-color'=>'rgba('.$value[$key]['warna'].')',
+        ]
+      ],
+      'contentOptions'=>[
         'style'=>[
-        'text-align'=>'center',
-        'width'=>$value[$key]['FIELD'],
-        'font-family'=>'tahoma, arial, sans-serif',
-        'font-size'=>'8pt',
-        'background-color'=>'rgba('.$value[$key]['warna'].')',
-      ]
-    ],
-    'contentOptions'=>[
-      'style'=>[
-        'text-align'=>$value[$key]['align'],
-        'font-family'=>'tahoma, arial, sans-serif',
-        'font-size'=>'8pt',
-      ]
-    ],
-          'width'=>'12px',
-  ];
+          'text-align'=>$value[$key]['align'],
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ],
+            'width'=>'12px',
+    ];
+  }else {
+    # code...
+    $attDinamik[]=[
+      'attribute'=>$value[$key]['FIELD'],
+      'label'=>$value[$key]['label'],
+      'filter'=>true,
+      'hAlign'=>'right',
+      'vAlign'=>'middle',
+      'noWrap'=>true,
+      'headerOptions'=>[
+          'style'=>[
+          'text-align'=>'center',
+          'width'=>$value[$key]['FIELD'],
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+          'background-color'=>'rgba('.$value[$key]['warna'].')',
+        ]
+      ],
+      'contentOptions'=>[
+        'style'=>[
+          'text-align'=>$value[$key]['align'],
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ],
+            'width'=>'12px',
+    ];
+  }
+
 };
 
 /*SHOW GRID VIEW LIST*/
