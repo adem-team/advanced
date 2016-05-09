@@ -47,7 +47,7 @@ class BeritaNotify extends \yii\db\ActiveRecord
     {
         return [
             [['KD_BERITA'], 'string'],
-            [['STATUS','ID_USER','TYPE'], 'integer'],
+            [['STATUS','TYPE'], 'integer'],
             [['CREATED_AT','CREATED_BY'], 'safe'],
             [['KD_BERITA'], 'string', 'max' => 20],
             [['CREATED_BY'], 'string', 'max' => 100]
