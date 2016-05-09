@@ -16,6 +16,7 @@ use yii\db\ActiveRecord;
 use yii\data\ArrayDataProvider;
 	
 	//print_r($dataModelsHeader1);
+	/*[1] LIST VIEW INFO */
 	$vwHeader1=DetailView::widget([		
         'model' => $dataModelsHeader1[0],
         'attributes' => [
@@ -29,12 +30,12 @@ use yii\data\ArrayDataProvider;
 					],
 					[
 						//JAM MEMULAI PERJALANAN DARI DISTRIBUTOR/OTHER
-						'attribute'=>'TIME_DAYEND', 
+						'attribute'=>'TIME_DAYSTART', 
 						'format'=>'raw',
-						'value'=>$model['TIME_DAYSTART']!=''?$model['TIME_DAYSTART']:"<span class='badge' style='background-color:#ff0000'>ABSENT </span>",
-						'label'=>'TIME START',
+						'value'=> $dataModelsHeader1[0]['TIME_DAYSTART']!=''?$dataModelsHeader1[0]['TIME_DAYSTART']:"<span class='badge' style='background-color:#ff0000'>ABSENT </span>",
+						'label'=>'START TIME',
 						'valueColOptions'=>['style'=>'width:30%'], 
-						'displayOnly'=>true
+						//'displayOnly'=>true
 					],
 				],
 			],
@@ -50,8 +51,8 @@ use yii\data\ArrayDataProvider;
 						//JAM SELESAI PERJALANAN DARI DISTRIBUTOR/OTHER
 						'attribute'=>'TIME_DAYEND',
 						'format'=>'raw',
-						'value'=>$model['TIME_DAYEND']!=''?$model['TIME_DAYEND']:"<span class='badge' style='background-color:#ff0000'>ABSENT </span>",						
-						'label'=>'TIME END',
+						'value'=>$dataModelsHeader1[0]['TIME_DAYEND']!=''?$dataModelsHeader1[0]['TIME_DAYEND']:"<span class='badge' style='background-color:#ff0000'>ABSENT </span>",						
+						'label'=>'END TIME',
 						'valueColOptions'=>['style'=>'width:30%'], 
 						'displayOnly'=>true
 					],
@@ -66,9 +67,11 @@ use yii\data\ArrayDataProvider;
 						'valueColOptions'=>['style'=>'width:30%']
 					],
 					[
-						'attribute'=>'CUST_TIPE_NM', 
-						'label'=>'TYPE',
-						//'format'=>'raw', 
+						//GPS IN -> VALUE AND STATUS
+						'attribute'=>'DISTANCE_DAYSTART', 
+						'label'=>'IN GPS',
+						'format'=>'raw', 
+						'value'=>"<span class='badge' style='background-color:#ff0000'>'' </span>".' '.$dataModelsHeader1[0]['DISTANCE_DAYSTART'],
 						//'value'=>'<kbd>'.$model->book_code.'</kbd>',
 						'valueColOptions'=>['style'=>'width:30%'], 
 						'displayOnly'=>true
@@ -79,14 +82,16 @@ use yii\data\ArrayDataProvider;
 				'columns' => [
 					[
 						'attribute'=>'CUST_TIPE_NM', 
-						'label'=>'TYPE',
+						'label'=>'TOTAL TIME',
 						'valueColOptions'=>['style'=>'width:30%'], 
 						'displayOnly'=>true
 					],
 					[
-						'attribute'=>'CUST_TIPE_NM', 
-						'label'=>'TYPE',
-						//'format'=>'raw', 
+						//GPS IN -> VALUE AND STATUS
+						'attribute'=>'DISTANCE_DAYEND', 
+						'label'=>'OUT GPS',
+						'format'=>'raw', 
+						'value'=>"<span class='badge' style='background-color:#ff0000'>'' </span>".' '.$dataModelsHeader1[0]['DISTANCE_DAYEND'],
 						//'value'=>'<kbd>'.$model->book_code.'</kbd>',
 						'valueColOptions'=>['style'=>'width:30%'], 
 						'displayOnly'=>true
@@ -98,73 +103,54 @@ use yii\data\ArrayDataProvider;
 		'enableEditMode'=>false,
 		'mainTemplate'=>'{detail}',
 		'panel'=>[
-			'heading'=>'USER INFO',
+			'heading'=>'[A] USER INFO',
 			'type'=>DetailView::TYPE_DANGER,
 		],		
 		
     ]); 
 	
-	
+	/*[2] GRID VIEW HEAD 1 */
 	$actionClass='btn btn-info btn-xs';
 	$actionLabel='View';
 	$attDinamik2 =[];
-	/*GRIDVIEW ARRAY FIELD HEAD*/
 	$headColomnEvent2=[
-		['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'USER_NM','SIZE' => '10px','label'=>'User','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '10px','label'=>'Customer','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'SCDL_GRP_NM','SIZE' => '10px','label'=>'Schadule','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'CUST_TIPE_NM','SIZE' => '10px','label'=>'Type','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'CUST_KTG_NM','SIZE' => '10px','label'=>'Cetegory','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		//['ID' =>7, 'ATTR' =>['FIELD'=>'radiusMeter','SIZE' => '10px','label'=>'Radius/Meter','align'=>'right','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		//['ID' =>8, 'ATTR' =>['FIELD'=>'sttKoordinat','SIZE' => '10px','label'=>'Status','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		//['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1''value'=>function($models){ return 'x';}]],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '10px','label'=>'Customer','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1','value'=>function($models){ return $models['CUST_NM'];}]],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_CHKIN','SIZE' => '10px','label'=>'In.Time','align'=>'center','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1','value'=>function($models){ return $models['CUST_CHKIN'];}]],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'CUST_CHKOUT','SIZE' => '10px','label'=>'Out.Time','align'=>'center','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1','value'=>function($models){ return $models['CUST_CHKOUT'];}]],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'ttl_time_cust','SIZE' => '10px','label'=>'Visit.Time','align'=>'center','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1','value'=>function($models){ return $models['ttl_time_cust']!=''?$models['ttl_time_cust']:"<span class='badge' style='background-color:#ff0000'>ABSENT </span>";}]],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'JRK_TEMPUH','SIZE' => '10px','label'=>'Distance.Time','align'=>'center','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1','value'=>function($models){ return $models['JRK_TEMPUH']!=''?$models['JRK_TEMPUH']:"<span class='badge' style='background-color:#ff0000'>ABSENT </span>";}]],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'STT_VISIT','SIZE' => '10px','label'=>'Status','align'=>'center','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1','value'=>function($models){ return $models['STT_VISIT']!=''?$models['STT_VISIT']:"<span class='badge' style='background-color:#ff0000'>''</span>";}]],
 	];
 	$gvHeadColomn2 = ArrayHelper::map($headColomnEvent2, 'ID', 'ATTR');
-	
-	/*GRIDVIEW EXPAND*/
-				/* $attDinamik2[]=[
-					'class'=>'kartik\grid\ExpandRowColumn',
-					'width'=>'50px',
-					'header'=>'',
-					'value'=>function ($model, $key, $index, $column) {
-						return GridView::ROW_COLLAPSED;
-						//return GridView::ROW_EXPANDED;
-					},
-					'detail'=>function (){						
-						//return Yii::$app->controller->renderPartial('_expand2');
-					},
-					//'headerOptions'=>['class'=>'kartik-sheet-style'] ,
-					'collapseTitle'=>'b1',
-					'expandTitle'=>'b2',
-					// 'allowBatchToggle'=>true,
-					// 'expandOneOnly'=>true,
-					// 'enableRowClick'=>true,
-					'headerOptions'=>[
-						'style'=>[
-						'id'=>'text123',
-							'text-align'=>'center',
-							'width'=>'10px',
-							'font-family'=>'tahoma, arial, sans-serif',
-							'font-size'=>'9pt',
-							'background-color'=>'rgba(74, 206, 231, 1)',
-						]
-					],
-					'contentOptions'=>[
-						'style'=>[
-							'id'=>'text123',
-							'text-align'=>'center',
-							'width'=>'10px',
-							'height'=>'10px',
-							'font-family'=>'tahoma, arial, sans-serif',
-							'font-size'=>'9pt',
-						]
-					],
-				]; */
-				
+	$attDinamik2[] =[
+		'class'=>'kartik\grid\SerialColumn',
+		//'contentOptions'=>['class'=>'kartik-sheet-style'],
+		'width'=>'10px',
+		'header'=>'No.',
+		'headerOptions'=>[
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'10px',
+				'font-family'=>'verdana, arial, sans-serif',
+				'font-size'=>'9pt',
+				'background-color'=>'rgba(249,215,100,1)',
+			]
+		],
+		'contentOptions'=>[
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'10px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'9pt',
+			]
+		],
+	];			
 	/*GRIDVIEW ARRAY ROWS*/
 	foreach($gvHeadColomn2 as $key =>$value[]){
 		$attDinamik2[]=[
 			'attribute'=>$value[$key]['FIELD'],
+			'value'=>$value[$key]['value'],
 			'label'=>$value[$key]['label'],
 			'filterType'=>$value[$key]['filterType'],
 			'filter'=>$value[$key]['filter'],
@@ -196,44 +182,349 @@ use yii\data\ArrayDataProvider;
 		];
 	};
 	
-/* 	echo "test expand";
-	echo "</br></br>";
-	echo $tgl;
-	echo "</br></br>";
-	echo $cust_id;
-	echo "</br></br>";
-	echo $user_id; */
-
 	$gvCustDaily= GridView::widget([
-					'id'=>'header2-id',
-					'export' => false,
-					'panel' => false,
-					'dataProvider' => $dataProviderHeader2,
-					//'filterModel' => $searchModel,					
-					//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
-					'columns' => $attDinamik2,
-					/* [
-						['class' => 'yii\grid\SerialColumn'],
-						'start',
-						'end',
-						'title',
-						['class' => 'yii\grid\ActionColumn'],
-					], */
-					//'pjax'=>true,
-					// 'pjaxSettings'=>[
-						// 'options'=>[
-							// 'enablePushState'=>false,
-							// 'id'=>'header2',
-						// ],
-					// ],
-										// 'hover'=>true, //cursor select
-					//'responsive'=>true,
-					//'responsiveWrap'=>true,
-					//'bordered'=>true,
-					//'striped'=>true,
-				]);			
-?>
+		'id'=>'header2-id',
+		'export' => false,
+		//'panel' => false,
+		'dataProvider' => $dataProviderHeader2,
+		//'filterModel' => $searchModel,					
+		//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
+		'columns' => $attDinamik2,
+		'toolbar' => [
+			'',
+		],
+		'panel' => [
+			'heading'=>'<h3 class="panel-title">[B] LIST TIME VISITING</h3>',
+			'type'=>'danger',
+			'footer'=>false,
+		],
+	]);	
 	
+	/*[3] GRID VIEW INVENTORY */
+	$inventory=GridView::widget([
+		'id'=>'inventory-list',
+        'dataProvider' => $inventoryProvider,
+		//'filterModel' => $searchModelInventory,
+        'columns' => [
+			[
+				'class'=>'kartik\grid\SerialColumn',
+				//'contentOptions'=>['class'=>'kartik-sheet-style'],
+				'width'=>'10px',
+				'header'=>'No.',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(249,215,100,1)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			[
+				'attribute'=>'NAME_ITEM',
+				'label'=>'ITEMS',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			[
+				'attribute'=>'STOCK',
+				'label'=>'STOCK/Pcs',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'right',
+						'width'=>'11px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			[
+				'attribute'=>'SELL_IN',
+				'label'=>'SELL IN/Pcs',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'right',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			[
+				'attribute'=>'SELL_OUT',
+				'label'=>'SELL OUT/Pcs',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'right',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			]
+		],
+		'toolbar' => [
+			'',
+		],
+		'panel' => [
+			'heading'=>'<h3 class="panel-title">[C] LIST INVENTORY</h3>',
+			'type'=>'danger',
+			'footer'=>false,
+			
+		],
+    ]);
+	
+	/*[4] GRID VIEW EXPIRED */
+	$expired=GridView::widget([
+		'id'=>'inventory-list',
+        'dataProvider' => $inventoryProvider,
+		//'filterModel' => $searchModelInventory,
+        'columns' => [
+			[
+				'class'=>'kartik\grid\SerialColumn',
+				//'contentOptions'=>['class'=>'kartik-sheet-style'],
+				'width'=>'10px',
+				'header'=>'No.',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(249,215,100,1)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			[
+				'attribute'=>'NAME_ITEM',
+				'label'=>'ITEMS',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			[
+				'attribute'=>'STOCK',
+				'label'=>'STOCK/Pcs',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'right',
+						'width'=>'11px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			[
+				'attribute'=>'SELL_IN',
+				'label'=>'SELL IN/Pcs',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'right',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			[
+				'attribute'=>'SELL_OUT',
+				'label'=>'SELL OUT/Pcs',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'right',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			]
+		],
+		'toolbar' => [
+			'',
+		],
+		'panel' => [
+			'heading'=>'<h3 class="panel-title">[D] LIST EXPIRED</h3>',
+			'type'=>'danger',
+			'footer'=>false,
+			
+		],
+    ]);
+	/*[4] GRID VIEW IMAGE SHOW */
+	$visitImage=GridView::widget([
+		'id'=>'img-list',
+        'dataProvider' => $dataProviderHeader2,
+		//'filterModel' => $searchModelImage,
+        'columns' => [
+			[
+				'class'=>'kartik\grid\SerialColumn',
+				//'contentOptions'=>['class'=>'kartik-sheet-style'],
+				'width'=>'10px',
+				'header'=>'No.',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(249,215,100,1)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			[
+				'attribute'=>'image_start',
+				'format'=>'raw', 
+				'label'=>'Image Start',
+				//'format'=>['image',['width'=>'100','height'=>'120']],
+				'value'=>function($model){				
+					$base64 ='data:image/jpg;charset=utf-8;base64,'.$model['IMG_START'];
+					//return Html::img($base64,['width'=>'100','height'=>'60','class'=>'img-circle']);
+					return $model['IMG_START']!=''?Html::img($base64,['width'=>'140','height'=>'140']):Html::img(Yii::$app->urlManager->baseUrl.'/df.jpg',['width'=>'140','height'=>'140']);
+				},
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(74, 206, 231, 1)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'height'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			[
+				'attribute'=>'image_end',
+				'format'=>'raw', 
+				'label'=>'Image End',
+				//'format'=>['image',['width'=>'100','height'=>'120']],
+				'value'=>function($model){				
+					$base64 ='data:image/jpg;charset=utf-8;base64,'.$model['IMG_END'];
+					return $model['IMG_END']!=''?Html::img($base64,['width'=>'140','height'=>'140']):Html::img(Yii::$app->urlManager->baseUrl.'/df.jpg',['width'=>'140','height'=>'140']);
+				},
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(74, 206, 231, 1)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'height'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			] 
+		
+		],
+		'toolbar' => [
+			'',
+		],
+		'panel' => [
+			'heading'=>'<h3 class="panel-title">LIST IMAGE VISITING</h3>',
+			'type'=>'danger',
+			'footer'=>false,
+		],
+    ]);
+?>
 
 
 
@@ -243,11 +534,13 @@ use yii\data\ArrayDataProvider;
 			<?php
 				echo $vwHeader1;
 				echo $gvCustDaily;
+				echo $inventory;
+				echo $expired;
 			?>
 		</div>
 		<div class="col-sm-4 col-md-4 col-lg-4">
 			<?php
-				//echo $visitImage;
+				echo $visitImage;
 			?>
 		</div>
 	</div>
