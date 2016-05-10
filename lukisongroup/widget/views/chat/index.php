@@ -1,7 +1,6 @@
 ﻿<?php
-
+use kartik\helpers\Html;
 use kartik\grid\GridView;
-use yii\helpers\html;
 use yii\bootstrap\Modal;
 use kartik\tabs\TabsX;
 
@@ -279,6 +278,33 @@ use kartik\tabs\TabsX;
         ?>
     </div>
 	
+<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
+	<div  class="row">
+	
+		<div class="col-md-8">
+			<?php
+				echo Html::panel(
+					[
+						'heading' => "BERITA ACARA ",
+						'body'=>'assss',
+					],
+					Html::TYPE_INFO
+				);
+			?>
+		</div>
+		<div class="col-md-4">
+			<?php
+				echo Html::panel(
+					[
+						'heading' => "BERITA ACARA ",
+						'body'=>'as',
+					],
+					Html::TYPE_INFO
+				);
+			?>
+		</div>
+	</div> 
+</div>	
 	
 	<?php
 	

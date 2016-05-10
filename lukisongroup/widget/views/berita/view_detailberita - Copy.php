@@ -92,9 +92,7 @@ if(count($queryCariEmploye) == 0 || $queryCariEmploye =='')
 
     /* array commentar */
     $query = Commentberita::find()->where(['KD_BERITA'=>$model->KD_BERITA])->asArray()->all();
-    //$body = [];
-    $body1 = [];
-	$x=0;
+    $body = [];
     foreach ($query as $key => $value) {
       # code...
 		$foto = $value['EMP_IMG'];
@@ -104,58 +102,29 @@ if(count($queryCariEmploye) == 0 || $queryCariEmploye =='')
 			$profile = '/upload/hrd/Employee/'.$foto.'';
 		}
 
-		// $body [] = [
-			//'heading' => $nama,
-			// 'body' => "<class='box-body'><class='direct-chat-info clearfix'><div class='direct-chat-text'>".$value['CHAT']."</div></div></div>",
-			// 'src' => '#',
-			// 'img' => $profile,
-			// 'imgOptions'=>['width'=>"64px",'height'=>"64px",'class'=>'img-circle'], //setting image display,
+		$body [] = [
+			// 'heading' => $nama,
+			'body' => "<class='box-body'><class='direct-chat-info clearfix'><div class='direct-chat-text'>".$value['CHAT']."</div></div></div>",
+			//  'src' => '#',
+			'img' => $profile,
+			'imgOptions'=>['width'=>"64px",'height'=>"64px",'class'=>'img-circle'], //setting image display,
 			//'imgOptions'=>['width'=>"64px",'height'=>"64px",'class'=>'img-rounded'], //setting image display,
 			//'imgOptions'=>['width'=>"64px",'height'=>"40px",'class'=>'img-thumbnail'], //setting image display,
-			// 'srcOptions'=>[
-				// 'style'=>[
-					// 'class'=>'direct-chat-img',
-					// 'background-color'=>'rgba(0, 95, 218, 0.3)',
-					// 'width'=>"70px",'height'=>"70px",'padding-top'=>'3px','padding-left'=>'3px',
-				// ]
-			// ],
-		// ]; 
-		if ($x==0){
-			$a=$this->render('_message_left', [
-				'profile'=>$profile,
-				'nama'=>$nama,
-				'messageReply'=>$value['CHAT']
-			]);
-			$x=1;
-		}else{
-			$a=$this->render('_message_right', [
-				'profile'=>$profile,
-				'nama'=>$nama,
-				'messageReply'=>$value['CHAT']
-			]);
-			$x=0;
-		}
-		/* $a='<div class="direct-chat-msg">
-                      <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-name pull-left">'.$nama.'</span>
-                        <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
-                      </div>
-                      <img class="direct-chat-img" src="'.$profile.'" alt="message user image">
-                      <div class="direct-chat-text">
-                        Is this template really for free? Thats unbelievable !,Is this template really for free? Thats unbelievable!,Is this template really for free? Thats unbelievable!Is this template really for free? Thats unbelievable!
-                      </div>
-                    </div>'; */
-		$body .=$a;		
-				
+			'srcOptions'=>[
+				'style'=>[
+					'class'=>'direct-chat-img',
+					'background-color'=>'rgba(0, 95, 218, 0.3)',
+					'width'=>"70px",'height'=>"70px",'padding-top'=>'3px','padding-left'=>'3px',
+				]
+			],
+		]; 
     }
-		$body1 [] = ['body'=>$body,'img' =>false];
-		//$listReply=;
 	$bodyHead=$this->render('_view_detailberita_headline', [
 		'model' => $model,
-	]); 
+	]);
 	$viewBt=Html::mediaList([
 		   [
-			'heading' => "<div class='box-header with-border'>".$model->JUDUL."</div>",
+			'heading' => "<div ><div class='direct-chat-text'>".$model->JUDUL."</div></div",
 			//'body' => "<div class='box-footer box-comments'>".$model->ISI."</div><div class='box-footer box-comments'><div>".$btnreply." ".$btnclose."</div></div>",
 			'body' => $bodyHead,
 			'imgOptions'=>['width'=>"84px",'height'=>"84px",'class'=>'img-circle'], //setting image display,
@@ -165,9 +134,9 @@ if(count($queryCariEmploye) == 0 || $queryCariEmploye =='')
 					 'background-color'=>'rgba(0, 95, 218, 0.3)',
 					 'width'=>"90px",'height'=>"90px",'padding-top'=>'3px','padding-left'=>'3px',
 				 ]
-			], 
+			],
 			'img' =>$foto_profile,
-			'items' =>$body1, //"<div class='box-footer box-comments'><div class='box-comment'>".$body."</div></div>",
+			'items' => $body //"<div class='box-footer box-comments'><div class='box-comment'>".$body."</div></div>",
 		   ],
 	]);
 		
@@ -206,31 +175,13 @@ if(count($queryCariEmploye) == 0 || $queryCariEmploye =='')
 ?>
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
 	<div  class="row">
-				<?php
-                 /*  echo '<div class="direct-chat-messages">'.
-				     '<div class="direct-chat-msg">'.
-                      '<div class="direct-chat-info clearfix">'.
-                        '<span class="direct-chat-name pull-left">Alexander Pierce</span>'.
-                        '<span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>'.
-                     ' </div>'.
-                     ' <img class="direct-chat-img" src="../dist/img/user1-128x128.jpg" alt="message user image">'.
-                      '<div class="direct-chat-text">'.
-                        'Is this template really for free? Thats unbelievable!'.
-                      '</div>'.
-                    '</div>'.
-				'</div>'; */
-				//print_r($body);
-                 ?>
-
-                  
-               
+	
 		<div class="col-md-12">
 			<?php
-				 echo Html::panel(
+				echo Html::panel(
 					[
 						'heading' => "BERITA ACARA ",
 						'body'=>$viewBt,
-						//'body'=>$body,
 					],
 					Html::TYPE_INFO
 				);

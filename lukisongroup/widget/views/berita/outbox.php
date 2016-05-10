@@ -22,8 +22,8 @@ $actionClass='btn btn-info btn-xs';
 $attDinamik =[];
 /*GRIDVIEW ARRAY FIELD HEAD*/
 $headColomnBT=[
-  ['ID' =>0, 'ATTR' =>['FIELD'=>'KD_BERITA','SIZE' => '10px','label'=>'KD_BERITA','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-  ['ID' =>1, 'ATTR' =>['FIELD'=>'JUDUL','SIZE' => '10px','label'=>'SUBJECT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>0, 'ATTR' =>['FIELD'=>'KD_BERITA','SIZE' => '40px','label'=>'KD_BERITA','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>1, 'ATTR' =>['FIELD'=>'JUDUL','SIZE' => '100px','label'=>'SUBJECT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
   ['ID' =>2, 'ATTR' =>['FIELD'=>'KD_CORP','SIZE' => '10px','label'=>'CORP','align'=>'left','warna'=>'97, 211, 96, 0.3']],
   ['ID' =>3, 'ATTR' =>['FIELD'=>'KD_DEP','SIZE' => '10px','label'=>'DEPT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 ];
@@ -123,7 +123,7 @@ echo GridView::widget([
             ['modelClass' => 'Kategori',]),'/widget/berita/create',[
               'data-toggle'=>"modal",
                 'data-target'=>"#modal-create",
-                  'class' => 'btn btn-success'
+                  'class' => 'btn btn-success btn-xs'
                         ]),
         'showFooter'=>false,
   ],
