@@ -22,10 +22,10 @@ $actionClass='btn btn-info btn-xs';
 $attDinamik =[];
 /*GRIDVIEW ARRAY FIELD HEAD*/
 $headColomnBT=[
-  ['ID' =>0, 'ATTR' =>['FIELD'=>'KD_BERITA','SIZE' => '40px','label'=>'KD_BERITA','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-  ['ID' =>1, 'ATTR' =>['FIELD'=>'JUDUL','SIZE' => '100px','label'=>'SUBJECT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-  ['ID' =>2, 'ATTR' =>['FIELD'=>'KD_CORP','SIZE' => '10px','label'=>'CORP','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-  ['ID' =>3, 'ATTR' =>['FIELD'=>'KD_DEP','SIZE' => '10px','label'=>'DEPT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>0, 'ATTR' =>['FIELD'=>'KD_BERITA','SIZE' => '30px','label'=>'KD_BERITA','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>1, 'ATTR' =>['FIELD'=>'JUDUL','SIZE' => '350px','label'=>'SUBJECT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>2, 'ATTR' =>['FIELD'=>'KD_CORP','SIZE' => '50px','label'=>'CORP','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>3, 'ATTR' =>['FIELD'=>'KD_DEP','SIZE' => '50px','label'=>'DEPT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 ];
 $gvHeadColomnBT = ArrayHelper::map($headColomnBT, 'ID', 'ATTR');
 
@@ -79,7 +79,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
     'headerOptions'=>[
         'style'=>[
         'text-align'=>'center',
-        'width'=>$value[$key]['FIELD'],
+        'width'=>$value[$key]['SIZE'],
         'font-family'=>'tahoma, arial, sans-serif',
         'font-size'=>'8pt',
         //'background-color'=>'rgba(97, 211, 96, 0.3)',
@@ -93,7 +93,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
         'font-size'=>'8pt',
       ]
     ],
-          'width'=>'12px',
+          //'width'=>'12px',
   ];
 };
 
@@ -111,15 +111,15 @@ echo GridView::widget([
       'id'=>'berita-acara-id-outbox',
     ],
   ],
+  // 'panel' => [
+        // 'heading'=>'<h3 class="panel-title">LIST BERITA ACARA </h3>',
+        // 'type'=>'warning',
+        // 'showFooter'=>false,
+  // ],
   'panel' => [
         'heading'=>'<h3 class="panel-title">LIST BERITA ACARA </h3>',
-        'type'=>'warning',
-        'showFooter'=>false,
-  ],
-  'panel' => [
-        'heading'=>'<h3 class="panel-title">LIST BERITA ACARA </h3>',
-        'type'=>'warning',
-        'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add ',
+        'type'=>'info',
+        'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Open Ticket',
             ['modelClass' => 'Kategori',]),'/widget/berita/create',[
               'data-toggle'=>"modal",
                 'data-target'=>"#modal-create",
@@ -163,7 +163,7 @@ echo GridView::widget([
  Modal::begin([
  		'id' => 'modal-create',
  		//'header' => '<h4 class="modal-title">Signature Authorize</h4>',
- 		'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Berita Acara</b></h4></div>',
+ 		'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/open_ticket2.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:35px;']).'</div><div style="margin-top:5px;"><h4><b> Berita Acara</b></h4></div>',
  		//'size' => 'modal-xs'
  	// 	'size' => Modal::SIZE_SMALL,
  		'headerOptions'=>[
