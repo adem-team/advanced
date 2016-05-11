@@ -67,15 +67,15 @@ class ChatController extends Controller
     {
         $searchmodel1 = new ChatroomSearch();
         $dataprovider1 = $searchmodel1->search(Yii::$app->request->queryParams);
-         $dataprovider1->pagination->pageSize=2;
+        $dataprovider1->pagination->pageSize=100;
          
         $searchModel1 = new ChatSearch();
         $dataProvider1 = $searchModel1->searchonline(Yii::$app->request->queryParams);
-        $dataProvider1->pagination->pageSize=2;
+        $dataProvider1->pagination->pageSize=100;
         
         $searchModel = new ChatSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->pagination->pageSize=5;
+        $dataProvider->pagination->pageSize=100;
        
 
         return $this->render('index', [
