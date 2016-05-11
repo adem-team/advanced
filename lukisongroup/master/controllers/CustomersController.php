@@ -65,88 +65,88 @@ class CustomersController extends Controller
             }
     }
 
-    //
-    // public function actionIndex()
-    // {
-    //    // city data
-    //     $searchmodelkota = new KotaSearch();
-    //     $dataproviderkota = $searchmodelkota->search(Yii::$app->request->queryParams);
-    //
-    //     // province data
-    //     $searchmodelpro = new ProvinceSearch();
-    //     $dataproviderpro = $searchmodelpro->search(Yii::$app->request->queryParams);
-    //
-    //     $searchModel1 = new KategoricusSearch();
-    //     $dataProviderkat  = $searchModel1->searchparent(Yii::$app->request->queryParams);
-    //
-    //     $searchModel = new CustomersSearch();
-    //     $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-    //
-    //        if(Yii::$app->request->post('hasEditable'))
-    //     {
-    //         $ID = \Yii::$app->request->post('editableKey');
-    //         $model = Customers::findOne($ID);
-    //         $out = Json::encode(['output'=>'', 'message'=>'']);
-    //
-    //         // fetch the first entry in posted data (there should
-    //         // only be one entry anyway in this array for an
-    //         // editable submission)
-    //         // - $posted is the posted data for Book without any indexes
-    //         // - $post is the converted array for single model validation
-    //         $post = [];
-    //         $posted = current($_POST['Customers']);
-    //         $post['Customers'] = $posted;
-    //
-    //
-    //
-    //         // load model like any single model validation
-    //         if ($model->load($post)) {
-    //             // can save model or do something before saving model
-    //             $model->save();
-    //
-    //             // custom output to return to be displayed as the editable grid cell
-    //             // data. Normally this is empty - whereby whatever value is edited by
-    //             // in the input by user is updated automatically.
-    //             $output = '';
-    //
-    //             // specific use case where you need to validate a specific
-    //             // editable column posted when you have more than one
-    //             // EditableColumn in the grid view. We evaluate here a
-    //             // check to see if buy_amount was posted for the Book model
-    //             if (isset($posted['CUST_KD_ALIAS'])) {
-    //                // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-    //                 $output =$model->CUST_KD_ALIAS;
-    //             }
-    //
-    //             // similarly you can check if the name attribute was posted as well
-    //             // if (isset($posted['name'])) {
-    //             //   $output =  ''; // process as you need
-    //             // }
-    //             $out = Json::encode(['output'=>$output, 'message'=>'']);
-    //
-    //
-    //         // return ajax json encoded response and exit
-    //         echo $out;
-    //
-    //         return;
-    //       }
-    //
-    //     }
+
+    public function actionIndex()
+    {
+       // city data
+        $searchmodelkota = new KotaSearch();
+        $dataproviderkota = $searchmodelkota->search(Yii::$app->request->queryParams);
+
+        // province data
+        $searchmodelpro = new ProvinceSearch();
+        $dataproviderpro = $searchmodelpro->search(Yii::$app->request->queryParams);
+
+        $searchModel1 = new KategoricusSearch();
+        $dataProviderkat  = $searchModel1->searchparent(Yii::$app->request->queryParams);
+
+        $searchModel = new CustomersSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+           if(Yii::$app->request->post('hasEditable'))
+        {
+            $ID = \Yii::$app->request->post('editableKey');
+            $model = Customers::findOne($ID);
+            $out = Json::encode(['output'=>'', 'message'=>'']);
+
+            // fetch the first entry in posted data (there should
+            // only be one entry anyway in this array for an
+            // editable submission)
+            // - $posted is the posted data for Book without any indexes
+            // - $post is the converted array for single model validation
+            $post = [];
+            $posted = current($_POST['Customers']);
+            $post['Customers'] = $posted;
+
+
+
+            // load model like any single model validation
+            if ($model->load($post)) {
+                // can save model or do something before saving model
+                $model->save();
+
+                // custom output to return to be displayed as the editable grid cell
+                // data. Normally this is empty - whereby whatever value is edited by
+                // in the input by user is updated automatically.
+                $output = '';
+
+                // specific use case where you need to validate a specific
+                // editable column posted when you have more than one
+                // EditableColumn in the grid view. We evaluate here a
+                // check to see if buy_amount was posted for the Book model
+                if (isset($posted['CUST_KD_ALIAS'])) {
+                   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
+                    $output =$model->CUST_KD_ALIAS;
+                }
+
+                // similarly you can check if the name attribute was posted as well
+                // if (isset($posted['name'])) {
+                //   $output =  ''; // process as you need
+                // }
+                $out = Json::encode(['output'=>$output, 'message'=>'']);
+
+
+            // return ajax json encoded response and exit
+            echo $out;
+
+            return;
+          }
+
+        }
 
 		/*Tambahal menu side Dinamik */
-	// 	$sideMenu_control='umum_datamaster';
-	// 	return $this->render('index', [
-	// 		'sideMenu_control'=> $sideMenu_control,
-	// 		'searchModel1' => $searchModel1,
-	// 		'dataProviderkat'  =>$dataProviderkat ,
-	// 		'searchModel' => $searchModel,
-	// 		'dataProvider' => $dataProvider,
-	// 		'searchmodelkota' => $searchmodelkota,
-	// 		'searchmodelpro' => $searchmodelpro,
-	// 		'dataproviderpro' =>  $dataproviderpro,
-	// 		'dataproviderkota' => $dataproviderkota,
-	// 	]);
-	// }
+		$sideMenu_control='umum_datamaster';
+		return $this->render('index', [
+			'sideMenu_control'=> $sideMenu_control,
+			'searchModel1' => $searchModel1,
+			'dataProviderkat'  =>$dataProviderkat ,
+			'searchModel' => $searchModel,
+			'dataProvider' => $dataProvider,
+			'searchmodelkota' => $searchmodelkota,
+			'searchmodelpro' => $searchmodelpro,
+			'dataproviderpro' =>  $dataproviderpro,
+			'dataproviderkota' => $dataproviderkota,
+		]);
+	}
 
 	/*ESM INDEX*/
 	public function actionEsmIndex()
@@ -866,7 +866,7 @@ class CustomersController extends Controller
 
     public function actionUpdatekat($id)
     {
-
+        $readonly = Customers::find()->where(['CUST_KD'=>$id])->asArray()->one(); // data for view
         $model = $this->findModelcust($id);
         $model->scenario = "updatekat";
         $dropparentkategori = ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT = CUST_KTG')
@@ -893,7 +893,8 @@ class CustomersController extends Controller
         } else {
             return $this->renderAjax('type', [
                 'model' => $model,
-                'dropparentkategori'=>$dropparentkategori
+                'dropparentkategori'=>$dropparentkategori,
+                'readonly'=>$readonly
             ]);
         }
     }
@@ -928,6 +929,7 @@ class CustomersController extends Controller
 
 	 public function actionUpdatecus($id)
     {
+        $readonly = Customers::find()->where(['CUST_KD'=>$id])->asArray()->one(); // data for view
         $model = $this->findModelcust($id);
         $model->scenario = "detail";
         $dropparentkategori = ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT = CUST_KTG')
@@ -965,7 +967,7 @@ class CustomersController extends Controller
                 'dropparentkategori'=>$dropparentkategori,
                 'droppro'=>$droppro,
                 'dropdis'=>$dropdis,
-                // 'readonly'=>$readonly
+                'readonly'=>$readonly
             ]);
         }
     }

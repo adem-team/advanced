@@ -9,11 +9,11 @@ use kartik\widgets\Select2;
 use yii\widgets\ActiveForm;
 use lukisongroup\sistem\models\Userlogin;
 
-
 $this->sideCorp = 'PT.Effembi Sukses Makmur';                          /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_customers';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'ESM - Produk');          /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;                     /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+
 
 
 $JSCode = <<<EOF
@@ -22,11 +22,22 @@ $JSCode = <<<EOF
 function(start, end) {
 	var dateTime2 = new Date(end);
 	var dateTime1 = new Date(start);
-	var tgl1 = moment(dateTime1).format("YYYY-MM-DD HH:mm:ss");
-	var tgl2 = moment(dateTime2).format("YYYY-MM-DD HH:mm:ss");
+	// var tgl1 = moment(dateTime1).format("YYYY-MM-DD HH:mm:ss");
+	// var tgl2 = moment(dateTime2).format("YYYY-MM-DD HH:mm:ss");
+	var tgl1 = moment(dateTime1).format("YYYY-MM-DD");
+	var tgl2 = moment(dateTime2).subtract(1, "days").format("YYYY-MM-DD");
+
+
+	// var tgl1 = moment(dateTime1).format("DD/MM/yyyy hh:mm");
+	// var tgl2 = moment(dateTime2).format("DD/MM/yyyy hh:mm");
 	$('#tglakhir').val(tgl2);
 	$('#tglawal').val(tgl1);
-    $('#confirm-permission-alert').modal();
+    // $('#confirm-permission-alert').modal();
+		$.get('/master/schedule-header/create-group',{'tgl1':tgl1,'tgl2':tgl2},function(data){
+						$('#modal').modal('show')
+						.find('#modalContent')
+						.html(data);
+		});
 }
 EOF;
 $JSDropEvent = <<<EOF
@@ -40,15 +51,25 @@ function(date) {
 EOF;
 $JSEventClick = <<<EOF
 function(calEvent, jsEvent, view) {
-  $('#tglakhir').val(tgl2);
-  $('#tglawal').val(tgl1);
-$('#confirm-permission-alert').modal();
+// $('#confirm-permission-alert').modal();
 
 }
 EOF;
 
+
+Modal::begin([
+	'headerOptions' => ['id' => 'modalHeader'],
+	'id' => 'modal',
+	'size' => 'modal-sm',
+	//keeps from closing modal with esc key or by clicking out of the modal.
+	// user must click cancel or X to close
+	// 'clientOptions' => ['backdrop' => 'static', 'keyboard' => FALSE]
+]);
+echo "<div id='modalContent'></div>";
+Modal::end();
+
 	/*
-	 * GRIDVIEW USER LIST CRM : author wawan
+	 * GRIDVIEW USER LIST  : author wawan
      */
 	$gvUser=GridView::widget([
 		'id'=>'gv-user-list-id',
@@ -93,7 +114,7 @@ EOF;
 				]
 			],
 			[  	//col-1
-				//CUSTOMER GRAOUP NAME
+				//username
 				'attribute' => 'username',
 				'label'=>'User',
 				'hAlign'=>'left',
@@ -436,7 +457,7 @@ EOF;
 		'lang' => 'id',
 		//... more options to be defined here!
 	  ],
-	   // 'events'=> $events,
+	   'events'=> $events,
 	  'ajaxEvents' => Url::to(['/master/schedule-header/jsoncalendar']),
 	  'clientOptions' => [
 			'selectable' => true,
@@ -450,9 +471,9 @@ EOF;
 			//'defaultDate' => date('Y-m-d')
 		],
 		//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
-		
+
 	]);
-	
+
 ?>
 </div>
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
@@ -475,7 +496,7 @@ EOF;
 											],
 										],
 										Html::TYPE_INFO
-										
+
 									);
 							?>
 						</div>
@@ -488,8 +509,8 @@ EOF;
 											],
 										],
 										Html::TYPE_INFO
-										
-									);	
+
+									);
 							?>
 						</div>
 					</div>
@@ -510,27 +531,46 @@ EOF;
 $this->registerJs("
      $.fn.modal.Constructor.prototype.enforceFocus = function(){};
        $('#Scheduleheader').on('beforeSubmit',function(){
-         var tgl2 = $('#tglakhir').val();
-         var tgl1 = $('#tglawal').val();
-         var scdl_group = $('#scheduleheader-scdl_group').val();
-         var user_id = $('#scheduleheader-user_id').val();
-         var note = $('#note').val();
-        $.ajax({
-            url: '/master/schedule-header/jsoncalendar_add',
-            type: 'POST',
-            data: {tgl2 :tgl2,scdl_group :scdl_group,tgl1:tgl1,user_id:user_id,note:note},
-            dataType: 'json',
-            success: function(result) {
-              if (result == 1){
-                       $(document).find('#confirm-permission-alert').modal('hide');
-                          $.pjax.reload({container:'#gv-schedule-id'});
-                     }
+				 var val = $('#scheduleheader-scdl_group').val();
+				 var val1 = $('#scheduleheader-user_id').val();
+				 if(val == '' && val1 == '')
+				 {
+					 	alert('your check field dont exist');
+				 }
+				 else{
+					 var tgl2 = $('#tglakhir').val();
+					 var tgl1 = $('#tglawal').val();
+					 var scdl_group = $('#scheduleheader-scdl_group').val();
+					 var user_id = $('#scheduleheader-user_id').val();
+					 var note = $('#note').val();
+					$.ajax({
+							url: '/master/schedule-header/jsoncalendar_add',
+							type: 'POST',
+							data: {tgl2 :tgl2,scdl_group :scdl_group,tgl1:tgl1,user_id:user_id,note:note},
+							dataType: 'json',
+							success: function(result) {
+								if (result == 1){
+													$(document).find('#confirm-permission-alert').modal('hide');
+													$.pjax.reload({container:'#gv-schedule-id'});
+												 $('form#Scheduleheader').trigger('reset');
+												 $.pjax.reload({container:'#calendar'});
+											 }
+							 else{
+								 alert('maaf untuk tanggal ini sudah di booking');
+										$('form#Scheduleheader').trigger('reset');
+									 //  $(document).find('#confirm-permission-alert').modal('hide');
+											 // $.pjax.reload({container:'#gv-schedule-id'});
+											 // $.pjax.reload({container:'#calendar'});
+							 }
 
-                        }
+									}
 
-                      });
-                      return false;
-                  });
+							});
+
+				 }
+
+          return false;
+        });
   ",$this::POS_READY);
 
 // author wawan

@@ -47,6 +47,8 @@ class Customers extends \yii\db\ActiveRecord
 
     public $parentnama;
     public $CusNm;
+    public $CusT; // model manipulate form_scdl and contrroler create-scdl
+    public $GruPCusT; // model manipulate form_scdl and contrroler create-scdl
     public static function tableName()
     {
         return 'c0001';
@@ -135,6 +137,8 @@ public function getParentName() {
     public function attributeLabels()
     {
         return [
+            'CusT' =>'Group',
+            'GruPCusT'=>'Customers',
             'CUST_KTG_NM' => 'Kategori Customers',
             'parentnama' => 'Is Parent',
             'CITY_ID' => 'KOTA',

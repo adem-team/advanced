@@ -97,13 +97,13 @@ class Auth1Model extends Model
 						$poHeaderStt->KD_PO = $this->kdpo;
 						$poHeaderStt->ID_USER = $this->getProfile()->EMP_ID;
 						//$poHeaderStt->TYPE
-						$poHeaderStt->STATUS = 101;
+						$poHeaderStt->STATUS = 100;
 						$poHeaderStt->UPDATE_AT = date('Y-m-d H:m:s');
 						if ($poHeaderStt->save()) {
-								
-							//Notification::notify(Notification::KEY_NEW_MESSAGE, $id_Pengirim, $id_penerima(user_login),$ref_kode);	
+
+							//Notification::notify(Notification::KEY_NEW_MESSAGE, $id_Pengirim, $id_penerima(user_login),$ref_kode);
 							Notification::notify(Notification::KEY_NEW_MESSAGE, 25,Yii::$app->user->identity->id,$this->kdpo);
-							
+
 							$msgNotify = new MessageNotify;
 							$msgNotify->USER_CREATE=Yii::$app->user->identity->id; 				//integer
 							$msgNotify->USER_FROM= $this->getProfile()->EMP_NM; 			//varchar 50
@@ -113,7 +113,7 @@ class Auth1Model extends Model
 							$msgNotify->IMG=''; 						//TEXT
 							$msgNotify->REF = $this->kdpo; 				//TEXT
 							$msgNotify->save();
-							
+
 						}
 					}
                 return $poHeader;

@@ -39,7 +39,7 @@ class EmployeSearch extends Employe
     public function rules()
     {
         return [
-            [['EMP_ID', 'EMP_NM','EMP_NM_BLK','EMP_JOIN_DATE','EMP_RESIGN_DATE'], 'safe'],
+            [['EMP_ID', 'EMP_NM','EMP_NM_BLK','EMP_JOIN_DATE','EMP_RESIGN_DATE','EMP_IMG_64'], 'safe'],
 			[['EMP_ID','EMP_CORP_ID'], 'string', 'max' => 15],
 			[['corpOne.CORP_NM','deptOne.DEP_NM','deptsub.DEP_SUB_NM','groupfunction.GF_NM','groupseqmen.SEQ_NM','jobgrade.JOBGRADE_NM','sttOne.STS_NM'], 'safe'],
         ];

@@ -12,6 +12,12 @@ use lukisongroup\master\models\Scheduledetail;
  */
 class ScheduledetailSearch extends Scheduledetail
 {
+	
+	public $nmgroup;
+	public $nmuser;
+	public $nmcust;
+	public $sttKoordinat;
+	public $radiusMeter;
     /**
      * @inheritdoc
      */
@@ -19,7 +25,7 @@ class ScheduledetailSearch extends Scheduledetail
     {
         return [
             [['ID', 'SCDL_GROUP', 'STATUS'], 'integer'],
-            [['TGL', 'CUST_ID', 'USER_ID', 'NOTE', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
+            [['sttKoordinat','radiusMeter','nmgroup','nmuser','nmcust','TGL', 'CUST_ID', 'USER_ID', 'NOTE', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
             [['LAT', 'LAG', 'RADIUS'], 'number'],
         ];
     }
@@ -46,6 +52,9 @@ class ScheduledetailSearch extends Scheduledetail
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+			'pagination' => [
+				'pageSize' => 100,
+			],
         ]);
 
         $this->load($params);

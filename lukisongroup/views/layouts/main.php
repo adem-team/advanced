@@ -46,7 +46,7 @@ $this->title = 'LukisonGroup.com';
 	 */
 	$recipient_id=1;
 	//Notification::notify(Notification::KEY_NEW_MESSAGE, $recipient_id, 2);
-	Notification::notify(Notification::KEY_NEW_MESSAGE, 1, 2,'123');
+	//Notification::notify(Notification::KEY_NEW_MESSAGE, 1, 2,'123');
 	//Notification::warning(Notification::KEY_NEW_MESSAGE, $recipient_id, 3);
 	
 

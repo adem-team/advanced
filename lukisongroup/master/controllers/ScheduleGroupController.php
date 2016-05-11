@@ -71,9 +71,9 @@ class ScheduleGroupController extends Controller
           ];
           $valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
 
-          $query = Schedulegroup::find()->all();
-
-          $data =  ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
+          //query for select2 in schedule-group = index
+          $query = Yii::$app->db_esm->createCommand("SELECT * FROM `c0007` c7  WHERE  NOT EXISTS (SELECT SCDL_GROUP FROM `c0001` `c1` WHERE c1.SCDL_GROUP = c7.ID)")->queryAll();
+        	$data =  ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -122,6 +122,44 @@ class ScheduleGroupController extends Controller
         }
     }
 
+    /**
+     * update customers schedule group model.
+     * @return mixed
+     */
+    public function actionCreateScdl()
+    {
+        $model = new Customers(); // first model using manipulate model in form
+        $post = Yii::$app->request->post();
+        $group = $post['Customers']['CusT'];
+        $CUST_KD = $post['Customers']['GruPCusT'];
+        $model1 = Customers::find()->where(['CUST_KD'=>$CUST_KD])->one(); //update model
+        /*query for select2 in schedule-group = form_scdl */
+        // $query = Yii::$app->db_esm->createCommand("SELECT * FROM `c0007` c7  WHERE  NOT EXISTS (SELECT SCDL_GROUP FROM `c0001` `c1` WHERE c1.SCDL_GROUP = c7.ID)")->queryAll();
+        $query = Schedulegroup::find()->all();
+        $cari_group =  ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
+
+        //query for select2 in schedule-group = form_scdl
+        $querys = Yii::$app->db_esm->createCommand("SELECT * FROM `c0001` where SCDL_GROUP is null")->queryAll();
+        $cari_cus =  ArrayHelper::map($querys, 'CUST_KD', 'CUST_NM');
+
+        if ($model->load(Yii::$app->request->post())) {
+           $model1->SCDL_GROUP = $group;
+           $model1->save();
+
+            return $this->redirect(['index']);
+        } else {
+            return $this->renderAjax('form_scdl', [
+                'model' => $model,
+                'cari_group'=>$cari_group,
+                'cari_cus'=>$cari_cus
+            ]);
+        }
+    }
+
+
+
+
+
     public function actionCreateGroup($CUST_KD)
     {
         $model = Customers::find()->where(['CUST_KD'=>$CUST_KD])->one();
@@ -169,7 +207,6 @@ class ScheduleGroupController extends Controller
         $model = $this->findModelGroup($id);
 
         $query = Schedulegroup::find()->all();
-
         $data =  ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

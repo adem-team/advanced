@@ -4,6 +4,7 @@ namespace lukisongroup\purchasing\models\pr;
 
 use Yii;
 
+/* namespace models */
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\master\models\Suplier;
 use lukisongroup\master\models\Nmperusahaan;
@@ -26,6 +27,9 @@ class Purchaseorder extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+
+     public $CREATE_AT1;
+     public $CREATE_AT2;
     public static function tableName()
     {
         return 'p0001';
@@ -84,6 +88,7 @@ class Purchaseorder extends \yii\db\ActiveRecord
         return $this->hasOne(Nmperusahaan::className(), ['ID' => 'SHIPPING']);
     }
 
+
 	/*
 	 * Attribute class getEmploye
 	 * used data master not data transaction | name saved table or dirict table trans
@@ -109,6 +114,16 @@ class Purchaseorder extends \yii\db\ActiveRecord
 	public function getNmcorp()
     {
         return $this->corp->CORP_NM;
+    }
+
+public function getNmcorphistory()
+    {
+          return $this->corp->CORP_NM;
+    }
+
+public function getNmcorpoutbox()
+    {
+         return $this->corp->CORP_NM;
     }
 
 	/*
@@ -158,6 +173,7 @@ class Purchaseorder extends \yii\db\ActiveRecord
             return $this->approve->EMP_NM.' '.$this->approve->EMP_NM_BLK;
         }
     }
+
 
     public function rules()
     {

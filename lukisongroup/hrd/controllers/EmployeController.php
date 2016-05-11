@@ -24,6 +24,7 @@ namespace lukisongroup\hrd\controllers;
 	use lukisongroup\hrd\models\EmployeSearch;	/* TABLE CLASS SEARCH */
 	use lukisongroup\hrd\models\Deptsub;
 	use lukisongroup\hrd\models\Jobgrademodul;
+		use lukisongroup\hrd\models\ProfileSalesSearch;
 
 
 /* VARIABLE SIDE MENU Author: -Eka- */
@@ -220,6 +221,31 @@ class EmployeController extends Controller
 			'aryStt'=>$this->aryStt()
         ]);
     }
+
+
+
+		/* index salesman from crm */
+		public function actionIndexSalesman()
+		{
+			/*
+			 * SEARCH FIRST AND DIRECT
+			 * @author piter [ptr.nov@gmail.com]
+			 * @since 1.2
+			*/
+			$paramCari=Yii::$app->getRequest()->getQueryParam('id');
+			if ($paramCari!=''){
+				$cari=['EMP_ID'=>$paramCari];
+			}else{
+				$cari='';
+			};
+
+				$searchModel = new ProfileSalesSearch($cari);
+			  $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+			return $this->render('index_salesman_employe', [
+						'searchModel' => $searchModel,
+			      'dataProvider' => $dataProvider,
+			        ]);
+		}
 
     /**
 	 * ACTION VIEW -> $id=PrimaryKey

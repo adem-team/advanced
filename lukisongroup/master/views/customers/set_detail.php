@@ -27,7 +27,7 @@ use kartik\widgets\DepDrop;
 			'id'=>$model->formName(),
 			'enableClientValidation' => true,
 	]);
-
+echo $form->field($model, 'CusNm')->Textinput(['value'=>$readonly['CUST_NM'],'readonly'=>true]);
 	// echo $form->field($model, 'CUST_NM', $config)->widget(LabelInPlace::classname());
 
 	echo  $form->field($model, 'PROVINCE_ID')->widget(Select2::classname(),[

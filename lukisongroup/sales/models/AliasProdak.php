@@ -12,7 +12,7 @@ class AliasProdak extends Model
 	public $kD_BARANG_ALIAS;
     public $nM_BARANG_ALIAS;
     public $kD_REF;
-	
+
 	public function rules()
     {
         return [
@@ -20,14 +20,14 @@ class AliasProdak extends Model
 			[['kD_REF'], 'safe'],
         ];
     }
-	
+
 	public function alias_barang_save(){
 		//if ($this->validate()) {
 			$rcBarangalias= new Barangalias;
 		//print_r($this->distributor());
 		//die();
-		
-		//print_r($rcBarangalias->getErrors());	
+
+		//print_r($rcBarangalias->getErrors());
 		//die();
 		//if ($this->validate()) {
 			$rcBarangalias->KD_BARANG=$this->kD_BARANG;
@@ -39,10 +39,10 @@ class AliasProdak extends Model
 			$rcBarangalias->save();
 			// print_r($rcBarangalias->save());
 			// die();
-					
+
 			return $rcBarangalias;
 		//}
-		//return null;	
+		//return null;
 		//}
 	}
 }

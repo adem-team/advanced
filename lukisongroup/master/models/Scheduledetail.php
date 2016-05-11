@@ -3,7 +3,9 @@
 namespace lukisongroup\master\models;
 
 use Yii;
-
+use lukisongroup\master\models\Schedulegroup;
+use lukisongroup\master\models\Customers;
+use lukisongroup\sistem\models\Userlogin;
 /**
  * This is the model class for table "c0002scdl_detail".
  *
@@ -40,6 +42,53 @@ class Scheduledetail extends \yii\db\ActiveRecord
         return Yii::$app->get('db_esm');
     }
 
+	public function getGroup_scdl()
+    {
+        return $this->hasOne(Schedulegroup::className(), ['ID' => 'SCDL_GROUP']);
+    }
+	public function getNmgroup()
+    {
+        return $this->group_scdl->SCDL_GROUP_NM;
+    }
+	
+	public function getUser()
+    {
+        return $this->hasOne(Userlogin::className(), ['id' => 'USER_ID']);
+    }
+	public function getNmuser()
+    {
+        return $this->user->username;
+    }
+	
+	public function getCust()
+    {
+        return $this->hasOne(Customers::className(), ['CUST_KD' => 'CUST_ID']);
+    }
+	public function getNmcust()
+    {
+        return $this->cust->CUST_NM;
+    }
+	
+	public function getSttKoordinat()
+    {
+        $radius =  $this->RADIUS * 1000;
+		
+		if ($radius<=30){
+			$stt_Chekin=1;			
+		}elseif ($radius>30 AND $radius <=60){
+			$stt_Chekin=2;	
+		}elseif($radius>60){
+			$stt_Chekin=3;				
+		};
+				
+		return $stt_Chekin;
+    }
+	
+	public function getRadiusMeter()
+    {
+		return $this->RADIUS * 1000;;		
+	}
+	
     /**
      * @inheritdoc
      */
@@ -55,6 +104,16 @@ class Scheduledetail extends \yii\db\ActiveRecord
         ];
     }
 
+	/* public function fields()
+	{
+		return [
+			'STATUS'=>function($model){
+							return '44';
+					},
+		];
+	}
+	 */
+	
     /**
      * @inheritdoc
      */

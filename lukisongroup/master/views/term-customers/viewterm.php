@@ -16,7 +16,7 @@ use kartik\detail\DetailView;
 
 $this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'Trading Terms ');   
+$this->title = Yii::t('app', 'Trading Terms ');
 	$aryStatus= [
 		  ['STATUS' =>0, 'DESCRIP' => 'New'],
 		  ['STATUS' =>1, 'DESCRIP' => 'Approved'],
@@ -520,10 +520,10 @@ $this->title = Yii::t('app', 'Trading Terms ');
 			 ?>
 			 <div>
 				 <?php
-				 $img = Url::to('@web/upload/barang/').'df.jpg';
-
-				 $dataimage = $image->GENERAL_TERM !=''? '<img src="data:image/jpeg;base64,' . $image->GENERAL_TERM . '" />' : '<img src="'.$img.'" width="50" />';;
-				 	echo  $dataimage;
+				//  $img = Url::to('@web/upload/barang/').'df.jpg';
+				 //
+				//  $dataimage = $image->GENERAL_TERM !=''? '<img src="data:image/jpeg;base64,' . $image->GENERAL_TERM . '" />' : '<img src="'.$img.'" width="50" />';;
+				//  	echo  $dataimage;
 
 			?>
 		</div>
@@ -596,21 +596,21 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					 <tr>
 						<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
 							<?php
-							$ttd1 =  $model->SIG1_SVGBASE64 !='' ? '<img style="width:80; height:40px" src='.$model->SIG1_SVGBASE64.'></img>':'';
+							$ttd1 = $model->SIG1_SVGBASE64 !='' ? '<img style="width:80; height:40px" src='.$model->SIG1_SVGBASE64.'></img>':''
 								?>
-							  <?= $ttd1 ?>;
+							  <?= $ttd1 ?>
 
 						</th>
 						<th class="col-md-1" style="text-align: center; vertical-align:middle">
 							<?php
 								$ttd2 =  $model->SIG2_SVGBASE64 !='' ? '<img style="width:80; height:40px" src='.$model->SIG2_SVGBASE64.'></img>':'';
-								echo $ttd2;
+								echo $ttd2
 							?>
 						</th>
 						<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 							<?php
 									$ttd3 = $model->SIG3_SVGBASE64 !='' ? '<img style="width:80; height:40px" src='.$model->SIG3_SVGBASE64.'></img>':'';
-								  echo $ttd3;
+								  echo $ttd3
 							?>
 						</th>
 					</tr>

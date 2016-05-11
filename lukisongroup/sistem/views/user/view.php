@@ -48,7 +48,9 @@ $this->title = Yii::t('app', 'LG - Administrator');         /* title pada header
 					'value'=>Html::a($Val_Emp, '#', ['class'=>'kv-author-link']),
 					'type'=>DetailView::INPUT_SELECT2, 
 					'widgetOptions'=>[
-						'data'=>ArrayHelper::map(Employe::find()->orderBy('EMP_NM')->asArray()->all(), 'EMP_ID','EMP_NM'),
+						'data'=>ArrayHelper::map(Employe::find()->orderBy('EMP_NM')->asArray()->all(), 'EMP_ID',function($model){
+							return $model['EMP_NM'] . ' ' . $model['EMP_NM_BLK'];
+						}),
 						'options'=>['placeholder'=>'Select ...'],
 						'pluginOptions'=>['allowClear'=>true],
 					],

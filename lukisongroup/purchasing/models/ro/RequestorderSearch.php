@@ -143,6 +143,7 @@ class RequestorderSearch extends Requestorder
 		return $dataProvider;
     }
 
+
 	/*
 	 * RO SEARCH TO PO
 	 * ACTION APPROVAL
@@ -151,6 +152,7 @@ class RequestorderSearch extends Requestorder
 	*/
 	public function cariHeaderRO_SendPO($params)
     {
+
         $query = Requestorder::find()->where("r0001.KD_RO LIKE 'RO%' and r0001.status <> 3 and r0001.status =103 ");
 
 
@@ -175,9 +177,6 @@ class RequestorderSearch extends Requestorder
         return $dataProvider;
     }
 
-
-
-		
 
 
 	public function searchRo($params)

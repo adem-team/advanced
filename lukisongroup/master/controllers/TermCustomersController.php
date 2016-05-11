@@ -137,7 +137,7 @@ class TermCustomersController extends Controller
         {
             $model->save();
         }
-        if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT'&&Yii::$app->getUserOpt->Modul_akses('3')->BTN_CREATE==1)
+        if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT')
         {
             return $this->redirect(['review-act','id'=>$model->ID_TERM]);
         }
@@ -152,24 +152,24 @@ class TermCustomersController extends Controller
       }
     }
 
-    public function actionPoNoteUpdate($ID)
-    {
-      # code...
-      $model = Termcustomers::find()->where(['ID_TERM' =>$ID])->one();
-
-      if ($model->load(Yii::$app->request->post())) {
-        if($model->validate())
-        {
-            $model->save();
-        }
-          return  $this->redirect(['review-act-update','id'=> $model->ID_TERM]);
-
-      } else {
-          return $this->renderAjax('note', [
-              'model' => $model,
-          ]);
-      }
-    }
+    // public function actionPoNoteUpdate($ID)
+    // {
+    //   # code...
+    //   $model = Termcustomers::find()->where(['ID_TERM' =>$ID])->one();
+    //
+    //   if ($model->load(Yii::$app->request->post())) {
+    //     if($model->validate())
+    //     {
+    //         $model->save();
+    //     }
+    //       return  $this->redirect(['review-act-update','id'=> $model->ID_TERM]);
+    //
+    //   } else {
+    //       return $this->renderAjax('note', [
+    //           'model' => $model,
+    //       ]);
+    //   }
+    // }
 
     public function actionInvoce($id)
     {
@@ -421,7 +421,17 @@ class TermCustomersController extends Controller
              if ($auth1Mdl->auth1_saved()){
                $hsl = \Yii::$app->request->post();
                $kd = $hsl['Auth1Model']['id'];
-               if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT'&&Yii::$app->getUserOpt->Modul_akses('3')->BTN_CREATE==1)
+              //  print_r($kd);
+              //  die();
+              if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT')
+              {
+                $this->SendmailAct($kd);
+              }
+              else{
+                 $this->Sendmail($kd);
+              }
+
+               if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT')
                {
                    return $this->redirect(['review-act','id'=>$kd]);
                }
@@ -446,6 +456,7 @@ class TermCustomersController extends Controller
              if ($auth2Mdl->auth2_saved()){
                $hsl = \Yii::$app->request->post();
                $kd = $hsl['Auth2Model']['id'];
+               $this->SendmailAct($kd);
                return $this->redirect(['review-act', 'id'=>$kd]);
              }
            }
@@ -479,6 +490,7 @@ class TermCustomersController extends Controller
             if ($auth3Mdl->auth3_saved()){
               $hsl = \Yii::$app->request->post();
               $kd = $hsl['Auth3Model']['id'];
+              $this->SendmailAct($kd);
               return $this->redirect(['review-drc', 'id'=>$kd]);
             }
           }
@@ -648,7 +660,7 @@ class TermCustomersController extends Controller
             $model->save();
         }
 
-        if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT'&& Yii::$app->getUserOpt->Modul_akses('3')->BTN_CREATE==1)
+        if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT')
         {
             return $this->redirect(['review-act','id'=>$model->ID_TERM]);
         }
@@ -679,7 +691,7 @@ class TermCustomersController extends Controller
             $model->save();
         }
 
-        if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT'&& Yii::$app->getUserOpt->Modul_akses('3')->BTN_CREATE==1)
+        if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT')
         {
             return $this->redirect(['review-act','id'=>$model->ID_TERM]);
         }
@@ -712,7 +724,7 @@ class TermCustomersController extends Controller
             $model->save();
         }
 
-        if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT'&& Yii::$app->getUserOpt->Modul_akses('3')->BTN_CREATE==1)
+        if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT')
         {
             return $this->redirect(['review-act','id'=>$model->ID_TERM]);
         }
@@ -751,7 +763,7 @@ class TermCustomersController extends Controller
               $model->save();
           }
 
-        if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT'&&Yii::$app->getUserOpt->Modul_akses('3')->BTN_CREATE==1)
+        if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT')
         {
             return $this->redirect(['review-act','id'=>$model->ID_TERM]);
         }
@@ -789,7 +801,7 @@ class TermCustomersController extends Controller
               $model->save();
           }
 
-          if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT'&& Yii::$app->getUserOpt->Modul_akses('3')->BTN_CREATE==1)
+          if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT')
           {
               return $this->redirect(['review-act','id'=>$model->ID_TERM]);
           }
@@ -807,7 +819,195 @@ class TermCustomersController extends Controller
         }
     }
 
+// send mail sales
+    public function Sendmail($id)
+    {
+      $data = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
+      $datainternal = Jobgrade::find()->where(['JOBGRADE_ID'=>$data['JOBGRADE_ID']])->asArray()
+                                                                                    ->one();
+      $datacus = Customers::find()->where(['CUST_KD'=> $data->CUST_KD])
+                              ->asArray()
+                              ->one();
+      $datadis = Distributor::find()->where(['KD_DISTRIBUTOR'=> $data->DIST_KD])
+                                    ->asArray()
+                                    ->one();
+      $datacorp = Corp::find()->where(['CORP_ID'=> $data->PRINCIPAL_KD])
+                                                                  ->asArray()
+                                                                  ->one();
+      $sql = "SELECT c.INVES_TYPE,c.ID_TERM,c.BUDGET_PLAN,c.BUDGET_ACTUAL,c.PERIODE_START,c.PERIODE_END,b.TARGET_VALUE from c0005 c LEFT JOIN c0003 b on c.ID_TERM = b.ID_TERM   where c.ID_TERM='".$id."'";
+      $data1 = Termbudget::findBySql($sql)->all();
+      $sqlsum = "SELECT SUM(BUDGET_PLAN) as BUDGET_PLAN,SUM(BUDGET_ACTUAL) as BUDGET_ACTUAL from c0005 where ID_TERM='".$id."'";
+      $datasum = Termbudget::findBySql($sqlsum)->one();
 
+     $dataProvider = new ArrayDataProvider([
+       'key' => 'ID_TERM',
+       'allModels'=>$data1,
+       'pagination' => [
+         'pageSize' => 20,
+       ],
+        ]);
+
+      $content = $this->renderPartial( '_pdf', [
+        'data' => $data,
+        'datainternal'=>$datainternal,
+        'datacus'=>  $datacus,
+        'datadis'=>$datadis,
+        'datacorp'=>$datacorp,
+        // 'term'=>$term,
+        'datasum'=>$datasum,
+        'dataProvider'=>$dataProvider
+
+          ]);
+
+          $contentmail = $this->renderPartial( 'sendmailcontent', [
+            'data' => $data,
+            'datainternal'=>$datainternal,
+            'datacus'=>  $datacus,
+            'datadis'=>$datadis,
+            'datacorp'=>$datacorp,
+            'datasum'=>$datasum,
+            'dataProvider'=>$dataProvider
+
+              ]);
+
+
+		/*Body Notify*/
+		$contentMailAttachBody= $this->renderPartial('postman_body',[
+			'data' => $data,
+			'dataProvider' => $dataProvider,
+		]);
+
+    $pdf = new Pdf([
+      // set to use core fonts only
+      'mode' => Pdf::MODE_CORE,
+      // A4 paper format
+      'format' => Pdf::FORMAT_A4,
+      // portrait orientation
+      'orientation' => Pdf::ORIENT_PORTRAIT,
+      // stream to browser inline
+      'destination' => Pdf::DEST_BROWSER,
+      // your html content input
+      'content' => $content,
+      // format content from your own css file if needed or use the
+      // enhanced bootstrap css built by Krajee for mPDF formatting
+      //D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+      'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+      // any css to be embedded if required
+      'cssInline' => '.kv-heading-1{font-size:12px}',
+       // set mPDF properties on the fly
+      'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+       // call mPDF methods on the fly
+      'methods' => [
+        'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
+        'SetFooter'=>['{PAGENO}'],
+      ]
+    ]);
+    // aditiya@lukison.com
+    // $to=[$dataemail['email'],$email,'purchasing@lukison.com',$datamanager['EMP_EMAIL']];
+    $to=['request_term@lukison.com'];
+
+    \Yii::$app->kirim_email->pdf($contentmail,'Tipro',$to,'Request-Term',$contentMailAttachBody);
+
+    }
+
+
+// Send mail accounting : split by email author wawan
+    public function SendmailAct($id)
+    {
+      # code...
+      $data = Termcustomers::find()->where(['ID_TERM'=>$id])->one();
+      $datainternal = Jobgrade::find()->where(['JOBGRADE_ID'=>$data['JOBGRADE_ID']])->asArray()
+                                                                                    ->one();
+      $datacus = Customers::find()->where(['CUST_KD'=> $data->CUST_KD])
+                              ->asArray()
+                              ->one();
+
+      // $term = Termgeneral::find()->where(['ID'=>$data['GENERAL_TERM']])->asArray()
+      //                                                     ->one();
+
+      $datadis = Distributor::find()->where(['KD_DISTRIBUTOR'=> $data->DIST_KD])
+                                    ->asArray()
+                                    ->one();
+      $datacorp = Corp::find()->where(['CORP_ID'=> $data->PRINCIPAL_KD])
+                                                                  ->asArray()
+                                                                  ->one();
+      $sql = "SELECT c.INVES_TYPE,c.ID_TERM,c.BUDGET_PLAN,c.BUDGET_ACTUAL,c.PERIODE_START,c.PERIODE_END,b.TARGET_VALUE from c0005 c LEFT JOIN c0003 b on c.ID_TERM = b.ID_TERM   where c.ID_TERM='".$id."'";
+      $data1 = Termbudget::findBySql($sql)->all();
+      $sqlsum = "SELECT SUM(BUDGET_PLAN) as BUDGET_PLAN,SUM(BUDGET_ACTUAL) as BUDGET_ACTUAL from c0005 where ID_TERM='".$id."'";
+      $datasum = Termbudget::findBySql($sqlsum)->one();
+      $sql1 = "SELECT SUM(BUDGET_ACTUAL) as Total from c0005 where  (ID_TERM='" .$id. "' AND STATUS =1) OR (STATUS =0 AND ID_TERM='" .$id. "')";
+      $modelnewaprov = Yii::$app->db3->createCommand($sql1)->queryscalar();
+
+     $dataProvider = new ArrayDataProvider([
+       'key' => 'ID_TERM',
+       'allModels'=>$data1,
+       'pagination' => [
+         'pageSize' => 20,
+       ],
+        ]);
+
+      $content = $this->renderPartial( '_pdf_act', [
+        'data' => $data,
+        'datainternal'=>$datainternal,
+        'datacus'=>  $datacus,
+        'datadis'=>$datadis,
+        'datacorp'=>$datacorp,
+        // 'term'=>$term,
+        'datasum'=>$datasum,
+        'dataProvider'=>$dataProvider,
+        'modelnewaprov'=>$modelnewaprov
+
+          ]);
+          $contentmail = $this->renderPartial( 'sendcontent_act', [
+            'data' => $data,
+            'datainternal'=>$datainternal,
+            'datacus'=>  $datacus,
+            'datadis'=>$datadis,
+            'datacorp'=>$datacorp,
+            'datasum'=>$datasum,
+            'dataProvider'=>$dataProvider
+
+              ]);
+
+
+    /*Body Notify*/
+    $contentMailAttachBody= $this->renderPartial('postman_body',[
+      'data' => $data,
+      'dataProvider' => $dataProvider,
+    ]);
+
+    $pdf = new Pdf([
+      // set to use core fonts only
+      'mode' => Pdf::MODE_CORE,
+      // A4 paper format
+      'format' => Pdf::FORMAT_A4,
+      // portrait orientation
+      'orientation' => Pdf::ORIENT_PORTRAIT,
+      // stream to browser inline
+      'destination' => Pdf::DEST_BROWSER,
+      // your html content input
+      'content' => $content,
+      // format content from your own css file if needed or use the
+      // enhanced bootstrap css built by Krajee for mPDF formatting
+      //D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+      'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+      // any css to be embedded if required
+      'cssInline' => '.kv-heading-1{font-size:12px}',
+       // set mPDF properties on the fly
+      'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+       // call mPDF methods on the fly
+      'methods' => [
+        'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
+        'SetFooter'=>['{PAGENO}'],
+      ]
+    ]);
+    // aditiya@lukison.com
+    // $to=[$dataemail['email'],$email,'purchasing@lukison.com',$datamanager['EMP_EMAIL']];
+    $to=['request_term@lukison.com'];
+
+    \Yii::$app->kirim_email->pdf($contentmail,'Tipro',$to,'Request-Term',$contentMailAttachBody);
+
+    }
 
 
 
@@ -823,7 +1023,7 @@ class TermCustomersController extends Controller
               $model->save();
           }
 
-          if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT' && Yii::$app->getUserOpt->Modul_akses('3')->BTN_CREATE==1)
+          if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT')
           {
               return $this->redirect(['review-act','id'=>$model->ID_TERM]);
           }
@@ -1095,6 +1295,7 @@ class TermCustomersController extends Controller
         }
     }
 
+// first accounting create term
     public function actionCreateAct()
     {
 

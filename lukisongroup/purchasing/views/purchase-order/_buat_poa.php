@@ -1,6 +1,7 @@
 <?php
-
-use yii\helpers\Html;
+/* extensions*/
+//use yii\helpers\Html;
+use kartik\helpers\Html;
 use yii\bootstrap\Modal;
 use yii\widgets\ActiveForm;
 use kartik\detail\DetailView;
@@ -11,8 +12,10 @@ use kartik\grid\GridView;
 use kartik\tabs\TabsX;
 use kartik\money\MaskMoney;
 
+/* namespace models*/
 use lukisongroup\purchasing\models\ro\Requestorder;
 use lukisongroup\purchasing\models\pr\Costcenter;
+use lukisongroup\purchasing\models\pr\FilePo;
 use lukisongroup\purchasing\models\ro\Rodetail;
 use lukisongroup\purchasing\models\ro\RodetailSearch;
 use lukisongroup\master\models\Unitbarang;
@@ -49,6 +52,7 @@ use lukisongroup\master\models\Unitbarang;
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.2
 	*/
+
 	function link_etd($poHeader){
 		$ttlEtd=$poHeader->ETD!=0? $poHeader->ETD:'---- -- --';
 		$title = Yii::t('app',$ttlEtd);
@@ -82,6 +86,26 @@ use lukisongroup\master\models\Unitbarang;
 		$content = Html::a($title,$url, $options);
 		return $content;
 	}
+
+  /*
+   * LINK PO Attach File
+   * @author : wawan
+     * @since 1.0
+  */
+  function PoAttach_file($poHeader){
+      $title = Yii::t('app','');
+      $options = [ 'id'=>'po-attach-id',
+              'data-toggle'=>"modal",
+              'data-target'=>"#po-attach-review",
+              'class'=>'btn btn-info btn-xs',
+              'title'=>'PO Attach File'
+      ];
+      $icon = '<span class="fa fa-plus fa-lg"></span>';
+      $label = $icon . ' ' . $title;
+      $url = Url::toRoute(['/purchasing/purchase-order/po-attach-file','kdpo'=>$poHeader->KD_PO]);
+      $content = Html::a($label,$url, $options);
+      return $content;
+  }
 
 	/*
 	 * LINK BUTTON SELECT SUPPLIER
@@ -248,6 +272,14 @@ use lukisongroup\master\models\Unitbarang;
 			return $content;
 	}
 
+	function getPermission(){
+		if (Yii::$app->getUserOpt->Modul_akses('3')){
+			return Yii::$app->getUserOpt->Modul_akses('3');
+		}else{
+			return false;
+		}
+	}
+
 	/*
 	 * LINK PO Note Term of Payment
 	 * @author ptrnov  <piter@lukison.com>
@@ -259,7 +291,6 @@ use lukisongroup\master\models\Unitbarang;
 						  'data-toggle'=>"modal",
 						  'data-target'=>"#po-notetop",
 						  'class'=>'btn btn-info btn-xs',
-						  //'style'=>['width'=>'150px'],
 						  'title'=>'PO Note'
 			];
 			$icon = '<span class="fa fa-plus fa-lg"></span>';
@@ -277,12 +308,6 @@ use lukisongroup\master\models\Unitbarang;
 	 * @since 1.2
 	*/
 	function tombolApproval($url, $model){
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Approved');
 				$options = [ 'id'=>'approved',
 							 'data-pjax' => true,
@@ -291,8 +316,6 @@ use lukisongroup\master\models\Unitbarang;
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';
 				$label = $icon . ' ' . $title;
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
 	}
 	/*
 	 * Tombol Reject Item
@@ -302,12 +325,6 @@ use lukisongroup\master\models\Unitbarang;
 	 * @since 1.2
 	*/
 	function tombolReject($url, $model) {
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Reject');
 				$options = [ 'id'=>'reject',
 							 'data-pjax'=>true,
@@ -317,8 +334,6 @@ use lukisongroup\master\models\Unitbarang;
 				$label = $icon . ' ' . $title;
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
 	}
 	/*
 	 * Tombol Reject Item
@@ -328,12 +343,6 @@ use lukisongroup\master\models\Unitbarang;
 	 * @since 1.2
 	*/
 	function tombolDelete($url, $model) {
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Delete');
 				$options = [ 'id'=>'delete',
 							 'data-pjax'=>true,
@@ -343,8 +352,6 @@ use lukisongroup\master\models\Unitbarang;
 				$label = $icon . ' ' . $title;
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
 	}
 	/*
 	 * Tombol Cancel Item
@@ -354,12 +361,6 @@ use lukisongroup\master\models\Unitbarang;
 	 * @since 1.2
 	*/
 	function tombolCancel($url, $model){
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Cancel');
 				$options = [ 'id'=>'cancel',
 							 'data-pjax'=>true,
@@ -368,8 +369,6 @@ use lukisongroup\master\models\Unitbarang;
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';
 				$label = $icon . ' ' . $title;
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
 	}
 
 	/*
@@ -467,19 +466,6 @@ use lukisongroup\master\models\Unitbarang;
 									return tombolDelete($url, $model);
 								}
 							},
-
-				'closed' => function ($url, $model) use ($poHeader){
-								/*Check Status Checked on Requestorderstatus TYPE=102*/
-								/* $checkedMdl=Requestorderstatus::find()->where([
-									'KD_RO'=>$model->KD_RO,
-									'TYPE'=>102,
-									'ID_USER'=>getPermissionEmp()->EMP_ID,
-								])->one();
-								if ($headerStatus==103 or $checkedMdl<>''  ) {
-									//return Html::label('<i class="glyphicon glyphicon-lock dm"></i> LOCKED','',['class'=>'label label-danger','style'=>['align'=>'center']]);
-									return  tombolKonci($url, $model);
-								} */
-							},
 			],
 			'headerOptions'=>[
 				'style'=>[
@@ -562,22 +548,7 @@ use lukisongroup\master\models\Unitbarang;
 				]
 			]
 		],
-		/* [
-			'attribute'=>'KD_PO',
-			'hidden'=>true,
-			'group'=>false,
-			'groupFooter'=>function ($model, $key, $index, $widget) {
-				$subttl=[
-					 'mergeColumns'=>[[1,5]],
-					  'content'=>[             // content to show in each summary cell
-                        1=>'Summary',
-                        6=>GridView::F_SUM,
-                    ],
-				 ];
-				return $subttl;
-			},
 
-		], */
 		[	//COL-3
 			/* Attribute Request KD_COSTCENTER */
 			'class'=>'kartik\grid\EditableColumn',
@@ -823,7 +794,6 @@ use lukisongroup\master\models\Unitbarang;
 			'vAlign'=>'middle',
 			'hAlign'=>'right',
 			'headerOptions'=>[
-				//'class'=>'kartik-sheet-style'
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'100px',
@@ -944,9 +914,6 @@ use lukisongroup\master\models\Unitbarang;
 						'width'=>'100px',
 						'font-family'=>'tahoma',
 						'font-size'=>'8pt',
-						//'text-decoration'=>'underline',
-						//'font-weight'=>'bold',
-						//'border-left-color'=>'transparant',
 						'border-left'=>'0px',
 				]
 			],
@@ -988,6 +955,9 @@ use lukisongroup\master\models\Unitbarang;
 		'export' => false,
 	]);
 
+
+
+
 	/*
 	 * Tombol Modul View
 	 * permission View [BTN_VIEW==1]
@@ -1012,22 +982,23 @@ use lukisongroup\master\models\Unitbarang;
 	 * permission View [BTN_VIEW==1]
 	 * Check By User login
 	*/
-	function tombolSendPo($url, $model,$poHeader) {
-		$kdPo = explode('.',$poHeader->KD_PO);
-		if($kdPo[0]!='POA'){
-				$title = Yii::t('app', 'SendPo');
-				$options = [ 'id'=>'ro-sendpo-id',
-							 'data-toggle'=>'modal',
-							 'data-target'=>"#ro-sendpo",
-							 'data-title'=> $model->KD_RO,
-				];
-				$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
-				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/purchase-order/detail','kd_ro'=>$model->KD_RO,'kdpo'=>$_GET['kdpo']]);
-				$options['tabindex'] = '-1';
-				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
-			}
-	}
+
+	// function tombolSendPo($url, $model,$poHeader) {
+	// 	$kdPo = explode('.',$poHeader->KD_PO);
+	// 	if($kdPo[0]!='POA'){
+	// 			$title = Yii::t('app', 'SendPo');
+	// 			$options = [ 'id'=>'ro-sendpo-id',
+	// 						 'data-toggle'=>'modal',
+	// 						 'data-target'=>"#ro-sendpo",
+	// 						 'data-title'=> $model->KD_RO,
+	// 			];
+	// 			$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
+	// 			$label = $icon . ' ' . $title;
+	// 			$url = Url::toRoute(['/purchasing/purchase-order/detail','kd_ro'=>$model->KD_RO,'kdpo'=>$_GET['kdpo']]);
+	// 			$options['tabindex'] = '-1';
+	// 			return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
+	// 		}
+	// }
 
 	/*
 	 * MODAL SELECT REQUEST ORDER
@@ -1125,11 +1096,13 @@ use lukisongroup\master\models\Unitbarang;
 	}
 ?>
 
+
 <!-- Stack the columns on mobile by making one full-width and the other half-width -->
 <div class="row">
-	<!-- SIDE LEFT | REQUEST ORDER | SALES ORDER !-->
-	<div class="col-xs-12 col-md-12">
-			<div class="row">
+
+		<div class="col-xs-12 col-md-12">
+				<div class="row">
+
 			<!-- Title Left Side Descript Supplier !-->
 			<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;">
 				<div>
@@ -1183,6 +1156,9 @@ use lukisongroup\master\models\Unitbarang;
 					<dd>:	<?php echo link_eta($poHeader); ?></dd>
 				</dl>
 			</div>
+
+
+
 			<!-- Button Select |Supplier|Shipping|Billing !-->
 			<div class="col-xs-1 col-sm-1 col-md-1" style="font-family: tahoma ;font-size: 9pt;">
 				<div>
@@ -1204,7 +1180,7 @@ use lukisongroup\master\models\Unitbarang;
 			<div style="text-align:right;float:right">
 				<?php echo PoView($poHeader); ?>
 			</div>
-			<div style="text-align:right;float:right"">
+			<div style="text-align:right;float:right">
 				<?php echo PrintPdf($poHeader); ?>
 			</div>
 			<div style="text-align:right;">
@@ -1216,8 +1192,9 @@ use lukisongroup\master\models\Unitbarang;
 		<div>
 			<?php  echo $gvPoDetail; ?>
 		</div>
-		<!-- Title BOTTEM Descript !-->
+
 		<div  class="row">
+
 				<div class="col-md-5" style="font-family: tahoma ;font-size: 9pt;float:left;">
 					<div  Style="margin-top:2px">
 						<?php echo ShippingSearch($poHeader); ?>
@@ -1243,7 +1220,9 @@ use lukisongroup\master\models\Unitbarang;
 						<dd>:	<?=$shipPic; ?></dd>
 					</dl>
 				</div>
-				<div class="col-md-2"></div>
+				<div class="col-md-2">
+
+				</div>
 				<div class="col-md-5" style="font-family: tahoma ;font-size: 9pt;float:left;">
 					<div Style="margin-top:2px">
 						<?php echo BillingSearch($poHeader); ?>
@@ -1273,6 +1252,9 @@ use lukisongroup\master\models\Unitbarang;
 					</dl>
 				</div>
 		</div>
+
+
+
 		<!-- PO Term Of Payment !-->
 		<div  class="row">
 			<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
@@ -1291,8 +1273,10 @@ use lukisongroup\master\models\Unitbarang;
 			</div>
 		</div>
 		<!-- PO Note !-->
-		<div  class="row">
+
+		<div class="row">
 			<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
+
 				<dt><b>General Notes :</b></dt>
 				<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
 				<div>
@@ -1307,6 +1291,7 @@ use lukisongroup\master\models\Unitbarang;
 				<hr style="height:1px;margin-top: 1px;">
 			</div>
 		</div>
+
 		<!-- Signature !-->
 		<div  class="col-md-12">
 			<div  class="row" >
@@ -1379,10 +1364,21 @@ use lukisongroup\master\models\Unitbarang;
 							</th>
 							<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 								<?php
-									$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :SignApproved($poHeader);
-									//if ($poHeader->STATUS==101 OR $poHeader->STATUS==10){
+									if(getPermission())
+									{
+										if(getPermission()->BTN_SIGN3 == 0)
+										{
+											$ttd3 = '';
+											echo $ttd3;
+
+										}else{
+											$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : SignApproved($poHeader);
+											echo $ttd3;
+										}
+									}else{
+										$ttd3 = '';
 										echo $ttd3;
-									//}
+									}
 								?>
 							</th>
 						</tr>
@@ -1444,9 +1440,44 @@ use lukisongroup\master\models\Unitbarang;
 		</div>
 	</div>
 </div>
+<?php
+	$items = [];
+		$po_file = FilePo::find()->where(['KD_PO'=>$poHeader->KD_PO])->asArray()->all();
 
+			foreach ($po_file as $key => $value) {
+			  # code...
+			  $items[] = [
+							'src'=>'data:image/pdf;base64,'.$value['IMG_BASE64'],
+							'imageOptions'=>['width'=>"120px",'height'=>"120px",'class'=>'img-rounded'], //setting image display
+					];
+			}
 
-
+		$itemAllimge= dosamigos\gallery\Gallery::widget([
+						'items' =>  $items]);
+	?>
+	<!-- image qotation-->
+      <div  class="row">
+        <div class="col-xs-1 col-sm-1 col-lg-1">
+        </div>
+      	<div  class="col-xs-12 col-sm-12 col-lg-12" style="font-family: tahoma ;font-size: 9pt;">
+      		<hr style="height:1px;margin-top: 3px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
+        </hr>
+              <?php
+				/* 2 amigos two galerry author mix:wawan and ptr.nov ver 1.0*/
+					// echo dosamigos\gallery\Gallery::widget([
+								// 'items' =>  $items]);
+					echo Html::panel(
+						[
+							'heading' => '<div>'.PoAttach_file($poHeader).'   Quotation/Penawaran</div>',
+							'body'=>$itemAllimge,
+						],
+						Html::TYPE_INFO
+					);
+				?>
+      	</div>
+      </div>
+		</div>
+	</div>
 <?php
 	$this->registerJs("
 		/* $(document).on('click', '[data-toggle-discount]', function(e){
@@ -1486,6 +1517,38 @@ use lukisongroup\master\models\Unitbarang;
 		}); */
 
 	",$this::POS_READY);
+
+  /*
+   * JS ATTACH FILE |
+   * @author wawan
+   * @since 1.0
+  */
+  $this->registerJs("
+      $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+      $('#po-attach-review').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        var modal = $(this)
+        var title = button.data('title')
+        var href = button.attr('href')
+        modal.find('.modal-title').html(title)
+        modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+        $.post(href)
+          .done(function( data ) {
+            modal.find('.modal-body').html(data)
+          });
+        }),
+  ",$this::POS_READY);
+
+  Modal::begin([
+      'id' => 'po-attach-review',
+      'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Attach file</b></h4></div>',
+      // 'size' => Modal::SIZE_SMALL,
+      'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+      ]
+    ]);
+  Modal::end();
+
 
 	/*
 	 * JS MODAL Discount

@@ -26,7 +26,6 @@ AppAssetChart::register($this);
 	 */
 	$this->registerJs('FusionCharts.ready(function () {
 			var  jsonData1= $.ajax({
-			  //url: "http://api.lukisongroup.int/chart/pilotps?access-token=azLSTAYr7Y7TLsEAML-LsVq9cAXLyAWa",
 			  url: "http://api.lukisongroup.com/chart/pilotps?access-token=azLSTAYr7Y7TLsEAML-LsVq9cAXLyAWa",
 			  type: "GET",
 			  dataType:"json",
@@ -42,9 +41,7 @@ AppAssetChart::register($this);
 				height: "830",
 				dataFormat: "json",
 				dataSource: myData1
-			})
-			
-			.render();
+			}).render();
 		});
 	',$this::POS_READY);
 

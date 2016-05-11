@@ -52,7 +52,7 @@ class Rodetail extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
+        return [ 
 			[['KD_RO','PARENT_ROSO','RQTY','UNIT','NEW'], 'required','message' => 'Maaf Tolong Diisi','on'=>'simpan'],
 			[['KD_RO','PARENT_ROSO','RQTY','UNIT'], 'required'],
 			[['KD_BARANG'], 'required','when' => function ($attribute) {

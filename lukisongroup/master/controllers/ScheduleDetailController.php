@@ -1,17 +1,18 @@
 <?php
-
 namespace lukisongroup\master\controllers;
 
 use Yii;
-use lukisongroup\master\models\Scheduledetail;
-use lukisongroup\master\models\ScheduledetailSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\widgets\Pjax;
+use yii\helpers\ArrayHelper;
 
-/**
- * ScheduleDetailController implements the CRUD actions for Scheduledetail model.
- */
+use lukisongroup\master\models\Scheduledetail;
+use lukisongroup\master\models\ScheduledetailSearch;
+use lukisongroup\master\models\Schedulegroup;
+use lukisongroup\master\models\CustomerVisitImage;
+
 class ScheduleDetailController extends Controller
 {
     public function behaviors()
@@ -25,7 +26,34 @@ class ScheduleDetailController extends Controller
             ],
         ];
     }
-
+	
+	 public function beforeAction(){
+            if (Yii::$app->user->isGuest)  {
+                 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+            }
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+                   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true;
+               }
+            } else {
+                return true;
+            }
+    }
+	
+	private function aryGroupID(){
+		$dataGroup =  ArrayHelper::map(Schedulegroup::find()->orderBy('SCDL_GROUP_NM')->asArray()->all(), 'ID','SCDL_GROUP_NM');
+		return $dataGroup;
+	}
+	
+	
     /**
      * Lists all Scheduledetail models.
      * @return mixed
@@ -38,6 +66,7 @@ class ScheduleDetailController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+			'nmGroup'=>$this->aryGroupID(),
         ]);
     }
 
@@ -53,6 +82,22 @@ class ScheduleDetailController extends Controller
         ]);
     }
 
+	public function actionImg1($id)
+	{
+		$model = CustomerVisitImage::find()->where(['ID_DETAIL'=>$id])->one();
+		return $this->renderAjax('image1', [
+				'model' => $model,
+			]);
+	}
+	
+	public function actionImg2($id)
+	{
+		$model = CustomerVisitImage::find()->where(['ID_DETAIL'=>$id])->one();
+		return $this->renderAjax('image2', [
+				'model' => $model,
+			]);
+	}
+	
     /**
      * Creates a new Scheduledetail model.
      * If creation is successful, the browser will be redirected to the 'view' page.

@@ -1,6 +1,6 @@
 <?php
-
-use yii\helpers\Html;
+use kartik\helpers\Html;
+//use yii\helpers\Html;
 use yii\bootstrap\Modal;
 use yii\widgets\ActiveForm;
 use kartik\detail\DetailView;
@@ -16,6 +16,7 @@ use lukisongroup\purchasing\models\ro\Rodetail;
 use lukisongroup\purchasing\models\ro\RodetailSearch;
 use lukisongroup\purchasing\models\pr\Costcenter;
 use lukisongroup\master\models\Unitbarang;
+use lukisongroup\purchasing\models\pr\FilePo;
 
 /*
  * =========== KEY SEARCH ================
@@ -42,6 +43,14 @@ use lukisongroup\master\models\Unitbarang;
  * tombolSendPo
 */
 
+function getPermission(){
+	if (Yii::$app->getUserOpt->Modul_akses('3')){
+		return Yii::$app->getUserOpt->Modul_akses('3');
+	}else{
+		return false;
+	}
+}
+
 	/*
 	 * LINK ETD
 	 * _Buat = GET permission ETD
@@ -61,6 +70,26 @@ use lukisongroup\master\models\Unitbarang;
 		$content = Html::a($title,$url, $options);
 		return $content;
 	}
+
+	/*
+   * LINK POC Attach File
+   * @author : wawan
+     * @since 1.0
+  */
+  function PoAttach_file_poc($poHeader){
+      $title = Yii::t('app','');
+      $options = [ 'id'=>'poc-attach-id',
+              'data-toggle'=>"modal",
+              'data-target'=>"#po-attach-buat-poc",
+              'class'=>'btn btn-info btn-xs',
+              'title'=>'PO Attach File'
+      ];
+      $icon = '<span class="fa fa-plus fa-lg"></span>';
+      $label = $icon . ' ' . $title;
+      $url = Url::toRoute(['/purchasing/purchase-order/po-attach-file','kdpo'=>$poHeader->KD_PO]);
+      $content = Html::a($label,$url, $options);
+      return $content;
+  }
 
 	/*
 	 * LINK ETA
@@ -273,12 +302,6 @@ use lukisongroup\master\models\Unitbarang;
 	 * @since 1.2
 	*/
 	function tombolReject($url, $model) {
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Reject');
 				$options = [ 'id'=>'reject',
 							 'data-pjax'=>true,
@@ -959,26 +982,40 @@ use lukisongroup\master\models\Unitbarang;
 		'export' => false,
 	]);
 
-
-
-
 	/*
-	 * Tombol Modul View
+	 * Tombol Modul View ver ptr.nov
 	 * permission View [BTN_VIEW==1]
 	 * Check By User login
 	*/
+	// function tombolView($url, $model){
+	// 	//if(getPermission()){
+	// 		//if(getPermission()->BTN_VIEW==1){
+	// 			$title = Yii::t('app', 'View');
+	// 			$options = [ 'id'=>'ro-view'];
+	// 			$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
+	// 			$label = $icon . ' ' . $title;
+	// 			$url = Url::toRoute(['/purchasing/request-order/view','kd'=>$model->KD_RO]);
+	// 			$options['tabindex'] = '-1';
+	// 			return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
+	// 		//}
+	// 	//}
+	// }
+
+	/*
+	 * Tombol  View ver wawan
+	*/
+
 	function tombolView($url, $model){
-		//if(getPermission()){
-			//if(getPermission()->BTN_VIEW==1){
 				$title = Yii::t('app', 'View');
-				$options = [ 'id'=>'ro-view'];
+				$options = [ 'id'=>'ro-view',
+											'data-toggle'=>'modal',
+											'data-target'=>"#so-view",
+											'data-title'=> $model->KD_RO];
 				$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
 				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/request-order/view','kd'=>$model->KD_RO]);
+				$url = Url::toRoute(['/purchasing/purchase-order/view-so','kd'=>$model->KD_RO]);
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
-			//}
-		//}
 	}
 
 	/*
@@ -1111,6 +1148,66 @@ use lukisongroup\master\models\Unitbarang;
 	",$this::POS_READY);
 	Modal::begin([
 		'id' => 'ro-sendpo',
+		'header' => '<h4 class="modal-title">...</h4>',
+		'size' => Modal::SIZE_LARGE,
+	]);
+		//echo '...';
+	Modal::end();
+
+
+  /*
+   * JS ATTACH FILE |
+   * @author wawan
+   * @since 1.0
+  */
+  $this->registerJs("
+      $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+      $('#po-attach-buat-poc').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        var modal = $(this)
+        var title = button.data('title')
+        var href = button.attr('href')
+        modal.find('.modal-title').html(title)
+        modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+        $.post(href)
+          .done(function( data ) {
+            modal.find('.modal-body').html(data)
+          });
+        }),
+  ",$this::POS_READY);
+
+  Modal::begin([
+      'id' => 'po-attach-buat-poc',
+      'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Attach file</b></h4></div>',
+      'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+      ]
+    ]);
+  Modal::end();
+
+
+	/*
+	 * MODAL View Sales ORDER
+	 * @author wawan
+     * @since 1.1
+     */
+	$this->registerJs("
+		$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+		$('#so-view').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			});
+	",$this::POS_READY);
+	Modal::begin([
+		'id' => 'so-view',
 		'header' => '<h4 class="modal-title">...</h4>',
 		'size' => Modal::SIZE_LARGE,
 	]);
@@ -1280,7 +1377,7 @@ use lukisongroup\master\models\Unitbarang;
 			<div style="text-align:right;float:right">
 				<?php echo PoView($poHeader); ?>
 			</div>
-			<div style="text-align:right;float:right"">
+			<div style="text-align:right;float:right">
 				<?php echo PrintPdf($poHeader); ?>
 			</div>
 			<div style="text-align:right;">
@@ -1455,10 +1552,25 @@ use lukisongroup\master\models\Unitbarang;
 							</th>
 							<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 								<?php
-									$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :SignApproved($poHeader);
+									//$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :SignApproved($poHeader);
 									//if ($poHeader->STATUS==101 OR $poHeader->STATUS==10){
-										echo $ttd3;
+										//echo $ttd3;
 									//}
+									if(getPermission())
+									{
+										if(getPermission()->BTN_SIGN3 == 0)
+										{
+											$ttd3 = '';
+											echo $ttd3;
+
+										}else{
+											$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : SignApproved($poHeader);
+											echo $ttd3;
+										}
+									}else{
+										$ttd3 = '';
+										echo $ttd3;
+									}
 								?>
 							</th>
 						</tr>
@@ -1520,6 +1632,40 @@ use lukisongroup\master\models\Unitbarang;
 		</div>
 	</div>
 </div>
+	<?php
+	$items = [];
+		$po_file = FilePo::find()->where(['KD_PO'=>$poHeader->KD_PO])->asArray()->all();
+
+			foreach ($po_file as $key => $value) {
+			  # code...
+			  $items[] = [
+							'src'=>'data:image/pdf;base64,'.$value['IMG_BASE64'],
+							'imageOptions'=>['width'=>"120px",'height'=>"120px",'class'=>'img-rounded'], //setting image display
+					];
+			}
+
+		$itemAllimge= dosamigos\gallery\Gallery::widget([
+						'items' =>  $items]);
+	?>
+	<div class="row">
+		<div class="col-sm-3">
+
+		</div>
+		<div class="col-sm-9">
+		<?php
+		/* 2 amigos two galerry author mix:wawan and ptr.nov ver 1.0*/
+			// echo dosamigos\gallery\Gallery::widget([
+						// 'items' =>  $items]);
+			echo Html::panel(
+				[
+					'heading' => '<div>'.PoAttach_file_poc($poHeader).'   Quotation/Penawaran</div>',
+					'body'=>$itemAllimge,
+				],
+				Html::TYPE_INFO
+			);
+		?>
+		</div>
+	</div>
 
 
 

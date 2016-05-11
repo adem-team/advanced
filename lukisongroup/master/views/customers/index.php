@@ -130,10 +130,9 @@ function tombolLoginalias(){
 ?>
 
 <div class="col-sm-8 col-md-8 col-lg-8" >
-  <div  class="row" style="margin-left:5px;">
-
+  <div  class="row" style="padding-left:3px">
       <!-- CUTI !-->
-      <div class="btn-group pull-left">
+      <div class="btn-group pull-left" >
         <button type="button" class="btn btn-info">MENU</button>
         <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
           <span class="caret"></span>
@@ -157,7 +156,7 @@ function tombolLoginalias(){
 </div>
 
 <div class="row">
-<div class="col-sm-12">
+<div class="col-sm-12" style="margin-top:5px">
 <?php
 /*CUSTOMER DATA*/
 echo $tabcustomersData = \kartik\grid\GridView::widget([

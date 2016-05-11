@@ -38,6 +38,7 @@ class Userprofile extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+     public $image;
     public static function tableName()
     {
         return '{{dbm_086.user_profile}}';
@@ -57,11 +58,11 @@ class Userprofile extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['ID', 'NM_FIRST', 'NM_MIDDLE', 'NM_END', 'KD_OUTSRC', 'CREATED_AT'], 'required'],
-            [['ID', 'STS', 'KD_OUTSRC', 'STATUS'], 'integer'],
+            [[ 'NM_FIRST', 'NM_MIDDLE', 'NM_END', 'KD_SRC'], 'required'],
+            [['ID', 'STS', 'STATUS'], 'integer'],
             [['JOIN_DATE', 'RESIGN_DATE', 'TGL_LAHIR', 'CREATED_AT', 'UPDATED_TIME'], 'safe'],
             [['NM_FIRST', 'NM_MIDDLE', 'NM_END', 'EMP_IMG', 'KTP', 'TLP_HOME', 'HP'], 'string', 'max' => 20],
-            [['KD_DISTRIBUTOR', 'KD_SUBDIST', 'EMAIL', 'CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 50],
+            [[ 'EMAIL', 'CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 50],
             [['ALAMAT'], 'string', 'max' => 255],
             [['ZIP'], 'string', 'max' => 10],
             [['GENDER', 'CORP_ID'], 'string', 'max' => 6]
@@ -83,8 +84,6 @@ class Userprofile extends \yii\db\ActiveRecord
             'STS' => 'Sts',
             'EMP_IMG' => 'Emp  Img',
             'KD_DISTRIBUTOR' => 'Kd  Distributor',
-            'KD_SUBDIST' => 'Kd  Subdist',
-            'KD_OUTSRC' => 'Kd  Outsrc',
             'KTP' => 'Ktp',
             'ALAMAT' => 'Alamat',
             'ZIP' => 'Zip',

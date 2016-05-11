@@ -138,11 +138,14 @@ $itemJsonStr = encodeURIComponent(Json::encode($dataProvider->getModels()));
 $itemJsonStr2 = Json::encode($dataProvider->getModels());
 
 
-$diagram = '<div class="content-wrapper">
+$diagram1 = '<div class="content-wrapper">
 <div style="padding: 0; margin: 0; font-size:12px">	
 	<div class="content-wrapper" id="orgdiagram" style="position: absolute; overflow: hidden; left: 0px; padding: 0px; margin: 0px; border-style: solid; border-color: navy; border-width: 1px;"></div>
 </div>
 </div>	';
+$diagram ='<div class="body-content" id="orgdiagram" style="overflow: hidden;"></div>';
+
+
 
 //$this->registerJs('Print("var data=\"" . $itemJsonStr . "\";");');
 //echo $itemJsonStr2;

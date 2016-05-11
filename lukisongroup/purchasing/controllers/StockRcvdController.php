@@ -4,10 +4,12 @@ namespace lukisongroup\purchasing\controllers;
 
 use Yii;
 use lukisongroup\purchasing\models\stck\StockRcvd;
+use lukisongroup\purchasing\models\stck\TipeStock;
 use lukisongroup\purchasing\models\stck\StockRcvdSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * StockRcvdController implements the CRUD actions for StockRcvd model.
@@ -27,6 +29,27 @@ class StockRcvdController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function beforeAction(){
+            if (Yii::$app->user->isGuest)  {
+                 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+            }
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+                   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true;
+               }
+            } else {
+                return true;
+            }
     }
 
     /**
@@ -64,16 +87,23 @@ class StockRcvdController extends Controller
     public function actionCreate()
     {
         $model = new StockRcvd();
-		$searchModel = new StockRcvdSearch();
+		    $searchModel = new StockRcvdSearch();
         $dataProvider = $searchModel->searchRcvd(Yii::$app->request->queryParams);
-        
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        // * data tipe for form stock rcvd
+
+        $tipe = ArrayHelper::map(TipeStock::find()->asArray()->all(), 'ID', 'NOTE');
+        // $brg = ArrayHelper::map(::find()->asArray()->all(), 'ID', 'NOTE');
+        // $tipe = TipeStock::find()->asArray()->all();
+
+		if ($model->load(Yii::$app->request->post())) {
+       $model->save();
             return $this->redirect(['view', 'id' => $model->ID]);
         } else {
             return $this->renderAjax('_form', [
                 'model' => $model,
-				'searchModel' => $searchModel,
-				'dataProvider' => $dataProvider,
+				        'searchModel' => $searchModel,
+				        'dataProvider' => $dataProvider,
+                'tipe'=>$tipe
             ]);
         }
     }

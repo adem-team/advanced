@@ -26,6 +26,7 @@ class Employe extends \yii\db\ActiveRecord
 	public $vKarNm;
 	public $vCorpID;
 	public $vIMAGE;
+	public $EMP_IMG_64;
 
 	/* [1] SOURCE DB */
     public static function getDb()
@@ -60,6 +61,7 @@ class Employe extends \yii\db\ActiveRecord
 			[['EMP_EMAIL'], 'string', 'max' => 30],
 
             [['EMP_IMG'], 'string', 'max' => 50],
+            [['EMP_IMG_64'], 'safe'],
 			[['upload_file'], 'file', 'skipOnEmpty' => true,'extensions'=>'jpg,png', 'mimeTypes'=>'image/jpeg, image/png',],
 			[['CREATED_BY','UPDATED_BY'], 'string', 'max' => 50],
 			[['SIGSVGBASE64','SIGSVGBASE30','SIGPASSWORD'], 'safe'],

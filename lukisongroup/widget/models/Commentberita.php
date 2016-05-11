@@ -40,9 +40,9 @@ class Commentberita extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['KD_BERITA', 'ID_USER'], 'required'],
+            [['CHAT'], 'required'],
             [['ID_USER', 'STATUS'], 'integer'],
-            [['CHAT'], 'string'],
+            [['CHAT','EMP_IMG'], 'string'],
             [['CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['KD_BERITA'], 'string', 'max' => 20],
             [['CREATED_BY'], 'string', 'max' => 100],

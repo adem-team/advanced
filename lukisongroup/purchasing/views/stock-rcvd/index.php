@@ -42,17 +42,17 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 					// ['ID' =>4, 'ATTR' =>['FIELD'=>'SUPPLIER','SIZE' => '10px','label'=>'SUPPLIER','align'=>'left','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
 					// ['ID' =>5, 'ATTR' =>['FIELD'=>'NM_BARANG','SIZE' => '10px','label'=>'NM_BARANG','align'=>'left','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
 					// ['ID' =>6, 'ATTR' =>['FIELD'=>'QTY','SIZE' => '10px','label'=>'QTY','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
-					// ['ID' =>7, 'ATTR' =>['FIELD'=>'UNIT','SIZE' => '10px','label'=>'UNIT','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],					
+					// ['ID' =>7, 'ATTR' =>['FIELD'=>'UNIT','SIZE' => '10px','label'=>'UNIT','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
 					// ['ID' =>8, 'ATTR' =>['FIELD'=>'HARGA','SIZE' => '10px','label'=>'HARGA','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'decimal','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
-					// ['ID' =>9, 'ATTR' =>['FIELD'=>'SUB_TTL','SIZE' => '10px','label'=>'Sub Total','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'decimal','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],					
-					// ['ID' =>10, 'ATTR' =>['FIELD'=>'PAJAK','SIZE' => '10px','label'=>'PPN','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],					
+					// ['ID' =>9, 'ATTR' =>['FIELD'=>'SUB_TTL','SIZE' => '10px','label'=>'Sub Total','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'decimal','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
+					// ['ID' =>10, 'ATTR' =>['FIELD'=>'PAJAK','SIZE' => '10px','label'=>'PPN','align'=>'right','warna'=>'74, 206, 231, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'74, 206, 231, 1']],
 				];
 				/* 'ID','TGL','TYPE','KD_PO','KD_REF','KD_SPL','ID_BARANG','NM_BARANG','UNIT','UNIT_NM','UNIT_QTY','UNIT_WIGHT','QTY','NOTE:ntext','STATUS','CREATE_BY',
 						'CREATE_AT','UPDATE_BY',
-						'UPDATE_AT',  
+						'UPDATE_AT',
 				*/
 				$gvHeadColomn = ArrayHelper::map($headColomn, 'ID', 'ATTR');
-				
+
 				/*GRIDVIEW ARRAY ACTION*/
 				$attDinamik[]=[
 					'class'=>'kartik\grid\ActionColumn',
@@ -93,7 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 						]
 					],
 				];
-										
+
 				/*GRIDVIEW ARRAY ROWS*/
 				foreach($gvHeadColomn as $key =>$value[]){
 					$attDinamik[]=[
@@ -107,7 +107,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 						//'mergeHeader'=>true,
 						'noWrap'=>true,
 						'group'=>$value[$key]['GRP'],
-						'format'=>$value[$key]['FORMAT'],						
+						'format'=>$value[$key]['FORMAT'],
 						'headerOptions'=>[
 								'style'=>[
 								'text-align'=>'center',
@@ -142,12 +142,12 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 						// ],
 					];
 				};
-				
+
 				/*SHOW GRID VIEW LIST EVENT*/
 				echo GridView::widget([
 					'id'=>'puchase-rcvd-list',
 					'dataProvider' => $dataProvider,
-					'filterModel' => $searchModel,					
+					'filterModel' => $searchModel,
 					//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
 					'columns' => $attDinamik,
 					/* [
@@ -172,7 +172,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 												[
 													'data-toggle'=>"modal",
 													'data-target'=>"#purchase-rcvd-add",
-													'class' => 'btn btn-success btn-sm'												
+													'class' => 'btn btn-success btn-sm'
 												]
 											),
 								'showFooter'=>false,
@@ -197,8 +197,11 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 	</div>
 </div>
 <?php
+
 	/*RCVD ADD*/
+
 	$this->registerJs("
+   $.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		 $('#purchase-rcvd-add').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget)
 			var modal = $(this)
@@ -220,7 +223,7 @@ $this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan
 		],
 		'size'=>Modal::SIZE_LARGE,
     ]);
-	 Modal::end();	
+	 Modal::end();
 	/*RCVD VIEW DETAIL*/
 	$this->registerJs("
 		 $('#purchase-rcvd-view').on('show.bs.modal', function (event) {

@@ -124,6 +124,7 @@ $gvmdlpermission= GridView::widget([
         'dropdown' => true,
         'template' => '{edit}',
         'dropdownOptions'=>['class'=>'pull-right dropup'],
+        'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
         'buttons' => [
             'edit' =>function($url, $model, $key){
                 return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Change Password'),
@@ -288,8 +289,8 @@ $gvmdlpermission= GridView::widget([
                'options' => [
                ],
                'displayValueConfig'=> [
-                       '0' => '<i class="fa fa-unlock "></i>',
-                       '1' => '<i class="fa fa-lock"></i>',
+                       '1' => '<i class="fa fa-unlock "></i>',
+                       '0' => '<i class="fa fa-lock"></i>',
                      ],
              ],
       'hAlign'=>'left',
@@ -324,8 +325,8 @@ $gvmdlpermission= GridView::widget([
                'options' => [
                ],
                'displayValueConfig'=> [
-                       '0' => '<i class="fa fa-unlock "></i>',
-                       '1' => '<i class="fa fa-lock"></i>',
+                       '1' => '<i class="fa fa-unlock "></i>',
+                       '0' => '<i class="fa fa-lock"></i>',
                      ],
              ],
       'hAlign'=>'left',
@@ -360,8 +361,8 @@ $gvmdlpermission= GridView::widget([
                'options' => [
                ],
                'displayValueConfig'=> [
-                       '0' => '<i class="fa fa-unlock "></i>',
-                       '1' => '<i class="fa fa-lock"></i>',
+                 '1' => '<i class="fa fa-unlock "></i>',
+                 '0' => '<i class="fa fa-lock"></i>',
                      ],
              ],
       'hAlign'=>'left',
@@ -398,8 +399,8 @@ $gvmdlpermission= GridView::widget([
                   // 'value' => 'Kartik Visweswaran',
                 ],
                 'displayValueConfig'=> [
-                        '0' => '<i class="fa fa-unlock "></i>',
-                        '1' => '<i class="fa fa-lock"></i>',
+                  '1' => '<i class="fa fa-unlock "></i>',
+                  '0' => '<i class="fa fa-lock"></i>',
                       ],
                 //  'editableValueOptions'=>['class'=>'Kartik Visweswaran']
              ],
@@ -435,8 +436,8 @@ $gvmdlpermission= GridView::widget([
                'options' => [
                ],
                  'displayValueConfig'=> [
-                         '0' => '<i class="fa fa-unlock "></i>',
-                         '1' => '<i class="fa fa-lock"></i>',
+                   '1' => '<i class="fa fa-unlock "></i>',
+                   '0' => '<i class="fa fa-lock"></i>',
                        ],
              ],
       'hAlign'=>'left',
@@ -471,8 +472,8 @@ $gvmdlpermission= GridView::widget([
                'options' => [
                ],
                'displayValueConfig'=> [
-                       '0' => '<i class="fa fa-unlock "></i>',
-                       '1' => '<i class="fa fa-lock"></i>',
+                 '1' => '<i class="fa fa-unlock "></i>',
+                 '0' => '<i class="fa fa-lock"></i>',
                      ],
              ],
       'hAlign'=>'left',
@@ -507,8 +508,8 @@ $gvmdlpermission= GridView::widget([
                'options' => [
                ],
                'displayValueConfig'=> [
-                       '0' => '<i class="fa fa-unlock "></i>',
-                       '1' => '<i class="fa fa-lock"></i>',
+                 '1' => '<i class="fa fa-unlock "></i>',
+                 '0' => '<i class="fa fa-lock"></i>',
                      ],
              ],
       'hAlign'=>'left',
@@ -543,8 +544,8 @@ $gvmdlpermission= GridView::widget([
                'options' => [
                ],
                'displayValueConfig'=> [
-                       '0' => '<i class="fa fa-unlock "></i>',
-                       '1' => '<i class="fa fa-lock"></i>',
+                 '1' => '<i class="fa fa-unlock "></i>',
+                 '0' => '<i class="fa fa-lock"></i>',
                      ],
              ],
       'hAlign'=>'left',
@@ -579,8 +580,8 @@ $gvmdlpermission= GridView::widget([
                'options' => [
                ],
                'displayValueConfig'=> [
-                       '0' => '<i class="fa fa-unlock "></i>',
-                       '1' => '<i class="fa fa-lock"></i>',
+                 '1' => '<i class="fa fa-unlock "></i>',
+                 '0' => '<i class="fa fa-lock"></i>',
                      ],
              ],
       'hAlign'=>'left',
@@ -615,8 +616,8 @@ $gvmdlpermission= GridView::widget([
                'options' => [
                ],
                'displayValueConfig'=> [
-                       '0' => '<i class="fa fa-unlock "></i>',
-                       '1' => '<i class="fa fa-lock"></i>',
+                 '1' => '<i class="fa fa-unlock "></i>',
+                 '0' => '<i class="fa fa-lock"></i>',
                      ],
              ],
       'hAlign'=>'left',
@@ -651,8 +652,8 @@ $gvmdlpermission= GridView::widget([
                'options' => [
                ],
                'displayValueConfig'=> [
-                       '0' => '<i class="fa fa-unlock "></i>',
-                       '1' => '<i class="fa fa-lock"></i>',
+                 '1' => '<i class="fa fa-unlock "></i>',
+                 '0' => '<i class="fa fa-lock"></i>',
                      ],
              ],
       'hAlign'=>'left',
@@ -687,8 +688,8 @@ $gvmdlpermission= GridView::widget([
                'options' => [
                ],
                'displayValueConfig'=> [
-                       '0' => '<i class="fa fa-unlock "></i>',
-                       '1' => '<i class="fa fa-lock"></i>',
+                 '1' => '<i class="fa fa-unlock "></i>',
+                 '0' => '<i class="fa fa-lock"></i>',
                      ],
              ],
       'hAlign'=>'left',
@@ -723,8 +724,8 @@ $gvmdlpermission= GridView::widget([
                'options' => [
                ],
                'displayValueConfig'=> [
-                       '0' => '<i class="fa fa-unlock "></i>',
-                       '1' => '<i class="fa fa-lock"></i>',
+                 '1' => '<i class="fa fa-unlock "></i>',
+                 '0' => '<i class="fa fa-lock"></i>',
                      ],
              ],
       'hAlign'=>'left',
@@ -759,8 +760,8 @@ $gvmdlpermission= GridView::widget([
                'options' => [
                ],
                'displayValueConfig'=> [
-                       '0' => '<i class="fa fa-unlock "></i>',
-                       '1' => '<i class="fa fa-lock"></i>',
+                 '1' => '<i class="fa fa-unlock "></i>',
+                 '0' => '<i class="fa fa-lock"></i>',
                      ],
              ],
       'hAlign'=>'left',
@@ -795,8 +796,8 @@ $gvmdlpermission= GridView::widget([
                'options' => [
                ],
                'displayValueConfig'=> [
-                       '0' => '<i class="fa fa-unlock "></i>',
-                       '1' => '<i class="fa fa-lock"></i>',
+                 '1' => '<i class="fa fa-unlock "></i>',
+                 '0' => '<i class="fa fa-lock"></i>',
                      ],
              ],
       'hAlign'=>'left',
@@ -904,7 +905,7 @@ $gvmdlpermission= GridView::widget([
      ],
   ],
   'panel' => [
-        'heading'=>'<h3 class="panel-title">LIST CUSTOMER GROUP</h3>',
+        'heading'=>'<h3 class="panel-title">List Permission </h3>',
         'type'=>'warning',
         // 'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Customer ',
         // 		['modelClass' => 'Kategori',]),'/master/barang/create',[

@@ -495,27 +495,12 @@ $this->registerJs("
 				'dataset': [
 					{
 						'data': [
-							{ 'value': 'L' },
-							{ 'value': 'L' },
-							{ 'value': 'W' },
-							{ 'value': 'D' },	
-							{ 'value': 'W' },	
-							{ 'value': 'W' },	
-							{ 'value': 'D' },	
-							{ 'value': 'W' },	
-							{ 'value': 'D' },	
-							{ 'value': 'W' },	
-							{ 'value': 'L' },	
-							{ 'value': 'D' },	
-							{ 'value': 'W' },	
-							{ 'value': 'D' },	
-							{ 'value': 'D' },	
-							{ 'value': 'D' },	
-							{ 'value': 'D' },	
-							{ 'value': 'D' },	
-							{ 'value': 'D' },	
-							{ 'value': 'D' },	
-							{ 'value': 'W' }
+							{ 'label':'A','value': 'L' },
+							{ 'label':'B','value': 'L' },
+							
+							{ 'label':'C','value': 'L' }
+							
+							
 						]
 					}
 				]

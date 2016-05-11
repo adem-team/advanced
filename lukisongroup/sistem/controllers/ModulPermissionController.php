@@ -13,6 +13,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
 use yii\helpers\Json;
+use yii\helpers\ArrayHelper;
+use lukisongroup\hrd\models\Employe;
 
 /**
  * MdlpermissionController implements the CRUD actions for Mdlpermission model.
@@ -63,6 +65,28 @@ class ModulPermissionController extends Controller
 
         $searchModelpermision = new MdlpermissionSearch();
         $dataProviderpermision = $searchModelpermision->search(Yii::$app->request->queryParams);
+        $params = Yii::$app->request->queryParams;
+        $baris = Modulerp::find()->count();
+        if(count($params) == 0)
+        {
+
+        }else {
+          # code...
+          if(count($params) < $baris )
+          {
+            $user_id = $params['MdlpermissionSearch']["USER_ID"];
+            $modul = Mdlpermission::find()->select('MODUL_ID')->where(['USER_ID'=>$user_id])->asArray()->all();
+            $erp = Modulerp::find()->where(['not in','MODUL_ID',$modul])->all();
+            foreach ($erp as $key => $value) {
+              # code...
+              $connection = Yii::$app->db;
+              $connection->createCommand()->batchInsert('modul_permission',['USER_ID','MODUL_ID'],[[$user_id,$value['MODUL_ID']]])->execute();
+            }
+          }
+        }
+
+        // print_r(count($params));
+        // die();
         	if (Yii::$app->request->post('hasEditable')) {
             $id = Yii::$app->request->post('editableKey');
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -90,6 +114,10 @@ class ModulPermissionController extends Controller
             if (isset($posted['BTN_VIEW'])) {
               $model->save();
               $output = $model->BTN_VIEW;
+            }
+            if (isset($posted['BTN_REVIEW'])) {
+              $model->save();
+              $output = $model->BTN_REVIEW;
             }
             if (isset($posted['BTN_PROCESS1'])) {
               $model->save();
@@ -148,6 +176,9 @@ class ModulPermissionController extends Controller
 
 
 
+
+
+
     /**
      * Creates a new Mdlpermission model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -157,6 +188,7 @@ class ModulPermissionController extends Controller
     {
           $model = new Userlogin();
           $model->scenario = 'createuser';
+          $data = ArrayHelper::map(Employe::find()->orderBy('EMP_NM')->asArray()->all(), 'EMP_ID','EMP_NM');
 
         if ($model->load(Yii::$app->request->post()) ) {
           $hash = Yii::$app->getSecurity()->generatePasswordHash($model->password_hash);
@@ -176,6 +208,7 @@ class ModulPermissionController extends Controller
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,
+                'data'=>$data
             ]);
         }
     }

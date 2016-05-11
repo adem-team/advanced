@@ -40,16 +40,27 @@ class Berita extends \yii\db\ActiveRecord
         return Yii::$app->get('db_widget');
     }
 
+
+      public function beforeSave($insert)
+            {
+                $user_cc = implode(",", $this->USER_CC);
+                $this->USER_CC = $user_cc;
+                return parent::beforeSave($insert);
+            }
+
+
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            // [['KD_BERITA'], 'required'],
+            // [['JUDUL'], 'required','on' => 'true'], // ajax validation checkbox value equal true
+            [['JUDUL','USER_CC','KD_DEP','ISI'], 'required'],// ajax validation
             [['ISI', 'DATA_PICT', 'DATA_FILE', 'DATA_ALL','KD_BERITA'], 'string'],
             [['STATUS'], 'integer'],
-            [['CREATED_ATCREATED_BY', 'UPDATE_AT'], 'safe'],
+            [['CREATED_ATCREATED_BY', 'UPDATE_AT','USER_CC'], 'safe'],
             [['KD_BERITA', 'KD_CORP', 'KD_CAB', 'KD_DEP'], 'string', 'max' => 20],
             [['JUDUL'], 'string', 'max' => 200],
             [['CREATED_BY'], 'string', 'max' => 100]
@@ -62,6 +73,7 @@ class Berita extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+          'alluser'=>'',
             'ID' => 'ID',
             'KD_BERITA' => 'Kd  Berita',
             'JUDUL' => 'Judul',

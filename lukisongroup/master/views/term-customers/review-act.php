@@ -22,7 +22,7 @@ use kartik\widgets\FileInput;
 
 $this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'Trading Terms ');   
+$this->title = Yii::t('app', 'Trading Terms ');
 
 	$aryStatus= [
 		  ['STATUS' =>0, 'DESCRIP' => 'New'],
@@ -183,7 +183,14 @@ $this->title = Yii::t('app', 'Trading Terms ');
 		return $content;
 	}
 
+	function getPermission(){
+	    if (Yii::$app->getUserOpt->Modul_akses('4')){
+	      return Yii::$app->getUserOpt->Modul_akses('4');
+	    }else{
+	      return false;
+	    }
 
+	}
 
 	function getPermissionEmp(){
 		if (Yii::$app->getUserOpt->profile_user()){
@@ -276,6 +283,9 @@ $this->title = Yii::t('app', 'Trading Terms ');
 		return $content;
 	}
 
+	// permission sign2 == 1
+if(getPermission()->BTN_SIGN2 == 1)
+{
 	function SignChecked($model){
 		$title = Yii::t('app', 'Sign Hire');
 		$options = [ 'id'=>'term-auth2',
@@ -292,6 +302,20 @@ $this->title = Yii::t('app', 'Trading Terms ');
 		$content = Html::a($label,$url, $options);
 		return $content;
 	}
+}
+else{
+	$title1 = Yii::t('app', 'Add Term ');
+	$options1 = [ 'id'=>'action-denied-id',
+					'data-toggle'=>"modal",
+					'data-target'=>"#confirm-permission-alert",
+						'class' => 'btn btn-success',
+	];
+	$icon1 = '<span class="fa fa-plus fa-lg"></span>';
+	$label1 = $icon1 . ' ' . $title1;
+	$content = Html::a($label1,'',$options1);
+	return $content;
+}
+
 
 	function SignApproved($model){
 		$title = Yii::t('app', 'Sign Hire');
@@ -453,7 +477,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 							['content'=>'PLAN BUDGET', 'options'=>['colspan'=>2, 'class'=>'text-center info']],
 							['content'=>'ACTUAL BUDGET', 'options'=>['colspan'=>2, 'class'=>'text-center info']],
 							['content'=>'', 'options'=>['colspan'=>1, 'class'=>'text-center info']],
-							//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']],
+							['content'=>'Action Status ', 'options'=>['colspan'=>3,  'class'=>'text-center info']],
 						],
 					]
 				],
@@ -1663,6 +1687,37 @@ Modal::end();
                        ],
                        ]);
                        Modal::end();
+
+											 $this->registerJs("
+											     $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+											     $('#confirm-permission-alert').on('show.bs.modal', function (event) {
+											       //var button = $(event.relatedTarget)
+											       //var modal = $(this)
+											       //var title = button.data('title')
+											       //var href = button.attr('href')
+											       //modal.find('.modal-title').html(title)
+											       //modal.find('.modal-body').html('')
+											       /* $.post(href)
+											         .done(function( data ) {
+											           modal.find('.modal-body').html(data)
+											         }); */
+											       }),
+											 ",$this::POS_READY);
+											 Modal::begin([
+											     'id' => 'confirm-permission-alert',
+											     'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/warning/denied.png',  ['class' => 'pnjg', 'style'=>'width:40px;height:40px;']).'</div><div style="margin-top:10px;"><h4><b>Permmission Confirm !</b></h4></div>',
+											     'size' => Modal::SIZE_SMALL,
+											     'headerOptions'=>[
+											       'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+											     ]
+											   ]);
+											   echo "<div>You do not have permission for this module.
+											       <dl>
+											         <dt>Contact : itdept@lukison.com</dt>
+											       </dl>
+											     </div>";
+											 Modal::end();
+
                        $this->registerJs("
                      		$(document).on('click', '[data-toggle-approved]', function(e){
                      			e.preventDefault();

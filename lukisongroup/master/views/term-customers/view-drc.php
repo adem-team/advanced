@@ -184,7 +184,7 @@ $this->title = Yii::t('app', 'Trading Terms ');                  /* belum di gun
 									['content'=>'PLAN BUDGET', 'options'=>['colspan'=>2, 'class'=>'text-center info']],
 									['content'=>'ACTUAL BUDGET', 'options'=>['colspan'=>2, 'class'=>'text-center info']],
 									['content'=>'', 'options'=>['colspan'=>1, 'class'=>'text-center info']],
-									//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']],
+									['content'=>'Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']],
 								],
 							]
 						],
@@ -615,14 +615,14 @@ $this->title = Yii::t('app', 'Trading Terms ');                  /* belum di gun
 			<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 				<?php
 	 		// 	 image($model);
-				$image = $model->imagedisplay($model->ID_TERM);
+				// $image = $model->imagedisplay($model->ID_TERM);
 				 ?>
 				 <div>
 					 <?php
-					 $img = Url::to('@web/upload/barang/').'df.jpg';
-
-					 $dataimage = $image->GENERAL_TERM !=''? '<img src="data:image/jpeg;base64,' . $image->GENERAL_TERM . '" />' : '<img src="'.$img.'" width="50" />';;
-					 	echo  $dataimage;
+					//  $img = Url::to('@web/upload/barang/').'df.jpg';
+					 //
+					//  $dataimage = $image->GENERAL_TERM !=''? '<img src="data:image/jpeg;base64,' . $image->GENERAL_TERM . '" />' : '<img src="'.$img.'" width="50" />';;
+					//  	echo  $dataimage;
 
 				?>
 			</div>

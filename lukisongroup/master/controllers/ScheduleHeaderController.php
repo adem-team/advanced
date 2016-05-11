@@ -13,10 +13,15 @@ use yii\web\Response;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use lukisongroup\master\models\Scheduleheader;
+use lukisongroup\master\models\Scheduledetail;
+use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Schedulegroup;
 use lukisongroup\master\models\ScheduleheaderSearch;
 use lukisongroup\sistem\models\Userlogin;
 use lukisongroup\sistem\models\UserloginSearch;
+use yii\data\ArrayDataProvider;
+use DateInterval;
+use DatePeriod;
 
 /**
  * ScheduleHeaderController implements the CRUD actions for Scheduleheader model.
@@ -121,6 +126,73 @@ class ScheduleHeaderController extends Controller
         }
     }
 
+
+  /**
+    * Creates a new schedule header and schedule detail.
+    * If creation is successful, bacth insert to schedule detail.
+    * usage save ajax ver 1.1 author : wawan
+ */
+    public function actionCreateGroup($tgl1,$tgl2)
+    {
+        $model = new Scheduleheader();
+        // data select2 for USER_ID where CRM and STATUS 10(active)
+        $connection = \Yii::$app->db_esm;
+        $querycariuser = 'SELECT * FROM dbm001.user  where id  NOT IN (SELECT DISTINCT(USER_ID) from dbc002.c0002scdl_detail WHERE TGL="'.$tgl1.'") AND POSITION_SITE = "CRM" AND STATUS = 10';
+        $user = $connection->createCommand($querycariuser)->queryAll();
+        $datauser = ArrayHelper::map($user, 'id', 'username');
+
+        // data select2 for SCDL_GROUP
+        $connection = \Yii::$app->db_esm;
+        $model1 = $connection->createCommand('SELECT * from c0007 where ID NOT IN (SELECT DISTINCT(SCDL_GROUP) FROM c0002scdl_detail  WHERE TGL="'.$tgl1.'")');
+        $query = $model1->queryAll();
+        $datagroup = ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
+
+        //componen user option
+        $profile=Yii::$app->getUserOpt->Profile_user();
+        $usercreate = $profile->username;
+        //proses save
+        if ($model->load(Yii::$app->request->post())) {
+
+          $model->TGL1 = $tgl1;
+          $model->TGL2 = $tgl2;
+          // cari group nama
+          $cari_groupName = Schedulegroup::find()->where(['ID'=>$model->SCDL_GROUP])->asArray()->one();
+            /* split array author : wawan*/
+            $temp = explode(" ",$cari_groupName['SCDL_GROUP_NM']);
+            $result = '';
+            foreach($temp as $t)
+            {
+              $result .= $t[0];
+            }
+          $model->NOTE = $result;
+          $model->CREATE_BY = $usercreate;
+          $model->CREATE_AT = date("Y-m-d H:i:s");
+           if($model->save())
+           {
+             // foreach date :author wawan
+               for ($date = strtotime($tgl1); $date <= strtotime($tgl2); $date = strtotime("+1 day", $date)) {
+                         $tgl =  date("Y-m-d", $date);
+                         //batch insert customers author :wawan
+                         $Customers = Customers::find()->where(['SCDL_GROUP'=>$model->SCDL_GROUP])->asArray()->all();
+                         foreach ($Customers as $key => $value) {
+                           # code...
+                           $connection = Yii::$app->db_esm;
+                           $connection->createCommand()->batchInsert('c0002scdl_detail',['TGL','CUST_ID','SCDL_GROUP','USER_ID'],[[$tgl,$value['CUST_KD'],$model->SCDL_GROUP,$model->USER_ID]])->execute();
+                         }
+                   }
+           }
+            return $this->redirect(['index']);
+
+        } else {
+            return $this->renderAjax('_formschedule', [
+                'model' => $model,
+                'datagroup'=>$datagroup,
+                'datauser'=>$datauser
+            ]);
+        }
+    }
+
+
     /**
      * Creates a new User Login.
      * If creation is successful, the browser will be redirected to the 'index' page.
@@ -217,9 +289,18 @@ class ScheduleHeaderController extends Controller
        public function actionJsoncalendar($start=NULL,$end=NULL,$_=NULL){
        //public function actionJsoncalendar(){
            $events = array();
-   		$eventCalendar= Scheduleheader::find()->all();
-   		//print_r($eventCalendar);
-   		//die();
+
+           /*array dataprovider from ScheduleDetail author :wawan*/
+           $AryDataProviderVal= new ArrayDataProvider([
+    			'allModels'=>Yii::$app->db_esm->createCommand("SELECT DISTINCT
+    					TGL as start, (SELECT SCDL_GROUP_NM FROM c0007 WHERE ID=SCDL_GROUP) as title
+    					FROM c0002scdl_detail;")->queryAll(),
+    			 'pagination' => [
+    				'pageSize' => 100,
+    			]
+    			]);
+           /*event calender from ScheduleDetail author :wawan*/
+    			$eventCalendar=$AryDataProviderVal->getModels();
            //Demo
            $Event = new \yii2fullcalendar\models\Event();
    		//FIELD HARUS [id,start,end,title]
@@ -228,31 +309,58 @@ class ScheduleHeaderController extends Controller
            Yii::$app->end();
        }
 
-// save using ajax: author wawan
+  /**
+    * Creates a new schedule header and schedule detail.
+    * If creation is successful, bacth insert to schedule detail.
+    * not in use again save ajax ver 1.0 author : wawan
+  */
 
-	 public function actionJsoncalendar_add(){
+	//  public function actionJsoncalendar_add(){
+   //
+	// 	if (Yii::$app->request->isAjax) {
+	// 		$request= Yii::$app->request;
+	// 		$model =  new Scheduleheader();
+  //     $profile=Yii::$app->getUserOpt->Profile_user();
+  //     $usercreate = $profile->username;
+	// 		$end=$request->post('tgl2');
+  //     $start=$request->post('tgl1');
+	// 		$scdl_group=$request->post('scdl_group');
+  //     $user_id = $request->post('user_id');
+  //     $note = $request->post('note');
+	// 		$model->TGL1 = $start;
+  //     $model->TGL2 = $end;
+  //     $model->CREATE_BY = $usercreate;
+  //     $model->CREATE_AT = date("Y-m-d H:i:s");
+  //     $model->NOTE = $note;
+  //     $model->SCDL_GROUP = $scdl_group;
+	// 		$model->USER_ID = $user_id;
+  //     $carisdl = Scheduleheader::find()->where(['TGL1'=>$model->TGL1,'SCDL_GROUP'=>$scdl_group])->one();
 
-		if (Yii::$app->request->isAjax) {
-			$request= Yii::$app->request;
-			$model =  new Scheduleheader();
-      $profile=Yii::$app->getUserOpt->Profile_user();
-      $usercreate = $profile->username;
-			$end=$request->post('tgl2');
-      $start=$request->post('tgl1');
-			$scdl_group=$request->post('scdl_group');
-      $user_id = $request->post('user_id');
-      $note = $request->post('note');
-			$model->TGL1 = $start;
-      $model->TGL2 = $end;
-      $model->CREATE_BY = $usercreate;
-      $model->CREATE_AT = date("Y-m-d H:i:s");
-      $model->NOTE = $note;
-      $model->SCDL_GROUP = $scdl_group;
-			$model->USER_ID = $user_id;
-			$model->save();
-
-		}
-		return true;
-
-	 }
+      // if exist data customers
+  //     if($carisdl)
+  //     {
+  //       echo 2;
+  //     }
+  //     else{
+   //
+	// 		if($model->save())
+  //     {
+   //
+  //       // foreach date :author wawan
+  //         for ($date = strtotime($start); $date < strtotime($end); $date = strtotime("+1 day", $date)) {
+  //                   $tgl =  date("Y-m-d", $date);
+  //                   $Customers = Customers::find()->where(['SCDL_GROUP'=>$scdl_group])->asArray()->all();
+  //                   foreach ($Customers as $key => $value) {
+  //                     # code...
+  //                     $connection = Yii::$app->db_esm;
+  //                     $connection->createCommand()->batchInsert('c0002scdl_detail',['TGL','CUST_ID','SCDL_GROUP','USER_ID'],[[$tgl,$value['CUST_KD'],$scdl_group,$user_id]])->execute();
+  //                   }
+  //             }
+  //       }
+  //   }
+   //
+	// 	}
+	// 	return true;
+   //
+	//  }
 }

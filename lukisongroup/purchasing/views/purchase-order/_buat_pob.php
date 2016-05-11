@@ -1,6 +1,6 @@
 <?php
-
-use yii\helpers\Html;
+/* extensions*/
+use kartik\helpers\Html;
 use yii\bootstrap\Modal;
 use yii\widgets\ActiveForm;
 use kartik\detail\DetailView;
@@ -11,11 +11,13 @@ use kartik\grid\GridView;
 use kartik\tabs\TabsX;
 use kartik\money\MaskMoney;
 
+/* namespace models*/
 use lukisongroup\purchasing\models\ro\Requestorder;
 use lukisongroup\purchasing\models\ro\Rodetail;
 use lukisongroup\purchasing\models\ro\RodetailSearch;
 use lukisongroup\purchasing\models\pr\Costcenter;
 use lukisongroup\master\models\Unitbarang;
+use lukisongroup\purchasing\models\pr\FilePo;
 
 /*
  * =========== KEY SEARCH ================
@@ -70,6 +72,28 @@ use lukisongroup\master\models\Unitbarang;
 		return $content;
 	}
 
+
+  /*
+   * LINK PO Attach File
+   * @author : wawan
+     * @since 1.0
+  */
+  function PoAttach_file_pob($poHeader){
+      $title = Yii::t('app','');
+      $options = [ 'id'=>'po-attach-id-buat-pob',
+              'data-toggle'=>"modal",
+              'data-target'=>"#po-attach-buatpob",
+              'class'=>'btn btn-info btn-xs',
+              'title'=>'PO Attach File'
+      ];
+      $icon = '<span class="fa fa-plus fa-lg"></span>';
+      $label = $icon . ' ' . $title;
+      $url = Url::toRoute(['/purchasing/purchase-order/po-attach-file','kdpo'=>$poHeader->KD_PO]);
+      $content = Html::a($label,$url, $options);
+      return $content;
+  }
+
+
 	/*
 	 * LINK ETA
 	 * _Buat = GET permission ETA
@@ -85,7 +109,6 @@ use lukisongroup\master\models\Unitbarang;
 					  'title'=>'Estimate Time Arriver'
 		];
 		$url = Url::toRoute(['/purchasing/purchase-order/eta-view','kdpo'=>$poHeader->KD_PO]);
-		//$options1['tabindex'] = '-1';
 		$content = Html::a($title,$url, $options);
 		return $content;
 	}
@@ -101,7 +124,6 @@ use lukisongroup\master\models\Unitbarang;
 					  'data-toggle'=>"modal",
 					  'data-target'=>"#search-spl",
 					  'class'=>'btn btn-warning btn-xs',
-					  //'style'=>['width'=>'150px'],
 					  'title'=>'Set Supplier'
 		];
 		$icon = '<span class="glyphicon glyphicon-open"></span>';
@@ -122,7 +144,6 @@ use lukisongroup\master\models\Unitbarang;
 					  'data-toggle'=>"modal",
 					  'data-target'=>"#search-shp",
 					  'class'=>'btn btn-info btn-xs',
-					  //'style'=>['width'=>'150px'],
 					  'title'=>'Set Shipping'
 		];
 		$icon = '<span class="glyphicon glyphicon-save"></span>';
@@ -190,7 +211,7 @@ use lukisongroup\master\models\Unitbarang;
 	}
 
 	/*
-	 * LINK PRINT PDF
+	 * LINK PRINT PDF Temporary
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.2
 	*/
@@ -217,7 +238,6 @@ use lukisongroup\master\models\Unitbarang;
 						  'data-toggle'=>"modal",
 						  'data-target'=>"#po-note",
 						  'class'=>'btn btn-info btn-xs',
-						  //'style'=>['width'=>'150px'],
 						  'title'=>'PO Note'
 			];
 			$icon = '<span class="fa fa-plus fa-lg"></span>';
@@ -239,7 +259,6 @@ use lukisongroup\master\models\Unitbarang;
 						  'data-toggle'=>"modal",
 						  'data-target'=>"#po-notetop",
 						  'class'=>'btn btn-info btn-xs',
-						  //'style'=>['width'=>'150px'],
 						  'title'=>'PO Note'
 			];
 			$icon = '<span class="fa fa-plus fa-lg"></span>';
@@ -248,20 +267,16 @@ use lukisongroup\master\models\Unitbarang;
 			$content = Html::a($label,$url, $options);
 			return $content;
 	}
+
+
 	/*
 	 * Tombol Approval Item
 	 * Permission Auth2 | Auth3
-	 * Cancel Back To Process
+	 * approval  To  status into 1
 	 * @author ptrnov [piter@lukison]
 	 * @since 1.2
 	*/
 	function tombolApproval($url, $model){
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Approved');
 				$options = [ 'id'=>'approved',
 							 'data-pjax' => true,
@@ -270,9 +285,9 @@ use lukisongroup\master\models\Unitbarang;
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';
 				$label = $icon . ' ' . $title;
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
 	}
+
+
 	/*
 	 * Tombol Reject Item
 	 * Permission Auth2 | Auth3
@@ -281,12 +296,6 @@ use lukisongroup\master\models\Unitbarang;
 	 * @since 1.2
 	*/
 	function tombolReject($url, $model) {
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Reject');
 				$options = [ 'id'=>'reject',
 							 'data-pjax'=>true,
@@ -296,23 +305,17 @@ use lukisongroup\master\models\Unitbarang;
 				$label = $icon . ' ' . $title;
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
 	}
+
+
 	/*
-	 * Tombol Reject Item
+	 * Tombol Delete Item
 	 * Permission Auth2 | Auth3
-	 * Cancel Back To Process
+	 * delete into status 3
 	 * @author ptrnov [piter@lukison]
 	 * @since 1.2
 	*/
 	function tombolDelete($url, $model) {
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Delete');
 				$options = [ 'id'=>'delete',
 							 'data-pjax'=>true,
@@ -322,9 +325,19 @@ use lukisongroup\master\models\Unitbarang;
 				$label = $icon . ' ' . $title;
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
 	}
+
+
+	/* Permission modul akses 3 for po */
+	function getPermission(){
+		if (Yii::$app->getUserOpt->Modul_akses('3')){
+			return Yii::$app->getUserOpt->Modul_akses('3');
+		}else{
+			return false;
+		}
+	}
+
+
 	/*
 	 * Tombol Cancel Item
 	 * Permission Auth2 | Auth3
@@ -333,12 +346,6 @@ use lukisongroup\master\models\Unitbarang;
 	 * @since 1.2
 	*/
 	function tombolCancel($url, $model){
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Cancel');
 				$options = [ 'id'=>'cancel',
 							 'data-pjax'=>true,
@@ -347,8 +354,6 @@ use lukisongroup\master\models\Unitbarang;
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';
 				$label = $icon . ' ' . $title;
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
 	}
 
 	/*
@@ -371,42 +376,33 @@ use lukisongroup\master\models\Unitbarang;
 		return $content;
 	}
 
-	/*
-	 * STATUS FLOW DATA
-	 * 1. NEW		= 0 	| Create First
-	 * 2. APPROVED	= 1 	| Item Approved
-	 * 3. PROCESS	= 101	| Sign Auth1 | Data Sudah di buat dan di tanda tangani
-	 * 4. CHECKED	= 102	| Sign Auth2 | Data Sudah Di Check  dan di tanda tangani
-	 * 5. APPROVED	= 103	| Sign Auth3 | Data Sudah Di disetujui dan di tanda tangani
-	 * 6. DELETE	= 3 	| Data Hidden | Data Di hapus oleh pembuat petama, jika belum di Approved
-	 * 7. REJECT	= 4		| Data tidak di setujui oleh manager atau Atasan  lain
-	 * 8. PANDING	= 5		| Menunggu keputusan berikutnya.
-	 * 9. UNKNOWN	<>		| Data Tidak valid atau tidak sah
-	*/
-	function statusProcessRo($model){
-		if($model->STATUS==0){
-			/*New*/
-			return Html::a('<i class="fa fa-square-o fa-md"></i>', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'25px'],'title'=>'New']);
-		}elseif($model->STATUS==1){
-			/*Approved*/
-			return Html::a('<i class="fa fa-check-square-o fa-md"></i>', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'25px'], 'title'=>'Approved']);
-		}elseif ($model->STATUS==3){
-			return Html::a('<i class="glyphicon glyphicon-remove"></i> DELETE', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==4){
-			/*REJECT*/
-			return Html::a('<i class="fa fa-remove fa-md"></i> ', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'25px'], 'title'=>'Reject']);
-		}elseif($model->STATUS==5){
-			return Html::a('<i class="glyphicon glyphicon-retweet"></i> Pending', '#',['class'=>'btn btn-danger btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
-		}elseif ($model->STATUS==101){
-			return Html::a('<i class="glyphicon glyphicon-time"></i> Proccess', '#',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==102){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> Checked', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==103){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> Approved', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}else{
-			return Html::a('<i class="glyphicon glyphicon-question-sign"></i> Unknown', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		};
-	}
+
+	/* author : wawan
+   * STATUS Items
+   * 1. NEW 	= 0 	| Create First items | jika di cancel maka status menjai 0 lagi atau new
+   * 2. APPROVED	= 1 	| Item Approved
+   * 6. DELETE	= 3 	| Data Hidden | Data Di hapus oleh pembuat petama, jika belum di Approved
+   * 7. REJECT	= 4		| Data tidak di setujui oleh manager atau Atasan  lain
+   * 9. UNKNOWN	<>		| Data Tidak valid atau tidak sah
+  */
+  function statusItems($model){
+    if($model->STATUS==0){
+      /*New*/
+      return Html::a('<i class="fa fa-square-o fa-md"></i>', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'25px'],'title'=>'New']);
+    }elseif($model->STATUS==1){
+      /*Approved*/
+      return Html::a('<i class="fa fa-check-square-o fa-md"></i>', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'25px'], 'title'=>'Approved']);
+    }elseif ($model->STATUS==3){
+        /*DELETE*/
+      return Html::a('<i class="glyphicon glyphicon-remove"></i> DELETE', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+    }elseif ($model->STATUS==4){
+      /*REJECT*/
+      return Html::a('<i class="fa fa-remove fa-md"></i> ', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'25px'], 'title'=>'Reject']);
+    }else{
+      return Html::a('<i class="glyphicon glyphicon-question-sign"></i> Unknown', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+    };
+  }
+
 
 
 	/*
@@ -420,7 +416,6 @@ use lukisongroup\master\models\Unitbarang;
 			'dropdown' => true,
 			'template' => '{approved} {reject} {cancel} {delete} {closed}',
 			'dropdownOptions'=>['class'=>'pull-left dropdown'],
-			//'headerOptions'=>['class'=>'kartik-sheet-style'],
 			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 			'buttons' => [
 				'approved' => function ($url, $model) use ($poHeader) {
@@ -448,18 +443,6 @@ use lukisongroup\master\models\Unitbarang;
 								}
 							},
 
-				'closed' => function ($url, $model) use ($poHeader){
-								/*Check Status Checked on Requestorderstatus TYPE=102*/
-								/* $checkedMdl=Requestorderstatus::find()->where([
-									'KD_RO'=>$model->KD_RO,
-									'TYPE'=>102,
-									'ID_USER'=>getPermissionEmp()->EMP_ID,
-								])->one();
-								if ($headerStatus==103 or $checkedMdl<>''  ) {
-									//return Html::label('<i class="glyphicon glyphicon-lock dm"></i> LOCKED','',['class'=>'label label-danger','style'=>['align'=>'center']]);
-									return  tombolKonci($url, $model);
-								} */
-							},
 			],
 			'headerOptions'=>[
 				'style'=>[
@@ -492,7 +475,7 @@ use lukisongroup\master\models\Unitbarang;
 			'contentOptions'=>['style'=>'width: 100px'],
 			'format' => 'html',
 			'value'=>function ($model, $key, $index, $widget) {
-						return statusProcessRo($model);
+						return statusItems($model);
 			},
 			'headerOptions'=>[
 				'style'=>[
@@ -542,22 +525,6 @@ use lukisongroup\master\models\Unitbarang;
 				]
 			]
 		],
-		/* [
-			'attribute'=>'KD_PO',
-			'hidden'=>true,
-			'group'=>false,
-			'groupFooter'=>function ($model, $key, $index, $widget) {
-				$subttl=[
-					 'mergeColumns'=>[[1,5]],
-					  'content'=>[             // content to show in each summary cell
-                        1=>'Summary',
-                        6=>GridView::F_SUM,
-                    ],
-				 ];
-				return $subttl;
-			},
-
-		], */
 		[	//COL-3
 			/* Attribute Request KD_COSTCENTER */
 			'class'=>'kartik\grid\EditableColumn',
@@ -979,10 +946,13 @@ use lukisongroup\master\models\Unitbarang;
 		//if(getPermission()){
 			//if(getPermission()->BTN_VIEW==1){
 				$title = Yii::t('app', 'View');
-				$options = [ 'id'=>'ro-view'];
+				$options = [ 'id'=>'ro-view',
+											'data-toggle'=>'modal',
+			 								'data-target'=>"#ro-view",
+			 								'data-title'=> $model->KD_RO];
 				$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
 				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/request-order/view','kd'=>$model->KD_RO]);
+				$url = Url::toRoute(['/purchasing/purchase-order/view-ro','kd'=>$model->KD_RO]);
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
 			//}
@@ -1019,7 +989,7 @@ use lukisongroup\master\models\Unitbarang;
 	$gvROSendPO=GridView::widget([
 		'id'=>'gv-ro-detail',
 		'dataProvider' => $dataProviderRo,
-		'filterModel' => $searchModel,
+		'filterModel' => $searchModel1,
 		'columns' => [
 			[/* Attribute KD RO */
 				'attribute'=>'KD_RO',
@@ -1119,6 +1089,29 @@ use lukisongroup\master\models\Unitbarang;
 	",$this::POS_READY);
 	Modal::begin([
 		'id' => 'ro-sendpo',
+		'header' => '<h4 class="modal-title">...</h4>',
+		'size' => Modal::SIZE_LARGE,
+	]);
+		//echo '...';
+	Modal::end();
+
+	$this->registerJs("
+		$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+		$('#ro-view').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			});
+	",$this::POS_READY);
+	Modal::begin([
+		'id' => 'ro-view',
 		'header' => '<h4 class="modal-title">...</h4>',
 		'size' => Modal::SIZE_LARGE,
 	]);
@@ -1288,7 +1281,7 @@ use lukisongroup\master\models\Unitbarang;
 			<div style="text-align:right;float:right">
 				<?php echo PoView($poHeader); ?>
 			</div>
-			<div style="text-align:right;float:right"">
+			<div style="text-align:right;float:right">
 				<?php echo PrintPdf($poHeader); ?>
 			</div>
 			<div style="text-align:right;">
@@ -1463,10 +1456,22 @@ use lukisongroup\master\models\Unitbarang;
 							</th>
 							<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 								<?php
-									$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :SignApproved($poHeader);
-									//if ($poHeader->STATUS==101 OR $poHeader->STATUS==10){
+
+									if(getPermission())
+									{
+										if(getPermission()->BTN_SIGN3 == 0)
+										{
+											$ttd3 = '';
+											echo $ttd3;
+
+										}else{
+											$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : SignApproved($poHeader);
+											echo $ttd3;
+										}
+									}else{
+										$ttd3 = '';
 										echo $ttd3;
-									//}
+									}
 								?>
 							</th>
 						</tr>
@@ -1529,7 +1534,57 @@ use lukisongroup\master\models\Unitbarang;
 	</div>
 </div>
 
+<!-- attach file_po
+<div  class="row">
+  <div  class="col-md-3" style="font-family: tahoma ;font-size: 9pt;">
+  </div>
+	<div  class="col-md-9" style="font-family: tahoma ;font-size: 9pt;">
+		<dt><b>Attach File :</b></dt>
+		<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
+		<div>
+			<div style="float:right;text-align:right;">
+				<?php //echo PoAttach_file_pob($poHeader); ?>
+			</div>
+		</div>
+	</div>
+</div>
+ !-->
+<!-- // attachment file on view -->
+<?php
+$items = [];
+$po_file = FilePo::find()->where(['KD_PO'=>$poHeader->KD_PO])->asArray()->all();
 
+	foreach ($po_file as $key => $value) {
+	  # code...
+	  $items[] = [
+					'src'=>'data:image/pdf;base64,'.$value['IMG_BASE64'],
+					'imageOptions'=>['width'=>"120px",'height'=>"120px",'class'=>'img-rounded'], //setting image display
+			];
+	}
+
+$itemAllimge= dosamigos\gallery\Gallery::widget([
+				'items' =>  $items]);
+?>
+<div class="row">
+<div class="col-sm-3">
+
+</div>
+<div class="col-sm-9">
+<?php
+
+/* 2 amigos two galerry author mix:wawan and ptr.nov ver 1.0*/
+	// echo dosamigos\gallery\Gallery::widget([
+				// 'items' =>  $items]);
+	echo Html::panel(
+		[
+			'heading' => '<div>'.PoAttach_file_pob($poHeader).'   Quotation/Penawaran</div>',
+			'body'=>$itemAllimge,
+		],
+		Html::TYPE_INFO
+	);
+?>
+</div>
+</div>
 
 <?php
 	$this->registerJs("
@@ -1570,6 +1625,36 @@ use lukisongroup\master\models\Unitbarang;
 		}); */
 
 	",$this::POS_READY);
+
+  /*
+	 * JS ATTACH FILE |
+	 * @author wawan
+	 * @since 1.0
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#po-attach-buatpob').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+	",$this::POS_READY);
+
+	Modal::begin([
+			'id' => 'po-attach-buatpob',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Attach file</b></h4></div>',
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
 
 	/*
 	 * JS MODAL Discount

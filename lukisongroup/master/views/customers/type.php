@@ -35,7 +35,8 @@ use kartik\widgets\DepDrop;
 				  'validationUrl'=>Url::toRoute('/master/customers/valid')
 	]);
 
-
+	echo $form->field($model, 'CusNm')->Textinput(['value'=>$readonly['CUST_NM'],'readonly'=>true]);
+	
     echo $form->field($model, 'CUST_TYPE')->widget(Select2::classname(),[
     	'options'=>[  'placeholder' => 'Select Customers parent ...'
     	],

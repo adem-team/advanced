@@ -1,17 +1,19 @@
 <?php
-use yii\helpers\Html;
-//use yii\widgets\DetailView;
+/* extensions */
+use kartik\helpers\Html;
 use kartik\grid\GridView;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 
+/* namespace models*/
 use lukisongroup\master\models\Suplier;
 use lukisongroup\master\models\Barangumum;
 use lukisongroup\master\models\Nmperusahaan;
 use lukisongroup\purchasing\models\Purchasedetail;
 use lukisongroup\esm\models\Barang;
 use lukisongroup\purchasing\models\pr\Costcenter;
+use lukisongroup\purchasing\models\pr\FilePo;
 /* @var $this yii\web\View */
 /* @var $poHeader lukisongroup\poHeaders\esm\po\Purchaseorder */
 
@@ -33,11 +35,10 @@ $y=4;
 			return false;
 		}
 	}
-	//print_r(getPermission());
+
 	/*
 	 * Declaration Componen User Permission
 	 * Function profile_user
-	 * Modul Name[3=PO]
 	*/
 	function getPermissionEmp(){
 		if (Yii::$app->getUserOpt->profile_user()){
@@ -46,22 +47,19 @@ $y=4;
 			return false;
 		}
 	}
-	//print_r(getPermissionEmp());
+
+/* array */
+  $sup = Suplier::find()->where(['KD_SUPPLIER'=>$poHeader->KD_SUPPLIER])->one();
+  $ship = Nmperusahaan::find()->where(['ID' => $poHeader->SHIPPING])->one();
+  $bill = Nmperusahaan::find()->where(['ID' => $poHeader->BILLING])->one();
+
 
 	/*
 	 * Tombol Approval Item
-	 * Permission Auth2 | Auth3
-	 * Cancel Back To Process
 	 * @author ptrnov [piter@lukison]
 	 * @since 1.2
 	*/
 	function tombolApproval($url, $model){
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Approved');
 				$options = [ 'id'=>'approved',
 							 'data-pjax' => true,
@@ -70,23 +68,15 @@ $y=4;
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';
 				$label = $icon . ' ' . $title;
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
 	}
+
+
 	/*
 	 * Tombol Reject Item
-	 * Permission Auth2 | Auth3
-	 * Cancel Back To Process
 	 * @author ptrnov [piter@lukison]
 	 * @since 1.2
 	*/
 	function tombolReject($url, $model) {
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Reject');
 				$options = [ 'id'=>'reject',
 							 'data-pjax'=>true,
@@ -96,23 +86,16 @@ $y=4;
 				$label = $icon . ' ' . $title;
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
+
 	}
+
+
 	/*
-	 * Tombol Reject Item
-	 * Permission Auth2 | Auth3
-	 * Cancel Back To Process
+	 * Tombol Delete Item
 	 * @author ptrnov [piter@lukison]
 	 * @since 1.2
 	*/
 	function tombolDelete($url, $model) {
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Delete');
 				$options = [ 'id'=>'delete',
 							 'data-pjax'=>true,
@@ -122,23 +105,16 @@ $y=4;
 				$label = $icon . ' ' . $title;
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
+
 	}
+
 	/*
 	 * Tombol Cancel Item
-	 * Permission Auth2 | Auth3
 	 * Cancel Back To Process
 	 * @author ptrnov [piter@lukison]
 	 * @since 1.2
 	*/
 	function tombolCancel($url, $model){
-		// if(getPermission()){
-			// /* GF_ID>=4 Group Function[Director|GM|M|S] */
-			// $gF=getPermissionEmp()->GF_ID;
-			// $Auth2=getPermission()->BTN_SIGN2; // Auth2
-			// $Auth3=getPermission()->BTN_SIGN3; // Auth3
-			// if (($Auth2==1 or $Auth3==1) AND ($gF<=4)){
 				$title = Yii::t('app', 'Cancel');
 				$options = [ 'id'=>'cancel',
 							 'data-pjax'=>true,
@@ -147,14 +123,12 @@ $y=4;
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';
 				$label = $icon . ' ' . $title;
 				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
-			// }
-		// }
+
 	}
 
 	/*
 	 * Tombol Modul Konci ->
-	 * Permission [Status 103]
-	 * CLOSED 101 or 10
+	 * Permission [Status 102]
 	*/
 	function tombolKonci($url, $model){
 		$title = Yii::t('app', 'LOCKED');
@@ -171,42 +145,32 @@ $y=4;
 		return $content;
 	}
 
-	/*
-	 * STATUS FLOW DATA
-	 * 1. NEW		= 0 	| Create First
-	 * 2. APPROVED	= 1 	| Item Approved
-	 * 3. PROCESS	= 101	| Sign Auth1 | Data Sudah di buat dan di tanda tangani
-	 * 4. CHECKED	= 102	| Sign Auth2 | Data Sudah Di Check  dan di tanda tangani
-	 * 5. APPROVED	= 103	| Sign Auth3 | Data Sudah Di disetujui dan di tanda tangani
-	 * 6. DELETE	= 3 	| Data Hidden | Data Di hapus oleh pembuat petama, jika belum di Approved
-	 * 7. REJECT	= 4		| Data tidak di setujui oleh manager atau Atasan  lain
-	 * 8. PANDING	= 5		| Menunggu keputusan berikutnya.
-	 * 9. UNKNOWN	<>		| Data Tidak valid atau tidak sah
-	*/
-	function statusProcessRo($model){
-		if($model->STATUS==0){
-			/*New*/
-			return Html::a('<i class="fa fa-square-o fa-md"></i>', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'25px'],'title'=>'New']);
-		}elseif($model->STATUS==1){
-			/*Approved*/
-			return Html::a('<i class="fa fa-check-square-o fa-md"></i>', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'25px'], 'title'=>'Approved']);
-		}elseif ($model->STATUS==3){
-			return Html::a('<i class="glyphicon glyphicon-remove"></i> DELETE', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==4){
-			/*REJECT*/
-			return Html::a('<i class="fa fa-remove fa-md"></i> ', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'25px'], 'title'=>'Reject']);
-		}elseif($model->STATUS==5){
-			return Html::a('<i class="glyphicon glyphicon-retweet"></i> Pending', '#',['class'=>'btn btn-danger btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
-		}elseif ($model->STATUS==101){
-			return Html::a('<i class="glyphicon glyphicon-time"></i> Proccess', '#',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==102){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> Checked', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==103){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> Approved', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}else{
-			return Html::a('<i class="glyphicon glyphicon-question-sign"></i> Unknown', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		};
-	}
+  /* author : wawan
+   * STATUS Items
+   * 1. NEW 	= 0 	| Create First items | jika di cancel maka status menjai 0 lagi atau new
+   * 2. APPROVED	= 1 	| Item Approved
+   * 6. DELETE	= 3 	| Data Hidden | Data Di hapus oleh pembuat petama, jika belum di Approved
+   * 7. REJECT	= 4		| Data tidak di setujui oleh manager atau Atasan  lain
+   * 9. UNKNOWN	<>		| Data Tidak valid atau tidak sah
+  */
+  function statusItems($model){
+    if($model->STATUS==0){
+      /*New*/
+      return Html::a('<i class="fa fa-square-o fa-md"></i>', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'25px'],'title'=>'New']);
+    }elseif($model->STATUS==1){
+      /*Approved*/
+      return Html::a('<i class="fa fa-check-square-o fa-md"></i>', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'25px'], 'title'=>'Approved']);
+    }elseif ($model->STATUS==3){
+        /*DELETE*/
+      return Html::a('<i class="glyphicon glyphicon-remove"></i> DELETE', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+    }elseif ($model->STATUS==4){
+      /*REJECT*/
+      return Html::a('<i class="fa fa-remove fa-md"></i> ', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'25px'], 'title'=>'Reject']);
+    }else{
+      return Html::a('<i class="glyphicon glyphicon-question-sign"></i> Unknown', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+    };
+  }
+
 
 	/*
 	 * LINK PO Note
@@ -219,7 +183,6 @@ $y=4;
 						  'data-toggle'=>"modal",
 						  'data-target'=>"#po-note-review",
 						  'class'=>'btn btn-info btn-xs',
-						  //'style'=>['width'=>'150px'],
 						  'title'=>'PO Note'
 			];
 			$icon = '<span class="fa fa-plus fa-lg"></span>';
@@ -228,6 +191,7 @@ $y=4;
 			$content = Html::a($label,$url, $options);
 			return $content;
 	}
+
 
 	/*
 	 * LINK PO Note TOP
@@ -240,7 +204,6 @@ $y=4;
 						  'data-toggle'=>"modal",
 						  'data-target'=>"#po-notetop-review",
 						  'class'=>'btn btn-info btn-xs',
-						  //'style'=>['width'=>'150px'],
 						  'title'=>'PO Note'
 			];
 			$icon = '<span class="fa fa-plus fa-lg"></span>';
@@ -253,28 +216,8 @@ $y=4;
 ?>
 
  <?php
-        $sup = Suplier::find()->where(['KD_SUPPLIER'=>$poHeader->KD_SUPPLIER])->one();
-        //$pod = Purchasedetail::find()->where(['KD_PO'=>$poHeader->KD_PO])->all();
-
-        $ship = Nmperusahaan::find()->where(['ID' => $poHeader->SHIPPING])->one();
-        $bill = Nmperusahaan::find()->where(['ID' => $poHeader->BILLING])->one();
-
-		/* $x=10;
-		function ax(){
-			return '10';
-		}
-		 */
-		/* function formulaAmount($summary, $data, $widget){
-				//$calculate = dataCell($model, $key, $index);
-				//$p = compact('model', 'key', 'index');
-				return '<div>'.$summary * $this->model().',</div>
-						<div>'.min($data).'</div>
-						<div>'.$summary.'</div>
-						<div>100,0</div>
-						<div><b>10000,0</b></div>';
-		}; */
 		/*
-	 * COLUMN GRID VIEW CREATE PO
+	 * COLUMN GRID VIEW Items
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
@@ -282,47 +225,34 @@ $y=4;
 		[	//COL-0
 			'class'=>'kartik\grid\ActionColumn',
 			'dropdown' => true,
-			'template' => '{approved} {reject} {cancel} {delete} {closed}',
+			'template' => '{approved} {reject} {cancel} {delete}',
 			'dropdownOptions'=>['class'=>'pull-left dropdown'],
-			//'headerOptions'=>['class'=>'kartik-sheet-style'],
 			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 			'buttons' => [
+      /* approved Items |  Status 1; | if  status 101 | DRC OR GM (dont for acounting) */
 				'approved' => function ($url, $model) use ($poHeader) {
-								if ($poHeader->STATUS!==103) {
+								if ($poHeader->STATUS == 101 && getPermissionEmp()->DEP_ID != 'ACT') {
 									return tombolApproval($url, $model);
 								}else{
 								}
 							},
-				/* Reject RO | Permissian Status 4; | Dept = Dept login | GF >= M */
+				/* Reject Items |  Status 4; | if  status 101 | DRC OR GM (dont for acounting)*/
 				'reject' => function ($url, $model) use ($poHeader) {
-								if ($poHeader->STATUS!==103) {
+								if ($poHeader->STATUS ==101 && getPermissionEmp()->DEP_ID != 'ACT') {
 									return tombolReject($url, $model);
 								}
 							},
-				/* Cancel RO | Permissian Status 0; | Dept = Dept login | GF >= M */
+				/* Cancel Items |  Status 0; | if  status 100 or status 0 | purchasing or GA (dont for acounting)*/
 				'cancel' => function ($url, $model) use ($poHeader){
-								if ($poHeader->STATUS!==103) {
+								if ($poHeader->STATUS!==101 && getPermissionEmp()->DEP_ID != 'ACT') {
 									return tombolCancel($url, $model);
 								}
 							},
-				/* Delete RO | Permissian Status 0; | Dept = Dept login | GF >= M */
+				/* Delete items |  Status 3; | if  status 100 or status 0 | purchasing or GA (dont for acounting)  */
 				'delete' => function ($url, $model) use ($poHeader){
-								if ($poHeader->STATUS!==103) {
+								if ($poHeader->STATUS!==101 && getPermissionEmp()->DEP_ID != 'ACT') {
 									return tombolDelete($url, $model);
 								}
-							},
-
-				'closed' => function ($url, $model) use ($poHeader){
-								/*Check Status Checked on Requestorderstatus TYPE=102*/
-								/* $checkedMdl=Requestorderstatus::find()->where([
-									'KD_RO'=>$model->KD_RO,
-									'TYPE'=>102,
-									'ID_USER'=>getPermissionEmp()->EMP_ID,
-								])->one();
-								if ($headerStatus==103 or $checkedMdl<>''  ) {
-									//return Html::label('<i class="glyphicon glyphicon-lock dm"></i> LOCKED','',['class'=>'label label-danger','style'=>['align'=>'center']]);
-									return  tombolKonci($url, $model);
-								} */
 							},
 			],
 			'headerOptions'=>[
@@ -356,7 +286,7 @@ $y=4;
 			'contentOptions'=>['style'=>'width: 100px'],
 			'format' => 'html',
 			'value'=>function ($model, $key, $index, $widget) {
-						return statusProcessRo($model);
+						return statusItems($model);
 			},
 			'headerOptions'=>[
 				'style'=>[
@@ -406,29 +336,12 @@ $y=4;
 				]
 			]
 		],
-		/* [
-			'attribute'=>'KD_PO',
-			'hidden'=>true,
-			'group'=>false,
-			'groupFooter'=>function ($model, $key, $index, $widget) {
-				$subttl=[
-					 'mergeColumns'=>[[1,5]],
-					  'content'=>[             // content to show in each summary cell
-                        1=>'Summary',
-                        6=>GridView::F_SUM,
-                    ],
-				 ];
-				return $subttl;
-			},
-
-		], */
 		[	//COL-3
 			/* Attribute Request KD_COSTCENTER */
 			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'KD_COSTCENTER',
 			'label'=>'Cost.Center',
 			'vAlign'=>'middle',
-			// 'hAlign'=>'center',
 			'mergeHeader'=>true,
 			'headerOptions'=>[
 				'style'=>[
@@ -445,7 +358,6 @@ $y=4;
 						'width'=>'60px',
 						'font-family'=>'tahoma',
 						'font-size'=>'8pt',
-						//'border-right'=>'0px',
 				]
 			],
 			'pageSummaryOptions' => [
@@ -461,8 +373,6 @@ $y=4;
 				'options' => [
 					'data' => ArrayHelper::map(Costcenter::find()->all(), 'KD_COSTCENTER', 'NM_COSTCENTER'),
 					'pluginOptions' => [
-						//'min'=>0,
-						//'max'=>5000,
 						'allowClear' => true,
 						'class'=>'pull-top dropup'
 					],
@@ -472,7 +382,7 @@ $y=4;
 			],
 		],
 		[	//COL-4
-			/* Attribute Items Barang */
+			/* Attribute Items KD_Barang */
 			'attribute'=>'KD_BARANG',
 			'label'=>'SKU',
 			'hAlign'=>'left',
@@ -480,7 +390,6 @@ $y=4;
 			'mergeHeader'=>true,
 			'format' => 'raw',
 			'headerOptions'=>[
-				//'class'=>'kartik-sheet-style'
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'150px',
@@ -490,6 +399,7 @@ $y=4;
 				]
 			],
 			'contentOptions'=>[
+				'is'=>'kd-brg',
 				'style'=>[
 					'text-align'=>'left',
 					'width'=>'150px',
@@ -505,7 +415,7 @@ $y=4;
 			]
 		],
 		[	//COL-5
-			/* Attribute Items Barang */
+			/* Attribute Items Name Barang */
 			'label'=>'Items Name',
 			'attribute'=>'NM_BARANG',
 			'hAlign'=>'left',
@@ -513,7 +423,6 @@ $y=4;
 			'mergeHeader'=>true,
 			'format' => 'raw',
 			'headerOptions'=>[
-				//'class'=>'kartik-sheet-style'
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'200px',
@@ -560,7 +469,6 @@ $y=4;
 						'width'=>'60px',
 						'font-family'=>'tahoma',
 						'font-size'=>'8pt',
-						//'border-right'=>'0px',
 				]
 			],
 			'pageSummaryOptions' => [
@@ -627,7 +535,7 @@ $y=4;
 			],
 		],
 		[	//COL-8
-			/* Attribute Unit Barang */
+			/* Attribute Harga Barang */
 			'class'=>'kartik\grid\EditableColumn',
 			'attribute'=>'HARGA',
 			'value'=>function($model){
@@ -638,7 +546,6 @@ $y=4;
 			'vAlign'=>'middle',
 			'hAlign'=>'right',
 			'headerOptions'=>[
-				//'class'=>'kartik-sheet-style'
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'100px',
@@ -687,13 +594,12 @@ $y=4;
 				]
 			],
 		],
-		[	//COL-9
+		[	//COL-9 attribute amount
 			'class'=>'kartik\grid\FormulaColumn',
 			'header'=>'Amount',
 			'mergeHeader'=>true,
 			'vAlign'=>'middle',
 			'hAlign'=>'right',
-			//'width'=>'7%',
 			'value'=>function ($model, $key, $index, $widget) {
 				$p = compact('model', 'key', 'index');
 				// return $widget->col(6, $p) != 0 ? $widget->col(6, $p) * round($model->UNIT_QTY * $widget->col(8, $p),0,PHP_ROUND_HALF_UP) : 0;
@@ -701,7 +607,6 @@ $y=4;
 				//return $widget->col(3, $p) != 0 ? $widget->col(5 ,$p) * 100 / $widget->col(3, $p) : 0;
 			},
 			'headerOptions'=>[
-				//'class'=>'kartik-sheet-style'
 				'style'=>[
 					'text-align'=>'center',
 					'width'=>'150px',
@@ -758,16 +663,66 @@ $y=4;
 						'width'=>'100px',
 						'font-family'=>'tahoma',
 						'font-size'=>'8pt',
-						//'text-decoration'=>'underline',
-						//'font-weight'=>'bold',
-						//'border-left-color'=>'transparant',
 						'border-left'=>'0px',
 				]
 			],
 			'footer'=>true,
 		],
+		[/* CheckboxColumn */
+'class'=>'kartik\grid\CheckboxColumn',
+'headerOptions'=>[
+	'style'=>[
+		'text-align'=>'center',
+		'width'=>'20px',
+		'font-family'=>'tahoma',
+		'font-size'=>'8pt',
+		'background-color'=>'rgba(0, 95, 218, 0.3)',
+
+	]
+],
+'contentOptions'=>[
+	// 'readonly'=>true,
+	'style'=>[
+			'text-align'=>'center',
+			'width'=>'20px',
+			'font-family'=>'tahoma',
+			'font-size'=>'8pt',
+			'border-left'=>'0px',
+	]
+],
+'checkboxOptions' => [
+	'is'=>'ck-gv',
+	'class' => 'simple',
+	'style'=>[
+		'text-align'=>'left',
+		'width'=>'20px',
+		'font-family'=>'tahoma',
+		'font-size'=>'8pt',
+		'border-left'=>'0px',
+	],
+				],
+'rowSelectedClass' => GridView::TYPE_WARNING,
+'checkboxOptions' => function ($model, $key, $index, $column){
+		if(getPermissionEmp()->DEP_ID == 'DRC')
+		{
+			if($model->STATUS == 1)
+			{
+				return ['checked' => $model->KD_RO];
+			}else{
+				return ['value' => $model->KD_RO];
+			}
+		}else{
+			return ['value' => $model->KD_RO,'hidden'=>true];
+		}
+}
+],
 	];
 
+  /*
+ *  GRID VIEW Items
+ * @author wawan
+   * @since 1.0
+   */
 	$viewGrid= GridView::widget([
 		'id'=>'po-review-id',
 		'dataProvider'=> $dataProvider,
@@ -777,7 +732,7 @@ $y=4;
 		'pjaxSettings'=>[
 		'options'=>[
 			'enablePushState'=>false,
-			'id'=>'ro-review-id',
+			'id'=>'po-review-id',
 		   ],
 		],
 		/* 'panel' => [
@@ -813,7 +768,6 @@ $y=4;
 		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 		$label = $icon . ' ' . $title;
 		$url = Url::toRoute(['/purchasing/purchase-order/sign-auth1-view','kdpo'=>$poHeader->KD_PO]);
-		//$options1['tabindex'] = '-1';
 		$content = Html::a($label,$url, $options);
 		return $content;
 	}
@@ -835,7 +789,6 @@ $y=4;
 		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 		$label = $icon . ' ' . $title;
 		$url = Url::toRoute(['/purchasing/purchase-order/sign-auth2-view','kdpo'=>$poHeader->KD_PO]);
-		//$options1['tabindex'] = '-1';
 		$content = Html::a($label,$url, $options);
 		return $content;
 	}
@@ -844,9 +797,17 @@ $y=4;
 	 * SIGNATURE AUTH3 | APPROVED
 	 * Status Value Signature1 | PurchaseOrder
 	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
+   * if poheader STATUS equal 4 then title reject and title Sign Hire
 	*/
 	function SignApproved($poHeader){
-		$title = Yii::t('app', 'Sign Hire');
+    if($poHeader->STATUS == 4)
+    {
+      $title = Yii::t('app', 'Reject');
+    }else {
+      # code...
+      $title = Yii::t('app', 'Sign Hire');
+    }
+
 		$options = [ 'id'=>'po-auth3',
 					  'data-toggle'=>"modal",
 					  'data-target'=>"#po-auth3-sign",
@@ -857,7 +818,6 @@ $y=4;
 		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 		$label = $icon . ' ' . $title;
 		$url = Url::toRoute(['/purchasing/purchase-order/sign-auth3-view','kdpo'=>$poHeader->KD_PO]);
-		//$options1['tabindex'] = '-1';
 		$content = Html::a($label,$url, $options);
 		return $content;
 	}
@@ -880,7 +840,7 @@ $y=4;
 
 		</div>
 	</div>
-	<!-- Title HEADER Descript !-->
+	<!-- Title HEADER Description !-->
 	<div  class="row">
 		<div class="col-md-12" style="font-family: tahoma ;font-size: 9pt;float:left;">
 			<div class="col-md-4">
@@ -918,7 +878,7 @@ $y=4;
 	</div>
 	<!-- Title GRID PO Detail !-->
 	<div  class="row">
-		<div class="ccol-md-12"  style="float:none">
+		<div class="col-md-12"  style="float:none">
 
 			<div class="col-md-12">
 
@@ -926,7 +886,7 @@ $y=4;
 			</div>
 		</div>
 	</div>
-	<!-- Title BOTTEM Descript !-->
+	<!-- Title BOTTOM Descript !-->
 	<div  class="row">
 		<div class="col-md-12" style="font-family: tahoma ;font-size: 9pt;float:left;">
 			<div class="col-md-4" style="float:left;">
@@ -979,6 +939,7 @@ $y=4;
 			</div>
 		</div>
 	</div>
+
 	<!-- PO Term Of Payment !-->
 	<div  class="row">
 		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
@@ -1080,15 +1041,33 @@ $y=4;
 						</th>
 						<th style="text-align: center; vertical-align:middle;width:180">
 							<?php
-							  //$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src="'.$poHeader->SIG2_SVGBASE64.'"></img>' : SignChecked($poHeader);
 								$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG2_SVGBASE64.'</img>' : SignChecked($poHeader);
 								echo $ttd2
 							?>
 						</th>
 						<th style="text-align: center; vertical-align:middle;width:180">
 							<?php
-								$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : SignApproved($poHeader);
+              /*  author : wawan ver 1.0
+                  * jika tidak ada permission maka untuk tanda tangan yang akan approve hilang
+                  * jika BTN_SIGN3 adalah 0 maka untuk tanda tangan yang akan approve hilang
+									* if status po header equal 4 then  button name Reject
+              */
+							if(getPermission())
+							{
+								if(getPermission()->BTN_SIGN3 == 0)
+								{
+									$ttd3 = '';
+									echo $ttd3;
+
+								}else{
+                  $ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : SignApproved($poHeader);
+                	echo $ttd3;
+								}
+							}else{
+								$ttd3 = '';
 								echo $ttd3;
+							}
+
 							?>
 						</th>
 					</tr>
@@ -1147,6 +1126,53 @@ $y=4;
 			</div>
 		</div>
 	</div>
+
+	<!--   attachment file on view -->
+	<?php
+		$items = [];
+		$po_file = FilePo::find()->where(['KD_PO'=>$poHeader->KD_PO])->asArray()->all();
+
+		/* display image author : wawan
+		  if count po file equal 0 then default jpg show*/
+		if(count($po_file) == 0){
+			  for($a = 0; $a < 2; $a++){
+				$items[] = [
+					'src'=>'/upload/barang/df.jpg',
+					'imageOptions'=>['width'=>"150px"]
+				];
+			  }
+		}else{
+		  foreach ($po_file as $key => $value) {
+			# code...
+			$items[] = [
+						  'src'=>'data:image/jpeg;base64,'.$value['IMG_BASE64'],
+						  'imageOptions'=>['width'=>"120px",'height'=>"120px",'class'=>'img-rounded'], //setting image display
+				];
+		  }
+
+		}
+	?>
+
+	<!-- image qotation-->
+	<div  class="row">
+	  <div class="col-xs-1 col-sm-1col-lg-1">
+	  </div>
+		<div  class="col-xs-12 col-sm-12 col-lg-12" style="font-family: tahoma ;font-size: 9pt;">
+			<hr style="height:1px;margin-top: 3px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
+	  </hr>
+			<?php
+			/* 2 amigos two galerry author mix:wawan and ptr.nov ver 1.0*/
+				$viewItemImge =dosamigos\gallery\Gallery::widget([
+					  'items' =>  $items]);
+				echo Html::panel([
+						'heading' => '<div> view Quotation/Penawaran </div>',
+						'body'=>$viewItemImge,
+					],
+					Html::TYPE_INFO
+				);
+			?>
+		</div>
+	</div>
 </div>
 <?php
 	/*
@@ -1169,11 +1195,10 @@ $y=4;
 					});
 				}),
 	",$this::POS_READY);
+
 	Modal::begin([
 			'id' => 'po-auth1-sign',
-			//'header' => '<h4 class="modal-title">Signature Authorize</h4>',
 			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
-			//'size' => 'modal-xs'
 			'size' => Modal::SIZE_SMALL,
 			'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
@@ -1201,6 +1226,7 @@ $y=4;
 					});
 				}),
 	",$this::POS_READY);
+
 	Modal::begin([
 			'id' => 'po-auth2-sign',
 			//'header' => '<h4 class="modal-title">Signature Authorize</h4>',
@@ -1212,6 +1238,8 @@ $y=4;
 			]
 		]);
 	Modal::end();
+
+
 
 	/*
 	 * JS AUTH3 | APPROVED
@@ -1233,12 +1261,42 @@ $y=4;
 					});
 				}),
 	",$this::POS_READY);
+
 	Modal::begin([
 			'id' => 'po-auth3-sign',
-			//'header' => '<h4 class="modal-title">Signature Authorize</h4>',
 			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
-			//'size' => 'modal-xs'
 			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+
+	/*
+	 * JS ATTACH FILE |
+	 * @author wawan
+	 * @since 1.0
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#po-attach-review').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+	",$this::POS_READY);
+
+	Modal::begin([
+			'id' => 'po-attach-review',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Attach file</b></h4></div>',
+			// 'size' => Modal::SIZE_SMALL,
 			'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
 			]
@@ -1253,16 +1311,6 @@ $y=4;
 	$this->registerJs("
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
 			$('#confirm-permission-alert').on('show.bs.modal', function (event) {
-				//var button = $(event.relatedTarget)
-				//var modal = $(this)
-				//var title = button.data('title')
-				//var href = button.attr('href')
-				//modal.find('.modal-title').html(title)
-				//modal.find('.modal-body').html('')
-				/* $.post(href)
-					.done(function( data ) {
-						modal.find('.modal-body').html(data)
-					}); */
 				}),
 	",$this::POS_READY);
 	Modal::begin([
@@ -1279,6 +1327,64 @@ $y=4;
 				</dl>
 			</div>";
 	Modal::end();
+
+/* kd_po get params next usage action ck-aprove and ck-proses */
+  $kd_po = Yii::$app->getRequest()->getQueryParam('kdpo');
+
+
+
+	/*
+	 * JS GRIDVIEW CheckboxColumn
+   * if this checked action url: '/purchasing/purchase-order/ck-aprove,creation succesful reload ajax',
+   * if this uncheked action url: '/purchasing/purchase-order/ck-proses,creation succesful reload ajax',
+	 * @author wawan
+   * @since 1.1
+	*/
+
+	 $this->registerJs("
+			var target = $(this).attr('href');
+			$('#po-review-id').on('change','input[type=checkbox]',function(){
+				  var roKode =$(this).val();
+					var poKode=\"".$kd_po."\";
+				 var keysSelect = $('#po-review-id').yiiGridView('getSelectedRows');
+					if ($(this).is(':checked')){
+						$.ajax({
+	 					 url: '/purchasing/purchase-order/ck-aprove',
+	 					 //cache: true,
+	 					 type: 'POST',
+	 					 data:{keysSelect:keysSelect,kdRo:roKode,kdpo:poKode},
+	 					 dataType: 'json',
+						 success: function(response) {
+							if (response == true ){
+								  $.pjax.reload({container:'#po-review-id'});
+							}
+							 else {
+
+							 }
+						 }
+	 					})
+					}else{
+            $.ajax({
+             url: '/purchasing/purchase-order/ck-proses',
+             //cache: true,
+             type: 'POST',
+             data:{keysSelect:keysSelect,kdRo:roKode,kdpo:poKode},
+             dataType: 'json',
+						 success: function(response) {
+							 if (response == true ){
+								 $.pjax.reload({container:'#po-review-id'});
+								  $(this).parent().parent().removeClass('alert-success');
+							 }
+								else {
+									  $.pjax.reload({container:'#po-review-id'});
+								}
+							}
+
+            })
+				}
+				});
+
+	",$this::POS_READY);
 
 	/*
 	 * Action PO Detail
@@ -1304,6 +1410,8 @@ $y=4;
 				});
 
 		});
+
+
 		$(document).on('click', '[data-toggle-reject]', function(e){
 			e.preventDefault();
 			var idx = $(this).data('toggle-reject');
@@ -1320,6 +1428,8 @@ $y=4;
 					}
 				});
 		});
+
+
 		$(document).on('click', '[data-toggle-delete]', function(e){
 			e.preventDefault();
 			var idx = $(this).data('toggle-delete');
@@ -1353,7 +1463,6 @@ $y=4;
 					}
 				});
 		});
-
 	",$this::POS_READY);
 
 	/*

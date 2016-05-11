@@ -3,15 +3,15 @@
 namespace lukisongroup\hrd\controllers;
 
 use Yii;
-use lukisongroup\hrd\models\Visi;
-use lukisongroup\hrd\models\VisiSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * VisiController implements the CRUD actions for Visi model.
- */
+use lukisongroup\hrd\models\Organisasi;
+use lukisongroup\hrd\models\OrganisasiSearch;
+use lukisongroup\hrd\models\Visi;
+use lukisongroup\hrd\models\VisiSearch;
+
 class AdministrasiController extends Controller
 {
     public function behaviors()
@@ -56,13 +56,17 @@ class AdministrasiController extends Controller
     {
        /*  $searchModel = new VisiSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
- */
-        return $this->render('index'
-		/* , [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ] */
-		);
+		*/
+		
+		/*STRUKTURE ORGANIZATION ARRAY*/
+		$searchModelOrg = new OrganisasiSearch();
+        $dataProviderOrg = $searchModelOrg->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModelOrg' => $searchModelOrg,
+            'dataProviderOrg' => $dataProviderOrg,
+        ]);
+		
     }
 
     /**

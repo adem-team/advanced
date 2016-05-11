@@ -32,6 +32,7 @@ use lukisongroup\hrd\models\Employe;
 use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Tipebarang;
+use lukisongroup\sistem\models\Userlogin;
 use yii\data\ActiveDataProvider;
 
 
@@ -630,11 +631,16 @@ class SalesOrderController extends Controller
         $employ = $roHeader->employe;
 		$dept = $roHeader->dept;
 		if ($v==101){
-			$filterPdf="KD_RO='".$kd."' AND (STATUS='101' OR STATUS='10')";
+			// $filterPdf="KD_RO='".$kd."' AND (STATUS='101' OR STATUS='10')";
+      	$filterPdf="KD_RO='".$kd."' AND STATUS='1'";
 		}elseif($v!=101){
 			$filterPdf="KD_RO='".$kd."' AND STATUS<>'3'";
 		}
+    // print_r($filterPdf);
+    // die();
 		$roDetail = Sodetail::find()->where($filterPdf)->all();
+    // print_r($roDetail);
+    // die();
 
 		/* PR Filter Status Output to Grid print*/
 		$dataProvider = new ArrayDataProvider([
@@ -940,14 +946,18 @@ class SalesOrderController extends Controller
 			]);
 	}
 
-  public function Sendmail($kd)
+
+// function for email sign-auth1 author :wawan
+  public function Sendmail($kd,$empid)
   {
-    // $profile=Yii::$app->getUserOpt->Profile_user();
-    // $dep = $profile->emp->DEP_ID;
-    // $datamanager = Employe::find()->where(['DEP_ID'=>$dep,'JOBGRADE_ID'=>'M'])->asArray()->one();
-    // $datamanager['EMP_EMAIL'];
-    // print_r(  $datamanager['EMP_EMAIL']);
-    // die();
+    // element email
+    $profile = Yii::$app->getUserOpt->Profile_user(); // create ro
+    $user = $profile->username; //user create email
+    $dep_id = $profile->emp->DEP_ID;
+    $gf_id = $profile->emp->GF_ID;
+    $usercc = Userlogin::find()->where(['EMP_ID'=>$empid])->asArray()->one(); // usercc
+    $approve = Employe::find()->where(['DEP_ID'=>$dep_id])->andwhere('GF_ID<=3')->asArray()->one();//approve ro
+
 
     // $email = Yii::$app->user->identity->email;
     $roHeader = Salesorder::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
@@ -999,7 +1009,7 @@ class SalesOrderController extends Controller
 			'roHeader' => $roHeader,
 			'dataProvider' => $dataProvider,
 		]);
-		
+
   $pdf = new Pdf([
     // set to use core fonts only
     'mode' => Pdf::MODE_CORE,
@@ -1027,11 +1037,204 @@ class SalesOrderController extends Controller
   ]);
   // aditiya@lukison.com
   // $to=[$dataemail['email'],$email,'purchasing@lukison.com',$datamanager['EMP_EMAIL']];
-  $to=['sales_order@lukison.com'];
+  // $to=['sales_order@lukison.com'];
+    $to=[$user,$usercc['username'],$approve['EMP_EMAIL']];
 
   \Yii::$app->kirim_email->pdf($contentMail,'SO',$to,'Sales-Order',$contentMailAttachBody);
 
   }
+
+
+
+  // function for email sign-auth2(checked) author :wawan
+  //connect  sign-auth2-save2
+    public function Sendmail2($kd,$empid)
+    {
+
+
+      $roHeader = Salesorder::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
+      $detro = $roHeader->detro;
+      $employ = $roHeader->employe;
+      $dept = $roHeader->dept;
+      $roDetail =Sodetail::find()->where(['KD_RO'=>$kd])->all();
+
+      // element email author :wawan
+      $profile = Yii::$app->getUserOpt->Profile_user(); // profile
+      $usercc = $profile->username; // send email usercc
+      $user = Userlogin::find()->where(['EMP_ID'=>$roHeader->SIG1_ID])->asArray()->one();
+      $usersign1 = $user['username']; // send mail user create ro
+      $caridep_id = Employe::find()->where(['EMP_ID'=>$user['EMP_ID']])->asArray()->one();
+      $approve = Employe::find()->where(['DEP_ID'=>$caridep_id['DEP_ID']])->andwhere('GF_ID<=3')->asArray()->one();
+      $dep_head = $approve['EMP_EMAIL']; // send mail deph_head approve ro
+
+    /* PR Filter Status Output to Grid print*/
+    $dataProvider = new ArrayDataProvider([
+      'key' => 'ID',
+      'allModels'=>$roDetail,//$detro,
+      'pagination' => [
+        'pageSize' => 20,
+      ],
+    ]);
+
+    //PR
+    //$dataProviderFilter = $dataProvider->getModels();
+
+    /* $StatusFilter = ["101","10"];
+        $test1 = ArrayHelper::where($dataProviderFilter, function($key, $StatusFilter) {
+             return is_string($value);
+        });
+    print_r($test1); */
+
+      $content = $this->renderPartial( 'pdfview_tmp', [
+            'roHeader' => $roHeader,
+            'detro' => $detro,
+            'employ' => $employ,
+            'dept' => $dept,
+            'dataProvider' => $dataProvider,
+        ]);
+
+        $contentMail= $this->renderPartial('sendmailcontent',[
+          'roHeader' => $roHeader,
+          'detro' => $detro,
+          'employ' => $employ,
+          'dept' => $dept,
+          'dataProvider' => $dataProvider,
+        ]);
+
+  	  /*Body Notify*/
+  		$contentMailAttachBody= $this->renderPartial('postman_body',[
+  			'roHeader' => $roHeader,
+  			'dataProvider' => $dataProvider,
+  		]);
+
+    $pdf = new Pdf([
+      // set to use core fonts only
+      'mode' => Pdf::MODE_CORE,
+      // A4 paper format
+      'format' => Pdf::FORMAT_A4,
+      // portrait orientation
+      'orientation' => Pdf::ORIENT_PORTRAIT,
+      // stream to browser inline
+      'destination' => Pdf::DEST_BROWSER,
+      // your html content input
+      'content' => $content,
+      // format content from your own css file if needed or use the
+      // enhanced bootstrap css built by Krajee for mPDF formatting
+      //D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+      'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+      // any css to be embedded if required
+      'cssInline' => '.kv-heading-1{font-size:12px}',
+       // set mPDF properties on the fly
+      'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+       // call mPDF methods on the fly
+      'methods' => [
+        'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
+        'SetFooter'=>['{PAGENO}'],
+      ]
+    ]);
+
+      $to=[$usersign1,$usercc,$dep_head];
+
+    \Yii::$app->kirim_email->pdf($contentMail,'SO',$to,'Sales-Order',$contentMailAttachBody);
+
+    }
+
+
+    // function for email sign-auth3(approve) author :wawan
+    //connect  sign-auth3-save3
+      public function Sendmail3($kd,$empid)
+      {
+        $roHeader = Salesorder::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
+        $detro = $roHeader->detro;
+        $employ = $roHeader->employe;
+        $dept = $roHeader->dept;
+        $roDetail =Sodetail::find()->where(['KD_RO'=>$kd])->all();
+
+        // element email author :wawan
+        $profile = Yii::$app->getUserOpt->Profile_user(); // profile
+        $user_dephead = $profile->username; // email dephead
+        $user = Userlogin::find()->where(['EMP_ID'=>$roHeader->SIG1_ID])->asArray()->one();
+        $usersign1 = $user['username']; // send mail user create ro
+        $cari = Employe::find()->where(['EMP_ID'=>$roHeader->SIG2_ID])->asArray()->one();
+        $cari_usercc = Employe::find()->where(['DEP_ID'=>$cari['DEP_ID']])->andwhere('GF_ID<=3')->asArray()->one();
+        $usercc = $cari_usercc['EMP_EMAIL']; // email usercc
+
+      /* PR Filter Status Output to Grid print*/
+      $dataProvider = new ArrayDataProvider([
+        'key' => 'ID',
+        'allModels'=>$roDetail,//$detro,
+        'pagination' => [
+          'pageSize' => 20,
+        ],
+      ]);
+
+      //PR
+      //$dataProviderFilter = $dataProvider->getModels();
+
+      /* $StatusFilter = ["101","10"];
+          $test1 = ArrayHelper::where($dataProviderFilter, function($key, $StatusFilter) {
+               return is_string($value);
+          });
+      print_r($test1); */
+
+        $content = $this->renderPartial( 'pdfview_tmp', [
+              'roHeader' => $roHeader,
+              'detro' => $detro,
+              'employ' => $employ,
+              'dept' => $dept,
+              'dataProvider' => $dataProvider,
+          ]);
+
+          $contentMail= $this->renderPartial('sendmailcontent',[
+            'roHeader' => $roHeader,
+            'detro' => $detro,
+            'employ' => $employ,
+            'dept' => $dept,
+            'dataProvider' => $dataProvider,
+          ]);
+
+    	  /*Body Notify*/
+    		$contentMailAttachBody= $this->renderPartial('postman_body',[
+    			'roHeader' => $roHeader,
+    			'dataProvider' => $dataProvider,
+    		]);
+
+      $pdf = new Pdf([
+        // set to use core fonts only
+        'mode' => Pdf::MODE_CORE,
+        // A4 paper format
+        'format' => Pdf::FORMAT_A4,
+        // portrait orientation
+        'orientation' => Pdf::ORIENT_PORTRAIT,
+        // stream to browser inline
+        'destination' => Pdf::DEST_BROWSER,
+        // your html content input
+        'content' => $content,
+        // format content from your own css file if needed or use the
+        // enhanced bootstrap css built by Krajee for mPDF formatting
+        //D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+        'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+        // any css to be embedded if required
+        'cssInline' => '.kv-heading-1{font-size:12px}',
+         // set mPDF properties on the fly
+        'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+         // call mPDF methods on the fly
+        'methods' => [
+          'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
+          'SetFooter'=>['{PAGENO}'],
+        ]
+      ]);
+
+        $to=[$usersign1,$usercc,$user_dephead];
+
+      \Yii::$app->kirim_email->pdf($contentMail,'SO',$to,'Sales-Order',$contentMailAttachBody);
+
+      }
+
+
+
+
+
 
 	/*SIGNARURE AUTH1 | SAVE */
 	public function actionSignAuth1Save(){
@@ -1045,8 +1248,8 @@ class SalesOrderController extends Controller
 				if ($auth1Mdl->auth1_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth1Model']['kdro'];
-          // $empid = $hsl['Auth1Model']['empID'];
-          $this->Sendmail($kdro);
+          $empid = $hsl['Auth1Model']['empID'];
+          $this->Sendmail($kdro,$empid); //send email
 					return $this->redirect(['/purchasing/sales-order/view','kd'=>$kdro]);
 				}
 			}
@@ -1082,8 +1285,8 @@ class SalesOrderController extends Controller
 				if ($auth2Mdl->auth2_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth2Model']['kdro'];
-          // $empid = $hsl['Auth1Model']['empID'];
-          $this->Sendmail($kdro);
+          $empid = $hsl['Auth1Model']['empID'];
+          $this->Sendmail2($kdro,$empid);//send email
 					return $this->redirect(['/purchasing/sales-order/review','kd'=>$kdro]);
 				}
 			}
@@ -1119,8 +1322,8 @@ class SalesOrderController extends Controller
 				if ($auth3Mdl->auth3_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth3Model']['kdro'];
-          // $empid = $hsl['Auth1Model']['empID'];
-          $this->Sendmail($kdro);
+          $empid = $hsl['Auth1Model']['empID'];
+          $this->Sendmail3($kdro,$empid); // send email
 					return $this->redirect(['/purchasing/sales-order/review','kd'=>$kdro]);
 				}
 			}
