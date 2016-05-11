@@ -4,6 +4,7 @@ namespace lukisongroup\purchasing\models\pr;
 
 use Yii;
 
+/* namespace models */
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\master\models\Suplier;
 use lukisongroup\master\models\Nmperusahaan;

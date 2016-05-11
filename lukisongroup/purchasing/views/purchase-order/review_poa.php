@@ -667,10 +667,58 @@ $y=4;
 			],
 			'footer'=>true,
 		],
+		[/* CheckboxColumn */
+'class'=>'kartik\grid\CheckboxColumn',
+'headerOptions'=>[
+	'style'=>[
+		'text-align'=>'center',
+		'width'=>'20px',
+		'font-family'=>'tahoma',
+		'font-size'=>'8pt',
+		'background-color'=>'rgba(0, 95, 218, 0.3)',
+
+	]
+],
+'contentOptions'=>[
+	// 'readonly'=>true,
+	'style'=>[
+			'text-align'=>'center',
+			'width'=>'20px',
+			'font-family'=>'tahoma',
+			'font-size'=>'8pt',
+			'border-left'=>'0px',
+	]
+],
+'checkboxOptions' => [
+	'is'=>'ck-gv',
+	'class' => 'simple',
+	'style'=>[
+		'text-align'=>'left',
+		'width'=>'20px',
+		'font-family'=>'tahoma',
+		'font-size'=>'8pt',
+		'border-left'=>'0px',
+	],
+				],
+'rowSelectedClass' => GridView::TYPE_WARNING,
+'checkboxOptions' => function ($model, $key, $index, $column){
+		if(getPermissionEmp()->DEP_ID == 'DRC')
+		{
+			if($model->STATUS == 1)
+			{
+				return ['checked' => $model->KD_RO];
+			}else{
+				return ['value' => $model->KD_RO];
+			}
+		}else{
+			return ['value' => $model->KD_RO,'hidden'=>true];
+		}
+}
+],
 	];
 
 	$viewGrid= GridView::widget([
-		'id'=>'po-review-id',
+		'id'=>'poa-review-id',
 		'dataProvider'=> $dataProvider,
 		'showPageSummary' => true,
 		'columns' => $gridColumnsX,
@@ -678,7 +726,7 @@ $y=4;
 		'pjaxSettings'=>[
 		'options'=>[
 			'enablePushState'=>false,
-			'id'=>'ro-review-id',
+			'id'=>'poa-review-id',
 		   ],
 		],
 		/* 'panel' => [
@@ -741,13 +789,21 @@ $y=4;
 		return $content;
 	}
 
-	/*
-	 * SIGNATURE AUTH3 | APPROVED
-	 * Status Value Signature1 | PurchaseOrder
-	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
-	*/
-	function SignApproved($poHeader){
-		$title = Yii::t('app', 'Sign Hire');
+
+  /*
+   * SIGNATURE AUTH3 | APPROVED
+   * Status Value Signature1 | PurchaseOrder
+   * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
+   * if poheader STATUS equal 4 then title reject and title Sign Hire
+  */
+  function SignApproved($poHeader){
+    if($poHeader->STATUS == 4)
+    {
+      $title = Yii::t('app', 'Reject');
+    }else {
+      # code...
+      $title = Yii::t('app', 'Sign Hire');
+    }
 		$options = [ 'id'=>'po-auth3',
 					  'data-toggle'=>"modal",
 					  'data-target'=>"#po-auth3-sign",
@@ -987,10 +1043,11 @@ $y=4;
 						</th>
 						<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 							<?php
-							/*  athor : wawan ver 1.0
-									- jika tidak ada permission maka untuk tanda tangan yang akan approve hilang
-									- jika BTN_SIGN3 adalah 0 maka untuk tanda tangan yang akan approve hilang
-							*/
+							/*  author : wawan ver 1.0
+                  * jika tidak ada permission maka untuk tanda tangan yang akan approve hilang
+                  * jika BTN_SIGN3 adalah 0 maka untuk tanda tangan yang akan approve hilang
+									* if status po header equal 4 then  button name Reject
+              */
 							if(getPermission())
 							{
 								if(getPermission()->BTN_SIGN3 == 0)
@@ -999,8 +1056,8 @@ $y=4;
 									echo $ttd3;
 
 								}else{
-									$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : SignApproved($poHeader);
-									echo $ttd3;
+                  $ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : SignApproved($poHeader);
+                	echo $ttd3;
 								}
 							}else{
 								$ttd3 = '';
@@ -1236,6 +1293,63 @@ $y=4;
 			</div>";
 	Modal::end();
 
+	/* kd_po get params next usage action ck-aprove and ck-proses */
+	  $kd_po = Yii::$app->getRequest()->getQueryParam('kdpo');
+
+
+
+		/*
+		 * JS GRIDVIEW CheckboxColumn
+	   * if this checked action url: '/purchasing/purchase-order/ck-aprove,creation succesful reload ajax',
+	   * if this uncheked action url: '/purchasing/purchase-order/ck-proses,creation succesful reload ajax',
+		 * @author wawan
+	   * @since 1.1
+		*/
+
+		 $this->registerJs("
+				var target = $(this).attr('href');
+				$('#poa-review-id').on('change','input[type=checkbox]',function(){
+					  var roKode =$(this).val();
+						var poKode=\"".$kd_po."\";
+					 var keysSelect = $('#poa-review-id').yiiGridView('getSelectedRows');
+						if ($(this).is(':checked')){
+							$.ajax({
+		 					 url: '/purchasing/purchase-order/ck-aprove',
+		 					 //cache: true,
+		 					 type: 'POST',
+		 					 data:{keysSelect:keysSelect,kdRo:roKode,kdpo:poKode},
+		 					 dataType: 'json',
+							 success: function(response) {
+								if (response == true ){
+									  $.pjax.reload({container:'#poa-review-id'});
+								}
+								 else {
+
+								 }
+							 }
+		 					})
+						}else{
+	            $.ajax({
+	             url: '/purchasing/purchase-order/ck-proses',
+	             //cache: true,
+	             type: 'POST',
+	             data:{keysSelect:keysSelect,kdRo:roKode,kdpo:poKode},
+	             dataType: 'json',
+							 success: function(response) {
+								 if (response == true ){
+									 $.pjax.reload({container:'#poa-review-id'});
+								 }
+									else {
+										  $.pjax.reload({container:'#poa-review-id'});
+									}
+								}
+
+	            })
+					}
+					});
+
+		",$this::POS_READY);
+
 
 	/*
 	 * Action PO Detail
@@ -1253,7 +1367,7 @@ $y=4;
 					success: function(result) {
 						if (result == 1){
 							// Success
-							$.pjax.reload({container:'#po-review-id'});
+							$.pjax.reload({container:'#poa-review-id'});
 						} else {
 							// Fail
 						}
@@ -1273,7 +1387,7 @@ $y=4;
 					dataType: 'json',
 					success: function(result) {
 						if (result == 1){
-							$.pjax.reload({container:'#po-review-id'});
+							$.pjax.reload({container:'#poa-review-id'});
 						}
 					}
 				});
@@ -1290,7 +1404,7 @@ $y=4;
 					dataType: 'json',
 					success: function(result) {
 						if (result == 1){
-							$.pjax.reload({container:'#po-review-id'});
+							$.pjax.reload({container:'#poa-review-id'});
 						}
 					}
 				});
@@ -1307,7 +1421,7 @@ $y=4;
 					dataType: 'json',
 					success: function(result) {
 						if (result == 1){
-							$.pjax.reload({container:'#po-review-id'});
+							$.pjax.reload({container:'#poa-review-id'});
 						}
 					}
 				});
