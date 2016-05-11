@@ -133,8 +133,9 @@ class ScheduleGroupController extends Controller
         $group = $post['Customers']['CusT'];
         $CUST_KD = $post['Customers']['GruPCusT'];
         $model1 = Customers::find()->where(['CUST_KD'=>$CUST_KD])->one(); //update model
-        //query for select2 in schedule-group = form_scdl
-        $query = Yii::$app->db_esm->createCommand("SELECT * FROM `c0007` c7  WHERE  NOT EXISTS (SELECT SCDL_GROUP FROM `c0001` `c1` WHERE c1.SCDL_GROUP = c7.ID)")->queryAll();
+        /*query for select2 in schedule-group = form_scdl */
+        // $query = Yii::$app->db_esm->createCommand("SELECT * FROM `c0007` c7  WHERE  NOT EXISTS (SELECT SCDL_GROUP FROM `c0001` `c1` WHERE c1.SCDL_GROUP = c7.ID)")->queryAll();
+        $query = Schedulegroup::find()->all();
         $cari_group =  ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
 
         //query for select2 in schedule-group = form_scdl

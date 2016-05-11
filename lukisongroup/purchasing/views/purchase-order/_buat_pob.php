@@ -1,7 +1,6 @@
 <?php
 /* extensions*/
 use kartik\helpers\Html;
-//use yii\helpers\Html;
 use yii\bootstrap\Modal;
 use yii\widgets\ActiveForm;
 use kartik\detail\DetailView;
@@ -1535,7 +1534,7 @@ use lukisongroup\purchasing\models\pr\FilePo;
 	</div>
 </div>
 
-<!-- attach file_po 
+<!-- attach file_po
 <div  class="row">
   <div  class="col-md-3" style="font-family: tahoma ;font-size: 9pt;">
   </div>

@@ -668,10 +668,17 @@ $y=4;
 						</th>
 						<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 							<?php
-								$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :'';
-								//if ($poHeader->STATUS==101 OR $poHeader->STATUS==10){
-									echo $ttd3;
-								//}
+              /* @author : wawan
+                *if purchase order STATUS equal 4 then signature reject
+                *else purchase order STATUS equal 102 then signature approve
+              */
+              if($poHeader->STATUS == 4)
+              {
+                $ttd3 = "<h4> <b> Reject </b></h4>";
+              }else{
+                $ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG3_SVGBASE64.'></img>' :'';
+              }
+								echo $ttd3;
 							?>
 						</th>
 					</tr>

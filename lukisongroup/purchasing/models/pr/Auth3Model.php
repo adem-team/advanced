@@ -82,6 +82,8 @@ class Auth3Model extends Model
 	 * Check validation
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
+   * if purchaseoder header equal 4 then SIG3_SVGBASE64 equal null and SIG3_SVGBASE30 equal null
+   * if purchaseoder header equal 4 then purchaseoderstatus STATUS equal 4
 	*/
 	public function auth3_saved(){
 		if ($this->validate()) {
@@ -89,8 +91,15 @@ class Auth3Model extends Model
 			$poSignStt = Statuspo::find()->where(['KD_PO'=>$this->kdpo,'ID_USER'=>$this->getProfile()->EMP_ID])->one();
 				$profile=Yii::$app->getUserOpt->Profile_user();
 				$roHeader->STATUS = $this->status;
-				$roHeader->SIG3_SVGBASE64 = $profile->emp->SIGSVGBASE64;
-				$roHeader->SIG3_SVGBASE30 = $profile->emp->SIGSVGBASE30;
+        if($roHeader->STATUS == 4)
+        {
+          $roHeader->SIG3_SVGBASE64 = "";
+  				$roHeader->SIG3_SVGBASE30 = "";
+        }else{
+          $roHeader->SIG3_SVGBASE64 = $profile->emp->SIGSVGBASE64;
+          $roHeader->SIG3_SVGBASE30 = $profile->emp->SIGSVGBASE30;
+        }
+
 				$roHeader->SIG3_NM = $profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;
 				$roHeader->SIG3_TGL = date('Y-m-d');
 			if ($roHeader->save()) {
@@ -98,9 +107,12 @@ class Auth3Model extends Model
 						$poHeaderStt = new Statuspo;
 						$poHeaderStt->KD_PO = $this->kdpo;
 						$poHeaderStt->ID_USER = $this->getProfile()->EMP_ID;
-						//$poHeaderStt->TYPE
-						$poHeaderStt->STATUS = 102;
-            // $poHeaderStt->STATUS = 103;
+            if($roHeader->STATUS == 4)
+            {
+              $poHeaderStt->STATUS = 4;
+            }else{
+              $poHeaderStt->STATUS = 102;
+            }
 						$poHeaderStt->UPDATE_AT = date('Y-m-d H:m:s');
 						if ($poHeaderStt->save()) {
 

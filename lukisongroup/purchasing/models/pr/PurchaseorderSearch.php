@@ -122,7 +122,7 @@ class PurchaseorderSearch extends Purchaseorder
           {
       		$profile=Yii::$app->getUserOpt->Profile_user();
 
-            $query = Purchaseorder::find()->where('p0001.STATUS = 102')->orderBy(['CREATE_AT'=> SORT_DESC]);
+            $query = Purchaseorder::find()->where('p0001.STATUS = 102 OR p0001.STATUS = 4')->orderBy(['CREATE_AT'=> SORT_DESC]);
         		$query->joinWith(['suplier' => function ($q) {
                     $q->where('s1000.NM_SUPPLIER LIKE "%' . $this->namasuplier . '%"');
                 }]);

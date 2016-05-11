@@ -275,7 +275,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
 			}
-			elseif(getPermissionEmp()->DEP_ID == 'DRC' && getPermission()->BTN_REVIEW==1 && $model->STATUS <>102  || getPermissionEmp()->DEP_ID == 'GM' && getPermission()->BTN_REVIEW==1 && $model->STATUS <>102  )
+			elseif(getPermissionEmp()->DEP_ID == 'DRC' && getPermission()->BTN_REVIEW==1 && $model->STATUS <>102 || getPermissionEmp()->DEP_ID == 'GM' && getPermission()->BTN_REVIEW==1 && $model->STATUS <>102)
 			{
 				$title = Yii::t('app','Review');
 				$options = [
@@ -616,7 +616,7 @@ $gridColumnshistory = [
 	[
 		'class'=>'kartik\grid\ActionColumn',
 		'dropdown' => true,
-		'template' => '{view}',
+		'template' => '{view}{review}',
 		'dropdownOptions'=>['class'=>'pull-right dropup'],
 		'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 		'buttons' => [
@@ -624,6 +624,13 @@ $gridColumnshistory = [
 			'view' => function ($url, $model) {
 							return tombolView($url, $model);
 						},
+      /* review PO | Permissian DRC AND STATUS equal 4 */
+      'review' => function($url, $model){
+          if(getPermissionEmp()->DEP_ID == 'DRC' && $model->STATUS == 4){
+            return tombolReview($url, $model);
+          }else{
+          }
+        }
 		],
 		'headerOptions'=>[
 			'style'=>[

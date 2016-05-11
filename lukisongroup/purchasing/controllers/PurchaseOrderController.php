@@ -829,6 +829,65 @@ class PurchaseOrderController extends Controller
         ]);
     }
 
+/*
+   *action checkbox approve || review
+   *if keysSelect not equal zero then foreach keysSelect
+   *if save succesful,return true
+   *@author : wawan;
+*/
+    public function actionCkAprove()
+    {
+      	if (Yii::$app->request->isAjax) {
+          Yii::$app->response->format = Response::FORMAT_JSON;
+          $request= Yii::$app->request;
+          $kdRo=$request->post('kdRo');
+          $dataKeySelect=$request->post('keysSelect');
+            if ($dataKeySelect!=0){
+            foreach ($dataKeySelect as $id) {
+              # code...
+              $items = Purchasedetail::find()->where(['ID'=>$id])->one();
+              $items->STATUS = 1;
+              $items->save();
+          }
+        }else{
+
+        }
+        return true;
+      }
+    }
+
+    /*
+      *action uncheck checkbox proses || review
+      *if keysSelect equal Null then updateAll
+      *if keysSelect not equal zero then foreach keysSelect
+      *if save succesful,return true
+      *@author : wawan;
+    */
+    public function actionCkProses()
+    {
+        if (Yii::$app->request->isAjax) {
+          Yii::$app->response->format = Response::FORMAT_JSON;
+          $request= Yii::$app->request;
+          $kdRo=$request->post('kdRo');
+          $kdpo=$request->post('kdpo');
+          $dataKeySelect=$request->post('keysSelect');
+          if($dataKeySelect == "")
+          {
+            $poproses = Purchasedetail::updateAll(['STATUS' => 0], ['KD_PO'=>$kdpo]);
+          }else{
+            if ($dataKeySelect!=0){
+            foreach ($dataKeySelect as $id) {
+              # code...
+              $items = Purchasedetail::find()->where(['ID'=>$id])->one();
+              $items->STATUS = 0;
+              $items->save();
+            }
+          }
+          }
+        }
+        return true;
+    }
+
 	/*
 	 * Action ChekBook Grid RO to PO | _detail
 	 * @author ptrnov <piter@lukison.com>
