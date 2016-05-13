@@ -382,7 +382,6 @@ class EmployeController extends Controller
 		if (!$model->load(Yii::$app->request->post())) {
 			return $this->renderAjax('_form_edit_identity', [
 					'model' => $model,
-					// 'aryCorpID'=>$,
 				]);
 		}else{
 
@@ -391,7 +390,6 @@ class EmployeController extends Controller
 				return Json::encode(\yii\widgets\ActiveForm::validate($model));
 			}else{
 				if ($model->load(Yii::$app->request->post())) {
-					//$model->save();
 					$image = $model->uploadImage();
 					$data_base64 = $image != ''? $this->saveimage(file_get_contents($image->tempName)): ''; //call function saveimage using base64
 					$model->IMG_BASE64 = $data_base64;
@@ -494,6 +492,8 @@ class EmployeController extends Controller
 				if ($model->load(Yii::$app->request->post())) {
 					//$model->save();
 					$image = $model->uploadImage();
+          $date = \Yii::$app->formatter->asDate($model->EMP_RESIGN_DATE,'yyyy-mm-dd');
+          $model->EMP_RESIGN_DATE = $date;
 					if ($model->save()) {
 						// upload only if valid uploaded file instance found
 						if ($image !== false) {
