@@ -267,7 +267,7 @@ use kartik\tabs\TabsX;
 			<?php
 				echo Html::panel(
 					[
-						'heading' => "BERITA ACARA ",
+						'heading' => "",
 						'body'=>$gv_Chat,
 					],
 					Html::TYPE_INFO
