@@ -19,12 +19,12 @@ $user = $model->CREATED_BY;
 /* cari employe*/
 $queryCariEmploye = employe::find()->where(['EMP_ID'=>$user])->andwhere('STATUS<>3')->one();
 
-$emp_img = $queryCariEmploye->EMP_IMG;
-if(count($queryCariEmploye) == 0 || $queryCariEmploye =='')
+$emp_img = $queryCariEmploye->IMG_BASE64;
+if(count($queryCariEmploye) == 0 || $emp_img =='')
 {
   $foto_profile = '/upload/hrd/Employee/default.jpg';
 }else{
-  $foto_profile = '/upload/hrd/Employee/'.$emp_img;
+  $foto_profile = 'data:image/jpg;base64,'.$emp_img;
 }
 ?>
 
@@ -101,7 +101,7 @@ if(count($queryCariEmploye) == 0 || $queryCariEmploye =='')
 		if($foto == ''){
 			$profile = '/upload/hrd/Employee/default.jpg';
 		}else{
-			$profile = '/upload/hrd/Employee/'.$foto.'';
+			$profile = 'data:image/jpg;base64,'.$foto.'';
 		}
 
 		if ($x==0){

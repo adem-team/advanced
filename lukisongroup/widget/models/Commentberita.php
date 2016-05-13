@@ -42,8 +42,8 @@ class Commentberita extends \yii\db\ActiveRecord
         return [
             [['CHAT'], 'required'],
             [['ID_USER', 'STATUS'], 'integer'],
-            [['CHAT','EMP_IMG'], 'string'],
-            [['CREATED_AT', 'UPDATED_AT'], 'safe'],
+            [['CHAT'], 'string'],
+            [['CREATED_AT', 'UPDATED_AT','EMP_IMG'], 'safe'],
             [['KD_BERITA'], 'string', 'max' => 20],
             [['CREATED_BY'], 'string', 'max' => 100],
         ];

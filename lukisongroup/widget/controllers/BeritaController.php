@@ -219,14 +219,14 @@ class BeritaController extends Controller
 
         /* componen user */
         $profile = Yii::$app->getUserOpt->profile_user()->emp;
-        $emp_img = $profile->EMP_IMG;
+        $emp_img = $profile->IMG_BASE64;
 
         /* foto profile */
-        if($emp_img == '')
+        if(count($emp_img) == 0)
         {
          $foto_profile = Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/default.jpg', ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
         }else{
-         $foto_profile = Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/'.$emp_img, ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
+         $foto_profile =Html::img('data:image/jpg;base64,'.$emp_img,['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
         }
 
         /* proses save */
