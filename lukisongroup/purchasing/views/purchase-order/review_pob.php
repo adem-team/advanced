@@ -145,7 +145,7 @@ $y=4;
 		return $content;
 	}
 
-  /* author : wawan
+  /* @author : wawan
    * STATUS Items
    * 1. NEW 	= 0 	| Create First items | jika di cancel maka status menjai 0 lagi atau new
    * 2. APPROVED	= 1 	| Item Approved
@@ -803,15 +803,17 @@ $y=4;
     if($poHeader->STATUS == 4)
     {
       $title = Yii::t('app', 'Reject');
+			$btn = 'btn btn-danger btn-xs';
     }else {
       # code...
       $title = Yii::t('app', 'Sign Hire');
+			$btn = 'btn btn-warning btn-xs';
     }
 
 		$options = [ 'id'=>'po-auth3',
 					  'data-toggle'=>"modal",
 					  'data-target'=>"#po-auth3-sign",
-					  'class'=>'btn btn-warning btn-xs',
+					  'class'=>$btn,
 					  'style'=>['width'=>'100px'],
 					  'title'=>'Detail'
 		];

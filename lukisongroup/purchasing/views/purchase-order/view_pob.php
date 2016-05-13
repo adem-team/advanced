@@ -1,10 +1,12 @@
 <?php
-//use yii\helpers\Html;
+
+/*extensions*/
 use kartik\helpers\Html;
 use yii\widgets\DetailView;
 use kartik\grid\GridView;
 use yii\helpers\Url;
 
+/* namespace models*/
 use lukisongroup\master\models\Suplier;
 use lukisongroup\master\models\Barangumum;
 use lukisongroup\master\models\Nmperusahaan;
@@ -22,9 +24,8 @@ $y=4;
 ?>
 
  <?php
+      /* array*/
         $sup = Suplier::find()->where(['KD_SUPPLIER'=>$poHeader->KD_SUPPLIER])->one();
-        //$pod = Purchasedetail::find()->where(['KD_PO'=>$poHeader->KD_PO])->all();
-
         $ship = Nmperusahaan::find()->where(['ID' => $poHeader->SHIPPING])->one();
         $bill = Nmperusahaan::find()->where(['ID' => $poHeader->BILLING])->one();
 

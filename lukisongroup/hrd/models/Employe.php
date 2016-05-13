@@ -21,7 +21,6 @@ class Employe extends \yii\db\ActiveRecord
 {
 	public $upload_file;
 	public $image;
-
 	public $vKarId;
 	public $vKarNm;
 	public $vCorpID;
@@ -52,7 +51,7 @@ class Employe extends \yii\db\ActiveRecord
 			[['DEP_ID','JOBGRADE_ID'], 'string', 'max' => 5],
 			[['DEP_SUB_ID'], 'string', 'max' => 6],
 			[['GF_ID','EMP_STS','SEQ_ID'], 'integer'],
-			[['EMP_JOIN_DATE','EMP_TGL_LAHIR','EMP_RESIGN_DATE'], 'safe'],
+			[['EMP_JOIN_DATE','EMP_TGL_LAHIR','EMP_RESIGN_DATE','IMG_BASE64'], 'safe'],
 			[['EMP_JOIN_DATE','EMP_TGL_LAHIR','EMP_RESIGN_DATE'], 'date','format' => 'yyyy-mm-dd'],
 			[['EMP_ALAMAT'],  'filter', 'filter' => function($value) {
                     return trim(htmlentities(strip_tags($value), ENT_QUOTES, 'UTF-8'));}],

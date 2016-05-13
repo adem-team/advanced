@@ -2,9 +2,9 @@
 	<div class="direct-chat-msg">
 		<div class="direct-chat-info clearfix">
 			<span class="direct-chat-name pull-left">
-				<?php //echo $nama;?>
+				<?php echo $nama;?>
 			</span>
-			<span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
+			<span class="direct-chat-timestamp pull-right"><?= $jamwaktu ?></span>
 			</div>
 			<img class="direct-chat-img" src=<?=$profile; ?> alt="message user image">
 			<div class="direct-chat-text">

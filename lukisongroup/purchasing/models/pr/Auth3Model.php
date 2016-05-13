@@ -99,7 +99,6 @@ class Auth3Model extends Model
           $roHeader->SIG3_SVGBASE64 = $profile->emp->SIGSVGBASE64;
           $roHeader->SIG3_SVGBASE30 = $profile->emp->SIGSVGBASE30;
         }
-
 				$roHeader->SIG3_NM = $profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;
 				$roHeader->SIG3_TGL = date('Y-m-d');
 			if ($roHeader->save()) {
