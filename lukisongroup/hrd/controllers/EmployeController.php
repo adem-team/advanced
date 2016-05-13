@@ -393,6 +393,8 @@ class EmployeController extends Controller
 				if ($model->load(Yii::$app->request->post())) {
 					//$model->save();
 					$image = $model->uploadImage();
+					$data_base64 = $image != ''? $this->saveimage(file_get_contents($image->tempName)): ''; //call function saveimage using base64
+					$model->IMG_BASE64 = $data_base64;
 					if ($model->save()) {
 						// upload only if valid uploaded file instance found
 						if ($image !== false) {
