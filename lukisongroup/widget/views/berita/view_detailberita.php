@@ -25,7 +25,7 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
   $foto_profile = '/upload/hrd/Employee/default.jpg';
 }else{
   $foto_profile = 'data:image/jpg;base64,'.$emp_img;
-}
+} 
 ?>
 
  <?php
@@ -97,11 +97,13 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
 	$x=0;
     foreach ($query as $key => $value) {
       # code...
-		$foto = $value['EMP_IMG'];
-		if($foto == ''){
+		
+		$queryEmp = employe::find()->where(['EMP_ID'=>$value['CREATED_BY']])->andwhere('STATUS<>3')->one();
+		$foto_detail = $queryEmp->IMG_BASE64;
+		if($foto_detail == ''){
 			$profile = '/upload/hrd/Employee/default.jpg';
 		}else{
-			$profile = 'data:image/jpg;base64,'.$foto.'';
+			$profile = 'data:image/jpg;charset=utf-8;base64,'.$foto_detail;
 		}
 
 		if ($x==0){
@@ -109,8 +111,8 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
 				'profile'=>$profile,
 				'nama'=>$nama,
 				'messageReply'=>$value['CHAT'],
-        'jamwaktu'=> date('Y-m-d h:i A', strtotime($value['CREATED_AT'])),
-        'nama'=>$nama
+				'jamwaktu'=> date('Y-m-d h:i A', strtotime($value['CREATED_AT'])),
+				'nama'=>$nama
 			]);
 			$x=1;
 		}else{
@@ -118,8 +120,8 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
 				'profile'=>$profile,
 				'nama'=>$nama,
 				'messageReply'=>$value['CHAT'],
-        'jamwaktu'=>date('Y-m-d h:i A', strtotime($value['CREATED_AT'])),
-        'nama'=>$nama
+				'jamwaktu'=>date('Y-m-d h:i A', strtotime($value['CREATED_AT'])),
+				'nama'=>$nama
 			]);
 			$x=0;
 		}
@@ -134,7 +136,7 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
 	]);
 	$viewBt=Html::mediaList([
 		   [
-			'heading' => "<div class='box-header with-border'>".$model->JUDUL."</div>",
+			//'heading' => "<div class='box-header with-border'>".$model->JUDUL."</div>",
 			//'body' => "<div class='box-footer box-comments'>".$model->ISI."</div><div class='box-footer box-comments'><div>".$btnreply." ".$btnclose."</div></div>",
 			'body' => $bodyHead,
 			'imgOptions'=>['width'=>"84px",'height'=>"84px",'class'=>'img-circle'], //setting image display,

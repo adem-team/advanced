@@ -60,12 +60,42 @@ use yii\helpers\Url;
 		return $content;
 	}
  ?>
-<div class='box-footer box-comments' style="margin-top:10px;font-family: tahoma ;font-size: 10pt;">
-	<?php
-		echo $model->ISI; 
-	?>
-</div>
-<div class='box box-primary box-footer ' style="margin-top:10px;font-family: tahoma ;font-size: 10pt;">
+<div class='' style="margin-top:40px;font-family: tahoma ;font-size: 10pt;">
+	<!-- HEADER JUDUL/ISI/ATTACH ptr.nov-->
+	<div class="box box-success direct-chat direct-chat-success">
+		 <!-- box-header -->
+		<div class="box-header with-border">
+			<h3 class="box-title"><?=$model->JUDUL?></h3>
+			<div class="box-tools pull-right">
+				<!--<span data-toggle="tooltip" title="3 New Messages" class="badge bg-green">3</span>-->
+				<button class="btn btn-box-tool" data-toggle="tooltip" title="show/hide" data-widget="collapse"><i class="fa fa-minus"></i></button>
+				<button class="btn btn-box-tool" data-toggle="tooltip" title="Attach" data-widget="chat-pane-toggle"><i class="fa fa-picture-o"></i></button>
+				<!-- <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>-->
+			</div>
+		</div><!-- /.box-header -->		
+		<div class="box-body">
+			<!-- Conversations are loaded here -->
+			<div class="direct-chat-messages">
+				<!-- Message. Default to the left -->
+				<?php
+					echo $model->ISI; 
+				?>
+				<!-- Message to the right -->                   
+			</div><!--/.direct-chat-messages-->
+			<!-- Contacts are loaded here -->
+			<div class="direct-chat-contacts">
+				<ul class="contacts-list">
+					<li>
+						<?php
+							echo "Data Attach";
+						?>
+					</li><!-- End Contact Item -->
+				</ul><!-- /.contatcts-list -->
+			</div><!-- /.direct-chat-pane -->		  
+		</div><!-- /.box-body -->               
+	</div><!--/.direct-chat -->
+	
+	<!-- REPLAY DETAIL ptr.nov-->
 	<div>
 		<?php
 			echo kembali().' '.$btnreply;
