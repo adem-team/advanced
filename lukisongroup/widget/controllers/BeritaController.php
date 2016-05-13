@@ -103,7 +103,9 @@ class BeritaController extends Controller
     {
       //componen
       $profile = Yii::$app->getUserOpt->profile_user()->emp;
+      $profile_login = Yii::$app->getUserOpt->profile_user();
       $id = $profile->EMP_ID;
+      $nama = $profile_login->username;
 
       $model = Berita::find()->where(['KD_BERITA' => $KD_BERITA])->one();
       $connection = Yii::$app->db_widget;
@@ -112,7 +114,8 @@ class BeritaController extends Controller
 
         return $this->render('view_detailberita', [
             'model' => $model,
-            'id'=>$id
+            'id'=>$id,
+            'nama'=>$nama
         ]);
     }
 

@@ -163,34 +163,21 @@ class PurchaseOrderController extends Controller
 	*/
     public function actionCreate($kdpo)
     {
+        /* search header ro using to send po || RequestorderSearch */
         $searchModel1 = new RequestorderSearch();
-
-        	// $q = Rodetail::find()->select('RQTY');
-          // $kd = Rodetail::find()->select('KD_RO');
-          // $ids = ArrayHelper::getColumn($q, 'KD_RO');
-          // $re = Purchasedetail::find()->
-          //                             ->where(['not in','QTY',$q])
-          //                             ->andWhere(['in','KD_RO',$kd])
-          //                             ->all();
-          // print_r($re);
-          // die();
-        // $query1 = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->asArray()->all();
-				// print_r(count($query1));
-        // die();
         $dataProviderRo = $searchModel1->cariHeaderRO_SendPO(Yii::$app->request->queryParams);
-        // $dataProviderRo = $searchModel1->cariHeaderRO_SendPO(Yii::$app->request->queryParams,$kdpo);
+
+        /* search header so using to send po || SalesorderSearch */
 		    $searchModel = new SalesorderSearch();
         $dataProviderSo = $searchModel->cariHeaderSO_SendPO(Yii::$app->request->queryParams);
 
+		    $poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
+		    $supplier = $poHeader->suplier;
+		    $bill = $poHeader->bill;
+		    $ship = $poHeader->ship;
+		    $employee= $poHeader->employe;
 
-
-		$poHeader = Purchaseorder::find()->where(['KD_PO'=>$kdpo])->one();
-		$supplier = $poHeader->suplier;
-		$bill = $poHeader->bill;
-		$ship = $poHeader->ship;
-		$employee= $poHeader->employe;
-
-    $poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->andWhere('STATUS <> 3')->all();
+        $poDetail = Purchasedetail::find()->where(['KD_PO'=>$kdpo])->andWhere('STATUS <> 3')->all();
 
 		$poDetailProvider = new ArrayDataProvider([
 			'key' => 'ID',//'key' => 'KD_PO',
@@ -343,7 +330,7 @@ class PurchaseOrderController extends Controller
     public function actionViewRo($kd)
     {
       $ro = new Requestorder();
-    $roHeader = Requestorder::find()->where(['KD_RO' => $kd])->one();
+      $roHeader = Requestorder::find()->where(['KD_RO' => $kd])->one();
     if(count($roHeader['KD_RO'])<>0){
       $detro = $roHeader->detro;
       $employ = $roHeader->employe;
@@ -413,10 +400,13 @@ class PurchaseOrderController extends Controller
     }
     }
 
-    /* convert base 64 author:wawan since 1.0 */
+    /*
+      *convert base 64 image
+      *@author:wawan since 1.0
+    */
     public function saveimage($base64)
     {
-      $base64 = str_replace('data:application/pdf;base64,', '', $base64);
+      $base64 = str_replace('data:image/jpg;base64,', '', $base64);
       $base64 = base64_encode($base64);
       $base64 = str_replace(' ', '+', $base64);
 
@@ -424,7 +414,7 @@ class PurchaseOrderController extends Controller
 
     }
 
-    /* render ajax file for upload po*/
+    /* render ajax file for upload po || attach_po_file */
     public function actionPoAttachFile($kdpo)
     {
           return $this->renderAjax('attach_po_file', [
@@ -443,12 +433,11 @@ class PurchaseOrderController extends Controller
     if (isset($_FILES[$fileName])) {
         $file = \yii\web\UploadedFile::getInstanceByName($fileName);
 
-        $data = $this->saveimage(file_get_contents( $file->tempName));
-           $model->KD_PO = $kdpo;
-           $model->IMG_BASE64 = $data;
+        $data = $this->saveimage(file_get_contents($file->tempName)); //call function saveimage using base64
+        $model->KD_PO = $kdpo;
+        $model->IMG_BASE64 = $data;
         if ($model->save()) {
             //Now save file data to database
-
             echo \yii\helpers\Json::encode($file);
         }
     }

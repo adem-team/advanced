@@ -27,7 +27,7 @@ use yii\helpers\Url;
 	}else{
 		$btnreply = berita_reply($model);
 	}
- 
+
 	function Add_close($model){
 		$title = Yii::t('app','');
 		$options = [ 'id'=>'berita-isi-id-close',
@@ -44,8 +44,8 @@ use yii\helpers\Url;
 		$btnclose = "";
 	}else{
 		$btnclose = Add_close($model);
-	} 
- 
+	}
+
 	function kembali(){
 		$title = Yii::t('app','');
 		$options = [ 'id'=>'berita-reply-id',
@@ -70,7 +70,7 @@ use yii\helpers\Url;
 		<?php
 			echo kembali().' '.$btnreply;
 		?>
-	</div>	
+	</div>
 	<div>
 		<?php
 			echo $btnclose;

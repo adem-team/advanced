@@ -72,7 +72,7 @@ if(count($queryCariEmploye) == 0 || $queryCariEmploye =='')
              'data-toggle'=>"modal",
              'data-target'=>"#berita-reply-id-join",
              'class'=>'btn btn-info btn-xs',
-             'title'=>'Reply' 
+             'title'=>'Reply'
      ];
      $icon = '<span class="fa fa-plus fa-lg"> Reply Discusion</span>';
      $label = $icon . ' ' . $title;
@@ -91,7 +91,7 @@ if(count($queryCariEmploye) == 0 || $queryCariEmploye =='')
 
 
     /* array commentar */
-    $query = Commentberita::find()->where(['KD_BERITA'=>$model->KD_BERITA])->asArray()->all();
+    $query = Commentberita::find()->where(['KD_BERITA'=>$model->KD_BERITA])->orderBy(['CREATED_AT'=>SORT_DESC])->asArray()->all();
     //$body = [];
     $body1 = [];
 	$x=0;
@@ -103,31 +103,35 @@ if(count($queryCariEmploye) == 0 || $queryCariEmploye =='')
 		}else{
 			$profile = '/upload/hrd/Employee/'.$foto.'';
 		}
-		
+
 		if ($x==0){
 			$a=$this->render('_message_left', [
 				'profile'=>$profile,
 				'nama'=>$nama,
-				'messageReply'=>$value['CHAT']
+				'messageReply'=>$value['CHAT'],
+        'jamwaktu'=> date('Y-m-d h:i A', strtotime($value['CREATED_AT'])),
+        'nama'=>$nama
 			]);
 			$x=1;
 		}else{
 			$a=$this->render('_message_right', [
 				'profile'=>$profile,
 				'nama'=>$nama,
-				'messageReply'=>$value['CHAT']
+				'messageReply'=>$value['CHAT'],
+        'jamwaktu'=>date('Y-m-d h:i A', strtotime($value['CREATED_AT'])),
+        'nama'=>$nama
 			]);
 			$x=0;
 		}
-		
-		$body .=$a;						
+
+		$body .=$a;
     }
 	$body1 [] = ['body'=>$body,'img' =>false];
 
 	/* HEADER CREATED*/
 	$bodyHead=$this->render('_view_detailberita_headline', [
 		'model' => $model,
-	]); 
+	]);
 	$viewBt=Html::mediaList([
 		   [
 			'heading' => "<div class='box-header with-border'>".$model->JUDUL."</div>",
@@ -140,12 +144,12 @@ if(count($queryCariEmploye) == 0 || $queryCariEmploye =='')
 					 // 'background-color'=>'rgba(0, 95, 218, 0.3)',
 					 // 'width'=>"90px",'height'=>"90px",'padding-top'=>'3px','padding-left'=>'3px',
 				 // ]
-			// ], 
+			// ],
 			'img' =>$foto_profile,
 			'items' =>$body1, //"<div class='box-footer box-comments'><div class='box-comment'>".$body."</div></div>",
 		   ],
-	]);		
-  
+	]);
+
 ?>
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
 	<div  class="row">
@@ -160,7 +164,7 @@ if(count($queryCariEmploye) == 0 || $queryCariEmploye =='')
 				);
 			?>
 		</div>
-	</div> 
+	</div>
 </div>
 
 

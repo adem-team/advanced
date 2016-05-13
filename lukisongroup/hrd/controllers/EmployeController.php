@@ -24,7 +24,7 @@ namespace lukisongroup\hrd\controllers;
 	use lukisongroup\hrd\models\EmployeSearch;	/* TABLE CLASS SEARCH */
 	use lukisongroup\hrd\models\Deptsub;
 	use lukisongroup\hrd\models\Jobgrademodul;
-		use lukisongroup\hrd\models\ProfileSalesSearch;
+	use lukisongroup\hrd\models\ProfileSalesSearch;
 
 
 /* VARIABLE SIDE MENU Author: -Eka- */
@@ -143,7 +143,7 @@ class EmployeController extends Controller
 		};
 
 		/*	variable content View Employe Author: -ptr.nov- */
-        $searchModel = new EmployeSearch($cari);
+    $searchModel = new EmployeSearch($cari);
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
 		/*	variable content View Additional Author: -ptr.nov- */
@@ -209,9 +209,9 @@ class EmployeController extends Controller
 			'searchModel' => $searchModel,
 			'dinamkkColumn1'=>$this->gvColumn1(),
 			'dinamkkColumn2'=>$this->gvColumn2(),
-            'dataProvider' => $dataProvider,
-            'searchModel1' => $searchModel1,
-            'dataProvider1' => $dataProvider1,
+      'dataProvider' => $dataProvider,
+      'searchModel1' => $searchModel1,
+      'dataProvider1' => $dataProvider1,
 			'aryCorpID'=>$this->aryCorpID(),
 			'aryDept'=>$this->aryDept(),
 			'aryDeptSub'=>$this->aryDeptSub(),
@@ -318,7 +318,22 @@ class EmployeController extends Controller
             ]);
         }
     }
-	*/
+
+		/*
+      *convert base 64 image
+      *@author:wawan since 1.0
+    */
+    public function saveimage($base64)
+    {
+      $base64 = str_replace('data:image/jpg;base64,', '', $base64);
+      $base64 = base64_encode($base64);
+      $base64 = str_replace(' ', '+', $base64);
+
+      return $base64;
+
+    }
+
+
     /**
      * ACTION CREATE note | $id=PrimaryKey -> TRIGER FROM VIEW  -ptr.nov-
      */
@@ -327,7 +342,9 @@ class EmployeController extends Controller
         $model = new Employe();
 
         if ($model->load(Yii::$app->request->post())){
-			$upload_file=$model->uploadImage();
+			$upload_file = $model->uploadImage();
+			$data_base64 = $upload_file != ''? $this->saveimage(file_get_contents($upload_file->tempName)): ''; //call function saveimage using base64
+			$model->IMG_BASE64 = $data_base64;
 			// var_dump($model->validate());
 			if($model->validate()){
 				if($model->save()) {
@@ -388,7 +405,9 @@ class EmployeController extends Controller
 			}
 		}
 	}
-// edit-titel
+
+
+/* edit-titel */
 	public function actionEditTitel($id){
         $model = $this->findModel($id);
 				$datacorp =  ArrayHelper::map(Corp::find()->orderBy('SORT')->asArray()->all(), 'CORP_ID','CORP_NM');
@@ -430,12 +449,9 @@ class EmployeController extends Controller
 
 	public function actionEditProfile($id){
 				$model = $this->findModel($id);
-
-
 		if (!$model->load(Yii::$app->request->post())) {
 			return $this->renderAjax('_form_profile', [
 					'model' => $model,
-
 				]);
 		}else{
 
@@ -444,7 +460,6 @@ class EmployeController extends Controller
 				return Json::encode(\yii\widgets\ActiveForm::validate($model));
 			}else{
 				if ($model->load(Yii::$app->request->post())) {
-					//$model->save();
 					$image = $model->uploadImage();
 					if ($model->save()) {
 						// upload only if valid uploaded file instance found
@@ -513,9 +528,9 @@ class EmployeController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-		$model->STATUS = 3;
-		$model->UPDATED_BY = Yii::$app->user->identity->username;
-		$model->save();
+				$model->STATUS = 3;
+				$model->UPDATED_BY = Yii::$app->user->identity->username;
+				$model->save();
 
         return $this->redirect(['index']);
     }

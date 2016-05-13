@@ -788,14 +788,16 @@ $y=4;
     if($poHeader->STATUS == 4)
     {
       $title = Yii::t('app', 'Reject');
+      	$btn = 'btn btn-danger btn-xs';
     }else {
       # code...
       $title = Yii::t('app', 'Sign Hire');
+      $btn = 'btn btn-warning btn-xs';
     }
 		$options = [ 'id'=>'po-auth3',
 					  'data-toggle'=>"modal",
 					  'data-target'=>"#po-auth3-sign",
-					  'class'=>'btn btn-warning btn-xs',
+					  'class'=>$btn,
 					  'style'=>['width'=>'100px'],
 					  'title'=>'Detail'
 		];
