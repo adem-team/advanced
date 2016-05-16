@@ -1392,7 +1392,7 @@ pre code {
 }
 
 .pre-scrollableUser {
-  max-height: 300px;
+  max-height: 400px;
   overflow-y: scroll;
 }
 
@@ -1402,7 +1402,7 @@ pre code {
 }
 
 .pre-scrollableChatBase {
-  max-height: 370px;
+  max-height: 470px;
   overflow-y: scroll;
 }
 

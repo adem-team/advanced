@@ -65,26 +65,31 @@ class ChatController extends Controller
 	
     public function actionIndex()
     {
-        $searchmodel1 = new ChatroomSearch();
-        $dataprovider1 = $searchmodel1->search(Yii::$app->request->queryParams);
-        $dataprovider1->pagination->pageSize=100;
-         
-        $searchModel1 = new ChatSearch();
-        $dataProvider1 = $searchModel1->searchonline(Yii::$app->request->queryParams);
-        $dataProvider1->pagination->pageSize=100;
-        
-        $searchModel = new ChatSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->pagination->pageSize=100;
+		/*MODEL CHAT MESSAGE*/
+        $searchModelMsg = new ChatSearch();
+        $dataProviderMsg = $searchModelMsg->search(Yii::$app->request->queryParams);
+        $dataProviderMsg->pagination->pageSize=100;		
+		/*MODEL CHAT GROUP*/
+        $searchmodelGrp = new ChatroomSearch();
+        $dataproviderGrp = $searchmodelGrp->search(Yii::$app->request->queryParams);
+        $dataproviderGrp->pagination->pageSize=100;
+        /*MODEL CHAT USER*/
+        $searchModelUser = new ChatSearch();
+        $dataProviderUser = $searchModelUser->searchonline(Yii::$app->request->queryParams);
+        $dataProviderUser->pagination->pageSize=100;        
        
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'searchmodel1' => $searchmodel1,
-            'dataprovider1' => $dataprovider1,
-            'searchModel1' => $searchModel1,
-            'dataProvider1' => $dataProvider1,
+			/*RENDER CHAT MESSAGE*/
+            'searchModelMsg' => $searchModelMsg,
+            'dataProviderMsg' => $dataProviderMsg,
+			/*RENDER CHAT GROUP*/
+            'searchmodelGrp' => $searchmodelGrp,
+            'dataproviderGrp' => $dataproviderGrp,
+			/*RENDER CHAT USER*/
+            'searchModelUser' => $searchModelUser,
+            'dataProviderUser' => $dataProviderUser,
+			/*MENU DEFAULT*/
 			'ctrl_chat'=>'mdefault',
         ]);
     }

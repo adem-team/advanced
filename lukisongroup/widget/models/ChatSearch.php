@@ -50,6 +50,7 @@ class ChatSearch extends Chat
 		// die();
 		
 		$query = Chat::find()->innerJoinWith('chat', false)
+							 //->JoinWith('employee',true,'LEFT JOIN')
 											->Where(['GROUP'=>$id])
 											->orWhere('CREATED_BY = :CREATED_BY', [':CREATED_BY' => $id])
 											->orWhere('SORT = :SORT', [':SORT' => $data]);

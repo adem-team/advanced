@@ -40,7 +40,8 @@ class Chatroom extends \yii\db\ActiveRecord
             [['PARENT', 'SORT'], 'integer'],
             [['GROUP_NM'], 'required'],
             [['GROUP_ID'], 'string', 'max' => 5],
-            [['GROUP_NM'], 'string', 'max' => 30]
+            [['GROUP_NM'], 'string', 'max' => 30],
+			[['IMAGE64'],'safe']
         ];
     }
 
@@ -55,6 +56,7 @@ class Chatroom extends \yii\db\ActiveRecord
             'SORT' => 'Sort',
             'GROUP_ID' => 'Group  ID',
             'GROUP_NM' => 'Group  Nm',
+			'IMAGE64'=>'image'
         ];
     }
 }

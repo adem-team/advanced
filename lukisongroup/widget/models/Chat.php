@@ -3,6 +3,7 @@
 namespace lukisongroup\widget\models;
 
 use Yii;
+use lukisongroup\hrd\models\Employe;
 
 /**
  * This is the model class for table "sc0003a".
@@ -37,6 +38,11 @@ class Chat extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Chatroom::className(), ['GROUP_ID' => 'GROUP']);
     }
+	
+	// public function getEmployee()
+    // {
+        // return $this->hasOne(Employe::className(), ['EMP_ID' => 'CREATED_BY']);
+    // }
 
     /**
      * @inheritdoc
