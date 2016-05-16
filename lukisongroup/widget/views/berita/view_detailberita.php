@@ -17,6 +17,10 @@ use dosamigos\gallery\Gallery;
 
 /* HEADER foto profile */
 $user = $model->CREATED_BY;
+
+
+
+
 /* HEADER cari employe*/
 $queryCariEmploye = employe::find()->where(['EMP_ID'=>$user])->andwhere('STATUS<>3')->one();
 
@@ -26,7 +30,7 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
   $foto_profile = '/upload/hrd/Employee/default.jpg';
 }else{
   $foto_profile = 'data:image/jpg;base64,'.$emp_img;
-} 
+}
 
 	//$queryAttachHeader = BeritaImage::find()->where(['ID_USER'=>$user])->andwhere(['CREATED_BY'=>$user])->All();
 	// $aryProviderAttachHeader= new ArrayDataProvider([
@@ -34,92 +38,101 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
 		// 'allModels'=>queryAttachHeader,
 		  // 'pagination' => [
 			// 'pageSize' =>50,
-		// ] 
-	// ]);	
+		// ]
+	// ]);
 	//$aryPrvData=$aryProviderAttachHeader->getModels[0];
 	//print_r($aryPrvData);
-	
+
 	$items = [];
-		$attach_file = BeritaImage::find()->where(['ID_USER'=>$user])->andwhere(['CREATED_BY'=>$user])->All();
-		$aryFieldHeader[]=ArrayHelper::getColumn($attach_file,'ATTACH64');
-		$no=0;
-		foreach ($attach_file as $key => $value) {
-			$aryFieldHeaderX[]=[
-				'attribute'=>$key,
-				'format'=>'raw', 
-				'label'=>'',
-				'value'=>function($model){				
-					$base64 ='data:image/jpg;charset=utf-8;base64,'.$model[0]; //?????
-					return Html::img($base64,['width'=>'100','height'=>'60','class'=>'img-circle']);
-				 },  
-				//'format'=>['image',['width'=>'100','height'=>'120']],
-				/* 'value'=>function($model){				
-					$base64 ='data:image/jpg;charset=utf-8;base64,'.$model['ATTACH64'];
-					//return Html::img($base64,['width'=>'100','height'=>'60','class'=>'img-circle']);
-					return $model['ATTACH64']!=''?Html::img($base64,['width'=>'140','height'=>'140']):Html::img(Yii::$app->urlManager->baseUrl.'/df.jpg',['width'=>'140','height'=>'140']);
-				}, */
-				
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						'width'=>'10px',
-						'height'=>'10px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-						'background-color'=>'black',
-						'border'=>'0px',
-					]
-				],
-			];			
-			$no=$no+1;
-		}
-		
-		
-		
-		
-		
-			foreach ($attach_file as $key => $value) {
-			  # code...
-				$items1[] = [
-							'src'=>'data:image/pdf;base64,'.$value['ATTACH64'],
-							'imageOptions'=>['width'=>"120px",'height'=>"120px",'class'=>'img-rounded'], //setting image display
-							'Options'=>['class'=>'crousel slide'],
-							'showControls'=>false
-					];
-				$items2[] = [
-						'src'=>'data:image/pdf;base64,'.$value['ATTACH64'],
-						'imageOptions'=>['id'=>'img-header-galery','width'=>"120px",'height'=>"120px",'class'=>'img-rounded'], //setting image display
-						'showControls'=>false
-					];
-					
-				//if($value['ATTACH64']!=''){
-					$aryFieldHeader1[]=
-							/* 'clm'.$key=>[
-								'id'=>$value['ID'],
-								'nilai'=>$value['ATTACH64'],		
-							] */
-							//'id'=>$value['ID'],
-							['clm'.$key.'=>'.$value['ATTACH64'],];	
-				//}
-					
-					
-					
-			}
-			
-			
-			
-		$itemHeaderAttach= Gallery::widget([
-						'id'=>'header-galery',
-						'items' =>  $items1,
-						'showControls'=>false,
-						
-		]);
-	
-		$itemDetailAttach= Gallery::widget([
-						'id'=>'header-detail1',
-						'items' => $items2,					
-						
-		]);
+		// $attach_file = BeritaImage::find()->where(['ID_USER'=>$user])->andwhere(['CREATED_BY'=>$user])->All();
+
+		// $aryFieldHeader[]=ArrayHelper::getColumn($attach_file,'ATTACH64');
+		// $no=0;
+		// foreach ($attach_file as $key => $value) {
+		// 	$aryFieldHeaderX[]=[
+		// 		'attribute'=>$key,
+		// 		'format'=>'raw',
+		// 		'label'=>'',
+		// 		'value'=>function($model){
+		// 			$base64 ='data:image/jpg;charset=utf-8;base64,'.$model[0]; //?????
+		// 			return Html::img($base64,['width'=>'100','height'=>'60','class'=>'img-circle']);
+		// 		 },
+		// 		//'format'=>['image',['width'=>'100','height'=>'120']],
+		// 		/* 'value'=>function($model){
+		// 			$base64 ='data:image/jpg;charset=utf-8;base64,'.$model['ATTACH64'];
+		// 			//return Html::img($base64,['width'=>'100','height'=>'60','class'=>'img-circle']);
+		// 			return $model['ATTACH64']!=''?Html::img($base64,['width'=>'140','height'=>'140']):Html::img(Yii::$app->urlManager->baseUrl.'/df.jpg',['width'=>'140','height'=>'140']);
+		// 		}, */
+    //
+		// 		'contentOptions'=>[
+		// 			'style'=>[
+		// 				'text-align'=>'center',
+		// 				'width'=>'10px',
+		// 				'height'=>'10px',
+		// 				'font-family'=>'tahoma, arial, sans-serif',
+		// 				'font-size'=>'9pt',
+		// 				'background-color'=>'black',
+		// 				'border'=>'0px',
+		// 			]
+		// 		],
+		// 	];
+		// 	$no=$no+1;
+		// }
+
+
+
+
+
+
+
+
+
+if(count($attach_file)== 0)
+{
+  for($a = 0; $a < 2; $a++)
+  {
+  $items[] = ['src'=>'/upload/barang/df.jpg',
+  'imageOptions'=>['width'=>"150px"]
+  ];
+  }
+}else{
+  foreach ($attach_file as $key => $value) {
+   # code...
+   $items1[] = [
+         'src'=>'data:image/pdf;base64,'.$value['ATTACH64'],
+         'imageOptions'=>['width'=>"120px",'height'=>"120px",'class'=>'img-rounded'], //setting image display
+         // 'Options'=>['id'=>$value['ID']],
+         // 'showControls'=>false
+     ];
+
+  }
+}
+
+      # code...
+
+
+     $itemHeaderAttach= Gallery::widget([
+            'id'=>'headergalery',
+            'items' =>$items1,
+             // 'options' => [
+             //   'id' =>$model->ID
+             // ],
+            'showControls'=>true,
+
+    ]);
+
+
+
+
+
+
+
+
+		// $itemDetailAttach= Gallery::widget([
+		// 				'id'=>'header-detail1',
+		// 				'items' => $items2,
+    //
+		// ]);
 
 ?>
 
@@ -192,7 +205,7 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
 	$x=0;
     foreach ($query as $key => $value) {
       # code...
-		
+
 		$queryEmp = employe::find()->where(['EMP_ID'=>$value['CREATED_BY']])->andwhere('STATUS<>3')->one();
 		$foto_detail = $queryEmp->IMG_BASE64;
 		if($foto_detail == ''){
@@ -241,15 +254,15 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
     }
 	$body1 [] = ['body'=>$body,'img' =>false];
 
-	
+
 	$dataProviderImageHeader= new ArrayDataProvider([
 				//'key' => 'id',
 				'allModels'=>$aryFieldHeader,
 				'pagination' => [
 					'pageSize' => 5,
 					]
-			]);	
-	
+			]);
+
 	/* HEADER CREATED*/
 	$bodyHead=$this->render('_view_detailberita_headline', [
 		'model' => $model,
@@ -257,7 +270,7 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
 		'itemDetailAttach'=>$itemDetailAttach,
 		'dataProviderImageHeader'=>$dataProviderImageHeader,
 		'aryFieldHeaderX'=>$aryFieldHeaderX,
-		'items'=>$items,
+		// 'items'=>$items,
 	]);
 	$viewBt=Html::mediaList([
 		   [
@@ -293,6 +306,76 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
 		</div>
 	</div>
 </div>
+
+<?php
+// $this->registerJs("
+// $('#{$model->ID}').on('click', function (event) {
+//         var val = $('').val();
+//         alert(val);
+//         $('#modal').modal('show')
+//   }); ",$this::POS_READY);
+//  ?>
+
+
+ <!-- <div class="modal fade" id="modal" role="dialog">
+    <div class="modal-dialog">
+      <! Modal content-->
+      <!-- <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body"> -->
+          <?php
+          //     $kd_berita =  Yii::$app->getRequest()->getQueryParam('KD_BERITA');
+          //     $file_upload = BeritaImage::find()->where(['KD_BERITA'=>$kd_berita])->all();
+          // foreach ($file_upload as $key => $value) { -->
+            # code...
+            // $items_attach[] = [
+            //       'src'=>'data:image/pdf;base64,'.$value['ATTACH64'],
+            //       'imageOptions'=>['width'=>"120px",'height'=>"120px",'class'=>'img-rounded'], //setting image display
+            //       // 'Options'=>['class'=>'crousel slide'],
+            //       // 'showControls'=>false
+            //   ];
+
+
+          //   //if($value['ATTACH64']!=''){
+          //     $aryFieldHeader1[]=
+          //         /* 'clm'.$key=>[
+          //           'id'=>$value['ID'],
+          //           'nilai'=>$value['ATTACH64'],
+          //         ] */
+          //         //'id'=>$value['ID'],
+          //         ['clm'.$key.'=>'.$value['ATTACH64'],];
+          //   //}
+          //
+          //
+          //
+          // }
+          //
+          // echo $itemHeaderfile= Gallery::widget([
+      		// 				'id'=>'header-galery',
+      		// 				'items' =>$items_attach,
+          //         // 'options' => [
+          //         //   'id' =>$model->ID
+          //         // ],
+      		// 				// 'showControls'=>false,
+          //
+      		// ]);
+
+           ?>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
 
 
 <?php
@@ -346,12 +429,12 @@ Modal::begin([
 Modal::end();
 
 
-$this->registerJs("
-	// dosamigos.gallery = (function($){
-		// var options = {
-			// container: document.getElementById('blueimp-gallery');
-		// };
-		
-	// }
-",$this::POS_READY);
+// $this->registerJs("
+// 	// dosamigos.gallery = (function($){
+// 		// var options = {
+// 			// container: document.getElementById('blueimp-gallery');
+// 		// };
+//
+// 	// }
+// ",$this::POS_READY);
 ?>

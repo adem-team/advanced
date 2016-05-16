@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 use kartik\widgets\DepDrop;
 use kartik\widgets\Select2;
 use yii\helpers\Url;
+use kartik\widgets\FileInput;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\widget\models\Berita */
@@ -39,6 +40,19 @@ use yii\helpers\Url;
           <?=  $form->field($model, 'USER_CC')->widget(Select2::classname(),['data' =>$dataemploye,
           'options' => ['placeholder' => 'Select ...','multiple'=>true],]) ?>
 
+          <?php echo \kato\DropZone::widget([
+           'options' => [
+               'maxFilesize' => '2',
+               'acceptedFiles'=>'image/*,application/pdf',
+               'url'=>'/widget/berita/upload-berita-acara'
+           ],
+           'clientEvents' => [
+               'complete' => "function(file){console.log(file)}",
+               'removedfile' => "function(file){alert(file.name + ' is removed')}"
+           ],
+       ]);
+     ?>
+
          <!-- $form->field($model, 'USER_CC')->widget(DepDrop::classname(), [
            'options' => ['placeholder' => 'Select ...'],
            'type' => DepDrop::TYPE_SELECT2,
@@ -49,7 +63,7 @@ use yii\helpers\Url;
                 'loadingText' => 'Loading ...',
         ]
         ]) ?> -->
-  
+
 
       </div>
       </div>

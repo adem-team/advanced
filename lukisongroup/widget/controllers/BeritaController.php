@@ -14,6 +14,7 @@ use yii\helpers\Html;
 
 /* namespace models */
 use lukisongroup\widget\models\Berita;
+use lukisongroup\widget\models\BeritaImage;
 use lukisongroup\widget\models\BeritaNotify;
 use lukisongroup\widget\models\Commentberita;
 use lukisongroup\widget\models\BeritaSearch;
@@ -116,6 +117,46 @@ class BeritaController extends Controller
         ]);
     }
 
+    /*
+      *convert base 64 image
+      *@author:wawan since 1.0
+    */
+    public function saveimage($base64)
+    {
+      $base64 = str_replace('data:image/jpg;base64,', '', $base64);
+      $base64 = base64_encode($base64);
+      $base64 = str_replace(' ', '+', $base64);
+
+      return $base64;
+
+    }
+
+    /* upload ajax using dropzone js author : wawan */
+        public function actionUploadBeritaAcara()
+    {
+        $fileName = 'file';
+        $model = new beritaimage();
+
+        if (isset($_FILES[$fileName])) {
+            $file = \yii\web\UploadedFile::getInstanceByName($fileName);
+
+            //componen
+            $profile = Yii::$app->getUserOpt->profile_user()->emp;
+            $id = $profile->EMP_ID;
+
+            $data = $this->saveimage(file_get_contents($file->tempName)); //call function saveimage using base64
+            $model->ID_USER = $id;
+            $model->CREATED_BY = $id;
+            $model->ATTACH64 = $data;
+            if ($model->save()) {
+                //Now save file data to database
+                echo \yii\helpers\Json::encode($file);
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Creates a new Berita model.
      * If creation is successful, the browser will be redirected to the 'detail-berita' page.
@@ -124,6 +165,9 @@ class BeritaController extends Controller
     public function actionCreate()
     {
         $model = new Berita();
+        /* image berita*/
+        $beritaimage = new BeritaImage();
+
         /* data departement using select 2 */
         $datadep = ArrayHelper::map(Dept::find()->where('DEP_STS <>3')->asArray()->all(), 'DEP_ID', 'DEP_NM');
 
@@ -164,8 +208,6 @@ class BeritaController extends Controller
           //componen
           $model->KD_CORP =  	Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
 	        $model->CREATED_BY = Yii::$app->user->identity->EMP_ID;
-          // print_r($model->USER_CC);
-          // die();
 
 
           if($model->save())
@@ -194,11 +236,21 @@ class BeritaController extends Controller
             return $this->renderAjax('create', [
                 'model' => $model,
                 'datadep'=>$datadep,
+                'beritaimage'=>$beritaimage,
                 'emp_img'=>$emp_img,
                 'foto_profile'=>$foto_profile,
                 'dataemploye'=>$dataemploye
             ]);
         }
+    }
+
+    /**
+     *  display image.
+     */
+    public function actionViewGallery($gallery)
+    {
+            return $this->renderAjax('view-gallery', [
+            ]);
     }
 
 

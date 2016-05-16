@@ -65,37 +65,37 @@ use kartik\grid\GridView;
 		$content = Html::a($label,$url, $options);
 		return $content;
 	}
-	
-	
-	
+
+
+
 	/*Image Header*/
-	$headerImage=GridView::widget([
-		'id'=>'img-header',
-        'dataProvider' => $dataProviderImageHeader,
-		//'filterModel' => $searchModelImage,
-        'columns' => $aryFieldHeaderX,
-		'pjax'=>true,
-        'pjaxSettings'=>[
-            'options'=>[
-                'enablePushState'=>false,
-                'id'=>'img-header',                
-               ],
-        ],
-		'summary'=>false,
-		'toolbar'=>false,
-		'panel'=>false,
-		'hover'=>true, //cursor select
-		'responsive'=>true,
-		'responsiveWrap'=>true,
-		'bordered'=>false,
-		'striped'=>false,
-    ]);
-	
-	
-	
+	// $headerImage=GridView::widget([
+	// 	'id'=>'img-header',
+  //       'dataProvider' => $dataProviderImageHeader,
+	// 	//'filterModel' => $searchModelImage,
+  //       'columns' => $aryFieldHeaderX,
+	// 	'pjax'=>true,
+  //       'pjaxSettings'=>[
+  //           'options'=>[
+  //               'enablePushState'=>false,
+  //               'id'=>'img-header',
+  //              ],
+  //       ],
+	// 	'summary'=>false,
+	// 	'toolbar'=>false,
+	// 	'panel'=>false,
+	// 	'hover'=>true, //cursor select
+	// 	'responsive'=>true,
+	// 	'responsiveWrap'=>true,
+	// 	'bordered'=>false,
+	// 	'striped'=>false,
+  //   ]);
+
+
+
  ?>
 <head>
-	<style type="text/css">		
+	<style type="text/css">
 		.blueimp-gallery > .slides > .slide > .text-content {
 			overflow: auto;
 			margin: 60px auto;
@@ -111,7 +111,7 @@ use kartik\grid\GridView;
 		  border-width: 6px;
 		  margin-top: -6px;
 		}
-	</style>		
+	</style>
 </head>
 <div class='' style="margin-top:40px;font-family: tahoma ;font-size: 10pt;">
 	<!-- HEADER JUDUL/ISI/ATTACH ptr.nov-->
@@ -125,28 +125,29 @@ use kartik\grid\GridView;
 				<button class="btn btn-box-tool" data-toggle="tooltip" title="Attach" data-widget="chat-pane-toggle"><i class="fa fa-picture-o"></i></button>
 				<!-- <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>-->
 			</div>
-		</div><!-- /.box-header -->		
+		</div><!-- /.box-header -->
 		<div class="box-body">
 			<!-- Conversations are loaded here -->
 			<div class="direct-chat-messages">
 				<!-- Message. Default to the left -->
 				<?php
-					echo $model->ISI; 
+					echo $model->ISI;
 				?>
-				<!-- Message to the right -->                   
+				<!-- Message to the right -->
 			</div><!--/.direct-chat-messages-->
 			<!-- Contacts are loaded here -->
 			<div class="direct-chat-contacts">
 				<ul class="contacts-list">
 					<li>
 						<?php
+
 							//echo $headerImage;
 							echo $itemHeaderAttach;
 						?>
 					</li><!-- End Contact Item -->
 				</ul><!-- /.contatcts-list -->
-			</div><!-- /.direct-chat-pane -->		  
-		</div><!-- /.box-body -->  
+			</div><!-- /.direct-chat-pane -->
+		</div><!-- /.box-body -->
 			<div>
 			<?php
 							//echo $itemHeaderAttach;
@@ -155,7 +156,7 @@ use kartik\grid\GridView;
 			<div>
 				<?php
 							//echo $itemDetailAttach;
-							
+
 						// echo Html::panel(
 							// [
 								// 'id'=>'ad',
@@ -167,7 +168,7 @@ use kartik\grid\GridView;
 					?>
 			</div>
 	</div><!--/.direct-chat -->
-	
+
 	<!-- REPLAY DETAIL ptr.nov-->
 	<div>
 		<?php

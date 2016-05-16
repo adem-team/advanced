@@ -15,7 +15,8 @@ use yii\helpers\Html;
         'datadep'=> $datadep,
         'emp_img'=>$emp_img,
         'foto_profile'=>$foto_profile,
-        'dataemploye'=>$dataemploye
+        'dataemploye'=>$dataemploye,
+         'beritaimage'=>$beritaimage
     ]) ?>
 
 </div>
