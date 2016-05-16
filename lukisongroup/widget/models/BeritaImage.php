@@ -41,7 +41,7 @@ class BeritaImage extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['KD_BERITA', 'ID_USER'], 'required'],
+            // [['KD_BERITA', 'ID_USER'], 'required'],
             [['ATTACH64'], 'string'],
             [['TYPE', 'STATUS'], 'integer'],
             [['CREATED_AT', 'UPDATED_AT'], 'safe'],
