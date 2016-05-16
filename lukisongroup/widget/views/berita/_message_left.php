@@ -8,7 +8,10 @@
 			</div>
 			<img class="direct-chat-img" src=<?=$profile; ?> alt="message user image">
 			<div class="direct-chat-text">
-			<?php echo $messageReply; ?>
+			<?php 
+				echo $messageReply; 
+				//echo $lampiran;	
+			?>
 		</div>
 	</div>
 </div>

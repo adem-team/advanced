@@ -1,7 +1,13 @@
 <?php
 use kartik\helpers\Html;
 use yii\helpers\Url;
+use dosamigos\gallery\Gallery;
+use kartik\grid\GridView;
 
+
+
+	//print_r($dataProviderImageHeader);
+	//print_r($dataProviderImageHeader->getModels());
 	/*
 	 * @author : wawan
      * @since 1.0
@@ -59,7 +65,54 @@ use yii\helpers\Url;
 		$content = Html::a($label,$url, $options);
 		return $content;
 	}
+	
+	
+	
+	/*Image Header*/
+	$headerImage=GridView::widget([
+		'id'=>'img-header',
+        'dataProvider' => $dataProviderImageHeader,
+		//'filterModel' => $searchModelImage,
+        'columns' => $aryFieldHeaderX,
+		'pjax'=>true,
+        'pjaxSettings'=>[
+            'options'=>[
+                'enablePushState'=>false,
+                'id'=>'img-header',                
+               ],
+        ],
+		'summary'=>false,
+		'toolbar'=>false,
+		'panel'=>false,
+		'hover'=>true, //cursor select
+		'responsive'=>true,
+		'responsiveWrap'=>true,
+		'bordered'=>false,
+		'striped'=>false,
+    ]);
+	
+	
+	
  ?>
+<head>
+	<style type="text/css">		
+		.blueimp-gallery > .slides > .slide > .text-content {
+			overflow: auto;
+			margin: 60px auto;
+			padding: 0 60px;
+			max-width: 920px;
+			text-align: left;
+		}
+		.piter-chat1-text:after {
+		  border-width: 5px;
+		  margin-top: -5px;
+		}
+		.piter-chat1-text:before {
+		  border-width: 6px;
+		  margin-top: -6px;
+		}
+	</style>		
+</head>
 <div class='' style="margin-top:40px;font-family: tahoma ;font-size: 10pt;">
 	<!-- HEADER JUDUL/ISI/ATTACH ptr.nov-->
 	<div class="box box-success direct-chat direct-chat-success">
@@ -87,12 +140,32 @@ use yii\helpers\Url;
 				<ul class="contacts-list">
 					<li>
 						<?php
-							echo "Data Attach";
+							//echo $headerImage;
+							echo $itemHeaderAttach;
 						?>
 					</li><!-- End Contact Item -->
 				</ul><!-- /.contatcts-list -->
 			</div><!-- /.direct-chat-pane -->		  
-		</div><!-- /.box-body -->               
+		</div><!-- /.box-body -->  
+			<div>
+			<?php
+							//echo $itemHeaderAttach;
+			?>
+			</div>
+			<div>
+				<?php
+							//echo $itemDetailAttach;
+							
+						// echo Html::panel(
+							// [
+								// 'id'=>'ad',
+								//'heading' => '<div>Attach</div>',
+								// 'body'=>$itemHeaderAttach,
+							// ],
+							// Html::TYPE_INFO
+						// );
+					?>
+			</div>
 	</div><!--/.direct-chat -->
 	
 	<!-- REPLAY DETAIL ptr.nov-->
@@ -105,5 +178,8 @@ use yii\helpers\Url;
 		<?php
 			echo $btnclose;
 		?>
+	</div>
+	<div class="piter-chat1-text">
+		test
 	</div>
 </div>
