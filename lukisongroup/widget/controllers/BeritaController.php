@@ -103,9 +103,7 @@ class BeritaController extends Controller
     {
       //componen
       $profile = Yii::$app->getUserOpt->profile_user()->emp;
-      $profile_login = Yii::$app->getUserOpt->profile_user();
       $id = $profile->EMP_ID;
-      $nama = $profile_login->username;
 
       $model = Berita::find()->where(['KD_BERITA' => $KD_BERITA])->one();
       $connection = Yii::$app->db_widget;
@@ -114,8 +112,7 @@ class BeritaController extends Controller
 
         return $this->render('view_detailberita', [
             'model' => $model,
-            'id'=>$id,
-            'nama'=>$nama
+            'id'=>$id
         ]);
     }
 
@@ -219,14 +216,14 @@ class BeritaController extends Controller
 
         /* componen user */
         $profile = Yii::$app->getUserOpt->profile_user()->emp;
-        $emp_img = $profile->IMG_BASE64;
+        $emp_img = $profile->EMP_IMG;
 
         /* foto profile */
-        if(count($emp_img) == 0)
+        if($emp_img == '')
         {
          $foto_profile = Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/default.jpg', ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
         }else{
-         $foto_profile =Html::img('data:image/jpg;base64,'.$emp_img,['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
+         $foto_profile = Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/'.$emp_img, ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
         }
 
         /* proses save */

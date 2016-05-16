@@ -6,17 +6,18 @@ use kartik\grid\GridView;
 use yii\helpers\Url;
 use yii\bootstrap\Modal;
 use yii\widgets\Pjax;
+use yii\helpers\ArrayHelper;
+use yii\data\ArrayDataProvider;
 
 /* namespace models */
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\widget\models\Commentberita;
+use lukisongroup\widget\models\BeritaImage;
+use dosamigos\gallery\Gallery;
 
-
-
-/* foto profile */
+/* HEADER foto profile */
 $user = $model->CREATED_BY;
-
-/* cari employe*/
+/* HEADER cari employe*/
 $queryCariEmploye = employe::find()->where(['EMP_ID'=>$user])->andwhere('STATUS<>3')->one();
 
 $emp_img = $queryCariEmploye->IMG_BASE64;
@@ -26,6 +27,100 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
 }else{
   $foto_profile = 'data:image/jpg;base64,'.$emp_img;
 } 
+
+	//$queryAttachHeader = BeritaImage::find()->where(['ID_USER'=>$user])->andwhere(['CREATED_BY'=>$user])->All();
+	// $aryProviderAttachHeader= new ArrayDataProvider([
+		//'key' => 'ID',
+		// 'allModels'=>queryAttachHeader,
+		  // 'pagination' => [
+			// 'pageSize' =>50,
+		// ] 
+	// ]);	
+	//$aryPrvData=$aryProviderAttachHeader->getModels[0];
+	//print_r($aryPrvData);
+	
+	$items = [];
+		$attach_file = BeritaImage::find()->where(['ID_USER'=>$user])->andwhere(['CREATED_BY'=>$user])->All();
+		$aryFieldHeader[]=ArrayHelper::getColumn($attach_file,'ATTACH64');
+		$no=0;
+		foreach ($attach_file as $key => $value) {
+			$aryFieldHeaderX[]=[
+				'attribute'=>$key,
+				'format'=>'raw', 
+				'label'=>'',
+				'value'=>function($model){				
+					$base64 ='data:image/jpg;charset=utf-8;base64,'.$model[0]; //?????
+					return Html::img($base64,['width'=>'100','height'=>'60','class'=>'img-circle']);
+				 },  
+				//'format'=>['image',['width'=>'100','height'=>'120']],
+				/* 'value'=>function($model){				
+					$base64 ='data:image/jpg;charset=utf-8;base64,'.$model['ATTACH64'];
+					//return Html::img($base64,['width'=>'100','height'=>'60','class'=>'img-circle']);
+					return $model['ATTACH64']!=''?Html::img($base64,['width'=>'140','height'=>'140']):Html::img(Yii::$app->urlManager->baseUrl.'/df.jpg',['width'=>'140','height'=>'140']);
+				}, */
+				
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'height'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'black',
+						'border'=>'0px',
+					]
+				],
+			];			
+			$no=$no+1;
+		}
+		
+		
+		
+		
+		
+			foreach ($attach_file as $key => $value) {
+			  # code...
+				$items1[] = [
+							'src'=>'data:image/pdf;base64,'.$value['ATTACH64'],
+							'imageOptions'=>['width'=>"120px",'height'=>"120px",'class'=>'img-rounded'], //setting image display
+							'Options'=>['class'=>'crousel slide'],
+							'showControls'=>false
+					];
+				$items2[] = [
+						'src'=>'data:image/pdf;base64,'.$value['ATTACH64'],
+						'imageOptions'=>['id'=>'img-header-galery','width'=>"120px",'height'=>"120px",'class'=>'img-rounded'], //setting image display
+						'showControls'=>false
+					];
+					
+				//if($value['ATTACH64']!=''){
+					$aryFieldHeader1[]=
+							/* 'clm'.$key=>[
+								'id'=>$value['ID'],
+								'nilai'=>$value['ATTACH64'],		
+							] */
+							//'id'=>$value['ID'],
+							['clm'.$key.'=>'.$value['ATTACH64'],];	
+				//}
+					
+					
+					
+			}
+			
+			
+			
+		$itemHeaderAttach= Gallery::widget([
+						'id'=>'header-galery',
+						'items' =>  $items1,
+						'showControls'=>false,
+						
+		]);
+	
+		$itemDetailAttach= Gallery::widget([
+						'id'=>'header-detail1',
+						'items' => $items2,					
+						
+		]);
+
 ?>
 
  <?php
@@ -112,16 +207,32 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
 				'nama'=>$nama,
 				'messageReply'=>$value['CHAT'],
 				'jamwaktu'=> date('Y-m-d h:i A', strtotime($value['CREATED_AT'])),
-				'nama'=>$nama
+				'nama'=>$nama,
+				'items'=>$items,
+				'lampiran'=>Html::panel(
+						[
+							'id'=>'as',
+							//'heading' => '<div>Attach</div>',
+							'body'=>$itemDetailAttach,
+						],
+						Html::TYPE_INFO
+					),
 			]);
 			$x=1;
 		}else{
 			$a=$this->render('_message_right', [
 				'profile'=>$profile,
-				'nama'=>$nama,
 				'messageReply'=>$value['CHAT'],
 				'jamwaktu'=>date('Y-m-d h:i A', strtotime($value['CREATED_AT'])),
-				'nama'=>$nama
+				'nama'=>$nama,
+				'items'=>$items,
+				'lampiran'=>Html::panel(
+						[
+							//'heading' => '<div>Attach</div>',
+							'body'=>'',//$itemHeaderAttach,
+						],
+						Html::TYPE_INFO
+					),
 			]);
 			$x=0;
 		}
@@ -130,9 +241,23 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
     }
 	$body1 [] = ['body'=>$body,'img' =>false];
 
+	
+	$dataProviderImageHeader= new ArrayDataProvider([
+				//'key' => 'id',
+				'allModels'=>$aryFieldHeader,
+				'pagination' => [
+					'pageSize' => 5,
+					]
+			]);	
+	
 	/* HEADER CREATED*/
 	$bodyHead=$this->render('_view_detailberita_headline', [
 		'model' => $model,
+		'itemHeaderAttach'=>$itemHeaderAttach,
+		'itemDetailAttach'=>$itemDetailAttach,
+		'dataProviderImageHeader'=>$dataProviderImageHeader,
+		'aryFieldHeaderX'=>$aryFieldHeaderX,
+		'items'=>$items,
 	]);
 	$viewBt=Html::mediaList([
 		   [
@@ -220,4 +345,13 @@ Modal::begin([
   //echo '...';
 Modal::end();
 
+
+$this->registerJs("
+	// dosamigos.gallery = (function($){
+		// var options = {
+			// container: document.getElementById('blueimp-gallery');
+		// };
+		
+	// }
+",$this::POS_READY);
 ?>
