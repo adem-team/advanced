@@ -3,6 +3,7 @@
 namespace lukisongroup\widget\models;
 
 use Yii;
+use lukisongroup\hrd\models\Employe;
 
 /**
  * This is the model class for table "bt0003".
@@ -34,6 +35,11 @@ class Commentberita extends \yii\db\ActiveRecord
         return Yii::$app->get('db_widget');
     }
 
+    public function getProfile()
+    {
+        return $this->hasOne(Employe::className(), ['EMP_ID' => 'ID_USER']);
+    }
+
     /**
      * @inheritdoc
      */
@@ -41,8 +47,8 @@ class Commentberita extends \yii\db\ActiveRecord
     {
         return [
             [['CHAT'], 'required'],
-            [['ID_USER', 'STATUS'], 'integer'],
-            [['CHAT'], 'string'],
+            [['STATUS'], 'integer'],
+            [['CHAT','ID_USER'], 'string'],
             [['CREATED_AT', 'UPDATED_AT','EMP_IMG'], 'safe'],
             [['KD_BERITA'], 'string', 'max' => 20],
             [['CREATED_BY'], 'string', 'max' => 100],

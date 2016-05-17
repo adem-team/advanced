@@ -46,7 +46,7 @@ class BeritaNotify extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['KD_BERITA'], 'string'],
+            [['KD_BERITA','ID_USER'], 'string'],
             [['STATUS','TYPE'], 'integer'],
             [['CREATED_AT','CREATED_BY'], 'safe'],
             [['KD_BERITA'], 'string', 'max' => 20],
@@ -57,24 +57,23 @@ class BeritaNotify extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
-        return [
-          'alluser'=>'',
-            'ID' => 'ID',
-            'KD_BERITA' => 'Kd  Berita',
-            'JUDUL' => 'Judul',
-            'ISI' => 'Isi',
-            'KD_CORP' => 'Kd  Corp',
-            'KD_CAB' => 'Kd  Cab',
-            'KD_DEP' => 'Kd  Dep',
-            'DATA_PICT' => 'Data  Pict',
-            'DATA_FILE' => 'Data  File',
-            'STATUS' => 'Status',
-            'CREATED_ATCREATED_BY' => 'Created  Atcreated  By',
-            'CREATED_BY' => 'Created  By',
-            'UPDATE_AT' => 'Update  At',
-            'DATA_ALL' => 'Data  All',
-        ];
-    }
+    // public function attributeLabels()
+    // {
+    //     return [
+    //         'ID' => 'ID',
+    //         'KD_BERITA' => 'Kd  Berita',
+    //         'JUDUL' => 'Judul',
+    //         'ISI' => 'Isi',
+    //         'KD_CORP' => 'Kd  Corp',
+    //         'KD_CAB' => 'Kd  Cab',
+    //         'KD_DEP' => 'Kd  Dep',
+    //         'DATA_PICT' => 'Data  Pict',
+    //         'DATA_FILE' => 'Data  File',
+    //         'STATUS' => 'Status',
+    //         'CREATED_ATCREATED_BY' => 'Created  Atcreated  By',
+    //         'CREATED_BY' => 'Created  By',
+    //         'UPDATE_AT' => 'Update  At',
+    //         'DATA_ALL' => 'Data  All',
+    //     ];
+    // }
 }

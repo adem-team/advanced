@@ -30,9 +30,11 @@ $attDinamik =[];
 $headColomnBT=[
   ['ID' =>0, 'ATTR' =>['FIELD'=>'KD_BERITA','SIZE' => '10px','label'=>'KD_BERITA','align'=>'left','warna'=>'97, 211, 96, 0.3']],
   ['ID' =>1, 'ATTR' =>['FIELD'=>'JUDUL','SIZE' => '10px','label'=>'SUBJECT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-  ['ID' =>2, 'ATTR' =>['FIELD'=>'KD_CORP','SIZE' => '10px','label'=>'CORP','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-  ['ID' =>3, 'ATTR' =>['FIELD'=>'KD_DEP','SIZE' => '10px','label'=>'DEPT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-  ['ID' =>4, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'Status Berita','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>2, 'ATTR' =>['FIELD'=>'KD_REF','SIZE' => '10px','label'=>'Kode Ref','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>3, 'ATTR' =>['FIELD'=>'CREATED_ATCREATED_BY','SIZE' => '10px','label'=>'Tanggal','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>4, 'ATTR' =>['FIELD'=>'KD_CORP','SIZE' => '10px','label'=>'CORP','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>5, 'ATTR' =>['FIELD'=>'KD_DEP','SIZE' => '10px','label'=>'DEPT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>6, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'Status Berita','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 ];
 $gvHeadColomnBT = ArrayHelper::map($headColomnBT, 'ID', 'ATTR');
 

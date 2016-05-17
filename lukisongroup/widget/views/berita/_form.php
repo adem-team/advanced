@@ -6,6 +6,7 @@ use kartik\widgets\DepDrop;
 use kartik\widgets\Select2;
 use yii\helpers\Url;
 use kartik\widgets\FileInput;
+use dosamigos\ckeditor\CKEditor;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\widget\models\Berita */
@@ -31,27 +32,31 @@ use kartik\widgets\FileInput;
       <div class="col-xs-8 col-sm-8 col-md-8">
         <?= $form->field($model, 'JUDUL')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'ISI')->textArea(['options' => ['rows' => 6]])?>
+        <?= $form->field($model, 'ISI')->widget(CKEditor::className(), [
+            'options' => ['rows' => 6],
+            'preset' => 'basic'
+        ]) ?>
 
-         <!-- $form->field($model, 'alluser')->checkbox()->label('All'); ?> -->
+        <?php echo \kato\DropZone::widget([
+         'options' => [
+             'maxFilesize' => '2',
+             'acceptedFiles'=>'image/*,application/pdf',
+             'url'=>'/widget/berita/upload-berita-acara'
+         ],
+         'clientEvents' => [
+             'complete' => "function(file){console.log(file)}",
+             'removedfile' => "function(file){alert(file.name + ' is removed')}"
+         ],
+     ]);
+   ?>
+
 
         <?=  $form->field($model, 'KD_DEP')->widget(Select2::classname(),['data' => $datadep,'options' => ['placeholder' => 'Select ...'],]) ?>
 
           <?=  $form->field($model, 'USER_CC')->widget(Select2::classname(),['data' =>$dataemploye,
           'options' => ['placeholder' => 'Select ...','multiple'=>true],]) ?>
 
-          <?php echo \kato\DropZone::widget([
-           'options' => [
-               'maxFilesize' => '2',
-               'acceptedFiles'=>'image/*,application/pdf',
-               'url'=>'/widget/berita/upload-berita-acara'
-           ],
-           'clientEvents' => [
-               'complete' => "function(file){console.log(file)}",
-               'removedfile' => "function(file){alert(file.name + ' is removed')}"
-           ],
-       ]);
-     ?>
+
 
          <!-- $form->field($model, 'USER_CC')->widget(DepDrop::classname(), [
            'options' => ['placeholder' => 'Select ...'],
