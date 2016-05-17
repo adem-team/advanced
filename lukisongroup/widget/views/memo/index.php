@@ -70,205 +70,200 @@ $JSEventClick = <<<EOF
 		$(this).css('border-color', 'red');
 	}
 EOF;
-
-
 ?>
-<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
-    <div  class="row" style="margin-top:15px">
-        <div class="col-sm-6 col-md-6 col-lg-6" >
-			<?php 
-				/*
-				 * MEMO CALENDAR 
-				 * PERIODE 23-22
-				 * @author ptrnov  [ptr.nov@gmail.com]
-				 * @since 1.2
-				*/
-				$calenderRt=yii2fullcalendar\yii2fullcalendar::widget([
-					'id'=>'calendar-memo',
-					'options' => [
-					'lang' => 'id',
-					//... more options to be defined here!
-					],
-					// 'events'=> $events,
-					'ajaxEvents' => Url::to(['/sistem/personalia/jsoncalendar']),
-					'clientOptions' => [
-						'selectable' => true,
-						'selectHelper' => true,
-						'droppable' => true,
-						'editable' => true,
-						//'drop' => new JsExpression($JSDropEvent),
-						'selectHelper'=>true,
-						'select' => new JsExpression($JSCode),
-						'eventClick' => new JsExpression($JSEventClick),
-						//'defaultDate' => date('Y-m-d')
-					],
-					//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
-				]);
-				
-				echo Html::panel(
-					['heading' => 'INTERNAL OFFICE MEMO CLENDER ', 'body' =>$calenderRt],
-					Html::TYPE_DANGER
-				);	
-			?>
-		</div>
-		<div class="col-sm-6 col-md-6 col-lg-6">
-			<?php			
-				/*
-				 * LIST MEMO CALENDAR 
-				 * PERIODE 23-22
-				 * @author ptrnov  [piter@lukison.com]
-				 * @since 1.2
-				*/
-				$actionClass='btn btn-info btn-xs';
-				$actionLabel='Update';
-				$attDinamikMemo =[];				
-				/*GRIDVIEW ARRAY FIELD HEAD*/
-				$headColomnMemo=[
-					['ID' =>0, 'ATTR' =>['FIELD'=>'start','SIZE' => '10px','label'=>'DATE START','align'=>'left','warna'=>'97, 211, 96, 0.3']],				
-					['ID' =>1, 'ATTR' =>['FIELD'=>'end','SIZE' => '10px','label'=>'DATE END','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-					['ID' =>2, 'ATTR' =>['FIELD'=>'title','SIZE' => '10px','label'=>'TITLE','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-				];
-				$gvHeadColomnMemo = ArrayHelper::map($headColomnMemo, 'ID', 'ATTR');
-				/*GRIDVIEW ARRAY ACTION*/
-				$attDinamikMemo[]=[
-					'class'=>'kartik\grid\ActionColumn',
-					'dropdown' => true,
-					'template' => '{view}{review}{delete}',
-					'dropdownOptions'=>['class'=>'pull-left dropdown','style'=>['disable'=>true]],
-					'dropdownButton'=>[
-						'class' => $actionClass,
-						'label'=>$actionLabel,
-						//'caret'=>'<span class="caret"></span>',
-					],
-					'buttons' => [
-						'view' =>function($url, $model, $key){
-								return  '<li>' .Html::a('<span class="fa fa-random fa-dm"></span>'.Yii::t('app', 'Set Alias Customer'),
-															['/sistem/personalia/view','id'=>$model->id],[
-															'id'=>'alias-cust-id',
-															'data-toggle'=>"modal",
-															'data-target'=>"#alias-cust",
-															]). '</li>' . PHP_EOL;
-						},				
-						'review' =>function($url, $model, $key){
-								return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'Set Alias Prodak'),
-															['/sistem/personalia/view','id'=>$model->id],[
-															'id'=>'alias-prodak-id',
-															'data-toggle'=>"modal",
-															'data-target'=>"#alias-prodak",
-															]). '</li>' . PHP_EOL;
-						},	
-						'delete' =>function($url, $model, $key){
-								return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'new Customer'),
-															['/sistem/personalia/view','id'=>$model->id],[
-															'data-toggle'=>"modal",
-															'data-target'=>"#alias-prodak",
-															]). '</li>' . PHP_EOL;
-						},				
-					],
-					'headerOptions'=>[
-						'style'=>[
-							'text-align'=>'center',
-							'width'=>'10px',
-							'font-family'=>'tahoma, arial, sans-serif',
-							'font-size'=>'9pt',
-							'background-color'=>'rgba(97, 211, 96, 0.3)',
-						]
-					],
-					'contentOptions'=>[
-						'style'=>[
-							'text-align'=>'center',
-							'width'=>'10px',
-							'height'=>'10px',
-							'font-family'=>'tahoma, arial, sans-serif',
-							'font-size'=>'9pt',
-						]
-					],
-				];
-				/*GRIDVIEW ARRAY ROWS*/
-				foreach($gvHeadColomnMemo as $key =>$value[]){
-					$attDinamikMemo[]=[		
-						'attribute'=>$value[$key]['FIELD'],
-						'label'=>$value[$key]['label'],
-						'filter'=>true,
-						'hAlign'=>'right',
-						'vAlign'=>'middle',
-						//'mergeHeader'=>true,
-						'noWrap'=>true,			
-						'headerOptions'=>[		
-								'style'=>[									
-								'text-align'=>'center',
-								'width'=>$value[$key]['FIELD'],
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'8pt',
-								//'background-color'=>'rgba(97, 211, 96, 0.3)',
-								'background-color'=>'rgba('.$value[$key]['warna'].')',
-							]
-						],  
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>$value[$key]['align'],
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'8pt',
-								//'background-color'=>'rgba(13, 127, 3, 0.1)',
-							]
-						],
-						//'pageSummaryFunc'=>GridView::F_SUM,
-						//'pageSummary'=>true,
-						// 'pageSummaryOptions' => [
-							// 'style'=>[
-									// 'text-align'=>'right',		
-									'width'=>'12px',
-									// 'font-family'=>'tahoma',
-									// 'font-size'=>'8pt',	
-									// 'text-decoration'=>'underline',
-									// 'font-weight'=>'bold',
-									// 'border-left-color'=>'transparant',		
-									// 'border-left'=>'0px',									
-							// ]
-						// ],	
-					];	
-				};
-				/*SHOW GRID VIEW LIST EVENT*/
-				echo GridView::widget([
-					'dataProvider' => $dataProviderMemo,
-					'filterModel' => $searchModelmemo,
-					'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
-					'columns' => $attDinamikMemo,
-					/* [
-						['class' => 'yii\grid\SerialColumn'],
-						'start',
-						'end',
-						'title',
-						['class' => 'yii\grid\ActionColumn'],
-					], */
-					'pjax'=>true,
-					'pjaxSettings'=>[
-						'options'=>[
-							'enablePushState'=>false,
-							'id'=>'absen-rekap',
-						],
-					],
-					'panel' => [
-								'heading'=>'<h3 class="panel-title">List Memo</h3>',
-								'type'=>'warning',
-								'showFooter'=>false,
-					],
-					'toolbar'=> [
-						//'{items}',
-					],
-					'hover'=>true, //cursor select
-					'responsive'=>true,
-					'responsiveWrap'=>true,
-					'bordered'=>true,
-					'striped'=>true,
-				]); 		
-			?>
-		</div>
-		<div class="col-sm-12 col-md-12 col-lg-12">
-			<?php
+
+	<?php 
+		/*
+		 * MEMO CALENDAR 
+		 * PERIODE 23-22
+		 * @author ptrnov  [ptr.nov@gmail.com]
+		 * @since 1.2
+		*/
+		$wgMemo=yii2fullcalendar\yii2fullcalendar::widget([
+			'id'=>'calendar-memo',
+			'options' => [
+				'lang' => 'id',
+				'height'=>'300px'
+			//... more options to be defined here!
+			],
+			// 'events'=> $events,
+			'ajaxEvents' => Url::to(['/sistem/personalia/jsoncalendar']),
+			'clientOptions' => [
+				'selectable' => true,
+				'selectHelper' => true,
+				'droppable' => true,
+				'editable' => true,
+				//'drop' => new JsExpression($JSDropEvent),
+				'selectHelper'=>true,
+				'select' => new JsExpression($JSCode),
+				'eventClick' => new JsExpression($JSEventClick),
+				//'defaultDate' => date('Y-m-d')
+			],
+			//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
+		]);
+		
+		$calenderMemo =Html::panel(
+			['heading' => 'CLENDER ', 'body' =>$wgMemo],
+			Html::TYPE_DANGER
+		);	
+	?>
+	<?php			
+		/*
+		 * LIST MEMO CALENDAR 
+		 * PERIODE 23-22
+		 * @author ptrnov  [piter@lukison.com]
+		 * @since 1.2
+		*/
+		$actionClass='btn btn-info btn-xs';
+		$actionLabel='Update';
+		$attDinamikMemo =[];				
+		/*GRIDVIEW ARRAY FIELD HEAD*/
+		$headColomnMemo=[
+			['ID' =>0, 'ATTR' =>['FIELD'=>'start','SIZE' => '10px','label'=>'DATE START','align'=>'left','warna'=>'97, 211, 96, 0.3']],				
+			['ID' =>1, 'ATTR' =>['FIELD'=>'end','SIZE' => '10px','label'=>'DATE END','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+			['ID' =>2, 'ATTR' =>['FIELD'=>'title','SIZE' => '10px','label'=>'TITLE','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+		];
+		$gvHeadColomnMemo = ArrayHelper::map($headColomnMemo, 'ID', 'ATTR');
+		/*GRIDVIEW ARRAY ACTION*/
+		
+		/*GRIDVIEW ARRAY ROWS*/
+		foreach($gvHeadColomnMemo as $key =>$value[]){
+			$attDinamikMemo[]=[		
+				'attribute'=>$value[$key]['FIELD'],
+				'label'=>$value[$key]['label'],
+				'filter'=>true,
+				'hAlign'=>'right',
+				'vAlign'=>'middle',
+				//'mergeHeader'=>true,
+				'noWrap'=>true,			
+				'headerOptions'=>[		
+						'style'=>[									
+						'text-align'=>'center',
+						'width'=>$value[$key]['FIELD'],
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(97, 211, 96, 0.3)',
+						'background-color'=>'rgba('.$value[$key]['warna'].')',
+					]
+				],  
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>$value[$key]['align'],
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(13, 127, 3, 0.1)',
+					]
+				],
+				//'pageSummaryFunc'=>GridView::F_SUM,
+				//'pageSummary'=>true,
+				// 'pageSummaryOptions' => [
+					// 'style'=>[
+							// 'text-align'=>'right',		
+							'width'=>'12px',
+							// 'font-family'=>'tahoma',
+							// 'font-size'=>'8pt',	
+							// 'text-decoration'=>'underline',
+							// 'font-weight'=>'bold',
+							// 'border-left-color'=>'transparant',		
+							// 'border-left'=>'0px',									
+					// ]
+				// ],	
+			];	
+		};
+		
+		/*SHOW GRID VIEW LIST EVENT*/
+		$gvMemoList=gridview::widget([
+			'dataProvider' => $dataProviderMemo,
+			'filterModel' => $searchModelmemo,
+			'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+			'columns' => $attDinamikMemo,
+			/* [
+				['class' => 'yii\grid\SerialColumn'],
+				'start',
+				'end',
+				'title',
+				['class' => 'yii\grid\ActionColumn'],
+			], */
+			'pjax'=>true,
+			'pjaxSettings'=>[
+				'options'=>[
+					'enablePushState'=>false,
+					'id'=>'absen-rekap',
+				],
+			],
+			/* 'panel' => [
+						'heading'=>'<h3 class="panel-title">List Memo</h3>',
+						'type'=>'warning',
+						'showFooter'=>false,
+			],
+			'toolbar'=> [
+				//'{items}',
+			], */
+			'summary'=>false,
+			'hover'=>true, //cursor select
+			'responsive'=>true,
+			'responsiveWrap'=>true,
+			'bordered'=>true,
+			'striped'=>true,
+		]); 		
+	?>	
+	
+	<?php
+		/*RENDER INFO MEMO*/			
+		$infoDetail=$this->render('_info_memo');
+	?>		
 			
-				print_r($dataProviderMemo);
-			?>
+<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
+    <div  class="row" style="margin-top:15px">     
+		<div class="col-sm-4 col-md-4 col-lg-4">
+			<div class="panel panel-info">
+				<div class="box direct-chat direct-chat">
+				 <!-- box-header -->
+					<div class="box-header with-border" style="background-color:rgba(218, 229, 252, 0.6);">
+						<h3 class="box-title" ><?php echo"MEMO LIST";?></h3>
+						<div class="box-tools pull-left">
+							<!--<span data-toggle="tooltip" title="3 New Messages" class="badge bg-green">3</span>-->
+							<button class="btn btn-box-tool" data-toggle="tooltip" title="show/hide" data-widget="collapse"><i class="fa fa-minus"></i></button>
+							<button class="btn btn-box-tool" data-toggle="tooltip" title="Calendar" data-widget="chat-pane-toggle"><i class="fa fa-calendar"></i></button>
+							<!-- <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>-->
+						</div>
+					</div><!-- /.box-header -->
+					<div class="box-body">
+						<!-- Conversations are loaded here -->
+						<div class="direct-chat-messages" style="height:550px">
+							<!-- Message. Default to the left -->
+								 <div class="raw">
+									<?php
+										echo $gvMemoList;
+									?>
+								</div>
+							<!-- Message to the right -->
+						</div><!--/.direct-chat-messages-->
+						<!-- Contacts are loaded here -->
+						<div class="direct-chat-contacts" style="height:550px; color:black;background-color:rgba(90, 130, 162, 0.7)">
+							<ul class="contacts-list">
+								<li>
+									<div class="raw">
+									<?=$calenderMemo;
+										//echo 'asdasd';
+									?>
+									</div>
+								</li><!-- End Contact Item -->
+							</ul><!-- /.contatcts-list -->
+						</div><!-- /.direct-chat-pane -->
+					</div><!-- /.box-body -->
+				</div><!--/.direct-chat -->
+			</div>
+		</div>
+		<div class="col-sm-8 col-md-8 col-lg-8">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<?php echo 'Memo Detail';?>
+				</div>
+				<div class="box-body">
+				<?=$infoDetail?>	
+				</div>				
+			</div>
 		</div>
 	</div>
 </div>
