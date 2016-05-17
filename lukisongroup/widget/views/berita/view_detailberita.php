@@ -18,9 +18,6 @@ use dosamigos\gallery\Gallery;
 /* HEADER foto profile */
 $user = $model->CREATED_BY;
 
-
-
-
 /* HEADER cari employe*/
 $queryCariEmploye = employe::find()->where(['EMP_ID'=>$user])->andwhere('STATUS<>3')->one();
 
@@ -31,6 +28,20 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
 }else{
   $foto_profile = 'data:image/jpg;base64,'.$emp_img;
 }
+
+/* message profile*/
+$emp_ID = Yii::$app->getUserOpt->profile_user()->emp->EMP_ID;
+$searchprofile = Commentberita::find()->where(['KD_BERITA'=>$model->KD_BERITA,'CREATED_BY'=>$emp_ID])->one();
+$msseage_profile = $searchprofile->EMP_IMG;
+
+if(count($searchprofile) == 0 ||  $msseage_profile =='')
+{
+  $profile = '/upload/hrd/Employee/default.jpg';
+}else{
+  $profile = 'data:image/jpg;base64,'.$msseage_profile;
+}
+
+
 
 	//$queryAttachHeader = BeritaImage::find()->where(['ID_USER'=>$user])->andwhere(['CREATED_BY'=>$user])->All();
 	// $aryProviderAttachHeader= new ArrayDataProvider([
@@ -44,7 +55,7 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
 	//print_r($aryPrvData);
 
 	$items = [];
-		// $attach_file = BeritaImage::find()->where(['ID_USER'=>$user])->andwhere(['CREATED_BY'=>$user])->All();
+		$attach_file = BeritaImage::find()->where(['ID_USER'=>$user,'TYPE'=>1])->andwhere(['CREATED_BY'=>$user])->All();
 
 		// $aryFieldHeader[]=ArrayHelper::getColumn($attach_file,'ATTACH64');
 		// $no=0;
@@ -81,17 +92,11 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
 
 
 
-
-
-
-
-
-
 if(count($attach_file)== 0)
 {
   for($a = 0; $a < 2; $a++)
   {
-  $items[] = ['src'=>'/upload/barang/df.jpg',
+  $items1[] = ['src'=>'/upload/barang/df.jpg',
   'imageOptions'=>['width'=>"150px"]
   ];
   }
@@ -109,22 +114,12 @@ if(count($attach_file)== 0)
 }
 
       # code...
-
-
      $itemHeaderAttach= Gallery::widget([
             'id'=>'headergalery',
             'items' =>$items1,
-             // 'options' => [
-             //   'id' =>$model->ID
-             // ],
             'showControls'=>true,
 
     ]);
-
-
-
-
-
 
 
 
@@ -199,28 +194,24 @@ if(count($attach_file)== 0)
 
 
     /* array commentar */
-    $query = Commentberita::find()->where(['KD_BERITA'=>$model->KD_BERITA])->orderBy(['CREATED_AT'=>SORT_DESC])->asArray()->all();
+    $query = Commentberita::find()->with('profile')->where(['KD_BERITA'=>$model->KD_BERITA])->orderBy(['CREATED_AT'=>SORT_DESC])->all();
     //$body = [];
     $body1 = [];
 	$x=0;
     foreach ($query as $key => $value) {
+      if($value->EMP_IMG == "default.jpg")
+      {
+        $profile = '/upload/hrd/Employee/default.jpg';
+      }else{
+        $profile = 'data:image/jpg;base64,'.$value->EMP_IMG;
+      }
       # code...
-
-		$queryEmp = employe::find()->where(['EMP_ID'=>$value['CREATED_BY']])->andwhere('STATUS<>3')->one();
-		$foto_detail = $queryEmp->IMG_BASE64;
-		if($foto_detail == ''){
-			$profile = '/upload/hrd/Employee/default.jpg';
-		}else{
-			$profile = 'data:image/jpg;charset=utf-8;base64,'.$foto_detail;
-		}
-
 		if ($x==0){
 			$a=$this->render('_message_left', [
 				'profile'=>$profile,
-				'nama'=>$nama,
-				'messageReply'=>$value['CHAT'],
+				'nama'=>$value->profile->EMP_NM,
+				'messageReply'=>$value->CHAT,
 				'jamwaktu'=> date('Y-m-d h:i A', strtotime($value['CREATED_AT'])),
-				'nama'=>$nama,
 				'items'=>$items,
 				'lampiran'=>Html::panel(
 						[
@@ -233,11 +224,17 @@ if(count($attach_file)== 0)
 			]);
 			$x=1;
 		}else{
+      if($value->EMP_IMG == "default.jpg")
+      {
+        $profile = '/upload/hrd/Employee/default.jpg';
+      }else{
+        $profile = 'data:image/jpg;base64,'.$value->EMP_IMG;
+      }
 			$a=$this->render('_message_right', [
 				'profile'=>$profile,
-				'messageReply'=>$value['CHAT'],
+				'messageReply'=>$value->CHAT,
 				'jamwaktu'=>date('Y-m-d h:i A', strtotime($value['CREATED_AT'])),
-				'nama'=>$nama,
+				'nama'=>$value->profile->EMP_NM,
 				'items'=>$items,
 				'lampiran'=>Html::panel(
 						[
@@ -270,6 +267,7 @@ if(count($attach_file)== 0)
 		'itemDetailAttach'=>$itemDetailAttach,
 		'dataProviderImageHeader'=>$dataProviderImageHeader,
 		'aryFieldHeaderX'=>$aryFieldHeaderX,
+    'id'=>$id
 		// 'items'=>$items,
 	]);
 	$viewBt=Html::mediaList([
@@ -366,9 +364,6 @@ if(count($attach_file)== 0)
            ?>
 
 
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
 

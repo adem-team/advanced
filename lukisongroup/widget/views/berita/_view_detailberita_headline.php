@@ -39,9 +39,9 @@ use kartik\grid\GridView;
 		$options = [ 'id'=>'berita-isi-id-close',
 			   'data-pjax' => true,
 			   'data-toggle-close'=>$model->KD_BERITA,
-			   'class'=>'btn btn-danger btn-xs',
+			   'class'=>'btn-xs',
 		];
-		$icon = '<span class="glyphicon glyphicon-remove-sign">Close</span>';
+		$icon = '<span class="glyphicon glyphicon-remove-sign"style="color:red">Close</span>';
 		$label = $icon . ' ' . $title;
 		$content = Html::a($label,'', $options);
 		return $content;
@@ -123,7 +123,7 @@ use kartik\grid\GridView;
 				<!--<span data-toggle="tooltip" title="3 New Messages" class="badge bg-green">3</span>-->
 				<button class="btn btn-box-tool" data-toggle="tooltip" title="show/hide" data-widget="collapse"><i class="fa fa-minus"></i></button>
 				<button class="btn btn-box-tool" data-toggle="tooltip" title="Attach" data-widget="chat-pane-toggle"><i class="fa fa-picture-o"></i></button>
-				<!-- <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>-->
+				<!-- <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button> -->
 			</div>
 		</div><!-- /.box-header -->
 		<div class="box-body">
@@ -172,15 +172,14 @@ use kartik\grid\GridView;
 	<!-- REPLAY DETAIL ptr.nov-->
 	<div>
 		<?php
-			echo kembali().' '.$btnreply;
+			echo kembali().' '.$btnreply.''.$btnclose;
 		?>
 	</div>
 	<div>
 		<?php
-			echo $btnclose;
+			// echo $btnclose;
 		?>
 	</div>
 	<div class="piter-chat1-text">
-		test
 	</div>
 </div>

@@ -23,7 +23,23 @@ use yii\helpers\Url;
         <?= $foto_profile ?>
       </div>
       <div class="col-xs-10 col-sm-10 col-md-10">
-        <?= $form->field($model, 'CHAT')->textArea(['options' => ['rows' => 6]])?>
+        <?= $form->field($model, 'CHAT')->widget(CKEditor::className(), [
+            'options' => ['rows' => 6],
+            'preset' => 'basic'
+        ]) ?>
+
+        <?php echo \kato\DropZone::widget([
+         'options' => [
+             'maxFilesize' => '2',
+             'acceptedFiles'=>'image/*,application/pdf',
+             'url'=>'/widget/berita/upload-join?KD_BERITA='.$KD_BERITA.''
+         ],
+         'clientEvents' => [
+             'complete' => "function(file){console.log(file)}",
+             'removedfile' => "function(file){alert(file.name + ' is removed')}"
+         ],
+     ]);
+   ?>
       </div>
 
       </div>

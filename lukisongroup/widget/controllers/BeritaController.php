@@ -95,8 +95,9 @@ class BeritaController extends Controller
         ]);
     }
 
-    /**
+    /**@author : wawan
      * Displays a single Berita model.
+     * bt0001notify update TYPE equal 0 after action DetailBerita
      * @param string $KD_BERITA
      * @return mixed
      */
@@ -131,7 +132,9 @@ class BeritaController extends Controller
 
     }
 
-    /* upload ajax using dropzone js author : wawan */
+    /* *upload ajax using dropzone js || _form
+       *@author : wawan
+    */
         public function actionUploadBeritaAcara()
     {
         $fileName = 'file';
@@ -148,6 +151,7 @@ class BeritaController extends Controller
             $model->ID_USER = $id;
             $model->CREATED_BY = $id;
             $model->ATTACH64 = $data;
+            $model->TYPE = 1;
             if ($model->save()) {
                 //Now save file data to database
                 echo \yii\helpers\Json::encode($file);
@@ -157,8 +161,41 @@ class BeritaController extends Controller
         return false;
     }
 
+    /* upload ajax using dropzone js||commentar
+      *@author : wawan
+    */
+        public function actionUploadJoin($KD_BERITA)
+    {
+        $fileName = 'file';
+        $model = new beritaimage();
+        $cariemp_inberita = Berita::find()->where(['KD_BERITA'=>$KD_BERITA])->asArray()->one();
+
+        if (isset($_FILES[$fileName])) {
+            $file = \yii\web\UploadedFile::getInstanceByName($fileName);
+
+            //componen
+            $profile = Yii::$app->getUserOpt->profile_user()->emp;
+            $id = $profile->EMP_ID;
+
+            $data = $this->saveimage(file_get_contents($file->tempName)); //call function saveimage using base64
+            $model->KD_BERITA = $KD_BERITA;
+            $model->ID_USER = $id;
+            $model->CREATED_BY = $cariemp_inberita['CREATED_BY'];
+            $model->ATTACH64 = $data;
+            $model->TYPE = 0;
+            if ($model->save()) {
+                //Now save file data to database
+                echo \yii\helpers\Json::encode($file);
+            }
+        }
+
+        return false;
+    }
+
+
     /**
      * Creates a new Berita model.
+     *if save successful,then save on bt0001notify
      * If creation is successful, the browser will be redirected to the 'detail-berita' page.
      * @return mixed
      */
@@ -177,6 +214,8 @@ class BeritaController extends Controller
         /* componen user */
         $profile = Yii::$app->getUserOpt->profile_user()->emp;
         $emp_img = $profile->EMP_IMG;
+
+
 
         /* foto profile */
         if($emp_img == '')
@@ -208,31 +247,54 @@ class BeritaController extends Controller
           //componen
           $model->KD_CORP =  	Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
 	        $model->CREATED_BY = Yii::$app->user->identity->EMP_ID;
+          $model->CREATED_ATCREATED_BY = date('Y-m-d h:i:s');
 
 
           if($model->save())
           {
 
+            $update_image_upload = BeritaImage::updateAll(['KD_BERITA' => $model->KD_BERITA], ['ID_USER'=>$profile->EMP_ID]);
 
-              $departement = Berita::find()->where(['KD_BERITA'=>$model->KD_BERITA])->asArray()->one();
+            /* connection db widget */
+            $connection = Yii::$app->db_widget;
 
-                /* connection db widget */
-                $connection = Yii::$app->db_widget;
+            /* date for field CREATED_AT */
+            $date =  date('Y-m-d');
 
-                $date =  date('Y-m-d');
+            /* search employee */
+            $search_depemploye = Employe::find()->where(['DEP_ID'=>$model->KD_DEP])->asArray()->all();
 
-                $connection->createCommand()
-                          ->insert('bt0001notify', [
-                                  'KD_BERITA' =>$model->KD_BERITA,
-                                   'ID_USER' =>$model->USER_CC,
-                                    'CREATED_BY' => $model->CREATED_BY,
-                                    'CREATED_AT' => $date,
-                                    ])->execute();
+            /* batch insert for many value*/
+            foreach ($search_depemploye as $key => $value) {
+              # code...
+              $connection->createCommand()
+                         ->batchInsert('bt0001notify',['KD_BERITA','ID_USER','CREATED_BY','CREATED_AT'],
+                                  [[$model->KD_BERITA,$value['EMP_ID'],$profile->EMP_ID,$date]])->execute();
 
             }
 
+            /*explode string to array using function explode php*/
+            $emp_id = explode(",",$model->USER_CC);
+
+            /* foreach array using save Bt001notify */
+            foreach ($emp_id as $value) {
+            $notifusercc = new BeritaNotify();
+              # code...
+              $notifusercc->KD_BERITA = $model->KD_BERITA;
+              $notifusercc->ID_USER = $value ;
+              $notifusercc->CREATED_BY = $profile->EMP_ID;
+              $notifusercc->CREATED_AT = $date;
+              $notifusercc->save();
+            }
+
+
+        }
+
               return $this->redirect(['detail-berita','KD_BERITA' => $model->KD_BERITA]);
         } else {
+          /* delete image if KD_BERITA equal null */
+          $deleteupload = BeritaImage::deleteAll(['KD_BERITA'=>'','ID_USER'=>$profile->EMP_ID]);
+
             return $this->renderAjax('create', [
                 'model' => $model,
                 'datadep'=>$datadep,
@@ -243,16 +305,6 @@ class BeritaController extends Controller
             ]);
         }
     }
-
-    /**
-     *  display image.
-     */
-    public function actionViewGallery($gallery)
-    {
-            return $this->renderAjax('view-gallery', [
-            ]);
-    }
-
 
 
 
@@ -269,26 +321,31 @@ class BeritaController extends Controller
         /* componen user */
         $profile = Yii::$app->getUserOpt->profile_user()->emp;
         $emp_img = $profile->EMP_IMG;
+        $emp_img_base64 = $profile->IMG_BASE64;
 
         /* foto profile */
-        if($emp_img == '')
+        if($emp_img_base64 == '')
         {
+         $emp_img_base64 = "default.jpg";
          $foto_profile = Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/default.jpg', ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
         }else{
-         $foto_profile = Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/'.$emp_img, ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
+          $emp_img_base64 = $profile->IMG_BASE64;
+         $foto_profile = Html::img('data:image/jpg;base64,'.$emp_img_base64, ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
         }
 
         /* proses save */
         if ($model->load(Yii::$app->request->post())) {
           $model->KD_BERITA = $KD_BERITA;
-          $model->EMP_IMG = $emp_img;
+          $model->EMP_IMG = $emp_img_base64;
 
           //componen
-          $model->ID_USER = Yii::$app->user->identity->id;
+          $model->ID_USER = Yii::$app->user->identity->EMP_ID;
 		      $model->CREATED_AT = date('Y-m-d h:i:s');
 	        $model->CREATED_BY = Yii::$app->user->identity->EMP_ID;
+
 		      if($model->save())
           {
+
             /* update read or unread  notifikasion */
             $notifupdateread = BeritaNotify::updateAll(['TYPE' => 1], ['KD_BERITA'=>$model->KD_BERITA]);
 
@@ -298,7 +355,8 @@ class BeritaController extends Controller
             return $this->renderAjax('commentar', [
                 'model' => $model,
                 'emp_img'=>$emp_img,
-                'foto_profile'=>$foto_profile
+                'foto_profile'=>$foto_profile,
+                'KD_BERITA'=>$KD_BERITA
             ]);
         }
     }
