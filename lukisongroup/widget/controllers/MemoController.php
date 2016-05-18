@@ -36,10 +36,12 @@ class MemoController extends Controller
     public function actionIndex()
     {
         $searchModel = new MemolSearch();
+		$model = new Memo();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->render('index', [
             'searchModelmemo' => $searchModel,
             'dataProviderMemo' => $dataProvider,
+			'model'=>$model
         ]);
     }
 

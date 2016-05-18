@@ -210,7 +210,9 @@ EOF;
 	
 	<?php
 		/*RENDER INFO MEMO*/			
-		$infoDetail=$this->render('_info_memo');
+		$infoDetail=$this->render('_info_memo',[
+			'model'=>$model
+		]);
 	?>		
 			
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">

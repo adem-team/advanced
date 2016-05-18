@@ -4,6 +4,11 @@ use kartik\detail\DetailView;
 use yii\bootstrap\Modal;
 use kartik\widgets\ActiveField;
 use kartik\widgets\ActiveForm;
+use dosamigos\ckeditor\CKEditor;
+use kartik\widgets\DepDrop;
+use kartik\widgets\Select2;
+use yii\helpers\Url;
+use kartik\widgets\FileInput;
 ?>
 	 <!--
 			Hari, TanggalTempat
@@ -50,3 +55,43 @@ use kartik\widgets\ActiveForm;
 		</dl>
     </div>
 	
+	<div class="row">
+		<div class=" col-xs-12 col-sm-12 col-dm-12 col-lg-12">
+			<?php $form = ActiveForm::begin([
+			  //'id'=>$model->formName(),
+			  'enableClientValidation' => true,
+			  'enableAjaxValidation'=>true,
+			  'validationUrl'=>Url::toRoute('/widget/berita/valid-berita-acara')
+			]); ?>
+			
+			<?= $form->field($model, 'title')->widget(CKEditor::className(), [
+					'options' => ['rows' => 6],
+					'preset' => [
+						//'height' => 400,
+						'toolbarGroups' => [
+							['name' => 'document', 'groups' => ['mode', 'document', 'doctools']],
+							['name' => 'clipboard', 'groups' => ['clipboard', 'undo']],
+							['name' => 'editing', 'groups' => [ 'find', 'selection', 'spellchecker']],
+							['name' => 'forms'],
+							'/',
+							['name' => 'basicstyles', 'groups' => ['basicstyles', 'colors','cleanup']],
+							['name' => 'paragraph', 'groups' => [ 'list', 'indent', 'blocks', 'align', 'bidi' ]],
+							['name' => 'links'],
+							['name' => 'insert'],
+							'/',
+							['name' => 'styles'],
+							['name' => 'blocks'],
+							['name' => 'colors'],
+							['name' => 'tools'],
+							['name' => 'others'],
+						],
+					],
+					
+				]) ?>
+				
+			<div class="form-group">
+				<?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $roDetail->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+			</div>
+			<?php ActiveForm::end(); ?>
+		</div>
+	</div>
