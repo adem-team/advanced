@@ -1,3 +1,7 @@
+<?php
+/* extensions */
+use kartik\helpers\Html;
+?>
 <div class="direct-chat" style="margin-top:10px;font-family: tahoma ;font-size: 10pt;">
 	<div class="direct-chat-msg">
 		<div class="direct-chat-info clearfix">
@@ -16,38 +20,40 @@
 	</div>
 </div>
 <!-- HEADER JUDUL/ISI/ATTACH ptr.nov-->
-<div class="box box-success direct-chat direct-chat-success">
+<div class="box box-success direct-chat direct-chat-success collapsed-box">
 	 <!-- box-header -->
 	<div class="box-header with-border">
 		<h3 class="box-title"></h3>
 		<div class="box-tools pull-right">
 			<!--<span data-toggle="tooltip" title="3 New Messages" class="badge bg-green">3</span>-->
 			<button class="btn btn-box-tool" data-toggle="tooltip" title="show/hide" data-widget="collapse"><i class="fa fa-minus"></i></button>
-			<button class="btn btn-box-tool" data-toggle="tooltip" title="Attach" data-widget="chat-pane-toggle"><i class="fa fa-picture-o"></i></button>
 			<!-- <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button> -->
 		</div>
 	</div><!-- /.box-header -->
-	<div class="box-body">
+	<div class="box-body" style="display: none;">
 		<!-- Conversations are loaded here -->
 		<div class="direct-chat-messages">
 			<!-- Message. Default to the left -->
 			<?php
+			if(count($attach_image) == 0)
+			{
+				for($a = 0; $a < 2; $a++)
+				{
+				echo Html::img(Yii::getAlias('@web').'/upload/barang/df.jpg', ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
+				}
+			}else{
+				foreach ($attach_image as $key => $value) {
+					# code...
+
+					echo Html::img('data:image/jpg;base64,'.$value->ATTACH64, ['class' => 'pull-left img-thumbnail','width'=>"120px",'height'=>"120px"]);
+				}
+			}
+
 				// echo $model->ISI;
 			?>
 			<!-- Message to the right -->
 		</div><!--/.direct-chat-messages-->
 		<!-- Contacts are loaded here -->
-		<div class="direct-chat-contacts">
-			<ul class="contacts-list">
-				<li>
-					<?php
-
-						//echo $headerImage;
-						// echo $itemHeaderAttach;
-					?>
-				</li><!-- End Contact Item -->
-			</ul><!-- /.contatcts-list -->
-		</div><!-- /.direct-chat-pane -->
 	</div><!-- /.box-body -->
 		<div>
 		<?php

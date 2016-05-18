@@ -15,11 +15,22 @@ class BeritaSearch extends Berita
     /**
      * @inheritdoc
      */
+     public $corpnnm;
+     public $corpnm;
+     public $deptnm;
+     public $deptmn;
+     public $corphistory;
+     public $depthistory;
+     public function attributes()
+   	{
+   		/*Author -ptr.nov- add related fields to searchable attributes */
+   		return array_merge(parent::attributes(), ['corpnnm','deptnm','corpnm','deptmn','depthistory','corphistory']);
+   	}
     public function rules()
     {
         return [
             [['ID', 'STATUS'], 'integer'],
-            [['KD_BERITA', 'JUDUL', 'ISI', 'KD_CORP', 'KD_CAB', 'KD_DEP', 'DATA_PICT', 'DATA_FILE', 'CREATED_ATCREATED_BY', 'CREATED_BY', 'UPDATE_AT', 'DATA_ALL'], 'safe'],
+            [['KD_BERITA','JUDUL','corpnm','deptmn','ISI', 'KD_CORP','corpnnm','deptnm','depthistory','corphistory', 'KD_CAB', 'KD_DEP', 'DATA_PICT', 'DATA_FILE', 'CREATED_ATCREATED_BY','CREATED_AT','CREATE_AT', 'CREATED_BY', 'UPDATE_AT', 'DATA_ALL','KD_REF'], 'safe'],
         ];
     }
 
@@ -73,9 +84,9 @@ class BeritaSearch extends Berita
         $query->andFilterWhere(['like', 'KD_BERITA', $this->KD_BERITA])
             ->andFilterWhere(['like', 'JUDUL', $this->JUDUL])
             ->andFilterWhere(['like', 'ISI', $this->ISI])
-            ->andFilterWhere(['like', 'KD_CORP', $this->KD_CORP])
+            ->andFilterWhere(['like', 'KD_CORP', $this->corpnnm])
             ->andFilterWhere(['like', 'KD_CAB', $this->KD_CAB])
-            ->andFilterWhere(['like', 'KD_DEP', $this->KD_DEP])
+            ->andFilterWhere(['like', 'KD_DEP', $this->deptnm])
             ->andFilterWhere(['like', 'DATA_PICT', $this->DATA_PICT])
             ->andFilterWhere(['like', 'DATA_FILE', $this->DATA_FILE])
             ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
@@ -104,22 +115,22 @@ class BeritaSearch extends Berita
         }
 
         $query->andFilterWhere([
-            // 'ID' => $this->ID,
-            // 'STATUS' => $this->STATUS,
-            // 'CREATED_ATCREATED_BY' => $this->CREATED_ATCREATED_BY,
-            // 'UPDATE_AT' => $this->UPDATE_AT,
+            'ID' => $this->ID,
+            'STATUS' => $this->STATUS,
+            'CREATED_ATCREATED_BY' => $this->CREATED_AT,
+            'UPDATE_AT' => $this->UPDATE_AT,
         ]);
 
-        // $query->andFilterWhere(['like', 'KD_BERITA', $this->KD_BERITA])
-        //     ->andFilterWhere(['like', 'JUDUL', $this->JUDUL])
-        //     ->andFilterWhere(['like', 'ISI', $this->ISI])
-        //     ->andFilterWhere(['like', 'KD_CORP', $this->KD_CORP])
-        //     ->andFilterWhere(['like', 'KD_CAB', $this->KD_CAB])
-        //     ->andFilterWhere(['like', 'KD_DEP', $this->KD_DEP])
-        //     ->andFilterWhere(['like', 'DATA_PICT', $this->DATA_PICT])
-        //     ->andFilterWhere(['like', 'DATA_FILE', $this->DATA_FILE])
-        //     ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
-        //     ->andFilterWhere(['like', 'DATA_ALL', $this->DATA_ALL]);
+        $query->andFilterWhere(['like', 'KD_BERITA', $this->KD_BERITA])
+            ->andFilterWhere(['like', 'JUDUL', $this->JUDUL])
+            ->andFilterWhere(['like', 'ISI', $this->ISI])
+            ->andFilterWhere(['like', 'KD_CORP', $this->corpnm])
+            ->andFilterWhere(['like', 'KD_CAB', $this->KD_CAB])
+            ->andFilterWhere(['like', 'KD_DEP', $this->deptmn])
+            ->andFilterWhere(['like', 'DATA_PICT', $this->DATA_PICT])
+            ->andFilterWhere(['like', 'DATA_FILE', $this->DATA_FILE])
+            ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
+            ->andFilterWhere(['like', 'DATA_ALL', $this->DATA_ALL]);
 
         return $dataProvider;
     }
@@ -141,22 +152,22 @@ class BeritaSearch extends Berita
         }
 
         $query->andFilterWhere([
-            // 'ID' => $this->ID,
-            // 'STATUS' => $this->STATUS,
-            // 'CREATED_ATCREATED_BY' => $this->CREATED_ATCREATED_BY,
-            // 'UPDATE_AT' => $this->UPDATE_AT,
+            'ID' => $this->ID,
+            'STATUS' => $this->STATUS,
+            'CREATED_ATCREATED_BY' => $this->CREATE_AT,
+            'UPDATE_AT' => $this->UPDATE_AT,
         ]);
 
-        // $query->andFilterWhere(['like', 'KD_BERITA', $this->KD_BERITA])
-        //     ->andFilterWhere(['like', 'JUDUL', $this->JUDUL])
-        //     ->andFilterWhere(['like', 'ISI', $this->ISI])
-        //     ->andFilterWhere(['like', 'KD_CORP', $this->KD_CORP])
-        //     ->andFilterWhere(['like', 'KD_CAB', $this->KD_CAB])
-        //     ->andFilterWhere(['like', 'KD_DEP', $this->KD_DEP])
-        //     ->andFilterWhere(['like', 'DATA_PICT', $this->DATA_PICT])
-        //     ->andFilterWhere(['like', 'DATA_FILE', $this->DATA_FILE])
-        //     ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
-        //     ->andFilterWhere(['like', 'DATA_ALL', $this->DATA_ALL]);
+        $query->andFilterWhere(['like', 'KD_BERITA', $this->KD_BERITA])
+            ->andFilterWhere(['like', 'JUDUL', $this->JUDUL])
+            ->andFilterWhere(['like', 'ISI', $this->ISI])
+            ->andFilterWhere(['like', 'KD_CORP', $this->corphistory])
+            ->andFilterWhere(['like', 'KD_CAB', $this->KD_CAB])
+            ->andFilterWhere(['like', 'KD_DEP', $this->depthistory])
+            ->andFilterWhere(['like', 'DATA_PICT', $this->DATA_PICT])
+            ->andFilterWhere(['like', 'DATA_FILE', $this->DATA_FILE])
+            ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
+            ->andFilterWhere(['like', 'DATA_ALL', $this->DATA_ALL]);
 
         return $dataProvider;
     }

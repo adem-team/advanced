@@ -24,8 +24,10 @@ $attDinamik =[];
 $headColomnBT=[
   ['ID' =>0, 'ATTR' =>['FIELD'=>'KD_BERITA','SIZE' => '30px','label'=>'KD_BERITA','align'=>'left','warna'=>'97, 211, 96, 0.3']],
   ['ID' =>1, 'ATTR' =>['FIELD'=>'JUDUL','SIZE' => '350px','label'=>'SUBJECT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-  ['ID' =>2, 'ATTR' =>['FIELD'=>'KD_CORP','SIZE' => '50px','label'=>'CORP','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-  ['ID' =>3, 'ATTR' =>['FIELD'=>'KD_DEP','SIZE' => '50px','label'=>'DEPT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>2, 'ATTR' =>['FIELD'=>'KD_REF','SIZE' => '350px','label'=>'Kode Referensi','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>3, 'ATTR' =>['FIELD'=>'CREATED_AT','SIZE' => '350px','label'=>'Tanggal','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>4, 'ATTR' =>['FIELD'=>'corpnm','SIZE' => '50px','label'=>'CORP','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>5, 'ATTR' =>['FIELD'=>'deptmn','SIZE' => '50px','label'=>'DEPT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 ];
 $gvHeadColomnBT = ArrayHelper::map($headColomnBT, 'ID', 'ATTR');
 
@@ -68,33 +70,139 @@ $attDinamik[]=[
 ];
 /*GRIDVIEW ARRAY ROWS*/
 foreach($gvHeadColomnBT as $key =>$value[]){
-  $attDinamik[]=[
-    'attribute'=>$value[$key]['FIELD'],
-    'label'=>$value[$key]['label'],
-    'filter'=>true,
-    'hAlign'=>'right',
-    'vAlign'=>'middle',
-    //'mergeHeader'=>true,
-    'noWrap'=>true,
-    'headerOptions'=>[
+    if($value[$key]['FIELD'] == 'corpnm')
+    {
+      $attDinamik[]=[
+        'attribute'=>$value[$key]['FIELD'],
+        'label'=>$value[$key]['label'],
+        'filterType'=>GridView::FILTER_SELECT2,
+          'filter' => $selectCorp,
+          'filterWidgetOptions'=>[
+            'pluginOptions'=>['allowClear'=>true],
+          ],
+          'filterInputOptions'=>['placeholder'=>'select kd corp'],
+        'hAlign'=>'right',
+        'vAlign'=>'middle',
+        'noWrap'=>true,
+        'headerOptions'=>[
+            'style'=>[
+            'text-align'=>'center',
+            'width'=>$value[$key]['FIELD'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+            'background-color'=>'rgba('.$value[$key]['warna'].')',
+          ]
+        ],
+        'contentOptions'=>[
+          'style'=>[
+            'text-align'=>$value[$key]['align'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+          ]
+        ],
+              'width'=>'12px',
+      ];
+
+  }elseif($value[$key]['FIELD'] == 'deptmn'){
+    $attDinamik[]=[
+      'attribute'=>$value[$key]['FIELD'],
+      'label'=>$value[$key]['label'],
+      'filterType'=>GridView::FILTER_SELECT2,
+        'filter' => $selectdept,
+        'filterWidgetOptions'=>[
+          'pluginOptions'=>['allowClear'=>true],
+        ],
+        'filterInputOptions'=>['placeholder'=>'select departemen'],
+      'hAlign'=>'right',
+      'vAlign'=>'middle',
+      'noWrap'=>true,
+      'headerOptions'=>[
+          'style'=>[
+          'text-align'=>'center',
+          'width'=>$value[$key]['FIELD'],
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+          'background-color'=>'rgba('.$value[$key]['warna'].')',
+        ]
+      ],
+      'contentOptions'=>[
         'style'=>[
-        'text-align'=>'center',
-        'width'=>$value[$key]['SIZE'],
-        'font-family'=>'tahoma, arial, sans-serif',
-        'font-size'=>'8pt',
-        //'background-color'=>'rgba(97, 211, 96, 0.3)',
-        'background-color'=>'rgba('.$value[$key]['warna'].')',
-      ]
-    ],
-    'contentOptions'=>[
-      'style'=>[
-        'text-align'=>$value[$key]['align'],
-        'font-family'=>'tahoma, arial, sans-serif',
-        'font-size'=>'8pt',
-      ]
-    ],
-          //'width'=>'12px',
-  ];
+          'text-align'=>$value[$key]['align'],
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ],
+            'width'=>'12px',
+    ];
+  }elseif($value[$key]['FIELD'] == 'CREATED_AT'){
+    $attDinamik[]=[
+      'attribute'=>$value[$key]['FIELD'],
+      'label'=>$value[$key]['label'],
+      'value'=>function($model){
+        /*
+         * max String Disply
+         * @author ptrnov <piter@lukison.com>
+        */
+        return $model->CREATED_ATCREATED_BY;
+      },
+      'filterType' => GridView::FILTER_DATETIME,
+             'filterWidgetOptions' => [
+                 'pluginOptions' => [
+                     'autoclose' => true,
+                     'todayHighlight' => true,
+                 ]
+             ],
+      'hAlign'=>'right',
+      'vAlign'=>'middle',
+      'noWrap'=>true,
+      'headerOptions'=>[
+          'style'=>[
+          'text-align'=>'center',
+          'width'=>$value[$key]['FIELD'],
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+          'background-color'=>'rgba('.$value[$key]['warna'].')',
+        ]
+      ],
+      'contentOptions'=>[
+        'style'=>[
+          'text-align'=>$value[$key]['align'],
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ],
+            'width'=>'12px',
+    ];
+  }else{
+    $attDinamik[]=[
+      'attribute'=>$value[$key]['FIELD'],
+      'label'=>$value[$key]['label'],
+      'filter'=>true,
+      'hAlign'=>'right',
+      'vAlign'=>'middle',
+      //'mergeHeader'=>true,
+      'noWrap'=>true,
+      'headerOptions'=>[
+          'style'=>[
+          'text-align'=>'center',
+          'width'=>$value[$key]['SIZE'],
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+          //'background-color'=>'rgba(97, 211, 96, 0.3)',
+          'background-color'=>'rgba('.$value[$key]['warna'].')',
+        ]
+      ],
+      'contentOptions'=>[
+        'style'=>[
+          'text-align'=>$value[$key]['align'],
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ],
+            //'width'=>'12px',
+    ];
+  }
+
 };
 
 /*SHOW GRID VIEW LIST*/

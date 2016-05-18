@@ -3,6 +3,8 @@
 namespace lukisongroup\widget\models;
 
 use Yii;
+use lukisongroup\hrd\models\corp;
+use lukisongroup\hrd\models\dept;
 
 /**
  * This is the model class for table "a1000".
@@ -27,6 +29,8 @@ class Berita extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+     public $CREATED_AT;
+     public $CREATE_AT;
     public static function tableName()
     {
         return 'bt0001';
@@ -40,13 +44,102 @@ class Berita extends \yii\db\ActiveRecord
         return Yii::$app->get('db_widget');
     }
 
+    /**
+      *@author: wawan
+      *before save implode USER_CC
+      *@return parent beforeSave
+    */
+    public function beforeSave($insert)
+     {
+          $user_cc = implode(",", $this->USER_CC);
+          $this->USER_CC = $user_cc;
+          return parent::beforeSave($insert);
+      }
 
-      public function beforeSave($insert)
-            {
-                $user_cc = implode(",", $this->USER_CC);
-                $this->USER_CC = $user_cc;
-                return parent::beforeSave($insert);
-            }
+      /**
+        *@author: wawan
+        *@return relational database corp
+      */
+    public function getCorp()
+      {
+         return $this->hasOne(Corp::className(), ['CORP_ID' => 'KD_CORP']);
+      }
+
+      /**
+        *@author: wawan
+        *@return relational database Departement
+      */
+      public function getDept()
+        {
+           return $this->hasOne(Dept::className(), ['DEP_ID' => 'KD_DEP']);
+        }
+
+        /**
+          *@author: wawan
+          *get CORP_NM
+          *@return relational database corp
+        */
+      public function getcorpnnm()
+      {
+        # code...
+        return $this->corp->CORP_NM;
+      }
+
+      /**
+        *@author: wawan
+        *get CORP_NM || outbox(widget)
+        *@return relational database corp
+      */
+    public function getCorpnm()
+    {
+      # code...
+      return $this->corp->CORP_NM;
+    }
+
+    /**
+      *@author: wawan
+      *get CORP_NM || history(widget)
+      *@return relational database corp
+    */
+  public function getCorphistory()
+  {
+    # code...
+    return $this->corp->CORP_NM;
+  }
+
+  /**
+    *@author: wawan
+    *get DEP_NM || history(widget)
+    *@return relational database Departement
+  */
+public function getDepthistory()
+{
+  # code...
+  return $this->dept->DEP_NM;
+}
+
+
+      /**
+        *@author: wawan
+        *get DEP_NM
+        *@return relational database Departement
+      */
+    public function getdeptnm()
+    {
+      # code...
+      return $this->dept->DEP_NM;
+    }
+
+    /**
+      *@author: wawan
+      *get DEP_NM || outbox(widget)
+      *@return relational database Departement
+    */
+  public function getDeptmn()
+  {
+    # code...
+    return $this->dept->DEP_NM;
+  }
 
 
 
@@ -58,7 +151,7 @@ class Berita extends \yii\db\ActiveRecord
         return [
             // [['JUDUL'], 'required','on' => 'true'], // ajax validation checkbox value equal true
             [['JUDUL','USER_CC','KD_DEP','ISI'], 'required'],// ajax validation
-            [['ISI', 'DATA_PICT', 'DATA_FILE', 'DATA_ALL','KD_BERITA'], 'string'],
+            [['ISI', 'DATA_PICT', 'DATA_FILE', 'DATA_ALL','KD_BERITA','KD_REF'], 'string'],
             [['STATUS'], 'integer'],
             [['CREATED_ATCREATED_BY', 'UPDATE_AT','USER_CC'], 'safe'],
             [['KD_BERITA', 'KD_CORP', 'KD_CAB', 'KD_DEP'], 'string', 'max' => 20],

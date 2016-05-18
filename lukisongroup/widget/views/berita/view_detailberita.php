@@ -8,12 +8,13 @@ use yii\bootstrap\Modal;
 use yii\widgets\Pjax;
 use yii\helpers\ArrayHelper;
 use yii\data\ArrayDataProvider;
+use dosamigos\gallery\Gallery;
 
 /* namespace models */
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\widget\models\Commentberita;
 use lukisongroup\widget\models\BeritaImage;
-use dosamigos\gallery\Gallery;
+
 
 /* HEADER foto profile */
 $user = $model->CREATED_BY;
@@ -29,19 +30,6 @@ if(count($queryCariEmploye) == 0 || $emp_img =='')
   $foto_profile = 'data:image/jpg;base64,'.$emp_img;
 }
 
-/* message profile*/
-$emp_ID = Yii::$app->getUserOpt->profile_user()->emp->EMP_ID;
-$searchprofile = Commentberita::find()->where(['KD_BERITA'=>$model->KD_BERITA,'CREATED_BY'=>$emp_ID])->one();
-$msseage_profile = $searchprofile->EMP_IMG;
-
-if(count($searchprofile) == 0 ||  $msseage_profile =='')
-{
-  $profile = '/upload/hrd/Employee/default.jpg';
-}else{
-  $profile = 'data:image/jpg;base64,'.$msseage_profile;
-}
-
-
 
 	//$queryAttachHeader = BeritaImage::find()->where(['ID_USER'=>$user])->andwhere(['CREATED_BY'=>$user])->All();
 	// $aryProviderAttachHeader= new ArrayDataProvider([
@@ -52,10 +40,8 @@ if(count($searchprofile) == 0 ||  $msseage_profile =='')
 		// ]
 	// ]);
 	//$aryPrvData=$aryProviderAttachHeader->getModels[0];
-	//print_r($aryPrvData);
-
 	$items = [];
-		$attach_file = BeritaImage::find()->where(['ID_USER'=>$user,'TYPE'=>1])->andwhere(['CREATED_BY'=>$user])->All();
+		$attach_file = BeritaImage::find()->where(['ID_USER'=>$user,'TYPE'=>1])->andwhere(['KD_BERITA'=>$model->KD_BERITA])->andwhere(['CREATED_BY'=>$user])->All();
 
 		// $aryFieldHeader[]=ArrayHelper::getColumn($attach_file,'ATTACH64');
 		// $no=0;
@@ -120,77 +106,9 @@ if(count($attach_file)== 0)
             'showControls'=>true,
 
     ]);
-
-
-
-		// $itemDetailAttach= Gallery::widget([
-		// 				'id'=>'header-detail1',
-		// 				'items' => $items2,
-    //
-		// ]);
-
 ?>
 
  <?php
-
- /*
-  * @author : wawan
-    * @since 1.0
- */
-
- /* function Add_close($model){
-     $title = Yii::t('app','');
-     $options = [ 'id'=>'berita-isi-id-close',
-               'data-pjax' => true,
-               'data-toggle-close'=>$model->KD_BERITA,
-               'class'=>'btn btn-danger btn-xs',
-     ];
-     $icon = '<span class="glyphicon glyphicon-remove-sign">Close</span>';
-     $label = $icon . ' ' . $title;
-     $content = Html::a($label,'', $options);
-     return $content;
- }
- // print_r($model->CREATED_BY);
- // die();
-
- if($model->CREATED_BY != $id )
- {
-    $btnclose = "";
-
- }else{
-
-   $btnclose = Add_close($model);
- } */
-
-
-
- /*
-  * @author : wawan
-    * @since 1.0
- */
-
- /* function berita_reply($model){
-     $title = Yii::t('app','');
-     $options = [ 'id'=>'berita-reply-id',
-             'data-toggle'=>"modal",
-             'data-target'=>"#berita-reply-id-join",
-             'class'=>'btn btn-info btn-xs',
-             'title'=>'Reply'
-     ];
-     $icon = '<span class="fa fa-plus fa-lg"> Reply Discusion</span>';
-     $label = $icon . ' ' . $title;
-     $url = Url::toRoute(['/widget/berita/join-comment','KD_BERITA'=>$model->KD_BERITA]);
-     $content = Html::a($label,$url, $options);
-     return $content;
- }
-
- if($model->STATUS == 0)
- {
-   $btnreply = "";
- }else{
-   $btnreply = berita_reply($model);
- } */
-
 
 
     /* array commentar */
@@ -199,6 +117,15 @@ if(count($attach_file)== 0)
     $body1 = [];
 	$x=0;
     foreach ($query as $key => $value) {
+      $emp_ID = $value->profile->EMP_ID;
+      $condition = ['and',
+      ['ID_USER'=>$emp_ID],
+      ['KD_BERITA'=> $model->KD_BERITA],
+      ['TYPE'=> 0],
+      ['CREATED_AT'=> $value->CREATED_AT],
+    ];
+      $attach_image = BeritaImage::find()->where($condition)->All();
+
       if($value->EMP_IMG == "default.jpg")
       {
         $profile = '/upload/hrd/Employee/default.jpg';
@@ -209,9 +136,11 @@ if(count($attach_file)== 0)
 		if ($x==0){
 			$a=$this->render('_message_left', [
 				'profile'=>$profile,
+        'attach_image'=>$attach_image,
+        'kd_berita'=>$model->KD_BERITA,
 				'nama'=>$value->profile->EMP_NM,
 				'messageReply'=>$value->CHAT,
-				'jamwaktu'=> date('Y-m-d h:i A', strtotime($value['CREATED_AT'])),
+				'jamwaktu'=> date('Y-m-d h:i A', strtotime($value->CREATED_AT)),
 				'items'=>$items,
 				'lampiran'=>Html::panel(
 						[
@@ -232,8 +161,10 @@ if(count($attach_file)== 0)
       }
 			$a=$this->render('_message_right', [
 				'profile'=>$profile,
+        'kd_berita'=>$model->KD_BERITA,
+        'attach_image'=>$attach_image,
 				'messageReply'=>$value->CHAT,
-				'jamwaktu'=>date('Y-m-d h:i A', strtotime($value['CREATED_AT'])),
+				'jamwaktu'=>date('Y-m-d h:i A', strtotime($value->CREATED_AT)),
 				'nama'=>$value->profile->EMP_NM,
 				'items'=>$items,
 				'lampiran'=>Html::panel(
@@ -268,23 +199,13 @@ if(count($attach_file)== 0)
 		'dataProviderImageHeader'=>$dataProviderImageHeader,
 		'aryFieldHeaderX'=>$aryFieldHeaderX,
     'id'=>$id
-		// 'items'=>$items,
 	]);
 	$viewBt=Html::mediaList([
 		   [
-			//'heading' => "<div class='box-header with-border'>".$model->JUDUL."</div>",
-			//'body' => "<div class='box-footer box-comments'>".$model->ISI."</div><div class='box-footer box-comments'><div>".$btnreply." ".$btnclose."</div></div>",
 			'body' => $bodyHead,
 			'imgOptions'=>['width'=>"84px",'height'=>"84px",'class'=>'img-circle'], //setting image display,
-			//'src' => '#',
-			// 'srcOptions'=>[
-				 // 'style'=>[
-					 // 'background-color'=>'rgba(0, 95, 218, 0.3)',
-					 // 'width'=>"90px",'height'=>"90px",'padding-top'=>'3px','padding-left'=>'3px',
-				 // ]
-			// ],
 			'img' =>$foto_profile,
-			'items' =>$body1, //"<div class='box-footer box-comments'><div class='box-comment'>".$body."</div></div>",
+			'items' =>$body1,
 		   ],
 	]);
 
@@ -305,75 +226,13 @@ if(count($attach_file)== 0)
 	</div>
 </div>
 
-<?php
-// $this->registerJs("
-// $('#{$model->ID}').on('click', function (event) {
-//         var val = $('').val();
-//         alert(val);
-//         $('#modal').modal('show')
-//   }); ",$this::POS_READY);
-//  ?>
-
-
- <!-- <div class="modal fade" id="modal" role="dialog">
-    <div class="modal-dialog">
-      <! Modal content-->
-      <!-- <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Modal Header</h4>
-        </div>
-        <div class="modal-body"> -->
-          <?php
-          //     $kd_berita =  Yii::$app->getRequest()->getQueryParam('KD_BERITA');
-          //     $file_upload = BeritaImage::find()->where(['KD_BERITA'=>$kd_berita])->all();
-          // foreach ($file_upload as $key => $value) { -->
-            # code...
-            // $items_attach[] = [
-            //       'src'=>'data:image/pdf;base64,'.$value['ATTACH64'],
-            //       'imageOptions'=>['width'=>"120px",'height'=>"120px",'class'=>'img-rounded'], //setting image display
-            //       // 'Options'=>['class'=>'crousel slide'],
-            //       // 'showControls'=>false
-            //   ];
-
-
-          //   //if($value['ATTACH64']!=''){
-          //     $aryFieldHeader1[]=
-          //         /* 'clm'.$key=>[
-          //           'id'=>$value['ID'],
-          //           'nilai'=>$value['ATTACH64'],
-          //         ] */
-          //         //'id'=>$value['ID'],
-          //         ['clm'.$key.'=>'.$value['ATTACH64'],];
-          //   //}
-          //
-          //
-          //
-          // }
-          //
-          // echo $itemHeaderfile= Gallery::widget([
-      		// 				'id'=>'header-galery',
-      		// 				'items' =>$items_attach,
-          //         // 'options' => [
-          //         //   'id' =>$model->ID
-          //         // ],
-      		// 				// 'showControls'=>false,
-          //
-      		// ]);
-
-           ?>
-
-
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-
-
 
 <?php
+/**@author wawan
+  *js close news
+  *event click(POS_READY)
+  *url = /widget/berita/close-berita
+*/
 $this->registerJs("
   $('#berita-isi-id-close').click(function(e){
     e.preventDefault();
@@ -397,6 +256,9 @@ $this->registerJs("
   ",$this::POS_READY);
 
 
+  /**@author wawan
+    *js modal render commentar
+  */
 $this->registerJs("
   $.fn.modal.Constructor.prototype.enforceFocus = function() {};
   $('#berita-reply-id-join').on('show.bs.modal', function (event) {
@@ -412,15 +274,14 @@ $this->registerJs("
       });
     });
 ",$this::POS_READY);
+
 Modal::begin([
   'id' => 'berita-reply-id-join',
   'header' => '<h4 class="modal-title"><b> Comment </b></h4>',
   'headerOptions'=>[
     'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
   ]
-  // 'size' => Modal::,
 ]);
-  //echo '...';
 Modal::end();
 
 
