@@ -32,8 +32,8 @@ $headColomnBT=[
   ['ID' =>1, 'ATTR' =>['FIELD'=>'JUDUL','SIZE' => '10px','label'=>'SUBJECT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
   ['ID' =>2, 'ATTR' =>['FIELD'=>'KD_REF','SIZE' => '10px','label'=>'Kode Ref','align'=>'left','warna'=>'97, 211, 96, 0.3']],
   ['ID' =>3, 'ATTR' =>['FIELD'=>'CREATED_ATCREATED_BY','SIZE' => '10px','label'=>'Tanggal','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-  ['ID' =>4, 'ATTR' =>['FIELD'=>'KD_CORP','SIZE' => '10px','label'=>'CORP','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-  ['ID' =>5, 'ATTR' =>['FIELD'=>'KD_DEP','SIZE' => '10px','label'=>'DEPT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>4, 'ATTR' =>['FIELD'=>'corpnnm','SIZE' => '10px','label'=>'CORP','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>5, 'ATTR' =>['FIELD'=>'deptnm','SIZE' => '10px','label'=>'DEPT','align'=>'left','warna'=>'97, 211, 96, 0.3']],
   ['ID' =>6, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'Status Berita','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 ];
 $gvHeadColomnBT = ArrayHelper::map($headColomnBT, 'ID', 'ATTR');
@@ -82,7 +82,12 @@ foreach($gvHeadColomnBT as $key =>$value[]){
     $attDinamik[]=[
       'attribute'=>$value[$key]['FIELD'],
       'label'=>$value[$key]['label'],
-      'filter'=>true,
+      'filterType'=>GridView::FILTER_SELECT2,
+        'filter' => $valStt,
+        'filterWidgetOptions'=>[
+          'pluginOptions'=>['allowClear'=>true],
+        ],
+        'filterInputOptions'=>['placeholder'=>'Pilih'],
       'format' => 'raw',
       'value'=>function($model){
         $id = Yii::$app->user->identity->EMP_ID; // componen
@@ -114,36 +119,144 @@ foreach($gvHeadColomnBT as $key =>$value[]){
       ],
             'width'=>'12px',
     ];
-  }else {
-    # code...
-    $attDinamik[]=[
-      'attribute'=>$value[$key]['FIELD'],
-      'label'=>$value[$key]['label'],
-      'filter'=>true,
-      'hAlign'=>'right',
-      'vAlign'=>'middle',
-      'noWrap'=>true,
-      'headerOptions'=>[
+  }else{
+    if($value[$key]['FIELD'] == 'corpnnm')
+    {
+      $attDinamik[]=[
+        'attribute'=>$value[$key]['FIELD'],
+        'label'=>$value[$key]['label'],
+        'filterType'=>GridView::FILTER_SELECT2,
+    			'filter' => $selectCorp,
+    			'filterWidgetOptions'=>[
+    				'pluginOptions'=>['allowClear'=>true],
+    			],
+    			'filterInputOptions'=>['placeholder'=>'select kd corp'],
+        'hAlign'=>'right',
+        'vAlign'=>'middle',
+        'noWrap'=>true,
+        'headerOptions'=>[
+            'style'=>[
+            'text-align'=>'center',
+            'width'=>$value[$key]['FIELD'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+            'background-color'=>'rgba('.$value[$key]['warna'].')',
+          ]
+        ],
+        'contentOptions'=>[
           'style'=>[
-          'text-align'=>'center',
-          'width'=>$value[$key]['FIELD'],
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'8pt',
-          'background-color'=>'rgba('.$value[$key]['warna'].')',
-        ]
-      ],
-      'contentOptions'=>[
-        'style'=>[
-          'text-align'=>$value[$key]['align'],
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'8pt',
-        ]
-      ],
-            'width'=>'12px',
-    ];
+            'text-align'=>$value[$key]['align'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+          ]
+        ],
+              'width'=>'12px',
+      ];
+    }elseif($value[$key]['FIELD'] == 'deptnm'){
+      $attDinamik[]=[
+        'attribute'=>$value[$key]['FIELD'],
+        'label'=>$value[$key]['label'],
+        'filterType'=>GridView::FILTER_SELECT2,
+          'filter' => $selectdept,
+          'filterWidgetOptions'=>[
+            'pluginOptions'=>['allowClear'=>true],
+          ],
+          'filterInputOptions'=>['placeholder'=>'select departemen'],
+        'hAlign'=>'right',
+        'vAlign'=>'middle',
+        'noWrap'=>true,
+        'headerOptions'=>[
+            'style'=>[
+            'text-align'=>'center',
+            'width'=>$value[$key]['FIELD'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+            'background-color'=>'rgba('.$value[$key]['warna'].')',
+          ]
+        ],
+        'contentOptions'=>[
+          'style'=>[
+            'text-align'=>$value[$key]['align'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+          ]
+        ],
+              'width'=>'12px',
+      ];
+    }elseif($value[$key]['FIELD'] == 'CREATED_ATCREATED_BY'){
+      $attDinamik[]=[
+        'attribute'=>$value[$key]['FIELD'],
+        'label'=>$value[$key]['label'],
+        'value'=>function($model){
+          /*
+           * max String Disply
+           * @author ptrnov <piter@lukison.com>
+          */
+          return $model->CREATED_ATCREATED_BY;
+        },
+        'filterType' => GridView::FILTER_DATETIME,
+               'filterWidgetOptions' => [
+                   'pluginOptions' => [
+                       'autoclose' => true,
+                       'todayHighlight' => true,
+                   ]
+               ],
+        'hAlign'=>'right',
+        'vAlign'=>'middle',
+        'noWrap'=>true,
+        'headerOptions'=>[
+            'style'=>[
+            'text-align'=>'center',
+            'width'=>$value[$key]['FIELD'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+            'background-color'=>'rgba('.$value[$key]['warna'].')',
+          ]
+        ],
+        'contentOptions'=>[
+          'style'=>[
+            'text-align'=>$value[$key]['align'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+          ]
+        ],
+              'width'=>'12px',
+      ];
+
+    }else{
+      # code...
+      $attDinamik[]=[
+        'attribute'=>$value[$key]['FIELD'],
+        'label'=>$value[$key]['label'],
+        'filter'=>true,
+        'hAlign'=>'right',
+        'vAlign'=>'middle',
+        'noWrap'=>true,
+        'headerOptions'=>[
+            'style'=>[
+            'text-align'=>'center',
+            'width'=>$value[$key]['FIELD'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+            'background-color'=>'rgba('.$value[$key]['warna'].')',
+          ]
+        ],
+        'contentOptions'=>[
+          'style'=>[
+            'text-align'=>$value[$key]['align'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+          ]
+        ],
+              'width'=>'12px',
+      ];
+
+    }
+
   }
 
 };
+
 
 /*SHOW GRID VIEW LIST*/
 echo GridView::widget([

@@ -20,6 +20,7 @@ use lukisongroup\widget\models\Commentberita;
 use lukisongroup\widget\models\BeritaSearch;
 use lukisongroup\hrd\models\Dept;
 use lukisongroup\hrd\models\Employe;
+use lukisongroup\hrd\models\Corp;
 
 /**
  * BeritaController implements the CRUD actions for Berita model.
@@ -83,7 +84,18 @@ class BeritaController extends Controller
         $searchModelHistory = new BeritaSearch();
         $dataProviderHistory = $searchModelHistory->searchBeritaClose(Yii::$app->request->queryParams);
 
+        /* filter corp */
+        $selectCorp = ArrayHelper::map(Corp::find()->where('CORP_STS<>3')->all(), 'CORP_ID', 'CORP_NM');
 
+        /* filter Dept */
+        $selectdept = ArrayHelper::map(Dept::find()->where('DEP_STS<>3')->all(), 'DEP_ID', 'DEP_NM');
+
+        /* filter Status */
+        $aryStt= [
+      		  ['STATUS' => 0, 'STT_NM' => 'UNREAD'],
+      		  ['STATUS' => 1, 'STT_NM' => 'READ'],
+      	];
+      	$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
 
         return $this->render('index', [
             'searchModelOutbox' => $searchModelOutbox,
@@ -91,7 +103,10 @@ class BeritaController extends Controller
             'searchModelInbox'  => $searchModelInbox,
             'dataProviderInbox' => $dataProviderInbox,
             'searchModelHistory' => $searchModelHistory,
-            'dataProviderHistory' => $dataProviderHistory
+            'dataProviderHistory' => $dataProviderHistory,
+            'selectCorp'=>$selectCorp,
+            'selectdept'=>$selectdept,
+            'valStt'=>$valStt
         ]);
     }
 
@@ -109,6 +124,7 @@ class BeritaController extends Controller
 
       $model = Berita::find()->where(['KD_BERITA' => $KD_BERITA])->one();
       $connection = Yii::$app->db_widget;
+      /* note next development */
 	    $command =  $connection->createCommand('UPDATE bt0001notify set TYPE = 0 where KD_BERITA="'.$KD_BERITA.'" AND ID_USER="'.$id.'"');
       $command->execute();
 
@@ -214,16 +230,16 @@ class BeritaController extends Controller
         /* componen user */
         $profile = Yii::$app->getUserOpt->profile_user()->emp;
         $emp_img = $profile->EMP_IMG;
-
-
+        $emp_img_base64 = $profile->IMG_BASE64;
 
         /* foto profile */
-        if($emp_img == '')
+        if($emp_img_base64 == '')
         {
          $foto_profile = Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/default.jpg', ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
         }else{
-         $foto_profile = Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/'.$emp_img, ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
+         $foto_profile = Html::img('data:image/jpg;base64,'.$emp_img_base64, ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
         }
+
 
           /* proses save */
         if ($model->load(Yii::$app->request->post())) {
@@ -253,7 +269,7 @@ class BeritaController extends Controller
           if($model->save())
           {
 
-            $update_image_upload = BeritaImage::updateAll(['KD_BERITA' => $model->KD_BERITA], ['ID_USER'=>$profile->EMP_ID]);
+            $update_image_upload = BeritaImage::updateAll(['KD_BERITA' => $model->KD_BERITA], 'ID_USER="'.$profile->EMP_ID.'"AND KD_BERITA = ""');
 
             /* connection db widget */
             $connection = Yii::$app->db_widget;
@@ -345,6 +361,13 @@ class BeritaController extends Controller
 
 		      if($model->save())
           {
+
+            $condition = ['and',
+            ['ID_USER'=>$profile->EMP_ID],
+            ['KD_BERITA'=> $model->KD_BERITA],
+            ['TYPE'=> 0],
+          ];
+              $update_image = BeritaImage::updateAll(['CREATED_AT' => $model->CREATED_AT],$condition);
 
             /* update read or unread  notifikasion */
             $notifupdateread = BeritaNotify::updateAll(['TYPE' => 1], ['KD_BERITA'=>$model->KD_BERITA]);

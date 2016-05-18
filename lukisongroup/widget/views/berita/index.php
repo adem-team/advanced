@@ -18,19 +18,26 @@ use lukisongroup\widget\models\Commentberita;
 /* grid view news inbox*/
 $inbox =  Yii::$app->controller->renderPartial('inbox',[
 	'searchModelInbox'=>$searchModelInbox,
-	'dataProviderInbox'=>$dataProviderInbox
+	'dataProviderInbox'=>$dataProviderInbox,
+	'selectCorp'=>$selectCorp,
+	'selectdept'=>$selectdept,
+	'valStt'=>$valStt
 ]);
 
 /* grid view news outbox*/
  $outbox = Yii::$app->controller->renderPartial('outbox',[
 	'searchModelOutbox'=>$searchModelOutbox,
-	'dataProviderOutbox'=>$dataProviderOutbox
+	'dataProviderOutbox'=>$dataProviderOutbox,
+	'selectCorp'=>$selectCorp,
+  'selectdept'=>$selectdept
 ]);
 
 /* grid view news History*/
 $History = Yii::$app->controller->renderPartial('history',[
 	'searchModelHistory'=>$searchModelHistory,
-	'dataProviderHistory'=>$dataProviderHistory
+	'dataProviderHistory'=>$dataProviderHistory,
+	'selectCorp'=>$selectCorp,
+  'selectdept'=>$selectdept
 ]);
 
 /* items tabs author : wawan */
