@@ -64,7 +64,7 @@ $this->title = 'LukisonGroup.com';
 	 *	'theme' => NotificationsWidget::THEME_GROWL,
 	*/
 	NotificationsWidget::widget([
-		'theme' => NotificationsWidget::THEME_PNOTIFY,
+		'theme' => NotificationsWidget::THEME_NOTIFIT,
 		 'clientOptions' => [
 			'location' => 'id',
 		], 

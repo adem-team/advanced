@@ -103,9 +103,10 @@ class Auth2Model extends Model
 						if ($poHeaderStt->save()) {
 
 							Notification::notify(Notification::KEY_NEW_MESSAGE, 23,Yii::$app->user->identity->id,$this->kdpo);
-
+							
 							$msgNotify = new MessageNotify;
 							$msgNotify->USER_CREATE=Yii::$app->user->identity->id; 				//integer
+							$msgNotify->USER_FROM_ID= $this->getProfile()->EMP_ID;
 							$msgNotify->USER_FROM= $this->getProfile()->EMP_NM; 			//varchar 50
 							$msgNotify->USER_TO='Stephen'; 			//varchar 50
 							$msgNotify->SUBJECT='PO'; 				//varchar 10
