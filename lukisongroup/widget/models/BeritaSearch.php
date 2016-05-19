@@ -55,11 +55,13 @@ class BeritaSearch extends Berita
         $profile = Yii::$app->getUserOpt->profile_user(); //componen
         $emp_id = $profile->EMP_ID;
         $dep_id = $profile->emp->DEP_ID;
-        $query = Berita::find()->where(['OR',
+        $query = Berita::find()->where('USER_CC like "%'.$emp_id.'%"  OR  KD_DEP=0 OR KD_DEP="'.$dep_id.'" AND STATUS<>0');
+		
+						/*  ->where(['OR',
                           ['USER_CC'=>$emp_id],
                           ['KD_DEP'=>"0"],
                           ['KD_DEP'=>$dep_id],
-                          ])->andwhere('STATUS<>0');
+                          ])->andwhere('STATUS<>0'); */
 
 
         $dataProvider = new ActiveDataProvider([

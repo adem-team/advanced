@@ -77,7 +77,8 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 										[
 											'content' => '<span class="fa fa-folder-open fa-lg"></span>'. '   '. 'Berita Acara',
 											'url' => '/widget/berita',
-											'badge' =>''//$notif,
+											'badge' =>'1',
+											//'badge' =>'<span class="badge" style="background-color:#ff0000">ABSENT </span>',
 										],
 										[
 											'content' => '<span class="fa fa-comments fa-lg"></span>'. '   '.'Chating ',

@@ -43,13 +43,13 @@ $attDinamik[]=[
   'class'=>'kartik\grid\ActionColumn',
   'dropdown' => true,
   'template' => '{view}',
-  'dropdownOptions'=>['class'=>'pull-left dropdown','style'=>['disable'=>true]],
+  'dropdownOptions'=>['class'=>'pull-left dropup','style'=>['disable'=>true]],
   'dropdownButton'=>[
     'class' => $actionClass,
   ],
   'buttons' => [
     'view' =>function($url, $model, $key){
-        return  '<li>' .Html::a('<span class="fa fa-random fa-dm"></span>'.Yii::t('app', 'View'),
+        return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
                       ['/widget/berita/detail-berita','KD_BERITA'=>$model->KD_BERITA],[
                       'id'=>'inbox-berita-id',
                       ]). '</li>' . PHP_EOL;

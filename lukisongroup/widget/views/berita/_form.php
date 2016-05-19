@@ -26,35 +26,52 @@ use dosamigos\ckeditor\CKEditor;
 
 
     <div class="row">
-      <div class="col-xs-4 col-sm-4 col-md-4">
-        <?= $foto_profile ?>
-      </div>
-      <div class="col-xs-8 col-sm-8 col-md-8">
-        <?= $form->field($model, 'JUDUL')->textInput(['maxlength' => true]) ?>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+			<?= $form->field($model, 'JUDUL')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'ISI')->widget(CKEditor::className(), [
-            'options' => ['rows' => 6],
-            'preset' => 'basic'
-        ]) ?>
+			<?= $form->field($model, 'ISI')->widget(CKEditor::className(), [
+				'options' => ['rows' => 6],
+				'preset' => [
+						//'height' => 400,
+						'toolbarGroups' => [
+							['name' => 'document', 'groups' => ['mode', 'document', 'doctools']],
+							['name' => 'clipboard', 'groups' => ['clipboard', 'undo']],
+							['name' => 'editing', 'groups' => [ 'find', 'selection', 'spellchecker']],
+							['name' => 'forms'],
+							'/',
+							['name' => 'basicstyles', 'groups' => ['basicstyles', 'colors','cleanup']],
+							['name' => 'paragraph', 'groups' => [ 'list', 'indent', 'blocks', 'align', 'bidi' ]],
+							['name' => 'links'],
+							['name' => 'insert'],
+							'/',
+							['name' => 'styles'],
+							['name' => 'blocks'],
+							['name' => 'colors'],
+							['name' => 'tools'],
+							['name' => 'others'],
+						],
+					],
+			])->label('Peristiwa/Kejadian'); ?>
 
-        <?php echo \kato\DropZone::widget([
-         'options' => [
-             'maxFilesize' => '2',
-             'acceptedFiles'=>'image/*,application/pdf',
-             'url'=>'/widget/berita/upload-berita-acara'
-         ],
-         'clientEvents' => [
-             'complete' => "function(file){console.log(file)}",
-             'removedfile' => "function(file){alert(file.name + ' is removed')}"
-         ],
-     ]);
-   ?>
+			<?php 
+				echo \kato\DropZone::widget([
+					 'options' => [
+						 'maxFilesize' => '2',
+						 'acceptedFiles'=>'image/*,application/pdf',
+						 'url'=>'/widget/berita/upload-berita-acara'
+					 ],
+					 'clientEvents' => [
+						 'complete' => "function(file){console.log(file)}",
+						 'removedfile' => "function(file){alert(file.name + ' is removed')}"
+					 ],
+				]);
+			?>
 
+			<?=  $form->field($model, 'KD_DEP')->widget(Select2::classname(),['data' => $datadep,'options' => ['placeholder' => 'Select ...'],])->label('Send to Dept'); ?>
 
-        <?=  $form->field($model, 'KD_DEP')->widget(Select2::classname(),['data' => $datadep,'options' => ['placeholder' => 'Select ...'],]) ?>
-
-          <?=  $form->field($model, 'USER_CC')->widget(Select2::classname(),['data' =>$dataemploye,
-          'options' => ['placeholder' => 'Select ...','multiple'=>true],]) ?>
+			<?=  $form->field($model, 'USER_CC')->widget(Select2::classname(),['data' =>$dataemploye,
+			'options' => ['placeholder' => 'Select ...','multiple'=>true],]) 
+			?>
 
 
 
