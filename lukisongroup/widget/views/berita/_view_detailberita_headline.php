@@ -66,6 +66,9 @@ use kartik\grid\GridView;
 		return $content;
 	}
 
+  /* button print next print-berita-acara */
+  $print = Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print', ['print-berita-acara','kd_berita'=>$model->KD_BERITA], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
+
 
 
 	/*Image Header*/
@@ -129,9 +132,74 @@ use kartik\grid\GridView;
 		<div class="box-body">
 			<!-- Conversations are loaded here -->
 			<div class="direct-chat-messages">
+        <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"  style="margin-left:0;">
+        <dl>
+          <dt style="width:150px; float:left;">No</dt>
+          <dd style="color:rgba(87, 163, 247, 1)">:<b> <?= $model->KD_BERITA ?></b></dd>
+
+          <dt style="width:150px; float:left;">Tanggal</dt>
+          <dd>: <?php echo  $tanggal =substr($model->CREATED_ATCREATED_BY,0,10);?></dd>
+        </dl>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"  style="margin-right:0;">
+        <dl>
+          <dt style="width:150px; float:left;">Kode Ref</dt>
+          <dd style="color:rgba(87, 163, 247, 1)">:<b> <?php  echo $kd_ref = $model->KD_REF !=""? $model->KD_REF: "xxx-xxx-xx" ;?></b></dd>
+
+          <dt style="width:150px; float:left;">Jam</dt>
+          <dd>: <?php echo $jam ?></dd>
+        </dl>
+        </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+            <dl>
+              <dt style="width:150px; float:left;">Peristiwa/Kejadian</dt>
+              <dd style="color:rgba(87, 163, 247, 1)">:<b> <?php echo $peristiwa = $model->ISI != ""? $model->ISI : "--------------" ?></b></dd>
+            </dl>
+
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <dl>
+            <dt style="width:150px; float:left;">Keterangan</dt>
+            <dd style="color:rgba(87, 163, 247, 1)">:<b> <?php echo $keterangan =  $model->DATA_ALL!= ""?:"-------------"; ?></b></dd>
+          </dl>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <dl>
+          <dt style="float:left;">Tangerang,<?php echo $date = date("d M Y",strtotime($model->CREATED_ATCREATED_BY)); ?></dt><br>
+          <dt style="float:left;">Dibuat Oleh,</dt>
+        </dl>
+        <dl>
+          <?php
+            $ttd1 = $ttd!='' ?  '<img style="width:80; height:40px" src='.$ttd.'></img>' :"";
+            echo $ttd1;
+          ?>
+        </dl>
+        <dl>
+          <?php
+            echo $emp_nm
+           ?>
+        </dl>
+
+    </div>
+  </div>
 				<!-- Message. Default to the left -->
+				<!-- <div> -->
+				<!-- </div> -->
+
+
 				<?php
-					echo $model->ISI;
+					// echo $model->ISI;
 				?>
 				<!-- Message to the right -->
 			</div><!--/.direct-chat-messages-->
@@ -171,8 +239,8 @@ use kartik\grid\GridView;
 
 	<!-- REPLAY DETAIL ptr.nov-->
 	<div>
-		<?php
-			echo kembali().' '.$btnreply.''.$btnclose;
+    <?php
+			echo kembali().' '.$btnreply.''.$btnclose.''.$print;
 		?>
 	</div>
 	<div>

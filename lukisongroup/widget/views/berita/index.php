@@ -12,6 +12,7 @@ use kartik\tabs\TabsX;
 /* namespace models */
 use lukisongroup\widget\models\Berita;
 use lukisongroup\widget\models\Commentberita;
+use lukisongroup\sistem\models\Userlogin;
 ?>
 
 <?php

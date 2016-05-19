@@ -35,6 +35,7 @@ use kartik\helpers\Html;
 		<div class="direct-chat-messages">
 			<!-- Message. Default to the left -->
 			<?php
+
 			if(count($attach_image) == 0)
 			{
 				for($a = 0; $a < 2; $a++)
@@ -42,15 +43,61 @@ use kartik\helpers\Html;
 				echo Html::img(Yii::getAlias('@web').'/upload/barang/df.jpg', ['width'=>'130','height'=>'130', 'align'=>'center' ,'class'=>'img-thumbnail']);
 				}
 			}else{
+				// $item = [];
 				foreach ($attach_image as $key => $value) {
 					# code...
 
-					echo Html::img('data:image/jpg;base64,'.$value->ATTACH64, ['class' => 'pull-left img-thumbnail','width'=>"120px",'height'=>"120px"]);
-				}
-			}
 
-				// echo $model->ISI;
-			?>
+						// Html::img('data:image/jpg;base64,'.$value->ATTACH64, ['class' => 'pull-left img-thumbnail','width'=>"120px",'height'=>"120px"]);
+					// $item[]= ['img'=>'data:image/jpg;base64,'.$value->ATTACH64];
+
+				$fotorama = \metalguardian\fotorama\Fotorama::begin(
+        [
+            'options' => [
+                'loop' => true,
+                'hash' => true,
+                'ratio' => 800/600,
+								  'width' => '50%',
+            ],
+            'spinner' => [
+                'lines' => 20,
+            ],
+            'tagName' => 'span',
+            'useHtmlData' => false,
+            'htmlOptions' => [
+                'class' => 'custom-class',
+                'id' => 'custom-id',
+            ],
+        ]
+    );
+    ?>
+		<?php
+		// $data;
+		echo '<img src=data:image/jpg;base64,'.$value->ATTACH64.'></img>';
+	}
+		 ?>
+
+    <?php $fotorama->end(); }?>
+
+
+
+
+		<!-- // 	echo \metalguardian\fotorama\Fotorama::widget(
+	  //       [
+	  //           'items' => [
+	  //               $item
+	  //           ],
+	  //           'options' => [
+	  //               'nav' => 'thumbs',
+	  //           ]
+	  //       ]
+	  //   );
+		// }
+
+			?> -->
+
+				<!-- // echo $model->ISI; -->
+
 			<!-- Message to the right -->
 		</div><!--/.direct-chat-messages-->
 		<!-- Contacts are loaded here -->

@@ -11,6 +11,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
+use kartik\mpdf\Pdf;
 
 /* namespace models */
 use lukisongroup\widget\models\Berita;
@@ -59,12 +60,14 @@ class BeritaController extends Controller
                      //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
   				   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
                      return true;
+
                  }
               } else {
                   return true;
               }
       }
 
+    
 
     /**
      * Lists all Berita models.
@@ -208,6 +211,51 @@ class BeritaController extends Controller
         return false;
     }
 
+    public function actionPrintBeritaAcara($kd_berita)
+    {
+      # code...
+      /* seacrh news */
+      $model = Berita::findOne(['KD_BERITA'=>$kd_berita]);
+
+      /* search employe */
+      $queryCariEmploye = employe::find()->where(['EMP_ID'=>$model->CREATED_BY])->andwhere('STATUS<>3')->one();
+      $ttdbase64 = $queryCariEmploye->SIGSVGBASE64;
+      $emp_nm = $queryCariEmploye->EMP_NM.' '.$queryCariEmploye->EMP_NM_BLK;
+
+      $content = $this->renderPartial( '_print_berita', [
+        'model'=>$model,
+        'emp_nm'=>$emp_nm,
+        'ttdbase64'=>$ttdbase64
+
+          ]);
+
+      $pdf = new Pdf([
+        // set to use core fonts only
+        'mode' => Pdf::MODE_CORE,
+        // A4 paper format
+        'format' => Pdf::FORMAT_A4,
+        // portrait orientation
+        'orientation' => Pdf::ORIENT_PORTRAIT,
+        // stream to browser inline
+        'destination' => Pdf::DEST_BROWSER,
+        // your html content input
+        'content' => $content,
+        // format content from your own css file if needed or use the
+        // enhanced bootstrap css built by Krajee for mPDF formatting
+        //D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+        'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+        // any css to be embedded if required
+        'cssInline' => '.kv-heading-1{font-size:12px}',
+         // set mPDF properties on the fly
+        'options' => ['title' => 'Berita Acara','subject'=>'Berita'],
+         // call mPDF methods on the fly
+        'methods' => [
+          'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
+          'SetFooter'=>['{PAGENO}'],
+        ]
+      ]);
+      return $pdf->render();
+    }
 
     /**
      * Creates a new Berita model.
