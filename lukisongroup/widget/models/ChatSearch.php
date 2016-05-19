@@ -43,19 +43,19 @@ class ChatSearch extends Chat
     public function search($params)
     {
 		$id = Yii::$app->user->identity->id;
-		
+
 		$SORT = Chatroom::find()->one();
 		$data = $SORT->SORT;
 		// print_r($SORT);
 		// die();
-		
+
 		$query = Chat::find()->innerJoinWith('chat', false)
 							 //->JoinWith('employee',true,'LEFT JOIN')
 											->Where(['GROUP'=>$id])
-											->orWhere('CREATED_BY = :CREATED_BY', [':CREATED_BY' => $id])
+											->Where('CREATED_BY = :CREATED_BY', [':CREATED_BY' => $id])
 											->orWhere('SORT = :SORT', [':SORT' => $data]);
-										
-											
+
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -83,12 +83,12 @@ class ChatSearch extends Chat
 
         return $dataProvider;
     }
-	
-	
-	  
-	
-	
-	
+
+
+
+
+
+
 	 public function searchonline($params)
     {
         //$Id = Yii::$app->user->identity->id;

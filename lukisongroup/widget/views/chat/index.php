@@ -9,7 +9,9 @@ use kartik\tabs\TabsX;
 	 * @author ptrnov [piter@lukison.com]
 	 * @since 1.0
 	*/
-	$this->sideMenu = $ctrl_chat!=''? $ctrl_chat:'mdefault';   
+	$this->sideMenu = $ctrl_chat!=''? $ctrl_chat:'mdefault';
+
+
 
 
 /* @var $this yii\web\View */
@@ -18,11 +20,11 @@ use kartik\tabs\TabsX;
 
 
 	/*message chat ver1*/
-	$gv_Chat = GridView::widget([    
+	$gv_Chat = GridView::widget([
         'id'=>'gv-chat-msg',
         'dataProvider' => $dataProviderMsg,
-        //'filterModel' => $searchModelMsg,            
-	    'columns' => [ 
+        //'filterModel' => $searchModelMsg,
+	    'columns' => [
 			[
 				'attribute' => 'MESSAGE',
 				'label' => '',
@@ -37,15 +39,15 @@ use kartik\tabs\TabsX;
 						'border'=>'0px',
 					]
 				],
-			],         	
-		],        
+			],
+		],
 		'pjax'=>true,
         'pjaxSettings'=>[
             'options'=>[
                 'enablePushState'=>false,
-                'id'=>'gv-chat-msg',                
+                'id'=>'gv-chat-msg',
                ],
-        ],			
+        ],
 		//'panel'=>['type'=>'info', 'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-envelope"></i> Chat</h3>'],
 		'summary'=>false,
 		'toolbar'=>false,
@@ -56,13 +58,13 @@ use kartik\tabs\TabsX;
 		'bordered'=>false,
 		'striped'=>false,
     ]);
-	
+
 	/*message chat ve2*/
 	$body1 = [];
 	$x=0;
     foreach ($dataProviderMsg->getModels() as $key => $value) {
       # code...
-		
+
 		// $queryEmp = employe::find()->where(['EMP_ID'=>$value['CREATED_BY']])->andwhere('STATUS<>3')->one();
 		// $foto_detail = $queryEmp->IMG_BASE64;
 		// if($foto_detail == ''){
@@ -77,7 +79,7 @@ use kartik\tabs\TabsX;
 				'gambar'=>$gambar,
 				'nama'=>$nama,
 				'messageReply'=>$value['MESSAGE'],
-				'jamwaktu'=> date('Y-m-d h:i A', strtotime($value['UPDATED_TIME'])),				
+				'jamwaktu'=> date('Y-m-d h:i A', strtotime($value['UPDATED_TIME'])),
 			]);
 			$x=1;
 		}else{
@@ -85,7 +87,7 @@ use kartik\tabs\TabsX;
 				'gambar'=>$gambar,
 				'nama'=>$nama,
 				'messageReply'=>$value['MESSAGE'],
-				'jamwaktu'=> date('Y-m-d h:i A', strtotime($value['UPDATED_TIME'])),	
+				'jamwaktu'=> date('Y-m-d h:i A', strtotime($value['UPDATED_TIME'])),
 			]);
 			$x=0;
 		}
@@ -93,25 +95,25 @@ use kartik\tabs\TabsX;
 		$body .=$a;
     }
 	$body1 [] = ['body'=>$body];
-	
-	
-	
+
+
+
    /*GROUP CHART*/
-   $ChatUserGroup=$this->render('_chat_group_info'); //Button reply, Back 
-   $gv_ChatGroup= GridView::widget([    
+   $ChatUserGroup=$this->render('_chat_group_info'); //Button reply, Back
+   $gv_ChatGroup= GridView::widget([
         'id'=>'gv-chat-grp',
         'dataProvider' => $dataproviderGrp,
-        //'filterModel' => $searchmodelGrp,			  
+        //'filterModel' => $searchmodelGrp,
 	    'columns' => [
 			[
                 'attribute'=>'x',
-				'format'=>'raw', 
+				'format'=>'raw',
 				'label'=>'',
-				'value'=>function($model){				
+				'value'=>function($model){
 					$base64 ='data:image/jpg;charset=utf-8;base64,'.$model['IMAGE64'];
 					$baseImge64=$model['IMAGE64']!=''?$base64:'/img_setting/noimage/df.jpg';
 					return Html::img($baseImge64,['class'=>'contacts-list-img']);
-				 },  				
+				 },
 				'contentOptions'=>[
 					'style'=>[
 						'text-align'=>'left',
@@ -123,23 +125,23 @@ use kartik\tabs\TabsX;
 						'border'=>'0px',
 					]
 				],
-            ], 		
-			['class' => 'yii\grid\ActionColumn', 
+            ],
+			['class' => 'yii\grid\ActionColumn',
 				'template' => '{view}',
 				// 'contentOptions'=>[
 					// 'style'=>'width:200px'
 				// ],
-				//'header'=>$ChatUserGroup,	
-				'header'=>false,				
+				//'header'=>$ChatUserGroup,
+				'header'=>false,
 				'buttons' => [
 					'view'=>function($url, $model, $key){
 						$name1 = $model->GROUP_NM;
 						$icon1 = '<span class="glyphicon glyphicon-user"></span>';
 						return Html::a($name1,
 							['createajax','id'=>$model->GROUP_ID],
-							[   
+							[
 								'data-toggle'=>"modal",
-								'data-target'=>"#modal-bumum",													
+								'data-target'=>"#modal-bumum",
 								//                                                                            'data-title'=> $model->username,
 							]
 						);
@@ -155,7 +157,7 @@ use kartik\tabs\TabsX;
 						'border'=>'0px',
 					]
 				],
-			], 	
+			],
 			[
                 'label'=>'',
                 'attribute'=>'x',
@@ -167,7 +169,7 @@ use kartik\tabs\TabsX;
 				'contentOptions'=>[
 					'style'=>[
 						'text-align'=>'right',
-						'padding-right'=>'20px',						
+						'padding-right'=>'20px',
 						//'width'=>'10px',
 						'font-family'=>'tahoma',
 						'font-size'=>'8pt',
@@ -175,13 +177,13 @@ use kartik\tabs\TabsX;
 						'border'=>'0px',
 					]
 				],
-            ], 
-		],        
+            ],
+		],
 		'pjax'=>true,
         'pjaxSettings'=>[
             'options'=>[
                 'enablePushState'=>false,
-                'id'=>'gv-chat-grp',                
+                'id'=>'gv-chat-grp',
                ],
         ],
 		'summary'=>false,
@@ -193,24 +195,32 @@ use kartik\tabs\TabsX;
 		'bordered'=>false,
 		'striped'=>false,
 		//'autoXlFormat'=>true,
-		
+
     ]);
-	
+
 	/* USER */
-	$ChatUserInfo=$this->render('_chat_user_info'); 
-	$gv_ChatUser = GridView::widget([    
+	$ChatUserInfo=$this->render('_chat_user_info');
+	$gv_ChatUser = GridView::widget([
         'id'=>'gv-chat-user',
         'dataProvider' => $dataProviderUser,
-		//'filterModel' => $searchModelUser,		
-	    'columns' => [               
+        'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
+    'rowOptions'   => function ($model, $key, $index, $grid) {
+       return ['id' => $model->id,'onclick' => '$.pjax.reload({
+            url: "'.Url::to(['/sistem/modul-permission/index']).'?MdlpermissionSearch[USER_ID]="+this.id,
+            container: "#gv-custgrp-list",
+            timeout: 1000,
+        });'];
+      //  return ['data-id' => $model->USER_ID];
+   },
+	    'columns' => [
 			[
                 'attribute'=>'x',
-				'format'=>'raw', 
+				'format'=>'raw',
 				'label'=>'',
-				'value'=>function($model){				
-					$base64 ='data:image/jpg;charset=utf-8;base64,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'; 
+				'value'=>function($model){
+					$base64 ='data:image/jpg;charset=utf-8;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxQSEhUUEBQVFhQWFBUUFRcXFBQVFRoXFhQWGhUYFRYYHCggGBolGxUUITEhJSksLi4uFx8zODMsNygtLisBCgoKDg0OGhAQGiwfHBwrLCwsLCwsLCwsLCwsLCwtLCwsKyw3LCw3LCssLCwsKyssKzcsLCwrLCsrKysrKysrK//AABEIAKAAoAMBIgACEQEDEQH/xAAcAAABBQEBAQAAAAAAAAAAAAAAAgQFBgcDAQj/xAA6EAACAQIEBAMGAwcEAwAAAAABAgADEQQFEiEGMUFRImFxEzKBkbHBB0KhFCMkUmLR8DOCkuFjssL/xAAYAQADAQEAAAAAAAAAAAAAAAAAAQMCBP/EACERAQEAAgMAAQUBAAAAAAAAAAABAhEDITFBBBIiMlEj/9oADAMBAAIRAxEAPwDcYQhAOVcbThojmoJytFS25FZ5adisTaTG3JgJn/FnEHtH9lSNkX3iPzH+wlj4yzT2FE2947CZFWxO+/MzeMUxm1koZgFsFtqPXtHTZxTB0ne27GU1a5Fz1iQdW3fnKCY9pHNM8aqbL4VHIDtFZPmVSmwZWtY3/wA7zrgsm12lrwPC6BbNveTy5JFPtTXDvGlOswp1bK/Q38J/tLgtphPFuRthiHQkoTv5dpp34f5ycThwW95LKfsY5ZZuJZY6Wm0LQgY2SCIpZ4Z6sChUIQgYhCEAS0TaKaeRM0m0RUNgT2nSMc4xfsqZbmeg7ntFYTLfxCzLVW0fyfU85Th1LR9m1Q1KjO/vFjf18vKQuMrb2Hxm46ZNR3q19o5yVddT1kQxsPPrJjhzEhXuVJ9IZeHj603JsMFAMmg0r2VZor7WI9Y6zDMxSHIsegE5rG668TYIVcNVX+hiPUAkSvfg1jvFUTy++33krRx2IqD/AEgEII3O8qP4TsUx70vJlP8AtMpxzW4lyeN0BgZ5PCZREGerExSxAqEIRmIQgYB40TFNE3gVErvG2OFPDlfzPsPuZNYrFBFLMbAC8zPifMmqlqpU2AIQHkB1PmYqeE3VFzRrGRA7md8fUZiTaRmJqEbTUi9vbuGufKWnJsdVQolKmNDc2KknzJ7SI4bwgqMBNXyvJ00iSzz103MejTKqbOdxaxtfofMR/neAcLqpAFrHbz6R8tVVOhR8BJB3uvwkN07tS+H8JiCP3lZtevVffSF28On5z3h3LRRzuvbk9L2q/EjV+t5baDg7gWPXvIFMQBnVJRzOFYH/AJEj6SmFtqXJ40O88nicp7LufYiliYtYhHsIQjaEIQgHjRvXqhQSTsI4aRGZAsCOgbeDGSIzLHLUYBr6RyHc9CZV+KFuAtiFIsPQb3lhxVMBwTyFj9ZU+K8eTqPT3RM3qrcc/iqY1FAsJWc2N/gQPnf+0lmxFzv1kXmRFjbuPvKRvSR4Mxdnse81rC5kAoEwnAYk03DD4zSsqzBaijfe0hy497Vx7mlnxtXfVSYBiLN9rTiuKqW069+/IyGGVG9w7WPS8dYPLFJGosfjJzS8xxs7qepY0FrKd+vrIHJ8R7bPzp3FKlpPqF3/AFaecQZpTy6nrABdrimncjqT2FxOf4H5eztXxVTcu2kHub6nPzIlOOfLi57NNhWEBPDKuYRaxEWsXyeJUIQjbEIQgCWjI09r9yb/ADj1o3Y6fT6QYyRGZUAEYjsR8PKZTnwJoMx/ntNNz3HMuq6j2dj4lNz6sJi+dYxtBXV4dRNr7XmPl0cM6QeKqxhinJA8p7Ue+88w29wZWN01RpOZNXdT4JBuulrGSWTYrTUA6GZznR4+tHyjNmIAZTOuc8V08IoZ1Yk30qOpA79BOOULexkbxrhVerQQ2JIqGx5G2j/uc+GMuWms8tRUGrYjNcYotd3NlUe6i/2HXvPpPhjJFweHp0U/ItmPdjux+cybgSgmCxXtBTuxUqBqsN+drzY8Fma1BuCh7Nb6jaXlcfKfCEIQTEUkRF04NY+lwhCNsQhCAMc4xnsaZfbbvykNlGevX1HSgVTa4JJ+UkOKP9A+ojbCJpRdug+kVZvpnmFAEHp6bTE+LcL7J6i3PPUt+o6za8dWHLST6TPePMpaomtaZGm5+HWE9W47plybxx+zFfGvKckpeH0NorB4wjwtN1eF4yhrFxGdDa3cGSNA7+U5YmjuSP8AO8zvfRWaaDwxWDKpv6zjxlS01qFUnwgsP0Bv8pXOFc19m1j1/wAtJzjPGo6UlDAsCxIBB5r1meHH/WMct3halsTTuisvNd5a8hzL2lP+oCzDv5yscNUy+FTVz02532BIG/Xa0XldY0KjD1Pyh8pXuNMyTMNd0Juyi/mRJaUHK8x8dOqnI8x6+8Je6bhgCORFx6GCNmiounORM6UY4ePrpCEI2xCEIBGZ+l6YHd1+sj3qvzYgLJnHgWF+hkfVVSOhioMqQQi6dZAZ7h2dSC+xBFrScxVMjdRIrMU1C4+IiPFjGZ5d7CoyE3B3BkNiEF7jnLBxgpWsR/Tf/PlK2zX3lI6Z4XTq7ztWq9YxaKd7xWD4dde9xO1XFMSPEbW5dOXaMw1otNz8/oZvin5xPP8AWtV4Dxq1cKoHvU/Aw+h9D9pI5rQ8SuOkzfgzNjQxC7XSoRTcep8B+BP6mawfGCvWSy9Zyx1UJlNY09a32BJE03hnE68NTPUCxmSP4alRe9v1E0fg3EWU0j0AYfRv/mJPOdLMTO1DlOE7UOUJU8fXWEITSghCEAZ5lSDKAe8j2QDkI7zpHKqKbBPENRIudNjfT0vy5yFTKqY3ctUPdmJ/TlM0zx28pH4kr1Foupl1HogHmLqf0jLF0npqSjGoo5o27W/pbv5GAkZZ+KGC0VFqoboy6T5MD9wf0mfs00H8RTrCNT3psLeYZTuD2Npn7NbpK4+OnDxzLEGdI3YzpRfeOw3ZuV/O0e5TQDVLH+Rz8QptGrIedj4r2FpLZVl9X954GB9kdIINzqIG3KV+nn5xHn/SkZBT/iaQPL2qfo02F2tuJlOXcP4l3A0aCCDqbYDfnNGy3Hiqp3GpTpcA3AYdvI85y5WW9N8mKAzaoxxJsbcifgJd+GMYfa0z32+YlGxo1YhgO4BPlLVk1YI9MnYBh8hMpZTpppnehylYxXFNMG1NalQ3sQq+6f6idhJzJsWaqaiunfazBwR3uIsb2nJpIQhCUMQhCAMs1YBRfv8AaQtTGkfkcj0k7mA8PxkRUoMeTkfC4macNhjgR7p+/wApxqsrKdJv5dR8J2dD+Yb9xGmJG4vsejDr5GJrTLeLMMfblR7pOsep5/SVDMcLZt5oHEYvWvIbN8r1Wde03KtjVL/Yrzp+yaBq69Ly0YTLbc5x4kwYWkrjo2/xH97TUu7o99mVel/D0qmwJqafTfnOwzmq/tHNr01UAja3iPzjHE48fsip11kj9YO16Vaoo8JFG+17Ek7X6bgzr+mxxsv9m3N9RbuT+kYrOazizVGt2vb52k1wI1mqkdk9ObSmmpLJwXXI9t56PvOPLGSOnPuJ/wDaNNVri5ZvCvw5nyk7lwN7sbk/IDsBKphqrGoxUW33Y8hJbCVWf3SQnIsfebvYdBJ1Kx5SarQxrGgAQza9RBtY+8CQbmbFwSjjD/vCpOom63tvY9fMmU/KhTKAMq2HLaXnhnT7I6RYBj9BMYzL7t0ZWa6TEIQlkhCEIA2x58PxkU7mSmYe78ZGkzNNF48sBqTmOYkdXzO63O6/m7qe47ywugMqvENAU2DLsDzHSCmPau8R07m47/WNKBuljHmJ8SnsRtI/C9RCdqSdFLSjHiKjfDVL9Bf5GSyrK7xnmGmmKSe8/PyUc/nHPSnqr49B7GnbnvG9DEN7Nqf5CQ3xFwLf8jOWLc7KfyiO8ty6pWRxRVnYDUQoudI5m3lOnjyuO9Ncsl9MXSSPDTkVGA5Fd/gZFsT1lh4Iw4esFZgqsyKxPRbksfkJLLwZFjGVPalGG1/dO3PcSdw9XQNzcnn225ASc/EXLsNV/iMLVpiogsygjxqLW/3AfOUI483+X0kvWPYvmCzQBefSaT+HuI10HP8A5D/6rMEoVncgIGY9gCT8hNv/AAowlSnhGFZWVjVJAbY20rCTtjKaXWEITSb/2Q==';
 					return Html::img($base64,['class'=>'contacts-list-img']);
-				 },  				
+				 },
 				'contentOptions'=>[
 					'style'=>[
 						'text-align'=>'left',
@@ -221,9 +231,9 @@ use kartik\tabs\TabsX;
 						'border'=>'0px',
 						'background-color'=>'rgba(255, 255, 155, 0.3)'
 					]
-				],				
-            ], 
-			['class' => 'yii\grid\ActionColumn', 
+				],
+            ],
+			['class' => 'yii\grid\ActionColumn',
 				'template' => '{view}',
 				// 'contentOptions'=>[
 					// 'style'=>'width:200px'
@@ -237,9 +247,9 @@ use kartik\tabs\TabsX;
 						//return Html::a($icon.''.$name,
 						return Html::a($name,
 							['createajax','id'=>$model->id],
-							[   
+							[
 							'data-toggle'=>"modal",
-							'data-target'=>"#modal-bumum",													
+							'data-target'=>"#modal-bumum",
 							//data-title'=> $model->username,
 							]
 						);
@@ -253,7 +263,7 @@ use kartik\tabs\TabsX;
 						'border'=>'0px',
 						'background-color'=>'rgba(255, 255, 155, 0.3)'
 					]
-				],				
+				],
 			],
 			[
                 'label'=>'',
@@ -266,21 +276,21 @@ use kartik\tabs\TabsX;
 				'contentOptions'=>[
 					'style'=>[
 						'text-align'=>'right',
-						'padding-right'=>'20px',						
+						'padding-right'=>'20px',
 						//'width'=>'10px',
 						'font-family'=>'tahoma',
 						'font-size'=>'8pt',
 						'border'=>'0px',
 						'background-color'=>'rgba(255, 255, 155, 0.3)'
 					]
-				],			
-            ], 
-		],        
+				],
+            ],
+		],
 		'pjax'=>true,
         'pjaxSettings'=>[
             'options'=>[
                 'enablePushState'=>false,
-                'id'=>'gv-chat-user',                
+                'id'=>'gv-chat-user',
                ],
         ],
 		'summary'=>false,
@@ -292,9 +302,9 @@ use kartik\tabs\TabsX;
 		'bordered'=>false,
 		'striped'=>false,
 		//
-		
+
     ]);
-	
+
 
 ?>
 
@@ -307,10 +317,10 @@ use kartik\tabs\TabsX;
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <![endif]-->
     <!-- BOOTSTRAP CORE STYLE CSS -->
-    <link href="http://lukisongroup.int/widget/bootstrap-chat/assets/css/bootstrap.css" rel="stylesheet" />	
-</head>	
+    <link href="http://lukisongroup.int/widget/bootstrap-chat/assets/css/bootstrap.css" rel="stylesheet" />
+</head>
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
-	<div  class="row">			
+	<div  class="row">
 		<div class="col-md-8">
 			 <div class="panel panel-info">
 				<div class="panel-heading">
@@ -320,9 +330,9 @@ use kartik\tabs\TabsX;
 				</div>
 				<div class="pre-scrollableChatBase" id="chat-msg" style="background-color:rgba(255, 255, 155, 0.3)">
 					<div style="margin-top: -20px;margin-left: 20px" >
-						<?php				
+						<?php
 							//echo $gv_Chat;
-							//echo $body1;						
+							//echo $body1;
 							echo Html::mediaList([
 								   [
 									'heading' => false,
@@ -330,10 +340,10 @@ use kartik\tabs\TabsX;
 									'imgOptions'=>false,
 									'src' => false,
 									'img' =>false,
-									'items' =>$body1,								
-								   ],							   
+									'items' =>$body1,
+								   ],
 							]);
-						?>				
+						?>
 					</div>
 				</div>
 				 <div class="box-footer" style="background-color:rgba(255, 255, 155, 0.3)">
@@ -345,7 +355,7 @@ use kartik\tabs\TabsX;
 						  </span>
 						</div>
 					  </form>
-					</div><!-- /.box-footer-->	
+					</div><!-- /.box-footer-->
 			</div>
 		</div>
 		<div class="col-md-4">
@@ -365,7 +375,7 @@ use kartik\tabs\TabsX;
 			</div>
 			 <div class="panel panel-info">
 				<div class="panel-heading">
-					ONLINE USERS		
+					ONLINE USERS
 				</div>
 				<div class="pre-scrollableUser panel-body" id="chat-usr" >
 					<div  class="row">
@@ -378,18 +388,18 @@ use kartik\tabs\TabsX;
 				</div>
 			</div>
 		</div>
-	</div> 
-</div>	
-	
+	</div>
+</div>
+
 	<?php
-	
+
 	 $this->registerJs("
-        
+
         $('#modal-bumum').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
-            var title = button.data('title') 
-            var href = button.attr('href') 
+            var title = button.data('title')
+            var href = button.attr('href')
             //modal.find('.modal-title').html(title)
             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
             $.post(href)
@@ -398,18 +408,18 @@ use kartik\tabs\TabsX;
                 });
             })
     ",$this::POS_READY);
-	
+
 	 Modal::begin([
                             'id' => 'modal-bumum',
                             'header' => '<h4 class="modal-title">LukisonGroup</h4>',
                              ]);
                 Modal::end();
-				
+
 	 $this->registerJs("
 		/*
 		 * 	Scroll Position Down
 		 *	@author ptr.nov@gmail.com
-		*/ 		
+		*/
 		var element = document.getElementById('chat-msg');
 		element.scrollTop = element.scrollHeight;
 	",$this::POS_READY);
@@ -420,8 +430,8 @@ use kartik\tabs\TabsX;
 // $waktu = time();
 	// $datawaktu = Yii::$app->session['userSessionTimeout'];
 
-	
-	
+
+
 	// if($datawaktu<$waktu)
 	// {
 		// $icon = "ofline";
@@ -429,7 +439,7 @@ use kartik\tabs\TabsX;
 	// else{
 		// $icon = 'online';
 	// }
-	
+
 
  /*  $this->registerJs("
 	    $('#tes').click(function(e) {
@@ -450,19 +460,16 @@ use kartik\tabs\TabsX;
                                              $.pjax.reload({container:'#gv-chat'});
                                           }
                                         else{
-                                          
+
                                         }
             },
-          
-       
+
+
        });
 	     e.preventDefault();
   });
-  
 
-        
+
+
         ",$this::POS_READY); */
 ?>
- 
-
- 

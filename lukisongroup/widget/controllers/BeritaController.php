@@ -67,7 +67,6 @@ class BeritaController extends Controller
               }
       }
 
-    
 
     /**
      * Lists all Berita models.

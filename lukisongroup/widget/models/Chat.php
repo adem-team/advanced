@@ -38,7 +38,7 @@ class Chat extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Chatroom::className(), ['GROUP_ID' => 'GROUP']);
     }
-	
+
 	// public function getEmployee()
     // {
         // return $this->hasOne(Employe::className(), ['EMP_ID' => 'CREATED_BY']);
@@ -50,9 +50,9 @@ class Chat extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-			  [['MESSAGE'], 'required'],
+			  // [['MESSAGE'], 'required'],
             [['MESSAGE'], 'string'],
-            [['MESSAGE_STS', 'MESSAGE_SHOW', 'CREATED_BY'], 'integer'],
+            [['MESSAGE_STS', 'MESSAGE_SHOW', 'CREATED_BY','ID'], 'integer'],
             [['UPDATED_TIME'], 'safe'],
             [['MESSAGE_ATTACH'], 'string', 'max' => 100],
             [['GROUP'], 'string', 'max' => 20]

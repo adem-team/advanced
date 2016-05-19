@@ -15,7 +15,7 @@ $this->sideCorp = 'Customers';                 				 /* Title Select Company pada
 $this->sideMenu = $sideMenu_control;//'umum_datamaster';   	 /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Customers');   	 			 /* title pada header page */
 
-
+$parent = ArrayHelper::map(Customers::find()->where('STATUS<>3 and CUST_KD=CUST_GRP')->all(), 'CUST_KD', 'CUST_NM');
 
 function tombolCustomers(){
   $title1 = Yii::t('app', 'Customers');
@@ -191,6 +191,12 @@ echo $tabcustomersData = \kartik\grid\GridView::widget([
     [
       'attribute' => 'parentName',
       'label'=>'Customer Group',
+      'filterType'=>GridView::FILTER_SELECT2,
+      'filter' => $parent,
+      'filterWidgetOptions'=>[
+        'pluginOptions'=>['allowClear'=>true],
+      ],
+      'filterInputOptions'=>['placeholder'=>'Any author'],
       'hAlign'=>'left',
       'vAlign'=>'middle',
       'headerOptions'=>[
