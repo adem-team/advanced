@@ -1,5 +1,7 @@
 #vendor.zip
 vendor.zip
+#/labtest1-config
+/labtest1config
 
 #api
 /api
