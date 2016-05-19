@@ -40,36 +40,3 @@ use lukisongroup\master\models\Kategoricus;
 
 </div>
 <?php
-
-$this->registerJs("
-
-   $('form#{$model->formName()}').on('beforeSubmit',function(e)
-    {
-        var \$form = $(this);
-        $.post(
-            \$form.attr('action'),
-            \$form.serialize()
-
-        )
-
-            .done(function(result){
-			        if(result == 1 )
-                                          {
-
-                                             $(document).find('#formparent').modal('hide');
-                                             $('form#kategoricus').trigger('reset');
-                                             $.pjax.reload({container:'#gv-kat'});
-                                          }
-                                        else{
-                                           console.log(result)
-                                        }
-
-            });
-
-return false;
-
-
-});
-
-
- ",$this::POS_END);

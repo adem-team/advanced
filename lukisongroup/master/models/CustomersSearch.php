@@ -118,17 +118,7 @@ class CustomersSearch extends Customers
             return $dataProvider;
         }
 
-        // $querya->andFilterWhere([
-        //     'CUST_KTG' => $this->CUST_KTG,
-        //     'JOIN_DATE' => $this->JOIN_DATE,
-        //     'TLP1' => $this->TLP1,
-        //     'TLP2' => $this->TLP2,
-        //     'FAX' => $this->FAX,
-        //     'STT_TOKO' => $this->STT_TOKO,
-        //     'CREATED_AT' => $this->CREATED_AT,
-        //     'UPDATED_AT' => $this->UPDATED_AT,
-        //     'STATUS' => $this->STATUS,
-        // ]);
+        
 
         $query->andFilterWhere(['like', 'CUST_KD', $this->CUST_KD])
             ->andFilterWhere(['like', 'CUST_KD_ALIAS', $this->CUST_KD_ALIAS])
@@ -149,8 +139,8 @@ class CustomersSearch extends Customers
             ->andFilterWhere(['like', 'NPWP', $this->NPWP])
             ->andFilterWhere(['like', 'DATA_ALL', $this->DATA_ALL])
             ->andFilterWhere(['like', 'JOIN_DATE', $this->JOIN_DATE])
-            ->andFilterWhere(['like', 'CUST_KD', $this->parentName])
-			->andFilterWhere(['like', 'c0001.STATUS', $this->STATUS]);
+            ->andFilterWhere(['like', 'CUST_GRP', $this->parentName])
+			      ->andFilterWhere(['like', 'c0001.STATUS', $this->STATUS]);
             // ->andFilterWhere(['like', 'CORP_ID', $this->CORP_ID])
             // ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
             // ->andFilterWhere(['like', 'UPDATED_BY', $this->UPDATED_BY]);

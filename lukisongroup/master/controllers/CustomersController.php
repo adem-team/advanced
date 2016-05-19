@@ -68,6 +68,8 @@ class CustomersController extends Controller
 
     public function actionIndex()
     {
+
+
        // city data
         $searchmodelkota = new KotaSearch();
         $dataproviderkota = $searchmodelkota->search(Yii::$app->request->queryParams);
@@ -152,7 +154,14 @@ class CustomersController extends Controller
 	public function actionEsmIndex()
     {
 
-        $searchModel = new CustomersSearch();
+      $paramCari=Yii::$app->getRequest()->getQueryParam('id');
+      if ($paramCari!=''){
+        $cari=['CUST_KD'=>$paramCari];
+      }else{
+        $cari='';
+      };
+
+        $searchModel = new CustomersSearch($cari);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
            if(Yii::$app->request->post('hasEditable'))
@@ -760,13 +769,9 @@ class CustomersController extends Controller
 				$model->CREATED_BY =  Yii::$app->user->identity->username;
 				$model->CREATED_AT = date("Y-m-d H:i:s");
 
-				if($model->save())
-        {
-          echo 1;
-        }
-        else{
-          echo 0;
-        }
+	      $model->save();
+
+        return $this->redirect(['esm-index','id'=>$model->CUST_KD]);
 
 			}
         } else {
@@ -883,6 +888,7 @@ class CustomersController extends Controller
           if($model->save())
           {
             echo 1;
+
           }
           else{
             echo 0;

@@ -204,14 +204,14 @@ use kartik\tabs\TabsX;
         'id'=>'gv-chat-user',
         'dataProvider' => $dataProviderUser,
         'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
-    'rowOptions'   => function ($model, $key, $index, $grid) {
-       return ['id' => $model->id,'onclick' => '$.pjax.reload({
-            url: "'.Url::to(['/sistem/modul-permission/index']).'?MdlpermissionSearch[USER_ID]="+this.id,
-            container: "#gv-custgrp-list",
-            timeout: 1000,
-        });'];
-      //  return ['data-id' => $model->USER_ID];
-   },
+  //   'rowOptions'   => function ($model, $key, $index, $grid) {
+  //      return ['id' => $model->id,'onclick' => '$.pjax.reload({
+  //           url: "'.Url::to(['/sistem/modul-permission/index']).'?MdlpermissionSearch[USER_ID]="+this.id,
+  //           container: "#gv-custgrp-list",
+  //           timeout: 1000,
+  //       });'];
+  //     //  return ['data-id' => $model->USER_ID];
+  //  },
 	    'columns' => [
 			[
                 'attribute'=>'x',
