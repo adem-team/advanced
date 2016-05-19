@@ -184,18 +184,23 @@ $this->title = 'LukisonGroup.com';
 														</ul>
 													</li>';		 */	
 										/*LONCENG*/
-										$menuItems[] ='<li class="dropdown notifications-menu">
-														<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-															<i class="fa fa-bell-o full-right"></i>
-															<span class="label label-warning notifications-icon-count">0</span>
-														</a>
-														<ul class="dropdown-menu">
-															<li class="header">You have <span class="notifications-header-count">0</span> notifications</li>
-															<li>
-																<div id="notifications"></div>
-															</li>
-														</ul>
-													</li>';   
+										$menuItemsNtf ='<li class="dropdown notifications-menu">
+															<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+																<i class="fa fa-bell-o full-right"></i>
+																<span class="label label-warning notifications-icon-count">0</span>
+															</a>
+															<ul class="dropdown-menu dropdown-right">
+																<li class="header">
+																	<a href="/notifications/message/read?id=25">
+																	You have <span class="notifications-header-count">0</span> notifications
+																	</a>
+																	
+																</li>
+																<li>
+																	<div id="notifications"></div>
+																</li>
+															</ul>
+														</li>';   
                                         NavBar::begin([
                                             //'brandLabel' => 'LukisonGroup',
                                             //'brandUrl' => Yii::$app->homeUrl,
@@ -203,7 +208,14 @@ $this->title = 'LukisonGroup.com';
                                             'brandLabel' => '<!-- Sidebar toggle button-->
                                                             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                                                                 <span class="sr-only">Toggle Navigation</span>
-                                                            </a>',
+                                                            </a>'.
+															' <!-- Notify toggle button-->
+																<div class="navbar-custom-menu ">
+																<ul class="nav navbar-nav ">
+																	'.$menuItemsNtf.'
+																</ul>
+															</div>
+															',
                                             'options' => [
                                                 //'class' => 'navbar-inverse navbar-fixed-top',
                                                'class' => [
