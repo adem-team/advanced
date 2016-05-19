@@ -21,7 +21,8 @@ $user = $model->CREATED_BY;
 
 /* HEADER cari employe*/
 $queryCariEmploye = employe::find()->where(['EMP_ID'=>$user])->andwhere('STATUS<>3')->one();
-
+$ttdbase64 = $queryCariEmploye->SIGSVGBASE64;
+$emp_nm = $queryCariEmploye->EMP_NM.' '.$queryCariEmploye->EMP_NM_BLK;
 $emp_img = $queryCariEmploye->IMG_BASE64;
 if(count($queryCariEmploye) == 0 || $emp_img =='')
 {
@@ -166,6 +167,7 @@ if(count($attach_file)== 0)
 				'messageReply'=>$value->CHAT,
 				'jamwaktu'=>date('Y-m-d h:i A', strtotime($value->CREATED_AT)),
 				'nama'=>$value->profile->EMP_NM,
+        'ttd'=>$value->profile->SIGSVGBASE64,
 				'items'=>$items,
 				'lampiran'=>Html::panel(
 						[
@@ -198,7 +200,10 @@ if(count($attach_file)== 0)
 		'itemDetailAttach'=>$itemDetailAttach,
 		'dataProviderImageHeader'=>$dataProviderImageHeader,
 		'aryFieldHeaderX'=>$aryFieldHeaderX,
-    'id'=>$id
+    'id'=>$id,
+    'ttd'=>$ttdbase64,
+    'emp_nm'=>$emp_nm,
+    'jam'=>date('h:i A', strtotime($model->CREATED_ATCREATED_BY))
 	]);
 	$viewBt=Html::mediaList([
 		   [
