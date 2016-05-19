@@ -12,14 +12,14 @@ namespace lukisongroup\widget\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter; 	
+use yii\filters\VerbFilter;
 use lukisongroup\widget\models\Chat;
 use lukisongroup\widget\models\ChatSearch;
 use lukisongroup\widget\models\ChatroomSearch;
 /* VARIABLE PRIMARY JOIN/SEARCH/FILTER/SORT Author: -ptr.nov- */
 //use app\models\hrd\Dept;			/* TABLE CLASS JOIN */
 //use app\models\hrd\DeptSearch;		/* TABLE CLASS SEARCH */
-	
+
 /**
  * HRD | CONTROLLER EMPLOYE .
  */
@@ -37,7 +37,7 @@ class ChatController extends Controller
             ],
         ];
     }
-	
+
 	   public function beforeAction(){
             if (Yii::$app->user->isGuest)  {
                  Yii::$app->user->logout();
@@ -52,23 +52,26 @@ class ChatController extends Controller
                } else {
                    //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
                    Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
-                   return true; 
+                   return true;
+
                }
             } else {
                 return true;
             }
     }
 
+
+
     /**
      * ACTION INDEX
      */
-	
+
     public function actionIndex()
     {
 		/*MODEL CHAT MESSAGE*/
         $searchModelMsg = new ChatSearch();
         $dataProviderMsg = $searchModelMsg->search(Yii::$app->request->queryParams);
-        $dataProviderMsg->pagination->pageSize=100;		
+        $dataProviderMsg->pagination->pageSize=100;
 		/*MODEL CHAT GROUP*/
         $searchmodelGrp = new ChatroomSearch();
         $dataproviderGrp = $searchmodelGrp->search(Yii::$app->request->queryParams);
@@ -76,8 +79,8 @@ class ChatController extends Controller
         /*MODEL CHAT USER*/
         $searchModelUser = new ChatSearch();
         $dataProviderUser = $searchModelUser->searchonline(Yii::$app->request->queryParams);
-        $dataProviderUser->pagination->pageSize=100;        
-       
+        $dataProviderUser->pagination->pageSize=100;
+
 
         return $this->render('index', [
 			/*RENDER CHAT MESSAGE*/
@@ -93,8 +96,8 @@ class ChatController extends Controller
 			'ctrl_chat'=>'mdefault',
         ]);
     }
-	
-	
+
+
 	 public function actionCreateajax($id)
     {
         $model = new Chat();
@@ -114,7 +117,7 @@ class ChatController extends Controller
 //                  if ($image !== false) {
 //				$path = $model->getImageFile();
 //				$image->saveAs($path);
-//                                
+//
 //                                print_r($image);
 ////                                die();
 //			}
@@ -153,37 +156,37 @@ class ChatController extends Controller
            $model = new Chat();
 
         if (Yii::$app->request->isAjax) {
-            
+
            $data = Yii::$app->request->post();
-           
+
 			$id = $data['id'];
 			$mes = $data['mes'];
-			
-			
+
+
 		 $model->MESSAGE = $mes;
 		 $model->GROUP = $id;
-			
-           
+
+
 //           print_r($img);
 //           $model->image = $img;
-       
-           
-        
+
+
+
             if($model->save())
             {
-               echo 1; 
+               echo 1;
             }
 			else {
      echo  0;
  }/
         }
- 
-             
-           
 
-          
-         
-         
+
+
+
+
+
+
 
 //    return [
 ////        'search' => $search,
@@ -197,17 +200,17 @@ class ChatController extends Controller
 //                'model' => $model,
 //            ]);
 //        }
-    
-    
-    
-  
+
+
+
+
     /**
      * Updates an existing Chat model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
      */
-	
+
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
@@ -249,5 +252,5 @@ class ChatController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-	
+
 }
