@@ -39,10 +39,10 @@ class Chat extends \yii\db\ActiveRecord
         return $this->hasOne(Chatroom::className(), ['GROUP_ID' => 'GROUP']);
     }
 
-	// public function getEmployee()
-    // {
-        // return $this->hasOne(Employe::className(), ['EMP_ID' => 'CREATED_BY']);
-    // }
+	public function getEmployee()
+    {
+        return $this->hasOne(Employe::className(), ['EMP_ID' => 'CREATED_BY']);
+    }
 
     /**
      * @inheritdoc

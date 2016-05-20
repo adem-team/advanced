@@ -127,6 +127,7 @@ if(count($attach_file)== 0)
     ];
       $attach_image = BeritaImage::find()->where($condition)->All();
 
+
       if($value->EMP_IMG == "default.jpg")
       {
         $profile = '/upload/hrd/Employee/default.jpg';
