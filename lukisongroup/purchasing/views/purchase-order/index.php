@@ -1485,21 +1485,27 @@ $gridLisHistory= GridView::widget([
 ?>
 <div style="padding:10px;">
 	<?php
+		
+		$ccPurch=$this->render('_graph_cc');
 
 		$items=[
 			[
 				'label'=>'<i class="fa fa-sign-in fa-lg"></i>  Inbox','content'=>$gridLisPo,
 				// 'active'=>true,
-         'options' => ['id' => 'in-box'],
+				'options' => ['id' => 'in-box'],
 			],
 			[
 				'label'=>'<i class="fa fa-sign-out fa-lg"></i>  Outbox','content'=>$outboxpo, // Checked/approved Ro
-        'options' => ['id' => 'out-tab'],
-      ],
+				'options' => ['id' => 'out-tab'],
+			],
 			[
 				'label'=>'<i class="glyphicon glyphicon-briefcase"></i>  History','content'=>$gridLisHistory, // History approved po
-          'options' => ['id' => 'history-tab'],
-      ],
+				'options' => ['id' => 'history-tab'],
+			],
+			[
+				'label'=>'<i class="fa fa-bar-chart"></i>  Cost Center','content'=>$ccPurch,
+				'options' => ['id' => 'cc-tab'],
+			],
 		];
 		echo TabsX::widget([
 			'id'=>'tab-index-po',
