@@ -16,11 +16,12 @@ class ChatSearch extends Chat
      * @inheritdoc
      */
 	 public $SORT;
+   public $id;
     public function rules()
     {
         return [
-            [['ID', 'MESSAGE_STS', 'MESSAGE_SHOW', 'CREATED_BY'], 'integer'],
-            [['MESSAGE','SORT', 'MESSAGE_ATTACH', 'GROUP', 'UPDATED_TIME'], 'safe'],
+            [['ID', 'MESSAGE_STS', 'MESSAGE_SHOW'], 'integer'],
+            [['MESSAGE','SORT', 'MESSAGE_ATTACH', 'GROUP', 'UPDATED_TIME','CREATED_BY'], 'safe'],
         ];
     }
 
@@ -44,22 +45,25 @@ class ChatSearch extends Chat
     {
 		$id = Yii::$app->user->identity->id;
 
-		$SORT = Chatroom::find()->one();
-		$data = $SORT->SORT;
+		$query = Chat::find()->JoinWith('employee',true,'LEFT JOIN');
+
+		// $data = $SORT->SORT;
 		// print_r($SORT);
 		// die();
 
-		$query = Chat::find()->innerJoinWith('chat', false)
-							 //->JoinWith('employee',true,'LEFT JOIN')
-											->Where(['GROUP'=>$id])
-											->Where('CREATED_BY = :CREATED_BY', [':CREATED_BY' => $id])
-											->orWhere('SORT = :SORT', [':SORT' => $data]);
+		// $query = Chat::find()->innerJoinWith('chat', false)
+		// 					 //->JoinWith('employee',true,'LEFT JOIN')
+		// 									->Where(['GROUP'=>$id])
+		// 									->Where('CREATED_BY = :CREATED_BY', [':CREATED_BY' => $id])
+		// 									->orWhere('SORT = :SORT', [':SORT' => $data]);
+
 
 
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
 
         $this->load($params);
 
@@ -73,13 +77,14 @@ class ChatSearch extends Chat
             'ID' => $this->ID,
             'MESSAGE_STS' => $this->MESSAGE_STS,
             'MESSAGE_SHOW' => $this->MESSAGE_SHOW,
-            'CREATED_BY' => $this->CREATED_BY,
+            'sc0003a.CREATED_BY' => $this->CREATED_BY,
             'UPDATED_TIME' => $this->UPDATED_TIME,
         ]);
 
         $query->andFilterWhere(['like', 'MESSAGE', $this->MESSAGE])
             ->andFilterWhere(['like', 'MESSAGE_ATTACH', $this->MESSAGE_ATTACH])
-            ->andFilterWhere(['like', 'GROUP', $this->GROUP]);
+            ->andFilterWhere(['like', 'GROUP', $this->GROUP])
+            ->andFilterWhere(['like', 'sc0003a.CREATED_BY', $this->CREATED_BY]);
 
         return $dataProvider;
     }
@@ -94,7 +99,7 @@ class ChatSearch extends Chat
         //$Id = Yii::$app->user->identity->id;
 //        print_r($Id);
 //        die();
-        $query = \lukisongroup\sistem\models\Userlogin::find();
+        $query = \lukisongroup\sistem\models\Userlogin::find()->where(['<>','status','1']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -109,15 +114,11 @@ class ChatSearch extends Chat
         }
 
 
-//    $query->andFilterWhere([
-//            'ID' => $this->ID,
-//            'MESSAGE_STS' => $this->MESSAGE_STS,
-//            'MESSAGE_SHOW' => $this->MESSAGE_SHOW,
-//            'CREATED_BY' => $this->CREATED_BY,
-//            'UPDATED_TIME' => $this->UPDATED_TIME,
-//        ]);
+   $query->andFilterWhere([
+           'id' => $this->id,
+       ]);
 //
-//        $query->andFilterWhere(['like', 'MESSAGE', $this->MESSAGE])
+       $query->andFilterWhere(['like', 'id', $this->id]);
 //            ->andFilterWhere(['like', 'MESSAGE_ATTACH', $this->MESSAGE_ATTACH])
 //            ->andFilterWhere(['like', 'GROUP', $this->GROUP]);
 

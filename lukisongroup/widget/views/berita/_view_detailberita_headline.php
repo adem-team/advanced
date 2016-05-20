@@ -54,7 +54,7 @@ use kartik\grid\GridView;
 
 	function kembali(){
 		$title = Yii::t('app','');
-		$options = [ 'id'=>'berita-reply-id',
+		$options = [ 'id'=>'berita-back-id',
 			 'class'=>'btn-xs',
 			 'title'=>'Back',
 		];

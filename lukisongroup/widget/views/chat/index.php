@@ -1,8 +1,12 @@
 ﻿<?php
+
+/* extensions*/
 use kartik\helpers\Html;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use kartik\tabs\TabsX;
+use yii\helpers\Url;
+
 	/*
 	 * Jangan di Hapus ...
 	 * Chat Menu Select Dashboard
@@ -62,8 +66,11 @@ use kartik\tabs\TabsX;
 	/*message chat ve2*/
 	$body1 = [];
 	$x=0;
+  // print_r($dataProviderMsg->getModels());
+  // die();
     foreach ($dataProviderMsg->getModels() as $key => $value) {
       # code...
+      $gambar_profile = 'data:image/jpg;charset=utf-8;base64,'.$value->employee->IMG_BASE64;
 
 		// $queryEmp = employe::find()->where(['EMP_ID'=>$value['CREATED_BY']])->andwhere('STATUS<>3')->one();
 		// $foto_detail = $queryEmp->IMG_BASE64;
@@ -76,10 +83,10 @@ use kartik\tabs\TabsX;
 		$nama='piter';
 		if ($x==0){
 			$a=$this->render('_message_left', [
-				'gambar'=>$gambar,
+				'gambar'=>$gambar_profile,
 				'nama'=>$nama,
-				'messageReply'=>$value['MESSAGE'],
-				'jamwaktu'=> date('Y-m-d h:i A', strtotime($value['UPDATED_TIME'])),
+				'messageReply'=>$value->MESSAGE,
+				'jamwaktu'=> date('Y-m-d h:i A', strtotime($value->UPDATED_TIME)),
 			]);
 			$x=1;
 		}else{
@@ -204,14 +211,13 @@ use kartik\tabs\TabsX;
         'id'=>'gv-chat-user',
         'dataProvider' => $dataProviderUser,
         'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
-  //   'rowOptions'   => function ($model, $key, $index, $grid) {
-  //      return ['id' => $model->id,'onclick' => '$.pjax.reload({
-  //           url: "'.Url::to(['/sistem/modul-permission/index']).'?MdlpermissionSearch[USER_ID]="+this.id,
-  //           container: "#gv-custgrp-list",
-  //           timeout: 1000,
-  //       });'];
-  //     //  return ['data-id' => $model->USER_ID];
-  //  },
+    		'rowOptions'   => function ($model, $key, $index, $grid) {
+       			return ['id' => $model->EMP_ID,'onclick' => '$.pjax.reload({
+            				url: "'.Url::to(['/widget/chat/index']).'?ChatSearch[CREATED_BY]="+this.id,
+            				container: "#chat-msg",
+            				timeout: 1000,
+        			});'];
+   },
 	    'columns' => [
 			[
                 'attribute'=>'x',
