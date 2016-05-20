@@ -43,13 +43,13 @@ class ChatSearch extends Chat
      */
     public function search($params)
     {
-		$id = Yii::$app->user->identity->id;
+	  $profile = Yii::$app->getUserOpt->profile_user()->emp;
+    $id = $profile->EMP_ID;
 
-		$query = Chat::find()->JoinWith('employee',true,'LEFT JOIN');
 
-		// $data = $SORT->SORT;
-		// print_r($SORT);
-		// die();
+		$query = Chat::find()->JoinWith('employee',true,'LEFT JOIN')
+                        ->where(['sc0003a.CREATED_BY'=>$id])
+                        ->orwhere(['sc0003a.GROUP'=>$id]);
 
 		// $query = Chat::find()->innerJoinWith('chat', false)
 		// 					 //->JoinWith('employee',true,'LEFT JOIN')
@@ -77,14 +77,14 @@ class ChatSearch extends Chat
             'ID' => $this->ID,
             'MESSAGE_STS' => $this->MESSAGE_STS,
             'MESSAGE_SHOW' => $this->MESSAGE_SHOW,
-            'sc0003a.CREATED_BY' => $this->CREATED_BY,
+            'sc0003a.GROUP' => $this->GROUP,
             'UPDATED_TIME' => $this->UPDATED_TIME,
         ]);
 
         $query->andFilterWhere(['like', 'MESSAGE', $this->MESSAGE])
             ->andFilterWhere(['like', 'MESSAGE_ATTACH', $this->MESSAGE_ATTACH])
-            ->andFilterWhere(['like', 'GROUP', $this->GROUP])
-            ->andFilterWhere(['like', 'sc0003a.CREATED_BY', $this->CREATED_BY]);
+            ->andFilterWhere(['like', 'sc0003a.GROUP', $this->GROUP]);
+            // ->andFilterWhere(['like', 'sc0003a.CREATED_BY', $this->CREATED_BY]);
 
         return $dataProvider;
     }

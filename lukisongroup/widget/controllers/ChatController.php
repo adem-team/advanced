@@ -98,6 +98,28 @@ class ChatController extends Controller
     }
 
 
+public function actionSendChat()
+{
+  # code...
+  if (Yii::$app->request->isAjax) {
+// componem user
+    $profile = Yii::$app->getUserOpt->profile_user()->emp;
+    $emp_id = $profile->EMP_ID;
+
+    $request= Yii::$app->request;
+    $id=$request->post('id');
+    $chat = $request->post('comment');
+    $model = new Chat();
+    $model->MESSAGE = $chat;
+    $model->GROUP = $id;
+    $model->CREATED_BY = $emp_id;
+    $model->save();
+    // print_r($model->getErrors());
+    // die();
+    return true;
+  }
+}
+
 	 public function actionCreateajax($id)
     {
         $model = new Chat();

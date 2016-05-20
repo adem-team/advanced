@@ -6,6 +6,7 @@ use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use kartik\tabs\TabsX;
 use yii\helpers\Url;
+use yii\widgets\Pjax;
 
 	/*
 	 * Jangan di Hapus ...
@@ -213,7 +214,7 @@ use yii\helpers\Url;
         'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
     		'rowOptions'   => function ($model, $key, $index, $grid) {
        			return ['id' => $model->EMP_ID,'onclick' => '$.pjax.reload({
-            				url: "'.Url::to(['/widget/chat/index']).'?ChatSearch[CREATED_BY]="+this.id,
+            				url: "'.Url::to(['/widget/chat/index']).'?ChatSearch[GROUP]="+this.id,
             				container: "#chat-msg",
             				timeout: 1000,
         			});'];
@@ -339,6 +340,7 @@ use yii\helpers\Url;
 						<?php
 							//echo $gv_Chat;
 							//echo $body1;
+							// Pjax::begin(['id'=>'msg-chat-id']);
 							echo Html::mediaList([
 								   [
 									'heading' => false,
@@ -349,19 +351,27 @@ use yii\helpers\Url;
 									'items' =>$body1,
 								   ],
 							]);
+							//Pjax::end();
 						?>
 					</div>
 				</div>
 				 <div class="box-footer" style="background-color:rgba(255, 255, 155, 0.3)">
-					  <form action="#" method="post">
+					  <form  action="#" method="post">
 						<div class="input-group">
+							<?php
+								 //Pjax::begin(['id'=>'#msg-chat-comment']);
+							?>
 						  <textarea class="form-control" id="comment" rows="3" name="message" placeholder="Type Message ..."></textarea>
+						  <?php
+								//Pjax::end();
+							?>
 						  <span class="input-group-btn" >
-							<button type="button" style="margin-left:10px" class="btn btn-primary ">Send</button>
-						  </span>
+								<button id="btn" type="button" style="margin-left:10px" class="btn btn-primary">Send</button>							
+						 </span>
 						</div>
 					  </form>
 					</div><!-- /.box-footer-->
+
 			</div>
 		</div>
 		<div class="col-md-4">
@@ -398,9 +408,49 @@ use yii\helpers\Url;
 </div>
 
 	<?php
+$params = Yii::$app->request->queryParams;
+	$id = $params['ChatSearch']['GROUP'];
+
+	$this->registerJs("
+	var id =\"".$id."\";
+	$('#btn').click(function(){
+		var comment = $('#comment').val();
+		var data = { id : id, comment : comment }
+		$.ajax({
+				url: '/widget/chat/send-chat',
+				type: 'POST',
+				//contentType: 'application/json; charset=utf-8',
+				data: data,
+				dataType: 'json',
+				success: function(result) {
+					/* //if (result == 1){
+						// Success
+						//$.('#btn').load(location.href + '#chat-msg');
+						//$.pjax.reload('#msg-chat-id');
+						//$.pjax.reload('#msg-chat-id');
+						//$.pjax.reload({container:'#comment-chat-id,#msg-chat-comment'});
+						$.pjax.reload({container:'#chat-msg'});
+						
+					//} else {
+						// Fail
+					//} */
+					$(function() {
+                        startRefresh();
+                    });
+
+                    //auto reload data
+                    function startRefresh() {
+                       $('#chat-msg').load({container: '#chat-msg'});                      
+                    }
+				}
+			});
+	})
+
+
+ ",$this::POS_READY);
+
 
 	 $this->registerJs("
-
         $('#modal-bumum').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
@@ -427,7 +477,7 @@ use yii\helpers\Url;
 		 *	@author ptr.nov@gmail.com
 		*/
 		var element = document.getElementById('chat-msg');
-		element.scrollTop = element.scrollHeight;
+		element.scrollTop = element.scrollHeight; 
 	",$this::POS_READY);
 	?>
 

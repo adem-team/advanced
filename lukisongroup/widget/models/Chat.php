@@ -51,8 +51,8 @@ class Chat extends \yii\db\ActiveRecord
     {
         return [
 			  // [['MESSAGE'], 'required'],
-            [['MESSAGE'], 'string'],
-            [['MESSAGE_STS', 'MESSAGE_SHOW', 'CREATED_BY','ID'], 'integer'],
+            [['MESSAGE','CREATED_BY'], 'string'],
+            [['MESSAGE_STS', 'MESSAGE_SHOW','ID'], 'integer'],
             [['UPDATED_TIME'], 'safe'],
             [['MESSAGE_ATTACH'], 'string', 'max' => 100],
             [['GROUP'], 'string', 'max' => 20]
