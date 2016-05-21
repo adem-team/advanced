@@ -326,7 +326,7 @@ use yii\widgets\Pjax;
     <!-- BOOTSTRAP CORE STYLE CSS -->
     <link href="http://lukisongroup.int/widget/bootstrap-chat/assets/css/bootstrap.css" rel="stylesheet" />
 </head>
-<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
+<div class="content" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
 	<div  class="row">
 		<div class="col-md-8">
 			 <div class="panel panel-info">
@@ -335,14 +335,15 @@ use yii\widgets\Pjax;
 					  <img class="img-circle" src="<?=$gambar?>" alt="User Avatar" height="40px" width="40px">
 					</div>
 				</div>
-				<div class="pre-scrollableChatBase" id="chat-msg" style="background-color:rgba(255, 255, 155, 0.3)">
+				<div class="pre-scrollableChatBase" id="chat-msg" style="height:300px;background-color:rgba(255, 255, 155, 0.3)">
 					<div style="margin-top: -20px;margin-left: 20px" >
 						<?php
 							//echo $gv_Chat;
 							//echo $body1;
-							// Pjax::begin(['id'=>'msg-chat-id']);
+							Pjax::begin(['id'=>'msg-chat']);
 							echo Html::mediaList([
 								   [
+								    'id'=>'msg-chat',
 									'heading' => false,
 									'body' => false,
 									'imgOptions'=>false,
@@ -351,20 +352,14 @@ use yii\widgets\Pjax;
 									'items' =>$body1,
 								   ],
 							]);
-							//Pjax::end();
+							Pjax::end();
 						?>
 					</div>
 				</div>
 				 <div class="box-footer" style="background-color:rgba(255, 255, 155, 0.3)">
 					  <form  action="#" method="post">
-						<div class="input-group">
-							<?php
-								 //Pjax::begin(['id'=>'#msg-chat-comment']);
-							?>
-						  <textarea class="form-control" id="comment" rows="3" name="message" placeholder="Type Message ..."></textarea>
-						  <?php
-								//Pjax::end();
-							?>
+						<div class="input-group">						
+						  <textarea class="form-control" id="comment" rows="3" name="message" placeholder="Type Message ..."></textarea>						
 						  <span class="input-group-btn" >
 								<button id="btn" type="button" style="margin-left:10px" class="btn btn-primary">Send</button>							
 						 </span>
@@ -423,25 +418,18 @@ $params = Yii::$app->request->queryParams;
 				data: data,
 				dataType: 'json',
 				success: function(result) {
-					/* //if (result == 1){
+					if (result == 1){
 						// Success
 						//$.('#btn').load(location.href + '#chat-msg');
 						//$.pjax.reload('#msg-chat-id');
 						//$.pjax.reload('#msg-chat-id');
 						//$.pjax.reload({container:'#comment-chat-id,#msg-chat-comment'});
-						$.pjax.reload({container:'#chat-msg'});
+						$.pjax.reload({container:'#msg-chat'});
+						//$.pjax.reload({container:'#comment'});
 						
-					//} else {
+					} else {
 						// Fail
-					//} */
-					$(function() {
-                        startRefresh();
-                    });
-
-                    //auto reload data
-                    function startRefresh() {
-                       $('#chat-msg').load({container: '#chat-msg'});                      
-                    }
+					} 				
 				}
 			});
 	})
