@@ -99,7 +99,7 @@ class ChatSearch extends Chat
         //$Id = Yii::$app->user->identity->id;
 //        print_r($Id);
 //        die();
-        $query = \lukisongroup\sistem\models\Userlogin::find()->where(['<>','status','1']);
+        $query = \lukisongroup\sistem\models\Userlogin::find()->where(['ONLINE'=>1]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
