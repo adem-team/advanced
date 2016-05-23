@@ -41,7 +41,7 @@ class ChatroomSearch extends Chatroom
      */
     public function search($params)
     {
-        $query = Chatroom::find();
+        $query = Chatroom::find()->where('PARENT = 0');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -63,8 +63,8 @@ class ChatroomSearch extends Chatroom
 
         $query->andFilterWhere(['like', 'GROUP_ID', $this->GROUP_ID])
             ->andFilterWhere(['like', 'GROUP_NM', $this->GROUP_NM]);
-			
-				$query->orderby(['SORT'=>SORT_ASC]); 
+
+				$query->orderby(['SORT'=>SORT_ASC]);
 
         return $dataProvider;
     }

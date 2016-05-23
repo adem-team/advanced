@@ -16,6 +16,8 @@ use yii\filters\VerbFilter;
 use lukisongroup\widget\models\Chat;
 use lukisongroup\widget\models\ChatSearch;
 use lukisongroup\widget\models\ChatroomSearch;
+use lukisongroup\widget\models\Chatroom;
+use lukisongroup\sistem\models\Userlogin;
 /* VARIABLE PRIMARY JOIN/SEARCH/FILTER/SORT Author: -ptr.nov- */
 //use app\models\hrd\Dept;			/* TABLE CLASS JOIN */
 //use app\models\hrd\DeptSearch;		/* TABLE CLASS SEARCH */
@@ -48,8 +50,12 @@ class ChatController extends Controller
                if (Yii::$app->session['userSessionTimeout']< time() ) {
                    // timeout
                    Yii::$app->user->logout();
+                   $id = Yii::$app->getUserOpt->profile_user()->id;
+                   $this->getofline($id);
                    $this->redirect(array('/site/login'));  //
                } else {
+                 $id = Yii::$app->getUserOpt->profile_user()->id;
+                 $this->getonline($id);
                    //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
                    Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
                    return true;
@@ -58,6 +64,23 @@ class ChatController extends Controller
             } else {
                 return true;
             }
+    }
+
+    public function getonline($id)
+    {
+      # code...
+      $user_login = UserLogin::findOne(['id'=>$id]);
+      $user_login->ONLINE = 1;
+      $user_login->save();
+    }
+
+    public function getofline($id)
+    {
+      # code...
+      $user_login = UserLogin::findOne(['id'=>$id]);
+      $user_login->ONLINE = 0;
+      $user_login->save();
+
     }
 
 
@@ -106,14 +129,34 @@ public function actionSendChat()
     $profile = Yii::$app->getUserOpt->profile_user()->emp;
     $emp_id = $profile->EMP_ID;
 
+    /* connection db widget */
+    $connection = Yii::$app->db_widget;
+
     $request= Yii::$app->request;
+    $typechat = $request->post('chat');
     $id=$request->post('id');
     $chat = $request->post('comment');
-    $model = new Chat();
-    $model->MESSAGE = $chat;
-    $model->GROUP = $id;
-    $model->CREATED_BY = $emp_id;
-    $model->save();
+    if($typechat == "group")
+    {
+      $cari_group = Chatroom::find()->where(['SORT'=>$id])->all();
+      foreach ($cari_group as $key => $value) {
+        # code...
+        $connection->createCommand()
+                   ->batchInsert('sc0003a',['MESSAGE','GROUP','CREATED_BY'],
+                            [[$chat,$value['GROUP_ID'],$emp_id]])->execute();
+
+      }
+    }else {
+      # code...
+      $model = new Chat();
+      $model->MESSAGE = $chat;
+      $model->GROUP = $id;
+      $model->CREATED_BY = $emp_id;
+      $model->save();
+    }
+
+
+
     // print_r($model->getErrors());
     // die();
     return true;
