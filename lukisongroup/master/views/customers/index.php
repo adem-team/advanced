@@ -4,6 +4,7 @@ use yii\helpers\Url;
 use kartik\helpers\Html;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
+use kartik\nav\NavX;
 use lukisongroup\master\models\Customers;
 use yii\helpers\ArrayHelper;
 // use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
@@ -126,40 +127,8 @@ function tombolLoginalias(){
 // print_r($parent);
 // die();
 
-
-?>
-
-<div class="col-sm-8 col-md-8 col-lg-8" >
-  <div  class="row" style="padding-left:3px">
-      <!-- CUTI !-->
-      <div class="btn-group pull-left" >
-        <button type="button" class="btn btn-info">MENU</button>
-        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
-          <span class="caret"></span>
-          <span class="sr-only">Toggle Dropdown</span>
-        </button>
-          <ul class="dropdown-menu" role="menu">
-          <li><?php echo tombolCustomers(); ?></li>
-          <li><?php echo tombolKota();?></li>
-          <li><?php echo tombolProvince(); ?></li>
-          <li><?php echo tombolKategori(); ?></li>
-          <li><?php echo tombolMap(); ?></li>
-          <li><?php echo tombolLoginalias(); ?></li>
-          <li class="divider"></li>
-            <!-- <ul>as</ul> -->
-          <!-- <li> tombolLogoff();?></li> -->
-          </ul>
-      </div>
-      <!-- CUTI !-->
-
-  </div>
-</div>
-
-<div class="row">
-<div class="col-sm-12" style="margin-top:5px">
-<?php
 /*CUSTOMER DATA*/
-echo $tabcustomersData = \kartik\grid\GridView::widget([
+$tabcustomersData = \kartik\grid\GridView::widget([
   'id'=>'gv-cus',
   'dataProvider' => $dataProvider,
   'filterModel' => $searchModel,
@@ -223,6 +192,7 @@ echo $tabcustomersData = \kartik\grid\GridView::widget([
       'label'=>'Customer.Id',
       'hAlign'=>'left',
       'vAlign'=>'middle',
+	  'filter'=>false,
       'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
@@ -455,6 +425,9 @@ echo $tabcustomersData = \kartik\grid\GridView::widget([
       ],
     ],
   ],
+  'toolbar'=>[
+	''
+  ],
   'panel'=>[
     // 'type' =>GridView::TYPE_SUCCESS,
     'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create  ',
@@ -462,7 +435,7 @@ echo $tabcustomersData = \kartik\grid\GridView::widget([
                               'data-toggle'=>"modal",
                               'id'=>'modcus',
                                'data-target'=>"#createcus",
-                               'class' => 'btn btn-success'
+                               'class' => 'btn btn-success btn-sm'
                               ])
 
   ],
@@ -473,6 +446,7 @@ echo $tabcustomersData = \kartik\grid\GridView::widget([
       'id'=>'gv-cus-data',
     ],
   ],
+  'summary'=>false,
   'hover'=>true,
   'responsive'=>true,
   'responsiveWrap'=>true,
@@ -485,11 +459,59 @@ echo $tabcustomersData = \kartik\grid\GridView::widget([
     'target'=>GridView::TARGET_BLANK
   ],
   ]);
-
-
-
  ?>
-
+ <?php
+	 $navmenu= NavX::widget([
+		'options'=>['class'=>'nav nav-tabs'],
+		'encodeLabels' => false,
+		'items' => [			
+			['label' => 'MENU', 'active'=>true, 'items' => [
+				['label' => '<span class="fa fa-user fa-md"></span>Customers', 'url' => '/master/customers/esm-index'],
+				['label' => '<span class="fa fa-cogs fa-md"></span>Alias Customers', 'url' => '/master/customers/login-alias','linkOptions'=>['id'=>'performance','data-toggle'=>'modal','data-target'=>'#formlogin']],
+				'<li class="divider"></li>',
+				['label' => 'Properties', 'items' => [
+					['label' => '<span class="fa fa-flag fa-md"></span>Kota', 'url' => '/master/customers/esm-index-city'],
+					['label' => '<span class="fa fa-flag-o fa-md"></span>Province', 'url' => '/master/customers/esm-index-provinsi'],
+					['label' => '<span class="fa fa-table fa-md"></span>Category', 'url' => '/master/customers/esm-index-kategori'],
+					'<li class="divider"></li>',
+					['label' => '<span class="fa fa-map-marker fa-md"></span>Customers Map', 'url' => '/master/customers/esm-map'],
+				]],
+			]],
+		   
+		]
+	]);
+?>
+<div class="content">
+  <div  class="row" style="padding-left:3px">
+		<div class="col-sm-12 col-md-12 col-lg-12" >
+		  <!-- CUTI !-->
+		  <?php
+		  $test='<div class="btn-group pull-left" >'.
+				'<button type="button" class="btn btn-info">MENU</button>'.
+				'<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">'.
+				  '<span class="caret"></span>'.
+				  '<span class="sr-only">Toggle Dropdown</span>'.
+				'</button>'.
+				  '<ul class="dropdown-menu" role="menu">'.
+				  '<li>'. tombolCustomers() .'</li>'.
+				  '<li>'.  tombolKota().'</li>'.
+				  '<li>'.  tombolProvince() .'</li>'.
+				  '<li>'.  tombolKategori() .'</li>'.
+				  '<li>'.  tombolMap() .'</li>'.
+				  '<li>'.  tombolLoginalias() .'</li>'.			  
+				  '</ul>'.
+				'</div>';
+				//echo  $test;
+				echo $navmenu;
+		  ?>
+		  <!-- CUTI !-->
+		</div>
+		<div class="col-sm-12">
+			<?php
+				echo $tabcustomersData;
+			?>
+		</div>
+	</div>
 </div>
 
 <!-- div class="modal fade" id="myModal" role="dialog"> -->
