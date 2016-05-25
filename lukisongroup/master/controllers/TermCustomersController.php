@@ -313,9 +313,13 @@ class TermCustomersController extends Controller
             if (isset($posted['KD_COSCENTER'])) {
                 $output = $model->KD_COSCENTER;
               }
-              $out = Json::encode(['output'=>$output, 'message'=>'']);
-            echo $out;
-            return;
+              $out = Json::encode(['output'=>$output, 'message'=>'','response'=>'success']);
+
+                echo $out;
+                return;
+
+
+
         }
       }
         $term = new Termgeneral();
