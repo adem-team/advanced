@@ -8,14 +8,12 @@ use yii\web\Response;
 use yii\helpers\ArrayHelper;
 use yii\data\ArrayDataProvider;
 use yii\db\Query;
-// use lukisongroup\assets\AppAssetFusionChart;
-// AppAssetFusionChart::register($this);
+
 ?>
 
 <?php
-	$dataGraphCcSupport=Yii::$app->db_esm->createCommand("CALL PURCHASING_report_cc('CC_SUPPORT','CORP')")->queryAll(); 
 	$provider= new ArrayDataProvider([
-	'allModels'=>$dataGraphCcSupport,
+	'allModels'=>Yii::$app->db_esm->createCommand("CALL PURCHASING_report_cc('CC_SUPPORT','CORP')")->queryAll(),
 	 'pagination' => [
 		'pageSize' => 1000,
 		]

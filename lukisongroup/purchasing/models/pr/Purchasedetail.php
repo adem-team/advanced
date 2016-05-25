@@ -24,7 +24,7 @@ class Purchasedetail extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-		 public $NM_COSTCENTER;
+	public $NM_COSTCENTER;
     public static function tableName()
     {
         return 'p0002';

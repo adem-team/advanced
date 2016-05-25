@@ -8,21 +8,19 @@ use yii\web\Response;
 use yii\helpers\ArrayHelper;
 use yii\data\ArrayDataProvider;
 use yii\db\Query;
-// use lukisongroup\assets\AppAssetFusionChart;
-// AppAssetFusionChart::register($this);
+
 ?>
 
 <?php
-	$dataGraphCcSupport=Yii::$app->db_esm->createCommand("CALL PURCHASING_report_cc('CC_SUPPORT','CORP')")->queryAll(); 
 	$provider= new ArrayDataProvider([
-	'allModels'=>$dataGraphCcSupport,
+	'allModels'=>Yii::$app->db_esm->createCommand("CALL PURCHASING_report_cc('CC_BISNIS','CORP')")->queryAll(),
 	 'pagination' => [
 		'pageSize' => 1000,
 		]
 	]);
 	$dataJson=(Json::encode($provider->getModels()));
-	$dataJsonSupportDept='data:'.$dataJson;
-	//print_r($dataJsonSupportDept);
+	$dataJsonBisnisDept='data:'.$dataJson;
+	//print_r($$dataJsonBisnisDept);
 	//print_r(Json::encode($provider->getModels()));
 	//print_r($provider);
 ?>
@@ -59,7 +57,7 @@ use yii\db\Query;
 					showAlternateHGridColor: '0',
 					showXAxisLine: '1'						
 				},
-				$dataJsonSupportDept
+				$dataJsonBisnisDept
 				/* data:[{
 					label: 'Bakersfield Central',
 					value: '880000'

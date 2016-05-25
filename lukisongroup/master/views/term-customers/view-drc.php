@@ -248,7 +248,11 @@ $this->title = Yii::t('app', 'Trading Terms ');                  /* belum di gun
 								'hAlign'=>'left',
 								'vAlign'=>'middle',
 								'noWrap'=>true,
-								'value' => function($model) { return $model->PERIODE_START . "-" . $model->PERIODE_END;},
+								'value' => function($model) { 
+									$prde=$model->PERIODE_START!='0000-00-00'? $model->PERIODE_START . " - " . $model->PERIODE_END:"";
+									//return $model->PERIODE_START . " - " . $model->PERIODE_END;
+									return $prde;
+								},
 								'headerOptions'=>[
 									'style'=>[
 									 'text-align'=>'center',

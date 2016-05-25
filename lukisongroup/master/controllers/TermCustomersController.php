@@ -1054,10 +1054,14 @@ class TermCustomersController extends Controller
 
 
           $budget->CORP_ID = $profile->emp->EMP_CORP_ID;
-          $tanggal = \Yii::$app->formatter->asDate($budget->PERIODE_START,'Y-M-d');
+         /*  $tanggal = \Yii::$app->formatter->asDate($budget->PERIODE_START,'Y-M-d');
           $tanggalend = \Yii::$app->formatter->asDate($budget->PERIODE_END,'Y-M-d');
           $budget->PERIODE_START = $tanggal;
-          $budget->PERIODE_END = $tanggalend;
+          $budget->PERIODE_END = $tanggalend;  */
+		  $tanggal = \Yii::$app->formatter->asDate($budget->PERIODE_START,'Y-M-d');
+          $tanggalend = \Yii::$app->formatter->asDate($budget->PERIODE_END,'Y-M-d');
+          $budget->PERIODE_START = $budget->PERIODE_START!=''?\Yii::$app->formatter->asDate($budget->PERIODE_START,'Y-M-d'):'0000-00-00';;
+          $budget->PERIODE_END =  $budget->PERIODE_END!=''?\Yii::$app->formatter->asDate($budget->PERIODE_END,'Y-M-d'):'0000-00-00';;
           if($budget->validate())
           {
 
@@ -1090,10 +1094,14 @@ class TermCustomersController extends Controller
 
 
           $budget->CORP_ID = $profile->emp->EMP_CORP_ID;
-          $tanggal = \Yii::$app->formatter->asDate($budget->PERIODE_START,'Y-M-d');
+          /* $tanggal = \Yii::$app->formatter->asDate($budget->PERIODE_START,'Y-M-d');
           $tanggalend = \Yii::$app->formatter->asDate($budget->PERIODE_END,'Y-M-d');
           $budget->PERIODE_START = $tanggal;
-          $budget->PERIODE_END = $tanggalend;
+          $budget->PERIODE_END = $tanggalend; */
+		  $tanggal = \Yii::$app->formatter->asDate($budget->PERIODE_START,'Y-M-d');
+          $tanggalend = \Yii::$app->formatter->asDate($budget->PERIODE_END,'Y-M-d');
+          $budget->PERIODE_START = $budget->PERIODE_START!=''?\Yii::$app->formatter->asDate($budget->PERIODE_START,'Y-M-d'):'0000-00-00';
+          $budget->PERIODE_END = $budget->PERIODE_END!=''?\Yii::$app->formatter->asDate($budget->PERIODE_END,'Y-M-d'):'0000-00-00';
           if($budget->validate())
           {
 

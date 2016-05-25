@@ -93,8 +93,8 @@ class AlgMarketingController extends Controller
 		  Yii::$app->mailer->compose()
 		 ->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
 		 //->setTo(['piter@lukison.com'])
-		 ->setTo(['it-dept@lukison.com'])
-		 ->setSubject('ERP TEST EMAIL')
+		 ->setTo(['piter@lukison.com'])
+		 ->setSubject('DAILY ERP TEST EMAIL')
 		 ->setTextBody($ok)
 		 ->send();
 		 

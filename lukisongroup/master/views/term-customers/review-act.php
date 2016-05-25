@@ -487,7 +487,7 @@ else{
             'dropdown' => true,
             'template' => '{approved} {reject} {cancel}',
             'dropdownOptions'=>['class'=>'pull-left dropdown'],
-            //'headerOptions'=>['class'=>'kartik-sheet-style'],
+            'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
             'buttons' => [
               'approved' => function ($url, $Model) {
                         return tombolApproval($url, $Model);
@@ -581,7 +581,11 @@ else{
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
 						'noWrap'=>true,
-						'value' => function($model) { return $model->PERIODE_START . " - " . $model->PERIODE_END;},
+						'value' => function($model) { 
+							$prde=$model->PERIODE_START!='0000-00-00'? $model->PERIODE_START . " - " . $model->PERIODE_END:"";
+							//return $model->PERIODE_START . " - " . $model->PERIODE_END;
+							return $prde;
+						},
 						'headerOptions'=>[
 							'style'=>[
 							 'text-align'=>'center',

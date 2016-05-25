@@ -52,9 +52,13 @@ class ReportController extends Controller
 	/*JSON MAP*/
 	public function actionMap()
     {
-            $conn = Yii::$app->db3;
-            $hasil = $conn->createCommand("SELECT c.SCDL_GROUP,c.CUST_KD, c.ALAMAT, c.CUST_NM,c.MAP_LAT,c.MAP_LNG,b.SCDL_GROUP_NM from c0001 c
+            //$conn = Yii::$app->db3;
+            //$hasil = Yii::$app->db3->createCommand("SELECT c.SCDL_GROUP,c.CUST_KD, c.ALAMAT, c.CUST_NM,c.MAP_LAT,c.MAP_LNG,b.SCDL_GROUP_NM from c0001 c
+             //                             left join c0007 b on c.SCDL_GROUP = b.ID")->queryAll();
+			$hasil = Yii::$app->db3->cache(function ($db3) {
+				return $db3->createCommand("SELECT c.SCDL_GROUP,c.CUST_KD, c.ALAMAT, c.CUST_NM,c.MAP_LAT,c.MAP_LNG,b.SCDL_GROUP_NM from c0001 c
                                           left join c0007 b on c.SCDL_GROUP = b.ID")->queryAll();
+			}, 60);
 
             //  $hasil = $conn->createCommand("SELECT * from c0001 ")->queryAll();
 
@@ -74,7 +78,10 @@ class ReportController extends Controller
 			/* CUSTOMER CATEHORI COUNT [modern,general,horeca,other]*/
 			$dataProvider_CustPrn= new ArrayDataProvider([
 				'key' => 'PARENT_ID',
-				'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_custromer_ktg('count_kategory_customer_parent')")->queryAll(),
+				//'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_custromer_ktg('count_kategory_customer_parent')")->queryAll(),
+				'allModels'=>Yii::$app->db_esm->cache(function ($db_esm) {
+					return $db_esm->createCommand("CALL DASHBOARD_ESM_SALES_custromer_ktg('count_kategory_customer_parent')")->queryAll();
+				}, 60),
 				'pagination' => [
 					'pageSize' => 50,
 					]
@@ -83,7 +90,10 @@ class ReportController extends Controller
 			$count_CustPrn=$dataProvider_CustPrn->getCount();
 			
 			/* COUNTER SALESMAN VISIT */
-			$dataCntrVisit=Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_customer_visit_winloss('COUNTER_DAILY','". date('Y-m-d')."','','')")->queryAll();
+			//$dataCntrVisit=Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_customer_visit_winloss('COUNTER_DAILY','". date('Y-m-d')."','','')")->queryAll();
+			$dataCntrVisit=Yii::$app->db_esm->cache(function ($db_esm) {
+				return $db_esm->createCommand("CALL DASHBOARD_ESM_SALES_customer_visit_winloss('COUNTER_DAILY','". date('Y-m-d')."','','')")->queryAll();
+			}, 60);
 			$CntrVisit=$dataCntrVisit[0]['CNT_DAY']!=''? $dataCntrVisit[0]['CNT_DAY']:0;
 			
 			return $this->render('index',[
@@ -109,7 +119,10 @@ class ReportController extends Controller
 	protected function graphSchaduleWinLoss(){
 		$AryDataProvider= new ArrayDataProvider([
 			//'key' => 'PARENT_ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_customer_visit_winloss('GRAPH_COUNTER_DAILY','". date('Y-m-d')."','','')")->queryAll(),
+			//'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_customer_visit_winloss('GRAPH_COUNTER_DAILY','". date('Y-m-d')."','','')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->cache(function ($db_esm) {
+					return $db_esm->createCommand("CALL DASHBOARD_ESM_SALES_customer_visit_winloss('GRAPH_COUNTER_DAILY','". date('Y-m-d')."','','')")->queryAll();
+			}, 60),
 			//'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_customer_visit_winloss('GRAPH_COUNTER_DAILY','2016-04-03','','')")->queryAll(),
 			 'pagination' => [
 				'pageSize' => 100,
@@ -155,7 +168,10 @@ class ReportController extends Controller
 	public function graphEsmSalesInventory(){		
 		/*Category*/
 		$AryDataProviderCtg= new ArrayDataProvider([
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('kategory_label','')")->queryAll(),
+			//'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('kategory_label','')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->cache(function ($db_esm) {
+				return $db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('kategory_label','')")->queryAll();
+			}, 60),
 			 'pagination' => [
 				'pageSize' => 100,
 			],
@@ -166,7 +182,10 @@ class ReportController extends Controller
 		/*Item Value 1*/
 		$AryDataProviderVal1= new ArrayDataProvider([
 			//'key' => 'PARENT_ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_stock','BRG.ESM.2016.01.0001')")->queryAll(),
+			//'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_stock','BRG.ESM.2016.01.0001')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->cache(function ($db_esm) {
+				return $db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_stock','BRG.ESM.2016.01.0001')")->queryAll();
+			}, 60),
 			 'pagination' => [
 				'pageSize' => 100,
 			]
@@ -177,7 +196,11 @@ class ReportController extends Controller
 		/*Item Value 2*/
 		$AryDataProviderVal2= new ArrayDataProvider([
 			//'key' => 'PARENT_ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_stock','BRG.ESM.2016.01.0002')")->queryAll(),
+			//'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_stock','BRG.ESM.2016.01.0002')")->queryAll(),
+			'allModels'=>
+			Yii::$app->db_esm->cache(function ($db_esm) {
+				return $db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_stock','BRG.ESM.2016.01.0002')")->queryAll();
+			}, 60),
 			 'pagination' => [
 				'pageSize' => 100,
 			]
@@ -188,7 +211,10 @@ class ReportController extends Controller
 		/*Item Value 3*/
 		$AryDataProviderVal3= new ArrayDataProvider([
 			//'key' => 'PARENT_ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_stock','BRG.ESM.2016.01.0003')")->queryAll(),
+			//'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_stock','BRG.ESM.2016.01.0003')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->cache(function ($db_esm) {
+				return $db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_stock','BRG.ESM.2016.01.0003')")->queryAll();
+			}, 60),
 			 'pagination' => [
 				'pageSize' => 100,
 			]
@@ -199,7 +225,10 @@ class ReportController extends Controller
 		/*Item Value 4*/
 		$AryDataProviderVal4= new ArrayDataProvider([
 			//'key' => 'PARENT_ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_stock','BRG.ESM.2016.01.0004')")->queryAll(),
+			//'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_stock','BRG.ESM.2016.01.0004')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->cache(function ($db_esm) {
+				return $db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_stock','BRG.ESM.2016.01.0004')")->queryAll();
+			}, 60),
 			 'pagination' => [
 				'pageSize' => 100,
 			]
@@ -210,7 +239,10 @@ class ReportController extends Controller
 		/*Item Value 5*/
 		$AryDataProviderVal5= new ArrayDataProvider([
 			//'key' => 'PARENT_ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_stock','BRG.ESM.2016.01.0005')")->queryAll(),
+			//'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_stock','BRG.ESM.2016.01.0005')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->cache(function ($db_esm) {
+				return $db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_stock','BRG.ESM.2016.01.0005')")->queryAll();
+			}, 60),
 			 'pagination' => [
 				'pageSize' => 100,
 			]
@@ -222,7 +254,10 @@ class ReportController extends Controller
 		/*SELL OUT ALL*/
 		$AryDataProviderValSellOutAll= new ArrayDataProvider([
 			//'key' => 'PARENT_ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_sell_out_all','')")->queryAll(),
+			//'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_sell_out_all','')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->cache(function ($db_esm) {
+				return $db_esm->createCommand("CALL DASHBOARD_ESM_SALES_inventory('value_sell_out_all','')")->queryAll();
+			}, 60),
 			 'pagination' => [
 				'pageSize' => 100,
 			]
@@ -321,7 +356,10 @@ class ReportController extends Controller
 	public function CountChildCustomer(){		
 		$countChildParen= new ArrayDataProvider([
 			'key' => 'CUST_KD',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_custromer_ktg('ParentChildCountCustomer')")->queryAll(),
+			//'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_custromer_ktg('ParentChildCountCustomer')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->cache(function ($db_esm) {
+				return $db_esm->createCommand("CALL DASHBOARD_ESM_SALES_custromer_ktg('ParentChildCountCustomer')")->queryAll();
+			}, 60),
 			'pagination' => [
 				'pageSize' => 50,
 				]
@@ -337,7 +375,10 @@ class ReportController extends Controller
 		/* CUSTOMER CATEHORI COUNT [modern,general,horeca,other]*/
 		$dataProvider_CustPrn= new ArrayDataProvider([
 			//'key' => 'PARENT_ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_custromer_ktg('count_kategory_customer_parent')")->queryAll(),
+			//'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_custromer_ktg('count_kategory_customer_parent')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->cache(function ($db_esm) {
+				return $db_esm->createCommand("CALL DASHBOARD_ESM_SALES_custromer_ktg('count_kategory_customer_parent')")->queryAll();
+			}, 60),
 			'pagination' => [
 				'pageSize' => 50,
 				]

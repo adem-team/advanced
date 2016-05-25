@@ -3,6 +3,8 @@ vendor.zip
 #/labtest1-config
 /labtest1config
 
+#cronjob
+/cronjob
 #api
 /api
 

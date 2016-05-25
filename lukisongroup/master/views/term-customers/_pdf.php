@@ -94,7 +94,11 @@ use kartik\grid\GridView;
 									'label'=>'Periode',
 									'hAlign'=>'left',
 									'vAlign'=>'middle',
-									'value' => function($model) { return $model['PERIODE_START'] . "-" . $model['PERIODE_END'] ;},
+									'value' => function($model) { 
+										$prde=$model->PERIODE_START!='0000-00-00'? $model->PERIODE_START . " - " . $model->PERIODE_END:"";
+										//return $model->PERIODE_START . " - " . $model->PERIODE_END;
+										return $prde;
+									},
 									'headerOptions'=>[
 										'style'=>[
 											 'text-align'=>'center',
