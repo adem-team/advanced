@@ -5,7 +5,7 @@ use yii\helpers\Url;
 use kartik\helpers\Html;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
-
+use kartik\nav\NavX;
 $this->params['breadcrumbs'][] = $this->title;
 $this->sideCorp = 'Customers';                 				 /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = $sideMenu_control;//'umum_datamaster';   	 /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -103,80 +103,49 @@ function tombolMap(){
   $content = Html::a($label1,$url1, $options1);
   return $content;
 }
-?>
-
-<div class="col-sm-8 col-md-8 col-lg-8" >
-  <div  class="row" style="margin-left:5px;">
-
-      <!-- CUTI !-->
-      <div class="btn-group pull-left">
-        <button type="button" class="btn btn-info">MENU</button>
-        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
-          <span class="caret"></span>
-          <span class="sr-only">Toggle Dropdown</span>
-        </button>
-          <ul class="dropdown-menu" role="menu">
-          <li><?php echo tombolCustomers(); ?></li>
-          <li><?php echo tombolKota();?></li>
-          <li><?php echo tombolProvince(); ?></li>
-          <li><?php echo tombolKategori(); ?></li>
-          <li><?php echo tombolMap(); ?></li>
-          <li class="divider"></li>
-            <!-- <ul>as</ul> -->
-          <!-- <li> tombolLogoff();?></li> -->
-          </ul>
-      </div>
-      <!-- CUTI !-->
-
-  </div>
-</div>
-
-<?php
 
 // grid kota
-echo $tabkota = \kartik\grid\GridView::widget([
-'id'=>'gv-kota',
-'dataProvider' => $dataproviderkota,
-'filterModel' => $searchmodelkota,
-'columns'=>[
-       ['class'=>'kartik\grid\SerialColumn'],
-            'PROVINCE',
-            'TYPE',
-            'CITY_NAME',
-            'POSTAL_CODE',
-     [ 'class' => 'kartik\grid\ActionColumn',
-                'template' => '{view}{update}',
-                        'header'=>'Action',
-                         'dropdown' => true,
-                         'dropdownOptions'=>['class'=>'pull-right dropup'],
-						 'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
-                        'buttons' => [
-                            'view' =>function($url, $model, $key){
-                                    return '<li>'. Html::a('<span class="glyphicon glyphicon-eye-open"></span>'.Yii::t('app', 'View'),
-                                                                ['viewkota','id'=> $model->CITY_ID],[
-                                                                'data-toggle'=>"modal",
-                                                                'data-target'=>"#view2",
-                                                                'data-title'=> $model->PROVINCE,
-                                                                ]).'<li>';
-                                                            },
+$tabkota = \kartik\grid\GridView::widget([
+		'id'=>'gv-kota',
+		'dataProvider' => $dataproviderkota,
+		'filterModel' => $searchmodelkota,
+		'columns'=>[
+			['class'=>'kartik\grid\SerialColumn'],
+				'PROVINCE',
+				'TYPE',
+				'CITY_NAME',
+				'POSTAL_CODE',
+			[ 'class' => 'kartik\grid\ActionColumn',
+				'template' => '{view}{update}',
+				'header'=>'Action',
+				'dropdown' => true,
+				'dropdownOptions'=>['class'=>'pull-right dropup'],
+				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
+				'buttons' => [
+				'view' =>function($url, $model, $key){
+						return '<li>'. Html::a('<span class="glyphicon glyphicon-eye-open"></span>'.Yii::t('app', 'View'),
+													['viewkota','id'=> $model->CITY_ID],[
+													'data-toggle'=>"modal",
+													'data-target'=>"#view2",
+													'data-title'=> $model->PROVINCE,
+													]).'<li>';
+												},
 
-                             'update' =>function($url, $model, $key){
-                                    return '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Update'),
-                                                                ['updatekota','id'=>$model->CITY_ID],[
-                                                                'data-toggle'=>"modal",
-                                                                'data-target'=>"#form2",
-                                                                'data-title'=> $model->PROVINCE,
-                                                                ]).'</li>';
-                                                            },
+				 'update' =>function($url, $model, $key){
+						return '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Update'),
+													['updatekota','id'=>$model->CITY_ID],[
+													'data-toggle'=>"modal",
+													'data-target'=>"#form2",
+													'data-title'=> $model->PROVINCE,
+													]).'</li>';
+												},
 
-                                                  ],
+									  ],
 
-                                            ],
-                                   ],
-
-    'panel'=>[
-
-      'type' =>GridView::TYPE_SUCCESS,
+			],
+	   ],
+		'panel'=>[
+			'type' =>GridView::TYPE_SUCCESS,
 			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
 						['modelClass' => 'Barangumum',]),'/master/customers/createkota',[
 							'data-toggle'=>"modal",
@@ -186,30 +155,71 @@ echo $tabkota = \kartik\grid\GridView::widget([
 												]),
 
             ],
-                'pjax'=>true,
-                'pjaxSettings'=>[
-                        'options'=>[
-                                    'enablePushState'=>false,
-                                    'id'=>'gv-kota',],
+		'pjax'=>true,
+		'pjaxSettings'=>[
+			'options'=>[
+						'enablePushState'=>false,
+						'id'=>'gv-kota',
+			],
+		],
+		'summary'=>false,
+		//'toolbar'=>false,
         'hover'=>true, //cursor select
         'responsive'=>true,
         'responsiveWrap'=>true,
         'bordered'=>true,
         'striped'=>'4px',
         'autoXlFormat'=>true,
-        'export'=>[//export like view grid --ptr.nov-
+        /* 'export'=>[//export like view grid --ptr.nov-
             'fontAwesome'=>true,
             'showConfirmAlert'=>false,
             'target'=>GridView::TARGET_BLANK
-        ],
+        ], */
 
-    ],
+    
 
 
  ]);
+ ?>
+ <?php
+	 $navmenu= NavX::widget([
+		'options'=>['class'=>'nav nav-tabs'],
+		'encodeLabels' => false,
+		'items' => [			
+			['label' => 'MENU', 'active'=>true, 'items' => [
+				['label' => '<span class="fa fa-user fa-md"></span>Customers', 'url' => '/master/customers/esm-index'],
+				['label' => '<span class="fa fa-cogs fa-md"></span>Alias Customers', 'url' => '/master/customers/login-alias','linkOptions'=>['id'=>'performance','data-toggle'=>'modal','data-target'=>'#formlogin']],
+				'<li class="divider"></li>',
+				['label' => 'Properties', 'items' => [
+					['label' => '<span class="fa fa-flag fa-md"></span>Kota', 'url' => '/master/customers/esm-index-city'],
+					['label' => '<span class="fa fa-flag-o fa-md"></span>Province', 'url' => '/master/customers/esm-index-provinsi'],
+					['label' => '<span class="fa fa-table fa-md"></span>Category', 'url' => '/master/customers/esm-index-kategori'],
+					'<li class="divider"></li>',
+					['label' => '<span class="fa fa-map-marker fa-md"></span>Customers Map', 'url' => '/master/customers/esm-map'],
+				]],
+			]],
+		   
+		]
+	]);
+?>
+<div class="content">
+  <div  class="row" style="padding-left:3px">
+		<div class="col-sm-12 col-md-12 col-lg-12" >
+		  <!-- CUTI !-->
+		  <?php
+				echo $navmenu;
+		  ?>
+		  <!-- CUTI !-->
+		</div>
+		<div class="col-sm-12">
+			<?php
+				echo $tabkota;
+			?>
+		</div>
+	</div>
+</div>
 
-
-
+<?php
 // create kota and update via modal
 $this->registerJs("
   $.fn.modal.Constructor.prototype.enforceFocus = function(){};

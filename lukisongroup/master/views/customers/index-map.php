@@ -3,6 +3,7 @@
 use yii\helpers\Url;
 use kartik\helpers\Html;
 use kartik\grid\GridView;
+use kartik\nav\NavX;
 use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
 MapAsset::register($this);
 
@@ -109,46 +110,44 @@ function tombolMap(){
 ?>
 
 
-
-
-<div class="col-sm-8 col-md-8 col-lg-8" >
-  <div  class="row" style="margin-left:5px;">
-      <!-- IJIN !-->
-      <?php
-        // echo Yii::$app->controller->renderPartial('button',[
-            //'model_CustPrn'=>$model_CustPrn,
-            //'count_CustPrn'=>$count_CustPrn
-        // ]);
-      ?>
-      <!-- CUTI !-->
-      <div class="btn-group pull-left">
-        <button type="button" class="btn btn-info">MENU</button>
-        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
-          <span class="caret"></span>
-          <span class="sr-only">Toggle Dropdown</span>
-        </button>
-          <ul class="dropdown-menu" role="menu">
-            <li><?php echo tombolCustomers(); ?></li>
-            <li><?php echo tombolKota();?></li>
-            <li><?php echo tombolProvince(); ?></li>
-            <li><?php echo tombolKategori(); ?></li>
-            <li><?php echo tombolMap(); ?></li>
-          <li class="divider"></li>
-            <!-- <ul>as</ul> -->
-          <!-- <li> tombolLogoff();?></li> -->
-          </ul>
-      </div>
-  </div>
+<?php
+	 $navmenu= NavX::widget([
+		'options'=>['class'=>'nav nav-tabs'],
+		'encodeLabels' => false,
+		'items' => [			
+			['label' => 'MENU', 'active'=>true, 'items' => [
+				['label' => '<span class="fa fa-user fa-md"></span>Customers', 'url' => '/master/customers/esm-index'],
+				['label' => '<span class="fa fa-cogs fa-md"></span>Alias Customers', 'url' => '/master/customers/login-alias','linkOptions'=>['id'=>'performance','data-toggle'=>'modal','data-target'=>'#formlogin']],
+				'<li class="divider"></li>',
+				['label' => 'Properties', 'items' => [
+					['label' => '<span class="fa fa-flag fa-md"></span>Kota', 'url' => '/master/customers/esm-index-city'],
+					['label' => '<span class="fa fa-flag-o fa-md"></span>Province', 'url' => '/master/customers/esm-index-provinsi'],
+					['label' => '<span class="fa fa-table fa-md"></span>Category', 'url' => '/master/customers/esm-index-kategori'],
+					'<li class="divider"></li>',
+					['label' => '<span class="fa fa-map-marker fa-md"></span>Customers Map', 'url' => '/master/customers/esm-map'],
+				]],
+			]],
+		   
+		]
+	]);
+?>
+<div class="content">
+  <div  class="row" style="padding-left:3px">
+		<div class="col-sm-12 col-md-12 col-lg-12" >
+		  <!-- CUTI !-->
+		  <?php
+				echo $navmenu;
+		  ?>
+		  <!-- CUTI !-->
+		</div>
+		<div class="col-sm-12">
+			<?php
+				 echo $map = '<div id ="map" style="width:100%;height:450px; padding-bottom:50px"></div>';
+			?>
+		</div>
+	</div>
 </div>
-<div class="row">
-  <div class="col-sm-12">
-    <?php
-    /*Display MAP*/
-    echo $map = '<div id ="map" style="width:100%;height:400px"></div>';
-     ?>
 
- </div>
- </div>
 
  <?php
  /*js mapping */
