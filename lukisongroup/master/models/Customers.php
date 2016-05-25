@@ -70,7 +70,7 @@ class Customers extends \yii\db\ActiveRecord
     {
         return [
 			      //  [['CUST_NM','STT_TOKO','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID'], 'required'],
-              [['CUST_NM','ALAMAT','TLP1','JOIN_DATE','PIC'], 'required','on'=>'create'],
+              [['CUST_NM','ALAMAT'], 'required','on'=>'create'],
               [['CUST_GRP'], 'required','on'=>'create','when' => function ($model) {
                   return $model->parentnama == 0; },
                   'whenClient' => "function (attribute, value) {
