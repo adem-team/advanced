@@ -60,9 +60,10 @@ $form = ActiveForm::begin([
            ],
 ])  ?>
 
-<?= $form->field($budget, 'PROGRAM', $config)->widget(LabelInPlace::classname(), [
-   'type' => LabelInPlace::TYPE_TEXTAREA
+<?= $form->field($budget, 'PROGRAM', $config)->textArea([
+  'options'=>['rows'=>5]
 ]) ?>
+
 <?= $form->field($budget, 'BUDGET_PLAN')->widget(MaskMoney::classname(), [
   'pluginOptions' => [
       'prefix' => 'Rp',
@@ -71,7 +72,7 @@ $form = ActiveForm::begin([
   ]
 ]) ?>
 
->
+
 
 <div class="form-group">
     <?= Html::submitButton($budget->isNewRecord ? 'Create' : 'Update', ['class' => $budget->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

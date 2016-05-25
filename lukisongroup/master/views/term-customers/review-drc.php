@@ -296,6 +296,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 				'id'=>'gv-term-general',
 				'dataProvider'=> $dataProvider1,
 				'footerRowOptions'=>['style'=>'font-weight:bold;text-decoration: underline;'],
+
 				'beforeHeader'=>[
 					[
 						'columns'=>[
@@ -328,6 +329,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 
 													},
 						],
+
 						'headerOptions'=>[
 							'style'=>[
 								'text-align'=>'center',
@@ -407,8 +409,8 @@ $this->title = Yii::t('app', 'Trading Terms ');
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
 						'noWrap'=>true,
-						'value' => function($model) { 
-							//return $model->PERIODE_START . "-" . $model->PERIODE_END;							 
+						'value' => function($model) {
+							//return $model->PERIODE_START . "-" . $model->PERIODE_END;
 							$prde=$model->PERIODE_START!='0000-00-00'? $model->PERIODE_START . " - " . $model->PERIODE_END:"";
 							return $prde;
 						},
