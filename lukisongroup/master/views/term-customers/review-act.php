@@ -17,6 +17,7 @@ use kartik\money\MaskMoney;
 use lukisongroup\purchasing\models\pr\Costcenter;
 use yii\widgets\ActiveForm;
 use kartik\widgets\FileInput;
+use yii\widgets\Pjax;
 
 
 
@@ -458,6 +459,7 @@ else{
 
 	<?php
 		$dataids = $_GET['id'];
+    //Pjax::begin(['id'=>'tes']);
 	?>
 
 	<!-- TRADE INVESTMENT !-->
@@ -581,7 +583,7 @@ else{
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
 						'noWrap'=>true,
-						'value' => function($model) { 
+						'value' => function($model) {
 							$prde=$model->PERIODE_START!='0000-00-00'? $model->PERIODE_START . " - " . $model->PERIODE_END:"";
 							//return $model->PERIODE_START . " - " . $model->PERIODE_END;
 							return $prde;
@@ -830,6 +832,7 @@ else{
 						'label'=>'Budget Actual',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
+						'refreshGrid'=>true,
 						'pageSummaryFunc'=>GridView::F_SUM,
 						'format'=>['decimal', 2],
 						'pageSummary'=>true,
@@ -878,7 +881,7 @@ else{
 								$Subtotal = ($ttlSubtotal+$ppn)-$pph23;
 								$Totalsub = number_format($Subtotal,2);
 
-							return '<div>'.$ttlSubtotal.'</div>
+							return '<div>'.number_format($ttlSubtotal,2).'</div>
 							<div>'.Html::a($ppn,Url::toRoute(['/master/term-customers/ppn','id'=>$id]),['id'=>'PPn','data-toggle'=>'modal','data-target'=>'#PPN']).'</div>
 							<div>'.Html::a($pph23,Url::toRoute(['/master/term-customers/pph','id'=>$id]),['id'=>'PPh','data-toggle'=>'modal','data-target'=>'#PPH']).'</div>
 								<div>'.$Totalsub.'</div>'
@@ -893,9 +896,12 @@ else{
 								'inputType' => \kartik\editable\Editable::INPUT_MONEY,
 								'size' => 'sm',
 								 'asPopover' => true,
+								 
 								// 'options' => [
 								// 	'pluginOptions' => ['min'=>0, 'max'=>50000]
 								// ]
+								//'displayValueConfig' => '121'
+								
 							],
 						'headerOptions'=>[
 							'style'=>[
@@ -1037,7 +1043,7 @@ else{
 				'export' =>false,
 			]);
 
-
+//Pjax::end()
 			?>
 		</div>
 	</div>
@@ -1256,6 +1262,46 @@ else{
 			</div>
 </div>
 <?php
+
+$this->registerJs("
+	 // $(document).ready(function(){
+		 // $('.kv-editable-submit').click(function($){
+		//	alert('tes');
+		//	$('gv-term-general').load(window.location + '#gv-term-general');
+		//	$.pjax.reload('#gv-term-general');
+		// });
+		// $(function() {
+			// startRefresh();
+		// });
+
+		// function startRefresh() {
+			// setTimeout(function(){
+			//	$('gv-term-general').load(window.location + '#gv-term-general');	
+			//	$.pjax.reload('#gv-term-general');	
+				// $.pjax.reload({container:'#gv-term-general'});				
+			// }, 1000);
+		 // }
+	// }) 
+	
+
+",$this::POS_READY);
+
+$this->registerJs("
+		$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+		$('#term-auth2-sign').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			}),
+",$this::POS_READY);
+
 $this->registerJs("
 		$.fn.modal.Constructor.prototype.enforceFocus = function() {};
 		$('#term-auth2-sign').on('show.bs.modal', function (event) {

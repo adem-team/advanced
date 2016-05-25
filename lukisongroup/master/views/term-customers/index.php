@@ -278,7 +278,7 @@ $gridColumns = [
 ],
 [
   'attribute'=>'SIG2_NM',
-  'label'=>'Sumbition By',
+  'label'=>'Checked By',
   'hAlign'=>'left',
   'vAlign'=>'middle',
   'value'=>function($model){
