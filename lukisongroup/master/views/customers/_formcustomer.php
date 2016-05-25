@@ -39,6 +39,7 @@ use kartik\widgets\DepDrop;
 
 	echo $form->field($model, 'CUST_NM', $config)->widget(LabelInPlace::classname());
 
+		echo $form->field($model, 'ALAMAT', $config)->widget(LabelInPlace::classname());
 		?>
 		<div id="grp">
 			<?php
@@ -109,7 +110,7 @@ use kartik\widgets\DepDrop;
 
 	]);
 
-		echo $form->field($model, 'ALAMAT', $config)->widget(LabelInPlace::classname());
+
 
 
 
