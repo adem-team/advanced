@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 use kartik\grid\GridView;
 use lukisongroup\master\models\Unitbarang;
 
-$this->title = $roHeader->KD_RO;
+$this->title = $roHeader->KD_RIB;
 $this->params['breadcrumbs'][] = ['label' => 'Request Order', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 	/*
@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		</div>
 		<div style="padding-top:40px;">
 			<!-- <h5 class="text-left"><b>FORM PERMINTAAN BARANG & JASA</b></h5> !-->
-			<h4 class="text-left"><b>REQUEST ORDER</b></h4>
+			<h4 class="text-left"><b>REQUEST TERM</b></h4>
 		</div>
 
 		<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
@@ -50,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		<dl>
 			  <dt style="width:100px; float:left;">Date</dt>
 			  <dd>: <?php echo date('d-M-Y'); ?></dd>
-			  <dt style="width:100px; float:left;">Nomor</dt>
+			  <dt style="width:100px; float:left;">Kode</dt>
 			  <dd>: <?php echo Html::encode($this->title); ?></dd>
 			  <dt style="width:100px; float:left;">Departement</dt>
 			  <dd>:
@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div>
 		<?php
 			echo GridView::widget([
-				'id'=>'ro-process',
+				'id'=>'rqt-pdfview',
 				'dataProvider'=> $dataProvider,
 				//'filterModel' => ['STATUS'=>'10'],
 				'headerRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
@@ -88,7 +88,7 @@ $this->params['breadcrumbs'][] = $this->title;
 								]
 							],
 							['content'=>'Remark', 'options'=>[
-									'colspan'=>2,
+									'colspan'=>4,
 									'class'=>'text-center info',
 									'style'=>[
 										'width'=>'10px',
@@ -105,16 +105,14 @@ $this->params['breadcrumbs'][] = $this->title;
 					[
 						/* Attribute Serial No */
 						'class'=>'kartik\grid\SerialColumn',
-						//'contentOptions'=>['class'=>'kartik-sheet-style'],
+						'contentOptions'=>['class'=>'kartik-sheet-style'],
 						'width'=>'10px',
 						'header'=>'No.',
-						'hAlign'=>'center',
 						'headerOptions'=>[
-							//'class'=>'kartik-sheet-style'
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'10px',
-								'font-family'=>'tahoma, arial, sans-serif',
+								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
 								'background-color'=>'rgba(126, 189, 188, 0.3)',
 							]
@@ -123,7 +121,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'10px',
-								'font-family'=>'tahoma, arial, sans-serif',
+								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
 							]
 						],
@@ -131,26 +129,26 @@ $this->params['breadcrumbs'][] = $this->title;
 					/* ['attribute'=>'ID',], */
 					[
 						/* Attribute Items Barang */
-						'label'=>'Items',
-						'attribute'=>'NM_BARANG',
-						//'hAlign'=>'left',
-						//'vAlign'=>'middle',
+						'label'=>'Type Investasi',
+						'attribute'=>'nminvest',
+						'hAlign'=>'left',
+						'vAlign'=>'middle',
 						'mergeHeader'=>true,
 						'format' => 'raw',
 						'headerOptions'=>[
-							//'class'=>'kartik-sheet-style'
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'200px',
-								'font-family'=>'tahoma, arial, sans-serif',
+								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
 								'background-color'=>'rgba(126, 189, 188, 0.3)',
 							]
 						],
 						'contentOptions'=>[
 							'style'=>[
+								'text-align'=>'left',
 								'width'=>'200px',
-								'font-family'=>'tahoma, arial, sans-serif',
+								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
 							]
 						],
@@ -158,78 +156,59 @@ $this->params['breadcrumbs'][] = $this->title;
 					[
 						/* Attribute Request Quantity */
 						'attribute'=>'RQTY',
-						'label'=>'R.Qty',
+						'label'=>'Qty.Request',
 						'vAlign'=>'middle',
 						'hAlign'=>'center',
 						'mergeHeader'=>true,
 						'headerOptions'=>[
-							//'class'=>'kartik-sheet-style'
 							'style'=>[
 								'text-align'=>'center',
-								'width'=>'40px',
-								'font-family'=>'tahoma, arial, sans-serif',
+								'width'=>'60px',
+								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
 								'background-color'=>'rgba(126, 189, 188, 0.3)',
 							]
 						],
 						'contentOptions'=>[
 							'style'=>[
-									'width'=>'40px',
-									'font-family'=>'tahoma, arial, sans-serif',
-									'font-size'=>'8pt',
+								'text-align'=>'left',
+								'width'=>'60px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
 							]
-						]
+						],
 					],
 					[
 						/* Attribute Submit Quantity */
 						'attribute'=>'SQTY',
-						'label'=>'S.Qty',
+						'label'=>'Qty.Submit',
 						'mergeHeader'=>true,
 						'vAlign'=>'middle',
 						'hAlign'=>'center',
 						'headerOptions'=>[
-							//'class'=>'kartik-sheet-style'
 							'style'=>[
 								'text-align'=>'center',
-								'width'=>'40px',
-								'font-family'=>'tahoma, arial, sans-serif',
+								'width'=>'60px',
+								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
 								'background-color'=>'rgba(126, 189, 188, 0.3)',
 							]
 						],
 						'contentOptions'=>[
 							'style'=>[
-									'width'=>'40px',
-									'font-family'=>'tahoma, arial, sans-serif',
-									'font-size'=>'8pt',
+								'text-align'=>'left',
+								'width'=>'60px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
 							]
-						]
+						],
 					],
-					[
-						/* Attribute Unit Barang */
+					[	/* Attribute Unit Barang */
 						'attribute'=>'UNIT',
-						'mergeHeader'=>true,
 						'label'=>'Unit',
+						'hAlign'=>'left',
 						'vAlign'=>'middle',
-						'hAlign'=>'right',
-						'headerOptions'=>[
-							//'class'=>'kartik-sheet-style'
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'150px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'8pt',
-								'background-color'=>'rgba(126, 189, 188, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-									//'text-align'=>'left',
-									'width'=>'150px',
-									'font-family'=>'tahoma, arial, sans-serif',
-									'font-size'=>'8pt',
-							]
-						],
+						'mergeHeader'=>true,
 						'value'=>function($model){
 							$model=Unitbarang::find()->where('KD_UNIT="'.$model->UNIT. '"')->one();
 							if (count($model)!=0){
@@ -238,70 +217,130 @@ $this->params['breadcrumbs'][] = $this->title;
 								$UnitNm='Not Set';
 							}
 							return $UnitNm;
-						}
-					],
-					[
-						/* Attribute Unit Barang */
-						'attribute'=>'NOTE',
-						'label'=>'Noted',
-						'hAlign'=>'left',
-						'mergeHeader'=>true,
+						},
 						'headerOptions'=>[
-							//'class'=>'kartik-sheet-style'
 							'style'=>[
 								'text-align'=>'center',
-								'width'=>'200px',
-								'font-family'=>'tahoma, arial, sans-serif',
+								'width'=>'120px',
+								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
 								'background-color'=>'rgba(126, 189, 188, 0.3)',
 							]
 						],
 						'contentOptions'=>[
 							'style'=>[
-									'width'=>'200px',
-									'font-family'=>'tahoma, arial, sans-serif',
-									'font-size'=>'8pt',
+								'text-align'=>'left',
+								'width'=>'120px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
 							]
 						],
 					],
-					// [
-					// 	/* Attribute Status Detail RO */
-					// 	'attribute'=>'STATUS',
-					// 	'options'=>['id'=>'test-ro'],
-					// 	'label'=>'#',
-					// 	'hAlign'=>'center',
-					// 	'vAlign'=>'middle',
-					// 	'mergeHeader'=>true,
-					// 	'contentOptions'=>['style'=>'width: 100px'],
-					// 	'format' => 'html',
-					// 	'value'=>function ($model, $key, $index, $widget) {
-					// 				return statusProcessRo($model);
-					// 	},
-					// 	'headerOptions'=>[
-					// 		'style'=>[
-					// 			'text-align'=>'center',
-					// 			'width'=>'10px',
-					// 			'font-family'=>'tahoma, arial, sans-serif',
-					// 			'font-size'=>'8pt',
-					// 			'background-color'=>'rgba(126, 189, 188, 0.3)',
-					// 		]
-					// 	],
-					// 	'contentOptions'=>[
-					// 		'style'=>[
-					// 			'text-align'=>'center',
-					// 			'width'=>'10px',
-					// 			'font-family'=>'tahoma, arial, sans-serif',
-					// 			'font-size'=>'8pt',
-					// 		]
-					// 	],
-					// ],
+					[	/* Attribute HARGA SUPPLIER */
+						'attribute'=>'HARGA',
+						'label'=>'Price/Pcs',
+						'vAlign'=>'middle',
+						'hAlign'=>'center',
+						'mergeHeader'=>true,
+						'headerOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'100px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'right',
+								'width'=>'100px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+							]
+						],
+					],
+					[
+						/* Attribute */
+						'attribute'=>'NOMER_INVOCE',
+						'label'=>'No Invoce',
+						'vAlign'=>'middle',
+						'hAlign'=>'center',
+						'mergeHeader'=>true,
+						'headerOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'120px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'120px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+							]
+						],
+					],
+					[
+						/* Attribute */
+						'attribute'=>'NOMER_FAKTURPAJAK',
+						'label'=>'No faktur',
+						'vAlign'=>'middle',
+						'hAlign'=>'center',
+						'mergeHeader'=>true,
+						'headerOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'120px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'120px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+							]
+						],
+					],
+					[
+						/* Attribute Notes Barang */
+						'attribute'=>'INVESTASI_PROGRAM',
+						'label'=>'Program',
+						'hAlign'=>'left',
+						'mergeHeader'=>true,
+						'headerOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'200px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'200px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+							]
+						],
+					],
 				],
 				'pjax'=>true,
 				'pjaxSettings'=>[
 				'options'=>[
 					'enablePushState'=>false,
-					'id'=>'ro-process',
-				   ],
+					'id'=>'rqt-pdfview',
+					 ],
 				],
 				'hover'=>true, //cursor select
 				'responsive'=>true,
@@ -370,13 +409,13 @@ $this->params['breadcrumbs'][] = $this->title;
 			<!-- Signature !-->
 			 <tr>
 				<th style="text-align: center; vertical-align:middle;width:120; height:60px">
-					<?php echo '<img style="width:80; height:40px" src='.$roHeader->SIG1_SVGBASE64.'></img>';?> 
+					<?php echo '<img style="width:80; height:40px" src='.$roHeader->SIG1_SVGBASE64.'></img>';?>
 				</th>
 				<th style="text-align: center; vertical-align:middle;width:120">
-					<?php echo '<img style="width:80; height:40px" src='.$roHeader->SIG2_SVGBASE64.'></img>';?> 
+					<?php echo '<img style="width:80; height:40px" src='.$roHeader->SIG2_SVGBASE64.'></img>';?>
 				</th>
 				<th style="text-align: center; vertical-align:middle;width:120">
-					<?php echo '<img style="width:80; height:40px" src='.$roHeader->SIG3_SVGBASE64.'></img>';?> 
+					<?php echo '<img style="width:80; height:40px" src='.$roHeader->SIG3_SVGBASE64.'></img>';?>
 				</th>
 			</tr>
 			<!--Nama !-->

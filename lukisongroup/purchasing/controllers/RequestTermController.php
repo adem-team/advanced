@@ -5,7 +5,6 @@ namespace lukisongroup\purchasing\controllers;
 use yii;
 use yii\web\Request;
 use yii\db\Query;
-//use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -18,8 +17,9 @@ use kartik\mpdf\Pdf;
 use zyx\phpmailer\Mailer;
 use yii\widgets\ActiveForm;
 
-use lukisongroup\purchasing\models\rqt\Requestterm;
-use lukisongroup\purchasing\models\rqt\RequesttermSearch;
+/* namespace models*/
+use lukisongroup\purchasing\models\rqt\Requesttermheader;
+use lukisongroup\purchasing\models\rqt\RequesttermheaderSearch;
 use lukisongroup\purchasing\models\rqt\Rtdetail;
 use lukisongroup\purchasing\models\rqt\RtdetailSearch;
 
@@ -40,6 +40,7 @@ use lukisongroup\sistem\models\Userlogin;
 use lukisongroup\purchasing\models\rqt\Validateitem;
 use lukisongroup\hrd\models\Dept;
 use lukisongroup\hrd\models\Corp;
+
 // use lukisongroup\hrd\models\Employe;
 
 /**
@@ -91,73 +92,59 @@ class RequestTermController extends Controller
      */
     public function actionIndex()
     {
-		//Check componen generate kode RO
-		//print_r(\Yii::$app->ambilkonci->getRoCode());
+        // component
+		    $profile=Yii::$app->getUserOpt->Profile_user();
+
+    		$searchModel = new RequesttermheaderSearch();
+    		$dataProvider = $searchModel->searchRt(Yii::$app->request->queryParams);
+    		$dataProviderInbox = $searchModel->searchRtInbox(Yii::$app->request->queryParams);
+    		$dataProviderOutbox = $searchModel->searchRtOutbox(Yii::$app->request->queryParams);
 
 
-		//function getPermission(){
-			//return Yii::$app->getUserOpt->Modul_akses(1);
+        // data for search index Rt//
+        $AryCorp = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM');
+        $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 'DEP_NM','DEP_NM');
+        // ** //
 
-		//}
-		//$getPermission=Yii::$app->getUserOpt->Modul_akses(1);
-		$searchModel = new RequesttermSearch();
-		/*  if (isset($_GET['param'])){
-			  $dataProvider = $searchModel->searchChildRo(Yii::$app->request->queryParams,$_GET['param']);
-		}else{
-			$dataProvider = $searchModel->searchChildRo(Yii::$app->request->queryParams);
-		}  */
-
-		//$searchModel->KD_RO ='2015.12.04.RO.0070';
-		$dataProvider = $searchModel->searchRo(Yii::$app->request->queryParams);
-		$dataProviderInbox = $searchModel->searchRoInbox(Yii::$app->request->queryParams);
-		$dataProviderOutbox = $searchModel->searchRoOutbox(Yii::$app->request->queryParams);
-    $profile=Yii::$app->getUserOpt->Profile_user();
-
-    // data for search index RO//
-    $AryCorp = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM');
-    $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 'DEP_NM','DEP_NM');
-    // ** //
-
-    $datachecked = Requestterm::find()->where("PARENT_ROSO = 0 AND STATUS = 101 AND STATUS <> 3 AND USER_CC='".$profile->emp->EMP_ID."'")
-                                        ->count();
-    $datacreate = Requestterm::find()->where("PARENT_ROSO = 0 AND STATUS <> 3 AND STATUS = 0 AND ID_USER = '".$profile->emp->EMP_ID."'")
-                                        ->count();
-    $dataapprove = Requestterm::find()->where("PARENT_ROSO = 0 AND STATUS = 102 AND  STATUS <>3 AND KD_DEP='".$profile->emp->DEP_ID."' OR STATUS = 5")
-                                        ->count();
-    $dataAprrove = new ActiveDataProvider([
-                    'query' => Requestterm::find()->where("PARENT_ROSO = 0 AND STATUS = 102 AND STATUS<>3  AND KD_DEP='".$profile->emp->DEP_ID."'OR STATUS = 5"),
-                        'pagination' => [
-                          'pageSize' => 5,
+        $datachecked = Requesttermheader::find()->where("STATUS = 101 AND STATUS <> 3 AND USER_CC='".$profile->emp->EMP_ID."'")
+                                                ->count();
+        $datacreate = Requesttermheader::find()->where("STATUS <> 3 AND STATUS = 0 AND ID_USER = '".$profile->emp->EMP_ID."'")
+                                            ->count();
+        $dataapprove = Requesttermheader::find()->where("STATUS = 102 AND  STATUS <>3 AND KD_DEP='".$profile->emp->DEP_ID."' OR STATUS = 5")
+                                            ->count();
+        $dataAprrove = new ActiveDataProvider([
+                            'query' => Requesttermheader::find()->where("STATUS = 102 AND STATUS<>3  AND KD_DEP='".$profile->emp->DEP_ID."'OR STATUS = 5"),
+                            'pagination' => [
+                              'pageSize' => 5,
                                       ],
-                              ]);
-    $dataChecked = new ActiveDataProvider([
-                                'query' => Requestterm::find()->where("PARENT_ROSO = 0 AND  STATUS = 101 AND USER_CC='".$profile->emp->EMP_ID."'"),
-                                  'pagination' => [
-                                        'pageSize' => 5,
-                                                    ],
-                                            ]);
-    $dataCreate = new ActiveDataProvider([
-                                'query' => Requestterm::find()->where("PARENT_ROSO = 0 AND STATUS <> 3 AND STATUS = 0 AND ID_USER = '".$profile->emp->EMP_ID."'"),
-                                  'pagination' => [
-                                        'pageSize' => 5,
-                                                    ],
-                                            ]);
+                                  ]);
+        $dataChecked = new ActiveDataProvider([
+                                    'query' => Requesttermheader::find()->where("STATUS = 101 AND USER_CC='".$profile->emp->EMP_ID."'"),
+                                      'pagination' => [
+                                            'pageSize' => 5,
+                                                        ],
+                                                ]);
+        $dataCreate = new ActiveDataProvider([
+                                    'query' => Requesttermheader::find()->where("STATUS <> 3 AND STATUS = 0 AND ID_USER = '".$profile->emp->EMP_ID."'"),
+                                      'pagination' => [
+                                            'pageSize' => 5,
+                                                        ],
+                                                ]);
 
-		  return $this->render('index', [
-      'searchModel' => $searchModel,
-      'dataProvider' => $dataProvider,
-			'dataProviderInbox' =>$dataProviderInbox,
-			'dataProviderOutbox' =>$dataProviderOutbox,
-      'datachecked'=>  $datachecked,
-      'datacreate'=>$datacreate,
-      'dataCreate'=>$dataCreate,
-      'dataapprove'=>$dataapprove,
-      'dataAprrove'=>$dataAprrove,
-      'dataChecked' => $dataChecked,
-      'Combo_Dept'=>$Combo_Dept,
-      'AryCorp'=>$AryCorp
-			//'getPermission'=> $getPermission,
-        ]);
+  		  return $this->render('index', [
+        'searchModel' => $searchModel,
+        'dataProvider' => $dataProvider,
+  			'dataProviderInbox' =>$dataProviderInbox,
+  			'dataProviderOutbox' =>$dataProviderOutbox,
+        'datachecked'=>  $datachecked,
+        'datacreate'=>$datacreate,
+        'dataCreate'=>$dataCreate,
+        'dataapprove'=>$dataapprove,
+        'dataAprrove'=>$dataAprrove,
+        'dataChecked' => $dataChecked,
+        'Combo_Dept'=>$Combo_Dept,
+        'AryCorp'=>$AryCorp
+          ]);
 
 
     }
@@ -171,16 +158,55 @@ class RequestTermController extends Controller
     public function actionCreate()
     {
 
-      // $model = new \yii\base\DynamicModel(['NEW']);
-      // $model->addRule(['NEW'], 'required');
-		  $roDetail = new Rtdetail();
-      $roDetail->scenario = "simpan";
+		  $model = new Requesttermheader();
+      $radiorqt = Yii::$app->request->post();
+      $term_invest = new Rtdetail();
+
+
+      if ($model->load(Yii::$app->request->post())&&$term_invest->load(Yii::$app->request->post())) {
+
+        $radioterm = $radiorqt['Requesttermheader']['NEW'];
+        if($radioterm == 1)
+        {
+          $kode = Yii::$app->ambilkonci->getRtiCode($model->KD_CORP);
+          $model->KD_RIB = $kode;
+
+        }else{
+          $kode = Yii::$app->ambilkonci->getRtbCode($model->KD_CORP);
+          $model->KD_RIB = $kode;
+
+        }
+        $model->CREATED_AT = date('Y-m-d');
+        $model->ID_USER = Yii::$app->getUserOpt->Profile_user()->EMP_ID;
+        $model->save();
+        $term_invest->KD_RIB = $model->KD_RIB;
+        $term_invest->INVESTASI_TYPE;
+        $term_invest->save();
+        	return $this->redirect(['/purchasing/request-term/edit?kd='.$model->KD_RIB]);
+      } else {
       return $this->renderAjax('_form', [
-                'roDetail' => $roDetail,
-				        // 'roHeader' => $roHeader,
+                'model' => $model,
+                'term_invest'=>$term_invest
             ]);
 
     }
+  }
+
+  public function actionAddNewInvest($kd)
+  {
+    # code...
+       $model = new Rtdetail();
+    if ($model->load(Yii::$app->request->post())) {
+          $model->KD_RIB = $kd;
+          $model->save();
+        return $this->redirect(['/purchasing/request-term/edit?kd='.$model->KD_RIB]);
+    } else {
+    return $this->renderAjax('_new_invest', [
+              'model' => $model,
+          ]);
+        }
+
+  }
 
     public function actionValid()
     {
@@ -206,8 +232,7 @@ class RequestTermController extends Controller
     {
 			//$roDetail = new Rodetail();
 			$roDetail = new AdditemValidation();
-			$roHeader = Requestterm::find()->where(['KD_RO' => $kd])->one();
-			$detro = $roHeader->detro;
+			$roHeader = Requesttermheader::find()->where(['KD_RO' => $kd])->one();
 			$employ = $roHeader->employe;
 			$dept = $roHeader->dept;
 
@@ -325,7 +350,7 @@ class RequestTermController extends Controller
     public function actionAddNewItem($kd)
     {
 			$roDetail = new AdditemValidation();
-			$roHeader = Requestterm::find()->where(['KD_RO' => $kd])->one();
+			$roHeader = Requesttermheader::find()->where(['KD_RO' => $kd])->one();
 			$detro = $roHeader->detro;
 			$employ = $roHeader->employe;
 			$dept = $roHeader->dept;
@@ -363,7 +388,7 @@ class RequestTermController extends Controller
 	public function actionItemDetailView($kdro,$kdbrg){
 
 		$brgDetail = Barang::find()->where(['KD_BARANG'=>$kdbrg])->One();
-		$roHeader = Requestterm::find()->where(['KD_RO' => $kdro])->one();
+		$roHeader = Requesttermheader::find()->where(['KD_RO' => $kdro])->one();
 		$roDetail = $roHeader->detro;
 		return $this->renderAjax('detailviewitem', [
 				'brgDetail' => $brgDetail,
@@ -529,7 +554,7 @@ class RequestTermController extends Controller
 	public function actionSimpanfirst(){
 
 				// $cons = \Yii::$app->db_esm;
-				$roHeader = new Requestterm();
+				$roHeader = new Requesttermheader();
 				//$reqorder = new Roatribute();
 				$roDetail = new Rtdetail();
         $BARANG = new Barang();
@@ -698,7 +723,7 @@ class RequestTermController extends Controller
     {
 		$searchModel = new RtdetailSearch();
         $dataProvider = $searchModel->searchChildRo(Yii::$app->request->queryParams,$kd);
-		$roHeader = Requestterm::find()->where(['KD_RO' => $kd])->one();
+		$roHeader = Requesttermheader::find()->where(['KD_RO' => $kd])->one();
 		$roDetail = new Rtdetail();
             return $this->renderAjax('_update', [
 						'roHeader' => $roHeader,
@@ -752,7 +777,7 @@ class RequestTermController extends Controller
 			$roDetail->STATUS = 0;
 			$roDetail->save();
 
-			return $this->redirect(['index?RequesttermSearch[KD_RO]='.$kdro]);
+			return $this->redirect(['index?RequesttermheaderSearch[KD_RO]='.$kdro]);
 		}else{
 			return $this->redirect(['index']);
 		}
@@ -766,9 +791,9 @@ class RequestTermController extends Controller
      */
     public function actionView($kd)
     {
-    	$ro = new Requestterm();
-		$roHeader = Requestterm::find()->where(['KD_RO' => $kd])->one();
-		if(count($roHeader['KD_RO'])<>0){
+    	$ro = new Requesttermheader();
+		$roHeader = Requesttermheader::find()->where(['KD_RIB' => $kd])->one();
+		if(count($roHeader['KD_RIB'])<>0){
 			$detro = $roHeader->detro;
 			$employ = $roHeader->employe;
 			$dept = $roHeader->dept;
@@ -811,9 +836,11 @@ class RequestTermController extends Controller
 		 * @author ptrnov  <piter@lukison.com>
 		 * @since 1.1
 		**/
-		$roHeader = Requestterm::find()->where(['KD_RO' =>$kd])->one();
-		if(count($roHeader['KD_RO'])<>0){
+		$roHeader = Requesttermheader::find()->where(['KD_RIB' =>$kd])->one();
+		if(count($roHeader['KD_RIB'])<>0){
 			$detro = $roHeader->detro;
+      // print_r($detro);
+      // die();
 			$employ = $roHeader->employe;
 			$dept = $roHeader->dept;
 
@@ -840,8 +867,8 @@ class RequestTermController extends Controller
 				$model = Rtdetail::findOne($id);
 				$out = Json::encode(['output'=>'', 'message'=>'']);
 				$post = [];
-				$posted = current($_POST['Rodetail']);
-				$post['Rodetail'] = $posted;
+				$posted = current($_POST['Rtdetail']);
+				$post['Rtdetail'] = $posted;
 				if ($model->load($post)) {
 					$model->save();
 					$output = '';
@@ -854,10 +881,16 @@ class RequestTermController extends Controller
 					if (isset($posted['HARGA'])) {
 					   $output =  Yii::$app->formatter->asDecimal($model->HARGA, 2);
 					}
-					if (isset($posted['NOTE'])) {
+					if (isset($posted['INVESTASI_PROGRAM'])) {
 					   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-						$output = $model->NOTE;
+						$output = $model->INVESTASI_PROGRAM;
 					}
+          if (isset($posted['NOMER_INVOCE'])) {
+            $output = $model->NOMER_INVOCE;
+          }
+          if (isset($posted['NOMER_FAKTURPAJAK'])) {
+            $output = $model->NOMER_FAKTURPAJAK;
+          }
 					$out = Json::encode(['output'=>$output, 'message'=>'']);
 				}
 				// return ajax json encoded response and exit
@@ -890,14 +923,14 @@ class RequestTermController extends Controller
      * @since 1.1
      */
 	public function actionCetakpdf($kd,$v){
-    $roHeader = Requestterm::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
+    $roHeader = Requesttermheader::find()->where(['KD_RIB' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
 		$detro = $roHeader->detro;
     $employ = $roHeader->employe;
 		$dept = $roHeader->dept;
 		if ($v==101){
-			$filterPdf="KD_RO='".$kd."' AND (STATUS='101' OR STATUS='10')";
+			$filterPdf="KD_RIB='".$kd."' AND (STATUS='101' OR STATUS='10')";
 		}elseif($v!=101){
-			$filterPdf="KD_RO='".$kd."' AND STATUS<>'3'";
+			$filterPdf="KD_RIB='".$kd."' AND STATUS<>'3'";
 		}
 		$roDetail = Rtdetail::find()->where($filterPdf)->all();
 
@@ -945,7 +978,7 @@ class RequestTermController extends Controller
 			// any css to be embedded if required
 			'cssInline' => '.kv-heading-1{font-size:12px}',
 			 // set mPDF properties on the fly
-			'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+			'options' => ['title' => 'Form Request Term','subject'=>'rqt'],
 			 // call mPDF methods on the fly
 			'methods' => [
 				'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
@@ -963,7 +996,7 @@ class RequestTermController extends Controller
      * @since 1.1
      */
 	public function actionTempCetakpdf($kd,$v){
-    	$roHeader = Requestterm::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
+    	$roHeader = Requesttermheader::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
 		$detro = $roHeader->detro;
         $employ = $roHeader->employe;
 		$dept = $roHeader->dept;
@@ -1119,12 +1152,12 @@ class RequestTermController extends Controller
 		 * @since 1.1
 		**/
 		//$ro = new Requestorder();
-		$roHeader = Requestterm::find()->where(['KD_RO' =>$kd])->one();
+		$roHeader = Requesttermheader::find()->where(['KD_RIB' =>$kd])->one();
 		$detro = $roHeader->detro;
 		$employ = $roHeader->employe;
 		$dept = $roHeader->dept;
 
-    $roDetail = Rtdetail::find()->where(['KD_RO' =>$kd])->one();
+    $roDetail = Rtdetail::find()->where(['KD_RIB' =>$kd])->one();
 
 		/*
 		 * Convert $roHeader->detro to ArrayDataProvider | Identity 'key' => 'ID',
@@ -1147,10 +1180,10 @@ class RequestTermController extends Controller
 		if (Yii::$app->request->post('hasEditable')) {
             $id = Yii::$app->request->post('editableKey');
             $model = Rtdetail::findOne($id);
-			$out = Json::encode(['output'=>'', 'message'=>'']);
+      			$out = Json::encode(['output'=>'', 'message'=>'']);
             $post = [];
-            $posted = current($_POST['Rodetail']);
-            $post['Rodetail'] = $posted;
+            $posted = current($_POST['Rtdetail']);
+            $post['Rtdetail'] = $posted;
             if ($model->load($post)) {
                 $model->save();
 				$output = '';
@@ -1163,10 +1196,18 @@ class RequestTermController extends Controller
 				if (isset($posted['HARGA'])) {
                    $output =  Yii::$app->formatter->asDecimal($model->HARGA, 2);
                 }
-				if (isset($posted['NOTE'])) {
+				if (isset($posted['INVESTASI_PROGRAM'])) {
                    // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-					$output = $model->NOTE;
+					        $output = $model->INVESTASI_PROGRAM;
                 }
+        if (isset($posted['NOMER_INVOCE'])) {
+                           // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
+                  $output = $model->NOMER_INVOCE;
+                }
+        if (isset($posted['NOMER_FAKTURPAJAK'])) {
+                                   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
+                  $output = $model->NOMER_FAKTURPAJAK;
+              }
                 $out = Json::encode(['output'=>$output, 'message'=>'']);
             }
             // return ajax json encoded response and exit
@@ -1183,9 +1224,9 @@ class RequestTermController extends Controller
             'roHeader' => $roHeader,
             'detro' => $detro,
             'employ' => $employ,
-			'dept' => $dept,
-			'dataProvider'=>$detroProvider,
-      'roDetail'=>$roDetail
+      			'dept' => $dept,
+      			'dataProvider'=>$detroProvider,
+            'roDetail'=>$roDetail
         ]);
 
     }
@@ -1201,7 +1242,7 @@ class RequestTermController extends Controller
       $usercc = Userlogin::find()->where(['EMP_ID'=>$empid])->asArray()->one(); // usercc
       $approve = Employe::find()->where("DEP_ID='".$dep_id."'AND GF_ID <=3")->asArray()->one();//approve ro
 
-      $roHeader = Requestterm::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
+      $roHeader = Requesttermheader::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
       $detro = $roHeader->detro;
       $employ = $roHeader->employe;
       $dept = $roHeader->dept;
@@ -1284,7 +1325,7 @@ class RequestTermController extends Controller
     public function Sendmail2($kd,$empid)
     {
 
-      $roHeader = Requestterm::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
+      $roHeader = Requesttermheader::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
       $detro = $roHeader->detro;
       $employ = $roHeader->employe;
       $dept = $roHeader->dept;
@@ -1384,7 +1425,7 @@ class RequestTermController extends Controller
     public function Sendmail3($kd,$empid)
     {
 
-      $roHeader = Requestterm::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
+      $roHeader = Requesttermheader::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
       $detro = $roHeader->detro;
       $employ = $roHeader->employe;
       $dept = $roHeader->dept;
@@ -1489,7 +1530,7 @@ class RequestTermController extends Controller
 	**/
 	public function actionSignAuth1View($kd){
 		$auth1Mdl = new Auth1Model();
-		$roHeader = Requestterm::find()->where(['KD_RO' =>$kd])->one();
+		$roHeader = Requesttermheader::find()->where(['KD_RO' =>$kd])->one();
 		$employe = $roHeader->employe;
 			return $this->renderAjax('sign-auth1', [
 				'roHeader' => $roHeader,
@@ -1527,7 +1568,7 @@ class RequestTermController extends Controller
 	**/
 	public function actionSignAuth2View($kd){
 		$auth2Mdl = new Auth2Model();
-		$roHeader = Requestterm::find()->where(['KD_RO' =>$kd])->one();
+		$roHeader = Requesttermheader::find()->where(['KD_RO' =>$kd])->one();
 		$employe = $roHeader->employe;
 			return $this->renderAjax('sign-auth2', [
 				'roHeader' => $roHeader,
@@ -1565,7 +1606,7 @@ class RequestTermController extends Controller
 	**/
 	public function actionSignAuth3View($kd){
 		$auth3Mdl = new Auth3Model();
-		$roHeader = Requestterm::find()->where(['KD_RO' =>$kd])->one();
+		$roHeader = Requesttermheader::find()->where(['KD_RO' =>$kd])->one();
 		$employe = $roHeader->employe;
 			return $this->renderAjax('sign-auth3', [
 				'roHeader' => $roHeader,
@@ -1621,7 +1662,7 @@ class RequestTermController extends Controller
 	**/
     public function actionHapusro($kd)
     {
-		$model = Requestterm::find()->where(['KD_RO' =>$kd])->one();
+		$model = Requesttermheader::find()->where(['KD_RO' =>$kd])->one();
 		$model->STATUS=3;
 		$model->save();
 
@@ -1659,7 +1700,7 @@ class RequestTermController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Requestterm::findOne($id)) !== null) {
+        if (($model = Requesttermheader::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

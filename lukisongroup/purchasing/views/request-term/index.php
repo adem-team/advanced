@@ -1,6 +1,6 @@
 
 <?php
-
+/*extensions*/
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\helpers\Url;
@@ -11,23 +11,25 @@ use yii\helpers\Json;
 use yii\web\Request;
 use kartik\daterange\DateRangePicker;
 use kartik\tabs\TabsX;
+use yii\widgets\ListView;
 
-use lukisongroup\purchasing\models\ro\Requestorderstatus;
-use lukisongroup\purchasing\models\ro\Rodetail;
+/* namespace request term*/
+use lukisongroup\purchasing\models\rqt\Requesttermstatus;
+use lukisongroup\purchasing\models\rqt\Rtdetail;
+use lukisongroup\purchasing\models\rqt\Requesttermheader;
 
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\hrd\models\Employe;
-use lukisongroup\purchasing\models\ro\Requestorder;
-use yii\widgets\ListView;
 
 
-$this->title = 'Request Order';
+
+
+$this->title = 'Request Term';
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->sideCorp = 'Request Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'mdefault';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
-//$this->title = Yii::t('app', 'List Permintaan Barang');      /* title pada header page */
-//$this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+       																											/* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
 
 	/*
@@ -42,7 +44,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 			return false;
 		}
 	}
-	//print_r(getPermission());
+
 	/*
 	 * Declaration Componen User Permission
 	 * Function profile_user
@@ -54,11 +56,11 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 			return false;
 		}
 	}
-	//print_r(getPermissionEmp());
+
 
 	/*
 	 * Tombol Modul Create
-	 * permission crate Ro
+	 * permission create Rqt
 	*/
 	function tombolCreate(){
 		if(getPermission()){
@@ -71,7 +73,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 				];
 				$icon1 = '<span class="fa fa-plus fa-xs"></span>';
 				$label1 = $icon1 . ' ' . $title1;
-				$url1 = Url::toRoute(['/purchasing/request-order/create']);
+				$url1 = Url::toRoute(['/purchasing/request-term/create']);
 				//$options1['tabindex'] = '-1';
 				$content = Html::a($label1,$url1, $options1);
 				return $content;
@@ -153,7 +155,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 				$options = [ 'id'=>'ro-view'];
 				$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
 				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/request-order/view','kd'=>$model->KD_RO]);
+				$url = Url::toRoute(['/purchasing/request-term/view','kd'=>$model->KD_RIB]);
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
 			}
@@ -180,7 +182,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 					];
 					$icon = '<span class="fa fa-pencil-square-o fa-lg"></span>';
 					$label = $icon . ' ' . $title;
-					$url = Url::toRoute(['/purchasing/request-order/edit','kd'=>$model->KD_RO]);
+					$url = Url::toRoute(['/purchasing/request-term/edit','kd'=>$model->KD_RIB]);
 					$options['tabindex'] = '-1';
 					return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
 				}
@@ -206,7 +208,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 					];
 					$icon = '<span class="fa fa-trash-o fa-lg"></span>';
 					$label = $icon . ' ' . $title;
-					$url = Url::toRoute(['/purchasing/request-order/hapusro','kd'=>$model->KD_RO]);
+					$url = Url::toRoute(['/purchasing/request-term/hapusro','kd'=>$model->KD_RIB]);
 					$options['tabindex'] = '-1';
 					return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
 				}
@@ -242,7 +244,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 					];
 					$icon = '<span class="glyphicon glyphicon-ok"></span>';
 					$label = $icon . ' ' . $title;
-					$url = Url::toRoute(['/purchasing/request-order/review','kd'=>$model->KD_RO]);
+					$url = Url::toRoute(['/purchasing/request-term/review','kd'=>$model->KD_RIB]);
 					$options['tabindex'] = '-1';
 					return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
 				//}
@@ -299,7 +301,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 		 * @since 1.2
 		*/
 		$outboxRo= GridView::widget([
-			'id'=>'ro-grd-index-outbox',
+			'id'=>'rt-grd-index-outbox',
 			'dataProvider'=> $dataProviderOutbox,
 			'filterModel' => $searchModel,
 			'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
@@ -341,8 +343,8 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 					],
 					/*KD_RO*/
 					[
-						'attribute'=>'KD_RO',
-						'label'=>'Kode RO',
+						'attribute'=>'KD_RIB',
+						'label'=>'Kode Rqt',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
 						//'group'=>true,
@@ -631,7 +633,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 				],
 			'panel'=>[
 				'type'=>GridView::TYPE_INFO,
-				'heading'=>"<span class='fa fa-cart-arrow-down fa-md'><b> LIST REQUEST ORDER</b></span>",
+				'heading'=>"<span class='fa fa-cart-arrow-down fa-md'><b> LIST REQUEST TERM</b></span>",
 			],
 		]);
 
@@ -643,7 +645,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 		 * @since 1.2
 		*/
 		$inboxRo= GridView::widget([
-			'id'=>'ro-grd-index-inbox',
+			'id'=>'rt-grd-index-inbox',
 			'dataProvider'=> $dataProviderInbox,
 			'filterModel' => $searchModel,
 			'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
@@ -685,8 +687,8 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 					],
 					/*KD_RO*/
 					[
-						'attribute'=>'KD_RO',
-						'label'=>'Kode RO',
+						'attribute'=>'KD_RIB',
+						'label'=>'Kode Rqt',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
 						//'group'=>true,
@@ -975,7 +977,7 @@ $this->sideMenu = 'mdefault';                                 /* kd_menu untuk l
 			], */
 			'panel'=>[
 				'type'=>GridView::TYPE_SUCCESS,
-				'heading'=>"<span class='fa fa-cart-arrow-down fa-md'><b> LIST REQUEST ORDER</b></span>",
+				'heading'=>"<span class='fa fa-cart-arrow-down fa-md'><b> LIST REQUEST TERM</b></span>",
 			],
 		]);
 	?>
