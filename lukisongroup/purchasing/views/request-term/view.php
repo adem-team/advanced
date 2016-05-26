@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 // use lukisongroup\assets\AppAssetJqueryJSignature;
-// AppAssetJqueryJSignature::register($this); 
+// AppAssetJqueryJSignature::register($this);
 
 use lukisongroup\master\models\Unitbarang;
 
@@ -16,17 +16,17 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			$(document).ready(function($) {
 				/* Data Signature1 from DB */
 				var ro_datadb1 =\''. $roHeader->SIG1_SVGBASE64 . '\'
-					var i = new Image();							
+					var i = new Image();
 						i.src = ro_datadb1
 						$(i).appendTo($("#ro-view-approval-sig1"));
 				/* Data Signature2 from DB */
 				var ro_datadb2 =\''. $roHeader->SIG2_SVGBASE64 . '\'
-					var j = new Image();							
+					var j = new Image();
 						j.src = ro_datadb2
-						$(j).appendTo($("#ro-view-approval-sig2"));				
-			});		
+						$(j).appendTo($("#ro-view-approval-sig2"));
+			});
 	 ',$this::POS_BEGIN);
- 
+
 	 $arrayStt= [
 		  ['STATUS' => '0', 'name' => 'PROCESS'],
 		  ['STATUS' => '1', 'name' => 'APPROVED'],
@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		}elseif($model->STATUS==1){
 			return Html::a('<i class="glyphicon glyphicon-ok"></i> Approved', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif ($model->STATUS==3){
-			return Html::a('<i class="glyphicon glyphicon-remove"></i> DELETE', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);						
+			return Html::a('<i class="glyphicon glyphicon-remove"></i> DELETE', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif ($model->STATUS==4){
 			return Html::a('<i class="glyphicon glyphicon-thumbs-down"></i> REJECT', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif($model->STATUS==5){
@@ -65,10 +65,10 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		}elseif ($model->STATUS==103){
 			return Html::a('<i class="glyphicon glyphicon-ok"></i> Approved', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}else{
-			return Html::a('<i class="glyphicon glyphicon-question-sign"></i> Unknown', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);	
-		};		
+			return Html::a('<i class="glyphicon glyphicon-question-sign"></i> Unknown', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+		};
 	}
-	
+
 	/*
 	 * Signature Notify
 	 * @author ptrnov  <piter@lukison.com>
@@ -76,27 +76,27 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	*/
 	function SignCreated(){
 		return Html::a('<i class="fa fa-edit fa-xs"></i> wait Signature', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
-	}	
+	}
 	function SignChecked(){
 		return Html::a('<i class="fa fa-edit fa-xs"></i> wait Signature', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
 	}
 	function SignApproved(){
 		return Html::a('<i class="fa fa-edit fa-xs"></i> wait Signature', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'160px'],'title'=>'Detail']);
-	} 
- 
+	}
+
 ?>
 
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
 	<!-- HEADER !-->
 	<div class="col-md-12">
 		<div class="col-md-1" style="float:left;">
-			<?php echo Html::img('@web/upload/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>	
+			<?php echo Html::img('@web/upload/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
 		</div>
 		<div class="col-md-9" style="padding-top:15px;">
 			<!--<h3 class="text-center"><b>Form Permintaan Barang & Jasa</b></h3>!-->
-			<h3 class="text-center"><b>VIEWS REQUEST ORDER</b></h3>
+			<h3 class="text-center"><b>VIEWS REQUEST TERM</b></h3>
 		</div>
-			<dt style="float:left;">Status RO</dt>				
+			<dt style="float:left;">Status RQT</dt>
 			<dd>: <?=statusProcessRo($roHeader);?></dd>
 		<div class="col-md-12" style="padding-left:0px;">
 			<hr>
@@ -107,11 +107,11 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		<dl>
 			  <dt style="width:100px; float:left;">Date</dt>
 			  <dd>: <?php echo date('d-M-Y'); ?></dd>
-			  <dt style="width:100px; float:left;">Nomor</dt>
-			  <dd>: <?php echo $roHeader->KD_RO; ?></dd>     	  
-			  <dt style="width:100px; float:left;">Departement</dt>	 
-			  <dd>: 
-				<?php 
+			  <dt style="width:100px; float:left;">KD RQT</dt>
+			  <dd>: <?php echo $roHeader->KD_RIB; ?></dd>
+			  <dt style="width:100px; float:left;">Departement</dt>
+			  <dd>:
+				<?php
 					if (count($dept)!=0){
 						echo $dept->DEP_NM;
 					}else{
@@ -123,9 +123,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	</div>
 	<!-- Table Grid List RO Detail !-->
 	<div class="col-md-12">
-		<?php 
+		<?php
 			echo GridView::widget([
-				'id'=>'ro-process',
+				'id'=>'rqt-view',
 				'dataProvider'=> $dataProvider,
 				'filterModel' => '',
 				//'headerRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
@@ -133,13 +133,13 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'beforeHeader'=>[
 					[
 						'columns'=>[
-							['content'=>'', 'options'=>['colspan'=>2,'class'=>'text-center info',]], 
-							['content'=>'Quantity', 'options'=>['colspan'=>4, 'class'=>'text-center info']], 
-							['content'=>'Remark', 'options'=>['colspan'=>2, 'class'=>'text-center info']], 
-							//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']], 
+							['content'=>'', 'options'=>['colspan'=>2,'class'=>'text-center info',]],
+							['content'=>'Quantity', 'options'=>['colspan'=>4, 'class'=>'text-center info']],
+							['content'=>'Remark', 'options'=>['colspan'=>5, 'class'=>'text-center info']],
+							//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']],
 						],
 					]
-				], 
+				],
 				'columns' => [
 					[
 						/* Attribute Serial No */
@@ -147,7 +147,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						'contentOptions'=>['class'=>'kartik-sheet-style'],
 						'width'=>'10px',
 						'header'=>'No.',
-						'headerOptions'=>[				
+						'headerOptions'=>[
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'10px',
@@ -163,18 +163,18 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
 							]
-						], 		
-					],						
+						],
+					],
 					/* ['attribute'=>'ID',], */
-					[		
+					[
 						/* Attribute Items Barang */
-						'label'=>'Items',
-						'attribute'=>'NM_BARANG',
-						'hAlign'=>'left',	
+						'label'=>'Type Investasi',
+						'attribute'=>'nminvest',
+						'hAlign'=>'left',
 						'vAlign'=>'middle',
 						'mergeHeader'=>true,
-						'format' => 'raw',	
-						'headerOptions'=>[				
+						'format' => 'raw',
+						'headerOptions'=>[
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'200px',
@@ -190,16 +190,16 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
 							]
-						], 
+						],
 					],
 					[
 						/* Attribute Request Quantity */
 						'attribute'=>'RQTY',
-						'label'=>'Qty.Request',						
+						'label'=>'Qty.Request',
 						'vAlign'=>'middle',
-						'hAlign'=>'center',	
+						'hAlign'=>'center',
 						'mergeHeader'=>true,
-						'headerOptions'=>[				
+						'headerOptions'=>[
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'60px',
@@ -215,16 +215,16 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
 							]
-						], 						
+						],
 					],
 					[
 						/* Attribute Submit Quantity */
-						'attribute'=>'SQTY',	
+						'attribute'=>'SQTY',
 						'label'=>'Qty.Submit',
-						'mergeHeader'=>true,											
-						'vAlign'=>'middle',	
+						'mergeHeader'=>true,
+						'vAlign'=>'middle',
 						'hAlign'=>'center',
-						'headerOptions'=>[				
+						'headerOptions'=>[
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'60px',
@@ -240,12 +240,12 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
 							]
-						],  						
-					],					
+						],
+					],
 					[	/* Attribute Unit Barang */
 						'attribute'=>'UNIT',
 						'label'=>'Unit',
-						'hAlign'=>'left',						
+						'hAlign'=>'left',
 						'vAlign'=>'middle',
 						'mergeHeader'=>true,
 						'value'=>function($model){
@@ -257,7 +257,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							}
 							return $UnitNm;
 						},
-						'headerOptions'=>[				
+						'headerOptions'=>[
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'120px',
@@ -273,15 +273,15 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
 							]
-						], 
+						],
 					],
 					[	/* Attribute HARGA SUPPLIER */
 						'attribute'=>'HARGA',
-						'label'=>'Price/Pcs',						
+						'label'=>'Price/Pcs',
 						'vAlign'=>'middle',
-						'hAlign'=>'center',	
-						'mergeHeader'=>true,						
-						'headerOptions'=>[				
+						'hAlign'=>'center',
+						'mergeHeader'=>true,
+						'headerOptions'=>[
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'100px',
@@ -300,12 +300,62 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						],
 					],
 					[
-						/* Attribute Notes Barang */
-						'attribute'=>'NOTE',
-						'label'=>'Notes',
-						'hAlign'=>'left',						
+						/* Attribute */
+						'attribute'=>'NOMER_INVOCE',
+						'label'=>'No Invoce',
+						'vAlign'=>'middle',
+						'hAlign'=>'center',
 						'mergeHeader'=>true,
-						'headerOptions'=>[				
+						'headerOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'120px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'120px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+							]
+						],
+					],
+					[
+						/* Attribute */
+						'attribute'=>'NOMER_FAKTURPAJAK',
+						'label'=>'No faktur',
+						'vAlign'=>'middle',
+						'hAlign'=>'center',
+						'mergeHeader'=>true,
+						'headerOptions'=>[
+							'style'=>[
+								'text-align'=>'center',
+								'width'=>'120px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
+							]
+						],
+						'contentOptions'=>[
+							'style'=>[
+								'text-align'=>'left',
+								'width'=>'120px',
+								'font-family'=>'verdana, arial, sans-serif',
+								'font-size'=>'8pt',
+							]
+						],
+					],
+					[
+						/* Attribute Notes Barang */
+						'attribute'=>'INVESTASI_PROGRAM',
+						'label'=>'Program',
+						'hAlign'=>'left',
+						'mergeHeader'=>true,
+						'headerOptions'=>[
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'200px',
@@ -321,8 +371,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
 							]
-						], 						
-					], 
+						],
+					],
 					[
 						/* Attribute Status Detail RO */
 						'attribute'=>'STATUS',
@@ -330,17 +380,17 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						'hAlign'=>'center',
 						'vAlign'=>'middle',
 						'mergeHeader'=>true,
-						'format' => 'html', 
-						'value'=>function ($model, $key, $index, $widget) { 
+						'format' => 'html',
+						'value'=>function ($model, $key, $index, $widget) {
 									return statusProcessRo($model);
 						},
-						'headerOptions'=>[				
+						'headerOptions'=>[
 							'style'=>[
 								'text-align'=>'center',
 								'width'=>'100px',
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
-								'background-color'=>'rgba(126, 189, 188, 0.3)', 
+								'background-color'=>'rgba(126, 189, 188, 0.3)',
 							]
 						],
 						'contentOptions'=>[
@@ -350,15 +400,15 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 								'font-family'=>'verdana, arial, sans-serif',
 								'font-size'=>'8pt',
 							]
-						], 											
+						],
 					],
 				],
 				'pjax'=>true,
 				'pjaxSettings'=>[
 				'options'=>[
 					'enablePushState'=>false,
-					'id'=>'ro-process',
-				   ],						  
+					'id'=>'rqt-view',
+				   ],
 				],
 				'hover'=>true, //cursor select
 				'responsive'=>true,
@@ -366,16 +416,16 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				'bordered'=>true,
 				'striped'=>'4px',
 				'autoXlFormat'=>true,
-				'export' => false, 
+				'export' => false,
 			]);
 		?>
 	</div>
-	
+
 	<!-- Signature !-->
 	<div  class="col-md-12">
 		<div  class="row" >
 			<div class="col-md-6">
-				<table id="tblRo" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">					
+				<table id="tblRo" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">
 					<!-- Tanggal!-->
 					 <tr>
 						<!-- Tanggal Pembuat RO!-->
@@ -383,46 +433,46 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							<div style="text-align:center;">
 								<?php
 									$placeTgl1=$roHeader->SIG1_TGL!=0 ? Yii::$app->ambilKonvesi->convert($roHeader->SIG1_TGL,'date') :'';
-									echo '<b>Tanggerang</b>,' . $placeTgl1;  
+									echo '<b>Tanggerang</b>,' . $placeTgl1;
 								?>
-							</div> 
-						
-						</th>		
+							</div>
+
+						</th>
 						<!-- Tanggal Pembuat RO!-->
 						<th class="col-md-1" style="text-align: center; height:20px">
 							<div style="text-align:center;">
 								<?php
 									$placeTgl2=$roHeader->SIG2_TGL!=0 ? Yii::$app->ambilKonvesi->convert($roHeader->SIG2_TGL,'date') :'';
-									echo '<b>Tanggerang</b>,' . $placeTgl2;  
+									echo '<b>Tanggerang</b>,' . $placeTgl2;
 								?>
-							</div> 
-						
-						</th>		
-						<!-- Tanggal PO Approved!-->				
+							</div>
+
+						</th>
+						<!-- Tanggal PO Approved!-->
 						<th class="col-md-1" style="text-align: center; height:20px">
 							<div style="text-align:center;">
 								<?php
 									$placeTgl3=$roHeader->SIG3_TGL!=0 ? Yii::$app->ambilKonvesi->convert($roHeader->SIG3_TGL,'date') :'';
-									echo '<b>Tanggerang</b>,' . $placeTgl3;  
+									echo '<b>Tanggerang</b>,' . $placeTgl3;
 								?>
-							</div> 				
-						</th>	
-						
+							</div>
+						</th>
+
 					</tr>
 					<!-- Department|Jbatan !-->
 					 <tr>
 						<th  class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
-							<div>		
+							<div>
 								<b><?php  echo 'Created'; ?></b>
 							</div>
-						</th>								
+						</th>
 						<th class="col-md-1"  style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
-							<div>		
+							<div>
 								<b><?php  echo 'Checked'; ?></b>
 							</div>
 						</th>
 						<th class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
-							<div>		
+							<div>
 								<b><?php  echo 'Approved'; ?></b>
 							</div>
 						</th>
@@ -430,36 +480,36 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					<!-- Signature !-->
 					 <tr>
 						<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
-							<?php 
+							<?php
 								$ttd1 = $roHeader->SIG1_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$roHeader->SIG1_SVGBASE64.'></img>' : SignCreated();
 								echo $ttd1;
-							?> 
-						</th>								
+							?>
+						</th>
 						<th class="col-md-1" style="text-align: center; vertical-align:middle">
-							<?php 
+							<?php
 								$ttd2 = $roHeader->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$roHeader->SIG2_SVGBASE64.'></img>' : SignChecked();
 								echo $ttd2;
-							?> 
+							?>
 						</th>
 						<th  class="col-md-1" style="text-align: center; vertical-align:middle">
-							<?php 
+							<?php
 								$ttd3 = $roHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$roHeader->SIG3_SVGBASE64.'></img>' : SignApproved();
 								echo $ttd3;
-							?> 
+							?>
 						</th>
 					</tr>
 					<!--Nama !-->
 					 <tr>
 						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
-							<div>		
+							<div>
 								<?php
 									$sigNm1=$roHeader->SIG1_NM!='none' ? '<b>'.$roHeader->SIG1_NM.'</b>' : 'none';
 									echo $sigNm1;
 								?>
 							</div>
-						</th>								
+						</th>
 						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
-							<div>		
+							<div>
 								<?php
 									$sigNm2=$roHeader->SIG2_NM!='none' ? '<b>'.$roHeader->SIG2_NM.'</b>' : 'none';
 									echo $sigNm2;
@@ -467,28 +517,28 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 							</div>
 						</th>
 						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
-							<div>		
+							<div>
 								<?php
 									$sigNm3=$roHeader->SIG3_NM!='none' ? '<b>'.$roHeader->SIG3_NM.'</b>' : 'none';
 									echo $sigNm3;
 								?>
 							</div>
 						</th>
-					</tr>					
-				</table>				
+					</tr>
+				</table>
 			</div>
 			<!-- Button Submit!-->
 			<div style="text-align:right; margin-top:80px; margin-right:15px">
 				<!-- Button Back!-->
-				<a href="/purchasing/request-order" class="btn btn-info btn-xs" role="button" style="width:90px">Back</a>
+				<a href="/purchasing/request-term" class="btn btn-info btn-xs" role="button" style="width:90px">Back</a>
 				<!-- Button Cetak!-->
-				<?php 
-					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print', ['cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
-				?>	
-				<?php 
-					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print Tmp', ['temp-cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
-				?>	
+				<?php
+					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print', ['cetakpdf','kd'=>$roHeader->KD_RIB,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
+				?>
+				<?php
+					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print Tmp', ['temp-cetakpdf','kd'=>$roHeader->KD_RIB,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
+				?>
 			</div>
 		</div>
-	</div>	
+	</div>
 </div>

@@ -22,7 +22,7 @@ class Requesttermstatus extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 't0002';
+        return 't0001stt';
     }
 
     /**

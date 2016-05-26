@@ -1,58 +1,48 @@
 <?php
 
 use \Yii;
+/*extensions*/
 use kartik\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\Select2;
-use lukisongroup\master\models\Barang;
+use kartik\money\MaskMoney;
+use yii\helpers\Url;
+
+/* namespace models*/
+use lukisongroup\master\models\Customers;
+use lukisongroup\master\models\Terminvest;
 use lukisongroup\master\models\Tipebarang;
 use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\hrd\models\Corp;
-use kartik\money\MaskMoney;
-use yii\helpers\Url;
 
 
 
-// $userCorp = ArrayHelper::map(Corp::find()->where('CORP_STS<>3')->all(), 'CORP_ID', 'CORP_NM');
-$brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT');
-// $brgType = ArrayHelper::map(Tipebarang::find()->where('PARENT=0 AND STATUS<>3')->orderBy('NM_TYPE')->all(), 'KD_TYPE', 'NM_TYPE');
-// $brgKtg  = ArrayHelper::map(Kategori::find()->where('PARENT=0 AND STATUS<>3')->orderBy('NM_KATEGORI')->all(), 'KD_KATEGORI', 'NM_KATEGORI');
-// $brgUmum = ArrayHelper::map(Barang::find()->where('PARENT=0 AND STATUS<>3')->orderBy('NM_BARANG')->all(), 'KD_BARANG', 'NM_BARANG');
-
-/* $this->registerJs("
-        $.fn.modal.Constructor.prototype.enforceFocus = function() {};
-    ",$this::POS_HEAD);
- */
+/* array*/
+ $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT');
  $corp = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
- $data = ArrayHelper::map(Barang::find()->where(['KD_CORP'=> $corp])->all(),'KD_BARANG','NM_BARANG')
-
+ $data_group_cus = ArrayHelper::map(Customers::find()->where('CUST_KD = CUST_GRP')->all(),'CUST_KD','CUST_NM');
+ $data_invest = ArrayHelper::map(Terminvest::find()->all(),'ID','INVES_TYPE')
 
 ?>
 
 
     <?php $form = ActiveForm::begin([
-			'id'=>$roDetail->formName(),
+			'id'=>$model->formName(),
 			'enableClientValidation' => true,
-      'enableAjaxValidation'=>true,
 			'method' => 'post',
-			'action' => ['/purchasing/request-order/simpanfirst'],
-      'validationUrl'=>Url::toRoute('/purchasing/request-order/valid')
 		]);
 	?>
-	<?php //= $form->errorSummary($model); ?>
 
-    <!-- $form->field($roDetail, 'CREATED_AT',['template' => "{input}"])->hiddenInput(['value'=>date('Y-m-d H:i:s'),'readonly' => true]) ?> -->
-
-    <?= $form->field($roDetail, 'NEW')->radioList([
-    '1' => 'New ',
-    '2' => ' Search',
+    <?= $form->field($model, 'NEW')->radioList([
+    '1' => 'Request Investment ',
+    '2' => 'Request Budget',
 ],
 ['item' => function($index, $label, $name, $checked, $value) {
                                   $return = '<label class="modal-radio">';
-                                  $return .= '<input type="radio" id = "radiochek" name="' .'Rodetail[NEW]'. '" value="' . $value . '" tabindex="-1">';
+                                  $return .= '<input type="radio" id = "radiochek" name="' .'Requesttermheader[NEW]'. '" value="' . $value . '" tabindex="-1">';
                                   $return .= '<i></i>';
                                   $return .= '<span>' . ucwords($label) . '</span>';
                                   $return .= '</label>';
@@ -62,56 +52,42 @@ $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_
                           ])->label(false)?>
 
 
-    <div id="tes">
 
-  <?=  $form->field($roDetail, 'KD_BARANG')->widget(Select2::classname(), [
-				'data' => $data,
+  <?=  $form->field($model, 'CUST_ID_PARENT')->widget(Select2::classname(), [
+				'data' => $data_group_cus,
 				'options' => [
-          'placeholder' => 'Pilih Nama Barang ...'
+          'placeholder' => 'Pilih Customers ...'
       ],
 				'pluginOptions' => [
 					'allowClear' => true
 				],
-		])->label('Nama Barang') ?>
+		])->label('Customers') ?>
 
-  </div>
+    <?=  $form->field($term_invest, 'INVESTASI_TYPE')->widget(Select2::classname(), [
+          'data' => $data_invest,
+          'options' => [
+            'placeholder' => 'Pilih Investasi ...'
+        ],
+          'pluginOptions' => [
+            'allowClear' => true
+          ],
+      ])->label('Investasi') ?>
+
+    </div>
 
 
 
-     <?=  $form->field($roDetail, 'NM_BARANG')->textInput(['maxlength' => true, 'placeholder'=>'New Item'])->label('New Item Barang')?>
-
-     <div id="hrg">
-
-     <?= $form->field($roDetail, 'HARGA')->widget(MaskMoney::classname(), [
-       'pluginOptions' => [
-           'prefix' => 'Rp',
-          'precision' => 2,
-           'allowNegative' => false
-       ]
-     ]) ?>
-
-   </div>
 
      <?php
 
-      echo  $form->field($roDetail, 'KD_CORP')->hiddenInput(['value'=>$corp])->label(false);
+      echo  $form->field($model, 'KD_CORP')->hiddenInput(['value'=>$corp])->label(false);
 
-     echo  $form->field($roDetail, 'RQTY')->textInput(['maxlength' => true, 'placeholder'=>'Jumlah Barang']);
-
-     echo $form->field($roDetail, 'UNIT')->widget(Select2::classname(), [
-         'data' => $brgUnit,
-         'options' => ['placeholder' => 'Pilih Unit Barang ...'],
-         'pluginOptions' => [
-           'allowClear' => true
-         ],
-     ]);
-
- 		 echo $form->field($roDetail, 'NOTE')->textarea(array('rows'=>2,'cols'=>5))->label('Informasi');
+ 		 echo $form->field($model, 'NOTE')->textarea(array('rows'=>2,'cols'=>5))->label('Program');
 
 
 ?>
     <div class="form-group">
-      <?= Html::submitButton($roDetail->isNewRecord ? 'Create' : 'Update', ['class' => $roDetail->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+      <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $roDetail->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
 
@@ -139,28 +115,5 @@ $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_
         $("#hrg").show();
       }
   });
-
-  // $("form#roInput").on("submit", function() {
-  //    var sel = $("#purchaseorder-top").val();
-  //      var val = $("input[name=new]:checked").val();
-  //      var item = $("#rodetail-nm_barang").val();
-  //     if( sel === "" && val === "2")
-  //     {
-  //
-  //       alert("tolong di isi Field Barang");
-  //       return false;
-  //
-  //     }
-  //     else if(item == "" && val == "1"){
-  //       alert("tolong di isi Item Barang");
-  //         return false;
-  //     }
-  //     else{
-  //         return true;
-  //     }
-  //
-  //
-  // });
-
 
 	',$this::POS_READY);

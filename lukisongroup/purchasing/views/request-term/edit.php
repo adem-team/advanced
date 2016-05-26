@@ -122,7 +122,7 @@ $this->params['breadcrumbs'][] = $this->title;       /* belum di gunakan karena 
 				];
 				$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/request-order/sign-auth1-view','kd'=>$roHeader->KD_RO]);
+				$url = Url::toRoute(['/purchasing/request-order/sign-auth1-view','kd'=>$roHeader->KD_RIB]);
 				//$options1['tabindex'] = '-1';
 				$content = Html::a($label,$url, $options);
 				return $content;
@@ -160,7 +160,7 @@ $this->params['breadcrumbs'][] = $this->title;       /* belum di gunakan karena 
 				];
 				$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/request-order/sign-auth2-view','kd'=>$roHeader->KD_RO]);
+				$url = Url::toRoute(['/purchasing/request-order/sign-auth2-view','kd'=>$roHeader->KD_RIB]);
 				//$options1['tabindex'] = '-1';
 				$content = Html::a($label,$url, $options);
 				return $content;
@@ -288,7 +288,7 @@ $this->params['breadcrumbs'][] = $this->title;       /* belum di gunakan karena 
 				];
 				$icon1 = '<span class="fa fa-edit fa-xs"></span>';
 				$label1 = $icon1 . ' ' . $title1;
-				$url1 = Url::toRoute(['/purchasing/request-order/add-new-item','kd'=>$kd]);
+				$url1 = Url::toRoute(['/purchasing/request-term/add-new-invest','kd'=>$kd]);
 				$content = Html::a($label1,$url1, $options1);
 				return $content;
 			}else{
@@ -336,7 +336,7 @@ $this->params['breadcrumbs'][] = $this->title;       /* belum di gunakan karena 
 		];
 		$icon1 = '<span class="fa fa-eye fa-lg"></span>';
 		$label1 = $icon1 . ' ' . $title1;
-		$url1 = Url::toRoute(['/purchasing/request-order/item-detail-view','kdro'=>$model->KD_RO,'kdbrg'=>$model->KD_BARANG]);
+		$url1 = Url::toRoute(['/purchasing/request-order/item-detail-view','kdro'=>$model->KD_RIB]);
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
@@ -352,9 +352,9 @@ $this->params['breadcrumbs'][] = $this->title;       /* belum di gunakan karena 
 		</div>
 		<div class="col-md-9" style="padding-top:15px;">
 			<!--<h3 class="text-center"><b>Form Permintaan Barang & Jasa</b></h3>!-->
-			<h3 class="text-center"><b>EDITING REQUEST ORDER</b></h3>
+			<h3 class="text-center"><b>EDITING REQUEST TERM</b></h3>
 		</div>
-			<dt style="float:left;">Status RO</dt>
+			<dt style="float:left;">Status RT</dt>
 			<dd>: <?=statusProcessRo($roHeader);?></dd>
 		<div class="col-md-12" style="padding-left:0px;">
 			<hr>
@@ -365,8 +365,8 @@ $this->params['breadcrumbs'][] = $this->title;       /* belum di gunakan karena 
 		<dl>
 			  <dt style="width:100px; float:left;">Date</dt>
 			  <dd>: <?php echo date('d-M-Y'); ?></dd>
-			  <dt style="width:100px; float:left;">Nomor</dt>
-			  <dd>: <?php echo $roHeader->KD_RO; ?></dd>
+			  <dt style="width:100px; float:left;">Kode Rqt</dt>
+			  <dd>: <?php echo $roHeader->KD_RIB; ?></dd>
 			  <dt style="width:100px; float:left;">Departement</dt>
 			  <dd>:
 				<?php
@@ -383,12 +383,12 @@ $this->params['breadcrumbs'][] = $this->title;       /* belum di gunakan karena 
 	<div class="col-md-12">
 		<div style="align:right;">
 			<!-- <div style="float:left;margin-right:5px"><tombolAddItem($roHeader->KD_RO,$roHeader->STATUS);?></div> -->
-			<div><?=tombolNewItem($roHeader->KD_RO,$roHeader->STATUS);?></div>
+			<div><?=tombolNewItem($roHeader->KD_RIB,$roHeader->STATUS);?></div>
 		</div>
 		<div>
 			<?php
 				echo GridView::widget([
-					'id'=>'ro-process',
+					'id'=>'rt-process',
 					'dataProvider'=> $dataProvider,
 					'filterModel' => '',
 					//'headerRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
@@ -398,7 +398,7 @@ $this->params['breadcrumbs'][] = $this->title;       /* belum di gunakan karena 
 							'columns'=>[
 								['content'=>'', 'options'=>['colspan'=>2,'class'=>'text-center info',]],
 								['content'=>'Quantity', 'options'=>['colspan'=>5, 'class'=>'text-center info']],
-								['content'=>'Remark', 'options'=>['colspan'=>2, 'class'=>'text-center info']],
+								['content'=>'Remark', 'options'=>['colspan'=>5, 'class'=>'text-center info']],
 								//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']],
 							],
 						]
@@ -461,8 +461,8 @@ $this->params['breadcrumbs'][] = $this->title;       /* belum di gunakan karena 
 						/* ['attribute'=>'ID',], */
 						[
 							/* Attribute Items Barang */
-							'label'=>'Items',
-							'attribute'=>'NM_BARANG',
+							'label'=>'Type Investasi',
+							'attribute'=>'nminvest',
 							'hAlign'=>'left',
 							'vAlign'=>'middle',
 							'mergeHeader'=>true,
@@ -470,7 +470,7 @@ $this->params['breadcrumbs'][] = $this->title;       /* belum di gunakan karena 
 							'headerOptions'=>[
 								'style'=>[
 									'text-align'=>'center',
-									'width'=>'300px',
+									'width'=>'150px',
 									'font-family'=>'verdana, arial, sans-serif',
 									'font-size'=>'8pt',
 									'background-color'=>'rgba(126, 189, 188, 0.3)',
@@ -479,7 +479,7 @@ $this->params['breadcrumbs'][] = $this->title;       /* belum di gunakan karena 
 							'contentOptions'=>[
 								'style'=>[
 									'text-align'=>'left',
-									'width'=>'300px',
+									'width'=>'150px',
 									'font-family'=>'verdana, arial, sans-serif',
 									'font-size'=>'8pt',
 								]
@@ -621,9 +621,85 @@ $this->params['breadcrumbs'][] = $this->title;       /* belum di gunakan karena 
 							],
 						],
 						[
+							/* Attribute */
+							'class'=>'kartik\grid\EditableColumn',
+							'attribute'=>'NOMER_INVOCE',
+							'label'=>'No Invoce',
+							'vAlign'=>'middle',
+							'hAlign'=>'center',
+							'mergeHeader'=>true,
+							'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+								//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
+								return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
+							},
+							'editableOptions' => [
+								'header' => 'Update Invoice',
+								'inputType' => \kartik\editable\Editable::INPUT_TEXT,
+								'size' => 'sm',
+								'options' => [
+									'pluginOptions' => ['min'=>0, 'max'=>50000]
+								]
+							],
+							'headerOptions'=>[
+								'style'=>[
+									'text-align'=>'center',
+									'width'=>'120px',
+									'font-family'=>'verdana, arial, sans-serif',
+									'font-size'=>'8pt',
+									'background-color'=>'rgba(126, 189, 188, 0.3)',
+								]
+							],
+							'contentOptions'=>[
+								'style'=>[
+									'text-align'=>'left',
+									'width'=>'120px',
+									'font-family'=>'verdana, arial, sans-serif',
+									'font-size'=>'8pt',
+								]
+							],
+						],
+						[
+							/* Attribute */
+							'class'=>'kartik\grid\EditableColumn',
+							'attribute'=>'NOMER_FAKTURPAJAK',
+							'label'=>'No faktur',
+							'vAlign'=>'middle',
+							'hAlign'=>'center',
+							'mergeHeader'=>true,
+							'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+								//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
+								return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
+							},
+							'editableOptions' => [
+								'header' => 'Update NoFaktur pajak',
+								'inputType' => \kartik\editable\Editable::INPUT_TEXT,
+								'size' => 'sm',
+								'options' => [
+									'pluginOptions' => ['min'=>0, 'max'=>50000]
+								]
+							],
+							'headerOptions'=>[
+								'style'=>[
+									'text-align'=>'center',
+									'width'=>'120px',
+									'font-family'=>'verdana, arial, sans-serif',
+									'font-size'=>'8pt',
+									'background-color'=>'rgba(126, 189, 188, 0.3)',
+								]
+							],
+							'contentOptions'=>[
+								'style'=>[
+									'text-align'=>'left',
+									'width'=>'120px',
+									'font-family'=>'verdana, arial, sans-serif',
+									'font-size'=>'8pt',
+								]
+							],
+						],
+						[
 							/* Attribute NOTE Barang */
 							'class'=>'kartik\grid\EditableColumn',
-							'attribute'=>'NOTE',
+							'attribute'=>'INVESTASI_PROGRAM',
 							'label'=>'Notes',
 							'hAlign'=>'left',
 							'mergeHeader'=>true,
@@ -631,11 +707,11 @@ $this->params['breadcrumbs'][] = $this->title;       /* belum di gunakan karena 
 								return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0;
 							},
 							'editableOptions' => [
-								'header' => 'Update Quantity',
+								'header' => 'Update program',
 								'inputType' => \kartik\editable\Editable::INPUT_TEXTAREA,
-								'size' => 'md',
+								'size' => 'sm',
 								'options' => [
-								  'pluginOptions' => ['min'=>0, 'max'=>50000]
+								  // 'pluginOptions' => ['min'=>0, 'max'=>50000]
 								]
 							],
 							'headerOptions'=>[
@@ -692,7 +768,7 @@ $this->params['breadcrumbs'][] = $this->title;       /* belum di gunakan karena 
 					'pjaxSettings'=>[
 					'options'=>[
 						'enablePushState'=>false,
-						'id'=>'ro-process',
+						'id'=>'rt-process',
 					   ],
 					],
 					'hover'=>true, //cursor select
@@ -831,13 +907,13 @@ $this->params['breadcrumbs'][] = $this->title;       /* belum di gunakan karena 
 			<!-- Button Submit!-->
 			<div style="text-align:right; margin-top:80px; margin-right:15px">
 				<!-- Button Back!-->
-				<a href="/purchasing/request-order" class="btn btn-info btn-xs" role="button" style="width:90px">Kembali</a>
+				<a href="/purchasing/request-term" class="btn btn-info btn-xs" role="button" style="width:90px">Kembali</a>
 				<!-- Button Cetak!-->
 				<?php
-					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print', ['cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
+					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print', ['cetakpdf','kd'=>$roHeader->KD_RIB,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
 				?>
 				<?php
-					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print Tmp', ['temp-cetakpdf','kd'=>$roHeader->KD_RO,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
+					echo Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print Tmp', ['temp-cetakpdf','kd'=>$roHeader->KD_RIB,'v'=>'0'], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
 				?>
 			</div>
 		</div>

@@ -36,7 +36,7 @@ class Requestterm extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 't0001';
+        return 't0001header';
     }
 
     /**
@@ -104,11 +104,11 @@ class Requestterm extends \yii\db\ActiveRecord
     {
         return [
 //          [['KD_RO', 'NOTE', 'ID_USER', 'KD_CORP', 'KD_CAB', 'KD_DEP', 'STATUS', 'CREATED_AT', 'UPDATED_ALL', 'DATA_ALL'], 'required'],
-						[['KD_RO','PARENT_ROSO'], 'required'],
-            [['NOTE', 'DATA_ALL'], 'string'],
-            [['STATUS','PARENT_ROSO'], 'integer'],
-            [['CREATED_AT'], 'safe'],
-            [['KD_RO'], 'safe'],
+						[['KD_RIB'], 'required'],
+            [['NOTE'], 'string'],
+            [['STATUS','PPN','PPH23'], 'integer'],
+            [['CREATED_AT','TGL'], 'safe'],
+            [['KD_RIB'], 'safe'],
             [['KD_RO', 'KD_CORP', 'KD_CAB', 'KD_DEP'], 'string', 'max' => 50],
             [['UPDATED_ALL', 'ID_USER'], 'string', 'max' => 255],
 						[['SIG1_ID','SIG2_ID','SIG3_ID'], 'string'],
