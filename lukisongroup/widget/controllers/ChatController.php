@@ -13,17 +13,18 @@ use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
+/* namespace models */
 use lukisongroup\widget\models\Chat;
 use lukisongroup\widget\models\ChatSearch;
 use lukisongroup\widget\models\ChatroomSearch;
 use lukisongroup\widget\models\Chatroom;
 use lukisongroup\sistem\models\Userlogin;
 /* VARIABLE PRIMARY JOIN/SEARCH/FILTER/SORT Author: -ptr.nov- */
-//use app\models\hrd\Dept;			/* TABLE CLASS JOIN */
-//use app\models\hrd\DeptSearch;		/* TABLE CLASS SEARCH */
+
 
 /**
- * HRD | CONTROLLER EMPLOYE .
+ * CHAT | CONTROLLER EMPLOYE .
  */
 class ChatController extends Controller
 {
