@@ -21,15 +21,9 @@ use lukisongroup\purchasing\models\rqt\Requesttermheader;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\hrd\models\Employe;
 
-
-
-
-$this->title = 'Request Term';
-$this->params['breadcrumbs'][] = $this->title;
-
-$this->sideCorp = 'Request Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'mdefault';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
-       																											/* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+$this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Trading Terms ');
 
 
 	/*

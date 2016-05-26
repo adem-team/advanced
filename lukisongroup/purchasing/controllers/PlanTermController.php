@@ -74,9 +74,10 @@ class PlanTermController extends Controller
 	 public function actionReview($id){
 		$searchModel = new TermplanSearch();		
 		$dataProvider = $searchModel->searchcusbyid(Yii::$app->request->queryParams,$id);
-		return $this->render('_review',[
+		$modelRslt=$dataProvider->getModels();
+		return $this->render('review',[
 			'dataProvider'=>$dataProvider,
-			'model'=>$dataProvider->getModels(),
+			'model'=>$modelRslt,
 		]);
 	}
 	

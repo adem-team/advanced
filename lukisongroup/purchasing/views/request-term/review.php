@@ -11,10 +11,9 @@ use yii\helpers\ArrayHelper;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\purchasing\models\rt\Requesttermstatus;
 
-$this->sideCorp = 'Request Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'mDefault';                                 /* kd_menu untuk list menu pada sidemenu, get from table of database */
-$this->title = Yii::t('app', 'Data Master');         		 /* title pada header page */
-$this->params['breadcrumbs'][] = $this->title;               /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+$this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Trading Terms ');
 
 	/* LOCK STATUS TOMBOL */
 	/* LOCK STATUS TOMBOL */

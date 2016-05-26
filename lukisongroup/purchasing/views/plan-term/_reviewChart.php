@@ -20,9 +20,9 @@ use lukisongroup\master\models\Termcustomers;
 use lukisongroup\master\models\Distributor;
 use lukisongroup\hrd\models\Corp;
 
-//print_r($model);
+//print_r($model[0]);
 
-echo $model['CUST_KD_PARENT']!=''?'no':'ok';
+//echo $model[0]->NmDis;
 ?>
 <div class="content" >
 	<!-- HEADER !-->
@@ -33,7 +33,7 @@ echo $model['CUST_KD_PARENT']!=''?'no':'ok';
 				<?php echo Html::img('@web/upload/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
 			</div>
 			<div class="col-md-9" style="padding-top:15px;">
-				<h3 class="text-center"><b> <?php echo 	ucwords($model->NM_TERM)  ?> </b></h3>
+				<h3 class="text-center"><b> <?php echo 'TERM - '.ucwords($model[0]->NmCustomer)  ?> </b></h3>
 			</div>
 			<div class="col-md-12">
 				<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
@@ -44,31 +44,48 @@ echo $model['CUST_KD_PARENT']!=''?'no':'ok';
 
 	<!-- PARTIES/PIHAK !-->
 	<div class="row">
-		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+		<div class="col-xs-12 col-sm-6 col-md-3" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 			<div>
 				<?php //echo pihak($model); ?>
 			</div>
-			<dl>
-				<?php
-					$data = Customers::find()->where(['CUST_KD'=> $model->CUST_KD_PARENT])
-											->asArray()
-											->one();
-					$datadis = Distributor::find()->where(['KD_DISTRIBUTOR'=> $model->DIST_KD])
-												  ->asArray()
-												  ->one();
-					$datacorp = Corp::find()->where(['CORP_ID'=> $model->PRINCIPAL_KD])
-																				->asArray()
-																				->one();
-				 ?>
+			<dl>				
 				<dt><h6><u><b>PARTIES/PIHAK BERSANGKUTAN :</b></u></h6></dt>
 
-				<dd>1 :	<?= $data['CUST_NM'] ?></dd>
+				<dd>1 :	<?= $model[0]->NmCustomer ?></dd>
 
 
-				<dd>2 :	<?= $datadis['NM_DISTRIBUTOR']?></dd>
+				<dd>2 :	<?= $model[0]->Nmprincipel ?></dd>
 
 
-				<dd>3 :	<?=$datacorp['CORP_NM']?></dd>
+				<dd>3 :	<?= $model[0]->NmDis ?></dd>
+			</dl>
+		</div>	
+	
+		<!-- PERIODE/JANGKA WAKTU !-->
+		<div class="col-xs-12 col-sm-6 col-md-3" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+			<div>
+				<?php //echo periode($model); ?>
+			</div>
+			<dl>
+				<dt><h6><u><b>PERIODE/JANGKA WAKTU :</b></u></h6></dt>
+				<dt style="width:80px; float:left;"> Dari: </dt>
+				<dd>:	<?=$model[0]->PERIOD_START ?></dd>
+
+				<dt style="width:80px; float:left;">Sampai:</dt>
+				<dd>:	<?=$model[0]->PERIOD_END ?></dd>
+			</dl>
+		</div>
+		
+		<!-- TARGET !-->
+		<div class="col-xs-3 col-sm-6col-md-12" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+			<div>
+				<?php //echo target($model); ?>
+			</div>
+			<dl>
+				<dt style="width:80px;"><h6><u><b>TARGET :</b></u></h6></dt>
+				<dd style="width:80px"> Rp.<?=$model->TARGET_VALUE?></dd>
+				<dd><?=$model->TARGET_TEXT ?> Rupiah</dd>
+
 			</dl>
 		</div>
 	</div>

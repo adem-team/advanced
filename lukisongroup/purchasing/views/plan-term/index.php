@@ -16,6 +16,12 @@ use yii\db\ActiveRecord;
 use yii\data\ArrayDataProvider;
 //use dosamigos\gallery\Gallery;
 
+$this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Trading Terms ');
+
+
+
 	//print_r($dataProvider);
 	/*
 	 * GRID VIEW PLAN TREM
