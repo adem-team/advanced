@@ -29,11 +29,11 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	/*
 	 * Declaration Componen User Permission
 	 * Function getPermission
-	 * Modul Name[1=RO]
+	 * Modul Name[5= request term]
 	*/
 	function getPermission(){
-		if (Yii::$app->getUserOpt->Modul_akses(1)){
-			return Yii::$app->getUserOpt->Modul_akses(1);
+		if (Yii::$app->getUserOpt->Modul_akses(5)){
+			return Yii::$app->getUserOpt->Modul_akses(5);
 		}else{
 			return false;
 		}
@@ -220,28 +220,37 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	*/
 	function tombolReview($url, $model){
 		if(getPermission()){
-			/* GF_ID>=4 Group Function[Director|GM|M|S] */
-			$gF=getPermissionEmp()->GF_ID;
-			$Auth2=getPermission()->BTN_SIGN2; // Auth2
-			$Auth3=getPermission()->BTN_SIGN3; // Auth3
-			$BtnReview=getPermission()->BTN_REVIEW;
-			if ((($Auth2==1 or $Auth3==1) AND $gF<=4 AND $BtnReview=1) OR (getPermissionEmp()->EMP_ID ==$model->USER_CC)){
-				//if(getPermissionEmp()->EMP_ID ==$model->USER_CC){
+		if(getPermission()->BTN_REVIEW==1 && $model->STATUS == 0  || getPermission()->BTN_REVIEW==1 && ($model->STATUS != 101 && $model->STATUS != 102) ){
 					$title = Yii::t('app', 'Review');
-					$options = [ //'id'=>'ro-approved',
-								//'data-method' => 'post',
-								 //'data-pjax'=>true,
-								 //'data'=>$model->KD_RO,
-								 //'data-pjax' => '0',
-								 //'data-toggle-active' => $model->KD_RO
-								//'data-confirm'=>'Anda yakin ingin menghapus RO ini?',
+					$options = [
 					];
 					$icon = '<span class="glyphicon glyphicon-ok"></span>';
 					$label = $icon . ' ' . $title;
 					$url = Url::toRoute(['/purchasing/request-term/review','kd'=>$model->KD_RIB]);
 					$options['tabindex'] = '-1';
 					return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
-				//}
+			}
+			elseif(getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 && $model->STATUS <>102 )
+			{
+				$title = Yii::t('app', 'Review');
+				$options = [
+				];
+				$icon = '<span class="glyphicon glyphicon-ok"></span>';
+				$label = $icon . ' ' . $title;
+				$url = Url::toRoute(['/purchasing/request-term/review','kd'=>$model->KD_RIB]);
+				$options['tabindex'] = '-1';
+				return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
+			}
+			elseif(getPermissionEmp()->DEP_ID == 'DRC' && getPermission()->BTN_REVIEW==1 && $model->STATUS <>102 || getPermissionEmp()->DEP_ID == 'GM' && getPermission()->BTN_REVIEW==1 && $model->STATUS <>102)
+			{
+				$title = Yii::t('app', 'Review');
+				$options = [
+				];
+				$icon = '<span class="glyphicon glyphicon-ok"></span>';
+				$label = $icon . ' ' . $title;
+				$url = Url::toRoute(['/purchasing/request-term/review','kd'=>$model->KD_RIB]);
+				$options['tabindex'] = '-1';
+				return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
 			}
 		}
 	}
@@ -272,19 +281,369 @@ $this->title = Yii::t('app', 'Trading Terms ');
 			return Html::a('<i class="glyphicon glyphicon-thumbs-down"></i> REJECT', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif($model->STATUS==5){
 			return Html::a('<i class="glyphicon glyphicon-retweet"></i> Pending', '#',['class'=>'btn btn-danger btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
+		}elseif ($model->STATUS==100){
+			return Html::a('<i class="glyphicon glyphicon-ok"></i> PROCESS', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif ($model->STATUS==101){
-			return Html::a('<i class="glyphicon glyphicon-time"></i> Proccess', '#',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+			return Html::a('<i class="glyphicon glyphicon-ok"></i> CHECKED', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		}elseif ($model->STATUS==102){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> Checked', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==103){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> Approved', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}else{
-			return Html::a('<i class="glyphicon glyphicon-question-sign"></i> Unknown', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+			return Html::a('<i class="glyphicon glyphicon-ok"></i> APPROVED', '#',['class'=>'btn btn-info btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+		}elseif ($model->STATUS==4){
+			return Html::a('<i class="glyphicon glyphicon-thumbs-down"></i> REJECT', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+		}
+		else{
+			return Html::a('<i class="glyphicon glyphicon-question-sign"></i> UNKNOWN', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
 		};
 	}
 
 
 ?>
+<?php
+
+/*
+ * $history Request
+ * ACTION CHECKED or APPROVED
+ * @author ptrnov [piter@lukison]
+ * @since 1.2
+*/
+$history= GridView::widget([
+	'id'=>'rt-grd-index-history',
+	'dataProvider'=> $dataproviderHistory,
+	'filterModel' => $searchmodelHistory,
+	'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
+	/*
+		'beforeHeader'=>[
+			[
+				'columns'=>[
+					['content'=>'List Permintaan Barang & Jasa', 'options'=>['colspan'=>4, 'class'=>'text-center success']],
+					['content'=>'Action Status ', 'options'=>['colspan'=>6, 'class'=>'text-center warning']],
+				],
+				'options'=>['class'=>'skip-export'] // remove this row from export
+			]
+		],
+	*/
+	'columns' => [
+			/*No Urut*/
+			[
+				'class'=>'kartik\grid\SerialColumn',
+				'contentOptions'=>['class'=>'kartik-sheet-style'],
+				'width'=>'10px',
+				'header'=>'No.',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+					]
+				],
+			],
+			/*KD_RO*/
+			[
+				'attribute'=>'KD_RIB',
+				'label'=>'Kode Rqt',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				//'group'=>true,
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'130px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'130px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			/*Corp*/
+			[
+				'attribute'=>'corp.CORP_NM',
+				'label'=>'Corporation',
+				'filter' => $AryCorp,
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				//'group'=>true,
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'200px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'200px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			/*Department*/
+			[
+				'attribute'=>'dept.DEP_NM',
+				'label'=>'Department',
+				'filter' => $Combo_Dept,
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				//'group'=>true,
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'200px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'200px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			/*CREATE_AT Tanggal Pembuatan*/
+			[
+				'attribute'=>'CREATED_AT',
+				'label'=>'Create At',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				'value'=>function($model){
+					/*
+					 * max String Disply
+					 * @author ptrnov <piter@lukison.com>
+					*/
+					return substr($model->CREATED_AT, 0, 10);
+				},
+				'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
+							'filterWidgetOptions' =>([
+								'attribute' =>'CREATED_AT',
+								'presetDropdown'=>TRUE,
+								'convertFormat'=>true,
+								'pluginOptions'=>[
+									'id'=>'tglpo',
+									'format'=>'Y/m/d',
+									'separator' => ' - ',
+									'opens'=>'right'
+								]
+				]),
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'90px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'90px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt'
+					]
+				],
+			],
+			/*DIBUAT*/
+			[
+				'attribute'=>'SIG1_NM',
+				'label'=>'Create By',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				//'group'=>true,
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'130px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'130px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			/*DIPERIKSA*/
+			[
+				'attribute'=>'SIG2_NM',
+				'label'=>'Checked',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				//'group'=>true,
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'130px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'130px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			/*DISETUJUI*/
+			[
+				'attribute'=>'SIG3_NM',
+				'label'=>'Approved',
+				'hAlign'=>'left',
+				'vAlign'=>'middle',
+				//'group'=>true,
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'130px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'130px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			[
+				'class'=>'kartik\grid\ActionColumn',
+				'dropdown' => true,
+				'template' => '{view}{tambahEdit}{delete}{review}',
+				'dropdownOptions'=>['class'=>'pull-right dropup'],
+				//'headerOptions'=>['class'=>'kartik-sheet-style'],
+				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
+				'buttons' => [
+					/* View RO | Permissian All */
+					'view' => function ($url, $model) {
+									return tombolView($url, $model);
+								},
+
+					/* View RO | Permissian Status 0; 0=process | User created = user login  */
+					'tambahEdit' => function ($url, $model) {
+									return tombolEdit($url, $model);
+								},
+
+					/* Delete RO | Permissian Status 0; 0=process | User created = user login */
+					'delete' => function ($url, $model) {
+									return tombolDelete($url, $model);
+								},
+
+					/* Approved RO | Permissian Status 0; 0=process | Dept = Dept login | GF >= M */
+					'review' => function ($url, $model) {
+									return tombolReview($url, $model);
+								},
+				],
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'height'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			[
+				'label'=>'Notification',
+				'mergeHeader'=>true,
+				'format' => 'raw',
+				'hAlign'=>'center',
+				'value' => function ($model) {
+								return statusProcessRo($model);
+				},
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(126, 189, 188, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'150px',
+						'height'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+
+	],
+	'pjax'=>true,
+	'pjaxSettings'=>[
+		'options'=>[
+			'enablePushState'=>false,
+			'id'=>'ro-grd-index-history',
+			 ],
+	],
+	'hover'=>true, //cursor select
+	'responsive'=>true,
+	'responsiveWrap'=>true,
+	'bordered'=>true,
+	'striped'=>'4px',
+	'autoXlFormat'=>true,
+	'export' => false,
+	/* 'toolbar'=> [
+			['content'=>tombolCreate().tombolBarang().tombolKategori()],
+			//'{export}',
+			'{toggleData}',
+	], */
+	'panel'=>[
+		'type'=>GridView::TYPE_SUCCESS,
+		'heading'=>"<span class='fa fa-cart-arrow-down fa-md'><b> LIST REQUEST TERM</b></span>",
+	],
+]);
+
+
+ ?>
 
 
 	<?php
@@ -297,7 +656,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 		$outboxRo= GridView::widget([
 			'id'=>'rt-grd-index-outbox',
 			'dataProvider'=> $dataProviderOutbox,
-			'filterModel' => $searchModel,
+			'filterModel' => $searchmodel,
 			'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.3); align:center'],
 			/*
 				'beforeHeader'=>[
@@ -1123,6 +1482,9 @@ if($profile->emp->GF_ID<=4)
 			],
 			[
 				'label'=>'<i class="fa fa-sign-out fa-lg"></i>  Inbox','content'=>$inboxRo, // Checked/approved Ro
+			],
+			[
+				'label'=>'<i class="glyphicon glyphicon-briefcase"></i>  History','content'=>$history, // Checked/approved Ro
 			],
 		];
 		echo TabsX::widget([

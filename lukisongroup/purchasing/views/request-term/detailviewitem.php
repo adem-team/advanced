@@ -11,52 +11,42 @@ $this->title = Yii::t('app', 'Prodak View');       /* title pada header page */
 <div class="barang-view">
 
 <?php
-	$sts = $brgDetail->STATUS;
+	$sts = $roDetail->STATUS;
 	if($sts == 1){
 		$stat = 'Aktif';
 	} else {
 		$stat = 'Tidak Aktif';
 	}
 
-	if($brgDetail->IMAGE == null){ $gmbr = "df.jpg"; } else { $gmbr = $brgDetail->IMAGE; } 
+
     echo DetailView::widget([
-		'model' => $brgDetail,
+		'model' => $roDetail,
 		'attributes' => [
+
 			[
-				'attribute'=>'Gambar',
-				'value'=>Yii::$app->urlManager->baseUrl.'/upload/barang/'.$gmbr,
-				'format' => ['image',['width'=>'150','height'=>'150']],
-			], 	
-			'KD_BARANG',
-			[
-				'attribute' =>'NM_BARANG',
-				'label' =>'Item Name',
+				'attribute' =>'INVESTASI_PROGRAM',
+				'label' =>'Investasi program',
 			],
-			
+
 			[
-				'label' => 'Unit Item',
-				'value' => $brgDetail->unitb->NM_UNIT,
-			],
-			[
-				'attribute' => 'HARGA_SPL',
+				'attribute' => 'HARGA',
 				'label' =>'Price',
 			],
 			[
-				'attribute' => 'nmcorp',
-				'label' =>'Corporate',
+				'attribute' => 'nminvest',
+				'label' =>'INVESTASI_TYPE',
 			],
 			[
 				'attribute' => 'CREATED_BY',
 				'label' =>'Register By',
 			],
-			
+
 			[
 				'label' => 'Status',
 				'value' => $stat,
-			], 
-			'NOTE',			
+			],
         ],
     ])
 ?>
-    
+
 </div>

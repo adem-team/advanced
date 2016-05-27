@@ -1,4 +1,5 @@
 <?php
+/*extensions*/
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\helpers\Url;
@@ -7,9 +8,9 @@ use yii\helpers\ArrayHelper;
 // use lukisongroup\assets\AppAssetJqueryJSignature;
 // AppAssetJqueryJSignature::register($this);
 
-
+/* namespace models*/
 use lukisongroup\master\models\Unitbarang;
-use lukisongroup\purchasing\models\rt\Requesttermstatus;
+use lukisongroup\purchasing\models\rqt\Requesttermstatus;
 
 $this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -48,11 +49,11 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	/*
 	 * Declaration Componen User Permission
 	 * Function getPermission
-	 * Modul Name[1=RO]
+	 * Modul Name[3=PO]
 	*/
 	function getPermission(){
-		if (Yii::$app->getUserOpt->Modul_akses(1)){
-			return Yii::$app->getUserOpt->Modul_akses(1);
+		if (Yii::$app->getUserOpt->Modul_akses(3)){
+			return Yii::$app->getUserOpt->Modul_akses(3);
 		}else{
 			return false;
 		}
@@ -85,25 +86,28 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	 * 9. UNKNOWN	<>		| Data Tidak valid atau tidak sah
 	*/
 	function statusProcessRo($model){
-		if($model->STATUS==0){
-			return Html::a('<i class="glyphicon glyphicon-retweet"></i> New', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
-		}elseif($model->STATUS==1){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> Approved', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==3){
-			return Html::a('<i class="glyphicon glyphicon-remove"></i> DELETE', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==4){
-			return Html::a('<i class="glyphicon glyphicon-thumbs-down"></i> REJECT', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif($model->STATUS==5){
-			return Html::a('<i class="glyphicon glyphicon-retweet"></i> Pending', '#',['class'=>'btn btn-danger btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
-		}elseif ($model->STATUS==101){
-			return Html::a('<i class="glyphicon glyphicon-time"></i> Proccess', '#',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==102){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> Checked', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==103){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> Approved', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}else{
-			return Html::a('<i class="glyphicon glyphicon-question-sign"></i> Unknown', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		};
+			if($model->STATUS==0){
+				return Html::a('<i class="glyphicon glyphicon-retweet"></i> New', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
+			}elseif($model->STATUS==1){
+				return Html::a('<i class="glyphicon glyphicon-ok"></i> Approved', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+			}elseif ($model->STATUS==3){
+				return Html::a('<i class="glyphicon glyphicon-remove"></i> DELETE', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+			}elseif ($model->STATUS==4){
+				return Html::a('<i class="glyphicon glyphicon-thumbs-down"></i> REJECT', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+			}elseif($model->STATUS==5){
+				return Html::a('<i class="glyphicon glyphicon-retweet"></i> Pending', '#',['class'=>'btn btn-danger btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
+			}elseif ($model->STATUS==100){
+				return Html::a('<i class="glyphicon glyphicon-ok"></i> PROCESS', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+			}elseif ($model->STATUS==101){
+				return Html::a('<i class="glyphicon glyphicon-ok"></i> CHECKED', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+			}elseif ($model->STATUS==102){
+				return Html::a('<i class="glyphicon glyphicon-ok"></i> APPROVED', '#',['class'=>'btn btn-info btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+			}elseif ($model->STATUS==4){
+				return Html::a('<i class="glyphicon glyphicon-thumbs-down"></i> REJECT', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+			}
+	    else{
+				return Html::a('<i class="glyphicon glyphicon-question-sign"></i> UNKNOWN', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+			};
 	}
 
 	/*
@@ -113,7 +117,6 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	*/
 	function SignCreated($roHeader){
 		if(getPermission()){
-			if(getPermission()->BTN_EDIT==1 AND $roHeader->STATUS==0){
 				$title = Yii::t('app', 'Sign Hire');
 				$options = [ 'id'=>'ro-auth1-id',
 							  'data-toggle'=>"modal",
@@ -124,7 +127,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 				];
 				$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/request-order/sign-auth1-view','kd'=>$roHeader->KD_RIB]);
+				$url = Url::toRoute(['/purchasing/request-term/sign-auth1-view','kd'=>$roHeader->KD_RIB]);
 				//$options1['tabindex'] = '-1';
 				$content = Html::a($label,$url, $options);
 				return $content;
@@ -142,7 +145,6 @@ $this->title = Yii::t('app', 'Trading Terms ');
 				$content = Html::button($label, $options);
 				return $content;
 			}
-		}
 	}
 
 	/*
@@ -152,7 +154,6 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	*/
 	function SignChecked($roHeader){
 		if(getPermission()){
-			if(getPermission()->BTN_EDIT==1 AND ($roHeader->STATUS==101 or $roHeader->STATUS==103)){
 				$title = Yii::t('app', 'Sign Hire');
 				$options = [ 'id'=>'ro-auth2-id',
 							  'data-toggle'=>"modal",
@@ -163,7 +164,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 				];
 				$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/request-order/sign-auth2-view','kd'=>$roHeader->KD_RIB]);
+				$url = Url::toRoute(['/purchasing/request-term/sign-auth2-view','kd'=>$roHeader->KD_RIB]);
 				//$options1['tabindex'] = '-1';
 				$content = Html::a($label,$url, $options);
 				return $content;
@@ -181,7 +182,6 @@ $this->title = Yii::t('app', 'Trading Terms ');
 				$content = Html::button($label, $options);
 				return $content;
 			}
-		}
 	}
 
 	/*
@@ -191,18 +191,26 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	*/
 	function SignApproved($roHeader){
 		if(getPermission()){
-			if(getPermission()->BTN_REVIEW==1 AND ($roHeader->STATUS==101 or $roHeader->STATUS==102 or  $roHeader->STATUS==4 or  $roHeader->STATUS==5) ){
-				$title = Yii::t('app', 'Sign Hire');
+			if($roHeader->STATUS == 4)
+	    {
+	      $title = Yii::t('app', 'Reject');
+				$btn = 'btn btn-danger btn-xs';
+	    }else {
+	      # code...
+	      $title = Yii::t('app', 'Sign Hire');
+				$btn = 'btn btn-warning btn-xs';
+	    }
+			
 				$options = [ 'id'=>'ro-auth3-id',
 							  'data-toggle'=>"modal",
 							  'data-target'=>"#ro-auth3-sign",
-							  'class'=>'btn btn-warning btn-xs',
+							  'class'=>$btn,
 							  'style'=>['width'=>'100px'],
 							  'title'=>'Signature'
 				];
 				$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/request-order/sign-auth3-view','kd'=>$roHeader->KD_RIB]);
+				$url = Url::toRoute(['/purchasing/request-term/sign-auth3-view','kd'=>$roHeader->KD_RIB]);
 				//$options1['tabindex'] = '-1';
 				$content = Html::a($label,$url, $options);
 				return $content;
@@ -220,7 +228,6 @@ $this->title = Yii::t('app', 'Trading Terms ');
 				$content = Html::button($label, $options);
 				return $content;
 			}
-		}
 	}
 
 	/*
@@ -811,10 +818,27 @@ $this->title = Yii::t('app', 'Trading Terms ');
 						</th>
 						<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 							<?php
-								$ttd3 = $roHeader->SIG3_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$roHeader->SIG3_SVGBASE64.'></img>' : SignApproved($roHeader);
-								//if ($roHeader->STATUS==101 OR $roHeader->STATUS==10){
+							/*  author : wawan ver 1.0
+									* jika tidak ada permission maka untuk tanda tangan yang akan approve hilang
+									* jika BTN_SIGN3 adalah 0 maka untuk tanda tangan yang akan approve hilang
+									* if status po header equal 4 then  button name Reject
+							*/
+							if(getPermission())
+							{
+								if(getPermission()->BTN_SIGN3 == 0)
+								{
+									$ttd3 = '';
 									echo $ttd3;
-								//}
+
+								}else{
+									$ttd3 = $roHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$roHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : SignApproved($roHeader);
+									echo $ttd3;
+								}
+							}else{
+								$ttd3 = '';
+								echo $ttd3;
+							}
+
 							?>
 						</th>
 					</tr>

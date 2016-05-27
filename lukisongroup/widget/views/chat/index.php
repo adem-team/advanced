@@ -7,7 +7,9 @@ use yii\bootstrap\Modal;
 use kartik\tabs\TabsX;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
+/* namespace models*/
 use lukisongroup\hrd\models\Employe;
+use lukisongroup\widget\models\Chatroom;
 
 	/*
 	 * Jangan di Hapus ...
@@ -72,7 +74,10 @@ use lukisongroup\hrd\models\Employe;
   // die();
     foreach ($dataProviderMsg->getModels() as $key => $value) {
       # code...
-      $gambar_profile = 'data:image/jpg;charset=utf-8;base64,'.$value->employee->IMG_BASE64;
+				# code...
+				$gambar_profile = 'data:image/jpg;charset=utf-8;base64,'.$value->employee->IMG_BASE64;
+
+
 
 		// $queryEmp = employe::find()->where(['EMP_ID'=>$value['CREATED_BY']])->andwhere('STATUS<>3')->one();
 		// $foto_detail = $queryEmp->IMG_BASE64;
@@ -239,10 +244,11 @@ use lukisongroup\hrd\models\Employe;
 				'format'=>'raw',
 				'label'=>'',
 				'value'=>function($model){
+
           $cari_employechat_image = Employe::find()->where(['EMP_ID'=>$model->EMP_ID])->one();
-          $base64 =  'data:image/jpg;charset=utf-8;base64,'.$cari_employechat_image->IMG_BASE64;
+           $baseimage_64 = $cari_employechat_image->IMG_BASE64 !=''?'data:image/jpg;charset=utf-8;base64,'.$cari_employechat_image->IMG_BASE64:'/img_setting/noimage/df.jpg';
 					// $base64 ='data:image/jpg;charset=utf-8;base64,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';
-					return  Html::img($base64,['class'=>'contacts-list-img']);
+					return  Html::img($baseimage_64,['class'=>'contacts-list-img']);
 				 },
 				'contentOptions'=>[
 					'style'=>[
@@ -343,6 +349,7 @@ use lukisongroup\hrd\models\Employe;
 <?php
 /* params */
 $params = Yii::$app->request->queryParams;
+
 /**
 *if count params equal 0 then give user option
 * @author : wawan
@@ -351,6 +358,11 @@ if(count($params) == 0)
 {
   $useavatar = Yii::$app->getUserOpt->profile_user()->emp;
   $gambaravatar = 'data:image/jpg;charset=utf-8;base64,'.$useavatar->IMG_BASE64;
+}elseif ($params['chat'] == 'group') {
+  # code...
+  $group_id = $params['ChatSearch']['GROUP'];
+  $useavatar = Chatroom::find()->where(['GROUP_ID'=>$group_id])->one();
+  $gambaravatar = 'data:image/jpg;charset=utf-8;base64,'.$useavatar->IMAGE64;
 }else{
   $emp_chat_id = $params['ChatSearch']['GROUP'];
   $useavatar = Employe::find()->where(['EMP_ID'=>$emp_chat_id])->one();
@@ -501,6 +513,8 @@ $chat_groupuser = Yii::$app->getRequest()->getQueryParam('chat');
  ",$this::POS_READY);
 
 
+
+
  $this->registerJs("
   /*
  	* 	Scroll Position Down
@@ -516,6 +530,13 @@ $chat_groupuser = Yii::$app->getRequest()->getQueryParam('chat');
 				var element = document.getElementById('chat-msg');
 				element.scrollTop = element.scrollHeight;
 			}, 1000);
+			setTimeout(function(){
+		   $('#gv-chat-user').load(window.location + ' #gv-chat-user');
+		}, 1000);
+			// setTimeout(function(){
+			// 	var element = document.getElementById('gv-chat-user');
+			// 	element.scrollTop = element.scrollHeight;
+			// }, 100);
 		 }
 	});
  ",$this::POS_READY);
