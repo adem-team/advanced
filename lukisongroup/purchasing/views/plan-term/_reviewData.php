@@ -21,6 +21,7 @@ use lukisongroup\master\models\Distributor;
 use lukisongroup\hrd\models\Corp;
 
 //print_r($model[0]);
+//print_r($dataProviderBudget->getModels());
 
 //echo $model[0]->NmDis;
 
@@ -29,12 +30,12 @@ use lukisongroup\hrd\models\Corp;
 	$attDinamik =[];
 	/*GRIDVIEW ARRAY FIELD HEAD*/
 	$headColomnEvent=[
-		['ID' =>0, 'ATTR' =>['FIELD'=>'NmCustomer','SIZE' => '50px','label'=>'Trade Investment','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'UPDATE_AT','SIZE' => '10px','label'=>'Periode','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'Nmprincipel','SIZE' => '10px','label'=>'Budget Plan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'NmDis','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'NmDis','SIZE' => '10px','label'=>'Budget Actual','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'NmDis','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'INVES_TYPE','SIZE' => '50px','label'=>'Trade Investment','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'PERIODE_START','SIZE' => '10px','label'=>'Periode','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'BUDGET_PLAN','SIZE' => '10px','label'=>'Budget Plan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'BUDGET_ACTUAL','SIZE' => '10px','label'=>'Budget Actual','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 	];
 	$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');	
 	/*GRIDVIEW SERIAL ROWS*/
@@ -104,10 +105,11 @@ use lukisongroup\hrd\models\Corp;
 		'value'=>function ($model, $key, $index, $column) {
 			return GridView::ROW_COLLAPSED;
 		},
-		'detail'=>function ($model, $key, $index, $column){
+		'detail'=>function ($model, $key, $index, $column) use($dataProviderBudget){
 			/* RENDER */
-			return Yii::$app->controller->renderPartial('_reviewDataExpand'
-			); 
+			return Yii::$app->controller->renderPartial('_reviewDataExpand',[
+				'dataProviderDetailBudget'=>$dataProviderBudget,
+			]); 
 		},
 		'headerOptions'=>[
 			'style'=>[				
@@ -125,6 +127,7 @@ use lukisongroup\hrd\models\Corp;
 				'height'=>'10px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'9pt',
+				'background-color'=>'rgba(231, 183, 108, 0.2)',
 			]
 		],
 	];
@@ -173,11 +176,11 @@ use lukisongroup\hrd\models\Corp;
 	]; */
 	/*GRID VIEW BASE*/
 	$gvDetalPlanActual= GridView::widget([
-		'id'=>'plan-term-data',
-		'dataProvider' => $dataProvider,
+		'id'=>'plan-term-budget',
+		'dataProvider' => $dataProviderBudget,
 		//'filterModel' => $searchModel,					
 		//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
-		'beforeHeader'=>[
+		/* 'beforeHeader'=>[
 			[
 				'columns'=>[
 					['content'=>'ITEMS TRAIDE INVESTMENT', 'options'=>['colspan'=>3,'class'=>'text-center info',]],
@@ -187,7 +190,7 @@ use lukisongroup\hrd\models\Corp;
 					//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']],
 				],
 			]
-		],
+		], */
 		'columns' => $attDinamik,
 		/* [
 			['class' => 'yii\grid\SerialColumn'],
@@ -200,7 +203,7 @@ use lukisongroup\hrd\models\Corp;
 		'pjaxSettings'=>[
 			'options'=>[
 				'enablePushState'=>false,
-				'id'=>'plan-term-data',
+				'id'=>'plan-term-budget',
 			],
 		],
 		'panel' => [
@@ -220,7 +223,7 @@ use lukisongroup\hrd\models\Corp;
 
 <div class="row" style="font-family: tahoma ;font-size: 9pt;padding-top:30px">
 	<!-- PARTIES/PIHAK !-->
-	<div class="col-xs-12 col-sm-6 col-md-3" style="font-family: tahoma ;font-size: 9pt">
+	<div class="col-xs-12 col-sm-6 col-md-1" style="font-family: tahoma ;font-size: 9pt">
 		<div>
 			<?php //echo pihak($model); ?>
 		</div>

@@ -5,7 +5,7 @@ namespace lukisongroup\purchasing\models\trmplan;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use lukisongroup\purchasing\models\trmplanTermplan;
+use lukisongroup\purchasing\models\trmplan\Termplan;
 
 /**
  * TermplanSearch represents the model behind the search form about `lukisongroup\master\models\Termplan`.

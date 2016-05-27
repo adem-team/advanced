@@ -19,6 +19,7 @@ use yii\widgets\ActiveForm;
 
 use lukisongroup\purchasing\models\trmplan\Termplan;
 use lukisongroup\purchasing\models\trmplan\TermplanSearch;
+use lukisongroup\purchasing\models\trmplan\TermbudgetSearch;
 class PlanTermController extends Controller
 {
     public function behaviors()
@@ -72,12 +73,17 @@ class PlanTermController extends Controller
 	}
 	
 	 public function actionReview($id){
+		 /*TERM PLAN HEADER*/
 		$searchModel = new TermplanSearch();		
 		$dataProvider = $searchModel->searchcusbyid(Yii::$app->request->queryParams,$id);
 		$modelRslt=$dataProvider->getModels();
+		/*BUDGET SEARCH*/
+		$searchModelBudget= new TermbudgetSearch();
+		$dataProviderBudget = $searchModelBudget->searchbudget(Yii::$app->request->queryParams,$id);
 		return $this->render('review',[
 			'dataProvider'=>$dataProvider,
 			'model'=>$modelRslt,
+			'dataProviderBudget'=>$dataProviderBudget
 		]);
 	}
 	

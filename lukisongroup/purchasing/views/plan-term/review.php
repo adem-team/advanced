@@ -50,6 +50,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					$contentData=$this->render('_reviewData',[
 						'model'=>$model,
 						'dataProvider'=>$dataProvider,
+						'dataProviderBudget'=>$dataProviderBudget
 					]);
 					$contentChart=$this->render('_reviewChart');
 
