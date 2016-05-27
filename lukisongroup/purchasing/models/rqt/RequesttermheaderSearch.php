@@ -52,38 +52,81 @@ class RequesttermHeaderSearch extends Requesttermheader
 	public function searchRtOutbox($params)
     {
       /* componen */
-		  $profile=Yii::$app->getUserOpt->Profile_user();
-
-		$query = RequesttermHeader::find()->JoinWith('dept',true,'left JOIN')
-      				                  ->where("t0001header.STATUS <> 3 AND t0001header.ID_USER = '".$profile->emp->EMP_ID."'");
-
-
-		$dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
-		$this->load($params);
-		if (!$this->validate()) {
-			//return $dataProvider;
-			//$dataProvider->query->where('0=1');
-			return $dataProvider;
-		}
-
-		$query->andFilterWhere(['like', 'KD_RIB', $this->KD_RIB])
-				->andFilterWhere(['like', 't0001header.KD_CORP', $this->getAttribute('corp.CORP_NM')])
-				->andFilterWhere(['like', 'EMP_NM', $this->EMP_NM])
-				->andFilterWhere(['like', 'u0002a.DEP_NM', $this->getAttribute('dept.DEP_NM')]);
+  		  $profile=Yii::$app->getUserOpt->Profile_user();
+        $id = $profile->emp->EMP_ID;
+        $query = Requesttermheader::find()->where(['ID_USER'=>$id])
+                                      ->andwhere('STATUS<>102 AND STATUS<>4')
+                                      ->orderBy(['CREATED_AT'=> SORT_DESC]);
 
 
-		if($this->CREATED_AT!=''){
-            $date_explode = explode(" - ", $this->CREATED_AT);
-            $date1 = trim($date_explode[0]);
-            $date2= trim($date_explode[1]);
-            $query->andFilterWhere(['between','CREATED_AT', $date1,$date2]);
-        }
 
-		return $dataProvider;
-    }
+    		$dataProvider = new ActiveDataProvider([
+                'query' => $query,
+            ]);
+
+    		$this->load($params);
+    		if (!$this->validate()) {
+    			//return $dataProvider;
+    			//$dataProvider->query->where('0=1');
+    			return $dataProvider;
+    		}
+
+  		$query->andFilterWhere(['like', 'KD_RIB', $this->KD_RIB])
+  				->andFilterWhere(['like', 't0001header.KD_CORP', $this->getAttribute('corp.CORP_NM')])
+  				->andFilterWhere(['like', 'EMP_NM', $this->EMP_NM])
+  				->andFilterWhere(['like', 'u0002a.DEP_NM', $this->getAttribute('dept.DEP_NM')]);
+
+
+  		if($this->CREATED_AT!=''){
+              $date_explode = explode(" - ", $this->CREATED_AT);
+              $date1 = trim($date_explode[0]);
+              $date2= trim($date_explode[1]);
+              $query->andFilterWhere(['between','CREATED_AT', $date1,$date2]);
+          }
+
+  		return $dataProvider;
+      }
+
+
+      /**
+       * OUTBOX Request term
+       * ACTION CREATE
+       * @author ptrnov [piter@lukison]
+       * @since 1.2
+      */
+      public function searchRthistory($params)
+        {
+          
+
+            $query = Requesttermheader::find()->where('STATUS = 102 OR STATUS = 4')->orderBy(['CREATED_AT'=> SORT_DESC]);
+
+            $dataProvider = new ActiveDataProvider([
+                    'query' => $query,
+                ]);
+
+            $this->load($params);
+            if (!$this->validate()) {
+              //return $dataProvider;
+              //$dataProvider->query->where('0=1');
+              return $dataProvider;
+            }
+
+          $query->andFilterWhere(['like', 'KD_RIB', $this->KD_RIB])
+              ->andFilterWhere(['like', 't0001header.KD_CORP', $this->getAttribute('corp.CORP_NM')])
+              ->andFilterWhere(['like', 'EMP_NM', $this->EMP_NM])
+              ->andFilterWhere(['like', 'u0002a.DEP_NM', $this->getAttribute('dept.DEP_NM')]);
+
+
+          if($this->CREATED_AT!=''){
+                  $date_explode = explode(" - ", $this->CREATED_AT);
+                  $date1 = trim($date_explode[0]);
+                  $date2= trim($date_explode[1]);
+                  $query->andFilterWhere(['between','CREATED_AT', $date1,$date2]);
+              }
+
+          return $dataProvider;
+          }
+
 
 	/**
 	 * INBOX Request term
@@ -93,27 +136,23 @@ class RequesttermHeaderSearch extends Requesttermheader
 	*/
 	public function searchRtInbox($params)
     {
-		$profile=Yii::$app->getUserOpt->Profile_user();
-		if($profile->emp->GF_ID<=4){
-			$query = RequesttermHeader::find()
-						->JoinWith('dept',true,'left JOIN')
-						->where("(t0001header.STATUS <> 3 and
-									t0001header.SIG2_NM<>'none' AND
-									t0001header.KD_DEP = '".$profile->emp->DEP_ID."') OR
-								 (t0001header.STATUS <> 3 and
-									t0001header.SIG1_NM<>'none' AND
-									t0001header.USER_CC='".$profile->emp->EMP_ID."')"
-							);
-        }else{
-			$query = RequesttermHeader::find()
-					->JoinWith('dept',true,'left JOIN')
-					->where("
-							t0001header.SIG1_NM<>'none' AND
-							t0001header.USER_CC='".$profile->emp->EMP_ID."' AND
-							t0001header.STATUS <> 3 ");
-		}
+      /*componen user*/
+		  $profile = Yii::$app->getUserOpt->Profile_user();
+      $id = Yii::$app->getUserOpt->Profile_user()->emp->EMP_ID;
+    if($profile->emp->GF_ID == 3 && $profile->emp->DEP_ID == 'ACT'  ){
+      $query = RequesttermHeader::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4');
+    }elseif($profile->emp->GF_ID == 1 || $profile->emp->GF_ID == 2){
+      $query = RequesttermHeader::find()->where('STATUS = 101 AND STATUS <> 102 AND STATUS<>4');
+    }else{
 
+      $query = RequesttermHeader::find()->where(['and',
+                                                  ['<>','STATUS',102],
+                                                  ['<>','STATUS',4],
+                                                  ['ID_USER'=>$id],
+                                                  ]);
 
+      // ->where('STATUS <> 102 AND STATUS<>4')->orderBy(['CREATED_AT'=> SORT_DESC]);
+    }
 		$dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

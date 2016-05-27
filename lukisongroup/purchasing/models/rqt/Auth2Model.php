@@ -4,7 +4,10 @@ namespace lukisongroup\purchasing\models\rqt;
 use Yii;
 use yii\base\Model;
 use lukisongroup\hrd\models\Employe;
-use lukisongroup\purchasing\models\rqt\Requestterm;
+use lukisongroup\purchasing\models\rqt\Requesttermheader;
+use lukisongroup\purchasing\models\rqt\Requesttermstatus;
+use common\components\Notification;
+use common\models\MessageNotify;
 
 /**
  * @author ptrnov  <piter@lukison.com>
@@ -20,12 +23,12 @@ use lukisongroup\purchasing\models\rqt\Requestterm;
 class Auth2Model extends Model
 {
     public $empNm;
-    public $kdro;
-	public $status;
-	public $password;
+    public $kdrib;
+  	public $status;
+  	public $password;
 
-	//public $findPasswords; // @property Digunakan jika Form Attribute di gunakan
-	private $_empid = false;
+  	//public $findPasswords; // @property Digunakan jika Form Attribute di gunakan
+  	private $_empid = false;
     /**
      * @inheritdoc
      */
@@ -38,8 +41,8 @@ class Auth2Model extends Model
 			['password', 'findPasswords'],
 			['status', 'required'],
 			['status', 'integer'],
-			[['kdro'], 'required'],
-			[['kdro','empNm'], 'string']
+			[['kdrib'], 'required'],
+			[['kdrib','empNm'], 'string']
         ];
     }
 
@@ -48,6 +51,7 @@ class Auth2Model extends Model
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
      */
+
 	public function findPasswords($attribute, $params)
     {
 		/*
@@ -55,22 +59,22 @@ class Auth2Model extends Model
 		 * @since 1.1
 		*/
 		if (!$this->hasErrors()) {
-			$roHeaderCheck = Requestterm::find()->where(['KD_RO' =>$this->kdro])->one();
-			$empid = $this->getEmpid(Yii::$app->user->identity->EMP_ID);
-			$roAuth1Check = Requesttermstatus::find()->where(['KD_RO' =>$this->kdro,'TYPE'=>101])->one();
-			$roAuth1CheckStt=$roAuth1Check!=''?$roAuth1Check->TYPE:0;
+			 $empid = $this->getEmpid();
+       $pocheckdep =  $this->getProfile()->DEP_ID;
+       $pocheckgf =  $this->getProfile()->GF_ID;
+       $kdrib = $this->kdrib;
+       $checkstatus = Requesttermheader::find()->where(['KD_RIB'=> $kdrib])->asArray()
+                                                                     ->one();
+       $status = $checkstatus['STATUS'];
+
 			if (!$empid || !$empid->validateOldPasswordCheck($this->password)) {
                 $this->addError($attribute, 'Incorrect password.');
-            }elseif((!$roAuth1CheckStt==101)){
-				 $this->addError($attribute, 'Needed Signature created, then signature approved Available'.$roAuth1CheckStt);
-			}elseif(!$this->getPermission()->BTN_SIGN2==1 || $roHeaderCheck->USER_CC!=$this->getProfile()->EMP_ID){
-				 $getUserCc=Employe::find()->where(['EMP_ID' => $roHeaderCheck->USER_CC])->one();
-				 $this->addError($attribute, 'Wrong Permission,the undersigned is checked by '.$getUserCc->EMP_NM. ' '.$getUserCc->EMP_NM_BLK);
-			}
+            }
+      elseif( $pocheckdep !='ACT' &&  $pocheckgf == 3 || $pocheckgf == 4 ){
+              $this->addError($attribute, 'Sorry Only  Acounting');
+      }
        }
     }
-
-
 
 	/*
 	 * Check validation
@@ -79,29 +83,41 @@ class Auth2Model extends Model
 	*/
 	public function auth2_saved(){
 		if ($this->validate()) {
-			$roHeader = Requestterm::find()->where(['KD_RO' =>$this->kdro])->one();
-			$roSignStt = Requesttermstatus::find()->where(['KD_RO'=>$this->kdro,'ID_USER'=>$this->getProfile()->EMP_ID])->one();
-				$roHeader->STATUS = $this->status;
-				$roHeader->SIG2_SVGBASE64 = $this->getProfile()->SIGSVGBASE64;
-				$roHeader->SIG2_SVGBASE30 = $this->getProfile()->SIGSVGBASE30;
-				$roHeader->SIG2_NM = $this->getProfile()->EMP_NM . ' ' . $this->getProfile()->EMP_NM_BLK;
-				$roHeader->SIG2_ID = $this->getProfile()->EMP_ID;
-				$roHeader->SIG2_TGL = date('Y-m-d');
-			if ($roHeader->save()) {
-					if (!$roSignStt){
-						$roHeaderStt = new Requesttermstatus;
-						$roHeaderStt->KD_RO = $this->kdro;
-						$roHeaderStt->ID_USER = $this->getProfile()->EMP_ID;
-						$roHeaderStt->TYPE=102;
-						$roHeaderStt->STATUS = 1;
-						$roHeaderStt->UPDATED_AT = date('Y-m-d H:m:s');
-						if ($roHeaderStt->save()) {
+			$rtHeader_2 = Requesttermheader::find()->where(['KD_RIB' =>$this->kdrib])->one();
+			$poSignStt = Requesttermstatus::find()->where(['KD_RIB'=>$this->kdrib,'ID_USER'=>$this->getProfile()->EMP_ID])->one();
+				$profile=Yii::$app->getUserOpt->Profile_user();
+				$rtHeader_2->STATUS = $this->status;
+				$rtHeader_2->SIG2_SVGBASE64 = $profile->emp->SIGSVGBASE64;
+				$rtHeader_2->SIG2_SVGBASE30 = $profile->emp->SIGSVGBASE30;
+				$rtHeader_2->SIG2_NM = $profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;
+				$rtHeader_2->SIG2_TGL = date('Y-m-d');
+			if ($rtHeader_2->save()) {
+					if (!$poSignStt){
+						$rtHeader_2Stt = new Requesttermstatus;
+						$rtHeader_2Stt->KD_RIB = $this->kdrib;
+						$rtHeader_2Stt->ID_USER = $this->getProfile()->EMP_ID;
+						//$rtHeader_2Stt->TYPE
+						$rtHeader_2Stt->STATUS = 101;
+						$rtHeader_2Stt->UPDATE_AT = date('Y-m-d H:m:s');
+						if ($rtHeader_2Stt->save()) {
 
+							Notification::notify(Notification::KEY_NEW_MESSAGE, 23,Yii::$app->user->identity->id,$this->kdrib);
+
+							$msgNotify = new MessageNotify;
+							$msgNotify->USER_CREATE=Yii::$app->user->identity->id; 				//integer
+							$msgNotify->USER_FROM_ID= $this->getProfile()->EMP_ID;
+							$msgNotify->USER_FROM= $this->getProfile()->EMP_NM; 			//varchar 50
+							$msgNotify->USER_TO='Stephen'; 			//varchar 50
+							$msgNotify->SUBJECT='PO'; 				//varchar 10
+							$msgNotify->CREATE_AT=date('Y-m-d H:m:s'); 		//varchar 10
+							$msgNotify->IMG=''; 						//TEXT
+							$msgNotify->REF = $this->kdrib; 				//TEXT
+							$msgNotify->save();
 						}
 					}
-                return $roHeader;
+                return $rtHeader_2;
             }
-			return $roHeader;
+			return $rtHeader_2;
 		}
 		return null;
 	}
@@ -113,10 +129,10 @@ class Auth2Model extends Model
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
      */
-    public function getEmpid($empIdIdentity)
+    public function getEmpid()
     {
         if ($this->_empid === false) {
-            $this->_empid = Employe::find()->where(['EMP_ID' => $empIdIdentity])->one();
+            $this->_empid = Employe::find()->where(['EMP_ID' => Yii::$app->user->identity->EMP_ID])->one();
         }
         return $this->_empid;
     }
@@ -124,18 +140,5 @@ class Auth2Model extends Model
 	public function getProfile(){
 		$profile=Yii::$app->getUserOpt->Profile_user();
 		return $profile->emp;
-	}
-
-	/*
-	 * Declaration Componen User Permission
-	 * Function getPermission
-	 * Modul Name[1=RO]
-	*/
-	function getPermission(){
-		if (Yii::$app->getUserOpt->Modul_akses(1)){
-			return Yii::$app->getUserOpt->Modul_akses(1);
-		}else{
-			return false;
-		}
 	}
 }

@@ -25,7 +25,7 @@ $profile=Yii::$app->getUserOpt->Profile_user();
 		<?php echo  $form->field($auth1Mdl, 'kdpo')->hiddenInput(['value' => $poHeader->KD_PO,'maxlength' => true, 'readonly' => true])->label(false); ?>
 		<?php echo  $form->field($auth1Mdl, 'status')->hiddenInput(['value'=>100])->label(false); ?>
 		<?php echo  $form->field($auth1Mdl, 'password')->textInput(['type'=>'password','maxlength' => true])->label('Password'); ?>
-		<div style="text-align: right;"">
+		<div style="text-align: right;">
 			<?php echo Html::submitButton('login',['class' => 'btn btn-primary']); ?>
 		</div>
 

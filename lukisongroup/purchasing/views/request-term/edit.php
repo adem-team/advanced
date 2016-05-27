@@ -50,11 +50,11 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	/*
 	 * Declaration Componen User Permission
 	 * Function getPermission
-	 * Modul Name[1=RO]
+	 * Modul Name[1=pO]
 	*/
 	function getPermission(){
-		if (Yii::$app->getUserOpt->Modul_akses(1)){
-			return Yii::$app->getUserOpt->Modul_akses(1);
+		if (Yii::$app->getUserOpt->Modul_akses(3)){
+			return Yii::$app->getUserOpt->Modul_akses(3);
 		}else{
 			return false;
 		}
@@ -121,7 +121,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 				];
 				$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/request-order/sign-auth1-view','kd'=>$roHeader->KD_RIB]);
+				$url = Url::toRoute(['/purchasing/request-term/sign-auth1-view','kd'=>$roHeader->KD_RIB]);
 				//$options1['tabindex'] = '-1';
 				$content = Html::a($label,$url, $options);
 				return $content;
@@ -148,7 +148,6 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	*/
 	function SignChecked($roHeader){
 		if(getPermission()){
-			if(getPermission()->BTN_EDIT==1 AND ($roHeader->STATUS==101 OR $roHeader->STATUS==103) ){
 				$title = Yii::t('app', 'Sign Hire');
 				$options = [ 'id'=>'ro-auth2-id',
 							  'data-toggle'=>"modal",
@@ -159,7 +158,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 				];
 				$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/request-order/sign-auth2-view','kd'=>$roHeader->KD_RIB]);
+				$url = Url::toRoute(['/purchasing/request-term/sign-auth2-view','kd'=>$roHeader->KD_RIB]);
 				//$options1['tabindex'] = '-1';
 				$content = Html::a($label,$url, $options);
 				return $content;
@@ -177,7 +176,6 @@ $this->title = Yii::t('app', 'Trading Terms ');
 				$content = Html::button($label, $options);
 				return $content;
 			}
-		}
 	}
 
 	/*
@@ -186,7 +184,6 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	*/
 	function SignApproved($roHeader){
 		if(getPermission()){
-			if(getPermission()->BTN_EDIT==1 AND ($roHeader->STATUS==101 or $roHeader->STATUS==102)){
 				$title = Yii::t('app', 'Sign Hire');
 				$options = [ 'id'=>'ro-auth3-id',
 							  'data-toggle'=>"modal",
@@ -197,7 +194,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 				];
 				$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/request-order/sign-auth3-view','kd'=>$roHeader->KD_RO]);
+				$url = Url::toRoute(['/purchasing/request-order/sign-auth3-view','kd'=>$roHeader->KD_RIB]);
 				//$options1['tabindex'] = '-1';
 				$content = Html::a($label,$url, $options);
 				return $content;
@@ -215,7 +212,6 @@ $this->title = Yii::t('app', 'Trading Terms ');
 				$content = Html::button($label, $options);
 				return $content;
 			}
-		}
 	}
 
  	/*
@@ -335,7 +331,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 		];
 		$icon1 = '<span class="fa fa-eye fa-lg"></span>';
 		$label1 = $icon1 . ' ' . $title1;
-		$url1 = Url::toRoute(['/purchasing/request-order/item-detail-view','kdro'=>$model->KD_RIB]);
+		$url1 = Url::toRoute(['/purchasing/request-term/item-detail-view','kdro'=>$model->KD_RIB]);
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
@@ -381,7 +377,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	<!-- Table Grid List RO Detail !-->
 	<div class="col-md-12">
 		<div style="align:right;">
-			<!-- <div style="float:left;margin-right:5px"><tombolAddItem($roHeader->KD_RO,$roHeader->STATUS);?></div> -->
+			<!-- <div style="float:left;margin-right:5px"><tombolAddItem($roHeader->KD_RIB,$roHeader->STATUS);?></div> -->
 			<div><?=tombolNewItem($roHeader->KD_RIB,$roHeader->STATUS);?></div>
 		</div>
 		<div>

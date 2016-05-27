@@ -44,8 +44,9 @@ class ChatroomSearch extends Chatroom
 
       /* componen */
       $profile_id = Yii::$app->getUserOpt->profile_user()->emp->EMP_ID;
+      $sort = Chatroom::find()->where(['GROUP_ID'=>$profile_id])->one();
 
-      $query = Chatroom::find()->where(['GROUP_ID'=>$profile_id]);
+      $query = Chatroom::find()->where(['SORT'=>$sort,'PARENT'=>0]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

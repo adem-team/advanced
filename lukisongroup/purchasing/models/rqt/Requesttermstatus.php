@@ -39,7 +39,7 @@ class Requesttermstatus extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['KD_RO', 'ID_USER', 'TYPE', 'STATUS', 'UPDATED_AT'], 'safe'],
+            [['KD_RIB', 'ID_USER', 'TYPE', 'STATUS', 'UPDATE_AT'], 'safe'],
         ];
     }
 

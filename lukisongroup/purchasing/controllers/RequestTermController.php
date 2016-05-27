@@ -92,13 +92,20 @@ class RequestTermController extends Controller
      */
     public function actionIndex()
     {
-        // component
+        // component user
 		    $profile=Yii::$app->getUserOpt->Profile_user();
 
+        /*inbox tab ||index*/
     		$searchModel = new RequesttermheaderSearch();
-    		$dataProvider = $searchModel->searchRt(Yii::$app->request->queryParams);
-    		$dataProviderInbox = $searchModel->searchRtInbox(Yii::$app->request->queryParams);
-    		$dataProviderOutbox = $searchModel->searchRtOutbox(Yii::$app->request->queryParams);
+        $dataProviderInbox = $searchModel->searchRtInbox(Yii::$app->request->queryParams);
+
+        /*outbox tab ||index*/
+        $searchmodel = new RequesttermheaderSearch();
+        $dataProviderOutbox = $searchmodel->searchRtOutbox(Yii::$app->request->queryParams);
+
+        /*history tab ||index*/
+        $searchmodelHistory = new RequesttermheaderSearch();
+        $dataproviderHistory = $searchmodelHistory->searchRthistory(Yii::$app->request->queryParams);
 
 
         // data for search index Rt//
@@ -133,9 +140,11 @@ class RequestTermController extends Controller
 
   		  return $this->render('index', [
         'searchModel' => $searchModel,
-        'dataProvider' => $dataProvider,
   			'dataProviderInbox' =>$dataProviderInbox,
+        'searchmodel' => $searchmodel,
   			'dataProviderOutbox' =>$dataProviderOutbox,
+        'searchmodelHistory' => $searchmodelHistory,
+        'dataproviderHistory' => $dataproviderHistory,
         'datachecked'=>  $datachecked,
         'datacreate'=>$datacreate,
         'dataCreate'=>$dataCreate,
@@ -159,6 +168,7 @@ class RequestTermController extends Controller
     {
 
 		  $model = new Requesttermheader();
+      $model->scenario = 'simpan';
       $radiorqt = Yii::$app->request->post();
       $term_invest = new Rtdetail();
 
@@ -385,14 +395,12 @@ class RequestTermController extends Controller
 
     }
 
-	public function actionItemDetailView($kdro,$kdbrg){
+	public function actionItemDetailView($kdro){
 
-		$brgDetail = Barang::find()->where(['KD_BARANG'=>$kdbrg])->One();
-		$roHeader = Requesttermheader::find()->where(['KD_RO' => $kdro])->one();
-		$roDetail = $roHeader->detro;
+		$roHeader = Rtdetail::find()->where(['KD_RIB' => $kdro])->one();
+		// $roDetail = $roHeader->detro;
 		return $this->renderAjax('detailviewitem', [
-				'brgDetail' => $brgDetail,
-				'roDetail' => $roDetail,
+				'roDetail' => $roHeader,
 		]);
 	}
 
@@ -996,41 +1004,32 @@ class RequestTermController extends Controller
      * @since 1.1
      */
 	public function actionTempCetakpdf($kd,$v){
-    	$roHeader = Requesttermheader::find()->where(['KD_RO' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
-		$detro = $roHeader->detro;
+    	  $roHeader = Requesttermheader::find()->where(['KD_RIB' => $kd])->one(); /*Noted check by status approval =1 header table | chek error record jika kosong*/
+		    $detro = $roHeader->detro;
         $employ = $roHeader->employe;
-		$dept = $roHeader->dept;
-		/* if ($v==101){
-			$filterPdf="KD_RO='".$kd."' AND (STATUS='101' OR STATUS='10')";
-		}elseif($v!=101){
-			$filterPdf="KD_RO='".$kd."' AND STATUS<>'3'";
-		} */
-		$roDetail = Rtdetail::find()->where(['KD_RO'=>$kd])->all();
+		    $dept = $roHeader->dept;
+    		/* if ($v==101){
+    			$filterPdf="KD_RO='".$kd."' AND (STATUS='101' OR STATUS='10')";
+    		}elseif($v!=101){
+    			$filterPdf="KD_RO='".$kd."' AND STATUS<>'3'";
+    		} */
+		  $roDetail = Rtdetail::find()->where(['KD_RIB'=>$kd])->all();
 
-		/* PR Filter Status Output to Grid print*/
-		$dataProvider = new ArrayDataProvider([
-			'key' => 'ID',
-			'allModels'=>$roDetail,//$detro,
-			'pagination' => [
-				'pageSize' => 20,
-			],
-		]);
-
-		//PR
-		//$dataProviderFilter = $dataProvider->getModels();
-
-		/* $StatusFilter = ["101","10"];
-        $test1 = ArrayHelper::where($dataProviderFilter, function($key, $StatusFilter) {
-             return is_string($value);
-        });
-		print_r($test1); */
+  		/* PR Filter Status Output to Grid print*/
+  		$dataProvider = new ArrayDataProvider([
+  			'key' => 'ID',
+  			'allModels'=>$roDetail,//$detro,
+  			'pagination' => [
+  				'pageSize' => 20,
+  			],
+  		]);
 
 		$content = $this->renderPartial( 'pdfview_tmp', [
             'roHeader' => $roHeader,
             'detro' => $detro,
             'employ' => $employ,
-			'dept' => $dept,
-			'dataProvider' => $dataProvider,
+      			'dept' => $dept,
+      			'dataProvider' => $dataProvider,
         ]);
 
 		$pdf = new Pdf([
@@ -1051,7 +1050,7 @@ class RequestTermController extends Controller
 			// any css to be embedded if required
 			'cssInline' => '.kv-heading-1{font-size:12px}',
 			 // set mPDF properties on the fly
-			'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+			'options' => ['title' => 'Form Request term','subject'=>'rt'],
 			 // call mPDF methods on the fly
 			'methods' => [
 				'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
@@ -1530,10 +1529,10 @@ class RequestTermController extends Controller
 	**/
 	public function actionSignAuth1View($kd){
 		$auth1Mdl = new Auth1Model();
-		$roHeader = Requesttermheader::find()->where(['KD_RO' =>$kd])->one();
-		$employe = $roHeader->employe;
+		$rtHeader = Requesttermheader::find()->where(['KD_RIB' =>$kd])->one();
+		$employe = $rtHeader->employe;
 			return $this->renderAjax('sign-auth1', [
-				'roHeader' => $roHeader,
+				'rtHeader' => $rtHeader,
 				'employe' => $employe,
 				'auth1Mdl' => $auth1Mdl,
 			]);
@@ -1549,10 +1548,10 @@ class RequestTermController extends Controller
 			if($auth1Mdl->load(Yii::$app->request->post())){
 				if ($auth1Mdl->auth1_saved()){
 					$hsl = \Yii::$app->request->post();
-					$kdro = $hsl['Auth1Model']['kdro'];
+					$kdrib = $hsl['Auth1Model']['kdrib'];
           $user =  $hsl['Auth1Model']['empID'];
-          $this->Sendmail($kdro,$user); //email auth1
-					return $this->redirect(['/purchasing/request-term/view','kd'=>$kdro]);
+          // $this->Sendmail($kdro,$user); //email auth1
+					return $this->redirect(['/purchasing/request-term/view','kd'=>$kdrib]);
 				}
 			}
 		}
@@ -1568,10 +1567,10 @@ class RequestTermController extends Controller
 	**/
 	public function actionSignAuth2View($kd){
 		$auth2Mdl = new Auth2Model();
-		$roHeader = Requesttermheader::find()->where(['KD_RO' =>$kd])->one();
-		$employe = $roHeader->employe;
+		$rtHeader = Requesttermheader::find()->where(['KD_RIB' =>$kd])->one();
+		$employe = $rtHeader->employe;
 			return $this->renderAjax('sign-auth2', [
-				'roHeader' => $roHeader,
+				'rtHeader' => $rtHeader,
 				'employe' => $employe,
 				'auth2Mdl' => $auth2Mdl,
 			]);
@@ -1587,10 +1586,10 @@ class RequestTermController extends Controller
 			if($auth2Mdl->load(Yii::$app->request->post())){
 				if ($auth2Mdl->auth2_saved()){
 					$hsl = \Yii::$app->request->post();
-					$kdro = $hsl['Auth2Model']['kdro'];
+					$kdrib = $hsl['Auth2Model']['kdrib'];
           $user =  $hsl['Auth1Model']['empID'];
-          $this->Sendmail2($kdro,$user); //email auth2
-					return $this->redirect(['/purchasing/request-term/review','kd'=>$kdro]);
+          // $this->Sendmail2($kdrib,$user); //email auth2
+					return $this->redirect(['/purchasing/request-term/review','kd'=>$kdrib]);
 				}
 			}
 		}
@@ -1606,10 +1605,10 @@ class RequestTermController extends Controller
 	**/
 	public function actionSignAuth3View($kd){
 		$auth3Mdl = new Auth3Model();
-		$roHeader = Requesttermheader::find()->where(['KD_RO' =>$kd])->one();
-		$employe = $roHeader->employe;
+    $rtHeader = Requesttermheader::find()->where(['KD_RIB' =>$kd])->one();
+    $employe = $rtHeader->employe;
 			return $this->renderAjax('sign-auth3', [
-				'roHeader' => $roHeader,
+				'rtHeader' => $rtHeader,
 				'employe' => $employe,
 				'auth3Mdl' => $auth3Mdl,
 			]);
@@ -1625,10 +1624,10 @@ class RequestTermController extends Controller
 			if($auth3Mdl->load(Yii::$app->request->post())){
 				if ($auth3Mdl->auth3_saved()){
 					$hsl = \Yii::$app->request->post();
-					$kdro = $hsl['Auth3Model']['kdro'];
+					$kdrib = $hsl['Auth3Model']['kdrib'];
           $user =  $hsl['Auth1Model']['empID'];
-          $this->Sendmail3($kdro,$user); ////email auth3
-					return $this->redirect(['/purchasing/request-term/review','kd'=>$kdro]);
+          // $this->Sendmail3($kdro,$user); ////email auth3
+					return $this->redirect(['/purchasing/request-term/review','kd'=>$kdrib]);
 				}
 			}
 		}

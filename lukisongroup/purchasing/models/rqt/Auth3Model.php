@@ -7,6 +7,8 @@ use lukisongroup\hrd\models\Employe;
 use lukisongroup\purchasing\models\rqt\Requestterm;
 use lukisongroup\purchasing\models\rqt\Rtdetail;
 use lukisongroup\purchasing\models\rqt\Requesttermstatus;
+use common\components\Notification;
+use common\models\MessageNotify;
 /**
  * @author ptrnov  <piter@lukison.com>
  * @since 1.1
@@ -21,12 +23,12 @@ use lukisongroup\purchasing\models\rqt\Requesttermstatus;
 class Auth3Model extends Model
 {
     public $empNm;
-    public $kdro;
-	public $status;
-	public $password;
+    public $kdrib;
+  	public $status;
+  	public $password;
 
-	//public $findPasswords; // @property Digunakan jika Form Attribute di gunakan
-	private $_empid = false;
+  	//public $findPasswords; // @property Digunakan jika Form Attribute di gunakan
+  	private $_empid = false;
     /**
      * @inheritdoc
      */
@@ -39,8 +41,8 @@ class Auth3Model extends Model
 			['password', 'findPasswords'],
 			['status', 'required'],
 			['status', 'integer'],
-			[['kdro'], 'required'],
-			[['kdro','empNm'], 'string']
+			[['kdrib'], 'required'],
+			[['kdrib','empNm'], 'string']
         ];
     }
 
@@ -57,90 +59,63 @@ class Auth3Model extends Model
 		*/
 		if (!$this->hasErrors()) {
 			 $empid = $this->getEmpid();
-			 $roHeaderCheck = Requestterm::find()->where(['KD_RO' =>$this->kdro])->one();
-			 $roAuth1Check = Requesttermstatus::find()->where(['KD_RO' =>$this->kdro,'TYPE'=>101])->one();
-			 $roAuth1CheckStt=$roAuth1Check!=''?$roAuth1Check->TYPE:0;
-			 $roAuth2Check = Requesttermstatus::find()->where(['KD_RO' =>$this->kdro,'TYPE'=>102])->one();
-			  $roAuth2CheckStt=$roAuth2Check!=''?$roAuth2Check->TYPE:0;
+       $pocheckdep =  $this->getProfile()->DEP_ID;
+       //
+      //  print_r($pocheckdep);
+      //  die();
+       $empID =  $this->getProfile()->EMP_ID->GF_ID;
+       $kdrib = $this->kdrib;
+       $checkstatus =  Requesttermheader::find()->where(['KD_RIB'=> $kdrib])->asArray()
+                                                                ->one();
+       $status = $checkstatus['STATUS'];
 			if (!$empid || !$empid->validateOldPasswordCheck($this->password)) {
                 $this->addError($attribute, 'Incorrect password.');
-			}elseif((!$roAuth1CheckStt==101)){
-				 $this->addError($attribute, 'Needed Signature created, then signature approved Available'.$roAuth1CheckStt);
-			}elseif(($roAuth2CheckStt!=102)){
-				 $this->addError($attribute, 'Wait Signature Checked first, then signature approved Available');
-            }elseif($roAuth1CheckStt!=101 and $roAuth2CheckStt!=102){
-				  $this->addError($attribute, 'Wait Signature Created and Checked first, then signature approved Available');
-			}elseif(!$this->getPermission()->BTN_SIGN3==1 || $empid->DEP_ID!=$roHeaderCheck->KD_DEP){
-				 $this->addError($attribute, 'Wrong Permission,the undersigned is checked by a head of the department');
-			}
+            }
        }
-   	}
+    }
 
 	/*
 	 * Check validation
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
+   * if purchaseoder header equal 4 then SIG3_SVGBASE64 equal null and SIG3_SVGBASE30 equal null
+   * if purchaseoder header equal 4 then purchaseoderstatus STATUS equal 4
 	*/
 	public function auth3_saved(){
 		if ($this->validate()) {
-			$roHeader = Requestterm::find()->where(['KD_RO' =>$this->kdro])->one();
-			$roSignStt = Requesttermstatus::find()->where(['KD_RO'=>$this->kdro,'ID_USER'=>$this->getProfile()->EMP_ID,'TYPE'=>$this->status])->one();
-				$roHeader->STATUS = $this->status;
-				if($this->status==103){ //
-					$roHeader->SIG3_SVGBASE64 = $this->getProfile()->SIGSVGBASE64;
-					$roHeader->SIG3_SVGBASE30 = $this->getProfile()->SIGSVGBASE30;
-				}
-				$roHeader->SIG3_NM = $this->getProfile()->EMP_NM . ' ' . $this->getProfile()->EMP_NM_BLK;
-				$roHeader->SIG3_ID = $this->getProfile()->EMP_ID;
-				$roHeader->SIG3_TGL = date('Y-m-d');
-			if ($roHeader->save()) {
-					/* Status Item RO Details 0 menjadi 1 */
-					if($this->status==103){
-						/* Direct SQL command and execcute update */
-						$cons = \Yii::$app->db_esm;
-						$command = $cons->createCommand("Update r0003 Set STATUS=1 WHERE KD_RO='".$this->kdro."' AND STATUS=0");
-						$command->execute();
-					}elseif($this->status==4){
-						$cons = \Yii::$app->db_esm;
-						$command = $cons->createCommand("Update r0003 Set STATUS=4 WHERE KD_RO='".$this->kdro."' AND STATUS=0");
-						$command->execute();
-					}
-					/*Status Auth Signature*/
-					if (!$roSignStt and ($this->status==101 or $this->status==102)){
-						/*Status Notify*/
-						$roHeaderStt = new Requesttermstatus;
-						$roHeaderStt->KD_RO = $this->kdro;
-						$roHeaderStt->ID_USER = $this->getProfile()->EMP_ID;
-						$roHeaderStt->TYPE=$this->status;
-						$roHeaderStt->STATUS = 1;
-						$roHeaderStt->UPDATED_AT = date('Y-m-d H:m:s');
-						if ($roHeaderStt->save()) {
-
-						}
-					}else{
-						$roSignSttAuth3 = Requesttermstatus::find()->where("(KD_RO='".$this->kdro."' AND ID_USER='".$this->getProfile()->EMP_ID."' AND TYPE=103) OR
-																			 (KD_RO='".$this->kdro."' AND ID_USER='".$this->getProfile()->EMP_ID."' AND TYPE=4) OR
-																			 (KD_RO='".$this->kdro."' AND ID_USER='".$this->getProfile()->EMP_ID."' AND TYPE=5)")
-																	->one();
-						if (!$roSignSttAuth3){
-							/*Status Notify*/
-							$roHeaderStt = new Requesttermstatus;
-							$roHeaderStt->KD_RO = $this->kdro;
-							$roHeaderStt->ID_USER = $this->getProfile()->EMP_ID;
-							$roHeaderStt->TYPE=$this->status;
-							$roHeaderStt->STATUS = 1;
-							$roHeaderStt->UPDATED_AT = date('Y-m-d H:m:s');
-							$roHeaderStt->save();
-						}else{
-							$cons = \Yii::$app->db_esm;
-							$command = $cons->createCommand("Update r0002 Set TYPE='".$this->status."' WHERE KD_RO='".$this->kdro."' AND ID_USER='".$this->getProfile()->EMP_ID."' AND (TYPE=103 or TYPE=4 or TYPE=5)");
-							$command->execute();
-						}
-
-					}
-                return $roHeader;
+			$rtHeader_3 = Requesttermheader::find()->where(['KD_RIB' =>$this->kdrib])->one();
+			$rtSignStt_3 = Requesttermstatus::find()->where(['KD_RIB'=>$this->kdrib,'ID_USER'=>$this->getProfile()->EMP_ID])->one();
+				$profile=Yii::$app->getUserOpt->Profile_user();
+				$rtHeader_3->STATUS = $this->status;
+        if($rtHeader_3->STATUS == 4)
+        {
+          $rtHeader_3->SIG3_SVGBASE64 = "";
+  				$rtHeader_3->SIG3_SVGBASE30 = "";
+        }else{
+          $rtHeader_3->SIG3_SVGBASE64 = $profile->emp->SIGSVGBASE64;
+          $rtHeader_3->SIG3_SVGBASE30 = $profile->emp->SIGSVGBASE30;
+        }
+				$rtHeader_3->SIG3_NM = $profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;
+				$rtHeader_3->SIG3_TGL = date('Y-m-d');
+			if ($rtHeader_3->save()) {
+					if (!$rtSignStt_3){
+						$rtHeaderStt_3 = new Requesttermstatus;
+						$rtHeaderStt_3->KD_RIB = $this->kdrib;
+						$rtHeaderStt_3->ID_USER = $this->getProfile()->EMP_ID;
+            if($rtHeader_3->STATUS == 4)
+            {
+              $rtHeaderStt_3->STATUS = 4;
+            }else{
+              $rtHeaderStt_3->STATUS = 102;
             }
-			return $roHeader;
+						$rtHeaderStt_3->UPDATE_AT = date('Y-m-d H:m:s');
+						if ($rtHeaderStt_3->save()) {
+
+						}
+					}
+                return $rtHeader_3;
+            }
+			return $rtHeader_3;
 		}
 		return null;
 	}
@@ -159,22 +134,9 @@ class Auth3Model extends Model
         }
         return $this->_empid;
     }
+
 	public function getProfile(){
 		$profile=Yii::$app->getUserOpt->Profile_user();
 		return $profile->emp;
 	}
-
-	/*
-	 * Declaration Componen User Permission
-	 * Function getPermission
-	 * Modul Name[1=RO]
-	*/
-	function getPermission(){
-		if (Yii::$app->getUserOpt->Modul_akses(1)){
-			return Yii::$app->getUserOpt->Modul_akses(1);
-		}else{
-			return false;
-		}
-	}
-
 }
