@@ -117,7 +117,7 @@ use lukisongroup\hrd\models\Corp;
 				'width'=>'10px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'9pt',
-				'background-color'=>'rgba(74, 206, 231, 1)',
+				'background-color'=>'rgba(74, 206, 231, 1)',	
 			]
 		],
 		'contentOptions'=>[

@@ -191,7 +191,7 @@ $this->title = 'LukisonGroup.com';
 															</a>
 															<ul class="dropdown-menu dropdown-right">
 																<li class="header">
-																	<a href="/notifications/message/read?id=25">
+																	<a href="/notifications/message/read">
 																	You have <span class="notifications-header-count">0</span> notifications
 																	</a>
 																	

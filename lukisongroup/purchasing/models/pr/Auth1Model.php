@@ -108,7 +108,8 @@ class Auth1Model extends Model
 							$msgNotify->USER_CREATE=Yii::$app->user->identity->id; 				//integer
 							$msgNotify->USER_FROM_ID= $this->getProfile()->EMP_ID;
 							$msgNotify->USER_FROM= $this->getProfile()->EMP_NM; 			//varchar 50
-							$msgNotify->USER_TO='Melissa'; 			//varchar 50
+							$msgNotify->USER_TO='Melissa'; 			//varchar 50 catatan multi name user permission purchasing sign3 harus di revisi
+							$msgNotify->USER_TO_ID='LG.2016.000010'; // catatan multi name EMP_ID permission purchasing sign3 harus di revisi
 							$msgNotify->SUBJECT='PO'; 				//varchar 10
 							$msgNotify->CREATE_AT=date('Y-m-d H:m:s'); 		//varchar 10
 							$msgNotify->IMG=''; 						//TEXT
