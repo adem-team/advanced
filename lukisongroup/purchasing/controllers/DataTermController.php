@@ -69,20 +69,20 @@ class DataTermController extends Controller
      * @since 1.1
      */
     public function actionIndex(){
-		$searchModel = new TermheaderSearch();		
+		$searchModel = new TermheaderSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		return $this->render('index',[
 			'dataProvider'=>$dataProvider
 		]);
 	}
-	
+
 	/*
 	 * VIEW TERM
 	 * Hanya untuk melihat sebatas view
 	*/
 	public function actionView($id){
 		 /*TERM PLAN HEADER*/
-		$searchModel = new TermheaderSearch();		
+		$searchModel = new TermheaderSearch();
 		$dataProvider = $searchModel->searchcusbyid(Yii::$app->request->queryParams,$id);
 		$modelRslt=$dataProvider->getModels();
 		/*BUDGET SEARCH*/
@@ -99,7 +99,7 @@ class DataTermController extends Controller
 		 *        _viewChart []
 		*/
 	}
-	
+
 	/*
 	 * REVIEW TERM
 	 * Data term yang bisa di update [budget plan | budget actual -> button Actual investment ]
@@ -107,7 +107,7 @@ class DataTermController extends Controller
 	*/
 	public function actionReview($id){
 		 /*TERM PLAN HEADER*/
-		$searchModel = new TermheaderSearch();		
+		$searchModel = new TermheaderSearch();
 		$dataProvider = $searchModel->searchcusbyid(Yii::$app->request->queryParams,$id);
 		$modelRslt=$dataProvider->getModels();
 		print_r($modelRslt->TERM_ID);
@@ -125,7 +125,7 @@ class DataTermController extends Controller
 		 *          _reviewChart []
 		*/
 	}
-	
+
 	/*
 	 * ACTUAL BUGDET
 	 * Manual Input = by condition | Direct input
@@ -134,16 +134,16 @@ class DataTermController extends Controller
 	*/
 	public function actionActualReview($id){
 		 /*TERM PLAN HEADER*/
-		$searchModel = new TermheaderSearch();		
+		$searchModel = new TermheaderSearch();
 		$dataProvider = $searchModel->searchcusbyid(Yii::$app->request->queryParams,$id);
 		$modelRslt=$dataProvider->getModels();
 		/*BUDGET SEARCH*/
 		$searchModelBudget= new TermdetailSearch();
 		$dataProviderBudget = $searchModelBudget->searchbudget(Yii::$app->request->queryParams,$id);
-		
+
 		$searchModelRdetail= new RtdetailSearch();
 		$dataProviderRdetail = $searchModelRdetail->search(Yii::$app->request->queryParams,$id);
-		
+
 		return $this->render('actual_review',[
 			'dataProvider'=>$dataProvider,
 			'model'=>$modelRslt,
@@ -155,7 +155,7 @@ class DataTermController extends Controller
 		 * review-> _reviewData  -> button [Actual Investment]  -> [contreoller]actionActualReview ->actual_review
 		*/
 	}
-	
+
 	public function actionActualReviewAdd($id){
 		/* $model = new Termcustomers();
 
@@ -174,36 +174,34 @@ class DataTermController extends Controller
                 'model' => $model,
             ]);
         } */
-		
+
 		$termHeader=Termheader::find()->where(['TERM_ID'=>$id])->one();
-		
+
 		/*Model Scnario*/
 		$actualModel = new ActualModel();
-		
+
 		return $this->renderAjax('actual_form',[
 			'term_id'=>$id,
 			'termHeader'=>$termHeader,
 			'actualModel'=>$actualModel
 		]);
 	}
-	
+
 	public function actionActualReviewSave(){
 		$ActualModel = new ActualModel();
 		/*Ajax Load*/
 		if(Yii::$app->request->isAjax){
 			$ActualModel->load(Yii::$app->request->post());
 			return Json::encode(\yii\widgets\ActiveForm::validate($ActualModel));
-		}else{	
-			//if($ActualModel->load(Yii::$app->request->post())){
-			//	if ($ActualModel->actualmodel_saved()){
+		}else{
+			if($ActualModel->load(Yii::$app->request->post())){
+				if ($ActualModel->actualmodel_saved()){
+          // $hsl = \Yii::$app->request->post();
+				}
 
-					$hsl = \Yii::$app->request->post();
-					$temIdRst = $hsl['ActualModel']['temId'];
-					
-			//	}
-			//} 
-			return $this->redirect(['actual-review', 'id'=>$temIdRst]);
-		} 
-		
+			}
+			return $this->redirect(['actual-review', 'id'=>$ActualModel->temId]);
+		}
+
     }
 }
