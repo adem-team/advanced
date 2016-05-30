@@ -860,19 +860,19 @@ class PurchaseOrderController extends Controller
           $kdRo=$request->post('kdRo');
           $kdpo=$request->post('kdpo');
           $dataKeySelect=$request->post('keysSelect');
-          // if($dataKeySelect == "")
-          // {
-          //   $poproses = Purchasedetail::updateAll(['STATUS' => 0], ['KD_PO'=>$kdpo]);
-          // }else{
-          //   if ($dataKeySelect!=0){
-          //   foreach ($dataKeySelect as $id) {
-          //     # code...
-          //     $items = Purchasedetail::find()->where(['ID'=>$id])->one();
-          //     $items->STATUS = 0;
-          //     $items->save();
-          //   }
-          // }
-          // }
+          if($dataKeySelect == "")
+          {
+            $poproses = Purchasedetail::updateAll(['STATUS' => 0], ['KD_PO'=>$kdpo]);
+          }else{
+            if ($dataKeySelect!=0){
+            foreach ($dataKeySelect as $id) {
+              # code...
+              $items = Purchasedetail::find()->where(['ID'=>$id])->one();
+              $items->STATUS = 0;
+              $items->save();
+            }
+          }
+          }
         }
         return true;
     }
