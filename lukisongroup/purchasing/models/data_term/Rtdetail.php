@@ -54,20 +54,25 @@ class Rtdetail extends \yii\db\ActiveRecord
             [['INVESTASI_PROGRAM','HARGA'], 'safe'],
 			['HARGA','default', 'value'=>0.00],
 			[['STATUS','INVESTASI_TYPE'], 'integer'],
-            [['UNIT'], 'string'],
+            //[['UNIT'], 'string'],
+            [['UNIT','label'], 'string'],
             [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT','HARGA'], 'safe'],
             [['KD_RIB','UNIT', 'NOMER_INVOCE','NOMER_FAKTURPAJAK'], 'string', 'max' => 50],
         ];
     }
 
-	public function fields()
+	public function getLabel(){
+		return $this->KD_RIB;
+	}
+	
+	/* public function fields()
 	{
 		return [
 			'label'=>function($model){
 							return 'Actual';
 					}		
 		];
-	}
+	} */
 	
 	
 	public function getCunit()
