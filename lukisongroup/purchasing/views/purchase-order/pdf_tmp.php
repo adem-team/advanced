@@ -652,8 +652,18 @@ $y=4;
        </th>
        <th style="text-align: center; vertical-align:middle;width:180">
          <?php
-           $ttd3 = $poHeader->SIG3_SVGBASE64!=0 ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : '';
-           echo $ttd3;
+         /**
+         *if po header status equal four then reject
+         *@author wawan
+         */
+         if($poHeader->STATUS == 4)
+         {
+           $ttd3 = "<h4> <b> Reject </b></h4>";
+         }else{
+           $ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : '';
+         }
+         echo $ttd3;
+
          ?>
        </th>
      </tr>

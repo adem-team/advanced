@@ -17,14 +17,14 @@
 						<h2>LUKISONGROUP POSTMAN</h2>
 					</td>
 				</tr>
-				<tr>				
+				<tr>
 					<td style="background: #ddd; margin-top:5px; margin-button: 18px; text-align: center;">
 						Purchase Order Notification
 					</td>
-				</tr>		
+				</tr>
 				<tr>
 					<td>
-						<table style="font-size: 12px; font-family: Verdana, sans-serif;">							
+						<table style="font-size: 12px; font-family: Verdana, sans-serif;">
 							<tr>
 								<td style="width: 80px; color:black; background:white;text-align:left">
 									PO.No
@@ -35,7 +35,7 @@
 								<td style="color:black; background:white;text-align:left">
 									<?php echo $poHeader->KD_PO; ?>
 								</td>
-							</tr>							
+							</tr>
 							<tr>
 								<td style="color:black; background:white;text-align:left">
 									ETA
@@ -82,7 +82,16 @@
 							</tr>
 							<tr>
 								<td style="color:black; background:white;text-align:left">
-									Approved By
+									<?php
+										if( $poHeader->STATUS == 4)
+										{
+											$label = 'Reject By';
+										}else {
+											# code...
+											$label = 'Approved By';
+										}
+									 ?>
+									 <?= $label ?>
 								</td>
 								<td style="color:black; background:white;text-align:left">
 									:
@@ -90,22 +99,22 @@
 								<td style="color:black; background:white;text-align:left">
 									<?php echo $poHeader->SIG3_NM!=''?$poHeader->SIG3_NM:'none'; ?>
 								</td>
-							</tr>								
-						</table>	
+							</tr>
+						</table>
 					</td>
 				</tr>
 
 				<tr>
 					<td style="padding: 9px; color:black; background:white;text-align:left">
-						please find the attachment for details or login <a href="http://lukisongroup.com">Lukisongroup.com</a> 
+						please find the attachment for details or login <a href="http://lukisongroup.com">Lukisongroup.com</a>
 					</td>
-				</tr>	
+				</tr>
 				<tr>
 					<td style="padding: 9px; color:red; background:white;text-align:center">
 						This email message has been automatically generated, Please do not reply to this message.
 					</td>
-				</tr>					
-				<tr>				
+				</tr>
+				<tr>
 					<td colspan="2" style="background: #ddd; padding: 9px; margin-top:5px; margin-button: 18px; text-align: center;">
 						&copy;Lukisongroup 2016
 					</td>

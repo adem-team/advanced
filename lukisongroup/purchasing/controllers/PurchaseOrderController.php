@@ -860,19 +860,19 @@ class PurchaseOrderController extends Controller
           $kdRo=$request->post('kdRo');
           $kdpo=$request->post('kdpo');
           $dataKeySelect=$request->post('keysSelect');
-          if($dataKeySelect == "")
-          {
-            $poproses = Purchasedetail::updateAll(['STATUS' => 0], ['KD_PO'=>$kdpo]);
-          }else{
-            if ($dataKeySelect!=0){
-            foreach ($dataKeySelect as $id) {
-              # code...
-              $items = Purchasedetail::find()->where(['ID'=>$id])->one();
-              $items->STATUS = 0;
-              $items->save();
-            }
-          }
-          }
+          // if($dataKeySelect == "")
+          // {
+          //   $poproses = Purchasedetail::updateAll(['STATUS' => 0], ['KD_PO'=>$kdpo]);
+          // }else{
+          //   if ($dataKeySelect!=0){
+          //   foreach ($dataKeySelect as $id) {
+          //     # code...
+          //     $items = Purchasedetail::find()->where(['ID'=>$id])->one();
+          //     $items->STATUS = 0;
+          //     $items->save();
+          //   }
+          // }
+          // }
         }
         return true;
     }
@@ -1358,7 +1358,7 @@ class PurchaseOrderController extends Controller
 			// any css to be embedded if required
 			'cssInline' => '.kv-heading-1{font-size:12px}',
 			 // set mPDF properties on the fly
-			'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+			'options' => ['title' => 'Form Purchase Order','subject'=>'po'],
 			 // call mPDF methods on the fly
 			'methods' => [
 			  'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
@@ -1428,7 +1428,7 @@ class PurchaseOrderController extends Controller
 			// any css to be embedded if required
 			'cssInline' => '.kv-heading-1{font-size:12px}',
 			 // set mPDF properties on the fly
-			'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+			'options' => ['title' => 'Form Purchase Order','subject'=>'po'],
 			 // call mPDF methods on the fly
 			'methods' => [
 			  'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
