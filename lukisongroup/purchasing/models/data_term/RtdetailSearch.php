@@ -15,10 +15,10 @@ class RtdetailSearch extends Rtdetail
      */
 	/* public function attributes()
 	{
-		//Author -ptr.nov- add related fields to searchable attributes 
+		//Author -ptr.nov- add related fields to searchable attributes
 		return array_merge(parent::attributes(), ['termheader.TERM_ID']);
 	} */
-	
+
 	public function rules()
     {
         return [
