@@ -133,6 +133,8 @@ $tabcustomersData = \kartik\grid\GridView::widget([
   'dataProvider' => $dataProvider,
   'filterModel' => $searchModel,
   'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.9); align:center'],
+  // 'floatHeader'=>true,
+  // 'floatHeaderOptions'=>['scrollingTop'=>'50'],
   'columns'=>[
     [
       'class'=>'kartik\grid\SerialColumn',
@@ -153,7 +155,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
           'text-align'=>'center',
           'width'=>'10px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
         ]
       ],
     ],
@@ -162,27 +164,40 @@ $tabcustomersData = \kartik\grid\GridView::widget([
       'label'=>'Customer Group',
       'filterType'=>GridView::FILTER_SELECT2,
       'filter' => $parent,
-      'filterWidgetOptions'=>[
-        'pluginOptions'=>['allowClear'=>true],
-      ],
-      'filterInputOptions'=>['placeholder'=>'Any author'],
+	  
+	  'filterOptions'=>[
+		'colspan'=>2,
+	  ],  
+	  'filterWidgetOptions'=>[		
+        'pluginOptions'=>[
+			'allowClear'=>true,
+			'contentOptions'=>[
+				'style'=>[
+				  'text-align'=>'left',
+				  'font-family'=>'tahoma, arial, sans-serif',
+				  'font-size'=>'8pt',
+				]
+			]
+		],
+	  ],	  
+      'filterInputOptions'=>['placeholder'=>'Parent Customer'],	 
       'hAlign'=>'left',
-      'vAlign'=>'middle',
+      'vAlign'=>'top',
       'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
-          'width'=>'120px',
+          'width'=>'250px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
           'background-color'=>'rgba(126, 189, 188, 0.9)',
         ]
       ],
       'contentOptions'=>[
         'style'=>[
           'text-align'=>'left',
-          'width'=>'120px',
+          'width'=>'250px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
         ]
       ],
       'group'=>true,
@@ -191,23 +206,25 @@ $tabcustomersData = \kartik\grid\GridView::widget([
       'attribute' => 'CUST_KD',
       'label'=>'Customer.Id',
       'hAlign'=>'left',
-      'vAlign'=>'middle',
+      'vAlign'=>'top',
 	  'filter'=>false,
-      'headerOptions'=>[
+	  'mergeHeader'=>true,
+	  'headerOptions'=>[	 
         'style'=>[
           'text-align'=>'center',
           'width'=>'120px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
           'background-color'=>'rgba(126, 189, 188, 0.9)',
         ]
       ],
       'contentOptions'=>[
-        'style'=>[
+		  'style'=>[
+		  'vertical-align'=>'text-middle',
           'text-align'=>'left',
           'width'=>'120px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
         ]
       ],
     ],
@@ -222,7 +239,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
           'text-align'=>'center',
           'width'=>'250px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
           'background-color'=>'rgba(126, 189, 188, 0.9)',
         ]
       ],
@@ -231,30 +248,31 @@ $tabcustomersData = \kartik\grid\GridView::widget([
           'text-align'=>'left',
           'width'=>'250px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
         ]
       ],
     ],
     [
       'attribute' => 'cus.CUST_KTG_NM',
+	  'label'=>'Category',
       'filter' => $dropType,
       'hAlign'=>'left',
       'vAlign'=>'middle',
       'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
-          'width'=>'150px',
+          'width'=>'100px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
           'background-color'=>'rgba(126, 189, 188, 0.9)',
         ]
       ],
       'contentOptions'=>[
         'style'=>[
           'text-align'=>'left',
-          'width'=>'150px',
+          'width'=>'100px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
         ]
       ],
         // 'group'=>true,
@@ -262,23 +280,24 @@ $tabcustomersData = \kartik\grid\GridView::widget([
     [
       'attribute' =>'custype.CUST_KTG_NM',
       'filter' => $dropKtg,
+	  'label'=>'Category.Detil',
       'hAlign'=>'left',
       'vAlign'=>'middle',
       'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
-          'width'=>'200px',
+          'width'=>'230px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
           'background-color'=>'rgba(126, 189, 188, 0.9)',
         ]
       ],
       'contentOptions'=>[
         'style'=>[
           'text-align'=>'left',
-          'width'=>'200px',
+          'width'=>'230px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
         ]
       ],
     ],
@@ -290,18 +309,18 @@ $tabcustomersData = \kartik\grid\GridView::widget([
       'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
-          'width'=>'200px',
+          'width'=>'130px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
           'background-color'=>'rgba(126, 189, 188, 0.9)',
         ]
       ],
       'contentOptions'=>[
         'style'=>[
           'text-align'=>'left',
-          'width'=>'200px',
+          'width'=>'130px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
         ]
       ],
     ],
@@ -324,7 +343,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
           'text-align'=>'center',
           'width'=>'80px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
           'background-color'=>'rgba(126, 189, 188, 0.9)',
         ]
       ],
@@ -333,7 +352,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
           'text-align'=>'center',
           'width'=>'80px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
         ]
       ],
     ],
@@ -408,19 +427,19 @@ $tabcustomersData = \kartik\grid\GridView::widget([
       'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
-          'width'=>'150px',
+          //'width'=>'150px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
           'background-color'=>'rgba(126, 189, 188, 0.9)',
         ]
       ],
       'contentOptions'=>[
         'style'=>[
           'text-align'=>'left',
-          'width'=>'150px',
-          'height'=>'10px',
+          '//width'=>'150px',
+          //'height'=>'10px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
         ]
       ],
     ],
@@ -436,6 +455,11 @@ $tabcustomersData = \kartik\grid\GridView::widget([
                               'id'=>'modcus',
                                'data-target'=>"#createcus",
                                'class' => 'btn btn-success btn-sm'
+                              ]).' '.
+			Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Refresh',
+            ['modelClass' => 'Customers1',]),'/master/customers',[
+							   'id'=>'refresh-cust',
+                               'class' => 'btn btn-info btn-sm'
                               ])
 
   ],
