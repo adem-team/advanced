@@ -1,0 +1,252 @@
+<?php
+use kartik\helpers\Html;
+use yii\widgets\DetailView;
+use kartik\grid\GridView;
+use yii\helpers\Url;
+use yii\widgets\Pjax;
+use yii\bootstrap\Modal;
+use yii\bootstrap\ActiveForm;
+use kartik\tabs\TabsX;
+use yii\helpers\Json;
+use yii\web\Response;
+use yii\helpers\ArrayHelper;
+use yii\web\Request;
+use kartik\daterange\DateRangePicker;
+use yii\db\ActiveRecord;
+use yii\data\ArrayDataProvider;
+
+use lukisongroup\master\models\Customers;
+use lukisongroup\master\models\Termcustomers;
+use lukisongroup\master\models\Distributor;
+use lukisongroup\hrd\models\Corp;
+
+
+$this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Trading Terms ');
+?>
+
+<?php
+	$mdl=$dataProviderRdetail->getModels();
+	//print_r($mdl);
+	/*
+	 * Tombol List Acount INVESTMENT
+	 * No Permission
+	*/
+	function tombolInvestInput($id){
+		$title = Yii::t('app', 'Investment input');
+		$options = ['id'=>'input-invest',
+					'data-toggle'=>"modal",
+					'data-target'=>"#input-invest-actual",
+					'class' => 'btn btn-info btn-sm'
+		];
+		$icon = '<span class="glyphicon glyphicon-search"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/data-term/actual-review-add','id'=>$id]);
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
+	 
+	/* 
+	 * GRID DETAIL BUDGET
+	 * Table [t0001header,t0001detail]
+	 * Input Status -> Direct=1 | Request=0
+	*/
+	$attDinamikInputActual =[];
+	/*GRIDVIEW ARRAY FIELD HEAD*/
+	$headColomnInputActual=[
+		['ID' =>0, 'ATTR' =>['FIELD'=>'KD_RIB','SIZE' => '50px','label'=>'Trade Investment','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'Termid','SIZE' => '10px','label'=>'Periode','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		//['ID' =>2, 'ATTR' =>['FIELD'=>'BUDGET_PLAN','SIZE' => '10px','label'=>'Budget Plan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		//['ID' =>3, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		//['ID' =>4, 'ATTR' =>['FIELD'=>'BUDGET_ACTUAL','SIZE' => '10px','label'=>'Budget Actual','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		//['ID' =>5, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+	];
+	$gvHeadColomnInputActual = ArrayHelper::map($headColomnInputActual, 'ID', 'ATTR');	
+	/*GRIDVIEW SERIAL ROWS*/
+	$attDinamikInputActual[] =[
+		'class'=>'kartik\grid\SerialColumn',
+		//'contentOptions'=>['class'=>'kartik-sheet-style'],
+		'width'=>'10px',
+		'header'=>'No.',
+		'headerOptions'=>[
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'10px',
+				'font-family'=>'verdana, arial, sans-serif',
+				'font-size'=>'9pt',
+				'background-color'=>'rgba(249,215,100,1)',
+			]
+		],
+		'contentOptions'=>[
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'10px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'9pt',
+			]
+		],
+	];
+	/*GRIDVIEW ARRAY ROWS*/
+	foreach($gvHeadColomnInputActual as $key =>$value[]){
+		$attDinamikInputActual[]=[
+			'attribute'=>$value[$key]['FIELD'],
+			'label'=>$value[$key]['label'],
+			'filterType'=>$value[$key]['filterType'],
+			'filter'=>$value[$key]['filter'],
+			'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
+			'hAlign'=>'right',
+			'vAlign'=>'middle',
+			//'mergeHeader'=>true,
+			'noWrap'=>true,
+			'group'=>$value[$key]['GRP'],
+			'format'=>$value[$key]['FORMAT'],						
+			'headerOptions'=>[
+					'style'=>[
+					'text-align'=>'center',
+					'width'=>$value[$key]['FIELD'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(74, 206, 231, 1)',
+					'background-color'=>'rgba('.$value[$key]['warna'].')',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>$value[$key]['align'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(13, 127, 3, 0.1)',
+				]
+			],
+		];
+	};
+	/*GRID VIEW BASE*/
+	$gvDetalInputActual= GridView::widget([
+		'id'=>'input-actual-budget',
+		'dataProvider' => $dataProviderRdetail,
+		//'filterModel' => $searchModel,					
+		//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
+		/* 'beforeHeader'=>[
+			[
+				'columns'=>[
+					['content'=>'ITEMS TRAIDE INVESTMENT', 'options'=>['colspan'=>3,'class'=>'text-center info',]],
+					['content'=>'PLAN BUDGET', 'options'=>['colspan'=>2, 'class'=>'text-center info']],
+					['content'=>'ACTUAL BUDGET', 'options'=>['colspan'=>2, 'class'=>'text-center info']],
+					['content'=>'', 'options'=>['colspan'=>1, 'class'=>'text-center info']],
+					//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']],
+				],
+			]
+		], */
+		'columns' => $attDinamikInputActual,
+		/* [
+			['class' => 'yii\grid\SerialColumn'],
+			'start',
+			'end',
+			'title',
+			['class' => 'yii\grid\ActionColumn'],
+		], */
+		'pjax'=>true,
+		'pjaxSettings'=>[
+			'options'=>[
+				'enablePushState'=>false,
+				'id'=>'input-actual-budget',
+			],
+		],
+		'panel' => [
+					'heading'=>'<h3 class="panel-title" style="font-family: verdana, arial, sans-serif ;font-size: 9pt;">Actual Budget Proccess</h3>',
+					'type'=>'info',
+					//'showFooter'=>false,
+		],
+		'summary'=>false,
+		'toolbar'=>false,
+		'panel'=>false,
+		'hover'=>true, //cursor select
+		'responsive'=>true,
+		'responsiveWrap'=>true,
+	]);
+?>
+
+
+<div class="content" >
+	<!-- HEADER !-->
+	<div  class="row">		
+		<div class="col-lg-12">		
+				<!-- HEADER !-->
+				<div class="col-md-1" style="float:left;">
+					<?php echo Html::img('@web/upload/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
+				</div>
+				<div class="col-md-9"">
+					<h4 class="text-center"><b> <?php echo 'ACTUAL BUDGET';  ?> </b></h4>
+				
+					<h4 class="text-center"><b> <?php echo ucwords($model[0]->NmCustomer)  ?> </b></h4>
+				</div>
+				<div class="col-md-12">
+					<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
+				</div>	
+		</div>
+	</div>
+		<!-- PARTIES/PIHAK !-->
+		<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" style="font-family: tahoma ;font-size: 8pt">
+			<dl>				
+				<dt><u><b>PARTIES/PIHAK BERSANGKUTAN :</b></u></dt>
+
+				<dd>1 :	<?= $model[0]->NmCustomer ?></dd>
+
+
+				<dd>2 :	<?= $model[0]->Nmprincipel ?></dd>
+
+
+				<dd>3 :	<?= $model[0]->NmDis ?></dd>
+			</dl>
+		</div>	
+
+		<!-- PERIODE/JANGKA WAKTU !-->
+		<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" style="font-family: tahoma ;font-size: 8pt;padding-left:30px">
+			<div>
+				<?php //echo periode($model); ?>
+			</div>
+			<dl>
+				<dt><u><b>PERIODE/JANGKA WAKTU :</b></u></dt>
+				<dt style="width:80px; float:left;"> Dari: </dt>
+				<dd>:	<?=$model[0]->PERIOD_START ?></dd>
+
+				<dt style="width:80px; float:left;">Sampai:</dt>
+				<dd>:	<?=$model[0]->PERIOD_END ?></dd>
+			</dl>
+		</div>
+	
+	<!-- GRID VIEW !-->
+	<div  class="row">	
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+			<div style="margin-bottom:5px;margin-right:5px"><?=tombolInvestInput($model[0]->TERM_ID);?></div>	
+			<?=$gvDetalInputActual?>		
+		</div>
+	</div>
+</div><!-- Body !-->
+
+<?php
+	$this->registerJs("
+	   $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+	   $('#input-invest-actual').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget)
+		var modal = $(this)
+		var title = button.data('title')
+		var href = button.attr('href')
+		//modal.find('.modal-title').html(title)
+		modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+		$.post(href)
+		  .done(function( data ) {
+			modal.find('.modal-body').html(data)
+		  });
+		})
+	",$this::POS_READY);
+	Modal::begin([
+	    'id' => 'input-invest-actual',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Actual Investment</h4></div>',
+		'headerOptions'=>[
+		  'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+		],
+	]);
+	Modal::end();
+?>
