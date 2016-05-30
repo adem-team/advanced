@@ -22,6 +22,8 @@ use lukisongroup\purchasing\models\data_term\TermheaderSearch;
 use lukisongroup\purchasing\models\data_term\TermdetailSearch;
 use lukisongroup\purchasing\models\data_term\RtdetailSearch;
 
+use lukisongroup\purchasing\models\data_term\ActualModel;
+
 class DataTermController extends Controller
 {
     public function behaviors()
@@ -173,6 +175,35 @@ class DataTermController extends Controller
             ]);
         } */
 		
-		return $this->renderAjax('create');
+		$termHeader=Termheader::find()->where(['TERM_ID'=>$id])->one();
+		
+		/*Model Scnario*/
+		$actualModel = new ActualModel();
+		
+		return $this->renderAjax('actual_form',[
+			'term_id'=>$id,
+			'termHeader'=>$termHeader,
+			'actualModel'=>$actualModel
+		]);
 	}
+	
+	public function actionActualReviewSave(){
+		$ActualModel = new ActualModel();
+		/*Ajax Load*/
+		if(Yii::$app->request->isAjax){
+			$ActualModel->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($ActualModel));
+		}else{	
+			//if($ActualModel->load(Yii::$app->request->post())){
+			//	if ($ActualModel->actualmodel_saved()){
+
+					$hsl = \Yii::$app->request->post();
+					$temIdRst = $hsl['ActualModel']['temId'];
+					
+			//	}
+			//} 
+			return $this->redirect(['actual-review', 'id'=>$temIdRst]);
+		} 
+		
+    }
 }
