@@ -280,7 +280,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
     [
       'attribute' =>'custype.CUST_KTG_NM',
       'filter' => $dropKtg,
-	  'label'=>'Category.Detil',
+	  'label'=>'Type',
       'hAlign'=>'left',
       'vAlign'=>'middle',
       'headerOptions'=>[
@@ -460,7 +460,14 @@ $tabcustomersData = \kartik\grid\GridView::widget([
             ['modelClass' => 'Customers1',]),'/master/customers',[
 							   'id'=>'refresh-cust',
                                'class' => 'btn btn-info btn-sm'
-                              ])
+                              ]).' '.
+			Html::a('<i class="fa fa-clone"></i> '.Yii::t('app', 'Export'),'/master/customers/export_data',
+								[
+									//'id'=>'export-data',
+									//'data-pjax' => true,
+									'class' => 'btn btn-info btn-sm'
+								]
+					),	
 
   ],
   'pjax'=>true,

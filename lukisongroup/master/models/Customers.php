@@ -80,7 +80,8 @@ class Customers extends \yii\db\ActiveRecord
               [['PROVINCE_ID','CITY_ID'], 'required','on'=>'detail'],
               [['CUST_TYPE','CUST_KTG'], 'required','on'=>'updatekat'],// for action updatekat scenario
             // [['CUST_NM','CUST_KTG','JOIN_DATE','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID','NPWP', 'TLP1','STT_TOKO'], 'required'],
-            [['CUST_TYPE','CUST_KTG', 'TLP1', 'TLP2', 'FAX', 'STT_TOKO', 'STATUS','PROVINCE_ID','SCDL_GROUP','CITY_ID'], 'integer'],
+            [['CUST_TYPE','CUST_KTG','STT_TOKO', 'STATUS','PROVINCE_ID','SCDL_GROUP','CITY_ID'], 'integer'],
+			[['TLP1', 'TLP2', 'FAX',],'safe'],
             [['JOIN_DATE', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['ALAMAT', 'NOTE'], 'string'],
             [['CUST_KD', 'CUST_KD_ALIAS', 'CUST_GRP', 'MAP_LAT', 'MAP_LNG', 'NPWP','KD_DISTRIBUTOR'], 'string', 'max' => 50],

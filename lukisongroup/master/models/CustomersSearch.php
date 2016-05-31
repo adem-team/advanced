@@ -95,7 +95,7 @@ class CustomersSearch extends Customers
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
 			'pagination' => [
-				'pageSize' => 20,
+				'pageSize' => 200,
 			],
         ]);
 
