@@ -456,12 +456,12 @@ $tabcustomersData = \kartik\grid\GridView::widget([
                                'data-target'=>"#createcus",
                                'class' => 'btn btn-success btn-sm'
                               ]).' '.
-			Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Refresh',
+			Html::a('<i class="fa fa-history "></i> '.Yii::t('app', 'Refresh',
             ['modelClass' => 'Customers1',]),'/master/customers',[
 							   'id'=>'refresh-cust',
                                'class' => 'btn btn-info btn-sm'
                               ]).' '.
-			Html::a('<i class="fa fa-clone"></i> '.Yii::t('app', 'Export'),'/master/customers/export_data',
+			Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export'),'/master/customers/export_data',
 								[
 									//'id'=>'export-data',
 									//'data-pjax' => true,
