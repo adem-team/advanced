@@ -3,6 +3,15 @@
 namespace lukisongroup\master\controllers;
 
 use Yii;
+use yii\helpers\Json;
+use yii\data\ArrayDataProvider;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
+use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
+use scotthuangzl\export2excel\Export2ExcelBehavior;
+
 use lukisongroup\master\models\KategoricusSearch;
 use lukisongroup\master\models\DistributorSearch;
 use lukisongroup\master\models\Kategoricus;
@@ -12,15 +21,9 @@ use lukisongroup\master\models\ProvinceSearch;
 use lukisongroup\master\models\Province;
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\CustomersSearch;
-use yii\helpers\Json;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use lukisongroup\master\models\Customersalias;
 use lukisongroup\master\models\CustomersaliasSearch;
-use yii\widgets\ActiveForm;
 use lukisongroup\master\models\ValidationLoginPrice;
-use yii\helpers\ArrayHelper;
 
 /**
  * CustomersController implements the CRUD actions for Customers model.
@@ -30,15 +33,27 @@ class CustomersController extends Controller
     public function behaviors()
     {
         return [
-            'verbs' => [
+			'export2excel' => [
+				'class' => Export2ExcelBehavior::className(),
+			],
+			'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
                 ],
-            ],
+            ]
         ];
     }
 
+	public function actions()
+    {
+        return [           
+            'download' => [
+                'class' => 'scotthuangzl\export2excel\DownloadAction',
+            ],
+        ];
+    }
+	
     /**
      * Lists all Customers models.
      * @return mixed
@@ -1072,6 +1087,91 @@ class CustomersController extends Controller
         return $this->redirect(['index']);
     }
 
+	
+	/*
+	 * EXPORT DATA CUSTOMER TO EXCEL
+	 * export_data
+	*/
+	public function actionExport_data(){
+		
+		$custData=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_format()")->queryAll(); 
+
+		$cusDataProvider= new ArrayDataProvider([
+			'key' => 'ID',
+			'allModels'=>$custData,
+			'pagination' => [
+			'pageSize' => 10,
+		 ]
+		]);
+		
+		//print_r($cusDataProvider->allModels);
+		$aryCusDataProvider=$cusDataProvider->allModels;
+		$excel_data = Export2ExcelBehavior::excelDataFormat($aryCusDataProvider);
+        $excel_title = $excel_data['excel_title'];
+        $excel_ceils = $excel_data['excel_ceils'];
+		$excel_content = [
+			 [
+				'sheet_name' => 'IMPORT FORMAT STOCK',
+                'sheet_title' => ['DATE','CUST_KD','CUST_NM','SKU_ID','SKU_NM','QTY_PCS','DIS_REF'], //$excel_ceils,//'sad',//[$excel_title],
+			    'ceils' => $excel_ceils,
+                //'freezePane' => 'E2',
+                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColumnCssClass' => [
+					 'TGL' => Export2ExcelBehavior::getCssClass('header'),
+                     'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
+                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
+                     'SKU_ID' => Export2ExcelBehavior::getCssClass('header'),
+                     'SKU_NM' => Export2ExcelBehavior::getCssClass('header'),
+                     'QTY_PCS' => Export2ExcelBehavior::getCssClass('header'),
+                     'DIS_REF' => Export2ExcelBehavior::getCssClass('header'),
+                ], //define each column's cssClass for header line only.  You can set as blank.
+               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+			],
+			[
+				'sheet_name' => 'IMPORTANT NOTE ',
+                'sheet_title' => ["Important Note For Import Stock Customer"],
+                'ceils' => [
+					["1.pastikan tidak merubah format hanya menambahkan data, karena import versi 1.2 masih butuhkan pengembangan validasi"],
+                    ["2.Berikut beberapa format nama yang tidak di anjurkan di ganti:"],
+                    ["  A. Nama dari Sheet1: IMPORT FORMAT STOCK "],
+					["  B. Nama Header seperti column : DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF"],
+					["3.Refrensi."],					
+					["  'IMPORT FORMAT STOCK'= Nama dari Sheet1 yang aktif untuk di import "],					
+					["  'DATE'= Tanggal dari data stok yang akan di import "],					
+					["  'CUST_KD'= Kode dari customer, dimana setiap customer memiliki kode sendiri sendiri sesuai yang mereka miliki "],					
+					["  'CUST_NM'= Nama dari customer "],					
+					["  'SKU_ID'=  Kode dari Item yang mana customer memiliku kode items yang berbeda beda "],					
+					["  'SKU_NM'=  Nama dari Item, sebaiknya disamakan dengan nama yang dimiliki lukisongroup"],					
+					["  'QTY_PCS'= Quantity dalam unit PCS "],					
+					["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],					
+				],
+			],
+			[
+				'sheet_name' => 'IMPORTANT NOTE ',
+                'sheet_title' => ["Important Note For Import Stock Customer"],
+                'ceils' => [
+					["1.pastikan tidak merubah format hanya menambahkan data, karena import versi 1.2 masih butuhkan pengembangan validasi"],
+                    ["2.Berikut beberapa format nama yang tidak di anjurkan di ganti:"],
+                    ["  A. Nama dari Sheet1: IMPORT FORMAT STOCK "],
+					["  B. Nama Header seperti column : DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF"],
+					["3.Refrensi."],					
+					["  'IMPORT FORMAT STOCK'= Nama dari Sheet1 yang aktif untuk di import "],					
+					["  'DATE'= Tanggal dari data stok yang akan di import "],					
+					["  'CUST_KD'= Kode dari customer, dimana setiap customer memiliki kode sendiri sendiri sesuai yang mereka miliki "],					
+					["  'CUST_NM'= Nama dari customer "],					
+					["  'SKU_ID'=  Kode dari Item yang mana customer memiliku kode items yang berbeda beda "],					
+					["  'SKU_NM'=  Nama dari Item, sebaiknya disamakan dengan nama yang dimiliki lukisongroup"],					
+					["  'QTY_PCS'= Quantity dalam unit PCS "],					
+					["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],					
+				],
+			],
+		];
+		
+		$excel_file = "CustomerData";
+		$this->export2excel($excel_content, $excel_file); 
+	}
+	
 
     /**
      * Finds the Kategoricus model based on its primary key value.
