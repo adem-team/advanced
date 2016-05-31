@@ -18,7 +18,7 @@ class TermheaderSearch extends Termheader
 
 	/* public function attributes()
 	{
-		//Author -ptr.nov- add related fields to searchable attributes 
+		//Author -ptr.nov- add related fields to searchable attributes
 		return array_merge(parent::attributes(), ['cus.CUST_NM','dis.NM_DISTRIBUTOR','corp.CORP_NM']);
 	} */
 

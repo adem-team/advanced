@@ -676,8 +676,6 @@ else{
 							;
 						}
 
-
-
 					},
 						'pageSummaryOptions' => [
 							'style'=>[
@@ -896,12 +894,12 @@ else{
 								'inputType' => \kartik\editable\Editable::INPUT_MONEY,
 								'size' => 'sm',
 								 'asPopover' => true,
-								 
+
 								// 'options' => [
 								// 	'pluginOptions' => ['min'=>0, 'max'=>50000]
 								// ]
 								//'displayValueConfig' => '121'
-								
+
 							],
 						'headerOptions'=>[
 							'style'=>[
@@ -1276,13 +1274,13 @@ $this->registerJs("
 
 		// function startRefresh() {
 			// setTimeout(function(){
-			//	$('gv-term-general').load(window.location + '#gv-term-general');	
-			//	$.pjax.reload('#gv-term-general');	
-				// $.pjax.reload({container:'#gv-term-general'});				
+			//	$('gv-term-general').load(window.location + '#gv-term-general');
+			//	$.pjax.reload('#gv-term-general');
+				// $.pjax.reload({container:'#gv-term-general'});
 			// }, 1000);
 		 // }
-	// }) 
-	
+	// })
+
 
 ",$this::POS_READY);
 

@@ -148,7 +148,8 @@ class DataTermController extends Controller
 			'dataProvider'=>$dataProvider,
 			'model'=>$modelRslt,
 			'dataProviderBudget'=>$dataProviderBudget,
-			'dataProviderRdetail'=>$dataProviderRdetail
+			'dataProviderRdetail'=>$dataProviderRdetail,
+      'searchModelRdetail'=>$searchModelRdetail
 		]);
 		/*
 		 * NOTED VIEWS FILES:

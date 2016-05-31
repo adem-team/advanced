@@ -137,24 +137,24 @@ public function actionSendChat()
     $typechat = $request->post('chat');
     $id=$request->post('id');
     $chat = $request->post('comment');
-    if($typechat == "group")
-    {
-      $cari_group = Chatroom::find()->where(['SORT'=>$id])->all();
-      foreach ($cari_group as $key => $value) {
-        # code...
-        $connection->createCommand()
-                   ->batchInsert('sc0003a',['MESSAGE','GROUP','CREATED_BY'],
-                            [[$chat,$value['GROUP_ID'],$emp_id]])->execute();
-
-      }
-    }else {
+    // if($typechat == "group")
+    // {
+    //   $cari_group = Chatroom::find()->where(['SORT'=>$id])->all();
+    //   foreach ($cari_group as $key => $value) {
+    //     # code...
+    //     $connection->createCommand()
+    //                ->batchInsert('sc0003a',['MESSAGE','GROUP','CREATED_BY'],
+    //                         [[$chat,$value['GROUP_ID'],$emp_id]])->execute();
+    //
+    //   }
+    // }else {
       # code...
       $model = new Chat();
       $model->MESSAGE = $chat;
-      $model->GROUP = $id;
+      $model->GROUP_ID = $id;
       $model->CREATED_BY = $emp_id;
       $model->save();
-    }
+    // }
 
 
 

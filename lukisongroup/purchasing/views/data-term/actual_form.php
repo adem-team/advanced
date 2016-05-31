@@ -1,15 +1,21 @@
 <?php
+/*extensions */
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\Select2;
-	//print_r($term_id);
-	//echo ($term_id);
-	//print_r($actualModel);
-	
+
+/* namespace model*/
 use lukisongroup\master\models\Terminvest;
 
-$investData = ArrayHelper::map(Terminvest::find()->all(), 'ID', 'INVES_TYPE');	
+/*array */
+$investData = ArrayHelper::map(Terminvest::find()->all(), 'ID', 'INVES_TYPE');
+$data = [ 2=>'2 persen',
+          4=>'4 persen ',
+          10=>'10 persen',
+          15=>'15 persen'];
+
+
 $config = ['template'=>"{input}\n{error}\n{hint}"];
 ?>
 <div class="row">
@@ -45,10 +51,28 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 				  'options'=>['rows'=>5]
 				])->label('INVESTATION PROGRAM');
 			?>
+			</div>
+				<div class="col-sm-6">
 			<?=$form->field($actualModel, 'invoiceNo')->textInput(['maxlength' => true])->label('INVOICE'); ?>
+
 			<?=$form->field($actualModel, 'faktureNo')->textInput(['maxlength' => true])->label('FAKTUR'); ?>
+
 			<?=$form->field($actualModel, 'invesHarga')->textInput(['maxlength' => true])->label('COST'); ?>
-		</div>
+				</div>
+				<div class="col-sm-6">
+					<?= $form->field($actualModel, 'pph23')->widget(Select2::classname(), [
+					     'data' => $data,
+					     'options' => ['placeholder' => 'Pilih Percentage ...'],
+					     'pluginOptions' => [
+					       'allowClear' => true
+					     ],
+					 ])?>
+				</div>
+
+				<div class="col-sm-6">
+					<?= $form->field($actualModel, 'ppn')->textinput()?>
+				</div>
+
 		<div class="col-lg-12 pull-right" style="text-align: right;">
 			<?php echo Html::submitButton('save',['class' => 'btn btn-primary']); ?>
 		</div>
