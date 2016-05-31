@@ -15,13 +15,17 @@ class ActualModel extends Model{
 	public $invoiceNo;
 	public $faktureNo;
 	public $invesHarga;
+	public $pph23;
+	public $ppn;
 
 	 public function rules()
     {
         return [
 			[['temId','investId'], 'string'],
+			[['pph23','ppn','invesHarga'], 'default','value'=>0.00],
+			[['pph23','ppn','invesHarga'], 'number'],
 			[['temId','investId','invesProgram'], 'required'],
-			[['invesProgram','invoiceNo','faktureNo','invesHarga'], 'safe'],
+			[['invesProgram','invoiceNo','faktureNo','invesHarga','pph23','ppn'], 'safe'],
         ];
     }
 
@@ -29,7 +33,7 @@ class ActualModel extends Model{
 		{
 			# code...
 			if ($this->validate()) {
-
+						/*header term */
 						$term_header = new Requesttermheader();
 						$corp =  $this->getProfile()->EMP_CORP_ID;
 						$term_header->KD_RIB = Yii::$app->ambilkonci->getRedirectCode($corp);
@@ -37,27 +41,24 @@ class ActualModel extends Model{
 						$term_header->CUST_ID_PARENT = $this->cusPerent;
 						$term_header->ID_USER = $this->getProfile()->EMP_ID;
 						$term_header->NOTE = $this->invesProgram;
+						$term_header->PPH23 = $this->pph23;
+						$term_header->PPN = $this->ppn;
 					 	$term_header->save();
 
-						$term_detail = new  Rtdetail();
+							/*detail term */
+						$term_detail = new Rtdetail();
 					  $term_detail->KD_RIB = $term_header->KD_RIB;
 						$term_detail->INVESTASI_TYPE = $this->investId;
 						$term_detail->INVESTASI_PROGRAM = $this->invesProgram;
-						$term_detail->HARGA = $this->invesHarga;
+						$term_detail->HARGA =$this->invesHarga;
 						$term_detail->NOMER_INVOCE =  $this->invoiceNo;
 						$term_detail->NOMER_FAKTURPAJAK = $this->faktureNo;
 						$term_detail->save();
-						// print_r($term_detail->getErrors());
-						// die();
-
-
-
 
 			}
 			return $term_header;
-			// return null;
-
 		}
+
 		public function getProfile(){
 			$profile=Yii::$app->getUserOpt->Profile_user();
 			return $profile->emp;

@@ -30,6 +30,7 @@ class Rtdetail extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+     public $total;
 
     public static function tableName()
     {
@@ -64,17 +65,17 @@ class Rtdetail extends \yii\db\ActiveRecord
 	public function getLabel(){
 		return $this->KD_RIB;
 	}
-	
+
 	/* public function fields()
 	{
 		return [
 			'label'=>function($model){
 							return 'Actual';
-					}		
+					}
 		];
 	} */
-	
-	
+
+
 	public function getCunit()
     {
         return $this->hasOne(Unitbarang::className(), ['KD_UNIT' => 'UNIT']);
@@ -88,15 +89,28 @@ class Rtdetail extends \yii\db\ActiveRecord
 	public function getNminvest(){
 		return $this->invest->INVES_TYPE;
 	}
-	
+
 	public function getTermheader(){
 		return $this->hasOne(Requesttermheader::className(), ['KD_RIB' => 'KD_RIB']);
 	}
-	
+  public function getPph()
+  {
+    return $this->termheader->PPH23;
+  }
+
+  public function getPpn()
+  {
+    return $this->termheader->PPN;
+  }
+
+  public function getPeriode(){
+		return $this->termheader->TGL;
+	}
+
 	public function getTermid(){
 		return $this->termheader->TERM_ID;
 	}
-	
+
     /**
      * @inheritdoc
      */

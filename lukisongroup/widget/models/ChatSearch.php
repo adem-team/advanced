@@ -21,7 +21,7 @@ class ChatSearch extends Chat
     {
         return [
             [['ID', 'MESSAGE_STS', 'MESSAGE_SHOW'], 'integer'],
-            [['MESSAGE','SORT', 'MESSAGE_ATTACH', 'GROUP', 'UPDATED_TIME','CREATED_BY'], 'safe'],
+            [['MESSAGE','SORT', 'MESSAGE_ATTACH', 'GROUP_ID', 'UPDATED_TIME','CREATED_BY'], 'safe'],
         ];
     }
 
@@ -43,21 +43,14 @@ class ChatSearch extends Chat
      */
     public function search($params)
     {
-	  $profile = Yii::$app->getUserOpt->profile_user()->emp;
-    $id = $profile->EMP_ID;
+  
+      // / componen user
+          $profile = Yii::$app->getUserOpt->profile_user()->emp;
+          $emp_id = $profile->EMP_ID;
 
 
-		$query = Chat::find()->JoinWith('employee',true,'LEFT JOIN')
-                        ->where(['sc0003a.CREATED_BY'=>$id])
-                        ->orwhere(['sc0003a.GROUP'=>$id]);
-
-		// $query = Chat::find()->innerJoinWith('chat', false)
-		// 					 //->JoinWith('employee',true,'LEFT JOIN')
-		// 									->Where(['GROUP'=>$id])
-		// 									->Where('CREATED_BY = :CREATED_BY', [':CREATED_BY' => $id])
-		// 									->orWhere('SORT = :SORT', [':SORT' => $data]);
-
-
+          $query = Chat::find()->where(['CREATED_BY'=>$emp_id])
+                        ->orwhere(['GROUP_ID'=>$emp_id]);
 
 
         $dataProvider = new ActiveDataProvider([
@@ -77,13 +70,13 @@ class ChatSearch extends Chat
             'ID' => $this->ID,
             'MESSAGE_STS' => $this->MESSAGE_STS,
             'MESSAGE_SHOW' => $this->MESSAGE_SHOW,
-            'sc0003a.GROUP' => $this->GROUP,
+            'GROUP_ID' => $this->GROUP_ID,
             'UPDATED_TIME' => $this->UPDATED_TIME,
         ]);
 
         $query->andFilterWhere(['like', 'MESSAGE', $this->MESSAGE])
             ->andFilterWhere(['like', 'MESSAGE_ATTACH', $this->MESSAGE_ATTACH])
-            ->andFilterWhere(['like', 'sc0003a.GROUP', $this->GROUP]);
+            ->andFilterWhere(['like', 'GROUP_ID', $this->GROUP_ID]);
             // ->andFilterWhere(['like', 'sc0003a.CREATED_BY', $this->CREATED_BY]);
 
         return $dataProvider;
