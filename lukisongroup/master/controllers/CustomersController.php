@@ -1094,41 +1094,40 @@ class CustomersController extends Controller
 	*/
 	public function actionExport_data(){
 		
-		$custData=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_format()")->queryAll(); 
+		//$custDataMTI=Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll(); 
 
-		$cusDataProvider= new ArrayDataProvider([
+		$cusDataProviderMTI= new ArrayDataProvider([
 			'key' => 'ID',
-			'allModels'=>$custData,
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll(),
 			'pagination' => [
-			'pageSize' => 10,
-		 ]
-		]);
-		
+				'pageSize' => 10,
+			]
+		]);		
 		//print_r($cusDataProvider->allModels);
-		$aryCusDataProvider=$cusDataProvider->allModels;
-		$excel_data = Export2ExcelBehavior::excelDataFormat($aryCusDataProvider);
+		$aryCusDataProviderMTI=$cusDataProviderMTI->allModels;
+		
+		$excel_data = Export2ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);
         $excel_title = $excel_data['excel_title'];
         $excel_ceils = $excel_data['excel_ceils'];
 		$excel_content = [
 			 [
-				'sheet_name' => 'IMPORT FORMAT STOCK',
-                'sheet_title' => ['DATE','CUST_KD','CUST_NM','SKU_ID','SKU_NM','QTY_PCS','DIS_REF'], //$excel_ceils,//'sad',//[$excel_title],
+				'sheet_name' => 'MTI CUSTOMER',
+                'sheet_title' => ['CUST_ID','CUST_NM','TYPE','ALAMAT','TLP','PIC'], //$excel_ceils,//'sad',//[$excel_title],
 			    'ceils' => $excel_ceils,
                 //'freezePane' => 'E2',
                 'headerColor' => Export2ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-					 'TGL' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
+					 'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
                      'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'SKU_ID' => Export2ExcelBehavior::getCssClass('header'),
-                     'SKU_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'QTY_PCS' => Export2ExcelBehavior::getCssClass('header'),
-                     'DIS_REF' => Export2ExcelBehavior::getCssClass('header'),
+                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
+                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
+                     'TLP1' => Export2ExcelBehavior::getCssClass('header'),
+                     'PIC' => Export2ExcelBehavior::getCssClass('header')              
                 ], //define each column's cssClass for header line only.  You can set as blank.
                'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
                'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
 			],
-			[
+			/* [
 				'sheet_name' => 'IMPORTANT NOTE ',
                 'sheet_title' => ["Important Note For Import Stock Customer"],
                 'ceils' => [
@@ -1165,7 +1164,7 @@ class CustomersController extends Controller
 					["  'QTY_PCS'= Quantity dalam unit PCS "],					
 					["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],					
 				],
-			],
+			], */
 		];
 		
 		$excel_file = "CustomerData";
