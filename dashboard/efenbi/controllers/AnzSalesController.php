@@ -58,7 +58,7 @@ class AnzSalesController extends Controller
 
 	public function actionIndex()
     {
-		 if (\Yii::$app->user->isGuest) {
+		if (\Yii::$app->user->isGuest) {
             return $this->render('../../../views/site/index_nologin'
             );
         }else{		

@@ -71,15 +71,63 @@ $this->params['breadcrumbs'][] = $this->title;
 					['ID' =>2, 'ATTR' =>['FIELD'=>'SCDL_GRP_NM','SIZE' => '10px','label'=>'Schadule','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 					['ID' =>3, 'ATTR' =>['FIELD'=>'TIME_DAYSTART','SIZE' => '10px','label'=>'Start Time','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 					['ID' =>4, 'ATTR' =>['FIELD'=>'TIME_DAYEND','SIZE' => '10px','label'=>'End Time','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-					['ID' =>5, 'ATTR' =>['FIELD'=>'DISTANCE_DAYSTART','SIZE' => '10px','label'=>'Radius.In','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-					['ID' =>6, 'ATTR' =>['FIELD'=>'DISTANCE_DAYEND','SIZE' => '10px','label'=>'Radius.Out','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-					
-					//['ID' =>5, 'ATTR' =>['FIELD'=>'CUST_TIPE_NM','SIZE' => '10px','label'=>'Type','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-					//['ID' =>6, 'ATTR' =>['FIELD'=>'CUST_KTG_NM','SIZE' => '10px','label'=>'Cetegory','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-					//['ID' =>7, 'ATTR' =>['FIELD'=>'radiusMeter','SIZE' => '10px','label'=>'Radius/Meter','align'=>'right','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+					['ID' =>5, 'ATTR' =>['FIELD'=>'CUST_TIPE_NM','SIZE' => '10px','label'=>'Type','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+					['ID' =>6, 'ATTR' =>['FIELD'=>'CUST_KTG_NM','SIZE' => '10px','label'=>'Cetegory','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+					['ID' =>7, 'ATTR' =>['FIELD'=>'radiusMeter','SIZE' => '10px','label'=>'Radius/Meter','align'=>'right','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 					//['ID' =>8, 'ATTR' =>['FIELD'=>'sttKoordinat','SIZE' => '10px','label'=>'Status','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 				];
 				$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');
+				
+				
+				/*GRIDVIEW ARRAY ACTION*/
+				// $attDinamik[]=[
+					// 'class'=>'kartik\grid\ActionColumn',
+					// 'dropdown' => true,
+					// 'template' => '{view1}{view2}',
+					// 'dropdownOptions'=>['class'=>'pull-left dropdown','style'=>['disable'=>true]],
+					// 'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
+					// 'dropdownButton'=>[
+						// 'class' => $actionClass,
+						// 'label'=>$actionLabel,
+						//'caret'=>'<span class="caret"></span>',
+					// ],
+					// 'buttons' => [
+						// 'view1' =>function($url, $model, $key){
+								// return  '<li>' .Html::a('<span class="fa fa-search-plus fa-dm"></span>'.Yii::t('app', 'Image Start'),
+															// ['/master/schedule-detail/img1','id'=>$model->ID],[
+															// 'id'=>'img1-id',
+															// 'data-toggle'=>"modal",
+															// 'data-target'=>"#img1-visit",
+															// ]). '</li>' . PHP_EOL;
+						// },
+						// 'view2' =>function($url, $model, $key){
+								// return  '<li>' .Html::a('<span class="fa fa-search-plus fa-dm"></span>'.Yii::t('app', 'Image End'),
+															// ['/master/schedule-detail/img2','id'=>$model->ID],[
+															// 'id'=>'img2-id',
+															// 'data-toggle'=>"modal",
+															// 'data-target'=>"#img2-visit",
+															// ]). '</li>' . PHP_EOL;
+						// },
+					// ],
+					// 'headerOptions'=>[
+						// 'style'=>[
+							// 'text-align'=>'center',
+							// 'width'=>'10px',
+							// 'font-family'=>'tahoma, arial, sans-serif',
+							// 'font-size'=>'9pt',
+							// 'background-color'=>'rgba(74, 206, 231, 1)',
+						// ]
+					// ],
+					// 'contentOptions'=>[
+						// 'style'=>[
+							// 'text-align'=>'center',
+							// 'width'=>'10px',
+							// 'height'=>'10px',
+							// 'font-family'=>'tahoma, arial, sans-serif',
+							// 'font-size'=>'9pt',
+						// ]
+					// ],
+				// ];
 				
 				/*GRIDVIEW EXPAND*/
 				$attDinamik[]=[	
@@ -127,26 +175,13 @@ $this->params['breadcrumbs'][] = $this->title;
 						]);
 						$dataProviderImage = $searchModel->search(Yii::$app->request->queryParams);
 						
-						
-						/* DETAIL & SUMMARY */
-						//'SUMMARY_ALL','2016-05-31','','30','1'
-						$aryProviderDetailSummary= new ArrayDataProvider([
-							//'key' => 'ID',
-							//'allModels'=>Yii::$app->db_esm->createCommand("MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_ALL','".$model['TGL']."','','".$model['USER_ID']."','1')")->queryAll(),
-							'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_ALL','2016-05-31','','30','1');")->queryAll(),
-							  'pagination' => [
-								'pageSize' =>50,
-							] 
-						]); 
-						
 						/* RENDER */
 						return Yii::$app->controller->renderPartial('_expand1',[
 							'dataModelsHeader1'=>$dataModelsHeader1->getModels(),
 							'dataProviderHeader2'=>$dataProviderHeader2,
 							'inventoryProvider'=>$inventoryProvider,
 							'searchModelImage'=>$searchModel,
-							'dataProviderImage'=>$dataProviderImage,
-							'aryproviderDetailSummary'=>$aryProviderDetailSummary,
+							'dataProviderImage'=>$dataProviderImage
 						]);
 					},
 					'collapseTitle'=>'Close Exploler',
@@ -158,6 +193,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					// 'enableRowClick'=>true,
 					//'disabled'=>true,
 					'headerOptions'=>[
+					'id'=>'xx',
 						'style'=>[
 							
 							'text-align'=>'center',
@@ -168,6 +204,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						]
 					],
 					'contentOptions'=>[
+					'id'=>'xx',
 						'style'=>[
 						
 							'text-align'=>'center',
