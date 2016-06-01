@@ -60,7 +60,7 @@ class Termdetail extends \yii\db\ActiveRecord
             [['PERIODE_START','PERIODE_END'], 'safe'],
             //[['PERIODE_END'], 'datevalid'],
             [['PERIODE_START', 'PERIODE_END', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
-            [['STATUS'], 'integer'],
+            [['STATUS','INVES_ID'], 'integer'],
             [['CUST_KD_PARENT','CORP_ID','KD_COSTCENTER','PROGRAM'], 'string', 'max' => 50],
             [['INVES_TYPE', 'BUDGET_SOURCE'], 'string', 'max' => 255],
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100]

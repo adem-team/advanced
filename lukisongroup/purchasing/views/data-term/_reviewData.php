@@ -20,37 +20,37 @@ use lukisongroup\master\models\Termcustomers;
 use lukisongroup\master\models\Distributor;
 use lukisongroup\hrd\models\Corp;
 
-//print_r($model[0]);
+
 //print_r($dataProviderBudget->getModels());
 
 //echo $model[0]->NmDis;
 
-	
+
 	/*
 	 * Tombol List Acount INVESTMENT
 	 * No Permission
 	*/
-	function tombolInvest(){
+	function tombolInvest($id_term){
 		$title = Yii::t('app', 'Account Investment');
 		$options = ['id'=>'account-invest',
-					'data-toggle'=>"modal",
-					'data-target'=>"#account-invest-plan",
+					// 'data-toggle'=>"modal",
+					// 'data-target'=>"#account-invest-plan",
 					'class' => 'btn btn-info btn-sm'
 		];
 		$icon = '<span class="glyphicon glyphicon-search"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['#']);
+		$url = Url::toRoute(['/purchasing/data-term/account-investment','id'=>$id_term]);
 		$content = Html::a($label,$url, $options);
 		return $content;
 	}
-	
+
 	/*
 	 * Tombol List Acount INVESTMENT
 	 * No Permission
 	*/
 	function tombolActual($id_term){
 		$title = Yii::t('app', 'Actual Investment');
-		$options = ['id'=>'actual-invest',					
+		$options = ['id'=>'actual-invest',
 					'class' => 'btn btn-info btn-sm'
 		];
 		$icon = '<span class="glyphicon glyphicon-search"></span>';
@@ -59,8 +59,8 @@ use lukisongroup\hrd\models\Corp;
 		$content = Html::a($label,$url, $options);
 		return $content;
 	}
-	
-	
+
+
 	/*==PLAN BUDGET|ACTUAL BUDGET==*/
 	$attDinamik =[];
 	/*GRIDVIEW ARRAY FIELD HEAD*/
@@ -72,7 +72,7 @@ use lukisongroup\hrd\models\Corp;
 		['ID' =>4, 'ATTR' =>['FIELD'=>'BUDGET_ACTUAL','SIZE' => '10px','label'=>'Budget Actual','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>5, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 	];
-	$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');	
+	$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');
 	/*GRIDVIEW SERIAL ROWS*/
 	$attDinamik[] =[
 		'class'=>'kartik\grid\SerialColumn',
@@ -110,7 +110,7 @@ use lukisongroup\hrd\models\Corp;
 			//'mergeHeader'=>true,
 			'noWrap'=>true,
 			'group'=>$value[$key]['GRP'],
-			'format'=>$value[$key]['FORMAT'],						
+			'format'=>$value[$key]['FORMAT'],
 			'headerOptions'=>[
 					'style'=>[
 					'text-align'=>'center',
@@ -132,7 +132,7 @@ use lukisongroup\hrd\models\Corp;
 		];
 	};
 	/*GRIDVIEW EXPAND*/
-	$attDinamik[]=[	
+	$attDinamik[]=[
 		'class'=>'kartik\grid\ExpandRowColumn',
 		'width'=>'50px',
 		'header'=>'Detail',
@@ -145,19 +145,19 @@ use lukisongroup\hrd\models\Corp;
 			/* RENDER */
 			return Yii::$app->controller->renderPartial('_reviewDataExpand',[
 				'dataProviderDetailBudget'=>$dataProviderBudget,
-			]); 
+			]);
 		},
 		'headerOptions'=>[
-			'style'=>[				
+			'style'=>[
 				'text-align'=>'center',
 				'width'=>'10px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'9pt',
-				'background-color'=>'rgba(74, 206, 231, 1)',	
+				'background-color'=>'rgba(74, 206, 231, 1)',
 			]
 		],
 		'contentOptions'=>[
-			'style'=>[			
+			'style'=>[
 				'text-align'=>'center',
 				'width'=>'10px',
 				'height'=>'10px',
@@ -214,7 +214,7 @@ use lukisongroup\hrd\models\Corp;
 	$gvDetalPlanActual= GridView::widget([
 		'id'=>'plan-term-budget',
 		'dataProvider' => $dataProviderBudget,
-		//'filterModel' => $searchModel,					
+		//'filterModel' => $searchModel,
 		//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
 		/* 'beforeHeader'=>[
 			[
@@ -263,7 +263,7 @@ use lukisongroup\hrd\models\Corp;
 		<div>
 			<?php //echo pihak($model); ?>
 		</div>
-		<dl>				
+		<dl>
 			<dt><u><b>PARTIES/PIHAK BERSANGKUTAN :</b></u></dt>
 
 			<dd>1 :	<?= $model[0]->NmCustomer ?></dd>
@@ -274,7 +274,7 @@ use lukisongroup\hrd\models\Corp;
 
 			<dd>3 :	<?= $model[0]->NmDis ?></dd>
 		</dl>
-	</div>	
+	</div>
 
 	<!-- PERIODE/JANGKA WAKTU !-->
 	<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" style="font-family: tahoma ;font-size: 8pt">
@@ -290,7 +290,7 @@ use lukisongroup\hrd\models\Corp;
 			<dd>:	<?=$model[0]->PERIOD_END ?></dd>
 		</dl>
 	</div>
-	
+
 	<!-- TARGET !-->
 	<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" style="font-family: tahoma ;font-size: 8pt">
 		<div>
@@ -303,7 +303,7 @@ use lukisongroup\hrd\models\Corp;
 
 		</dl>
 	</div>
-	<!-- BUDGET !-->		
+	<!-- BUDGET !-->
 	<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" style="font-family: tahoma ;font-size: 8pt">
 		<div>
 			<?php //echo target($model); ?>
@@ -318,14 +318,14 @@ use lukisongroup\hrd\models\Corp;
 			<dd>: 1000.<?=$model->TARGET_VALUE?></dd>
 		</dl>
 	</div>
-</div>	
+</div>
 
 <div style="font-family: tahoma ;font-size: 8pt;padding-top:10px;float:none">
 	<!-- GRID VIEW DETAIL PLAN AND ACTUAL !-->
-	<?php 
+	<?php
 		//print_r($model[0]->TERM_ID);
 	?>
-	<div style="margin-bottom:5px;margin-right:5px; float:left"><?=tombolInvest();?></div>
+	<div style="margin-bottom:5px;margin-right:5px; float:left"><?=tombolInvest($model[0]['TERM_ID']);?></div>
 	<div style="margin-bottom:5px"><?=tombolActual($model[0]->TERM_ID);?></div>
 	<?=$gvDetalPlanActual;?>
 </div>

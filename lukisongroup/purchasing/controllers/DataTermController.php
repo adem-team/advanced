@@ -18,8 +18,11 @@ use zyx\phpmailer\Mailer;
 use yii\widgets\ActiveForm;
 
 use lukisongroup\purchasing\models\data_term\Termheader;
+use lukisongroup\master\models\Terminvest;
 use lukisongroup\purchasing\models\data_term\TermheaderSearch;
 use lukisongroup\purchasing\models\data_term\TermdetailSearch;
+use lukisongroup\purchasing\models\data_term\Termdetail;
+use lukisongroup\purchasing\models\data_term\PostAccount;
 use lukisongroup\purchasing\models\data_term\RtdetailSearch;
 
 use lukisongroup\purchasing\models\data_term\ActualModel;
@@ -156,6 +159,31 @@ class DataTermController extends Controller
 		 * review-> _reviewData  -> button [Actual Investment]  -> [contreoller]actionActualReview ->actual_review
 		*/
 	}
+
+
+/**
+  *save account using list_box||_account
+  *@author wawan
+*/
+  public function actionAccountInvestment($id){
+      $model = new PostAccount();
+
+       $model->term_id = $id;
+
+      if ($model->load(Yii::$app->request->post())) {
+            $model->saveAccount();
+
+      }
+        # code...
+          $items = $model->getAvailableAccount();
+        return $this->render('_account',[
+              'model'=>$model,
+              'items'=>$items
+        ]);
+      }
+
+
+
 
 	public function actionActualReviewAdd($id){
 		/* $model = new Termcustomers();
