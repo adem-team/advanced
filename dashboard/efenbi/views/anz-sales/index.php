@@ -143,7 +143,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						/*SUMMRY STOCK*/
 						$aryProviderDataStock = new ArrayDataProvider([
 							//'key' => 'ID',
-							'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_STOCK_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','1');")->queryAll(),
+							'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_STOCK_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
 							'pagination' => [
 								'pageSize' =>50,
 							] 
@@ -153,7 +153,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						/*SUMMRY SELL IN*/
 						$aryProviderDataSellIN = new ArrayDataProvider([
 							//'key' => 'ID',
-							'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_SELL_IN_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','1');")->queryAll(),
+							'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_SELL_IN_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
 							'pagination' => [
 								'pageSize' =>50,
 							] 
@@ -163,7 +163,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						/*SUMMRY SELL OUT*/
 						$aryProviderDataSellOut = new ArrayDataProvider([
 							//'key' => 'ID',
-							'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_SELL_OUT_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','1');")->queryAll(),
+							'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_SELL_OUT_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
 							'pagination' => [
 								'pageSize' =>50,
 							] 
@@ -173,7 +173,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						/*SUMMRY RETURE*/
 						$aryProviderDataReture = new ArrayDataProvider([
 							//'key' => 'ID',
-							'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_RETURE_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','1');")->queryAll(),
+							'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_RETURE_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
 							'pagination' => [
 								'pageSize' =>50,
 							] 
@@ -183,7 +183,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						/*SUMMRY REQUEST*/
 						$aryProviderDataRequest = new ArrayDataProvider([
 							//'key' => 'ID',
-							'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_REQUEST_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','1');")->queryAll(),
+							'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_REQUEST_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
 							'pagination' => [
 								'pageSize' =>50,
 							] 
