@@ -25,6 +25,7 @@ namespace lukisongroup\hrd\controllers;
 	use lukisongroup\hrd\models\Deptsub;
 	use lukisongroup\hrd\models\Jobgrademodul;
 	use lukisongroup\hrd\models\ProfileSalesSearch;
+	use lukisongroup\sistem\models\Userlogin;
 
 
 /* VARIABLE SIDE MENU Author: -Eka- */
@@ -495,6 +496,9 @@ class EmployeController extends Controller
           $date = \Yii::$app->formatter->asDate($model->EMP_RESIGN_DATE,'yyyy-mm-dd');
           $model->EMP_RESIGN_DATE = $date;
 					if ($model->save()) {
+							$cari_user_login = Userlogin::find()->where(['EMP_ID'=>$id])->one();
+							$cari_user_login->status = 1;
+							$cari_user_login->save();
 						// upload only if valid uploaded file instance found
 						if ($image !== false) {
 							$path = $model->getImageFile();

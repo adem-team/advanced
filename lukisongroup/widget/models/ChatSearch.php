@@ -43,14 +43,20 @@ class ChatSearch extends Chat
      */
     public function search($params)
     {
-  
-      // / componen user
-          $profile = Yii::$app->getUserOpt->profile_user()->emp;
-          $emp_id = $profile->EMP_ID;
+        /*params group */
+        $group = $params['ChatSearch']['GROUP'];
+    
+          // componen user
+        $profile = Yii::$app->getUserOpt->profile_user()->emp;
+        $emp_id = $profile->EMP_ID;
+      if($params['chat'] == 'group')
+      {
+        $query = Chat::find()->where(['GROUP_ID'=>$group]);
+      }else{
+        $query = Chat::find()->where(['CREATED_BY'=>$emp_id])
+                            ->orwhere(['GROUP_ID'=>$emp_id]);
+      }
 
-
-          $query = Chat::find()->where(['CREATED_BY'=>$emp_id])
-                        ->orwhere(['GROUP_ID'=>$emp_id]);
 
 
         $dataProvider = new ActiveDataProvider([
