@@ -6,6 +6,7 @@ namespace lukisongroup\purchasing\models\data_term;
 use Yii;
 use yii\helpers\ArrayHelper;
 use lukisongroup\purchasing\models\data_term\Termheader;
+use lukisongroup\master\models\Terminvest;
 
 /**
  * This is the model class for table "c0005".
@@ -42,6 +43,16 @@ class Termdetail extends \yii\db\ActiveRecord
     public static function getDb()
     {
         return Yii::$app->get('db_esm');
+    }
+
+    public function getInvest()
+  	{
+  		return $this->hasOne(Terminvest::className(), ['ID' => 'INVES_ID']);
+  	}
+
+    public function getNamainvest()
+    {
+      return $this->invest->INVES_TYPE;
     }
 
     /**

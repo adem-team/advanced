@@ -56,9 +56,9 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	/*GRIDVIEW ARRAY FIELD HEAD*/
 	$headColomnInputActual=[
 		// ['ID' =>0, 'ATTR' =>['FIELD'=>'KD_RIB','SIZE' => '50px','label'=>'Trade Investment','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>0, 'ATTR' =>['FIELD'=>'nminvest','SIZE' => '10px','label'=>'Nomer Faktur','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'nminvest','SIZE' => '10px','label'=>'Type Investasi','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>1, 'ATTR' =>['FIELD'=>'INVESTASI_PROGRAM','SIZE' => '10px','label'=>'Program','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'NOMER_FAKTURPAJAK','SIZE' => '10px','label'=>'Type Investasi','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'NOMER_FAKTURPAJAK','SIZE' => '10px','label'=>'Nomer Faktur','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>3, 'ATTR' =>['FIELD'=>'NOMER_INVOCE','SIZE' => '10px','label'=>'Nomer Invoice','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>4, 'ATTR' =>['FIELD'=>'HARGA','SIZE' => '10px','label'=>'Biaya','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>5, 'ATTR' =>['FIELD'=>'ppn','SIZE' => '10px','label'=>'Ppn','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],

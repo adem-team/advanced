@@ -33,8 +33,8 @@ use lukisongroup\hrd\models\Corp;
 	function tombolInvest($id_term){
 		$title = Yii::t('app', 'Account Investment');
 		$options = ['id'=>'account-invest',
-					// 'data-toggle'=>"modal",
-					// 'data-target'=>"#account-invest-plan",
+					'data-toggle'=>"modal",
+					'data-target'=>"#account-invest-plan",
 					'class' => 'btn btn-info btn-sm'
 		];
 		$icon = '<span class="glyphicon glyphicon-search"></span>';
@@ -65,7 +65,7 @@ use lukisongroup\hrd\models\Corp;
 	$attDinamik =[];
 	/*GRIDVIEW ARRAY FIELD HEAD*/
 	$headColomnEvent=[
-		['ID' =>0, 'ATTR' =>['FIELD'=>'INVES_TYPE','SIZE' => '50px','label'=>'Trade Investment','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'Namainvest','SIZE' => '50px','label'=>'Trade Investment','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>1, 'ATTR' =>['FIELD'=>'PERIODE_START','SIZE' => '10px','label'=>'Periode','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>2, 'ATTR' =>['FIELD'=>'BUDGET_PLAN','SIZE' => '10px','label'=>'Budget Plan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>3, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
@@ -329,3 +329,28 @@ use lukisongroup\hrd\models\Corp;
 	<div style="margin-bottom:5px"><?=tombolActual($model[0]->TERM_ID);?></div>
 	<?=$gvDetalPlanActual;?>
 </div>
+<?php
+$this->registerJs("
+	 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+	 $('#account-invest-plan').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget)
+		var modal = $(this)
+		var title = button.data('title')
+		var href = button.attr('href')
+		//modal.find('.modal-title').html(title)
+		modal.find('.modal-body').html('<i class=\"fa fa-dolar fa-spin\"></i>')
+		$.post(href)
+			.done(function( data ) {
+				modal.find('.modal-body').html(data)
+			});
+		})
+",$this::POS_READY);
+	Modal::begin([
+			'id' => 'account-invest-plan',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Account</b></h4></div>',
+		// 'size' => Modal::SIZE_LARGE,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+		]
+	]);
+	Modal::end();

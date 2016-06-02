@@ -173,10 +173,11 @@ class DataTermController extends Controller
       if ($model->load(Yii::$app->request->post())) {
             $model->saveAccount();
 
+        return $this->redirect(['review', 'id'=>$model->term_id]);
       }
         # code...
           $items = $model->getAvailableAccount();
-        return $this->render('_account',[
+        return $this->renderAjax('_account',[
               'model'=>$model,
               'items'=>$items
         ]);
