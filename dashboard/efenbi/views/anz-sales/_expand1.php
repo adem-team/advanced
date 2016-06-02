@@ -21,7 +21,7 @@ use yii\data\ArrayDataProvider;
 		<div class="box direct-chat direct-chat">
 		 <!-- box-header -->
 			<div class="box-header with-border" >
-				<h3 class="box-title" ><?php echo "<b>SUMMARY CUSTOMER CALL</b>";?></h3>
+				<h3 class="box-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:center;color:blue" ><?php echo "<b>CUSTOMER CALL</b>";?></h3>
 				<div class="box-tools pull-left">
 					<!--<span data-toggle="tooltip" title="3 New Messages" class="badge bg-green">3</span>-->
 					<button class="btn btn-box-tool" data-toggle="tooltip" title="show/hide" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -64,11 +64,42 @@ use yii\data\ArrayDataProvider;
 						<li>
 							<div class="raw">
 							<?php
+								/*All Detail*/
 								$gvDetailAll=$this->render('_expand1DetailAll',[
 									'dataProviderHeader2'=>$dataProviderHeader2,
 									'aryproviderDetailSummary'=>$aryproviderDetailSummary,
-								]);	
+								]);
+								/*STOCK*/
+								$gvStock=$this->render('_expand1SlideStock',[
+									'aryProviderDataStock'=>$aryProviderDataStock,
+									'aryProviderHeaderStock'=>$aryProviderHeaderStock,
+								]);
+								/*SELL IN*/								
+								$gvSellIn=$this->render('_expand1SlideSin',[
+									'aryProviderDataSellIN'=>$aryProviderDataSellIN,
+									'aryProviderHeaderSellIN'=>$aryProviderHeaderSellIN,
+								]);
+								/*SELL OUT*/								
+								$gvSellOut=$this->render('_expand1SlideSout',[
+									'aryProviderDataSellOut'=>$aryProviderDataSellOut,
+									'aryProviderHeaderSellOut'=>$aryProviderHeaderSellOut,
+								]);
+								/*SELL RETURE*/								
+								$gvReture=$this->render('_expand1SlideReture',[
+									'aryProviderDataReture'=>$aryProviderDataReture,
+									'aryProviderHeaderReture'=>$aryProviderHeaderReture,
+								]);
+								/*SELL REQUEST*/								
+								$gvRequest=$this->render('_expand1SlideRequest',[
+									'aryProviderDataRequest'=>$aryProviderDataRequest,
+									'aryProviderHeaderRequest'=>$aryProviderHeaderRequest,
+								]);
 							?>
+							<?=$gvRequest?>
+							<?=$gvStock?>
+							<?=$gvReture?>
+							<?=$gvSellOut?>
+							<?=$gvSellIn?>
 							<?=$gvDetailAll?>
 							</div>
 						</li><!-- End Contact Item -->

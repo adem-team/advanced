@@ -108,7 +108,7 @@ use yii\data\ArrayDataProvider;
 			'',
 		],
 		'panel' => [
-			'heading'=>'<h3 class="panel-title">DETAIL VISITING</h3>',
+			'heading'=>'<h3 class="panel-title">DETAIL ALL QUANTITY</h3>',
 			'type'=>'info',
 			'footer'=>false,
 		],

@@ -139,6 +139,57 @@ $this->params['breadcrumbs'][] = $this->title;
 							] 
 						]); 
 						
+						
+						/*SUMMRY STOCK*/
+						$aryProviderDataStock = new ArrayDataProvider([
+							//'key' => 'ID',
+							'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_STOCK_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','1');")->queryAll(),
+							'pagination' => [
+								'pageSize' =>50,
+							] 
+						]); 
+						$aryProviderHeaderStock=$aryProviderDataStock->allModels[0];				
+						
+						/*SUMMRY SELL IN*/
+						$aryProviderDataSellIN = new ArrayDataProvider([
+							//'key' => 'ID',
+							'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_SELL_IN_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','1');")->queryAll(),
+							'pagination' => [
+								'pageSize' =>50,
+							] 
+						]); 
+						$aryProviderHeaderSellIN=$aryProviderDataSellIN->allModels[0];
+						
+						/*SUMMRY SELL OUT*/
+						$aryProviderDataSellOut = new ArrayDataProvider([
+							//'key' => 'ID',
+							'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_SELL_OUT_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','1');")->queryAll(),
+							'pagination' => [
+								'pageSize' =>50,
+							] 
+						]); 
+						$aryProviderHeaderSellOut=$aryProviderDataSellOut->allModels[0];
+						
+						/*SUMMRY RETURE*/
+						$aryProviderDataReture = new ArrayDataProvider([
+							//'key' => 'ID',
+							'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_RETURE_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','1');")->queryAll(),
+							'pagination' => [
+								'pageSize' =>50,
+							] 
+						]); 
+						$aryProviderHeaderReture=$aryProviderDataReture->allModels[0];
+						
+						/*SUMMRY REQUEST*/
+						$aryProviderDataRequest = new ArrayDataProvider([
+							//'key' => 'ID',
+							'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_REQUEST_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','1');")->queryAll(),
+							'pagination' => [
+								'pageSize' =>50,
+							] 
+						]); 
+						$aryProviderHeaderRequest=$aryProviderDataRequest->allModels[0];
+						
 						/* RENDER */
 						return Yii::$app->controller->renderPartial('_expand1',[
 							'dataModelsHeader1'=>$dataModelsHeader1->getModels(),
@@ -147,6 +198,21 @@ $this->params['breadcrumbs'][] = $this->title;
 							'searchModelImage'=>$searchModel,
 							'dataProviderImage'=>$dataProviderImage,
 							'aryproviderDetailSummary'=>$aryProviderDetailSummary,
+							//SUMMRY STOCK
+							'aryProviderHeaderStock'=>$aryProviderHeaderStock,
+							'aryProviderDataStock'=>$aryProviderDataStock,
+							//SUMMRY SELL IN
+							'aryProviderHeaderSellIN'=>$aryProviderHeaderSellIN,
+							'aryProviderDataSellIN'=>$aryProviderDataSellIN,
+							//SUMMRY SELL OUT
+							'aryProviderHeaderSellOut'=>$aryProviderHeaderSellOut,
+							'aryProviderDataSellOut'=>$aryProviderDataSellOut,
+							//SUMMRY RETURE
+							'aryProviderHeaderReture'=>$aryProviderHeaderReture,
+							'aryProviderDataReture'=>$aryProviderDataReture,
+							//SUMMRY REQUEST
+							'aryProviderHeaderRequest'=>$aryProviderHeaderRequest,
+							'aryProviderDataRequest'=>$aryProviderDataRequest
 						]);
 					},
 					'collapseTitle'=>'Close Exploler',
