@@ -45,6 +45,42 @@ use yii\data\ArrayDataProvider;
 					]
 				],
 			],
+			
+			/*GRIDVIEW EXPAND*/
+			/* [	
+				'class'=>'kartik\grid\ExpandRowColumn',
+				'width'=>'50px',
+				'header'=>'Detail',
+				'value'=>function ($model, $key, $index, $column) {
+					return GridView::ROW_COLLAPSED;
+				},
+				'detail'=>function ($model, $key, $index, $column){		
+					return $this->render('_expand1RoPerCustomer');
+				},
+				'collapseTitle'=>'Close Exploler',
+				'expandTitle'=>'Click to views detail',				
+				'expandOneOnly'=>true,
+				'headerOptions'=>[
+					'style'=>[
+						
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(74, 206, 231, 1)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+					
+						'text-align'=>'center',
+						'width'=>'10px',
+						'height'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],  */
 			[
 				'attribute'=>'NAME_ITEM',
 				'label'=>'ITEMS',
@@ -66,6 +102,7 @@ use yii\data\ArrayDataProvider;
 			[
 				'attribute'=>'STOCK',
 				'label'=>'STOCK/Pcs',
+				'value'=>'<button class="btn btn-box-tool" data-toggle="tooltip" title="show/hide" data-widget="collapse"><i class="fa fa-minus"></i>s</button>',
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
