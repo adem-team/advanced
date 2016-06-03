@@ -1469,10 +1469,9 @@ class PurchaseOrderController extends Controller
 		}else{	/*Normal Load*/
 			if($auth1Mdl->load(Yii::$app->request->post())){
 				if ($auth1Mdl->auth1_saved()){
-
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth1Model']['kdpo'];
-          $this->Sendmail($kdpo); //call function email
+					$this->Sendmail($kdpo); //call function email
 					return $this->redirect(['create', 'kdpo'=>$kdpo]);
 				}
 			}
