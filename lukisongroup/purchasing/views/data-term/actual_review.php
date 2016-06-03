@@ -47,6 +47,9 @@ $this->title = Yii::t('app', 'Trading Terms ');
 		return $content;
 	}
 
+$id_term = $_GET['id'];
+
+
 	/*
 	 * GRID DETAIL BUDGET
 	 * Table [t0001header,t0001detail]
@@ -132,6 +135,61 @@ $this->title = Yii::t('app', 'Trading Terms ');
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'8pt',
 						//'background-color'=>'rgba(13, 127, 3, 0.1)',
+					]
+				],
+			];
+			/*GRIDVIEW ARRAY ACTION*/
+			$actionClass='btn btn-info btn-xs';
+			$actionLabel='Action';
+			$attDinamikInputActual[]=[
+				'class'=>'kartik\grid\ActionColumn',
+				'dropdown' => true,
+				'template' => '{edit}{delete}',
+				'dropdownOptions'=>['class'=>'pull-right dropup','style'=>['disable'=>true]],
+				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
+				'dropdownButton'=>[
+					'class' => $actionClass,
+					'label'=>$actionLabel,
+					'caret'=>'<span class="caret"></span>',
+				],
+				 'buttons' => [
+					 'edit' =>function($url, $model, $key)use($id_term){
+							 return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Edit'),
+														 ['edit-actual','id'=>$model->TERM_ID],[
+														 'data-toggle'=>"modal",
+														 'data-target'=>"#modal-create",
+														 ]). '</li>' . PHP_EOL;
+					 },
+					 'delete' =>function($url, $model, $key)use($id_term){
+							 return  '<li>' . Html::a('<span class="fa fa-trash fa-dm"></span>'.Yii::t('app', 'delete'),
+														 ['delete-actual','id'=>$id_term,'kd'=>$model->KD_RIB],[
+														 ]). '</li>' . PHP_EOL;
+													 }
+					/* 'view1' =>function($url, $model, $key){
+							return  '<li>' .Html::a('<span class="fa fa-search-plus fa-dm"></span>'.Yii::t('app', 'Review'),
+														['/purchasing/data-term/review','id'=>$model->TERM_ID],[
+														'id'=>'img1-id',
+														'data-toggle'=>"modal",
+														//'data-target'=>"#img1-visit",
+														]). '</li>' . PHP_EOL ;
+					}*/
+				],
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(249, 215, 100, 1)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'height'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
 					]
 				],
 			];

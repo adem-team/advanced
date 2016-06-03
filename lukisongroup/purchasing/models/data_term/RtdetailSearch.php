@@ -46,16 +46,20 @@ class RtdetailSearch extends Rtdetail
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params,$id)
     {
+
 			/**
 			  *search redirect accounting only RI and RID
 				*@author wawan
 				*/
         $query = Rtdetail::find()
-				 ->JoinWith('termheader',true,'left JOIN')
-				 ->where(['LIKE', 't0001detail.KD_RIB','RI'])
-				 ->orwhere(['LIKE', 't0001detail.KD_RIB','RID']);
+				 ->JoinWith('retermheader',true,'left JOIN')
+				 ->where(['t0001header.TERM_ID'=>$id])
+				 ->andwhere(['<>','t0001detail.STATUS',3])
+				 ->andwhere(['LIKE','t0001header.KD_RIB','RI'])
+				 ->andwhere(['LIKE', 't0001header.KD_RIB','RID']);
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

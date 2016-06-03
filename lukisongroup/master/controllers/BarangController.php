@@ -22,6 +22,7 @@ use lukisongroup\master\models\ValidationLoginPrice;
 use lukisongroup\master\models\Barangalias;
 use lukisongroup\master\models\BarangaliasSearch;
 
+
 /**
  * BarangController implements the CRUD actions for Barang model.
  */
