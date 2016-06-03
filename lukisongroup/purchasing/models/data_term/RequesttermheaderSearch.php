@@ -96,7 +96,7 @@ class RequesttermHeaderSearch extends Requesttermheader
       */
       public function searchRthistory($params)
         {
-          
+
 
             $query = Requesttermheader::find()->where('STATUS = 102 OR STATUS = 4')->orderBy(['CREATED_AT'=> SORT_DESC]);
 

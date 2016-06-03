@@ -24,6 +24,7 @@ use lukisongroup\purchasing\models\data_term\TermdetailSearch;
 use lukisongroup\purchasing\models\data_term\Termdetail;
 use lukisongroup\purchasing\models\data_term\PostAccount;
 use lukisongroup\purchasing\models\data_term\RtdetailSearch;
+use lukisongroup\purchasing\models\rqt\Rtdetail;
 
 use lukisongroup\purchasing\models\data_term\ActualModel;
 
@@ -64,6 +65,16 @@ class DataTermController extends Controller
             } else {
                 return true;
             }
+    }
+
+
+    public function actionDeleteActual($id,$kd)
+    {
+
+      $model = Rtdetail::find()->where(['KD_RIB'=>$kd])->one();
+      $model->STATUS = 3;
+      $model->save();
+      return $this->redirect(['actual-review','id'=>$id]);
     }
 
 

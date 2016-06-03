@@ -56,7 +56,7 @@ class Rtdetail extends \yii\db\ActiveRecord
 			['HARGA','default', 'value'=>0.00],
 			[['STATUS','INVESTASI_TYPE'], 'integer'],
             //[['UNIT'], 'string'],
-            [['UNIT','label'], 'string'],
+            [['UNIT','label','TERM_ID'], 'string'],
             [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT','HARGA'], 'safe'],
             [['KD_RIB','UNIT', 'NOMER_INVOCE','NOMER_FAKTURPAJAK'], 'string', 'max' => 50],
         ];
@@ -90,25 +90,25 @@ class Rtdetail extends \yii\db\ActiveRecord
 		return $this->invest->INVES_TYPE;
 	}
 
-	public function getTermheader(){
+	public function getRetermheader(){
 		return $this->hasOne(Requesttermheader::className(), ['KD_RIB' => 'KD_RIB']);
 	}
   public function getPph()
   {
-    return $this->termheader->PPH23;
+    return $this->retermheader->PPH23;
   }
 
   public function getPpn()
   {
-    return $this->termheader->PPN;
+    return $this->retermheader->PPN;
   }
 
   public function getPeriode(){
-		return $this->termheader->TGL;
+		return $this->retermheader->TGL;
 	}
 
 	public function getTermid(){
-		return $this->termheader->TERM_ID;
+		return $this->retermheader->TERM_ID;
 	}
 
     /**
