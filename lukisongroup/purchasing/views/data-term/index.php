@@ -21,6 +21,23 @@ $this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada
 $this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Trading Terms ');
 
+/*
+ * Tombol Create
+ * permission create term
+*/
+function tombolCreate(){
+			$title1 = Yii::t('app', 'NEW TERM');
+			$options1 = [ 'id'=>'term-create',
+							'data-toggle'=>"modal",
+							'data-target'=>"#new-term",
+							'class' => 'btn btn-success btn-sm',
+			];
+			$icon1 = '<span class="fa fa-plus fa-lg"></span>';
+			$url = Url::toRoute(['/purchasing/data-term/create-term-data']);
+			$label1 = $icon1 . ' ' . $title1;
+			$content = Html::a($label1,$url,$options1);
+			return $content;
+		 }
 
 	/*
 	 * Declaration Componen User Permission
@@ -87,7 +104,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 		};
 	}
 
-	
+
 	/*
 	 * GRID VIEW PLAN TREM
 	 * @author ptrnov  [piter@lukison.com]
@@ -256,11 +273,9 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					'type'=>'info',
 					//'showFooter'=>false,
 		],
-		/* 'toolbar'=> [
-			''
-			//['content'=>toMenuAwal().toExportExcel()],
-			''//'{items}',
-		], */
+		'toolbar'=> [
+		 ['content'=>tombolCreate()],
+	 ],
 		// 'hover'=>true, //cursor select
 		 'responsive'=>true,
 		// 'responsiveWrap'=>true,
@@ -279,3 +294,35 @@ $this->title = Yii::t('app', 'Trading Terms ');
 		</div>
 	</div>
 </div><!-- Body !-->
+
+<?php
+/*
+ * JS  CREATED
+ * @author wawan
+ * @since 1.2
+*/
+$this->registerJs("
+		$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+		$('#new-term').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			}),
+",$this::POS_READY);
+
+Modal::begin([
+		'id' => 'new-term',
+		'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+		// 'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+		]
+	]);
+Modal::end();

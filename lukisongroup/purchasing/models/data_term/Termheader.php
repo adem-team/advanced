@@ -6,11 +6,12 @@ use lukisongroup\hrd\models\Corp;
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Distributor;
 
+
 use Yii;
 
 /**
  * This is the model class for table "c0003".
- * 
+ *
  * @property string $CUST_KD_PARENT
  * @property string $CUST_NM
  * @property string $CUST_SIGN
@@ -53,6 +54,12 @@ class Termheader extends \yii\db\ActiveRecord
     public static function getDb()
     {
         return Yii::$app->get('db_esm');
+    }
+
+    public function dataarray($data,$to,$from)
+    {
+      # code...
+      return ArrayHelper::map($data, $to, $from);
     }
 
     /**
@@ -113,7 +120,7 @@ class Termheader extends \yii\db\ActiveRecord
     public function getNmCustomer(){
 		return $this->cus->CUST_NM;
 	}
-	
+
     public function getDis()
     {
       # code...
@@ -122,8 +129,8 @@ class Termheader extends \yii\db\ActiveRecord
 	public function getNmDis(){
 		return $this->dis->NM_DISTRIBUTOR;
 	}
-	
-	#principel	
+
+	#principel
     public function getCorp()
     {
       # code...
@@ -144,8 +151,8 @@ class Termheader extends \yii\db\ActiveRecord
         return [
 			'TERM_ID' => 'Term.Id',
 			'CUST_KD_PARENT' => 'Nama Customers',
-            'PRINCIPAL_KD' => ' Nama Principal',            
-            'DIST_KD' => 'Nama Distributor',            
+            'PRINCIPAL_KD' => ' Nama Principal',
+            'DIST_KD' => 'Nama Distributor',
             'PERIOD_START' => 'Period  Start',
             'PERIOD_END' => 'Period  End',
             'TARGET_TEXT' => 'Target  Text',

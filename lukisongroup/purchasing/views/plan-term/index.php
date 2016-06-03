@@ -1,4 +1,5 @@
 <?php
+/*extensions */
 use kartik\helpers\Html;
 use yii\widgets\DetailView;
 use kartik\grid\GridView;
@@ -14,7 +15,7 @@ use yii\web\Request;
 use kartik\daterange\DateRangePicker;
 use yii\db\ActiveRecord;
 use yii\data\ArrayDataProvider;
-//use dosamigos\gallery\Gallery;
+
 
 $this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -22,12 +23,12 @@ $this->title = Yii::t('app', 'Trading Terms ');
 
 
 
-	//print_r($dataProvider);
+
 	/*
 	 * GRID VIEW PLAN TREM
 	 * @author ptrnov  [piter@lukison.com]
 	 * @since 1.2
-	*/	
+	*/
 	$attDinamik =[];
 	/*GRIDVIEW ARRAY FIELD HEAD*/
 	$headColomnEvent=[
@@ -36,7 +37,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 		['ID' =>2, 'ATTR' =>['FIELD'=>'Nmprincipel','SIZE' => '10px','label'=>'PRINCIPAL','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>3, 'ATTR' =>['FIELD'=>'NmDis','SIZE' => '10px','label'=>'DISTRIBUTOR','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 	];
-	$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');	
+	$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');
 	/*GRIDVIEW SERIAL ROWS*/
 	$attDinamik[] =[
 		'class'=>'kartik\grid\SerialColumn',
@@ -74,7 +75,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 			//'mergeHeader'=>true,
 			'noWrap'=>true,
 			'group'=>$value[$key]['GRP'],
-			'format'=>$value[$key]['FORMAT'],						
+			'format'=>$value[$key]['FORMAT'],
 			'headerOptions'=>[
 					'style'=>[
 					'text-align'=>'center',
@@ -142,7 +143,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	$gvPlanTerm= GridView::widget([
 		'id'=>'plan-term',
 		'dataProvider' => $dataProvider,
-		//'filterModel' => $searchModel,					
+		//'filterModel' => $searchModel,
 		//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
 		'columns' => $attDinamik,
 		/* [
@@ -164,11 +165,9 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					'type'=>'info',
 					//'showFooter'=>false,
 		],
-		/* 'toolbar'=> [
-			''
-			//['content'=>toMenuAwal().toExportExcel()],
-			''//'{items}',
-		], */
+		//  'toolbar'=> [
+		// 	['content'=>tombolCreate()],
+		// ],
 		// 'hover'=>true, //cursor select
 		// 'responsive'=>true,
 		// 'responsiveWrap'=>true,

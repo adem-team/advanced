@@ -66,6 +66,25 @@ class DataTermController extends Controller
             }
     }
 
+
+
+    public function actionCreateTermData()
+    {
+      $model = new Termheader();
+      # code...
+      if ($model->load(Yii::$app->request->post()) ) {
+          $model->TERM_ID = Yii::$app->ambilkonci->getkdTermData();
+          $model->CREATED_AT = date("Y-m-d H:i:s");
+          $model->CREATED_BY = Yii::$app->user->identity->username;
+          $model->save();
+          return $this->redirect(['review', 'id'=>$model->TERM_ID]);
+      }else {
+        return $this->renderAjax('new_term', [
+            'model' => $model,
+        ]);
+      }
+    }
+
    /**
      * Index
      * @author ptrnov  <piter@lukison.com>
