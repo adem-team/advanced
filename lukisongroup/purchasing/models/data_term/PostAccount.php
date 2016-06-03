@@ -69,17 +69,7 @@ class PostAccount extends Model
         }
     }
 
-    /**
-     * Get all the available Account (*4)
-     * @return array available Account
-     */
-    public static function getAvailableAccount()
-    {
-      //query list in listbox = _account
-        $invets = Yii::$app->db_esm->createCommand("SELECT * FROM `c0006` c6  WHERE  NOT EXISTS (SELECT INVES_ID FROM `t0000detail` `td` WHERE td.INVES_ID = c6.ID)")->queryAll();
-        $items = ArrayHelper::map($invets, 'ID', 'INVES_TYPE');
-        return $items;
-    }
+
 
 
 }

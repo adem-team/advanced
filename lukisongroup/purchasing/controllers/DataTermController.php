@@ -194,8 +194,11 @@ class DataTermController extends Controller
 
         return $this->redirect(['review', 'id'=>$model->term_id]);
       }
-        # code...
-          $items = $model->getAvailableAccount();
+
+
+            $invets = Yii::$app->db_esm->createCommand("SELECT * FROM `c0006` c6  WHERE NOT EXISTS (SELECT INVES_ID FROM `t0000detail` `td` WHERE td.INVES_ID = c6.ID and td.TERM_ID ='".$id."')")->queryAll();
+            $items = ArrayHelper::map($invets, 'ID', 'INVES_TYPE');
+
         return $this->renderAjax('_account',[
               'model'=>$model,
               'items'=>$items
