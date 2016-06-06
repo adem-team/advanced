@@ -547,7 +547,7 @@ else{
 						],
 					],
 					[
-						'attribute' => 'INVES_TYPE',
+						'attribute' => 'inves.INVES_TYPE',
 						'label'=>'Trade Investment',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',

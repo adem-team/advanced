@@ -7,6 +7,9 @@ use lukisongroup\hrd\models\Employe;
 use lukisongroup\purchasing\models\ro\Requestorder;
 use lukisongroup\purchasing\models\ro\Rodetail;
 use lukisongroup\purchasing\models\ro\Requestorderstatus;
+use lukisongroup\purchasing\models\data_term\Termheader;
+use lukisongroup\purchasing\models\data_term\Termdetail;
+use lukisongroup\master\models\Termbudget;
 /**
  * @author ptrnov  <piter@lukison.com>
  * @since 1.1
@@ -92,6 +95,49 @@ class Auth3Model extends Model
             $statusterm->ID_USER = $this->getProfile()->EMP_ID; //required
             $statusterm->UPDATE_AT =  date('Y-m-d H:m:s');
             $statusterm->save();
+
+            $copy_term = new Termheader();
+            $copy_term->TERM_ID = Yii::$app->ambilkonci->getkdTermData();
+            $copy_term->TERM_REF = $model->ID_TERM;
+            $copy_term->STATUS = 0;
+            $copy_term->CUST_KD_PARENT = $model->CUST_KD;
+            $copy_term->PRINCIPAL_KD = $model->PRINCIPAL_KD;
+            $copy_term->DIST_KD = $model->DIST_KD;
+            $copy_term->PERIOD_START = $model->PERIOD_START;
+            $copy_term->PERIOD_END = $model->PERIOD_END;
+            $copy_term->SIG1_ID = $model->SIG1_ID;
+            $copy_term->SIG1_NM = $model->SIG1_NM;
+            $copy_term->SIG1_TGL = $model->SIG1_TGL;
+            $copy_term->SIG1_SVGBASE64 = $model->SIG1_SVGBASE64;
+            $copy_term->SIG2_ID = $model->SIG2_ID;
+            $copy_term->SIG2_NM = $model->SIG2_NM;
+            $copy_term->SIG2_TGL = $model->SIG2_TGL;
+            $copy_term->SIG2_SVGBASE64 = $model->SIG2_SVGBASE64;
+            $copy_term->SIG3_ID = $model->SIG3_ID;
+            $copy_term->SIG3_NM = $model->SIG3_NM;
+            $copy_term->SIG3_TGL = $model->SIG3_TGL;
+            $copy_term->SIG3_SVGBASE64 = $model->SIG3_SVGBASE64;
+            $copy_term->CREATED_BY = $model->CREATED_BY;
+            $copy_term->save();
+            $budget_detail = Termbudget::find()->where(['ID_TERM'=>$model->ID_TERM])->all();
+            foreach ($budget_detail as $key => $value) {
+              # code...
+              $copy_detail = new Termdetail();
+              $copy_detail->TERM_ID = $copy_term->TERM_ID;
+              $copy_detail->CUST_KD_PARENT = $copy_term->CUST_KD_PARENT;
+              $copy_detail->INVES_ID = $value->INVES_TYPE;
+              $copy_detail->BUDGET_SOURCE = $value->BUDGET_SOURCE;
+              $copy_detail->BUDGET_PLAN = $value->BUDGET_PLAN;
+              $copy_detail->BUDGET_ACTUAL = $value->BUDGET_ACTUAL;
+              $copy_detail->PERIODE_START = $value->PERIODE_START;
+              $copy_detail->PERIODE_END = $value->PERIODE_END;
+              $copy_detail->PPH23 = $value->PPH23;
+              $copy_detail->PPN = $value->PPN;
+              $copy_detail->PROGRAM = $value->PROGRAM;
+              $copy_detail->save();
+            }
+
+
           }
         }
 
