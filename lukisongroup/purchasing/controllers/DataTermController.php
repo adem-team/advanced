@@ -19,12 +19,14 @@ use yii\widgets\ActiveForm;
 
 use lukisongroup\purchasing\models\data_term\Termheader;
 use lukisongroup\master\models\Terminvest;
+use lukisongroup\master\models\Customers;
 use lukisongroup\purchasing\models\data_term\TermheaderSearch;
 use lukisongroup\purchasing\models\data_term\TermdetailSearch;
 use lukisongroup\purchasing\models\data_term\Termdetail;
+use lukisongroup\purchasing\models\data_term\Requesttermheader;
 use lukisongroup\purchasing\models\data_term\PostAccount;
 use lukisongroup\purchasing\models\data_term\RtdetailSearch;
-use lukisongroup\purchasing\models\rqt\Rtdetail;
+use lukisongroup\purchasing\models\data_term\Rtdetail;
 
 use lukisongroup\purchasing\models\data_term\ActualModel;
 
@@ -215,6 +217,35 @@ class DataTermController extends Controller
               'items'=>$items
         ]);
       }
+
+
+      /**
+        *update request  term detail and header
+        *@author wawan
+      */
+    public function actionUpdateTerm($id,$kd_term){
+          $model = Rtdetail::find()->where(['KD_RIB'=>$id])->one();
+          $model_header = Requesttermheader::find()->where(['KD_RIB'=>$id])->one();
+          $cari_header_term = TermHeader::find()->where(['TERM_ID'=>$kd_term])->one();
+          $cari_customers = Customers::find()->where(['CUST_GRP'=>$cari_header_term->CUST_KD_PARENT])->one();
+
+
+          if ($model->load(Yii::$app->request->post())&&$model_header->load(Yii::$app->request->post())) {
+
+
+              $model->save();
+              $model_header->save();
+
+              return $this->redirect(['actual-review', 'id'=>$model_header->TERM_ID]);
+            }else {
+              # code...
+              return $this->renderAjax('edit_actual',[
+                    'model'=>$model,
+                    'model_header'=>$model_header,
+                    'cari_customers'=>$cari_customers
+              ]);
+            }
+          }
 
 
 

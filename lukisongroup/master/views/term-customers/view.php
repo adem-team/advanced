@@ -390,7 +390,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 						],
 					],
 					[
-						'attribute' => 'INVES_TYPE',
+						'attribute' => 'inves.INVES_TYPE',
 						'label'=>'Trade Investment',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
@@ -425,7 +425,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
 						'noWrap'=>true,
-						'value' => function($model) { 
+						'value' => function($model) {
 							$prde=$model->PERIODE_START!='0000-00-00'? $model->PERIODE_START . " - " . $model->PERIODE_END:"";
 							//return $model->PERIODE_START . " - " . $model->PERIODE_END;
 							return $prde;
@@ -542,7 +542,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 						 ],
 						 // 'pageSummary'=>function ($summary, $data, $widget){
 								// return '<div> Total:</div>' ;
-											
+
 							 // },
 					],
 					[	//BUDGET_ACTUAL

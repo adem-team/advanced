@@ -373,7 +373,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 						],
 					],
 					[
-						'attribute' => 'INVES_TYPE',
+						'attribute' => 'inves.INVES_TYPE',
 						'label'=>'Trade Investment',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',

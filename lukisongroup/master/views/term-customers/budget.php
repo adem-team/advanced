@@ -13,7 +13,7 @@ use kartik\checkbox\CheckboxX;
 
 
 $data1 = Terminvest::find()->all();
-$to1 = "INVES_TYPE";
+$to1 = "ID";
 $from1 = "INVES_TYPE";
 
 $config = ['template'=>"{input}\n{error}\n{hint}"];

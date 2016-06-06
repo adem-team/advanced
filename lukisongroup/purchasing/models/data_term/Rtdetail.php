@@ -31,6 +31,8 @@ class Rtdetail extends \yii\db\ActiveRecord
      * @inheritdoc
      */
      public $total;
+     public $temr_Id;
+     public $cus_Perent;
 
     public static function tableName()
     {

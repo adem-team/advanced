@@ -100,6 +100,12 @@ class Termbudget extends \yii\db\ActiveRecord
 
     }
 
+    public function getInves()
+    {
+      return $this->hasOne(Terminvest::className(), ['ID' => 'INVES_TYPE']);
+
+    }
+
 
 // valid date in term-customers
     public function datevalid($model)
