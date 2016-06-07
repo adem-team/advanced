@@ -1,10 +1,11 @@
 <?php
 
 namespace lukisongroup\purchasing\controllers;
+
+/*extensions*/
 use yii;
 use yii\web\Request;
 use yii\db\Query;
-//use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -17,6 +18,7 @@ use kartik\mpdf\Pdf;
 use zyx\phpmailer\Mailer;
 use yii\widgets\ActiveForm;
 
+/* namespace models */
 use lukisongroup\purchasing\models\data_term\Termheader;
 use lukisongroup\master\models\Terminvest;
 use lukisongroup\master\models\Customers;
@@ -70,6 +72,7 @@ class DataTermController extends Controller
     }
 
 
+    /*delete */
     public function actionDeleteActual($id,$kd)
     {
 
@@ -144,15 +147,19 @@ class DataTermController extends Controller
 		 /*TERM PLAN HEADER*/
 		$searchModel = new TermheaderSearch();
 		$dataProvider = $searchModel->searchcusbyid(Yii::$app->request->queryParams,$id);
-		$modelRslt=$dataProvider->getModels();
-		print_r($modelRslt->TERM_ID);
+		// $modelRslt=$dataProvider->getModels();
+		// print_r($modelRslt->TERM_ID);
+    $modelRslt = Termheader::find()->where(['TERM_ID'=>$id])->one();
 		/*BUDGET SEARCH*/
 		$searchModelBudget= new TermdetailSearch();
 		$dataProviderBudget = $searchModelBudget->searchbudget(Yii::$app->request->queryParams,$id);
+
+    $searchModelBudgetdetail= new TermdetailSearch();
+		$dataProviderBudgetdetail = $searchModelBudgetdetail->searchbudgetdetail(Yii::$app->request->queryParams,$id);
 		return $this->render('review',[
 			'dataProvider'=>$dataProvider,
 			'model'=>$modelRslt,
-			'dataProviderBudget'=>$dataProviderBudget
+			'dataProviderBudget'=>$dataProviderBudget,
 		]);
 		/*
 		 * NOTED VIEWS FILES:
@@ -171,7 +178,8 @@ class DataTermController extends Controller
 		 /*TERM PLAN HEADER*/
 		$searchModel = new TermheaderSearch();
 		$dataProvider = $searchModel->searchcusbyid(Yii::$app->request->queryParams,$id);
-		$modelRslt=$dataProvider->getModels();
+		// $modelRslt=$dataProvider->getModels();
+    $modelRslt = Termheader::find()->where(['TERM_ID'=>$id])->one();
 		/*BUDGET SEARCH*/
 		$searchModelBudget= new TermdetailSearch();
 		$dataProviderBudget = $searchModelBudget->searchbudget(Yii::$app->request->queryParams,$id);

@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use lukisongroup\purchasing\models\data_term\Termheader;
+use lukisongroup\purchasing\models\data_term\Requesttermheader;
 
 /**
  * TermheaderSearch represents the model behind the search form about `lukisongroup\master\models\Termheader`.
@@ -51,6 +52,7 @@ class TermheaderSearch extends Termheader
      {
 
          $query = Termheader::find()->where(['TERM_ID'=>$id]);
+        //  ->andwhere(['like','KD_RIB','RI'])->andwhere(['like','KD_RIB','RID']);
 
          $dataProvider = new ActiveDataProvider([
              'query' => $query,
