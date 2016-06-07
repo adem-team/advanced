@@ -472,6 +472,12 @@ class EmployeController extends Controller
 		}
 	}
 
+	/**
+	*set personal  resign from  hrd || form_resign
+	*if EMP_STS equal 3(resign) then Status login not activ
+	*@author wawan
+	*/
+
 	public function actionResign($id){
 				$model = $this->findModel($id);
 				$emp_sts =  ArrayHelper::map(Status::find()->orderBy('SORT')->asArray()->all(), 'STS_ID','STS_NM');
@@ -494,8 +500,16 @@ class EmployeController extends Controller
           $model->EMP_RESIGN_DATE = $date;
 					if ($model->save()) {
 							$cari_user_login = Userlogin::find()->where(['EMP_ID'=>$id])->one();
-							$cari_user_login->status = 1;
-							$cari_user_login->save();
+							$baris = count($cari_user_login);
+							if($baris == 0)
+							{
+
+							}elseif($model->EMP_STS == 3) {
+								# code...
+								$cari_user_login->status = 1;
+								$cari_user_login->save();
+							}
+
 						// upload only if valid uploaded file instance found
 						if ($image !== false) {
 							$path = $model->getImageFile();

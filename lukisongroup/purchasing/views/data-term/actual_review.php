@@ -155,9 +155,9 @@ $id_term = $_GET['id'];
 				 'buttons' => [
 					 'edit' =>function($url, $model, $key)use($id_term){
 							 return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Edit'),
-														 ['edit-actual','id'=>$model->TERM_ID],[
+														 ['update-term','id'=>$model->KD_RIB,'kd_term'=>$id_term],[
 														 'data-toggle'=>"modal",
-														 'data-target'=>"#modal-create",
+														 'data-target'=>"#modal-update",
 														 ]). '</li>' . PHP_EOL;
 					 },
 					 'delete' =>function($url, $model, $key)use($id_term){
@@ -286,7 +286,7 @@ $id_term = $_GET['id'];
 				<div class="col-md-9">
 					<h4 class="text-center"><b> <?php echo 'ACTUAL BUDGET';  ?> </b></h4>
 
-					<h4 class="text-center"><b> <?php echo ucwords($model[0]->NmCustomer)  ?> </b></h4>
+					<h4 class="text-center"><b> <?php echo ucwords($model->NmCustomer)  ?> </b></h4>
 				</div>
 				<div class="col-md-12">
 					<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
@@ -298,13 +298,13 @@ $id_term = $_GET['id'];
 			<dl>
 				<dt><u><b>PARTIES/PIHAK BERSANGKUTAN :</b></u></dt>
 
-				<dd>1 :	<?= $model[0]->NmCustomer ?></dd>
+				<dd>1 :	<?= $model->NmCustomer ?></dd>
 
 
-				<dd>2 :	<?= $model[0]->Nmprincipel ?></dd>
+				<dd>2 :	<?= $model->Nmprincipel ?></dd>
 
 
-				<dd>3 :	<?= $model[0]->NmDis ?></dd>
+				<dd>3 :	<?= $model->NmDis ?></dd>
 			</dl>
 		</div>
 
@@ -316,17 +316,17 @@ $id_term = $_GET['id'];
 			<dl>
 				<dt><u><b>PERIODE/JANGKA WAKTU :</b></u></dt>
 				<dt style="width:80px; float:left;"> Dari: </dt>
-				<dd>:	<?=$model[0]->PERIOD_START ?></dd>
+				<dd>:	<?=$model->PERIOD_START ?></dd>
 
 				<dt style="width:80px; float:left;">Sampai:</dt>
-				<dd>:	<?=$model[0]->PERIOD_END ?></dd>
+				<dd>:	<?=$model->PERIOD_END ?></dd>
 			</dl>
 		</div>
 
 	<!-- GRID VIEW !-->
 	<div  class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
-			<div style="margin-bottom:5px;margin-right:5px"><?=tombolInvestInput($model[0]->TERM_ID);?></div>
+			<div style="margin-bottom:5px;margin-right:5px"><?=tombolInvestInput($model->TERM_ID);?></div>
 			<?=$gvDetalInputActual?>
 		</div>
 	</div>
@@ -353,6 +353,30 @@ $id_term = $_GET['id'];
 		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Actual Investment</h4></div>',
 		'headerOptions'=>[
 		  'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+		],
+	]);
+	Modal::end();
+
+	$this->registerJs("
+		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		 $('#modal-update').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget)
+		var modal = $(this)
+		var title = button.data('title')
+		var href = button.attr('href')
+		//modal.find('.modal-title').html(title)
+		modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+		$.post(href)
+			.done(function( data ) {
+			modal.find('.modal-body').html(data)
+			});
+		})
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'modal-update',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Actual Investment</h4></div>',
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
 		],
 	]);
 	Modal::end();

@@ -144,7 +144,7 @@ use lukisongroup\hrd\models\Corp;
 		'detail'=>function ($model, $key, $index, $column) use($dataProviderBudget){
 			/* RENDER */
 			return Yii::$app->controller->renderPartial('_reviewDataExpand',[
-				'dataProviderDetailBudget'=>$dataProviderBudget,
+				'dataProviderBudget'=>$dataProviderBudget,
 			]);
 		},
 		'headerOptions'=>[
@@ -210,6 +210,7 @@ use lukisongroup\hrd\models\Corp;
 			]
 		],
 	]; */
+
 	/*GRID VIEW BASE*/
 	$gvDetalPlanActual= GridView::widget([
 		'id'=>'plan-term-budget',
@@ -266,13 +267,13 @@ use lukisongroup\hrd\models\Corp;
 		<dl>
 			<dt><u><b>PARTIES/PIHAK BERSANGKUTAN :</b></u></dt>
 
-			<dd>1 :	<?= $model[0]->NmCustomer ?></dd>
+			<dd>1 :	<?= $model->NmCustomer ?></dd>
 
 
-			<dd>2 :	<?= $model[0]->Nmprincipel ?></dd>
+			<dd>2 :	<?= $model->Nmprincipel ?></dd>
 
 
-			<dd>3 :	<?= $model[0]->NmDis ?></dd>
+			<dd>3 :	<?= $model->NmDis ?></dd>
 		</dl>
 	</div>
 
@@ -284,10 +285,10 @@ use lukisongroup\hrd\models\Corp;
 		<dl>
 			<dt><u><b>PERIODE/JANGKA WAKTU :</b></u></dt>
 			<dt style="width:80px; float:left;"> Dari: </dt>
-			<dd>:	<?=$model[0]->PERIOD_START ?></dd>
+			<dd>:	<?=$model->PERIOD_START ?></dd>
 
 			<dt style="width:80px; float:left;">Sampai:</dt>
-			<dd>:	<?=$model[0]->PERIOD_END ?></dd>
+			<dd>:	<?=$model->PERIOD_END ?></dd>
 		</dl>
 	</div>
 
@@ -325,8 +326,8 @@ use lukisongroup\hrd\models\Corp;
 	<?php
 		//print_r($model[0]->TERM_ID);
 	?>
-	<div style="margin-bottom:5px;margin-right:5px; float:left"><?=tombolInvest($model[0]['TERM_ID']);?></div>
-	<div style="margin-bottom:5px"><?=tombolActual($model[0]->TERM_ID);?></div>
+	<div style="margin-bottom:5px;margin-right:5px; float:left"><?=tombolInvest($model['TERM_ID']);?></div>
+	<div style="margin-bottom:5px"><?=tombolActual($model->TERM_ID);?></div>
 	<?=$gvDetalPlanActual;?>
 </div>
 <?php

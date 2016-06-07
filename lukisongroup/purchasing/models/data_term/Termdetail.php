@@ -50,6 +50,11 @@ class Termdetail extends \yii\db\ActiveRecord
   		return $this->hasOne(Terminvest::className(), ['ID' => 'INVES_ID']);
   	}
 
+    public function getTermhead()
+    {
+      return $this->hasOne(Requesttermheader::className(), ['TERM_ID' => 'TERM_ID']);
+    }
+
     public function getNamainvest()
     {
       return $this->invest->INVES_TYPE;

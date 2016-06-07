@@ -129,9 +129,10 @@ use yii\data\ArrayDataProvider;
 		],
 	]; */
 	/*GRID VIEW BASE*/
+
 	$gvDetalPlan= GridView::widget([
 		'id'=>'detail-plan',
-		'dataProvider' => $dataProviderDetailBudget,
+		'dataProvider' => $dataProviderBudget,
 		//'filterModel' => $searchModel,
 		//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
 		'beforeHeader'=>[

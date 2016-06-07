@@ -131,7 +131,7 @@ use yii\data\ArrayDataProvider;
 	/*GRID VIEW BASE*/
 	$gvDetalActual= GridView::widget([
 		'id'=>'detail-actual',
-		'dataProvider' => $dataProviderDetailBudget,
+		'dataProvider' => $dataProviderBudget,
 		//'filterModel' => $searchModel,
 		//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
 		'beforeHeader'=>[

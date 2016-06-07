@@ -77,13 +77,13 @@ class Requesttermheader extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(Dept::className(), ['DEP_ID' => 'KD_DEP']);
 	}
-    
+
 	public function getCorp()
     {
        return $this->hasOne(Corp::className(), ['CORP_ID' => 'KD_CORP']);
     }
 
-	
+
     /**
      * @inheritdoc
      */

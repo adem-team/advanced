@@ -1,10 +1,11 @@
 <?php
 
 namespace lukisongroup\purchasing\controllers;
+
+/*extensions*/
 use yii;
 use yii\web\Request;
 use yii\db\Query;
-//use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -17,14 +18,17 @@ use kartik\mpdf\Pdf;
 use zyx\phpmailer\Mailer;
 use yii\widgets\ActiveForm;
 
+/* namespace models */
 use lukisongroup\purchasing\models\data_term\Termheader;
 use lukisongroup\master\models\Terminvest;
+use lukisongroup\master\models\Customers;
 use lukisongroup\purchasing\models\data_term\TermheaderSearch;
 use lukisongroup\purchasing\models\data_term\TermdetailSearch;
 use lukisongroup\purchasing\models\data_term\Termdetail;
+use lukisongroup\purchasing\models\data_term\Requesttermheader;
 use lukisongroup\purchasing\models\data_term\PostAccount;
 use lukisongroup\purchasing\models\data_term\RtdetailSearch;
-use lukisongroup\purchasing\models\rqt\Rtdetail;
+use lukisongroup\purchasing\models\data_term\Rtdetail;
 
 use lukisongroup\purchasing\models\data_term\ActualModel;
 
@@ -68,6 +72,7 @@ class DataTermController extends Controller
     }
 
 
+    /*delete */
     public function actionDeleteActual($id,$kd)
     {
 
@@ -142,15 +147,19 @@ class DataTermController extends Controller
 		 /*TERM PLAN HEADER*/
 		$searchModel = new TermheaderSearch();
 		$dataProvider = $searchModel->searchcusbyid(Yii::$app->request->queryParams,$id);
-		$modelRslt=$dataProvider->getModels();
-		print_r($modelRslt->TERM_ID);
+		// $modelRslt=$dataProvider->getModels();
+		// print_r($modelRslt->TERM_ID);
+    $modelRslt = Termheader::find()->where(['TERM_ID'=>$id])->one();
 		/*BUDGET SEARCH*/
 		$searchModelBudget= new TermdetailSearch();
 		$dataProviderBudget = $searchModelBudget->searchbudget(Yii::$app->request->queryParams,$id);
+
+    $searchModelBudgetdetail= new TermdetailSearch();
+		$dataProviderBudgetdetail = $searchModelBudgetdetail->searchbudgetdetail(Yii::$app->request->queryParams,$id);
 		return $this->render('review',[
 			'dataProvider'=>$dataProvider,
 			'model'=>$modelRslt,
-			'dataProviderBudget'=>$dataProviderBudget
+			'dataProviderBudget'=>$dataProviderBudget,
 		]);
 		/*
 		 * NOTED VIEWS FILES:
@@ -169,7 +178,8 @@ class DataTermController extends Controller
 		 /*TERM PLAN HEADER*/
 		$searchModel = new TermheaderSearch();
 		$dataProvider = $searchModel->searchcusbyid(Yii::$app->request->queryParams,$id);
-		$modelRslt=$dataProvider->getModels();
+		// $modelRslt=$dataProvider->getModels();
+    $modelRslt = Termheader::find()->where(['TERM_ID'=>$id])->one();
 		/*BUDGET SEARCH*/
 		$searchModelBudget= new TermdetailSearch();
 		$dataProviderBudget = $searchModelBudget->searchbudget(Yii::$app->request->queryParams,$id);
@@ -215,6 +225,35 @@ class DataTermController extends Controller
               'items'=>$items
         ]);
       }
+
+
+      /**
+        *update request  term detail and header
+        *@author wawan
+      */
+    public function actionUpdateTerm($id,$kd_term){
+          $model = Rtdetail::find()->where(['KD_RIB'=>$id])->one();
+          $model_header = Requesttermheader::find()->where(['KD_RIB'=>$id])->one();
+          $cari_header_term = TermHeader::find()->where(['TERM_ID'=>$kd_term])->one();
+          $cari_customers = Customers::find()->where(['CUST_GRP'=>$cari_header_term->CUST_KD_PARENT])->one();
+
+
+          if ($model->load(Yii::$app->request->post())&&$model_header->load(Yii::$app->request->post())) {
+
+
+              $model->save();
+              $model_header->save();
+
+              return $this->redirect(['actual-review', 'id'=>$model_header->TERM_ID]);
+            }else {
+              # code...
+              return $this->renderAjax('edit_actual',[
+                    'model'=>$model,
+                    'model_header'=>$model_header,
+                    'cari_customers'=>$cari_customers
+              ]);
+            }
+          }
 
 
 

@@ -21,13 +21,15 @@ class ActualModel extends Model{
 	 public function rules()
     {
         return [
-			[['temId','investId'], 'string'],
+			[['temId','investId','cusPerent'], 'string'],
 			[['pph23','ppn','invesHarga'], 'default','value'=>0.00],
 			[['pph23','ppn','invesHarga'], 'number'],
 			[['temId','investId','invesProgram'], 'required'],
 			[['invesProgram','invoiceNo','faktureNo','invesHarga','pph23','ppn'], 'safe'],
         ];
     }
+
+
 
 		public function actualmodel_saved()
 		{
