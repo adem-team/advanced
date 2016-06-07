@@ -83,6 +83,11 @@ class Requesttermheader extends \yii\db\ActiveRecord
        return $this->hasOne(Corp::className(), ['CORP_ID' => 'KD_CORP']);
     }
 
+    public function getTerm()
+      {
+         return $this->hasOne(Termdetail::className(), ['TERM_ID' => 'TERM_ID']);
+      }
+
 
     /**
      * @inheritdoc

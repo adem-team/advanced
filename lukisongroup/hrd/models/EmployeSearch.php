@@ -58,7 +58,7 @@ class EmployeSearch extends Employe
 		/*[5.1] JOIN TABLE */
 		$query = Employe::find()
 						 ->JoinWith('corpOne',true,'LEFT JOIN')
-                         ->JoinWith('deptOne',true,'left JOIN')
+             ->JoinWith('deptOne',true,'left JOIN')
 						 ->JoinWith('deptsub',true,'left JOIN')
 						 ->JoinWith('groupfunction',true,'left JOIN')
 						 ->JoinWith('groupseqmen',true,'left JOIN')

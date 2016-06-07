@@ -100,22 +100,22 @@ class Auth1Model extends Model
 						$rtheaderStt->ID_USER = $this->getProfile()->EMP_ID;
 						//$rtheaderStt->TYPE
 						$rtheaderStt->STATUS = 100;
-						$rtheaderStt->UPDATE_AT = date('Y-m-d H:m:s');
+						$rtheaderStt->UPDATED_AT = date('Y-m-d H:m:s');
 						if ($rtheaderStt->save()) {
 
 							//Notification::notify(Notification::KEY_NEW_MESSAGE, $id_Pengirim, $id_penerima(user_login),$ref_kode);
-							Notification::notify(Notification::KEY_NEW_MESSAGE, 25,Yii::$app->user->identity->id,$this->kdrib);
+							// Notification::notify(Notification::KEY_NEW_MESSAGE, 25,Yii::$app->user->identity->id,$this->kdrib);
 
-							$msgNotify = new MessageNotify;
-							$msgNotify->USER_CREATE=Yii::$app->user->identity->id; 				//integer
-							$msgNotify->USER_FROM_ID= $this->getProfile()->EMP_ID;
-							$msgNotify->USER_FROM= $this->getProfile()->EMP_NM; 			//varchar 50
-							$msgNotify->USER_TO='Melissa'; 			//varchar 50
-							$msgNotify->SUBJECT='PO'; 				//varchar 10
-							$msgNotify->CREATE_AT=date('Y-m-d H:m:s'); 		//varchar 10
-							$msgNotify->IMG=''; 						//TEXT
-							$msgNotify->REF = $this->kdrib; 				//TEXT
-							$msgNotify->save();
+							// $msgNotify = new MessageNotify;
+							// $msgNotify->USER_CREATE=Yii::$app->user->identity->id; 				//integer
+							// $msgNotify->USER_FROM_ID= $this->getProfile()->EMP_ID;
+							// $msgNotify->USER_FROM= $this->getProfile()->EMP_NM; 			//varchar 50
+							// $msgNotify->USER_TO='Melissa'; 			//varchar 50
+							// $msgNotify->SUBJECT='PO'; 				//varchar 10
+							// $msgNotify->CREATE_AT=date('Y-m-d H:m:s'); 		//varchar 10
+							// $msgNotify->IMG=''; 						//TEXT
+							// $msgNotify->REF = $this->kdrib; 				//TEXT
+							// $msgNotify->save();
 
 						}
 					}
