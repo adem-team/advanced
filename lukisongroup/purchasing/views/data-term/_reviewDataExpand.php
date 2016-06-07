@@ -21,13 +21,13 @@ use yii\data\ArrayDataProvider;
 	<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt">
 		<?php
 			$expandPlan=$this->render('_reviewDataExpandPlan',[
-				'dataProviderDetailBudget'=>$dataProviderDetailBudget
+				'dataProviderBudget'=>$dataProviderBudget
 			]);
-			
+
 			$expandActual=$this->render('_reviewDataExpandActual',[
-				'dataProviderDetailBudget'=>$dataProviderDetailBudget
-			]); 
-			
+				'dataProviderBudget'=>$dataProviderBudget
+			]);
+
 			$items=[
 				[
 					'label'=>'<i class="fa fa-mortar-board fa-lg"></i>Plan budget','content'=>$expandPlan,
@@ -37,11 +37,11 @@ use yii\data\ArrayDataProvider;
 				[
 					'label'=>'<i class="fa fa-bar-chart fa-lg"></i>  Actual Budget','content'=>$expandActual,
 					'options' => ['id' => 'term-chart-actual-budget'],
-				],	
+				],
 				[
 					'label'=>'<i class="fa fa-bar-chart fa-lg"></i>  Chart','content'=>'',
 					'options' => ['id' => 'term-chart-actual-budget'],
-				]			
+				]
 			];
 			echo TabsX::widget([
 				'id'=>'tab-detail-plan-actual',
@@ -49,7 +49,7 @@ use yii\data\ArrayDataProvider;
 				'position'=>TabsX::POS_ABOVE,
 				'bordered'=>true,
 				'encodeLabels'=>false
-			]);				
+			]);
 		?>
 	</div>
 	<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt">
