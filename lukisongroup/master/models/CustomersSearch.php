@@ -118,7 +118,7 @@ class CustomersSearch extends Customers
             return $dataProvider;
         }
 
-        
+
 
         $query->andFilterWhere(['like', 'CUST_KD', $this->CUST_KD])
             ->andFilterWhere(['like', 'CUST_KD_ALIAS', $this->CUST_KD_ALIAS])
@@ -145,6 +145,7 @@ class CustomersSearch extends Customers
             // ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
             // ->andFilterWhere(['like', 'UPDATED_BY', $this->UPDATED_BY]);
 
+	        $query->orderby(['CUST_GRP'=>SORT_ASC]); //SORT PENTING UNTUK RECURSIVE BIAR TREE BISA URUTAN, save => (IF (PATENT =0) {SORT=ID}, ELSE {SORT=PATENT}, note Parent=ID header
         return $dataProvider;
     }
 

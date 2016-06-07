@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use scotthuangzl\export2excel\Export2ExcelBehavior;
+use yii\web\Response;
 
 use lukisongroup\master\models\KategoricusSearch;
 use lukisongroup\master\models\DistributorSearch;
@@ -24,6 +25,7 @@ use lukisongroup\master\models\CustomersSearch;
 use lukisongroup\master\models\Customersalias;
 use lukisongroup\master\models\CustomersaliasSearch;
 use lukisongroup\master\models\ValidationLoginPrice;
+
 
 /**
  * CustomersController implements the CRUD actions for Customers model.
@@ -47,13 +49,13 @@ class CustomersController extends Controller
 
 	public function actions()
     {
-        return [           
+        return [
             'download' => [
                 'class' => 'scotthuangzl\export2excel\DownloadAction',
             ],
         ];
     }
-	
+
     /**
      * Lists all Customers models.
      * @return mixed
@@ -168,6 +170,8 @@ class CustomersController extends Controller
 	/*ESM INDEX*/
 	public function actionEsmIndex()
     {
+      $datacus = Customers::find()->where('CUST_GRP = CUST_KD')->asArray()->all();
+      $parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
 
       $paramCari=Yii::$app->getRequest()->getQueryParam('id');
       if ($paramCari!=''){
@@ -182,6 +186,7 @@ class CustomersController extends Controller
            if(Yii::$app->request->post('hasEditable'))
         {
             $ID = \Yii::$app->request->post('editableKey');
+            Yii::$app->response->format = Response::FORMAT_JSON;
             $model = Customers::findOne($ID);
             $out = Json::encode(['output'=>'', 'message'=>'']);
 
@@ -195,11 +200,10 @@ class CustomersController extends Controller
             $post['Customers'] = $posted;
 
 
-
             // load model like any single model validation
             if ($model->load($post)) {
                 // can save model or do something before saving model
-                $model->save();
+
 
                 // custom output to return to be displayed as the editable grid cell
                 // data. Normally this is empty - whereby whatever value is edited by
@@ -210,9 +214,11 @@ class CustomersController extends Controller
                 // editable column posted when you have more than one
                 // EditableColumn in the grid view. We evaluate here a
                 // check to see if buy_amount was posted for the Book model
-                if (isset($posted['CUST_KD_ALIAS'])) {
+                if (isset($posted['CUST_GRP'])) {
+                    $model->save();
+
                    // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-                    $output =$model->CUST_KD_ALIAS;
+                    $output = $model->CUST_GRP;
                 }
 
                 // similarly you can check if the name attribute was posted as well
@@ -236,6 +242,7 @@ class CustomersController extends Controller
 			'sideMenu_control'=> $sideMenu_control,
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
+      'parent'=>$parent
 		]);
 	}
 
@@ -1087,14 +1094,14 @@ class CustomersController extends Controller
         return $this->redirect(['index']);
     }
 
-	
+
 	/*
 	 * EXPORT DATA CUSTOMER TO EXCEL
 	 * export_data
 	*/
 	public function actionExport_data(){
-		
-		//$custDataMTI=Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll(); 
+
+		//$custDataMTI=Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll();
 
 		$cusDataProviderMTI= new ArrayDataProvider([
 			'key' => 'ID',
@@ -1102,10 +1109,10 @@ class CustomersController extends Controller
 			'pagination' => [
 				'pageSize' => 10,
 			]
-		]);		
+		]);
 		//print_r($cusDataProvider->allModels);
 		$aryCusDataProviderMTI=$cusDataProviderMTI->allModels;
-		
+
 		$excel_data = Export2ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);
         $excel_title = $excel_data['excel_title'];
         $excel_ceils = $excel_data['excel_ceils'];
@@ -1122,7 +1129,7 @@ class CustomersController extends Controller
                      'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
                      'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
                      'TLP1' => Export2ExcelBehavior::getCssClass('header'),
-                     'PIC' => Export2ExcelBehavior::getCssClass('header')              
+                     'PIC' => Export2ExcelBehavior::getCssClass('header')
                 ], //define each column's cssClass for header line only.  You can set as blank.
                'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
                'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
@@ -1135,15 +1142,15 @@ class CustomersController extends Controller
                     ["2.Berikut beberapa format nama yang tidak di anjurkan di ganti:"],
                     ["  A. Nama dari Sheet1: IMPORT FORMAT STOCK "],
 					["  B. Nama Header seperti column : DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF"],
-					["3.Refrensi."],					
-					["  'IMPORT FORMAT STOCK'= Nama dari Sheet1 yang aktif untuk di import "],					
-					["  'DATE'= Tanggal dari data stok yang akan di import "],					
-					["  'CUST_KD'= Kode dari customer, dimana setiap customer memiliki kode sendiri sendiri sesuai yang mereka miliki "],					
-					["  'CUST_NM'= Nama dari customer "],					
-					["  'SKU_ID'=  Kode dari Item yang mana customer memiliku kode items yang berbeda beda "],					
-					["  'SKU_NM'=  Nama dari Item, sebaiknya disamakan dengan nama yang dimiliki lukisongroup"],					
-					["  'QTY_PCS'= Quantity dalam unit PCS "],					
-					["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],					
+					["3.Refrensi."],
+					["  'IMPORT FORMAT STOCK'= Nama dari Sheet1 yang aktif untuk di import "],
+					["  'DATE'= Tanggal dari data stok yang akan di import "],
+					["  'CUST_KD'= Kode dari customer, dimana setiap customer memiliki kode sendiri sendiri sesuai yang mereka miliki "],
+					["  'CUST_NM'= Nama dari customer "],
+					["  'SKU_ID'=  Kode dari Item yang mana customer memiliku kode items yang berbeda beda "],
+					["  'SKU_NM'=  Nama dari Item, sebaiknya disamakan dengan nama yang dimiliki lukisongroup"],
+					["  'QTY_PCS'= Quantity dalam unit PCS "],
+					["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],
 				],
 			],
 			[
@@ -1154,23 +1161,23 @@ class CustomersController extends Controller
                     ["2.Berikut beberapa format nama yang tidak di anjurkan di ganti:"],
                     ["  A. Nama dari Sheet1: IMPORT FORMAT STOCK "],
 					["  B. Nama Header seperti column : DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF"],
-					["3.Refrensi."],					
-					["  'IMPORT FORMAT STOCK'= Nama dari Sheet1 yang aktif untuk di import "],					
-					["  'DATE'= Tanggal dari data stok yang akan di import "],					
-					["  'CUST_KD'= Kode dari customer, dimana setiap customer memiliki kode sendiri sendiri sesuai yang mereka miliki "],					
-					["  'CUST_NM'= Nama dari customer "],					
-					["  'SKU_ID'=  Kode dari Item yang mana customer memiliku kode items yang berbeda beda "],					
-					["  'SKU_NM'=  Nama dari Item, sebaiknya disamakan dengan nama yang dimiliki lukisongroup"],					
-					["  'QTY_PCS'= Quantity dalam unit PCS "],					
-					["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],					
+					["3.Refrensi."],
+					["  'IMPORT FORMAT STOCK'= Nama dari Sheet1 yang aktif untuk di import "],
+					["  'DATE'= Tanggal dari data stok yang akan di import "],
+					["  'CUST_KD'= Kode dari customer, dimana setiap customer memiliki kode sendiri sendiri sesuai yang mereka miliki "],
+					["  'CUST_NM'= Nama dari customer "],
+					["  'SKU_ID'=  Kode dari Item yang mana customer memiliku kode items yang berbeda beda "],
+					["  'SKU_NM'=  Nama dari Item, sebaiknya disamakan dengan nama yang dimiliki lukisongroup"],
+					["  'QTY_PCS'= Quantity dalam unit PCS "],
+					["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],
 				],
 			], */
 		];
-		
+
 		$excel_file = "CustomerData";
-		$this->export2excel($excel_content, $excel_file); 
+		$this->export2excel($excel_content, $excel_file);
 	}
-	
+
 
     /**
      * Finds the Kategoricus model based on its primary key value.

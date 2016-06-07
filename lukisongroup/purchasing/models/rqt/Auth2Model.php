@@ -98,21 +98,21 @@ class Auth2Model extends Model
 						$rtHeader_2Stt->ID_USER = $this->getProfile()->EMP_ID;
 						//$rtHeader_2Stt->TYPE
 						$rtHeader_2Stt->STATUS = 101;
-						$rtHeader_2Stt->UPDATE_AT = date('Y-m-d H:m:s');
+						$rtHeader_2Stt->UPDATED_AT = date('Y-m-d H:m:s');
 						if ($rtHeader_2Stt->save()) {
 
-							Notification::notify(Notification::KEY_NEW_MESSAGE, 23,Yii::$app->user->identity->id,$this->kdrib);
-
-							$msgNotify = new MessageNotify;
-							$msgNotify->USER_CREATE=Yii::$app->user->identity->id; 				//integer
-							$msgNotify->USER_FROM_ID= $this->getProfile()->EMP_ID;
-							$msgNotify->USER_FROM= $this->getProfile()->EMP_NM; 			//varchar 50
-							$msgNotify->USER_TO='Stephen'; 			//varchar 50
-							$msgNotify->SUBJECT='PO'; 				//varchar 10
-							$msgNotify->CREATE_AT=date('Y-m-d H:m:s'); 		//varchar 10
-							$msgNotify->IMG=''; 						//TEXT
-							$msgNotify->REF = $this->kdrib; 				//TEXT
-							$msgNotify->save();
+							// Notification::notify(Notification::KEY_NEW_MESSAGE, 23,Yii::$app->user->identity->id,$this->kdrib);
+              //
+							// $msgNotify = new MessageNotify;
+							// $msgNotify->USER_CREATE=Yii::$app->user->identity->id; 				//integer
+							// $msgNotify->USER_FROM_ID= $this->getProfile()->EMP_ID;
+							// $msgNotify->USER_FROM= $this->getProfile()->EMP_NM; 			//varchar 50
+							// $msgNotify->USER_TO='Stephen'; 			//varchar 50
+							// $msgNotify->SUBJECT='PO'; 				//varchar 10
+							// $msgNotify->CREATE_AT=date('Y-m-d H:m:s'); 		//varchar 10
+							// $msgNotify->IMG=''; 						//TEXT
+							// $msgNotify->REF = $this->kdrib; 				//TEXT
+							// $msgNotify->save();
 						}
 					}
                 return $rtHeader_2;

@@ -21,6 +21,7 @@ use yii\widgets\ActiveForm;
 use lukisongroup\purchasing\models\rqt\Requesttermheader;
 use lukisongroup\purchasing\models\rqt\RequesttermheaderSearch;
 use lukisongroup\purchasing\models\rqt\Rtdetail;
+use lukisongroup\purchasing\models\data_term\Termheader;
 use lukisongroup\purchasing\models\rqt\RtdetailSearch;
 
 use lukisongroup\purchasing\models\rqt\AdditemValidation;
@@ -186,12 +187,17 @@ class RequestTermController extends Controller
           $model->KD_RIB = $kode;
 
         }
+
+        $cari_term = Yii::$app->db_esm->createCommand('SELECT * from t0000header where CUST_KD_PARENT ="'.$model->CUST_ID_PARENT.'"')->queryScalar();
+        // $cari_term = Requesttermheader::find()->where(['CUST_ID_PARENT'=>$model->CUST_ID_PARENT])->one();
+        $model->TERM_ID = $cari_term;
         $model->CREATED_AT = date('Y-m-d');
         $model->ID_USER = Yii::$app->getUserOpt->Profile_user()->EMP_ID;
         $model->save();
         $term_invest->KD_RIB = $model->KD_RIB;
         $term_invest->INVESTASI_TYPE;
         $term_invest->save();
+
         	return $this->redirect(['/purchasing/request-term/edit?kd='.$model->KD_RIB]);
       } else {
       return $this->renderAjax('_form', [

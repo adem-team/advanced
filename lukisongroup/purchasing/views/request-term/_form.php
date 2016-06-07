@@ -23,7 +23,9 @@ use lukisongroup\hrd\models\Corp;
 /* array*/
  $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT');
  $corp = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
- $data_group_cus = ArrayHelper::map(Customers::find()->where('CUST_KD = CUST_GRP')->all(),'CUST_KD','CUST_NM');
+ $query_cari_customers = Yii::$app->db_esm->createCommand('SELECT td.CUST_NM,th.TERM_ID,th.CUST_KD_PARENT FROM `t0000header` th INNER JOIN c0001 td on th.CUST_KD_PARENT = td.CUST_KD')->queryAll();
+
+ $data_group_cus = ArrayHelper::map($query_cari_customers,'CUST_KD_PARENT','CUST_NM');
  $data_invest = ArrayHelper::map(Terminvest::find()->all(),'ID','INVES_TYPE')
 
 ?>

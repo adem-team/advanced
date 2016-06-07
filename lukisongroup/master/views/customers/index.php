@@ -164,11 +164,11 @@ $tabcustomersData = \kartik\grid\GridView::widget([
       'label'=>'Customer Group',
       'filterType'=>GridView::FILTER_SELECT2,
       'filter' => $parent,
-	  
+
 	  'filterOptions'=>[
 		'colspan'=>2,
-	  ],  
-	  'filterWidgetOptions'=>[		
+	  ],
+	  'filterWidgetOptions'=>[
         'pluginOptions'=>[
 			'allowClear'=>true,
 			'contentOptions'=>[
@@ -179,8 +179,8 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 				]
 			]
 		],
-	  ],	  
-      'filterInputOptions'=>['placeholder'=>'Parent Customer'],	 
+	  ],
+      'filterInputOptions'=>['placeholder'=>'Parent Customer'],
       'hAlign'=>'left',
       'vAlign'=>'top',
       'headerOptions'=>[
@@ -203,13 +203,15 @@ $tabcustomersData = \kartik\grid\GridView::widget([
       'group'=>true,
     ],
     [
-      'attribute' => 'CUST_KD',
+    	'class'=>'kartik\grid\EditableColumn',
+      'attribute' => 'CUST_GRP',
+      'refreshGrid'=>true,
       'label'=>'Customer.Id',
       'hAlign'=>'left',
       'vAlign'=>'top',
-	  'filter'=>false,
-	  'mergeHeader'=>true,
-	  'headerOptions'=>[	 
+  	  'filter'=>false,
+  	  'mergeHeader'=>true,
+  	  'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
           'width'=>'120px',
@@ -226,6 +228,20 @@ $tabcustomersData = \kartik\grid\GridView::widget([
           'font-family'=>'tahoma, arial, sans-serif',
           'font-size'=>'8pt',
         ]
+      ],
+      'editableOptions' => [
+        'header' => 'Cost Center',
+        'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+        'size' => 'md',
+        'options' => [
+          'data' =>$parent,
+          'pluginOptions' => [
+            'allowClear' => true,
+            'class'=>'pull-top dropup'
+          ],
+        ],
+        //Refresh Display
+        // 'displayValueConfig' => $parent,
       ],
     ],
 
@@ -467,7 +483,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 									//'data-pjax' => true,
 									'class' => 'btn btn-info btn-sm'
 								]
-					),	
+					),
 
   ],
   'pjax'=>true,
@@ -495,7 +511,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 	 $navmenu= NavX::widget([
 		'options'=>['class'=>'nav nav-tabs'],
 		'encodeLabels' => false,
-		'items' => [			
+		'items' => [
 			['label' => 'MENU', 'active'=>true, 'items' => [
 				['label' => '<span class="fa fa-user fa-md"></span>Customers', 'url' => '/master/customers/esm-index'],
 				['label' => '<span class="fa fa-cogs fa-md"></span>Alias Customers', 'url' => '/master/customers/login-alias','linkOptions'=>['id'=>'performance','data-toggle'=>'modal','data-target'=>'#formlogin']],
@@ -508,7 +524,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 					['label' => '<span class="fa fa-map-marker fa-md"></span>Customers Map', 'url' => '/master/customers/esm-map'],
 				]],
 			]],
-		   
+
 		]
 	]);
 ?>
@@ -529,7 +545,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 				  '<li>'.  tombolProvince() .'</li>'.
 				  '<li>'.  tombolKategori() .'</li>'.
 				  '<li>'.  tombolMap() .'</li>'.
-				  '<li>'.  tombolLoginalias() .'</li>'.			  
+				  '<li>'.  tombolLoginalias() .'</li>'.
 				  '</ul>'.
 				'</div>';
 				//echo  $test;

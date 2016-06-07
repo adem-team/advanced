@@ -111,7 +111,7 @@ class TermdetailSearch extends Termdetail
 
         $query->andFilterWhere([
             'ID' => $this->ID,
-			'BUDGET_PLAN' => $this->BUDGET_PLAN,
+			      'BUDGET_PLAN' => $this->BUDGET_PLAN,
             'BUDGET_ACTUAL' => $this->BUDGET_ACTUAL,
             'PERIODE_END' => $this->PERIODE_END,
             'STATUS' => $this->STATUS,
@@ -131,20 +131,52 @@ class TermdetailSearch extends Termdetail
     public function searchbudgetdetail($params,$id)
     {
 
-      // Customers::find()->joinWith('cus',true,'JOIN')
-      //           ->where('c0001.STATUS <> 3');
+
         $query = Termdetail::find()->JoinWith('termhead',true,'LEFT JOIN')
                                   ->where(['t0000detail.TERM_ID'=>$id])
                                   ->andwhere(['like','t0001header.KD_RIB','RB']);
-          
 
 
 
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
 
-                                  // ->JoinWith('termhead',true,'left JOIN')
+        $this->load($params);
 
-                                                            // ->andwhere(['like','t0001header.KD_RIB','RIB']);
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
 
+        $query->andFilterWhere([
+            'ID' => $this->ID,
+      'BUDGET_PLAN' => $this->BUDGET_PLAN,
+            'BUDGET_ACTUAL' => $this->BUDGET_ACTUAL,
+            'PERIODE_END' => $this->PERIODE_END,
+            'STATUS' => $this->STATUS,
+            'CREATE_AT' => $this->CREATE_AT,
+            'UPDATE_AT' => $this->UPDATE_AT,
+        ]);
+
+        $query->andFilterWhere(['like', 'CUST_KD_PARENT', $this->CUST_KD_PARENT])
+            ->andFilterWhere(['like', 'INVES_TYPE', $this->INVES_TYPE])
+            ->andFilterWhere(['like', 'BUDGET_SOURCE', $this->BUDGET_SOURCE])
+            ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
+            ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
+
+        return $dataProvider;
+    }
+
+    public function searchbudgetdetailinves($params,$id)
+    {
+
+
+        $query = Termdetail::find()->JoinWith('termhead',true,'LEFT JOIN')
+                                  ->where(['t0000detail.TERM_ID'=>$id])
+                                  ->andwhere(['like','t0001header.KD_RIB','RI'])
+                                  ->andwhere(['like','t0001header.KD_RIB','RID']);
 
 
 

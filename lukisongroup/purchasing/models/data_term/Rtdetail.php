@@ -95,6 +95,9 @@ class Rtdetail extends \yii\db\ActiveRecord
 	public function getRetermheader(){
 		return $this->hasOne(Requesttermheader::className(), ['KD_RIB' => 'KD_RIB']);
 	}
+  public function getTermdet(){
+		return $this->hasOne(Termdetail::className(), ['TERM_ID' => 'TERM_ID']);
+	}
   public function getPph()
   {
     return $this->retermheader->PPH23;

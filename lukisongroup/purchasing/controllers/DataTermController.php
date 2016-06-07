@@ -138,6 +138,8 @@ class DataTermController extends Controller
 		*/
 	}
 
+
+
 	/*
 	 * REVIEW TERM
 	 * Data term yang bisa di update [budget plan | budget actual -> button Actual investment ]
@@ -156,10 +158,15 @@ class DataTermController extends Controller
 
     $searchModelBudgetdetail= new TermdetailSearch();
 		$dataProviderBudgetdetail = $searchModelBudgetdetail->searchbudgetdetail(Yii::$app->request->queryParams,$id);
+
+    $searchModelBudgetdetail_inves = new TermdetailSearch();
+    $dataProviderBudgetdetail_inves = $searchModelBudgetdetail_inves->searchbudgetdetailinves(Yii::$app->request->queryParams,$id);
 		return $this->render('review',[
 			'dataProvider'=>$dataProvider,
 			'model'=>$modelRslt,
 			'dataProviderBudget'=>$dataProviderBudget,
+      'dataProviderBudgetdetail'=>$dataProviderBudgetdetail,
+      'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves
 		]);
 		/*
 		 * NOTED VIEWS FILES:
