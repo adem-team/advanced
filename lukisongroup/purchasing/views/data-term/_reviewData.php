@@ -14,11 +14,13 @@ use yii\web\Request;
 use kartik\daterange\DateRangePicker;
 use yii\db\ActiveRecord;
 use yii\data\ArrayDataProvider;
+use yii\data\ActiveDataProvider;
 
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Termcustomers;
 use lukisongroup\master\models\Distributor;
 use lukisongroup\hrd\models\Corp;
+use lukisongroup\purchasing\models\data_term\Rtdetail;
 
 
 //print_r($dataProviderBudget->getModels());
@@ -141,10 +143,28 @@ use lukisongroup\hrd\models\Corp;
 		'value'=>function ($model, $key, $index, $column) {
 			return GridView::ROW_COLLAPSED;
 		},
-		'detail'=>function ($model, $key, $index, $column) use($dataProviderBudget){
+		// 'detail'=>function ($model, $key, $index, $column) use($dataProviderBudget){
+		// 	/* RENDER */
+		// 	return Yii::$app->controller->renderPartial('_reviewDataExpand',[
+		// 		'dataProviderBudget'=>$dataProviderBudget,
+		// 	]);
+		// },
+		'detail'=>function ($model, $key, $index, $column)use($dataProviderBudgetdetail){
 			/* RENDER */
+			$query = Rtdetail::find()->JoinWith('termdet',true,'left JOIN')
+																						 ->where(['t0001detail.TERM_ID'=>$model->TERM_ID])
+																						 ->andwhere(['like','t0001detail.KD_RIB','RID'])
+																						  ->andwhere(['like','t0001detail.KD_RIB','RI'])
+																						 ->andwhere(['t0001detail.INVESTASI_TYPE'=>$model->INVES_ID]);
+																						//  ->where(['like','t0001detail.KD_RIB','RI']);
+				 $dataProviderBudgetdetail_inves = new ActiveDataProvider([
+																'query' => $query,
+																]);
 			return Yii::$app->controller->renderPartial('_reviewDataExpand',[
+				'dataProviderBudgetdetail'=>$dataProviderBudgetdetail,
+				'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves,
 				'dataProviderBudget'=>$dataProviderBudget,
+				'id'=>$model->ID
 			]);
 		},
 		'headerOptions'=>[

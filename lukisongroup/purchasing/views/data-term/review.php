@@ -53,14 +53,15 @@ $this->title = Yii::t('app', 'Trading Terms ');
 						'model'=>$model,
 						'dataProvider'=>$dataProvider,
 						'dataProviderBudget'=>$dataProviderBudget,
-						'dataProviderBudgetdetail'=>$dataProviderBudgetdetail
+						'dataProviderBudgetdetail'=>$dataProviderBudgetdetail,
+						'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves
 					]);
 					$contentChart=$this->render('_reviewChart');
 
 					$items=[
 						[
 							'label'=>'<i class="fa fa-mortar-board fa-lg"></i>  TERM DATA','content'=>$contentData,
-							// 'active'=>true,
+							'active'=>true,
 							'options' => ['id' => 'term-data'],
 						],
 						[
@@ -75,8 +76,10 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					echo TabsX::widget([
 						'id'=>'tab-term-plan',
 						'items'=>$items,
+						'sideways'=>true,
 						'position'=>TabsX::POS_ABOVE,
-										'encodeLabels'=>false
+						'encodeLabels'=>false,
+
 					]);
 				?>
 		</div>

@@ -89,9 +89,9 @@ class Requesttermheader extends \yii\db\ActiveRecord
     {
         return [
             [['NEW','CUST_ID_PARENT','NOTE'], 'required','on'=>'simpan'],
-            [['TGL', 'CREATED_AT', 'SIG1_TGL', 'SIG2_TGL', 'SIG3_TGL','SIG1_SVGBASE64','SIG1_SVGBASE30'], 'safe'],
+            [['TGL', 'CREATED_AT', 'SIG1_TGL', 'SIG2_TGL', 'SIG3_TGL','SIG1_SVGBASE64','SIG1_SVGBASE30','TERM_ID'], 'safe'],
             [['PPN', 'PPH23'], 'number'],
-            [['NOTE', 'DATA_ALL', 'SIG2_SVGBASE64', 'SIG2_SVGBASE30', 'SIG3_SVGBASE64', 'SIG3_SVGBASE30'], 'string'],
+            [['NOTE', 'DATA_ALL', 'SIG2_SVGBASE64', 'SIG2_SVGBASE30', 'SIG3_SVGBASE64', 'SIG3_SVGBASE30','TERM_ID'], 'string'],
             [['STATUS'], 'integer'],
             [['KD_RIB', 'CUST_ID_PARENT', 'KD_CORP', 'KD_COSTCENTER', 'KD_CAB', 'KD_DEP', 'EMP_NM', 'USER_CC', 'SIG1_ID', 'SIG1_NM', 'SIG2_ID', 'SIG2_NM', 'SIG3_ID', 'SIG3_NM'], 'string', 'max' => 50],
             [['ID_USER', 'UPDATED_ALL','KD_CAB', 'KD_DEP',  'CREATED_AT'], 'string', 'max' => 255],
