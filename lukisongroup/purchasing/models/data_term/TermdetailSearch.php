@@ -20,7 +20,7 @@ class TermdetailSearch extends Termdetail
     {
         return [
             [['ID', 'STATUS'], 'integer'],
-            [['CUST_KD_PARENT','TERM_ID', 'INVES_TYPE', 'BUDGET_SOURCE', 'PERIODE_START', 'PERIODE_END', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
+            [['CUST_KD_PARENT', 'INVES_TYPE', 'BUDGET_SOURCE', 'PERIODE_START', 'PERIODE_END', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
             [['BUDGET_PLAN','BUDGET_ACTUAL'], 'number'],
         ];
     }
@@ -81,20 +81,7 @@ class TermdetailSearch extends Termdetail
     public function searchbudget($params,$id)
     {
 
-      // Customers::find()->joinWith('cus',true,'JOIN')
-      //           ->where('c0001.STATUS <> 3');
-        // $query = Termdetail::find()->JoinWith('termhead',true,'LEFT JOIN')
-        //                           ->where(['t0000detail.TERM_ID'=>$id])
-        //                           ->andwhere(['like','t0001header.KD_RIB','RB']);
-
-
-          $query = Termdetail::find()->where(['TERM_ID'=>$id]);
-
-                                  // ->JoinWith('termhead',true,'left JOIN')
-
-                                                            // ->andwhere(['like','t0001header.KD_RIB','RIB']);
-
-
+        $query = Termdetail::find()->where(['TERM_ID'=>$id]);
 
 
         $dataProvider = new ActiveDataProvider([
@@ -152,7 +139,7 @@ class TermdetailSearch extends Termdetail
 
         $query->andFilterWhere([
             'ID' => $this->ID,
-      'BUDGET_PLAN' => $this->BUDGET_PLAN,
+            'BUDGET_PLAN' => $this->BUDGET_PLAN,
             'BUDGET_ACTUAL' => $this->BUDGET_ACTUAL,
             'PERIODE_END' => $this->PERIODE_END,
             'STATUS' => $this->STATUS,
@@ -194,7 +181,7 @@ class TermdetailSearch extends Termdetail
 
         $query->andFilterWhere([
             'ID' => $this->ID,
-      'BUDGET_PLAN' => $this->BUDGET_PLAN,
+            'BUDGET_PLAN' => $this->BUDGET_PLAN,
             'BUDGET_ACTUAL' => $this->BUDGET_ACTUAL,
             'PERIODE_END' => $this->PERIODE_END,
             'STATUS' => $this->STATUS,

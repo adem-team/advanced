@@ -26,7 +26,7 @@ use yii\data\ArrayDataProvider;
 		['ID' =>4, 'ATTR' =>['FIELD'=>'BUDGET_ACTUAL','SIZE' => '10px','label'=>'Budget Actual','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		//['ID' =>5, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 	];
-	$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');	
+	$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');
 	/*GRIDVIEW SERIAL ROWS*/
 	$attDinamik[] =[
 		'class'=>'kartik\grid\SerialColumn',
@@ -64,7 +64,7 @@ use yii\data\ArrayDataProvider;
 			//'mergeHeader'=>true,
 			'noWrap'=>true,
 			'group'=>$value[$key]['GRP'],
-			'format'=>$value[$key]['FORMAT'],						
+			'format'=>$value[$key]['FORMAT'],
 			'headerOptions'=>[
 					'style'=>[
 					'text-align'=>'center',
@@ -132,7 +132,7 @@ use yii\data\ArrayDataProvider;
 	$gvDetalBudget= GridView::widget([
 		'id'=>'detail-budget',
 		'dataProvider' => $dataProviderDetailBudget,
-		//'filterModel' => $searchModel,					
+		//'filterModel' => $searchModel,
 		//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
 		'beforeHeader'=>[
 			[
@@ -145,7 +145,7 @@ use yii\data\ArrayDataProvider;
 				],
 			]
 		],
-		'columns' => $attDinamik,		
+		'columns' => $attDinamik,
 		'pjax'=>true,
 		'pjaxSettings'=>[
 			'options'=>[
