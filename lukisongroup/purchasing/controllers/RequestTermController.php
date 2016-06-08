@@ -194,6 +194,7 @@ class RequestTermController extends Controller
         $model->CREATED_AT = date('Y-m-d');
         $model->ID_USER = Yii::$app->getUserOpt->Profile_user()->EMP_ID;
         $model->save();
+        $term_invest->TERM_ID = $model->TERM_ID;
         $term_invest->KD_RIB = $model->KD_RIB;
         $term_invest->INVESTASI_TYPE;
         $term_invest->save();
