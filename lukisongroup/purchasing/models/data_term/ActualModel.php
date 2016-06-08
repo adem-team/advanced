@@ -49,6 +49,7 @@ class ActualModel extends Model{
 
 							/*detail term */
 						$term_detail = new Rtdetail();
+						$term_detail->TERM_ID =  $term_header->TERM_ID;
 					  $term_detail->KD_RIB = $term_header->KD_RIB;
 						$term_detail->INVESTASI_TYPE = $this->investId;
 						$term_detail->INVESTASI_PROGRAM = $this->invesProgram;

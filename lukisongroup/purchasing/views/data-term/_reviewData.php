@@ -143,26 +143,42 @@ use lukisongroup\purchasing\models\data_term\Rtdetail;
 		'value'=>function ($model, $key, $index, $column) {
 			return GridView::ROW_COLLAPSED;
 		},
-		// 'detail'=>function ($model, $key, $index, $column) use($dataProviderBudget){
-		// 	/* RENDER */
-		// 	return Yii::$app->controller->renderPartial('_reviewDataExpand',[
-		// 		'dataProviderBudget'=>$dataProviderBudget,
-		// 	]);
-		// },
-		'detail'=>function ($model, $key, $index, $column)use($dataProviderBudgetdetail){
-			/* RENDER */
-			$query = Rtdetail::find()->JoinWith('termdet',true,'left JOIN')
+		'detail'=>function ($model, $key, $index, $column){
+
+			/*query actual_detail*/
+			$query = Rtdetail::find()->JoinWith('invest',true,'left JOIN')
+																						->JoinWith('termdet',true,'left JOIN')
 																						 ->where(['t0001detail.TERM_ID'=>$model->TERM_ID])
 																						 ->andwhere(['like','t0001detail.KD_RIB','RID'])
-																						  ->andwhere(['like','t0001detail.KD_RIB','RI'])
+																						 ->andwhere(['like','t0001detail.KD_RIB','RI'])
 																						 ->andwhere(['t0001detail.INVESTASI_TYPE'=>$model->INVES_ID]);
-																						//  ->where(['like','t0001detail.KD_RIB','RI']);
-				 $dataProviderBudgetdetail_inves = new ActiveDataProvider([
+			/*dataprovider actual_detail*/
+			$dataProviderBudgetdetail_inves = new ActiveDataProvider([
 																'query' => $query,
+																'pagination' => [
+																'pageSize' => 20,
+																	 ],
 																]);
+
+			/*query budget_plan*/
+			$query1 = Rtdetail::find()->JoinWith('invest',true,'left JOIN')
+								->JoinWith('termdet',true,'left JOIN')
+								->where(['t0001detail.TERM_ID'=>$model->TERM_ID])
+								->andwhere(['like','t0001detail.KD_RIB','RB'])
+								->andwhere(['t0001detail.INVESTASI_TYPE'=>$model->INVES_ID]);
+
+			/*dataprovider budget_plan*/
+			 $dataProviderBudgetdetail = new ActiveDataProvider([
+																							'query' => $query1,
+																							'pagination' => [
+																							'pageSize' => 20,
+																											],
+																								]);
+
+				/*render*/
 			return Yii::$app->controller->renderPartial('_reviewDataExpand',[
 				'dataProviderBudgetdetail'=>$dataProviderBudgetdetail,
-				'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves,
+				'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves, //actual_detail
 				'dataProviderBudget'=>$dataProviderBudget,
 				'id'=>$model->ID
 			]);
