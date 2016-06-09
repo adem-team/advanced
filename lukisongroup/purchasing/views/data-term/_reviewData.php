@@ -27,12 +27,15 @@ use lukisongroup\purchasing\models\data_term\Rtdetail;
 
 //echo $model[0]->NmDis;
 
+$id = $_GET['id'];
+
+
 
 	/*
 	 * Tombol List Acount INVESTMENT
 	 * No Permission
 	*/
-	function tombolInvest($id_term){
+	function tombolInvest($id_term,$cust_kd){
 		$title = Yii::t('app', 'Account Investment');
 		$options = ['id'=>'account-invest',
 					'data-toggle'=>"modal",
@@ -41,7 +44,7 @@ use lukisongroup\purchasing\models\data_term\Rtdetail;
 		];
 		$icon = '<span class="glyphicon glyphicon-search"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/data-term/account-investment','id'=>$id_term]);
+		$url = Url::toRoute(['/purchasing/data-term/account-investment','id'=>$id_term,'cus_kd'=>$cust_kd]);
 		$content = Html::a($label,$url, $options);
 		return $content;
 	}
@@ -117,7 +120,15 @@ use lukisongroup\purchasing\models\data_term\Rtdetail;
         					INNER JOIN t0001detail td1 on td.INVES_ID = td1.INVESTASI_TYPE
         					where td.TERM_ID ="'.$model->TERM_ID.'" and td1.INVESTASI_TYPE="'.$model->INVES_ID.'" and td1.KD_RIB LIKE "RID%" and td1.KD_RIB LIKE "RI%"';
 					$execute = $connect->createCommand($sql)->queryScalar();
-					return $execute;
+					if($execute!= '')
+					{
+						return $execute;
+					}else {
+						# code...
+						$execute = number_format(0.00,2);
+						return $execute;
+					}
+
 				},
 				'label'=>$value[$key]['label'],
 				'filterType'=>$value[$key]['filterType'],
@@ -195,38 +206,75 @@ use lukisongroup\purchasing\models\data_term\Rtdetail;
 		},
 		'detail'=>function ($model, $key, $index, $column){
 
+		$connect = Yii::$app->db_esm;
+		$sql = "SELECT * FROM `t0000detail` td
+						LEFT JOIN t0001header th on
+						td.CUST_KD_PARENT = th.CUST_ID_PARENT
+						LEFT JOIN t0001detail ti on th.KD_RIB = ti.KD_RIB
+						LEFT JOIN  c0006 c on ti.INVESTASI_TYPE = c.ID
+						WHERE th.TERM_ID ='".$model->TERM_ID."'
+						AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
+						AND th.KD_RIB LIKE 'RID%'
+						AND th.KD_RIB LIKE 'RI%'";
+
+						$hasil = $connect->createCommand($sql)->queryAll();
+
+						$dataProviderBudgetdetail_inves = new ArrayDataProvider([
+				    'allModels' => $hasil,
+				    'pagination' => [
+				        'pageSize' => 10,
+				    ],
+				]);
+
+
+				$sql2 = "SELECT * FROM `t0000detail` td
+								LEFT JOIN t0001header th on
+								td.CUST_KD_PARENT = th.CUST_ID_PARENT
+								LEFT JOIN t0001detail ti on th.KD_RIB = ti.KD_RIB
+								LEFT JOIN  c0006 c on ti.INVESTASI_TYPE = c.ID
+								WHERE th.TERM_ID ='".$model->TERM_ID."'AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
+								AND th.KD_RIB LIKE 'RB%'";
+
+								$hasil1 = $connect->createCommand($sql2)->queryAll();
+
+								$dataProviderBudgetdetail = new ArrayDataProvider([
+								'allModels' => $hasil1,
+								'pagination' => [
+										'pageSize' => 10,
+								],
+						]);
 
 			/*query actual_detail*/
-			$query = Rtdetail::find()->JoinWith('invest',true,'left JOIN')
-							 ->JoinWith('termdet',true,'left JOIN')
-							 ->where(['t0000detail.TERM_ID'=>$model->TERM_ID])
-							 ->andwhere(['t0001detail.INVESTASI_TYPE'=>$model->INVES_ID])
-							 ->andwhere(['like','t0001detail.KD_RIB','RID'])
-							 ->andwhere(['like','t0001detail.KD_RIB','RI']);
+			// $query = Rtdetail::find()->JoinWith('invest',true,'left JOIN')
+			// 				 ->JoinWith('termdet',true,'left JOIN')
+			// 				 ->where(['t0000detail.TERM_ID'=>$model->TERM_ID])
+			// 				 ->andwhere(['t0001detail.INVESTASI_TYPE'=>$model->INVES_ID])
+			// 				 ->andwhere(['like','t0001detail.KD_RIB','RID'])
+			// 				 ->andwhere(['like','t0001detail.KD_RIB','RI']);
 
 
 			/*dataprovider actual_detail*/
-			$dataProviderBudgetdetail_inves = new ActiveDataProvider([
-																'query' => $query,
-																'pagination' => [
-																'pageSize' => 20,
-																	 ],
-																]);
+			// $dataProviderBudgetdetail_inves = new ActiveDataProvider([
+			// 													'query' => $query,
+			// 													'pagination' => [
+			// 													'pageSize' => 20,
+			// 														 ],
+			// 													]);
 
 			/*query budget_plan*/
-			$query1 = Rtdetail::find()->JoinWith('invest',true,'left JOIN')
-								->JoinWith('termdet',true,'left JOIN')
-								->where(['t0000detail.TERM_ID'=>$model->TERM_ID])
-								->andwhere(['like','t0001detail.KD_RIB','RB'])
-								->andwhere(['t0001detail.INVESTASI_TYPE'=>$model->INVES_ID]);
+			// $query1 = Rtdetail::find()->JoinWith('invest',true,'left JOIN')
+			// 					->JoinWith('termdet',true,'left JOIN')
+			// 					->where(['t0000detail.TERM_ID'=>$model->TERM_ID])
+			// 					->andwhere(['like','t0001detail.KD_RIB','RB'])
+			// 					->andwhere(['t0001detail.INVESTASI_TYPE'=>$model->INVES_ID]);
 
 			/*dataprovider budget_plan*/
-			 $dataProviderBudgetdetail = new ActiveDataProvider([
-																	'query' => $query1,
-																	 'pagination' => [
-																		'pageSize' => 20,
-																				],
-																			]);
+			//  $dataProviderBudgetdetail = new ActiveDataProvider([
+			// 														'query' => $query1,
+			// 														 'pagination' => [
+			// 															'pageSize' => 20,
+			// 																	],
+			// 																]);
 
 				/*render*/
 			return Yii::$app->controller->renderPartial('_reviewDataExpand',[
@@ -415,7 +463,7 @@ use lukisongroup\purchasing\models\data_term\Rtdetail;
 	<?php
 		//print_r($model[0]->TERM_ID);
 	?>
-	<div style="margin-bottom:5px;margin-right:5px; float:left"><?=tombolInvest($model['TERM_ID']);?></div>
+	<div style="margin-bottom:5px;margin-right:5px; float:left"><?=tombolInvest($model['TERM_ID'],$cus_kd);?></div>
 	<div style="margin-bottom:5px"><?=tombolActual($model->TERM_ID);?></div>
 	<?=$gvDetalPlanActual;?>
 </div>

@@ -83,7 +83,7 @@ function tombolCreate(){
 				$options = [ 'id'=>'term-date-review'];
 				$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
 				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/data-term/review','id'=>$model->TERM_ID]);
+				$url = Url::toRoute(['/purchasing/data-term/review','id'=>$model->TERM_ID,'cus_kd'=>$model->CUST_KD_PARENT]);
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
 			}
@@ -319,7 +319,7 @@ $this->registerJs("
 
 Modal::begin([
 		'id' => 'new-term',
-		'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+		'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>New Term</b></h4></div>',
 		// 'size' => Modal::SIZE_SMALL,
 		'headerOptions'=>[
 			'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
