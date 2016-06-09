@@ -178,8 +178,8 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 											'badge' => ''
 										],
 										[
-											'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Request Trade',
-											'url' => '/master/term-customers',
+											'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Request Trade invest',
+											'url' => '/purchasing/request-term',
 											'badge' => ''
 										],
 
