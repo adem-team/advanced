@@ -4,9 +4,11 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\Select2;
+use kartik\money\MaskMoney;
 
 /* namespace model*/
 use lukisongroup\master\models\Terminvest;
+
 
 /*array */
 $investData = ArrayHelper::map(Terminvest::find()->all(), 'ID', 'INVES_TYPE');
@@ -57,7 +59,12 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 
 			<?=$form->field($actualModel, 'faktureNo')->textInput(['maxlength' => true])->label('FAKTUR'); ?>
 
-			<?=$form->field($actualModel, 'invesHarga')->textInput(['maxlength' => true])->label('COST'); ?>
+      <?= $form->field($actualModel, 'invesHarga')->widget(MaskMoney::classname(), [
+                    'pluginOptions' => [
+                        'allowNegative' => false
+                    ]
+                ])->label('COST') ?>
+			<!-- $form->field($actualModel, 'invesHarga')->textInput(['maxlength' => true])->label('COST'); ?> -->
 				</div>
 				<div class="col-sm-6">
 					<?= $form->field($actualModel, 'pph23')->widget(Select2::classname(), [

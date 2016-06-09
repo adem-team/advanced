@@ -30,6 +30,7 @@ class PostAccount extends Model
 
     public $invest_ids;
     public $term_id;
+    public $cus_kd;
 
     /**
          * @return array the validation rules.
@@ -60,6 +61,7 @@ class PostAccount extends Model
         if (is_array($this->invest_ids)) {
             foreach($pcs as $key => $value) {
                 $pc = new Termdetail();
+                $pc->CUST_KD_PARENT = $this->cus_kd;
                 $pc->TERM_ID = $this->term_id;
                 $pc->INVES_ID = $value->ID;
                 $pc->save();

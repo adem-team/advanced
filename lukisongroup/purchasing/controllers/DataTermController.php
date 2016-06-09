@@ -93,7 +93,7 @@ class DataTermController extends Controller
           $model->CREATED_AT = date("Y-m-d H:i:s");
           $model->CREATED_BY = Yii::$app->user->identity->username;
           $model->save();
-          return $this->redirect(['review', 'id'=>$model->TERM_ID]);
+          return $this->redirect(['review', 'id'=>$model->TERM_ID,'cus_kd'=>$model->CUST_KD_PARENT]);
       }else {
         return $this->renderAjax('new_term', [
             'model' => $model,
@@ -145,7 +145,7 @@ class DataTermController extends Controller
 	 * Data term yang bisa di update [budget plan | budget actual -> button Actual investment ]
 	 * Rwview by Marketing/Accounting/Direction
 	*/
-	public function actionReview($id){
+	public function actionReview($id,$cus_kd){
 		 /*TERM PLAN HEADER*/
 		$searchModel = new TermheaderSearch();
 		$dataProvider = $searchModel->searchcusbyid(Yii::$app->request->queryParams,$id);
@@ -166,6 +166,7 @@ class DataTermController extends Controller
 			'model'=>$modelRslt,
 			'dataProviderBudget'=>$dataProviderBudget,
       'dataProviderBudgetdetail'=>$dataProviderBudgetdetail,
+      'cus_kd'=>$cus_kd,
       'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves
 		]);
 		/*
@@ -212,15 +213,16 @@ class DataTermController extends Controller
   *save account using list_box||_account
   *@author wawan
 */
-  public function actionAccountInvestment($id){
+  public function actionAccountInvestment($id,$cus_kd){
       $model = new PostAccount();
 
+       $model->cus_kd = $cus_kd;
        $model->term_id = $id;
 
       if ($model->load(Yii::$app->request->post())) {
             $model->saveAccount();
 
-        return $this->redirect(['review', 'id'=>$model->term_id]);
+        return $this->redirect(['review', 'id'=>$model->term_id,'cus_kd'=>$cus_kd]);
       }
 
 
