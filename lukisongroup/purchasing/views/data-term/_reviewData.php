@@ -110,9 +110,12 @@ use lukisongroup\purchasing\models\data_term\Rtdetail;
 					// select * from t0000detail td
 					// INNER  JOIN t0001detail td1
 					// on td.INVES_ID = td1.INVESTASI_TYPE WHERE td.TERM_ID = "trm.2016.0001" and td1.INVESTASI_TYPE = 8 ;
-					$sql = 'select sum(td1.HARGA) as BUDGET_ACTUAL from t0000detail td
-					      	INNER JOIN t0001detail td1
-					 				where td.TERM_ID ="'.$model->TERM_ID.'" and td1.INVESTASI_TYPE="'.$model->INVES_ID.'"';
+					// $sql1 = 'select sum(td1.HARGA) as BUDGET_ACTUAL from t0000detail td
+					//       	INNER JOIN t0001detail td1
+					//  				where td.TERM_ID ="'.$model->TERM_ID.'" and td1.INVESTASI_TYPE="'.$model->INVES_ID.'" and td1.KD_RIB LIKE "%RID" and td1.KD_RIB LIKE "%RI"';
+          $sql = 'select sum(td1.HARGA) as BUDGET_ACTUAL from t0000detail td
+        					INNER JOIN t0001detail td1 on td.INVES_ID = td1.INVESTASI_TYPE
+        					where td.TERM_ID ="'.$model->TERM_ID.'" and td1.INVESTASI_TYPE="'.$model->INVES_ID.'" and td1.KD_RIB LIKE "RID%" and td1.KD_RIB LIKE "RI%"';
 					$execute = $connect->createCommand($sql)->queryScalar();
 					return $execute;
 				},
