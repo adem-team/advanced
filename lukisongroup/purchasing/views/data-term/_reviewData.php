@@ -21,6 +21,7 @@ use lukisongroup\master\models\Termcustomers;
 use lukisongroup\master\models\Distributor;
 use lukisongroup\hrd\models\Corp;
 use lukisongroup\purchasing\models\data_term\Rtdetail;
+use lukisongroup\purchasing\models\data_term\Requesttermheader;
 
 
 //print_r($dataProviderBudget->getModels());
@@ -116,16 +117,32 @@ $id = $_GET['id'];
 					// $sql1 = 'select sum(td1.HARGA) as BUDGET_ACTUAL from t0000detail td
 					//       	INNER JOIN t0001detail td1
 					//  				where td.TERM_ID ="'.$model->TERM_ID.'" and td1.INVESTASI_TYPE="'.$model->INVES_ID.'" and td1.KD_RIB LIKE "%RID" and td1.KD_RIB LIKE "%RI"';
-          $sql = 'select sum(HARGA) as BUDGET_ACTUAL from t0001detail
-        					where TERM_ID ="'.$model->TERM_ID.'" and INVESTASI_TYPE="'.$model->INVES_ID.'" and KD_RIB LIKE "RID%" and KD_RIB LIKE "RI%"';
-					$execute = $connect->createCommand($sql)->queryScalar();
-					if($execute!= '')
+					// $total_pp23 = ($model->HARGA*$model->pph)/100;
+					// $total_ppn =  ($model->HARGA*$model->ppn)/100;
+					//
+					// 	$total = ($total_ppn + $model->HARGA)-$total_pp23 ;
+
+					$total_ppn = Requesttermheader::find()->where(['TERM_ID'=>$model->TERM_ID])->sum('PPN');
+
+					$total_harga = Rtdetail::find()->where(['TERM_ID'=>$model->TERM_ID,'INVESTASI_TYPE'=>$model->INVES_ID])->sum('HARGA');
+
+					$total_pph = Requesttermheader::find()->where(['TERM_ID'=>$model->TERM_ID])->sum('PPH23');
+
+					$hitung_ppn = ($total_harga*$total_ppn)/100;
+					$hitung_pph = ($total_harga*$total_pph)/100;
+					$sub_total = ($hitung_ppn + $total_harga)-$hitung_pph;
+					// // $total_ppn = $cari_ppn->sum('PPN');
+				  // $sql = 'select sum(th.PPN) from t0001detail ti
+					// 				LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
+        	// 				where ti.TERM_ID ="'.$model->TERM_ID.'" and ti.INVESTASI_TYPE="'.$model->INVES_ID.'" and ti.KD_RIB LIKE "RID%" and ti.KD_RIB LIKE "RI%"';
+					// $execute = $connect->createCommand($sql)->queryScalar();
+					if($sub_total!= '')
 					{
-						return $execute;
+					   return  number_format($sub_total,2);
 					}else {
 						# code...
-						$execute = number_format(0.00,2);
-						return $execute;
+						 return number_format(0.00,2);
+						// return  number_format($sub_total,2);
 					}
 
 				},
