@@ -116,9 +116,8 @@ $id = $_GET['id'];
 					// $sql1 = 'select sum(td1.HARGA) as BUDGET_ACTUAL from t0000detail td
 					//       	INNER JOIN t0001detail td1
 					//  				where td.TERM_ID ="'.$model->TERM_ID.'" and td1.INVESTASI_TYPE="'.$model->INVES_ID.'" and td1.KD_RIB LIKE "%RID" and td1.KD_RIB LIKE "%RI"';
-          $sql = 'select sum(td1.HARGA) as BUDGET_ACTUAL from t0000detail td
-        					INNER JOIN t0001detail td1 on td.INVES_ID = td1.INVESTASI_TYPE
-        					where td.TERM_ID ="'.$model->TERM_ID.'" and td1.INVESTASI_TYPE="'.$model->INVES_ID.'" and td1.KD_RIB LIKE "RID%" and td1.KD_RIB LIKE "RI%"';
+          $sql = 'select sum(HARGA) as BUDGET_ACTUAL from t0001detail
+        					where TERM_ID ="'.$model->TERM_ID.'" and INVESTASI_TYPE="'.$model->INVES_ID.'" and KD_RIB LIKE "RID%" and KD_RIB LIKE "RI%"';
 					$execute = $connect->createCommand($sql)->queryScalar();
 					if($execute!= '')
 					{
@@ -207,15 +206,23 @@ $id = $_GET['id'];
 		'detail'=>function ($model, $key, $index, $column){
 
 		$connect = Yii::$app->db_esm;
-		$sql = "SELECT * FROM `t0000detail` td
-						LEFT JOIN t0001header th on
-						td.CUST_KD_PARENT = th.CUST_ID_PARENT
-						LEFT JOIN t0001detail ti on th.KD_RIB = ti.KD_RIB
-						LEFT JOIN  c0006 c on ti.INVESTASI_TYPE = c.ID
-						WHERE th.TERM_ID ='".$model->TERM_ID."'
+
+		$sql = "SELECT * FROM t0001detail ti
+						LEFT JOIN c0006 c on ti.INVESTASI_TYPE = c.ID
+						WHERE ti.TERM_ID ='".$model->TERM_ID."'
 						AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
-						AND th.KD_RIB LIKE 'RID%'
-						AND th.KD_RIB LIKE 'RI%'";
+						AND ti.KD_RIB LIKE 'RID%'
+						AND ti.KD_RIB LIKE 'RI%'";
+
+		// $sql = "SELECT * FROM `t0000detail` td
+		// 				LEFT JOIN t0001header th on
+		// 				td.CUST_KD_PARENT = th.CUST_ID_PARENT
+		// 				LEFT JOIN t0001detail ti on th.KD_RIB = ti.KD_RIB
+		// 				LEFT JOIN  c0006 c on ti.INVESTASI_TYPE = c.ID
+		// 				WHERE th.TERM_ID ='".$model->TERM_ID."'
+		// 				AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
+		// 				AND th.KD_RIB LIKE 'RID%'
+		// 				AND th.KD_RIB LIKE 'RI%'";
 
 						$hasil = $connect->createCommand($sql)->queryAll();
 
@@ -226,14 +233,19 @@ $id = $_GET['id'];
 				    ],
 				]);
 
+				$sql2 = "SELECT * FROM t0001detail ti
+								LEFT JOIN c0006 c on ti.INVESTASI_TYPE = c.ID
+								WHERE ti.TERM_ID ='".$model->TERM_ID."'
+								AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
+								AND ti.KD_RIB LIKE 'RB%'";
 
-				$sql2 = "SELECT * FROM `t0000detail` td
-								LEFT JOIN t0001header th on
-								td.CUST_KD_PARENT = th.CUST_ID_PARENT
-								LEFT JOIN t0001detail ti on th.KD_RIB = ti.KD_RIB
-								LEFT JOIN  c0006 c on ti.INVESTASI_TYPE = c.ID
-								WHERE th.TERM_ID ='".$model->TERM_ID."'AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
-								AND th.KD_RIB LIKE 'RB%'";
+				// $sql2 = "SELECT * FROM `t0000detail` td
+				// 				LEFT JOIN t0001header th on
+				// 				td.CUST_KD_PARENT = th.CUST_ID_PARENT
+				// 				LEFT JOIN t0001detail ti on th.KD_RIB = ti.KD_RIB
+				// 				LEFT JOIN  c0006 c on ti.INVESTASI_TYPE = c.ID
+				// 				WHERE th.TERM_ID ='".$model->TERM_ID."'AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
+				// 				AND th.KD_RIB LIKE 'RB%'";
 
 								$hasil1 = $connect->createCommand($sql2)->queryAll();
 
