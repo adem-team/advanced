@@ -104,7 +104,7 @@ $id_term = $_GET['id'];
 					$total_pp23 = ($model->HARGA*$model->pph)/100;
 					$total_ppn =  ($model->HARGA*$model->ppn)/100;
 
-						$total = $total_ppn + $total_pp23;
+						$total = ($total_ppn + $model->HARGA)-$total_pp23 ;
 
 					//return $model->PERIODE_START . " - " . $model->PERIODE_END;
 					return number_format($total,2);
