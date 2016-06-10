@@ -207,7 +207,15 @@ $id = $_GET['id'];
 
 		$connect = Yii::$app->db_esm;
 
-		$sql = "SELECT * FROM t0001detail ti
+		// $sql = "SELECT * FROM t0001detail ti
+		// 				LEFT JOIN c0006 c on ti.INVESTASI_TYPE = c.ID
+		// 				WHERE ti.TERM_ID ='".$model->TERM_ID."'
+		// 				AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
+		// 				AND ti.KD_RIB LIKE 'RID%'
+		// 				AND ti.KD_RIB LIKE 'RI%'";
+
+		$sql = "SELECT * FROM `t0001detail` ti
+						LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
 						LEFT JOIN c0006 c on ti.INVESTASI_TYPE = c.ID
 						WHERE ti.TERM_ID ='".$model->TERM_ID."'
 						AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
@@ -453,6 +461,9 @@ $id = $_GET['id'];
 
 		</dl>
 	</div>
+  <?php
+
+  ?>
 	<!-- BUDGET !-->
 	<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" style="font-family: tahoma ;font-size: 8pt">
 		<div>
@@ -461,7 +472,7 @@ $id = $_GET['id'];
 		<dl>
 			<dt style="width:80px;"><u><b>BUDGET :</b></u></dt><dd></dd>
 			<dt style="width:120px; float:left;"> Budget Awal</dt>
-			<dd>: 1.000.000.000.000 <?=$model->TARGET_VALUE?> </dd>
+			<dd>:  <?= $model->BUDGET_AWAL ?> </dd>
 			<dt style="width:120px; float:left;"> Budget Tambahan</dt>
 			<dd>: 1000.<?=$model->TARGET_VALUE?></dd>
 			<dt style="width:120px; float:left;" > Budget Sisa</dt>
