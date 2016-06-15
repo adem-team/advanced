@@ -992,19 +992,20 @@ $y=4;
 			<div class="col-md-6">
 				<!-- Signature !-->
 				<?php
-				/* if(getPermissionSettingPoa())
+				 if(getPermissionSettingPoa())
 				{
 					if(getPermissionSettingPoa()->BTN_PROCESS1 != 1)
 					{
-						//$set_signature_poa =  Yii::$app->controller->renderPartial('set_signature_poa',[
-						$set_signature_poa =  $this->render('set_signature_poa',[
+						$set_signature_poa =  Yii::$app->controller->renderPartial('set_signature_poa',[
+						//$set_signature_poa =  $this->render('set_signature_poa',[
 								'poHeader'=>$poHeader,
 								 'getPermission'=>getPermission()
 							]);
 
 					}else {
 						# code...
-						$set_signature_poa =  $this->render('set_signature_poa1',[
+						//$set_signature_poa =  $this->render('set_signature_poa1',[
+						$set_signature_poa =  Yii::$app->controller->renderPartial('set_signature_poa1',[
 								'poHeader'=>$poHeader,
 								 'getPermission'=>getPermission()
 							]);
@@ -1014,7 +1015,7 @@ $y=4;
 				}
 
 				/* set_Signature*/
-			echo $set_signature_poa; */
+			echo $set_signature_poa; 
 				?>
 			</div>
 			<!-- Button Submit!-->
