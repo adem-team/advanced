@@ -39,6 +39,19 @@ $y=4;
 
 	/*
 	 * Declaration Componen User Permission
+	 * Function getPermission setting signature
+	 * Modul Name[7=PO]
+	*/
+	function getPermissionSettingPoa(){
+		if (Yii::$app->getUserOpt->Modul_akses('7')){
+			return Yii::$app->getUserOpt->Modul_akses('7');
+		}else{
+			return false;
+		}
+	}
+
+	/*
+	 * Declaration Componen User Permission
 	 * Function profile_user
 	*/
 	function getPermissionEmp(){
@@ -977,143 +990,32 @@ $y=4;
 	<div  class="col-md-12">
 		<div  class="row" >
 			<div class="col-md-6">
-				<table id="tblRo" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">
-					<!-- Tanggal!-->
-					 <tr>
-						<!-- Tanggal Pembuat RO!-->
-						<th  class="col-md-1" style="text-align: center; height:20px">
-							<div style="text-align:center;">
-								<?php
-									$placeTgl1=$poHeader->SIG1_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG1_TGL,'date') :'';
-									echo '<b>Tanggerang</b>,' . $placeTgl1;
-								?>
-							</div>
+				<!-- Signature !-->
+				<?php
+				/* if(getPermissionSettingPoa())
+				{
+					if(getPermissionSettingPoa()->BTN_PROCESS1 != 1)
+					{
+						//$set_signature_poa =  Yii::$app->controller->renderPartial('set_signature_poa',[
+						$set_signature_poa =  $this->render('set_signature_poa',[
+								'poHeader'=>$poHeader,
+								 'getPermission'=>getPermission()
+							]);
 
-						</th>
-						<!-- Tanggal Pembuat RO!-->
-						<th class="col-md-1" style="text-align: center; height:20px">
-							<div style="text-align:center;">
-								<?php
-									$placeTgl2=$poHeader->SIG2_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG2_TGL,'date') :'';
-									echo '<b>Tanggerang</b>,' . $placeTgl2;
-								?>
-							</div>
+					}else {
+						# code...
+						$set_signature_poa =  $this->render('set_signature_poa1',[
+								'poHeader'=>$poHeader,
+								 'getPermission'=>getPermission()
+							]);
+					}
+				}else {
+					# code...
+				}
 
-						</th>
-						<!-- Tanggal PO Approved!-->
-						<th class="col-md-1" style="text-align: center; height:20px">
-							<div style="text-align:center;">
-								<?php
-									$placeTgl3=$poHeader->SIG3_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG3_TGL,'date') :'';
-									echo '<b>Tanggerang</b>,' . $placeTgl3;
-								?>
-							</div>
-						</th>
-
-					</tr>
-					<!-- Department|Jbatan !-->
-					 <tr>
-						<th  class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
-							<div>
-								<b><?php  echo 'Created'; ?></b>
-							</div>
-						</th>
-						<th class="col-md-1"  style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
-							<div>
-								<b><?php  echo 'Checked'; ?></b>
-							</div>
-						</th>
-						<th class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
-							<div>
-								<b><?php  echo 'Approved'; ?></b>
-							</div>
-						</th>
-					</tr>
-					<!-- Signature !-->
-					 <tr>
-						<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
-							<?php
-								$ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG1_SVGBASE64.'></img>' :SignCreated($poHeader);
-								echo $ttd1;
-							?>
-						</th>
-						<th class="col-md-1" style="text-align: center; vertical-align:middle">
-							<?php
-								$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG2_SVGBASE64.'></img>' :SignChecked($poHeader);
-								echo $ttd2;
-							?>
-						</th>
-						<th  class="col-md-1" style="text-align: center; vertical-align:middle">
-							<?php
-							/*  author : wawan ver 1.0
-                  * jika tidak ada permission maka untuk tanda tangan yang akan approve hilang
-                  * jika BTN_SIGN3 adalah 0 maka untuk tanda tangan yang akan approve hilang
-									* if status po header equal 4 then  button name Reject
-              */
-							if(getPermission())
-							{
-								if(getPermission()->BTN_SIGN3 == 0)
-								{
-									$ttd3 = '';
-									echo $ttd3;
-
-								}else{
-                  $ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : SignApproved($poHeader);
-                	echo $ttd3;
-								}
-							}else{
-								$ttd3 = '';
-								echo $ttd3;
-							}
-							?>
-						</th>
-					</tr>
-					<!--Nama !-->
-					 <tr>
-						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
-							<div>
-								<?php
-									$sigNm1=$poHeader->SIG1_NM!='none' ? '<b>'.$poHeader->SIG1_NM.'</b>' : 'none';
-									echo $sigNm1;
-								?>
-							</div>
-						</th>
-						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
-							<div>
-								<?php
-									$sigNm2=$poHeader->SIG2_NM!='none' ? '<b>'.$poHeader->SIG2_NM.'</b>' : 'none';
-									echo $sigNm2;
-								?>
-							</div>
-						</th>
-						<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
-							<div>
-								<?php
-									$sigNm3=$poHeader->SIG3_NM!='none' ? '<b>'.$poHeader->SIG3_NM.'</b>' : 'none';
-									echo $sigNm3;
-								?>
-							</div>
-						</th>
-					</tr>
-					<!-- Department|Jbatan !-->
-					 <tr>
-						<th style="text-align: center; vertical-align:middle;height:20">
-							<div>
-								<b><?php  echo 'Purchaser'; ?></b>
-							</div>
-						</th>
-						<th style="text-align: center; vertical-align:middle;height:20">
-							<div>
-								<b><?php  echo 'F & A'; ?></b>
-							</div>
-						</th>
-						<th style="text-align: center; vertical-align:middle;height:20">
-							<div>
-								<b><?php  echo 'Director'; ?></b>
-							</div>
-						</th>
-					</tr>
-				</table>
+				/* set_Signature*/
+			echo $set_signature_poa; */
+				?>
 			</div>
 			<!-- Button Submit!-->
 			<div style="text-align:right; margin-top:80px; margin-right:15px">

@@ -1471,7 +1471,7 @@ class PurchaseOrderController extends Controller
 				if ($auth1Mdl->auth1_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth1Model']['kdpo'];
-					$this->Sendmail($kdpo); //call function email
+					// $this->Sendmail($kdpo); //call function email
 					return $this->redirect(['create', 'kdpo'=>$kdpo]);
 				}
 			}
@@ -1505,12 +1505,47 @@ class PurchaseOrderController extends Controller
 				if ($auth2Mdl->auth2_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth2Model']['kdpo'];
-					$this->Sendmail2($kdpo);//call function email
+					// $this->Sendmail2($kdpo);//call function email
 					return $this->redirect(['review', 'kdpo'=>$kdpo]);
 				}
 			}
 		}
     }
+
+
+    /*
+  	 * SIGNATURE AUTH4 | SIGN CHECKED PO
+  	 * $poHeader->STATUS =102
+  	 * @author ptrnov  <piter@lukison.com>
+       * @since 1.1
+       */
+  	 public function actionSignAuth4View($kdpo){
+  		$auth4Mdl = new Auth4Model();
+  		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
+  		$employe = $poHeader->employe;
+  			return $this->renderAjax('sign-auth4', [
+  				'poHeader' => $poHeader,
+  				'employe' => $employe,
+  				'auth2Mdl' => $auth4Mdl,
+  			]);
+  	}
+  	public function actionSignAuth4Save(){
+  		$auth4Mdl = new Auth4Model();
+  		/*Ajax Load*/
+  		if(Yii::$app->request->isAjax){
+  			$auth4Mdl->load(Yii::$app->request->post());
+  			return Json::encode(\yii\widgets\ActiveForm::validate($auth4Mdl));
+  		}else{	/*Normal Load*/
+  			if($auth4Mdl->load(Yii::$app->request->post())){
+  				if ($auth4Mdl->auth4_saved()){
+  					$hsl = \Yii::$app->request->post();
+  					$kdpo = $hsl['Auth4Model']['kdpo'];
+  					// $this->Sendmail2($kdpo);//call function email
+  					return $this->redirect(['review', 'kdpo'=>$kdpo]);
+  				}
+  			}
+  		}
+      }
 
 	/*
 	 * SIGNATURE AUTH3 | SIGN APPROVAL PO
@@ -1539,7 +1574,7 @@ class PurchaseOrderController extends Controller
 				if ($auth3Mdl->auth3_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth3Model']['kdpo'];
-          $this->Sendmail3($kdpo);//call function email
+          // $this->Sendmail3($kdpo);//call function email
 					return $this->redirect(['review', 'kdpo'=>$kdpo]);
 				}
 			}
