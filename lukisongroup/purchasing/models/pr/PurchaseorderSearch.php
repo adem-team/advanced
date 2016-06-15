@@ -5,6 +5,7 @@ namespace lukisongroup\purchasing\models\pr;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use lukisongroup\purchasing\models\pr\Purchaseorder;
 use lukisongroup\hrd\models\Employe;
 
@@ -33,7 +34,13 @@ class PurchaseorderSearch extends Purchaseorder
         ];
     }
 
-
+    // public function getPermissionsetpo(){
+  	// 	if (Yii::$app->getUserOpt->Modul_akses('7')){
+  	// 		return Yii::$app->getUserOpt->Modul_akses('7');
+  	// 	}else{
+  	// 		return false;
+  	// 	}
+  	// }
 
     /**
      * @inheritdoc
@@ -183,18 +190,136 @@ class PurchaseorderSearch extends Purchaseorder
       		return $dataProvider;
           }
 
+          /*
+           * INBOX PO
+           * ACTION CHECKED | APPROVAL
+           * @author ptrnov [piter@lukison]
+           * @since 1.2
+          */
+          // public function searchPoInbox($params)
+          //   {
+          //     $profile=Yii::$app->getUserOpt->Profile_user();
+          //
+          //     if($this->getPermissionsetpo())
+          //     {
+          //       if($this->getPermissionsetpo()->BTN_PROCESS1 != 1)
+          //       {
+          //         if($profile->emp->GF_ID == 3 && $profile->emp->DEP_ID == 'ACT'){
+          //           // $query = Purchas eorder::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4');
+          //           $query = Purchaseorder::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4')->all();
+          //         }elseif($profile->emp->GF_ID == 1 || $profile->emp->GF_ID == 2){
+          //           $query = Purchaseorder::find()->where('STATUS = 101 AND STATUS <> 102 AND STATUS<>4')->all();
+          //         }
+          //         else{
+          //
+          //           $query = Purchaseorder::find()->where('p0001.STATUS <> 102 AND p0001.STATUS<>4')->orderBy(['CREATE_AT'=> SORT_DESC])->all();
+          //           $query->joinWith(['suplier' => function ($q) {
+          //                   $q->where('s1000.NM_SUPPLIER LIKE "%' . $this->namasuplier . '%"');
+          //               }]);
+          //
+          //         }
+          //       }else {
+          //         # code...
+          //         if($profile->emp->GF_ID == 3 && $profile->emp->DEP_ID == 'ACT'){
+          //           // $query = Purchas eorder::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4');
+          //           $query = Purchaseorder::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4')->all();
+          //         }elseif ( $profile->emp->GF_ID == 2 && $profile->emp->DEP_ID == 'GM') {
+          //           # code...
+          //             $query = Purchaseorder::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4 AND STATUS<>100')->all();
+          //         }elseif($profile->emp->GF_ID == 1){
+          //           $query = Yii::$app->db_esm->createCommand('SELECT  *,(SELECT COUNT(STATUS) FROM p0003 p2 WHERE STATUS = 101  and p2.KD_PO = p3.KD_PO  ) as total
+          //            from p0003  p3 left JOIN p0001 p1 on p3.KD_PO = p1.KD_PO
+          //            WHERE p3.`STATUS`<>100 and p3.`STATUS`<>102 GROUP BY p3.KD_PO HAVING total >1')->queryAll();
+          //
+          //         }
+          //         else{
+          //
+          //           $query = Purchaseorder::find()->where('p0001.STATUS <> 102 AND p0001.STATUS<>4')->orderBy(['CREATE_AT'=> SORT_DESC])->all();
+          //           $query->joinWith(['suplier' => function ($q) {
+          //                   $q->where('s1000.NM_SUPPLIER LIKE "%' . $this->namasuplier . '%"');
+          //               }]);
+          //
+          //         }
+          //       }
+          //     }else {
+          //       # code...
+          //     }
+              /*query*/
+              // SELECT  *,(SELECT COUNT(STATUS) FROM p0003 p2 WHERE STATUS = 101  and p2.KD_PO = p3.KD_PO  ) as total
+              // from p0003  p3 left JOIN p0001 p1 on p3.KD_PO = p1.KD_PO
+              // WHERE p3.`STATUS`<>100 and p3.`STATUS`<>102 GROUP BY p3.KD_PO HAVING total >1  ;
 
-  	/*
-  	 * INBOX PO
-  	 * ACTION CHECKED | APPROVAL
-  	 * @author ptrnov [piter@lukison]
-  	 * @since 1.2
-  	*/
+            //
+            // $dataProvider = new  ArrayDataProvider([
+            //         'allModels' => $query,
+            //     ]);
+            //
+            //
+            //
+            //     $dataProvider->setSort([
+            //        'attributes' => [
+            //        'KD_PO',
+                   //'KD_SUPPLIER',
+
+                   /* 'pembuat' => [
+                       'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                       'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                       'label' => 'Pembuat',
+                   ],
+
+                   'disetujui' => [
+                       'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                       'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                       'label' => 'Pembuat',
+                   ],
+
+                   'approved' => [
+                       'asc' => ['a0001.EMP_NM' => SORT_ASC],
+                       'desc' => ['a0001.EMP_NM' => SORT_DESC],
+                       'label' => 'Pembuat',
+                   ],    */
+
+                  //  ]
+              //  ]);
+               //
+              //  if (!($this->load($params) && $this->validate())) {
+              //      return $dataProvider;
+              //  }
+               //
+              //  $query->andFilterWhere([
+              //      'STATUS' => $this->STATUS,
+              //  ]);
+
+            //    $query->andFilterWhere(['like', 'KD_PO', $this->KD_PO])
+            //        ->andFilterWhere(['like', 'SIG1_NM', $this->SIG1_NM])
+            //        ->andFilterWhere(['like', 'SIG2_NM', $this->SIG2_NM])
+            //        ->andFilterWhere(['like', 'SIG3_NM', $this->SIG3_NM])
+            //        ->andFilterWhere(['like', 'SIG4_NM', $this->SIG4_NM])
+            //        ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
+            //        ->andFilterWhere(['like', 'p0001.KD_CORP', $this->nmcorp]);
+            //
+            //        if($this->CREATE_AT2!=''){
+            //                $query->andFilterWhere(['like','CREATE_AT', $this->CREATE_AT2]);
+            //            }
+            //
+            //
+            // return $dataProvider;
+            // }
+
+
+  	// /*
+  	//  * INBOX PO
+  	//  * ACTION CHECKED | APPROVAL
+  	//  * @author ptrnov [piter@lukison]
+  	//  * @since 1.2
+  	// */
   	public function searchPoInbox($params)
       {
-  		$profile=Yii::$app->getUserOpt->Profile_user();
-  		if($profile->emp->GF_ID == 3 && $profile->emp->DEP_ID == 'ACT'  ){
-  			$query = Purchaseorder::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4');
+  		  $profile=Yii::$app->getUserOpt->Profile_user();
+
+  		if($profile->emp->GF_ID == 3 && $profile->emp->DEP_ID == 'ACT'){
+  			// $query = Purchas eorder::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4');
+        $query = Purchaseorder::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4');
       }elseif($profile->emp->GF_ID == 1 || $profile->emp->GF_ID == 2){
   			$query = Purchaseorder::find()->where('STATUS = 101 AND STATUS <> 102 AND STATUS<>4');
   		}
