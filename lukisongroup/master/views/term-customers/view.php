@@ -699,7 +699,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					'heading'=>'<h5 class="panel-title">TRADE INVESTMENT</h5>',
 					'type'=>'success',
 					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Investment ',
-						['modelClass' => 'Termcustomers',]),['/master/term-customers/create-budget','id'=>$dataids],[
+						['modelClass' => 'Termcustomers',]),['/master/term-customers/create-budget','id'=>$dataids,'cust_kd'=>$model->CUST_KD],[
 							'data-toggle'=>"modal",
 							'data-target'=>"#modal-create",
 							'data-title'=>'type Investasi',

@@ -14,6 +14,8 @@ use lukisongroup\master\models\Auth2Model;
 use lukisongroup\master\models\Auth3Model;
 use lukisongroup\master\models\TermgeneralSearch;
 use lukisongroup\master\models\TermcustomersSearch;
+use lukisongroup\purchasing\models\rqt\Requesttermheader;
+use lukisongroup\purchasing\models\rqt\Rtdetail;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -278,7 +280,8 @@ class TermCustomersController extends Controller
             'modelnewaprov'=>$modelnewaprov,
             'dataProvider' =>  $dataProvider,
             'searchModel1'=>   $searchModel1,
-            'dataProvider1' =>  $dataProvider1
+            'dataProvider1' =>  $dataProvider1,
+
         ]);
     }
 
@@ -1048,7 +1051,7 @@ class TermCustomersController extends Controller
 
 
 
-    public function actionCreateBudget($id)
+    public function actionCreateBudget($id,$cust_kd)
     {
       # code...
         $budget = new  Termbudget();
@@ -1062,7 +1065,7 @@ class TermCustomersController extends Controller
           $tanggalend = \Yii::$app->formatter->asDate($budget->PERIODE_END,'Y-M-d');
           $budget->PERIODE_START = $tanggal;
           $budget->PERIODE_END = $tanggalend;  */
-		  $tanggal = \Yii::$app->formatter->asDate($budget->PERIODE_START,'Y-M-d');
+		      $tanggal = \Yii::$app->formatter->asDate($budget->PERIODE_START,'Y-M-d');
           $tanggalend = \Yii::$app->formatter->asDate($budget->PERIODE_END,'Y-M-d');
           $budget->PERIODE_START = $budget->PERIODE_START!=''?\Yii::$app->formatter->asDate($budget->PERIODE_START,'Y-M-d'):'0000-00-00';;
           $budget->PERIODE_END =  $budget->PERIODE_END!=''?\Yii::$app->formatter->asDate($budget->PERIODE_END,'Y-M-d'):'0000-00-00';;
@@ -1074,6 +1077,21 @@ class TermCustomersController extends Controller
             $budget->save();
 
           }
+          //header
+          $copy_budget = new Requesttermheader();
+          $copy_budget->KD_RIB = Yii::$app->ambilkonci->getRaCode($budget->CORP_ID);
+          $copy_budget->TERM_ID = $id;
+          $copy_budget->ID_USER = $profile->emp->EMP_ID;
+          $copy_budget->CUST_ID_PARENT = $cust_kd;
+          $copy_budget->save();
+
+          // detail
+          $copy_budget_detail = new Rtdetail();
+          $copy_budget_detail->KD_RIB = $copy_budget->KD_RIB;
+          $copy_budget_detail->INVESTASI_TYPE = $budget->INVES_TYPE;
+          $copy_budget_detail->HARGA = $budget->BUDGET_PLAN;
+          $copy_budget_detail->save();
+
 
             return $this->redirect(['view','id'=>$budget->ID_TERM]);
 
@@ -1291,7 +1309,7 @@ class TermCustomersController extends Controller
         $model = new Termcustomers();
 
         if ($model->load(Yii::$app->request->post())) {
-          $model->ID_TERM = Yii::$app->ambilkonci->getkdTerm();
+          $model->ID_TERM = Yii::$app->ambilkonci->getPlanCode();
           if($model->validate())
           {
               $model->CREATED_AT = date("Y-m-d H:i:s");
@@ -1299,7 +1317,7 @@ class TermCustomersController extends Controller
               $model->save();
 
           }
-            return $this->redirect(['view','id'=>$model->ID_TERM]);
+            return $this->redirect(['view','id'=>$model->ID_TERM,'cust_kd'=>$model->CUST_KD]);
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,
