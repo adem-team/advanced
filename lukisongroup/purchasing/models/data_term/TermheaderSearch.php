@@ -96,7 +96,7 @@ class TermheaderSearch extends Termheader
 
         if($profile->emp->DEP_ID == 'GM'|| $profile->emp->DEP_ID == 'DRC')
           {
-            $query = Termheader::find()->where('STATUS = 101 OR STATUS = 102');
+            $query = Termheader::find();
           }
         elseif($profile->emp->DEP_ID == 'ACT')
         {

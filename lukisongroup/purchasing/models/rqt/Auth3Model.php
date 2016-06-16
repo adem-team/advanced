@@ -111,6 +111,8 @@ class Auth3Model extends Model
 						$rtHeaderStt_3->UPDATE_AT = date('Y-m-d H:m:s');
 						if ($rtHeaderStt_3->save()) {
 
+
+
 						}
 					}
                 return $rtHeader_3;
