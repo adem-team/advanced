@@ -41,7 +41,7 @@ function tombolCreate(){
       $options1 = [ 'id'=>'po-create',
               'data-toggle'=>"modal",
               'data-target'=>"#modal-create",
-              'class' => 'btn btn-success',
+              'class' => 'btn btn-success btn-sm',
       ];
       $icon1 = '<span class="fa fa-plus fa-lg"></span>';
       $url = Url::toRoute(['/master/term-customers/create-act']);
@@ -53,7 +53,7 @@ function tombolCreate(){
       $options1 = [ 'id'=>'action-denied-id',
               'data-toggle'=>"modal",
               'data-target'=>"#confirm-permission-alert",
-                'class' => 'btn btn-success',
+                'class' => 'btn btn-success btn-sm',
       ];
       $icon1 = '<span class="fa fa-plus fa-lg"></span>';
       $label1 = $icon1 . ' ' . $title1;
@@ -64,7 +64,7 @@ function tombolCreate(){
       $options1 = [ 'id'=>'po-create',
       'data-toggle'=>"modal",
       'data-target'=>"#modal-create",
-      'class' => 'btn btn-success',
+      'class' => 'btn btn-success btn-sm',
       ];
       $icon1 = '<span class="fa fa-plus fa-lg"></span>';
       $label1 = $icon1 . ' ' . $title1;
@@ -77,7 +77,7 @@ function tombolCreate(){
     $options1 = [ 'id'=>'action-denied-id',
             'data-toggle'=>"modal",
             'data-target'=>"#confirm-permission-alert",
-              'class' => 'btn btn-success',
+              'class' => 'btn btn-success btn-sm',
     ];
     $icon1 = '<span class="fa fa-plus fa-lg"></span>';
     $label1 = $icon1 . ' ' . $title1;
@@ -465,6 +465,7 @@ $gridColumns = [
       'dropdown' => true,
       'template' => '{review}{view}',
       'dropdownOptions'=>['class'=>'pull-right dropup'],
+      'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
       'buttons' => [
         'review' => function ($url, $model) {
                 return review($url, $model);

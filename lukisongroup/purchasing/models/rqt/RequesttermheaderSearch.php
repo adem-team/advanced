@@ -55,7 +55,7 @@ class RequesttermHeaderSearch extends Requesttermheader
   		  $profile=Yii::$app->getUserOpt->Profile_user();
         $id = $profile->emp->EMP_ID;
         $query = Requesttermheader::find()->where(['ID_USER'=>$id])
-                                      ->andwhere('STATUS<>102 AND STATUS<>4 AND KD_RIB NOT LIKE "RID%" AND KD_RIB NOT LIKE "RI%"')
+                                      ->andwhere('STATUS<>102 AND STATUS<>4')
                                       ->orderBy(['CREATED_AT'=> SORT_DESC]);
 
 
@@ -98,7 +98,7 @@ class RequesttermHeaderSearch extends Requesttermheader
         {
 
 
-            $query = Requesttermheader::find()->where('STATUS = 102 OR STATUS = 4 AND KD_RIB NOT LIKE "RID%" AND KD_RIB NOT LIKE "RI%"')->orderBy(['CREATED_AT'=> SORT_DESC]);
+            $query = Requesttermheader::find()->where('STATUS = 102 OR STATUS = 4')->orderBy(['CREATED_AT'=> SORT_DESC]);
 
             $dataProvider = new ActiveDataProvider([
                     'query' => $query,
@@ -140,14 +140,12 @@ class RequesttermHeaderSearch extends Requesttermheader
 		  $profile = Yii::$app->getUserOpt->Profile_user();
       $id = Yii::$app->getUserOpt->Profile_user()->emp->EMP_ID;
     if($profile->emp->GF_ID == 3 && $profile->emp->DEP_ID == 'ACT'  ){
-      $query = RequesttermHeader::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4 AND KD_RIB NOT LIKE "RID%" AND KD_RIB NOT LIKE "RI%"');
+      $query = RequesttermHeader::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4');
     }elseif($profile->emp->GF_ID == 1 || $profile->emp->GF_ID == 2){
-      $query = RequesttermHeader::find()->where('STATUS = 101 AND STATUS <> 102 AND STATUS<>4 AND KD_RIB NOT LIKE "RID%" AND KD_RIB NOT LIKE "RI%"');
+      $query = RequesttermHeader::find()->where('STATUS = 101 AND STATUS <> 102 AND STATUS<>4');
     }else{
 
       $query = RequesttermHeader::find()->where(['and',
-                                                  ['NOT LIKE','KD_RIB','RID'],
-                                                  ['NOT LIKE','KD_RIB','RI'],
                                                   ['<>','STATUS',102],
                                                   ['<>','STATUS',4],
                                                   ['ID_USER'=>$id],
