@@ -264,7 +264,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
 
 			}
-			elseif(getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 && $model->STATUS <>102 )
+			elseif(getPermissionEmp()->DEP_ID == 'ACT' && getPermission()->BTN_REVIEW==1 && $model->STATUS <>102 || getPermissionEmp()->DEP_ID == 'GM' && getPermission()->BTN_REVIEW==1 && $model->STATUS <>102 )
 			{
 				$title = Yii::t('app','Review');
 				$options = [
@@ -1485,7 +1485,7 @@ $gridLisHistory= GridView::widget([
 ?>
 <div style="padding:10px;">
 	<?php
-		
+
 		$ccPurch=$this->render('_graph_cc');
 
 		$items=[

@@ -21,6 +21,7 @@ use lukisongroup\master\models\Termcustomers;
 use lukisongroup\master\models\Distributor;
 use lukisongroup\hrd\models\Corp;
 use lukisongroup\purchasing\models\data_term\Rtdetail;
+use lukisongroup\purchasing\models\data_term\Requesttermheader;
 
 
 //print_r($dataProviderBudget->getModels());
@@ -116,16 +117,32 @@ $id = $_GET['id'];
 					// $sql1 = 'select sum(td1.HARGA) as BUDGET_ACTUAL from t0000detail td
 					//       	INNER JOIN t0001detail td1
 					//  				where td.TERM_ID ="'.$model->TERM_ID.'" and td1.INVESTASI_TYPE="'.$model->INVES_ID.'" and td1.KD_RIB LIKE "%RID" and td1.KD_RIB LIKE "%RI"';
-          $sql = 'select sum(HARGA) as BUDGET_ACTUAL from t0001detail
-        					where TERM_ID ="'.$model->TERM_ID.'" and INVESTASI_TYPE="'.$model->INVES_ID.'" and KD_RIB LIKE "RID%" and KD_RIB LIKE "RI%"';
-					$execute = $connect->createCommand($sql)->queryScalar();
-					if($execute!= '')
+					// $total_pp23 = ($model->HARGA*$model->pph)/100;
+					// $total_ppn =  ($model->HARGA*$model->ppn)/100;
+					//
+					// 	$total = ($total_ppn + $model->HARGA)-$total_pp23 ;
+
+					$total_ppn = Requesttermheader::find()->where(['TERM_ID'=>$model->TERM_ID])->sum('PPN');
+
+					$total_harga = Rtdetail::find()->where(['TERM_ID'=>$model->TERM_ID,'INVESTASI_TYPE'=>$model->INVES_ID])->sum('HARGA');
+
+					$total_pph = Requesttermheader::find()->where(['TERM_ID'=>$model->TERM_ID])->sum('PPH23');
+
+					$hitung_ppn = ($total_harga*$total_ppn)/100;
+					$hitung_pph = ($total_harga*$total_pph)/100;
+					$sub_total = ($hitung_ppn + $total_harga)-$hitung_pph;
+					// // $total_ppn = $cari_ppn->sum('PPN');
+				  // $sql = 'select sum(th.PPN) from t0001detail ti
+					// 				LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
+        	// 				where ti.TERM_ID ="'.$model->TERM_ID.'" and ti.INVESTASI_TYPE="'.$model->INVES_ID.'" and ti.KD_RIB LIKE "RID%" and ti.KD_RIB LIKE "RI%"';
+					// $execute = $connect->createCommand($sql)->queryScalar();
+					if($sub_total!= '')
 					{
-						return $execute;
+					   return  number_format($sub_total,2);
 					}else {
 						# code...
-						$execute = number_format(0.00,2);
-						return $execute;
+						 return number_format(0.00,2);
+						// return  number_format($sub_total,2);
 					}
 
 				},
@@ -207,7 +224,15 @@ $id = $_GET['id'];
 
 		$connect = Yii::$app->db_esm;
 
-		$sql = "SELECT * FROM t0001detail ti
+		// $sql = "SELECT * FROM t0001detail ti
+		// 				LEFT JOIN c0006 c on ti.INVESTASI_TYPE = c.ID
+		// 				WHERE ti.TERM_ID ='".$model->TERM_ID."'
+		// 				AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
+		// 				AND ti.KD_RIB LIKE 'RID%'
+		// 				AND ti.KD_RIB LIKE 'RI%'";
+
+		$sql = "SELECT * FROM `t0001detail` ti
+						LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
 						LEFT JOIN c0006 c on ti.INVESTASI_TYPE = c.ID
 						WHERE ti.TERM_ID ='".$model->TERM_ID."'
 						AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
@@ -453,6 +478,28 @@ $id = $_GET['id'];
 
 		</dl>
 	</div>
+  <?php
+
+
+	$total_tambahan_ppn = Requesttermheader::find()->where(['TERM_ID'=>$id])->sum('PPN');
+
+	$total_tamabahan_harga = Rtdetail::find()->where(['TERM_ID'=>$id])->sum('HARGA');
+
+	$total_tambahan_pph = Requesttermheader::find()->where(['TERM_ID'=>$id])->sum('PPH23');
+
+	$hitung_ppn_tambahan = ($total_tamabahan_harga*$total_tambahan_ppn)/100;
+	$hitung_pph_tambahan = ($total_tamabahan_harga*$total_tambahan_pph)/100;
+	$Budget_tambahan = ($hitung_ppn_tambahan + $total_tamabahan_harga)-$hitung_pph_tambahan;
+
+	$budget = number_format($Budget_tambahan,2);
+
+	$invets = $model->BUDGET_AWAL+$Budget_tambahan;
+
+	$total_invest= number_format($invets,2);
+
+	$modal_awal = $model->BUDGET_AWAL !='' ? $model->BUDGET_AWAL: number_format(0.00,2);
+
+  ?>
 	<!-- BUDGET !-->
 	<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" style="font-family: tahoma ;font-size: 8pt">
 		<div>
@@ -461,11 +508,13 @@ $id = $_GET['id'];
 		<dl>
 			<dt style="width:80px;"><u><b>BUDGET :</b></u></dt><dd></dd>
 			<dt style="width:120px; float:left;"> Budget Awal</dt>
-			<dd>: 1.000.000.000.000 <?=$model->TARGET_VALUE?> </dd>
+			<dd>:  <?= $modal_awal ?> </dd>
 			<dt style="width:120px; float:left;"> Budget Tambahan</dt>
-			<dd>: 1000.<?=$model->TARGET_VALUE?></dd>
+			<dd>:<?=$budget?></dd>
+			<dt style="width:120px; float:left;" > Total Inves</dt>
+			<dd>: <?=$total_invest?></dd>
 			<dt style="width:120px; float:left;" > Budget Sisa</dt>
-			<dd>: 1000.<?=$model->TARGET_VALUE?></dd>
+			<dd>: <?=$model->TARGET_VALUE?></dd>
 		</dl>
 	</div>
 </div>

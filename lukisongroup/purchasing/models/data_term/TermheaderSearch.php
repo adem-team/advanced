@@ -51,7 +51,7 @@ class TermheaderSearch extends Termheader
      public function searchcusbyid($params,$id)
      {
 
-         $query = Termheader::find()->where(['TERM_ID'=>$id]);
+         $query = Termheader::find();
         //  ->andwhere(['like','KD_RIB','RI'])->andwhere(['like','KD_RIB','RID']);
 
          $dataProvider = new ActiveDataProvider([
@@ -96,13 +96,14 @@ class TermheaderSearch extends Termheader
 
         if($profile->emp->DEP_ID == 'GM'|| $profile->emp->DEP_ID == 'DRC')
           {
-            $query = Termheader::find()->where('STATUS = 101 OR STATUS = 102');
+            $query = Termheader::find();
           }
         elseif($profile->emp->DEP_ID == 'ACT')
         {
             $query = Termheader::find();
         }else{
-              $query = Termheader::find()->where(['CREATED_BY'=>$profile->username]);
+              // $query = Termheader::find()->where(['CREATED_BY'=>$profile->username]);
+              $query = Termheader::find();
           }
 
 

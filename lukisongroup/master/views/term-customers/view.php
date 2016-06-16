@@ -313,17 +313,17 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	</div>
 
 	<!-- TERM OF PAYMENT !-->
-	<div class="row">
+	<!-- <div class="row">
 		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
 			<div>
-				<?php echo TOP($model); ?>
+				<  TOP(model); ?>
 			</div>
 			<dl>
 				<dt><h6><u><b>TERM OF PAYMENT :</b></u></h6></dt>
-				<dd> <?= $model->TOP ?></dd>
+				<dd>  $model->TOP ?></dd>
 			</dl>
 		</div>
-	</div>
+	</div> -->
 
 
 
@@ -463,7 +463,9 @@ $this->title = Yii::t('app', 'Trading Terms ');
 
 					[	//BUDGET_PLAN
 						//COL
+						'class'=>'kartik\grid\EditableColumn',
 						'attribute' => 'BUDGET_PLAN',
+						'refreshGrid'=>true,
 						'label'=>'Budget Plan',
 						'hAlign'=>'left',
 						'vAlign'=>'middle',
@@ -484,6 +486,18 @@ $this->title = Yii::t('app', 'Trading Terms ');
 							 'font-size'=>'9pt',
 							]
 						],
+						'editableOptions' => [
+								'header' => 'Update Budget Plan',
+								'inputType' => \kartik\editable\Editable::INPUT_MONEY,
+								'size' => 'sm',
+								 'asPopover' => true,
+
+								// 'options' => [
+								// 	'pluginOptions' => ['min'=>0, 'max'=>50000]
+								// ]
+								//'displayValueConfig' => '121'
+
+							],
 						'pageSummaryFunc'=>GridView::F_SUM,
 						'format'=>['decimal', 2],
 						'pageSummary'=>true,
@@ -529,6 +543,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 								'font-size'=>'9pt',
 							]
 						],
+
 						'pageSummaryFunc'=>GridView::F_SUM,
 						'format'=>['decimal', 2],
 						'pageSummary'=>true,
@@ -547,6 +562,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					],
 					[	//BUDGET_ACTUAL
 						//COL
+
 						'attribute' => 'BUDGET_ACTUAL',
 						'label'=>'Budget Actual',
 						'hAlign'=>'left',
@@ -568,6 +584,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 								 'font-size'=>'9pt',
 							]
 						],
+
 						'pageSummaryFunc'=>GridView::F_SUM,
 						'format'=>['decimal', 2],
 						'pageSummary'=>true,
@@ -699,7 +716,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					'heading'=>'<h5 class="panel-title">TRADE INVESTMENT</h5>',
 					'type'=>'success',
 					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Investment ',
-						['modelClass' => 'Termcustomers',]),['/master/term-customers/create-budget','id'=>$dataids],[
+						['modelClass' => 'Termcustomers',]),['/master/term-customers/create-budget','id'=>$dataids,'cust_kd'=>$model->CUST_KD],[
 							'data-toggle'=>"modal",
 							'data-target'=>"#modal-create",
 							'data-title'=>'type Investasi',

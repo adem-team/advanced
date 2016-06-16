@@ -76,6 +76,8 @@ class Auth2Model extends Model
        }
     }
 
+
+
 	/*
 	 * Check validation
 	 * @author ptrnov  <piter@lukison.com>
@@ -100,6 +102,9 @@ class Auth2Model extends Model
 						$rtHeader_2Stt->STATUS = 101;
 						$rtHeader_2Stt->UPDATED_AT = date('Y-m-d H:m:s');
 						if ($rtHeader_2Stt->save()) {
+
+
+
 
 							// Notification::notify(Notification::KEY_NEW_MESSAGE, 23,Yii::$app->user->identity->id,$this->kdrib);
               //

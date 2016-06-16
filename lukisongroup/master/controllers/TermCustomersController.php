@@ -14,6 +14,8 @@ use lukisongroup\master\models\Auth2Model;
 use lukisongroup\master\models\Auth3Model;
 use lukisongroup\master\models\TermgeneralSearch;
 use lukisongroup\master\models\TermcustomersSearch;
+use lukisongroup\purchasing\models\rqt\Requesttermheader;
+use lukisongroup\purchasing\models\rqt\Rtdetail;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -49,6 +51,7 @@ class TermCustomersController extends Controller
                    $this->redirect(array('/site/login'));  //
             }
             // Check only when the user is logged in
+
             if (!Yii::$app->user->isGuest)  {
                if (Yii::$app->session['userSessionTimeout']< time() ) {
                    // timeout
@@ -273,12 +276,37 @@ class TermCustomersController extends Controller
       $sql1 = "SELECT SUM(BUDGET_ACTUAL) as Total from c0005 where  (ID_TERM='" .$id. "' AND STATUS =1) OR (STATUS =0 AND ID_TERM='" .$id. "')";
       $modelnewaprov = Yii::$app->db3->createCommand($sql1)->queryscalar();
 
+              if (Yii::$app->request->post('hasEditable')) {
+                $id = Yii::$app->request->post('editableKey');
+                $model = Termbudget::findOne($id);
+                $out = Json::encode(['output'=>'', 'message'=>'']);
+                $post = [];
+                $posted = current($_POST['Termbudget']);
+
+                $post['Termbudget'] = $posted;
+                if ($model->load($post)) {
+                    $model->save();
+                    $output = '';
+                if (isset($posted['BUDGET_PLAN'])) {
+                    $output = $model->BUDGET_PLAN;
+                  }
+                    $out = Json::encode(['output'=>$output, 'message'=>'','response'=>'success']);
+
+                      echo $out;
+                      return;
+
+
+
+              }
+            }
+
         return $this->render('view', [
             'model' => $this->findModel($id),
             'modelnewaprov'=>$modelnewaprov,
             'dataProvider' =>  $dataProvider,
             'searchModel1'=>   $searchModel1,
-            'dataProvider1' =>  $dataProvider1
+            'dataProvider1' =>  $dataProvider1,
+
         ]);
     }
 
@@ -429,10 +457,10 @@ class TermCustomersController extends Controller
               //  die();
               if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT')
               {
-                $this->SendmailAct($kd);
+                // $this->SendmailAct($kd);
               }
               else{
-                 $this->Sendmail($kd);
+                //  $this->Sendmail($kd);
               }
 
                if(Yii::$app->getUserOpt->profile_user()->emp->DEP_ID == 'ACT')
@@ -460,7 +488,7 @@ class TermCustomersController extends Controller
              if ($auth2Mdl->auth2_saved()){
                $hsl = \Yii::$app->request->post();
                $kd = $hsl['Auth2Model']['id'];
-               $this->SendmailAct($kd);
+              //  $this->SendmailAct($kd);
                return $this->redirect(['review-act', 'id'=>$kd]);
              }
            }
@@ -494,7 +522,7 @@ class TermCustomersController extends Controller
             if ($auth3Mdl->auth3_saved()){
               $hsl = \Yii::$app->request->post();
               $kd = $hsl['Auth3Model']['id'];
-              $this->SendmailAct($kd);
+              // $this->SendmailAct($kd);
               return $this->redirect(['review-drc', 'id'=>$kd]);
             }
           }
@@ -1048,7 +1076,7 @@ class TermCustomersController extends Controller
 
 
 
-    public function actionCreateBudget($id)
+    public function actionCreateBudget($id,$cust_kd)
     {
       # code...
         $budget = new  Termbudget();
@@ -1062,7 +1090,7 @@ class TermCustomersController extends Controller
           $tanggalend = \Yii::$app->formatter->asDate($budget->PERIODE_END,'Y-M-d');
           $budget->PERIODE_START = $tanggal;
           $budget->PERIODE_END = $tanggalend;  */
-		  $tanggal = \Yii::$app->formatter->asDate($budget->PERIODE_START,'Y-M-d');
+		      $tanggal = \Yii::$app->formatter->asDate($budget->PERIODE_START,'Y-M-d');
           $tanggalend = \Yii::$app->formatter->asDate($budget->PERIODE_END,'Y-M-d');
           $budget->PERIODE_START = $budget->PERIODE_START!=''?\Yii::$app->formatter->asDate($budget->PERIODE_START,'Y-M-d'):'0000-00-00';;
           $budget->PERIODE_END =  $budget->PERIODE_END!=''?\Yii::$app->formatter->asDate($budget->PERIODE_END,'Y-M-d'):'0000-00-00';;
@@ -1074,6 +1102,7 @@ class TermCustomersController extends Controller
             $budget->save();
 
           }
+
 
             return $this->redirect(['view','id'=>$budget->ID_TERM]);
 
@@ -1291,7 +1320,7 @@ class TermCustomersController extends Controller
         $model = new Termcustomers();
 
         if ($model->load(Yii::$app->request->post())) {
-          $model->ID_TERM = Yii::$app->ambilkonci->getkdTerm();
+          $model->ID_TERM = Yii::$app->ambilkonci->getPlanCode();
           if($model->validate())
           {
               $model->CREATED_AT = date("Y-m-d H:i:s");
@@ -1299,7 +1328,7 @@ class TermCustomersController extends Controller
               $model->save();
 
           }
-            return $this->redirect(['view','id'=>$model->ID_TERM]);
+            return $this->redirect(['view','id'=>$model->ID_TERM,'cust_kd'=>$model->CUST_KD]);
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,
@@ -1314,7 +1343,7 @@ class TermCustomersController extends Controller
         $model = new Termcustomers();
 
         if ($model->load(Yii::$app->request->post())) {
-          $model->ID_TERM = Yii::$app->ambilkonci->getkdTerm();
+          $model->ID_TERM = Yii::$app->ambilkonci->getPlanCode();
           if($model->validate())
           {
               $model->CREATED_AT = date("Y-m-d H:i:s");

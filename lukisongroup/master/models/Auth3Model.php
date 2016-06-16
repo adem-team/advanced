@@ -10,6 +10,8 @@ use lukisongroup\purchasing\models\ro\Requestorderstatus;
 use lukisongroup\purchasing\models\data_term\Termheader;
 use lukisongroup\purchasing\models\data_term\Termdetail;
 use lukisongroup\master\models\Termbudget;
+use lukisongroup\purchasing\models\rqt\Requesttermheader;
+use lukisongroup\purchasing\models\rqt\Rtdetail;
 /**
  * @author ptrnov  <piter@lukison.com>
  * @since 1.1
@@ -87,6 +89,7 @@ class Auth3Model extends Model
 				$model->SIG3_TGL = date('Y-m-d');
 		    if($model->save())
         {
+
           if(!$termSignStt)
           {
             $statusterm = new Statusterm();
@@ -96,6 +99,7 @@ class Auth3Model extends Model
             $statusterm->UPDATE_AT =  date('Y-m-d H:m:s');
             $statusterm->save();
 
+            //header t0000header
             $copy_term = new Termheader();
             $copy_term->TERM_ID = Yii::$app->ambilkonci->getkdTermData();
             $copy_term->TERM_REF = $model->ID_TERM;
@@ -119,6 +123,28 @@ class Auth3Model extends Model
             $copy_term->SIG3_SVGBASE64 = $model->SIG3_SVGBASE64;
             $copy_term->CREATED_BY = $model->CREATED_BY;
             $copy_term->save();
+
+
+
+              // t0001header
+            $copy_budget = new Requesttermheader();
+            $cari_term_old = Requesttermheader::find()->where(['CUST_ID_PARENT'=>$model->CUST_KD])->one();
+
+            if(count($cari_term_old) == 0)
+            {
+              $copy_budget->TERM_ID = $copy_term->TERM_ID;
+            }else {
+              # code...
+                $copy_budget->TERM_ID = $cari_term_old->TERM_ID;
+            }
+
+            $copy_budget->KD_RIB = Yii::$app->ambilkonci->getRaCode($this->getProfile()->EMP_CORP_ID);
+            $copy_budget->ID_USER = $this->getProfile()->EMP_ID;
+            $copy_budget->CUST_ID_PARENT = $model->CUST_KD;
+            $copy_budget->save();
+
+
+            // detail
             $budget_detail = Termbudget::find()->where(['ID_TERM'=>$model->ID_TERM])->all();
             foreach ($budget_detail as $key => $value) {
               # code...
@@ -135,6 +161,14 @@ class Auth3Model extends Model
               $copy_detail->PPN = $value->PPN;
               $copy_detail->PROGRAM = $value->PROGRAM;
               $copy_detail->save();
+
+              // detail
+              $copy_budget_detail = new Rtdetail();
+              $copy_budget_detail->KD_RIB = $copy_budget->KD_RIB;
+              $copy_budget_detail->TERM_ID = $copy_budget->TERM_ID;
+              $copy_budget_detail->INVESTASI_TYPE = $value->INVES_TYPE;
+              $copy_budget_detail->HARGA = $value->BUDGET_PLAN;
+              $copy_budget_detail->save();
             }
 
 

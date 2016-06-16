@@ -29,8 +29,8 @@ use yii\data\ArrayDataProvider;
 				'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves
 			]);
 
-		
-				
+
+
 				$items=[
 					[
 						'label'=>'<i class="fa fa-mortar-board fa-lg"></i>Plan budget','content'=>$expandPlan,
@@ -38,7 +38,7 @@ use yii\data\ArrayDataProvider;
 						'options' => ['id' => 'term-detail-plan-budget'.$id],
 					],
 					[
-						'label'=>'<i class="fa fa-bar-chart fa-lg"></i>  Actual Budget','content'=>$expandActual,
+						'label'=>'<i class="fa fa-bar-chart fa-lg"></i>  Actual Realisasi	','content'=>$expandActual,
 						'options' => ['id' => 'term-actual-budget'.$id],
 					],
 					[
@@ -46,9 +46,9 @@ use yii\data\ArrayDataProvider;
 						'options' => ['id' => 'term-chart-actual-budget'.$id],
 					]
 				];
-			
 
-			
+
+
 				echo TabsX::widget([
 					'id'=>'tab-detail-plan-actual'.$id,
 					'enableStickyTabs' => true,
@@ -62,7 +62,7 @@ use yii\data\ArrayDataProvider;
 					'bordered'=>true,
 					'encodeLabels'=>false
 				]);
-			
+
 		?>
 	</div>
 	<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt">
