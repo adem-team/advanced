@@ -102,6 +102,7 @@ class Auth3Model extends Model
             //header t0000header
             $copy_term = new Termheader();
             $copy_term->TERM_ID = Yii::$app->ambilkonci->getkdTermData();
+
             $copy_term->TERM_REF = $model->ID_TERM;
             $copy_term->STATUS = 0;
             $copy_term->CUST_KD_PARENT = $model->CUST_KD;
@@ -129,7 +130,7 @@ class Auth3Model extends Model
               // t0001header
             $copy_budget = new Requesttermheader();
             $cari_term_old = Requesttermheader::find()->where(['CUST_ID_PARENT'=>$model->CUST_KD])->one();
-
+            //
             if(count($cari_term_old) == 0)
             {
               $copy_budget->TERM_ID = $copy_term->TERM_ID;
@@ -141,7 +142,10 @@ class Auth3Model extends Model
             $copy_budget->KD_RIB = Yii::$app->ambilkonci->getRaCode($this->getProfile()->EMP_CORP_ID);
             $copy_budget->ID_USER = $this->getProfile()->EMP_ID;
             $copy_budget->CUST_ID_PARENT = $model->CUST_KD;
+            $copy_budget->STATUS = 102;
             $copy_budget->save();
+            print_r($copy_budget->getErrors());
+            die();
 
 
             // detail
@@ -168,12 +172,15 @@ class Auth3Model extends Model
               $copy_budget_detail->TERM_ID = $copy_budget->TERM_ID;
               $copy_budget_detail->INVESTASI_TYPE = $value->INVES_TYPE;
               $copy_budget_detail->HARGA = $value->BUDGET_PLAN;
+              // $copy_budget_detail->STATUS = 102;
               $copy_budget_detail->save();
             }
 
 
           }
+
         }
+
 
 			return $model;
 		}
