@@ -66,6 +66,7 @@ class RequestTermController extends Controller
 	 * @since 1.1
      */
 	public function beforeAction(){
+
 			if (Yii::$app->user->isGuest)  {
 				 Yii::$app->user->logout();
                    $this->redirect(array('/site/login'));  //
@@ -188,7 +189,7 @@ class RequestTermController extends Controller
 
         }
 
-        $cari_term = Yii::$app->db_esm->createCommand('SELECT * from t0000header where CUST_KD_PARENT ="'.$model->CUST_ID_PARENT.'"')->queryScalar();
+        $cari_term = Yii::$app->db_esm->createCommand('SELECT TERM_ID from t0000header where CUST_KD_PARENT ="'.$model->CUST_ID_PARENT.'"')->queryScalar();
         // $cari_term = Requesttermheader::find()->where(['CUST_ID_PARENT'=>$model->CUST_ID_PARENT])->one();
         $model->TERM_ID = $cari_term;
         $model->CREATED_AT = date('Y-m-d');
@@ -196,6 +197,7 @@ class RequestTermController extends Controller
         $model->save();
         $term_invest->KD_RIB = $model->KD_RIB;
         $term_invest->INVESTASI_TYPE;
+        $term_invest->TERM_ID = $cari_term ;
         $term_invest->save();
 
         	return $this->redirect(['/purchasing/request-term/edit?kd='.$model->KD_RIB]);
