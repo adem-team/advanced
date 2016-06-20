@@ -126,28 +126,18 @@ public function actionSendChat()
 {
   # code...
   if (Yii::$app->request->isAjax) {
-// componem user
+// componen user
     $profile = Yii::$app->getUserOpt->profile_user()->emp;
     $emp_id = $profile->EMP_ID;
 
     /* connection db widget */
     $connection = Yii::$app->db_widget;
 
-    $request= Yii::$app->request;
+    $request = Yii::$app->request;
     $typechat = $request->post('chat');
     $id=$request->post('id');
     $chat = $request->post('comment');
-    // if($typechat == "group")
-    // {
-    //   $cari_group = Chatroom::find()->where(['SORT'=>$id])->all();
-    //   foreach ($cari_group as $key => $value) {
-    //     # code...
-    //     $connection->createCommand()
-    //                ->batchInsert('sc0003a',['MESSAGE','GROUP','CREATED_BY'],
-    //                         [[$chat,$value['GROUP_ID'],$emp_id]])->execute();
-    //
-    //   }
-    // }else {
+    
       # code...
       $model = new Chat();
       $model->MESSAGE = $chat;

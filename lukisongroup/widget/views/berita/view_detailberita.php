@@ -232,6 +232,24 @@ if(count($attach_file)== 0)
 	</div>
 </div>
 
+<?php
+ /* componen user */
+        $profile_user = Yii::$app->getUserOpt->profile_user()->emp;
+        $emp_img = $profile_user->EMP_IMG;
+        $emp_img_base64 = $profile_user->IMG_BASE64;
+
+        /* foto profile */
+        if($emp_img_base64 == '')
+        {
+         $emp_img_base64 = "default.jpg";
+         $foto = Html::img(Yii::getAlias('@web').'/upload/hrd/Employee/default.jpg', ['width'=>'100','height'=>'80', 'align'=>'center' ,'class'=>'img-circle']);
+        }else{
+          $emp_img_base64 = $profile_user->IMG_BASE64;
+         $foto= Html::img('data:image/jpg;base64,'.$emp_img_base64, ['width'=>'100','height'=>'80', 'align'=>'center' ,'class'=>'img-circle']);
+        }
+
+?>
+
 
 <?php
 /**@author wawan
@@ -283,7 +301,7 @@ $this->registerJs("
 
 Modal::begin([
   'id' => 'berita-reply-id-join',
-  'header' => '<h4 class="modal-title"><b> Comment </b></h4>',
+  'header' => '<h4 class="modal-title"><b>'.$foto.' Comment </b></h4>',
   'headerOptions'=>[
     'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
   ]

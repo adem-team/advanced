@@ -140,7 +140,7 @@ class Termcustomers extends \yii\db\ActiveRecord
           'JOBGRADE_ID' => 'Jabatan Principal',
           // 'CUST_KD' => 'Cust  Kd',
             'ID_TERM' => 'Id  Term',
-            'NM_TERM' => 'Nama Perjanjian',
+            'NM_TERM' => 'Nama TIPRO',
             'CUST_KD' => 'Nama Customers',
             'CUST_NM' => 'Nama Customers',
             // 'CUST_SIGN' => 'Cust  Sign',
