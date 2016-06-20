@@ -65,7 +65,7 @@ use lukisongroup\hrd\models\Corp;
 				],
 		])->label('Customers') ?>
 
-    <?=  $form->field($term_invest, 'INVESTASI_TYPE')->widget(Select2::classname(), [
+    <?=  $form->field($term_invest, 'ID_INVEST')->widget(Select2::classname(), [
           'data' => $data_invest,
           'options' => [
             'placeholder' => 'Pilih Investasi ...'

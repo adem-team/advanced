@@ -55,6 +55,46 @@ use yii\data\ArrayDataProvider;
 	];
 	/*GRIDVIEW ARRAY ROWS*/
 	foreach($gvHeadColomn as $key =>$value[]){
+		if($value[$key]['FIELD'] == 'HARGA')
+		{
+			$attDinamik[]=[
+			'attribute'=>$value[$key]['FIELD'],
+			'value'=>function($model)
+				{
+					return number_format($model['HARGA'],2);
+				},
+			'label'=>$value[$key]['label'],
+			'filterType'=>$value[$key]['filterType'],
+			'filter'=>$value[$key]['filter'],
+			'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
+			'hAlign'=>'right',
+			'vAlign'=>'middle',
+			//'mergeHeader'=>true,
+			'noWrap'=>true,
+			'group'=>$value[$key]['GRP'],
+			'format'=>$value[$key]['FORMAT'],
+			'headerOptions'=>[
+					'style'=>[
+					'text-align'=>'center',
+					'width'=>$value[$key]['FIELD'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(74, 206, 231, 1)',
+					'background-color'=>'rgba('.$value[$key]['warna'].')',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>$value[$key]['align'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(13, 127, 3, 0.1)',
+				]
+			],
+		];
+		}else{
+
+
 		$attDinamik[]=[
 			'attribute'=>$value[$key]['FIELD'],
 			'label'=>$value[$key]['label'],
@@ -86,6 +126,7 @@ use yii\data\ArrayDataProvider;
 				]
 			],
 		];
+	}
 	};
 	/*GRIDVIEW ARRAY ACTION*/
 	/* $actionClass='btn btn-info btn-xs';
