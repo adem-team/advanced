@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Termcustomers */
 
-$this->title = 'Create Termcustomers';
+$this->title = 'Create TIPRO';
 $this->params['breadcrumbs'][] = ['label' => 'Termcustomers', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

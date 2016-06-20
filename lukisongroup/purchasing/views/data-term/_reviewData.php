@@ -560,7 +560,7 @@ $id = $_GET['id'];
 	</div>
   <?php
 
-
+  /*budget tambahan*/
 	$total_tambahan_ppn = Requesttermheader::find()->where(['TERM_ID'=>$id])->sum('PPN');
 
 	$total_tamabahan_harga = Rtdetail::find()->where(['TERM_ID'=>$id])->sum('HARGA');
@@ -573,14 +573,22 @@ $id = $_GET['id'];
 
 	$budget = number_format($Budget_tambahan,2);
 
-	$invets = $model->BUDGET_AWAL+$Budget_tambahan;
+	/*total invest*/
+
+	$total_tambahan_ppn1 = Requesttermheader::find()->where(['TERM_ID'=>$id])->andwhere(['like','KD_RIB','RI'])->sum('PPN');
+
+	$total_tamabahan_harga1 = Rtdetail::find()->where(['TERM_ID'=>$id])->andwhere(['like','KD_RIB','RI'])->sum('HARGA');
+
+	$total_tambahan_pph1 = Requesttermheader::find()->where(['TERM_ID'=>$id])->andwhere(['like','KD_RIB','RI'])->sum('PPH23');
+
+	$invets = ($hitung_ppn_tambahan1 + $total_tamabahan_harga1)-$hitung_pph_tambahan1;
 
 	$total_invest= number_format($invets,2);
 
 	$modal_awal = $model->BUDGET_AWAL !='' ? $model->BUDGET_AWAL: number_format(0.00,2);
 
 	/*budget sisa */
-	$budget_sisa = $invets-$modal_awal;
+	$budget_sisa = $Budget_tambahan-$modal_awal-$invets;
 
   ?>
 	<!-- BUDGET !-->
