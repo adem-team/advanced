@@ -17,18 +17,32 @@ use yii\helpers\Url;
       'enableClientValidation' => true,
     ]); ?>
 
-
-    <div class="row">
-      <div class="col-xs-2 col-sm-2 col-md-2">
-        <?= $foto_profile ?>
-      </div>
-      <div class="col-xs-10 col-sm-10 col-md-10">
+ 
+  <div class="row">
+    
+      <div class="col-xs-12 col-sm-12 col-md-12">
+      <div class="panel panel-primary">
+      <div class="panel-heading">Comment</div>
+      <div class="panel-body">
+        
+       
         <?= $form->field($model, 'CHAT')->widget(CKEditor::className(), [
             'options' => ['rows' => 6],
             'preset' => 'basic'
-        ]) ?>
+        ])->label(false) ?>
 
-        <?php echo \kato\DropZone::widget([
+       
+      </div>
+      </div>
+    </div>
+    </div>
+
+  <div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12">
+      <div class="panel panel-primary">
+      <div class="panel-heading">Upload</div>
+      <div class="panel-body">
+     <?php echo \kato\DropZone::widget([
          'options' => [
              'maxFilesize' => '2',
              'acceptedFiles'=>'image/*,application/pdf',
@@ -39,22 +53,21 @@ use yii\helpers\Url;
              'removedfile' => "function(file){alert(file.name + ' is removed')}"
          ],
      ]);
-   ?>
+     ?>
+      
       </div>
-
       </div>
       </div>
+    </div>
 
 
     <div class="form-group" style="margin-top:10px">
         <?= Html::submitButton($model->isNewRecord ? 'SEND' : 'Update', ['class' => $roDetail->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
+  
 
     <?php ActiveForm::end(); ?>
 
 </div>
 
-<?php
 
-
- ?>

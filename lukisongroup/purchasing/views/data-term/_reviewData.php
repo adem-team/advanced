@@ -16,6 +16,8 @@ use yii\db\ActiveRecord;
 use yii\data\ArrayDataProvider;
 use yii\data\ActiveDataProvider;
 
+
+/*namespace models*/
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Termcustomers;
 use lukisongroup\master\models\Distributor;
@@ -124,7 +126,7 @@ $id = $_GET['id'];
 
 					$total_ppn = Requesttermheader::find()->where(['TERM_ID'=>$model->TERM_ID])->andwhere(['like','KD_RIB','RI'])->sum('PPN');
 
-					$total_harga = Rtdetail::find()->where(['TERM_ID'=>$model->TERM_ID,'INVESTASI_TYPE'=>$model->INVES_ID])->andwhere(['like','KD_RIB','RI'])->sum('HARGA');
+					$total_harga = Rtdetail::find()->where(['TERM_ID'=>$model->TERM_ID,'ID_INVEST'=>$model->INVES_ID])->andwhere(['like','KD_RIB','RI'])->sum('HARGA');
 
 					$total_pph = Requesttermheader::find()->where(['TERM_ID'=>$model->TERM_ID])->andwhere(['like','KD_RIB','RI'])->sum('PPH23');
 
@@ -192,11 +194,14 @@ $id = $_GET['id'];
           //
           // 	$total = ($total_ppn + $model->HARGA)-$total_pp23 ;
 
-          $total_ppn = Requesttermheader::find()->where(['TERM_ID'=>$model->TERM_ID])->andwhere('STATUS = 102')->orwhere(['like','KD_RIB','RA'])->orwhere(['like','KD_RIB','RB'])->sum('PPN');
+          $total_ppn = Requesttermheader::find()->where(['TERM_ID'=>$model->TERM_ID])->orwhere(['like','KD_RIB','RA'])->orwhere(['like','KD_RIB','RB'])->sum('PPN');
 
-          $total_harga = Rtdetail::find()->where(['TERM_ID'=>$model->TERM_ID,'INVESTASI_TYPE'=>$model->INVES_ID])->andwhere('STATUS = 102')->orwhere(['like','KD_RIB','RA'])->orwhere(['like','KD_RIB','RB'])->sum('HARGA');
+          // $total_harga = Rtdetail::find()->where(['TERM_ID'=>$model->TERM_ID])->andwhere(['ID_INVEST'=>$model->INVES_ID])->sum('HARGA');
 
-          $total_pph = Requesttermheader::find()->where(['TERM_ID'=>$model->TERM_ID])->orwhere(['like','KD_RIB','RA'])->andwhere('STATUS = 102')->orwhere(['like','KD_RIB','RB'])->sum('PPH23');
+          $total_sql = "select sum(harga) as harga from t0001detail where TERM_ID='".$model->TERM_ID."' and ID_INVEST='".$model->INVES_ID."' and (KD_RIB LIKE 'RA%' OR KD_RIB LIKE 'RB%')";
+
+          $total_harga = Yii::$app->db_esm->createCommand($total_sql)->queryScalar();
+          $total_pph = Requesttermheader::find()->where(['TERM_ID'=>$model->TERM_ID])->orwhere(['like','KD_RIB','RA'])->orwhere(['like','KD_RIB','RB'])->sum('PPH23');
 
           $hitung_ppn = ($total_harga*$total_ppn)/100;
           $hitung_pph = ($total_harga*$total_pph)/100;
@@ -303,9 +308,9 @@ $id = $_GET['id'];
 
 		$sql = "SELECT * FROM `t0001detail` ti
 						LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
-						LEFT JOIN c0006 c on ti.INVESTASI_TYPE = c.ID
+						LEFT JOIN c0006 c on ti.ID_INVEST = c.ID
 						WHERE ti.TERM_ID ='".$model->TERM_ID."'
-						AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
+						AND ti.ID_INVEST ='".$model->INVES_ID."'
 						AND (ti.KD_RIB LIKE 'RID%' OR ti.KD_RIB LIKE 'RI%')";
 
 		// $sql = "SELECT * FROM `t0000detail` td
@@ -333,12 +338,11 @@ $id = $_GET['id'];
 				// 				AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
 				// 				AND ti.KD_RIB LIKE 'RB%' AND ti.KD_RIB LIKE 'RA%'";
 				$sql2 = "SELECT * FROM t0001detail ti
-								LEFT JOIN c0006 c on ti.INVESTASI_TYPE = c.ID
+								LEFT JOIN c0006 c on ti.ID_INVEST = c.ID
 								LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
 								WHERE ti.TERM_ID ='".$model->TERM_ID."'
-								AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
-								AND th.STATUS = 102
-							  AND (ti.KD_RIB LIKE 'RA%' OR ti.KD_RIB LIKE 'RB%')";
+								AND ti.ID_INVEST ='".$model->INVES_ID."'
+							  	AND (ti.KD_RIB LIKE 'RA%' OR ti.KD_RIB LIKE 'RB%')";
 
 				// $sql2 = "SELECT * FROM `t0000detail` td
 				// 				LEFT JOIN t0001header th on
@@ -575,6 +579,9 @@ $id = $_GET['id'];
 
 	$modal_awal = $model->BUDGET_AWAL !='' ? $model->BUDGET_AWAL: number_format(0.00,2);
 
+	/*budget sisa */
+	$budget_sisa = $invets-$modal_awal;
+
   ?>
 	<!-- BUDGET !-->
 	<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" style="font-family: tahoma ;font-size: 8pt">
@@ -586,11 +593,11 @@ $id = $_GET['id'];
 			<dt style="width:120px; float:left;"> Budget Awal</dt>
 			<dd>:  <?= $modal_awal ?> </dd>
 			<dt style="width:120px; float:left;"> Budget Tambahan</dt>
-			<dd>:<?=$budget?></dd>
+			<dd>:<?= $budget ?></dd>
 			<dt style="width:120px; float:left;" > Total Inves</dt>
-			<dd>: <?=$total_invest?></dd>
+			<dd>: <?= $total_invest ?></dd>
 			<dt style="width:120px; float:left;" > Budget Sisa</dt>
-			<dd>: <?=$model->TARGET_VALUE?></dd>
+			<dd>:<?= number_format($budget_sisa,2) ?></dd>
 		</dl>
 	</div>
 </div>

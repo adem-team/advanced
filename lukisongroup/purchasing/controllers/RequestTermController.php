@@ -196,7 +196,7 @@ class RequestTermController extends Controller
         $model->ID_USER = Yii::$app->getUserOpt->Profile_user()->EMP_ID;
         $model->save();
         $term_invest->KD_RIB = $model->KD_RIB;
-        $term_invest->INVESTASI_TYPE;
+        $term_invest->ID_INVEST;
         $term_invest->TERM_ID = $cari_term ;
         $term_invest->save();
 

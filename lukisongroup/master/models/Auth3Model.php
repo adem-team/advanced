@@ -102,7 +102,6 @@ class Auth3Model extends Model
             //header t0000header
             $copy_term = new Termheader();
             $copy_term->TERM_ID = Yii::$app->ambilkonci->getkdTermData();
-
             $copy_term->TERM_REF = $model->ID_TERM;
             $copy_term->STATUS = 0;
             $copy_term->CUST_KD_PARENT = $model->CUST_KD;
@@ -129,51 +128,29 @@ class Auth3Model extends Model
 
               // t0001header
             $copy_budget = new Requesttermheader();
-            $cari_term_old = Requesttermheader::find()->where(['CUST_ID_PARENT'=>$model->CUST_KD])->one();
-            //
-            if(count($cari_term_old) == 0)
-            {
-              $copy_budget->TERM_ID = $copy_term->TERM_ID;
-            }else {
-              # code...
-                $copy_budget->TERM_ID = $cari_term_old->TERM_ID;
-            }
-
+            $copy_budget->TERM_ID = $copy_term->TERM_ID;
             $copy_budget->KD_RIB = Yii::$app->ambilkonci->getRaCode($this->getProfile()->EMP_CORP_ID);
             $copy_budget->ID_USER = $this->getProfile()->EMP_ID;
             $copy_budget->CUST_ID_PARENT = $model->CUST_KD;
             $copy_budget->STATUS = 102;
             $copy_budget->save();
-            print_r($copy_budget->getErrors());
-            die();
+          
 
 
             // detail
             $budget_detail = Termbudget::find()->where(['ID_TERM'=>$model->ID_TERM])->all();
+
             foreach ($budget_detail as $key => $value) {
               # code...
-              $copy_detail = new Termdetail();
-              $copy_detail->TERM_ID = $copy_term->TERM_ID;
-              $copy_detail->CUST_KD_PARENT = $copy_term->CUST_KD_PARENT;
-              $copy_detail->INVES_ID = $value->INVES_TYPE;
-              $copy_detail->BUDGET_SOURCE = $value->BUDGET_SOURCE;
-              $copy_detail->BUDGET_PLAN = $value->BUDGET_PLAN;
-              $copy_detail->BUDGET_ACTUAL = $value->BUDGET_ACTUAL;
-              $copy_detail->PERIODE_START = $value->PERIODE_START;
-              $copy_detail->PERIODE_END = $value->PERIODE_END;
-              $copy_detail->PPH23 = $value->PPH23;
-              $copy_detail->PPN = $value->PPN;
-              $copy_detail->PROGRAM = $value->PROGRAM;
-              $copy_detail->save();
+             
 
-              // detail
-              $copy_budget_detail = new Rtdetail();
-              $copy_budget_detail->KD_RIB = $copy_budget->KD_RIB;
-              $copy_budget_detail->TERM_ID = $copy_budget->TERM_ID;
-              $copy_budget_detail->INVESTASI_TYPE = $value->INVES_TYPE;
-              $copy_budget_detail->HARGA = $value->BUDGET_PLAN;
-              // $copy_budget_detail->STATUS = 102;
-              $copy_budget_detail->save();
+              //t0000detail
+              $connection = Yii::$app->db_esm;
+              $connection->createCommand()->batchInsert('t0000detail',['TERM_ID','CUST_KD_PARENT','INVES_ID','BUDGET_SOURCE','BUDGET_PLAN','BUDGET_ACTUAL','PERIODE_START','PERIODE_END','PPH23','PPN','PROGRAM'],[[$copy_term->TERM_ID,$copy_term->CUST_KD_PARENT,$value->INVES_TYPE,$value->BUDGET_SOURCE,$value->BUDGET_PLAN,$value->BUDGET_ACTUAL,$value->PERIODE_START,$value->PERIODE_END,$value->PPH23,$value->PPN,$value->PROGRAM]])->execute();
+              
+               //t0001detail
+              $connection->createCommand()->batchInsert('t0001detail',['KD_RIB','TERM_ID','ID_INVEST','HARGA'],[[$copy_budget->KD_RIB,$copy_budget->TERM_ID,$value->INVES_TYPE,$value->BUDGET_PLAN]])->execute();
+             
             }
 
 
