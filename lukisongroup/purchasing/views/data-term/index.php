@@ -269,7 +269,7 @@ function tombolCreate(){
 			],
 		],
 		'panel' => [
-					'heading'=>'<h3 class="panel-title" style="font-family: verdana, arial, sans-serif ;font-size: 9pt;">TERM PLAN</h3>',
+					'heading'=>'<h3 class="panel-title" style="font-family: verdana, arial, sans-serif ;font-size: 9pt;">TERM DATA</h3>',
 					'type'=>'info',
 					//'showFooter'=>false,
 		],
