@@ -407,6 +407,43 @@ else{
 		</div>
 	</div>
 
+	<!-- TERM OF PAYMENT !-->
+	<div class="row">
+		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+			<div>
+				<?php echo TOP($model); ?>
+			</div>
+			<dl>
+				<dt><h6><u><b>TERM OF PAYMENT :</b></u></h6></dt>
+				<dd> <?= $model->TOP ?></dd>
+			</dl>
+		</div>
+	</div>
+
+	<!-- Invoce Number  -->
+	<div class="row">
+		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+			<div>
+				<?php echo INVOCE($model); ?>
+			</div>
+			<dl>
+				<dt><h6><u><b> Invoice Nomer :</b></u></h6></dt>
+				<dd> <?= $model->NOMER_INVOCE ?></dd>
+			</dl>
+		</div>
+	</div>
+	<!-- Faktur Pajak Number  -->
+	<div class="row">
+		<div class="col-xs-6 col-sm-6 col-md-6" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
+			<div>
+				<?php echo Faktur($model); ?>
+			</div>
+			<dl>
+				<dt><h6><u><b> Nomer Faktur Pajak :</b></u></h6></dt>
+				<dd> <?= $model->NOMER_FAKTURPAJAK ?></dd>
+			</dl>
+		</div>
+	</div>
 
 	<!-- TARGET !-->
     <div class="row">
