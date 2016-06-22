@@ -20,6 +20,7 @@ $form = ActiveForm::begin([
 'options' => ['placeholder' => 'Dari  ...'],
 'pluginOptions' => [
    'autoclose'=>true,
+    'value' => '01/29/2014',
    'format' => 'dd-mm-yyyy',
 ],
 
