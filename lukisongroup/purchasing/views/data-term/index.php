@@ -114,9 +114,10 @@ function tombolCreate(){
 	/*GRIDVIEW ARRAY FIELD HEAD*/
 	$headColomnEvent=[
 		['ID' =>0, 'ATTR' =>['FIELD'=>'NmCustomer','SIZE' => '50px','label'=>'CUSTOMER PARENT','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'UPDATE_AT','SIZE' => '10px','label'=>'Date','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'Nmprincipel','SIZE' => '10px','label'=>'PRINCIPAL','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'NmDis','SIZE' => '10px','label'=>'DISTRIBUTOR','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'PERIOD_START','SIZE' => '10px','label'=>'tanggal term di buat ','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'PERIOD_END','SIZE' => '10px','label'=>'tanggal term  berakhir','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'Nmprincipel','SIZE' => '10px','label'=>'PRINCIPAL','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'NmDis','SIZE' => '10px','label'=>'DISTRIBUTOR','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		//['ID' =>4, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'STATUS','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 	];
 	$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');
