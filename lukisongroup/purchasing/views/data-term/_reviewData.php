@@ -112,39 +112,37 @@ $id = $_GET['id'];
 			$attDinamik[]=[
 				'attribute'=>$value[$key]['FIELD'],
 				'value'=>function($model){
+					  /*connect*/
 					$connect = Yii::$app->db_esm;
-					// select * from t0000detail td
-					// INNER  JOIN t0001detail td1
-					// on td.INVES_ID = td1.INVESTASI_TYPE WHERE td.TERM_ID = "trm.2016.0001" and td1.INVESTASI_TYPE = 8 ;
-					// $sql1 = 'select sum(td1.HARGA) as BUDGET_ACTUAL from t0000detail td
-					//       	INNER JOIN t0001detail td1
-					//  				where td.TERM_ID ="'.$model->TERM_ID.'" and td1.INVESTASI_TYPE="'.$model->INVES_ID.'" and td1.KD_RIB LIKE "%RID" and td1.KD_RIB LIKE "%RI"';
-					// $total_pp23 = ($model->HARGA*$model->pph)/100;
-					// $total_ppn =  ($model->HARGA*$model->ppn)/100;
-					//
-					// 	$total = ($total_ppn + $model->HARGA)-$total_pp23 ;
+		
+					/*caculate ppn*/
+					 $sql_ppn = "select sum(PPN) as PPN from t0001header where TERM_ID='".$model->TERM_ID."' AND STATUS = 102 AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
+          		     $total_ppn =  $connect->createCommand($sql_ppn)->queryScalar();
+					
 
-					$total_ppn = Requesttermheader::find()->where(['TERM_ID'=>$model->TERM_ID])->andwhere(['like','KD_RIB','RI'])->sum('PPN');
+					/*caculate harga*/
+		          	$total_sql = "select sum(HARGA) as harga from t0001detail where TERM_ID='".$model->TERM_ID."' and ID_INVEST='".$model->INVES_ID."' and STATUS = 102 and (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
+				  	$total_harga = Yii::$app->db_esm->createCommand($total_sql)->queryScalar();
 
-					$total_harga = Rtdetail::find()->where(['TERM_ID'=>$model->TERM_ID,'ID_INVEST'=>$model->INVES_ID])->andwhere(['like','KD_RIB','RI'])->sum('HARGA');
+					/*caculate pph23*/
+					$sql_pph = "select sum(PPH23) as PPH23 from t0001header where TERM_ID='".$model->TERM_ID."' AND STATUS = 102 AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
+          			$total_pph = $connect->createCommand($sql_pph)->queryScalar();
+					
 
-					$total_pph = Requesttermheader::find()->where(['TERM_ID'=>$model->TERM_ID])->andwhere(['like','KD_RIB','RI'])->sum('PPH23');
-
+					/*formula sub total*/
 					$hitung_ppn = ($total_harga*$total_ppn)/100;
 					$hitung_pph = ($total_harga*$total_pph)/100;
 					$sub_total = ($hitung_ppn + $total_harga)-$hitung_pph;
-					// // $total_ppn = $cari_ppn->sum('PPN');
-				  // $sql = 'select sum(th.PPN) from t0001detail ti
-					// 				LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
-        	// 				where ti.TERM_ID ="'.$model->TERM_ID.'" and ti.INVESTASI_TYPE="'.$model->INVES_ID.'" and ti.KD_RIB LIKE "RID%" and ti.KD_RIB LIKE "RI%"';
-					// $execute = $connect->createCommand($sql)->queryScalar();
+					
+					 /* if subtotal equal null then number format using sub total*/
+
 					if($sub_total!= '')
 					{
-					   return  number_format($sub_total,2);
+					    return  number_format($sub_total,2);
 					}else {
 						# code...
-						 return number_format(0.00,2);
-						// return  number_format($sub_total,2);
+						return number_format(0.00,2);
+						
 					}
 
 				},
@@ -182,42 +180,36 @@ $id = $_GET['id'];
       $attDinamik[]=[
         'attribute'=>$value[$key]['FIELD'],
         'value'=>function($model){
+          /*connect*/
           $connect = Yii::$app->db_esm;
-          // select * from t0000detail td
-          // INNER  JOIN t0001detail td1
-          // on td.INVES_ID = td1.INVESTASI_TYPE WHERE td.TERM_ID = "trm.2016.0001" and td1.INVESTASI_TYPE = 8 ;
-          // $sql1 = 'select sum(td1.HARGA) as BUDGET_ACTUAL from t0000detail td
-          //       	INNER JOIN t0001detail td1
-          //  				where td.TERM_ID ="'.$model->TERM_ID.'" and td1.INVESTASI_TYPE="'.$model->INVES_ID.'" and td1.KD_RIB LIKE "%RID" and td1.KD_RIB LIKE "%RI"';
-          // $total_pp23 = ($model->HARGA*$model->pph)/100;
-          // $total_ppn =  ($model->HARGA*$model->ppn)/100;
-          //
-          // 	$total = ($total_ppn + $model->HARGA)-$total_pp23 ;
+          
+          /*caculate ppn*/
+          $sql_ppn = "select sum(PPN) as PPN from t0001header where TERM_ID='".$model->TERM_ID."' AND STATUS = 102 AND (KD_RIB LIKE 'RA%' OR KD_RIB LIKE 'RB%')";
+          $total_ppn =  $connect->createCommand($sql_ppn)->queryScalar();
 
-          $total_ppn = Requesttermheader::find()->where(['TERM_ID'=>$model->TERM_ID])->orwhere(['like','KD_RIB','RA'])->orwhere(['like','KD_RIB','RB'])->sum('PPN');
-
-          // $total_harga = Rtdetail::find()->where(['TERM_ID'=>$model->TERM_ID])->andwhere(['ID_INVEST'=>$model->INVES_ID])->sum('HARGA');
-
-          $total_sql = "select sum(harga) as harga from t0001detail where TERM_ID='".$model->TERM_ID."' and ID_INVEST='".$model->INVES_ID."' and (KD_RIB LIKE 'RA%' OR KD_RIB LIKE 'RB%')";
-
-          $total_harga = Yii::$app->db_esm->createCommand($total_sql)->queryScalar();
-          $total_pph = Requesttermheader::find()->where(['TERM_ID'=>$model->TERM_ID])->orwhere(['like','KD_RIB','RA'])->orwhere(['like','KD_RIB','RB'])->sum('PPH23');
-
+        
+          /*caculate harga*/
+          $total_sql = "select sum(HARGA) as harga from t0001detail where TERM_ID='".$model->TERM_ID."' and ID_INVEST='".$model->INVES_ID."' and STATUS = 102 and (KD_RIB LIKE 'RA%' OR KD_RIB LIKE 'RB%')";
+		  $total_harga = Yii::$app->db_esm->createCommand($total_sql)->queryScalar();
+          
+		  /*caculate pph23*/
+		  $sql_pph = "select sum(PPH23) as PPH23 from t0001header where TERM_ID='".$model->TERM_ID."' AND STATUS = 102 AND (KD_RIB LIKE 'RA%' OR KD_RIB LIKE 'RB%')";
+          $total_pph = $connect->createCommand($sql_pph)->queryScalar();
+         
+         	/*formula sub total*/
           $hitung_ppn = ($total_harga*$total_ppn)/100;
           $hitung_pph = ($total_harga*$total_pph)/100;
           $sub_total = ($hitung_ppn + $total_harga)-$hitung_pph;
-          // // $total_ppn = $cari_ppn->sum('PPN');
-          // $sql = 'select sum(th.PPN) from t0001detail ti
-          // 				LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
-          // 				where ti.TERM_ID ="'.$model->TERM_ID.'" and ti.INVESTASI_TYPE="'.$model->INVES_ID.'" and ti.KD_RIB LIKE "RID%" and ti.KD_RIB LIKE "RI%"';
-          // $execute = $connect->createCommand($sql)->queryScalar();
+      
+          
+
+       	  /* if subtotal equal null then number format using sub total*/
           if($sub_total!= '')
           {
              return  number_format($sub_total,2);
           }else {
             # code...
              return number_format(0.00,2);
-            // return  number_format($sub_total,2);
           }
 
         },
@@ -296,110 +288,58 @@ $id = $_GET['id'];
 			return GridView::ROW_COLLAPSED;
 		},
 		'detail'=>function ($model, $key, $index, $column){
-
+		/*connect db esm*/
 		$connect = Yii::$app->db_esm;
 
-		// $sql = "SELECT * FROM t0001detail ti
-		// 				LEFT JOIN c0006 c on ti.INVESTASI_TYPE = c.ID
-		// 				WHERE ti.TERM_ID ='".$model->TERM_ID."'
-		// 				AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
-		// 				AND ti.KD_RIB LIKE 'RID%'
-		// 				AND ti.KD_RIB LIKE 'RI%'";
-
+		/* reviewDataexpandPlan || budget_plan */
 		$sql = "SELECT * FROM `t0001detail` ti
-						LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
-						LEFT JOIN c0006 c on ti.ID_INVEST = c.ID
-						WHERE ti.TERM_ID ='".$model->TERM_ID."'
-						AND ti.ID_INVEST ='".$model->INVES_ID."'
-						AND (ti.KD_RIB LIKE 'RID%' OR ti.KD_RIB LIKE 'RI%')";
+					LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
+					LEFT JOIN c0006 c on ti.ID_INVEST = c.ID
+					WHERE ti.TERM_ID ='".$model->TERM_ID."'
+					AND ti.ID_INVEST ='".$model->INVES_ID."'
+					AND ti.STATUS = 102
+					AND (ti.KD_RIB LIKE 'RID%' OR ti.KD_RIB LIKE 'RI%')";
 
-		// $sql = "SELECT * FROM `t0000detail` td
-		// 				LEFT JOIN t0001header th on
-		// 				td.CUST_KD_PARENT = th.CUST_ID_PARENT
-		// 				LEFT JOIN t0001detail ti on th.KD_RIB = ti.KD_RIB
-		// 				LEFT JOIN  c0006 c on ti.INVESTASI_TYPE = c.ID
-		// 				WHERE th.TERM_ID ='".$model->TERM_ID."'
-		// 				AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
-		// 				AND th.KD_RIB LIKE 'RID%'
-		// 				AND th.KD_RIB LIKE 'RI%'";
 
-						$hasil = $connect->createCommand($sql)->queryAll();
+		$hasil = $connect->createCommand($sql)->queryAll();
 
-						$dataProviderBudgetdetail_inves = new ArrayDataProvider([
+		$dataProviderBudgetdetail_inves = new ArrayDataProvider([
 				    'allModels' => $hasil,
 				    'pagination' => [
 				        'pageSize' => 10,
 				    ],
 				]);
 
-				// $sql2 = "SELECT * FROM t0001detail ti
-				// 				LEFT JOIN c0006 c on ti.INVESTASI_TYPE = c.ID
-				// 				WHERE ti.TERM_ID ='".$model->TERM_ID."'
-				// 				AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
-				// 				AND ti.KD_RIB LIKE 'RB%' AND ti.KD_RIB LIKE 'RA%'";
-				$sql2 = "SELECT * FROM t0001detail ti
-								LEFT JOIN c0006 c on ti.ID_INVEST = c.ID
-								LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
-								WHERE ti.TERM_ID ='".$model->TERM_ID."'
-								AND ti.ID_INVEST ='".$model->INVES_ID."'
-							  	AND (ti.KD_RIB LIKE 'RA%' OR ti.KD_RIB LIKE 'RB%')";
 
-				// $sql2 = "SELECT * FROM `t0000detail` td
-				// 				LEFT JOIN t0001header th on
-				// 				td.CUST_KD_PARENT = th.CUST_ID_PARENT
-				// 				LEFT JOIN t0001detail ti on th.KD_RIB = ti.KD_RIB
-				// 				LEFT JOIN  c0006 c on ti.INVESTASI_TYPE = c.ID
-				// 				WHERE th.TERM_ID ='".$model->TERM_ID."'AND ti.INVESTASI_TYPE ='".$model->INVES_ID."'
-				// 				AND th.KD_RIB LIKE 'RB%'";
 
-								$hasil1 = $connect->createCommand($sql2)->queryAll();
+		/* reviewDataexpandActual || budget_actual */
+		$sql2 = "SELECT * FROM t0001detail ti
+					LEFT JOIN c0006 c on ti.ID_INVEST = c.ID
+					LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
+					WHERE ti.TERM_ID ='".$model->TERM_ID."'
+					AND ti.ID_INVEST ='".$model->INVES_ID."'
+					AND ti.STATUS = 102
+					AND (ti.KD_RIB LIKE 'RA%' OR ti.KD_RIB LIKE 'RB%')";
 
-								$dataProviderBudgetdetail = new ArrayDataProvider([
+				
+
+		$hasil1 = $connect->createCommand($sql2)->queryAll();
+
+		$dataProviderBudgetdetail = new ArrayDataProvider([
 								'allModels' => $hasil1,
 								'pagination' => [
 										'pageSize' => 10,
 								],
 						]);
 
-			/*query actual_detail*/
-			// $query = Rtdetail::find()->JoinWith('invest',true,'left JOIN')
-			// 				 ->JoinWith('termdet',true,'left JOIN')
-			// 				 ->where(['t0000detail.TERM_ID'=>$model->TERM_ID])
-			// 				 ->andwhere(['t0001detail.INVESTASI_TYPE'=>$model->INVES_ID])
-			// 				 ->andwhere(['like','t0001detail.KD_RIB','RID'])
-			// 				 ->andwhere(['like','t0001detail.KD_RIB','RI']);
-
-
-			/*dataprovider actual_detail*/
-			// $dataProviderBudgetdetail_inves = new ActiveDataProvider([
-			// 													'query' => $query,
-			// 													'pagination' => [
-			// 													'pageSize' => 20,
-			// 														 ],
-			// 													]);
-
-			/*query budget_plan*/
-			// $query1 = Rtdetail::find()->JoinWith('invest',true,'left JOIN')
-			// 					->JoinWith('termdet',true,'left JOIN')
-			// 					->where(['t0000detail.TERM_ID'=>$model->TERM_ID])
-			// 					->andwhere(['like','t0001detail.KD_RIB','RB'])
-			// 					->andwhere(['t0001detail.INVESTASI_TYPE'=>$model->INVES_ID]);
-
-			/*dataprovider budget_plan*/
-			//  $dataProviderBudgetdetail = new ActiveDataProvider([
-			// 														'query' => $query1,
-			// 														 'pagination' => [
-			// 															'pageSize' => 20,
-			// 																	],
-			// 																]);
-
-				/*render*/
-			return Yii::$app->controller->renderPartial('_reviewDataExpand',[
+			/*render*/
+		return Yii::$app->controller->renderPartial('_reviewDataExpand',[
 				'dataProviderBudgetdetail'=>$dataProviderBudgetdetail,
 				'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves, //actual_detail
 				'dataProviderBudget'=>$dataProviderBudget,
 				'id'=>$model->ID
 			]);
+
 		},
 		'headerOptions'=>[
 			'style'=>[
@@ -560,13 +500,21 @@ $id = $_GET['id'];
 	</div>
   <?php
 
-  /*budget tambahan*/
-	$total_tambahan_ppn = Requesttermheader::find()->where(['TERM_ID'=>$id])->sum('PPN');
+  	/*connect db esm*/
+	$connect_esm = Yii::$app->db_esm;
 
-	$total_tamabahan_harga = Rtdetail::find()->where(['TERM_ID'=>$id])->sum('HARGA');
+  	/*budget tambahan*/
+  	$sql_tambahan_ppn = "select sum(PPN) as PPN from t0001header where TERM_ID ='".$id."' AND STATUS = 102 AND (KD_RIB LIKE 'RA%' OR KD_RIB LIKE 'RB%')";
+	$total_tambahan_ppn = $connect_esm->createCommand($sql_tambahan_ppn)->queryScalar();
 
-	$total_tambahan_pph = Requesttermheader::find()->where(['TERM_ID'=>$id])->sum('PPH23');
 
+	$sql_budget_tambahan = "select sum(HARGA) as harga from t0001detail where TERM_ID='".$id."'and STATUS = 102 and (KD_RIB LIKE 'RA%' OR KD_RIB LIKE 'RB%')";
+	$total_tamabahan_harga = $connect_esm->createCommand($sql_budget_tambahan)->queryScalar();
+
+	$sql_tambahan_pph = "select sum(PPH23) as PPH23 from t0001header where TERM_ID ='".$id."' AND STATUS = 102 AND (KD_RIB LIKE 'RA%' OR KD_RIB LIKE 'RB%')";
+	$total_tambahan_pph =$connect_esm->createCommand($sql_tambahan_pph)->queryScalar();
+
+	/*caculate bubget tambhan*/
 	$hitung_ppn_tambahan = ($total_tamabahan_harga*$total_tambahan_ppn)/100;
 	$hitung_pph_tambahan = ($total_tamabahan_harga*$total_tambahan_pph)/100;
 	$Budget_tambahan = ($hitung_ppn_tambahan + $total_tamabahan_harga)-$hitung_pph_tambahan;
@@ -574,17 +522,18 @@ $id = $_GET['id'];
 	$budget = number_format($Budget_tambahan,2);
 
 	/*total invest*/
-
 	$total_tambahan_ppn1 = Requesttermheader::find()->where(['TERM_ID'=>$id])->andwhere(['like','KD_RIB','RI'])->sum('PPN');
-
-	$total_tamabahan_harga1 = Rtdetail::find()->where(['TERM_ID'=>$id])->andwhere(['like','KD_RIB','RI'])->sum('HARGA');
-
+	
+	$sql_invest = "select sum(HARGA) as harga from t0001detail where TERM_ID='".$id."'and STATUS = 102 and (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
+	$total_tamabahan_harga1 =$connect_esm->createCommand($sql_invest)->queryScalar();
 	$total_tambahan_pph1 = Requesttermheader::find()->where(['TERM_ID'=>$id])->andwhere(['like','KD_RIB','RI'])->sum('PPH23');
-
+	/*caculate investasi*/
+	$hitung_ppn_tambahan1 = ($total_tamabahan_harga1*$total_tambahan_ppn1)/100;
+	$hitung_pph_tambahan1 = ($total_tamabahan_harga1*$total_tambahan_pph1)/100;
 	$invets = ($hitung_ppn_tambahan1 + $total_tamabahan_harga1)-$hitung_pph_tambahan1;
-
 	$total_invest= number_format($invets,2);
 
+	/*modal awal*/
 	$modal_awal = $model->BUDGET_AWAL !='' ? $model->BUDGET_AWAL: number_format(0.00,2);
 
 	/*budget sisa */
