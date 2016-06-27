@@ -97,6 +97,16 @@ public function getParent() {
            ['CUST_KD'=>'CUST_GRP'])->
            from(self::tableName() . ' AS parent');
 }
+
+public function getNameColumn()
+{
+
+ $data_column = new Customers();
+ return $dbSchema = $data_column->getTableSchema()->getColumnNames();
+
+}
+
+
 /* Getter for parent name */
 public function getParentName() {
     return $this->parent->CUST_NM;
