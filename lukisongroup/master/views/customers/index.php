@@ -18,6 +18,7 @@ $this->title = Yii::t('app', 'Customers');   	 			 /* title pada header page */
 
 $parent = ArrayHelper::map(Customers::find()->where('STATUS<>3 and CUST_KD=CUST_GRP')->all(), 'CUST_KD', 'CUST_NM');
 
+
 function tombolCustomers(){
   $title1 = Yii::t('app', 'Customers');
   $options1 = [ 'id'=>'setting',
@@ -204,8 +205,15 @@ $tabcustomersData = \kartik\grid\GridView::widget([
     ],
     [
     	'class'=>'kartik\grid\EditableColumn',
-      'attribute' => 'CUST_GRP',
+      'attribute' => 'CUST_KD',
       'refreshGrid'=>true,
+      'readonly'=>function($model, $key, $index, $widget){ // readonly
+        if($model->CUST_GRP == $model->CUST_KD)
+        {
+
+          return true;
+        }
+      },  
       'label'=>'Customer.Id',
       'hAlign'=>'left',
       'vAlign'=>'top',
@@ -229,6 +237,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
           'font-size'=>'8pt',
         ]
       ],
+    
       'editableOptions' => [
         'header' => 'Cost Center',
         'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
@@ -240,8 +249,9 @@ $tabcustomersData = \kartik\grid\GridView::widget([
             'class'=>'pull-top dropup'
           ],
         ],
+        
         //Refresh Display
-        // 'displayValueConfig' => $parent,
+        // 'displayValueConfig' => ArrayHelper::map(Customers::find()->where('STATUS<>3')->all(), 'CUST_KD', 'CUST_KD'),
       ],
     ],
 

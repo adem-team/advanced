@@ -188,6 +188,8 @@ class CustomersController extends Controller
             $ID = \Yii::$app->request->post('editableKey');
             Yii::$app->response->format = Response::FORMAT_JSON;
             $model = Customers::findOne($ID);
+            // print_r($ID);
+            // die();
             $out = Json::encode(['output'=>'', 'message'=>'']);
 
             // fetch the first entry in posted data (there should
@@ -210,6 +212,11 @@ class CustomersController extends Controller
                 // in the input by user is updated automatically.
                 $output = '';
 
+                    /*save parent customers*/
+                    $parent_model = Customers::find()->where(['CUST_KD'=>$ID])->one();
+                    $parent_model->CUST_GRP = $posted['CUST_KD'];
+                    $parent_model->save();
+
                 // specific use case where you need to validate a specific
                 // editable column posted when you have more than one
                 // EditableColumn in the grid view. We evaluate here a
@@ -219,7 +226,12 @@ class CustomersController extends Controller
 
                    // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
                     $output = $model->CUST_GRP;
+
+                   
                 }
+
+
+
 
                 // similarly you can check if the name attribute was posted as well
                 // if (isset($posted['name'])) {
@@ -1119,12 +1131,13 @@ class CustomersController extends Controller
 		$excel_content = [
 			 [
 				'sheet_name' => 'MTI CUSTOMER',
-                'sheet_title' => ['CUST_ID','CUST_NM','TYPE','ALAMAT','TLP','PIC'], //$excel_ceils,//'sad',//[$excel_title],
-			    'ceils' => $excel_ceils,
+          // 'sheet_title' => ['CUST_ID','CUST_NM','TYPE','ALAMAT','TLP','PIC'], //$excel_ceils,//'sad',//[$excel_title],
+			    'sheet_title' => $excel_data['excel_title'],
+          'ceils' => $excel_ceils,
                 //'freezePane' => 'E2',
                 'headerColor' => Export2ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-					 'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
+					           'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
                      'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
                      'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
                      'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
