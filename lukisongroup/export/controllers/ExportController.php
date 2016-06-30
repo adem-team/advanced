@@ -153,7 +153,7 @@ class ExportController extends Controller
         ];
 
         $excel_file = "CustomerData";
-        $this->export2excel($excel_content, $excel_file);
+        $this->export2excel($excel_content, $excel_file,1);
     }
 	
     
