@@ -3,7 +3,8 @@
 use yii\helpers\Url;
 use kartik\helpers\Html;
 use kartik\grid\GridView;
-use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
+use lukisongroup\assets\MapAsset;
+use kartik\nav\NavX;      /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
 MapAsset::register($this);
 
 
@@ -108,16 +109,50 @@ function tombolMap(){
 
 ?>
 
+<?php
+   $navmenu= NavX::widget([
+    'options'=>['class'=>'nav nav-tabs'],
+    'encodeLabels' => false,
+    'items' => [
+      ['label' => 'MENU', 'active'=>true, 'items' => [
+        ['label' => '<span class="fa fa-user fa-md"></span>Customers', 'url' => '/mastercrm/customers-crm/index'],
+        ['label' => '<span class="fa fa-cogs fa-md"></span>Alias Customers', 'url' => '/mastercrm/customers-crm/login-alias','linkOptions'=>['id'=>'performance','data-toggle'=>'modal','data-target'=>'#formlogin']],
+        '<li class="divider"></li>',
+        ['label' => 'Properties', 'items' => [
+          ['label' => '<span class="fa fa-flag fa-md"></span>Kota', 'url' => '/mastercrm/kota-customers-crm/index'],
+          ['label' => '<span class="fa fa-flag-o fa-md"></span>Province', 'url' => '/mastercrm/provinsi-customers-crm/index'],
+          ['label' => '<span class="fa fa-table fa-md"></span>Category', 'url' => '/mastercrm/kategori-customers-crm/index'],
+          '<li class="divider"></li>',
+          ['label' => '<span class="fa fa-map-marker fa-md"></span>Customers Map', 'url' => '/mastercrm/customers-crm/crm-map'],
+        ]],
+      ]],
 
-<div class="row">
-  <div class="col-sm-12">
+    ]
+  ]);
+?>
+<div class="content">
+  <div  class="row" style="padding-left:3px">
+    <div class="col-sm-12 col-md-12 col-lg-12" >
+     <?php
+        //echo  $test;
+        echo $navmenu;
+      ?>
+      <!-- CUTI !-->
+    </div>
+   <div class="col-sm-12">
     <?php
     /*Display MAP*/
     echo $map = '<div id ="map" style="width:100%;height:400px"></div>';
      ?>
 
  </div>
- </div>
+  </div>
+</div>
+
+
+<!-- <div class="row"> -->
+ 
+ <!-- </div> -->
 
  <?php
  /*js mapping */
@@ -135,7 +170,7 @@ function tombolMap(){
      var infowindow = new google.maps.InfoWindow();
 
    /*data json*/
-    $.getJSON('/salesman/customers-crm/map', function(json) {
+    $.getJSON('/mastercrm/customers-crm/map', function(json) {
 
      for (var i in public_markers)
      {

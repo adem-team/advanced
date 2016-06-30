@@ -44,7 +44,7 @@ class Customers extends \yii\db\ActiveRecord
      * @inheritdoc
      */
 	// public $tipenm;
-
+    public $checkbox_export;
     public $parentnama;
     public $CusNm;
     public $CusT; // model manipulate form_scdl and contrroler create-scdl
@@ -99,6 +99,14 @@ public function getParent() {
 /* Getter for parent name */
 public function getParentName() {
     return $this->parent->CUST_NM;
+}
+
+public function getNameColumn()
+{
+
+ $data_column = new Customers();
+ return $dbSchema = $data_column->getTableSchema()->getColumnNames();
+
 }
 
 	public function getCus()

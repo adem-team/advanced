@@ -107,25 +107,28 @@ function tombolMap(){
   return $content;
 }
 
-	// grid province
 
-	$tabprovince = \kartik\grid\GridView::widget([
-		'id'=>'gv-prov',
-		'dataProvider' => $dataproviderpro,
-		'filterModel' => $searchmodelpro,
-		'columns'=>[
-		['class'=>'kartik\grid\SerialColumn'],
+$actionClass='btn btn-info btn-xs';
+$actionLabel='Update';
+$attDinamik =[];
+/*GRIDVIEW ARRAY FIELD HEAD*/
+$headColomnBT=[
+['ID' =>0, 'ATTR' =>['FIELD'=> 'PROVINCE','SIZE' => '10px',
+'label'=>'Province',
+'align'=>'left','warna'=>'97, 211, 96, 0.3']],
+];
+$gvHeadColomnBT = ArrayHelper::map($headColomnBT, 'ID', 'ATTR');
 
-             'PROVINCE',
-
-     [ 'class' => 'kartik\grid\ActionColumn',
-                'template' => '{view}{update}',
-                        'header'=>'Action',
-                          'dropdown' => true,
-                            'dropdownOptions'=>['class'=>'pull-right dropup'],
-							'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
-                        'buttons' => [
-                            'view' =>function($url, $model, $key){
+/*GRIDVIEW ARRAY ACTION*/
+$attDinamik[]=[
+  'class'=>'kartik\grid\ActionColumn',
+  'dropdown' => true,
+  'template' => '{edit} {view} {update}',
+  'dropdownOptions'=>['class'=>'pull-left dropup','style'=>['disable'=>true]],
+  'dropdownButton'=>[
+    'class' => $actionClass,
+  ],
+  'buttons' => [   'view' =>function($url, $model, $key){
                                     return '<li>'.Html::a('<span class="glyphicon glyphicon-eye-open"></span>'.Yii::t('app', 'View'),
                                                                 ['viewpro','id'=> $model->PROVINCE_ID],[
                                                                 'data-toggle'=>"modal",
@@ -143,47 +146,95 @@ function tombolMap(){
                                                                 ]).'</li>';
                                                       },
 
-                                               ],
-                                       ],
-                              ],
+                                              ],
 
+                                         
+  'headerOptions'=>[
+    'style'=>[
+      'text-align'=>'center',
+      'width'=>'10px',
+      'font-family'=>'tahoma, arial, sans-serif',
+      'font-size'=>'9pt',
+      'background-color'=>'rgba(97, 211, 96, 0.3)',
+    ]
+  ],
+  'contentOptions'=>[
+    'style'=>[
+      'text-align'=>'center',
+      'width'=>'10px',
+      'height'=>'10px',
+      'font-family'=>'tahoma, arial, sans-serif',
+      'font-size'=>'9pt',
+    ]
+  ],
+];
 
-    'panel'=>[
-
-      'type' =>GridView::TYPE_SUCCESS,
-			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
-						['modelClass' => 'Barangumum',]),'/master/customers/createprovnce',[
-							'data-toggle'=>"modal",
-								'data-target'=>"#form3",
-                  'id'=>'modl22',
-									'class' => 'btn btn-success'
-												]),
-           ],
-           'pjax'=>true,
-           'pjaxSettings'=>[
-				'options'=>[
-					'enablePushState'=>false,
-					'id'=>'gv-prov',
-				],
-			],
-			'summary'=>false,
-			'toolbar'=>false,
-        'hover'=>true, //cursor select
-        'responsive'=>true,
-        'responsiveWrap'=>true,
-        'bordered'=>true,
-        'striped'=>'4px',
-        'autoXlFormat'=>true,
-        'export'=>[//export like view grid --ptr.nov-
-            'fontAwesome'=>true,
-            'showConfirmAlert'=>false,
-            'target'=>GridView::TARGET_BLANK
+/*GRIDVIEW ARRAY ROWS*/
+foreach($gvHeadColomnBT as $key =>$value[]){
+      # code...
+      $attDinamik[]=[
+        'attribute'=>$value[$key]['FIELD'],
+        'label'=>$value[$key]['label'],
+        'filter'=>true,
+        'hAlign'=>'right',
+        'vAlign'=>'middle',
+        'noWrap'=>true,
+        'headerOptions'=>[
+            'style'=>[
+            'text-align'=>'center',
+            'width'=>$value[$key]['FIELD'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+            'background-color'=>'rgba('.$value[$key]['warna'].')',
+          ]
         ],
+        'contentOptions'=>[
+          'style'=>[
+            'text-align'=>$value[$key]['align'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+          ]
+        ],
+              'width'=>'12px',
+      ];
 
-    
+};
 
 
-    ]);
+/*SHOW GRID VIEW LIST*/
+ $tabprovince =  GridView::widget([
+  'id'=>'gv-prov',
+  'dataProvider' => $dataproviderpro,
+  'filterModel' => $searchmodelpro,
+  'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+  'columns' => $attDinamik,
+  'pjax'=>true,
+  'pjaxSettings'=>[
+    'options'=>[
+      'enablePushState'=>false,
+      'id'=>'gv-prov',
+    ],
+  ],
+   'panel'=>['type' =>GridView::TYPE_SUCCESS,
+    'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
+            ['modelClass' => 'Barangumum',]),'/master/customers/createprovnce',[
+              'data-toggle'=>"modal",
+                'data-target'=>"#form3",
+                  'id'=>'modl22',
+                  'class' => 'btn btn-success'
+                        ]),
+                    ],
+  'toolbar'=> [
+    //'{items}',
+  ],
+  'hover'=>true, //cursor select
+  'responsive'=>true,
+  'responsiveWrap'=>true,
+  'bordered'=>true,
+  'striped'=>true,
+]);
+
+	
 ?>
 <?php
 	 $navmenu= NavX::widget([

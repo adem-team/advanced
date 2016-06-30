@@ -6,6 +6,7 @@ use kartik\helpers\Html;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use kartik\nav\NavX;
+use yii\helpers\ArrayHelper;
 $this->params['breadcrumbs'][] = $this->title;
 $this->sideCorp = 'Customers';                 				 /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = $sideMenu_control;//'umum_datamaster';   	 /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -104,82 +105,146 @@ function tombolMap(){
   return $content;
 }
 
-// grid kota
-$tabkota = \kartik\grid\GridView::widget([
-		'id'=>'gv-kota',
-		'dataProvider' => $dataproviderkota,
-		'filterModel' => $searchmodelkota,
-		'columns'=>[
-			['class'=>'kartik\grid\SerialColumn'],
-				'PROVINCE',
-				'TYPE',
-				'CITY_NAME',
-				'POSTAL_CODE',
-			[ 'class' => 'kartik\grid\ActionColumn',
-				'template' => '{view}{update}',
-				'header'=>'Action',
-				'dropdown' => true,
-				'dropdownOptions'=>['class'=>'pull-right dropup'],
-				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
-				'buttons' => [
-				'view' =>function($url, $model, $key){
-						return '<li>'. Html::a('<span class="glyphicon glyphicon-eye-open"></span>'.Yii::t('app', 'View'),
-													['viewkota','id'=> $model->CITY_ID],[
-													'data-toggle'=>"modal",
-													'data-target'=>"#view2",
-													'data-title'=> $model->PROVINCE,
-													]).'<li>';
-												},
 
-				 'update' =>function($url, $model, $key){
-						return '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Update'),
-													['updatekota','id'=>$model->CITY_ID],[
-													'data-toggle'=>"modal",
-													'data-target'=>"#form2",
-													'data-title'=> $model->PROVINCE,
-													]).'</li>';
-												},
 
-									  ],
 
-			],
-	   ],
-		'panel'=>[
-			'type' =>GridView::TYPE_SUCCESS,
-			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
-						['modelClass' => 'Barangumum',]),'/master/customers/createkota',[
-							'data-toggle'=>"modal",
-								'data-target'=>"#form2",
+$actionClass='btn btn-info btn-xs';
+$actionLabel='Update';
+$attDinamik =[];
+
+/*GRIDVIEW ARRAY FIELD HEAD*/
+$headColomnBT=[
+['ID' =>0, 'ATTR' =>['FIELD'=> 'PROVINCE','SIZE' => '10px',
+'label'=>'Province',
+'align'=>'left','warna'=>'97, 211, 96, 0.3']],
+['ID' =>1, 'ATTR' =>['FIELD'=> 'TYPE','SIZE' => '10px',
+'label'=>'Type',
+'align'=>'left','warna'=>'97, 211, 96, 0.3']],
+['ID' =>2, 'ATTR' =>['FIELD'=> 'CITY_NAME','SIZE' => '10px',
+'label'=>'Nama Kota',
+'align'=>'left','warna'=>'97, 211, 96, 0.3']],
+['ID' =>3, 'ATTR' =>['FIELD'=> 'POSTAL_CODE','SIZE' => '10px',
+'label'=>'Kode Pos',
+'align'=>'left','warna'=>'97, 211, 96, 0.3']],
+];
+$gvHeadColomnBT = ArrayHelper::map($headColomnBT, 'ID', 'ATTR');
+
+/*GRIDVIEW ARRAY ACTION*/
+$attDinamik[]=[
+  'class'=>'kartik\grid\ActionColumn',
+  'dropdown' => true,
+  'template' => '{edit} {view} {update}',
+  'dropdownOptions'=>['class'=>'pull-left dropup','style'=>['disable'=>true]],
+  'dropdownButton'=>[
+    'class' => $actionClass,
+  ],
+  'buttons' => [    'view' =>function($url, $model, $key){
+            return '<li>'. Html::a('<span class="glyphicon glyphicon-eye-open"></span>'.Yii::t('app', 'View'),
+                          ['viewkota','id'=> $model->CITY_ID],[
+                          'data-toggle'=>"modal",
+                          'data-target'=>"#view2",
+                          'data-title'=> $model->PROVINCE,
+                          ]).'<li>';
+                        },
+
+         'update' =>function($url, $model, $key){
+            return '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Update'),
+                          ['updatekota','id'=>$model->CITY_ID],[
+                          'data-toggle'=>"modal",
+                          'data-target'=>"#form2",
+                          'data-title'=> $model->PROVINCE,
+                          ]).'</li>';
+                        },
+
+                                              ],
+
+                                         
+  'headerOptions'=>[
+    'style'=>[
+      'text-align'=>'center',
+      'width'=>'10px',
+      'font-family'=>'tahoma, arial, sans-serif',
+      'font-size'=>'9pt',
+      'background-color'=>'rgba(97, 211, 96, 0.3)',
+    ]
+  ],
+  'contentOptions'=>[
+    'style'=>[
+      'text-align'=>'center',
+      'width'=>'10px',
+      'height'=>'10px',
+      'font-family'=>'tahoma, arial, sans-serif',
+      'font-size'=>'9pt',
+    ]
+  ],
+];
+
+/*GRIDVIEW ARRAY ROWS*/
+foreach($gvHeadColomnBT as $key =>$value[]){
+      # code...
+      $attDinamik[]=[
+        'attribute'=>$value[$key]['FIELD'],
+        'label'=>$value[$key]['label'],
+        'filter'=>true,
+        'hAlign'=>'right',
+        'vAlign'=>'middle',
+        'noWrap'=>true,
+        'headerOptions'=>[
+            'style'=>[
+            'text-align'=>'center',
+            'width'=>$value[$key]['FIELD'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+            'background-color'=>'rgba('.$value[$key]['warna'].')',
+          ]
+        ],
+        'contentOptions'=>[
+          'style'=>[
+            'text-align'=>$value[$key]['align'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+          ]
+        ],
+              'width'=>'12px',
+      ];
+
+};
+
+
+/*SHOW GRID VIEW LIST*/
+ $tabkota =  GridView::widget([
+  'id'=>'gv-kota',
+  'dataProvider' => $dataproviderkota,
+  'filterModel' => $searchmodelkota,
+  'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+  'columns' => $attDinamik,
+  'pjax'=>true,
+  'pjaxSettings'=>[
+    'options'=>[
+      'enablePushState'=>false,
+      'id'=>'gv-kota',
+    ],
+  ],
+   'panel'=>[
+   'type' =>GridView::TYPE_SUCCESS,
+      'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
+            ['modelClass' => 'Barangumum',]),'/master/customers/createkota',[
+              'data-toggle'=>"modal",
+                'data-target'=>"#form2",
                   'id'=>'modl',
-									'class' => 'btn btn-success'
-												]),
+                  'class' => 'btn btn-success'
+                        ]),
+                    ],
+  'toolbar'=> [
+    //'{items}',
+  ],
+  'hover'=>true, //cursor select
+  'responsive'=>true,
+  'responsiveWrap'=>true,
+  'bordered'=>true,
+  'striped'=>true,
+]);
 
-            ],
-		'pjax'=>true,
-		'pjaxSettings'=>[
-			'options'=>[
-						'enablePushState'=>false,
-						'id'=>'gv-kota',
-			],
-		],
-		'summary'=>false,
-		//'toolbar'=>false,
-        'hover'=>true, //cursor select
-        'responsive'=>true,
-        'responsiveWrap'=>true,
-        'bordered'=>true,
-        'striped'=>'4px',
-        'autoXlFormat'=>true,
-        /* 'export'=>[//export like view grid --ptr.nov-
-            'fontAwesome'=>true,
-            'showConfirmAlert'=>false,
-            'target'=>GridView::TARGET_BLANK
-        ], */
-
-    
-
-
- ]);
  ?>
  <?php
 	 $navmenu= NavX::widget([

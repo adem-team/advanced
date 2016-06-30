@@ -18,6 +18,7 @@ $this->title = Yii::t('app', 'Customers');   	 			 /* title pada header page */
 
 $parent = ArrayHelper::map(Customers::find()->where('STATUS<>3 and CUST_KD=CUST_GRP')->all(), 'CUST_KD', 'CUST_NM');
 
+
 function tombolCustomers(){
   $title1 = Yii::t('app', 'Customers');
   $options1 = [ 'id'=>'setting',
@@ -204,8 +205,15 @@ $tabcustomersData = \kartik\grid\GridView::widget([
     ],
     [
     	'class'=>'kartik\grid\EditableColumn',
-      'attribute' => 'CUST_GRP',
+      'attribute' => 'CUST_KD',
       'refreshGrid'=>true,
+      'readonly'=>function($model, $key, $index, $widget){ // readonly
+        if($model->CUST_GRP == $model->CUST_KD)
+        {
+
+          return true;
+        }
+      },  
       'label'=>'Customer.Id',
       'hAlign'=>'left',
       'vAlign'=>'top',
@@ -229,8 +237,9 @@ $tabcustomersData = \kartik\grid\GridView::widget([
           'font-size'=>'8pt',
         ]
       ],
+    
       'editableOptions' => [
-        'header' => 'Cost Center',
+        'header' => 'Customers',
         'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
         'size' => 'md',
         'options' => [
@@ -240,8 +249,9 @@ $tabcustomersData = \kartik\grid\GridView::widget([
             'class'=>'pull-top dropup'
           ],
         ],
+        
         //Refresh Display
-        // 'displayValueConfig' => $parent,
+        // 'displayValueConfig' => ArrayHelper::map(Customers::find()->where('STATUS<>3')->all(), 'CUST_KD', 'CUST_KD'),
       ],
     ],
 
@@ -477,13 +487,13 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 							   'id'=>'refresh-cust',
                                'class' => 'btn btn-info btn-sm'
                               ]).' '.
-			Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export'),'/master/customers/export_data',
+			Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export'),'/export/export/export-data',
 								[
 									//'id'=>'export-data',
 									//'data-pjax' => true,
 									'class' => 'btn btn-info btn-sm'
 								]
-					),
+					)
 
   ],
   'pjax'=>true,
@@ -618,6 +628,33 @@ $this->registerJs("
 ",$this::POS_READY);
   Modal::begin([
       'id' => 'formlogin',
+      'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Login Autorize</b></h4></div>',
+    'size' => Modal::SIZE_SMALL,
+    'headerOptions'=>[
+      'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+    ]
+  ]);
+  Modal::end();
+
+
+  /* Login alias*/
+$this->registerJs("
+  $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+  $('#export-mod').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var modal = $(this)
+    var title = button.data('title')
+    var href = button.attr('href')
+    //modal.find('.modal-title').html(title)
+    modal.find('.modal-body').html('<i class=\"fa fa-dolar fa-spin\"></i>')
+    $.post(href)
+    .done(function( data ) {
+      modal.find('.modal-body').html(data)
+    });
+  })
+",$this::POS_READY);
+  Modal::begin([
+      'id' => 'export-mod',
       'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Login Autorize</b></h4></div>',
     'size' => Modal::SIZE_SMALL,
     'headerOptions'=>[
