@@ -21,6 +21,7 @@ use lukisongroup\master\models\CustomersaliasSearch;
 use yii\widgets\ActiveForm;
 use lukisongroup\master\models\ValidationLoginPrice;
 use yii\helpers\ArrayHelper;
+use yii\web\Response;
 
 /**
  * CustomersController implements the CRUD actions for Customers model.
@@ -73,10 +74,13 @@ class CustomersCrmController extends Controller
         $searchModel = new CustomersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-           if(Yii::$app->request->post('hasEditable'))
+          if(Yii::$app->request->post('hasEditable'))
         {
             $ID = \Yii::$app->request->post('editableKey');
+            Yii::$app->response->format = Response::FORMAT_JSON;
             $model = Customers::findOne($ID);
+            // print_r($ID);
+            // die();
             $out = Json::encode(['output'=>'', 'message'=>'']);
 
             // fetch the first entry in posted data (there should
@@ -89,25 +93,36 @@ class CustomersCrmController extends Controller
             $post['Customers'] = $posted;
 
 
-
             // load model like any single model validation
             if ($model->load($post)) {
                 // can save model or do something before saving model
-                $model->save();
+
 
                 // custom output to return to be displayed as the editable grid cell
                 // data. Normally this is empty - whereby whatever value is edited by
                 // in the input by user is updated automatically.
                 $output = '';
 
+              /*save parent customers*/
+              $parent_model = Customers::find()->where(['CUST_KD'=>$ID])->one();
+              $parent_model->CUST_GRP = $posted['CUST_KD'];
+              $parent_model->save();
+
                 // specific use case where you need to validate a specific
                 // editable column posted when you have more than one
                 // EditableColumn in the grid view. We evaluate here a
                 // check to see if buy_amount was posted for the Book model
-                if (isset($posted['CUST_KD_ALIAS'])) {
+                if (isset($posted['CUST_GRP'])) {
+                    $model->save();
+
                    // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-                    $output =$model->CUST_KD_ALIAS;
+                    $output = $model->CUST_GRP;
+
+                   
                 }
+
+
+
 
                 // similarly you can check if the name attribute was posted as well
                 // if (isset($posted['name'])) {
@@ -310,7 +325,7 @@ class CustomersCrmController extends Controller
  // data json map
     public function actionMap()
     {
-            $conn = Yii::$app->db3;
+             $conn = Yii::$app->db3;
             $hasil = $conn->createCommand("SELECT c.SCDL_GROUP,c.CUST_KD, c.ALAMAT, c.CUST_NM,c.MAP_LAT,c.MAP_LNG,b.SCDL_GROUP_NM from c0001 c
                                           left join c0007 b on c.SCDL_GROUP = b.ID")->queryAll();
 
@@ -480,6 +495,29 @@ class CustomersCrmController extends Controller
             ]);
         }
       }
+
+       public function actionExportDataTes()
+    {
+
+        $model = new Customers();
+
+      
+
+        if ($model->load(Yii::$app->request->post()) ) {
+
+       
+           
+         
+          
+          // $data = ArrayHelper::map($data_cus, 'id', 'name');
+            return $this->redirect(['index']);
+        } else {
+            return $this->renderAjax('export_tes', [
+                'model' => $model,
+                // 'data_cus'=> $data_cus
+            ]);
+        }
+    }
 
       // validasi ajax for _formcustomer
       public function actionValid()
