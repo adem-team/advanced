@@ -35,26 +35,15 @@ class CustomersController extends Controller
     public function behaviors()
     {
         return [
-			'export2excel' => [
-				'class' => Export2ExcelBehavior::className(),
-			],
-			'verbs' => [
+            'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
                 ],
-            ]
-        ];
-    }
-
-	public function actions()
-    {
-        return [
-            'download' => [
-                'class' => 'scotthuangzl\export2excel\DownloadAction',
             ],
         ];
     }
+
 
     /**
      * Lists all Customers models.
@@ -212,10 +201,10 @@ class CustomersController extends Controller
                 // in the input by user is updated automatically.
                 $output = '';
 
-                    /*save parent customers*/
-                    $parent_model = Customers::find()->where(['CUST_KD'=>$ID])->one();
-                    $parent_model->CUST_GRP = $posted['CUST_KD'];
-                    $parent_model->save();
+              /*save parent customers*/
+              $parent_model = Customers::find()->where(['CUST_KD'=>$ID])->one();
+              $parent_model->CUST_GRP = $posted['CUST_KD'];
+              $parent_model->save();
 
                 // specific use case where you need to validate a specific
                 // editable column posted when you have more than one
@@ -254,7 +243,7 @@ class CustomersController extends Controller
 			'sideMenu_control'=> $sideMenu_control,
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
-      'parent'=>$parent
+      'parent'=>$parent,
 		]);
 	}
 
@@ -276,6 +265,34 @@ class CustomersController extends Controller
 
     ]);
   }
+
+  public function actionUpdateKate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) ) {
+
+
+        if($model->validate())
+        {
+            $model->UPDATED_AT = date("Y-m-d H:i:s");
+            $model->UPDATED_BY = Yii::$app->user->identity->username;
+          if($model->save())
+          {
+            echo 1;
+          }
+          else{
+            echo 0;
+          }
+        }
+
+          //  return $this->redirect(['index']);
+        } else {
+            return $this->renderAjax('_form_child', [
+                'model' => $model,
+            ]);
+        }
+    }
 
 
   /*ESM INDEX City */
@@ -1107,6 +1124,91 @@ class CustomersController extends Controller
     }
 
 
+    /*
+   * EXPORT DATA CUSTOMER TO EXCEL
+   * export_data
+  */
+  public function actionExportColumn(){
+
+    //$custDataMTI=Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll();
+
+    $cusDataProviderMTI = new ArrayDataProvider([
+      'key' => 'ID',
+      'allModels'=>Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll(),
+      'pagination' => [
+        'pageSize' => 10,
+      ]
+    ]);
+    //print_r($cusDataProvider->allModels);
+    $aryCusDataProviderMTI=$cusDataProviderMTI->allModels;
+
+    $excel_data = Export2ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);
+        $excel_title = $excel_data['excel_title'];
+        $excel_ceils = $excel_data['excel_ceils'];
+    $excel_content = [
+       [
+        'sheet_name' => 'MTI CUSTOMER',
+          // 'sheet_title' => ['CUST_ID','CUST_NM','TYPE','ALAMAT','TLP','PIC'], //$excel_ceils,//'sad',//[$excel_title],
+          'sheet_title' => $excel_data['excel_title'],
+          'ceils' => $excel_ceils,
+                //'freezePane' => 'E2',
+                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColumnCssClass' => [
+                     'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
+                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
+                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
+                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
+                     'TLP1' => Export2ExcelBehavior::getCssClass('header'),
+                     'PIC' => Export2ExcelBehavior::getCssClass('header')
+                ], //define each column's cssClass for header line only.  You can set as blank.
+               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+      ],
+      /* [
+        'sheet_name' => 'IMPORTANT NOTE ',
+                'sheet_title' => ["Important Note For Import Stock Customer"],
+                'ceils' => [
+          ["1.pastikan tidak merubah format hanya menambahkan data, karena import versi 1.2 masih butuhkan pengembangan validasi"],
+                    ["2.Berikut beberapa format nama yang tidak di anjurkan di ganti:"],
+                    ["  A. Nama dari Sheet1: IMPORT FORMAT STOCK "],
+          ["  B. Nama Header seperti column : DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF"],
+          ["3.Refrensi."],
+          ["  'IMPORT FORMAT STOCK'= Nama dari Sheet1 yang aktif untuk di import "],
+          ["  'DATE'= Tanggal dari data stok yang akan di import "],
+          ["  'CUST_KD'= Kode dari customer, dimana setiap customer memiliki kode sendiri sendiri sesuai yang mereka miliki "],
+          ["  'CUST_NM'= Nama dari customer "],
+          ["  'SKU_ID'=  Kode dari Item yang mana customer memiliku kode items yang berbeda beda "],
+          ["  'SKU_NM'=  Nama dari Item, sebaiknya disamakan dengan nama yang dimiliki lukisongroup"],
+          ["  'QTY_PCS'= Quantity dalam unit PCS "],
+          ["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],
+        ],
+      ],
+      [
+        'sheet_name' => 'IMPORTANT NOTE ',
+                'sheet_title' => ["Important Note For Import Stock Customer"],
+                'ceils' => [
+          ["1.pastikan tidak merubah format hanya menambahkan data, karena import versi 1.2 masih butuhkan pengembangan validasi"],
+                    ["2.Berikut beberapa format nama yang tidak di anjurkan di ganti:"],
+                    ["  A. Nama dari Sheet1: IMPORT FORMAT STOCK "],
+          ["  B. Nama Header seperti column : DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF"],
+          ["3.Refrensi."],
+          ["  'IMPORT FORMAT STOCK'= Nama dari Sheet1 yang aktif untuk di import "],
+          ["  'DATE'= Tanggal dari data stok yang akan di import "],
+          ["  'CUST_KD'= Kode dari customer, dimana setiap customer memiliki kode sendiri sendiri sesuai yang mereka miliki "],
+          ["  'CUST_NM'= Nama dari customer "],
+          ["  'SKU_ID'=  Kode dari Item yang mana customer memiliku kode items yang berbeda beda "],
+          ["  'SKU_NM'=  Nama dari Item, sebaiknya disamakan dengan nama yang dimiliki lukisongroup"],
+          ["  'QTY_PCS'= Quantity dalam unit PCS "],
+          ["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],
+        ],
+      ], */
+    ];
+
+    $excel_file = "CustomerData";
+    $this->export2excel($excel_content, $excel_file);
+  }
+
+
 	/*
 	 * EXPORT DATA CUSTOMER TO EXCEL
 	 * export_data
@@ -1115,7 +1217,7 @@ class CustomersController extends Controller
 
 		//$custDataMTI=Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll();
 
-		$cusDataProviderMTI= new ArrayDataProvider([
+		$cusDataProviderMTI = new ArrayDataProvider([
 			'key' => 'ID',
 			'allModels'=>Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll(),
 			'pagination' => [

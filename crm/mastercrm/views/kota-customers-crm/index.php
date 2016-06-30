@@ -5,6 +5,7 @@ use yii\helpers\Url;
 use kartik\helpers\Html;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
+use kartik\nav\NavX;
 
 // $this->params['breadcrumbs'][] = $this->title;
 // $this->sideCorp = 'Customers';                 				 /* Title Select Company pada header pasa sidemenu/menu samping kiri */
@@ -13,7 +14,7 @@ $this->title = Yii::t('app', 'Customers');   	 			 /* title pada header page */
 
 
 // grid kota
-echo $tabkota = \kartik\grid\GridView::widget([
+ $tabkota = \kartik\grid\GridView::widget([
 'id'=>'gv-kota',
 'dataProvider' => $dataProvider,
 'filterModel' => $searchModel,
@@ -87,8 +88,44 @@ echo $tabkota = \kartik\grid\GridView::widget([
 
  ]);
 
+ $navmenu= NavX::widget([
+    'options'=>['class'=>'nav nav-tabs'],
+    'encodeLabels' => false,
+    'items' => [
+      ['label' => 'MENU', 'active'=>true, 'items' => [
+        ['label' => '<span class="fa fa-user fa-md"></span>Customers', 'url' => '/mastercrm/customers-crm/index'],
+        ['label' => '<span class="fa fa-cogs fa-md"></span>Alias Customers', 'url' => '/mastercrm/customers-crm/login-alias','linkOptions'=>['id'=>'performance','data-toggle'=>'modal','data-target'=>'#formlogin']],
+        '<li class="divider"></li>',
+        ['label' => 'Properties', 'items' => [
+          ['label' => '<span class="fa fa-flag fa-md"></span>Kota', 'url' => '/mastercrm/kota-customers-crm/index'],
+          ['label' => '<span class="fa fa-flag-o fa-md"></span>Province', 'url' => '/mastercrm/provinsi-customers-crm/index'],
+          ['label' => '<span class="fa fa-table fa-md"></span>Category', 'url' => '/mastercrm/kategori-customers-crm/index'],
+          '<li class="divider"></li>',
+          ['label' => '<span class="fa fa-map-marker fa-md"></span>Customers Map', 'url' => '/mastercrm/customers-crm/crm-map'],
+        ]],
+      ]],
 
+    ]
+  ]);
+?>
+<div class="content">
+  <div  class="row" style="padding-left:3px">
+    <div class="col-sm-12 col-md-12 col-lg-12" >
+     <?php
+        //echo  $test;
+        echo $navmenu;
+      ?>
+      <!-- CUTI !-->
+    </div>
+    <div class="col-sm-12">
+      <?php
+        echo $tabkota;
+      ?>
+    </div>
+  </div>
+</div>
 
+<?php
 // create kota and update via modal
 $this->registerJs("
   $.fn.modal.Constructor.prototype.enforceFocus = function(){};
