@@ -511,7 +511,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 							   'id'=>'refresh-cust',
                                'class' => 'btn btn-info btn-sm'
                               ]).' '.
-			Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export'),'/export/export/export-data-crm',
+			Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export'),'/export/export/export-data',
 								[
 									'id'=>'get-export',
 									//'data-pjax' => true,
@@ -522,6 +522,8 @@ $tabcustomersData = \kartik\grid\GridView::widget([
                 [
                     // 'data-toggle'=>"modal",
                     'id'=>'exportmodal',
+                    'data-pjax' => true,
+                     'data-toggle-approved'=>1,
                     // 'data-target'=>"#export-mod",
                     'class' => 'btn btn-success btn-sm'
                  
@@ -617,15 +619,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 <?php
 
 $this->registerJs("
-// $(document).ready(function(){
-// $('#gv-cus input[type=checkbox]').change(function() {
-
-//    var keysSelect = $('#gv-cus').yiiGridView('getSelectedRows');
- 
-// })
-
-$('#exportmodal').on('click',function(){
-// $('#exportmodal').click(function(){
+$(document).on('click', '[data-toggle-approved]', function(){
 
   var keysSelect = $('#gv-cus').yiiGridView('getSelectedRows');
 
