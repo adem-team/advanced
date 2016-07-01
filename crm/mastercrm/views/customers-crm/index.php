@@ -518,7 +518,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 									'class' => 'btn btn-info btn-sm'
 								]
 					).' '.  
-      Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export selected'),'#',
+      Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export selected'),'',
                 [
                     // 'data-toggle'=>"modal",
                     'id'=>'exportmodal',
@@ -619,9 +619,15 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 <?php
 
 $this->registerJs("
-$(document).on('click', '[data-toggle-approved]', function(){
+$(document).on('click', '[data-toggle-approved]', function(e){
+
+  e.preventDefault();
 
   var keysSelect = $('#gv-cus').yiiGridView('getSelectedRows');
+  if(keysSelect == '')
+  {
+    alert('sorry your not selected item')
+  }else{
 
   $.ajax({
            url: '/export/export/export-data-crm',
@@ -632,19 +638,14 @@ $(document).on('click', '[data-toggle-approved]', function(){
            success: function(response) {
              if (response.status== true ){
                  $.pjax.reload('#gv-cus');
-                 // window.open('http://labtest1-crm.int','_blank' );
 
              }
               else {
-                alert('SKU Item already exists ');
-                // $.pjax.reload('#gv-po-detail');
-                //$('this').checked = false
-                //document.getElementById('gv-ropo').checked = false;
-                //$('#ck-gv').checked = false;
-                //$('input:checkbox[name=checkme]').attr('checked',false);
+                alert('Item already exists ');
               }
             }
           });
+        }
 
 })
 
