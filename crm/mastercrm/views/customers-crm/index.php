@@ -518,7 +518,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 									'class' => 'btn btn-info btn-sm'
 								]
 					).' '.  
-      Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export Tes'),'#',
+      Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export selected'),'#',
                 [
                     // 'data-toggle'=>"modal",
                     'id'=>'exportmodal',
