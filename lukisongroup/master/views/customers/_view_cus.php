@@ -300,6 +300,7 @@ $this->params['breadcrumbs'][] = $this->title;
     		'depends'=>['customers-cust_type'],
     		'url' => Url::to(['/master/customers/lisdata']),
     	  'loadingText' => 'Loading data ...',
+		  'initialize'=>true,
     	],
 			],
 				
