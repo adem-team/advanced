@@ -274,7 +274,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'rowOptions'=>['class'=>'info'],
 			'groupOptions'=>['class'=>'text-left'] //text-center 
 		],
-		[ 	//CUST_TYPE
+		[ 	//CUST_KTG
 			'attribute' =>'CUST_TYPE',
 			'format'=>'raw',
 			'value'=>$model->custype->CUST_KTG_NM,
@@ -285,7 +285,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				'pluginOptions'=>['allowClear'=>true],
 			],	
 		],
-		[ 	//CUST_KTG
+		[ 	//CUST_TYPE
 			'attribute' =>'CUST_KTG',
 			'format'=>'raw',
 			'type'=>DetailView::INPUT_DEPDROP,
