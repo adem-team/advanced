@@ -44,7 +44,8 @@ class Customers extends \yii\db\ActiveRecord
      * @inheritdoc
      */
 	// public $tipenm;
-
+    public $cus_Type;
+    public $cust_ktg;
     public $parentnama;
     public $CusNm;
     public $CusT; // model manipulate form_scdl and contrroler create-scdl
@@ -138,6 +139,8 @@ public function getParentName() {
   public function getCustdis(){
     return $this->hasOne(Distributor::className(), ['KD_DISTRIBUTOR'=>'KD_DISTRIBUTOR']);
   }
+
+
 
 	// public function getGrp_nm()
   //   {

@@ -418,15 +418,15 @@ $tabcustomersData = \kartik\grid\GridView::widget([
       'template' => '{view}{edit}',
       'header'=>'Action',
       'dropdown' => true,
-      'dropdownOptions'=>['class'=>'pull-right dropdown'],
+      'dropdownOptions'=>['class'=>'pull-right dropup'],
       'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
       'buttons' => [
             'view' =>function($url, $model, $key){
-          return  Html::button(Yii::t('app', 'View'),
+          return  Html::button(Yii::t('app', 'View Customers'),
             ['value'=>url::to(['viewcust','id'=>$model->CUST_KD]),
             'id'=>'modalButtonCustomers',
             'class'=>"btn btn-default btn-xs",      
-            'style'=>['width'=>'120px', 'height'=>'25px','text-align'=>'center','border'=> 'none'],
+            'style'=>['width'=>'170px', 'height'=>'25px','border'=> 'none'],
           ]);
       },      
         
@@ -477,7 +477,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 							   'id'=>'refresh-cust',
                                'class' => 'btn btn-info btn-sm'
                               ]).' '.
-			Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export'),'/export/export/export-data',
+			Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export All'),'/export/export/export-data',
 								[
 									//'id'=>'export-data',
 									//'data-pjax' => true,
@@ -490,6 +490,14 @@ $tabcustomersData = \kartik\grid\GridView::widget([
                     'data-pjax' => true,
                      'data-toggle-export-erp'=>'erp-customers-modal',
                     // 'data-target'=>"#export-mod",
+                    'class' => 'btn btn-success btn-sm'
+                 
+                ]
+          ).' '.  Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Pilih Export'),'/export/export/pilih-export-data',
+                [
+                    'data-toggle'=>"modal",
+                    'id'=>'exportmodal-erp-pilih',
+                    'data-target'=>"#export-mod",
                     'class' => 'btn btn-success btn-sm'
                  
                 ]
@@ -637,7 +645,7 @@ $(document).on('click', '[data-toggle-export-erp]', function(e){
      * @author wawan [aditiya@lukison.com]
     */
     $(document).on('click','#modalButtonCustomers', function(ehead){ 
-        $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+      
         //e.preventDefault();     
         localStorage.clear();
         localStorage.setItem('nilai',ehead.target.value);     
@@ -702,6 +710,37 @@ $this->registerJs("
 Modal::begin([
   'id' => 'createcus',
   'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">New Customer</h4></div>',
+  'headerOptions'=>[
+      'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.9)',
+  ],
+]);
+Modal::end();
+
+
+// Export customers via modal
+$this->registerJs("
+ 
+
+  $('#export-mod').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var modal = $(this)
+    var title = button.data('title')
+    var href = button.attr('href')
+
+    //modal.find('.modal-title').html(title)
+    modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+    $.post(href)
+      .done(function( data ) {
+        modal.find('.modal-body').html(data)
+      });
+
+
+    })
+
+",$this::POS_READY);
+Modal::begin([
+  'id' => 'export-mod',
+  'header' => '<div style="float:left;margin-right:10px" class="fa fa-file-excel-o"></div><div><h4 class="modal-title">Print Customer</h4></div>',
   'headerOptions'=>[
       'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.9)',
   ],
