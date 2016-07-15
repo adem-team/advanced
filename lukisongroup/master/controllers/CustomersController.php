@@ -25,6 +25,7 @@ use lukisongroup\master\models\CustomersSearch;
 use lukisongroup\master\models\Customersalias;
 use lukisongroup\master\models\CustomersaliasSearch;
 use lukisongroup\master\models\ValidationLoginPrice;
+use lukisongroup\master\models\Distributor;
 
 
 /**
@@ -371,9 +372,34 @@ class CustomersController extends Controller
 
 	  public function actionViewcust($id)
     {
-        return $this->renderAjax('viewcus', [
-            'model' => $this->findModelcust($id),
+        /*province data*/
+        $valpro = ArrayHelper::map(Province::find()->asArray()->all(),'PROVINCE_ID','PROVINCE');
+
+        /*distributor data*/
+        $datadis_view = ArrayHelper::map(Distributor::find()->where('STATUS<>3')
+                              ->all(),'KD_DISTRIBUTOR','NM_DISTRIBUTOR');
+
+        $kategori_view = ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT = CUST_KTG')
+                                                                   ->asArray()
+                                                                   ->all(),'CUST_KTG', 'CUST_KTG_NM');
+          $model = $this->findModelcust($id);
+       
+        if ($model->load(Yii::$app->request->post())){
+      //$model->save(false);
+      if($model->save()){
+        //$model->refresh();
+        
+        return $this->redirect(['/master/customers/esm-index']);
+         //Yii::$app->session->setFlash('kv-detail-success', 'Success Message');
+      };
+    }else{
+      return $this->renderAjax('_view_cus', [
+            'model' => $model,
+            'valpro'=>$valpro,
+            'datadis_view'=>$datadis_view,
+            'kategori_view'=>$kategori_view
         ]);
+    }
     }
 
     public function actionView($id)
