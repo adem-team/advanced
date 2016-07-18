@@ -170,6 +170,8 @@ class ExportController extends Controller
 
             $model = new Customers();
 
+            $model->scenario = "export";
+
         if ($model->load(Yii::$app->request->post()) ) {
 
              $data_cus = Customers::find()->select('CUST_KD,CUST_NM,(SELECT CUST_KTG_NM FROM c0001k WHERE CUST_KTG=CUST_TYPE limit 1) AS TYPE_NM, ALAMAT,TLP1,PIC')->orderBy('CUST_NM ASC')->where(['CUST_GRP'=>$model->CUST_GRP])->asArray()->all();

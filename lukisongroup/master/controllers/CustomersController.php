@@ -741,6 +741,25 @@ class CustomersController extends Controller
        echo Json::encode(['output'=>'', 'selected'=>'']);
    }
 
+    // action depdrop
+   public function actionLisCusBox($id) {
+
+        $model = Customers::find()->asArray()->where(['CUST_TYPE'=>$id])
+                                                     ->andwhere('CUST_GRP = CUST_KD')
+                                                     ->andwhere('CUST_TYPE != "" ')
+                                                    ->all();
+            $items = ArrayHelper::map($model, 'CUST_KD', 'CUST_NM');
+            foreach ($model as $key => $value) {
+                   // $out[] = [$value['CUST_KD'] => $value['CUST_NM']];
+                   // <option value="volvo">Volvo</option>
+     $out [] = "<option value=".$value['CUST_KD'].">".$value['CUST_NM']."</option>";
+               }
+
+               echo json_encode($out);
+             
+    
+   }
+
 
     public function actionLisarea() {
     $out = [];
