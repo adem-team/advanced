@@ -123,22 +123,14 @@ function tombolLoginalias(){
   $content = Html::a($label1,$url1, $options1);
   return $content;
 }
-
-/*modal*/
-Modal::begin([
-    'id' => 'modal-view_cus-customer',
-    'header' => '<div style="float:left;margin-right:10px" class="fa fa-user"></div><div><h5 class="modal-title"><b>VIEW CUSTOMERS</b></h5></div>',
-    'size' => Modal::SIZE_LARGE,
-    'headerOptions'=>[
-        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
-    ],
-  ]);
-  echo "<div id='modalContentcustomers'></div>";
-  Modal::end();
+// $datacus = Customers::find()->where('CUST_GRP = CUST_KD')->asArray()->all();
+//   $parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
+// print_r($parent);
+// die();
 
 /*CUSTOMER DATA*/
 $tabcustomersData = \kartik\grid\GridView::widget([
-  'id'=>'gv-cus-erp',
+  'id'=>'gv-cus',
   'dataProvider' => $dataProvider,
   'filterModel' => $searchModel,
   'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.9); align:center'],
@@ -150,29 +142,6 @@ $tabcustomersData = \kartik\grid\GridView::widget([
       'contentOptions'=>['class'=>'kartik-sheet-style'],
       'width'=>'10px',
       'header'=>'No.',
-      'headerOptions'=>[
-        'style'=>[
-          'text-align'=>'center',
-          'width'=>'10px',
-          'font-family'=>'verdana, arial, sans-serif',
-          'font-size'=>'9pt',
-          'background-color'=>'rgba(126, 189, 188, 0.9)',
-        ]
-      ],
-      'contentOptions'=>[
-        'style'=>[
-          'text-align'=>'center',
-          'width'=>'10px',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'8pt',
-        ]
-      ],
-    ],
-     [
-      'class' => '\kartik\grid\CheckboxColumn',
-      'contentOptions'=>['class'=>'kartik-sheet-style'],
-      'width'=>'10px',
-      // 'header'=>'No.',
       'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
@@ -415,22 +384,45 @@ $tabcustomersData = \kartik\grid\GridView::widget([
     ],
     [
       'class' => 'kartik\grid\ActionColumn',
-      'template' => '{view}{edit}',
+      'template' => '{view}{update}{edit}{alias}{update2}{type}',
       'header'=>'Action',
       'dropdown' => true,
-      'dropdownOptions'=>['class'=>'pull-right dropup'],
+      'dropdownOptions'=>['class'=>'pull-right dropdown'],
       'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
       'buttons' => [
-            'view' =>function($url, $model, $key){
-          return  Html::button(Yii::t('app', 'View Customers'),
-            ['value'=>url::to(['viewcust','id'=>$model->CUST_KD]),
-            'id'=>'modalButtonCustomers',
-            'class'=>"btn btn-default btn-xs",      
-            'style'=>['width'=>'170px', 'height'=>'25px','border'=> 'none'],
-          ]);
-      },      
-        
-            'edit' =>function($url, $model,$key){
+        'view' =>function($url, $model, $key){
+            return'<li>'.  Html::a('<span class="glyphicon glyphicon-eye-open"></span> '.Yii::t('app', 'View'),
+                          ['viewcust','id'=>$model->CUST_KD],[
+                            'data-toggle'=>"modal",
+                            'data-target'=>"#view3",
+                            'data-title'=> $model->CUST_KD,
+                            ]).'</li>';
+            },
+        'update' =>function($url, $model, $key){
+            return '<li>'. Html::a('<span class="glyphicon glyphicon-user"></span>'.Yii::t('app', 'Update Alamat'),
+                          ['updatecus','id'=>$model->CUST_KD],[
+                          'data-toggle'=>"modal",
+                          'data-target'=>"#createcus",
+                          'data-title'=> $model->CUST_KD,
+                          ]).'</li>';
+            },
+          'type' =>function($url, $model, $key){
+                return '<li>'. Html::a('<span class="glyphicon glyphicon-user"></span>'.Yii::t('app', 'Update Kategori'),
+                              ['updatekat','id'=>$model->CUST_KD],[
+                              'data-toggle'=>"modal",
+                              'data-target'=>"#createcus",
+                              'data-title'=> $model->CUST_KD,
+                              ]).'</li>';
+                },
+            'update2' =>function($url, $model, $key){
+                return '<li>'. Html::a('<span class="glyphicon glyphicon-user"></span>'.Yii::t('app', 'Update Detail'),
+                              ['update-cust','id'=>$model->CUST_KD],[
+                              'data-toggle'=>"modal",
+                              'data-target'=>"#createcus",
+                              'data-title'=> $model->CUST_KD,
+                              ]).'</li>';
+                },
+                'edit' =>function($url, $model,$key){
                   return '<li>'. Html::a('<i class="glyphicon glyphicon-globe"></i>'.Yii::t('app', 'Create Map'),
                                 ['create-map','id'=>$model->CUST_KD],
                                  [
@@ -438,6 +430,24 @@ $tabcustomersData = \kartik\grid\GridView::widget([
                                 ]).'</li>';
 
                    },
+          // 'edit' =>function($url, $model,$key){
+          //   return '<li>'. Html::a('<i class="glyphicon glyphicon-globe"></i>'.Yii::t('app', 'Create Map'),
+          //                 [''],
+          //                  [ 'id'=>'approved',
+          //                     'data-pjax' => true,
+          //                       // 'data'=>['idc'=>$model->ID],
+          //                        'data-target'=>'mod',
+          //                        'data-toggle-approved'=>$model->CUST_KD,
+          //                 ]).'</li>';
+          //
+          //    },
+          'alias' =>function($url, $model, $key){
+            return  '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Set alias'),['create-alias-customers','id'=>$model->CUST_KD],[
+                            'data-toggle'=>"modal",
+                            'data-target'=>"#formalias",
+                            'data-title'=> $model->CUST_KD,
+                             ]).'</li>';
+            },
 
       ],
       'headerOptions'=>[
@@ -477,38 +487,20 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 							   'id'=>'refresh-cust',
                                'class' => 'btn btn-info btn-sm'
                               ]).' '.
-			Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export All'),'/export/export/export-data',
+			Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export'),'/export/export/export-data',
 								[
 									//'id'=>'export-data',
 									//'data-pjax' => true,
 									'class' => 'btn btn-info btn-sm'
 								]
-					).' '.  Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export selected'),'',
-                [
-                    // 'data-toggle'=>"modal",
-                    'id'=>'exportmodal-erp',
-                    'data-pjax' => true,
-                     'data-toggle-export-erp'=>'erp-customers-modal',
-                    // 'data-target'=>"#export-mod",
-                    'class' => 'btn btn-success btn-sm'
-                 
-                ]
-          ).' '.  Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Pilih Export'),'/export/export/pilih-export-data',
-                [
-                    'data-toggle'=>"modal",
-                    'id'=>'exportmodal-erp-pilih',
-                    'data-target'=>"#export-mod",
-                    'class' => 'btn btn-success btn-sm'
-                 
-                ]
-          )
+					)
 
   ],
   'pjax'=>true,
   'pjaxSettings'=>[
     'options'=>[
       'enablePushState'=>false,
-      'id'=>'gv-cus-erp',
+      'id'=>'gv-cus-data',
     ],
   ],
   'summary'=>false,
@@ -549,7 +541,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 <div class="content">
   <div  class="row" style="padding-left:3px">
 		<div class="col-sm-12 col-md-12 col-lg-12" >
-		  <!-- Menu !-->
+		  <!-- CUTI !-->
 		  <?php
 		  $test='<div class="btn-group pull-left" >'.
 				'<button type="button" class="btn btn-info">MENU</button>'.
@@ -569,7 +561,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 				//echo  $test;
 				echo $navmenu;
 		  ?>
-		  <!-- Customers !-->
+		  <!-- CUTI !-->
 		</div>
 		<div class="col-sm-12">
 			<?php
@@ -579,114 +571,99 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 	</div>
 </div>
 
+<!-- div class="modal fade" id="myModal" role="dialog"> -->
+    <!-- <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <!-- <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+                        <div id="map-canvas" class=""></div>
+                    </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div> -->
+
+    <!-- </div>
+  </div> -->
+
+
+
 
 <?php
 
-/** *js export if click then export 
-    *@author adityia@lukison.com
+// $this->registerJs("
+// $(document).on('click', '[data-toggle-approved]', function(e){
+//   e.preventDefault();
+//   var idx = $(this).data('toggle-approved');
+//   $('#myModal').modal('show');
+//
+// });
+//
+// ",$this::POS_READY);
 
-**/
+
+
+/* Login alias*/
 $this->registerJs("
-$(document).on('click', '[data-toggle-export-erp]', function(e){
-
-  e.preventDefault();
-
-  var keysSelect = $('#gv-cus-erp').yiiGridView('getSelectedRows');
-  if(keysSelect == '')
-  {
-    alert('sorry your not selected item')
-  }else{
-
-  $.ajax({
-           url: '/export/export/export-data-erp',
-           //cache: true,
-           type: 'POST',
-           data:{keysSelect:keysSelect},
-           dataType: 'json',
-           success: function(response) {
-             if (response.status== true ){
-                 $.pjax.reload('#gv-cus-erp');
-
-             }
-              else {
-                alert('Item already exists ');
-              }
-            }
-          });
-        }
-
-})
-
-// })
-
+  $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+  $('#formlogin').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var modal = $(this)
+    var title = button.data('title')
+    var href = button.attr('href')
+    //modal.find('.modal-title').html(title)
+    modal.find('.modal-body').html('<i class=\"fa fa-dolar fa-spin\"></i>')
+    $.post(href)
+    .done(function( data ) {
+      modal.find('.modal-body').html(data)
+    });
+  })
 ",$this::POS_READY);
+  Modal::begin([
+      'id' => 'formlogin',
+      'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Login Autorize</b></h4></div>',
+    'size' => Modal::SIZE_SMALL,
+    'headerOptions'=>[
+      'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+    ]
+  ]);
+  Modal::end();
 
 
-  /*
-   * PROCESS EXCEPTION VIEW EDITING
-   * @author wawan [aditiya@lukison.com]
-   * @since 1.0
-   */
-  $this->registerJs("
-  $(document).ready(function () {
-
-    if(localStorage.getItem('sts')==null){
-      //alert(sts);
-      localStorage.setItem('sts','hidden');
-    };
-    
-    var stt  = localStorage.getItem('sts');
-    var viewaction = localStorage.getItem('view');
-    var nilaiValue = localStorage.getItem('nilai');
-    localStorage.setItem('sts','hidden');
-   
-    /*
-     * FIRST SHOW MODAL
-     * @author wawan [aditiya@lukison.com]
-    */
-    $(document).on('click','#modalButtonCustomers', function(ehead){ 
-      
-        //e.preventDefault();     
-        localStorage.clear();
-        localStorage.setItem('nilai',ehead.target.value);     
-        localStorage.setItem('sts','show');
-        $('#modal-view_cus-customer').modal('show')
-        .find('#modalContentcustomers')
-        .load(ehead.target.value);
+  /* Login alias*/
+$this->registerJs("
+  $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+  $('#export-mod').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var modal = $(this)
+    var title = button.data('title')
+    var href = button.attr('href')
+    //modal.find('.modal-title').html(title)
+    modal.find('.modal-body').html('<i class=\"fa fa-dolar fa-spin\"></i>')
+    $.post(href)
+    .done(function( data ) {
+      modal.find('.modal-body').html(data)
     });
-    
-    
-    /*
-     * STATUS SHOW IF EVENT BUTTON SAVED
-     * @author wawan [aditiya@lukison.com]
-    */
-    $(document).on('click','#saveBtn', function(e){ 
-      localStorage.setItem('sts','show');
-     
-    }); 
-  
-    
-    /*
-     * STATUS HIDDEN IF EVENT MODAL HIDE
-     * @author wawan [aditiya@lukison.com]
-    */
-    $('#modal-view_cus-customer').on('hidden.bs.modal', function () {
-      localStorage.setItem('sts','hidden');
-    });
-    
-    /*
-     * CALL BACK SHOW MODAL
-     * @author wawan [aditiya@lukison.com]
-    */  
-    setTimeout(function(){
-      $('#modal-view_cus-customer').modal(stt)
-      .find('#modalContentcustomers')
-      .load(nilaiValue);
-    }, 1000);  
-  });
-  ",$this::POS_READY);
+  })
+",$this::POS_READY);
+  Modal::begin([
+      'id' => 'export-mod',
+      'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Login Autorize</b></h4></div>',
+    'size' => Modal::SIZE_SMALL,
+    'headerOptions'=>[
+      'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+    ]
+  ]);
+  Modal::end();
 
-// create customers via modal
+  // create customers via modal
 $this->registerJs("
   $.fn.modal.Constructor.prototype.enforceFocus = function(){};
 
@@ -717,16 +694,46 @@ Modal::begin([
 Modal::end();
 
 
-// Export customers via modal
-$this->registerJs("
- 
 
-  $('#export-mod').on('show.bs.modal', function (event) {
+
+// view customers via modal
+$this->registerJs("
+$.fn.modal.Constructor.prototype.enforceFocus = function(){};
+
+$('#view3').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget)
+  var modal = $(this)
+  var title = button.data('title')
+  var href = button.attr('href')
+
+  //modal.find('.modal-title').html(title)
+  modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+  $.post(href)
+    .done(function( data ) {
+      modal.find('.modal-body').html(data)
+    });
+
+
+  })
+
+",$this::POS_READY);
+Modal::begin([
+'id' => 'view3',
+'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">New Customer</h4></div>',
+'headerOptions'=>[
+    'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.9)',
+],
+]);
+Modal::end();
+
+// JS Alias Code customers
+$this->registerJs("
+  $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+  $('#formalias').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget)
     var modal = $(this)
     var title = button.data('title')
     var href = button.attr('href')
-
     //modal.find('.modal-title').html(title)
     modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
     $.post(href)
@@ -736,11 +743,10 @@ $this->registerJs("
 
 
     })
-
 ",$this::POS_READY);
 Modal::begin([
-  'id' => 'export-mod',
-  'header' => '<div style="float:left;margin-right:10px" class="fa fa-file-excel-o"></div><div><h4 class="modal-title">Print Customer</h4></div>',
+  'id' => 'formalias',
+  'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Alias Customer</h4></div>',
   'headerOptions'=>[
       'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.9)',
   ],
@@ -748,3 +754,6 @@ Modal::begin([
 Modal::end();
 
 
+
+
+ ?>

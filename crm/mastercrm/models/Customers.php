@@ -132,6 +132,10 @@ public function getNameColumn()
     return $this->hasOne(Kota::className(), ['POSTAL_CODE'=>'CITY_ID']);
   }
 
+   public function getCustdis(){
+    return $this->hasOne(Distributor::className(), ['KD_DISTRIBUTOR'=>'KD_DISTRIBUTOR']);
+  }
+
 	// public function getGrp_nm()
   //   {
   //       return $this->custgrp->SCDL_GROUP_NM;

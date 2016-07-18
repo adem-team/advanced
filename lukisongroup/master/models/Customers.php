@@ -44,7 +44,8 @@ class Customers extends \yii\db\ActiveRecord
      * @inheritdoc
      */
 	// public $tipenm;
-
+    public $cus_Type;
+    public $cust_ktg;
     public $parentnama;
     public $CusNm;
     public $CusT; // model manipulate form_scdl and contrroler create-scdl
@@ -70,6 +71,7 @@ class Customers extends \yii\db\ActiveRecord
     {
         return [
 			      //  [['CUST_NM','STT_TOKO','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID'], 'required'],
+              [['CUST_GRP'], 'required','on'=>'export'], //export validasi
               [['CUST_NM','ALAMAT'], 'required','on'=>'create'],
               [['CUST_GRP'], 'required','on'=>'create','when' => function ($model) {
                   return $model->parentnama == 0; },
@@ -81,10 +83,10 @@ class Customers extends \yii\db\ActiveRecord
               [['CUST_TYPE','CUST_KTG'], 'required','on'=>'updatekat'],// for action updatekat scenario
             // [['CUST_NM','CUST_KTG','JOIN_DATE','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID','NPWP', 'TLP1','STT_TOKO'], 'required'],
             [['CUST_TYPE','CUST_KTG','STT_TOKO', 'STATUS','PROVINCE_ID','SCDL_GROUP','CITY_ID'], 'integer'],
-			[['TLP1', 'TLP2', 'FAX',],'safe'],
+			[['TLP1', 'TLP2', 'FAX','CUST_GRP'],'safe'],
             [['JOIN_DATE', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['ALAMAT', 'NOTE'], 'string'],
-            [['CUST_KD', 'CUST_KD_ALIAS', 'CUST_GRP', 'MAP_LAT', 'MAP_LNG', 'NPWP','KD_DISTRIBUTOR'], 'string', 'max' => 50],
+            [['CUST_KD', 'CUST_KD_ALIAS', 'MAP_LAT', 'MAP_LNG', 'NPWP','KD_DISTRIBUTOR'], 'string', 'max' => 50],
             [['CUST_NM', 'PIC', 'EMAIL', 'WEBSITE', 'DATA_ALL'], 'string', 'max' => 255],
             [['CAB_ID', 'CORP_ID'], 'string', 'max' => 6],
             [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 100]
@@ -134,6 +136,12 @@ public function getParentName() {
   public function getCustkota(){
     return $this->hasOne(Kota::className(), ['POSTAL_CODE'=>'CITY_ID']);
   }
+
+  public function getCustdis(){
+    return $this->hasOne(Distributor::className(), ['KD_DISTRIBUTOR'=>'KD_DISTRIBUTOR']);
+  }
+
+
 
 	// public function getGrp_nm()
   //   {

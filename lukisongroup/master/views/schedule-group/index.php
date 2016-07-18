@@ -11,425 +11,33 @@ use kartik\widgets\Select2;
 use lukisongroup\master\models\Schedulegroup;
 use lukisongroup\master\models\Customers;
 
-use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
+use lukisongroup\assets\MapAsset;       			  /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
 MapAsset::register($this);
 
-
-/* @var $this yii\web\View */
-/* @var $searchModel lukisongroup\master\models\SchedulegroupSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
-$this->sideCorp = 'PT.Effembi Sukses Makmur';                          /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'esm_customers';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->sideCorp = 'PT.Effembi Sukses Makmur';         /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'esm_customers';                    /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'ESM - Group');          /* title pada header page */
-$this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+$this->params['breadcrumbs'][] = $this->title;        /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
-
-
-	/*
-	 * GRIDVIEW Group CUSTOMER
+	 /*
+	 * GRIDVIEW GROUP LIST
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
-     */
-	$gvCustGroup= GridView::widget([
-			'id'=>'gv-custgrp-id',
-			'dataProvider' => $dataProvider,
-			'filterModel' => $searchModel,
-			'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
-			'rowOptions'   => function ($model, $key, $index, $grid) {
-				 return ['id' => $model->ID,'onclick' => '$.pjax.reload({
-							url: "'.Url::to(['/master/schedule-group/index']).'?CustomersSearch[SCDL_GROUP]="+this.id,
-							container: "#gv-custgrp-list",
-							timeout: 10,
-					});'];
-				//  return ['data-id' => $model->USER_ID];
-		 },
-			'columns' => [
-				[	//COL-2
-					/* Attribute Serial No */
-					'class'=>'kartik\grid\SerialColumn',
-					'width'=>'10px',
-					'header'=>'No.',
-					'hAlign'=>'center',
-					'headerOptions'=>[
-						'style'=>[
-							'text-align'=>'center',
-							'width'=>'10px',
-							'font-family'=>'tahoma',
-							'font-size'=>'8pt',
-							'background-color'=>'rgba(0, 95, 218, 0.3)',
-						]
-					],
-					'contentOptions'=>[
-						'style'=>[
-							'text-align'=>'center',
-							'width'=>'10px',
-							'font-family'=>'tahoma',
-							'font-size'=>'8pt',
-						]
-					],
-					'pageSummaryOptions' => [
-						'style'=>[
-								'border-right'=>'0px',
-						]
-					]
-				],
-				[  	//col-1
-					//CUSTOMER GRAOUP NAME
-					'attribute' => 'SCDL_GROUP_NM',
-					'label'=>'Customer Groups',
-					'hAlign'=>'left',
-					'vAlign'=>'middle',
-					'headerOptions'=>[
-						'style'=>[
-							'text-align'=>'center',
-							'width'=>'200px',
-							'font-family'=>'tahoma, arial, sans-serif',
-							'font-size'=>'9pt',
-							'background-color'=>'rgba(97, 211, 96, 0.3)',
-						]
-					],
-					'contentOptions'=>[
-						'style'=>[
-							'text-align'=>'left',
-							'width'=>'200px',
-							'font-family'=>'tahoma, arial, sans-serif',
-							'font-size'=>'9pt',
-						]
-					],
-				],
-				[  	//col-2
-					//CUSTOMER GRAOUP NAME
-					'attribute' => 'KETERANGAN',
-					'label'=>'Keterangan',
-					'hAlign'=>'left',
-					'vAlign'=>'middle',
-					'headerOptions'=>[
-						'style'=>[
-							'text-align'=>'center',
-							'width'=>'200px',
-							'font-family'=>'tahoma, arial, sans-serif',
-							'font-size'=>'9pt',
-							'background-color'=>'rgba(97, 211, 96, 0.3)',
-						]
-					],
-					'contentOptions'=>[
-						'style'=>[
-							'text-align'=>'left',
-							'width'=>'200px',
-							'font-family'=>'tahoma, arial, sans-serif',
-							'font-size'=>'9pt',
-						]
-					],
-				],
-				[	//col-3
-					//STATUS
-					'attribute' => 'STATUS',
-					'filter' => $valStt,
-					'format' => 'raw',
-					'hAlign'=>'center',
-					'value'=>function($model){
-					   if ($model->STATUS == 1) {
-							return Html::a('<i class="fa fa-check"></i> &nbsp;Enable', '',['class'=>'btn btn-success btn-xs', 'title'=>'Aktif']);
-						} else if ($model->STATUS == 0) {
-							return Html::a('<i class="fa fa-close"></i> &nbsp;Disable', '',['class'=>'btn btn-danger btn-xs', 'title'=>'Deactive']);
-						}
-					},
-					'hAlign'=>'left',
-					'vAlign'=>'middle',
-					'headerOptions'=>[
-						'style'=>[
-							'text-align'=>'center',
-							'width'=>'80px',
-							'font-family'=>'tahoma, arial, sans-serif',
-							'font-size'=>'9pt',
-							'background-color'=>'rgba(97, 211, 96, 0.3)',
-						]
-					],
-					'contentOptions'=>[
-						'style'=>[
-							'text-align'=>'center',
-							'width'=>'80px',
-							'font-family'=>'tahoma, arial, sans-serif',
-							'font-size'=>'9pt',
-						]
-					],
-				],
-				[
-					'class'=>'kartik\grid\ActionColumn',
-					'dropdown' => true,
-					'template' => '{view}{edit}',
-					'dropdownOptions'=>['class'=>'pull-right dropup'],
-					'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
-					'buttons' => [
-							'view' =>function($url, $model, $key){
-									return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
-																['/master/schedule-group/view','id'=>$model->ID],[
-																'data-toggle'=>"modal",
-																'data-target'=>"#modal-view",
-																'data-title'=> '',//$model->KD_BARANG,
-																]). '</li>' . PHP_EOL;
-							},
-							'edit' =>function($url, $model, $key){
-									return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Update'),
-																['/master/schedule-group/update','id'=>$model->ID],[
-																'data-toggle'=>"modal",
-																'data-target'=>"#modal-create",
-																'data-title'=>'',// $model->KD_BARANG,
-																]). '</li>' . PHP_EOL;
-							},
-					],
-					'headerOptions'=>[
-						'style'=>[
-							'text-align'=>'center',
-							//'width'=>'150px',
-							'font-family'=>'tahoma, arial, sans-serif',
-							'font-size'=>'9pt',
-							'background-color'=>'rgba(97, 211, 96, 0.3)',
-						]
-					],
-					'contentOptions'=>[
-						'style'=>[
-							'text-align'=>'center',
-							//'width'=>'150px',
-							//'height'=>'10px',
-							'font-family'=>'tahoma, arial, sans-serif',
-							'font-size'=>'9pt',
-						]
-					],
-
-				],
-			],
-			'pjax'=>true,
-			'pjaxSettings'=>[
-			'options'=>[
-				'enablePushState'=>false,
-				'id'=>'gv-custgrp-id',
-			   ],
-			],
-			'panel' => [
-						'heading'=>'<h3 class="panel-title">GROUPING CUSTOMER LOCALTIONS</h3>',
-						'type'=>'warning',
-						'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Group ',
-								['modelClass' => 'Kategori',]),'/master/schedule-group/create',[
-									'data-toggle'=>"modal",
-										'data-target'=>"#modal-create",
-											'class' => 'btn btn-success btn-sm'
-														]),
-						'showFooter'=>false,
-			],
-			'toolbar'=> [
-				//'{items}',
-			],
-			'hover'=>true, //cursor select
-			'responsive'=>true,
-			'responsiveWrap'=>true,
-			'bordered'=>true,
-			'striped'=>'4px',
-			'autoXlFormat'=>true,
-			'export' => false,
-		]);
-
-	/*
-	 * GRIDVIEW CUSTOMER LIST
+     */	 
+	 $gvGroupListLocation=$this->render('_indexGroupList',[
+		'dataProvider' => $dataProvider,
+		'searchModel' => $searchModel,
+	 ]);
+	 
+	  /*
+	 * GRIDVIEW GROUP LIST DETAIL
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.1
-     */
-	$gvCustGroupList= GridView::widget([
-		'id'=>'gv-custgrp-list',
-		'dataProvider' => $dpListCustGrp,
-		'filterModel' => $searchModel,
-		'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
-		'columns' => [
-			[	//COL-2
-				/* Attribute Serial No */
-				'class'=>'kartik\grid\SerialColumn',
-				'width'=>'10px',
-				'header'=>'No.',
-				'hAlign'=>'center',
-				'headerOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						'width'=>'10px',
-						'font-family'=>'tahoma',
-						'font-size'=>'8pt',
-						'background-color'=>'rgba(0, 95, 218, 0.3)',
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						'width'=>'10px',
-						'font-family'=>'tahoma',
-						'font-size'=>'8pt',
-					]
-				],
-				'pageSummaryOptions' => [
-					'style'=>[
-							'border-right'=>'0px',
-					]
-				]
-			],
-			[  	//col-1
-				//CUSTOMER GRAOUP NAME
-				'attribute' =>'custgrp.SCDL_GROUP_NM',
-				'label'=>'Customer Groups',
-				'hAlign'=>'left',
-				'vAlign'=>'middle',
-				'headerOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						'width'=>'200px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-						'background-color'=>'rgba(97, 211, 96, 0.3)',
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>'left',
-						'width'=>'200px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-					]
-				],
-				  'group'=>true,
-			],
-			[  	//col-2
-				//CUSTOMER GRAOUP NAME
-				//'attribute' => 'cust_nm',
-				'attribute' => 'CUST_NM',
-				'label'=>'Nama Customers',
-				'hAlign'=>'left',
-				'vAlign'=>'middle',
-				'headerOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						'width'=>'200px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-						'background-color'=>'rgba(97, 211, 96, 0.3)',
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>'left',
-						'width'=>'200px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-					]
-				],
-			],
-			[	//col-3
-				//STATUS
-				'attribute' => 'STATUS',
-				'filter' => $valStt,
-				'format' => 'raw',
-				'hAlign'=>'center',
-				'value'=>function($model){
-				   if ($model->STATUS == 1) {
-						return Html::a('<i class="fa fa-check"></i> &nbsp;Enable', '',['class'=>'btn btn-success btn-xs', 'title'=>'Aktif']);
-					} else if ($model->STATUS == 0) {
-						return Html::a('<i class="fa fa-close"></i> &nbsp;Disable', '',['class'=>'btn btn-danger btn-xs', 'title'=>'Deactive']);
-					}
-				},
-				'hAlign'=>'left',
-				'vAlign'=>'middle',
-				'headerOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						'width'=>'80px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-						'background-color'=>'rgba(97, 211, 96, 0.3)',
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						'width'=>'80px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-					]
-				],
-			],
-			[
-				'class'=>'kartik\grid\ActionColumn',
-				'dropdown' => true,
-				'template' => '{view}{edit}',
-				'dropdownOptions'=>['class'=>'pull-right dropup'],
-				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
-				'buttons' => [
-					 'view' =>function($url, $model, $key){
-								return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
-															['/master/schedule-group/view-group','id'=>$model->CUST_KD],[
-															'data-toggle'=>"modal",
-															'data-target'=>"#modal-view",
-															'data-title'=> '',//$model->KD_BARANG,
-															]). '</li>' . PHP_EOL;
-						},
-						'edit' =>function($url, $model, $key){
-								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Update'),
-															['/master/schedule-group/update-group','id'=>$model->CUST_KD],[
-															'data-toggle'=>"modal",
-															'data-target'=>"#modalmap",
-															'data-title'=>'',// $model->KD_BARANG,
-															]). '</li>' . PHP_EOL;
-						},
-				],
-				'headerOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						//'width'=>'150px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-						'background-color'=>'rgba(97, 211, 96, 0.3)',
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						//'width'=>'150px',
-						//'height'=>'10px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-					]
-				],
-
-			],
-		],
-		'pjax'=>true,
-		'pjaxSettings'=>[
-		'options'=>[
-			'enablePushState'=>false,
-			'id'=>'gv-custgrp-list',
-		   ],
-		],
-		'panel' => [
-					'heading'=>'<h3 class="panel-title">LIST CUSTOMER GROUP</h3>',
-					'type'=>'warning',
-					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Customer ',
-							['modelClass' => 'Kategori',]),'/master/schedule-group/create-scdl',[
-								'data-toggle'=>"modal",
-									'data-target'=>"#modal-create",
-										'class' => 'btn btn-success'
-													]),
-
-					'showFooter'=>false,
-		],
-		'toolbar'=> [
-			//'{items}',
-		],
-		'hover'=>true, //cursor select
-		'responsive'=>true,
-		'responsiveWrap'=>true,
-		'bordered'=>true,
-		'striped'=>'4px',
-		'autoXlFormat'=>true,
-		'export' => false,
-	]);
-
-
+     */	 
+	 $gvCustGroupListDetail=$this->render('_indexGroupListDetail',[
+		'dpListCustGrp' => $dpListCustGrp,
+		'searchModel' => $searchModel,
+	 ]);
 ?>
 
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
@@ -443,18 +51,17 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		</div>
 	</div>
 	<div  class="row" style="margin-top:15px">
-		<!-- GROUP LOCALTION !-->
-		<div class="col-md-5">
-			<?php
-				echo $gvCustGroup;
-			?>
+		<!-- LIST GROUP LOCALTION !-->
+		<div class="col-md-5" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
+			<?=$gvGroupListLocation?>
 		</div>
 		<!-- GROUP CUSTOMER LIST !-->
 		<div class="col-md-7">
 
 			<?php
-				echo $gvCustGroupList;
+				//echo $gvCustGroupList;
 			?>
+			<?=$gvCustGroupListDetail?>
 		</div>
 	</div>
 </div>

@@ -17,6 +17,7 @@ use yii\helpers\Url;
 use zyx\phpmailer\Mailer;
 use yii\web\UploadedFile;
 
+
 /* namespace models */
 use lukisongroup\purchasing\models\pr\Purchaseorder;
 use lukisongroup\purchasing\models\pr\PurchaseorderSearch;
@@ -106,6 +107,7 @@ class PurchaseOrderController extends Controller
 	*/
     public function actionIndex()
     {
+    	
         $searchModel = new PurchaseorderSearch();
         $dataProvider = $searchModel->searchPoInbox(Yii::$app->request->queryParams);
         $searchmodel = new PurchaseorderSearch();
@@ -126,6 +128,7 @@ class PurchaseOrderController extends Controller
             'poHeader' => $poHeader,
 			      'poHeaderVal'=>$poHeaderVal,
         ]);
+       
     }
 
 	/*

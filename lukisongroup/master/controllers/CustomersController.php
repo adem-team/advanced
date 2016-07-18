@@ -25,6 +25,7 @@ use lukisongroup\master\models\CustomersSearch;
 use lukisongroup\master\models\Customersalias;
 use lukisongroup\master\models\CustomersaliasSearch;
 use lukisongroup\master\models\ValidationLoginPrice;
+use lukisongroup\master\models\Distributor;
 
 
 /**
@@ -371,9 +372,37 @@ class CustomersController extends Controller
 
 	  public function actionViewcust($id)
     {
-        return $this->renderAjax('viewcus', [
-            'model' => $this->findModelcust($id),
+        /*province data*/
+        $valpro = ArrayHelper::map(Province::find()->asArray()->all(),'PROVINCE_ID','PROVINCE');
+
+        /*distributor data*/
+        $datadis_view = ArrayHelper::map(Distributor::find()->where('STATUS<>3')
+                              ->all(),'KD_DISTRIBUTOR','NM_DISTRIBUTOR');
+
+        $kategori_view = ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT = CUST_KTG')
+                                                                   ->asArray()
+                                                                   ->all(),'CUST_KTG', 'CUST_KTG_NM');
+          $model = $this->findModelcust($id);
+       
+        if ($model->load(Yii::$app->request->post())){
+          $model->UPDATED_AT = date("Y-m-d H:i:s");
+          $model->UPDATED_BY =  Yii::$app->user->identity->username;
+           
+      //$model->save(false);
+      if($model->save()){
+        //$model->refresh();
+        
+        return $this->redirect(['/master/customers/esm-index']);
+         //Yii::$app->session->setFlash('kv-detail-success', 'Success Message');
+      };
+    }else{
+      return $this->renderAjax('_view_cus', [
+            'model' => $model,
+            'valpro'=>$valpro,
+            'datadis_view'=>$datadis_view,
+            'kategori_view'=>$kategori_view
         ]);
+    }
     }
 
     public function actionView($id)
@@ -677,6 +706,58 @@ class CustomersController extends Controller
            }
        }
        echo Json::encode(['output'=>'', 'selected'=>'']);
+   }
+
+
+     // action depdrop
+   public function actionLisCus() {
+    $out = [];
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+        if ($parents != null) {
+            $id = $parents[0];
+
+            $model = Customers::find()->asArray()->where(['CUST_TYPE'=>$id])
+                                                     ->andwhere('CUST_GRP = CUST_KD')
+                                                     ->andwhere('CUST_TYPE != "" ')
+                                                    ->all();
+                                                    // print_r($model);
+                                                    // die();
+            //$out = self::getSubCatList($cat_id);
+            // the getSubCatList function will query the database based on the
+            // cat_id and return an array like below:
+            // [
+            //    ['id'=>'<sub-cat-id-1>', 'name'=>'<sub-cat-name1>'],
+            //    ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
+            // ]
+            foreach ($model as $key => $value) {
+                   $out[] = ['id'=>$value['CUST_KD'],'name'=> $value['CUST_NM']];
+               }
+
+               echo json_encode(['output'=>$out, 'selected'=>'']);
+               return;
+           }
+       }
+       echo Json::encode(['output'=>'', 'selected'=>'']);
+   }
+
+    // action depdrop
+   public function actionLisCusBox($id) {
+
+        $model = Customers::find()->asArray()->where(['CUST_TYPE'=>$id])
+                                                     ->andwhere('CUST_GRP = CUST_KD')
+                                                     ->andwhere('CUST_TYPE != "" ')
+                                                    ->all();
+            $items = ArrayHelper::map($model, 'CUST_KD', 'CUST_NM');
+            foreach ($model as $key => $value) {
+                   // $out[] = [$value['CUST_KD'] => $value['CUST_NM']];
+                   // <option value="volvo">Volvo</option>
+     $out [] = "<option value=".$value['CUST_KD'].">".$value['CUST_NM']."</option>";
+               }
+
+               echo json_encode($out);
+             
+    
    }
 
 
