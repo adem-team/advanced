@@ -68,6 +68,15 @@ class ScheduleHeaderController extends Controller
     public function actionIndex()
     {
 
+		$aryDataProviderRptScdl= new ArrayDataProvider([
+			'key' => 'ID',
+			'allModels'=>Yii::$app->db_esm->createCommand("CALL ERP_CUSTOMER_VISIT_SchaduleReport('2016-06-30')")->queryAll(),
+			 'pagination' => [
+				'pageSize' => 50,
+			]
+		]);
+		$attributeField=$aryDataProviderRptScdl->allModels[0]; //get label Array 0
+		
         $searchModel = new ScheduleheaderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -85,13 +94,15 @@ class ScheduleHeaderController extends Controller
         $datauser = ArrayHelper::map($query1, 'id', 'username');
 
         return $this->render('index', [
-			       'dataProviderUser'=>$dataProviderUser,
-			       'searchModelUser'=>$searchModelUser,
+			'dataProviderUser'=>$dataProviderUser,
+		    'searchModelUser'=>$searchModelUser,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'model'=>$model,
             'datagroup'=>$datagroup,
-            'datauser'=>$datauser
+            'datauser'=>$datauser,
+			'aryDataProviderRptScdl'=>$aryDataProviderRptScdl,
+			'attributeField'=>$attributeField
         ]);
     }
 
