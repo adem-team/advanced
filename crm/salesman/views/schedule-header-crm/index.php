@@ -8,6 +8,7 @@ use yii\web\JsExpression;
 use kartik\widgets\Select2;
 use yii\widgets\ActiveForm;
 use lukisongroup\sistem\models\Userlogin;
+use mdm\admin\components\Helper;
 
 
 ?>
@@ -376,7 +377,7 @@ Modal::end();
             [
 				'class'=>'kartik\grid\ActionColumn',
 				'dropdown' => true,
-				'template' => '{view}{edit}',
+				'template' =>Helper::filterActionColumn('{view}{createalias}'),
 				'dropdownOptions'=>['class'=>'pull-right dropup'],
 				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 				'buttons' => [

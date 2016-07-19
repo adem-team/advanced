@@ -239,6 +239,10 @@ use yii\widgets\Pjax;
 				<hr/>
 
 		</div>
+		<?php
+		$foto_profile = $profile->IMG_BASE64 !=''? $profile->IMG_BASE64:Yii::getAlias("@HRD_EMP_UploadUrl").'/'.'default.jpg';
+
+		?>
 
 		<div class="col-sm-3 col-md-3 col-lg-3">
 			<!-- EMPLOYEE IMAGE !-->
@@ -246,7 +250,7 @@ use yii\widgets\Pjax;
 			<div class="col-sm-12 col-md-12 col-lg-12  text-center ">
 				<!-- <img src="Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$profile->EMP_IMG; ?>" class="img-responsive img-thumbnail" style="width:80%; height:80%" /> -->
 				<?php
-				 $image = '<img style="width:80%; margin-bottom:5%; height:80%",class="img-responsive img-thumbnail", src="'.$profile->IMG_BASE64.'"></img>';
+				 $image = '<img style="width:80%; margin-bottom:5%; height:80%",class="img-responsive img-thumbnail", src="'.$foto_profile.'"></img>';
 
 				 ?>
 				 <?= $image ?>

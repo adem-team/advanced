@@ -23,6 +23,7 @@ use yii\widgets\ActiveForm;
 use lukisongroup\master\models\ValidationLoginPrice;
 use yii\helpers\ArrayHelper;
 use yii\web\Response;
+use mdm\admin\components\Helper;
 
 /**
  * CustomersController implements the CRUD actions for Customers model.
@@ -46,32 +47,33 @@ class CustomersCrmController extends Controller
      * @return mixed
      */
 
-    public function beforeAction(){
-            if (Yii::$app->user->isGuest)  {
-                 Yii::$app->user->logout();
-                   $this->redirect(array('/site/login'));  //
-            }
-            // Check only when the user is logged in
-            if (!Yii::$app->user->isGuest)  {
-               if (Yii::$app->session['userSessionTimeout']< time() ) {
-                   // timeout
-                   Yii::$app->user->logout();
-                   $this->redirect(array('/site/login'));  //
-               } else {
-                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
-                   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
-                   return true;
-               }
-            } else {
-                return true;
-            }
-    }
+    // public function beforeAction(){
+    //         if (Yii::$app->user->isGuest)  {
+    //              Yii::$app->user->logout();
+    //                $this->redirect(array('/site/login'));  //
+    //         }
+    //         // Check only when the user is logged in
+    //         if (!Yii::$app->user->isGuest)  {
+    //            if (Yii::$app->session['userSessionTimeout']< time() ) {
+    //                // timeout
+    //                Yii::$app->user->logout();
+    //                $this->redirect(array('/site/login'));  //
+    //            } else {
+    //                //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+    //                Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+    //                return true;
+    //            }
+    //         } else {
+    //             return true;
+    //         }
+    // }
 
 
     public function actionIndex()
     {
-
-
+      
+      if(Helper::checkRoute('index')){
+        
         $searchModel = new CustomersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -140,10 +142,15 @@ class CustomersCrmController extends Controller
 
         }
 
-		return $this->render('index', [
-			'searchModel' => $searchModel,
-			'dataProvider' => $dataProvider,
-		]);
+    return $this->render('index', [
+      'searchModel' => $searchModel,
+      'dataProvider' => $dataProvider,
+    ]);
+      }else{
+          Yii::$app->user->logout();
+          $this->redirect(array('/site/login'));
+      }
+
 	}
 
 

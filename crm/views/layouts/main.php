@@ -64,7 +64,7 @@ AppAsset_style::register($this);
 				$ModelUserAttr = UserloginSearch::findUserAttr(Yii::$app->user->id)->one();
 				//print_r($ModelUserAttr);
 				//echo $ModelUserAttr->emp->EMP_IMG;
-				$MainAvatar =  $ModelUserAttr->userprofile['EMP_IMG'];
+				$MainAvatar =  $ModelUserAttr->userprofile['EMP_IMG'] != ''? $ModelUserAttr->userprofile['EMP_IMG'] : 'default.jpg';
 				$MainUserProfile = $ModelUserAttr->userprofile['NM_FIRST'] . '  '. $ModelUserAttr->userprofile['NM_MIDDLE'] . '  '. $ModelUserAttr->userprofile['NM_END'];
 
 			}

@@ -13,6 +13,7 @@ use crm\salesman\models\SchedulegroupSearch;
 use crm\mastercrm\models\Customers;
 use crm\mastercrm\models\CustomersSearch;
 use yii\helpers\ArrayHelper;
+use mdm\admin\components\Helper;
 
 /**
  * ScheduleGroupController implements the CRUD actions for Schedulegroup model.
@@ -59,6 +60,7 @@ class ScheduleGroupCrmController extends Controller
      */
     public function actionIndex()
     {
+         if(Helper::checkRoute('index')){
         $searchModel = new SchedulegroupSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -82,6 +84,10 @@ class ScheduleGroupCrmController extends Controller
             'data' =>  $data,
             'valStt' => $valStt
         ]);
+    }else{
+         Yii::$app->user->logout();
+         $this->redirect(array('/site/login'));  //
+    }
     }
 
     /**

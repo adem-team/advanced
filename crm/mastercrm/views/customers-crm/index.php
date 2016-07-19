@@ -7,6 +7,7 @@ use yii\bootstrap\Modal;
 use kartik\nav\NavX;
 use crm\mastercrm\models\Customers;
 use yii\helpers\ArrayHelper;
+use mdm\admin\components\Helper;
 
 
 
@@ -32,6 +33,29 @@ function tombolCustomers(){
   $content = Html::a($label1,$url1, $options1);
   return $content;
 }
+
+ 
+function tombolCreate(){
+  $title1 = Yii::t('app', 'Customers');
+  $options1 = [ 'id'=>'modcus',
+          'data-toggle'=>"modal",
+          'data-target'=>"#createcus",
+          'class' => 'btn btn-success btn-sm',
+          // 'style' => 'text-align:left',
+  ];
+  $icon1 = '<i class="glyphicon glyphicon-plus"></i>';
+  $label1 = $icon1 . ' ' . $title1;
+  $url1 = Url::toRoute(['/mastercrm/customers-crm/createcustomers']);//,'kd'=>$kd]);
+  $content = Html::a($label1,$url1, $options1);
+  return $content;
+}
+
+  if(Helper::checkRoute('createcustomers')){
+        $button_create = tombolCreate();
+    }else{
+        $button_create = "";
+    }
+
 
 /**
    * New|Change|Reset| Password Login
@@ -417,13 +441,13 @@ $tabcustomersData = \kartik\grid\GridView::widget([
     ],
     [
       'class' => 'kartik\grid\ActionColumn',
-      'template' => '{view}{edit}',
+      'template' =>Helper::filterActionColumn('{viewcust}{create-map}'),
       'header'=>'Action',
       'dropdown' => true,
       'dropdownOptions'=>['class'=>'pull-right dropdown'],
       'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
       'buttons' => [
-        'view' =>function($url, $model, $key){
+        'viewcust' =>function($url, $model, $key){
           return  Html::button(Yii::t('app', 'View'),
             ['value'=>url::to(['viewcust','id'=>$model->CUST_KD]),
             'id'=>'modalButtonCustomers-crm',
@@ -431,7 +455,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
             'style'=>['width'=>'120px', 'height'=>'25px','text-align'=>'center','border'=> 'none'],
           ]);
       },  
-          'edit' =>function($url, $model,$key){
+          'create-map' =>function($url, $model,$key){
             return '<li>'. Html::a('<i class="glyphicon glyphicon-globe"></i>'.Yii::t('app', 'Create Map'),
                                 ['create-map','id'=>$model->CUST_KD],
                                  [
@@ -465,13 +489,15 @@ $tabcustomersData = \kartik\grid\GridView::widget([
   ],
   'panel'=>[
     // 'type' =>GridView::TYPE_SUCCESS,
-    'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create  ',
-            ['modelClass' => 'Customers',]),'/mastercrm/customers-crm/createcustomers',[
-                              'data-toggle'=>"modal",
-                              'id'=>'modcus',
-                               'data-target'=>"#createcus",
-                               'class' => 'btn btn-success btn-sm'
-                              ]).' '.
+    'before'=>$button_create.' '.
+
+    // Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create  ',
+    //         ['modelClass' => 'Customers',]),'/mastercrm/customers-crm/createcustomers',[
+    //                           'data-toggle'=>"modal",
+    //                           'id'=>'modcus',
+    //                            'data-target'=>"#createcus",
+    //                            'class' => 'btn btn-success btn-sm'
+    //                           ]).' '.
 			Html::a('<i class="fa fa-history "></i> '.Yii::t('app', 'Refresh',
             ['modelClass' => 'Customers1',]),'/mastercrm/customers-crm',[
 							   'id'=>'refresh-cust',

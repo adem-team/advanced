@@ -6,11 +6,36 @@ use kartik\helpers\Html;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use kartik\nav\NavX;
+use mdm\admin\components\Helper;
 
 // $this->params['breadcrumbs'][] = $this->title;
 // $this->sideCorp = 'Customers';                 				 /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 // $this->sideMenu = $sideMenu_control;//'umum_datamaster';   	 /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Customers');   	 			 /* title pada header page */
+
+
+
+function tombolCreate(){
+  $title1 = Yii::t('app', 'Create');
+  $options1 = [ 'id'=>'modl',
+          'data-toggle'=>"modal",
+          'data-target'=>"#form2",
+          'class' => 'btn btn-success btn-sm',
+          // 'style' => 'text-align:left',
+  ];
+  $icon1 = '<i class="glyphicon glyphicon-plus"></i>';
+  $label1 = $icon1 . ' ' . $title1;
+  $url1 = Url::toRoute(['/mastercrm/kota-customers-crm/createkota']);//,'kd'=>$kd]);
+  $content = Html::a($label1,$url1, $options1);
+  return $content;
+}
+
+  if(Helper::checkRoute('createkota')){
+        $button_create = tombolCreate();
+    }else{
+        $button_create = "";
+    }
+
 
 
 // grid kota
@@ -25,13 +50,13 @@ $this->title = Yii::t('app', 'Customers');   	 			 /* title pada header page */
             'CITY_NAME',
             'POSTAL_CODE',
      [ 'class' => 'kartik\grid\ActionColumn',
-                'template' => '{view}{update}',
+               'template' =>Helper::filterActionColumn('{viewkota}{updatekota}'),
                         'header'=>'Action',
                          'dropdown' => true,
                          'dropdownOptions'=>['class'=>'pull-right dropup'],
 						 'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
                         'buttons' => [
-                            'view' =>function($url, $model, $key){
+                            'viewkota' =>function($url, $model, $key){
                                     return '<li>'. Html::a('<span class="glyphicon glyphicon-eye-open"></span>'.Yii::t('app', 'View'),
                                                                 ['viewkota','id'=> $model->CITY_ID],[
                                                                 'data-toggle'=>"modal",
@@ -40,7 +65,7 @@ $this->title = Yii::t('app', 'Customers');   	 			 /* title pada header page */
                                                                 ]).'<li>';
                                                             },
 
-                             'update' =>function($url, $model, $key){
+                             'updatekota' =>function($url, $model, $key){
                                     return '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Update'),
                                                                 ['updatekota','id'=>$model->CITY_ID],[
                                                                 'data-toggle'=>"modal",
@@ -57,13 +82,7 @@ $this->title = Yii::t('app', 'Customers');   	 			 /* title pada header page */
     'panel'=>[
 
       'type' =>GridView::TYPE_SUCCESS,
-			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
-						['modelClass' => 'Barangumum',]),'/mastercrm/kota-customers-crm/createkota',[
-							'data-toggle'=>"modal",
-								'data-target'=>"#form2",
-                  'id'=>'modl',
-									'class' => 'btn btn-success'
-												]),
+			'before'=> $button_create,
 
             ],
                 'pjax'=>true,

@@ -10,6 +10,7 @@ use yii\widgets\ActiveForm;
 use kartik\widgets\Select2;
 use crm\salesman\models\Schedulegroup;
 use crm\mastercrm\models\Customers;
+use mdm\admin\components\Helper;
 
 use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
 MapAsset::register($this);
@@ -23,6 +24,51 @@ MapAsset::register($this);
 // $this->sideMenu = 'esm_customers';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
 // $this->title = Yii::t('app', 'ESM - Group');          /* title pada header page */
 // $this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
+
+
+
+function tombolAddGroup(){
+  $title1 = Yii::t('app', 'Add Group');
+  $options1 = [ 'id'=>'schedule-group-crm-modal',
+          'data-toggle'=>"modal",
+          'data-target'=>"#modal-create",
+          'class' => 'btn btn-success btn-sm',
+          // 'style' => 'text-align:left',
+  ];
+  $icon1 = '<i class="glyphicon glyphicon-plus"></i>';
+  $label1 = $icon1 . ' ' . $title1;
+  $url1 = Url::toRoute(['/salesman/schedule-group-crm/create']);//,'kd'=>$kd]);
+  $content = Html::a($label1,$url1, $options1);
+  return $content;
+}
+
+  if(Helper::checkRoute('create')){
+        $button_add_group = tombolAddGroup();
+    }else{
+        $button_add_group = "";
+    }
+
+
+function tombolAddCustomers(){
+  $title1 = Yii::t('app', 'Add Customers');
+  $options1 = [ 'id'=>'schedule-group-crm-add-customers',
+          'data-toggle'=>"modal",
+          'data-target'=>"#modal-create",
+          'class' => 'btn btn-success btn-sm',
+          // 'style' => 'text-align:left',
+  ];
+  $icon1 = '<i class="glyphicon glyphicon-plus"></i>';
+  $label1 = $icon1 . ' ' . $title1;
+  $url1 = Url::toRoute(['/salesman/schedule-group-crm/create-scdl']);//,'kd'=>$kd]);
+  $content = Html::a($label1,$url1, $options1);
+  return $content;
+}
+
+  if(Helper::checkRoute('create-scdl')){
+        $button_create = tombolAddCustomers();
+    }else{
+        $button_create = "";
+    }
 
 
 
@@ -158,7 +204,8 @@ MapAsset::register($this);
 				[
 					'class'=>'kartik\grid\ActionColumn',
 					'dropdown' => true,
-					'template' => '{view}{edit}',
+					// 'template' => '{view}{edit}',
+					'template' =>Helper::filterActionColumn('{view}{update}'),
 					'dropdownOptions'=>['class'=>'pull-right dropup'],
 					'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 					'buttons' => [
@@ -170,7 +217,7 @@ MapAsset::register($this);
 																'data-title'=> '',//$model->KD_BARANG,
 																]). '</li>' . PHP_EOL;
 							},
-							'edit' =>function($url, $model, $key){
+							'update' =>function($url, $model, $key){
 									return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Update'),
 																['/salesman/schedule-group-crm/update','id'=>$model->ID],[
 																'data-toggle'=>"modal",
@@ -210,12 +257,7 @@ MapAsset::register($this);
 			'panel' => [
 						'heading'=>'<h3 class="panel-title">GROUPING CUSTOMER LOCALTIONS</h3>',
 						'type'=>'warning',
-						'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Group ',
-								['modelClass' => 'Kategori',]),'/salesman/schedule-group-crm/create',[
-									'data-toggle'=>"modal",
-										'data-target'=>"#modal-create",
-											'class' => 'btn btn-success btn-sm'
-														]),
+						'before'=>$button_add_group,
 						'showFooter'=>false,
 			],
 			'toolbar'=> [
@@ -356,11 +398,11 @@ MapAsset::register($this);
 			[
 				'class'=>'kartik\grid\ActionColumn',
 				'dropdown' => true,
-				'template' => '{view}{edit}',
+				'template' =>Helper::filterActionColumn('{view-group}{update-group}'),
 				'dropdownOptions'=>['class'=>'pull-right dropup'],
 				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 				'buttons' => [
-					 'view' =>function($url, $model, $key){
+					 'view-group' =>function($url, $model, $key){
 								return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
 															['/salesman/schedule-group-crm/view-group','id'=>$model->CUST_KD],[
 															'data-toggle'=>"modal",
@@ -368,7 +410,7 @@ MapAsset::register($this);
 															'data-title'=> '',//$model->KD_BARANG,
 															]). '</li>' . PHP_EOL;
 						},
-						'edit' =>function($url, $model, $key){
+						'update-group' =>function($url, $model, $key){
 								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Update'),
 															['/salesman/schedule-group-crm/update-group','id'=>$model->CUST_KD],[
 															'data-toggle'=>"modal",
@@ -408,12 +450,7 @@ MapAsset::register($this);
 		'panel' => [
 					'heading'=>'<h3 class="panel-title">LIST CUSTOMER GROUP</h3>',
 					'type'=>'warning',
-					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Customer ',
-							['modelClass' => 'Kategori',]),'/salesman/schedule-group-crm/create-scdl',[
-								'data-toggle'=>"modal",
-									'data-target'=>"#modal-create",
-										'class' => 'btn btn-success'
-													]),
+					'before'=>$button_create,
 
 					'showFooter'=>false,
 		],

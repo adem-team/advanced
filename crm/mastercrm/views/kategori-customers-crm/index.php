@@ -6,6 +6,7 @@ use yii\helpers\ArrayHelper;
 use lukisongroup\master\models\Kategoricus;
 use yii\bootstrap\Modal;
 use kartik\nav\NavX;
+use mdm\admin\components\Helper;
 
 $this->params['breadcrumbs'][] = $this->title;
 $this->sideCorp = 'Customers';                 				 /* Title Select Company pada header pasa sidemenu/menu samping kiri */
@@ -105,6 +106,29 @@ function tombolMap(){
   return $content;
 }
 
+
+
+function tombolCreate(){
+  $title1 = Yii::t('app', 'Create Parent');
+  $options1 = [ 'id'=>'create-parent-kategori',
+          'data-toggle'=>"modal",
+          'data-target'=>"#formparent",
+          'class' => 'btn btn-success btn-sm',
+          // 'style' => 'text-align:left',
+  ];
+  $icon1 = '<i class="glyphicon glyphicon-plus"></i>';
+  $label1 = $icon1 . ' ' . $title1;
+  $url1 = Url::toRoute(['/mastercrm/kategori-customers-crm/createparent']);//,'kd'=>$kd]);
+  $content = Html::a($label1,$url1, $options1);
+  return $content;
+}
+
+  if(Helper::checkRoute('createparent')){
+        $button_create = tombolCreate();
+    }else{
+        $button_create = "";
+    }
+
 ?>
 
 
@@ -151,14 +175,14 @@ function tombolMap(){
 
 
         [ 'class' => 'kartik\grid\ActionColumn',
-          'template' => ' {edit} {view} {update}',
+          'template' =>Helper::filterActionColumn('{create}{view}{update}'),
           'dropdown' => true,
           'dropdownOptions'=>['class'=>'pull-right dropup'],
 		  'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
            'header'=>'Action',
            'buttons' => [
 
-                         'edit' =>function($url, $model, $key){
+                         'create' =>function($url, $model, $key){
                                 return  '<li>' .  Html::a('<span class="glyphicon glyphicon-plus"></span>'.Yii::t('app', 'Tambah'),['create','id'=> $model->CUST_KTG_PARENT],[
                                                             'data-toggle'=>"modal",
                                                             'data-target'=>"#formparent",
@@ -192,12 +216,7 @@ function tombolMap(){
            'panel'=>[
 
                 'type' =>GridView::TYPE_SUCCESS,
-                'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create Parent ',
-                        ['modelClass' => 'Kategoricus',]),'/mastercrm/kategori-customers-crm/createparent',[
-                                                            'data-toggle'=>"modal",
-                                                            'data-target'=>"#formparent",
-                                                            'class' => 'btn btn-success'
-                                                            ])
+                'before'=>$button_create
                     ],
 
             'pjax'=>true,
