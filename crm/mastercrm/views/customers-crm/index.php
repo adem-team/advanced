@@ -265,12 +265,16 @@ $tabcustomersData = \kartik\grid\GridView::widget([
       'attribute' => 'CUST_KD',
       'refreshGrid'=>true,
       'readonly'=>function($model, $key, $index, $widget){ // readonly
-        if($model->CUST_GRP == $model->CUST_KD)
-        {
+        // if($model->CUST_GRP == $model->CUST_KD)
+        // {
 
           return true;
-        }
-      },  
+        // }elseif(Yii::$app->getUserOptcrm->Profile_user()->POSITION_LOGIN == 6)
+        // {
+        //   return true;
+        // }
+      },
+      
       'label'=>'Customer.Id',
       'hAlign'=>'left',
       'vAlign'=>'top',
@@ -520,6 +524,14 @@ $tabcustomersData = \kartik\grid\GridView::widget([
                     'class' => 'btn btn-success btn-sm'
                  
                 ]
+          ).' '.  Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Pilih Export'),'/export/export/pilih-export-data',
+                [
+                    'data-toggle'=>"modal",
+                    'id'=>'exportmodal-erp-pilih',
+                    'data-target'=>"#export-mod",
+                    'class' => 'btn btn-success btn-sm'
+                 
+                ]
           )
 
 
@@ -624,6 +636,37 @@ $(document).on('click', '[data-toggle-export]', function(e){
 // })
 
 ",$this::POS_READY);
+
+
+// Export customers via modal
+$this->registerJs("
+ 
+
+  $('#export-mod').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var modal = $(this)
+    var title = button.data('title')
+    var href = button.attr('href')
+
+    //modal.find('.modal-title').html(title)
+    modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+    $.post(href)
+      .done(function( data ) {
+        modal.find('.modal-body').html(data)
+      });
+
+
+    })
+
+",$this::POS_READY);
+Modal::begin([
+  'id' => 'export-mod',
+  'header' => '<div style="float:left;margin-right:10px" class="fa fa-file-excel-o"></div><div><h4 class="modal-title">Print Customer</h4></div>',
+  'headerOptions'=>[
+      'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.9)',
+  ],
+]);
+Modal::end();
 
 
 

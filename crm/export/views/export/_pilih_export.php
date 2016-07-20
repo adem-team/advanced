@@ -29,10 +29,10 @@ use lukisongroup\master\models\Kategoricus;
 <div class="kategoricus-form">
 
     <?php $form = ActiveForm::begin([
-	  'id'=>$model->formName(),
+    'id'=>$model->formName(),
       'enableClientValidation' => true,
 
-	]); ?>
+  ]); ?>
     
     <?= $form->field($model, 'cus_Type')->widget(Select2::classname(),[
       'options'=>['placeholder' => 'Select Category ...'
@@ -49,7 +49,7 @@ use lukisongroup\master\models\Kategoricus;
         'depends'=>['customers-cus_type'],
          'initialize' => true,
           'loadingText' => 'Loading  ...',
-        'url' => Url::to(['/master/customers/lisdata']),
+        'url' => Url::to(['/mastercrm/customers-crm/lisdata']),
     ]
 ])->label('Type') ?>
 
@@ -118,7 +118,7 @@ $('#customers-cust_ktg').on('change',function(e){
 e.preventDefault();
 var idx = $(this).val();
    $.ajax({   
-        url: '/master/customers/lis-cus-box',
+        url: '/mastercrm/customers-crm/lis-cus-box',
         dataType: 'json',
         type: 'GET',
         data:{id:idx},

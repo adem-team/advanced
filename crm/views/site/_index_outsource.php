@@ -8,6 +8,7 @@ use kartik\builder\Form;
 use kartik\widgets\FileInput;
 use kartik\builder\FormGrid;
 use kartik\tabs\TabsX;
+$this->title = 'LukisonGroup';
 $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctype'=>'multipart/form-data']]);
 $ProfAttribute1 = [
     [
@@ -72,6 +73,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										'url' => '/salespromo/stock-promo',
 										'badge' => '0'
 									],
+
 									[
 										/* 
 										 * Modul Customer - Stock Penjualan | input Penjualan langsung dari Customer
@@ -86,6 +88,14 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										*/
 										'content' => 'Customer Input Stock',
 										'url' => '/salespromo/penjualan-promo',
+										'badge' => '0'
+									],
+									[
+										/*
+										 * Modul mastercrm - Customer  | Buka customer Baru
+										*/
+										'content' => 'New Customers',
+										'url' => '/mastercrm/customers-crm',
 										'badge' => '0'
 									],									
 								]),
@@ -106,7 +116,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										 * Modul Sales Promotion | jadwal kunjungan ke cusotmer
 										*/
 										'content' => 'Jadwal Kunjungan',
-										'url' => '/salespromo/schadule',
+										'url' => '/salesman/schedule-header-crm/index',
 										'badge' => '0'
 									],
 									[
@@ -114,15 +124,23 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										 * Modul Sales Promotion | Peta posisi alamat customer yang akan di kunjungi, check validasi kunjungan Porsquare
 										*/
 										'content' => 'Peta Customer',
-										'url' => '/salespromo/customer-map',
+										'url' => '/mastercrm/customers-crm/crm-map',
 										'badge' => '0'
-									],									
+									],
+									[
+										/*
+										 * Modul Salesman - IT/Admin/Salesman  | Absensi Salesman
+										*/
+										'content' => 'Customers Visit Group',
+										'url' => '/salesman/schedule-group-crm',
+										'badge' => '0'
+									],							
 									[
 										/* 
 										 * Modul Customer | Sacustomer Profile Pribadi | change password Account
 										*/
 										'content' => 'Profile',	
-										'url' => '/salespromo/profile',
+										'url' => '/sistem/crm-user-profile',
 										'badge' => '0'
 									],
 								]),

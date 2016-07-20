@@ -11,7 +11,7 @@ use yii\web\Response;
 use yii\widgets\Pjax;
 
 
-
+$this->title = 'LukisonGroup';
 	/**
      * Setting
 	 * @author wawan
@@ -134,23 +134,29 @@ use yii\widgets\Pjax;
 	}
 
 	/* PRIBADI*/
-	function tombolPeribadi(){
+	function tombolPeribadi($id){
 		$title1 = Yii::t('app', 'Informasi Pribadi');
-		$options1 = [ 'id'=>'pribadi'];
+		$options1 = [ 'id'=>'user-profile-pribadi',
+						'data-toggle'=>"modal",
+					     'data-target'=>"#profile-pribadi"
+		];
 		$icon1 = '<span class="fa fa-graduation-cap fa-md"></span>';
 		$label1 = $icon1 . ' ' . $title1;
-		$url1 = Url::toRoute(['/sistem/user-profile/pribadi']);
+		$url1 = Url::toRoute(['/sistem/crm-user-profile/pribadi-edit','id'=>$id]);
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
 
 	/* TEMPAT TINGGAL & TELPHON*/
-	function tombolTempat(){
+	function tombolTempat($id){
 		$title1 = Yii::t('app', 'Informasi Tempat & Telepon');
-		$options1 = [ 'id'=>'pendidikan'];
+		$options1 = [ 'id'=>'user-profile-tempat',
+		 					'data-toggle'=>"modal",
+					        'data-target'=>"#profile-tempat"
+					        ];
 		$icon1 = '<span class="fa fa-graduation-cap fa-md"></span>';
 		$label1 = $icon1 . ' ' . $title1;
-		$url1 = Url::toRoute(['/sistem/user-profile/tempat']);
+		$url1 = Url::toRoute(['/sistem/crm-user-profile/tempat','id'=>$id]);
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
@@ -218,8 +224,8 @@ use yii\widgets\Pjax;
 				</button>
 				  <ul class="dropdown-menu" role="menu">
 					<li><?php echo tombolSummary(); ?></li>
-					<li><?php echo tombolPeribadi(); ?></li>
-					<li><?php echo tombolTempat(); ?></li>
+					<li><?php echo tombolPeribadi($id); ?></li>
+					<li><?php echo tombolTempat($id); ?></li>
 					<li><?php echo tombolPendidikan(); ?></li>
 					<li><?php echo tombolDarurat(); ?></li>
 					<li><?php echo tombolTanggungan(); ?></li>
@@ -240,7 +246,7 @@ use yii\widgets\Pjax;
 
 		</div>
 		<?php
-		$foto_profile = $profile->IMG_BASE64 !=''? $profile->IMG_BASE64:Yii::getAlias("@HRD_EMP_UploadUrl").'/'.'default.jpg';
+		$foto_profile = $profile->IMG_BASE64 !=''? 'data:image/jpeg;base64,'.$profile->IMG_BASE64:Yii::getAlias("@HRD_EMP_UploadUrl").'/'.'default.jpg';
 
 		?>
 
@@ -258,8 +264,9 @@ use yii\widgets\Pjax;
 
 		</div>
 		<?php
+		
 			$profile=$profile!=''?$profile:false;
-			echo Yii::$app->controller->renderPartial($fileLink,[
+			echo $this->render($fileLink,[
 					'profile'=>$profile,
 					//'model_CustPrn'=>$model_CustPrn,
 					//'count_CustPrn'=>$count_CustPrn
@@ -299,35 +306,7 @@ use yii\widgets\Pjax;
 		]);
 	Modal::end();
 
-	/*
-	 * profile
-	 * @author wawan
-	 * @since 1.0
-	*/
-	$this->registerJs("
-			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
-			$('#profile-personalia').on('show.bs.modal', function (event) {
-				var button = $(event.relatedTarget)
-				var modal = $(this)
-				var title = button.data('title')
-				var href = button.attr('href')
-				modal.find('.modal-title').html(title)
-				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-				$.post(href)
-					.done(function( data ) {
-						modal.find('.modal-body').html(data)
-					});
-				}),
-	",$this::POS_READY);
-	Modal::begin([
-			'id' => 'profile-personalia',
-			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Profile</b></h4></div>',
-			// 'size' => Modal::SIZE_MIDLE,
-			'headerOptions'=>[
-				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
-			]
-		]);
-	Modal::end();
+	
 
 	/*
 	 * profile
@@ -336,7 +315,7 @@ use yii\widgets\Pjax;
 	*/
 	$this->registerJs("
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
-			$('#profile-personalia').on('show.bs.modal', function (event) {
+			$('#profile-tempat').on('show.bs.modal', function (event) {
 				var button = $(event.relatedTarget)
 				var modal = $(this)
 				var title = button.data('title')
@@ -350,8 +329,39 @@ use yii\widgets\Pjax;
 				}),
 	",$this::POS_READY);
 	Modal::begin([
-			'id' => 'profile-personalia',
-			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Profile</b></h4></div>',
+			'id' => 'profile-tempat',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/login.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Profile</b></h4></div>',
+			// 'size' => Modal::SIZE_MIDLE,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+
+
+	/*
+	 * profile
+	 * @author wawan
+	 * @since 1.0
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#profile-pribadi').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'profile-pribadi',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/login.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Profile</b></h4></div>',
 			// 'size' => Modal::SIZE_MIDLE,
 			'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
@@ -381,7 +391,7 @@ use yii\widgets\Pjax;
 	",$this::POS_READY);
 	Modal::begin([
 			'id' => 'profile-setting',
-			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Profile Setting</b></h4></div>',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/login.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Profile Setting</b></h4></div>',
 			'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
 			]

@@ -11,6 +11,7 @@ use crm\salesman\models\Sot2Search;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use mdm\admin\components\Helper;
 
 // use crm\master\models\Barang;
 /**
@@ -29,6 +30,33 @@ class SalesDailyCrmController extends Controller
             ],
         ];
     }
+
+    /**
+     * Lists all Customers models.
+     * @return mixed
+     */
+
+    public function beforeAction(){
+            if (Yii::$app->user->isGuest)  {
+                 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+            }
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+                   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true;
+               }
+            } else {
+                return true;
+            }
+    }
+
 
 	 /**
      * PLSQL ! GET DATA SALES
@@ -51,7 +79,7 @@ class SalesDailyCrmController extends Controller
      */
     public function actionIndex()
     {
-		//print_r($this->getScripts());
+		 if(Helper::checkRoute('index')){
 
 		/**
 		 * PLSQL ! Array Data Provider
@@ -87,6 +115,10 @@ class SalesDailyCrmController extends Controller
 			//'clmKdBarang'=>$clmKdBarang,
 
         ]);
+    }else{
+         Yii::$app->user->logout();
+           $this->redirect(array('/site/login'));  //
+    }
     }
 
     /**

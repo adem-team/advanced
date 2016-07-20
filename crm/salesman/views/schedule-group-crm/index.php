@@ -14,6 +14,7 @@ use mdm\admin\components\Helper;
 
 use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
 MapAsset::register($this);
+$this->title = 'Schedulegroup';
 
 
 /* @var $this yii\web\View */

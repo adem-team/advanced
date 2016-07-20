@@ -24,7 +24,8 @@
 		<div class="col-md-6"style="float:left">
 			<dl>
 				<?php
-					if($profile){
+				
+					// if($profile){
 						$namaLengkap=$profile!=''? $profile->NM_MIDDLE . ' ' . $profile->NM_END:'';
 						$tPhone=$profile!=''?$profile->TLP_HOME:'';
 						$joinDate=$profile!=''? $profile->JOIN_DATE:'';
@@ -32,7 +33,7 @@
 						$ktp ='xxx.xxx.xxx.xxx';
 						$kode_subdis ='xxx.xxx.xx.xx';
 						$kode_OUTSRC ='xxx-xxx-xxx-xx';
-					}
+					// }
 				?>
 				<dt style="width:100px; float:left">Name</dt>
 				<dd>:	<?= $namaLengkap; ?></dd>
@@ -54,7 +55,7 @@
 	<div class="col-xs-12 col-md-12 col-lg-12">
 	<h3>  <strong> Access Links :</strong></h3>
 	   <br />
-	   <?=tombolPersonalia();?>
-	   <?=tombolPerformance();?>
+	   <!-- tombolPersonalia();?> -->
+	   <!-- tombolPerformance();?> -->
 </div>
 </div>

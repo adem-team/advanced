@@ -473,53 +473,91 @@ Modal::end();
 
 ?>
 </div>
-<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
-	<div  class="row">
-		<div class="col-md-4">
-			<?php
-				echo $gvUser;
-			?>
-		</div>
-		<div class="col-md-8">
-			<div  class="row">
-				<div class="col-md-12">
-					<div  class="row">
-						<div class="col-md-6">
-							<?php
-								echo Html::panel(
-										['heading' => 'Calendar Visit	', 'body' =>$calenderRt,
-											'options' => [
-											'style'=>['height'=>'150px'],
-											],
-										],
-										Html::TYPE_INFO
-
-									);
-							?>
-						</div>
-						<div class="col-md-6">
-							<?php
-								echo Html::panel(
-										['heading' => 'User Profile', 'body' =>'data user ',
-											'options' => [
-											'style'=>['height'=>'150px'],
-											],
-										],
-										Html::TYPE_INFO
-
-									);
-							?>
-						</div>
-					</div>
+<div class="raw">
+	<div class="panel panel-info">
+		<div class="box direct-chat direct-chat">
+		 <!-- box-header -->
+			<div class="box-header with-border"  >
+				<h3 class="box-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:center;color:blue" ><?php echo "<b>CUSTOMER SCHADULE</b>";?></h3>
+				<div class="box-tools pull-left">
+					<!--<span data-toggle="tooltip" title="3 New Messages" class="badge bg-green">3</span>-->
+					<button class="btn btn-box-tool" data-toggle="tooltip" title="show/hide" data-widget="collapse"><i class="fa fa-minus"></i></button>
+					<button class="btn btn-box-tool" data-toggle="tooltip" title="Detail" data-widget="chat-pane-toggle"><i class="fa fa-navicon"></i></button>
+					<!-- <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>-->
 				</div>
-				<div class="col-md-12">
-					<?php
-						 echo $gvScdlHeader;
-					?>
-				</div>
-			</div>
-		</div>
+			</div><!-- /.box-header -->
+			<div class="box-body">
+				<!-- Conversations are loaded here -->
+				<div class="direct-chat-messages" style="height:1200px">
+					<!-- Message. Default to the left -->
+						 <div class="raw">
+							<div class="col-md-4">
+								<?php
+									echo $gvUser;
+								?>
+							</div>
+							<div class="col-md-8">
+								<div  class="row">
+									<div class="col-md-12">
+										<div  class="row">
+											<div class="col-md-6">
+												<?php
+													echo Html::panel(
+															['heading' => 'Calendar Visit	', 'body' =>$calenderRt,
+																'options' => [
+																'style'=>['height'=>'150px'],
+																],
+															],
+															Html::TYPE_INFO
+
+														);
+												?>
+											</div>
+											<div class="col-md-6">
+												<?php
+													echo Html::panel(
+															['heading' => 'User Profile', 'body' =>'data user ',
+																'options' => [
+																'style'=>['height'=>'150px'],
+																],
+															],
+															Html::TYPE_INFO
+
+														);
+												?>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-12">
+										<?php
+											 echo $gvScdlHeader;
+										?>
+									</div>
+								</div>
+							</div>
+						</div>
+					<!-- Message to the right -->
+				</div><!--/.direct-chat-messages-->
+				<!-- Contacts are loaded here -->
+				<div class="direct-chat-contacts" style="height:1200px; color:black;background-color:white">
+					<ul class="contacts-list">
+						<li>
+							<div class="raw">
+							<?php 
+								// $gvScdlRpt=$this->render('_indexSchaduleReport',[
+								// 	'aryDataProviderRptScdl'=>$aryDataProviderRptScdl,
+								// 	'attributeField'=>$attributeField
+								// ]);
+							?>
+							<!-- $gvScdlRpt?> -->
+							</div>
+						</li><!-- End Contact Item -->
+					</ul><!-- /.contatcts-list -->
+				</div><!-- /.direct-chat-pane -->
+			</div><!-- /.box-body -->
+		</div><!--/.direct-chat -->
 	</div>
+
 </div>
 
 <?php

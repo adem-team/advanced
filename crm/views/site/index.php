@@ -1,5 +1,6 @@
 <?php
 use crm\sistem\models\Userlogin;
+$this->title = 'LukisonGroup';
 /*
  * Login Dashboard user Permission
  * login user account berdasarkan POSITION_LOGIN

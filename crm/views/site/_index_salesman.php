@@ -8,6 +8,7 @@ use kartik\builder\Form;
 use kartik\widgets\FileInput;
 use kartik\builder\FormGrid;
 use kartik\tabs\TabsX;
+$this->title = 'LukisonGroup';
 $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctype'=>'multipart/form-data']]);
 $ProfAttribute1 = [
     [

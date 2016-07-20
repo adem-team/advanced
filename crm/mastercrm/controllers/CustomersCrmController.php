@@ -47,26 +47,26 @@ class CustomersCrmController extends Controller
      * @return mixed
      */
 
-    // public function beforeAction(){
-    //         if (Yii::$app->user->isGuest)  {
-    //              Yii::$app->user->logout();
-    //                $this->redirect(array('/site/login'));  //
-    //         }
-    //         // Check only when the user is logged in
-    //         if (!Yii::$app->user->isGuest)  {
-    //            if (Yii::$app->session['userSessionTimeout']< time() ) {
-    //                // timeout
-    //                Yii::$app->user->logout();
-    //                $this->redirect(array('/site/login'));  //
-    //            } else {
-    //                //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
-    //                Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
-    //                return true;
-    //            }
-    //         } else {
-    //             return true;
-    //         }
-    // }
+    public function beforeAction(){
+            if (Yii::$app->user->isGuest)  {
+                 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+            }
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+                   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true;
+               }
+            } else {
+                return true;
+            }
+    }
 
 
     public function actionIndex()
@@ -152,6 +152,25 @@ class CustomersCrmController extends Controller
       }
 
 	}
+
+   // action depdrop
+   public function actionLisCusBox($id) {
+
+        $model = Customers::find()->asArray()->where(['CUST_TYPE'=>$id])
+                                                     ->andwhere('CUST_GRP = CUST_KD')
+                                                     ->andwhere('CUST_TYPE != "" ')
+                                                    ->all();
+            $items = ArrayHelper::map($model, 'CUST_KD', 'CUST_NM');
+            foreach ($model as $key => $value) {
+                   // $out[] = [$value['CUST_KD'] => $value['CUST_NM']];
+                   // <option value="volvo">Volvo</option>
+     $out [] = "<option value=".$value['CUST_KD'].">".$value['CUST_NM']."</option>";
+               }
+
+               echo json_encode($out);
+             
+    
+   }
 
 
   /*CRM INDEX map */

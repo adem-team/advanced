@@ -64,7 +64,8 @@ AppAsset_style::register($this);
 				$ModelUserAttr = UserloginSearch::findUserAttr(Yii::$app->user->id)->one();
 				//print_r($ModelUserAttr);
 				//echo $ModelUserAttr->emp->EMP_IMG;
-				$MainAvatar =  $ModelUserAttr->userprofile['EMP_IMG'] != ''? $ModelUserAttr->userprofile['EMP_IMG'] : 'default.jpg';
+                $MainAvatar = $ModelUserAttr->userprofile->IMG_BASE64 !=''? 'data:image/jpeg;base64,'.$ModelUserAttr->userprofile->IMG_BASE64:Yii::getAlias("@HRD_EMP_UploadUrl").'/'.'default.jpg';
+				// $MainAvatar =  $ModelUserAttr->userprofile['EMP_IMG'] != ''? $ModelUserAttr->userprofile['EMP_IMG'] : 'default.jpg';
 				$MainUserProfile = $ModelUserAttr->userprofile['NM_FIRST'] . '  '. $ModelUserAttr->userprofile['NM_MIDDLE'] . '  '. $ModelUserAttr->userprofile['NM_END'];
 
 			}
@@ -142,7 +143,7 @@ AppAsset_style::register($this);
                             <!-- User Login -->
                                 <div class="user-panel">
                                     <div class="pull-left" style="text-align: left">
-                                        <img src="<?= Yii::getAlias('@HRD_EMP_UploadUrl') .'/'. $MainAvatar; ?>" class="img-circle" alt="Cinque Terre" width="80" height="80"/>
+                                        <img src="<?=$MainAvatar; ?>" class="img-circle" alt="Cinque Terre" width="80" height="80"/>
                                     </div>
                                     <div class="pull-left info" style="margin-left: 40px" >
                                         <p><?php echo $MainUserProfile; ?></p>

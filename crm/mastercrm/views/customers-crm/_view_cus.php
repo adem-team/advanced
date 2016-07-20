@@ -5,12 +5,20 @@ use kartik\widgets\DepDrop;
 use yii\helpers\Url;
 use kartik\widgets\Select2;
 
+
+
 /* @var $this yii\web\View */
 /* @var $model modulprj\master\models\IjinDetail */
 
 $this->title = $model->CUST_KD;
 $this->params['breadcrumbs'][] = ['label' => 'Customers', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+// if(Yii::$app->getUserOptcrm->Profile_user()->POSITION_LOGIN != 6)
+//         {
+//           $Btn = '{update}';
+//         }else{
+          $Btn = '';
+        // }
 
 	/*Customers info*/
 	$cusviewinfo=DetailView::widget([
@@ -163,7 +171,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		'condensed'=>true,
 		'hover'=>true,
 		'mode'=>DetailView::MODE_VIEW,
-		'buttons1'=>'{update}',
+		'buttons1'=>$Btn,
 		'buttons2'=>'{view}{save}',
 		'panel'=>[
 					'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-1x fa-list-alt"></div><div><h6 class="modal-title"><b> Detail Customers</b></h6></div>',
@@ -186,7 +194,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		'condensed'=>true,
 		'hover'=>true,
 		'mode'=>DetailView::MODE_VIEW,
-		'buttons1'=>'{update}',
+		'buttons1'=>$Btn,
 		'buttons2'=>'{view}{save}',
 		'panel'=>[
 					'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-1x fa-list-alt"></div><div><h6 class="modal-title"><b>Alias Customers</b></h6></div>',
@@ -253,7 +261,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		'condensed'=>true,
 		'hover'=>true,
 		'mode'=>DetailView::MODE_VIEW,
-		'buttons1'=>'{update}',
+		'buttons1'=>$Btn,
 		'buttons2'=>'{view}{save}',
 		'panel'=>[
 					'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-1x fa-list-alt"></div><div><h6 class="modal-title"><b>Update Alamat</b></h6></div>',
@@ -314,7 +322,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		'condensed'=>true,
 		'hover'=>true,
 		'mode'=>DetailView::MODE_VIEW,
-		'buttons1'=>'{update}',
+		'buttons1'=>$Btn,
 		'buttons2'=>'{view}{save}',
 		'panel'=>[
 					'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-1x fa-list-alt"></div><div><h6 class="modal-title"><b>Update Kategori</b></h6></div>',
