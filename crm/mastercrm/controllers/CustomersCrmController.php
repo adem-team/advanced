@@ -23,6 +23,7 @@ use yii\widgets\ActiveForm;
 use lukisongroup\master\models\ValidationLoginPrice;
 use yii\helpers\ArrayHelper;
 use yii\web\Response;
+use mdm\admin\components\Helper;
 
 /**
  * CustomersController implements the CRUD actions for Customers model.
@@ -70,8 +71,9 @@ class CustomersCrmController extends Controller
 
     public function actionIndex()
     {
-
-
+      
+      if(Helper::checkRoute('index')){
+        
         $searchModel = new CustomersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -140,11 +142,35 @@ class CustomersCrmController extends Controller
 
         }
 
-		return $this->render('index', [
-			'searchModel' => $searchModel,
-			'dataProvider' => $dataProvider,
-		]);
+    return $this->render('index', [
+      'searchModel' => $searchModel,
+      'dataProvider' => $dataProvider,
+    ]);
+      }else{
+          Yii::$app->user->logout();
+          $this->redirect(array('/site/login'));
+      }
+
 	}
+
+   // action depdrop
+   public function actionLisCusBox($id) {
+
+        $model = Customers::find()->asArray()->where(['CUST_TYPE'=>$id])
+                                                     ->andwhere('CUST_GRP = CUST_KD')
+                                                     ->andwhere('CUST_TYPE != "" ')
+                                                    ->all();
+            $items = ArrayHelper::map($model, 'CUST_KD', 'CUST_NM');
+            foreach ($model as $key => $value) {
+                   // $out[] = [$value['CUST_KD'] => $value['CUST_NM']];
+                   // <option value="volvo">Volvo</option>
+     $out [] = "<option value=".$value['CUST_KD'].">".$value['CUST_NM']."</option>";
+               }
+
+               echo json_encode($out);
+             
+    
+   }
 
 
   /*CRM INDEX map */

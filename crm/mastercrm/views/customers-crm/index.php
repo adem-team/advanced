@@ -7,6 +7,7 @@ use yii\bootstrap\Modal;
 use kartik\nav\NavX;
 use crm\mastercrm\models\Customers;
 use yii\helpers\ArrayHelper;
+use mdm\admin\components\Helper;
 
 
 
@@ -32,6 +33,29 @@ function tombolCustomers(){
   $content = Html::a($label1,$url1, $options1);
   return $content;
 }
+
+ 
+function tombolCreate(){
+  $title1 = Yii::t('app', 'Customers');
+  $options1 = [ 'id'=>'modcus',
+          'data-toggle'=>"modal",
+          'data-target'=>"#createcus",
+          'class' => 'btn btn-success btn-sm',
+          // 'style' => 'text-align:left',
+  ];
+  $icon1 = '<i class="glyphicon glyphicon-plus"></i>';
+  $label1 = $icon1 . ' ' . $title1;
+  $url1 = Url::toRoute(['/mastercrm/customers-crm/createcustomers']);//,'kd'=>$kd]);
+  $content = Html::a($label1,$url1, $options1);
+  return $content;
+}
+
+  if(Helper::checkRoute('createcustomers')){
+        $button_create = tombolCreate();
+    }else{
+        $button_create = "";
+    }
+
 
 /**
    * New|Change|Reset| Password Login
@@ -241,12 +265,16 @@ $tabcustomersData = \kartik\grid\GridView::widget([
       'attribute' => 'CUST_KD',
       'refreshGrid'=>true,
       'readonly'=>function($model, $key, $index, $widget){ // readonly
-        if($model->CUST_GRP == $model->CUST_KD)
-        {
+        // if($model->CUST_GRP == $model->CUST_KD)
+        // {
 
           return true;
-        }
-      },  
+        // }elseif(Yii::$app->getUserOptcrm->Profile_user()->POSITION_LOGIN == 6)
+        // {
+        //   return true;
+        // }
+      },
+      
       'label'=>'Customer.Id',
       'hAlign'=>'left',
       'vAlign'=>'top',
@@ -417,13 +445,13 @@ $tabcustomersData = \kartik\grid\GridView::widget([
     ],
     [
       'class' => 'kartik\grid\ActionColumn',
-      'template' => '{view}{edit}',
+      'template' =>Helper::filterActionColumn('{viewcust}{create-map}'),
       'header'=>'Action',
       'dropdown' => true,
       'dropdownOptions'=>['class'=>'pull-right dropdown'],
       'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
       'buttons' => [
-        'view' =>function($url, $model, $key){
+        'viewcust' =>function($url, $model, $key){
           return  Html::button(Yii::t('app', 'View'),
             ['value'=>url::to(['viewcust','id'=>$model->CUST_KD]),
             'id'=>'modalButtonCustomers-crm',
@@ -431,7 +459,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
             'style'=>['width'=>'120px', 'height'=>'25px','text-align'=>'center','border'=> 'none'],
           ]);
       },  
-          'edit' =>function($url, $model,$key){
+          'create-map' =>function($url, $model,$key){
             return '<li>'. Html::a('<i class="glyphicon glyphicon-globe"></i>'.Yii::t('app', 'Create Map'),
                                 ['create-map','id'=>$model->CUST_KD],
                                  [
@@ -465,13 +493,15 @@ $tabcustomersData = \kartik\grid\GridView::widget([
   ],
   'panel'=>[
     // 'type' =>GridView::TYPE_SUCCESS,
-    'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create  ',
-            ['modelClass' => 'Customers',]),'/mastercrm/customers-crm/createcustomers',[
-                              'data-toggle'=>"modal",
-                              'id'=>'modcus',
-                               'data-target'=>"#createcus",
-                               'class' => 'btn btn-success btn-sm'
-                              ]).' '.
+    'before'=>$button_create.' '.
+
+    // Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create  ',
+    //         ['modelClass' => 'Customers',]),'/mastercrm/customers-crm/createcustomers',[
+    //                           'data-toggle'=>"modal",
+    //                           'id'=>'modcus',
+    //                            'data-target'=>"#createcus",
+    //                            'class' => 'btn btn-success btn-sm'
+    //                           ]).' '.
 			Html::a('<i class="fa fa-history "></i> '.Yii::t('app', 'Refresh',
             ['modelClass' => 'Customers1',]),'/mastercrm/customers-crm',[
 							   'id'=>'refresh-cust',
@@ -491,6 +521,14 @@ $tabcustomersData = \kartik\grid\GridView::widget([
                     'data-pjax' => true,
                      'data-toggle-export'=>'crm-customers-modal',
                     // 'data-target'=>"#export-mod",
+                    'class' => 'btn btn-success btn-sm'
+                 
+                ]
+          ).' '.  Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Pilih Export'),'/export/export/pilih-export-data',
+                [
+                    'data-toggle'=>"modal",
+                    'id'=>'exportmodal-erp-pilih',
+                    'data-target'=>"#export-mod",
                     'class' => 'btn btn-success btn-sm'
                  
                 ]
@@ -598,6 +636,37 @@ $(document).on('click', '[data-toggle-export]', function(e){
 // })
 
 ",$this::POS_READY);
+
+
+// Export customers via modal
+$this->registerJs("
+ 
+
+  $('#export-mod').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var modal = $(this)
+    var title = button.data('title')
+    var href = button.attr('href')
+
+    //modal.find('.modal-title').html(title)
+    modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+    $.post(href)
+      .done(function( data ) {
+        modal.find('.modal-body').html(data)
+      });
+
+
+    })
+
+",$this::POS_READY);
+Modal::begin([
+  'id' => 'export-mod',
+  'header' => '<div style="float:left;margin-right:10px" class="fa fa-file-excel-o"></div><div><h4 class="modal-title">Print Customer</h4></div>',
+  'headerOptions'=>[
+      'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.9)',
+  ],
+]);
+Modal::end();
 
 
 

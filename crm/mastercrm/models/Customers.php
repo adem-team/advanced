@@ -44,6 +44,8 @@ class Customers extends \yii\db\ActiveRecord
      * @inheritdoc
      */
 	// public $tipenm;
+    public $cus_Type;
+    public $cust_ktg;
     public $checkbox_export;
     public $parentnama;
     public $CusNm;
@@ -70,6 +72,7 @@ class Customers extends \yii\db\ActiveRecord
     {
         return [
 			      //  [['CUST_NM','STT_TOKO','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID'], 'required'],
+          [['CUST_GRP'], 'required','on'=>'export'],
               [['CUST_NM','ALAMAT','TLP1','JOIN_DATE','PIC'], 'required','on'=>'create'],
               [['CUST_GRP'], 'required','on'=>'create','when' => function ($model) {
                   return $model->parentnama == 0; },
@@ -81,9 +84,9 @@ class Customers extends \yii\db\ActiveRecord
               [['CUST_TYPE','CUST_KTG'], 'required','on'=>'updatekat'],// for action updatekat scenario
             // [['CUST_NM','CUST_KTG','JOIN_DATE','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID','NPWP', 'TLP1','STT_TOKO'], 'required'],
             [['CUST_TYPE','CUST_KTG', 'TLP1', 'TLP2', 'FAX', 'STT_TOKO', 'STATUS','PROVINCE_ID','SCDL_GROUP','CITY_ID'], 'integer'],
-            [['JOIN_DATE', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
+            [['JOIN_DATE', 'CREATED_AT', 'UPDATED_AT','CUST_GRP'], 'safe'],
             [['ALAMAT', 'NOTE'], 'string'],
-            [['CUST_KD', 'CUST_KD_ALIAS', 'CUST_GRP', 'MAP_LAT', 'MAP_LNG', 'NPWP','KD_DISTRIBUTOR'], 'string', 'max' => 50],
+            [['CUST_KD', 'CUST_KD_ALIAS', 'MAP_LAT', 'MAP_LNG', 'NPWP','KD_DISTRIBUTOR'], 'string', 'max' => 50],
             [['CUST_NM', 'PIC', 'EMAIL', 'WEBSITE', 'DATA_ALL'], 'string', 'max' => 255],
             [['CAB_ID', 'CORP_ID'], 'string', 'max' => 6],
             [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 100]

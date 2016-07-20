@@ -58,9 +58,9 @@ class Userprofile extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'NM_FIRST', 'NM_MIDDLE', 'NM_END', 'KD_SRC'], 'required'],
+            // [[ 'NM_FIRST', 'NM_MIDDLE', 'NM_END'], 'required'],
             [['ID', 'STS', 'STATUS'], 'integer'],
-            [['JOIN_DATE', 'RESIGN_DATE', 'TGL_LAHIR', 'CREATED_AT', 'UPDATED_TIME'], 'safe'],
+            [['JOIN_DATE', 'RESIGN_DATE', 'TGL_LAHIR', 'CREATED_AT', 'UPDATED_TIME','KD_SRC'], 'safe'],
             [['NM_FIRST', 'NM_MIDDLE', 'NM_END', 'EMP_IMG', 'KTP', 'TLP_HOME', 'HP'], 'string', 'max' => 20],
             [[ 'EMAIL', 'CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 50],
             [['ALAMAT'], 'string', 'max' => 255],

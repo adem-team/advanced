@@ -46,10 +46,13 @@ class CrmUserProfileController extends Controller
             }
     }
 
+    
+
     public function actionIndex()
     {
 			$fileLink="data_userprofile";
 		  $profile=Yii::$app->getUserOptcrm->Profile_user()->userprofile; //component Crm
+
 			$id = Yii::$app->getUserOptcrm->Profile_user()->id; //component Crm
 
        return $this->render('index',[
@@ -68,18 +71,62 @@ class CrmUserProfileController extends Controller
 			$model = new Userprofile();
 
 			if ($model->load(Yii::$app->request->post())){
+				$base64File = \yii\web\UploadedFile::getInstance($model, 'image');
+							$File64 = $this->saveimage(file_get_contents($base64File->tempName));
+					$model->IMG_BASE64 =$File64;
+					$model->ID = Yii::$app->getUserOptcrm->Profile_user()->id;
 					$model->CREATED_BY=Yii::$app->user->identity->username;
 					$model->UPDATED_TIME=date('Y-m-d h:i:s');
-					$model->save();
-			if($model->save()){
-				 return $this->redirect('index');
-			}
-	}else {
+			       $model->save();
+				 	return $this->redirect('index');
+			}else {
 					return $this->renderAjax('_form_add-profile', [
 							'model' => $model,
 					]);
 			}
 		}
+
+		/*
+		*author : wawan
+		*update  user profile if creation succes,redirect index */
+		public function actionTempat($id)
+		{
+			 $profile=Yii::$app->getUserOptcrm->Profile_user()->userprofile; //component Crm
+			$model = Userprofile::find()->where(['id'=>$id])->one();
+
+			if ($model->load(Yii::$app->request->post())){
+			       $model->save();
+				 	return $this->redirect('index');
+			}else {
+					return $this->renderAjax('_set_informasi', [
+							'model' => $model,
+							'profile'=>$profile
+					]);
+			}
+		}
+
+
+		/*
+		*author : wawan
+		*update  user profile if creation succes,redirect index */
+		public function actionPribadiEdit($id)
+		{
+			 $profile=Yii::$app->getUserOptcrm->Profile_user()->userprofile; //component Crm
+			$model = Userprofile::find()->where(['id'=>$id])->one();
+
+			if ($model->load(Yii::$app->request->post())){
+			       $model->save();
+				 	return $this->redirect('index');
+			}else {
+					return $this->renderAjax('_set_pribadi', [
+							'model' => $model,
+							'profile'=>$profile
+					]);
+			}
+		}
+
+
+
 
 		/*
 				*author : wawan

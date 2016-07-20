@@ -19,6 +19,7 @@ use lukisongroup\master\models\Schedulegroup;
 use lukisongroup\master\models\ScheduleheaderSearch;
 use lukisongroup\sistem\models\Userlogin;
 use lukisongroup\sistem\models\UserloginSearch;
+use crm\sistem\models\Userprofile;
 use yii\data\ArrayDataProvider;
 use DateInterval;
 use DatePeriod;
@@ -213,6 +214,11 @@ class ScheduleHeaderController extends Controller
     public function actionCreateUser()
     {
         $model = new Userlogin();
+        $user_profile = new UserProfile();
+        //componen user option
+        $profile=Yii::$app->getUserOpt->Profile_user();
+        $usercreate = $profile->username;
+
         $model->scenario = 'createuser';
         if ($model->load(Yii::$app->request->post())  ) {
           $post = Yii::$app->request->post();
@@ -221,8 +227,16 @@ class ScheduleHeaderController extends Controller
           {
               $auth = "SALESMAN";// auth key untuk salesmen
           }
-          else{
+          elseif($datapostion == 2){
             $auth = "SALES PROMOTION";// auth key untuk sales promotion
+          }elseif($datapostion == 3){
+            $auth = "CUSTOMER";// auth key untuk Customers
+          }elseif($datapostion == 4){
+            $auth = "DISTRIBUTOR";// auth key untuk Customers
+          }elseif($datapostion == 5){
+            $auth = "FACTORY PABRIK";// auth key untuk Customers
+          }elseif($datapostion == 6){
+            $auth = "OUTSOURCE";// auth key untuk Customers
           }
           $model->POSITION_LOGIN = $datapostion;
           $model->POSITION_SITE = "CRM"; // untuk login crm
@@ -231,8 +245,16 @@ class ScheduleHeaderController extends Controller
           $authkey =  Yii::$app->security->generatePasswordHash($auth);
           $model->password_hash = $security;
           $model->auth_key = $authkey;
-          $model->save();
-            return $this->redirect(['index']);
+          if($model->save())
+          {
+            $user_profile->ID = $model->id;
+            $user_profile->NM_FIRST = $model->username;
+            $user_profile->CREATED_BY = $usercreate;
+            $user_profile->CREATED_AT = date("Y-m-d H:i:s");
+            $user_profile->save();
+           
+          }
+           return $this->redirect(['index']);
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,

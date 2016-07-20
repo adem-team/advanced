@@ -11,6 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
+use mdm\admin\components\Helper;
 
 /**
  * CustomersController implements the CRUD actions for Customers model.
@@ -59,7 +60,7 @@ class KategoriCustomersCrmController extends Controller
     public function actionIndex()
     {
 
-
+      if(Helper::checkRoute('index')){
         $searchModel1 = new KategoricusSearch();
         $dataProviderkat  = $searchModel1->searchparent(Yii::$app->request->queryParams);
 
@@ -118,6 +119,10 @@ class KategoriCustomersCrmController extends Controller
 			'searchModel1' => $searchModel1,
 			'dataProviderkat'  =>$dataProviderkat ,
 		]);
+  }else{
+    Yii::$app->user->logout();
+    $this->redirect(array('/site/login'));
+  }
 	}
 
 
