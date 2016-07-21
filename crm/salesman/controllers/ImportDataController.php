@@ -31,6 +31,7 @@ use crm\salesman\models\AliasProdak;
 use lukisongroup\sales\models\ImportViewSearch;
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Barang;
+use mdm\admin\components\Helper;
 //use lukisongroup\master\models\Customersalias;
 
 
@@ -118,6 +119,7 @@ class ImportDataController extends Controller
      */
     public function actionIndex()
     {
+    	if(Helper::checkRoute('index')){
 		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
 		//echo $paramCari;
 		$model = new UserFile();
@@ -147,6 +149,10 @@ class ImportDataController extends Controller
 			'searchModelViewImport'=>$searchModelViewImport,
 			'dataProviderViewImport'=>$dataProviderViewImport,
 		]);
+	}else{
+		 Yii::$app->user->logout();
+         $this->redirect(array('/site/login'));  //
+	}
     }
 
     /**

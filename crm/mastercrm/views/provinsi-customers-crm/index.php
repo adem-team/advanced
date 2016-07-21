@@ -9,6 +9,30 @@ use yii\helpers\ArrayHelper;
 use crm\mastercrm\models\Province;
 use yii\bootstrap\Modal;
 use kartik\nav\NavX;
+use mdm\admin\components\Helper;
+
+
+function tombolCreate(){
+  $title1 = Yii::t('app', 'Create');
+  $options1 = [ 'id'=>'modl22',
+          'data-toggle'=>"modal",
+          'data-target'=>"#form3",
+          'class' => 'btn btn-success btn-sm',
+          // 'style' => 'text-align:left',
+  ];
+  $icon1 = '<i class="glyphicon glyphicon-plus"></i>';
+  $label1 = $icon1 . ' ' . $title1;
+  $url1 = Url::toRoute(['/mastercrm/provinsi-customers-crm/createprovnce']);//,'kd'=>$kd]);
+  $content = Html::a($label1,$url1, $options1);
+  return $content;
+}
+
+  if(Helper::checkRoute('createprovnce')){
+        $button_create = tombolCreate();
+    }else{
+        $button_create = "";
+    }
+
 
 ?>
 
@@ -28,13 +52,13 @@ use kartik\nav\NavX;
              'PROVINCE',
 
      [ 'class' => 'kartik\grid\ActionColumn',
-                'template' => '{view}{update}',
+                'template' =>Helper::filterActionColumn('{viewpro}{updatepro}'),
                         'header'=>'Action',
                           'dropdown' => true,
                             'dropdownOptions'=>['class'=>'pull-right dropup'],
 							'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
                         'buttons' => [
-                            'view' =>function($url, $model, $key){
+                            'viewpro' =>function($url, $model, $key){
                                     return '<li>'.Html::a('<span class="glyphicon glyphicon-eye-open"></span>'.Yii::t('app', 'View'),
                                                                 ['viewpro','id'=> $model->PROVINCE_ID],[
                                                                 'data-toggle'=>"modal",
@@ -43,7 +67,7 @@ use kartik\nav\NavX;
                                                                 ]).'</li>';
                             },
 
-                             'update' =>function($url, $model, $key){
+                             'updatepro' =>function($url, $model, $key){
                                     return '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Update'),
                                                                 ['updatepro','id'=>$model->PROVINCE_ID],[
                                                                 'data-toggle'=>"modal",
@@ -60,13 +84,7 @@ use kartik\nav\NavX;
     'panel'=>[
 
       'type' =>GridView::TYPE_SUCCESS,
-			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
-						['modelClass' => 'Barangumum',]),'/mastercrm/provinsi-customers-crm/createprovnce',[
-							'data-toggle'=>"modal",
-								'data-target'=>"#form3",
-                  'id'=>'modl22',
-									'class' => 'btn btn-success'
-												]),
+			'before'=> $button_create
            ],
            'pjax'=>true,
            'pjaxSettings'=>[

@@ -75,6 +75,73 @@ class ExportController extends Controller
         return $this->render('index');
     }
 
+    /**
+     * EXPORT DATA CUSTOMER TO EXCEL USING AJAX
+     * export_data
+     * @author wawan
+    */
+
+    public function actionPilihExportData(){
+
+            $model = new Customers();
+
+            $model->scenario = "export";
+
+        if ($model->load(Yii::$app->request->post()) ) {
+
+             $data_cus = Customers::find()->select('CUST_KD,CUST_NM,(SELECT CUST_KTG_NM FROM c0001k WHERE CUST_KTG=CUST_TYPE limit 1) AS TYPE_NM, ALAMAT,TLP1,PIC')->orderBy('CUST_NM ASC')->where(['CUST_GRP'=>$model->CUST_GRP])->asArray()->all();
+
+          
+
+            $cusDataProviderMTI = new ArrayDataProvider([
+            'key' => 'CUST_KD',
+            'allModels'=>$data_cus,
+        ]);
+
+       
+        $aryCusDataProviderMTI=$cusDataProviderMTI->allModels;
+       
+
+        $excel_data = Export2ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);
+        
+        $excel_title = $excel_data['excel_title'];
+
+        $excel_ceils = $excel_data['excel_ceils'];
+        $excel_content = [
+             [
+                'sheet_name' => 'MTI CUSTOMER',
+          // 'sheet_title' => ['CUST_ID','CUST_NM','TYPE','ALAMAT','TLP','PIC'], //$excel_ceils,//'sad',//[$excel_title],
+                'sheet_title' => $excel_title,
+          'ceils' => $excel_ceils,
+                //'freezePane' => 'E2',
+                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColumnCssClass' => [
+                               'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
+                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
+                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
+                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
+                     'TLP1' => Export2ExcelBehavior::getCssClass('header'),
+                     'PIC' => Export2ExcelBehavior::getCssClass('header')
+                ], //define each column's cssClass for header line only.  You can set as blank.
+               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+            ],
+
+            ];
+
+        $excel_file = "CustomerDataCRMPilih".'-'.date('Ymd-his');
+        $this->export2excel($excel_content, $excel_file,1);
+         
+         // return $this->redirect('esm-index');
+
+      }else{
+          return $this->renderAjax('_pilih_export', [
+            'model' => $model,
+           ]);
+      }
+           
+    }
+
 
     /*
      * EXPORT DATA CUSTOMER TO EXCEL

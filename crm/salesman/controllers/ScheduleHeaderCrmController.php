@@ -22,6 +22,7 @@ use lukisongroup\sistem\models\UserloginSearch;
 use yii\data\ArrayDataProvider;
 use DateInterval;
 use DatePeriod;
+use mdm\admin\components\Helper;
 
 /**
  * ScheduleHeaderController implements the CRUD actions for Scheduleheader model.
@@ -68,6 +69,7 @@ class ScheduleHeaderCrmController extends Controller
     public function actionIndex()
     {
 
+       if(Helper::checkRoute('index')){
         $searchModel = new ScheduleheaderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -86,6 +88,10 @@ class ScheduleHeaderCrmController extends Controller
             'datagroup'=>$datagroup,
             'datauser'=>$datauser
         ]);
+      }else{
+         Yii::$app->user->logout();
+         $this->redirect(array('/site/login'));  //
+      }
     }
 
 
@@ -108,6 +114,7 @@ class ScheduleHeaderCrmController extends Controller
      */
     public function actionCreate()
     {
+
         $model = new Scheduleheader();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -127,6 +134,7 @@ class ScheduleHeaderCrmController extends Controller
 
     public function actionCreateGroup($tgl1,$tgl2)
     {
+        if(Helper::checkRoute('create-group')){
         $model = new Scheduleheader();
         // data select2 for USER_ID where CRM and STATUS 10(active)
         $connection = \Yii::$app->db_esm;
@@ -183,6 +191,10 @@ class ScheduleHeaderCrmController extends Controller
                 'datauser'=>$datauser
             ]);
         }
+      }else{
+        return $this->renderAjax('_confirm_alert', [
+            ]);
+      }
     }
 
     /**
@@ -193,6 +205,7 @@ class ScheduleHeaderCrmController extends Controller
 
     public function actionCreateUser()
     {
+       if(Helper::checkRoute('create-user')){
         $model = new Userlogin();
         $model->scenario = 'createuser';
         if ($model->load(Yii::$app->request->post())  ) {
@@ -219,6 +232,10 @@ class ScheduleHeaderCrmController extends Controller
                 'model' => $model,
             ]);
         }
+      }else{
+         return $this->renderAjax('_confirm_alert', [
+            ]);
+      }
     }
 
     /**

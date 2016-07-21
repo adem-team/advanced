@@ -7,7 +7,7 @@ use kartik\widgets\Select2;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\DepDrop;
 use yii\helpers\Url;
-use softark\duallistbox\DualListbox;
+
 
 
 /*namespace models*/
