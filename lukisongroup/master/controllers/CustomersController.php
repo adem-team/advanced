@@ -918,7 +918,17 @@ class CustomersController extends Controller
       public function actionValid()
       {
         # code...
+        $post = Yii::$app->request->post();
+        if($post['Customers']['parentnama'] == 1)
+        {
           $model = new Customers();
+          $model->scenario = "create";
+        }else{
+          $model = new Customers();
+          $model->scenario = "parentcreate";
+        }
+
+          // $model = new Customers();
         if(Yii::$app->request->isAjax && $model->load($_POST))
         {
           Yii::$app->response->format = 'json';

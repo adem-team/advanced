@@ -74,15 +74,15 @@ class Customers extends \yii\db\ActiveRecord
               [['CUST_GRP'], 'required','on'=>'export'], //export validasi
               [['CUST_NM'],'required','on'=>'create'],
                ['CUST_NM', 'unique', 'targetAttribute' => 'CUST_NM'], // uniqe name
-               // [['CUST_NM'], 'unique','on'=>'create'],
+               [['CUST_GRP','CUST_NM'], 'required','on'=>'parentcreate'],
 
               // [['CUST_NM'],'validasi','on'=>'create'],
-              [['CUST_GRP'], 'required','when' => function ($model) {
-                  return $model->parentnama == 0; },
-                  'whenClient' => "function (attribute, value) {
-                      return $('#customers-parentnama:checked').val() == '0';
-                  }"
-                  ],
+              // [['CUST_GRP'], 'required','when' => function ($model) {
+              //     return $model->parentnama == 1; },
+              //     'whenClient' => "function (attribute, value) {
+              //         return $('#customers-parentnama:checked').val() == '1';
+              //     }"
+              //     ],
               [['PROVINCE_ID','CITY_ID'], 'required','on'=>'detail'],
               [['CUST_TYPE','CUST_KTG'], 'required','on'=>'updatekat'],// for action updatekat scenario
             // [['CUST_NM','CUST_KTG','JOIN_DATE','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID','NPWP', 'TLP1','STT_TOKO'], 'required'],
