@@ -17,6 +17,7 @@ use lukisongroup\master\models\Scheduledetail;
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Schedulegroup;
 use lukisongroup\master\models\ScheduleheaderSearch;
+use lukisongroup\hrd\models\Employe;
 use lukisongroup\sistem\models\Userlogin;
 use lukisongroup\sistem\models\UserloginSearch;
 use crm\sistem\models\Userprofile;
@@ -76,10 +77,14 @@ class ScheduleHeaderController extends Controller
 				'pageSize' => 50,
 			]
 		]);
-		$attributeField=$aryDataProviderRptScdl->allModels[0]; //get label Array 0
+		    $attributeField=$aryDataProviderRptScdl->allModels[0]; //get label Array 0
+
 		
         $searchModel = new ScheduleheaderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $searchModel1 = new ScheduleheaderSearch();
+        $dataProvider1 = $searchModel->searchid(Yii::$app->request->queryParams);
 
         $searchModelUser = new UserloginSearch();
         $dataProviderUser = $searchModelUser->searchCustGroup(Yii::$app->request->queryParams);
@@ -90,20 +95,34 @@ class ScheduleHeaderController extends Controller
         $query = Schedulegroup::find()->all();
         $datagroup = ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
 
+        // data select2 for SCDL_GROUP_NM
+        $query = Schedulegroup::find()->all();
+        $datagroup_nm = ArrayHelper::map($query, 'SCDL_GROUP_NM', 'SCDL_GROUP_NM');
+
         // data select2 for USER_ID where CRM and STATUS 10(active)
         $query1 = Userlogin::find()->where('POSITION_SITE = "CRM" AND STATUS = 10')->all();
         $datauser = ArrayHelper::map($query1, 'id', 'username');
 
+        //componen user option
+        $profile=Yii::$app->getUserOpt->Profile_user()->emp;
+        $id = $profile->EMP_ID;
+
+        $user_profile = Employe::find()->where(['EMP_ID'=>$id])->one();
+
         return $this->render('index', [
-			'dataProviderUser'=>$dataProviderUser,
-		    'searchModelUser'=>$searchModelUser,
+			     'dataProviderUser'=>$dataProviderUser,
+		        'searchModelUser'=>$searchModelUser,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'searchModel1' => $searchModel1,
+            'dataProvider1' => $dataProvider1,
             'model'=>$model,
             'datagroup'=>$datagroup,
             'datauser'=>$datauser,
-			'aryDataProviderRptScdl'=>$aryDataProviderRptScdl,
-			'attributeField'=>$attributeField
+      			'aryDataProviderRptScdl'=>$aryDataProviderRptScdl,
+      			'attributeField'=>$attributeField,
+            'user_profile'=>$user_profile,
+            'datagroup_nm'=>$datagroup_nm
         ]);
     }
 
@@ -118,6 +137,34 @@ class ScheduleHeaderController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
+    }
+
+    /**
+     * Displays a single Scheduleheader model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionGetData($id)
+    {
+        $model = Userlogin::find()->where(['id'=>$id])->asArray()->one();
+
+    
+      // $out[];
+          // $out  = "<table class='table table-hover'> 
+          //         <tbody> 
+          //             <tr> 
+          //             <td>username <td> 
+          //             <td>email</td></tr> 
+          //             <tr>
+          //             <td>".$model['username']."</td> 
+          //             <td>".$model['status']." </td>
+          //             </tr>
+          //             </tbody>
+          //             </table>";
+           
+
+               echo json_encode($model);
+             
     }
 
     /**
@@ -176,7 +223,8 @@ class ScheduleHeaderController extends Controller
             {
               $result .= $t[0];
             }
-          $model->NOTE = $result;
+          //$model->NOTE = $result;
+          $model->NOTE = $cari_groupName['SCDL_GROUP_NM'];  /*Update by ptr.nov*/
           $model->CREATE_BY = $usercreate;
           $model->CREATE_AT = date("Y-m-d H:i:s");
            if($model->save())
@@ -260,6 +308,28 @@ class ScheduleHeaderController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+     public function actionViewUserCrm($id)
+    {
+       
+          $model = Userlogin::find()->where(['id'=>$id])->one();
+       
+        if ($model->load(Yii::$app->request->post())){
+          $model->UPDATED_AT = date("Y-m-d H:i:s");
+          $model->UPDATED_BY =  Yii::$app->user->identity->username;
+           
+      if($model->save()){
+       
+        
+        return $this->redirect(['/master/schedule-header/index']);
+         
+      };
+    }else{
+      return $this->renderAjax('view_user_crm', [
+            'model' => $model,
+        ]);
+    }
     }
 
     /**

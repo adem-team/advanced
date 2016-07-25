@@ -72,13 +72,17 @@ class Customers extends \yii\db\ActiveRecord
         return [
 			      //  [['CUST_NM','STT_TOKO','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID'], 'required'],
               [['CUST_GRP'], 'required','on'=>'export'], //export validasi
-              [['CUST_NM','ALAMAT'], 'required','on'=>'create'],
-              [['CUST_GRP'], 'required','on'=>'create','when' => function ($model) {
-                  return $model->parentnama == 0; },
-                  'whenClient' => "function (attribute, value) {
-                      return $('#customers-parentnama:checked').val() == '0';
-                  }"
-                  ],
+              [['CUST_NM'],'required','on'=>'create'],
+               ['CUST_NM', 'unique', 'targetAttribute' => 'CUST_NM'], // uniqe name
+               [['CUST_GRP','CUST_NM'], 'required','on'=>'parentcreate'],
+
+              // [['CUST_NM'],'validasi','on'=>'create'],
+              // [['CUST_GRP'], 'required','when' => function ($model) {
+              //     return $model->parentnama == 1; },
+              //     'whenClient' => "function (attribute, value) {
+              //         return $('#customers-parentnama:checked').val() == '1';
+              //     }"
+              //     ],
               [['PROVINCE_ID','CITY_ID'], 'required','on'=>'detail'],
               [['CUST_TYPE','CUST_KTG'], 'required','on'=>'updatekat'],// for action updatekat scenario
             // [['CUST_NM','CUST_KTG','JOIN_DATE','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID','NPWP', 'TLP1','STT_TOKO'], 'required'],
@@ -99,6 +103,8 @@ public function getParent() {
            ['CUST_KD'=>'CUST_GRP'])->
            from(self::tableName() . ' AS parent');
 }
+
+
 
 public function getNameColumn()
 {

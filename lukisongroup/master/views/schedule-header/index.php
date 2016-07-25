@@ -8,6 +8,7 @@ use yii\web\JsExpression;
 use kartik\widgets\Select2;
 use yii\widgets\ActiveForm;
 use lukisongroup\sistem\models\Userlogin;
+use kartik\detail\DetailView;
 
 $this->sideCorp = 'PT.Effembi Sukses Makmur';                          /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_customers';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -56,6 +57,46 @@ function(calEvent, jsEvent, view) {
 }
 EOF;
 
+$Jseventcolor = <<<EOF
+function (event, element, view) {
+ var dateTime2 = new Date(event.end);
+ var dateTime1 = new Date(event.start);
+var tgl1 = moment(dateTime1).format("YYYY-MM-DD");
+var tgl2 = moment(dateTime2).subtract(1, "days").format("YYYY-MM-DD");
+var now = Date();
+var now1 = moment(now).format("YYYY-MM-DD");
+// var d = new Date();
+// var now1 = Date.parse(d)/1000;
+
+// var tgl1 = Date.parse(event.start)/1000;
+// var tgl2 = Date.parse(event.end)/1000;
+
+
+ if(tgl1 < now1 && tgl2 < now1)
+ {
+ 	 //event.color = "#FFB347"; //Em andamento
+      element.css('background-color', 'red');
+ } else if(tgl1 > now1 && tgl2 > now1){
+ 	  element.css('background-color', 'green');
+} else{
+	 element.css('background-color', 'blue');}
+}
+EOF;
+
+// function (event, element, view) {
+//         var dataHoje = new Date();
+//         if (event.start < dataHoje && event.end > dataHoje) {
+//             //event.color = "#FFB347"; //Em andamento
+//             element.css('background-color', '#FFB347');
+//         } else if (event.start < dataHoje && event.end < dataHoje) {
+//             //event.color = "#77DD77"; //Concluído OK
+//             element.css('background-color', '#77DD77');
+//         } else if (event.start > dataHoje && event.end > dataHoje) {
+//             //event.color = "#AEC6CF"; //Não iniciado
+//             element.css('background-color', '#AEC6CF');
+//         }
+//     },
+
 
 Modal::begin([
 	'headerOptions' => ['id' => 'modalHeader'],
@@ -76,12 +117,15 @@ Modal::end();
     'dataProvider' => $dataProviderUser,
     'filterModel' => $searchModelUser,
 		'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
-    'rowOptions'   => function ($model, $key, $index, $grid) {
-       return ['id' => $model->id,'onclick' => '$.pjax.reload({
-            url: "'.Url::to(['/master/schedule-header/index']).'?ScheduleheaderSearch[USER_ID]="+this.id,
-            container: "#gv-schedule-id",
-            timeout: 100,
-        });'];
+    // 'rowOptions' => function ($model, $key, $index, $grid) {
+    //    return ['id' => $model->id,'onclick' => '$.pjax.reload({
+    //         url: "'.Url::to(['/master/schedule-header/index']).'?ScheduleheaderSearch[USER_ID]="+this.id,
+    //         container: "#gv-schedule-id",
+    //         timeout: 100,
+    //     });'];
+    //   },
+		 'rowOptions'   => function ($model, $key, $index, $grid) {
+       return ['id' => $model->id,'onclick' => 'detail(this,'.$model->id.'); return false;'];
       },
         'columns' => [
             [	//COL-0
@@ -188,26 +232,25 @@ Modal::end();
             [
 				'class'=>'kartik\grid\ActionColumn',
 				'dropdown' => true,
-				'template' => '{view}{edit}',
+				'template' => '{view}',
 				'dropdownOptions'=>['class'=>'pull-right dropup'],
 				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 				'buttons' => [
 						'view' =>function($url, $model, $key){
 								return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
-															['/master/barang/view','id'=>$model->id],[
-															'data-toggle'=>"modal",
-															'data-target'=>"#modal-view",
-															'data-title'=> '',//$model->KD_BARANG,
-															]). '</li>' . PHP_EOL;
-						},
-						'edit' =>function($url, $model, $key){
-								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Create Kode Alias'),
-															['createalias','id'=>$model->id],[
+															['view-user-crm','id'=>$model->id],[
 															'data-toggle'=>"modal",
 															'data-target'=>"#modal-create",
-															'data-title'=>'',// $model->KD_BARANG,
 															]). '</li>' . PHP_EOL;
 						},
+						// 'edit' =>function($url, $model, $key){
+						// 		return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Create Kode Alias'),
+						// 									['createalias','id'=>$model->id],[
+						// 									'data-toggle'=>"modal",
+						// 									'data-target'=>"#modal-create",
+						// 									'data-title'=>'',// $model->KD_BARANG,
+						// 									]). '</li>' . PHP_EOL;
+						// },
 				],
 				'headerOptions'=>[
 					'style'=>[
@@ -259,6 +302,150 @@ Modal::end();
 		'autoXlFormat'=>true,
 		'export' => false,
     ]);
+
+/*
+	 * GRIDVIEW USER LIST  : author wawan
+     */
+	// $info=GridView::widget([
+	// 	'id'=>'gv-user-id',
+ //    'dataProvider' => $dataProvider1,
+ //    // 'filterModel' => $searchModelUser,
+	// 	'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+ //        'columns' => [
+ //            [	//COL-0
+	// 			/* Attribute Serial No */
+	// 			'class'=>'kartik\grid\SerialColumn',
+	// 			'width'=>'10px',
+	// 			'header'=>'No.',
+	// 			'hAlign'=>'center',
+	// 			'headerOptions'=>[
+	// 				'style'=>[
+	// 					'text-align'=>'center',
+	// 					'width'=>'10px',
+	// 					'font-family'=>'tahoma',
+	// 					'font-size'=>'8pt',
+	// 					'background-color'=>'rgba(0, 95, 218, 0.3)',
+	// 				]
+	// 			],
+	// 			'contentOptions'=>[
+	// 				'style'=>[
+	// 					'text-align'=>'center',
+	// 					'width'=>'10px',
+	// 					'font-family'=>'tahoma',
+	// 					'font-size'=>'8pt',
+	// 				]
+	// 			],
+	// 			'pageSummaryOptions' => [
+	// 				'style'=>[
+	// 						'border-right'=>'0px',
+	// 				]
+	// 			]
+	// 		],
+	// 		[  	//col-1
+	// 			//username
+	// 			'attribute' => 'username',
+	// 			'label'=>'User',
+	// 			'hAlign'=>'left',
+	// 			'vAlign'=>'middle',
+	// 			'headerOptions'=>[
+	// 				'style'=>[
+	// 					'text-align'=>'center',
+	// 					'width'=>'100px',
+	// 					'font-family'=>'tahoma, arial, sans-serif',
+	// 					'font-size'=>'9pt',
+	// 					'background-color'=>'rgba(97, 211, 96, 0.3)',
+	// 				]
+	// 			],
+	// 			'contentOptions'=>[
+	// 				'style'=>[
+	// 					'text-align'=>'left',
+	// 					'width'=>'100px',
+	// 					'font-family'=>'tahoma, arial, sans-serif',
+	// 					'font-size'=>'9pt',
+	// 				]
+	// 			],
+	// 		],
+	// 		[  	//col-2
+	// 			//USER POSITION_SITE
+	// 			'attribute' => 'POSITION_SITE',
+	// 			'label'=>'Site Login',
+	// 			'hAlign'=>'left',
+	// 			'vAlign'=>'middle',
+	// 			'headerOptions'=>[
+	// 				'style'=>[
+	// 					'text-align'=>'center',
+	// 					'width'=>'100px',
+	// 					'font-family'=>'tahoma, arial, sans-serif',
+	// 					'font-size'=>'9pt',
+	// 					'background-color'=>'rgba(97, 211, 96, 0.3)',
+	// 				]
+	// 			],
+	// 			'contentOptions'=>[
+	// 				'style'=>[
+	// 					'text-align'=>'left',
+	// 					'width'=>'100px',
+	// 					'font-family'=>'tahoma, arial, sans-serif',
+	// 					'font-size'=>'9pt',
+	// 				]
+	// 			],
+	// 		],
+	// 		[  	//col-3
+	// 			//USER POSITION_LOGIN
+	// 			'attribute' => 'POSITION_LOGIN',
+	// 			'label'=>'Position Login',
+	// 			'hAlign'=>'left',
+	// 			'vAlign'=>'middle',
+	// 			'headerOptions'=>[
+	// 				'style'=>[
+	// 					'text-align'=>'center',
+	// 					'width'=>'100px',
+	// 					'font-family'=>'tahoma, arial, sans-serif',
+	// 					'font-size'=>'9pt',
+	// 					'background-color'=>'rgba(97, 211, 96, 0.3)',
+	// 				]
+	// 			],
+	// 			'contentOptions'=>[
+	// 				'style'=>[
+	// 					'text-align'=>'left',
+	// 					'width'=>'100px',
+	// 					'font-family'=>'tahoma, arial, sans-serif',
+	// 					'font-size'=>'9pt',
+	// 				]
+	// 			],
+	// 		],
+           
+ //        ],
+	// 	'pjax'=>true,
+	// 	'pjaxSettings'=>[
+	// 	'options'=>[
+	// 		'enablePushState'=>false,
+	// 		'id'=>'gv-user-id',
+	// 	   ],
+	// 	],
+	// 	'panel' => [
+	// 	// 			'heading'=>'<h3 class="panel-title">USER LIST</h3>',
+	// 	// 			'type'=>'warning',
+	// 	// 			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add User ',
+	// 	// 					['modelClass' => 'Kategori',]),'/master/schedule-header/create-user',[
+	// 	// 						'data-toggle'=>"modal",
+	// 	// 							'data-target'=>"#modal-create",
+	// 	// 								'class' => 'btn btn-success'
+	// 	// 											]),
+	// 				'showFooter'=>false,
+	// 	],
+	// 	'toolbar'=> [
+	// 		//'{items}',
+	// 	],
+	// 	'hover'=>true, //cursor select
+	// 	'responsive'=>true,
+	// 	'responsiveWrap'=>true,
+	// 	'bordered'=>true,
+	// 	'striped'=>'4px',
+	// 	'autoXlFormat'=>true,
+	// 	'export' => false,
+ //    ]);
+
+
 
 
 	/*
@@ -331,6 +518,21 @@ Modal::end();
 				'label'=>'Schadule Group',
 				'hAlign'=>'left',
 				'vAlign'=>'middle',
+				 'filterType'=>GridView::FILTER_SELECT2,
+      			 'filter' => $datagroup_nm,
+      			  'filterWidgetOptions'=>[
+			        'pluginOptions'=>[
+						'allowClear'=>true,
+						'contentOptions'=>[
+							'style'=>[
+							  'text-align'=>'left',
+							  'font-family'=>'tahoma, arial, sans-serif',
+							  'font-size'=>'8pt',
+							]
+						]
+					],
+				  ],
+      			'filterInputOptions'=>['placeholder'=>'Group Name'],
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -379,24 +581,17 @@ Modal::end();
             [
 				'class'=>'kartik\grid\ActionColumn',
 				'dropdown' => true,
-				'template' => '{view}{edit}',
+				'template' => '{view}',
 				'dropdownOptions'=>['class'=>'pull-right dropup'],
 				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 				'buttons' => [
-						'view' =>function($url, $model, $key){
-								return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
-															['/master/barang/view','id'=>$model->ID],[
-															'data-toggle'=>"modal",
-															'data-target'=>"#modal-view",
-															]). '</li>' . PHP_EOL;
-						},
-						'edit' =>function($url, $model, $key){
-								return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Create Kode Alias'),
-															['createalias','id'=>$model->ID],[
-															'data-toggle'=>"modal",
-															'data-target'=>"#modal-create",
-															]). '</li>' . PHP_EOL;
-						},
+						// 'view' =>function($url, $model, $key){
+						// 		return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
+						// 									['view-user-crm','id'=>$model->ID],[
+						// 									'data-toggle'=>"modal",
+						// 									'data-target'=>"#modal-create",
+						// 									]). '</li>' . PHP_EOL;
+						// },
 				],
 				'headerOptions'=>[
 					'style'=>[
@@ -468,6 +663,7 @@ Modal::end();
 			'selectHelper'=>true,
 			'select' => new JsExpression($JSCode),
 			'eventClick' => new JsExpression($JSEventClick),
+			'eventAfterRender'=> new JsExpression($Jseventcolor),
 			//'defaultDate' => date('Y-m-d')
 		],
 		//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
@@ -517,8 +713,12 @@ Modal::end();
 											</div>
 											<div class="col-md-6">
 												<?php
+												$info = "<div id =detail></div>";
+												// $render = $this->render('data_user_profile',[
+												// 	'dataProvider1'=>$dataProvider1,'searchModel1'=>$searchModel1
+												// 	]);
 													echo Html::panel(
-															['heading' => 'User Profile', 'body' =>'data user ',
+															['heading' => 'User Profile', 'body' =>$info,
 																'options' => [
 																'style'=>['height'=>'150px'],
 																],
@@ -564,6 +764,54 @@ Modal::end();
 
 
 
+<?php
+
+$this->registerJs('
+        function detail(obj,idx){
+        	$.pjax.reload({
+            url: "'.Url::to(['/master/schedule-header/index']).'?ScheduleheaderSearch[USER_ID]="+idx,
+	            container: "#gv-schedule-id",
+	            timeout: 100,
+        });
+          
+            // get content via ajax
+            $.get("'.\yii\helpers\Url::to(['/master/schedule-header/get-data']).'?id="+idx, function( data ) {
+            	var customers = JSON.parse(data);
+
+              // $(#detail).html( data );
+            	   // var out = "<table>";
+            	   // 	   out += "<tbody>";
+            	   // 	    <tr> 
+          //             <td>username <td> 
+          //             <td>email</td></tr> 
+            // 	       out += "<tr><td>" + 
+				        // arr[i].Name +
+				        // "</td><td>" +
+				        // arr[i].City +
+				        // "</td><td>" +
+				        // arr[i].Country +
+				        // "</td></tr>";
+            	 //   	out += "</tbody>";
+            	 //    out += "</table>";
+            	 // document.getElementById("detail").innerHTML = out;
+               // $.pjax.reload({container:"#detail",timeout:2e3});
+            }).fail(function() {
+                alert( "error" );
+              });
+            // $(trDetail).append(tdDetail); // add td to tr
+            // $(tr).after(trDetail);  // add tr to table
+        }
+     
+', \yii\web\View::POS_HEAD) 
+
+// $this->registerJs('
+//     jQuery(document).on("pjax:success", "#gv-schedule-id",  function(event){
+//             $.pjax.reload({container:"#gv-user-id",timeout:2e3})
+//           }
+//         );
+//    ');
+
+?>
 
 <?php
 
