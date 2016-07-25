@@ -776,12 +776,12 @@ $this->registerJs('
           
             // get content via ajax
             $.get("'.\yii\helpers\Url::to(['/master/schedule-header/get-data']).'?id="+idx, function( data ) {
-            	var customers = JSON.parse(data);;
+            	var customers = JSON.parse(data);
 
               // $(#detail).html( data );
-            	   var out = "<table>";
-            	   	   out += "<tbody>";
-            	   	    <tr> 
+            	   // var out = "<table>";
+            	   // 	   out += "<tbody>";
+            	   // 	    <tr> 
           //             <td>username <td> 
           //             <td>email</td></tr> 
             // 	       out += "<tr><td>" + 
@@ -791,9 +791,9 @@ $this->registerJs('
 				        // "</td><td>" +
 				        // arr[i].Country +
 				        // "</td></tr>";
-            	   	out += "</tbody>";
-            	    out += "</table>";
-            	 document.getElementById("detail").innerHTML = out;
+            	 //   	out += "</tbody>";
+            	 //    out += "</table>";
+            	 // document.getElementById("detail").innerHTML = out;
                // $.pjax.reload({container:"#detail",timeout:2e3});
             }).fail(function() {
                 alert( "error" );
