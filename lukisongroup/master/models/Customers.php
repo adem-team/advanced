@@ -72,8 +72,12 @@ class Customers extends \yii\db\ActiveRecord
         return [
 			      //  [['CUST_NM','STT_TOKO','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID'], 'required'],
               [['CUST_GRP'], 'required','on'=>'export'], //export validasi
-              [['CUST_NM','ALAMAT'], 'required','on'=>'create'],
-              [['CUST_GRP'], 'required','on'=>'create','when' => function ($model) {
+              [['CUST_NM'],'required','on'=>'create'],
+               ['CUST_NM', 'unique', 'targetAttribute' => 'CUST_NM'], // uniqe name
+               // [['CUST_NM'], 'unique','on'=>'create'],
+
+              // [['CUST_NM'],'validasi','on'=>'create'],
+              [['CUST_GRP'], 'required','when' => function ($model) {
                   return $model->parentnama == 0; },
                   'whenClient' => "function (attribute, value) {
                       return $('#customers-parentnama:checked').val() == '0';
@@ -99,6 +103,8 @@ public function getParent() {
            ['CUST_KD'=>'CUST_GRP'])->
            from(self::tableName() . ' AS parent');
 }
+
+
 
 public function getNameColumn()
 {
