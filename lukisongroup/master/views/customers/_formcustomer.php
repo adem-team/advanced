@@ -46,6 +46,7 @@ use kartik\widgets\DepDrop;
 	echo $form->field($model, 'CUST_GRP')->widget(Select2::classname(), [
 		     'data' => $parent,
         'options' => [
+        'id'=>'customers-cust_grp',
         'placeholder' => 'Pilih Group Customers ...'],
         'pluginOptions' => [
             'allowClear' => true
