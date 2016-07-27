@@ -165,7 +165,7 @@ class CustomersController extends Controller
 
       $paramCari=Yii::$app->getRequest()->getQueryParam('id');
       if ($paramCari!=''){
-        $cari=['CUST_KD'=>$paramCari];
+        $cari=['CUST_GRP'=>$paramCari];
       }else{
         $cari='';
       };
@@ -392,7 +392,7 @@ class CustomersController extends Controller
       if($model->save()){
         //$model->refresh();
         
-        return $this->redirect(['/master/customers/esm-index']);
+        return $this->redirect(['/master/customers/esm-index','id'=>$model->CUST_GRP]);
          //Yii::$app->session->setFlash('kv-detail-success', 'Success Message');
       };
     }else{

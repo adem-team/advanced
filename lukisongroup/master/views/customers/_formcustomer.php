@@ -160,35 +160,3 @@ $('#customers-parentnama').click(function(){
 
 
 
-$this->registerJs("
-
-   $('form#{$model->formName()}').on('beforeSubmit',function(e)
-    {
-        var \$form = $(this);
-        $.post(
-            \$form.attr('action'),
-            \$form.serialize()
-
-        )
-
-            .done(function(result){
-			        if(result == 1 )
-                {
-                  $(document).find('#createcus').modal('hide');
-                  $('form#customers').trigger('reset');
-                  $.pjax.reload({container:'#gv-cus'});
-
-                  }
-                else{
-                      console.log(result)
-                      }
-
-            });
-
-return false;
-
-
-});
-
-
- ",$this::POS_READY);
