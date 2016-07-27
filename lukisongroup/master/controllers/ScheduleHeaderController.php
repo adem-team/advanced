@@ -303,7 +303,8 @@ class ScheduleHeaderController extends Controller
                   {
                     $result .= $t[0];
                   }
-                $model->NOTE = $result;
+                //$model->NOTE = $result;
+				$model->NOTE = $cari_groupName['SCDL_GROUP_NM'];  /*Update by ptr.nov*/
                 $model->save();
                 return $this->redirect(['index']);
                 }else{
