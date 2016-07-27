@@ -429,7 +429,6 @@ class ScheduleHeaderController extends Controller
           if($model->save())
           {
             $user_profile->ID = $model->id;
-            $user_profile->NM_FIRST = $model->username;
             $user_profile->CREATED_BY = $usercreate;
             $user_profile->CREATED_AT = date("Y-m-d H:i:s");
             $user_profile->save();
@@ -447,12 +446,23 @@ class ScheduleHeaderController extends Controller
     {
        
           $model = Userlogin::find()->where(['id'=>$id])->one();
+
+          $user_profile_crm = Userprofile::find()->where(['ID'=>$id])->one();
        
-        if ($model->load(Yii::$app->request->post())){
-          $model->UPDATED_AT = date("Y-m-d H:i:s");
-          $model->UPDATED_BY =  Yii::$app->user->identity->username;
+        if ($model->load(Yii::$app->request->post())|| $user_profile_crm->load(Yii::$app->request->post()) ){
+          $model->email = $user_profile_crm->EMAIL ;
+          if($user_profile_crm->STATUS == 0)
+          {
+            $model->status = 1 ;
+          }elseif($user_profile_crm->STATUS != 0){
+            $model->status = 10;
+          }else{
+            $model->status;
+          }
+          
            
       if($model->save()){
+        $user_profile_crm->save();
        
         
         return $this->redirect(['/master/schedule-header/index']);
@@ -461,6 +471,7 @@ class ScheduleHeaderController extends Controller
     }else{
       return $this->renderAjax('view_user_crm', [
             'model' => $model,
+            'user_profile_crm'=>$user_profile_crm
         ]);
     }
     }

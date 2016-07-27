@@ -109,6 +109,18 @@ Modal::begin([
 echo "<div id='modalContent'></div>";
 Modal::end();
 
+/*modal*/
+Modal::begin([
+    'id' => 'modal-view_cus-crm',
+    'header' => '<div style="float:left;margin-right:10px" class="fa fa-user"></div><div><h5 class="modal-title"><b>VIEW User</b></h5></div>',
+    'size' => Modal::SIZE_LARGE,
+    'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+    ],
+  ]);
+  echo "<div id='modalContentcrm'></div>";
+  Modal::end();
+
 	/*
 	 * GRIDVIEW USER LIST  : author wawan
      */
@@ -236,13 +248,14 @@ Modal::end();
 				'dropdownOptions'=>['class'=>'pull-right dropup'],
 				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 				'buttons' => [
-						'view' =>function($url, $model, $key){
-								return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
-															['view-user-crm','id'=>$model->id],[
-															'data-toggle'=>"modal",
-															'data-target'=>"#modal-create",
-															]). '</li>' . PHP_EOL;
-						},
+						 'view' =>function($url, $model, $key){
+					          return  Html::button(Yii::t('app', 'View User Crm'),
+					            ['value'=>url::to(['view-user-crm','id'=>$model->id]),
+					            'id'=>'modalButtoncrm',
+					            'class'=>"btn btn-default btn-xs",      
+					            'style'=>['width'=>'170px', 'height'=>'25px','border'=> 'none'],
+					          ]);
+      },      
 						// 'edit' =>function($url, $model, $key){
 						// 		return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Create Kode Alias'),
 						// 									['createalias','id'=>$model->id],[
@@ -779,21 +792,25 @@ $this->registerJs('
             	var customers = JSON.parse(data);
 
               // $(#detail).html( data );
-            	    var out = "<table>";
-            	   // 	   out += "<tbody>";
-            	   // 	    <tr> 
-          //             <td>username <td> 
-          //             <td>email</td></tr> 
+            	
+    
+            	    var out = "<table class=table table-striped>";
+            	     out += "<thead>";
+            	      out += "</thead>";
+            	       out += "<tbody>";
+     					 out +="<tr>"; 
+                       out +="<td>username <td>"; 
+                     out +="<td>"+customers.username+"<td>";
             // 	       out += "<tr><td>" + 
-				        // arr[i].Name +
+				        // username +
 				        // "</td><td>" +
-				        // arr[i].City +
-				        // "</td><td>" +
-				        // arr[i].Country +
-				        // "</td></tr>";
-            	 //   	out += "</tbody>";
+				        // email +"</td></tr>";
+            	      
+            	      
+            	    	  
+            	   	out += "</tbody>";
             	        out += "</table>";
-            	 // document.getElementById("detail").innerHTML = out;
+            	 document.getElementById("detail").innerHTML = out;
                // $.pjax.reload({container:"#detail",timeout:2e3});
             }).fail(function() {
                 alert( "error" );
@@ -813,53 +830,120 @@ $this->registerJs('
 
 ?>
 
+
+
 <?php
 
-// save via ajax : author wawan
-$this->registerJs("
-     $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-       $('#Scheduleheader').on('beforeSubmit',function(){
-				 var val = $('#scheduleheader-scdl_group').val();
-				 var val1 = $('#scheduleheader-user_id').val();
-				 if(val == '' && val1 == '')
-				 {
-					 	alert('your check field dont exist');
-				 }
-				 else{
-					 var tgl2 = $('#tglakhir').val();
-					 var tgl1 = $('#tglawal').val();
-					 var scdl_group = $('#scheduleheader-scdl_group').val();
-					 var user_id = $('#scheduleheader-user_id').val();
-					 var note = $('#note').val();
-					$.ajax({
-							url: '/master/schedule-header/jsoncalendar_add',
-							type: 'POST',
-							data: {tgl2 :tgl2,scdl_group :scdl_group,tgl1:tgl1,user_id:user_id,note:note},
-							dataType: 'json',
-							success: function(result) {
-								if (result == 1){
-													$(document).find('#confirm-permission-alert').modal('hide');
-													$.pjax.reload({container:'#gv-schedule-id'});
-												 $('form#Scheduleheader').trigger('reset');
-												 $.pjax.reload({container:'#calendar'});
-											 }
-							 else{
-								 alert('maaf untuk tanggal ini sudah di booking');
-										$('form#Scheduleheader').trigger('reset');
-									 //  $(document).find('#confirm-permission-alert').modal('hide');
-											 // $.pjax.reload({container:'#gv-schedule-id'});
-											 // $.pjax.reload({container:'#calendar'});
-							 }
+/*
+   * PROCESS EXCEPTION VIEW EDITING
+   * @author wawan [aditiya@lukison.com]
+   * @since 1.0
+   */
+  $this->registerJs("
+  $(document).ready(function () {
 
-									}
-
-							});
-
-				 }
-
-          return false;
-        });
+    if(localStorage.getItem('sts')==null){
+      //alert(sts);
+      localStorage.setItem('sts','hidden');
+    };
+    
+    var stt  = localStorage.getItem('sts');
+    var viewaction = localStorage.getItem('view');
+    var nilaiValue = localStorage.getItem('nilai');
+    localStorage.setItem('sts','hidden');
+   
+    /*
+     * FIRST SHOW MODAL
+     * @author wawan [aditiya@lukison.com]
+    */
+    $(document).on('click','#modalButtoncrm', function(ehead){ 
+      
+        //e.preventDefault();     
+        localStorage.clear();
+        localStorage.setItem('nilai',ehead.target.value);     
+        localStorage.setItem('sts','show');
+        $('#modal-view_cus-crm').modal('show')
+        .find('#modalContentcrm')
+        .load(ehead.target.value);
+    });
+    
+    
+    /*
+     * STATUS SHOW IF EVENT BUTTON SAVED
+     * @author wawan [aditiya@lukison.com]
+    */
+    $(document).on('click','#saveBtn', function(e){ 
+      localStorage.setItem('sts','show');
+     
+    }); 
+  
+    
+    /*
+     * STATUS HIDDEN IF EVENT MODAL HIDE
+     * @author wawan [aditiya@lukison.com]
+    */
+    $('#modal-view_cus-crm').on('hidden.bs.modal', function () {
+      localStorage.setItem('sts','hidden');
+    });
+    
+    /*
+     * CALL BACK SHOW MODAL
+     * @author wawan [aditiya@lukison.com]
+    */  
+    setTimeout(function(){
+      $('#modal-view_cus-crm').modal(stt)
+      .find('#modalContentcrm')
+      .load(nilaiValue);
+    }, 1000);  
+  });
   ",$this::POS_READY);
+
+
+// save via ajax : author wawan
+// $this->registerJs("
+//      $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+//        $('#Scheduleheader').on('beforeSubmit',function(){
+// 				 var val = $('#scheduleheader-scdl_group').val();
+// 				 var val1 = $('#scheduleheader-user_id').val();
+// 				 if(val == '' && val1 == '')
+// 				 {
+// 					 	alert('your check field dont exist');
+// 				 }
+// 				 else{
+// 					 var tgl2 = $('#tglakhir').val();
+// 					 var tgl1 = $('#tglawal').val();
+// 					 var scdl_group = $('#scheduleheader-scdl_group').val();
+// 					 var user_id = $('#scheduleheader-user_id').val();
+// 					 var note = $('#note').val();
+// 					$.ajax({
+// 							url: '/master/schedule-header/jsoncalendar_add',
+// 							type: 'POST',
+// 							data: {tgl2 :tgl2,scdl_group :scdl_group,tgl1:tgl1,user_id:user_id,note:note},
+// 							dataType: 'json',
+// 							success: function(result) {
+// 								if (result == 1){
+// 													$(document).find('#confirm-permission-alert').modal('hide');
+// 													$.pjax.reload({container:'#gv-schedule-id'});
+// 												 $('form#Scheduleheader').trigger('reset');
+// 												 $.pjax.reload({container:'#calendar'});
+// 											 }
+// 							 else{
+// 								 alert('maaf untuk tanggal ini sudah di booking');
+// 										$('form#Scheduleheader').trigger('reset');
+// 									 //  $(document).find('#confirm-permission-alert').modal('hide');
+// 											 // $.pjax.reload({container:'#gv-schedule-id'});
+// 											 // $.pjax.reload({container:'#calendar'});
+// 							 }
+
+// 									}
+
+// 							});
+
+// 				 }
+
+//           return false;
+//         });
+//   ",$this::POS_READY);
 
 // author wawan
 Modal::begin([
