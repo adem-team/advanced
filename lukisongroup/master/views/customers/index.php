@@ -473,7 +473,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
                                'class' => 'btn btn-success btn-sm'
                               ]).' '.
 			Html::a('<i class="fa fa-history "></i> '.Yii::t('app', 'Refresh',
-            ['modelClass' => 'Customers1',]),'/master/customers',[
+            ['modelClass' => 'Customers1',]),'/master/customers/esm-index',[
 							   'id'=>'refresh-cust',
                                'class' => 'btn btn-info btn-sm'
                               ]).' '.
