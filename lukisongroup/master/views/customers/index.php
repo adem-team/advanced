@@ -493,7 +493,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
                     'class' => 'btn btn-success btn-sm'
                  
                 ]
-          ).' '.  Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Pilih Export'),'/export/export/pilih-export-data',
+          ).' '.  Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Pilih Export'),'',
                 [
                     'data-toggle'=>"modal",
                     'id'=>'exportmodal-erp-pilih',
@@ -501,7 +501,15 @@ $tabcustomersData = \kartik\grid\GridView::widget([
                     'class' => 'btn btn-success btn-sm'
                  
                 ]
-          )
+          ).' '.  Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Pilih delete'),'',
+                [
+                    'data-toggle-delete-erp'=>'erp-customers-delete',
+                    'id'=>'delete-all-erp',
+                    'data-pjax' => true,
+                    'class' => 'btn btn-danger btn-sm'
+                 
+                ]
+            )
 
   ],
   'pjax'=>true,
@@ -581,6 +589,47 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 
 
 <?php
+
+/** *js export if click then export 
+    *@author adityia@lukison.com
+
+**/
+$this->registerJs("
+$(document).on('click', '[data-toggle-delete-erp]', function(e){
+
+  e.preventDefault();
+
+  var keysSelect1 = $('#gv-cus-erp').yiiGridView('getSelectedRows');
+
+  if(keysSelect1 == '')
+  {
+    alert('sorry your not selected item');
+  }else{
+
+  $.ajax({
+           url: '/master/customers/delete-erp',
+           //cache: true,
+           type: 'POST',
+           data:{keysSelect:keysSelect1},
+           dataType: 'json',
+           success: function(result) {
+             if (result == 1){
+                 $.pjax.reload('#gv-cus-erp');
+
+             }
+              else {
+                alert('Item already exists ');
+              }
+            }
+          });
+        }
+
+})
+
+// })
+
+",$this::POS_READY);
+
 
 /** *js export if click then export 
     *@author adityia@lukison.com

@@ -88,7 +88,7 @@ class CustomersSearch extends Customers
     {
         // $query = Customers::find()->joinWith('cus',true,'JOIN')
 				// 				  ->where('c0001.STATUS <> 3');
-        $query = Customers::find();
+        $query = Customers::find()->where('STATUS<>3');
 
 									// ->orderBy(['CUST_KD'=>SORT_ASC]);
 

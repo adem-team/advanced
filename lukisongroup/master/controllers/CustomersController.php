@@ -157,6 +157,28 @@ class CustomersController extends Controller
 		]);
 	}
 
+  /*update using ajax*/
+
+   public function actionDeleteErp(){
+
+            if (Yii::$app->request->isAjax) {
+
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                $request= Yii::$app->request;
+                $dataKeySelect=$request->post('keysSelect');
+                foreach ($dataKeySelect as $key => $value) {
+              
+                    $model = Customers::find()->where(['CUST_KD'=>$value])->one();
+                    $model->STATUS = 3;
+                    $model->save();   
+             }
+             
+         }
+         
+     return true;
+   
+       }
+
 	/*ESM INDEX*/
 	public function actionEsmIndex()
     {
