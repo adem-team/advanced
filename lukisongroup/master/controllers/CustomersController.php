@@ -163,10 +163,18 @@ class CustomersController extends Controller
       $datacus = Customers::find()->where('CUST_GRP = CUST_KD')->asArray()->all();
       $parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
 
+	/*search individual*/
       $paramCari=Yii::$app->getRequest()->getQueryParam('id');
-      if ($paramCari!=''){
-        $cari=['CUST_GRP'=>$paramCari];
-      }else{
+	  
+	  /*search group*/
+	  $paramCari_prn=Yii::$app->getRequest()->getQueryParam('id_prn');
+	  
+	  /*if parent not equal null then search parent*/
+      if ($paramCari_prn !=''){
+        $cari=['CUST_GRP'=>$paramCari_prn];
+      }elseif($paramCari != ''){
+		    $cari=['CUST_KD'=>$paramCari];
+			}else{
         $cari='';
       };
 
@@ -392,7 +400,7 @@ class CustomersController extends Controller
       if($model->save()){
         //$model->refresh();
         
-        return $this->redirect(['/master/customers/esm-index','id'=>$model->CUST_GRP]);
+        return $this->redirect(['/master/customers/esm-index','id_prn'=>$model->CUST_GRP]);
          //Yii::$app->session->setFlash('kv-detail-success', 'Success Message');
       };
     }else{
