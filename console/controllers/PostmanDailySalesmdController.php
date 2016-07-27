@@ -33,143 +33,100 @@ class PostmanDailySalesmdController extends Controller
             ]
         ];
     }
-
-	// public function actions()
-    // {
-        // return [           
-            // 'download' => [
-                // 'class' => 'scotthuangzl\export2excel\DownloadAction',
-            // ],
-        // ];
-    // } 
 	
-	// public function actionIndex(){
-		// return $this->render('index');
-	// }
 	/*
 	 * EXPORT DATA CUSTOMER TO EXCEL
 	 * export_data
 	*/
 	public function actionExport(){
 		
-		//$custDataMTI=Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll(); 
-		/* 22=NKA*/
-		$cusDataProviderNKA= new ArrayDataProvider([
+		/* DAILY REPORT INVENTORY SALES */
+		$dailySalesReport= new ArrayDataProvider([
 			'key' => 'ID',
 			'allModels'=>Yii::$app->db_esm->createCommand("	
-				SELECT a.CUST_KD,a.CUST_NM,b.CUST_KTG_NM AS TYPE_NM, a.ALAMAT,c.PROVINCE,d.CITY_NAME,d.POSTAL_CODE,a.TLP1,a.PIC
-				FROM c0001 a LEFT JOIN c0001k b ON b.CUST_KTG=a.CUST_TYPE
-				LEFT JOIN c0001g1 c on c.PROVINCE_ID=a.PROVINCE_ID
-				LEFT JOIN c0001g2 d on d.CITY_ID=a.CITY_ID
-				WHERE a.CUST_KTG='1' AND a.CUST_TYPE='22' #AND CUST_KD<>CUST_GRP
-				ORDER BY a.CUST_GRP ASC					
+				# x1 = Schadule Detail; x2 = Sales Order; x3 = customer;x4 = barang; x5 = Visit Memo; x6 = Alias customer; x7 = Alias barang; x8 = USER PROFILE
+				SELECT x1.TGL,x8.NM_FIRST,x1.CUST_ID AS CUST_ID_ESM,x6.KD_ALIAS AS CUST_ID_DISTRIBUTOR,x3.CUST_NM,x2.KD_BARANG AS KD_BARANG_ESM, x7.KD_ALIAS As ID_BARANG_DISTRIBUTOR,x4.NM_BARANG, 
+					SUM(CASE WHEN x2.SO_TYPE=5 THEN x2.SO_QTY ELSE 0 END) as STOCK,
+					SUM(CASE WHEN x2.SO_TYPE=6 THEN x2.SO_QTY ELSE 0 END) as SELL_IN,
+					SUM(CASE WHEN x2.SO_TYPE=7 THEN x2.SO_QTY ELSE 0 END) as SELL_OUT,
+					SUM(CASE WHEN x2.SO_TYPE=8 THEN x2.SO_QTY ELSE 0 END) as RETURN_INV,
+					SUM(CASE WHEN x2.SO_TYPE=9 THEN x2.SO_QTY ELSE 0 END) as REQUEST_INV,
+					SUM(CASE WHEN x2.SO_TYPE=10 THEN '0000-00-00' ELSE '0000-00-00' END) as ED,
+					 x5.ISI_MESSAGES
+					FROM c0002scdl_detail x1 INNER JOIN so_t2 x2 ON  x2.TGL=x1.TGL AND x2.CUST_KD=x1.CUST_ID 
+					LEFT JOIN c0001 x3 on x3.CUST_KD=x1.CUST_ID
+					LEFT JOIN b0001 x4 on x4.KD_BARANG=x2.KD_BARANG		
+					LEFT JOIN c0014 x5 on x5.TGL=x1.TGL AND x5.KD_CUSTOMER=x1.CUST_ID AND x5.ID_USER=x1.USER_ID
+					LEFT JOIN c0002 x6 on x6.KD_CUSTOMERS=x1.CUST_ID
+					LEFT JOIN b0002 x7 on x7.KD_BARANG=x2.KD_BARANG
+					LEFT JOIN dbm_086.user_profile x8 on x8.ID=x1.USER_ID
+					WHERE  x1.TGL='2016-07-27'
+					GROUP BY x1.CUST_ID,x2.KD_BARANG	
 			")->queryAll(),
 		]);	
-		$aryCusDataProviderNKA=$cusDataProviderNKA->allModels;
+		$apDailySalesReport=$dailySalesReport->allModels;
+		$excel_DailySalesReport = Export2ExcelBehavior::excelDataFormat($apDailySalesReport);
+		$excel_ceilsDailySalesReport = $excel_DailySalesReport['excel_ceils'];
 		
-		/*15=MTI*/
-		$cusDataProviderMTI= new ArrayDataProvider([
+		$dailySalesQt= new ArrayDataProvider([
 			'key' => 'ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("
-				SELECT a.CUST_KD,a.CUST_NM,b.CUST_KTG_NM AS TYPE_NM, a.ALAMAT,c.PROVINCE,d.CITY_NAME,d.POSTAL_CODE,a.TLP1,a.PIC
-				FROM c0001 a LEFT JOIN c0001k b ON b.CUST_KTG=a.CUST_TYPE
-				LEFT JOIN c0001g1 c on c.PROVINCE_ID=a.PROVINCE_ID
-				LEFT JOIN c0001g2 d on d.CITY_ID=a.CITY_ID
-				WHERE a.CUST_KTG='1' AND a.CUST_TYPE='15' #AND CUST_KD<>CUST_GRP
-				ORDER BY a.CUST_GRP ASC		
-			")->queryAll(),
-		]);			
-		$aryCusDataProviderMTI=$cusDataProviderMTI->allModels;
-		
-		/*OTHERS*/		
-		$cusDataProvideOTHER= new ArrayDataProvider([
-			'key' => 'ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("
-				SELECT a.CUST_KD,a.CUST_NM,b.CUST_KTG_NM AS TYPE_NM, a.ALAMAT,c.PROVINCE,d.CITY_NAME,d.POSTAL_CODE,a.TLP1,a.PIC
-				FROM c0001 a LEFT JOIN c0001k b ON b.CUST_KTG=a.CUST_TYPE
-				LEFT JOIN c0001g1 c on c.PROVINCE_ID=a.PROVINCE_ID
-				LEFT JOIN c0001g2 d on d.CITY_ID=a.CITY_ID
-				WHERE (a.CUST_KTG='1' AND a.CUST_TYPE<>'15' AND a.CUST_TYPE<>22) or (a.CUST_KTG='' AND a.CUST_TYPE='')
-				ORDER BY a.CUST_GRP ASC	
-			")->queryAll(),
-		]);			
-		$aryCusDataProviderOTHER=$cusDataProvideOTHER->allModels;
-		
-		/*SOURCE NKA*/
-		$excel_dataNKA = Export2ExcelBehavior::excelDataFormat($aryCusDataProviderNKA);
-		//$excel_title = $excel_dataNKA['excel_title'];
-		$excel_ceilsNKA = $excel_dataNKA['excel_ceils'];
-		
-		/*SOURCE MTI*/
-		$excel_dataMTI = Export2ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);      
-        $excel_ceilsMTI = $excel_dataMTI['excel_ceils'];
-		
-		/*SOURCE OTHERS*/
-		$excel_dataOTHER= Export2ExcelBehavior::excelDataFormat($aryCusDataProviderOTHER);      
-        $excel_ceilsOTHER = $excel_dataOTHER['excel_ceils'];
-		
-		
+			'allModels'=>Yii::$app->db_esm->createCommand("call ERP_CUSTOMER_VISIT_CRONJOB_kwalitas_time('ALL_HEAD2','59','2016-07-27')")->queryAll(),
+		]);				
+		$apSalesQT=$dailySalesQt->allModels;
+		$excel_DailySalesQT = Export2ExcelBehavior::excelDataFormat($apSalesQT);
+		$excel_ceilsSalesQT = $excel_DailySalesQT['excel_ceils'];
+					
 		$excel_content = [
-			 [
-				'sheet_name' => 'NKA CUSTOMER',
-                'sheet_title' => ['CUST_ID','CUST_NM','TYPE','ALAMAT','PROVINSI','KOTA','KODE POS','TLP','PIC'], //$excel_ceils,//'sad',//[$excel_title],
-			    'ceils' => $excel_ceilsNKA,
+			 [  //QUANTITY
+				//'sheet_name' => 'DAILY REPORT QUANTITY OF SALES MD',
+				'sheet_name' => 'DAILY REPORT INVENTORY',
+                'sheet_title' => [
+					'TGL','SALESMD','CUST_ID_ESM','CUST_ID_DISTRIBUTOR','CUST_NM','KD_BARANG_ESM','ID_BARANG_DIST','NM_BARANG',
+					'STOCK/PCS','SELL_IN/PCS','SELL_OUT/PCS','RETURE/PCS','REQUEST ORDER/PCS','EXPIRED DATE/PCS','NOTE'
+				],
+			    'ceils' => $excel_ceilsDailySalesReport,
                 //'freezePane' => 'E2',
                 'headerColor' => Export2ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-					 'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Export2ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Export2ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Export2ExcelBehavior::getCssClass('header'),  
-                     'TLP1' => Export2ExcelBehavior::getCssClass('header'),
-                     'PIC' => Export2ExcelBehavior::getCssClass('header')              
-                ], //define each column's cssClass for header line only.  You can set as blank.
+					 'TGL' => Export2ExcelBehavior::getCssClass('header'),
+                     'SALESMD' => Export2ExcelBehavior::getCssClass('header'),
+                     'CUST_ID_ESM' => Export2ExcelBehavior::getCssClass('header'),
+                     'CUST_ID_DISTRIBUTOR' => Export2ExcelBehavior::getCssClass('header'),
+					 'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),              
+                     'KD_BARANG_ESM' => Export2ExcelBehavior::getCssClass('header'),  
+                     'ID_BARANG_DIST' => Export2ExcelBehavior::getCssClass('header'),  
+                     'NM_BARANG' => Export2ExcelBehavior::getCssClass('header'),
+                     'STOCK' => Export2ExcelBehavior::getCssClass('header'),              
+                     'SELL_IN' => Export2ExcelBehavior::getCssClass('header'),              
+                     'SELL_OUT' => Export2ExcelBehavior::getCssClass('header'),              
+                     'REQUEST ORDER' => Export2ExcelBehavior::getCssClass('header'),              
+                     'EXPIRED DATE' => Export2ExcelBehavior::getCssClass('header'),              
+                     'NOTE' => Export2ExcelBehavior::getCssClass('header'),              
+                ],
                'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
                'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
 			],
-			[
-				'sheet_name' => 'MTI CUSTOMER',
-                'sheet_title' => ['CUST_ID','CUST_NM','TYPE','ALAMAT','PROVINSI','KOTA','KODE POS','TLP','PIC'], //$excel_ceils,//'sad',//[$excel_title],
-			    'ceils' => $excel_ceilsMTI,
+			[	//QUALITAS SALES TIME
+				'sheet_name' => 'DAILY REPORT QUALITY TIME',
+                'sheet_title' => [
+					'SALES MD','CUSTOMERS','CHECK IN','CHECK OUT','VISIT TIME','DISTANCE','START ABSENSI','END ABSENSI'
+				],
+			    'ceils' => $excel_ceilsSalesQT,
                 //'freezePane' => 'E2',
                 'headerColor' => Export2ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-					 'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-                     'TLP1' => Export2ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Export2ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Export2ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Export2ExcelBehavior::getCssClass('header'),  
-                     'PIC' => Export2ExcelBehavior::getCssClass('header')              
-                ], //define each column's cssClass for header line only.  You can set as blank.
+					 'SALES MD' => Export2ExcelBehavior::getCssClass('header'),
+                     'CUSTOMERS' => Export2ExcelBehavior::getCssClass('header'),
+                     'CHECK IN' => Export2ExcelBehavior::getCssClass('header'),
+                     'CHECK OUT' => Export2ExcelBehavior::getCssClass('header'),
+					 'VISIT TIME' => Export2ExcelBehavior::getCssClass('header'),              
+                     'DISTANCE' => Export2ExcelBehavior::getCssClass('header'),  
+                     'START ABSENSI' => Export2ExcelBehavior::getCssClass('header'),  
+                     'END ABSENSI' => Export2ExcelBehavior::getCssClass('header'),    
+                ],
                'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
                'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
-			],
-			[
-				'sheet_name' => 'OTHERS',
-                'sheet_title' => ['CUST_ID','CUST_NM','TYPE','ALAMAT','PROVINSI','KOTA','KODE POS','TLP','PIC'], //$excel_ceils,//'sad',//[$excel_title],
-			    'ceils' => $excel_ceilsOTHER,
-                //'freezePane' => 'E2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
-                'headerColumnCssClass' => [
-					 'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Export2ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Export2ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Export2ExcelBehavior::getCssClass('header'),  
-                     'TLP1' => Export2ExcelBehavior::getCssClass('header'),
-                     'PIC' => Export2ExcelBehavior::getCssClass('header')              
-                ], //define each column's cssClass for header line only.  You can set as blank.
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
-			],
+			],			
 		];		
 		$excel_file = "PostmanDailySalesMd";
 		$this->export2excel($excel_content, $excel_file,0); 
@@ -193,7 +150,7 @@ class PostmanDailySalesmdController extends Controller
 		if (file_exists($filenameAll)) {
 			
 			/* Get Content*/
-			$contentBody= $this->renderPartial('_postmanBody',[
+			$contentBody= $this->renderPartial('_postmanBodyDailySales',[
 				'cusCount'=>$cusCount
 			]);	
 			
@@ -203,7 +160,7 @@ class PostmanDailySalesmdController extends Controller
 			//->setTo(['it-dept@lukison.com'])
 			//->setTo(['piter@lukison.com'])
 			->setTo(['sales_esm@lukison.com','marketing_esm@lukison.com'])
-			->setSubject('WEEKLY POSTMAN-CUSTOMER')
+			->setSubject('POSTMAN - DAILY REPORT SALES MD')
 			->setHtmlBody($contentBody)
 			->attach($filenameAll,[$filename,'xlsx'])
 			->send(); 		
