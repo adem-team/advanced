@@ -779,7 +779,7 @@ $this->registerJs('
             	var customers = JSON.parse(data);
 
               // $(#detail).html( data );
-            	   // var out = "<table>";
+            	    var out = "<table>";
             	   // 	   out += "<tbody>";
             	   // 	    <tr> 
           //             <td>username <td> 
@@ -792,7 +792,7 @@ $this->registerJs('
 				        // arr[i].Country +
 				        // "</td></tr>";
             	 //   	out += "</tbody>";
-            	 //    out += "</table>";
+            	        out += "</table>";
             	 // document.getElementById("detail").innerHTML = out;
                // $.pjax.reload({container:"#detail",timeout:2e3});
             }).fail(function() {

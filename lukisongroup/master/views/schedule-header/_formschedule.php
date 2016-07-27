@@ -5,11 +5,15 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\widgets\Select2;
+use kartik\widgets\DepDrop;
+use yii\helpers\Url;
 
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Scheduleheader */
 /* @var $form yii\widgets\ActiveForm */
+
+
 ?>
 
 <div class="scheduleheader-form">
@@ -19,21 +23,40 @@ use kartik\widgets\Select2;
               'enableClientValidation'=>true
       ]);
 
-
-      echo $form->field($model, 'SCDL_GROUP')->widget(Select2::classname(), [
-          'data' => $datagroup,
-          'options' => ['placeholder' => 'Select Group ...'],
+  echo $form->field($model, 'STT_UBAH')->widget(Select2::classname(), [
+          'data' => $val,
+          'options' => ['placeholder' => 'Select ...'],
           'pluginOptions' => [
               'allowClear' => true
               ],
           ]);
 
-      echo $form->field($model, 'USER_ID')->widget(Select2::classname(), [
-              'data' => $datauser,
+  
+      echo $form->field($model, 'SCDL_GROUP')->widget(DepDrop::classname(), [
+          // 'data' => $datagroup,
+          'options' => ['placeholder' => 'Select Group ...'],
+          'type'=>DepDrop::TYPE_SELECT2,
+          'pluginOptions' => [
+              'allowClear' => true,
+
+               'depends'=>['scheduleheader-stt_ubah'],
+                'placeholder'=>'Select...',
+                'url'=>Url::to(['/master/schedule-header/sub-group','tgl'=>$tgl1]),
+              ],
+          ]);
+      
+
+      echo $form->field($model, 'USER_ID')->widget(DepDrop::classname(), [
+              // 'data' => $datauser,
               'options' => ['placeholder' => 'Select User ...'],
+              'type'=>DepDrop::TYPE_SELECT2,
               'pluginOptions' => [
-                  'allowClear' => true
-                  ],
+                'allowClear' => true,
+                'depends'=>['scheduleheader-stt_ubah', 'scheduleheader-scdl_group'],
+                 // 'depends'=>['scheduleheader-scdl_group'],
+                  'placeholder'=>'Select...',
+                  'url'=>Url::to(['/master/schedule-header/sub-user','tgl'=>$tgl1]),
+                   ],
               ]);
       echo $form->field($model, 'NOTE')->Textarea(['rows'=>2,'id'=>'note'])->label('KETERANGAN');
 

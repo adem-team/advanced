@@ -21,7 +21,7 @@ $parent = ArrayHelper::map(Customers::find()->where('STATUS<>3 and CUST_KD=CUST_
 
 function tombolCustomers(){
   $title1 = Yii::t('app', 'Customers');
-  $options1 = [ 'id'=>'setting',
+  $options1 = [ 'id'=>'setting-erp',
           //'data-toggle'=>"modal",
           // 'data-target'=>"#",
           //'class' => 'btn btn-default',
@@ -41,7 +41,7 @@ function tombolCustomers(){
    */
 function tombolKota(){
   $title1 = Yii::t('app', 'Kota');
-  $options1 = [ 'id'=>'password',
+  $options1 = [ 'id'=>'password-erp',
           // 'data-toggle'=>"modal",
           // 'data-target'=>"#profile-passwrd",
           //'class' => 'btn btn-default',
@@ -61,7 +61,7 @@ function tombolKota(){
    */
 function tombolProvince(){
   $title1 = Yii::t('app', 'Province');
-  $options1 = [ 'id'=>'signature',
+  $options1 = [ 'id'=>'signature-erp',
           //'data-toggle'=>"modal",
           // 'data-target'=>"#profile-signature",
           //'class' => 'btn btn-default',
@@ -80,7 +80,7 @@ function tombolProvince(){
    */
 function tombolKategori(){
   $title1 = Yii::t('app', 'Kategori Customers');
-  $options1 = [ 'id'=>'personalia',
+  $options1 = [ 'id'=>'personalia-erp',
           //'data-toggle'=>"modal",
           // 'data-target'=>"#profile-personalia",
           // 'class' => 'btn btn-primary',
@@ -99,7 +99,7 @@ function tombolKategori(){
    */
 function tombolMap(){
   $title1 = Yii::t('app', 'Map');
-  $options1 = [ 'id'=>'performance',
+  $options1 = [ 'id'=>'performance-erp',
           //'data-toggle'=>"modal",
           // 'data-target'=>"#profile-performance",
           // 'class' => 'btn btn-danger',
@@ -113,7 +113,7 @@ function tombolMap(){
 
 function tombolLoginalias(){
   $title1 = Yii::t('app', 'Alias List');
-  $options1 = [ 'id'=>'performance',
+  $options1 = [ 'id'=>'performance-alias-erp',
                   'data-toggle'=>"modal",
                   'data-target'=>"#formlogin",
   ];
@@ -479,7 +479,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
                               ]).' '.
 			Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export All'),'/export/export/export-data',
 								[
-									//'id'=>'export-data',
+									'id'=>'export-data-erp-customers',
 									//'data-pjax' => true,
 									'class' => 'btn btn-info btn-sm'
 								]
