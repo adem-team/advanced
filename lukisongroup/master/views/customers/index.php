@@ -243,7 +243,9 @@ $tabcustomersData = \kartik\grid\GridView::widget([
         {
 
           return true;
-        }
+        }else{
+			 return false;
+		}
       },  
       'label'=>'Customer.Id',
       'hAlign'=>'left',
@@ -275,6 +277,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
         'size' => 'md',
         'options' => [
           'data' =>$parent,
+		  'id'=>'cus-slct-id',
           'pluginOptions' => [
             'allowClear' => true,
             'class'=>'pull-top dropup'
@@ -472,11 +475,18 @@ $tabcustomersData = \kartik\grid\GridView::widget([
                                'data-target'=>"#createcus",
                                'class' => 'btn btn-success btn-sm'
                               ]).' '.
+//			Html::a('<i class="fa fa-history "></i> '.Yii::t('app', 'Refresh',
+//            ['modelClass' => 'Customers1',]),['customers/esm-index'],[
+//							  // 'id'=>'refresh-cust',
+//                               'class' => 'btn btn-info btn-sm'
+//                              ]).' '.
 			Html::a('<i class="fa fa-history "></i> '.Yii::t('app', 'Refresh',
-            ['modelClass' => 'Customers1',]),'/master/customers/esm-index',[
-							   'id'=>'refresh-cust',
-                               'class' => 'btn btn-info btn-sm'
-                              ]).' '.
+					['modelClass' => 'Customers1',]),'/master/customers/esm-index',[
+									   'id'=>'refresh-cust-erp',
+//									    'data-toggle-refsehs-erp'=>'erp-customers-refsehs',
+//									     'data-pjax' => true,
+									   'class' => 'btn btn-info btn-sm'
+									  ]).' '.
 			Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export All'),'/export/export/export-data',
 								[
 									'id'=>'export-data-erp-customers',
@@ -589,6 +599,28 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 
 
 <?php
+
+/** *js export if click then export 
+    *@author adityia@lukison.com
+
+**/
+//$this->registerJs("
+//$(document).on('click', '[data-toggle-refsehs-erp]', function(e){
+//
+//  e.preventDefault();
+//
+//  $.pjax.reload({
+//				url: '/master/customers/esm-index',
+//	            container: '#gv-cus-erp',
+//	            timeout: 100,
+//        });
+//
+//})
+//
+//// })
+//
+//",$this::POS_READY);
+
 
 /** *js export if click then export 
     *@author adityia@lukison.com

@@ -789,26 +789,34 @@ $this->registerJs('
           
             // get content via ajax
             $.get("'.\yii\helpers\Url::to(['/master/schedule-header/get-data']).'?id="+idx, function( data ) {
-            	var customers = JSON.parse(data);
-
-              // $(#detail).html( data );
-            	
-    
-            	    var out = "<table class=table table-striped>";
-            	     out += "<thead>";
-            	      out += "</thead>";
-            	       out += "<tbody>";
-     					 out +="<tr>"; 
-                       out +="<td>username <td>"; 
-                     out +="<td>"+customers.username+"<td>";
-            // 	       out += "<tr><td>" + 
-				        // username +
-				        // "</td><td>" +
-				        // email +"</td></tr>";
-            	      
-            	      
-            	    	  
-            	   	out += "</tbody>";
+            	var profile = JSON.parse(data);
+            	if(profile.STATUS == 1)
+            	{
+            		var valuests = "Aktif";
+            		var clas = "info";
+            	}else{
+            		var valuests = " Tidak Aktif";
+            		var clas = "danger";
+            	}
+            	 var out = "<table class=table table-hover>";
+            	     	out += "<thead>";
+            	     	out += "<tr>";
+            	     	out += "</tr>";
+            	      	out += "</thead>";
+            	       	out += "<tbody>";
+     					out +="<tr class=info>"; 
+                       	out +="<td>Nama Profile </td>"; 	
+	                    out +="<td>"+profile.NM_FIRST+"</td>";
+	                    out += "</tr>";
+	                    out +="<tr class=info>"; 
+                       	out +="<td>No Telp </td>"; 	
+	                    out +="<td>"+profile.TLP_HOME+"</td>";
+	                    out += "</tr>";
+	                    out +="<tr class="+clas+">"; 
+                       	out +="<td>Status </td>"; 	
+	                    out +="<td>"+valuests+"</td>";
+	                    out += "</tr>";
+            	   		out += "</tbody>";
             	        out += "</table>";
             	 document.getElementById("detail").innerHTML = out;
                // $.pjax.reload({container:"#detail",timeout:2e3});

@@ -16,7 +16,7 @@ use kartik\password\PasswordInput;
       'enableClientValidation'=>true
     ]); ?>
 
-    <?= $form->field($user, 'username')->textInput() ?>
+    <?= $form->field($model, 'username')->textInput() ?>
 
 
      <?=  $form->field($model, 'password_hash')->widget(PasswordInput::classname(), []) ?>

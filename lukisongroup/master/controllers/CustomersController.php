@@ -13,6 +13,7 @@ use yii\helpers\ArrayHelper;
 use scotthuangzl\export2excel\Export2ExcelBehavior;
 use yii\web\Response;
 
+/*namespace models*/
 use lukisongroup\master\models\KategoricusSearch;
 use lukisongroup\master\models\DistributorSearch;
 use lukisongroup\master\models\Kategoricus;
@@ -208,8 +209,7 @@ class CustomersController extends Controller
             $ID = \Yii::$app->request->post('editableKey');
             Yii::$app->response->format = Response::FORMAT_JSON;
             $model = Customers::findOne($ID);
-            // print_r($ID);
-            // die();
+           
             $out = Json::encode(['output'=>'', 'message'=>'']);
 
             // fetch the first entry in posted data (there should
@@ -232,23 +232,36 @@ class CustomersController extends Controller
                 // in the input by user is updated automatically.
                 $output = '';
 
-              /*save parent customers*/
-              $parent_model = Customers::find()->where(['CUST_KD'=>$ID])->one();
-              $parent_model->CUST_GRP = $posted['CUST_KD'];
-              $parent_model->save();
+				  /*save parent customers*/
+				  $parent_model = Customers::find()->where(['CUST_KD'=>$ID])->one();
+				  $parent_model->CUST_GRP = $posted['CUST_KD'];
+				  $parent_model->save();
+				  
+				    if (isset($posted['CUST_GRP'])) {
+                    $model->save();
+
+                   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
+                    $output = $model->CUST_GRP;
+//
+//                   
+                }
+
+			  }
+		
+              
 
                 // specific use case where you need to validate a specific
                 // editable column posted when you have more than one
                 // EditableColumn in the grid view. We evaluate here a
                 // check to see if buy_amount was posted for the Book model
-                if (isset($posted['CUST_GRP'])) {
-                    $model->save();
-
-                   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-                    $output = $model->CUST_GRP;
-
-                   
-                }
+//                if (isset($posted['CUST_GRP'])) {
+//                    $model->save();
+//
+//                   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
+//                    $output = $model->CUST_GRP;
+//
+//                   
+//                }
 
 
 
@@ -266,7 +279,7 @@ class CustomersController extends Controller
             return;
           }
 
-        }
+        
 
 		/*Tambahal menu side Dinamik */
 		$sideMenu_control='esm_customers';
