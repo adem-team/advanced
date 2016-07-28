@@ -59,16 +59,40 @@ class ScheduleGroupController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new SchedulegroupSearch();
+         $params_group = Yii::$app->request->queryParams;
+        
+          /*search group*/
+         $paramCari_group=Yii::$app->getRequest()->getQueryParam('SCDL_GROUP');
+
+          if(count($paramCari_group) == 0)
+          {
+            $field_cust = $params_group['CustomersSearch']['SCDL_GROUP'];
+          }else{
+            $field_cust = $params_group['SCDL_GROUP'];
+          }
+      
+     
+      
+      /*if parent not equal null then search parent*/
+      if ($paramCari_group !=''){
+        $cari=['SCDL_GROUP'=>$paramCari_group];
+        $cari_scdl_group=['ID'=>$paramCari_group];
+      }else{
+        $cari='';
+      };
+        $searchModel = new SchedulegroupSearch($cari_scdl_group);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-		      $searchModelCustGrp = new CustomersSearch();
-          $dpListCustGrp = $searchModelCustGrp->searchCustGrp(Yii::$app->request->queryParams);
+		$searchModelCustGrp = new CustomersSearch($cari);
+        $dpListCustGrp = $searchModelCustGrp->searchCustGrp(Yii::$app->request->queryParams);
 
           $aryStt= [
               ['STATUS' => 0, 'STT_NM' => 'DISABLE'],
               ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
           ];
+
+
+          
           $valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
 
           //query for select2 in schedule-group = index
@@ -78,9 +102,10 @@ class ScheduleGroupController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-			      'dpListCustGrp'=>$dpListCustGrp,
+			'dpListCustGrp'=>$dpListCustGrp,
             'data' =>  $data,
-            'valStt' => $valStt
+            'valStt' => $valStt,
+            'field_cust'=>$field_cust
         ]);
     }
 
@@ -114,7 +139,7 @@ class ScheduleGroupController extends Controller
             $model->save();
           }
 
-            return $this->redirect(['index']);
+            return $this->redirect(['index','SCDL_GROUP'=>$model->ID]);
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,
@@ -126,16 +151,18 @@ class ScheduleGroupController extends Controller
      * update customers schedule group model.
      * @return mixed
      */
-    public function actionCreateScdl()
+    public function actionCreateScdl($id)
     {
         $model = new Customers(); // first model using manipulate model in form
         $post = Yii::$app->request->post();
         $group = $post['Customers']['CusT'];
+
         $CUST_KD = $post['Customers']['GruPCusT'];
         $model1 = Customers::find()->where(['CUST_KD'=>$CUST_KD])->one(); //update model
         /*query for select2 in schedule-group = form_scdl */
         // $query = Yii::$app->db_esm->createCommand("SELECT * FROM `c0007` c7  WHERE  NOT EXISTS (SELECT SCDL_GROUP FROM `c0001` `c1` WHERE c1.SCDL_GROUP = c7.ID)")->queryAll();
         $query = Schedulegroup::find()->all();
+        $field_group_nm = Schedulegroup::find()->where(['ID'=>$id])->one();
         $cari_group =  ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
 
         //query for select2 in schedule-group = form_scdl
@@ -143,15 +170,17 @@ class ScheduleGroupController extends Controller
         $cari_cus =  ArrayHelper::map($querys, 'CUST_KD', 'CUST_NM');
 
         if ($model->load(Yii::$app->request->post())) {
-           $model1->SCDL_GROUP = $group;
+           $model1->SCDL_GROUP = $id;
            $model1->save();
+          
 
-            return $this->redirect(['index']);
+            return $this->redirect(['index','SCDL_GROUP'=>$id]);
         } else {
             return $this->renderAjax('form_scdl', [
                 'model' => $model,
                 'cari_group'=>$cari_group,
-                'cari_cus'=>$cari_cus
+                'cari_cus'=>$cari_cus,
+                'field_group_nm'=>$field_group_nm
             ]);
         }
     }

@@ -39,7 +39,7 @@ use yii\helpers\Url;
           'pluginOptions' => [
               'allowClear' => true,
 
-               'depends'=>['scheduleheader-stt_ubah'],
+               'depends'=>['scheduleheadertemp-stt_ubah'],
                 'placeholder'=>'Select...',
                 'url'=>Url::to(['/master/schedule-header/sub-group','tgl'=>$tgl1]),
               ],
@@ -52,7 +52,7 @@ use yii\helpers\Url;
               'type'=>DepDrop::TYPE_SELECT2,
               'pluginOptions' => [
                 'allowClear' => true,
-                'depends'=>['scheduleheader-stt_ubah', 'scheduleheader-scdl_group'],
+                'depends'=>['scheduleheadertemp-stt_ubah', 'scheduleheadertemp-scdl_group'],
                  // 'depends'=>['scheduleheader-scdl_group'],
                   'placeholder'=>'Select...',
                   'url'=>Url::to(['/master/schedule-header/sub-user','tgl'=>$tgl1]),
