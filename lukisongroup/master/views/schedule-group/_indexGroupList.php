@@ -195,7 +195,16 @@ use yii\helpers\ArrayHelper;
 									'data-toggle'=>"modal",
 										'data-target'=>"#modal-create",
 											'class' => 'btn btn-success btn-sm'
-														]),
+														]).' '.
+			Html::a('<i class="fa fa-history"></i> '.Yii::t('app', 'Refresh'),'',
+								[
+									
+									'id'=>'refresh-group',
+									'data-pjax' => true,
+									'data-toggle-group-erp'=>'erp-group-refsehs',
+									'class' => 'btn btn-info btn-sm'
+								]
+								),
 						'showFooter'=>false,
 			],
 			'toolbar'=> [
@@ -213,3 +222,25 @@ use yii\helpers\ArrayHelper;
 ?>
 
 <?=$gvGroupListLocation?>
+
+<?php
+
+$this->registerJs("
+$(document).on('click', '[data-toggle-group-erp]', function(e){
+
+ e.preventDefault();
+
+ $.pjax.reload({
+				url: '/master/schedule-group/index',
+	            container: '#gv-listgroup-location',
+	            timeout: 100,
+       });
+
+})
+
+// })
+
+",$this::POS_READY);
+
+
+?>

@@ -277,7 +277,6 @@ $tabcustomersData = \kartik\grid\GridView::widget([
         'size' => 'md',
         'options' => [
           'data' =>$parent,
-		  'id'=>'cus-slct-id',
           'pluginOptions' => [
             'allowClear' => true,
             'class'=>'pull-top dropup'
@@ -288,7 +287,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
         // 'displayValueConfig' => ArrayHelper::map(Customers::find()->where('STATUS<>3')->all(), 'CUST_KD', 'CUST_KD'),
       ],
     ],
-
+   
     [
       'attribute' => 'CUST_NM',
       'label'=>'Customer Name',
@@ -312,6 +311,67 @@ $tabcustomersData = \kartik\grid\GridView::widget([
         ]
       ],
     ],
+      [
+      'class'=>'kartik\grid\EditableColumn',
+      'attribute' => 'LAYER',
+
+      'refreshGrid'=>true,
+      'label'=>'Layer',
+      'hAlign'=>'left',
+      'vAlign'=>'top',
+      'filter'=>true,
+      'filterType'=>GridView::FILTER_SELECT2,
+      'filter' => $data_layer,
+      'filterWidgetOptions'=>[
+    'pluginOptions'=>[
+      'allowClear'=>true,
+      'contentOptions'=>[
+        'style'=>[
+          'text-align'=>'left',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ]
+    ],
+    ],
+      'filterInputOptions'=>['placeholder'=>'Select'],
+      // 'mergeHeader'=>true,
+      'headerOptions'=>[
+        'style'=>[
+          'text-align'=>'center',
+          'width'=>'120px',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+          'background-color'=>'rgba(126, 189, 188, 0.9)',
+        ]
+      ],
+      'contentOptions'=>[
+      'style'=>[
+      'vertical-align'=>'text-middle',
+          'text-align'=>'left',
+          'width'=>'120px',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ],
+    
+      'editableOptions' => [
+        'header' => 'layer',
+        'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+        'size' => 'md',
+
+        'options' => [
+          'data' =>$data_layer,
+          'pluginOptions' => [
+            'allowClear' => true,
+            // 'class'=>'pull-top dropup'
+          ],
+        ],    
+        // Refresh Display
+        'displayValueConfig' => $config_layer,
+      ],
+    ],
+
     [
       'attribute' => 'cus.CUST_KTG_NM',
 	  'label'=>'Category',
@@ -361,29 +421,65 @@ $tabcustomersData = \kartik\grid\GridView::widget([
         ]
       ],
     ],
-    [
-      'label'=>'PIC',
-      'attribute' =>'PIC',
+     [
+      'class'=>'kartik\grid\EditableColumn',
+      'attribute' => 'GEO',
+      'refreshGrid'=>true,
+      'label'=>'Geo',
       'hAlign'=>'left',
-      'vAlign'=>'middle',
+      'vAlign'=>'top',
+      'filter'=>true,
+      'filterType'=>GridView::FILTER_SELECT2,
+      'filter' => $data_group,
+      'filterWidgetOptions'=>[
+    'pluginOptions'=>[
+      'allowClear'=>true,
+      'contentOptions'=>[
+        'style'=>[
+          'text-align'=>'left',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ]
+    ],
+    ],
+      'filterInputOptions'=>['placeholder'=>'Select'],
+      // 'mergeHeader'=>true,
       'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
-          'width'=>'130px',
+          'width'=>'120px',
           'font-family'=>'tahoma, arial, sans-serif',
           'font-size'=>'8pt',
           'background-color'=>'rgba(126, 189, 188, 0.9)',
         ]
       ],
       'contentOptions'=>[
-        'style'=>[
+      'style'=>[
+      'vertical-align'=>'text-middle',
           'text-align'=>'left',
-          'width'=>'130px',
+          'width'=>'120px',
           'font-family'=>'tahoma, arial, sans-serif',
           'font-size'=>'8pt',
         ]
       ],
+    
+      'editableOptions' => [
+        'header' => 'GEO',
+        'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+        'size' => 'sm',
+        'options' => [
+          'data' =>$data_group,
+          'pluginOptions' => [
+            'allowClear' => true,
+            
+          ],
+        ],    
+        // Refresh Display
+        'displayValueConfig' => $data_group,
+      ],
     ],
+
     [
       'attribute' => 'STATUS',
       'filter' => $valStt,
