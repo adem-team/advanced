@@ -186,6 +186,23 @@ class CustomersController extends Controller
       $datacus = Customers::find()->where('CUST_GRP = CUST_KD')->asArray()->all();
       $parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
 
+      /*layer*/
+      $cari_layer = "select * from c0016";
+      $hasil = Yii::$app->db_esm->createCommand($cari_layer)->queryAll();
+      $data_layer =  ArrayHelper::map($hasil,'ID',function ($hasil, $defaultValue) {
+        return $hasil['LAYER'].'-'.$hasil['DCRIPT'];
+    });
+     $config_layer = ArrayHelper::map($hasil,'ID','LAYER'
+    );
+
+
+      /*group*/
+      $cari_group = "select * from c0007_temp";
+      $hasil_grup = Yii::$app->db_esm->createCommand($cari_group)->queryAll();
+     $data_group = ArrayHelper::map($hasil_grup,'ID','SCDL_GROUP_NM'
+    );
+      
+
 	/*search individual*/
       $paramCari=Yii::$app->getRequest()->getQueryParam('id');
 	  
@@ -233,15 +250,32 @@ class CustomersController extends Controller
                 $output = '';
 
 				  /*save parent customers*/
-				  $parent_model = Customers::find()->where(['CUST_KD'=>$ID])->one();
-				  $parent_model->CUST_GRP = $posted['CUST_KD'];
-				  $parent_model->save();
+				  // $parent_model = Customers::find()->where(['CUST_KD'=>$ID])->one();
+				 
 				  
-				    if (isset($posted['CUST_GRP'])) {
+				    if (isset($posted['CUST_KD'])) {
+                /*save parent customers*/
+                $parent_model = Customers::find()->where(['CUST_KD'=>$ID])->one();
+                    $parent_model->CUST_GRP = $posted['CUST_KD'];
+                    $parent_model->save();
+
+                    /* output parent*/
+                    $output = $parent_model->CUST_GRP;
+                   
+                }
+                 if (isset($posted['LAYER'])) {
                     $model->save();
 
                    // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-                    $output = $model->CUST_GRP;
+                    $output = $model->LAYER;
+//
+//                   
+                }
+                if (isset($posted['GEO'])) {
+                    $model->save();
+
+                   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
+                    $output = $model->GEO;
 //
 //                   
                 }
@@ -288,6 +322,9 @@ class CustomersController extends Controller
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
       'parent'=>$parent,
+      'data_layer'=>$data_layer,
+      'config_layer'=>$config_layer,
+      'data_group'=>$data_group
 		]);
 	}
 

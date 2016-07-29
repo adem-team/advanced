@@ -83,10 +83,12 @@ class ExportController extends Controller
     public function actionExportData(){
 
         //$custDataMTI=Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll();
+        $query = "select c.CUST_KD,c.CUST_NM,ck.CUST_KTG_NM from c0001 c left join c0001k ck on c.CUST_TYPE = ck.CUST_KTG";
 
         $cusDataProviderMTI = new ArrayDataProvider([
             'key' => 'ID',
-            'allModels'=>Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll(),
+            // 'allModels'=>Yii::$app->db_esm->createCommand("SELECT CUST_KD,CUST_NM,TYPE_NM ")->queryAll(),
+             'allModels'=>Yii::$app->db_esm->createCommand($query)->queryAll(),
             'pagination' => [
                 'pageSize' => 10,
             ]
@@ -99,7 +101,7 @@ class ExportController extends Controller
         $excel_ceils = $excel_data['excel_ceils'];
         $excel_content = [
              [
-                'sheet_name' => 'MTI CUSTOMER',
+                'sheet_name' => 'CUSTOMER',
           // 'sheet_title' => ['CUST_ID','CUST_NM','TYPE','ALAMAT','TLP','PIC'], //$excel_ceils,//'sad',//[$excel_title],
                 'sheet_title' => $excel_data['excel_title'],
           'ceils' => $excel_ceils,
