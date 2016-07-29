@@ -13,6 +13,7 @@ use yii\helpers\ArrayHelper;
 use scotthuangzl\export2excel\Export2ExcelBehavior;
 use yii\web\Response;
 
+/*namespace models*/
 use lukisongroup\master\models\KategoricusSearch;
 use lukisongroup\master\models\DistributorSearch;
 use lukisongroup\master\models\Kategoricus;
@@ -157,16 +158,63 @@ class CustomersController extends Controller
 		]);
 	}
 
+  /*update using ajax*/
+
+   public function actionDeleteErp(){
+
+            if (Yii::$app->request->isAjax) {
+
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                $request= Yii::$app->request;
+                $dataKeySelect=$request->post('keysSelect');
+                foreach ($dataKeySelect as $key => $value) {
+              
+                    $model = Customers::find()->where(['CUST_KD'=>$value])->one();
+                    $model->STATUS = 3;
+                    $model->save();   
+             }
+             
+         }
+         
+     return true;
+   
+       }
+
 	/*ESM INDEX*/
 	public function actionEsmIndex()
     {
       $datacus = Customers::find()->where('CUST_GRP = CUST_KD')->asArray()->all();
       $parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
 
+      /*layer*/
+      $cari_layer = "select * from c0016";
+      $hasil = Yii::$app->db_esm->createCommand($cari_layer)->queryAll();
+      $data_layer =  ArrayHelper::map($hasil,'ID',function ($hasil, $defaultValue) {
+        return $hasil['LAYER'].'-'.$hasil['DCRIPT'];
+    });
+     $config_layer = ArrayHelper::map($hasil,'ID','LAYER'
+    );
+
+
+      /*group*/
+      $cari_group = "select * from c0007_temp";
+      $hasil_grup = Yii::$app->db_esm->createCommand($cari_group)->queryAll();
+     $data_group = ArrayHelper::map($hasil_grup,'ID','SCDL_GROUP_NM'
+    );
+      
+
+	/*search individual*/
       $paramCari=Yii::$app->getRequest()->getQueryParam('id');
-      if ($paramCari!=''){
-        $cari=['CUST_KD'=>$paramCari];
-      }else{
+	  
+	  /*search group*/
+	  $paramCari_prn=Yii::$app->getRequest()->getQueryParam('id_prn');
+	  
+	  /*if parent not equal null then search parent*/
+      if ($paramCari_prn !=''){
+        $cari=['CUST_GRP'=>$paramCari_prn];
+      }elseif($paramCari != ''){
+		    $cari=['CUST_KD'=>$paramCari];
+			}else{
         $cari='';
       };
 
@@ -178,8 +226,7 @@ class CustomersController extends Controller
             $ID = \Yii::$app->request->post('editableKey');
             Yii::$app->response->format = Response::FORMAT_JSON;
             $model = Customers::findOne($ID);
-            // print_r($ID);
-            // die();
+           
             $out = Json::encode(['output'=>'', 'message'=>'']);
 
             // fetch the first entry in posted data (there should
@@ -202,23 +249,53 @@ class CustomersController extends Controller
                 // in the input by user is updated automatically.
                 $output = '';
 
-              /*save parent customers*/
-              $parent_model = Customers::find()->where(['CUST_KD'=>$ID])->one();
-              $parent_model->CUST_GRP = $posted['CUST_KD'];
-              $parent_model->save();
+				  /*save parent customers*/
+				  // $parent_model = Customers::find()->where(['CUST_KD'=>$ID])->one();
+				 
+				  
+				    if (isset($posted['CUST_KD'])) {
+                /*save parent customers*/
+                $parent_model = Customers::find()->where(['CUST_KD'=>$ID])->one();
+                    $parent_model->CUST_GRP = $posted['CUST_KD'];
+                    $parent_model->save();
+
+                    /* output parent*/
+                    $output = $parent_model->CUST_GRP;
+                   
+                }
+                 if (isset($posted['LAYER'])) {
+                    $model->save();
+
+                   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
+                    $output = $model->LAYER;
+//
+//                   
+                }
+                if (isset($posted['GEO'])) {
+                    $model->save();
+
+                   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
+                    $output = $model->GEO;
+//
+//                   
+                }
+
+			  }
+		
+              
 
                 // specific use case where you need to validate a specific
                 // editable column posted when you have more than one
                 // EditableColumn in the grid view. We evaluate here a
                 // check to see if buy_amount was posted for the Book model
-                if (isset($posted['CUST_GRP'])) {
-                    $model->save();
-
-                   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-                    $output = $model->CUST_GRP;
-
-                   
-                }
+//                if (isset($posted['CUST_GRP'])) {
+//                    $model->save();
+//
+//                   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
+//                    $output = $model->CUST_GRP;
+//
+//                   
+//                }
 
 
 
@@ -236,7 +313,7 @@ class CustomersController extends Controller
             return;
           }
 
-        }
+        
 
 		/*Tambahal menu side Dinamik */
 		$sideMenu_control='esm_customers';
@@ -245,6 +322,9 @@ class CustomersController extends Controller
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
       'parent'=>$parent,
+      'data_layer'=>$data_layer,
+      'config_layer'=>$config_layer,
+      'data_group'=>$data_group
 		]);
 	}
 
@@ -392,7 +472,7 @@ class CustomersController extends Controller
       if($model->save()){
         //$model->refresh();
         
-        return $this->redirect(['/master/customers/esm-index']);
+        return $this->redirect(['/master/customers/esm-index','id_prn'=>$model->CUST_GRP]);
          //Yii::$app->session->setFlash('kv-detail-success', 'Success Message');
       };
     }else{
@@ -1219,42 +1299,42 @@ class CustomersController extends Controller
    * EXPORT DATA CUSTOMER TO EXCEL
    * export_data
   */
-  public function actionExportColumn(){
-
-    //$custDataMTI=Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll();
-
-    $cusDataProviderMTI = new ArrayDataProvider([
-      'key' => 'ID',
-      'allModels'=>Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll(),
-      'pagination' => [
-        'pageSize' => 10,
-      ]
-    ]);
-    //print_r($cusDataProvider->allModels);
-    $aryCusDataProviderMTI=$cusDataProviderMTI->allModels;
-
-    $excel_data = Export2ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);
-        $excel_title = $excel_data['excel_title'];
-        $excel_ceils = $excel_data['excel_ceils'];
-    $excel_content = [
-       [
-        'sheet_name' => 'MTI CUSTOMER',
-          // 'sheet_title' => ['CUST_ID','CUST_NM','TYPE','ALAMAT','TLP','PIC'], //$excel_ceils,//'sad',//[$excel_title],
-          'sheet_title' => $excel_data['excel_title'],
-          'ceils' => $excel_ceils,
-                //'freezePane' => 'E2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
-                'headerColumnCssClass' => [
-                     'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-                     'TLP1' => Export2ExcelBehavior::getCssClass('header'),
-                     'PIC' => Export2ExcelBehavior::getCssClass('header')
-                ], //define each column's cssClass for header line only.  You can set as blank.
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
-      ],
+//  public function actionExportColumn(){
+//
+//    //$custDataMTI=Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll();
+//
+//    $cusDataProviderMTI = new ArrayDataProvider([
+//      'key' => 'ID',
+//      'allModels'=>Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll(),
+//      'pagination' => [
+//        'pageSize' => 10,
+//      ]
+//    ]);
+//    //print_r($cusDataProvider->allModels);
+//    $aryCusDataProviderMTI=$cusDataProviderMTI->allModels;
+//
+//    $excel_data = Export2ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);
+//        $excel_title = $excel_data['excel_title'];
+//        $excel_ceils = $excel_data['excel_ceils'];
+//    $excel_content = [
+//       [
+//        'sheet_name' => 'MTI CUSTOMER',
+//          // 'sheet_title' => ['CUST_ID','CUST_NM','TYPE','ALAMAT','TLP','PIC'], //$excel_ceils,//'sad',//[$excel_title],
+//          'sheet_title' => $excel_data['excel_title'],
+//          'ceils' => $excel_ceils,
+//                //'freezePane' => 'E2',
+//                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+//                'headerColumnCssClass' => [
+//                     'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
+//                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
+//                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
+//                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
+//                     'TLP1' => Export2ExcelBehavior::getCssClass('header'),
+//                     'PIC' => Export2ExcelBehavior::getCssClass('header')
+//                ], //define each column's cssClass for header line only.  You can set as blank.
+//               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
+//               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+//      ],
       /* [
         'sheet_name' => 'IMPORTANT NOTE ',
                 'sheet_title' => ["Important Note For Import Stock Customer"],
@@ -1293,53 +1373,53 @@ class CustomersController extends Controller
           ["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],
         ],
       ], */
-    ];
-
-    $excel_file = "CustomerData";
-    $this->export2excel($excel_content, $excel_file);
-  }
+//    ];
+//
+//    $excel_file = "CustomerData";
+//    $this->export2excel($excel_content, $excel_file);
+//  }
 
 
 	/*
 	 * EXPORT DATA CUSTOMER TO EXCEL
 	 * export_data
 	*/
-	public function actionExport_data(){
+//	public function actionExport_data(){
 
-		//$custDataMTI=Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll();
-
-		$cusDataProviderMTI = new ArrayDataProvider([
-			'key' => 'ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll(),
-			'pagination' => [
-				'pageSize' => 10,
-			]
-		]);
-		//print_r($cusDataProvider->allModels);
-		$aryCusDataProviderMTI=$cusDataProviderMTI->allModels;
-
-		$excel_data = Export2ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);
-        $excel_title = $excel_data['excel_title'];
-        $excel_ceils = $excel_data['excel_ceils'];
-		$excel_content = [
-			 [
-				'sheet_name' => 'MTI CUSTOMER',
-          // 'sheet_title' => ['CUST_ID','CUST_NM','TYPE','ALAMAT','TLP','PIC'], //$excel_ceils,//'sad',//[$excel_title],
-			    'sheet_title' => $excel_data['excel_title'],
-          'ceils' => $excel_ceils,
-                //'freezePane' => 'E2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
-                'headerColumnCssClass' => [
-					           'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-                     'TLP1' => Export2ExcelBehavior::getCssClass('header'),
-                     'PIC' => Export2ExcelBehavior::getCssClass('header')
-                ], //define each column's cssClass for header line only.  You can set as blank.
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
-			],
+//		//$custDataMTI=Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll();
+//
+//		$cusDataProviderMTI = new ArrayDataProvider([
+//			'key' => 'ID',
+//			'allModels'=>Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll(),
+//			'pagination' => [
+//				'pageSize' => 10,
+//			]
+//		]);
+//		//print_r($cusDataProvider->allModels);
+//		$aryCusDataProviderMTI=$cusDataProviderMTI->allModels;
+//
+//		$excel_data = Export2ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);
+//        $excel_title = $excel_data['excel_title'];
+//        $excel_ceils = $excel_data['excel_ceils'];
+//		$excel_content = [
+//			 [
+//				'sheet_name' => 'MTI CUSTOMER',
+//          // 'sheet_title' => ['CUST_ID','CUST_NM','TYPE','ALAMAT','TLP','PIC'], //$excel_ceils,//'sad',//[$excel_title],
+//			    'sheet_title' => $excel_data['excel_title'],
+//          'ceils' => $excel_ceils,
+//                //'freezePane' => 'E2',
+//                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+//                'headerColumnCssClass' => [
+//					           'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
+//                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
+//                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
+//                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
+//                     'TLP1' => Export2ExcelBehavior::getCssClass('header'),
+//                     'PIC' => Export2ExcelBehavior::getCssClass('header')
+//                ], //define each column's cssClass for header line only.  You can set as blank.
+//               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
+//               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+//			],
 			/* [
 				'sheet_name' => 'IMPORTANT NOTE ',
                 'sheet_title' => ["Important Note For Import Stock Customer"],
@@ -1378,11 +1458,11 @@ class CustomersController extends Controller
 					["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],
 				],
 			], */
-		];
-
-		$excel_file = "CustomerData";
-		$this->export2excel($excel_content, $excel_file);
-	}
+//		];
+//
+//		$excel_file = "CustomerData";
+//		$this->export2excel($excel_content, $excel_file);
+//	}
 
 
     /**

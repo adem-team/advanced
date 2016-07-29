@@ -27,7 +27,7 @@ class Scheduleheader extends \yii\db\ActiveRecord
 
     public static function tableName()
     {
-        return 'c0002scdl_header';
+        return 'c0002scdl_header_temp';
     }
 
     /**

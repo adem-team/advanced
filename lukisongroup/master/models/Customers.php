@@ -73,10 +73,11 @@ class Customers extends \yii\db\ActiveRecord
 			      //  [['CUST_NM','STT_TOKO','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID'], 'required'],
               [['CUST_GRP'], 'required','on'=>'export'], //export validasi
               [['CUST_NM'],'required','on'=>'create'],
-               ['CUST_NM', 'unique', 'targetAttribute' => 'CUST_NM'], // uniqe name
+               // ['CUST_NM', 'unique', 'targetAttribute' => 'CUST_NM'], // uniqe name
                [['CUST_GRP','CUST_NM'], 'required','on'=>'parentcreate'],
 
-              // [['CUST_NM'],'validasi','on'=>'create'],
+              [['CUST_NM'],'validasi','on'=>'create'],
+              [['CUST_NM'],'validasi','on'=>'parentcreate'],
               // [['CUST_GRP'], 'required','when' => function ($model) {
               //     return $model->parentnama == 1; },
               //     'whenClient' => "function (attribute, value) {
@@ -86,7 +87,7 @@ class Customers extends \yii\db\ActiveRecord
               [['PROVINCE_ID','CITY_ID'], 'required','on'=>'detail'],
               [['CUST_TYPE','CUST_KTG'], 'required','on'=>'updatekat'],// for action updatekat scenario
             // [['CUST_NM','CUST_KTG','JOIN_DATE','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID','NPWP', 'TLP1','STT_TOKO'], 'required'],
-            [['CUST_TYPE','CUST_KTG','STT_TOKO', 'STATUS','PROVINCE_ID','SCDL_GROUP','CITY_ID'], 'integer'],
+            [['CUST_TYPE','CUST_KTG','STT_TOKO', 'STATUS','PROVINCE_ID','SCDL_GROUP','CITY_ID','LAYER','GEO'], 'integer'],
 			[['TLP1', 'TLP2', 'FAX','CUST_GRP'],'safe'],
             [['JOIN_DATE', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['ALAMAT', 'NOTE'], 'string'],
@@ -103,6 +104,19 @@ public function getParent() {
            ['CUST_KD'=>'CUST_GRP'])->
            from(self::tableName() . ' AS parent');
 }
+
+ public function validasi($model)
+    {
+      
+      $data_customers = Yii::$app->db_esm->createCommand("SELECT DISTINCT CUST_NM FROM `c0001` where CUST_NM='".$this->CUST_NM."' and STATUS <>2")->queryScalar();
+
+
+      if($data_customers === $this->CUST_NM)
+      {
+        $this->addError($model, 'duplicate name');
+      }
+
+    }
 
 
 

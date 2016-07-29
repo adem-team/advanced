@@ -263,9 +263,9 @@ class PostmanSchaduleController extends Controller
 			/* Send Mail*/
 			Yii::$app->mailer->compose()
 			->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
-			->setTo(['it-dept@lukison.com'])
+			//->setTo(['it-dept@lukison.com'])
 			//->setTo(['piter@lukison.com'])
-			//->setTo(['sales_esm@lukison.com','marketing_esm@lukison.com'])
+			->setTo(['sales_esm@lukison.com','marketing_esm@lukison.com'])
 			->setSubject('WEEKLY SCHADULE')
 			->setHtmlBody($contentBody)
 			->attach($filenameAll,[$filename,'xlsx'])

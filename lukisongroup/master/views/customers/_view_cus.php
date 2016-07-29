@@ -275,9 +275,10 @@ $this->params['breadcrumbs'][] = $this->title;
 			'groupOptions'=>['class'=>'text-left'] //text-center 
 		],
 		[ 	//CUST_KTG
-			'attribute' =>'CUST_TYPE',
+			'attribute' =>'CUST_KTG',
 			'format'=>'raw',
-			'value'=>$model->custype->CUST_KTG_NM,
+			// 'value'=>$model->custype->CUST_KTG_NM,
+				'value'=>$model->cus->CUST_KTG_NM,
 			'type'=>DetailView::INPUT_SELECT2,
 			'widgetOptions'=>[
 				'data'=>$kategori_view,
@@ -286,18 +287,19 @@ $this->params['breadcrumbs'][] = $this->title;
 			],	
 		],
 		[ 	//CUST_TYPE
-			'attribute' =>'CUST_KTG',
+			'attribute' =>'CUST_TYPE',
 			'format'=>'raw',
 			'type'=>DetailView::INPUT_DEPDROP,
-			'value'=>$model->cus->CUST_KTG_NM,
+			'value'=>$model->custype->CUST_KTG_NM,
+			// 'value'=>$model->cus->CUST_KTG_NM,
 			'widgetOptions'=>[
 				'options' => [
-				'id'=>'customers-cust_ktg',
+				'id'=>'customers-cust_type',
 		    	'placeholder' => 'Select Customers kategory'],
 		    	'type' => DepDrop::TYPE_SELECT2,
 		    	'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
     	'pluginOptions'=>[
-    		'depends'=>['customers-cust_type'],
+    		'depends'=>['customers-cust_ktg'],
     		'url' => Url::to(['/master/customers/lisdata']),
     	  'loadingText' => 'Loading data ...',
 		  'initialize'=>true,

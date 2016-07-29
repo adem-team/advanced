@@ -184,7 +184,7 @@ use yii\helpers\ArrayHelper;
 					'heading'=>'<h3 class="panel-title">LIST CUSTOMER GROUP</h3>',
 					'type'=>'warning',
 					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Customer ',
-							['modelClass' => 'Kategori',]),'/master/schedule-group/create-scdl',[
+							['modelClass' => 'Kategori',]),'/master/schedule-group/create-scdl?id='.$field_cust,[
 								'data-toggle'=>"modal",
 									'data-target'=>"#modal-create",
 										'class' => 'btn btn-success'
@@ -206,3 +206,6 @@ use yii\helpers\ArrayHelper;
 ?>
 
 <?=$gvCustGroupListDetail?>
+
+<?php
+

@@ -14,6 +14,9 @@ use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use lukisongroup\master\models\Scheduleheader;
 use lukisongroup\master\models\Scheduledetail;
+use lukisongroup\master\models\Scheduleheadertemp;
+use lukisongroup\master\models\ScheduleheadertempSearch;
+use lukisongroup\master\models\Scheduledetailtemp;
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Schedulegroup;
 use lukisongroup\master\models\ScheduleheaderSearch;
@@ -80,10 +83,10 @@ class ScheduleHeaderController extends Controller
 		    $attributeField=$aryDataProviderRptScdl->allModels[0]; //get label Array 0
 
 		
-        $searchModel = new ScheduleheaderSearch();
+        $searchModel = new ScheduleheadertempSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        $searchModel1 = new ScheduleheaderSearch();
+        $searchModel1 = new ScheduleheadertempSearch();
         $dataProvider1 = $searchModel->searchid(Yii::$app->request->queryParams);
 
         $searchModelUser = new UserloginSearch();
@@ -126,6 +129,87 @@ class ScheduleHeaderController extends Controller
         ]);
     }
 
+     // action depdrop
+   public function actionSubGroup($tgl) {
+    $out = [];
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+        if ($parents != null) {
+            $id = $parents[0];
+            if($id == 1)
+            {
+              $model = Schedulegroup::find()->asArray()->all();
+            
+
+              foreach ($model as $key => $value) {
+                   $out[] = ['id'=>$value['ID'],'name'=> $value['SCDL_GROUP_NM']];
+               }
+
+            }else{
+               // data select2 for SCDL_GROUP
+              $connection = \Yii::$app->db_esm;
+              $query = $connection->createCommand('SELECT * from c0007 where ID NOT IN (SELECT DISTINCT(SCDL_GROUP) FROM c0002scdl_detail_temp  WHERE TGL="'.$tgl.'")');
+              $model = $query->queryAll();
+
+              foreach ($model as $key => $value) {
+                   $out[] = ['id'=>$value['ID'],'name'=> $value['SCDL_GROUP_NM']];
+               }
+
+            }
+
+            
+
+               echo json_encode(['output'=>$out, 'selected'=>'']);
+               return;
+           }
+       }
+       echo Json::encode(['output'=>'', 'selected'=>'']);
+   }
+
+
+   // action depdrop
+   public function actionSubUser($tgl) {
+    $out = [];
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+        if ($parents != null) {
+            $id = $parents[0];
+            if($id == 1)
+            {
+
+                $connection = \Yii::$app->db_esm;
+                $querycariuser = 'SELECT * FROM dbm001.user where POSITION_SITE = "CRM" AND STATUS = 10';
+                $model = $connection->createCommand($querycariuser)->queryAll();
+            
+
+              foreach ($model as $key => $value) {
+                   $out[] = ['id'=>$value['id'],'name'=> $value['username']];
+               }
+
+            }else{
+               // data select2 for User
+            
+              $connection = \Yii::$app->db_esm;
+              $querycariuser = 'SELECT * FROM dbm001.user  where id  NOT IN (SELECT DISTINCT(USER_ID) from dbc002.c0002scdl_detail_temp WHERE TGL="'.$tgl.'") AND POSITION_SITE = "CRM" AND STATUS = 10';
+              $model = $connection->createCommand($querycariuser)->queryAll();
+
+              foreach ($model as $key => $value) {
+                   $out[] = ['id'=>$value['id'],'name'=> $value['username']];
+               }
+
+            }
+
+            
+
+               echo json_encode(['output'=>$out, 'selected'=>'']);
+               return;
+           }
+       }
+       echo Json::encode(['output'=>'', 'selected'=>'']);
+   }
+
+
+
 
     /**
      * Displays a single Scheduleheader model.
@@ -146,24 +230,10 @@ class ScheduleHeaderController extends Controller
      */
     public function actionGetData($id)
     {
-        $model = Userlogin::find()->where(['id'=>$id])->asArray()->one();
+        $model = Userprofile::find()->where(['ID'=>$id])->asArray()->one();
+       
 
-    
-      // $out[];
-          // $out  = "<table class='table table-hover'> 
-          //         <tbody> 
-          //             <tr> 
-          //             <td>username <td> 
-          //             <td>email</td></tr> 
-          //             <tr>
-          //             <td>".$model['username']."</td> 
-          //             <td>".$model['status']." </td>
-          //             </tr>
-          //             </tbody>
-          //             </table>";
-           
-
-               echo json_encode($model);
+          echo json_encode($model);
              
     }
 
@@ -191,21 +261,183 @@ class ScheduleHeaderController extends Controller
     * If creation is successful, bacth insert to schedule detail.
     * usage save ajax ver 1.1 author : wawan
  */
-    public function actionCreateGroup($tgl1,$tgl2)
+    // public function actionCreateGroup($tgl1,$tgl2)
+    // {
+        
+
+    //     $ary= [
+    //   ['id' => 0, 'UBAH_NM' => 'permanen'],      
+    //   ['id' => 1, 'UBAH_NM' => 'Update'],
+    //       ];  
+    //       $val = ArrayHelper::map($ary, 'id', 'UBAH_NM');
+
+    //       $post = Yii::$app->request->post();
+    //       $post['Scheduleheader']['STT_UBAH'];
+    //       // if equal 1 then update else save
+    //      if($post['Scheduleheader']['STT_UBAH'] == 1)
+    //      {
+    //         $model = Scheduleheader::find()->where(['TGL1'=>$tgl1])->one();
+          
+
+    //          if ($model->load(Yii::$app->request->post())) {
+
+    //             $model->TGL1 = $tgl1;
+    //             $model->TGL2 = $tgl2;
+    //             // cari group nama
+    //             $cari_groupName = Schedulegroup::find()->where(['ID'=>$model->SCDL_GROUP])->asArray()->one();
+    //               /* split array author : wawan*/
+    //               $temp = explode(" ",$cari_groupName['SCDL_GROUP_NM']);
+    //               $result = '';
+    //               foreach($temp as $t)
+    //               {
+    //                 $result .= $t[0];
+    //               }
+    //             //$model->NOTE = $result;
+				// $model->NOTE = $cari_groupName['SCDL_GROUP_NM'];  /*Update by ptr.nov*/
+    //             $model->save();
+    //             return $this->redirect(['index']);
+    //             }else{
+
+    //           return $this->renderAjax('_formschedule', [
+    //             'model' => $model,
+    //             'datagroup'=>$datagroup,
+    //             'datauser'=>$datauser,
+    //             'val'=>$val,
+    //             'tgl1'=>$tgl1
+
+    //         ]);
+    //             }
+
+    //      }else{
+
+    //       $model = new Scheduleheader();
+    //        // data select2 for USER_ID where CRM and STATUS 10(active)
+    //     $connection = \Yii::$app->db_esm;
+    //     $querycariuser = 'SELECT * FROM dbm001.user  where id  NOT IN (SELECT DISTINCT(USER_ID) from dbc002.c0002scdl_detail WHERE TGL="'.$tgl1.'") AND POSITION_SITE = "CRM" AND STATUS = 10';
+    //     $user = $connection->createCommand($querycariuser)->queryAll();
+    //     $datauser = ArrayHelper::map($user, 'id', 'username');
+
+    //     // data select2 for SCDL_GROUP
+    //     $connection = \Yii::$app->db_esm;
+    //     $model1 = $connection->createCommand('SELECT * from c0007 where ID NOT IN (SELECT DISTINCT(SCDL_GROUP) FROM c0002scdl_detail  WHERE TGL="'.$tgl1.'")');
+    //     $query = $model1->queryAll();
+    //     $datagroup = ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
+
+         
+    //     //componen user option
+    //     $profile=Yii::$app->getUserOpt->Profile_user();
+    //     $usercreate = $profile->username;
+    //     //proses save
+    //     if ($model->load(Yii::$app->request->post())) {
+
+    //       $model->TGL1 = $tgl1;
+    //       $model->TGL2 = $tgl2;
+    //       // cari group nama
+    //       $cari_groupName = Schedulegroup::find()->where(['ID'=>$model->SCDL_GROUP])->asArray()->one();
+    //         /* split array author : wawan*/
+    //         $temp = explode(" ",$cari_groupName['SCDL_GROUP_NM']);
+    //         $result = '';
+    //         foreach($temp as $t)
+    //         {
+    //           $result .= $t[0];
+    //         }
+    //       //$model->NOTE = $result;
+    //       $model->NOTE = $cari_groupName['SCDL_GROUP_NM'];  /*Update by ptr.nov*/
+    //       $model->CREATE_BY = $usercreate;
+    //       $model->CREATE_AT = date("Y-m-d H:i:s");
+    //        if($model->save())
+    //        {
+    //          // foreach date :author wawan
+    //            for ($date = strtotime($tgl1); $date <= strtotime($tgl2); $date = strtotime("+1 day", $date)) {
+    //                      $tgl =  date("Y-m-d", $date);
+    //                      //batch insert customers author :wawan
+    //                      $Customers = Customers::find()->where(['SCDL_GROUP'=>$model->SCDL_GROUP])->asArray()->all();
+    //                      foreach ($Customers as $key => $value) {
+    //                        # code...
+    //                        $connection = Yii::$app->db_esm;
+    //                        $connection->createCommand()->batchInsert('c0002scdl_detail',['TGL','CUST_ID','SCDL_GROUP','USER_ID'],[[$tgl,$value['CUST_KD'],$model->SCDL_GROUP,$model->USER_ID]])->execute();
+    //                      }
+    //                }
+    //        }
+         
+    //         return $this->redirect(['index']);
+
+    //     } else {
+    //         return $this->renderAjax('_formschedule', [
+    //             'model' => $model,
+    //             'datagroup'=>$datagroup,
+    //             'datauser'=>$datauser,
+    //             'val'=>$val,
+    //             'tgl1'=>$tgl1
+    //         ]);
+    //     }
+    //   }
+    // }
+
+
+     public function actionCreateGroup($tgl1,$tgl2)
     {
-        $model = new Scheduleheader();
-        // data select2 for USER_ID where CRM and STATUS 10(active)
+        
+
+        $ary= [
+      ['id' => 0, 'UBAH_NM' => 'permanen'],      
+      ['id' => 1, 'UBAH_NM' => 'Update'],
+          ];  
+          $val = ArrayHelper::map($ary, 'id', 'UBAH_NM');
+
+          $post = Yii::$app->request->post();
+          $post['Scheduleheadertemp']['STT_UBAH'];
+          // if equal 1 then update else save
+         if($post['Scheduleheadertemp']['STT_UBAH'] == 1)
+         {
+            $model = Scheduleheadertemp::find()->where(['TGL1'=>$tgl1])->one();
+          
+
+             if ($model->load(Yii::$app->request->post())) {
+
+                $model->TGL1 = $tgl1;
+                $model->TGL2 = $tgl2;
+                // cari group nama
+                $cari_groupName = Schedulegroup::find()->where(['ID'=>$model->SCDL_GROUP])->asArray()->one();
+                  /* split array author : wawan*/
+                  $temp = explode(" ",$cari_groupName['SCDL_GROUP_NM']);
+                  $result = '';
+                  foreach($temp as $t)
+                  {
+                    $result .= $t[0];
+                  }
+                //$model->NOTE = $result;
+        $model->NOTE = $cari_groupName['SCDL_GROUP_NM'];  /*Update by ptr.nov*/
+                $model->save();
+                return $this->redirect(['index']);
+                }else{
+
+              return $this->renderAjax('_formschedule', [
+                'model' => $model,
+                'datagroup'=>$datagroup,
+                'datauser'=>$datauser,
+                'val'=>$val,
+                'tgl1'=>$tgl1
+
+            ]);
+                }
+
+         }else{
+
+          $model = new Scheduleheadertemp();
+           // data select2 for USER_ID where CRM and STATUS 10(active)
         $connection = \Yii::$app->db_esm;
-        $querycariuser = 'SELECT * FROM dbm001.user  where id  NOT IN (SELECT DISTINCT(USER_ID) from dbc002.c0002scdl_detail WHERE TGL="'.$tgl1.'") AND POSITION_SITE = "CRM" AND STATUS = 10';
+        $querycariuser = 'SELECT * FROM dbm001.user  where id  NOT IN (SELECT DISTINCT(USER_ID) from dbc002.c0002scdl_detail_temp WHERE TGL="'.$tgl1.'") AND POSITION_SITE = "CRM" AND STATUS = 10';
         $user = $connection->createCommand($querycariuser)->queryAll();
         $datauser = ArrayHelper::map($user, 'id', 'username');
 
         // data select2 for SCDL_GROUP
         $connection = \Yii::$app->db_esm;
-        $model1 = $connection->createCommand('SELECT * from c0007 where ID NOT IN (SELECT DISTINCT(SCDL_GROUP) FROM c0002scdl_detail  WHERE TGL="'.$tgl1.'")');
+        $model1 = $connection->createCommand('SELECT * from c0007 where ID NOT IN (SELECT DISTINCT(SCDL_GROUP) FROM c0002scdl_detail_temp  WHERE TGL="'.$tgl1.'")');
         $query = $model1->queryAll();
         $datagroup = ArrayHelper::map($query, 'ID', 'SCDL_GROUP_NM');
 
+         
         //componen user option
         $profile=Yii::$app->getUserOpt->Profile_user();
         $usercreate = $profile->username;
@@ -237,19 +469,23 @@ class ScheduleHeaderController extends Controller
                          foreach ($Customers as $key => $value) {
                            # code...
                            $connection = Yii::$app->db_esm;
-                           $connection->createCommand()->batchInsert('c0002scdl_detail',['TGL','CUST_ID','SCDL_GROUP','USER_ID'],[[$tgl,$value['CUST_KD'],$model->SCDL_GROUP,$model->USER_ID]])->execute();
+                           $connection->createCommand()->batchInsert('c0002scdl_detail_temp',['TGL','CUST_ID','SCDL_GROUP','USER_ID'],[[$tgl,$value['CUST_KD'],$model->SCDL_GROUP,$model->USER_ID]])->execute();
                          }
                    }
            }
+         
             return $this->redirect(['index']);
 
         } else {
             return $this->renderAjax('_formschedule', [
                 'model' => $model,
                 'datagroup'=>$datagroup,
-                'datauser'=>$datauser
+                'datauser'=>$datauser,
+                'val'=>$val,
+                'tgl1'=>$tgl1
             ]);
         }
+      }
     }
 
 
@@ -296,7 +532,6 @@ class ScheduleHeaderController extends Controller
           if($model->save())
           {
             $user_profile->ID = $model->id;
-            $user_profile->NM_FIRST = $model->username;
             $user_profile->CREATED_BY = $usercreate;
             $user_profile->CREATED_AT = date("Y-m-d H:i:s");
             $user_profile->save();
@@ -314,12 +549,23 @@ class ScheduleHeaderController extends Controller
     {
        
           $model = Userlogin::find()->where(['id'=>$id])->one();
+
+          $user_profile_crm = Userprofile::find()->where(['ID'=>$id])->one();
        
-        if ($model->load(Yii::$app->request->post())){
-          $model->UPDATED_AT = date("Y-m-d H:i:s");
-          $model->UPDATED_BY =  Yii::$app->user->identity->username;
+        if ($model->load(Yii::$app->request->post())|| $user_profile_crm->load(Yii::$app->request->post()) ){
+          $model->email = $user_profile_crm->EMAIL ;
+          if($user_profile_crm->STATUS == 0)
+          {
+            $model->status = 1 ;
+          }elseif($user_profile_crm->STATUS != 0){
+            $model->status = 10;
+          }else{
+            $model->status;
+          }
+          
            
       if($model->save()){
+        $user_profile_crm->save();
        
         
         return $this->redirect(['/master/schedule-header/index']);
@@ -328,6 +574,7 @@ class ScheduleHeaderController extends Controller
     }else{
       return $this->renderAjax('view_user_crm', [
             'model' => $model,
+            'user_profile_crm'=>$user_profile_crm
         ]);
     }
     }
@@ -373,7 +620,7 @@ class ScheduleHeaderController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Scheduleheader::findOne($id)) !== null) {
+        if (($model = Scheduleheadertemp::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -397,7 +644,7 @@ class ScheduleHeaderController extends Controller
            $AryDataProviderVal= new ArrayDataProvider([
     			'allModels'=>Yii::$app->db_esm->createCommand("SELECT DISTINCT
     					TGL as start, (SELECT SCDL_GROUP_NM FROM c0007 WHERE ID=SCDL_GROUP) as title
-    					FROM c0002scdl_detail;")->queryAll(),
+    					FROM c0002scdl_detail_temp;")->queryAll(),
     			 'pagination' => [
     				'pageSize' => 100,
     			]

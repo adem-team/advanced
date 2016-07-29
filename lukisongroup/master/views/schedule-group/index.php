@@ -37,6 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;        /* belum di gunakan karena
 	 $gvCustGroupListDetail=$this->render('_indexGroupListDetail',[
 		'dpListCustGrp' => $dpListCustGrp,
 		'searchModel' => $searchModel,
+		'field_cust' =>$field_cust
 	 ]);
 ?>
 
