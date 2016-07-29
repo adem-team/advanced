@@ -311,67 +311,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
         ]
       ],
     ],
-      [
-      'class'=>'kartik\grid\EditableColumn',
-      'attribute' => 'LAYER',
-
-      'refreshGrid'=>true,
-      'label'=>'Layer',
-      'hAlign'=>'left',
-      'vAlign'=>'top',
-      'filter'=>true,
-      'filterType'=>GridView::FILTER_SELECT2,
-      'filter' => $data_layer,
-      'filterWidgetOptions'=>[
-    'pluginOptions'=>[
-      'allowClear'=>true,
-      'contentOptions'=>[
-        'style'=>[
-          'text-align'=>'left',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'8pt',
-        ]
-      ]
-    ],
-    ],
-      'filterInputOptions'=>['placeholder'=>'Select'],
-      // 'mergeHeader'=>true,
-      'headerOptions'=>[
-        'style'=>[
-          'text-align'=>'center',
-          'width'=>'120px',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'8pt',
-          'background-color'=>'rgba(126, 189, 188, 0.9)',
-        ]
-      ],
-      'contentOptions'=>[
-      'style'=>[
-      'vertical-align'=>'text-middle',
-          'text-align'=>'left',
-          'width'=>'120px',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'8pt',
-        ]
-      ],
-    
-      'editableOptions' => [
-        'header' => 'layer',
-        'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
-        'size' => 'md',
-
-        'options' => [
-          'data' =>$data_layer,
-          'pluginOptions' => [
-            'allowClear' => true,
-            // 'class'=>'pull-top dropup'
-          ],
-        ],    
-        // Refresh Display
-        'displayValueConfig' => $config_layer,
-      ],
-    ],
-
+      
     [
       'attribute' => 'cus.CUST_KTG_NM',
 	  'label'=>'Category',
@@ -479,7 +419,66 @@ $tabcustomersData = \kartik\grid\GridView::widget([
         'displayValueConfig' => $data_group,
       ],
     ],
+[
+      'class'=>'kartik\grid\EditableColumn',
+      'attribute' => 'LAYER',
 
+      'refreshGrid'=>true,
+      'label'=>'Layer',
+      'hAlign'=>'left',
+      'vAlign'=>'top',
+      'filter'=>true,
+      'filterType'=>GridView::FILTER_SELECT2,
+      'filter' => $data_layer,
+      'filterWidgetOptions'=>[
+    'pluginOptions'=>[
+      'allowClear'=>true,
+      'contentOptions'=>[
+        'style'=>[
+          'text-align'=>'left',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ]
+    ],
+    ],
+      'filterInputOptions'=>['placeholder'=>'Select'],
+      // 'mergeHeader'=>true,
+      'headerOptions'=>[
+        'style'=>[
+          'text-align'=>'center',
+          'width'=>'120px',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+          'background-color'=>'rgba(126, 189, 188, 0.9)',
+        ]
+      ],
+      'contentOptions'=>[
+      'style'=>[
+      'vertical-align'=>'text-middle',
+          'text-align'=>'left',
+          'width'=>'120px',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ],
+    
+      'editableOptions' => [
+        'header' => 'layer',
+        'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+        'size' => 'md',
+
+        'options' => [
+          'data' =>$data_layer,
+          'pluginOptions' => [
+            'allowClear' => true,
+            // 'class'=>'pull-top dropup'
+          ],
+        ],    
+        // Refresh Display
+        'displayValueConfig' => $config_layer,
+      ],
+    ],
     [
       'attribute' => 'STATUS',
       'filter' => $valStt,
@@ -580,7 +579,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 					['modelClass' => 'Customers1',]),'/master/customers/esm-index',[
 									   'id'=>'refresh-cust-erp',
 //									    'data-toggle-refsehs-erp'=>'erp-customers-refsehs',
-//									     'data-pjax' => true,
+									   'data-pjax' => 0,
 									   'class' => 'btn btn-info btn-sm'
 									  ]).' '.
 			Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export All'),'/export/export/export-data',
