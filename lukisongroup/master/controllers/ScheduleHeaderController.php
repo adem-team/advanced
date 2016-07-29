@@ -15,6 +15,7 @@ use yii\helpers\ArrayHelper;
 use lukisongroup\master\models\Scheduleheader;
 use lukisongroup\master\models\Scheduledetail;
 use lukisongroup\master\models\Scheduleheadertemp;
+use lukisongroup\master\models\ScheduleheadertempSearch;
 use lukisongroup\master\models\Scheduledetailtemp;
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Schedulegroup;
@@ -82,10 +83,10 @@ class ScheduleHeaderController extends Controller
 		    $attributeField=$aryDataProviderRptScdl->allModels[0]; //get label Array 0
 
 		
-        $searchModel = new ScheduleheaderSearch();
+        $searchModel = new ScheduleheadertempSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        $searchModel1 = new ScheduleheaderSearch();
+        $searchModel1 = new ScheduleheadertempSearch();
         $dataProvider1 = $searchModel->searchid(Yii::$app->request->queryParams);
 
         $searchModelUser = new UserloginSearch();
@@ -619,7 +620,7 @@ class ScheduleHeaderController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Scheduleheader::findOne($id)) !== null) {
+        if (($model = Scheduleheadertemp::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -643,7 +644,7 @@ class ScheduleHeaderController extends Controller
            $AryDataProviderVal= new ArrayDataProvider([
     			'allModels'=>Yii::$app->db_esm->createCommand("SELECT DISTINCT
     					TGL as start, (SELECT SCDL_GROUP_NM FROM c0007 WHERE ID=SCDL_GROUP) as title
-    					FROM c0002scdl_detail;")->queryAll(),
+    					FROM c0002scdl_detail_temp;")->queryAll(),
     			 'pagination' => [
     				'pageSize' => 100,
     			]
