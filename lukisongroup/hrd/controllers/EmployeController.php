@@ -27,12 +27,6 @@ namespace lukisongroup\hrd\controllers;
 	use lukisongroup\hrd\models\ProfileSalesSearch;
 	use lukisongroup\sistem\models\Userlogin;
 
-
-/* VARIABLE SIDE MENU Author: -Eka- */
-	//use lukisongroup\models\system\side_menu\M1000;			/* TABLE CLASS */
-	//use lukisongroup\models\system\side_menu\M1000Search;	/* TABLE CLASS SEARCH */
-/* CLASS SIDE MENU Author: -ptr.nov- */
-
 	use lukisongroup\hrd\models\Corp;
 	use lukisongroup\hrd\models\Dept;
 	//use lukisongroup\hrd\models\Jabatan;
@@ -265,7 +259,10 @@ class EmployeController extends Controller
 						$upload_file->saveAs($path);
 					}
 					//return $this->redirect(['view', 'id' => $model->EMP_ID]);
-					return $this->redirect(['index']);
+					//return $this->redirect(['index']);
+					return $this->renderAjax('_view', [
+						'model' => $model,
+					]);
 				}
 			}
 		}else {
