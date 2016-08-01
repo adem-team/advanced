@@ -27,6 +27,11 @@ use lukisongroup\master\models\Customersalias;
 use lukisongroup\master\models\CustomersaliasSearch;
 use lukisongroup\master\models\ValidationLoginPrice;
 use lukisongroup\master\models\Distributor;
+use lukisongroup\master\models\DraftLayer;
+use lukisongroup\master\models\DraftLayerSearch;
+use lukisongroup\master\models\DraftGeo;
+use lukisongroup\master\models\DraftGeoSearch;
+use lukisongroup\master\models\DraftLayerMutasiSearch;
 
 
 /**
@@ -73,12 +78,18 @@ class CustomersController extends Controller
             }
     }
 
+	public function aryData_layer(){ 
+		return ArrayHelper::map(DraftLayer::find()->all(), 'LAYER_ID',function($model) {
+				return $model['LAYER_NM'].'-'.$model['DCRIPT'];
+			});
+	}
+	public function aryData_Geo(){ 
+		return ArrayHelper::map(DraftGeo::find()->all(), 'GEO_ID','GEO_NM');
+	}
 
     public function actionIndex()
     {
-
-
-       // city data
+		// city data
         $searchmodelkota = new KotaSearch();
         $dataproviderkota = $searchmodelkota->search(Yii::$app->request->queryParams);
 
@@ -183,26 +194,25 @@ class CustomersController extends Controller
 	/*ESM INDEX*/
 	public function actionEsmIndex()
     {
-      $datacus = Customers::find()->where('CUST_GRP = CUST_KD')->asArray()->all();
-      $parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
+		$datacus = Customers::find()->where('CUST_GRP = CUST_KD')->asArray()->all();
+		$parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
 
-      /*layer*/
-      $cari_layer = "select * from c0016";
-      $hasil = Yii::$app->db_esm->createCommand($cari_layer)->queryAll();
-      $data_layer =  ArrayHelper::map($hasil,'ID',function ($hasil, $defaultValue) {
-        return $hasil['LAYER'].'-'.$hasil['DCRIPT'];
-    });
-     $config_layer = ArrayHelper::map($hasil,'ID','LAYER'
-    );
+		/*layer
+		$cari_layer = "select * from c0016";
+		$hasil = Yii::$app->db_esm->createCommand($cari_layer)->queryAll();
+		$data_layer =  ArrayHelper::map($hasil,'ID',function ($hasil, $defaultValue) {
+		return $hasil['LAYER'].'-'.$hasil['DCRIPT'];
+		});
+		$config_layer = ArrayHelper::map($hasil,'ID','LAYER'
+		);
 
-
-      /*group*/
-      $cari_group = "select * from c0007_temp";
-      $hasil_grup = Yii::$app->db_esm->createCommand($cari_group)->queryAll();
-     $data_group = ArrayHelper::map($hasil_grup,'ID','SCDL_GROUP_NM'
-    );
+		$cari_group = "select * from c0007_temp";
+		$hasil_grup = Yii::$app->db_esm->createCommand($cari_group)->queryAll();
+		$data_group = ArrayHelper::map($hasil_grup,'ID','SCDL_GROUP_NM'
+		);
       
-
+		
+		*/
 	/*search individual*/
       $paramCari=Yii::$app->getRequest()->getQueryParam('id');
 	  
@@ -321,10 +331,10 @@ class CustomersController extends Controller
 			'sideMenu_control'=> $sideMenu_control,
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
-      'parent'=>$parent,
-      'data_layer'=>$data_layer,
-      'config_layer'=>$config_layer,
-      'data_group'=>$data_group
+		'parent'=>$parent,
+		'data_layer'=>$this->aryData_layer(),
+		'config_layer'=>$config_layer,
+		'data_group'=>$this->aryData_Geo(),
 		]);
 	}
 
@@ -343,6 +353,62 @@ class CustomersController extends Controller
       'sideMenu_control'=> $sideMenu_control,
       'searchModel1' => $searchModel1,
       'dataProviderkat'  =>$dataProviderkat ,
+
+    ]);
+  }
+  
+  /*ESM INDEX LAYER*/
+  public function actionEsmIndexGeo()
+    {
+
+      $searchModelGeo= new DraftGeoSearch();
+      $dataProviderGeo  = $searchModelGeo->search(Yii::$app->request->queryParams);
+
+
+    /*Tambahal menu side Dinamik */
+    $sideMenu_control='esm_customers';
+    return $this->render('_indexLayerGeo', [
+      'sideMenu_control'=> $sideMenu_control,
+      'searchModelGeo' => $searchModelGeo,
+      'dataProviderGeo'  =>$dataProviderGeo ,
+
+    ]);
+  }
+  
+
+  
+  /*ESM INDEX LAYER*/
+  public function actionEsmIndexLayer()
+    {
+
+      $searchModellayer= new DraftLayerSearch();
+      $dataProviderLayer  = $searchModellayer->search(Yii::$app->request->queryParams);
+
+
+    /*Tambahal menu side Dinamik */
+    $sideMenu_control='esm_customers';
+    return $this->render('_indexLayer', [
+      'sideMenu_control'=> $sideMenu_control,
+      'searchModellayer' => $searchModellayer,
+      'dataProviderLayer'  =>$dataProviderLayer ,
+
+    ]);
+  }
+  
+  /*ESM INDEX LAYER MUTASI*/
+  public function actionEsmIndexLayermutasi()
+    {
+
+      $searchModelLayerMutasi= new DraftLayerMutasiSearch();
+      $dataProviderLayerMutasi  = $searchModelLayerMutasi->search(Yii::$app->request->queryParams);
+
+
+    /*Tambahal menu side Dinamik */
+    $sideMenu_control='esm_customers';
+    return $this->render('_indexLayerMutasi', [
+      'sideMenu_control'=> $sideMenu_control,
+      'searchModelLayerMutasi' => $searchModelLayerMutasi,
+      'dataProviderLayerMutasi'  =>$dataProviderLayerMutasi ,
 
     ]);
   }

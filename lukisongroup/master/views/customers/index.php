@@ -638,7 +638,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
   ],
   ]);
  ?>
- <?php
+<?php
 	 $navmenu= NavX::widget([
 		'options'=>['class'=>'nav nav-tabs'],
 		'encodeLabels' => false,
@@ -651,6 +651,9 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 					['label' => '<span class="fa fa-flag fa-md"></span>Kota', 'url' => '/master/customers/esm-index-city'],
 					['label' => '<span class="fa fa-flag-o fa-md"></span>Province', 'url' => '/master/customers/esm-index-provinsi'],
 					['label' => '<span class="fa fa-table fa-md"></span>Category', 'url' => '/master/customers/esm-index-kategori'],
+					['label' => '<span class="fa fa-table fa-md"></span>Geografis', 'url' => '/master/customers/esm-index-geo'],
+					['label' => '<span class="fa fa-table fa-md"></span>Layers', 'url' => '/master/customers/esm-index-layer'],
+					['label' => '<span class="fa fa-table fa-md"></span>Layers Mutasi', 'url' => '/master/customers/esm-index-layermutasi'],
 					'<li class="divider"></li>',
 					['label' => '<span class="fa fa-map-marker fa-md"></span>Customers Map', 'url' => '/master/customers/esm-map'],
 				]],
