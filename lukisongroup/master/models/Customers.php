@@ -5,6 +5,7 @@ namespace lukisongroup\master\models;
 use Yii;
 
 use lukisongroup\master\models\Schedulegroup;
+// use lukisongroup\master\models\LayesClastering;
 
 
 /**
@@ -159,6 +160,10 @@ public function getParentName() {
 
   public function getCustdis(){
     return $this->hasOne(Distributor::className(), ['KD_DISTRIBUTOR'=>'KD_DISTRIBUTOR']);
+  }
+
+  public function getCustlayer(){
+    return $this->hasOne(LayesClastering::className(), ['ID'=>'LAYER']);
   }
 
 
