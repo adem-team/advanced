@@ -3,6 +3,8 @@
 namespace lukisongroup\master\models;
 
 use Yii;
+use lukisongroup\master\models\GeografiGroup;
+use lukisongroup\master\models\LayesClastering;
 
 /**
  * This is the model class for table "c0002scdl_plan".
@@ -35,6 +37,18 @@ class DraftPlan extends \yii\db\ActiveRecord
     public static function getDb()
     {
         return Yii::$app->get('db_esm');
+    }
+
+    public function getCustgeo()
+    {
+        return $this->hasOne(GeografiGroup::className(), ['ID' => 'GEO_ID']);
+
+    }
+
+     public function getCustlayer()
+    {
+        return $this->hasOne(LayesClastering::className(), ['ID' => 'LAYER_ID']);
+
     }
 
     /**

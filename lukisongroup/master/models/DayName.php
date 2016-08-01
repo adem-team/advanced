@@ -5,21 +5,22 @@ namespace lukisongroup\master\models;
 use Yii;
 
 /**
- * This is the model class for table "c0002scdl_layer".
+ * This is the model class for table "c0002scdl_dayname".
  *
- * @property integer $LAYER_ID
- * @property string $LAYER_NM
- * @property integer $JEDA_PEKAN
+ * @property integer $DAY_ID
+ * @property string $DAY_NM
+ * @property integer $DAY_VALUE
+ * @property integer $OPT
  * @property string $DCRIPT
  */
-class DraftLayer extends \yii\db\ActiveRecord
+class DayName extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'c0002scdl_layer';
+        return 'c0002scdl_dayname';
     }
 
     /**
@@ -36,9 +37,9 @@ class DraftLayer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['JEDA_PEKAN'], 'integer'],
+            [['DAY_VALUE', 'OPT'], 'integer'],
             [['DCRIPT'], 'string'],
-            [['LAYER_NM'], 'string', 'max' => 5],
+            [['DAY_NM'], 'string', 'max' => 10],
         ];
     }
 
@@ -48,9 +49,10 @@ class DraftLayer extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'LAYER_ID' => 'Layer  ID',
-            'LAYER_NM' => 'Layer  Nm',
-            'JEDA_PEKAN' => 'Jeda  Pekan',
+            'DAY_ID' => 'Day  ID',
+            'DAY_NM' => 'Day  Nm',
+            'DAY_VALUE' => 'Day  Value',
+            'OPT' => 'Opt',
             'DCRIPT' => 'Dcript',
         ];
     }
