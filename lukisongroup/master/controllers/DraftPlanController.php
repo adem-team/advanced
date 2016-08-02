@@ -6,7 +6,7 @@ use Yii;
 use lukisongroup\master\models\DraftPlan;
 use lukisongroup\master\models\DraftPlanSearch;
 use lukisongroup\master\models\Customers;
-use lukisongroup\master\models\GeografiGroup;
+use lukisongroup\master\models\DraftGeo;
 use lukisongroup\master\models\DayName;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -180,8 +180,8 @@ class DraftPlanController extends Controller
         /**connetion dbc002*/
         $conn = Yii::$app->db_esm;
 
-        $cari_geo = GeografiGroup::find()->where('STATUS<>3')->all();
-        $geo = ArrayHelper::map($cari_geo, 'ID', 'SCDL_GROUP_NM');
+        $cari_geo = DraftGeo::find()->where('STATUS<>3')->all();
+        $geo = ArrayHelper::map($cari_geo, 'GEO_ID', 'GEO_NM');
 
 
         if ($model->load(Yii::$app->request->post())) {
