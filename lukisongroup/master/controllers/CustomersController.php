@@ -10,17 +10,14 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
-use scotthuangzl\export2excel\Export2ExcelBehavior;
 use yii\web\Response;
 
 /*namespace models*/
-use lukisongroup\master\models\KategoricusSearch;
 use lukisongroup\master\models\DistributorSearch;
-use lukisongroup\master\models\Kategoricus;
-use lukisongroup\master\models\KotaSearch;
-use lukisongroup\master\models\Kota;
 use lukisongroup\master\models\ProvinceSearch;
 use lukisongroup\master\models\Province;
+use lukisongroup\master\models\Kota;
+use lukisongroup\master\models\Kategoricus;
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\CustomersSearch;
 use lukisongroup\master\models\Customersalias;
@@ -53,8 +50,9 @@ class CustomersController extends Controller
 
 
     /**
-     * Lists all Customers models.
-     * @return mixed
+     * Before Action Index
+     * @author ptrnov  <piter@lukison.com>
+     * @since 1.1.0
      */
 
     public function beforeAction(){
@@ -78,35 +76,53 @@ class CustomersController extends Controller
             }
     }
 
+/*draft layer array*/
 	public function aryData_layer(){ 
-		return ArrayHelper::map(DraftLayer::find()->all(), 'LAYER_ID',function($model) {
-				return $model['LAYER_NM'].'-'.$model['DCRIPT'];
-			});
-	}
-	public function aryData_Geo(){ 
-		return ArrayHelper::map(DraftGeo::find()->all(), 'GEO_ID','GEO_NM');
+		return ArrayHelper::map(DraftLayer::find()->all(), 'LAYER_ID','LAYER_NM');
 	}
 
+  /*draft geo array*/
+	public function aryData_Geo(){ 
+		return ArrayHelper::map(DraftGeo::find()->Where("GEO_ID<>1")->all(), 'GEO_ID','GEO_NM');
+	}
+
+
+/**
+     * INDEX 
+     * Lists all  Customers models.
+     * @author wawan
+     * @since 1.1.0
+     */
     public function actionIndex()
     {
-		// city data
-        $searchmodelkota = new KotaSearch();
-        $dataproviderkota = $searchmodelkota->search(Yii::$app->request->queryParams);
 
-        // province data
-        $searchmodelpro = new ProvinceSearch();
-        $dataproviderpro = $searchmodelpro->search(Yii::$app->request->queryParams);
+      $datacus = Customers::find()->where('CUST_GRP = CUST_KD')->asArray()->all();
+    $parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
 
-        $searchModel1 = new KategoricusSearch();
-        $dataProviderkat  = $searchModel1->searchparent(Yii::$app->request->queryParams);
+		//*search individual*/
+      $paramCari=Yii::$app->getRequest()->getQueryParam('id');
+    
+    /*search group*/
+    $paramCari_prn=Yii::$app->getRequest()->getQueryParam('id_prn');
+    
+    // if parent not equal null then search parent
+      if ($paramCari_prn !=''){
+        $cari=['CUST_GRP'=>$paramCari_prn];
+      }elseif($paramCari != ''){
+        $cari=['CUST_KD'=>$paramCari];
+      }else{
+        $cari='';
+      };
 
-        $searchModel = new CustomersSearch();
+        $searchModel = new CustomersSearch($cari);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
            if(Yii::$app->request->post('hasEditable'))
         {
             $ID = \Yii::$app->request->post('editableKey');
+            Yii::$app->response->format = Response::FORMAT_JSON;
             $model = Customers::findOne($ID);
+           
             $out = Json::encode(['output'=>'', 'message'=>'']);
 
             // fetch the first entry in posted data (there should
@@ -119,30 +135,48 @@ class CustomersController extends Controller
             $post['Customers'] = $posted;
 
 
-
             // load model like any single model validation
             if ($model->load($post)) {
                 // can save model or do something before saving model
-                $model->save();
+
 
                 // custom output to return to be displayed as the editable grid cell
                 // data. Normally this is empty - whereby whatever value is edited by
                 // in the input by user is updated automatically.
                 $output = '';
+         
+          
+            if (isset($posted['CUST_KD'])) {
+                /*save parent customers*/
+                $parent_model = Customers::find()->where(['CUST_KD'=>$ID])->one();
+                    $parent_model->CUST_GRP = $posted['CUST_KD'];
+                    $parent_model->save();
+
+                    /* output parent*/
+                    $output = $parent_model->CUST_GRP;
+                   
+                }
+                if (isset($posted['LAYER'])) {
+                    $model->save();
+                    $output = $model->LAYER;                 
+                }
+                if (isset($posted['GEO'])) {
+                    $model->save();
+
+               
+                    $output = $model->GEO;                  
+                }
+
+        }
+    
+              
 
                 // specific use case where you need to validate a specific
                 // editable column posted when you have more than one
                 // EditableColumn in the grid view. We evaluate here a
                 // check to see if buy_amount was posted for the Book model
-                if (isset($posted['CUST_KD_ALIAS'])) {
-                   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-                    $output =$model->CUST_KD_ALIAS;
-                }
-
                 // similarly you can check if the name attribute was posted as well
-                // if (isset($posted['name'])) {
-                //   $output =  ''; // process as you need
-                // }
+
                 $out = Json::encode(['output'=>$output, 'message'=>'']);
 
 
@@ -152,25 +186,25 @@ class CustomersController extends Controller
             return;
           }
 
-        }
-
 		/*Tambahal menu side Dinamik */
 		$sideMenu_control='umum_datamaster';
 		return $this->render('index', [
 			'sideMenu_control'=> $sideMenu_control,
-			'searchModel1' => $searchModel1,
-			'dataProviderkat'  =>$dataProviderkat ,
+       'parent'=> $parent,
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
-			'searchmodelkota' => $searchmodelkota,
-			'searchmodelpro' => $searchmodelpro,
-			'dataproviderpro' =>  $dataproviderpro,
-			'dataproviderkota' => $dataproviderkota,
+			'data_layer'=>$this->aryData_layer(),
+			'data_group'=>$this->aryData_Geo(),
 		]);
 	}
 
-  /*update using ajax*/
-
+  
+   /**
+     * delete using ajax.
+     * @author wawan
+     * @since 1.1.0
+     * @return mixed
+     */
    public function actionDeleteErp(){
 
             if (Yii::$app->request->isAjax) {
@@ -191,35 +225,26 @@ class CustomersController extends Controller
    
        }
 
-	/*ESM INDEX*/
+
+  /**
+     * ESM INDEX 
+     * Lists all  Customers models.
+     * @author wawan
+     * @since 1.1.0
+     */
 	public function actionEsmIndex()
     {
 		$datacus = Customers::find()->where('CUST_GRP = CUST_KD')->asArray()->all();
 		$parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
 
-		/*layer
-		$cari_layer = "select * from c0016";
-		$hasil = Yii::$app->db_esm->createCommand($cari_layer)->queryAll();
-		$data_layer =  ArrayHelper::map($hasil,'ID',function ($hasil, $defaultValue) {
-		return $hasil['LAYER'].'-'.$hasil['DCRIPT'];
-		});
-		$config_layer = ArrayHelper::map($hasil,'ID','LAYER'
-		);
-
-		$cari_group = "select * from c0007_temp";
-		$hasil_grup = Yii::$app->db_esm->createCommand($cari_group)->queryAll();
-		$data_group = ArrayHelper::map($hasil_grup,'ID','SCDL_GROUP_NM'
-		);
-      
 		
-		*/
 	/*search individual*/
       $paramCari=Yii::$app->getRequest()->getQueryParam('id');
 	  
 	  /*search group*/
 	  $paramCari_prn=Yii::$app->getRequest()->getQueryParam('id_prn');
 	  
-	  /*if parent not equal null then search parent*/
+	  // if parent not equal null then search parent
       if ($paramCari_prn !=''){
         $cari=['CUST_GRP'=>$paramCari_prn];
       }elseif($paramCari != ''){
@@ -258,9 +283,6 @@ class CustomersController extends Controller
                 // data. Normally this is empty - whereby whatever value is edited by
                 // in the input by user is updated automatically.
                 $output = '';
-
-				  /*save parent customers*/
-				  // $parent_model = Customers::find()->where(['CUST_KD'=>$ID])->one();
 				 
 				  
 				    if (isset($posted['CUST_KD'])) {
@@ -273,21 +295,15 @@ class CustomersController extends Controller
                     $output = $parent_model->CUST_GRP;
                    
                 }
-                 if (isset($posted['LAYER'])) {
+                if (isset($posted['LAYER'])) {
                     $model->save();
-
-                   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-                    $output = $model->LAYER;
-//
-//                   
+                    $output = $model->LAYER;                 
                 }
                 if (isset($posted['GEO'])) {
                     $model->save();
 
-                   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-                    $output = $model->GEO;
-//
-//                   
+               
+                    $output = $model->GEO;                  
                 }
 
 			  }
@@ -298,22 +314,8 @@ class CustomersController extends Controller
                 // editable column posted when you have more than one
                 // EditableColumn in the grid view. We evaluate here a
                 // check to see if buy_amount was posted for the Book model
-//                if (isset($posted['CUST_GRP'])) {
-//                    $model->save();
-//
-//                   // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);
-//                    $output = $model->CUST_GRP;
-//
-//                   
-//                }
-
-
-
-
                 // similarly you can check if the name attribute was posted as well
-                // if (isset($posted['name'])) {
-                //   $output =  ''; // process as you need
-                // }
+
                 $out = Json::encode(['output'=>$output, 'message'=>'']);
 
 
@@ -331,33 +333,22 @@ class CustomersController extends Controller
 			'sideMenu_control'=> $sideMenu_control,
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
-		'parent'=>$parent,
-		'data_layer'=>$this->aryData_layer(),
-		'config_layer'=>$config_layer,
-		'data_group'=>$this->aryData_Geo(),
+		  'parent'=> $parent,
+  		'data_layer'=>$this->aryData_layer(),
+  		'config_layer'=>$config_layer,
+  		'data_group'=>$this->aryData_Geo(),
 		]);
 	}
 
 
-  /*ESM INDEX Kategori Customesr*/
-  public function actionEsmIndexKategori()
-    {
-
-      $searchModel1 = new KategoricusSearch();
-      $dataProviderkat  = $searchModel1->searchparent(Yii::$app->request->queryParams);
-
-
-    /*Tambahal menu side Dinamik */
-    $sideMenu_control='esm_customers';
-    return $this->render('index-kategori', [
-      'sideMenu_control'=> $sideMenu_control,
-      'searchModel1' => $searchModel1,
-      'dataProviderkat'  =>$dataProviderkat ,
-
-    ]);
-  }
   
-  /*ESM INDEX LAYER*/
+ 
+   /**
+     * ESM INDEX Geo
+     * Lists all DraftGeo models.
+     * @author wawan
+     * @since 1.1.0
+     */
   public function actionEsmIndexGeo()
     {
 
@@ -377,7 +368,13 @@ class CustomersController extends Controller
   
 
   
-  /*ESM INDEX LAYER*/
+  
+   /**
+     * ESM INDEX LAYER
+     * Lists all DraftLayer models.
+     * @author wawan
+     * @since 1.1.0
+     */
   public function actionEsmIndexLayer()
     {
 
@@ -395,7 +392,13 @@ class CustomersController extends Controller
     ]);
   }
   
-  /*ESM INDEX LAYER MUTASI*/
+
+   /**
+     * ESM INDEX LAYER MUTASI
+     * Lists all DraftLayerMutasi models.
+     * @author wawan
+     * @since 1.1.0
+     */
   public function actionEsmIndexLayermutasi()
     {
 
@@ -413,56 +416,14 @@ class CustomersController extends Controller
     ]);
   }
 
-  public function actionUpdateKate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) ) {
 
 
-        if($model->validate())
-        {
-            $model->UPDATED_AT = date("Y-m-d H:i:s");
-            $model->UPDATED_BY = Yii::$app->user->identity->username;
-          if($model->save())
-          {
-            echo 1;
-          }
-          else{
-            echo 0;
-          }
-        }
-
-          //  return $this->redirect(['index']);
-        } else {
-            return $this->renderAjax('_form_child', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-
-  /*ESM INDEX City */
-  public function actionEsmIndexCity()
-    {
-
-      // city data
-       $searchmodelkota = new KotaSearch();
-       $dataproviderkota = $searchmodelkota->search(Yii::$app->request->queryParams);
-
-
-    /*Tambahal menu side Dinamik */
-    $sideMenu_control='esm_customers';
-    return $this->render('index-city', [
-      'sideMenu_control'=> $sideMenu_control,
-      'searchmodelkota' => $searchmodelkota,
-      'dataproviderkota'  =>$dataproviderkota ,
-
-    ]);
-  }
-
-
-  /*ESM INDEX Provinsi */
+   /**
+     * ESM INDEX Provinsi
+     * Lists all  Province models.
+     * @author wawan
+     * @since 1.1.0
+     */
   public function actionEsmIndexProvinsi()
     {
 
@@ -481,7 +442,14 @@ class CustomersController extends Controller
     ]);
   }
 
-  /*ESM INDEX Provinsi */
+  
+
+  /**
+     * ESM INDEX Map
+     * Lists all  Map.
+     * @author wawan
+     * @since 1.1.0
+     */
   public function actionEsmMap()
     {
 
@@ -495,19 +463,14 @@ class CustomersController extends Controller
 
 
 
+  /**
+      * Display Single model province.
+       * @author wawan
+       * @since 1.1.0
+       * @param string $id
+       * @return mixed
 
-    /**
-     * Displays a single Customer model.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionViewkota($id)
-    {
-        return $this->renderAjax('viewkota', [
-            'model' => $this->findModelkota($id),
-        ]);
-    }
-
+  */
 	 public function actionViewpro($id)
     {
         return $this->renderAjax('viewpro', [
@@ -515,7 +478,17 @@ class CustomersController extends Controller
         ]);
     }
 
+  /**
+         * Display Single model province.
+         * Display Single model Distributor.
+         * Display Single model Kategoricus.
+         * update Customers.
+         * @author wawan
+         * @since 1.1.0
+         * @param string $id
+         * @return mixed
 
+    */
 	  public function actionViewcust($id)
     {
         /*province data*/
@@ -551,12 +524,14 @@ class CustomersController extends Controller
     }
     }
 
-    public function actionView($id)
-    {
-        return $this->renderAjax('viewkat', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+  /**
+         * Display Single model Customers Alias.
+         * @author wawan
+         * @since 1.1.0
+         * @param string $id
+         * @return mixed
+
+    */
     public function actionViewAlias($id)
     {
         return $this->renderAjax('view_alias', [
@@ -564,116 +539,118 @@ class CustomersController extends Controller
         ]);
     }
 
-	public function actionAliasCodeView($id)
-    {
-      $model = new Customersalias();
-      $searchModel = new CustomersaliasSearch();
-      $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$id);
+
+
+	// public function actionAliasCodeView($id)
+ //    {
+ //      $model = new Customersalias();
+ //      $searchModel = new CustomersaliasSearch();
+ //      $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$id);
 
 
 
-      $id = Customers::find()->where(['CUST_KD'=>$id])->one();
-      $nama = $id->CUST_NM;
-      if ($model->load(Yii::$app->request->post()) ) {
-        $model->CREATED_AT = date('Y-m-d');
-        $model->CREATED_BY = Yii::$app->user->identity->username;
-        $model->KD_PARENT = 1;
-        if($model->save())
-        {
-          echo 1;
+ //      $id = Customers::find()->where(['CUST_KD'=>$id])->one();
+ //      $nama = $id->CUST_NM;
+ //      if ($model->load(Yii::$app->request->post()) ) {
+ //        $model->CREATED_AT = date('Y-m-d');
+ //        $model->CREATED_BY = Yii::$app->user->identity->username;
+ //        $model->KD_PARENT = 1;
+ //        if($model->save())
+ //        {
+ //          echo 1;
 
-        }
-        else{
-          echo 0;
-        }
-      } else {
-          return $this->renderAjax('_aliascus', [
-              'model' => $model,
-              'id'=>$id,
-              'nama'=>$nama,
-              'searchModel'=>$searchModel,
-              'dataProvider'=>$dataProvider
-          ]);
-      }
-    }
-
-
+ //        }
+ //        else{
+ //          echo 0;
+ //        }
+ //      } else {
+ //          return $this->renderAjax('_aliascus', [
+ //              'model' => $model,
+ //              'id'=>$id,
+ //              'nama'=>$nama,
+ //              'searchModel'=>$searchModel,
+ //              'dataProvider'=>$dataProvider
+ //          ]);
+ //      }
+ //    }
 
 
-    public function actionCreateAliasCustomers($id)
-    {
-        $model = new Customersalias();
-        $id = Customers::find()->where(['CUST_KD'=>$id])->one();
-        $nama = $id->CUST_NM;
-        if ($model->load(Yii::$app->request->post()) ) {
-          $model->CREATED_AT = date('Y-m-d');
-          $model->CREATED_BY = Yii::$app->user->identity->username;
-          $model->KD_PARENT = 1;
-          if($model->save())
-          {
-            echo 1;
-          }
-          else{
-            echo 0;
-          }
-        } else {
-            return $this->renderAjax('alias_customers', [
-                'model' => $model,
-                'id'=>$id,
-                'nama'=>$nama,
-            ]);
-        }
-    }
 
-    public function actionValidAlias()
-    {
-      # code...
-        $model = new Customersalias();
-      if(Yii::$app->request->isAjax && $model->load($_POST))
-      {
-        Yii::$app->response->format = 'json';
-        return ActiveForm::validate($model);
-      }
-    }
-    public function actionLoginAlias()
-    {
-      # code...
-      $ValidationLoginPrice = new ValidationLoginPrice();
-      return $this->renderAjax('login_alias', [
-        'ValidationLoginPrice' => $ValidationLoginPrice,
-      ]);
-    }
 
-    public function actionLoginCek(){
-      $ValidationLoginPrice = new ValidationLoginPrice();
-      /*Ajax Load*/
-      if(Yii::$app->request->isAjax){
-        $ValidationLoginPrice->load(Yii::$app->request->post());
-        return Json::encode(\yii\widgets\ActiveForm::validate($ValidationLoginPrice));
-      }else{	/*Normal Load*/
-        if($ValidationLoginPrice->load(Yii::$app->request->post())){
-          if ($ValidationLoginPrice->Validationlogin()){
-            return $this->redirect(['/master/customers/index-alias']);
-          }
-        }
-      }
-    }
+   //  public function actionCreateAliasCustomers($id)
+   //  {
+   //      $model = new Customersalias();
+   //      $id = Customers::find()->where(['CUST_KD'=>$id])->one();
+   //      $nama = $id->CUST_NM;
+   //      if ($model->load(Yii::$app->request->post()) ) {
+   //        $model->CREATED_AT = date('Y-m-d');
+   //        $model->CREATED_BY = Yii::$app->user->identity->username;
+   //        $model->KD_PARENT = 1;
+   //        if($model->save())
+   //        {
+   //          echo 1;
+   //        }
+   //        else{
+   //          echo 0;
+   //        }
+   //      } else {
+   //          return $this->renderAjax('alias_customers', [
+   //              'model' => $model,
+   //              'id'=>$id,
+   //              'nama'=>$nama,
+   //          ]);
+   //      }
+   //  }
 
-    public function actionIndexAlias()
-    {
-      # code...
-      $searchModel = new CustomersaliasSearch();
-      $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+   //  public function actionValidAlias()
+   //  {
+   //    # code...
+   //      $model = new Customersalias();
+   //    if(Yii::$app->request->isAjax && $model->load($_POST))
+   //    {
+   //      Yii::$app->response->format = 'json';
+   //      return ActiveForm::validate($model);
+   //    }
+   //  }
+   //  public function actionLoginAlias()
+   //  {
+   //    # code...
+   //    $ValidationLoginPrice = new ValidationLoginPrice();
+   //    return $this->renderAjax('login_alias', [
+   //      'ValidationLoginPrice' => $ValidationLoginPrice,
+   //    ]);
+   //  }
 
-      return $this->render('index_alias', [
-              'searchModel' => $searchModel,
-              'dataProvider' => $dataProvider,
-          ]);
-    }
+   //  public function actionLoginCek(){
+   //    $ValidationLoginPrice = new ValidationLoginPrice();
+   //    /*Ajax Load*/
+   //    if(Yii::$app->request->isAjax){
+   //      $ValidationLoginPrice->load(Yii::$app->request->post());
+   //      return Json::encode(\yii\widgets\ActiveForm::validate($ValidationLoginPrice));
+   //    }else{	/*Normal Load*/
+   //      if($ValidationLoginPrice->load(Yii::$app->request->post())){
+   //        if ($ValidationLoginPrice->Validationlogin()){
+   //          return $this->redirect(['/master/customers/index-alias']);
+   //        }
+   //      }
+   //    }
+   //  }
 
-    public function actionPriceLogout(){
-  		$this->redirect('esm-index');
-  	}
+   //  public function actionIndexAlias()
+   //  {
+   //    # code...
+   //    $searchModel = new CustomersaliasSearch();
+   //    $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+   //    return $this->render('index_alias', [
+   //            'searchModel' => $searchModel,
+   //            'dataProvider' => $dataProvider,
+   //        ]);
+   //  }
+
+   //  public function actionPriceLogout(){
+  	// 	$this->redirect('esm-index');
+  	// }
 
 
     /**
@@ -707,6 +684,15 @@ class CustomersController extends Controller
          }
      }
 
+
+    /**
+     * Create  Province model.
+     * @author wawan
+     * @since 1.1.0
+     * @param string $id
+     * @return mixed
+     */
+
       public function actionCreateprovnce()
     {
         $model = new Province();
@@ -733,79 +719,21 @@ class CustomersController extends Controller
             ]);
         }
     }
+  
 
-     public function actionCreatekota()
-    {
-        $model = new Kota();
-
-        if ($model->load(Yii::$app->request->post()) ) {
-
-                if($model->validate())
-                {
-
-                  if($model->save())
-                  {
-                    echo 1;
-                  }
-                  else{
-                    echo 0;
-                  }
-
-                }
-
-            // return $this->redirect(['index']);
-        }
-         else {
-            return $this->renderAjax('_formkota', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-
-    public function actionCreate($id)
-    {
-
-        $model = new Kategoricus();
-
-        $cus = Kategoricus::find()->where(['CUST_KTG'=> $id ])->one();
-        $par = $cus['CUST_KTG'];
-
-        if ($model->load(Yii::$app->request->post()) ) {
-
-          $model->CUST_KTG_PARENT = $par;
-
-				if($model->validate())
-				{
-            $model->STATUS = 1;
-					  $model->CREATED_BY =  Yii::$app->user->identity->username;
-						$model->CREATED_AT = date("Y-m-d H:i:s");
-            if($model->save())
-            {
-              echo 1;
-            }
-            else{
-              echo 0;
-            }
-
-				}
-
-            // return $this->redirect(['index']);
-        } else {
-            return $this->renderAjax('_form', [
-                'model' => $model,
-            ]);
-        }
-    }
-
- // data json map
+ /**
+     * List all map customers.
+     * @author wawan
+     * @since 1.1.0
+     * @response json
+     * @return mixed
+     */
     public function actionMap()
     {
             $conn = Yii::$app->db3;
             $hasil = $conn->createCommand("SELECT c.SCDL_GROUP,c.CUST_KD, c.ALAMAT, c.CUST_NM,c.MAP_LAT,c.MAP_LNG,b.SCDL_GROUP_NM from c0001 c
                                           left join c0007 b on c.SCDL_GROUP = b.ID")->queryAll();
 
-            //  $hasil = $conn->createCommand("SELECT * from c0001 ")->queryAll();
 
             echo json_encode($hasil);
 
@@ -823,7 +751,12 @@ class CustomersController extends Controller
 
       }
 
-   // action depdrop
+/**
+     * Depdrop Kategoricus
+     * @author wawan
+     * @since 1.1.0
+     * @return mixed
+     */
    public function actionLisdata() {
     $out = [];
     if (isset($_POST['depdrop_parents'])) {
@@ -855,7 +788,12 @@ class CustomersController extends Controller
    }
 
 
-     // action depdrop
+    /**
+     * Depdrop Customers
+     * @author wawan
+     * @since 1.1.0
+     * @return mixed
+     */
    public function actionLisCus() {
     $out = [];
     if (isset($_POST['depdrop_parents'])) {
@@ -887,7 +825,13 @@ class CustomersController extends Controller
        echo Json::encode(['output'=>'', 'selected'=>'']);
    }
 
-    // action depdrop
+  /**
+     * Depdrop Customers
+     * @author wawan
+     * @param string $id
+     * @since 1.1.0
+     * @return mixed
+     */
    public function actionLisCusBox($id) {
 
         $model = Customers::find()->asArray()->where(['CUST_TYPE'=>$id])
@@ -906,7 +850,13 @@ class CustomersController extends Controller
     
    }
 
-
+ /**
+     * Depdrop Kota
+     * @author wawan
+     * @param string $id
+     * @since 1.1.0
+     * @return mixed
+     */
     public function actionLisarea() {
     $out = [];
 
@@ -940,76 +890,15 @@ class CustomersController extends Controller
 
 
 
-  //   public function actionLis($id)
-  //   {
+ 
 
-
-  //       $countJob = Kategoricus::find()
-  //               ->where(['CUST_KTG_PARENT' =>$id])
-  //               ->count();
-
-  //       $job = Kategoricus::find()
-  //                ->where(['CUST_KTG_PARENT' =>$id])
-		// 		 ->andwhere('CUST_KTG_PARENT <> 0')
-  //               ->all();
-
-
-
-  //       if($countJob>0){
-  //           echo "<option> Select  </option>";
-  //           foreach($job as $post){
-
-  //               echo "<option value='".$post->CUST_KTG."'>".$post->CUST_KTG_NM."</option>";
-  //           }
-  //       }
-  //       else{
-  //           echo "<option> - </option>";
-  //       }
-
-  //   }
-
-
-
-
-     public function actionCreateparent()
-    {
-        $model = new Kategoricus();
-
-        if ($model->load(Yii::$app->request->post()) ) {
-          $data = Kategoricus::find()->count();
-          if($data == 0)
-          {
-
-              $model->CUST_KTG_PARENT = 1;
-          }
-          else{
-              $datax = Kategoricus::find()->MAX('CUST_KTG');
-
-                $model->CUST_KTG_PARENT = $datax+1;
-          }
-
-       	    if($model->validate())
-            {
-
-
-                $model->CREATED_BY =  Yii::$app->user->identity->username;
-                $model->CREATED_AT = date("Y-m-d H:i:s");
-                if($model->save())
-                {
-                  echo 1;
-                }
-                else{
-                  echo 0;
-                }
-
-            }
-        } else {
-            return $this->renderAjax('_formparent', [
-                'model' => $model,
-            ]);
-        }
-    }
-
+    /**
+     * Create  Customers model.
+     * @author wawan
+     * @since 1.1.0
+     * @param string $id
+     * @return mixed
+     */
 
     public function actionCreatecustomers()
     {
@@ -1034,11 +923,7 @@ class CustomersController extends Controller
           $model->CUST_KD = $kode;
 
         }
-        // print_r($val);
-        // die();
-
-
-
+        
         $tanggal = \Yii::$app->formatter->asDate($model->JOIN_DATE,'Y-M-d');
         $model->JOIN_DATE = $tanggal;
 			if($model->validate())
@@ -1060,7 +945,13 @@ class CustomersController extends Controller
         }
       }
 
-      // validasi ajax for _formcustomer
+  /**
+     * validasi ajax in page _formcustomer
+     * @author wawan
+     * @param string $id
+     * @since 1.1.0
+     * @return mixed
+     */
       public function actionValid()
       {
         # code...
@@ -1090,8 +981,6 @@ class CustomersController extends Controller
      * @return mixed
      */
 
-
-
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
@@ -1120,177 +1009,152 @@ class CustomersController extends Controller
         }
     }
 
-    public function actionUpdateCust($id)
-    {
-        $model = $this->findModelcust($id);
-        $datacus = Customers::find()->where('CUST_GRP = CUST_KD')->asArray()->all();
-        $parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
-        $dropparentkategori = ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT = CUST_KTG')
-                                                                   ->asArray()
-                                                                   ->all(),'CUST_KTG', 'CUST_KTG_NM');
-        $readonly = Customers::find()->where(['CUST_KD'=>$id])->asArray()->one(); // data for view type
-        if ($model->load(Yii::$app->request->post()) ) {
+    // public function actionUpdateCust($id)
+    // {
+    //     $model = $this->findModelcust($id);
+    //     $datacus = Customers::find()->where('CUST_GRP = CUST_KD')->asArray()->all();
+    //     $parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
+    //     $dropparentkategori = ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT = CUST_KTG')
+    //                                                                ->asArray()
+    //                                                                ->all(),'CUST_KTG', 'CUST_KTG_NM');
+    //     $readonly = Customers::find()->where(['CUST_KD'=>$id])->asArray()->one(); // data for view type
+    //     if ($model->load(Yii::$app->request->post()) ) {
 
-        $tanggal = \Yii::$app->formatter->asDate($model->JOIN_DATE,'Y-M-d');
-        $model->JOIN_DATE = $tanggal;
-        if($model->validate())
-        {
-            $model->UPDATED_AT = date("Y-m-d H:i:s");
-            $model->UPDATED_BY = Yii::$app->user->identity->username;
-          if($model->save())
-          {
-            echo 1;
-          }
-          else{
-            echo 0;
-          }
-        }
+    //     $tanggal = \Yii::$app->formatter->asDate($model->JOIN_DATE,'Y-M-d');
+    //     $model->JOIN_DATE = $tanggal;
+    //     if($model->validate())
+    //     {
+    //         $model->UPDATED_AT = date("Y-m-d H:i:s");
+    //         $model->UPDATED_BY = Yii::$app->user->identity->username;
+    //       if($model->save())
+    //       {
+    //         echo 1;
+    //       }
+    //       else{
+    //         echo 0;
+    //       }
+    //     }
 
-          //  return $this->redirect(['index']);
-        } else {
-            return $this->renderAjax('update', [
-                'model' => $model,
-                'parent'=>$parent,
-                'dropparentkategori'=>$dropparentkategori,
-                'readonly'=>$readonly
-            ]);
-        }
-    }
+    //       //  return $this->redirect(['index']);
+    //     } else {
+    //         return $this->renderAjax('update', [
+    //             'model' => $model,
+    //             'parent'=>$parent,
+    //             'dropparentkategori'=>$dropparentkategori,
+    //             'readonly'=>$readonly
+    //         ]);
+    //     }
+    // }
 
-    public function actionUpdatekat($id)
-    {
-        $readonly = Customers::find()->where(['CUST_KD'=>$id])->asArray()->one(); // data for view
-        $model = $this->findModelcust($id);
-        $model->scenario = "updatekat";
-        $dropparentkategori = ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT = CUST_KTG')
-                                                                   ->asArray()
-                                                                   ->all(),'CUST_KTG', 'CUST_KTG_NM');
-        if ($model->load(Yii::$app->request->post()) ) {
+    // public function actionUpdatekat($id)
+    // {
+    //     $readonly = Customers::find()->where(['CUST_KD'=>$id])->asArray()->one(); // data for view
+    //     $model = $this->findModelcust($id);
+    //     $model->scenario = "updatekat";
+    //     $dropparentkategori = ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT = CUST_KTG')
+    //                                                                ->asArray()
+    //                                                                ->all(),'CUST_KTG', 'CUST_KTG_NM');
+    //     if ($model->load(Yii::$app->request->post()) ) {
 
-        $tanggal = \Yii::$app->formatter->asDate($model->JOIN_DATE,'Y-M-d');
-        $model->JOIN_DATE = $tanggal;
-        if($model->validate())
-        {
-            $model->UPDATED_AT = date("Y-m-d H:i:s");
-            $model->UPDATED_BY = Yii::$app->user->identity->username;
-          if($model->save())
-          {
-            echo 1;
+    //     $tanggal = \Yii::$app->formatter->asDate($model->JOIN_DATE,'Y-M-d');
+    //     $model->JOIN_DATE = $tanggal;
+    //     if($model->validate())
+    //     {
+    //         $model->UPDATED_AT = date("Y-m-d H:i:s");
+    //         $model->UPDATED_BY = Yii::$app->user->identity->username;
+    //       if($model->save())
+    //       {
+    //         echo 1;
 
-          }
-          else{
-            echo 0;
-          }
-        }
+    //       }
+    //       else{
+    //         echo 0;
+    //       }
+    //     }
 
-          //  return $this->redirect(['index']);
-        } else {
-            return $this->renderAjax('type', [
-                'model' => $model,
-                'dropparentkategori'=>$dropparentkategori,
-                'readonly'=>$readonly
-            ]);
-        }
-    }
+    //       //  return $this->redirect(['index']);
+    //     } else {
+    //         return $this->renderAjax('type', [
+    //             'model' => $model,
+    //             'dropparentkategori'=>$dropparentkategori,
+    //             'readonly'=>$readonly
+    //         ]);
+    //     }
+    // }
 
-    public function actionUpdateAlias($id)
-    {
-        $model = Customersalias::find()->where(['KD_CUSTOMERS'=>$id])->one();
+    // public function actionUpdateAlias($id)
+    // {
+    //     $model = Customersalias::find()->where(['KD_CUSTOMERS'=>$id])->one();
 
-        $id = Customers::find()->where(['CUST_KD'=>$id])->one();
+    //     $id = Customers::find()->where(['CUST_KD'=>$id])->one();
 
-        $nama = $id->CUST_NM;
+    //     $nama = $id->CUST_NM;
 
-        if(Yii::$app->request->isAjax && $model->load($_POST))
-        {
-          Yii::$app->response->format = 'json';
-          return ActiveForm::validate($model);
-        }
+    //     if(Yii::$app->request->isAjax && $model->load($_POST))
+    //     {
+    //       Yii::$app->response->format = 'json';
+    //       return ActiveForm::validate($model);
+    //     }
 
-        if ($model->load(Yii::$app->request->post()) ) {
-          $model->UPDATED_AT = date('Y-m-d');
-          $model->UPDATED_BY = Yii::$app->user->identity->username;
-          $model->save();
-            return $this->redirect(['index-alias']);
-        } else {
-            return $this->renderAjax('alias_customers', [
-                'model' => $model,
-                'id'=>$id,
-                'nama'=>$nama,
-            ]);
-        }
-    }
+    //     if ($model->load(Yii::$app->request->post()) ) {
+    //       $model->UPDATED_AT = date('Y-m-d');
+    //       $model->UPDATED_BY = Yii::$app->user->identity->username;
+    //       $model->save();
+    //         return $this->redirect(['index-alias']);
+    //     } else {
+    //         return $this->renderAjax('alias_customers', [
+    //             'model' => $model,
+    //             'id'=>$id,
+    //             'nama'=>$nama,
+    //         ]);
+    //     }
+    // }
 
-	 public function actionUpdatecus($id)
-    {
-        $readonly = Customers::find()->where(['CUST_KD'=>$id])->asArray()->one(); // data for view
-        $model = $this->findModelcust($id);
-        $model->scenario = "detail";
-        $dropparentkategori = ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT = CUST_KTG')
-                                                                   ->asArray()
-                                                                   ->all(),'CUST_KTG', 'CUST_KTG_NM');
-      	$droppro = ArrayHelper::map(Province::find()->asArray()->all(),'PROVINCE_ID','PROVINCE');
+	 // public function actionUpdatecus($id)
+  //   {
+  //       $readonly = Customers::find()->where(['CUST_KD'=>$id])->asArray()->one(); // data for view
+  //       $model = $this->findModelcust($id);
+  //       $model->scenario = "detail";
+  //       $dropparentkategori = ArrayHelper::map(Kategoricus::find()->where('CUST_KTG_PARENT = CUST_KTG')
+  //                                                                  ->asArray()
+  //                                                                  ->all(),'CUST_KTG', 'CUST_KTG_NM');
+  //     	$droppro = ArrayHelper::map(Province::find()->asArray()->all(),'PROVINCE_ID','PROVINCE');
 
-        $dropdis = ArrayHelper::map(\lukisongroup\master\models\Distributor::find()->all(), 'KD_DISTRIBUTOR', 'NM_DISTRIBUTOR');
+  //       $dropdis = ArrayHelper::map(\lukisongroup\master\models\Distributor::find()->all(), 'KD_DISTRIBUTOR', 'NM_DISTRIBUTOR');
 
 
-        if ($model->load(Yii::$app->request->post()) ) {
+  //       if ($model->load(Yii::$app->request->post()) ) {
 
-			    if($model->validate())
-            {
-              $model->UPDATED_AT = date("Y-m-d H:i:s");
-						  $model->UPDATED_BY = Yii::$app->user->identity->username;
-              // $model->save();
+		// 	    if($model->validate())
+  //           {
+  //             $model->UPDATED_AT = date("Y-m-d H:i:s");
+		// 				  $model->UPDATED_BY = Yii::$app->user->identity->username;
+  //             // $model->save();
 
-					         if($model->save())
-                   {
-                     echo 1;
+		// 			         if($model->save())
+  //                  {
+  //                    echo 1;
 
-                    }
-                  else{
-                      echo 0;
-                    }
-            }
-            // print_r($model->save());
-            // die();
+  //                   }
+  //                 else{
+  //                     echo 0;
+  //                   }
+  //           }
+  //           // print_r($model->save());
+  //           // die();
 
-            //  return $this->redirect(['index']);
-        } else {
-            return $this->renderAjax('set_detail', [
-                'model' => $model,
-                'dropparentkategori'=>$dropparentkategori,
-                'droppro'=>$droppro,
-                'dropdis'=>$dropdis,
-                'readonly'=>$readonly
-            ]);
-        }
-    }
+  //           //  return $this->redirect(['index']);
+  //       } else {
+  //           return $this->renderAjax('set_detail', [
+  //               'model' => $model,
+  //               'dropparentkategori'=>$dropparentkategori,
+  //               'droppro'=>$droppro,
+  //               'dropdis'=>$dropdis,
+  //               'readonly'=>$readonly
+  //           ]);
+  //       }
+  //   }
 
-	public function actionUpdatekota($id)
-    {
-        $model = $this->findModelkota($id);
-
-        if ($model->load(Yii::$app->request->post()) ) {
-
-			    if($model->validate())
-              {
-                      if($model->save())
-                      {
-                        echo 1;
-                      }
-                      else{
-                        echo 0;
-                      }
-
-              }
-
-            //  return $this->redirect(['index']);
-        } else {
-            return $this->renderAjax('_formkota', [
-                'model' => $model,
-            ]);
-        }
-    }
 
 	public function actionUpdatepro($id)
     {
@@ -1323,21 +1187,6 @@ class CustomersController extends Controller
      * @param string $id
      * @return mixed
      */
-	  // public function actionDeletepro($id)
-    // {
-     	// $model = Province::find()->where(['PROVINCE_ID'=>$id])->one();
-		// $model->STATUS = 3;
-		// $model->save();
-        // return $this->redirect(['index']);
-    // }
-
-	  // public function actionDeletekota($id)
-    // {
-     	// $model = Kota::find()->where(['CITY_ID'=>$id])->one();
-		// $model->STATUS = 3;
-		// $model->save();
-        // return $this->redirect(['index']);
-    // }
 
     public function actionDelete($id)
     {
@@ -1361,176 +1210,7 @@ class CustomersController extends Controller
     }
 
 
-    /*
-   * EXPORT DATA CUSTOMER TO EXCEL
-   * export_data
-  */
-//  public function actionExportColumn(){
-//
-//    //$custDataMTI=Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll();
-//
-//    $cusDataProviderMTI = new ArrayDataProvider([
-//      'key' => 'ID',
-//      'allModels'=>Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll(),
-//      'pagination' => [
-//        'pageSize' => 10,
-//      ]
-//    ]);
-//    //print_r($cusDataProvider->allModels);
-//    $aryCusDataProviderMTI=$cusDataProviderMTI->allModels;
-//
-//    $excel_data = Export2ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);
-//        $excel_title = $excel_data['excel_title'];
-//        $excel_ceils = $excel_data['excel_ceils'];
-//    $excel_content = [
-//       [
-//        'sheet_name' => 'MTI CUSTOMER',
-//          // 'sheet_title' => ['CUST_ID','CUST_NM','TYPE','ALAMAT','TLP','PIC'], //$excel_ceils,//'sad',//[$excel_title],
-//          'sheet_title' => $excel_data['excel_title'],
-//          'ceils' => $excel_ceils,
-//                //'freezePane' => 'E2',
-//                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
-//                'headerColumnCssClass' => [
-//                     'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-//                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-//                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
-//                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-//                     'TLP1' => Export2ExcelBehavior::getCssClass('header'),
-//                     'PIC' => Export2ExcelBehavior::getCssClass('header')
-//                ], //define each column's cssClass for header line only.  You can set as blank.
-//               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-//               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
-//      ],
-      /* [
-        'sheet_name' => 'IMPORTANT NOTE ',
-                'sheet_title' => ["Important Note For Import Stock Customer"],
-                'ceils' => [
-          ["1.pastikan tidak merubah format hanya menambahkan data, karena import versi 1.2 masih butuhkan pengembangan validasi"],
-                    ["2.Berikut beberapa format nama yang tidak di anjurkan di ganti:"],
-                    ["  A. Nama dari Sheet1: IMPORT FORMAT STOCK "],
-          ["  B. Nama Header seperti column : DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF"],
-          ["3.Refrensi."],
-          ["  'IMPORT FORMAT STOCK'= Nama dari Sheet1 yang aktif untuk di import "],
-          ["  'DATE'= Tanggal dari data stok yang akan di import "],
-          ["  'CUST_KD'= Kode dari customer, dimana setiap customer memiliki kode sendiri sendiri sesuai yang mereka miliki "],
-          ["  'CUST_NM'= Nama dari customer "],
-          ["  'SKU_ID'=  Kode dari Item yang mana customer memiliku kode items yang berbeda beda "],
-          ["  'SKU_NM'=  Nama dari Item, sebaiknya disamakan dengan nama yang dimiliki lukisongroup"],
-          ["  'QTY_PCS'= Quantity dalam unit PCS "],
-          ["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],
-        ],
-      ],
-      [
-        'sheet_name' => 'IMPORTANT NOTE ',
-                'sheet_title' => ["Important Note For Import Stock Customer"],
-                'ceils' => [
-          ["1.pastikan tidak merubah format hanya menambahkan data, karena import versi 1.2 masih butuhkan pengembangan validasi"],
-                    ["2.Berikut beberapa format nama yang tidak di anjurkan di ganti:"],
-                    ["  A. Nama dari Sheet1: IMPORT FORMAT STOCK "],
-          ["  B. Nama Header seperti column : DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF"],
-          ["3.Refrensi."],
-          ["  'IMPORT FORMAT STOCK'= Nama dari Sheet1 yang aktif untuk di import "],
-          ["  'DATE'= Tanggal dari data stok yang akan di import "],
-          ["  'CUST_KD'= Kode dari customer, dimana setiap customer memiliki kode sendiri sendiri sesuai yang mereka miliki "],
-          ["  'CUST_NM'= Nama dari customer "],
-          ["  'SKU_ID'=  Kode dari Item yang mana customer memiliku kode items yang berbeda beda "],
-          ["  'SKU_NM'=  Nama dari Item, sebaiknya disamakan dengan nama yang dimiliki lukisongroup"],
-          ["  'QTY_PCS'= Quantity dalam unit PCS "],
-          ["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],
-        ],
-      ], */
-//    ];
-//
-//    $excel_file = "CustomerData";
-//    $this->export2excel($excel_content, $excel_file);
-//  }
-
-
-	/*
-	 * EXPORT DATA CUSTOMER TO EXCEL
-	 * export_data
-	*/
-//	public function actionExport_data(){
-
-//		//$custDataMTI=Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll();
-//
-//		$cusDataProviderMTI = new ArrayDataProvider([
-//			'key' => 'ID',
-//			'allModels'=>Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll(),
-//			'pagination' => [
-//				'pageSize' => 10,
-//			]
-//		]);
-//		//print_r($cusDataProvider->allModels);
-//		$aryCusDataProviderMTI=$cusDataProviderMTI->allModels;
-//
-//		$excel_data = Export2ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);
-//        $excel_title = $excel_data['excel_title'];
-//        $excel_ceils = $excel_data['excel_ceils'];
-//		$excel_content = [
-//			 [
-//				'sheet_name' => 'MTI CUSTOMER',
-//          // 'sheet_title' => ['CUST_ID','CUST_NM','TYPE','ALAMAT','TLP','PIC'], //$excel_ceils,//'sad',//[$excel_title],
-//			    'sheet_title' => $excel_data['excel_title'],
-//          'ceils' => $excel_ceils,
-//                //'freezePane' => 'E2',
-//                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
-//                'headerColumnCssClass' => [
-//					           'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-//                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-//                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
-//                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-//                     'TLP1' => Export2ExcelBehavior::getCssClass('header'),
-//                     'PIC' => Export2ExcelBehavior::getCssClass('header')
-//                ], //define each column's cssClass for header line only.  You can set as blank.
-//               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-//               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
-//			],
-			/* [
-				'sheet_name' => 'IMPORTANT NOTE ',
-                'sheet_title' => ["Important Note For Import Stock Customer"],
-                'ceils' => [
-					["1.pastikan tidak merubah format hanya menambahkan data, karena import versi 1.2 masih butuhkan pengembangan validasi"],
-                    ["2.Berikut beberapa format nama yang tidak di anjurkan di ganti:"],
-                    ["  A. Nama dari Sheet1: IMPORT FORMAT STOCK "],
-					["  B. Nama Header seperti column : DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF"],
-					["3.Refrensi."],
-					["  'IMPORT FORMAT STOCK'= Nama dari Sheet1 yang aktif untuk di import "],
-					["  'DATE'= Tanggal dari data stok yang akan di import "],
-					["  'CUST_KD'= Kode dari customer, dimana setiap customer memiliki kode sendiri sendiri sesuai yang mereka miliki "],
-					["  'CUST_NM'= Nama dari customer "],
-					["  'SKU_ID'=  Kode dari Item yang mana customer memiliku kode items yang berbeda beda "],
-					["  'SKU_NM'=  Nama dari Item, sebaiknya disamakan dengan nama yang dimiliki lukisongroup"],
-					["  'QTY_PCS'= Quantity dalam unit PCS "],
-					["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],
-				],
-			],
-			[
-				'sheet_name' => 'IMPORTANT NOTE ',
-                'sheet_title' => ["Important Note For Import Stock Customer"],
-                'ceils' => [
-					["1.pastikan tidak merubah format hanya menambahkan data, karena import versi 1.2 masih butuhkan pengembangan validasi"],
-                    ["2.Berikut beberapa format nama yang tidak di anjurkan di ganti:"],
-                    ["  A. Nama dari Sheet1: IMPORT FORMAT STOCK "],
-					["  B. Nama Header seperti column : DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF"],
-					["3.Refrensi."],
-					["  'IMPORT FORMAT STOCK'= Nama dari Sheet1 yang aktif untuk di import "],
-					["  'DATE'= Tanggal dari data stok yang akan di import "],
-					["  'CUST_KD'= Kode dari customer, dimana setiap customer memiliki kode sendiri sendiri sesuai yang mereka miliki "],
-					["  'CUST_NM'= Nama dari customer "],
-					["  'SKU_ID'=  Kode dari Item yang mana customer memiliku kode items yang berbeda beda "],
-					["  'SKU_NM'=  Nama dari Item, sebaiknya disamakan dengan nama yang dimiliki lukisongroup"],
-					["  'QTY_PCS'= Quantity dalam unit PCS "],
-					["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],
-				],
-			], */
-//		];
-//
-//		$excel_file = "CustomerData";
-//		$this->export2excel($excel_content, $excel_file);
-//	}
-
-
+  
     /**
      * Finds the Kategoricus model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -1546,14 +1226,7 @@ class CustomersController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-	  protected function findModelkota($id)
-    {
-        if (($model = Kota::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
+	
 
     protected function findModelalias($id)
     {
@@ -1575,12 +1248,5 @@ class CustomersController extends Controller
 
 
 
-    protected function findModel($id)
-    {
-        if (($model = Kategoricus::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
+    
 }

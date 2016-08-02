@@ -44,9 +44,9 @@ class Customers extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-	// public $tipenm;
+	  public $LAYER_ID;
     public $cus_Type;
-    public $cust_ktg;
+    public $cust_ktga;
     public $parentnama;
     public $CusNm;
     public $CusT; // model manipulate form_scdl and contrroler create-scdl
@@ -121,19 +121,12 @@ public function getParent() {
 
 
 
-public function getNameColumn()
-{
-
- $data_column = new Customers();
- return $dbSchema = $data_column->getTableSchema()->getColumnNames();
-
-}
-
 
 /* Getter for parent name */
 public function getParentName() {
     return $this->parent->CUST_NM;
 }
+
 
 	public function getCus()
 	{
@@ -163,7 +156,7 @@ public function getParentName() {
   }
 
   public function getCustlayer(){
-    return $this->hasOne(LayesClastering::className(), ['ID'=>'LAYER']);
+    return $this->hasOne(DraftLayer::className(), ['LAYER'=>'LAYER_ID']);
   }
 
 

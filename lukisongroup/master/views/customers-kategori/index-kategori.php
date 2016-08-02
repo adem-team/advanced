@@ -1,12 +1,14 @@
-
 <?php
-
 use yii\helpers\Url;
 use kartik\helpers\Html;
 use kartik\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 use kartik\nav\NavX;
-use yii\helpers\ArrayHelper;
+
+/*namespace models*/
+use lukisongroup\master\models\Kategoricus;
+
 $this->params['breadcrumbs'][] = $this->title;
 $this->sideCorp = 'Customers';                 				 /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = $sideMenu_control;//'umum_datamaster';   	 /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -106,26 +108,13 @@ function tombolMap(){
 }
 
 
-
-
 $actionClass='btn btn-info btn-xs';
 $actionLabel='Update';
 $attDinamik =[];
-
 /*GRIDVIEW ARRAY FIELD HEAD*/
 $headColomnBT=[
-['ID' =>0, 'ATTR' =>['FIELD'=> 'PROVINCE','SIZE' => '10px',
-'label'=>'Province',
-'align'=>'left','warna'=>'97, 211, 96, 0.3']],
-['ID' =>1, 'ATTR' =>['FIELD'=> 'TYPE','SIZE' => '10px',
-'label'=>'Type',
-'align'=>'left','warna'=>'97, 211, 96, 0.3']],
-['ID' =>2, 'ATTR' =>['FIELD'=> 'CITY_NAME','SIZE' => '10px',
-'label'=>'Nama Kota',
-'align'=>'left','warna'=>'97, 211, 96, 0.3']],
-['ID' =>3, 'ATTR' =>['FIELD'=> 'POSTAL_CODE','SIZE' => '10px',
-'label'=>'Kode Pos',
-'align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>0, 'ATTR' =>['FIELD'=>'CUST_KTG_PARENT','SIZE' => '10px','label'=>'Customer Kategori Parent','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_KTG_NM','SIZE' => '10px','label'=>'Customers Kategori','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 ];
 $gvHeadColomnBT = ArrayHelper::map($headColomnBT, 'ID', 'ATTR');
 
@@ -138,23 +127,21 @@ $attDinamik[]=[
   'dropdownButton'=>[
     'class' => $actionClass,
   ],
-  'buttons' => [    'view' =>function($url, $model, $key){
-            return '<li>'. Html::a('<span class="glyphicon glyphicon-eye-open"></span>'.Yii::t('app', 'View'),
-                          ['viewkota','id'=> $model->CITY_ID],[
-                          'data-toggle'=>"modal",
-                          'data-target'=>"#view2",
-                          'data-title'=> $model->PROVINCE,
-                          ]).'<li>';
-                        },
+  'buttons' => [ 'edit' =>function($url, $model, $key){
+    return  '<li>' .  Html::a('<span class="glyphicon glyphicon-plus"></span>'.Yii::t('app', 'Tambah'),['create','id'=> $model->CUST_KTG_PARENT],['data-toggle'=>"modal",'data-target'=>"#formparent",
+                            'data-title'=> $model->CUST_KTG_NM,
+                                ]).'<li>';},
+                  'view' =>function($url, $model, $key){
+                    return  '<li>' . Html::a('<span class="glyphicon glyphicon-eye-open"></span>'.Yii::t('app', 'View'),['view','id'=>$model->CUST_KTG],['data-toggle'=>"modal", 'data-target'=>"#viewparent",'data-title'=> $model->CUST_KTG_PARENT, ]).'</li>'; },
 
-         'update' =>function($url, $model, $key){
-            return '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Update'),
-                          ['updatekota','id'=>$model->CITY_ID],[
-                          'data-toggle'=>"modal",
-                          'data-target'=>"#form2",
-                          'data-title'=> $model->PROVINCE,
-                          ]).'</li>';
-                        },
+                         'update' =>function($url, $model, $key){
+                                 return  '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Update'),['update-kate','id'=>$model->CUST_KTG],[
+                                                            'data-toggle'=>"modal",
+                                                            'data-target'=>"#formparent",
+                                                            'data-title'=> $model->CUST_KTG_PARENT,
+                                                            ]).'</li>';
+
+                                                            },
 
                                               ],
 
@@ -181,6 +168,52 @@ $attDinamik[]=[
 
 /*GRIDVIEW ARRAY ROWS*/
 foreach($gvHeadColomnBT as $key =>$value[]){
+ 
+  if($value[$key]['FIELD'] == 'CUST_KTG_PARENT'){
+      $attDinamik[]=[
+        'attribute'=>$value[$key]['FIELD'],
+        'label'=>$value[$key]['label'],
+       'value'=>function ($model, $key, $index, $widget) {
+              $kategori = Kategoricus::find()
+                          ->where(['CUST_KTG'=>$model->CUST_KTG_PARENT])
+                          ->one();
+
+              return $kategori->CUST_KTG_NM;},
+              'filterType'=>GridView::FILTER_SELECT2,
+              'filter'=>ArrayHelper::map(Kategoricus::find()
+                                        ->where('CUST_KTG_PARENT = CUST_KTG')
+                                        ->asArray()
+                                        ->all(), 'CUST_KTG', 'CUST_KTG_NM'),
+              'filterWidgetOptions'=>[
+              'pluginOptions'=>['allowClear'=>true],
+                            ],
+              'filterInputOptions'=>['placeholder'=>'Customers Group'],
+
+               'group'=>true,
+                 
+        'hAlign'=>'right',
+        'vAlign'=>'middle',
+        'noWrap'=>true,
+        'headerOptions'=>[
+            'style'=>[
+            'text-align'=>'center',
+            'width'=>$value[$key]['FIELD'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+            'background-color'=>'rgba('.$value[$key]['warna'].')',
+          ]
+        ],
+        'contentOptions'=>[
+          'style'=>[
+            'text-align'=>$value[$key]['align'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+          ]
+        ],
+              'width'=>'12px',
+      ];
+
+    }else{
       # code...
       $attDinamik[]=[
         'attribute'=>$value[$key]['FIELD'],
@@ -208,32 +241,34 @@ foreach($gvHeadColomnBT as $key =>$value[]){
               'width'=>'12px',
       ];
 
+    }
+
 };
 
 
 /*SHOW GRID VIEW LIST*/
- $tabkota =  GridView::widget([
-  'id'=>'gv-kota',
-  'dataProvider' => $dataproviderkota,
-  'filterModel' => $searchmodelkota,
+ $tabcrud =  GridView::widget([
+  'id'=>'gv-kat',
+  'dataProvider' => $dataProviderkat,
+  'filterModel' => $searchModel1,
   'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
   'columns' => $attDinamik,
   'pjax'=>true,
   'pjaxSettings'=>[
     'options'=>[
       'enablePushState'=>false,
-      'id'=>'gv-kota',
+      'id'=>'gv-kat',
     ],
   ],
    'panel'=>[
-   'type' =>GridView::TYPE_SUCCESS,
-      'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create ',
-            ['modelClass' => 'Barangumum',]),'/master/customers/createkota',[
-              'data-toggle'=>"modal",
-                'data-target'=>"#form2",
-                  'id'=>'modl',
-                  'class' => 'btn btn-success'
-                        ]),
+
+                'type' =>GridView::TYPE_SUCCESS,
+                'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create Parent ',
+                        ['modelClass' => 'Kategoricus',]),'/master/customers-kategori/createparent',[
+                                                            'data-toggle'=>"modal",
+                                                            'data-target'=>"#formparent",
+                                                            'class' => 'btn btn-success'
+                                                            ])
                     ],
   'toolbar'=> [
     //'{items}',
@@ -245,7 +280,16 @@ foreach($gvHeadColomnBT as $key =>$value[]){
   'striped'=>true,
 ]);
 
- ?>
+
+
+
+
+
+
+ 
+
+
+?>
 <?php
 	 $navmenu= NavX::widget([
 		'options'=>['class'=>'nav nav-tabs'],
@@ -258,7 +302,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 				['label' => 'Properties', 'items' => [
 					['label' => '<span class="fa fa-flag fa-md"></span>Kota', 'url' => '/master/customers/esm-index-city'],
 					['label' => '<span class="fa fa-flag-o fa-md"></span>Province', 'url' => '/master/customers/esm-index-provinsi'],
-					['label' => '<span class="fa fa-table fa-md"></span>Category', 'url' => '/master/customers/esm-index-kategori'],
+					['label' => '<span class="fa fa-table fa-md"></span>Category', 'url' => '/master/customers-kategori/esm-index-kategori'],
 					['label' => '<span class="fa fa-table fa-md"></span>Geografis', 'url' => '/master/customers/esm-index-geo'],
 					['label' => '<span class="fa fa-table fa-md"></span>Layers', 'url' => '/master/customers/esm-index-layer'],
 					['label' => '<span class="fa fa-table fa-md"></span>Layers Mutasi', 'url' => '/master/customers/esm-index-layermutasi'],
@@ -281,52 +325,54 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 		</div>
 		<div class="col-sm-12">
 			<?php
-				echo $tabkota;
+				echo $tabcrud;
 			?>
 		</div>
 	</div>
 </div>
-
 <?php
-// create kota and update via modal
-$this->registerJs("
-  $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-      $('#form2').on('show.bs.modal', function (event) {
-          var button = $(event.relatedTarget)
-          var modal = $(this)
-          var title = button.data('title')
-          var href = button.attr('href')
-          //modal.find('.modal-title').html(title)
-          modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-          $.post(href)
-              .done(function( data ) {
-                  modal.find('.modal-body').html(data)
-              });
-          })
-  ",$this::POS_READY);
-Modal::begin([
-     'id' => 'form2',
-     'header' => '<h4 class="modal-title">LukisonGroup</h4>',
-       ]);
-Modal::end();
 
-// view kota via modal
-$this->registerJs("
-   $('#view2').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget)
-    var modal = $(this)
-    var title = button.data('title')
-    var href = button.attr('href')
-    //modal.find('.modal-title').html(title)
-    modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-    $.post(href)
-      .done(function( data ) {
-        modal.find('.modal-body').html(data)
-      });
-    })
-",$this::POS_READY);
-Modal::begin([
-        'id' => 'view2',
-        'header' => '<h4 class="modal-title">LukisonGroup</h4>',
-        ]);
-Modal::end();
+    // create and update kategori customers via modal
+      $this->registerJs("
+      $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+          $('#formparent').on('show.bs.modal', function (event) {
+              var button = $(event.relatedTarget)
+              var modal = $(this)
+              var title = button.data('title')
+              var href = button.attr('href')
+              //modal.find('.modal-title').html(title)
+              modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+              $.post(href)
+                  .done(function( data ) {
+                      modal.find('.modal-body').html(data)
+                  });
+              })
+      ",$this::POS_READY);
+  	Modal::begin([
+  			'id' => 'formparent',
+  			'header' => '<h4 class="modal-title">LukisonGroup</h4>',
+  				]);
+  	Modal::end();
+
+    // view kategori customers via modal
+    $this->registerJs("
+          $('#viewparent').on('show.bs.modal', function (event) {
+              var button = $(event.relatedTarget)
+              var modal = $(this)
+              var title = button.data('title')
+              var href = button.attr('href')
+              //modal.find('.modal-title').html(title)
+              modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+              $.post(href)
+                  .done(function( data ) {
+                      modal.find('.modal-body').html(data)
+                  });
+              })
+      ",$this::POS_READY);
+      Modal::begin([
+              'id' => 'viewparent',
+              'header' => '<h4 class="modal-title">LukisonGroup</h4>',
+                  ]);
+      Modal::end();
+
+     ?>

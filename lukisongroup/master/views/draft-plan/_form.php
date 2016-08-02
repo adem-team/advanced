@@ -19,7 +19,7 @@ use kartik\widgets\Select2;
                 'pluginOptions' => [
                     'allowClear' => true
                      ],
-            ]);?>
+            ])->label('List Geografis');?>
 
 
 

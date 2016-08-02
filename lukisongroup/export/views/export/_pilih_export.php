@@ -41,9 +41,10 @@ use lukisongroup\master\models\Kategoricus;
     ])->label('Kategori');
         ?>
 
-  <?= $form->field($model, 'cust_ktg')->widget(DepDrop::classname(), [
+  <?= $form->field($model, 'cust_ktga')->widget(DepDrop::classname(), [
     'type'=>DepDrop::TYPE_SELECT2,
-    'options'=>['placeholder'=>'Select ...'],
+    'options'=>['placeholder'=>'Select ...',
+    'id'=>'customers-cust_ktga'],
     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
     'pluginOptions'=>[
         'depends'=>['customers-cus_type'],
@@ -114,7 +115,7 @@ use lukisongroup\master\models\Kategoricus;
 
 **/
 $this->registerJs("
-$('#customers-cust_ktg').on('change',function(e){
+$('#customers-cust_ktga').on('change',function(e){
 e.preventDefault();
 var idx = $(this).val();
    $.ajax({   
@@ -130,9 +131,4 @@ var idx = $(this).val();
 // bootstrap-duallistbox-nonselected-list_Customers[CUST_GRP][]
 ",$this::POS_READY);
 
-$script = <<< JS
-$(document).ready(function() {
-    setInterval(function(){ $("#customers-cust_grp").click(); }, 1000);
-});
-JS;
-$this->registerJs($script);
+
