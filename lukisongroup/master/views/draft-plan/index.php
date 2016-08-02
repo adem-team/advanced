@@ -29,8 +29,8 @@ $attDinamik =[];
 /*GRIDVIEW ARRAY FIELD HEAD*/
 $headColomnBT=[
   ['ID' =>0, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'Customers.id','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-  ['ID' =>1, 'ATTR' =>['FIELD'=>'custgeo.SCDL_GROUP_NM','SIZE' => '10px','label'=>'Geo','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-   ['ID' =>2, 'ATTR' =>['FIELD'=>'custlayer.LAYER','SIZE' => '10px','label'=>'Layer','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+  ['ID' =>1, 'ATTR' =>['FIELD'=>'custgeo.GEO_NM','SIZE' => '10px','label'=>'Geo','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+   ['ID' =>2, 'ATTR' =>['FIELD'=>'custlayer.LAYER_NM','SIZE' => '10px','label'=>'Layer','align'=>'left','warna'=>'97, 211, 96, 0.3']],
   ['ID' =>3, 'ATTR' =>['FIELD'=>'DAY_ID','SIZE' => '10px','label'=>'Day','align'=>'left','warna'=>'97, 211, 96, 0.3']],
    ['ID' =>4, 'ATTR' =>['FIELD'=>'DAY_VALUE','SIZE' => '10px','label'=>'Day Value','align'=>'left','warna'=>'97, 211, 96, 0.3']],
   ['ID' =>5, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'Status','align'=>'left','warna'=>'97, 211, 96, 0.3']],
