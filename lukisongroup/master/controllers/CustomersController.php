@@ -79,18 +79,19 @@ class CustomersController extends Controller
     }
 
 	public function aryData_layer(){ 
-		return ArrayHelper::map(DraftLayer::find()->all(), 'LAYER_ID',function($model) {
-				return $model['LAYER_NM'].'-'.$model['DCRIPT'];
-			});
+		return ArrayHelper::map(DraftLayer::find()->all(), 'LAYER_ID','LAYER_NM');
+		// return ArrayHelper::map(DraftLayer::find()->all(), 'LAYER_ID',function($model) {
+				// return $model['LAYER_NM'].'-'.$model['DCRIPT'];
+			// });
 	}
 	public function aryData_Geo(){ 
-		return ArrayHelper::map(DraftGeo::find()->all(), 'GEO_ID','GEO_NM');
+		return ArrayHelper::map(DraftGeo::find()->Where("GEO_ID<>1")->all(), 'GEO_ID','GEO_NM');
 	}
 
     public function actionIndex()
     {
 		// city data
-        $searchmodelkota = new KotaSearch();
+       /*  $searchmodelkota = new KotaSearch();
         $dataproviderkota = $searchmodelkota->search(Yii::$app->request->queryParams);
 
         // province data
@@ -98,7 +99,7 @@ class CustomersController extends Controller
         $dataproviderpro = $searchmodelpro->search(Yii::$app->request->queryParams);
 
         $searchModel1 = new KategoricusSearch();
-        $dataProviderkat  = $searchModel1->searchparent(Yii::$app->request->queryParams);
+        $dataProviderkat  = $searchModel1->searchparent(Yii::$app->request->queryParams); */
 
         $searchModel = new CustomersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -158,14 +159,18 @@ class CustomersController extends Controller
 		$sideMenu_control='umum_datamaster';
 		return $this->render('index', [
 			'sideMenu_control'=> $sideMenu_control,
-			'searchModel1' => $searchModel1,
-			'dataProviderkat'  =>$dataProviderkat ,
+			// 'searchModel1' => $searchModel1,
+			// 'dataProviderkat'  =>$dataProviderkat ,
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
-			'searchmodelkota' => $searchmodelkota,
-			'searchmodelpro' => $searchmodelpro,
-			'dataproviderpro' =>  $dataproviderpro,
-			'dataproviderkota' => $dataproviderkota,
+			// 'searchmodelkota' => $searchmodelkota,
+			// 'searchmodelpro' => $searchmodelpro,
+			// 'dataproviderpro' =>  $dataproviderpro,
+			// 'dataproviderkota' => $dataproviderkota,
+			//'parent'=>$parent,
+			'data_layer'=>$this->aryData_layer(),
+			//'config_layer'=>$config_layer,
+			'data_group'=>$this->aryData_Geo(),
 		]);
 	}
 
@@ -273,7 +278,7 @@ class CustomersController extends Controller
                     $output = $parent_model->CUST_GRP;
                    
                 }
-                 if (isset($posted['LAYER'])) {
+                if (isset($posted['LAYER'])) {
                     $model->save();
 
                    // $output =  Yii::$app->formatter->asDecimal($model->EMP_NM, 2);

@@ -18,6 +18,112 @@ $this->title = Yii::t('app', 'Customers');   	 			 /* title pada header page */
 
 $parent = ArrayHelper::map(Customers::find()->where('STATUS<>3 and CUST_KD=CUST_GRP')->all(), 'CUST_KD', 'CUST_NM');
 
+
+function tombolCustomers(){
+  $title1 = Yii::t('app', 'Customers');
+  $options1 = [ 'id'=>'setting-erp',
+          //'data-toggle'=>"modal",
+          // 'data-target'=>"#",
+          //'class' => 'btn btn-default',
+          'style' => 'text-align:left',
+  ];
+  $icon1 = '<span class="fa fa-cogs fa-md"></span>';
+  $label1 = $icon1 . ' ' . $title1;
+  $url1 = Url::toRoute(['/master/customers/esm-index']);//,'kd'=>$kd]);
+  $content = Html::a($label1,$url1, $options1);
+  return $content;
+}
+
+/**
+   * New|Change|Reset| Password Login
+ * @author ptrnov  <piter@lukison.com>
+ * @since 1.1
+   */
+function tombolKota(){
+  $title1 = Yii::t('app', 'Kota');
+  $options1 = [ 'id'=>'password-erp',
+          // 'data-toggle'=>"modal",
+          // 'data-target'=>"#profile-passwrd",
+          //'class' => 'btn btn-default',
+         // 'style' => 'text-align:left',
+  ];
+  $icon1 = '<span class="fa fa-shield fa-md"></span>';
+  $label1 = $icon1 . ' ' . $title1;
+  $url1 = Url::toRoute(['/master/customers/esm-index-city']);
+  $content = Html::a($label1,$url1, $options1);
+  return $content;
+}
+
+/**
+   * Create Signature
+ * @author ptrnov  <piter@lukison.com>
+ * @since 1.1
+   */
+function tombolProvince(){
+  $title1 = Yii::t('app', 'Province');
+  $options1 = [ 'id'=>'signature-erp',
+          //'data-toggle'=>"modal",
+          // 'data-target'=>"#profile-signature",
+          //'class' => 'btn btn-default',
+  ];
+  $icon1 = '<span class="fa fa-pencil-square-o fa-md"></span>';
+  $label1 = $icon1 . ' ' . $title1;
+  $url1 = Url::toRoute(['/master/customers/esm-index-provinsi']);//,'kd'=>$kd]);
+  $content = Html::a($label1,$url1, $options1);
+  return $content;
+}
+
+/**
+   * Persinalia Employee
+ * @author ptrnov  <piter@lukison.com>
+ * @since 1.1
+   */
+function tombolKategori(){
+  $title1 = Yii::t('app', 'Kategori Customers');
+  $options1 = [ 'id'=>'personalia-erp',
+          //'data-toggle'=>"modal",
+          // 'data-target'=>"#profile-personalia",
+          // 'class' => 'btn btn-primary',
+  ];
+  $icon1 = '<span class="fa fa-group fa-md"></span>';
+  $label1 = $icon1 . ' ' . $title1;
+  $url1 = Url::toRoute(['/master/customers/esm-index-kategori']);//,'kd'=>$kd]);
+  $content = Html::a($label1,$url1, $options1);
+  return $content;
+}
+
+/**
+   * Performance Employee
+ * @author ptrnov  <piter@lukison.com>
+ * @since 1.1
+   */
+function tombolMap(){
+  $title1 = Yii::t('app', 'Map');
+  $options1 = [ 'id'=>'performance-erp',
+          //'data-toggle'=>"modal",
+          // 'data-target'=>"#profile-performance",
+          // 'class' => 'btn btn-danger',
+  ];
+  $icon1 = '<span class="fa fa-graduation-cap fa-md"></span>';
+  $label1 = $icon1 . ' ' . $title1;
+  $url1 = Url::toRoute(['/master/customers/esm-map']);//,'kd'=>$kd]);
+  $content = Html::a($label1,$url1, $options1);
+  return $content;
+}
+
+function tombolLoginalias(){
+  $title1 = Yii::t('app', 'Alias List');
+  $options1 = [ 'id'=>'performance-alias-erp',
+                  'data-toggle'=>"modal",
+                  'data-target'=>"#formlogin",
+  ];
+  $icon1 = '<span class="fa fa-graduation-cap fa-md"></span>';
+  $label1 = $icon1 . ' ' . $title1;
+  $url1 = Url::toRoute(['/master/customers/login-alias']);//,'kd'=>$kd]);
+  $content = Html::a($label1,$url1, $options1);
+  return $content;
+}
+
 /*modal*/
 Modal::begin([
     'id' => 'modal-view_cus-customer',
@@ -255,31 +361,31 @@ $tabcustomersData = \kartik\grid\GridView::widget([
         ]
       ],
     ],
-	[
-		'class'=>'kartik\grid\EditableColumn',
-		'attribute' => 'GEO',
-		'refreshGrid'=>true,
-		'label'=>'Geo',
-		'hAlign'=>'left',
-		'vAlign'=>'top',
-		'filter'=>true,
-		'filterType'=>GridView::FILTER_SELECT2,
-		'filter' => $data_group,
-		'filterWidgetOptions'=>[
-			'pluginOptions'=>[
-				'allowClear'=>true,
-				'contentOptions'=>[
-					'style'=>[
-					  'text-align'=>'left',
-					  'font-family'=>'tahoma, arial, sans-serif',
-					  'font-size'=>'8pt',
-					]	
-				]
-			],
-		],
-		'filterInputOptions'=>['placeholder'=>'Select'],
-		// 'mergeHeader'=>true,
-		'headerOptions'=>[
+     [
+      'class'=>'kartik\grid\EditableColumn',
+      'attribute' => 'GEO',
+      'refreshGrid'=>true,
+      'label'=>'Geo',
+      'hAlign'=>'left',
+      'vAlign'=>'top',
+      'filter'=>true,
+      'filterType'=>GridView::FILTER_SELECT2,
+      'filter' => $data_group,
+      'filterWidgetOptions'=>[
+    'pluginOptions'=>[
+      'allowClear'=>true,
+      'contentOptions'=>[
+        'style'=>[
+          'text-align'=>'left',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ]
+    ],
+    ],
+      'filterInputOptions'=>['placeholder'=>'Select'],
+      // 'mergeHeader'=>true,
+      'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
           'width'=>'120px',
@@ -287,88 +393,92 @@ $tabcustomersData = \kartik\grid\GridView::widget([
           'font-size'=>'8pt',
           'background-color'=>'rgba(126, 189, 188, 0.9)',
         ]
-		],
-			'contentOptions'=>[
-			'style'=>[
-				'vertical-align'=>'text-middle',
-				  'text-align'=>'center',
-				  'width'=>'120px',
-				  'font-family'=>'tahoma, arial, sans-serif',
-				  'font-size'=>'8pt',
-			]
-		],    
-		'editableOptions' => [
-			'header' => 'GEO',
-			'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
-			'size' => 'xs',
-			'options' => [
-			  'data' =>$data_group,
-			  'pluginOptions' => [
-				'allowClear' => true,
-				
-			  ],
-			],    
-			// Refresh Display
-			'displayValueConfig' => $data_group,
-		],
+      ],
+      'contentOptions'=>[
+      'style'=>[
+      'vertical-align'=>'text-middle',
+          'text-align'=>'left',
+          'width'=>'120px',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ],
+    
+      'editableOptions' => [
+        'header' => 'GEO',
+        'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+        'size' => 'sm',
+        'options' => [
+          'data' =>$data_group,
+          'pluginOptions' => [
+            'allowClear' => true,
+            
+          ],
+        ],    
+        // Refresh Display
+        'displayValueConfig' => $data_group,
+      ],
     ],
-	[
-		'class'=>'kartik\grid\EditableColumn',
-		'attribute' => 'LAYER',
-		'refreshGrid'=>true,
-		'label'=>'Layer',
-		'hAlign'=>'left',
-		'vAlign'=>'top',
-		'filter'=>true,
-		'filterType'=>GridView::FILTER_SELECT2,
-		'filter' => $data_layer,
-		'filterWidgetOptions'=>[
-		'pluginOptions'=>[
-			'allowClear'=>true,
-			'contentOptions'=>[
-					'style'=>[
-					  'text-align'=>'left',
-					  'font-family'=>'tahoma, arial, sans-serif',
-					  'font-size'=>'8pt',
-					]
-				]
-			],
-		],
-		'filterInputOptions'=>['placeholder'=>'Select'],
-		// 'mergeHeader'=>true,
-		'headerOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'120px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			  'background-color'=>'rgba(126, 189, 188, 0.9)',
-			]
-		],
-		'contentOptions'=>[
-			'style'=>[
-				'vertical-align'=>'text-middle',
-				'text-align'=>'center',
-				'width'=>'120px',
-				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'8pt',
-			]
-		],    
-		'editableOptions' => [
-		'header' => 'layer',
-		'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
-		'size' => 'xs',
-		'options' => [
-				'data' =>$data_layer,
-				'pluginOptions' => [
-					'allowClear' => true,
-					// 'class'=>'pull-top dropup'
-				],
-			],    
-			// Refresh Display
-			'displayValueConfig' => $data_layer,
-		],
-	],
+[
+      'class'=>'kartik\grid\EditableColumn',
+      'attribute' => 'LAYER',
+
+      'refreshGrid'=>true,
+      'label'=>'Layer',
+      'hAlign'=>'left',
+      'vAlign'=>'top',
+      'filter'=>true,
+      'filterType'=>GridView::FILTER_SELECT2,
+      'filter' => $data_layer,
+      'filterWidgetOptions'=>[
+    'pluginOptions'=>[
+      'allowClear'=>true,
+      'contentOptions'=>[
+        'style'=>[
+          'text-align'=>'left',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ]
+    ],
+    ],
+      'filterInputOptions'=>['placeholder'=>'Select'],
+      // 'mergeHeader'=>true,
+      'headerOptions'=>[
+        'style'=>[
+          'text-align'=>'center',
+          'width'=>'120px',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+          'background-color'=>'rgba(126, 189, 188, 0.9)',
+        ]
+      ],
+      'contentOptions'=>[
+      'style'=>[
+      'vertical-align'=>'text-middle',
+          'text-align'=>'left',
+          'width'=>'120px',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ],
+    
+      'editableOptions' => [
+        'header' => 'layer',
+        'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+        'size' => 'md',
+
+        'options' => [
+          'data' =>$data_layer,
+          'pluginOptions' => [
+            'allowClear' => true,
+            // 'class'=>'pull-top dropup'
+          ],
+        ],    
+        // Refresh Display
+        'displayValueConfig' => $config_layer,
+      ],
+    ],
     [
       'attribute' => 'STATUS',
       'filter' => $valStt,
@@ -410,13 +520,14 @@ $tabcustomersData = \kartik\grid\GridView::widget([
       'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
       'buttons' => [
             'view' =>function($url, $model, $key){
-					  return  Html::button(Yii::t('app', 'View Customers'),
-						['value'=>url::to(['viewcust','id'=>$model->CUST_KD]),
-						'id'=>'modalButtonCustomers',
-						'class'=>"btn btn-default btn-xs",      
-						'style'=>['width'=>'170px', 'height'=>'25px','border'=> 'none'],
-					  ]);
-				  },        
+          return  Html::button(Yii::t('app', 'View Customers'),
+            ['value'=>url::to(['viewcust','id'=>$model->CUST_KD]),
+            'id'=>'modalButtonCustomers',
+            'class'=>"btn btn-default btn-xs",      
+            'style'=>['width'=>'170px', 'height'=>'25px','border'=> 'none'],
+          ]);
+      },      
+        
             'edit' =>function($url, $model,$key){
                   return '<li>'. Html::a('<i class="glyphicon glyphicon-globe"></i>'.Yii::t('app', 'Create Map'),
                                 ['create-map','id'=>$model->CUST_KD],
@@ -459,9 +570,15 @@ $tabcustomersData = \kartik\grid\GridView::widget([
                                'data-target'=>"#createcus",
                                'class' => 'btn btn-success btn-sm'
                               ]).' '.
+//			Html::a('<i class="fa fa-history "></i> '.Yii::t('app', 'Refresh',
+//            ['modelClass' => 'Customers1',]),['customers/esm-index'],[
+//							  // 'id'=>'refresh-cust',
+//                               'class' => 'btn btn-info btn-sm'
+//                              ]).' '.
 			Html::a('<i class="fa fa-history "></i> '.Yii::t('app', 'Refresh',
-					['modelClass' => 'Customers1',]),'/master/customers',[
+					['modelClass' => 'Customers1',]),'/master/customers/esm-index',[
 									   'id'=>'refresh-cust-erp',
+//									    'data-toggle-refsehs-erp'=>'erp-customers-refsehs',
 									   'data-pjax' => 0,
 									   'class' => 'btn btn-info btn-sm'
 									  ]).' '.
@@ -550,6 +667,22 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 		<div class="col-sm-12 col-md-12 col-lg-12" >
 		  <!-- Menu !-->
 		  <?php
+		  $test='<div class="btn-group pull-left" >'.
+				'<button type="button" class="btn btn-info">MENU</button>'.
+				'<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">'.
+				  '<span class="caret"></span>'.
+				  '<span class="sr-only">Toggle Dropdown</span>'.
+				'</button>'.
+				  '<ul class="dropdown-menu" role="menu">'.
+				  '<li>'. tombolCustomers() .'</li>'.
+				  '<li>'.  tombolKota().'</li>'.
+				  '<li>'.  tombolProvince() .'</li>'.
+				  '<li>'.  tombolKategori() .'</li>'.
+				  '<li>'.  tombolMap() .'</li>'.
+				  '<li>'.  tombolLoginalias() .'</li>'.
+				  '</ul>'.
+				'</div>';
+				//echo  $test;
 				echo $navmenu;
 		  ?>
 		  <!-- Customers !-->
