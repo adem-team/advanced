@@ -16,7 +16,7 @@ $this->sideCorp = 'Customers';                 				 /* Title Select Company pada
 $this->sideMenu = $sideMenu_control;//'umum_datamaster';   	 /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Customers');   	 			 /* title pada header page */
 
-$parent = ArrayHelper::map(Customers::find()->where('STATUS<>3 and CUST_KD=CUST_GRP')->all(), 'CUST_KD', 'CUST_NM');
+// $parent = ArrayHelper::map(Customers::find()->where('STATUS<>3 and CUST_KD=CUST_GRP')->all(), 'CUST_KD', 'CUST_NM');
 
 /*modal*/
 Modal::begin([
@@ -172,8 +172,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
         'options' => [
           'data' =>$parent,
           'pluginOptions' => [
-            'allowClear' => true,
-            'class'=>'pull-top dropup'
+            'allowClear' => true
           ],
         ],
         
@@ -468,20 +467,20 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 			Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export All'),'/export/export/export-data',
 								[
 									'id'=>'export-data-erp-customers',
-									//'data-pjax' => true,
+									'data-pjax' => 0,
 									'class' => 'btn btn-info btn-sm'
 								]
 					).' '.  Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export selected'),'',
                 [
                     // 'data-toggle'=>"modal",
                     'id'=>'exportmodal-erp',
-                    'data-pjax' => true,
+                    'data-pjax' => 0,
                      'data-toggle-export-erp'=>'erp-customers-modal',
                     // 'data-target'=>"#export-mod",
                     'class' => 'btn btn-success btn-sm'
                  
                 ]
-          ).' '.  Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Pilih Export'),'',
+          ).' '.  Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Pilih Export'),'/export/export/pilih-export-data',
                 [
                     'data-toggle'=>"modal",
                     'id'=>'exportmodal-erp-pilih',
@@ -493,7 +492,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
                 [
                     'data-toggle-delete-erp'=>'erp-customers-delete',
                     'id'=>'delete-all-erp',
-                    'data-pjax' => true,
+                    'data-pjax' => 0,
                     'class' => 'btn btn-danger btn-sm'
                  
                 ]
@@ -531,9 +530,9 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 				['label' => '<span class="fa fa-cogs fa-md"></span>Alias Customers', 'url' => '/master/customers/login-alias','linkOptions'=>['id'=>'performance','data-toggle'=>'modal','data-target'=>'#formlogin']],
 				'<li class="divider"></li>',
 				['label' => 'Properties', 'items' => [
-					['label' => '<span class="fa fa-flag fa-md"></span>Kota', 'url' => '/master/customers/esm-index-city'],
+					['label' => '<span class="fa fa-flag fa-md"></span>Kota', 'url' => '/master/kota-customers/esm-index-city'],
 					['label' => '<span class="fa fa-flag-o fa-md"></span>Province', 'url' => '/master/customers/esm-index-provinsi'],
-					['label' => '<span class="fa fa-table fa-md"></span>Category', 'url' => '/master/customers/esm-index-kategori'],
+					['label' => '<span class="fa fa-table fa-md"></span>Category', 'url' => '/master/customers-kategori/esm-index-kategori'],
 					['label' => '<span class="fa fa-table fa-md"></span>Geografis', 'url' => '/master/customers/esm-index-geo'],
 					['label' => '<span class="fa fa-table fa-md"></span>Layers', 'url' => '/master/customers/esm-index-layer'],
 					['label' => '<span class="fa fa-table fa-md"></span>Layers Mutasi', 'url' => '/master/customers/esm-index-layermutasi'],
@@ -625,7 +624,7 @@ $(document).on('click', '[data-toggle-delete-erp]', function(e){
 
 // })
 
-",$this::POS_READY);
+",$this::POS_LOAD);
 
 
 /** *js export if click then export 
@@ -665,7 +664,7 @@ $(document).on('click', '[data-toggle-export-erp]', function(e){
 
 // })
 
-",$this::POS_READY);
+",$this::POS_LOAD);
 
 
   /*

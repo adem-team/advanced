@@ -102,13 +102,11 @@ class DraftPlanController extends Controller
         $model =  DraftPlan::find()->where(['CUST_KD'=>$id])->one();
 
         $model_day = new DayName();
-
           $ary= [
           ['ID' => 1, 'OPT' => 'Pekan Ganjil'],
           ['ID' => 2, 'OPT' => 'Pekan Genap'],
         ];
-
-            $opt = ArrayHelper::map($ary, 'ID', 'OPT');
+        $opt = ArrayHelper::map($ary, 'ID', 'OPT');
 
          if ($model->load(Yii::$app->request->post())) {
 

@@ -76,19 +76,21 @@ $this->params['breadcrumbs'][] = $this->title;
                 'pluginOptions' => [
                     'allowClear' => true
                      ],
-            ]);?>
+            ])->label('Options Jeda Pekan');
+		?>
 
         <?= $form->field($model, 'DAY_ID')->widget(DepDrop::classname(), [
-            'type'=>DepDrop::TYPE_SELECT2,
-            'options'=>['placeholder'=>'Select ...'],
-            'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-            'pluginOptions'=>[
-                'depends'=>['dayname-opt'],
-                 'initialize' => true,
-                  'loadingText' => 'Loading  ...',
-                'url' => Url::to(['/master/draft-plan/lisday']),
-            ]
-        ]) ?>
+				'type'=>DepDrop::TYPE_SELECT2,
+				'options'=>['placeholder'=>'Select ...'],
+				'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+				'pluginOptions'=>[
+					'depends'=>['dayname-opt'],
+					 'initialize' => true,
+					  'loadingText' => 'Loading  ...',
+					'url' => Url::to(['/master/draft-plan/lisday']),
+				]
+			])->label('Setel Hari') 
+		?>
 
        <!--   $form->field($model, 'DAY_ID')->widget(Select2::classname(), [
                 // 'data' => $opt,

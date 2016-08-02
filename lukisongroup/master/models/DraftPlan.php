@@ -21,6 +21,7 @@ use lukisongroup\master\models\DraftLayer;
  * @property string $UPDATED_BY
  * @property string $UPDATED_AT
  */
+ 
 class DraftPlan extends \yii\db\ActiveRecord
 {
     /**
@@ -84,4 +85,61 @@ class DraftPlan extends \yii\db\ActiveRecord
             'UPDATED_AT' => 'Updated  At',
         ];
     }
+	
+	/*ID DISPLY NAMEOF THE DAY*/
+	Public function getDayNm(){
+		if ($this->DAY_ID==1){
+			return "Senin";
+		}elseif ($this->DAY_ID==2){
+			return "Selasa";
+		}elseif ($this->DAY_ID==3){
+			return "Rabu";
+		}elseif ($this->DAY_ID==4){
+			return "Kamis";
+		}elseif ($this->DAY_ID==5){
+			return "Jumat";
+		}elseif ($this->DAY_ID==6){
+			return "Sabtu";
+		}elseif ($this->DAY_ID==7){
+			return "Minggu";
+		}else{
+			return "None";
+		}
+	}
+	
+	/*
+	 * ID DINAMIK SCHEDULING
+	 * FORMULA SCHEDULE ID | MAPING BY [GEO,subGEO,DAY,LAYER]
+	 * @author ptrnov [ptr.nov@gmail.com] @since 1.0.0, 1.5.0,
+	 * @author wawan [wawan@gmail.com] @since 1.3.0
+	*/
+	public function getIdDinamikScdl(){
+		$geo=$this->custgeo->GEO_NM;
+		$subGeo=1;
+		$pekanGanjilGenap=1;
+		$dayNilai=$this->DAY_VALUE;		
+		$layerStt='n';
+		if ($geo!=''){// GEO = check semua customer dalam group GEO
+			if ($subGeo!=''){// Check SubGeo Validation scenario  jika jumlah customer dalam (GEO+HARI) Full, harus new SubGeo.
+				if ($pekanGanjilGenap!=''){// Check hari of week[ganjil/genap] Validation scenario jumlah customer sesuai max default/max MIX
+					if ($dayNilai!=''){// Check Layer B=u  or A,B,C,D=m
+						if ($layerStt!=''){// Check Layer B=u  or A,B,C,D=m
+							$valueFormua= $geo .'.'.$subGeo.'.'.$pekanGanjilGenap.'.'.$dayNilai.'.'.$layerStt;   
+						}else{
+							$valueFormua= "NotSet";
+						}
+					}else{
+						$valueFormua= "NotSet";
+					}
+				}else{
+					$valueFormua= "NotSet";
+				}
+			}else{
+				$valueFormua= "NotSet";	
+			}			
+		}else{
+			$valueFormua= "NotSet";
+		}
+		return $valueFormua;
+	}
 }
