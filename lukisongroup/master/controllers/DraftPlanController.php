@@ -59,6 +59,58 @@ class DraftPlanController extends Controller
             }
     }
 
+  /** 
+    *@return  connection db_esm
+  */
+    public function conn_esm()
+    {
+        return Yii::$app->db_esm;
+    }
+
+
+  /**
+     * finds draftplan models.
+     * @var $dynamick draftplan.
+     * @var $data converting obejct to array.
+     * save c0002scdl_plan_group via batch insert.
+     * if success redirect page index
+     * @return mixed
+     * @author wawan 
+     * @since 1.2.0
+     */
+
+    public function actionSendDraft()
+    {   
+        /*model draftplan*/
+        $data_draft = DraftPlan::find()->all();
+        $dynamick =  new DraftPlan();
+
+        /*converting obejct to array*/
+        $data = ArrayHelper::toArray($data_draft, [
+        'lukisongroup\master\models\DraftPlan' => [
+            'ID' => function ($dynamick) {
+                return $dynamick->IdDinamikScdl;
+            },
+            'GEO_ID',
+            'LAYER_ID',
+            'DAY_ID',
+            'DAY_VALUE'
+        ],
+    ]);
+        
+        /*batch insert*/
+        foreach ($data as $value) {
+            # code...
+            $this->conn_esm()->CreateCommand()
+                            ->batchInsert('c0002scdl_plan_group', ['SCDL_GROUP', 'GEO_ID','LAYER_ID','DAY_ID','DAY_VALUE'], [
+                    [$value['ID'],$value['GEO_ID'],$value['LAYER_ID'],$value['DAY_ID'],$value['DAY_VALUE']]
+                ])->execute();
+            }
+
+        return $this->redirect(['index']);
+
+    }
+
 
     /**
      * Lists all DraftPlan models.
@@ -76,6 +128,8 @@ class DraftPlanController extends Controller
         $searchModel = new DraftPlanSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+
+       
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -94,6 +148,7 @@ class DraftPlanController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
+
 
     public function actionDay($id)
     {
