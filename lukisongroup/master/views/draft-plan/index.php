@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
+use lukisongroup\master\models\DraftPlan;
 
 /* @var $this yii\web\View */
 /* @var $searchModel lukisongroup\master\models\DraftPlanSearch */
@@ -14,9 +15,11 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="draft-plan-index">
 
-    
+
 
 <?php
+ // print_r(\ptrnov\salesforce\Jadwal::getDateOfWeekAndDayname('2016','34','1'));
+ // die();
 /*
  * GRID draft_plan
  * @author wawan  [aditiya@lukison.com]
@@ -249,6 +252,10 @@ $gvDraftPlan=GridView::widget([
                                 'data-toggle'=>"modal",
                                     'data-target'=>"#modal-create",
                                         'class' => 'btn btn-success'
+                                                    ]).' '.
+                Html::a('<i class="fa fa-paper-plane"></i> '.Yii::t('app', 'Send Draft',
+                            ['modelClass' => 'DraftPlan',]),'/master/draft-plan/send-draft',[
+                                        'class' => 'btn btn-info'
                                                     ]),
         'showFooter'=>false,
   ],
@@ -264,7 +271,6 @@ $gvDraftPlan=GridView::widget([
   'hover'=>true, //cursor select
   'responsive'=>true,
   'responsiveWrap'=>true,
-
   'bordered'=>true,
   'striped'=>true,
 ]);
