@@ -878,7 +878,7 @@ class CustomersController extends Controller
             //    ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
             // ]
             foreach ($model as $key => $value) {
-                   $out[] = ['id'=>$value['POSTAL_CODE'],'name'=> $value['CITY_NAME']];
+                   $out[] = ['id'=>$value['CITY_ID'],'name'=> $value['CITY_NAME']];
                }
 
                echo json_encode(['output'=>$out, 'selected'=>'']);
