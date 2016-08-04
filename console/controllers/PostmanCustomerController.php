@@ -70,12 +70,12 @@ class PostmanCustomerController extends Controller
 						(CASE WHEN a.PIC!='' THEN a.PIC ELSE 'Kosong' END) as CP
 				FROM c0001 a LEFT JOIN c0001k b ON b.CUST_KTG=a.CUST_TYPE
 				LEFT JOIN c0001g1 c on c.PROVINCE_ID=a.PROVINCE_ID
-				LEFT JOIN c0001g2 d on  d.POSTAL_CODE=a.CITY_ID
+				LEFT JOIN c0001g2 d on  d.CITY_ID=a.CITY_ID
 				LEFT JOIN c0002scdl_geo e on e.GEO_ID=a.GEO
 				LEFT JOIN c0002scdl_layer f on f.LAYER_ID=a.LAYER
 				LEFT JOIN c0002 g ON g.KD_CUSTOMERS=a.CUST_KD
 				WHERE a.STATUS<>3
-				ORDER BY a.CITY_ID ASC		
+				ORDER BY a.CUST_NM ASC		
 			")->queryAll(), 
 		]);	
 		$aryCusAllDataProvider=$cusAllDataProvider->allModels;
@@ -98,12 +98,12 @@ class PostmanCustomerController extends Controller
 						(CASE WHEN a.PIC!='' THEN a.PIC ELSE 'Kosong' END) as CP
 				FROM c0001 a LEFT JOIN c0001k b ON b.CUST_KTG=a.CUST_TYPE
 				LEFT JOIN c0001g1 c on c.PROVINCE_ID=a.PROVINCE_ID
-				LEFT JOIN c0001g2 d on  d.POSTAL_CODE=a.CITY_ID
+				LEFT JOIN c0001g2 d on  d.CITY_ID=a.CITY_ID
 				LEFT JOIN c0002scdl_geo e on e.GEO_ID=a.GEO
 				LEFT JOIN c0002scdl_layer f on f.LAYER_ID=a.LAYER
 				LEFT JOIN c0002 g ON g.KD_CUSTOMERS=a.CUST_KD
 				WHERE a.STATUS<>3 AND a.CUST_KTG='1' AND a.CUST_TYPE='22' #AND CUST_KD<>CUST_GRP
-				ORDER BY a.CUST_GRP ASC		
+				ORDER BY a.CUST_NM ASC		
 			")->queryAll(), 
 		]);	
 		$aryCusDataProviderNKA=$cusDataProviderNKA->allModels;
@@ -126,12 +126,12 @@ class PostmanCustomerController extends Controller
 						(CASE WHEN a.PIC!='' THEN a.PIC ELSE 'Kosong' END) as CP
 				FROM c0001 a LEFT JOIN c0001k b ON b.CUST_KTG=a.CUST_TYPE
 				LEFT JOIN c0001g1 c on c.PROVINCE_ID=a.PROVINCE_ID
-				LEFT JOIN c0001g2 d on  d.POSTAL_CODE=a.CITY_ID
+				LEFT JOIN c0001g2 d on  d.CITY_ID=a.CITY_ID
 				LEFT JOIN c0002scdl_geo e on e.GEO_ID=a.GEO
 				LEFT JOIN c0002scdl_layer f on f.LAYER_ID=a.LAYER
 				LEFT JOIN c0002 g ON g.KD_CUSTOMERS=a.CUST_KD
 				WHERE  a.STATUS <>3 AND a.CUST_KTG='1' AND a.CUST_TYPE='15' #AND CUST_KD<>CUST_GRP
-				ORDER BY a.CUST_GRP ASC					
+				ORDER BY a.CUST_NM ASC					
 			")->queryAll(),
 		]);			
 		$aryCusDataProviderMTI=$cusDataProviderMTI->allModels;
@@ -154,12 +154,12 @@ class PostmanCustomerController extends Controller
 						(CASE WHEN a.PIC!='' THEN a.PIC ELSE 'Kosong' END) as CP
 				FROM c0001 a LEFT JOIN c0001k b ON b.CUST_KTG=a.CUST_TYPE
 				LEFT JOIN c0001g1 c on c.PROVINCE_ID=a.PROVINCE_ID
-				LEFT JOIN c0001g2 d on  d.POSTAL_CODE=a.CITY_ID
+				LEFT JOIN c0001g2 d on  d.CITY_ID=a.CITY_ID
 				LEFT JOIN c0002scdl_geo e on e.GEO_ID=a.GEO
 				LEFT JOIN c0002scdl_layer f on f.LAYER_ID=a.LAYER
 				LEFT JOIN c0002 g ON g.KD_CUSTOMERS=a.CUST_KD
-				WHERE a.STATUS <>3 AND (a.CUST_KTG='1' AND a.CUST_TYPE<>'15' AND a.CUST_TYPE<>22) or (a.CUST_KTG='' AND a.CUST_TYPE='')
-				ORDER BY a.CUST_GRP ASC	
+				WHERE a.STATUS <>3 AND a.CUST_TYPE not in ('15','22') 
+				ORDER BY a.CUST_NM ASC	
 			")->queryAll(),
 		]);			
 		$aryCusDataProviderOTHER=$cusDataProvideOTHER->allModels;
@@ -208,7 +208,7 @@ class PostmanCustomerController extends Controller
                'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
 			],
 			[
-				'sheet_name' => 'NKA CUSTOMER',
+				'sheet_name' => 'MODERN-NKA',
                 'sheet_title' => ['CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER_GRADE','GEO_MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE POS','PHONE','CONTACT PERSON'], //$excel_ceils,//'sad',//[$excel_title],
 			    'ceils' => $excel_ceilsNKA,
                 //'freezePane' => 'E2',
@@ -231,7 +231,7 @@ class PostmanCustomerController extends Controller
                'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
 			],
 			[
-				'sheet_name' => 'MTI CUSTOMER',
+				'sheet_name' => 'MODERN-MTI',
 				'sheet_title' => ['CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER_GRADE','GEO_MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE POS','PHONE','CONTACT PERSON'], //$excel_ceils,//'sad',//[$excel_title],
 				'ceils' => $excel_ceilsMTI,
                 //'freezePane' => 'E2',
