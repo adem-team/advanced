@@ -83,7 +83,7 @@ class ExportController extends Controller
     public function actionExportData(){
 
         //$custDataMTI=Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll();
-        $query = "select c.CUST_KD,c.CUST_NM,ck.CUST_KTG_NM from c0001 c left join c0001k ck on c.CUST_TYPE = ck.CUST_KTG";
+        $query = "select c.CUST_KD,c.CUST_NM,ck.CUST_KTG_NM,c.ALAMAT from c0001 c left join c0001k ck on c.CUST_TYPE = ck.CUST_KTG where c.STATUS<>3";
 
         $cusDataProviderMTI = new ArrayDataProvider([
             'key' => 'ID',

@@ -5,6 +5,7 @@ namespace lukisongroup\master\models;
 use Yii;
 use lukisongroup\master\models\DraftGeo;
 use lukisongroup\master\models\DraftLayer;
+Use ptrnov\salesforce\Jadwal;
 
 /**
  * This is the model class for table "c0002scdl_plan".
@@ -27,6 +28,7 @@ class DraftPlan extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+   
 
     public static function tableName()
     {
@@ -60,7 +62,7 @@ class DraftPlan extends \yii\db\ActiveRecord
     {
         return [
             [['CUST_KD'], 'required'],
-            [['GEO_ID', 'LAYER_ID', 'DAY_ID', 'DAY_VALUE', 'STATUS'], 'integer'],
+            [['GEO_ID', 'LAYER_ID', 'DAY_ID', 'DAY_VALUE', 'STATUS','ODD_EVEN'], 'integer'],
             [['CREATED_AT','IdDinamikScdl', 'UPDATED_AT'], 'safe'],
             [['CUST_KD'], 'string', 'max' => 50],
             [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 100],
@@ -117,7 +119,7 @@ class DraftPlan extends \yii\db\ActiveRecord
 	public function getIdDinamikScdl(){
 		$geo=$this->custgeo->GEO_NM;
 		$subGeo=1;
-		$pekanGanjilGenap=1;	
+		$pekanGanjilGenap=$this->ODD_EVEN;	
 		$dayNilai=$this->DAY_VALUE;		
 		$layerStt='n';
 		if ($geo!=''){// GEO = check semua customer dalam group GEO
@@ -143,5 +145,7 @@ class DraftPlan extends \yii\db\ActiveRecord
 		}
 		return $valueFormua;
 	}
+
+	
 
 }

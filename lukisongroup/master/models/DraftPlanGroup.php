@@ -4,6 +4,7 @@ namespace lukisongroup\master\models;
 
 use Yii;
 
+
 /**
  * This is the model class for table "c0002scdl_plan_group".
  *
@@ -46,7 +47,7 @@ class DraftPlanGroup extends \yii\db\ActiveRecord
     {
         return [
             [['TGL_START', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
-            [['SCL_NM'], 'required'],
+            // [['SCL_NM'], 'required'],
             [['GEO_ID', 'LAYER_ID', 'DAY_ID', 'DAY_VALUE', 'STATUS'], 'integer'],
             [['SCL_NM', 'USER_ID'], 'string', 'max' => 50],
             [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 100],
