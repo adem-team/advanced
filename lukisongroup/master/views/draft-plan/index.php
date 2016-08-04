@@ -5,6 +5,7 @@ use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use lukisongroup\master\models\DraftPlan;
+Use ptrnov\salesforce\Jadwal;
 
 /* @var $this yii\web\View */
 /* @var $searchModel lukisongroup\master\models\DraftPlanSearch */
@@ -18,6 +19,42 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 <?php
+         $data_draft = DraftPlan::find()->all();
+        $dynamick =  new DraftPlan();
+
+    //     /*converting obejct to array*/
+        $data = ArrayHelper::toArray($data_draft, [
+        'lukisongroup\master\models\DraftPlan' => [
+            'ID' => function ($dynamick) {
+                return $dynamick->IdDinamikScdl;
+            },
+            'GEO_ID',
+            'LAYER_ID',
+            'DAY_ID',
+            'DAY_VALUE'
+        ],
+    ]);
+
+        foreach ($data as $value) {
+          # code...
+          // echo $value['ID'];
+            $dua[] = Jadwal::getArrayDateCust('2016','C','1','1','',$value['ID'],'66');
+            
+        }
+
+      
+
+    
+        // print_r($dynamick->IdDinamikScdl);
+        // die();
+ 
+            // print_r($dua);
+            // die();
+ // $dua= DraftPlan::getDateVal();
+ // print_r($dua);
+ // die();
+  
+
  // print_r(\ptrnov\salesforce\Jadwal::getDateOfWeekAndDayname('2016','34','1'));
  // die();
 /*

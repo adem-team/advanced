@@ -12,6 +12,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+Use ptrnov\ salesforce\Jadwal;
+use lukisongroup\master\models\DraftPlanGroup;
+
 
 /**
  * DraftPlanController implements the CRUD actions for DraftPlan model.
@@ -81,11 +84,11 @@ class DraftPlanController extends Controller
 
     public function actionSendDraft()
     {   
-        /*model draftplan*/
+         /*model draftplan*/
         $data_draft = DraftPlan::find()->all();
         $dynamick =  new DraftPlan();
 
-        /*converting obejct to array*/
+         /*converting obejct to array*/
         $data = ArrayHelper::toArray($data_draft, [
         'lukisongroup\master\models\DraftPlan' => [
             'ID' => function ($dynamick) {
@@ -94,18 +97,88 @@ class DraftPlanController extends Controller
             'GEO_ID',
             'LAYER_ID',
             'DAY_ID',
-            'DAY_VALUE'
+            'DAY_VALUE',
+            'CUST_KD',
+            'ODD_EVEN'
         ],
     ]);
+
+        // $dua = Jadwal::getArrayDateCust('2016','A','1','1','1','c00.1','66');
+
+        // print_r($dua);
+        // die();
+
+
+ // foreach ($data as $value) {
+ //          # code...
+ //          // echo $value['ID'];
+           
+            
+ //        }
+
+ // $dua= DraftPlan::getDateVal();
+ 
+
+            # code...
+        // $cus = DraftPlan::find()->asArray()->all();
+
+        /*batch insert*/
+
+        foreach ($data as $key => $value) {
+            # code...
+             if($value['ID'] == 'NotSet')
+                {
+
+                }else{
+            $dua = Jadwal::getArrayDateCust('2016',$value->custlayer->LAYER_NM,$value['ODD_EVEN'],$value['DAY_ID'],$value['GEO_ID'],$value['CUST_KD'],'66');
+        }
+        
+             foreach ($dua as $val) {
+               
+            # code...
+             $this->conn_esm()->CreateCommand()
+                            ->batchInsert('c0002scdl_plan_detail', ['CUST_ID','TGL','SCDL_GROUP'], [
+                    [$val['custId'],$val['tg'],$val['scdlGrp']]
+                ])->execute();
+                        }
+        }
+
+        
+       
         
         /*batch insert*/
-        foreach ($data as $value) {
-            # code...
-            $this->conn_esm()->CreateCommand()
-                            ->batchInsert('c0002scdl_plan_group', ['SCDL_GROUP', 'GEO_ID','LAYER_ID','DAY_ID','DAY_VALUE'], [
-                    [$value['ID'],$value['GEO_ID'],$value['LAYER_ID'],$value['DAY_ID'],$value['DAY_VALUE']]
-                ])->execute();
-            }
+        // foreach ($data as $val) {
+        //     # code...
+        //       $dua = Jadwal::getArrayDateCust('2016','C','1','1','',$val['ID'],'66');
+        //        $array_nilai_uniq = array_unique($dua);
+        //       foreach ($array_nilai_uniq as  $value) {
+        //           # code...
+
+        //     // $this->conn_esm()->CreateCommand()
+        //     //                 ->batchInsert('c0002scdl_plan_group', ['SCDL_GROUP', 'GEO_ID','LAYER_ID','DAY_ID','DAY_VALUE'], [
+        //     //         [$value['ID'],$value['GEO_ID'],$value['LAYER_ID'],$value['DAY_ID'],$value['DAY_VALUE']]
+        //     //     ])->execute();
+        //     //                     }
+        //     $this->conn_esm()->CreateCommand()
+        //                     ->batchInsert('c0002scdl_plan_group', ['SCDL_GROUP','TGL_START'], [
+        //             [$value['custId'],$value['tg']]
+        //         ])->execute();
+        //     }
+        // }
+            // $array_nilai_uniq = array_unique($dua);
+
+            // foreach ($array_nilai_uniq as $key => $val1) {
+            //     # code...
+            //    print_r($key);
+            // die();
+            //     // $this->conn_esm()->CreateCommand()
+            //     //             ->batchInsert('c0002scdl_plan_group', ['SCDL_GROUP','TGL_START'], [
+            //     //     [$val1['custId'],$val1['tg']]
+            //     // ])->execute();
+            // }
+            
+
+
 
         return $this->redirect(['index']);
 
@@ -163,11 +236,17 @@ class DraftPlanController extends Controller
         ];
         $opt = ArrayHelper::map($ary, 'ID', 'OPT');
 
+        $post = Yii::$app->request->post();
+
+        $odd_even = $post['DayName']['OPT'];
+
          if ($model->load(Yii::$app->request->post())) {
 
             $day_value = DayName::find()->where(['DAY_ID'=>$model->DAY_ID])->one();
 
             $model->DAY_VALUE = $day_value->DAY_VALUE;
+
+            $model->ODD_EVEN = $odd_even;
 
             $model->save();
                
