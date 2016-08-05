@@ -50,7 +50,7 @@ class DraftPlanDetail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['TGL', 'CREATE_AT', 'UPDATE_AT', 'CHECKIN_TIME', 'CHECKOUT_TIME'], 'safe'],
+            [['TGL', 'CREATE_AT', 'UPDATE_AT', 'CHECKIN_TIME', 'CHECKOUT_TIME','ODD_EVEN'], 'safe'],
             [['SCDL_GROUP', 'STATUS'], 'integer'],
             [['NOTE'], 'string'],
             [['LAT', 'LAG', 'RADIUS', 'CHECKOUT_LAT', 'CHECKOUT_LAG'], 'number'],
@@ -69,6 +69,7 @@ class DraftPlanDetail extends \yii\db\ActiveRecord
             'TGL' => 'Tgl',
             'CUST_ID' => 'Cust  ID',
             'USER_ID' => 'User  ID',
+            'ODD_EVEN' => 'OddEven',
             'SCDL_GROUP' => 'Scdl  Group',
             'NOTE' => 'Note',
             'LAT' => 'Lat',
@@ -85,4 +86,52 @@ class DraftPlanDetail extends \yii\db\ActiveRecord
             'CHECKOUT_TIME' => 'Checkout  Time',
         ];
     }
+	
+	/* DEPATMENT JOIN | GET NAME */
+	public function getCustTbl()
+    {
+        return $this->hasOne(Customers::className(), ['CUST_KD' => 'CUST_ID']);
+    }
+	public function getCustNm() //DetailView Value Name
+    {
+        return $this->custTbl!=''?$this->custTbl->CUST_NM:'none';
+    }
+	
+	public function getDayofDate(){
+		//return date('D', strtotime($this->TGL)); Day Name
+		//return date('l', strtotime($this->TGL)); Day Name
+		//return date('N', strtotime($this->TGL)); Day value 
+		$x=date('N', strtotime($this->TGL));
+		
+		if ($x==1){
+			return "Senin";
+		}elseif ($x==2){
+			return "Selasa";
+		}elseif ($x==3){
+			return "Rabu";
+		}elseif ($x==4){
+			return "Kamis";
+		}elseif ($x==5){
+			return "Jumat";
+		}elseif ($x==6){
+			return "Sabtu";
+		}elseif ($x==7){
+			return "Minggu";
+		}else{
+			return "None";
+		};
+		
+	}
+	
+	public function getWeekofDate(){
+		$a=date('W', strtotime($this->TGL));
+		if($a % 2==0){
+			$rslt='Genap';
+		}elseif($a % 2!=0){
+			$rslt='Ganjil';
+		}else{
+			$rslt='not set';
+		}
+		return $rslt;
+	}
 }

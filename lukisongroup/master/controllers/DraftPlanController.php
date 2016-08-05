@@ -14,6 +14,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 Use ptrnov\ salesforce\Jadwal;
 use lukisongroup\master\models\DraftPlanGroup;
+use lukisongroup\master\models\DraftPlanDetailSearch;
 
 
 /**
@@ -198,15 +199,21 @@ class DraftPlanController extends Controller
 
         $valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
 
+		/*PLAN DRAFT*/
         $searchModel = new DraftPlanSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+		
+		/*PLAN MAINTAIN*/
+		$searchModelMaintain = new DraftPlanDetailSearch();
+        $dataProviderMaintain = $searchModelMaintain->search(Yii::$app->request->queryParams);
 
        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'valStt'=>$valStt
+            'valStt'=>$valStt,
+			'searchModelMaintain'=>$searchModelMaintain,
+			'dataProviderMaintain'=>$dataProviderMaintain
         ]);
     }
 

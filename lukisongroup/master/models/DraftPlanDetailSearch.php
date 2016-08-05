@@ -19,7 +19,7 @@ class DraftPlanDetailSearch extends DraftPlanDetail
     {
         return [
             [['ID', 'SCDL_GROUP', 'STATUS'], 'integer'],
-            [['TGL', 'CUST_ID', 'USER_ID', 'NOTE', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT', 'CHECKIN_TIME', 'CHECKOUT_TIME'], 'safe'],
+            [['TGL', 'CUST_ID', 'USER_ID', 'NOTE', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT', 'CHECKIN_TIME', 'CHECKOUT_TIME','ODD_EVEN'], 'safe'],
             [['LAT', 'LAG', 'RADIUS', 'CHECKOUT_LAT', 'CHECKOUT_LAG'], 'number'],
         ];
     }
