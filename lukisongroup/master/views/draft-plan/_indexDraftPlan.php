@@ -117,7 +117,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 			}else{
 				$label = 'SETUP SCHEDULE';
 				return Html::a(Yii::t('app',$label,['modelClass' => 'DayName',]), 
-								['day','id'=>$model->CUST_KD],
+								['/master/draft-plan/set-scdl-fday','id'=>$model->ID],
 								['data-toggle'=>"modal",
 								'data-target'=>"#modal-day",
 								'class' => 'btn btn-default btn-xs',
@@ -310,7 +310,7 @@ $this->registerJs("
     ",$this::POS_READY);
     Modal::begin([
         'id' => 'modal-day',
-        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title"> SCHEDULE OF CUSTOMER </h4></div>',
+        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title"> SET CUSTOMER SCHEDULE </h4></div>',
         'headerOptions'=>[
                 'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
         ],

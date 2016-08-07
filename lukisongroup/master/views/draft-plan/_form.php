@@ -13,6 +13,14 @@ use kartik\widgets\Select2;
 
     <?php $form = ActiveForm::begin(['id'=>$model->formName()]); ?>
 
+	<?= $form->field($model, 'YEAR')->widget(Select2::classname(), [
+					'data' => $opt,
+					'options' => ['placeholder' => 'Pilih ...'],
+					'pluginOptions' => [
+						'allowClear' => true
+						 ],
+				])->label('YEAR');
+	?>
     <?= $form->field($model, 'GEO_ID')->widget(Select2::classname(), [
                 'data' => $geo,
                 'options' => ['placeholder' => 'Pilih ...'],
