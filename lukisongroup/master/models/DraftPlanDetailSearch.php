@@ -42,8 +42,8 @@ class DraftPlanDetailSearch extends DraftPlanDetail
      */
     public function search($params)
     {
-        $query = DraftPlanDetail::find()->orderBy(['TGL'=>SORT_ASC,'SCDL_GROUP'=>SORT_ASC,]);
-        //$query = DraftPlanDetail::find()->groupBy(['SCDL_GROUP','TGL','CUST_ID']);//->orderBy(['SCDL_GROUP'=>SORT_ASC,'TGL'=>SORT_ASC]);
+        //$query = DraftPlanDetail::find()->orderBy(['TGL'=>SORT_ASC,'SCDL_GROUP'=>SORT_ASC,]);
+        $query = DraftPlanDetail::find()->groupBy(['SCDL_GROUP','TGL','CUST_ID'])->orderBy(['TGL'=>SORT_ASC,'SCDL_GROUP'=>SORT_ASC]);
 
         // add conditions that should always apply here
 

@@ -6,48 +6,7 @@ use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use lukisongroup\master\models\DraftPlan;
 Use ptrnov\salesforce\Jadwal;
-
-?>
-
-<?php
-        $data_draft = DraftPlan::find()->all();
-        $dynamick =  new DraftPlan();
-
-    //     /*converting obejct to array*/
-        $data = ArrayHelper::toArray($data_draft, [
-        'lukisongroup\master\models\DraftPlan' => [
-            'ID' => function ($dynamick) {
-                return $dynamick->IdDinamikScdl;
-            },
-            'GEO_ID',
-            'LAYER_ID',
-            'DAY_ID',
-            'DAY_VALUE'
-        ],
-    ]);
-
-        foreach ($data as $value) {
-          # code...
-          // echo $value['ID'];
-            $dua[] = Jadwal::getArrayDateCust('2016','C','1','1','',$value['ID'],'66');
-            
-        }
-
-      
-
-    
-        // print_r($dynamick->IdDinamikScdl);
-        // die();
- 
-            // print_r($dua);
-            // die();
- // $dua= DraftPlan::getDateVal();
- // print_r($dua);
- // die();
   
-
- // print_r(\ptrnov\salesforce\Jadwal::getDateOfWeekAndDayname('2016','34','1'));
- // die();
 /*
  * GRID draft_plan
  * @author wawan  [aditiya@lukison.com]
@@ -59,16 +18,17 @@ $actionLabel='Update';
 $attDinamik =[];
 /*GRIDVIEW ARRAY FIELD HEAD*/
 $headColomnBT=[
-	['ID' =>0, 'ATTR' =>['FIELD'=>'IdDinamikScdl','SIZE' => '30px','label'=>'AUTO GROUP','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>0, 'ATTR' =>['FIELD'=>'IdDinamikScdl','SIZE' => '30px','label'=>'AUTO GROUP','center'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
 	['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '30px','label'=>'CUST.ID','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
 	['ID' =>2, 'ATTR' =>['FIELD'=>'CustNm','SIZE' => '200px','label'=>'CUSTOMER','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
 	['ID' =>3, 'ATTR' =>['FIELD'=>'GeoNm','SIZE' => '10px','label'=>'GEO','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
-	['ID' =>4, 'ATTR' =>['FIELD'=>'GEO_SUB','SIZE' => '10px','label'=>'SUB','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>4, 'ATTR' =>['FIELD'=>'GeoSub','SIZE' => '10px','label'=>'SUB','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
 	['ID' =>5, 'ATTR' =>['FIELD'=>'LayerNm','SIZE' => '10px','label'=>'LAYER','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
 	['ID' =>6, 'ATTR' =>['FIELD'=>'DayNm','SIZE' => '10px','label'=>'DAY','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
 	['ID' =>7, 'ATTR' =>['FIELD'=>'GanjilGenap','SIZE' => '10px','label'=>'WEEK','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
 	['ID' =>8, 'ATTR' =>['FIELD'=>'DAY_ID','SIZE' => '80px','label'=>'SETUP','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
-	['ID' =>9, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'Status','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>9, 'ATTR' =>['FIELD'=>'YEAR','SIZE' => '10px','label'=>'YEAR','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>10, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'Status','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
 ];
 $gvHeadColomnBT = ArrayHelper::map($headColomnBT, 'ID', 'ATTR');
 
