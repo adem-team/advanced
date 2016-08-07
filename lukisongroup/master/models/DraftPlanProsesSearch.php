@@ -5,12 +5,12 @@ namespace lukisongroup\master\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use lukisongroup\master\models\DraftPlanGroup;
+use lukisongroup\master\models\DraftPlanProses;
 
 /**
- * DraftPlanGroupSearch represents the model behind the search form about `lukisongroup\master\models\DraftPlanGroup`.
+ * DraftPlanProsesSearch represents the model behind the search form about `lukisongroup\master\models\DraftPlanProses`.
  */
-class DraftPlanGroupSearch extends DraftPlanGroup
+class DraftPlanProsesSearch extends DraftPlanProses
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class DraftPlanGroupSearch extends DraftPlanGroup
     public function rules()
     {
         return [
-            [['SCDL_GROUP', 'GEO_ID','DAY_ID', 'DAY_VALUE', 'STATUS'], 'integer'],
-            [['TGL_START', 'SCL_NM', 'USER_ID', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT'], 'safe'],
+            [['PROSES_ID'], 'integer'],
+            [['PROSES_NM', 'DCRIPT'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class DraftPlanGroupSearch extends DraftPlanGroup
      */
     public function search($params)
     {
-        $query = DraftPlanGroup::find();
+        $query = DraftPlanProses::find();
 
         // add conditions that should always apply here
 
@@ -59,20 +59,11 @@ class DraftPlanGroupSearch extends DraftPlanGroup
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'SCDL_GROUP' => $this->SCDL_GROUP,
-            'TGL_START' => $this->TGL_START,
-            'GEO_ID' => $this->GEO_ID,
-            'DAY_ID' => $this->DAY_ID,
-            'DAY_VALUE' => $this->DAY_VALUE,
-            'STATUS' => $this->STATUS,
-            'CREATED_AT' => $this->CREATED_AT,
-            'UPDATED_AT' => $this->UPDATED_AT,
+            'PROSES_ID' => $this->PROSES_ID,
         ]);
 
-        $query->andFilterWhere(['like', 'SCL_NM', $this->SCL_NM])
-            ->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
-            ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
-            ->andFilterWhere(['like', 'UPDATED_BY', $this->UPDATED_BY]);
+        $query->andFilterWhere(['like', 'PROSES_NM', $this->PROSES_NM])
+            ->andFilterWhere(['like', 'DCRIPT', $this->DCRIPT]);
 
         return $dataProvider;
     }

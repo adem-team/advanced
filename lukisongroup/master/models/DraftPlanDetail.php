@@ -2,8 +2,9 @@
 
 namespace lukisongroup\master\models;
 
-use Yii;
 
+use Yii;
+use lukisongroup\master\models\DraftPlanGroup;
 /**
  * This is the model class for table "c0002scdl_plan_detail".
  *
@@ -21,10 +22,6 @@ use Yii;
  * @property string $CREATE_AT
  * @property string $UPDATE_BY
  * @property string $UPDATE_AT
- * @property string $CHECKIN_TIME
- * @property double $CHECKOUT_LAT
- * @property double $CHECKOUT_LAG
- * @property string $CHECKOUT_TIME
  */
 class DraftPlanDetail extends \yii\db\ActiveRecord
 {
@@ -50,11 +47,11 @@ class DraftPlanDetail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['TGL', 'CREATE_AT', 'UPDATE_AT', 'CHECKIN_TIME', 'CHECKOUT_TIME','ODD_EVEN'], 'safe'],
+            [['TGL', 'CREATE_AT', 'UPDATE_AT','ODD_EVEN'], 'safe'],
             [['SCDL_GROUP', 'STATUS'], 'integer'],
             [['NOTE'], 'string'],
-            [['LAT', 'LAG', 'RADIUS', 'CHECKOUT_LAT', 'CHECKOUT_LAG'], 'number'],
-            [['CUST_ID', 'USER_ID'], 'string', 'max' => 50],
+            [['LAT', 'LAG', 'RADIUS'], 'number'],
+            [['CUST_ID'], 'string', 'max' => 50],
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100],
         ];
     }
@@ -68,7 +65,6 @@ class DraftPlanDetail extends \yii\db\ActiveRecord
             'ID' => 'ID',
             'TGL' => 'Tgl',
             'CUST_ID' => 'Cust  ID',
-            'USER_ID' => 'User  ID',
             'ODD_EVEN' => 'OddEven',
             'SCDL_GROUP' => 'Scdl  Group',
             'NOTE' => 'Note',
@@ -87,14 +83,32 @@ class DraftPlanDetail extends \yii\db\ActiveRecord
         ];
     }
 	
-	/* DEPATMENT JOIN | GET NAME */
+	/* JOIN Model Customers*/
 	public function getCustTbl()
     {
         return $this->hasOne(Customers::className(), ['CUST_KD' => 'CUST_ID']);
-    }
-	public function getCustNm() //DetailView Value Name
+    }	
+	public function getCustNm() 
     {
         return $this->custTbl!=''?$this->custTbl->CUST_NM:'none';
+    }	
+	public function getCustlayernm() 
+    {
+        return $this->custTbl!=''?$this->custTbl->layerNm:'none';
+    }
+	
+	/* JOIN Model DraftPlanGroup */
+	public function getDraftPlanGroupTbl()
+    {
+        return $this->hasOne(DraftPlanGroup::className(), ['SCDL_GROUP' => 'SCDL_GROUP']);
+    }
+	public function getUseridNm() 
+    {
+        return $this->draftPlanGroupTbl!=''?$this->draftPlanGroupTbl->useridNm:'none';
+    }
+	public function getSalesNm() 
+    {
+        return $this->draftPlanGroupTbl!=''?$this->draftPlanGroupTbl->SalesNm:'none';
     }
 	
 	public function getDayofDate(){

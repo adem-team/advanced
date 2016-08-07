@@ -15,7 +15,8 @@ use yii\helpers\ArrayHelper;
 Use ptrnov\ salesforce\Jadwal;
 use lukisongroup\master\models\DraftPlanGroup;
 use lukisongroup\master\models\DraftPlanDetailSearch;
-
+use lukisongroup\master\models\DraftPlanGroupSearch;
+use lukisongroup\sistem\models\UserloginSearch;
 
 /**
  * DraftPlanController implements the CRUD actions for DraftPlan model.
@@ -72,6 +73,66 @@ class DraftPlanController extends Controller
     }
 
 
+	public function actionSendDraft()
+    {   
+         /*model draftplan*/
+        $data_draft = DraftPlan::find()->all();
+        //$dynamick =  new DraftPlan();
+
+         /*converting obejct to array*/
+        $data = ArrayHelper::toArray($data_draft, [
+			'lukisongroup\master\models\DraftPlan' => [
+				// 'SCDL_GROUP' => function ($dynamick) {
+						// return $dynamick->IdDinamikScdl;
+					// },
+				'IdDinamikScdl',//SCDL_GROUP
+				'GEO_ID',
+				'LayerNm',	
+				'DAY_ID',
+				'DAY_VALUE',
+				'CUST_KD',
+				'ODD_EVEN'
+			],
+		]);
+		//print_r($data);
+          foreach ($data as $key => $value) {
+            # code...
+             if($value['ID'] == 'NotSet')
+                {
+
+                }else{
+            $dua = Jadwal::getArrayDateCust('2016',$value->custlayer->LAYER_NM,$value['ODD_EVEN'],$value['DAY_ID'],$value['IdDinamikScdl'],$value['CUST_KD'],'66');
+        }
+        
+             foreach ($dua as $val) {
+               
+            # code...
+             $this->conn_esm()->CreateCommand()
+                            ->batchInsert('c0002scdl_plan_detail', ['CUST_ID','TGL','SCDL_GROUP'], [
+                    [$val['custId'],$val['tg'],$val['scdlGrp']]
+                ])->execute();
+                        }
+        }    
+ 
+
+
+        return $this->redirect(['index?tab=1']); 
+
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
   /**
      * finds draftplan models.
      * @var $dynamick draftplan.
@@ -83,7 +144,7 @@ class DraftPlanController extends Controller
      * @since 1.2.0
      */
 
-    public function actionSendDraft()
+    public function actionSendDraftX()
     {   
          /*model draftplan*/
         $data_draft = DraftPlan::find()->all();
@@ -192,6 +253,8 @@ class DraftPlanController extends Controller
      */
     public function actionIndex()
     {
+		$tab=Yii::$app->getRequest()->getQueryParam('tab');
+		
         $aryStt= [
           ['STATUS' => 0, 'STT_NM' => 'DISABLE'],
           ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
@@ -206,14 +269,27 @@ class DraftPlanController extends Controller
 		/*PLAN MAINTAIN*/
 		$searchModelMaintain = new DraftPlanDetailSearch();
         $dataProviderMaintain = $searchModelMaintain->search(Yii::$app->request->queryParams);
+		
+		/*GROUP SETTING*/
+		$searchModelGrp = new DraftPlanGroupSearch();
+        $dataProviderGrp = $searchModelGrp->search(Yii::$app->request->queryParams);
+
+		/*GROUP USER*/
+		$searchModelUser = new UserloginSearch();
+        $dataProviderUser = $searchModelUser->search(Yii::$app->request->queryParams);
 
        
         return $this->render('index', [
+			'tab'=>$tab,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'valStt'=>$valStt,
 			'searchModelMaintain'=>$searchModelMaintain,
-			'dataProviderMaintain'=>$dataProviderMaintain
+			'dataProviderMaintain'=>$dataProviderMaintain,
+			'searchModelGrp'=>$searchModelGrp,
+			'dataProviderGrp'=>$dataProviderGrp,
+     		'searchModelUser'=>$searchModelUser,
+			'dataProviderUser'=>$dataProviderUser
         ]);
     }
 
