@@ -19,7 +19,7 @@ class DraftPlanSearch extends DraftPlan
     {
         return [
             [['ID', 'GEO_ID', 'LAYER_ID', 'DAY_ID', 'DAY_VALUE', 'STATUS'], 'integer'],
-            [['CUST_KD', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT'], 'safe'],
+            [['CUST_KD', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT','ODD_EVEN'], 'safe'],
         ];
     }
 

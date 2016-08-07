@@ -59,8 +59,21 @@ class DraftPlan extends \yii\db\ActiveRecord
     }
 	public function getGeoNm() 
     {
-        return $this->geoTbl!=''?$this->geoTbl->GEO_NM:'none';
-    }	
+        return $this->geoTbl!=''?$this->geoTbl->GEO_NM:'NotSet';
+    }
+
+	/*JOIN GEO SUB*/
+    public function getGeoSubTbl()
+    {
+        //return $this->hasOne(DraftGeoSub::className(), ['GEO_ID' => $this->geoTbl->GEO_ID,'GEO_SUB' => 'GEO_SUB']);
+        return $this->hasOne(DraftGeoSub::className(), ['GEO_ID' =>'GEO_ID','GEO_SUB' => 'GEO_SUB']);
+
+    }
+	public function getGeoSub() 
+    {
+        return $this->geoSubTbl!=''?$this->geoSubTbl->GEO_SUB:'NotSet';
+    }
+	
 	/*JOIN LAYER*/
     public function getLayerTbl()
     {
@@ -69,7 +82,7 @@ class DraftPlan extends \yii\db\ActiveRecord
     }	
 	public function getLayerNm() 
     {
-        return $this->layerTbl!=''?$this->layerTbl->LAYER_NM:'none';
+        return $this->layerTbl!=''?$this->layerTbl->LAYER_NM:'NotSet';
     }
 
     /**
@@ -79,8 +92,8 @@ class DraftPlan extends \yii\db\ActiveRecord
     {
         return [
             [['CUST_KD'], 'required'],
-            [['GEO_ID', 'GEO_SUB','LAYER_ID', 'DAY_ID', 'DAY_VALUE', 'STATUS','ODD_EVEN','PROSES_ID'], 'integer'],
-            [['CREATED_AT','IdDinamikScdl', 'UPDATED_AT'], 'safe'],
+            [['GEO_ID', 'GEO_SUB','LAYER_ID', 'DAY_ID', 'DAY_VALUE', 'STATUS','PROSES_ID','YEAR'], 'integer'],
+            [['ODD_EVEN','CREATED_AT','IdDinamikScdl', 'UPDATED_AT'], 'safe'],
             [['CUST_KD'], 'string', 'max' => 50],
             [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 100],
         ];
@@ -101,6 +114,7 @@ class DraftPlan extends \yii\db\ActiveRecord
             'DAY_VALUE' => 'Day  Value',
             'ODD_EVEN' => 'ODD EVEN',
             'PROSES_ID' => 'PROSES',
+            'YEAR' => 'YEAR',
             'STATUS' => 'Status',
             'CREATED_BY' => 'Created  By',
             'CREATED_AT' => 'Created  At',
@@ -111,7 +125,7 @@ class DraftPlan extends \yii\db\ActiveRecord
 	
 	/*ID DISPLY NAMEOF THE DAY*/
 	Public function getDayNm(){
-		if ($this->DAY_ID==1){
+		if ($this->DAY_VALUE==1){
 			return "Senin";
 		}elseif ($this->DAY_ID==2){
 			return "Selasa";
@@ -126,38 +140,42 @@ class DraftPlan extends \yii\db\ActiveRecord
 		}elseif ($this->DAY_ID==7){
 			return "Minggu";
 		}else{
-			return "None";
+			return "NotSet";
 		}
 	}
 	
 	public function getGanjilGenap(){
 		$a=$this->ODD_EVEN;
-		if($a % 2==0){
-			$rslt='Genap';
-		}elseif($a % 2!=0){
-			$rslt='Ganjil';
+		if($a!=''){
+			if($a % 2==0){
+				$rslt='Genap';
+			}elseif($a % 2!=0){
+				$rslt='Ganjil';
+			}else{
+				$rslt='NotSet';
+			}
 		}else{
-			$rslt='not set';
+			$rslt='NotSet';
 		}
 		return $rslt;
 	}
 	/*
 	 * ID DINAMIK SCHEDULING
-	 * FORMULA SCHEDULE ID | MAPING BY [GEO,subGEO,DAY,LAYER]
+	 * FORMULA SCHEDULE | MAPING BY [GEO,subGEO,ODD_EVEN,DAY,PROSES_ID]
 	 * @author ptrnov [ptr.nov@gmail.com] @since 1.0.0, 1.5.0,
 	 * @author wawan [wawan@gmail.com] @since 1.3.0
 	*/
 	public function getIdDinamikScdl(){
 		$geo=$this->GEO_ID; 					//GET FROM CUSTOMER GEO
-		$subGeo=$this->GEO_SUB;				//SET BY FORM GUI
-		$pekanGanjilGenap=$this->ODD_EVEN;	//SET BY FORM GUI
-		$dayNilai=$this->DAY_VALUE;			//SET BY FORM GUI		
-		$proses=$this->PROSES_ID;			//SET BY FORM GUI DEFAULT =1 (ACTIVE CALL)
-		if ($geo!=''){// GEO = check semua customer dalam group GEO
-			if ($subGeo!=''){// Check SubGeo Validation scenario  jika jumlah customer dalam (GEO+HARI) Full, harus new SubGeo.
-				if ($pekanGanjilGenap!=''){// Check hari of week[ganjil/genap] Validation scenario jumlah customer sesuai max default/max MIX
-					if ($dayNilai!=''){// Check Layer B=u  or A,B,C,D=m
-						if ($proses!=''){// Check Layer B=u  or A,B,C,D=m
+		$subGeo=$this->GEO_SUB;					//SET BY FORM GUI
+		$pekanGanjilGenap=$this->ODD_EVEN;		//SET BY FORM GUI
+		$dayNilai=$this->DAY_VALUE;				//SET BY FORM GUI		
+		$proses=$this->PROSES_ID;				//SET BY FORM GUI DEFAULT =1 (ACTIVE CALL)
+		if ($geo!=''){							// GEO = check semua customer dalam group GEO
+			if ($subGeo!=''){					// Check SubGeo Validation scenario  jika jumlah customer dalam (GEO+HARI) Full, harus new SubGeo.
+				if ($pekanGanjilGenap!=''){		// Check hari of week[ganjil/genap] Validation scenario jumlah customer sesuai max default/max MIX
+					if ($dayNilai!=''){			// Check Layer B=u  or A,B,C,D=m
+						if ($proses!=''){		// Check Layer B=u  or A,B,C,D=m
 							$valueFormua= $geo .'.'.$subGeo.'.'.$pekanGanjilGenap.'.'.$dayNilai.'.'.$proses;   
 						}else{
 							$valueFormua= "NotSet";
@@ -166,7 +184,15 @@ class DraftPlan extends \yii\db\ActiveRecord
 						$valueFormua= "NotSet";
 					}
 				}else{
-					$valueFormua= "NotSet";
+					if ($dayNilai!=''){			// Check Layer B=u  or A,B,C,D=m
+						if ($proses!=''){		// Check Layer B=u  or A,B,C,D=m
+							$valueFormua= $geo .'.'.$subGeo.'.0.'.$dayNilai.'.'.$proses;   
+						}else{
+							$valueFormua= "NotSet";
+						}
+					}else{
+						$valueFormua= "NotSet";
+					}
 				}
 			}else{
 				$valueFormua= "NotSet";	

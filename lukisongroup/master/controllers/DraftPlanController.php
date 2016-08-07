@@ -73,6 +73,17 @@ class DraftPlanController extends Controller
     }
 
 
+	
+	/**
+     * finds draftplan models.
+     * @var $dynamick draftplan.
+     * @var $data converting obejct to array.
+     * save c0002scdl_plan_group via batch insert.
+     * if success redirect page index
+     * @return mixed
+     * @author wawan 
+     * @since 1.2.1
+     */
 	public function actionSendDraft()
     {   
          /*model draftplan*/
@@ -95,29 +106,31 @@ class DraftPlanController extends Controller
 			],
 		]);
 		//print_r($data);
-          foreach ($data as $key => $value) {
-            # code...
-             if($value['ID'] == 'NotSet')
-                {
-
-                }else{
-            $dua = Jadwal::getArrayDateCust('2016',$value->custlayer->LAYER_NM,$value['ODD_EVEN'],$value['DAY_ID'],$value['IdDinamikScdl'],$value['CUST_KD'],'66');
-        }
-        
-             foreach ($dua as $val) {
-               
-            # code...
-             $this->conn_esm()->CreateCommand()
-                            ->batchInsert('c0002scdl_plan_detail', ['CUST_ID','TGL','SCDL_GROUP'], [
-                    [$val['custId'],$val['tg'],$val['scdlGrp']]
-                ])->execute();
-                        }
-        }    
- 
-
-
-        return $this->redirect(['index?tab=1']); 
-
+		
+		/* GET ROW DATE OF WEEK*/
+		foreach ($data as $key => $value) {
+            if($value['IdDinamikScdl'] != 'NotSet'){
+				$aryScdlPlan = Jadwal::getArrayDateCust('2018',$value['LayerNm'],$value['ODD_EVEN'],$value['DAY_VALUE'],$value['IdDinamikScdl'],$value['CUST_KD'],'');
+			}
+		 }		
+		//print_r($aryScdlPlan);
+		
+		//INSERT BIT To TABEL c0002scdl_plan_detail |MODEL DraftPlanDetail
+		foreach ($aryScdlPlan as $val) {
+			$this->conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_detail', 
+						['CUST_ID','TGL','SCDL_GROUP','ODD_EVEN'], 
+						[[$val['custId'],$val['tg'],$val['scdlGrp'],$val['currenWeek']]
+			])->execute();
+		}
+			
+		/*INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader */
+		$this->conn_esm()->CreateCommand("
+						INSERT INTO c0002scdl_plan_header (
+							SELECT NULL,TGL,SCDL_GROUP,NOTE,NULL,0,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail
+							GROUP BY SCDL_GROUP,TGL
+						)		
+		")->execute(); 
+      return $this->redirect(['index?tab=1']); 
     }
 	
 	
