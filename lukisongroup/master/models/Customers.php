@@ -5,6 +5,7 @@ namespace lukisongroup\master\models;
 use Yii;
 
 use lukisongroup\master\models\Schedulegroup;
+//use lukisongroup\master\models\DraftLayer;
 // use lukisongroup\master\models\LayesClastering;
 
 
@@ -157,8 +158,16 @@ public function getParentName() {
 
   public function getCustlayer(){
     return $this->hasOne(DraftLayer::className(), ['LAYER'=>'LAYER_ID']);
+  } 
+
+  public function getLayerTbl(){
+	  return $this->hasOne(DraftLayer::className(), ['LAYER_ID' => 'LAYER']);
   }
 
+  public function getLayerNm() //DetailView Value Name
+  {
+	return $this->layerTbl!=''?$this->layerTbl->LAYER_NM:'none';
+  }
 
 
 	// public function getGrp_nm()

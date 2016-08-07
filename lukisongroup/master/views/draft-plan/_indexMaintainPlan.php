@@ -60,11 +60,15 @@ $attDinamik =[];
 /*GRIDVIEW ARRAY FIELD HEAD*/
 $headColomn=[
 	['ID' =>0, 'ATTR' =>['FIELD'=>'SCDL_GROUP','SIZE' => '10px','label'=>'AUTO GROUP','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>true]],
-	['ID' =>1, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'DATE','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
-	['ID' =>2, 'ATTR' =>['FIELD'=>'CUST_ID','SIZE' => '10px','label'=>'CusId','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
-	['ID' =>3, 'ATTR' =>['FIELD'=>'custNm','SIZE' => '10px','label'=>'Customer','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
-	['ID' =>4, 'ATTR' =>['FIELD'=>'dayofDate','SIZE' => '10px','label'=>'hari','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
-	['ID' =>5, 'ATTR' =>['FIELD'=>'weekofDate','SIZE' => '10px','label'=>'pekan','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>1, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '20px','label'=>'DATE','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>2, 'ATTR' =>['FIELD'=>'dayofDate','SIZE' => '30px','label'=>'DAY.NM','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>3, 'ATTR' =>['FIELD'=>'weekofDate','SIZE' => '20px','label'=>'WEEK','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>4, 'ATTR' =>['FIELD'=>'custlayernm','SIZE' => '10px','label'=>'LAYER','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>5, 'ATTR' =>['FIELD'=>'CUST_ID','SIZE' => '50px','label'=>'CUST.ID','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>6, 'ATTR' =>['FIELD'=>'custNm','SIZE' => '200px','label'=>'CUSTOMER','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>7, 'ATTR' =>['FIELD'=>'SalesNm','SIZE' => '20px','label'=>'SALES.NM','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>8, 'ATTR' =>['FIELD'=>'UseridNm','SIZE' => '20px','label'=>'USER.ID','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
+	
 ];
 $gvHeadColomnBT = ArrayHelper::map($headColomn, 'ID', 'ATTR');
 
@@ -96,8 +100,37 @@ $attDinamik[] =[
 
 /*GRIDVIEW ARRAY ROWS*/
 foreach($gvHeadColomnBT as $key =>$value[]){
-  if($value[$key]['FIELD'] == 'STATUS')
+  if($value[$key]['FIELD'] != 'STATUS')
   {
+      # code...
+      $attDinamik[]=[
+        'attribute'=>$value[$key]['FIELD'],
+        'label'=>$value[$key]['label'],
+        'filter'=>true,
+        'hAlign'=>'right',
+        'vAlign'=>'middle',
+        'noWrap'=>true,
+		'group'=>$value[$key]['grp'],
+        'headerOptions'=>[
+            'style'=>[
+            'text-align'=>'center',
+            'width'=>$value[$key]['SIZE'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+            'background-color'=>'rgba('.$value[$key]['warna'].')',
+          ]
+        ],
+        'contentOptions'=>[
+          'style'=>[
+            'text-align'=>$value[$key]['align'],
+			'width'=>$value[$key]['SIZE'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+          ]
+        ],
+      ];
+
+    }else{
    /*  $attDinamik[]=[
 		'attribute'=>$value[$key]['FIELD'],
 		'label'=>$value[$key]['label'],
@@ -184,36 +217,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
       ]; */
 
 
-  }else{
-      # code...
-      $attDinamik[]=[
-        'attribute'=>$value[$key]['FIELD'],
-        'label'=>$value[$key]['label'],
-        'filter'=>true,
-        'hAlign'=>'right',
-        'vAlign'=>'middle',
-        'noWrap'=>true,
-		'group'=>$value[$key]['grp'],
-        'headerOptions'=>[
-            'style'=>[
-            'text-align'=>'center',
-            'width'=>$value[$key]['SIZE'],
-            'font-family'=>'tahoma, arial, sans-serif',
-            'font-size'=>'8pt',
-            'background-color'=>'rgba('.$value[$key]['warna'].')',
-          ]
-        ],
-        'contentOptions'=>[
-          'style'=>[
-            'text-align'=>$value[$key]['align'],
-            'font-family'=>'tahoma, arial, sans-serif',
-            'font-size'=>'8pt',
-          ]
-        ],
-              'width'=>'12px',
-      ];
-
-    }
+  }
 
 
 

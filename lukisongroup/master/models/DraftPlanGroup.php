@@ -3,7 +3,8 @@
 namespace lukisongroup\master\models;
 
 use Yii;
-
+use lukisongroup\sistem\models\Userlogin;
+use lukisongroup\sistem\models\CrmUserprofile;
 
 /**
  * This is the model class for table "c0002scdl_plan_group".
@@ -46,25 +47,25 @@ class DraftPlanGroup extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['TGL_START', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
+            [['TGL_START', 'CREATED_AT', 'UPDATED_AT','SCDL_GROUP','GROUP_PRN'], 'safe'],
             // [['SCL_NM'], 'required'],
-            [['GEO_ID', 'LAYER_ID', 'DAY_ID', 'DAY_VALUE', 'STATUS'], 'integer'],
+            [['GEO_ID', 'DAY_ID', 'DAY_VALUE', 'STATUS'], 'integer'],
             [['SCL_NM', 'USER_ID'], 'string', 'max' => 50],
             [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 100],
         ];
     }
 
     /**
-     * @inheritdoc
+     * @inheritdoc	
      */
     public function attributeLabels()
     {
         return [
-            'SCDL_GROUP' => 'Scdl  Group',
+            'SCDL_GROUP' => 'GROUP',
+            'GROUP_PRN' => 'PARENT',
             'TGL_START' => 'Tgl  Start',
             'SCL_NM' => 'Scl  Nm',
             'GEO_ID' => 'Geo  ID',
-            'LAYER_ID' => 'Layer  ID',
             'DAY_ID' => 'Day  ID',
             'DAY_VALUE' => 'Day  Value',
             'USER_ID' => 'User  ID',
@@ -74,5 +75,25 @@ class DraftPlanGroup extends \yii\db\ActiveRecord
             'UPDATED_BY' => 'Updated  By',
             'UPDATED_AT' => 'Updated  At',
         ];
+    }
+	
+	/* JOIN Model DraftPlanHeader */
+	public function getUserloginTbl()
+    {
+        return $this->hasOne(Userlogin::className(), ['id' => 'USER_ID']);
+    }
+	public function getUseridNm() 
+    {
+        return $this->userloginTbl!=''?$this->userloginTbl->username:'none';
+    }
+	
+	/* JOIN Model CrmUserprofile | CRM PROFILE */
+	public function getCrmUserprofileTbl()
+    {
+        return $this->hasOne(CrmUserprofile::className(), ['ID' => 'USER_ID']);
+    }
+	public function getSalesNm() 
+    {
+        return $this->crmUserprofileTbl!=''?$this->crmUserprofileTbl->NM_FIRST:'none';
     }
 }

@@ -368,6 +368,33 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 			'displayValueConfig' => $data_layer,
 		],
 	],
+	/* //test
+		[
+		'attribute' => 'layerNm',
+		'label'=>'Layer',
+		'hAlign'=>'left',
+		'vAlign'=>'top',
+		'filter'=>false,
+		// 'mergeHeader'=>true,
+		'headerOptions'=>[
+			'style'=>[
+			  'text-align'=>'center',
+			  'width'=>'120px',
+			  'font-family'=>'tahoma, arial, sans-serif',
+			  'font-size'=>'8pt',
+			  'background-color'=>'rgba(126, 189, 188, 0.9)',
+			]
+		],
+		'contentOptions'=>[
+			'style'=>[
+				'vertical-align'=>'text-middle',
+				'text-align'=>'center',
+				'width'=>'120px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'8pt',
+			]
+		],
+	], */
     [
       'attribute' => 'STATUS',
       'filter' => $valStt,

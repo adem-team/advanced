@@ -5,12 +5,12 @@ namespace lukisongroup\master\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use lukisongroup\master\models\DraftPlanDetail;
+use lukisongroup\master\models\DraftGeoSub;
 
 /**
- * DraftPlanDetailSearch represents the model behind the search form about `lukisongroup\master\models\DraftPlanDetail`.
+ * DraftGeoSubSearch represents the model behind the search form about `lukisongroup\master\models\DraftGeoSub`.
  */
-class DraftPlanDetailSearch extends DraftPlanDetail
+class DraftGeoSubSearch extends DraftGeoSub
 {
     /**
      * @inheritdoc
@@ -18,9 +18,8 @@ class DraftPlanDetailSearch extends DraftPlanDetail
     public function rules()
     {
         return [
-            [['ID', 'SCDL_GROUP', 'STATUS'], 'integer'],
-            [['TGL', 'CUST_ID','NOTE', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT','ODD_EVEN'], 'safe'],
-            [['LAT', 'LAG', 'RADIUS'], 'number'],
+            [['ID', 'GEO_SUB', 'GEO_ID', 'CUST_MAX_NORMAL', 'CUST_MAX_LAYER', 'STATUS'], 'integer'],
+            [['GEO_DCRIP', 'START_LAT', 'START_LONG', 'CITY_ID', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
         ];
     }
 
@@ -42,16 +41,12 @@ class DraftPlanDetailSearch extends DraftPlanDetail
      */
     public function search($params)
     {
-        $query = DraftPlanDetail::find()->orderBy(['TGL'=>SORT_ASC,'SCDL_GROUP'=>SORT_ASC,]);
-        //$query = DraftPlanDetail::find()->groupBy(['SCDL_GROUP','TGL','CUST_ID']);//->orderBy(['SCDL_GROUP'=>SORT_ASC,'TGL'=>SORT_ASC]);
+        $query = DraftGeoSub::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-			'pagination'=>[
-				'pageSize'=>1000,
-			]
         ]);
 
         $this->load($params);
@@ -65,19 +60,19 @@ class DraftPlanDetailSearch extends DraftPlanDetail
         // grid filtering conditions
         $query->andFilterWhere([
             'ID' => $this->ID,
-            'TGL' => $this->TGL,
-            'SCDL_GROUP' => $this->SCDL_GROUP,
-            'LAT' => $this->LAT,
-            'LAG' => $this->LAG,
-            'RADIUS' => $this->RADIUS,
+            'GEO_SUB' => $this->GEO_SUB,
+            'GEO_ID' => $this->GEO_ID,
+            'CUST_MAX_NORMAL' => $this->CUST_MAX_NORMAL,
+            'CUST_MAX_LAYER' => $this->CUST_MAX_LAYER,
             'STATUS' => $this->STATUS,
             'CREATE_AT' => $this->CREATE_AT,
-            'UPDATE_AT' => $this->UPDATE_AT
+            'UPDATE_AT' => $this->UPDATE_AT,
         ]);
 
-        $query->andFilterWhere(['like', 'CUST_ID', $this->CUST_ID])
-           // ->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
-            ->andFilterWhere(['like', 'NOTE', $this->NOTE])
+        $query->andFilterWhere(['like', 'GEO_DCRIP', $this->GEO_DCRIP])
+            ->andFilterWhere(['like', 'START_LAT', $this->START_LAT])
+            ->andFilterWhere(['like', 'START_LONG', $this->START_LONG])
+            ->andFilterWhere(['like', 'CITY_ID', $this->CITY_ID])
             ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
 

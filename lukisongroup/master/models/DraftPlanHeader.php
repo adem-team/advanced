@@ -4,6 +4,8 @@ namespace lukisongroup\master\models;
 
 use Yii;
 
+use lukisongroup\sistem\models\Userlogin;
+use lukisongroup\sistem\models\CrmUserprofile;
 /**
  * This is the model class for table "c0002scdl_plan_header".
  *
@@ -69,5 +71,25 @@ class DraftPlanHeader extends \yii\db\ActiveRecord
             'STT_UBAH' => 'Stt  Ubah',
             'UPDATE_AT' => 'Update  At',
         ];
+    }
+	
+	/* JOIN Model Sistem/Userlogin */
+	public function getUserloginTbl()
+    {
+        return $this->hasOne(Userlogin::className(), ['id' => 'USER_ID']);
+    }
+	public function getUseridNm() 
+    {
+        return $this->userloginTbl!=''?$this->userloginTbl->username:'none';
+    }
+	
+	/* JOIN Model sistem/CrmUserprofile | CRM PROFILE */
+	public function getCrmUserprofileTbl()
+    {
+        return $this->hasOne(CrmUserprofile::className(), ['ID' => 'USER_ID']);
+    }
+	public function getSalesNm() 
+    {
+        return $this->crmUserprofileTbl!=''?$this->crmUserprofileTbl->NM_FIRST:'none';
     }
 }

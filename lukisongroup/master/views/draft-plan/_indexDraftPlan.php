@@ -59,13 +59,16 @@ $actionLabel='Update';
 $attDinamik =[];
 /*GRIDVIEW ARRAY FIELD HEAD*/
 $headColomnBT=[
-	['ID' =>0, 'ATTR' =>['FIELD'=>'IdDinamikScdl','SIZE' => '10px','label'=>'ID','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>true]],
-	['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'Customers.id','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
-	['ID' =>2, 'ATTR' =>['FIELD'=>'custgeo.GEO_NM','SIZE' => '10px','label'=>'Geo','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
-	['ID' =>3, 'ATTR' =>['FIELD'=>'custlayer.LAYER_NM','SIZE' => '10px','label'=>'Layer','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
-	['ID' =>4, 'ATTR' =>['FIELD'=>'DayNm','SIZE' => '10px','label'=>'Name Of Day','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
-	['ID' =>5, 'ATTR' =>['FIELD'=>'DAY_ID','SIZE' => '10px','label'=>'Day','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
-	['ID' =>6, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'Status','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>0, 'ATTR' =>['FIELD'=>'IdDinamikScdl','SIZE' => '30px','label'=>'AUTO GROUP','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '30px','label'=>'CUST.ID','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>2, 'ATTR' =>['FIELD'=>'CustNm','SIZE' => '200px','label'=>'CUSTOMER','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>3, 'ATTR' =>['FIELD'=>'GeoNm','SIZE' => '10px','label'=>'GEO','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>4, 'ATTR' =>['FIELD'=>'GEO_SUB','SIZE' => '10px','label'=>'SUB','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>5, 'ATTR' =>['FIELD'=>'LayerNm','SIZE' => '10px','label'=>'LAYER','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>6, 'ATTR' =>['FIELD'=>'DayNm','SIZE' => '10px','label'=>'DAY','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>7, 'ATTR' =>['FIELD'=>'GanjilGenap','SIZE' => '10px','label'=>'WEEK','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>8, 'ATTR' =>['FIELD'=>'DAY_ID','SIZE' => '80px','label'=>'SETUP','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>9, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'Status','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
 ];
 $gvHeadColomnBT = ArrayHelper::map($headColomnBT, 'ID', 'ATTR');
 
@@ -130,12 +133,12 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 		],
 		'contentOptions'=>[
 			'style'=>[
-			  'text-align'=>$value[$key]['align'],
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
+				'width'=>$value[$key]['SIZE'],
+				'text-align'=>$value[$key]['align'],
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'8pt',
 			]
 		],
-		'width'=>'8px',
     ];
   }elseif($value[$key]['FIELD'] == 'DAY_ID'){
       # code...
@@ -176,12 +179,12 @@ foreach($gvHeadColomnBT as $key =>$value[]){
         ],
         'contentOptions'=>[
           'style'=>[
+			'width'=>$value[$key]['SIZE'],
             'text-align'=>$value[$key]['align'],
             'font-family'=>'tahoma, arial, sans-serif',
             'font-size'=>'8pt',
           ]
         ],
-              'width'=>'12px',
       ];
 
 
@@ -194,7 +197,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
         'hAlign'=>'right',
         'vAlign'=>'middle',
         'noWrap'=>true,
-		'group'=>$value[$key]['grp'],
+		//'group'=>$value[$key]['grp'],
         'headerOptions'=>[
             'style'=>[
             'text-align'=>'center',
@@ -206,12 +209,12 @@ foreach($gvHeadColomnBT as $key =>$value[]){
         ],
         'contentOptions'=>[
           'style'=>[
+			'width'=>$value[$key]['SIZE'],
             'text-align'=>$value[$key]['align'],
             'font-family'=>'tahoma, arial, sans-serif',
             'font-size'=>'8pt',
           ]
         ],
-              'width'=>'12px',
       ];
 
     }

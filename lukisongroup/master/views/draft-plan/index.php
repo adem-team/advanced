@@ -26,14 +26,25 @@ $this->params['breadcrumbs'][] = $this->title;
 		'searchModelMaintain' =>$searchModelMaintain,
 		'dataProviderMaintain' =>$dataProviderMaintain,
 	]);
-	$salesPlan='';
-	
+	$groupIndex=$this->render('_indexGroup',[
+		'searchModelGrp'=>$searchModelGrp,
+		'dataProviderGrp'=>$dataProviderGrp,
+		'searchModelUser'=>$searchModelUser,
+		'dataProviderUser'=>$dataProviderUser
+	]);
+		
 	if($tab==0){
 		$tab0=true;
 		$tab1=false;
+		$tab2=false;
 	}elseif($tab==1){
 		$tab0=false;
 		$tab1=true;
+		$tab2=false;
+	}elseif($tab==2){
+		$tab0=false;
+		$tab1=false;
+		$tab2=true;
 	}
 	
 	$items=[
@@ -46,8 +57,8 @@ $this->params['breadcrumbs'][] = $this->title;
 			'active'=>$tab1,
 		],
 		[
-			'label'=>'<i class="fa fa-user-plus	 fa-2x"></i> Salesman Planned','content'=>$salesPlan,
-			'active'=>$tab1,
+			'label'=>'<i class="fa fa-user-plus	 fa-2x"></i> Group Setting','content'=>$groupIndex,
+			'active'=>$tab2,
 		]
 	];
 
