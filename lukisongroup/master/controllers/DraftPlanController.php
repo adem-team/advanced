@@ -17,7 +17,7 @@ use lukisongroup\master\models\DraftPlanGroup;
 use lukisongroup\master\models\DraftPlanDetailSearch;
 use lukisongroup\master\models\DraftPlanGroupSearch;
 use lukisongroup\sistem\models\UserloginSearch;
-
+use lukisongroup\master\models\DraftGeoSub;
 /**
  * DraftPlanController implements the CRUD actions for DraftPlan model.
  */
@@ -82,6 +82,8 @@ class DraftPlanController extends Controller
      * if success redirect page index
      * @return mixed
      * @author wawan 
+     * @since 1.2.0
+	 * @author ptrnov 
      * @since 1.2.1
      */
 	public function actionSendDraft()
@@ -110,30 +112,97 @@ class DraftPlanController extends Controller
 		/* GET ROW DATE OF WEEK*/
 		foreach ($data as $key => $value) {
             if($value['IdDinamikScdl'] != 'NotSet'){
-				$aryScdlPlan = Jadwal::getArrayDateCust('2018',$value['LayerNm'],$value['ODD_EVEN'],$value['DAY_VALUE'],$value['IdDinamikScdl'],$value['CUST_KD'],'');
-			}
-		 }		
-		//print_r($aryScdlPlan);
-		
-		//INSERT BIT To TABEL c0002scdl_plan_detail |MODEL DraftPlanDetail
-		foreach ($aryScdlPlan as $val) {
-			$this->conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_detail', 
-						['CUST_ID','TGL','SCDL_GROUP','ODD_EVEN'], 
-						[[$val['custId'],$val['tg'],$val['scdlGrp'],$val['currenWeek']]
-			])->execute();
-		}
+				//$aryScdlPlan = Jadwal::getArrayDateCust('2018',$value['LayerNm'],$value['ODD_EVEN'],$value['DAY_VALUE'],$value['IdDinamikScdl'],$value['CUST_KD'],'');
+				$aryScdlPlan = Jadwal::getArrayDateCust($value['YEAR'],$value['LayerNm'],$value['ODD_EVEN'],$value['DAY_VALUE'],$value['IdDinamikScdl'],$value['CUST_KD'],'');
 			
-		/*INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader */
-		$this->conn_esm()->CreateCommand("
-						INSERT INTO c0002scdl_plan_header (
-							SELECT NULL,TGL,SCDL_GROUP,NOTE,NULL,0,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail
-							GROUP BY SCDL_GROUP,TGL
-						)		
-		")->execute(); 
+				//print_r($aryScdlPlan);
+		
+				//INSERT BIT To TABEL c0002scdl_plan_detail |MODEL DraftPlanDetail
+				foreach ($aryScdlPlan as $val) {
+					$this->conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_detail', 
+								['CUST_ID','TGL','SCDL_GROUP','ODD_EVEN'], 
+								[[$val['custId'],$val['tg'],$val['scdlGrp'],$val['currenWeek']]
+					])->execute();
+				}
+			
+				/*INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader */
+				$this->conn_esm()->CreateCommand("
+								INSERT INTO c0002scdl_plan_header (
+									SELECT NULL,TGL,SCDL_GROUP,NOTE,NULL,0,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail
+									GROUP BY SCDL_GROUP,TGL
+								)		
+				")->execute(); 
+			
+			}
+		}	
+		
       return $this->redirect(['index?tab=1']); 
     }
 	
 	
+	/**
+     * finds draftplan models.
+     * @var $dynamick draftplan.
+     * @var $data converting obejct to array.
+     * save c0002scdl_plan_group via batch insert.
+     * if success redirect page index
+     * @return mixed
+	 * @author ptrnov 
+     * @since 1.0.0
+     */
+	public static function sendMaintain($id)
+    {   
+         /*model draftplan*/
+        //$dataDraftMaintain = DraftPlan::find()->where(['ID'=>$id])->one();
+        $dataDraftMaintain = self::findModel($id);
+        //$dynamick =  new DraftPlan();
+
+         /*converting obejct to array*/
+        $dataField = ArrayHelper::toArray($dataDraftMaintain, [
+			'lukisongroup\master\models\DraftPlan' => [
+				'IdDinamikScdl',//SCDL_GROUP
+				'GEO_ID',
+				'LayerNm',	
+				'DAY_ID',
+				'DAY_VALUE',
+				'CUST_KD',
+				'ODD_EVEN',
+				'YEAR'
+			],
+		]);
+		//print_r($dataField);
+		
+		/* GET ROW DATE OF WEEK*/
+		//foreach ($dataField as $key => $value) {
+            if($dataField['IdDinamikScdl'] != 'NotSet'){
+				//$aryScdlPlan = Jadwal::getArrayDateCust('2018',$value['LayerNm'],$value['ODD_EVEN'],$value['DAY_VALUE'],$value['IdDinamikScdl'],$value['CUST_KD'],'');
+				$aryScdlPlan = Jadwal::getArrayDateCust($dataField['YEAR'],$dataField['LayerNm'],$dataField['ODD_EVEN'],$dataField['DAY_VALUE'],$dataField['IdDinamikScdl'],$dataField['CUST_KD'],'');
+			
+				//print_r($aryScdlPlan);
+		
+				//INSERT BIT To TABEL c0002scdl_plan_detail |MODEL DraftPlanDetail
+				foreach ($aryScdlPlan as $val) {
+					self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_detail', 
+								['CUST_ID','TGL','SCDL_GROUP','ODD_EVEN'], 
+								[[$val['custId'],$val['tg'],$val['scdlGrp'],$val['currenWeek']]
+					])->execute();
+				}
+			
+				//INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader 
+				self::conn_esm()->CreateCommand("
+								INSERT INTO c0002scdl_plan_header (
+									SELECT NULL,TGL,SCDL_GROUP,NOTE,NULL,0,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail
+									GROUP BY SCDL_GROUP,TGL
+								)		
+				")->execute(); 
+			
+			}
+		//}	
+		
+      //return $this->redirect(['index?tab=0']); 
+      return 'index';
+	  //return $dataField;
+    }
 	
 	
 	
@@ -319,13 +388,17 @@ class DraftPlanController extends Controller
     }
 
 
-    public function actionDay($id)
+	/*
+	 * SETUP CUSTOMER SCHEDULE FIRST DAY
+	*/
+    public function actionSetScdlFday($id)
     {
-        $view_info = Customers::find()->where(['CUST_KD'=>$id])->one();
+        //$view_info = Customers::find()->where(['CUST_KD'=>$id])->one();
 
-        $model =  DraftPlan::find()->where(['CUST_KD'=>$id])->one();
-
-        $model_day = new DayName();
+        $model =  DraftPlan::find()->where(['ID'=>$id])->one();
+		$view_info = $model->custTbl; //Customers::find()->where(['CUST_KD'=>$id])->one();
+       
+	   $model_day = new DayName();
           $ary= [
           ['ID' => 1, 'OPT' => 'Pekan Ganjil'],
           ['ID' => 2, 'OPT' => 'Pekan Genap'],
@@ -335,21 +408,23 @@ class DraftPlanController extends Controller
         $post = Yii::$app->request->post();
 
         $odd_even = $post['DayName']['OPT'];
-
          if ($model->load(Yii::$app->request->post())) {
 
             $day_value = DayName::find()->where(['DAY_ID'=>$model->DAY_ID])->one();
 
-            $model->DAY_VALUE = $day_value->DAY_VALUE;
+            $model->DAY_VALUE = $day_value->DAY_VALUE; //THE REAL DAY VALUE
 
             $model->ODD_EVEN = $odd_even;
 
             $model->save();
-               
-            return $this->redirect(['index']);
+            $rslt=self::sendMaintain($id);
+			//print_r(self::sendMaintain(248));
+            //return $this->redirect(['index']);
+            return $this->redirect([$rslt]);
          }else{
 
-          return $this->renderAjax('day', [
+          //return $this->renderAjax('_setScheduleFirstDay', [
+          return $this->renderAjax('_setScheduleFirstDay', [
             'view_info' => $view_info,
             'model'=>$model,
             'model_day'=>$model_day,
@@ -396,6 +471,27 @@ class DraftPlanController extends Controller
              
    }
 
+   /*AJAX GEO SUB*/
+   public function actionLisGeoSub() {
+
+         $out = [];
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+        if ($parents != null) {
+            $parentGeo = $parents[0];
+			  $model = DraftGeoSub::find()->asArray()->where(['GEO_ID'=>$parentGeo])->all();
+           foreach ($model as $key => $value) {
+                   $out[] = ['id'=>$value['GEO_SUB'],'name'=> $value['GEO_SUB'].' - '.$value['GEO_DCRIP']];
+               }
+
+               echo json_encode(['output'=>$out, 'selected'=>'']);
+               return;
+           }
+       }
+       echo Json::encode(['output'=>'', 'selected'=>'']);
+             
+   }
+   
     /**
      * Creates a new DraftPlan model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -411,10 +507,16 @@ class DraftPlanController extends Controller
         $cari_geo = DraftGeo::find()->where('STATUS<>3')->all();
         $geo = ArrayHelper::map($cari_geo, 'GEO_ID', 'GEO_NM');
 
+		$ary= [
+			['YEAR' => '2015'],
+			['YEAR' => '2016'],
+			['YEAR' => '2017'],
+		];
+        $opt = ArrayHelper::map($ary, 'YEAR', 'YEAR');
 
         if ($model->load(Yii::$app->request->post())) {
-
-
+			$hsl = \Yii::$app->request->post();	
+			$tahun = $hsl['DraftPlan']['YEAR'];
 
             // $model->save();
             $check_exist = DraftPlan::find()->where(['GEO_ID'=>$model->GEO_ID])->one();
@@ -429,8 +531,8 @@ class DraftPlanController extends Controller
                 /*batch insert*/
                 foreach ($get_customers as $key => $value) {
                     # code...
-                      $batch = $conn->CreateCommand()->batchInsert('c0002scdl_plan', ['CUST_KD', 'GEO_ID','LAYER_ID'], [
-                    [$value->CUST_KD,$value->GEO,$value->LAYER],
+                      $batch = $conn->CreateCommand()->batchInsert('c0002scdl_plan', ['CUST_KD', 'GEO_ID','LAYER_ID','YEAR'], [
+                    [$value->CUST_KD,$value->GEO,$value->LAYER,$tahun],
                 ])->execute();
                 }
             }else{
@@ -442,8 +544,8 @@ class DraftPlanController extends Controller
             /*batch insert*/
             foreach ($get_customers as $key => $value) {
                 # code...
-                  $batch = $conn->CreateCommand()->batchInsert('c0002scdl_plan', ['CUST_KD', 'GEO_ID','LAYER_ID'], [
-                [$value->CUST_KD,$value->GEO,$value->LAYER],
+                  $batch = $conn->CreateCommand()->batchInsert('c0002scdl_plan', ['CUST_KD', 'GEO_ID','LAYER_ID','YEAR'], [
+                [$value->CUST_KD,$value->GEO,$value->LAYER,$tahun],
             ])->execute();
             }
         }
@@ -452,7 +554,8 @@ class DraftPlanController extends Controller
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,
-                'geo'=>$geo
+                'geo'=>$geo,
+				'opt'=>$opt
             ]);
         }
     }

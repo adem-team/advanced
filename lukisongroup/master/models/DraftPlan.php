@@ -29,7 +29,8 @@ class DraftPlan extends \yii\db\ActiveRecord
      * @inheritdoc
      */
    
-
+	public $displyGeoId;
+	public $displyGeoNm;
     public static function tableName()
     {
         return 'c0002scdl_plan';
@@ -60,6 +61,10 @@ class DraftPlan extends \yii\db\ActiveRecord
 	public function getGeoNm() 
     {
         return $this->geoTbl!=''?$this->geoTbl->GEO_NM:'NotSet';
+    }
+	public function getGeoDcrip() 
+    {
+        return $this->geoTbl!=''?$this->geoTbl->GEO_DCRIP:'';
     }
 
 	/*JOIN GEO SUB*/
@@ -93,7 +98,8 @@ class DraftPlan extends \yii\db\ActiveRecord
         return [
             [['CUST_KD'], 'required'],
             [['GEO_ID', 'GEO_SUB','LAYER_ID', 'DAY_ID', 'DAY_VALUE', 'STATUS','PROSES_ID','YEAR'], 'integer'],
-            [['ODD_EVEN','CREATED_AT','IdDinamikScdl', 'UPDATED_AT'], 'safe'],
+            //[['ODD_EVEN','CREATED_AT','IdDinamikScdl', 'UPDATED_AT','displyGeoId','displyGeoNm'], 'safe'],
+            [['ODD_EVEN','CREATED_AT','IdDinamikScdl', 'UPDATED_AT','displyGeoId','displyGeoNm'], 'safe'],
             [['CUST_KD'], 'string', 'max' => 50],
             [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 100],
         ];

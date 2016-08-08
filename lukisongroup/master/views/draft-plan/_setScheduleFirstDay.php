@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             
         ],
-    ]);
+    ]); 
 
     $layer_viewinfo=DetailView::widget([
         'model' => $view_info,
@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             
         ],
-    ]);
+    ]); 
 
     ?>
     <div class="row">
@@ -68,35 +68,28 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <div class="col-sm-12">
             
-			<?php $form = ActiveForm::begin([
-				'id'=>$model->formName()
+			<?php $form = ActiveForm::begin(['id'=>$model->formName()]); ?>
+			<?=$form->field($model, 'displyGeoId')->hiddenInput(['value'=>$model->GEO_ID,'id'=>'draftplan-displygeoid'])->label(false); ?>
 			
-			]); ?>
-			<?php //=$form->field($model, 'displyGeoId')->hiddenInput(['value'=>$model->GEO_ID,'id'=>'draftplan-displygeoid'])->label(false); ?>
-		</div>
-		<div class="col-sm-12">	
 			<div class="row">
 				<div class="col-sm-6">	
-					<?php //=$form->field($model, 'displyGeoNm')->textInput(['value' => $model->geoNm .' - '. $model->GeoDcrip,'readonly' => true])->label('CUSTOMER GROUP'); ?>
+						<?=$form->field($model, 'displyGeoNm')->textInput(['value' => $model->geoNm .' - '. $model->GeoDcrip,'readonly' => true])->label('CUSTOMER GROUP'); ?>
 				</div>
 				<div class="col-sm-6">
-					<?php //= $form->field($model, 'GEO_SUB')->widget(DepDrop::classname(), [
-						// 'type'=>DepDrop::TYPE_SELECT2,
-						// 'options'=>['placeholder'=>'Select ...'],
-						// 'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-						// 'pluginOptions'=>[
-							// 'depends'=>['draftplan-displygeoid'],
-							 // 'initialize' => true,
-							  // 'loadingText' => 'Loading  ...',
-							// 'url' => Url::to(['/master/draft-plan/lis-geo-sub']),
-						// ]
-					// ])->label('AREA GROUP') 
+					<?= $form->field($model, 'GEO_SUB')->widget(DepDrop::classname(), [
+						'type'=>DepDrop::TYPE_SELECT2,
+						'options'=>['placeholder'=>'Select ...'],
+						'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+						'pluginOptions'=>[
+							'depends'=>['draftplan-displygeoid'],
+							 'initialize' => true,
+							  'loadingText' => 'Loading  ...',
+							'url' => Url::to(['/master/draft-plan/lis-geo-sub']),
+						]
+					])->label('AREA GROUP') 
 					?>
 				</div>
-			</div>
-		</div>	
-		<div class="col-sm-12">		
-			
+			</div>		
 			
 			<?= $form->field($model_day, 'OPT')->widget(Select2::classname(), [
 					'data' => $opt,
@@ -130,9 +123,9 @@ $this->params['breadcrumbs'][] = $this->title;
 				]);?> -->
 		
 
-			
+			<div class="form-group">
 				<?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-	
+			</div>
 
 			<?php ActiveForm::end(); ?>
 		</div>
