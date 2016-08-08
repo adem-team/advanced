@@ -119,7 +119,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 				return Html::a(Yii::t('app',$label,['modelClass' => 'DayName',]), 
 								['/master/draft-plan/set-scdl-fday','id'=>$model->ID],
 								['data-toggle'=>"modal",
-								'data-target'=>"#modal-day",
+								'data-target'=>"#modal-day-draft",
 								'class' => 'btn btn-default btn-xs',
 								// 'style'=>'width:50px;height:40px'
 								]
@@ -241,7 +241,7 @@ $gvNewPlan=GridView::widget([
 		'before'=> Html::a('<i class="fa fa-sign-in"></i> '.Yii::t('app', 'Start Draft Plan',
                             ['modelClass' => 'DraftPlan',]),'/master/draft-plan/create',[
                                 'data-toggle'=>"modal",
-                                    'data-target'=>"#modal-create",
+                                    'data-target'=>"#modal-create-draft",
                                         'class' => 'btn btn-success'
                                                     ]).' '.
                 Html::a('<i class="fa fa-paper-plane"></i> '.Yii::t('app', 'Send Maintain',
@@ -270,7 +270,7 @@ $gvNewPlan=GridView::widget([
 <?php
 $this->registerJs("
          $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-         $('#modal-create').on('show.bs.modal', function (event) {
+         $('#modal-create-draft').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
             var title = button.data('title')
@@ -284,7 +284,7 @@ $this->registerJs("
             })
     ",$this::POS_READY);
     Modal::begin([
-        'id' => 'modal-create',
+        'id' => 'modal-create-draft',
         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search-plus"></div><div><h4 class="modal-title">GEOGRAFIS FILTER To PLAN MAINTAIN</h4></div>',
         'headerOptions'=>[
                 'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
@@ -292,10 +292,9 @@ $this->registerJs("
     ]);
     Modal::end();
 
-
     $this->registerJs("
          $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-         $('#modal-day').on('show.bs.modal', function (event) {
+         $('#modal-day-draft').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
             var title = button.data('title')
@@ -309,10 +308,11 @@ $this->registerJs("
             })
     ",$this::POS_READY);
     Modal::begin([
-        'id' => 'modal-day',
-        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title"> SET CUSTOMER SCHEDULE </h4></div>',
+        'id' => 'modal-day-draft',
+        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search-plus"></div><div><h4 class="modal-title">GEOGRAFIS FILTER To PLAN MAINTAIN</h4></div>',
         'headerOptions'=>[
                 'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
         ],
     ]);
     Modal::end();
+
