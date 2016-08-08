@@ -15,9 +15,11 @@ use yii\helpers\ArrayHelper;
 Use ptrnov\ salesforce\Jadwal;
 use lukisongroup\master\models\DraftPlanGroup;
 use lukisongroup\master\models\DraftPlanDetailSearch;
+use lukisongroup\master\models\DraftPlanDetail;
 use lukisongroup\master\models\DraftPlanGroupSearch;
 use lukisongroup\sistem\models\UserloginSearch;
 use lukisongroup\master\models\DraftGeoSub;
+use yii\widgets\ActiveForm;
 /**
  * DraftPlanController implements the CRUD actions for DraftPlan model.
  */
@@ -73,6 +75,13 @@ class DraftPlanController extends Controller
     }
 
 
+    
+    public function get_arycusdetail()
+    {
+        return ArrayHelper::map(DraftPlanDetail::find()->where('STATUS<>1')->all(),'CUST_ID','custNm');
+    }
+
+
 	
 	/**
      * finds draftplan models.
@@ -107,15 +116,19 @@ class DraftPlanController extends Controller
 				'ODD_EVEN'
 			],
 		]);
+
+
 		//print_r($data);
 		
 		/* GET ROW DATE OF WEEK*/
 		foreach ($data as $key => $value) {
             if($value['IdDinamikScdl'] != 'NotSet'){
+
+              
 				//$aryScdlPlan = Jadwal::getArrayDateCust('2018',$value['LayerNm'],$value['ODD_EVEN'],$value['DAY_VALUE'],$value['IdDinamikScdl'],$value['CUST_KD'],'');
 				$aryScdlPlan = Jadwal::getArrayDateCust($value['YEAR'],$value['LayerNm'],$value['ODD_EVEN'],$value['DAY_VALUE'],$value['IdDinamikScdl'],$value['CUST_KD'],'');
 			
-				//print_r($aryScdlPlan);
+
 		
 				//INSERT BIT To TABEL c0002scdl_plan_detail |MODEL DraftPlanDetail
 				foreach ($aryScdlPlan as $val) {
@@ -148,13 +161,14 @@ class DraftPlanController extends Controller
      * if success redirect page index
      * @return mixed
 	 * @author ptrnov 
-     * @since 1.0.0
+     * @since 1.3.0
      */
 	public static function sendMaintain($id)
     {   
          /*model draftplan*/
         //$dataDraftMaintain = DraftPlan::find()->where(['ID'=>$id])->one();
         $dataDraftMaintain = self::findModel($id);
+         // $dataDraftMaintain = DraftPlan::find()->joinwith('plandetail')->where(['c0002scdl_plan.ID'=>$id])->one();
         //$dynamick =  new DraftPlan();
 
          /*converting obejct to array*/
@@ -167,25 +181,31 @@ class DraftPlanController extends Controller
 				'DAY_VALUE',
 				'CUST_KD',
 				'ODD_EVEN',
-				'YEAR'
+				'YEAR',
 			],
 		]);
-		//print_r($dataField);
+        
+       
+		
 		
 		/* GET ROW DATE OF WEEK*/
 		//foreach ($dataField as $key => $value) {
             if($dataField['IdDinamikScdl'] != 'NotSet'){
 				//$aryScdlPlan = Jadwal::getArrayDateCust('2018',$value['LayerNm'],$value['ODD_EVEN'],$value['DAY_VALUE'],$value['IdDinamikScdl'],$value['CUST_KD'],'');
 				$aryScdlPlan = Jadwal::getArrayDateCust($dataField['YEAR'],$dataField['LayerNm'],$dataField['ODD_EVEN'],$dataField['DAY_VALUE'],$dataField['IdDinamikScdl'],$dataField['CUST_KD'],'');
-			
-				//print_r($aryScdlPlan);
+
 		
+           $ary_scdlplndetail = self::findCount($dataField['CUST_KD']);
 				//INSERT BIT To TABEL c0002scdl_plan_detail |MODEL DraftPlanDetail
+                if($ary_scdlplndetail == 0)
+                {
 				foreach ($aryScdlPlan as $val) {
+
 					self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_detail', 
 								['CUST_ID','TGL','SCDL_GROUP','ODD_EVEN'], 
 								[[$val['custId'],$val['tg'],$val['scdlGrp'],$val['currenWeek']]
 					])->execute();
+                    }
 				}
 			
 				//INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader 
@@ -203,17 +223,19 @@ class DraftPlanController extends Controller
       return 'index';
 	  //return $dataField;
     }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+    public function actionValid()
+    {
+      # code...
+      $model = new DraftPlan();
+      $model->scenario = DraftPlan::SCENARIO_EXIST;
+    if(Yii::$app->request->isAjax && $model->load($_POST))
+    {
+      Yii::$app->response->format = 'json';
+      return ActiveForm::validate($model);
+      }
+    }
 	
   /**
      * finds draftplan models.
@@ -260,11 +282,6 @@ class DraftPlanController extends Controller
             
  //        }
 
- // $dua= DraftPlan::getDateVal();
- 
-
-            # code...
-        // $cus = DraftPlan::find()->asArray()->all();
 
         /*batch insert*/
 
@@ -433,6 +450,52 @@ class DraftPlanController extends Controller
       }
     }
 
+
+    /*
+     * Delete DrafplanDetail Customers
+    */
+    public function actionPilihDelete()
+    {
+       $model = new DraftPlanDetail();
+       $model->scenario = 'delete';
+
+         if ($model->load(Yii::$app->request->post())) {
+
+            self::DeleteDetail($model->CUST_ID);
+
+            return $this->redirect(['index?tab=1']); 
+
+         }else{
+          return $this->renderAjax('_pilihdelete', [
+            'model'=>$model,
+            'cus'=>self::get_arycusdetail()
+        ]);
+      }
+    }
+
+    /*
+     * Approve DrafplanDetail Customers
+    */
+    public function actionPilihApprove()
+    {
+       $model = new DraftPlanDetail();
+       $model->scenario = 'approve';
+
+         if ($model->load(Yii::$app->request->post())) {
+
+            self::Approve($model->CUST_ID);
+
+            return $this->redirect(['index?tab=1']); 
+
+         }else{
+          return $this->renderAjax('_pilihapprove', [
+            'model'=>$model,
+            'cus'=>self::get_arycusdetail()
+        ]);
+      }
+    }
+
+
      // action depdrop
    // public function actionLisday($opt) {
 
@@ -591,6 +654,46 @@ class DraftPlanController extends Controller
 
         return $this->redirect(['index']);
     }
+
+
+     /**
+     * Finds the DraftPlandetail count  model based on its CUST_KD value.
+     * @param string $CUST_KD
+     * @return @var ary_scdlplndetail
+     */
+    protected function findCount($custId)
+    {
+       $ary_scdlplndetail = DraftPlanDetail::find()->where(['CUST_ID'=>$custId])->count();
+
+       return $ary_scdlplndetail;
+    }
+
+      /**
+     * Finds the DraftPlanDetail model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return DraftPlanDetail the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function DeleteDetail($custId)
+    {
+        DraftPlanDetail::deleteAll(['CUST_ID'=>$custId]);
+    }
+
+
+     /**
+     * Finds the DraftPlanDetail model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return DraftPlanDetail the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function Approve($custId)
+    {
+       $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_detail SET STATUS=1 WHERE CUST_ID="'.$custId.'"')->execute();
+       
+    }
+
 
     /**
      * Finds the DraftPlan model based on its primary key value.

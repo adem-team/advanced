@@ -68,9 +68,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <div class="col-sm-12">
             
-			<?php $form = ActiveForm::begin(['id'=>$model->formName()]); ?>
+			<?php $form = ActiveForm::begin(['id'=>$model->formName(),
+					'enableClientValidation' => true,
+  					'enableAjaxValidation'=>true,
+  					 'validationUrl'=>Url::toRoute('/master/draft-plan/valid')
+			]); ?>
 			<?=$form->field($model, 'displyGeoId')->hiddenInput(['value'=>$model->GEO_ID,'id'=>'draftplan-displygeoid'])->label(false); ?>
 			
+				<?=$form->field($model, 'CUST_KD')->hiddenInput(['value'=>$model->CUST_KD])->label(false); ?>
 			<div class="row">
 				<div class="col-sm-6">	
 						<?=$form->field($model, 'displyGeoNm')->textInput(['value' => $model->geoNm .' - '. $model->GeoDcrip,'readonly' => true])->label('CUSTOMER GROUP'); ?>
@@ -98,7 +103,9 @@ $this->params['breadcrumbs'][] = $this->title;
 						'allowClear' => true
 						 ],
 				])->label('Options Jeda Pekan');
+
 			?>
+
 
 			<?= $form->field($model, 'DAY_ID')->widget(DepDrop::classname(), [
 					'type'=>DepDrop::TYPE_SELECT2,
