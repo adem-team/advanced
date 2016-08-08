@@ -83,8 +83,29 @@ class ExportController extends Controller
     public function actionExportData(){
 
         //$custDataMTI=Yii::$app->db_esm->createCommand("CALL ERP_MASTER_CUSTOMER_export('CUSTOMER_MTI')")->queryAll();
-        $query = "select c.CUST_KD,c.CUST_NM,ck.CUST_KTG_NM,c.ALAMAT from c0001 c left join c0001k ck on c.CUST_TYPE = ck.CUST_KTG where c.STATUS<>3";
-
+        //$query = "select c.CUST_KD,c.CUST_NM,ck.CUST_KTG_NM,c.ALAMAT from c0001 c left join c0001k ck on c.CUST_TYPE = ck.CUST_KTG where c.STATUS<>3";
+		$query="
+				SELECT a.CUST_KD,
+						(CASE WHEN g.KD_ALIAS!='' THEN g.KD_ALIAS ELSE 'Kosong' END) as DIST_ID,
+						a.CUST_NM,
+						(CASE WHEN b.CUST_KTG_NM!='' THEN b.CUST_KTG_NM ELSE 'Kosong' END) as TYPE_NM,		
+						(CASE WHEN f.LAYER_NM!='' THEN f.LAYER_NM ELSE 'Kosong' END) as LAYER_GRADE,
+						(CASE WHEN e.GEO_NM!='' THEN CONCAT(e.GEO_NM,'-',e.GEO_DCRIP) ELSE 'Kosong' END) as GEO_MAINTAIN,
+						(CASE WHEN a.ALAMAT!='' THEN a.ALAMAT ELSE 'Kosong' END) as ALAMAT,
+						(CASE WHEN c.PROVINCE!='' THEN c.PROVINCE ELSE 'Kosong' END) as PROVINCE,
+						(CASE WHEN d.CITY_NAME!='' THEN  d.CITY_NAME ELSE 'Kosong' END) as CITY_NAME,
+						(CASE WHEN d.POSTAL_CODE!='' THEN  d.POSTAL_CODE ELSE 'Kosong' END) as POSTAL_CODE,
+						(CASE WHEN a.TLP1!='' THEN  a.TLP1 ELSE 'Kosong' END) as PHONE,
+						(CASE WHEN a.PIC!='' THEN a.PIC ELSE 'Kosong' END) as CP
+				FROM c0001 a LEFT JOIN c0001k b ON b.CUST_KTG=a.CUST_TYPE
+				LEFT JOIN c0001g1 c on c.PROVINCE_ID=a.PROVINCE_ID
+				LEFT JOIN c0001g2 d on  d.CITY_ID=a.CITY_ID
+				LEFT JOIN c0002scdl_geo e on e.GEO_ID=a.GEO
+				LEFT JOIN c0002scdl_layer f on f.LAYER_ID=a.LAYER
+				LEFT JOIN c0002 g ON g.KD_CUSTOMERS=a.CUST_KD
+				WHERE a.STATUS<>3
+				ORDER BY a.CUST_NM ASC		
+		";
         $cusDataProviderMTI = new ArrayDataProvider([
             'key' => 'ID',
             // 'allModels'=>Yii::$app->db_esm->createCommand("SELECT CUST_KD,CUST_NM,TYPE_NM ")->queryAll(),
@@ -102,18 +123,26 @@ class ExportController extends Controller
         $excel_content = [
              [
                 'sheet_name' => 'CUSTOMER',
-          // 'sheet_title' => ['CUST_ID','CUST_NM','TYPE','ALAMAT','TLP','PIC'], //$excel_ceils,//'sad',//[$excel_title],
-                'sheet_title' => $excel_data['excel_title'],
-          'ceils' => $excel_ceils,
+				// 'sheet_title' => ['CUST_ID','CUST_NM','TYPE','ALAMAT','TLP','PIC'], //$excel_ceils,//'sad',//[$excel_title],
+				'sheet_title' => ['CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER_GRADE','GEO_MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE POS','PHONE','CONTACT PERSON'], //$excel_ceils,//'sad',//[$excel_title],
+			   
+                //'sheet_title' => $excel_data['excel_title'],
+				'ceils' => $excel_ceils,
                 //'freezePane' => 'E2',
                 'headerColor' => Export2ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-                               'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
+                     'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
+                     'DIST_ID' => Export2ExcelBehavior::getCssClass('header'),
                      'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
                      'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
+                     'LAYER_GRADE' => Export2ExcelBehavior::getCssClass('header'),
+                     'GEO_MAINTAIN' => Export2ExcelBehavior::getCssClass('header'),
                      'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-                     'TLP1' => Export2ExcelBehavior::getCssClass('header'),
-                     'PIC' => Export2ExcelBehavior::getCssClass('header')
+					 'PROVINCE' => Export2ExcelBehavior::getCssClass('header'),              
+                     'CITY_NAME' => Export2ExcelBehavior::getCssClass('header'),  
+                     'POSTAL_CODE' => Export2ExcelBehavior::getCssClass('header'),  
+                     'PHONE' => Export2ExcelBehavior::getCssClass('header'),
+                     'CP' => Export2ExcelBehavior::getCssClass('header')   
                 ], //define each column's cssClass for header line only.  You can set as blank.
                'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
                'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
