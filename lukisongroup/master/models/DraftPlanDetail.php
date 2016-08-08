@@ -52,6 +52,8 @@ class DraftPlanDetail extends \yii\db\ActiveRecord
             [['NOTE'], 'string'],
             [['LAT', 'LAG', 'RADIUS'], 'number'],
             [['CUST_ID'], 'string', 'max' => 50],
+             [['CUST_ID'], 'required','on'=>'delete'],
+              [['CUST_ID'], 'required','on'=>'approve'],
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100],
         ];
     }

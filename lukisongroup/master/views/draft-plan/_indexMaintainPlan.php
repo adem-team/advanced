@@ -238,10 +238,19 @@ $gvDraftPlan=GridView::widget([
                                     'data-target'=>"#modal-create",
                                         'class' => 'btn btn-success'
                                                     ]).' '.
-                Html::a('<i class="fa fa-paper-plane"></i> '.Yii::t('app', 'Send Draft',
-                            ['modelClass' => 'DraftPlan',]),'/master/draft-plan/send-draft',[
+                Html::a('<i class="fa fa-paper-plane"></i> '.Yii::t('app', 'Approve',
+                            ['modelClass' => 'DraftPlan',]),'/master/draft-plan/pilih-approve',[
+                                    'data-toggle'=>"modal",
+                                    'data-target'=>"#modal-approve",
                                         'class' => 'btn btn-info'
+                                                    ]).' '.
+                Html::a('<i class="fa fa-trash"></i> '.Yii::t('app', 'Pilih Delete',
+                            ['modelClass' => 'DraftPlanDetail',]),'/master/draft-plan/pilih-delete',[
+                                'data-toggle'=>"modal",
+                                  'data-target'=>"#modal-day",
+                                  'class' => 'btn btn-danger'
                                                     ]),
+
         'showFooter'=>false,
   ],
   'export' =>['target' => GridView::TARGET_BLANK],
@@ -262,6 +271,30 @@ $gvDraftPlan=GridView::widget([
 ?>
 <?=$gvDraftPlan?>
 <?php
+
+$this->registerJs("
+         $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+         $('#modal-day').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title')
+            var href = button.attr('href')
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+    Modal::begin([
+        'id' => 'modal-day',
+        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title"> Delete SCHEDULE OF CUSTOMER </h4></div>',
+        'headerOptions'=>[
+                'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+        ],
+    ]);
+    Modal::end();
 $this->registerJs("
          $.fn.modal.Constructor.prototype.enforceFocus = function(){};
          $('#modal-create').on('show.bs.modal', function (event) {
@@ -289,7 +322,7 @@ $this->registerJs("
 
     $this->registerJs("
          $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-         $('#modal-day').on('show.bs.modal', function (event) {
+         $('#modal-approve').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)
             var title = button.data('title')
@@ -303,10 +336,13 @@ $this->registerJs("
             })
     ",$this::POS_READY);
     Modal::begin([
-        'id' => 'modal-day',
-        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title"> SCHEDULE OF CUSTOMER </h4></div>',
+        'id' => 'modal-approve',
+        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search-plus"></div><div><h4 class="modal-title">GEOGRAFIS FILTER To PLAN MAINTAIN</h4></div>',
         'headerOptions'=>[
                 'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
         ],
     ]);
     Modal::end();
+
+
+    

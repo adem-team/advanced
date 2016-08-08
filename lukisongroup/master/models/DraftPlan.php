@@ -5,6 +5,7 @@ namespace lukisongroup\master\models;
 use Yii;
 use lukisongroup\master\models\DraftGeo;
 use lukisongroup\master\models\DraftLayer;
+use lukisongroup\master\models\DraftPlanDetail;
 Use ptrnov\salesforce\Jadwal;
 
 /**
@@ -31,6 +32,10 @@ class DraftPlan extends \yii\db\ActiveRecord
    
 	public $displyGeoId;
 	public $displyGeoNm;
+	
+	/*checkvalidation */
+	const SCENARIO_EXIST = 'exist';
+
     public static function tableName()
     {
         return 'c0002scdl_plan';
@@ -90,13 +95,32 @@ class DraftPlan extends \yii\db\ActiveRecord
         return $this->layerTbl!=''?$this->layerTbl->LAYER_NM:'NotSet';
     }
 
+    public function getPlandetail() 
+    {
+         return $this->hasOne(DraftPlanDetail::className(), ['CUST_ID' => 'CUST_KD']);
+
+    }
+
+     public function getTgldetail() 
+    {
+         return $this->plandetail!=''?$this->plandetail->TGL:'NotSet';
+
+    }
+
+      public function getCustdetail() 
+    {
+         return $this->plandetail!=''?$this->plandetail->CUST_ID:'NotSet';
+
+    }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['CUST_KD'], 'required'],
+            [['CUST_KD','GEO_SUB','DAY_ID'], 'required','message' => '{attribute} Tidak Boleh Kosong','on'=>self::SCENARIO_EXIST],
+             [['DAY_ID'], 'exist_validation','on'=>self::SCENARIO_EXIST],
             [['GEO_ID', 'GEO_SUB','LAYER_ID', 'DAY_ID', 'DAY_VALUE', 'STATUS','PROSES_ID','YEAR'], 'integer'],
             //[['ODD_EVEN','CREATED_AT','IdDinamikScdl', 'UPDATED_AT','displyGeoId','displyGeoNm'], 'safe'],
             [['ODD_EVEN','CREATED_AT','IdDinamikScdl', 'UPDATED_AT','displyGeoId','displyGeoNm'], 'safe'],
@@ -114,9 +138,9 @@ class DraftPlan extends \yii\db\ActiveRecord
             'ID' => 'ID',
             'CUST_KD' => 'Cust  Kd',
             'GEO_ID' => 'GEO',
-            'GEO_SUB' => 'GEO_SUB',
+            'GEO_SUB' => 'Area Group',
             'LAYER_ID' => 'Layer  ID',
-            'DAY_ID' => 'Day  ID',
+            'DAY_ID' => 'Hari',
             'DAY_VALUE' => 'Day  Value',
             'ODD_EVEN' => 'ODD EVEN',
             'PROSES_ID' => 'PROSES',
@@ -127,6 +151,19 @@ class DraftPlan extends \yii\db\ActiveRecord
             'UPDATED_BY' => 'Updated  By',
             'UPDATED_AT' => 'Updated  At',
         ];
+    }
+
+
+    /*check exist*/
+    public function exist_validation($model)
+    {
+    	$ary_scdlplndetail = DraftPlanDetail::find()->where(['CUST_ID'=>$this->CUST_KD,'STATUS'=>0])->count();
+
+
+    	if($ary_scdlplndetail != 0){
+    		$this->addError($model, 'Customer sudah di set pada pekan ganjil, delete  jadwal untuk editing');
+    	}
+
     }
 	
 	/*ID DISPLY NAMEOF THE DAY*/
