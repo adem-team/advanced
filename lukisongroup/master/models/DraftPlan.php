@@ -83,7 +83,7 @@ class DraftPlan extends \yii\db\ActiveRecord
     {
         return $this->geoSubTbl!=''?$this->geoSubTbl->GEO_SUB:'NotSet';
     }
-	
+
 	/*JOIN LAYER*/
     public function getLayerTbl()
     {
@@ -94,6 +94,8 @@ class DraftPlan extends \yii\db\ActiveRecord
     {
         return $this->layerTbl!=''?$this->layerTbl->LAYER_NM:'NotSet';
     }
+
+    /*join Plandetail*/
 
     public function getPlandetail() 
     {
@@ -121,6 +123,7 @@ class DraftPlan extends \yii\db\ActiveRecord
         return [
             [['CUST_KD','GEO_SUB','DAY_ID'], 'required','message' => '{attribute} Tidak Boleh Kosong','on'=>self::SCENARIO_EXIST],
              [['DAY_ID'], 'exist_validation','on'=>self::SCENARIO_EXIST],
+              [['GEO_SUB'], 'exist_validation_sub','on'=>self::SCENARIO_EXIST],
             [['GEO_ID', 'GEO_SUB','LAYER_ID', 'DAY_ID', 'DAY_VALUE', 'STATUS','PROSES_ID','YEAR'], 'integer'],
             //[['ODD_EVEN','CREATED_AT','IdDinamikScdl', 'UPDATED_AT','displyGeoId','displyGeoNm'], 'safe'],
             [['ODD_EVEN','CREATED_AT','IdDinamikScdl', 'UPDATED_AT','displyGeoId','displyGeoNm'], 'safe'],
@@ -128,6 +131,8 @@ class DraftPlan extends \yii\db\ActiveRecord
             [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 100],
         ];
     }
+
+
 
     /**
      * @inheritdoc
@@ -153,6 +158,14 @@ class DraftPlan extends \yii\db\ActiveRecord
         ];
     }
 
+    /*range year */
+    public function getYearsList() {
+        $currentYear = 2020;
+        $yearFrom = 2016;
+        $yearsRange = range($yearFrom, $currentYear);
+        return array_combine($yearsRange, $yearsRange);
+}
+
 
     /*check exist*/
     public function exist_validation($model)
@@ -164,6 +177,30 @@ class DraftPlan extends \yii\db\ActiveRecord
     		$this->addError($model, 'Customer sudah di set pada pekan ganjil, delete  jadwal untuk editing');
     	}
 
+    }
+
+
+    /*check exist GEO SUB*/
+    public function exist_validation_sub($model)
+    {
+        $ary = self::getScdlPlan();
+        if(count($ary->GEO_SUB) != 0)
+        {
+              if($ary->GEO_SUB != $this->GEO_SUB)
+            {
+                $this->addError($model, 'Geo Sub sudah di set pada Customers, delete  jadwal untuk editing');
+            }
+        }
+      
+   
+    }
+
+    /*get DraftPlan*/
+    public function getScdlPlan()
+    {
+        $ary_scdlplan = DraftPlanDetail::find()->where(['CUST_ID'=>$this->CUST_KD,'STATUS'=>0]) ->distinct()->one();
+
+        return $ary_scdlplan;
     }
 	
 	/*ID DISPLY NAMEOF THE DAY*/
