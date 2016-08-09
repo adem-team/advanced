@@ -149,7 +149,7 @@ public function getParentName() {
     return $this->hasOne(Province::className(), ['PROVINCE_ID'=>'PROVINCE_ID']);
   }
   public function getCustkota(){
-    return $this->hasOne(Kota::className(), ['POSTAL_CODE'=>'CITY_ID']);
+    return $this->hasOne(Kota::className(), ['CITY_ID'=>'CITY_ID']);
   }
 
   public function getCustdis(){
