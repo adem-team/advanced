@@ -307,25 +307,27 @@ class PurchaseorderSearch extends Purchaseorder
             // }
 
 
-  	// /*
-  	//  * INBOX PO
-  	//  * ACTION CHECKED | APPROVAL
-  	//  * @author ptrnov [piter@lukison]
-  	//  * @since 1.2
-  	// */
+  	/*
+  	 * INBOX PO
+  	 * ACTION CHECKED | APPROVAL
+  	 * @author ptrnov [piter@lukison]
+  	 * @since 1.3.0
+  	*/
   	public function searchPoInbox($params)
       {
   		  $profile=Yii::$app->getUserOpt->Profile_user();
 
   		if($profile->emp->GF_ID == 3 && $profile->emp->DEP_ID == 'ACT'){
   			// $query = Purchas eorder::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4');
-        $query = Purchaseorder::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4');
+        // $query = Purchaseorder::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4');
+
+          $query = Purchaseorder::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4 AND CREATE_BY="'.$profile->emp->EMP_ID.'"');
       }elseif($profile->emp->GF_ID == 1 || $profile->emp->GF_ID == 2){
   			$query = Purchaseorder::find()->where('STATUS = 101 AND STATUS <> 102 AND STATUS<>4');
   		}
       else{
 
-        $query = Purchaseorder::find()->where('p0001.STATUS <> 102 AND p0001.STATUS<>4')->orderBy(['CREATE_AT'=> SORT_DESC]);
+        $query = Purchaseorder::find()->where('p0001.STATUS <> 102 AND p0001.STATUS<>4 AND CREATE_BY="'.$profile->emp->EMP_ID.'"')->orderBy(['CREATE_AT'=> SORT_DESC]);
     		$query->joinWith(['suplier' => function ($q) {
                 $q->where('s1000.NM_SUPPLIER LIKE "%' . $this->namasuplier . '%"');
             }]);
