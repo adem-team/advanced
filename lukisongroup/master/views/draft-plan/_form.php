@@ -14,7 +14,7 @@ use kartik\widgets\Select2;
     <?php $form = ActiveForm::begin(['id'=>$model->formName()]); ?>
 
 	<?= $form->field($model, 'YEAR')->widget(Select2::classname(), [
-					'data' => $opt,
+					'data' => $model->getYearsList(),
 					'options' => ['placeholder' => 'Pilih ...'],
 					'pluginOptions' => [
 						'allowClear' => true
