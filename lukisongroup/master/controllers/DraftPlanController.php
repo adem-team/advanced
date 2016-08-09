@@ -185,8 +185,6 @@ class DraftPlanController extends Controller
 			],
 		]);
         
-       
-		
 		
 		/* GET ROW DATE OF WEEK*/
 		//foreach ($dataField as $key => $value) {
@@ -225,6 +223,7 @@ class DraftPlanController extends Controller
     }
 
 
+    /*validation ajax*/
     public function actionValid()
     {
       # code...
@@ -236,6 +235,7 @@ class DraftPlanController extends Controller
       return ActiveForm::validate($model);
       }
     }
+
 	
   /**
      * finds draftplan models.
@@ -483,7 +483,13 @@ class DraftPlanController extends Controller
 
          if ($model->load(Yii::$app->request->post())) {
 
-            self::Approve($model->CUST_ID);
+            if(self::findCountStatus($model->CUST_ID) == 0)
+            {
+                self::Approve($model->CUST_ID);
+            }else{
+                 self::ApproveValidasi($model->CUST_ID);
+                 self::Approve($model->CUST_ID);
+            }
 
             return $this->redirect(['index?tab=1']); 
 
@@ -663,17 +669,28 @@ class DraftPlanController extends Controller
      */
     protected function findCount($custId)
     {
-       $ary_scdlplndetail = DraftPlanDetail::find()->where(['CUST_ID'=>$custId])->count();
+       $ary_scdlplndetail = DraftPlanDetail::find()->where(['CUST_ID'=>$custId,'STATUS' => 0])->count();
 
        return $ary_scdlplndetail;
     }
 
+
+     /**
+     * Finds the DraftPlandetail count  model based on its CUST_KD value.
+     * @param string $CUST_KD
+     * @return @var ary_scdlplndetail
+     */
+    protected function findCountStatus($custId)
+    {
+       $ary_scdlplndetail = DraftPlanDetail::find()->where(['CUST_ID'=>$custId,'STATUS' => 1])->count();
+
+       return $ary_scdlplndetail;
+    }
+
+
       /**
-     * Finds the DraftPlanDetail model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return DraftPlanDetail the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
+     * Delete All
+     * @param string $custId
      */
     protected function DeleteDetail($custId)
     {
@@ -682,15 +699,24 @@ class DraftPlanController extends Controller
 
 
      /**
-     * Finds the DraftPlanDetail model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return DraftPlanDetail the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
+     * update STATUS 1
+     * @param string $custId
      */
     protected function Approve($custId)
     {
-       $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_detail SET STATUS=1 WHERE CUST_ID="'.$custId.'"')->execute();
+       $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_detail SET STATUS=1 WHERE CUST_ID="'.$custId.'" AND STATUS = 0')->execute();
+       
+    }
+
+
+    /**
+     * update STATUS 2
+     * @param string $custId
+     */
+    protected function ApproveValidasi($custId)
+    {
+            # code...
+        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_detail SET STATUS=2 WHERE CUST_ID="'.$custId.'" And STATUS = 1')->execute();
        
     }
 
