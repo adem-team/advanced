@@ -8,7 +8,8 @@ use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use scotthuangzl\export2excel\Export2ExcelBehavior;
+//use scotthuangzl\export2excel\Postman4ExcelBehavior;
+use ptrnov\postman4excel\Postman4ExcelBehavior;
 use yii\data\ArrayDataProvider;
 use yii\web\Response;
 
@@ -27,9 +28,14 @@ class ExportController extends Controller
      public function behaviors()
     {
         return [
-            'export2excel' => [
-                'class' => Export2ExcelBehavior::className(),
-            ],
+            // 'export2excel' => [
+                // 'class' => Postman4ExcelBehavior::className(),
+            // ],
+			'export4excel' => [
+				'class' => Postman4ExcelBehavior::className(),
+				'downloadPath'=>Yii::getAlias('@lukisongroup').'/export/tmp/';,
+				'widgetType'=>'download'
+			], 
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -39,14 +45,14 @@ class ExportController extends Controller
         ];
     }
 
-    public function actions()
-    {
-        return [
-            'download' => [
-                'class' => 'scotthuangzl\export2excel\DownloadAction',
-            ],
-        ];
-    }
+    // public function actions()
+    // {
+        // return [
+            // 'download' => [
+                // 'class' => 'scotthuangzl\export2excel\DownloadAction',
+            // ],
+        // ];
+    // }
 
 
    
@@ -117,7 +123,7 @@ class ExportController extends Controller
         
         $aryCusDataProviderMTI=$cusDataProviderMTI->allModels;
 
-        $excel_data = Export2ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);
+        $excel_data = Postman4ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);
         $excel_title = $excel_data['excel_title'];
         $excel_ceils = $excel_data['excel_ceils'];
         $excel_content = [
@@ -129,23 +135,23 @@ class ExportController extends Controller
                 //'sheet_title' => $excel_data['excel_title'],
 				'ceils' => $excel_ceils,
                 //'freezePane' => 'E2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-                     'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-                     'DIST_ID' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'LAYER_GRADE' => Export2ExcelBehavior::getCssClass('header'),
-                     'GEO_MAINTAIN' => Export2ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Export2ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Export2ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Export2ExcelBehavior::getCssClass('header'),  
-                     'PHONE' => Export2ExcelBehavior::getCssClass('header'),
-                     'CP' => Export2ExcelBehavior::getCssClass('header')   
+                     'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
+                     'DIST_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'TYPE_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'LAYER_GRADE' => Postman4ExcelBehavior::getCssClass('header'),
+                     'GEO_MAINTAIN' => Postman4ExcelBehavior::getCssClass('header'),
+                     'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),
+					 'PROVINCE' => Postman4ExcelBehavior::getCssClass('header'),              
+                     'CITY_NAME' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'POSTAL_CODE' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'PHONE' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CP' => Postman4ExcelBehavior::getCssClass('header')   
                 ], //define each column's cssClass for header line only.  You can set as blank.
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
             ],
             /* [
                 'sheet_name' => 'IMPORTANT NOTE ',
@@ -187,8 +193,10 @@ class ExportController extends Controller
             ], */
         ];
 
-        $excel_file = "CustomerDataERPAll".'-'.date('Ymd-his');
-        $this->export2excel($excel_content, $excel_file,1);
+        //$excel_file = "CustomerDataERPAll".'-'.date('Ymd-his');
+        $excel_file = "CustomerData";
+        //$this->export2excel($excel_content, $excel_file,1);
+        $this->export2excel($excel_content, $excel_file);
     }
 
      /**
@@ -218,7 +226,7 @@ class ExportController extends Controller
         $aryCusDataProviderMTI=$cusDataProviderMTI->allModels;
        
 
-        $excel_data = Export2ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);
+        $excel_data = Postman4ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);
         
         $excel_title = $excel_data['excel_title'];
 
@@ -230,23 +238,25 @@ class ExportController extends Controller
                 'sheet_title' => $excel_title,
           'ceils' => $excel_ceils,
                 //'freezePane' => 'E2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-                               'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-                     'TLP1' => Export2ExcelBehavior::getCssClass('header'),
-                     'PIC' => Export2ExcelBehavior::getCssClass('header')
+                               'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'TYPE_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),
+                     'TLP1' => Postman4ExcelBehavior::getCssClass('header'),
+                     'PIC' => Postman4ExcelBehavior::getCssClass('header')
                 ], //define each column's cssClass for header line only.  You can set as blank.
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
             ],
 
             ];
 
-        $excel_file = "CustomerDataERPPilih".'-'.date('Ymd-his');
-        $this->export2excel($excel_content, $excel_file,1);
+        //$excel_file = "CustomerDataERPPilih".'-'.date('Ymd-his');
+        $excel_file = "CustomerData";
+        //$this->export2excel($excel_content, $excel_file,1);
+        $this->export2excel($excel_content, $excel_file);
          
          // return $this->redirect('esm-index');
 
@@ -293,7 +303,7 @@ class ExportController extends Controller
         $aryCusDataProviderMTI=$cusDataProviderMTI->allModels;
        
 
-        $excel_data = Export2ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);
+        $excel_data = Postman4ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);
         
         $excel_title = $excel_data['excel_title'];
 
@@ -305,23 +315,24 @@ class ExportController extends Controller
                 'sheet_title' => $excel_title,
           'ceils' => $excel_ceils,
                 //'freezePane' => 'E2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-                               'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-                     'TLP1' => Export2ExcelBehavior::getCssClass('header'),
-                     'PIC' => Export2ExcelBehavior::getCssClass('header')
+                               'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'TYPE_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),
+                     'TLP1' => Postman4ExcelBehavior::getCssClass('header'),
+                     'PIC' => Postman4ExcelBehavior::getCssClass('header')
                 ], //define each column's cssClass for header line only.  You can set as blank.
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
             ],
 
             ];
 
-        $excel_file = "CustomerDataERPSelected".'-'.date('Ymd-his');
-        $this->export2excel($excel_content, $excel_file,1);
+        $excel_file = "CustomerData";
+       // $this->export2excel($excel_content, $excel_file,1);
+        $this->export2excel($excel_content, $excel_file);
 
 
           return true;
