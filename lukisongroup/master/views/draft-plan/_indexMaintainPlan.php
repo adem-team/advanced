@@ -22,6 +22,7 @@ $headColomn=[
 	['ID' =>6, 'ATTR' =>['FIELD'=>'custNm','SIZE' => '200px','label'=>'CUSTOMER','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
 	['ID' =>7, 'ATTR' =>['FIELD'=>'SalesNm','SIZE' => '20px','label'=>'SALES.NM','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
 	['ID' =>8, 'ATTR' =>['FIELD'=>'UseridNm','SIZE' => '20px','label'=>'USER.ID','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
+  ['ID' =>9, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '20px','label'=>'Status','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
 	
 ];
 $gvHeadColomnBT = ArrayHelper::map($headColomn, 'ID', 'ATTR');
@@ -54,9 +55,49 @@ $attDinamik[] =[
 
 /*GRIDVIEW ARRAY ROWS*/
 foreach($gvHeadColomnBT as $key =>$value[]){
-  if($value[$key]['FIELD'] != 'STATUS')
+  if($value[$key]['FIELD'] == 'STATUS')
   {
-      # code...
+     $attDinamik[]=[
+    'attribute'=>$value[$key]['FIELD'],
+    'label'=>$value[$key]['label'],
+    'filterType'=>GridView::FILTER_SELECT2,
+    'filter' => $valStt,
+    'filterWidgetOptions'=>[
+      'pluginOptions'=>['allowClear'=>true],
+    ],
+    'filterInputOptions'=>['placeholder'=>'Pilih'],
+     'format' => 'raw',
+    'value'=>function($model){
+           if ($model->STATUS == 1) {
+            return Html::a('<i class="fa fa-check"></i> &nbsp;Approve', '',['class'=>'btn btn-success btn-xs', 'title'=>'Approve']);
+          } else if ($model->STATUS == 0) {
+            return Html::a('<i class="fa fa-close"></i> &nbsp;DRAFT', '',['class'=>'btn btn-danger btn-xs', 'title'=>'Deactive']);
+          }
+        },
+    'hAlign'=>'right',
+    'vAlign'=>'middle',
+    'noWrap'=>true,
+    'headerOptions'=>[
+      'style'=>[
+        'text-align'=>'center',
+        'width'=>$value[$key]['SIZE'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+        'background-color'=>'rgba('.$value[$key]['warna'].')',
+      ]
+    ],
+    'contentOptions'=>[
+      'style'=>[
+        'width'=>$value[$key]['SIZE'],
+        'text-align'=>$value[$key]['align'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+      ]
+    ],
+    ];
+
+    }else{
+       # code...
       $attDinamik[]=[
         'attribute'=>$value[$key]['FIELD'],
         'label'=>$value[$key]['label'],
@@ -64,7 +105,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
         'hAlign'=>'right',
         'vAlign'=>'middle',
         'noWrap'=>true,
-		'group'=>$value[$key]['grp'],
+    'group'=>$value[$key]['grp'],
         'headerOptions'=>[
             'style'=>[
             'text-align'=>'center',
@@ -77,143 +118,14 @@ foreach($gvHeadColomnBT as $key =>$value[]){
         'contentOptions'=>[
           'style'=>[
             'text-align'=>$value[$key]['align'],
-			'width'=>$value[$key]['SIZE'],
+      'width'=>$value[$key]['SIZE'],
             'font-family'=>'tahoma, arial, sans-serif',
             'font-size'=>'8pt',
           ]
         ],
       ];
-
-    }else{
-   /*  $attDinamik[]=[
-		'attribute'=>$value[$key]['FIELD'],
-		'label'=>$value[$key]['label'],
-		'filterType'=>GridView::FILTER_SELECT2,
-		'filter' => $valStt,
-		'filterWidgetOptions'=>[
-		  'pluginOptions'=>['allowClear'=>true],
-		],
-		'filterInputOptions'=>['placeholder'=>'Pilih'],
-		 'format' => 'raw',
-		'value'=>function($model){
-				   if ($model->STATUS == 1) {
-						return Html::a('<i class="fa fa-check"></i> &nbsp;Enable', '',['class'=>'btn btn-success btn-xs', 'title'=>'Aktif']);
-					} else if ($model->STATUS == 0) {
-						return Html::a('<i class="fa fa-close"></i> &nbsp;DRAFT', '',['class'=>'btn btn-danger btn-xs', 'title'=>'Deactive']);
-					}
-				},
-		'hAlign'=>'right',
-		'vAlign'=>'middle',
-		'noWrap'=>true,
-		'headerOptions'=>[
-			'style'=>[
-				'text-align'=>'center',
-				'width'=>$value[$key]['SIZE'],
-				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'8pt',
-				'background-color'=>'rgba('.$value[$key]['warna'].')',
-			]
-		],
-		'contentOptions'=>[
-			'style'=>[
-			  'text-align'=>$value[$key]['align'],
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			]
-		],
-		'width'=>'8px',
-    ];
-  }elseif($value[$key]['FIELD'] == 'DAY_ID'){
-      # code...
-      $attDinamik[]=[
-        'attribute'=>$value[$key]['FIELD'],
-        'label'=>$value[$key]['label'],
-        'filter'=>true,
-        'hAlign'=>'right',
-        'vAlign'=>'middle',
-        'format' =>'raw',
-        'value'=>function($model){
-            //$label = $model->DAY_ID != ''?$model->DAY_ID:'Day';
-			if (!$model->GEO_ID OR !$model->LAYER_ID){
-				$label = 'Data Not Compelte';
-				return	$label;			
-			}else{
-				$label = 'SETUP SCHEDULE';
-				return Html::a(Yii::t('app',$label,['modelClass' => 'DayName',]), 
-								['day','id'=>$model->CUST_KD],
-								['data-toggle'=>"modal",
-								'data-target'=>"#modal-day",
-								'class' => 'btn btn-default btn-xs',
-								// 'style'=>'width:50px;height:40px'
-								]
-						);
-			}
-           
-        },
-        'noWrap'=>true,
-        'headerOptions'=>[
-            'style'=>[
-            'text-align'=>'center',
-            'width'=>$value[$key]['SIZE'],
-            'font-family'=>'tahoma, arial, sans-serif',
-            'font-size'=>'8pt',
-            'background-color'=>'rgba('.$value[$key]['warna'].')',
-          ]
-        ],
-        'contentOptions'=>[
-          'style'=>[
-            'text-align'=>$value[$key]['align'],
-            'font-family'=>'tahoma, arial, sans-serif',
-            'font-size'=>'8pt',
-          ]
-        ],
-              'width'=>'12px',
-      ]; */
-
-
-  }
-
-
-
-  };
-
-   /*GRIDVIEW ARRAY ACTION*/
-   /*  $attDinamik[]=[
-      'class'=>'kartik\grid\ActionColumn',
-      'dropdown' => true,
-      'dropdownOptions'=>['class'=>'pull-left dropup','style'=>['disable'=>true]],
-      'dropdownButton'=>[
-        'class' => $actionClass,
-      ],
-      'buttons' => [
-        'view' =>function($url, $model, $key){
-            return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
-                          ['view','id'=>$model->ID],[
-                          'id'=>'gv-grid-draft-id',
-                          ]). '</li>' . PHP_EOL;
-        },
-      ],
-      'headerOptions'=>[
-        'style'=>[
-          'text-align'=>'center',
-          'width'=>'10px',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-          'background-color'=>'rgba(97, 211, 96, 0.3)',
-        ]
-      ],
-      'contentOptions'=>[
-        'style'=>[
-          'text-align'=>'center',
-          'width'=>'10px',
-          'height'=>'10px',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-        ]
-      ],
-    ]; */
-
-
+   }
+ }
 
 /*SHOW GRID VIEW LIST*/
 $gvDraftPlan=GridView::widget([

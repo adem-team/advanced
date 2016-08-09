@@ -78,7 +78,13 @@ class DraftPlanController extends Controller
     
     public function get_arycusdetail()
     {
-        return ArrayHelper::map(DraftPlanDetail::find()->where('STATUS<>1')->all(),'CUST_ID','custNm');
+        return ArrayHelper::map(DraftPlanDetail::find()->where('STATUS<>1 AND STATUS<>2')->all(),'CUST_ID','custNm');
+    }
+
+
+     public function get_arygeo()
+    {
+        return ArrayHelper::map(DraftGeo::find()->where('GEO_ID<>1 AND STATUS<>3')->all(),'GEO_ID','GEO_NM');
     }
 
 
@@ -155,10 +161,10 @@ class DraftPlanController extends Controller
 	
 	/**
      * finds draftplan models.
-     * @var $dynamick draftplan.
-     * @var $data converting obejct to array.
+     * @var $dataField converting obejct to array.
      * save c0002scdl_plan_group via batch insert.
      * if success redirect page index
+     * note = array userid dipakai sementara untuk geosub
      * @return mixed
 	 * @author ptrnov 
      * @since 1.3.0
@@ -182,6 +188,8 @@ class DraftPlanController extends Controller
 				'CUST_KD',
 				'ODD_EVEN',
 				'YEAR',
+                'GEO_SUB',
+
 			],
 		]);
         
@@ -190,29 +198,30 @@ class DraftPlanController extends Controller
 		//foreach ($dataField as $key => $value) {
             if($dataField['IdDinamikScdl'] != 'NotSet'){
 				//$aryScdlPlan = Jadwal::getArrayDateCust('2018',$value['LayerNm'],$value['ODD_EVEN'],$value['DAY_VALUE'],$value['IdDinamikScdl'],$value['CUST_KD'],'');
-				$aryScdlPlan = Jadwal::getArrayDateCust($dataField['YEAR'],$dataField['LayerNm'],$dataField['ODD_EVEN'],$dataField['DAY_VALUE'],$dataField['IdDinamikScdl'],$dataField['CUST_KD'],'');
+				$aryScdlPlan = Jadwal::getArrayDateCust($dataField['YEAR'],$dataField['LayerNm'],$dataField['ODD_EVEN'],$dataField['DAY_VALUE'],$dataField['IdDinamikScdl'],$dataField['CUST_KD'],$dataField['GEO_SUB']);
 
 		
-           $ary_scdlplndetail = self::findCount($dataField['CUST_KD']);
+           $ary_scdlplndetail = self::findCount($dataField['CUST_KD'],$dataField['YEAR']);
 				//INSERT BIT To TABEL c0002scdl_plan_detail |MODEL DraftPlanDetail
                 if($ary_scdlplndetail == 0)
                 {
 				foreach ($aryScdlPlan as $val) {
 
 					self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_detail', 
-								['CUST_ID','TGL','SCDL_GROUP','ODD_EVEN'], 
-								[[$val['custId'],$val['tg'],$val['scdlGrp'],$val['currenWeek']]
+								['CUST_ID','TGL','SCDL_GROUP','ODD_EVEN','GEO_SUB'], 
+								[[$val['custId'],$val['tg'],$val['scdlGrp'],$val['currenWeek'],$val['user_id']]
 					])->execute();
                     }
+
+                    //INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader 
+                self::conn_esm()->CreateCommand("
+                                INSERT INTO c0002scdl_plan_header (
+                                    SELECT NULL,TGL,SCDL_GROUP,NOTE,NULL,0,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail
+                                    GROUP BY SCDL_GROUP,TGL
+                                )       
+                ")->execute(); 
 				}
 			
-				//INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader 
-				self::conn_esm()->CreateCommand("
-								INSERT INTO c0002scdl_plan_header (
-									SELECT NULL,TGL,SCDL_GROUP,NOTE,NULL,0,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail
-									GROUP BY SCDL_GROUP,TGL
-								)		
-				")->execute(); 
 			
 			}
 		//}	
@@ -412,8 +421,9 @@ class DraftPlanController extends Controller
     {
         //$view_info = Customers::find()->where(['CUST_KD'=>$id])->one();
 
-        $model =  DraftPlan::find()->where(['ID'=>$id])->one();
-		$view_info = $model->custTbl; //Customers::find()->where(['CUST_KD'=>$id])->one();
+        $model =  $this->findModel($id);
+
+		$view_info = $model->custTbl; 
        
 	   $model_day = new DayName();
           $ary= [
@@ -487,8 +497,8 @@ class DraftPlanController extends Controller
             {
                 self::Approve($model->CUST_ID);
             }else{
-                 self::ApproveValidasi($model->CUST_ID);
-                 self::Approve($model->CUST_ID);
+                self::ApproveValidasi($model->CUST_ID);
+                self::Approve($model->CUST_ID);
             }
 
             return $this->redirect(['index?tab=1']); 
@@ -501,23 +511,6 @@ class DraftPlanController extends Controller
       }
     }
 
-
-     // action depdrop
-   // public function actionLisday($opt) {
-
-   //      $model = DayName::find()->asArray()->where(['OPT'=>$opt])
-   //                                                  ->all();
-   //          $items = ArrayHelper::map($model, 'DAY_ID', 'DAY_NM');
-   //          foreach ($model as $key => $value) {
-   //                 // $out[] = [$value['CUST_KD'] => $value['CUST_NM']];
-   //                 // <option value="volvo">Volvo</option>
-   //   $out [] = "<option value=".$value['DAY_ID'].">".$value['DAY_NM']."</option>";
-   //             }
-
-   //             echo json_encode($out);
-             
-    
-   // }
 
     public function actionLisday() {
 
@@ -570,61 +563,58 @@ class DraftPlanController extends Controller
     {
         $model = new DraftPlan();
 
-        /**connetion dbc002*/
-        $conn = Yii::$app->db_esm;
-
-        $cari_geo = DraftGeo::find()->where('STATUS<>3')->all();
-        $geo = ArrayHelper::map($cari_geo, 'GEO_ID', 'GEO_NM');
-
-		$ary= [
-			['YEAR' => '2015'],
-			['YEAR' => '2016'],
-			['YEAR' => '2017'],
-		];
-        $opt = ArrayHelper::map($ary, 'YEAR', 'YEAR');
 
         if ($model->load(Yii::$app->request->post())) {
 			$hsl = \Yii::$app->request->post();	
 			$tahun = $hsl['DraftPlan']['YEAR'];
 
             // $model->save();
-            $check_exist = DraftPlan::find()->where(['GEO_ID'=>$model->GEO_ID])->one();
-            if(count($check_exist) != 0)
-            {
-                /*delete data if exist */
-                $delete_data = $conn->CreateCommand('DELETE FROM c0002scdl_plan WHERE GEO_ID='.$model->GEO_ID.'')->execute();
-
-                 /*get customers*/
-                $get_customers = Customers::find()->where(['GEO'=>$model->GEO_ID])->all();
-
-                /*batch insert*/
-                foreach ($get_customers as $key => $value) {
-                    # code...
-                      $batch = $conn->CreateCommand()->batchInsert('c0002scdl_plan', ['CUST_KD', 'GEO_ID','LAYER_ID','YEAR'], [
-                    [$value->CUST_KD,$value->GEO,$value->LAYER,$tahun],
-                ])->execute();
-                }
-            }else{
-
+            $check_exist = DraftPlan::find()->where(['GEO_ID'=>$model->GEO_ID,'YEAR'=>$tahun])->one();
 
             /*get customers*/
             $get_customers = Customers::find()->where(['GEO'=>$model->GEO_ID])->all();
 
-            /*batch insert*/
-            foreach ($get_customers as $key => $value) {
-                # code...
-                  $batch = $conn->CreateCommand()->batchInsert('c0002scdl_plan', ['CUST_KD', 'GEO_ID','LAYER_ID','YEAR'], [
-                [$value->CUST_KD,$value->GEO,$value->LAYER,$tahun],
-            ])->execute();
+        //     if(count($check_exist) != 0)
+        //     {
+        //        /*delete plan*/
+        //         self::DeletePlan($model->GEO_ID);
+
+        //         /*batch insert*/
+        //         foreach ($get_customers as $key => $value) {
+        //             # code...
+        //               $batch = self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan', ['CUST_KD', 'GEO_ID','LAYER_ID','YEAR'], [
+        //             [$value->CUST_KD,$value->GEO,$value->LAYER,$tahun],
+        //         ])->execute();
+        //         }
+        //     }else{
+
+        //     /*batch insert*/
+        //     foreach ($get_customers as $key => $value) {
+        //         # code...
+        //           $batch = self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan', ['CUST_KD', 'GEO_ID','LAYER_ID','YEAR'], [
+        //         [$value->CUST_KD,$value->GEO,$value->LAYER,$tahun],
+        //     ])->execute();
+        //     }
+        // }
+
+             if(count($check_exist) == 0)
+            {
+               
+                /*batch insert*/
+                foreach ($get_customers as $key => $value) {
+                    # code...
+                      $batch = self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan', ['CUST_KD', 'GEO_ID','LAYER_ID','YEAR'], [
+                    [$value->CUST_KD,$value->GEO,$value->LAYER,$tahun],
+                ])->execute();
+                }
             }
-        }
+        
           
             return $this->redirect(['index']);
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,
-                'geo'=>$geo,
-				'opt'=>$opt
+                'geo'=>$this->get_arygeo(),
             ]);
         }
     }
@@ -648,35 +638,42 @@ class DraftPlanController extends Controller
         }
     }
 
-    /**
-     * Deletes an existing DraftPlan model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
+   
 
-        return $this->redirect(['index']);
-    }
-
-
-     /**
-     * Finds the DraftPlandetail count  model based on its CUST_KD value.
+  /**
+     * Finds the DraftPlandetail   model based on its CUST_KD value AND STATUS equal 0.
      * @param string $CUST_KD
      * @return @var ary_scdlplndetail
      */
-    protected function findCount($custId)
+    protected function finddetailary_cus($custId)
     {
-       $ary_scdlplndetail = DraftPlanDetail::find()->where(['CUST_ID'=>$custId,'STATUS' => 0])->count();
+       $ary_scdlplndetail = DraftPlanDetail::find()->distinct()->where(['CUST_ID'=>$custId,'STATUS' => 0])->one();
 
        return $ary_scdlplndetail;
     }
 
 
      /**
-     * Finds the DraftPlandetail count  model based on its CUST_KD value.
+     * Finds the DraftPlandetail count  model based on its CUST_KD value AND STATUS equal 0.
+     * @param string $CUST_KD
+     * @return @var ary_scdlplndetail
+     */
+    protected function findCount($custId,$tgl)
+    {
+        // $ary = self::finddetailary_cus($custId);
+        // $tahun = substr($ary->TGL,0,4);
+       // $ary_scdlplndetail = DraftPlanDetail::find()->where(['CUST_ID'=>$custId,'STATUS' => 0])->count();
+        $ary_scdlplndetail = DraftPlanDetail::find()->where('LEFT(TGL,4) ="'.$tgl.'" AND CUST_ID="'.$custId.'" AND STATUS = 0 ')->count();
+
+        // print_r($ary_scdlplndetail);
+        // die();
+
+       return $ary_scdlplndetail;
+    }
+
+
+     /**
+     * Finds the DraftPlandetail count  model based on its CUST_KD value AND    STATUS equal 1.
      * @param string $CUST_KD
      * @return @var ary_scdlplndetail
      */
@@ -694,8 +691,19 @@ class DraftPlanController extends Controller
      */
     protected function DeleteDetail($custId)
     {
-        DraftPlanDetail::deleteAll(['CUST_ID'=>$custId]);
+        DraftPlanDetail::deleteAll(['CUST_ID'=>$custId,'STATUS'=>0]);
     }
+
+
+    /**
+     * Delete All DraftPlan
+     * @param string $geoId
+     */
+    // protected function DeletePlan($geoId)
+    // {
+    //      /*delete data if exist */
+    //      self::conn_esm()->CreateCommand('DELETE FROM c0002scdl_plan WHERE GEO_ID='.$geoId.'')->execute();
+    // }
 
 
      /**
@@ -705,6 +713,10 @@ class DraftPlanController extends Controller
     protected function Approve($custId)
     {
        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_detail SET STATUS=1 WHERE CUST_ID="'.$custId.'" AND STATUS = 0')->execute();
+
+        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan SET STATUS=1 WHERE CUST_KD="'.$custId.'" AND STATUS = 0')->execute();
+
+        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET STATUS=1 WHERE STATUS = 0')->execute();
        
     }
 
@@ -718,6 +730,7 @@ class DraftPlanController extends Controller
             # code...
         $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_detail SET STATUS=2 WHERE CUST_ID="'.$custId.'" And STATUS = 1')->execute();
        
+        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET STATUS=2 WHERE STATUS = 1')->execute();
     }
 
 

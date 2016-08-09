@@ -74,7 +74,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 		 'format' => 'raw',
 		'value'=>function($model){
 				   if ($model->STATUS == 1) {
-						return Html::a('<i class="fa fa-check"></i> &nbsp;Enable', '',['class'=>'btn btn-success btn-xs', 'title'=>'Aktif']);
+						return Html::a('<i class="fa fa-check"></i> &nbsp;Approve', '',['class'=>'btn btn-success btn-xs', 'title'=>'Approve']);
 					} else if ($model->STATUS == 0) {
 						return Html::a('<i class="fa fa-close"></i> &nbsp;DRAFT', '',['class'=>'btn btn-danger btn-xs', 'title'=>'Deactive']);
 					}
@@ -243,10 +243,6 @@ $gvNewPlan=GridView::widget([
                                 'data-toggle'=>"modal",
                                     'data-target'=>"#modal-create-draft",
                                         'class' => 'btn btn-success'
-                                                    ]).' '.
-                Html::a('<i class="fa fa-paper-plane"></i> '.Yii::t('app', 'Send Maintain',
-                            ['modelClass' => 'DraftPlan',]),'/master/draft-plan/send-draft',[
-                                        'class' => 'btn btn-info'
                                                     ]),
         'showFooter'=>false,
   ],
