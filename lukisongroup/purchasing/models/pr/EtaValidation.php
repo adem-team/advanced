@@ -49,7 +49,7 @@ class EtaValidation extends Model
     {         
 		if (!$this->hasErrors()) {
 			 $poHeader = Purchaseorder::findOne($this->kD_PO);
-			if ((\Yii::$app->formatter->asDate($this->eTA,'Y-M-d') < \Yii::$app->formatter->asDate($poHeader->CREATE_AT,'Y-M-d')) or (\Yii::$app->formatter->asDate($this->eTA,'Y-M-d')<\Yii::$app->formatter->asDate($poHeader->ETD,'Y-M-d'))) {
+			if ((strtotime(\Yii::$app->formatter->asDate($this->eTA,'Y-M-d')) < strtotime(\Yii::$app->formatter->asDate($poHeader->CREATE_AT,'Y-M-d'))) or (strtotime(\Yii::$app->formatter->asDate($this->eTA,'Y-M-d')) < strtotime(\Yii::$app->formatter->asDate($poHeader->ETD,'Y-M-d')))) {
                 $this->addError($attribute, 'Estimated Time Arrival, should be higher than the date Estimated Delivery Time');				
             } 
        }
