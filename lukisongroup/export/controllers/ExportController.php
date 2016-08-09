@@ -33,7 +33,7 @@ class ExportController extends Controller
             // ],
 			'export4excel' => [
 				'class' => Postman4ExcelBehavior::className(),
-				'downloadPath'=>Yii::getAlias('@lukisongroup').'/export/tmp/';,
+				'downloadPath'=>Yii::getAlias('@lukisongroup').'/export/tmp/',
 				'widgetType'=>'download'
 			], 
             'verbs' => [
@@ -196,7 +196,7 @@ class ExportController extends Controller
         //$excel_file = "CustomerDataERPAll".'-'.date('Ymd-his');
         $excel_file = "CustomerData";
         //$this->export2excel($excel_content, $excel_file,1);
-        $this->export2excel($excel_content, $excel_file);
+        $this->export4excel($excel_content, $excel_file);
     }
 
      /**
@@ -256,7 +256,7 @@ class ExportController extends Controller
         //$excel_file = "CustomerDataERPPilih".'-'.date('Ymd-his');
         $excel_file = "CustomerData";
         //$this->export2excel($excel_content, $excel_file,1);
-        $this->export2excel($excel_content, $excel_file);
+        $this->export4excel($excel_content, $excel_file);
          
          // return $this->redirect('esm-index');
 
@@ -332,7 +332,7 @@ class ExportController extends Controller
 
         $excel_file = "CustomerData";
        // $this->export2excel($excel_content, $excel_file,1);
-        $this->export2excel($excel_content, $excel_file);
+        $this->export4excel($excel_content, $excel_file);
 
 
           return true;
