@@ -319,9 +319,9 @@ class PurchaseorderSearch extends Purchaseorder
 
   		if($profile->emp->GF_ID == 3 && $profile->emp->DEP_ID == 'ACT'){
   			// $query = Purchas eorder::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4');
-        // $query = Purchaseorder::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4');
+        $query = Purchaseorder::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4');
 
-          $query = Purchaseorder::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4 AND CREATE_BY="'.$profile->emp->EMP_ID.'"');
+          // $query = Purchaseorder::find()->where('STATUS <> 0 AND STATUS <> 102 AND STATUS<>4 AND CREATE_BY="'.$profile->emp->EMP_ID.'"');
       }elseif($profile->emp->GF_ID == 1 || $profile->emp->GF_ID == 2){
   			$query = Purchaseorder::find()->where('STATUS = 101 AND STATUS <> 102 AND STATUS<>4');
   		}
