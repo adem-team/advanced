@@ -32,7 +32,7 @@ use yii\helpers\Url;
 							'depends'=>['draftplandetail-tgl'],
 							 'initialize' => true,
 							  'loadingText' => 'Loading  ...',
-							'url' => Url::to(['/master/draft-plan/lis-cus-plan']),
+							'url' => Url::to(['/master/draft-plan/lis-ganti']),
 						]
 					])->label('Pilih Customers') 
 	?>
@@ -40,7 +40,7 @@ use yii\helpers\Url;
 
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Delete' : 'Delete', ['class' => $model->isNewRecord ? 'btn btn-danger' : 'btn btn-danger',  'data-confirm'=>'Anda yakin ingin delete',]) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Reschedule' : 'Reschedule', ['class' => $model->isNewRecord ? 'btn btn-primary' : 'btn btn-primary',  'data-confirm'=>'Anda yakin ingin Ganti Jadwal',]) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -14,11 +14,14 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 Use ptrnov\ salesforce\Jadwal;
 use lukisongroup\master\models\DraftPlanGroup;
+use lukisongroup\master\models\DraftPlanHeader;
 use lukisongroup\master\models\DraftPlanDetailSearch;
 use lukisongroup\master\models\DraftPlanDetail;
 use lukisongroup\master\models\DraftPlanGroupSearch;
 use lukisongroup\sistem\models\UserloginSearch;
 use lukisongroup\master\models\DraftGeoSub;
+use lukisongroup\master\models\DraftPlanProses;
+use lukisongroup\sistem\models\Userlogin;
 use yii\widgets\ActiveForm;
 /**
  * DraftPlanController implements the CRUD actions for DraftPlan model.
@@ -81,11 +84,66 @@ class DraftPlanController extends Controller
         return ArrayHelper::map(DraftPlanDetail::find()->where('STATUS<>1 AND STATUS<>2')->all(),'CUST_ID','custNm');
     }
 
+     public function get_aryUserCrmSales()
+    {
+        return ArrayHelper::map(Userlogin::find()->where('POSITION_SITE="CRM" AND POSITION_ACCESS = 2 AND status <>1')->all(),'id','username');
+    }
+
 
      public function get_arygeo()
     {
         return ArrayHelper::map(DraftGeo::find()->where('GEO_ID<>1 AND STATUS<>3')->all(),'GEO_ID','GEO_NM');
     }
+
+     public function get_aryProses()
+    {
+        return ArrayHelper::map(DraftPlanProses::find()->all(),'PROSES_ID','DCRIPT');
+    }
+
+
+      public function get_aryYearDetail()
+    {
+        $ary = self::conn_esm()->CreateCommand('SELECT LEFT(TGL,4) as TGL FROM c0002scdl_plan_detail where STATUS <>1 AND STATUS<>2')->queryAll();
+        return ArrayHelper::map($ary,'TGL','TGL');
+    }
+
+     public function get_aryYearDetailJadwal()
+    {
+        $ary = self::conn_esm()->CreateCommand('SELECT LEFT(TGL,4) as TGL FROM c0002scdl_plan_detail where STATUS = 1 AND STATUS<>0 AND STATUS<>2')->queryAll();
+        return ArrayHelper::map($ary,'TGL','TGL');
+    }
+
+
+     public function get_aryYearCustomers($tgl)
+    {
+        $ary = self::conn_esm()->CreateCommand('SELECT distinct(pd.CUST_ID),c1.CUST_NM FROM c0002scdl_plan_detail pd LEFT JOIN  c0001 c1 on pd.CUST_ID = c1.CUST_KD where pd.STATUS <>1 AND pd.STATUS<>2 AND LEFT(pd.TGL,4) ="'.$tgl.'"')->queryAll();
+
+        return $ary;
+    }
+
+    public function get_aryYearCustomersJadwal($tgl)
+    {
+        $ary = self::conn_esm()->CreateCommand('SELECT distinct(pd.CUST_ID),c1.CUST_NM FROM c0002scdl_plan_detail pd LEFT JOIN  c0001 c1 on pd.CUST_ID = c1.CUST_KD where pd.STATUS = 1 AND pd.STATUS<>2 AND pd.STATUS<>0 AND LEFT(pd.TGL,4) ="'.$tgl.'"')->queryAll();
+
+        return $ary;
+    }
+
+
+    public function ary_day($id)
+    {
+        $day_value = DayName::find()->where(['DAY_ID'=>$id])->one();
+
+        return $day_value;
+    }
+
+     public function ary_subgeo($id)
+    {
+        $geo_id = DraftGeo::find()->where(['GEO_ID'=>$id])->one();
+
+        return $geo_id;
+    }
+
+
 
 
 	
@@ -244,6 +302,140 @@ class DraftPlanController extends Controller
       return ActiveForm::validate($model);
       }
     }
+
+
+      public function actionCreatePlanGroup()
+    {
+        $model = new DraftPlanGroup();
+
+
+        if ($model->load(Yii::$app->request->post())) {
+
+           $day_nilai =  self::ary_day($model->DAY_ID);
+           
+           $geo_nm = self::ary_subgeo($model->GEO_ID);
+
+           $jeda_pekan =  array(1, 2);
+
+           $hari =  array(1, 2,3,4,5,6,7);
+
+            $model->DAY_VALUE = $day_nilai->DAY_VALUE;
+            $model->GROUP_PRN = $model->GEO_ID;
+            $model->SCL_NM = $geo_nm->GEO_NM.'.'.$model->SUB_GEO;
+
+
+           foreach ($jeda_pekan as $key => $value) {
+               # code...
+            foreach ($hari as $key => $val) {
+                # code...
+            $model->SCDL_GROUP  = self::generatecode($model->GEO_ID,$model->SUB_GEO,$value,$val,$model->PROSES_ID);
+
+            self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_group', 
+                                ['SCDL_GROUP'], 
+                                [[$model->SCDL_GROUP],
+                    ])->execute();
+            
+
+           };
+            
+           };
+
+
+
+           
+
+           // $model->SCDL_GROUP  = self::generatecode($model->GEO_ID,$model->SUB_GEO,$val++,$model->DAY_VALUE,$model->PROSES_ID);
+
+           /* split array author : wawan*/
+    //               $temp = explode(" ",$cari_groupName['SCDL_GROUP_NM']);
+    //               $result = '';
+    //               foreach($temp as $t)
+    //               {
+    //                 $result .= $t[0];
+    //               }
+          
+
+           
+
+          
+           
+
+            // if($model->SCDL_GROUP != 'NotSet'){
+            //     //$aryScdlPlan = Jadwal::getArrayDateCust('2018',$value['LayerNm'],$value['ODD_EVEN'],$value['DAY_VALUE'],$value['IdDinamikScdl'],$value['CUST_KD'],'');
+            //     $aryScdlPlan_group = Jadwal::getArrayDateCust($model->TGL_START,'',$model->ODD_EVEN,$model->DAY_VALUE,$model->SCDL_GROUP,$model->SCL_NM,$model->USER_ID);
+
+                
+
+            //     foreach ($aryScdlPlan_group as $val) {
+            //         # code...
+
+
+            //         self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_group', 
+            //                     ['SCDL_GROUP','SCL_NM','USER_ID','ODD_EVEN','TGL_START','GROUP_PRN','SUB_GEO','GEO_ID','DAY_ID','DAY_VALUE'], 
+            //                     [[$val['scdlGrp'],$val['custId'],$val['user_id'],$val['currenWeek'],$val['tg'],$model->GROUP_PRN,$model->SUB_GEO,$model->GEO_ID,$model->DAY_ID,$model->DAY_VALUE]
+            //         ])->execute();
+
+            //     }
+
+            // }
+
+          
+            return $this->redirect(['index']);
+        } else {
+            return $this->renderAjax('_plangroup', [
+                'model' => $model,
+                'geo'=>$this->get_arygeo(),
+                'opt'=>self::getPekan(),
+                'user'=>self::get_aryUserCrmSales(),
+                'proses'=>self::get_aryProses()
+            ]);
+        }
+    }
+
+    /*
+     * ID DINAMIK SCHEDULING
+     * FORMULA SCHEDULE | MAPING BY [GEO,subGEO,ODD_EVEN,DAY,PROSES_ID]
+     * @author ptrnov [ptr.nov@gmail.com] @since 1.0.0, 1.5.0,
+     * @author wawan [wawan@gmail.com] @since 1.3.0
+    */
+    public function generatecode($geo,$subGeo,$pekanGanjilGenap,$dayNilai,$proses){
+        // $geo=$model->GEO_ID;                     //GET FROM CUSTOMER GEO
+        // $subGeo=$model->GEO_SUB;                 //SET BY FORM GUI
+        // $pekanGanjilGenap=$model->ODD_EVEN;      //SET BY FORM GUI
+        // $dayNilai=$model->DAY_VALUE;             //SET BY FORM GUI       
+        // $proses=$this->PROSES_ID;               //SET BY FORM GUI DEFAULT =1 (ACTIVE CALL)
+        if ($geo!=''){                          // GEO = check semua customer dalam group GEO
+            if ($subGeo!=''){                   // Check SubGeo Validation scenario  jika jumlah customer dalam (GEO+HARI) Full, harus new SubGeo.
+                if ($pekanGanjilGenap!=''){     // Check hari of week[ganjil/genap] Validation scenario jumlah customer sesuai max default/max MIX
+                    if ($dayNilai!=''){         // Check Layer B=u  or A,B,C,D=m
+                        if ($proses!=''){       // Check Layer B=u  or A,B,C,D=m
+                            $valueFormua= $geo .'.'.$subGeo.'.'.$pekanGanjilGenap.'.'.$dayNilai.'.'.$proses;   
+                        }else{
+                            $valueFormua= "NotSet";
+                        }
+                    }else{
+                        $valueFormua= "NotSet";
+                    }
+                }else{
+                    if ($dayNilai!=''){         // Check Layer B=u  or A,B,C,D=m
+                        if ($proses!=''){       // Check Layer B=u  or A,B,C,D=m
+                            $valueFormua= $geo .'.'.$subGeo.'.0.'.$dayNilai.'.'.$proses;   
+                        }else{
+                            $valueFormua= "NotSet";
+                        }
+                    }else{
+                        $valueFormua= "NotSet";
+                    }
+                }
+            }else{
+                $valueFormua= "NotSet"; 
+            }           
+        }else{
+            $valueFormua= "NotSet";
+        }
+        return $valueFormua;
+    }
+
 
 	
   /**
@@ -413,6 +605,17 @@ class DraftPlanController extends Controller
         ]);
     }
 
+    public function getPekan()
+    {
+        $ary= [
+              ['ID' => 1, 'OPT' => 'Pekan Ganjil'],
+              ['ID' => 2, 'OPT' => 'Pekan Genap'],
+            ];
+         $opt = ArrayHelper::map($ary, 'ID', 'OPT');
+
+       return $opt;
+    }
+
 
 	/*
 	 * SETUP CUSTOMER SCHEDULE FIRST DAY
@@ -426,11 +629,7 @@ class DraftPlanController extends Controller
 		$view_info = $model->custTbl; 
        
 	   $model_day = new DayName();
-          $ary= [
-          ['ID' => 1, 'OPT' => 'Pekan Ganjil'],
-          ['ID' => 2, 'OPT' => 'Pekan Genap'],
-        ];
-        $opt = ArrayHelper::map($ary, 'ID', 'OPT');
+      
 
         $post = Yii::$app->request->post();
 
@@ -455,7 +654,7 @@ class DraftPlanController extends Controller
             'view_info' => $view_info,
             'model'=>$model,
             'model_day'=>$model_day,
-            'opt'=>$opt
+            'opt'=>self::getPekan()
         ]);
       }
     }
@@ -471,14 +670,14 @@ class DraftPlanController extends Controller
 
          if ($model->load(Yii::$app->request->post())) {
 
-            self::DeleteDetail($model->CUST_ID);
+            self::DeleteDetailHeader($model->CUST_ID,$model->TGL);
 
             return $this->redirect(['index?tab=1']); 
 
          }else{
           return $this->renderAjax('_pilihdelete', [
             'model'=>$model,
-            'cus'=>self::get_arycusdetail()
+            'year'=>self::get_aryYearDetail()
         ]);
       }
     }
@@ -493,12 +692,12 @@ class DraftPlanController extends Controller
 
          if ($model->load(Yii::$app->request->post())) {
 
-            if(self::findCountStatus($model->CUST_ID) == 0)
+            if(self::findCountStatus($model->CUST_ID,$model->TGL) == 0)
             {
-                self::Approve($model->CUST_ID);
+                self::Approve($model->CUST_ID,$model->TGL);
             }else{
-                self::ApproveValidasi($model->CUST_ID);
-                self::Approve($model->CUST_ID);
+                self::ApproveValidasi($model->CUST_ID,$model->TGL);
+                self::Approve($model->CUST_ID,$model->TGL);
             }
 
             return $this->redirect(['index?tab=1']); 
@@ -506,7 +705,8 @@ class DraftPlanController extends Controller
          }else{
           return $this->renderAjax('_pilihapprove', [
             'model'=>$model,
-            'cus'=>self::get_arycusdetail()
+            // 'cus'=>self::get_arycusdetail(),
+            'year'=>self::get_aryYearDetail()
         ]);
       }
     }
@@ -553,6 +753,74 @@ class DraftPlanController extends Controller
        echo Json::encode(['output'=>'', 'selected'=>'']);
              
    }
+
+
+   /*AJAX Customers Plan Detail*/
+   public function actionLisCusPlan() {
+
+         $out = [];
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+        if ($parents != null) {
+            $id = $parents[0];
+              $model = self::get_aryYearCustomers($id);
+
+           foreach ($model as $key => $value) {
+                   $out[] = ['id'=>$value['CUST_ID'],'name'=> $value['CUST_NM']];
+               }
+
+               echo json_encode(['output'=>$out, 'selected'=>'']);
+               return;
+           }
+       }
+       echo Json::encode(['output'=>'', 'selected'=>'']);
+             
+   }
+
+   /*AJAX Ganti Jadwal*/
+   public function actionLisGanti() {
+
+         $out = [];
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+        if ($parents != null) {
+            $id = $parents[0];
+              $model = self::get_aryYearCustomersJadwal($id);
+
+           foreach ($model as $key => $value) {
+                   $out[] = ['id'=>$value['CUST_ID'],'name'=> $value['CUST_NM']];
+               }
+
+               echo json_encode(['output'=>$out, 'selected'=>'']);
+               return;
+           }
+       }
+       echo Json::encode(['output'=>'', 'selected'=>'']);
+             
+   }
+
+   public function actionGantiJadwal()
+   {
+       $model = new DraftPlanDetail();
+       $model->scenario = 'approve'; //scenario approve same
+
+         if ($model->load(Yii::$app->request->post())) {
+
+           self::GantiDetailHeader($model->CUST_ID,$model->TGL);
+           self::GantiJadwalPlan($model->CUST_ID,$model->TGL);
+
+            return $this->redirect(['index?tab=1']); 
+
+         }else{
+          return $this->renderAjax('_gantijadwal', [
+            'model'=>$model,
+            // 'cus'=>self::get_arycusdetail(),
+            'year'=>self::get_aryYearDetailJadwal()
+        ]);
+      }
+
+   }
+
    
     /**
      * Creates a new DraftPlan model.
@@ -677,9 +945,12 @@ class DraftPlanController extends Controller
      * @param string $CUST_KD
      * @return @var ary_scdlplndetail
      */
-    protected function findCountStatus($custId)
+    protected function findCountStatus($custId,$tgl)
     {
-       $ary_scdlplndetail = DraftPlanDetail::find()->where(['CUST_ID'=>$custId,'STATUS' => 1])->count();
+         
+
+       // $ary_scdlplndetail = DraftPlanDetail::find()->where(['CUST_ID'=>$custId,'STATUS' => 1])->count();
+         $ary_scdlplndetail = DraftPlanDetail::find()->where('LEFT(TGL,4) ="'.$tgl.'" AND CUST_ID="'.$custId.'" AND STATUS = 1')->count();
 
        return $ary_scdlplndetail;
     }
@@ -689,9 +960,38 @@ class DraftPlanController extends Controller
      * Delete All
      * @param string $custId
      */
-    protected function DeleteDetail($custId)
+    protected function DeleteDetailHeader($custId,$tgl)
     {
-        DraftPlanDetail::deleteAll(['CUST_ID'=>$custId,'STATUS'=>0]);
+        // DraftPlanDetail::deleteAll(['CUST_ID'=>$custId,'STATUS'=>0]);
+        DraftPlanDetail::deleteAll('LEFT(TGL,4) ="'.$tgl.'" AND CUST_ID="'.$custId.'" AND STATUS = 0');
+
+        DraftPlanHeader::deleteAll('LEFT(TGL,4) ="'.$tgl.'" AND STATUS = 0');
+    }
+
+      /**
+     * Delete All
+     * @param string $custId
+     */
+    protected function GantiDetailHeader($custId,$tgl)
+    {
+        // DraftPlanDetail::deleteAll(['CUST_ID'=>$custId,'STATUS'=>0]);
+        DraftPlanDetail::deleteAll('LEFT(TGL,4) ="'.$tgl.'" AND CUST_ID="'.$custId.'" AND STATUS = 1');
+
+         DraftPlanDetail::deleteAll('LEFT(TGL,4) ="'.$tgl.'" AND CUST_ID="'.$custId.'" AND STATUS = 0');
+
+        DraftPlanHeader::deleteAll('LEFT(TGL,4) ="'.$tgl.'" AND STATUS = 1');
+    }
+
+
+     /**
+     * update STATUS 0
+     * @param string $custId
+     */
+    protected function GantiJadwalPlan($custId,$tgl)
+    {
+    
+        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan SET STATUS=0 WHERE YEAR ="'.$tgl.'" AND CUST_KD="'.$custId.'" AND STATUS = 1')->execute();
+       
     }
 
 
@@ -710,13 +1010,13 @@ class DraftPlanController extends Controller
      * update STATUS 1
      * @param string $custId
      */
-    protected function Approve($custId)
+    protected function Approve($custId,$tgl)
     {
-       $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_detail SET STATUS=1 WHERE CUST_ID="'.$custId.'" AND STATUS = 0')->execute();
+       $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_detail SET STATUS=1 WHERE LEFT(TGL,4) ="'.$tgl.'" AND CUST_ID="'.$custId.'" AND STATUS = 0')->execute();
 
-        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan SET STATUS=1 WHERE CUST_KD="'.$custId.'" AND STATUS = 0')->execute();
+        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan SET STATUS=1 WHERE YEAR ="'.$tgl.'" AND CUST_KD="'.$custId.'" AND STATUS = 0')->execute();
 
-        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET STATUS=1 WHERE STATUS = 0')->execute();
+        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET STATUS=1 WHERE LEFT(TGL,4) ="'.$tgl.'" AND STATUS = 0')->execute();
        
     }
 
@@ -725,13 +1025,15 @@ class DraftPlanController extends Controller
      * update STATUS 2
      * @param string $custId
      */
-    protected function ApproveValidasi($custId)
+    protected function ApproveValidasi($custId,$tgl)
     {
             # code...
-        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_detail SET STATUS=2 WHERE CUST_ID="'.$custId.'" And STATUS = 1')->execute();
+        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_detail SET STATUS=2 WHERE LEFT(TGL,4) ="'.$tgl.'" AND CUST_ID="'.$custId.'" And STATUS = 1')->execute();
        
-        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET STATUS=2 WHERE STATUS = 1')->execute();
+        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET STATUS=2 WHERE LEFT(TGL,4) ="'.$tgl.'" AND STATUS = 1')->execute();
     }
+
+
 
 
     /**

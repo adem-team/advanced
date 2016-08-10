@@ -170,13 +170,21 @@ class DraftPlan extends \yii\db\ActiveRecord
     /*check exist*/
     public function exist_validation($model)
     {
-    	$ary_scdlplndetail = DraftPlanDetail::find()->where(['CUST_ID'=>$this->CUST_KD,'STATUS'=>0])->count();
+    	// $ary_scdlplndetail = DraftPlanDetail::find()->where(['CUST_ID'=>$this->CUST_KD,'STATUS'=>0])->count();
 
-
+        $ary_scdlplndetail = self::findCountExist();
     	if($ary_scdlplndetail != 0){
     		$this->addError($model, 'Customer sudah di set pada pekan ganjil, delete  jadwal untuk editing');
     	}
 
+    }
+
+    public function findCountExist()
+    {
+         
+         $ary = DraftPlanDetail::find()->where('LEFT(TGL,4) ="'.$this->YEAR.'" AND CUST_ID="'.$this->CUST_KD.'" AND STATUS = 0')->count();
+
+       return $ary;
     }
 
 
@@ -198,7 +206,9 @@ class DraftPlan extends \yii\db\ActiveRecord
     /*get DraftPlan*/
     public function getScdlPlan()
     {
-        $ary_scdlplan = DraftPlanDetail::find()->where(['CUST_ID'=>$this->CUST_KD,'STATUS'=>0]) ->distinct()->one();
+        // $ary_scdlplan = DraftPlanDetail::find()->where(['CUST_ID'=>$this->CUST_KD,'STATUS'=>0])->distinct()->one();
+
+        $ary_scdlplan = DraftPlanDetail::find()->where('LEFT(TGL,4) ="'.$this->YEAR.'" AND CUST_ID="'.$this->CUST_KD.'" AND STATUS = 0')->distinct()->one();
 
         return $ary_scdlplan;
     }
