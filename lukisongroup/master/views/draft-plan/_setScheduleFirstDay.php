@@ -76,6 +76,8 @@ $this->params['breadcrumbs'][] = $this->title;
 			<?=$form->field($model, 'displyGeoId')->hiddenInput(['value'=>$model->GEO_ID,'id'=>'draftplan-displygeoid'])->label(false); ?>
 			
 				<?=$form->field($model, 'CUST_KD')->hiddenInput(['value'=>$model->CUST_KD])->label(false); ?>
+
+				<?=$form->field($model, 'YEAR')->hiddenInput(['value'=>$model->YEAR])->label(false); ?>
 			<div class="row">
 				<div class="col-sm-6">	
 						<?=$form->field($model, 'displyGeoNm')->textInput(['value' => $model->geoNm .' - '. $model->GeoDcrip,'readonly' => true])->label('CUSTOMER GROUP'); ?>

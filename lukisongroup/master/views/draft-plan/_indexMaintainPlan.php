@@ -144,10 +144,10 @@ $gvDraftPlan=GridView::widget([
   'panel' => [
        'heading'=>false,
         'type'=>'info',
-       'before'=> Html::a('<i class="fa fa-sign-in"></i> '.Yii::t('app', 'Start Plan',
-                            ['modelClass' => 'DraftPlan',]),'/master/draft-plan/create',[
+       'before'=> Html::a('<i class="fa fa-sign-in"></i> '.Yii::t('app', 'Reschedule Draft',
+                            ['modelClass' => 'DraftPlan',]),'/master/draft-plan/ganti-jadwal',[
                                 'data-toggle'=>"modal",
-                                    'data-target'=>"#modal-create",
+                                    'data-target'=>"#modal-day",
                                         'class' => 'btn btn-success'
                                                     ]).' '.
                 Html::a('<i class="fa fa-paper-plane"></i> '.Yii::t('app', 'Approve',

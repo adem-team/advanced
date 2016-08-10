@@ -47,7 +47,7 @@ class DraftPlanGroup extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['TGL_START', 'CREATED_AT', 'UPDATED_AT','SCDL_GROUP','GROUP_PRN'], 'safe'],
+            [['TGL_START', 'CREATED_AT','SUB_GEO', 'UPDATED_AT','SCDL_GROUP','GROUP_PRN','ODD_EVEN','PROSES_ID'], 'safe'],
             // [['SCL_NM'], 'required'],
             [['GEO_ID', 'DAY_ID', 'DAY_VALUE', 'STATUS'], 'integer'],
             [['SCL_NM', 'USER_ID'], 'string', 'max' => 50],

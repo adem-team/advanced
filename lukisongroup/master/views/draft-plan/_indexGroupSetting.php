@@ -143,15 +143,11 @@ $gvGroupSetting=GridView::widget([
   'panel' => [
        'heading'=>false,
         'type'=>'info',
-       'before'=> Html::a('<i class="fa fa-sign-in"></i> '.Yii::t('app', 'Start Plan',
-                            ['modelClass' => 'DraftPlan',]),'/master/draft-plan/create',[
+       'before'=> Html::a('<i class="fa fa-sign-in"></i> '.Yii::t('app', 'Plan Group',
+                            ['modelClass' => 'DraftPlanGroup',]),'/master/draft-plan/create-plan-group',[
                                 'data-toggle'=>"modal",
-                                    'data-target'=>"#modal-create",
+                                    'data-target'=>"#modal-create-group",
                                         'class' => 'btn btn-success'
-                                                    ]).' '.
-                Html::a('<i class="fa fa-paper-plane"></i> '.Yii::t('app', 'Send Draft',
-                            ['modelClass' => 'DraftPlan',]),'/master/draft-plan/send-draft',[
-                                        'class' => 'btn btn-info'
                                                     ]),
         'showFooter'=>false,
   ],
@@ -172,4 +168,31 @@ $gvGroupSetting=GridView::widget([
 ]);
 ?>
 <?=$gvGroupSetting?>
+
+<?php
+$this->registerJs("
+         $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+         $('#modal-create-group').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title')
+            var href = button.attr('href')
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+    Modal::begin([
+        'id' => 'modal-create-group',
+        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search-plus"></div><div><h4 class="modal-title">GEOGRAFIS FILTER To PLAN MAINTAIN</h4></div>',
+        'headerOptions'=>[
+                'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+        ],
+    ]);
+    Modal::end();
+
+?>
 
