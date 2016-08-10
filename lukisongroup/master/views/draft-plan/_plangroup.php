@@ -16,13 +16,13 @@ use lukisongroup\master\models\DraftPlan;
 
     <?php $form = ActiveForm::begin(['id'=>$model->formName()]); ?>
 
-    <?= $form->field($model, 'TGL_START')->widget(Select2::classname(), [
-					'data' => DraftPlan::getYearsList(),
+     <!-- $form->field($model, 'TGL_START')->widget(Select2::classname(), [ -->
+	<!-- 				'data' => DraftPlan::getYearsList(),
 					'options' => ['placeholder' => 'Pilih Tahun ...'],
 					'pluginOptions' => [
 						'allowClear' => true
 						 ],
-				])->label('YEAR') ?>
+				])->label('YEAR') ?> -->
 
 
 	 <?= $form->field($model, 'GEO_ID')->widget(Select2::classname(), [
@@ -49,25 +49,25 @@ use lukisongroup\master\models\DraftPlan;
 
  		
 
-            <?= $form->field($model, 'USER_ID')->widget(Select2::classname(), [
+           <!--   $form->field($model, 'USER_ID')->widget(Select2::classname(), [
                 'data' => $user,
                 'options' => ['placeholder' => 'Pilih User ...'],
                 'pluginOptions' => [
                     'allowClear' => true
                      ],
-            ])->label('Pilih User');?>
+            ])->label('Pilih User');?> -->
 
-            <?= $form->field($model, 'ODD_EVEN')->widget(Select2::classname(), [
+            <!--  $form->field($model, 'ODD_EVEN')->widget(Select2::classname(), [
                 'data' => $opt,
                 'options' => ['placeholder' => 'Pilih ...'],
                 'pluginOptions' => [
                     'allowClear' => true
                      ],
             ])->label('Options Jeda Pekan');?>
+ -->
 
 
-
-            <?= $form->field($model, 'DAY_ID')->widget(DepDrop::classname(), [
+             <!-- $form->field($model, 'DAY_ID')->widget(DepDrop::classname(), [
 					'type'=>DepDrop::TYPE_SELECT2,
 					'options'=>['placeholder'=>'Select ...'],
 					'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
@@ -77,8 +77,8 @@ use lukisongroup\master\models\DraftPlan;
 						  'loadingText' => 'Loading  ...',
 						'url' => Url::to(['/master/draft-plan/lisday']),
 					]
-				])->label('Setel Hari') ?>
-				
+				])->label('Setel Hari') ?> -->
+
 
             <?= $form->field($model, 'PROSES_ID')->widget(Select2::classname(), [
                 'data' => $proses,

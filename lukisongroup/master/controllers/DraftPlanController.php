@@ -331,8 +331,8 @@ class DraftPlanController extends Controller
             $model->SCDL_GROUP  = self::generatecode($model->GEO_ID,$model->SUB_GEO,$value,$val,$model->PROSES_ID);
 
             self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_group', 
-                                ['SCDL_GROUP'], 
-                                [[$model->SCDL_GROUP],
+                                ['SCDL_GROUP','GROUP_PRN','SCL_NM','GEO_ID','SUB_GEO','DAY_ID','PROSES_ID','DAY_VALUE'], 
+                                [[$model->SCDL_GROUP,$model->GROUP_PRN,$model->SCL_NM,$model->GEO_ID,$model->SUB_GEO,$value,$model->PROSES_ID,$val],
                     ])->execute();
             
 
