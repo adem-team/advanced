@@ -15,16 +15,18 @@ use yii\console\Controller;			// Untuk console
 use yii\filters\VerbFilter;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
-use scotthuangzl\export2excel\Export2ExcelBehavior;
+use ptrnov\postman4excel\Postman4ExcelBehavior;
 
 class PostmanCustomerController extends Controller
 {
     public function behaviors()
     {
         return [
-			'export2excel' => [
-				'class' => Export2ExcelBehavior::className(),
-			],
+			'export4excel' => [
+				'class' => Postman4ExcelBehavior::className(),
+				'downloadPath'=>Yii::getAlias('@lukisongroup').'/cronjob/',
+				'widgetType'=>'CRONJOB',
+			], 
 			'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -250,33 +252,33 @@ class PostmanCustomerController extends Controller
 		$aryCusDataProviderOTHER=$cusDataProvideOTHER->allModels;
 		
 		/*SOURCE ALL CUSTOMER*/
-		$excel_dataAll = Export2ExcelBehavior::excelDataFormat($aryCusAllDataProvider);
+		$excel_dataAll = Postman4ExcelBehavior::excelDataFormat($aryCusAllDataProvider);
 		//$excel_title = $excel_dataNKA['excel_title'];
 		$excel_ceilsAll = $excel_dataAll['excel_ceils'];
 		
 		/*SOURCE NKA  CUSTOMER*/
-		$excel_dataNKA = Export2ExcelBehavior::excelDataFormat($aryCusDataProviderNKA);
+		$excel_dataNKA = Postman4ExcelBehavior::excelDataFormat($aryCusDataProviderNKA);
 		//$excel_title = $excel_dataNKA['excel_title'];
 		$excel_ceilsNKA = $excel_dataNKA['excel_ceils'];
 		
 		/*SOURCE MTI  CUSTOMER*/
-		$excel_dataMTI = Export2ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);      
+		$excel_dataMTI = Postman4ExcelBehavior::excelDataFormat($aryCusDataProviderMTI);      
         $excel_ceilsMTI = $excel_dataMTI['excel_ceils'];
 		
 		/*SOURCE UNKNOWN  CUSTOMER*/
-		$excel_dataOTHER= Export2ExcelBehavior::excelDataFormat($aryCusDataProviderOTHER);      
+		$excel_dataOTHER= Postman4ExcelBehavior::excelDataFormat($aryCusDataProviderOTHER);      
         $excel_ceilsOTHER = $excel_dataOTHER['excel_ceils'];
 		
 		/*SOURCE DELETE  CUSTOMER*/
-		$excel_dataDEL= Export2ExcelBehavior::excelDataFormat($aryCusDelDataProvider);      
+		$excel_dataDEL= Postman4ExcelBehavior::excelDataFormat($aryCusDelDataProvider);      
         $excel_ceilsDEL = $excel_dataDEL['excel_ceils'];
 		
 		/*SOURCE UPDATE  CUSTOMER*/
-		$excel_dataEDIT= Export2ExcelBehavior::excelDataFormat($aryCusEditDataProvider);      
+		$excel_dataEDIT= Postman4ExcelBehavior::excelDataFormat($aryCusEditDataProvider);      
         $excel_ceilsEDIT = $excel_dataEDIT['excel_ceils'];
 		
 		/*SOURCE NEW  CUSTOMER*/
-		$excel_dataNEW= Export2ExcelBehavior::excelDataFormat($aryCusNewDataProvider);      
+		$excel_dataNEW= Postman4ExcelBehavior::excelDataFormat($aryCusNewDataProvider);      
         $excel_ceilsNEW = $excel_dataNEW['excel_ceils'];
 		
 		
@@ -287,171 +289,171 @@ class PostmanCustomerController extends Controller
                 'sheet_title' => ['CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER_GRADE','GEO_MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE POS','PHONE','CONTACT PERSON'], //$excel_ceils,//'sad',//[$excel_title],
 			    'ceils' => $excel_ceilsAll,
                 //'freezePane' => 'E2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-					 'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-                     'DIST_ID' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'LAYER_GRADE' => Export2ExcelBehavior::getCssClass('header'),
-                     'GEO_MAINTAIN' => Export2ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Export2ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Export2ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Export2ExcelBehavior::getCssClass('header'),  
-                     'PHONE' => Export2ExcelBehavior::getCssClass('header'),
-                     'CP' => Export2ExcelBehavior::getCssClass('header')              
+					 'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
+                     'DIST_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'TYPE_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'LAYER_GRADE' => Postman4ExcelBehavior::getCssClass('header'),
+                     'GEO_MAINTAIN' => Postman4ExcelBehavior::getCssClass('header'),
+                     'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),
+					 'PROVINCE' => Postman4ExcelBehavior::getCssClass('header'),              
+                     'CITY_NAME' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'POSTAL_CODE' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'PHONE' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CP' => Postman4ExcelBehavior::getCssClass('header')              
                 ], //define each column's cssClass for header line only.  You can set as blank.
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			[
 				'sheet_name' => 'MODERN-NKA',
                 'sheet_title' => ['CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER_GRADE','GEO_MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE POS','PHONE','CONTACT PERSON'], //$excel_ceils,//'sad',//[$excel_title],
 			    'ceils' => $excel_ceilsNKA,
                 //'freezePane' => 'E2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-					 'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-                     'DIST_ID' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'LAYER_GRADE' => Export2ExcelBehavior::getCssClass('header'),
-                     'GEO_MAINTAIN' => Export2ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Export2ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Export2ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Export2ExcelBehavior::getCssClass('header'),  
-                     'PHONE' => Export2ExcelBehavior::getCssClass('header'),
-                     'CP' => Export2ExcelBehavior::getCssClass('header')              
+					 'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
+                     'DIST_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'TYPE_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'LAYER_GRADE' => Postman4ExcelBehavior::getCssClass('header'),
+                     'GEO_MAINTAIN' => Postman4ExcelBehavior::getCssClass('header'),
+                     'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),
+					 'PROVINCE' => Postman4ExcelBehavior::getCssClass('header'),              
+                     'CITY_NAME' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'POSTAL_CODE' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'PHONE' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CP' => Postman4ExcelBehavior::getCssClass('header')              
                 ], //define each column's cssClass for header line only.  You can set as blank.
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			[
 				'sheet_name' => 'MODERN-MTI',
 				'sheet_title' => ['CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER_GRADE','GEO_MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE POS','PHONE','CONTACT PERSON'], //$excel_ceils,//'sad',//[$excel_title],
 				'ceils' => $excel_ceilsMTI,
                 //'freezePane' => 'E2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-					 'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-                     'DIST_ID' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'LAYER_GRADE' => Export2ExcelBehavior::getCssClass('header'),
-                     'GEO_MAINTAIN' => Export2ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Export2ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Export2ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Export2ExcelBehavior::getCssClass('header'),  
-                     'PHONE' => Export2ExcelBehavior::getCssClass('header'),
-                     'CP' => Export2ExcelBehavior::getCssClass('header')                  
+					 'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
+                     'DIST_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'TYPE_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'LAYER_GRADE' => Postman4ExcelBehavior::getCssClass('header'),
+                     'GEO_MAINTAIN' => Postman4ExcelBehavior::getCssClass('header'),
+                     'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),
+					 'PROVINCE' => Postman4ExcelBehavior::getCssClass('header'),              
+                     'CITY_NAME' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'POSTAL_CODE' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'PHONE' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CP' => Postman4ExcelBehavior::getCssClass('header')                  
                 ], //define each column's cssClass for header line only.  You can set as blank.
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			[
 				'sheet_name' => 'UNKNOWN',
 				'sheet_title' => ['CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER_GRADE','GEO_MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE POS','PHONE','CONTACT PERSON'], //$excel_ceils,//'sad',//[$excel_title],
 				'ceils' => $excel_ceilsOTHER,
                 //'freezePane' => 'E2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-					  'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-                     'DIST_ID' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'LAYER_GRADE' => Export2ExcelBehavior::getCssClass('header'),
-                     'GEO_MAINTAIN' => Export2ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Export2ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Export2ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Export2ExcelBehavior::getCssClass('header'),  
-                     'PHONE' => Export2ExcelBehavior::getCssClass('header'),
-                     'CP' => Export2ExcelBehavior::getCssClass('header')          
+					  'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
+                     'DIST_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'TYPE_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'LAYER_GRADE' => Postman4ExcelBehavior::getCssClass('header'),
+                     'GEO_MAINTAIN' => Postman4ExcelBehavior::getCssClass('header'),
+                     'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),
+					 'PROVINCE' => Postman4ExcelBehavior::getCssClass('header'),              
+                     'CITY_NAME' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'POSTAL_CODE' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'PHONE' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CP' => Postman4ExcelBehavior::getCssClass('header')          
                 ],
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			[
 				'sheet_name' => 'DELETE',
 				'sheet_title' => ['DELETE BY','DELETE AT','CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER_GRADE','GEO_MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE POS','PHONE','CONTACT PERSON'], //$excel_ceils,//'sad',//[$excel_title],
 				'ceils' => $excel_ceilsDEL,
                 //'freezePane' => 'E2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-					 'DELETE_AT' => Export2ExcelBehavior::getCssClass('header'),
-					 'DELETE_BY' => Export2ExcelBehavior::getCssClass('header'),
-					 'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-                     'DIST_ID' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'LAYER_GRADE' => Export2ExcelBehavior::getCssClass('header'),
-                     'GEO_MAINTAIN' => Export2ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Export2ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Export2ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Export2ExcelBehavior::getCssClass('header'),  
-                     'PHONE' => Export2ExcelBehavior::getCssClass('header'),
-                     'CP' => Export2ExcelBehavior::getCssClass('header')          
+					 'DELETE_AT' => Postman4ExcelBehavior::getCssClass('header'),
+					 'DELETE_BY' => Postman4ExcelBehavior::getCssClass('header'),
+					 'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
+                     'DIST_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'TYPE_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'LAYER_GRADE' => Postman4ExcelBehavior::getCssClass('header'),
+                     'GEO_MAINTAIN' => Postman4ExcelBehavior::getCssClass('header'),
+                     'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),
+					 'PROVINCE' => Postman4ExcelBehavior::getCssClass('header'),              
+                     'CITY_NAME' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'POSTAL_CODE' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'PHONE' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CP' => Postman4ExcelBehavior::getCssClass('header')          
                 ],
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			[
 				'sheet_name' => 'EDITING',
 				'sheet_title' => ['UPDATE BY','UPDATE AT','CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER_GRADE','GEO_MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE POS','PHONE','CONTACT PERSON'], //$excel_ceils,//'sad',//[$excel_title],
 				'ceils' => $excel_ceilsEDIT,
                 //'freezePane' => 'E2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-					 'UPDATE_AT' => Export2ExcelBehavior::getCssClass('header'),
-					 'UPDATE_BY' => Export2ExcelBehavior::getCssClass('header'),
-					 'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-                     'DIST_ID' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'LAYER_GRADE' => Export2ExcelBehavior::getCssClass('header'),
-                     'GEO_MAINTAIN' => Export2ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Export2ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Export2ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Export2ExcelBehavior::getCssClass('header'),  
-                     'PHONE' => Export2ExcelBehavior::getCssClass('header'),
-                     'CP' => Export2ExcelBehavior::getCssClass('header')          
+					 'UPDATE_AT' => Postman4ExcelBehavior::getCssClass('header'),
+					 'UPDATE_BY' => Postman4ExcelBehavior::getCssClass('header'),
+					 'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
+                     'DIST_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'TYPE_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'LAYER_GRADE' => Postman4ExcelBehavior::getCssClass('header'),
+                     'GEO_MAINTAIN' => Postman4ExcelBehavior::getCssClass('header'),
+                     'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),
+					 'PROVINCE' => Postman4ExcelBehavior::getCssClass('header'),              
+                     'CITY_NAME' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'POSTAL_CODE' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'PHONE' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CP' => Postman4ExcelBehavior::getCssClass('header')          
                 ],
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			[
 				'sheet_name' => 'ADD NEW',
 				'sheet_title' => ['CREATE BY','CREATE AT','CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER_GRADE','GEO_MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE POS','PHONE','CONTACT PERSON'], //$excel_ceils,//'sad',//[$excel_title],
 				'ceils' => $excel_ceilsNEW,
                 //'freezePane' => 'E2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-					 'CREATE_AT' => Export2ExcelBehavior::getCssClass('header'),
-					 'CREATE_BY' => Export2ExcelBehavior::getCssClass('header'),
-					 'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-                     'DIST_ID' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'LAYER_GRADE' => Export2ExcelBehavior::getCssClass('header'),
-                     'GEO_MAINTAIN' => Export2ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Export2ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Export2ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Export2ExcelBehavior::getCssClass('header'),  
-                     'PHONE' => Export2ExcelBehavior::getCssClass('header'),
-                     'CP' => Export2ExcelBehavior::getCssClass('header')          
+					 'CREATE_AT' => Postman4ExcelBehavior::getCssClass('header'),
+					 'CREATE_BY' => Postman4ExcelBehavior::getCssClass('header'),
+					 'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
+                     'DIST_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'TYPE_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'LAYER_GRADE' => Postman4ExcelBehavior::getCssClass('header'),
+                     'GEO_MAINTAIN' => Postman4ExcelBehavior::getCssClass('header'),
+                     'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),
+					 'PROVINCE' => Postman4ExcelBehavior::getCssClass('header'),              
+                     'CITY_NAME' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'POSTAL_CODE' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'PHONE' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CP' => Postman4ExcelBehavior::getCssClass('header')          
                 ],
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 		];		
 		$excel_file = "PostmanCustomer";
-		$this->export2excel($excel_content, $excel_file,0); 
+		$this->export4excel($excel_content, $excel_file,0); 
 	}
 	
 	/*SEND EMAIL*/
@@ -462,7 +464,7 @@ class PostmanCustomerController extends Controller
 			
 		/*path & Name File*/
 		//$rootyii=dirname(dirname(__DIR__)).'/cronjob/';
-		$rootyii='/var/www/advanced/lukisongroup/cronjob/temp/';
+		$rootyii='/var/www/advanced/lukisongroup/cronjob/tmp_cronjob/';
 		//$folder=$rootyii.'/cronjob/'.$filename;
 		//$baseRoot = Yii::getAlias('@webroot') . "/uploads/temp/";
 		$filename = 'PostmanCustomer';
@@ -481,7 +483,7 @@ class PostmanCustomerController extends Controller
 			->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
 			//->setTo(['it-dept@lukison.com'])
 			//->setTo(['piter@lukison.com'])
-			->setTo(['yosika@lukison.com','timbul.siregar@lukison.com'])
+			->setTo(['yosika@lukison.com','timbul.siregar@lukison.com','piter@lukison.com'])
 			//->setTo(['sales_esm@lukison.com','marketing_esm@lukison.com'])
 			->setSubject('WEEKLY POSTMAN-CUSTOMER')
 			->setHtmlBody($contentBody)
