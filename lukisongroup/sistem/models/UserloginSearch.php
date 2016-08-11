@@ -62,6 +62,30 @@ class UserloginSearch extends Userlogin
         return $dataProvider_Userlogin;
     }
 
+
+    /*	[5] SEARCH dataProvider -> SHOW GRIDVIEW */
+    public function searchgroupplan($params)
+    {
+		/*[5.1] JOIN TABLE */
+		$query = Userlogin::find()->where('POSITION_SITE="CRM" AND POSITION_ACCESS = 2 AND status <>1');
+        $dataProvider_Userlogin = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+		/*[5.3] LOAD VALIDATION PARAMS */
+			/*LOAD FARM VER 1*/
+			$this->load($params);
+			if (!$this->validate()) {
+				return $dataProvider_Userlogin;
+			}
+
+		/*[5.4] FILTER WHERE LIKE (string/integer)*/
+			/* FILTER COLUMN Author -ptr.nov-*/
+			 $query->andFilterWhere(['like', 'username', $this->username]);
+
+        return $dataProvider_Userlogin;
+    }
+
 	public function attributes()
 	{
 		/*Author -ptr.nov- add related fields to searchable attributes */

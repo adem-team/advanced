@@ -14,7 +14,12 @@ use lukisongroup\master\models\DraftPlan;
 
 <div class="draft-plan-form">
 
-    <?php $form = ActiveForm::begin(['id'=>$model->formName()]); ?>
+    <?php $form = ActiveForm::begin(['id'=>$model->formName(),
+        'enableClientValidation' => true,
+        'enableAjaxValidation'=>true,
+        'validationUrl'=>Url::toRoute('/master/draft-plan/valid-group')   
+
+    ]); ?>
 
      <!-- $form->field($model, 'TGL_START')->widget(Select2::classname(), [ -->
 	<!-- 				'data' => DraftPlan::getYearsList(),
@@ -33,7 +38,7 @@ use lukisongroup\master\models\DraftPlan;
                      ],
             ])->label('List Geografis');?>
 
-    <?= $form->field($model, 'SUB_GEO')->widget(DepDrop::classname(), [
+    <!--  $form->field($model, 'SUB_GEO')->widget(DepDrop::classname(), [
 						'type'=>DepDrop::TYPE_SELECT2,
 						'options'=>['placeholder'=>'Select ...'],
 						'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
@@ -44,7 +49,7 @@ use lukisongroup\master\models\DraftPlan;
 							'url' => Url::to(['/master/draft-plan/lis-geo-sub']),
 						]
 					])->label('AREA GROUP') 
-					?>
+					?> -->
 
 
  		
@@ -92,7 +97,7 @@ use lukisongroup\master\models\DraftPlan;
 
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Create', ['class' => $model->isNewRecord ? 'btn btn-primary' : 'btn btn-primary',  'data-confirm'=>'Anda yakin ingin Ganti Jadwal',]) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Create', ['class' => $model->isNewRecord ? 'btn btn-primary' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

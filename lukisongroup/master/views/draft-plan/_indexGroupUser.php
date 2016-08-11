@@ -22,7 +22,7 @@ $actionLabel='Update';
 $attDinamik =[];
 /*GRIDVIEW ARRAY FIELD HEAD*/
 $headColomn=[
-	['ID' =>0, 'ATTR' =>['FIELD'=>'username','SIZE' => '10px','label'=>'GROUP CODE','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>0, 'ATTR' =>['FIELD'=>'username','SIZE' => '10px','label'=>'Nama','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
 	['ID' =>1, 'ATTR' =>['FIELD'=>'id','SIZE' => '20px','label'=>'GROUP_PRN','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],	
 ];
 $gvHeadColomnBT = ArrayHelper::map($headColomn, 'ID', 'ATTR');
@@ -143,15 +143,11 @@ $gvGroupUser=GridView::widget([
   'panel' => [
        'heading'=>false,
         'type'=>'info',
-       'before'=> Html::a('<i class="fa fa-sign-in"></i> '.Yii::t('app', 'Start Plan',
-                            ['modelClass' => 'DraftPlan',]),'/master/draft-plan/create',[
+       'before'=> Html::a('<i class="fa fa-user"></i> '.Yii::t('app', 'Plan User',
+                            ['modelClass' => 'DraftPlan',]),'/master/draft-plan/create-user',[
                                 'data-toggle'=>"modal",
-                                    'data-target'=>"#modal-create",
+                                    'data-target'=>"#modal-create-user",
                                         'class' => 'btn btn-success'
-                                                    ]).' '.
-                Html::a('<i class="fa fa-paper-plane"></i> '.Yii::t('app', 'Send Draft',
-                            ['modelClass' => 'DraftPlan',]),'/master/draft-plan/send-draft',[
-                                        'class' => 'btn btn-info'
                                                     ]),
         'showFooter'=>false,
   ],
@@ -172,4 +168,33 @@ $gvGroupUser=GridView::widget([
 ]);
 ?>
 <?=$gvGroupUser?>
+
+<?php
+
+$this->registerJs("
+         $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+         $('#modal-create-user').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title')
+            var href = button.attr('href')
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+    Modal::begin([
+        'id' => 'modal-create-user',
+        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search-plus"></div><div><h4 class="modal-title">User</h4></div>',
+        'headerOptions'=>[
+                'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+        ],
+    ]);
+    Modal::end();
+
+
+?>
 

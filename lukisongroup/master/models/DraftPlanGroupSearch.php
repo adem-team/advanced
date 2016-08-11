@@ -15,11 +15,12 @@ class DraftPlanGroupSearch extends DraftPlanGroup
     /**
      * @inheritdoc
      */
+    public $geonm;
     public function rules()
     {
         return [
-            [['SCDL_GROUP', 'GEO_ID','DAY_ID', 'DAY_VALUE', 'STATUS'], 'integer'],
-            [['TGL_START', 'SCL_NM', 'USER_ID', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT'], 'safe'],
+            [['GEO_ID','DAY_ID', 'DAY_VALUE', 'STATUS'], 'integer'],
+            [['TGL_START','SCDL_GROUP', 'SCL_NM', 'USER_ID', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT','geonm','GROUP_PRN'], 'safe'],
         ];
     }
 
@@ -67,6 +68,7 @@ class DraftPlanGroupSearch extends DraftPlanGroup
             'STATUS' => $this->STATUS,
             'CREATED_AT' => $this->CREATED_AT,
             'UPDATED_AT' => $this->UPDATED_AT,
+            'GROUP_PRN' => $this->geonm
         ]);
 
         $query->andFilterWhere(['like', 'SCL_NM', $this->SCL_NM])

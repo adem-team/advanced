@@ -23,7 +23,11 @@ $attDinamik =[];
 /*GRIDVIEW ARRAY FIELD HEAD*/
 $headColomn=[
 	['ID' =>0, 'ATTR' =>['FIELD'=>'SCDL_GROUP','SIZE' => '10px','label'=>'GROUP CODE','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
-	['ID' =>1, 'ATTR' =>['FIELD'=>'GROUP_PRN','SIZE' => '20px','label'=>'GROUP_PRN','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],	
+	['ID' =>1, 'ATTR' =>['FIELD'=>'geonm','SIZE' => '20px','label'=>'GROUP_PRN','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
+  ['ID' =>2, 'ATTR' =>['FIELD'=>'SUB_GEO','SIZE' => '20px','label'=>'GEO_SUB','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
+   ['ID' =>3, 'ATTR' =>['FIELD'=>'ganjilGenap','SIZE' => '20px','label'=>'Week','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
+   ['ID' =>4, 'ATTR' =>['FIELD'=>'dayNm','SIZE' => '20px','label'=>'Day Name','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
+   ['ID' =>5, 'ATTR' =>['FIELD'=>'useridNm','SIZE' => '20px','label'=>'Day Name','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],     	
 ];
 $gvHeadColomnBT = ArrayHelper::map($headColomn, 'ID', 'ATTR');
 
@@ -55,9 +59,44 @@ $attDinamik[] =[
 
 /*GRIDVIEW ARRAY ROWS*/
 foreach($gvHeadColomnBT as $key =>$value[]){
-  if($value[$key]['FIELD'] != 'STATUS')
+  if($value[$key]['FIELD'] == 'geonm')
   {
       # code...
+      $attDinamik[]=[
+      'attribute'=>$value[$key]['FIELD'],
+      'label'=>$value[$key]['label'],
+      'filterType'=>GridView::FILTER_SELECT2,
+      'filter' => $drop,
+      'filterWidgetOptions'=>[
+        'pluginOptions'=>['allowClear'=>true],
+      ],
+      'filterInputOptions'=>['placeholder'=>'Pilih Group'],
+      'hAlign'=>'right',
+      'vAlign'=>'middle',
+      'noWrap'=>true,
+      'group'=>true,
+      'headerOptions'=>[
+        'style'=>[
+          'text-align'=>'center',
+          'width'=>$value[$key]['SIZE'],
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+          'background-color'=>'rgba('.$value[$key]['warna'].')',
+        ]
+      ],
+      'contentOptions'=>[
+        'style'=>[
+          'width'=>$value[$key]['SIZE'],
+          'text-align'=>$value[$key]['align'],
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ],
+      ];
+
+    }else{
+      # code...
+       # code...
       $attDinamik[]=[
         'attribute'=>$value[$key]['FIELD'],
         'label'=>$value[$key]['label'],
@@ -65,7 +104,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
         'hAlign'=>'right',
         'vAlign'=>'middle',
         'noWrap'=>true,
-		'group'=>$value[$key]['grp'],
+    'group'=>$value[$key]['grp'],
         'headerOptions'=>[
             'style'=>[
             'text-align'=>'center',
@@ -78,14 +117,14 @@ foreach($gvHeadColomnBT as $key =>$value[]){
         'contentOptions'=>[
           'style'=>[
             'text-align'=>$value[$key]['align'],
-			'width'=>$value[$key]['SIZE'],
+      'width'=>$value[$key]['SIZE'],
             'font-family'=>'tahoma, arial, sans-serif',
             'font-size'=>'8pt',
           ]
         ],
       ];
 
-    }else{}
+    }
   };
 
    /*GRIDVIEW ARRAY ACTION*/

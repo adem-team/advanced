@@ -15,11 +15,16 @@ class DraftPlanDetailSearch extends DraftPlanDetail
     /**
      * @inheritdoc
      */
+    public $custNm;
+    public $custlayernm;
+    public $SalesNm;
+    public $UseridNm;
+    
     public function rules()
     {
         return [
-            [['ID', 'SCDL_GROUP', 'STATUS'], 'integer'],
-            [['TGL', 'CUST_ID','NOTE', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT','ODD_EVEN'], 'safe'],
+            [['ID','STATUS'], 'integer'],
+            [['TGL', 'CUST_ID','NOTE', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT','ODD_EVEN','custNm','SCDL_GROUP','custlayernm','SalesNm','UseridNm'], 'safe'],
             [['LAT', 'LAG', 'RADIUS'], 'number'],
         ];
     }
@@ -72,10 +77,10 @@ class DraftPlanDetailSearch extends DraftPlanDetail
             'RADIUS' => $this->RADIUS,
             'STATUS' => $this->STATUS,
             'CREATE_AT' => $this->CREATE_AT,
-            'UPDATE_AT' => $this->UPDATE_AT
+            'UPDATE_AT' => $this->UPDATE_AT,
         ]);
 
-        $query->andFilterWhere(['like', 'CUST_ID', $this->CUST_ID])
+        $query->andFilterWhere(['like', 'CUST_ID', $this->custNm])
            // ->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
             ->andFilterWhere(['like', 'NOTE', $this->NOTE])
             ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
