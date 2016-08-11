@@ -12,7 +12,8 @@ use yii\helpers\Url;
 
 	$groupSetting=$this->render('_indexGroupSetting',[
 		'searchModelGrp'=>$searchModelGrp,
-		'dataProviderGrp'=>$dataProviderGrp
+		'dataProviderGrp'=>$dataProviderGrp,
+		'drop'=>$drop
 	]);
 	$groupUser=$this->render('_indexGroupUser',[
 		'searchModelUser'=>$searchModelUser,

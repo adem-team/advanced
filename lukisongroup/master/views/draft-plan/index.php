@@ -21,16 +21,21 @@ $this->params['breadcrumbs'][] = $this->title;
 	$newDraftPlan=$this->render('_indexDraftPlan',[
 		'searchModel' => $searchModel,
 		'dataProvider' => $dataProvider,
+		'valStt'=>$valStt
 	]);
 	$MaintainPlan=$this->render('_indexMaintainPlan',[
 		'searchModelMaintain' =>$searchModelMaintain,
 		'dataProviderMaintain' =>$dataProviderMaintain,
+		'dropcus'=>$dropcus,
+		'valStt'=>$valStt
+
 	]);
 	$groupIndex=$this->render('_indexGroup',[
 		'searchModelGrp'=>$searchModelGrp,
 		'dataProviderGrp'=>$dataProviderGrp,
 		'searchModelUser'=>$searchModelUser,
-		'dataProviderUser'=>$dataProviderUser
+		'dataProviderUser'=>$dataProviderUser,
+		'drop'=>$drop
 	]);
 		
 	if($tab==0){

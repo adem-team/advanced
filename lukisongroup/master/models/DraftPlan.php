@@ -187,6 +187,8 @@ class DraftPlan extends \yii\db\ActiveRecord
        return $ary;
     }
 
+   
+
 
     /*check exist GEO SUB*/
     public function exist_validation_sub($model)
@@ -199,8 +201,6 @@ class DraftPlan extends \yii\db\ActiveRecord
                 $this->addError($model, 'Geo Sub sudah di set pada Customers, delete  jadwal untuk editing');
             }
         }
-      
-   
     }
 
     /*get DraftPlan*/

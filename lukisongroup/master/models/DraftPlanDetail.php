@@ -28,6 +28,7 @@ class DraftPlanDetail extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+
     public static function tableName()
     {
         return 'c0002scdl_plan_detail';
@@ -47,8 +48,8 @@ class DraftPlanDetail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['TGL', 'CREATE_AT', 'UPDATE_AT','ODD_EVEN'], 'safe'],
-            [['SCDL_GROUP', 'STATUS'], 'integer'],
+            [['TGL', 'CREATE_AT', 'UPDATE_AT','ODD_EVEN','SCDL_GROUP'], 'safe'],
+            [['STATUS'], 'integer'],
             [['NOTE'], 'string'],
             [['LAT', 'LAG', 'RADIUS'], 'number'],
             [['CUST_ID'], 'string', 'max' => 50],

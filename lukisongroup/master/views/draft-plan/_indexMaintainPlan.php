@@ -19,7 +19,7 @@ $headColomn=[
 	['ID' =>3, 'ATTR' =>['FIELD'=>'weekofDate','SIZE' => '20px','label'=>'WEEK','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
 	['ID' =>4, 'ATTR' =>['FIELD'=>'custlayernm','SIZE' => '10px','label'=>'LAYER','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
 	['ID' =>5, 'ATTR' =>['FIELD'=>'CUST_ID','SIZE' => '50px','label'=>'CUST.ID','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
-	['ID' =>6, 'ATTR' =>['FIELD'=>'custNm','SIZE' => '200px','label'=>'CUSTOMER','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
+	['ID' =>6, 'ATTR' =>['FIELD'=>'custNm','SIZE' => '200px','label'=>'CUSTOMER','align'=>'left','warna'=>'73, 162, 182, 1','group'=>true]],
 	['ID' =>7, 'ATTR' =>['FIELD'=>'SalesNm','SIZE' => '20px','label'=>'SALES.NM','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
 	['ID' =>8, 'ATTR' =>['FIELD'=>'UseridNm','SIZE' => '20px','label'=>'USER.ID','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
   ['ID' =>9, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '20px','label'=>'Status','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
@@ -95,6 +95,40 @@ foreach($gvHeadColomnBT as $key =>$value[]){
       ]
     ],
     ];
+
+    }elseif($value[$key]['FIELD'] == 'custNm'){
+
+      $attDinamik[]=[
+      'attribute'=>$value[$key]['FIELD'],
+      'label'=>$value[$key]['label'],
+      'filterType'=>GridView::FILTER_SELECT2,
+      'filter' => $dropcus,
+      'filterWidgetOptions'=>[
+        'pluginOptions'=>['allowClear'=>true],
+      ],
+      'filterInputOptions'=>['placeholder'=>'Pilih Customers'],
+      'hAlign'=>'right',
+      'vAlign'=>'middle',
+      'noWrap'=>true,
+      'group'=>true,
+      'headerOptions'=>[
+        'style'=>[
+          'text-align'=>'center',
+          'width'=>$value[$key]['SIZE'],
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+          'background-color'=>'rgba('.$value[$key]['warna'].')',
+        ]
+      ],
+      'contentOptions'=>[
+        'style'=>[
+          'width'=>$value[$key]['SIZE'],
+          'text-align'=>$value[$key]['align'],
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ],
+      ];
 
     }else{
        # code...

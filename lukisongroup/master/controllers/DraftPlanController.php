@@ -143,6 +143,27 @@ class DraftPlanController extends Controller
         return $geo_id;
     }
 
+     public function ary_customers()
+    {
+      
+        return ArrayHelper::map(Customers::find()->where(['STATUS'=>1])->all(),'CUST_KD','CUST_NM');
+    }
+
+    public function get_arygeoplangroup()
+    {
+        return ArrayHelper::map(DraftPlanGroup::find()->where('STATUS = 1')->all(),'SCL_NM','SCL_NM');
+    }
+
+     public function get_execute_plan($scl_nm,$user_id)
+    {
+        /*draftplangroup*/
+       $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_group SET USER_ID="'.$user_id.'" WHERE SCL_NM ="'.$scl_nm.'" AND STATUS = 1')->execute();
+
+       /*draftplanheader*/
+       $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET USER_ID="'.$user_id.'" WHERE NOTE ="'.$scl_nm.'" AND STATUS = 1')->execute();
+    }
+
+
 
 
 
@@ -159,62 +180,62 @@ class DraftPlanController extends Controller
 	 * @author ptrnov 
      * @since 1.2.1
      */
-	public function actionSendDraft()
-    {   
-         /*model draftplan*/
-        $data_draft = DraftPlan::find()->all();
-        //$dynamick =  new DraftPlan();
+	// public function actionSendDraft()
+ //    {   
+ //         /*model draftplan*/
+ //        $data_draft = DraftPlan::find()->all();
+ //        //$dynamick =  new DraftPlan();
 
-         /*converting obejct to array*/
-        $data = ArrayHelper::toArray($data_draft, [
-			'lukisongroup\master\models\DraftPlan' => [
-				// 'SCDL_GROUP' => function ($dynamick) {
-						// return $dynamick->IdDinamikScdl;
-					// },
-				'IdDinamikScdl',//SCDL_GROUP
-				'GEO_ID',
-				'LayerNm',	
-				'DAY_ID',
-				'DAY_VALUE',
-				'CUST_KD',
-				'ODD_EVEN'
-			],
-		]);
+ //         /*converting obejct to array*/
+ //        $data = ArrayHelper::toArray($data_draft, [
+	// 		'lukisongroup\master\models\DraftPlan' => [
+	// 			// 'SCDL_GROUP' => function ($dynamick) {
+	// 					// return $dynamick->IdDinamikScdl;
+	// 				// },
+	// 			'IdDinamikScdl',//SCDL_GROUP
+	// 			'GEO_ID',
+	// 			'LayerNm',	
+	// 			'DAY_ID',
+	// 			'DAY_VALUE',
+	// 			'CUST_KD',
+	// 			'ODD_EVEN'
+	// 		],
+	// 	]);
 
 
-		//print_r($data);
+	// 	//print_r($data);
 		
-		/* GET ROW DATE OF WEEK*/
-		foreach ($data as $key => $value) {
-            if($value['IdDinamikScdl'] != 'NotSet'){
+	// 	/* GET ROW DATE OF WEEK*/
+	// 	foreach ($data as $key => $value) {
+ //            if($value['IdDinamikScdl'] != 'NotSet'){
 
               
-				//$aryScdlPlan = Jadwal::getArrayDateCust('2018',$value['LayerNm'],$value['ODD_EVEN'],$value['DAY_VALUE'],$value['IdDinamikScdl'],$value['CUST_KD'],'');
-				$aryScdlPlan = Jadwal::getArrayDateCust($value['YEAR'],$value['LayerNm'],$value['ODD_EVEN'],$value['DAY_VALUE'],$value['IdDinamikScdl'],$value['CUST_KD'],'');
+	// 			//$aryScdlPlan = Jadwal::getArrayDateCust('2018',$value['LayerNm'],$value['ODD_EVEN'],$value['DAY_VALUE'],$value['IdDinamikScdl'],$value['CUST_KD'],'');
+	// 			$aryScdlPlan = Jadwal::getArrayDateCust($value['YEAR'],$value['LayerNm'],$value['ODD_EVEN'],$value['DAY_VALUE'],$value['IdDinamikScdl'],$value['CUST_KD'],'');
 			
 
 		
-				//INSERT BIT To TABEL c0002scdl_plan_detail |MODEL DraftPlanDetail
-				foreach ($aryScdlPlan as $val) {
-					$this->conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_detail', 
-								['CUST_ID','TGL','SCDL_GROUP','ODD_EVEN'], 
-								[[$val['custId'],$val['tg'],$val['scdlGrp'],$val['currenWeek']]
-					])->execute();
-				}
+	// 			//INSERT BIT To TABEL c0002scdl_plan_detail |MODEL DraftPlanDetail
+	// 			foreach ($aryScdlPlan as $val) {
+	// 				$this->conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_detail', 
+	// 							['CUST_ID','TGL','SCDL_GROUP','ODD_EVEN'], 
+	// 							[[$val['custId'],$val['tg'],$val['scdlGrp'],$val['currenWeek']]
+	// 				])->execute();
+	// 			}
 			
-				/*INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader */
-				$this->conn_esm()->CreateCommand("
-								INSERT INTO c0002scdl_plan_header (
-									SELECT NULL,TGL,SCDL_GROUP,NOTE,NULL,0,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail
-									GROUP BY SCDL_GROUP,TGL
-								)		
-				")->execute(); 
+	// 			/*INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader */
+	// 			$this->conn_esm()->CreateCommand("
+	// 							INSERT INTO c0002scdl_plan_header (
+	// 								SELECT NULL,TGL,SCDL_GROUP,NOTE,NULL,0,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail
+	// 								GROUP BY SCDL_GROUP,TGL
+	// 							)		
+	// 			")->execute(); 
 			
-			}
-		}	
+	// 		}
+	// 	}	
 		
-      return $this->redirect(['index?tab=1']); 
-    }
+ //      return $this->redirect(['index?tab=1']); 
+ //    }
 	
 	
 	/**
@@ -250,13 +271,18 @@ class DraftPlanController extends Controller
 
 			],
 		]);
+
+         $geo_nm = self::ary_subgeo($dataField['GEO_ID']);
+
+         $geo_Id = $dataField['GEO_ID'].'.'.$dataField['GEO_SUB'];
         
 		
 		/* GET ROW DATE OF WEEK*/
 		//foreach ($dataField as $key => $value) {
             if($dataField['IdDinamikScdl'] != 'NotSet'){
+
 				//$aryScdlPlan = Jadwal::getArrayDateCust('2018',$value['LayerNm'],$value['ODD_EVEN'],$value['DAY_VALUE'],$value['IdDinamikScdl'],$value['CUST_KD'],'');
-				$aryScdlPlan = Jadwal::getArrayDateCust($dataField['YEAR'],$dataField['LayerNm'],$dataField['ODD_EVEN'],$dataField['DAY_VALUE'],$dataField['IdDinamikScdl'],$dataField['CUST_KD'],$dataField['GEO_SUB']);
+				$aryScdlPlan = Jadwal::getArrayDateCust($dataField['YEAR'],$dataField['LayerNm'],$dataField['ODD_EVEN'],$dataField['DAY_VALUE'],$dataField['IdDinamikScdl'],$dataField['CUST_KD'],$geo_nm->GEO_NM.'.'.$dataField['GEO_SUB']);
 
 		
            $ary_scdlplndetail = self::findCount($dataField['CUST_KD'],$dataField['YEAR']);
@@ -266,16 +292,16 @@ class DraftPlanController extends Controller
 				foreach ($aryScdlPlan as $val) {
 
 					self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_detail', 
-								['CUST_ID','TGL','SCDL_GROUP','ODD_EVEN','GEO_SUB'], 
-								[[$val['custId'],$val['tg'],$val['scdlGrp'],$val['currenWeek'],$val['user_id']]
+								['CUST_ID','TGL','SCDL_ID','ODD_EVEN','SCDL_GROUP_NM','GEO_SUB','SCDL_GROUP'], 
+								[[$val['custId'],$val['tg'],$val['scdlGrp'],$val['currenWeek'],$val['user_id'],$dataField['GEO_SUB'],$geo_Id]
 					])->execute();
                     }
 
                     //INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader 
                 self::conn_esm()->CreateCommand("
                                 INSERT INTO c0002scdl_plan_header (
-                                    SELECT NULL,TGL,SCDL_GROUP,NOTE,NULL,0,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail
-                                    GROUP BY SCDL_GROUP,TGL
+                                    SELECT NULL,TGL,SCDL_ID,SCDL_GROUP,SCDL_GROUP_NM,NULL,0,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail
+                                    GROUP BY SCDL_ID,TGL
                                 )       
                 ")->execute(); 
 				}
@@ -304,6 +330,35 @@ class DraftPlanController extends Controller
     }
 
 
+    /*validation ajax*/
+    public function actionValidGroup()
+    {
+      # code...
+      $model = new DraftPlanGroup();
+      $model->scenario = DraftPlanGroup::SCENARIO_EXIST_GROP;
+
+    if(Yii::$app->request->isAjax && $model->load($_POST))
+    {
+      Yii::$app->response->format = 'json';
+      return ActiveForm::validate($model);
+      }
+    }
+
+    /*validation ajax*/
+    public function actionValidUser()
+    {
+      # code...
+      $model = new DraftPlanGroup();
+      $model->scenario = DraftPlanGroup::SCENARIO_EXIST_USER;
+
+    if(Yii::$app->request->isAjax && $model->load($_POST))
+    {
+      Yii::$app->response->format = 'json';
+      return ActiveForm::validate($model);
+      }
+    }
+
+
       public function actionCreatePlanGroup()
     {
         $model = new DraftPlanGroup();
@@ -311,73 +366,36 @@ class DraftPlanController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
 
-           $day_nilai =  self::ary_day($model->DAY_ID);
+           // $day_nilai =  self::ary_day($model->DAY_ID);
            
            $geo_nm = self::ary_subgeo($model->GEO_ID);
 
-           $jeda_pekan =  array(1, 2);
+           $jeda_geosub =  array(1, 2); //array week and Geo
 
-           $hari =  array(1, 2,3,4,5,6,7);
+           $hari =  array(1, 2,3,4,5,6,7); //aray hari
 
-            $model->DAY_VALUE = $day_nilai->DAY_VALUE;
-            $model->GROUP_PRN = $model->GEO_ID;
-            $model->SCL_NM = $geo_nm->GEO_NM.'.'.$model->SUB_GEO;
+           // $model->DAY_VALUE = $day_nilai->DAY_VALUE;
+
+           $model->GROUP_PRN = $model->GEO_ID;
 
 
-           foreach ($jeda_pekan as $key => $value) {
+           foreach ($jeda_geosub as $key => $value) {
                # code...
             foreach ($hari as $key => $val) {
                 # code...
-            $model->SCDL_GROUP  = self::generatecode($model->GEO_ID,$model->SUB_GEO,$value,$val,$model->PROSES_ID);
+            $model->SCL_NM = $geo_nm->GEO_NM.'.'.$value;
+
+            $model->SCDL_GROUP  = self::generatecode($model->GEO_ID,$value,$value,$val,$model->PROSES_ID);
 
             self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_group', 
-                                ['SCDL_GROUP','GROUP_PRN','SCL_NM','GEO_ID','SUB_GEO','DAY_ID','PROSES_ID','DAY_VALUE'], 
-                                [[$model->SCDL_GROUP,$model->GROUP_PRN,$model->SCL_NM,$model->GEO_ID,$model->SUB_GEO,$value,$model->PROSES_ID,$val],
+                    ['SCDL_GROUP','GROUP_PRN','SCL_NM','GEO_ID','SUB_GEO','DAY_ID','PROSES_ID','DAY_VALUE','ODD_EVEN'], 
+                    [[$model->SCDL_GROUP,$model->GROUP_PRN,$model->SCL_NM,$model->GEO_ID,$value,$value,$model->PROSES_ID,$val,$value],
                     ])->execute();
             
 
-           };
+                };
             
-           };
-
-
-
-           
-
-           // $model->SCDL_GROUP  = self::generatecode($model->GEO_ID,$model->SUB_GEO,$val++,$model->DAY_VALUE,$model->PROSES_ID);
-
-           /* split array author : wawan*/
-    //               $temp = explode(" ",$cari_groupName['SCDL_GROUP_NM']);
-    //               $result = '';
-    //               foreach($temp as $t)
-    //               {
-    //                 $result .= $t[0];
-    //               }
-          
-
-           
-
-          
-           
-
-            // if($model->SCDL_GROUP != 'NotSet'){
-            //     //$aryScdlPlan = Jadwal::getArrayDateCust('2018',$value['LayerNm'],$value['ODD_EVEN'],$value['DAY_VALUE'],$value['IdDinamikScdl'],$value['CUST_KD'],'');
-            //     $aryScdlPlan_group = Jadwal::getArrayDateCust($model->TGL_START,'',$model->ODD_EVEN,$model->DAY_VALUE,$model->SCDL_GROUP,$model->SCL_NM,$model->USER_ID);
-
-                
-
-            //     foreach ($aryScdlPlan_group as $val) {
-            //         # code...
-
-
-            //         self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_group', 
-            //                     ['SCDL_GROUP','SCL_NM','USER_ID','ODD_EVEN','TGL_START','GROUP_PRN','SUB_GEO','GEO_ID','DAY_ID','DAY_VALUE'], 
-            //                     [[$val['scdlGrp'],$val['custId'],$val['user_id'],$val['currenWeek'],$val['tg'],$model->GROUP_PRN,$model->SUB_GEO,$model->GEO_ID,$model->DAY_ID,$model->DAY_VALUE]
-            //         ])->execute();
-
-            //     }
-
-            // }
+            };
 
           
             return $this->redirect(['index']);
@@ -385,17 +403,37 @@ class DraftPlanController extends Controller
             return $this->renderAjax('_plangroup', [
                 'model' => $model,
                 'geo'=>$this->get_arygeo(),
-                'opt'=>self::getPekan(),
-                'user'=>self::get_aryUserCrmSales(),
                 'proses'=>self::get_aryProses()
             ]);
         }
     }
 
+
+    public function actionCreateUser()
+    {
+        $model = new DraftPlanGroup();
+
+
+        if ($model->load(Yii::$app->request->post())) {
+
+
+            $ary = self::get_execute_plan($model->SCL_NM,$model->USER_ID);
+            
+
+            return $this->redirect(['index']);
+        } else {
+            return $this->renderAjax('_pilihuser', [
+                'model' => $model,
+                'geo'=>$this->get_arygeoplangroup(),
+                'user'=>self::get_aryUserCrmSales()
+            ]);
+        }
+    }
+
+
     /*
-     * ID DINAMIK SCHEDULING
-     * FORMULA SCHEDULE | MAPING BY [GEO,subGEO,ODD_EVEN,DAY,PROSES_ID]
-     * @author ptrnov [ptr.nov@gmail.com] @since 1.0.0, 1.5.0,
+     * SCDL_GROUP DINAMIK PLAN GROUP
+     * FORMULA PLAN GROUP | MAPING BY [GEO,subGEO,ODD_EVEN,DAY,PROSES_ID]
      * @author wawan [wawan@gmail.com] @since 1.3.0
     */
     public function generatecode($geo,$subGeo,$pekanGanjilGenap,$dayNilai,$proses){
@@ -556,8 +594,8 @@ class DraftPlanController extends Controller
 		$tab=Yii::$app->getRequest()->getQueryParam('tab');
 		
         $aryStt= [
-          ['STATUS' => 0, 'STT_NM' => 'DISABLE'],
-          ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
+          ['STATUS' => 0, 'STT_NM' => 'Draft'],
+          ['STATUS' => 1, 'STT_NM' => 'Approve'],
         ];
 
         $valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
@@ -576,7 +614,7 @@ class DraftPlanController extends Controller
 
 		/*GROUP USER*/
 		$searchModelUser = new UserloginSearch();
-        $dataProviderUser = $searchModelUser->search(Yii::$app->request->queryParams);
+        $dataProviderUser = $searchModelUser->searchgroupplan(Yii::$app->request->queryParams);
 
        
         return $this->render('index', [
@@ -589,7 +627,9 @@ class DraftPlanController extends Controller
 			'searchModelGrp'=>$searchModelGrp,
 			'dataProviderGrp'=>$dataProviderGrp,
      		'searchModelUser'=>$searchModelUser,
-			'dataProviderUser'=>$dataProviderUser
+			'dataProviderUser'=>$dataProviderUser,
+            'dropcus'=>self::ary_customers(),
+            'drop'=>self::get_arygeo()
         ]);
     }
 
