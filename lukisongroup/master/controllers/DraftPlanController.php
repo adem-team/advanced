@@ -393,11 +393,11 @@ class DraftPlanController extends Controller
                 # code...
             $model->SCL_NM = $geo_nm->GEO_NM.'.'.$model->SUB_GEO;
 
-            $model->SCDL_GROUP  = self::generatecode($model->GEO_ID,$model->SUB_GEO,$value,$val,$model->PROSES_ID);
+            $model->SCDL_GROUP  = self::generatecode($model->GEO_ID,$model->SUB_GEO,$value,$val,1);
 
             self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_group', 
                     ['SCDL_GROUP','GROUP_PRN','SCL_NM','GEO_ID','SUB_GEO','DAY_ID','PROSES_ID','DAY_VALUE','ODD_EVEN'], 
-                    [[$model->SCDL_GROUP,$model->GROUP_PRN,$model->SCL_NM,$model->GEO_ID,$model->SUB_GEO,$value,$model->PROSES_ID,$val,$value],
+                    [[$model->SCDL_GROUP,$model->GROUP_PRN,$model->SCL_NM,$model->GEO_ID,$model->SUB_GEO,$value,1,$val,$value],
                     ])->execute();
             
 
@@ -406,7 +406,7 @@ class DraftPlanController extends Controller
             };
 
           
-            return $this->redirect(['index']);
+           return $this->redirect(['index?tab=2']);
         } else {
             return $this->renderAjax('_plangroup', [
                 'model' => $model,
