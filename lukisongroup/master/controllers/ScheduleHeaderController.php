@@ -539,7 +539,7 @@ class ScheduleHeaderController extends Controller
           }
            return $this->redirect(['index']);
         } else {
-            return $this->renderAjax('create', [
+            return $this->renderAjax('_usercreate', [
                 'model' => $model,
             ]);
         }

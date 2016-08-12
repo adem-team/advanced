@@ -14,21 +14,20 @@ use lukisongroup\master\models\DraftPlan;
 
 <div class="draft-plan-form">
 
-    <?php $form = ActiveForm::begin(['id'=>$model->formName(),
-        'enableClientValidation' => true,
-        'enableAjaxValidation'=>true,
-        'validationUrl'=>Url::toRoute('/master/draft-plan/valid-user')   
+    <?php $form = ActiveForm::begin(['id'=>$model->formName() 
 
     ]); ?>
 
      
-	 <?= $form->field($model, 'SCL_NM')->widget(Select2::classname(), [
+	  <?= $form->field($model, 'SCL_NM')->widget(Select2::classname(), [
                 'data' => $geo,
                 'options' => ['placeholder' => 'Pilih ...'],
                 'pluginOptions' => [
                     'allowClear' => true
                      ],
-                ])->label('List Geografis');?>
+                ])->label('Geografis');?>
+
+               <!--    $form->field($model, 'SCL_NM')->textInput(['value' =>$scl_nm,'readonly'=>true]) ?> -->
 
 
     <?= $form->field($model, 'USER_ID')->widget(Select2::classname(), [
@@ -43,7 +42,7 @@ use lukisongroup\master\models\DraftPlan;
 					
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Create', ['class' => $model->isNewRecord ? 'btn btn-primary' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Create', ['class' => $model->isNewRecord ? 'btn btn-primary' : 'btn btn-primary','data-confirm'=>'apakah anda yakin ingin ganti Group?']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -5,6 +5,7 @@ namespace lukisongroup\master\models;
 
 use Yii;
 use lukisongroup\master\models\DraftPlanGroup;
+use lukisongroup\master\models\DraftPlanHeader;
 /**
  * This is the model class for table "c0002scdl_plan_detail".
  *
@@ -28,6 +29,7 @@ class DraftPlanDetail extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+     const SCENARIO_APROVE = 'approve';
 
     public static function tableName()
     {
@@ -48,13 +50,14 @@ class DraftPlanDetail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['TGL', 'CREATE_AT', 'UPDATE_AT','ODD_EVEN','SCDL_GROUP'], 'safe'],
+            [['TGL', 'CREATE_AT', 'UPDATE_AT','ODD_EVEN','SCDL_GROUP','SCDL_GROUP_NM'], 'safe'],
             [['STATUS'], 'integer'],
             [['NOTE'], 'string'],
             [['LAT', 'LAG', 'RADIUS'], 'number'],
             [['CUST_ID'], 'string', 'max' => 50],
              [['CUST_ID'], 'required','on'=>'delete'],
-              [['CUST_ID'], 'required','on'=>'approve'],
+              [['CUST_ID'], 'required','on'=>self::SCENARIO_APROVE],
+               [['CUST_ID'], 'exist','on'=>self::SCENARIO_APROVE],
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100],
         ];
     }
@@ -84,6 +87,16 @@ class DraftPlanDetail extends \yii\db\ActiveRecord
             'CHECKOUT_LAG' => 'Checkout  Lag',
             'CHECKOUT_TIME' => 'Checkout  Time',
         ];
+    }
+
+    public function exist($model)
+    {
+     
+        $cari_user = DraftPlanHeader::find()->where(['NOTE'=>$this->SCDL_GROUP_NM])->one();
+        if(count($cari_user->USER_ID) == 0)
+        {
+            $this->addError($model, 'User Pada Customers ini Belum Di Setting Group');
+        }
     }
 	
 	/* JOIN Model Customers*/

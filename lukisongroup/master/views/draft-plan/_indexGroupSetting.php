@@ -6,6 +6,7 @@ use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use lukisongroup\master\models\DraftPlan;
 Use ptrnov\salesforce\Jadwal;
+use yii\helpers\Url;
 
 
 ?>
@@ -23,11 +24,12 @@ $attDinamik =[];
 /*GRIDVIEW ARRAY FIELD HEAD*/
 $headColomn=[
 	['ID' =>0, 'ATTR' =>['FIELD'=>'SCDL_GROUP','SIZE' => '10px','label'=>'GROUP CODE','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
-	['ID' =>1, 'ATTR' =>['FIELD'=>'geonm','SIZE' => '20px','label'=>'GROUP_PRN','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
-  ['ID' =>2, 'ATTR' =>['FIELD'=>'SUB_GEO','SIZE' => '20px','label'=>'GEO_SUB','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
-   ['ID' =>3, 'ATTR' =>['FIELD'=>'ganjilGenap','SIZE' => '20px','label'=>'Week','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
-   ['ID' =>4, 'ATTR' =>['FIELD'=>'dayNm','SIZE' => '20px','label'=>'Day Name','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
-   ['ID' =>5, 'ATTR' =>['FIELD'=>'useridNm','SIZE' => '20px','label'=>'Day Name','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],     	
+	// ['ID' =>1, 'ATTR' =>['FIELD'=>'geonm','SIZE' => '20px','label'=>'GROUP_PRN','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
+  ['ID' =>1, 'ATTR' =>['FIELD'=>'SUB_GEO','SIZE' => '20px','label'=>'GEO_SUB','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
+   ['ID' =>2, 'ATTR' =>['FIELD'=>'ganjilGenap','SIZE' => '20px','label'=>'Week','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
+   ['ID' =>3, 'ATTR' =>['FIELD'=>'dayNm','SIZE' => '20px','label'=>'Day Name','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
+    ['ID' =>4, 'ATTR' =>['FIELD'=>'geonm','SIZE' => '20px','label'=>'GROUP_PRN','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
+   ['ID' =>5, 'ATTR' =>['FIELD'=>'useridNm','SIZE' => '20px','label'=>'UserName','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],     	
 ];
 $gvHeadColomnBT = ArrayHelper::map($headColomn, 'ID', 'ATTR');
 
@@ -171,6 +173,14 @@ $gvGroupSetting=GridView::widget([
   'dataProvider' => $dataProviderGrp,
   'filterModel' => $searchModelGrp,
   'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+  // 'rowOptions'   => function ($model, $key, $index, $grid) {
+  //        return ['id' => $model->SCL_NM,'onclick' => '$.pjax.reload({
+  //             url: "'.Url::to(['/master/draft-plan/index']).'?SCL_NM="+this.id,
+  //             container: "#gv-group-user-id",
+  //             timeout: 10,
+  //         });'];
+  //       //  return ['data-id' => $model->USER_ID];
+  //    },
   'columns' => $attDinamik,
   'pjax'=>true,
   'pjaxSettings'=>[

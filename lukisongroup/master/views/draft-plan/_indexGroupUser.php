@@ -22,8 +22,10 @@ $actionLabel='Update';
 $attDinamik =[];
 /*GRIDVIEW ARRAY FIELD HEAD*/
 $headColomn=[
-	['ID' =>0, 'ATTR' =>['FIELD'=>'username','SIZE' => '10px','label'=>'Nama','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
-	['ID' =>1, 'ATTR' =>['FIELD'=>'id','SIZE' => '20px','label'=>'GROUP_PRN','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],	
+	['ID' =>0, 'ATTR' =>['FIELD'=>'username','SIZE' => '10px','label'=>'User Login','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
+    ['ID' =>1, 'ATTR' =>['FIELD'=>'salesNm','SIZE' => '20px','label'=>'Nama User','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+    ['ID' =>2, 'ATTR' =>['FIELD'=>'salesHp','SIZE' => '20px','label'=>'HP','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
+    ['ID' =>3, 'ATTR' =>['FIELD'=>'status','SIZE' => '20px','label'=>'Status','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]], 	
 ];
 $gvHeadColomnBT = ArrayHelper::map($headColomn, 'ID', 'ATTR');
 
@@ -55,17 +57,59 @@ $attDinamik[] =[
 
 /*GRIDVIEW ARRAY ROWS*/
 foreach($gvHeadColomnBT as $key =>$value[]){
-  if($value[$key]['FIELD'] != 'STATUS')
+  if($value[$key]['FIELD'] == 'status')
   {
       # code...
-      $attDinamik[]=[
+  $attDinamik[]=[
+    'attribute'=>$value[$key]['FIELD'],
+    'label'=>$value[$key]['label'],
+    'filterType'=>GridView::FILTER_SELECT2,
+    'filter' => true,
+    'filterWidgetOptions'=>[
+      'pluginOptions'=>['allowClear'=>true],
+    ],
+    'filterInputOptions'=>['placeholder'=>'Pilih'],
+     'format' => 'raw',
+    'value'=>function($model){
+           if ($model->status == 10) {
+            return Html::a('<i class="fa fa-check"></i> &nbsp;Active', '',['class'=>'btn btn-success btn-xs', 'title'=>'Active']);
+          } else if ($model->status == 1) {
+            return Html::a('<i class="fa fa-close"></i> &nbsp;Inactive', '',['class'=>'btn btn-danger btn-xs', 'title'=>'Inactive']);
+          }
+        },
+    'hAlign'=>'right',
+    'vAlign'=>'middle',
+    'noWrap'=>true,
+    'headerOptions'=>[
+      'style'=>[
+        'text-align'=>'center',
+        'width'=>$value[$key]['SIZE'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+        'background-color'=>'rgba('.$value[$key]['warna'].')',
+      ]
+    ],
+    'contentOptions'=>[
+      'style'=>[
+        'width'=>$value[$key]['SIZE'],
+        'text-align'=>$value[$key]['align'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+      ]
+    ],
+    ];
+
+    }else{
+       
+
+     $attDinamik[]=[
         'attribute'=>$value[$key]['FIELD'],
         'label'=>$value[$key]['label'],
         'filter'=>true,
         'hAlign'=>'right',
         'vAlign'=>'middle',
         'noWrap'=>true,
-		'group'=>$value[$key]['grp'],
+    'group'=>$value[$key]['grp'],
         'headerOptions'=>[
             'style'=>[
             'text-align'=>'center',
@@ -78,14 +122,14 @@ foreach($gvHeadColomnBT as $key =>$value[]){
         'contentOptions'=>[
           'style'=>[
             'text-align'=>$value[$key]['align'],
-			'width'=>$value[$key]['SIZE'],
+      'width'=>$value[$key]['SIZE'],
             'font-family'=>'tahoma, arial, sans-serif',
             'font-size'=>'8pt',
           ]
         ],
       ];
 
-    }else{}
+    }
   };
 
    /*GRIDVIEW ARRAY ACTION*/
@@ -144,6 +188,12 @@ $gvGroupUser=GridView::widget([
        'heading'=>false,
         'type'=>'info',
        'before'=> Html::a('<i class="fa fa-user"></i> '.Yii::t('app', 'Plan User',
+                            ['modelClass' => 'DraftPlan',]),'/master/draft-plan/plan-user',[
+                                'data-toggle'=>"modal",
+                                    'data-target'=>"#modal-create-user",
+                                        'class' => 'btn btn-success'
+                                                    ]).' '.
+                  Html::a('<i class="fa fa-user"></i> '.Yii::t('app', 'Add User',
                             ['modelClass' => 'DraftPlan',]),'/master/draft-plan/create-user',[
                                 'data-toggle'=>"modal",
                                     'data-target'=>"#modal-create-user",
