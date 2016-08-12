@@ -35,7 +35,8 @@ $this->params['breadcrumbs'][] = $this->title;
 		'dataProviderGrp'=>$dataProviderGrp,
 		'searchModelUser'=>$searchModelUser,
 		'dataProviderUser'=>$dataProviderUser,
-		'drop'=>$drop
+		'drop'=>$drop,
+		'SCL_NM'=>$SCL_NM
 	]);
 		
 	if($tab==0){

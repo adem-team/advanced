@@ -13,7 +13,12 @@ use yii\helpers\Url;
 
 <div class="draft-plan-form">
 
-    <?php $form = ActiveForm::begin(['id'=>$model->formName()]); ?>
+    <?php $form = ActiveForm::begin(['id'=>$model->formName(),
+    	'enableClientValidation' => true,
+        'enableAjaxValidation'=>true,
+        'validationUrl'=>Url::toRoute('/master/draft-plan/valid-user')
+
+    ]); ?>
 
     <?= $form->field($model, 'TGL')->widget(Select2::classname(), [
 					'data' => $year,
@@ -42,8 +47,10 @@ use yii\helpers\Url;
 							  'loadingText' => 'Loading  ...',
 							'url' => Url::to(['/master/draft-plan/lis-cus-plan']),
 						]
-					])->label('Pilih Customers') 
-	?>
+					])->label('Pilih Customers') ?>
+
+					<?= $form->field($model, 'SCDL_GROUP_NM')->hiddenInput()->label(false); ?> 
+	<!-- ?> -->
    
 
 
@@ -54,3 +61,18 @@ use yii\helpers\Url;
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+$this->registerJs("
+$('#draftplandetail-cust_id').on('change',function(e){
+e.preventDefault();
+var idx = $(this).val();
+   $.ajax({   
+        url: '/master/draft-plan/val',
+        dataType: 'json',
+        type: 'GET',
+        data:{id:idx},
+        success: function (data, textStatus, jqXHR) {            $('#draftplandetail-scdl_group_nm').val(data)
+        },
+    });
+});
+  ",$this::POS_READY);

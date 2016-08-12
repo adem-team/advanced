@@ -38,7 +38,7 @@ use lukisongroup\master\models\DraftPlan;
                      ],
             ])->label('List Geografis');?>
 
-    <!--  $form->field($model, 'SUB_GEO')->widget(DepDrop::classname(), [
+     <?= $form->field($model, 'SUB_GEO')->widget(DepDrop::classname(), [
 						'type'=>DepDrop::TYPE_SELECT2,
 						'options'=>['placeholder'=>'Select ...'],
 						'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
@@ -49,7 +49,7 @@ use lukisongroup\master\models\DraftPlan;
 							'url' => Url::to(['/master/draft-plan/lis-geo-sub']),
 						]
 					])->label('AREA GROUP') 
-					?> -->
+					?>
 
 
  		
@@ -85,13 +85,13 @@ use lukisongroup\master\models\DraftPlan;
 				])->label('Setel Hari') ?> -->
 
 
-            <?= $form->field($model, 'PROSES_ID')->widget(Select2::classname(), [
+            <!--  $form->field($model, 'PROSES_ID')->widget(Select2::classname(), [
                 'data' => $proses,
                 'options' => ['placeholder' => 'Pilih ...'],
                 'pluginOptions' => [
                     'allowClear' => true
                      ],
-            ])->label('Options Libur');?>
+            ])->label('Options Libur');?> -->
 					
 
 

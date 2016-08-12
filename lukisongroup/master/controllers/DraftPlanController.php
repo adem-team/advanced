@@ -19,6 +19,9 @@ use lukisongroup\master\models\DraftPlanDetailSearch;
 use lukisongroup\master\models\DraftPlanDetail;
 use lukisongroup\master\models\DraftPlanGroupSearch;
 use lukisongroup\sistem\models\UserloginSearch;
+use crm\sistem\models\Userprofile;
+
+
 use lukisongroup\master\models\DraftGeoSub;
 use lukisongroup\master\models\DraftPlanProses;
 use lukisongroup\sistem\models\Userlogin;
@@ -159,9 +162,14 @@ class DraftPlanController extends Controller
         /*draftplangroup*/
        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_group SET USER_ID="'.$user_id.'" WHERE SCL_NM ="'.$scl_nm.'" AND STATUS = 1')->execute();
 
-       /*draftplanheader*/
-       $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET USER_ID="'.$user_id.'" WHERE NOTE ="'.$scl_nm.'" AND STATUS = 1')->execute();
+       // /*draftplanheader*/
+       $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET USER_ID="'.$user_id.'" WHERE NOTE ="'.$scl_nm.'"')->execute();
     }
+
+    // public function ary_detail($scdl_nm)
+    // {
+    //     $detail = DraftPlanDetail::find()->distinct()->where(['SCDL_GROUP_NM'=>$scdl_nm])->one()
+    // }
 
 
 
@@ -348,8 +356,8 @@ class DraftPlanController extends Controller
     public function actionValidUser()
     {
       # code...
-      $model = new DraftPlanGroup();
-      $model->scenario = DraftPlanGroup::SCENARIO_EXIST_USER;
+      $model = new DraftPlanDetail();
+      $model->scenario = DraftPlanDetail::SCENARIO_APROVE;
 
     if(Yii::$app->request->isAjax && $model->load($_POST))
     {
@@ -370,7 +378,7 @@ class DraftPlanController extends Controller
            
            $geo_nm = self::ary_subgeo($model->GEO_ID);
 
-           $jeda_geosub =  array(1, 2); //array week and Geo
+           $jeda_geosub =  array(1, 2); //array week 
 
            $hari =  array(1, 2,3,4,5,6,7); //aray hari
 
@@ -383,13 +391,13 @@ class DraftPlanController extends Controller
                # code...
             foreach ($hari as $key => $val) {
                 # code...
-            $model->SCL_NM = $geo_nm->GEO_NM.'.'.$value;
+            $model->SCL_NM = $geo_nm->GEO_NM.'.'.$model->SUB_GEO;
 
-            $model->SCDL_GROUP  = self::generatecode($model->GEO_ID,$value,$value,$val,$model->PROSES_ID);
+            $model->SCDL_GROUP  = self::generatecode($model->GEO_ID,$model->SUB_GEO,$value,$val,$model->PROSES_ID);
 
             self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_group', 
                     ['SCDL_GROUP','GROUP_PRN','SCL_NM','GEO_ID','SUB_GEO','DAY_ID','PROSES_ID','DAY_VALUE','ODD_EVEN'], 
-                    [[$model->SCDL_GROUP,$model->GROUP_PRN,$model->SCL_NM,$model->GEO_ID,$value,$value,$model->PROSES_ID,$val,$value],
+                    [[$model->SCDL_GROUP,$model->GROUP_PRN,$model->SCL_NM,$model->GEO_ID,$model->SUB_GEO,$value,$model->PROSES_ID,$val,$value],
                     ])->execute();
             
 
@@ -409,7 +417,64 @@ class DraftPlanController extends Controller
     }
 
 
+    /**
+     * Creates a new User Login.
+     * If creation is successful, the browser will be redirected to the 'index' page.
+     * author wawan
+     */
+
     public function actionCreateUser()
+    {
+        $model = new Userlogin();
+        $user_profile = new UserProfile();
+        //componen user option
+        $profile=Yii::$app->getUserOpt->Profile_user();
+        $usercreate = $profile->username;
+
+        $model->scenario = Userlogin::SCENARIO_USER;
+        if ($model->load(Yii::$app->request->post())&&$user_profile->load(Yii::$app->request->post())) {
+          $post = Yii::$app->request->post();
+          $datapostion = $post['Userlogin']['POSITION_LOGIN'];
+          if($datapostion == 1)
+          {
+              $auth = "SALESMAN";// auth key untuk salesmen
+          }
+          elseif($datapostion == 2){
+            $auth = "SALES PROMOTION";// auth key untuk sales promotion
+          }elseif($datapostion == 3){
+            $auth = "CUSTOMER";// auth key untuk Customers
+          }elseif($datapostion == 4){
+            $auth = "DISTRIBUTOR";// auth key untuk Customers
+          }elseif($datapostion == 5){
+            $auth = "FACTORY PABRIK";// auth key untuk Customers
+          }elseif($datapostion == 6){
+            $auth = "OUTSOURCE";// auth key untuk Customers
+          }
+          $model->POSITION_LOGIN = $datapostion;
+          $model->POSITION_SITE = "CRM"; // untuk login crm
+          $pass = $model->password_hash;
+          $security = Yii::$app->security->generatePasswordHash($pass);
+          $authkey =  Yii::$app->security->generatePasswordHash($auth);
+          $model->password_hash = $security;
+          $model->auth_key = $authkey;
+          $model->save();
+          $user_profile->ID_USER = $model->id;
+          $user_profile->CREATED_BY = $usercreate;
+          $user_profile->CREATED_AT = date("Y-m-d H:i:s");
+          $user_profile->save();
+          
+           return $this->redirect(['index?tab=2']);
+        } else {
+            return $this->renderAjax('_usercreate', [
+                'model' => $model,
+                'user_profile'=>$user_profile
+            ]);
+        }
+    }
+
+
+
+    public function actionPlanUser()
     {
         $model = new DraftPlanGroup();
 
@@ -420,12 +485,13 @@ class DraftPlanController extends Controller
             $ary = self::get_execute_plan($model->SCL_NM,$model->USER_ID);
             
 
-            return $this->redirect(['index']);
+             return $this->redirect(['index?tab=2']);
         } else {
             return $this->renderAjax('_pilihuser', [
                 'model' => $model,
                 'geo'=>$this->get_arygeoplangroup(),
-                'user'=>self::get_aryUserCrmSales()
+                'user'=>self::get_aryUserCrmSales(),
+                // 'scl_nm'=>$SCL_NM
             ]);
         }
     }
@@ -592,6 +658,8 @@ class DraftPlanController extends Controller
     public function actionIndex()
     {
 		$tab=Yii::$app->getRequest()->getQueryParam('tab');
+
+        $SCL_NM=Yii::$app->getRequest()->getQueryParam('SCL_NM');
 		
         $aryStt= [
           ['STATUS' => 0, 'STT_NM' => 'Draft'],
@@ -629,7 +697,8 @@ class DraftPlanController extends Controller
      		'searchModelUser'=>$searchModelUser,
 			'dataProviderUser'=>$dataProviderUser,
             'dropcus'=>self::ary_customers(),
-            'drop'=>self::get_arygeo()
+            'drop'=>self::get_arygeo(),
+            'SCL_NM'=>$SCL_NM
         ]);
     }
 
@@ -722,6 +791,15 @@ class DraftPlanController extends Controller
       }
     }
 
+    public function actionVal($id)
+    {
+        $data = DraftPlanDetail::find()->where(['CUST_ID'=>$id])->one();
+
+        $data_id = $data->SCDL_GROUP_NM;
+
+        echo json_encode($data_id);
+    }
+
     /*
      * Approve DrafplanDetail Customers
     */
@@ -732,12 +810,13 @@ class DraftPlanController extends Controller
 
          if ($model->load(Yii::$app->request->post())) {
 
+            $user = self::getuser($model->SCDL_GROUP_NM);
             if(self::findCountStatus($model->CUST_ID,$model->TGL) == 0)
             {
-                self::Approve($model->CUST_ID,$model->TGL);
+                self::Approve($model->CUST_ID,$model->TGL,$user);
             }else{
                 self::ApproveValidasi($model->CUST_ID,$model->TGL);
-                self::Approve($model->CUST_ID,$model->TGL);
+                self::Approve($model->CUST_ID,$model->TGL,$user);
             }
 
             return $this->redirect(['index?tab=1']); 
@@ -746,9 +825,15 @@ class DraftPlanController extends Controller
           return $this->renderAjax('_pilihapprove', [
             'model'=>$model,
             // 'cus'=>self::get_arycusdetail(),
-            'year'=>self::get_aryYearDetail()
+            'year'=>self::get_aryYearDetail(),
         ]);
       }
+    }
+
+    public function getuser($scl_nm)
+    {
+         $user = DraftPlanGroup::find()->where(['SCL_NM'=>$scl_nm])->one();
+         return $user->USER_ID;
     }
 
 
@@ -1050,13 +1135,13 @@ class DraftPlanController extends Controller
      * update STATUS 1
      * @param string $custId
      */
-    protected function Approve($custId,$tgl)
+    protected function Approve($custId,$tgl,$user_id)
     {
        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_detail SET STATUS=1 WHERE LEFT(TGL,4) ="'.$tgl.'" AND CUST_ID="'.$custId.'" AND STATUS = 0')->execute();
 
         $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan SET STATUS=1 WHERE YEAR ="'.$tgl.'" AND CUST_KD="'.$custId.'" AND STATUS = 0')->execute();
 
-        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET STATUS=1 WHERE LEFT(TGL,4) ="'.$tgl.'" AND STATUS = 0')->execute();
+        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET STATUS=1,USER_ID ="'.$user_id.'" WHERE LEFT(TGL,4) ="'.$tgl.'" AND STATUS = 0')->execute();
        
     }
 

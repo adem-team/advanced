@@ -17,7 +17,8 @@ use yii\helpers\Url;
 	]);
 	$groupUser=$this->render('_indexGroupUser',[
 		'searchModelUser'=>$searchModelUser,
-		'dataProviderUser'=>$dataProviderUser
+		'dataProviderUser'=>$dataProviderUser,
+		// 'SCL_NM'=>$SCL_NM
 	]);
 ?>
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">

@@ -27,7 +27,7 @@ class Userlogin extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-      [['id','username','auth_key','password_hash'], 'required','on' => self::SCENARIO_USER],
+      [['username','auth_key','password_hash','POSITION_ACCESS'], 'required','on' => self::SCENARIO_USER],
 			[['new_pass','username','status'], 'required','on' =>'updateuser'],
 			[['username','auth_key','password_hash','password_reset_token','EMP_ID'], 'string'],
       [['email','avatar','avatarImage'], 'string'],
@@ -36,12 +36,12 @@ class Userlogin extends \yii\db\ActiveRecord
 		];
     }
 
-		public function scenarios()
-    {
-        $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_USER] = ['username', 'password_hash'];
-        return $scenarios;
-    }
+		// public function scenarios()
+  //   {
+  //       $scenarios = parent::scenarios();
+  //       $scenarios[self::SCENARIO_USER] = ['username', 'password_hash'];
+  //       return $scenarios;
+  //   }
 
     public function attributeLabels()
     {
@@ -73,6 +73,20 @@ class Userlogin extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(Userprofile::className(), ['ID' => 'id']);
 	}
+
+	/* JOIN Model CrmUserprofile | CRM PROFILE */
+	public function getCrmUserprofileTbl()
+    {
+        return $this->hasOne(CrmUserprofile::className(), ['ID_USER' => 'id']);
+    }
+	public function getSalesNm() 
+    {
+        return $this->crmUserprofileTbl!=''?$this->crmUserprofileTbl->NM_FIRST:'none';
+    }
+    public function getSalesHp() 
+    {
+        return $this->crmUserprofileTbl!=''?$this->crmUserprofileTbl->HP:'none';
+    }
 
 
 

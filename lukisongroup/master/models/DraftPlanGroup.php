@@ -55,7 +55,8 @@ class DraftPlanGroup extends \yii\db\ActiveRecord
     {
         return [
             [['TGL_START', 'CREATED_AT','SUB_GEO', 'UPDATED_AT','SCDL_GROUP','GROUP_PRN','ODD_EVEN','PROSES_ID'], 'safe'],
-            [['GEO_ID'], 'existgeosub_plangroup','on'=>self::SCENARIO_EXIST_GROP],
+             [['GEO_ID','SUB_GEO'], 'required','on'=>self::SCENARIO_EXIST_GROP],
+            [['SUB_GEO'], 'existgeosub_plangroup','on'=>self::SCENARIO_EXIST_GROP],
              [['SCL_NM','USER_ID'], 'exist_plan_user','on'=>self::SCENARIO_EXIST_USER],
             [['GEO_ID', 'DAY_ID', 'DAY_VALUE', 'STATUS'], 'integer'],
             [['SCL_NM', 'USER_ID'], 'string', 'max' => 50],
@@ -126,7 +127,7 @@ class DraftPlanGroup extends \yii\db\ActiveRecord
 
     public function getCountgeosub()
     {
-        $count = DraftPlanGroup::find()->where(['GEO_ID'=>$this->GEO_ID,'STATUS'=>1])->count();
+        $count = DraftPlanGroup::find()->where(['GEO_ID'=>$this->GEO_ID,'SUB_GEO'=>$this->SUB_GEO,'STATUS'=>1])->count();
 
         return $count;
     }

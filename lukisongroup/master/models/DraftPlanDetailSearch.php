@@ -86,6 +86,8 @@ class DraftPlanDetailSearch extends DraftPlanDetail
             ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
 
+             $query->orderby(['CUST_ID'=>SORT_ASC]); //SORT PENTING UNTUK RECURSIVE BIAR TREE BISA URUTAN, save => (IF (PATENT =0) {SORT=ID}, ELSE {SORT=PATENT}, note Parent=ID header
+
         return $dataProvider;
     }
 }
