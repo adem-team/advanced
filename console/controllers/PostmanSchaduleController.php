@@ -15,16 +15,18 @@ use yii\console\Controller;			// Untuk console
 use yii\filters\VerbFilter;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
-use scotthuangzl\export2excel\Export2ExcelBehavior;
+use ptrnov\postman4excel\Postman4ExcelBehavior;
 
 class PostmanSchaduleController extends Controller
 {
     public function behaviors()
     {
         return [
-			'export2excel' => [
-				'class' => Export2ExcelBehavior::className(),
-			],
+			'export4excel' => [
+				'class' => Postman4ExcelBehavior::className(),
+				'downloadPath'=>Yii::getAlias('@lukisongroup').'/cronjob/',
+				'widgetType'=>'CRONJOB',
+			], 
 			'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -53,7 +55,7 @@ class PostmanSchaduleController extends Controller
 	*/
 	public function actionExport(){
 		
-		$tglIn='2016-07-30';
+		$tglIn='2016-08-31';
 		/* HEADER/FIELD MONTHLY SCHADULE*/
 		$tanggalOfMonth= new ArrayDataProvider([
 			//'key' => 'ID',
@@ -71,21 +73,54 @@ class PostmanSchaduleController extends Controller
 			")->queryAll(), */
 			'allModels'=>Yii::$app->db_esm->createCommand("Call ERP_CUSTOMER_VISIT_SchaduleReportHeader('".$tglIn."')")->queryAll(),
 		]);			
-		$attributeField=$tanggalOfMonth->allModels;
-		$attField1=['USER_NM','MONTH '];
-		foreach($attributeField as $key=>$value){
-				$val=explode(".",$value['TGL']);
-			$attField2[]= $val[1]."(".$val[0].")";
-			//$attField2[]= $value['TGL'];
-			//$attDinamik[]= $value[$key];
+		$attributeHeader=$tanggalOfMonth->allModels;
+		$attHeaderName=['Sales','Bulan'];
+		
+		foreach($attributeHeader as $key=>$value){
+			$cntArray[]=$value['Pekan'];
+		}		
+		$counts = array_count_values($cntArray); //get count of value array
+			
+		
+		$headerStyleDinamik1[] =[ 	
+						'Sales'=>[
+							'align'=>'center','color-font'=>'0000FF','color-background'=>'FF0000','merge'=>'0,2'
+						],
+						'Bulan'=>[
+							'align'=>'center','color-font'=>'0000FF','color-background'=>'FF0000','merge'=>'0,2'
+						]];	
+						
+		$checkPekan='';					
+		foreach($attributeHeader as $key=>$value){			
+			if ($checkPekan!=$value['Pekan']){
+				$mergeVal=($counts[$value['Pekan']]-1).',1';
+				$attHeader1Dinamik[]= 'Pekan-'.$value['Pekan'];						
+				$headerStyleDinamik2[] =[
+					'Pekan-'.$value['Pekan']=>[
+						'align'=>'center','color-font'=>'0000FF','color-background'=>'FF0000','merge'=>$mergeVal
+					]];
+				$checkPekan=$value['Pekan'];
+			}else{
+				$attHeader1Dinamik[]= $value['Pekan'].'-'.$key;
+			}
+			$val=explode(".",$value['TGL']);
+			$attHeader2[]= $val[1]." ".$val[0]."";
 		};
-		$title1Field=array_merge($attField1,$attField2);
+		
+		$titleHeader1=array_merge($attHeaderName,$attHeader1Dinamik);
+		$titleHeader2=array_merge($attHeaderName,$attHeader2);
+		//Array column sync position
+		foreach($headerStyleDinamik2 as $key=>$val){
+			$headerStyleDinamik1[0]=array_merge($headerStyleDinamik1[0],$headerStyleDinamik2[$key]);			
+		}
+		
+		
 		//Row data
 		$dataScdlOfMonth= new ArrayDataProvider([
 			'allModels'=>Yii::$app->db_esm->createCommand("Call ERP_CUSTOMER_VISIT_SchaduleReport('".$tglIn."')")->queryAll()
 		]);
 		$schaduleProvider=$dataScdlOfMonth->allModels;
-		$excelScdlData = Export2ExcelBehavior::excelDataFormat($schaduleProvider);
+		$excelScdlData = Postman4ExcelBehavior::excelDataFormat($schaduleProvider);
 		$excel_ceilsScdl = $excelScdlData['excel_ceils'];
 			
 		/* GROUP SCHADULE*/
@@ -105,7 +140,7 @@ class PostmanSchaduleController extends Controller
 			")->queryAll(),
 		]);	
 		$schaduleGrpProvider=$schaduleGrpData->allModels;
-		$excelScdlGrpData = Export2ExcelBehavior::excelDataFormat($schaduleGrpProvider);
+		$excelScdlGrpData = Postman4ExcelBehavior::excelDataFormat($schaduleGrpProvider);
 		$excel_ceilsScdlGrp = $excelScdlGrpData['excel_ceils'];
 				
 		
@@ -115,17 +150,15 @@ class PostmanSchaduleController extends Controller
 			//SELECT b.ID,a.username,b.NM_FIRST, b.NM_MIDDLE, b.KTP,ALAMAT, b.GENDER, b.EMAIL, b.HP, b.TLP_HOME 
 				
 			'allModels'=>Yii::$app->db_esm->createCommand("				
-				SELECT b.ID,a.username,b.NM_FIRST, b.NM_MIDDLE, b.KTP,ALAMAT, b.GENDER, b.EMAIL, b.HP, b.TLP_HOME 
-				FROM dbm001.user a LEFT JOIN dbm_086.user_profile b on b.ID=a.id
+				SELECT b.ID_USER,a.username,b.NM_FIRST, b.NM_MIDDLE, b.KTP,ALAMAT, b.GENDER, b.EMAIL, b.HP, b.TLP_HOME 
+				FROM dbm001.user a LEFT JOIN dbm_086.user_profile b on b.ID_USER=a.id
 				WHERE a.POSITION_SITE='CRM' AND a.POSITION_LOGIN=1 AND a.status=10
 			")->queryAll(),
 		]);	
 		$usrProvider=$userData->allModels;
-		$excelUserData = Export2ExcelBehavior::excelDataFormat($usrProvider);
+		$excelUserData = Postman4ExcelBehavior::excelDataFormat($usrProvider);
 		$excel_ceilsUser = $excelUserData['excel_ceils']; 		
-				
-				
-				
+		
 		$excel_content = [
 			 /* GROUP SCHADULE*/
 			 [
@@ -133,42 +166,47 @@ class PostmanSchaduleController extends Controller
                 'sheet_title' => ['GRP_NM ','GRP_DCRP','CUST_ID','CUST_NM','PROVINSI','KOTA','KODE POS','LAT','LAG'], 
                 'ceils' => $excel_ceilsScdlGrp,
                 //'freezePane' => 'E2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-					 // 'USER_ID' => Export2ExcelBehavior::getCssClass('header'),
-                     //'GRP_ID' => Export2ExcelBehavior::getCssClass('header'),
-                     'GRP_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'GRP_DCRP' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_ID' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'PROVINCE' => Export2ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Export2ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Export2ExcelBehavior::getCssClass('header'),  
-					 'LAT' => Export2ExcelBehavior::getCssClass('header'),              
-                     'LAG' => Export2ExcelBehavior::getCssClass('header')              
+					 // 'USER_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                     //'GRP_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                     'GRP_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'GRP_DCRP' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CUST_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'PROVINCE' => Postman4ExcelBehavior::getCssClass('header'),              
+                     'CITY_NAME' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'POSTAL_CODE' => Postman4ExcelBehavior::getCssClass('header'),  
+					 'LAT' => Postman4ExcelBehavior::getCssClass('header'),              
+                     'LAG' => Postman4ExcelBehavior::getCssClass('header')              
                 ], //define each column's cssClass for header line only.  You can set as blank.
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			/* MONTHLY SCHADULE*/
+			
 			[
 				'sheet_name' => 'WEEK SCHEDULE OF THE MONTH',
-                'sheet_title' => $title1Field,
+                'sheet_title' => [
+							$titleHeader1,
+							$titleHeader2,		
+				],
                // 'sheet_title' => ['USER_ID','GRP_ID','GRP_NM','CUST_ID','CUST_NM','LAT','LAG'], 
 			    'ceils' => $excel_ceilsScdl,
                 //'freezePane' => 'C2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("lightgreen"),
-                'headerColumnCssClass' => [
-					 'USER_NM' => Export2ExcelBehavior::getCssClass('header'),
-					 'MONTH ' => Export2ExcelBehavior::getCssClass('header'),
-                     ///'GRP_NM' => Export2ExcelBehavior::getCssClass('header'),
-                    // 'CUST_ID' => Export2ExcelBehavior::getCssClass('header'),
-                    // 'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                    // 'LAT' => Export2ExcelBehavior::getCssClass('header'),              
-                    // 'LAG' => Export2ExcelBehavior::getCssClass('header')              
-                ], //define each column's cssClass for header line only.  You can set as blank.
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+                'headerColor' => Postman4ExcelBehavior::getCssClass("lightgreen"),
+               /*  // 'headerColumnCssClass' => [
+					 // 'USER_NM' => Postman4ExcelBehavior::getCssClass('header'),
+					 // 'MONTH ' => Postman4ExcelBehavior::getCssClass('header'),
+                     /'GRP_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                    'CUST_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                    'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                    'LAT' => Postman4ExcelBehavior::getCssClass('header'),              
+                    'LAG' => Postman4ExcelBehavior::getCssClass('header')              
+                // ], */
+				'headerStyle'=>$headerStyleDinamik1,
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			
 			/* USER */
@@ -177,21 +215,21 @@ class PostmanSchaduleController extends Controller
 				'sheet_title' => ['ID','USERNAME','NAMA DEPAN','NAMA BELAKANG','KTP','ALAMAT','GENDER','EMAIL','HP','TLP_HOME'], 
 				'ceils' => $excel_ceilsUser,
 				//'freezePane' => 'E2',
-				'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+				'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
 				'headerColumnCssClass' => [
-					'ID' => Export2ExcelBehavior::getCssClass('header'),
-					'username' => Export2ExcelBehavior::getCssClass('header'),
-					'NM_FIRST' => Export2ExcelBehavior::getCssClass('header'),
-					'NM_MIDDLE' => Export2ExcelBehavior::getCssClass('header'),
-					'KTP' => Export2ExcelBehavior::getCssClass('header'),
-					'ALAMAT' => Export2ExcelBehavior::getCssClass('header'),              
-					'GENDER' => Export2ExcelBehavior::getCssClass('header'),              
-					'EMAIL' => Export2ExcelBehavior::getCssClass('header'),              
-					'HP' => Export2ExcelBehavior::getCssClass('header'),              
-					'TLP_HOME' => Export2ExcelBehavior::getCssClass('header')              
+					'ID' => Postman4ExcelBehavior::getCssClass('header'),
+					'username' => Postman4ExcelBehavior::getCssClass('header'),
+					'NM_FIRST' => Postman4ExcelBehavior::getCssClass('header'),
+					'NM_MIDDLE' => Postman4ExcelBehavior::getCssClass('header'),
+					'KTP' => Postman4ExcelBehavior::getCssClass('header'),
+					'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),              
+					'GENDER' => Postman4ExcelBehavior::getCssClass('header'),              
+					'EMAIL' => Postman4ExcelBehavior::getCssClass('header'),              
+					'HP' => Postman4ExcelBehavior::getCssClass('header'),              
+					'TLP_HOME' => Postman4ExcelBehavior::getCssClass('header')              
 				], //define each column's cssClass for header line only.  You can set as blank.
-			   'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-			   'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+			   'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+			   'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			
 			/* DAILY SUMMARY AC|EC */
@@ -201,18 +239,18 @@ class PostmanSchaduleController extends Controller
                 'sheet_title' => [''], 
 			    //'ceils' => $excel_ceilsScdl,
                 //'freezePane' => 'E2',
-               //'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+               //'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 //'headerColumnCssClass' => [
-					// 'USER_ID' => Export2ExcelBehavior::getCssClass('header'),
-                     //'GRP_ID' => Export2ExcelBehavior::getCssClass('header'),
-                     ///'GRP_NM' => Export2ExcelBehavior::getCssClass('header'),
-                    // 'CUST_ID' => Export2ExcelBehavior::getCssClass('header'),
-                    // 'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                    // 'LAT' => Export2ExcelBehavior::getCssClass('header'),              
-                    // 'LAG' => Export2ExcelBehavior::getCssClass('header')              
+					// 'USER_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                     //'GRP_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                     ///'GRP_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                    // 'CUST_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                    // 'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                    // 'LAT' => Postman4ExcelBehavior::getCssClass('header'),              
+                    // 'LAG' => Postman4ExcelBehavior::getCssClass('header')              
                 //], //define each column's cssClass for header line only.  You can set as blank.
-               //'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               //'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+               //'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               //'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			/* DAILY DETAIL AC|EC */
 			[
@@ -221,23 +259,23 @@ class PostmanSchaduleController extends Controller
 				'sheet_title' => [''], 
 			    //'ceils' => $excel_ceilsScdl,
                 //'freezePane' => 'E2',
-               //'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+               //'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 //'headerColumnCssClass' => [
-					// 'USER_ID' => Export2ExcelBehavior::getCssClass('header'),
-                     //'GRP_ID' => Export2ExcelBehavior::getCssClass('header'),
-                     ///'GRP_NM' => Export2ExcelBehavior::getCssClass('header'),
-                    // 'CUST_ID' => Export2ExcelBehavior::getCssClass('header'),
-                    // 'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                    // 'LAT' => Export2ExcelBehavior::getCssClass('header'),              
-                    // 'LAG' => Export2ExcelBehavior::getCssClass('header')              
+					// 'USER_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                     //'GRP_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                     ///'GRP_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                    // 'CUST_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                    // 'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                    // 'LAT' => Postman4ExcelBehavior::getCssClass('header'),              
+                    // 'LAG' => Postman4ExcelBehavior::getCssClass('header')              
                 //], //define each column's cssClass for header line only.  You can set as blank.
-               //'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               //'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+               //'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               //'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			], 
 			
 		];		
 		$excel_file = "PostmanSalesSchadule";
-		$this->export2excel($excel_content, $excel_file,0); 
+		$this->export4excel($excel_content, $excel_file,0); 
 	}
 	
 	/*SEND EMAIL*/
