@@ -27,7 +27,7 @@ vendor.zip
 
 # console
 #/console
-
+/console/config
 #environments
 /environments
 

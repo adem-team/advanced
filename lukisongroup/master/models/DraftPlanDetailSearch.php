@@ -50,13 +50,14 @@ class DraftPlanDetailSearch extends DraftPlanDetail
     public function search($params)
     {
         //$query = DraftPlanDetail::find()->orderBy(['TGL'=>SORT_ASC,'SCDL_GROUP'=>SORT_ASC,]);
-        $query = DraftPlanDetail::find()->where('STATUS<>2')->groupBy(['SCDL_GROUP','TGL','CUST_ID'])->orderBy(['TGL'=>SORT_ASC,'SCDL_GROUP'=>SORT_ASC]);
+        $query = DraftPlanDetail::find()->where('STATUS<>2')->groupBy(['TGL','SCDL_GROUP','CUST_ID'])->orderBy(['TGL'=>SORT_ASC,'SCDL_GROUP'=>SORT_ASC]);
+        //$query = DraftPlanDetail::find()->where('STATUS<>2')->orderBy(['TGL'=>SORT_ASC]);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-              'sort' =>false,
+              //'sort' =>false,
 			'pagination'=>[
 				'pageSize'=>1000,
 			]
@@ -91,7 +92,7 @@ class DraftPlanDetailSearch extends DraftPlanDetail
             ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
 
-             $query->orderby(['CUST_ID'=>SORT_ASC]); //SORT PENTING UNTUK RECURSIVE BIAR TREE BISA URUTAN, save => (IF (PATENT =0) {SORT=ID}, ELSE {SORT=PATENT}, note Parent=ID header
+             //	$query->orderby(['CUST_ID'=>SORT_ASC]); //SORT PENTING UNTUK RECURSIVE BIAR TREE BISA URUTAN, save => (IF (PATENT =0) {SORT=ID}, ELSE {SORT=PATENT}, note Parent=ID header
 
         return $dataProvider;
     }

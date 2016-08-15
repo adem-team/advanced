@@ -285,7 +285,7 @@ class DraftPlanController extends Controller
 				'CUST_KD',
 				'ODD_EVEN',
 				'YEAR',
-        'GEO_SUB',
+				'GEO_SUB',
 
 			],
 		]);
@@ -299,33 +299,38 @@ class DraftPlanController extends Controller
 		/* GET ROW DATE OF WEEK*/
     if($dataField['IdDinamikScdl'] != 'NotSet'){
 
-      $scdl_group_nm = self::code_scdl_group_nm($geo_nm['GEO_NM'],$dataField['GEO_SUB'],$dataField['ODD_EVEN'],$dataField['DAY_VALUE'],1);
+		$scdl_group_nm = self::code_scdl_group_nm($geo_nm['GEO_NM'],$dataField['GEO_SUB'],$dataField['ODD_EVEN'],$dataField['DAY_VALUE'],1);
 
 
-				$aryScdlPlan = Jadwal::getArrayDateCust($dataField['YEAR'],$dataField['LayerNm'],$dataField['ODD_EVEN'],$dataField['DAY_VALUE'],$dataField['IdDinamikScdl'],$dataField['CUST_KD'],$geo_nm->GEO_NM.'.'.$dataField['GEO_SUB']);
+		$aryScdlPlan = Jadwal::getArrayDateCust($dataField['YEAR'],$dataField['LayerNm'],$dataField['ODD_EVEN'],$dataField['DAY_VALUE'],$dataField['IdDinamikScdl'],$dataField['CUST_KD'],$geo_nm->GEO_NM.'.'.$dataField['GEO_SUB']);
 
 		
         $ary_scdlplndetail = self::findCount($dataField['CUST_KD'],$dataField['YEAR']);
 				//INSERT BIT To TABEL c0002scdl_plan_detail |MODEL DraftPlanDetail
-          if($ary_scdlplndetail == 0)
-            {
-      				  foreach ($aryScdlPlan as $val) {
-      					self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_detail', 
-      								['CUST_ID','TGL','SCDL_ID','ODD_EVEN','SCDL_GROUP_NM','GEO_SUB','SCDL_GROUP','CREATE_AT','CREATE_BY'], 
-      								[[$val['custId'],$val['tg'],$val['scdlGrp'],$val['currenWeek'],$scdl_group_nm,$dataField['GEO_SUB'],$geo_Id,date("Y-m-d H:i:s"),Yii::$app->user->identity->username]
-      					])->execute();
-              }
+		if($ary_scdlplndetail == 0)
+		{
+			foreach ($aryScdlPlan as $val) {
+				self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_detail', 
+							['CUST_ID','TGL','SCDL_ID','ODD_EVEN','SCDL_GROUP_NM','GEO_SUB','SCDL_GROUP','CREATE_AT','CREATE_BY'], 
+							[[$val['custId'],$val['tg'],$val['scdlGrp'],$val['currenWeek'],$scdl_group_nm,$dataField['GEO_SUB'],$geo_Id,date("Y-m-d H:i:s"),Yii::$app->user->identity->username]
+				])->execute();
+			}			
+		}
+	}
+	
+	//DELETE TABEL c0002scdl_plan_header
+	self::conn_esm()->CreateCommand("
+					DELETE FROM c0002scdl_plan_header   
+	")->execute();
 
-              //INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader 
-                self::conn_esm()->CreateCommand("
-                                INSERT INTO c0002scdl_plan_header (
-                                    SELECT NULL,TGL,SCDL_ID,SCDL_GROUP,SCDL_GROUP_NM,NULL,0,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail
-                                    GROUP BY SCDL_ID,TGL
-                                )       
-                ")->execute(); 
-				    }
-			
-			}
+	//INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader 
+	self::conn_esm()->CreateCommand("
+					INSERT INTO c0002scdl_plan_header (
+						SELECT NULL,TGL,SCDL_ID,SCDL_GROUP,SCDL_GROUP_NM,NULL,0,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail
+						GROUP BY TGL,SCDL_ID
+					)       
+	")->execute(); 
+	
 		
       //return $this->redirect(['index?tab=0']); 
       return 'index';
@@ -399,7 +404,7 @@ class DraftPlanController extends Controller
                # code...
             foreach ($hari as $key => $val) {
                 # code...
-            $model->SCL_NM = $geo_nm->GEO_NM.'.'.$model->SUB_GEO;
+            $model->SCL_NM = $geo_nm->GEO_NM.'.'.$model->SUB_GEO.'.'.$value.'.'.$val;
 
             $model->SCDL_GROUP  = self::generatecode($model->GEO_ID,$model->SUB_GEO,$value,$val,1);
 

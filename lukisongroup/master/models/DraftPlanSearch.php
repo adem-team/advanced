@@ -46,7 +46,12 @@ class DraftPlanSearch extends DraftPlan
      */
     public function search($params)
     {
-        $query = DraftPlan::find();
+        $query = DraftPlan::find()->orderBy([
+			'GEO_ID' => SORT_DESC,
+			'GEO_SUB' => SORT_DESC,
+			'ODD_EVEN' => SORT_DESC,
+			'DAY_ID' => SORT_DESC,
+        ]);
 
         // add conditions that should always apply here
 
