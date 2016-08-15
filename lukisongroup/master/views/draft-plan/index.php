@@ -21,7 +21,11 @@ $this->params['breadcrumbs'][] = $this->title;
 	$newDraftPlan=$this->render('_indexDraftPlan',[
 		'searchModel' => $searchModel,
 		'dataProvider' => $dataProvider,
-		'valStt'=>$valStt
+		'valStt'=>$valStt,
+		'pekan'=>$pekan,
+		'layer'=>$layer,
+		'drop'=>$drop,
+		'dropcus'=>$dropcus
 	]);
 	$MaintainPlan=$this->render('_indexMaintainPlan',[
 		'searchModelMaintain' =>$searchModelMaintain,

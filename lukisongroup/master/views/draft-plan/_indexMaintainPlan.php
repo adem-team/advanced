@@ -178,7 +178,7 @@ $gvDraftPlan=GridView::widget([
   'panel' => [
        'heading'=>false,
         'type'=>'info',
-       'before'=> Html::a('<i class="fa fa-sign-in"></i> '.Yii::t('app', 'Reschedule Draft',
+       'before'=> Html::a('<i class="fa fa-check-square-o"></i> '.Yii::t('app', 'Reschedule Draft',
                             ['modelClass' => 'DraftPlan',]),'/master/draft-plan/ganti-jadwal',[
                                 'data-toggle'=>"modal",
                                     'data-target'=>"#modal-day",

@@ -23,6 +23,7 @@ use crm\sistem\models\Userprofile;
 
 
 use lukisongroup\master\models\DraftGeoSub;
+use lukisongroup\master\models\DraftLayer;
 use lukisongroup\master\models\DraftPlanProses;
 use lukisongroup\sistem\models\Userlogin;
 use yii\widgets\ActiveForm;
@@ -89,7 +90,9 @@ class DraftPlanController extends Controller
 
      public function get_aryUserCrmSales()
     {
-        return ArrayHelper::map(Userlogin::find()->where('POSITION_SITE="CRM" AND POSITION_ACCESS = 2 AND status <>1')->all(),'id','username');
+      $sql = Userlogin::find()->with('crmUserprofileTbl')->where('POSITION_SITE="CRM" AND POSITION_ACCESS = 2 AND status <>1')->all();
+      return ArrayHelper::map($sql,'id',function ($sql, $defaultValue) {
+        return $sql->username . ' - ' . $sql->crmUserprofileTbl->NM_FIRST; });
     }
 
 
@@ -164,6 +167,11 @@ class DraftPlanController extends Controller
 
        // /*draftplanheader*/
        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET USER_ID="'.$user_id.'" WHERE NOTE ="'.$scl_nm.'"')->execute();
+    }
+
+    public function ary_layer()
+    {
+      return ArrayHelper::map(DraftLayer::find()->all(),'LAYER_ID','LAYER_NM');
     }
 
     // public function ary_detail($scdl_nm)
@@ -393,11 +401,11 @@ class DraftPlanController extends Controller
                 # code...
             $model->SCL_NM = $geo_nm->GEO_NM.'.'.$model->SUB_GEO;
 
-            $model->SCDL_GROUP  = self::generatecode($model->GEO_ID,$model->SUB_GEO,$value,$val,$model->PROSES_ID);
+            $model->SCDL_GROUP  = self::generatecode($model->GEO_ID,$model->SUB_GEO,$value,$val,1);
 
             self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_group', 
                     ['SCDL_GROUP','GROUP_PRN','SCL_NM','GEO_ID','SUB_GEO','DAY_ID','PROSES_ID','DAY_VALUE','ODD_EVEN'], 
-                    [[$model->SCDL_GROUP,$model->GROUP_PRN,$model->SCL_NM,$model->GEO_ID,$model->SUB_GEO,$value,$model->PROSES_ID,$val,$value],
+                    [[$model->SCDL_GROUP,$model->GROUP_PRN,$model->SCL_NM,$model->GEO_ID,$model->SUB_GEO,$value,1,$val,$value],
                     ])->execute();
             
 
@@ -406,7 +414,7 @@ class DraftPlanController extends Controller
             };
 
           
-            return $this->redirect(['index']);
+           return $this->redirect(['index?tab=2']);
         } else {
             return $this->renderAjax('_plangroup', [
                 'model' => $model,
@@ -686,19 +694,21 @@ class DraftPlanController extends Controller
 
        
         return $this->render('index', [
-			'tab'=>$tab,
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'valStt'=>$valStt,
-			'searchModelMaintain'=>$searchModelMaintain,
-			'dataProviderMaintain'=>$dataProviderMaintain,
-			'searchModelGrp'=>$searchModelGrp,
-			'dataProviderGrp'=>$dataProviderGrp,
-     		'searchModelUser'=>$searchModelUser,
-			'dataProviderUser'=>$dataProviderUser,
-            'dropcus'=>self::ary_customers(),
-            'drop'=>self::get_arygeo(),
-            'SCL_NM'=>$SCL_NM
+			    'tab'=>$tab,
+          'searchModel' => $searchModel,
+          'dataProvider' => $dataProvider,
+          'valStt'=>$valStt,
+    			'searchModelMaintain'=>$searchModelMaintain,
+    			'dataProviderMaintain'=>$dataProviderMaintain,
+    			'searchModelGrp'=>$searchModelGrp,
+    			'dataProviderGrp'=>$dataProviderGrp,
+         	'searchModelUser'=>$searchModelUser,
+    			'dataProviderUser'=>$dataProviderUser,
+          'dropcus'=>self::ary_customers(),
+          'drop'=>self::get_arygeo(),
+          'SCL_NM'=>$SCL_NM,
+          'pekan'=>self::getPekan(),
+          'layer'=>self::ary_layer()
         ]);
     }
 

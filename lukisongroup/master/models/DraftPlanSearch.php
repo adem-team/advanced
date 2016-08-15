@@ -15,11 +15,16 @@ class DraftPlanSearch extends DraftPlan
     /**
      * @inheritdoc
      */
+    public $GanjilGenap;
+    public $LayerNm;
+    public $DayNm;
+    public $GeoNm;
+    public $CustNm;
     public function rules()
     {
         return [
-            [['ID', 'GEO_ID', 'LAYER_ID', 'DAY_ID', 'DAY_VALUE', 'STATUS'], 'integer'],
-            [['CUST_KD', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT','ODD_EVEN'], 'safe'],
+            [['ID','GEO_ID', 'LAYER_ID', 'DAY_ID', 'DAY_VALUE', 'STATUS','GanjilGenap'], 'integer'],
+            [['CUST_KD', 'CREATED_BY','DayNm','CREATED_AT', 'UPDATED_BY','GeoNm','UPDATED_AT','ODD_EVEN','YEAR','LayerNm','CustNm'], 'safe'],
         ];
     }
 
@@ -60,16 +65,19 @@ class DraftPlanSearch extends DraftPlan
         // grid filtering conditions
         $query->andFilterWhere([
             'ID' => $this->ID,
-            'GEO_ID' => $this->GEO_ID,
-            'LAYER_ID' => $this->LAYER_ID,
+            'GEO_ID' => $this->GeoNm,
+            'LAYER_ID' => $this->LayerNm,
             'DAY_ID' => $this->DAY_ID,
-            'DAY_VALUE' => $this->DAY_VALUE,
+            'DAY_VALUE' => $this->DayNm,
             'STATUS' => $this->STATUS,
+            'YEAR' => $this->YEAR,
+            'ODD_EVEN'=>$this->GanjilGenap,
             'CREATED_AT' => $this->CREATED_AT,
             'UPDATED_AT' => $this->UPDATED_AT,
+            'CUST_KD' => $this->CUST_KD
         ]);
 
-        $query->andFilterWhere(['like', 'CUST_KD', $this->CUST_KD])
+        $query->andFilterWhere(['like', 'CUST_KD', $this->CustNm])
             ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
             ->andFilterWhere(['like', 'UPDATED_BY', $this->UPDATED_BY]);
 
