@@ -16,11 +16,14 @@ class DraftPlanGroupSearch extends DraftPlanGroup
      * @inheritdoc
      */
     public $geonm;
+    public $ganjilGenap;
+    public $dayNm;
+    public $useridNm;
     public function rules()
     {
         return [
             [['GEO_ID','DAY_ID', 'DAY_VALUE', 'STATUS'], 'integer'],
-            [['TGL_START','SCDL_GROUP', 'SCL_NM', 'USER_ID', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT','geonm','GROUP_PRN'], 'safe'],
+            [['TGL_START','SCDL_GROUP', 'SCL_NM', 'USER_ID', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT','geonm','GROUP_PRN','ganjilGenap','dayNm','useridNm'], 'safe'],
         ];
     }
 
@@ -48,6 +51,7 @@ class DraftPlanGroupSearch extends DraftPlanGroup
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+             'sort' =>false
         ]);
 
         $this->load($params);
@@ -68,7 +72,10 @@ class DraftPlanGroupSearch extends DraftPlanGroup
             'STATUS' => $this->STATUS,
             'CREATED_AT' => $this->CREATED_AT,
             'UPDATED_AT' => $this->UPDATED_AT,
-            'GROUP_PRN' => $this->geonm
+            'GROUP_PRN' => $this->geonm,
+            'DAY_ID'=>$this->ganjilGenap,
+            'DAY_VALUE'=>$this->dayNm,
+            'USER_ID'=>$this->useridNm
         ]);
 
         $query->andFilterWhere(['like', 'SCL_NM', $this->SCL_NM])

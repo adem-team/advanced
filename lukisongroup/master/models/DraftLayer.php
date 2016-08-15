@@ -42,6 +42,15 @@ class DraftLayer extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getCuslayer(){
+      return $this->hasOne(Customers::className(), ['LAYER' => 'LAYER_ID']);
+  }
+
+  public function getCus_kd() 
+  {
+  return $this->cuslayer->CUST_KD;
+  }
+
     /**
      * @inheritdoc
      */

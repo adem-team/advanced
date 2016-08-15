@@ -64,7 +64,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
     'attribute'=>$value[$key]['FIELD'],
     'label'=>$value[$key]['label'],
     'filterType'=>GridView::FILTER_SELECT2,
-    'filter' => true,
+    'filter' => $Stt,
     'filterWidgetOptions'=>[
       'pluginOptions'=>['allowClear'=>true],
     ],
