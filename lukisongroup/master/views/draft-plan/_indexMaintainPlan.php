@@ -106,11 +106,12 @@ foreach($gvHeadColomnBT as $key =>$value[]){
       'filterWidgetOptions'=>[
         'pluginOptions'=>['allowClear'=>true],
       ],
+
       'filterInputOptions'=>['placeholder'=>'Pilih Customers'],
       'hAlign'=>'right',
       'vAlign'=>'middle',
       'noWrap'=>true,
-      'group'=>true,
+      'group'=>false,
       'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
@@ -130,7 +131,105 @@ foreach($gvHeadColomnBT as $key =>$value[]){
       ],
       ];
 
-    }else{
+    }elseif($value[$key]['FIELD'] == 'weekofDate'){
+    $attDinamik[]=[
+    'attribute'=>$value[$key]['FIELD'],
+    'label'=>$value[$key]['label'],
+    'filterType'=>GridView::FILTER_SELECT2,
+    'filter' => $pekan,
+    'filterWidgetOptions'=>[
+      'pluginOptions'=>['allowClear'=>true],
+    ],
+    'filterInputOptions'=>['placeholder'=>'Pilih'],
+    'hAlign'=>'right',
+    'vAlign'=>'middle',
+    'noWrap'=>true,
+    'headerOptions'=>[
+      'style'=>[
+        'text-align'=>'center',
+        'width'=>$value[$key]['SIZE'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+        'background-color'=>'rgba('.$value[$key]['warna'].')',
+      ]
+    ],
+    'contentOptions'=>[
+      'style'=>[
+        'width'=>$value[$key]['SIZE'],
+        'text-align'=>$value[$key]['align'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+      ]
+    ],
+    ];
+  }elseif($value[$key]['FIELD'] == 'custlayernm'){
+    $attDinamik[]=[
+    'attribute'=>$value[$key]['FIELD'],
+    'label'=>$value[$key]['label'],
+    'filterType'=>GridView::FILTER_SELECT2,
+    'filter' => $layer_nm,
+    'filterWidgetOptions'=>[
+      'pluginOptions'=>['allowClear'=>true],
+    ],
+    'filterInputOptions'=>['placeholder'=>'Pilih'],
+    'hAlign'=>'right',
+    'vAlign'=>'middle',
+    'noWrap'=>true,
+    'headerOptions'=>[
+      'style'=>[
+        'text-align'=>'center',
+        'width'=>$value[$key]['SIZE'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+        'background-color'=>'rgba('.$value[$key]['warna'].')',
+      ]
+    ],
+    'contentOptions'=>[
+      'style'=>[
+        'width'=>$value[$key]['SIZE'],
+        'text-align'=>$value[$key]['align'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+      ]
+    ],
+    ];
+  }elseif($value[$key]['FIELD'] == 'TGL'){
+    $attDinamik[]=[
+    'attribute'=>$value[$key]['FIELD'],
+    'label'=>$value[$key]['label'],
+    'filterType' => GridView::FILTER_DATE,
+        'filterWidgetOptions' => [
+            'pluginOptions' => [
+                'format' => 'yyyy-mm-dd',
+                'autoclose' => true,
+                'todayHighlight' => true,
+                     
+                 ]
+             ],
+      'filter'=>true,
+    'hAlign'=>'right',
+    'vAlign'=>'middle',
+    'noWrap'=>true,
+    'headerOptions'=>[
+      'style'=>[
+        'text-align'=>'center',
+        'width'=>$value[$key]['SIZE'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+        'background-color'=>'rgba('.$value[$key]['warna'].')',
+      ]
+    ],
+    'contentOptions'=>[
+      'style'=>[
+        'width'=>$value[$key]['SIZE'],
+        'text-align'=>$value[$key]['align'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+      ]
+    ],
+    'width'=>'20%',
+    ];
+  }else{
        # code...
       $attDinamik[]=[
         'attribute'=>$value[$key]['FIELD'],

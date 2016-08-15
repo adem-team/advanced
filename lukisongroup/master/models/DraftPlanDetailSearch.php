@@ -19,6 +19,8 @@ class DraftPlanDetailSearch extends DraftPlanDetail
     public $custlayernm;
     public $SalesNm;
     public $UseridNm;
+    public $weekofDate;
+    public $dayofDate;
     
     public function rules()
     {
@@ -54,6 +56,7 @@ class DraftPlanDetailSearch extends DraftPlanDetail
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+              'sort' =>false,
 			'pagination'=>[
 				'pageSize'=>1000,
 			]
@@ -73,11 +76,13 @@ class DraftPlanDetailSearch extends DraftPlanDetail
             'TGL' => $this->TGL,
             'SCDL_GROUP' => $this->SCDL_GROUP,
             'LAT' => $this->LAT,
+            'CUST_ID' => $this->custlayernm,
             'LAG' => $this->LAG,
             'RADIUS' => $this->RADIUS,
             'STATUS' => $this->STATUS,
             'CREATE_AT' => $this->CREATE_AT,
             'UPDATE_AT' => $this->UPDATE_AT,
+            'ODD_EVEN' => $this->weekofDate
         ]);
 
         $query->andFilterWhere(['like', 'CUST_ID', $this->custNm])

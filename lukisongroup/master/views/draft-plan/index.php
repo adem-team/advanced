@@ -31,7 +31,9 @@ $this->params['breadcrumbs'][] = $this->title;
 		'searchModelMaintain' =>$searchModelMaintain,
 		'dataProviderMaintain' =>$dataProviderMaintain,
 		'dropcus'=>$dropcus,
-		'valStt'=>$valStt
+		'valStt'=>$valStt,
+		'pekan'=>$pekan,
+		'layer_nm'=>$layer_nm,
 
 	]);
 	$groupIndex=$this->render('_indexGroup',[
@@ -40,7 +42,10 @@ $this->params['breadcrumbs'][] = $this->title;
 		'searchModelUser'=>$searchModelUser,
 		'dataProviderUser'=>$dataProviderUser,
 		'drop'=>$drop,
-		'SCL_NM'=>$SCL_NM
+		'SCL_NM'=>$SCL_NM,
+		'Stt'=>$Stt,
+		'pekan'=>$pekan,
+		'user'=>$user
 	]);
 		
 	if($tab==0){

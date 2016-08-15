@@ -20,6 +20,8 @@ use yii\data\ActiveDataProvider;
 class UserloginSearch extends Userlogin
 {
 	public $emp;
+	public $salesNm;
+	public $salesHp;
 	//public $mdlakses;
 	/*	[1] FILTER */
     public function rules()
@@ -28,7 +30,7 @@ class UserloginSearch extends Userlogin
             [['username','EMP_ID','email'], 'string'],
             [['email','avatar','avatarImage'], 'string'],
 			[['id','status','created_at','updated_at'],'integer'],
-			[['POSITION_SITE','POSITION_LOGIN'], 'safe'],
+			[['POSITION_SITE','POSITION_LOGIN','salesNm','salesHp'], 'safe'],
         ];
     }
 
@@ -67,21 +69,37 @@ class UserloginSearch extends Userlogin
     public function searchgroupplan($params)
     {
 		/*[5.1] JOIN TABLE */
-		$query = Userlogin::find()->where('POSITION_SITE="CRM" AND POSITION_ACCESS = 2 AND status <>1');
+		$query = Userlogin::find()->where('POSITION_SITE="CRM" AND POSITION_ACCESS = 2 AND user.status <>1');
+
+		$query->joinWith(['crmUserprofileTbl']);
+
         $dataProvider_Userlogin = new ActiveDataProvider([
             'query' => $query,
+             'sort' =>false
         ]);
 
 		/*[5.3] LOAD VALIDATION PARAMS */
 			/*LOAD FARM VER 1*/
 			$this->load($params);
 			if (!$this->validate()) {
+				
 				return $dataProvider_Userlogin;
 			}
 
+			 // grid filtering conditions
+        $query->andFilterWhere([
+            'dbm001.user.status' => $this->status,
+            // 'HP' => $this->salesHp,
+            'NM_FIRST' => $this->salesNm,
+        ]);
+
 		/*[5.4] FILTER WHERE LIKE (string/integer)*/
 			/* FILTER COLUMN Author -ptr.nov-*/
-			 $query->andFilterWhere(['like', 'username', $this->username]);
+
+			 $query->andFilterWhere(['like', 'username', $this->username])
+			    ->andFilterWhere(['like', 'dbm001.user.status', $this->status])
+			     ->andFilterWhere(['like', 'user_profile.HP', $this->salesHp])
+			      ->andFilterWhere(['like', 'user_profile.NM_FIRST', $this->salesNm]);
 
         return $dataProvider_Userlogin;
     }
@@ -89,7 +107,7 @@ class UserloginSearch extends Userlogin
 	public function attributes()
 	{
 		/*Author -ptr.nov- add related fields to searchable attributes */
-		return array_merge(parent::attributes(), ['emp.EMP_IMG','emp.EMP_NM','emp.EMP_NM_BLK','Mdlpermission.ID']);
+		return array_merge(parent::attributes(), ['emp.EMP_IMG','emp.EMP_NM','emp.EMP_NM_BLK','Mdlpermission.ID','crmUserprofileTbl.HP']);
 	}
 
 	/**

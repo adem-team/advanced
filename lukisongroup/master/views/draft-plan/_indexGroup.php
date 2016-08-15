@@ -13,11 +13,14 @@ use yii\helpers\Url;
 	$groupSetting=$this->render('_indexGroupSetting',[
 		'searchModelGrp'=>$searchModelGrp,
 		'dataProviderGrp'=>$dataProviderGrp,
-		'drop'=>$drop
+		'drop'=>$drop,
+		'pekan'=>$pekan,
+		'user'=>$user
 	]);
 	$groupUser=$this->render('_indexGroupUser',[
 		'searchModelUser'=>$searchModelUser,
 		'dataProviderUser'=>$dataProviderUser,
+		 'Stt'=>$Stt
 		// 'SCL_NM'=>$SCL_NM
 	]);
 ?>

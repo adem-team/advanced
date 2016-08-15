@@ -17,6 +17,7 @@ $actionClass='btn btn-info btn-xs';
 $actionLabel='Update';
 $attDinamik =[];
 /*GRIDVIEW ARRAY FIELD HEAD*/
+
 $headColomnBT=[
 	['ID' =>0, 'ATTR' =>['FIELD'=>'IdDinamikScdl','SIZE' => '30px','label'=>'AUTO GROUP','center'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
 	['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '30px','label'=>'CUST.ID','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
