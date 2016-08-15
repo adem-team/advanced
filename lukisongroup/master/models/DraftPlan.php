@@ -164,7 +164,20 @@ class DraftPlan extends \yii\db\ActiveRecord
         $yearFrom = 2016;
         $yearsRange = range($yearFrom, $currentYear);
         return array_combine($yearsRange, $yearsRange);
-}
+    }
+
+     /*range day */
+    public function getDay() {
+
+        for($i=0;$i<7;$i++){
+            // $weekdays [] = date("l",mktime(0,0,0,3,28,2016)+$i * (3600*24));
+             $weekdays[] = strftime("%a", strtotime("last sunday +$i day"));
+            $days [] = $i;
+        }
+        return array_combine($days, $weekdays);
+    }
+
+
 
 
     /*check exist*/

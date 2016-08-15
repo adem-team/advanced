@@ -192,7 +192,7 @@ $gvGroupSetting=GridView::widget([
   'panel' => [
        'heading'=>false,
         'type'=>'info',
-       'before'=> Html::a('<i class="fa fa-sign-in"></i> '.Yii::t('app', 'Plan Group',
+       'before'=> Html::a('<i class="fa fa-users"></i> '.Yii::t('app', 'Plan Group',
                             ['modelClass' => 'DraftPlanGroup',]),'/master/draft-plan/create-plan-group',[
                                 'data-toggle'=>"modal",
                                     'data-target'=>"#modal-create-group",

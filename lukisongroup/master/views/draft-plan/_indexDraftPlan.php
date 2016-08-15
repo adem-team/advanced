@@ -100,6 +100,192 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 			]
 		],
     ];
+  }elseif($value[$key]['FIELD'] == 'CustNm'){
+    $attDinamik[]=[
+    'attribute'=>$value[$key]['FIELD'],
+    'label'=>$value[$key]['label'],
+    'filterType'=>GridView::FILTER_SELECT2,
+    'filter' =>$dropcus,
+    'filterWidgetOptions'=>[
+      'pluginOptions'=>['allowClear'=>true],
+    ],
+    'filterInputOptions'=>['placeholder'=>'Pilih'],
+    'hAlign'=>'right',
+    'vAlign'=>'middle',
+    'noWrap'=>true,
+    'headerOptions'=>[
+      'style'=>[
+        'text-align'=>'center',
+        'width'=>$value[$key]['SIZE'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+        'background-color'=>'rgba('.$value[$key]['warna'].')',
+      ]
+    ],
+    'contentOptions'=>[
+      'style'=>[
+        'width'=>$value[$key]['SIZE'],
+        'text-align'=>$value[$key]['align'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+      ]
+    ],
+    ];
+  }elseif($value[$key]['FIELD'] == 'YEAR'){
+    $attDinamik[]=[
+    'attribute'=>$value[$key]['FIELD'],
+    'label'=>$value[$key]['label'],
+    'filterType'=>GridView::FILTER_SELECT2,
+    'filter' => DraftPlan::getYearsList(),
+    'filterWidgetOptions'=>[
+      'pluginOptions'=>['allowClear'=>true],
+    ],
+    'filterInputOptions'=>['placeholder'=>'Pilih'],
+    'hAlign'=>'right',
+    'vAlign'=>'middle',
+    'noWrap'=>true,
+    'headerOptions'=>[
+      'style'=>[
+        'text-align'=>'center',
+        'width'=>$value[$key]['SIZE'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+        'background-color'=>'rgba('.$value[$key]['warna'].')',
+      ]
+    ],
+    'contentOptions'=>[
+      'style'=>[
+        'width'=>$value[$key]['SIZE'],
+        'text-align'=>$value[$key]['align'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+      ]
+    ],
+    ];
+  }elseif($value[$key]['FIELD'] == 'GanjilGenap'){
+    $attDinamik[]=[
+    'attribute'=>$value[$key]['FIELD'],
+    'label'=>$value[$key]['label'],
+    'filterType'=>GridView::FILTER_SELECT2,
+    'filter' => $pekan,
+    'filterWidgetOptions'=>[
+      'pluginOptions'=>['allowClear'=>true],
+    ],
+    'filterInputOptions'=>['placeholder'=>'Pilih'],
+    'hAlign'=>'right',
+    'vAlign'=>'middle',
+    'noWrap'=>true,
+    'headerOptions'=>[
+      'style'=>[
+        'text-align'=>'center',
+        'width'=>$value[$key]['SIZE'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+        'background-color'=>'rgba('.$value[$key]['warna'].')',
+      ]
+    ],
+    'contentOptions'=>[
+      'style'=>[
+        'width'=>$value[$key]['SIZE'],
+        'text-align'=>$value[$key]['align'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+      ]
+    ],
+    ];
+  }elseif($value[$key]['FIELD'] == 'LayerNm'){
+    $attDinamik[]=[
+    'attribute'=>$value[$key]['FIELD'],
+    'label'=>$value[$key]['label'],
+    'filterType'=>GridView::FILTER_SELECT2,
+    'filter' => $layer,
+    'filterWidgetOptions'=>[
+      'pluginOptions'=>['allowClear'=>true],
+    ],
+    'filterInputOptions'=>['placeholder'=>'Pilih'],
+    'hAlign'=>'right',
+    'vAlign'=>'middle',
+    'noWrap'=>true,
+    'headerOptions'=>[
+      'style'=>[
+        'text-align'=>'center',
+        'width'=>$value[$key]['SIZE'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+        'background-color'=>'rgba('.$value[$key]['warna'].')',
+      ]
+    ],
+    'contentOptions'=>[
+      'style'=>[
+        'width'=>$value[$key]['SIZE'],
+        'text-align'=>$value[$key]['align'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+      ]
+    ],
+    ];
+  }elseif($value[$key]['FIELD'] == 'GeoNm'){
+    $attDinamik[]=[
+    'attribute'=>$value[$key]['FIELD'],
+    'label'=>$value[$key]['label'],
+    'filterType'=>GridView::FILTER_SELECT2,
+    'filter' => $drop,
+    'filterWidgetOptions'=>[
+      'pluginOptions'=>['allowClear'=>true],
+    ],
+    'filterInputOptions'=>['placeholder'=>'Pilih'],
+    'hAlign'=>'right',
+    'vAlign'=>'middle',
+    'noWrap'=>true,
+    'headerOptions'=>[
+      'style'=>[
+        'text-align'=>'center',
+        'width'=>$value[$key]['SIZE'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+        'background-color'=>'rgba('.$value[$key]['warna'].')',
+      ]
+    ],
+    'contentOptions'=>[
+      'style'=>[
+        'width'=>$value[$key]['SIZE'],
+        'text-align'=>$value[$key]['align'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+      ]
+    ],
+    ];
+  }elseif($value[$key]['FIELD'] == 'DayNm'){
+    $attDinamik[]=[
+    'attribute'=>$value[$key]['FIELD'],
+    'label'=>$value[$key]['label'],
+    'filterType'=>GridView::FILTER_SELECT2,
+    'filter' => DraftPlan::getDay(),
+    'filterWidgetOptions'=>[
+      'pluginOptions'=>['allowClear'=>true],
+    ],
+    'filterInputOptions'=>['placeholder'=>'Pilih'],
+    'hAlign'=>'right',
+    'vAlign'=>'middle',
+    'noWrap'=>true,
+    'headerOptions'=>[
+      'style'=>[
+        'text-align'=>'center',
+        'width'=>$value[$key]['SIZE'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+        'background-color'=>'rgba('.$value[$key]['warna'].')',
+      ]
+    ],
+    'contentOptions'=>[
+      'style'=>[
+        'width'=>$value[$key]['SIZE'],
+        'text-align'=>$value[$key]['align'],
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'8pt',
+      ]
+    ],
+    ];
   }elseif($value[$key]['FIELD'] == 'DAY_ID'){
       # code...
       $attDinamik[]=[
