@@ -6,6 +6,7 @@ use yii\widgets\ActiveForm;
 use kartik\widgets\Select2;
 use kartik\widgets\DepDrop;
 use yii\helpers\Url;
+use kartik\widgets\Alert;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\DraftPlan */
@@ -134,6 +135,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
 			<div class="form-group">
 				<?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+
+			 <?= Html::button(Yii::t('app', 'Delete'),
+						[
+						'id'=>'modalButton',
+						'class'=>"btn btn-danger btn",      
+					  ]); ?>
+
+			
 			</div>
 
 			<?php ActiveForm::end(); ?>
@@ -142,7 +151,50 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
 </div>
+
+
 <?php
+ $this->registerJs("
+$('#modalButton').on('click',function(e){
+e.preventDefault();
+var nilaiaja = localStorage.getItem('nilaix');
+
+var idx = '{$model->CUST_KD}';
+
+var ID = '{$model->ID}';
+localStorage.setItem('nilaix','/master/draft-plan/set-scdl-fday?id='+ID+'');
+
+   $.ajax({   
+        url: '/master/draft-plan/delete-schedule',
+        dataType: 'json',
+        type: 'GET',
+        data:{id:idx},
+        success: function (data, textStatus, jqXHR) {
+        		if(textStatus == 'success')
+        		{
+        			$(document).find('#modal-day-draft').modal('hide');
+        			$.pjax.reload({container:'#gv-maintain-id'});
+        			 setTimeout(function(){
+				      $('#modal-day-draft').modal('toggle')
+				      .find('.modal-body')
+				      .load(nilaiaja);
+				    }, 2000); 
+        		}
+                
+        },
+    });
+
+   
+				
+    
+  
+})
+
+",$this::POS_READY);
+
+ 
+
+
 /** *js getting table values using ajax
     *@author adityia@lukison.com
 

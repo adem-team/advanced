@@ -436,6 +436,17 @@ class DraftPlanController extends Controller
         }
     }
 
+    public function actionDeleteSchedule($id)
+    {
+      
+        $model = self::Schdelete($id);
+        if($model)
+        {
+          echo 1;
+          // echo 'master/draft-plan/set-scdl-fday?id='.$id.'';
+        }
+    }
+
 
     /**
      * Creates a new User Login.
@@ -1235,7 +1246,14 @@ class DraftPlanController extends Controller
         $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET STATUS=2 WHERE LEFT(TGL,4) ="'.$tgl.'" AND STATUS = 1')->execute();
     }
 
+    public function Schdelete($id)
+    {
+        $model = DraftPlanDetail::deleteAll('CUST_ID = :cus_id', [':cus_id' => $id]);
 
+        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan SET STATUS=0 WHERE  CUST_KD="'.$id.'" AND STATUS = 1')->execute();
+
+        return true;
+    }
 
 
     /**
