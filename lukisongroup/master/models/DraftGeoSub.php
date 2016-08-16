@@ -77,4 +77,15 @@ class DraftGeoSub extends \yii\db\ActiveRecord
             'UPDATE_AT' => 'Update  At',
         ];
     }
+
+        public function getGeoTbl()
+    {
+        return $this->hasOne(DraftGeo::className(), ['GEO_ID' => 'GEO_ID']);
+    }
+
+     public function getGeo_nm()
+    {
+        return $this->geoTbl->GEO_NM;
+    }
+
 }

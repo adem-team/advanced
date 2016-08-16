@@ -92,8 +92,8 @@ class DraftPlanDetail extends \yii\db\ActiveRecord
     public function exist($model)
     {
      
-        $cari_user = DraftPlanHeader::find()->where(['NOTE'=>$this->SCDL_GROUP_NM])->one();
-        if(count($cari_user->USER_ID) == 0)
+        $cari_user = DraftPlanGroup::find()->where(['SCL_NM'=>$this->SCDL_GROUP_NM])->one();
+        if($cari_user->USER_ID == '')
         {
             $this->addError($model, 'User Pada Customers ini Belum Di Setting Group');
         }

@@ -28,26 +28,25 @@ use yii\helpers\Url;
 						 ],
 				])->label('YEAR') ?>
 
-
-	 <!-- $form->field($model, 'CUST_ID')->widget(Select2::classname(), [
-					'data' => $cus,
-					'options' => ['placeholder' => 'Pilih ...'],
+	 <!-- $form->field($model, 'GEO_SUB')->widget(Select2::classname(), [
+			'data' => $geo,
+				'options' => ['placeholder' => 'Pilih Tahun ...'],
 					'pluginOptions' => [
 						'allowClear' => true
 						 ],
-				])->label('Pilih Customers'); -->
+				])->label('List Geografis') ? -->
+			
 
-				<?= $form->field($model, 'CUST_ID')->widget(DepDrop::classname(), [
-						'type'=>DepDrop::TYPE_SELECT2,
-						'options'=>['placeholder'=>'Select ...'],
-						'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-						'pluginOptions'=>[
-							'depends'=>['draftplandetail-tgl'],
+	<?= $form->field($model, 'CUST_ID')->widget(DepDrop::classname(), [
+			'type'=>DepDrop::TYPE_SELECT2,
+				'options'=>['placeholder'=>'Select ...'],
+					'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+					'pluginOptions'=>[
+						'depends'=>['draftplandetail-tgl'],
 							 'initialize' => true,
 							  'loadingText' => 'Loading  ...',
-							'url' => Url::to(['/master/draft-plan/lis-cus-plan']),
-						]
-					])->label('Pilih Customers') ?>
+								'url' => Url::to(['/master/draft-plan/lis-cus-plan']),
+						]])->label('Pilih Customers') ?>
 
 					<?= $form->field($model, 'SCDL_GROUP_NM')->hiddenInput()->label(false); ?> 
 	<!-- ?> -->
