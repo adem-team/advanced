@@ -45,8 +45,8 @@ class DraftPlanHeader extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['TGL', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
-            [['SCDL_GROUP', 'STATUS', 'STT_UBAH'], 'integer'],
+            [['TGL', 'CREATE_AT', 'UPDATE_AT','SCDL_GROUP'], 'safe'],
+            [[ 'STATUS', 'STT_UBAH'], 'integer'],
             [['NOTE'], 'string'],
             [['USER_ID'], 'string', 'max' => 50],
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100],
