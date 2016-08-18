@@ -152,6 +152,8 @@ class DraftPlanDetail extends \yii\db\ActiveRecord
 		};
 		
 	}
+
+    
 	
 	public function getWeekofDate(){
 		$a=date('W', strtotime($this->TGL));
