@@ -5,6 +5,7 @@ use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use lukisongroup\master\models\DraftPlan;
+use lukisongroup\master\models\DraftPlanGroup;
 Use ptrnov\salesforce\Jadwal;
 
 
@@ -33,6 +34,41 @@ $attDinamik[] =[
   //'contentOptions'=>['class'=>'kartik-sheet-style'],
   'width'=>'10px',
   'header'=>'No.',
+  'headerOptions'=>[
+    'style'=>[
+      'text-align'=>'center',
+      'width'=>'10px',
+      'font-family'=>'verdana, arial, sans-serif',
+      'font-size'=>'9pt',
+      'background-color'=>'rgba(73, 162, 182, 1)',
+    ]
+  ],
+  'contentOptions'=>[
+    'style'=>[
+      'text-align'=>'center',
+      'width'=>'10px',
+      'font-family'=>'tahoma, arial, sans-serif',
+      'font-size'=>'9pt',
+    ]
+  ],
+];
+
+$attDinamik[] =[
+  'class' => '\kartik\grid\CheckboxColumn',
+  //'contentOptions'=>['class'=>'kartik-sheet-style'],
+  'width'=>'10px',
+  // 'header'=>'No.',
+  'checkboxOptions' => function ($model, $key, $index, $column){
+
+  $check_user = DraftPlanGroup::find()->where(['SCL_NM'=>$model->SCDL_GROUP_NM])->one();
+  
+    if($check_user->USER_ID == "")
+    {
+      return ['checked' =>'', 'hidden'=>true];
+    }elseif($model->STATUS == 1){
+      return ['checked' =>'','hidden'=>true];
+    }
+  },
   'headerOptions'=>[
     'style'=>[
       'text-align'=>'center',
@@ -195,6 +231,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
     ];
   }elseif($value[$key]['FIELD'] == 'TGL'){
     $attDinamik[]=[
+
     'attribute'=>$value[$key]['FIELD'],
     'label'=>$value[$key]['label'],
     'filterType' => GridView::FILTER_DATE,
@@ -238,7 +275,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
         'hAlign'=>'right',
         'vAlign'=>'middle',
         'noWrap'=>true,
-    'group'=>$value[$key]['grp'],
+        'group'=>$value[$key]['grp'],
         'headerOptions'=>[
             'style'=>[
             'text-align'=>'center',
@@ -294,7 +331,16 @@ $gvDraftPlan=GridView::widget([
                                 'data-toggle'=>"modal",
                                   'data-target'=>"#modal-day",
                                   'class' => 'btn btn-danger'
-                                                    ]),
+                                                    ]).' '.  
+                Html::a('<i class="fa fa-check-circle"></i> '.Yii::t('app', 'Approve All'),'/master/draft-plan/approve-all',
+                [
+                    'data-toggle-approve-all'=>"approve-plan-erp",
+                    'id'=>'approvemodal-erp-plan',
+                    // 'data-pjax' => 0,
+                    'class' => 'btn btn-success btn-sm'
+                 
+                ]
+          ),
 
         'showFooter'=>false,
   ],
@@ -316,6 +362,44 @@ $gvDraftPlan=GridView::widget([
 ?>
 <?=$gvDraftPlan?>
 <?php
+
+/** 
+    *js Approve 
+    *if click then approve 
+    *@author adityia@lukison.com
+    *@since 1.1.0  
+
+**/
+$this->registerJs("
+$(document).on('click', '[data-toggle-approve-all]', function(e){
+
+  e.preventDefault();
+
+  var keysSelect = $('#gv-maintain-id').yiiGridView('getSelectedRows');
+
+  if(keysSelect == '')
+  {
+    alert('sorry your not selected item')
+  }else{
+
+  $.ajax({
+           url: '/master/draft-plan/approve-all',
+           //cache: true,
+           type: 'POST',
+           data:{keysSelect:keysSelect},
+           dataType: 'json',
+           success: function(response) {
+             if (response == true ){
+                  $.pjax.reload({container:'#gv-maintain-id'});
+             }
+            }
+          });
+        }
+
+})
+
+
+",$this::POS_READY);
 
 $this->registerJs("
          $.fn.modal.Constructor.prototype.enforceFocus = function(){};

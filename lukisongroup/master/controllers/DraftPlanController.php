@@ -8,11 +8,14 @@ use lukisongroup\master\models\DraftPlanSearch;
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\DraftGeo;
 use lukisongroup\master\models\DayName;
+
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\web\Response;
 Use ptrnov\ salesforce\Jadwal;
+
 use lukisongroup\master\models\DraftPlanGroup;
 use lukisongroup\master\models\DraftPlanHeader;
 use lukisongroup\master\models\DraftPlanDetailSearch;
@@ -264,6 +267,9 @@ class DraftPlanController extends Controller
 		
  //      return $this->redirect(['index?tab=1']); 
  //    }
+
+
+  
 	
 	
 	/**
@@ -271,9 +277,8 @@ class DraftPlanController extends Controller
      * @var $dataField converting obejct to array.
      * save c0002scdl_plan_group via batch insert.
      * if success redirect page index
-     * note = array userid dipakai sementara untuk geosub
      * @return mixed
-	 * @author ptrnov 
+	   * @author ptrnov 
      * @since 1.3.0
      */
 	public static function sendMaintain($id)
@@ -900,7 +905,11 @@ class DraftPlanController extends Controller
             $user = self::getuser($model->SCDL_GROUP_NM);
             if(self::findCountStatus($model->CUST_ID,$model->TGL) == 0)
             {
-                self::Approve($model->CUST_ID,$model->TGL,$user);
+              foreach ($model as $key => $value) {
+                # code...
+                self::Approve($value->CUST_ID,$value->TGL,$user);
+              }
+                
             }else{
                 self::ApproveValidasi($model->CUST_ID,$model->TGL);
                 self::Approve($model->CUST_ID,$model->TGL,$user);
@@ -989,6 +998,42 @@ class DraftPlanController extends Controller
        echo Json::encode(['output'=>'', 'selected'=>'']);
              
    }
+
+   public function actionApproveAll()
+  {
+       if (Yii::$app->request->isAjax) {
+
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                $request= Yii::$app->request;
+                $dataKeySelect=$request->post('keysSelect');
+                foreach ($dataKeySelect as $key => $value) {
+                    $model = DraftPlanDetail::find()->where(['ID'=>$value])->one();
+
+                    $scdl_group_nm = $model->SCDL_GROUP_NM;
+              
+                    $cari_user = DraftPlanGroup::find()->where(['SCL_NM'=>$scdl_group_nm])->one();
+                    
+                      
+                    if($cari_user->USER_ID != ""){
+                        $model->STATUS = 1;
+                        $model->save();
+                          # code...
+                        self::conn_esm()->createCommand()->update('c0002scdl_plan_header',['STATUS'=>1,'USER_ID'=>$cari_user->USER_ID],'NOTE="'.$scdl_group_nm.'"')->execute();
+
+                        self::conn_esm()->createCommand()->update('c0002scdl_plan',['STATUS'=>1],'CUST_KD="'.$model->CUST_ID.'"')->execute();     
+
+                    }   
+                   
+             }
+
+              
+
+      return true;
+  }
+  return $this->redirect(['index?tab=1']);
+}
+
+  
 
    /*AJAX Ganti Jadwal*/
    public function actionLisGanti() {
@@ -1223,7 +1268,17 @@ class DraftPlanController extends Controller
      * update STATUS 1
      * @param string $custId
      */
-    protected function Approve($custId,$tgl,$user_id)
+    // protected function Approve($custId,$tgl,$user_id)
+    // {
+    //    $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_detail SET STATUS=1 WHERE LEFT(TGL,4) ="'.$tgl.'" AND CUST_ID="'.$custId.'" AND STATUS = 0')->execute();
+
+    //     $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan SET STATUS=1 WHERE YEAR ="'.$tgl.'" AND CUST_KD="'.$custId.'" AND STATUS = 0')->execute();
+
+    //     $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET STATUS=1,USER_ID ="'.$user_id.'" WHERE LEFT(TGL,4) ="'.$tgl.'" AND STATUS = 0')->execute();
+       
+    // }
+
+     protected function Approve($custId,$tgl)
     {
        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_detail SET STATUS=1 WHERE LEFT(TGL,4) ="'.$tgl.'" AND CUST_ID="'.$custId.'" AND STATUS = 0')->execute();
 
