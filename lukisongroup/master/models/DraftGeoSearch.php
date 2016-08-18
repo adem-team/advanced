@@ -18,7 +18,7 @@ class DraftGeoSearch extends DraftGeo
     public function rules()
     {
         return [
-            [['GEO_ID','GEO_SUB', 'CUST_MAX_NORMAL', 'CUST_MAX_LAYER', 'STATUS'], 'integer'],
+            [['GEO_ID', 'CUST_MAX_NORMAL', 'CUST_MAX_LAYER', 'STATUS'], 'integer'],
             [['GEO_NM', 'GEO_DCRIP', 'START_LAT', 'START_LONG', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
         ];
     }

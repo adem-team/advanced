@@ -15,16 +15,19 @@ use yii\console\Controller;			// Untuk console
 use yii\filters\VerbFilter;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
-use scotthuangzl\export2excel\Export2ExcelBehavior;
+use ptrnov\postman4excel\Postman4ExcelBehavior;
 
 class PostmanDailySalesmdController extends Controller
 {
     public function behaviors()
     {
         return [
-			'export2excel' => [
-				'class' => Export2ExcelBehavior::className(),
-			],
+			'export4excel' => [
+				'class' => Postman4ExcelBehavior::className(),
+				'downloadPath'=>Yii::getAlias('@lukisongroup').'/cronjob/',
+				'widgetType'=>'CRONJOB',
+				'columnAutoSize'=>true,
+			], 
 			'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -59,21 +62,21 @@ class PostmanDailySalesmdController extends Controller
 					LEFT JOIN c0014 x5 on x5.TGL=x1.TGL AND x5.KD_CUSTOMER=x1.CUST_ID AND x5.ID_USER=x1.USER_ID
 					LEFT JOIN c0002 x6 on x6.KD_CUSTOMERS=x1.CUST_ID
 					LEFT JOIN b0002 x7 on x7.KD_BARANG=x2.KD_BARANG
-					LEFT JOIN dbm_086.user_profile x8 on x8.ID=x1.USER_ID
-					WHERE  x1.TGL='2016-07-27'
+					LEFT JOIN dbm_086.user_profile x8 on x8.ID_USER=x1.USER_ID
+					WHERE  x1.TGL='2016-08-18'
 					GROUP BY x1.CUST_ID,x2.KD_BARANG	
 			")->queryAll(),
 		]);	
 		$apDailySalesReport=$dailySalesReport->allModels;
-		$excel_DailySalesReport = Export2ExcelBehavior::excelDataFormat($apDailySalesReport);
+		$excel_DailySalesReport = Postman4ExcelBehavior::excelDataFormat($apDailySalesReport);
 		$excel_ceilsDailySalesReport = $excel_DailySalesReport['excel_ceils'];
 		
 		$dailySalesQt= new ArrayDataProvider([
 			'key' => 'ID',
-			'allModels'=>Yii::$app->db_esm->createCommand("call ERP_CUSTOMER_VISIT_CRONJOB_kwalitas_time('ALL_HEAD2','59','2016-07-27')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->createCommand("call ERP_CUSTOMER_VISIT_CRONJOB_kwalitas_time('ALL_HEAD2','55','2016-08-18')")->queryAll(),
 		]);				
 		$apSalesQT=$dailySalesQt->allModels;
-		$excel_DailySalesQT = Export2ExcelBehavior::excelDataFormat($apSalesQT);
+		$excel_DailySalesQT = Postman4ExcelBehavior::excelDataFormat($apSalesQT);
 		$excel_ceilsSalesQT = $excel_DailySalesQT['excel_ceils'];
 					
 		$excel_content = [
@@ -86,25 +89,25 @@ class PostmanDailySalesmdController extends Controller
 				],
 			    'ceils' => $excel_ceilsDailySalesReport,
                 //'freezePane' => 'E2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-					 'TGL' => Export2ExcelBehavior::getCssClass('header'),
-                     'SALESMD' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_ID_ESM' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_ID_DISTRIBUTOR' => Export2ExcelBehavior::getCssClass('header'),
-					 'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),              
-                     'KD_BARANG_ESM' => Export2ExcelBehavior::getCssClass('header'),  
-                     'ID_BARANG_DIST' => Export2ExcelBehavior::getCssClass('header'),  
-                     'NM_BARANG' => Export2ExcelBehavior::getCssClass('header'),
-                     'STOCK' => Export2ExcelBehavior::getCssClass('header'),              
-                     'SELL_IN' => Export2ExcelBehavior::getCssClass('header'),              
-                     'SELL_OUT' => Export2ExcelBehavior::getCssClass('header'),              
-                     'REQUEST ORDER' => Export2ExcelBehavior::getCssClass('header'),              
-                     'EXPIRED DATE' => Export2ExcelBehavior::getCssClass('header'),              
-                     'NOTE' => Export2ExcelBehavior::getCssClass('header'),              
+					 'TGL' => Postman4ExcelBehavior::getCssClass('header'),
+                     'SALESMD' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CUST_ID_ESM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CUST_ID_DISTRIBUTOR' => Postman4ExcelBehavior::getCssClass('header'),
+					 'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),              
+                     'KD_BARANG_ESM' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'ID_BARANG_DIST' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'NM_BARANG' => Postman4ExcelBehavior::getCssClass('header'),
+                     'STOCK' => Postman4ExcelBehavior::getCssClass('header'),              
+                     'SELL_IN' => Postman4ExcelBehavior::getCssClass('header'),              
+                     'SELL_OUT' => Postman4ExcelBehavior::getCssClass('header'),              
+                     'REQUEST ORDER' => Postman4ExcelBehavior::getCssClass('header'),              
+                     'EXPIRED DATE' => Postman4ExcelBehavior::getCssClass('header'),              
+                     'NOTE' => Postman4ExcelBehavior::getCssClass('header'),              
                 ],
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			[	//QUALITAS SALES TIME
 				'sheet_name' => 'DAILY REPORT QUALITY TIME',
@@ -113,23 +116,23 @@ class PostmanDailySalesmdController extends Controller
 				],
 			    'ceils' => $excel_ceilsSalesQT,
                 //'freezePane' => 'E2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-					 'SALES MD' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUSTOMERS' => Export2ExcelBehavior::getCssClass('header'),
-                     'CHECK IN' => Export2ExcelBehavior::getCssClass('header'),
-                     'CHECK OUT' => Export2ExcelBehavior::getCssClass('header'),
-					 'VISIT TIME' => Export2ExcelBehavior::getCssClass('header'),              
-                     'DISTANCE' => Export2ExcelBehavior::getCssClass('header'),  
-                     'START ABSENSI' => Export2ExcelBehavior::getCssClass('header'),  
-                     'END ABSENSI' => Export2ExcelBehavior::getCssClass('header'),    
+					 'SALES MD' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CUSTOMERS' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CHECK IN' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CHECK OUT' => Postman4ExcelBehavior::getCssClass('header'),
+					 'VISIT TIME' => Postman4ExcelBehavior::getCssClass('header'),              
+                     'DISTANCE' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'START ABSENSI' => Postman4ExcelBehavior::getCssClass('header'),  
+                     'END ABSENSI' => Postman4ExcelBehavior::getCssClass('header'),    
                 ],
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],			
 		];		
 		$excel_file = "PostmanDailySalesMd";
-		$this->export2excel($excel_content, $excel_file,0); 
+		$this->export4excel($excel_content, $excel_file,0); 
 	}
 	
 	/*SEND EMAIL*/

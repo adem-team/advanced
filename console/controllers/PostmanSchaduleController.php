@@ -59,7 +59,7 @@ class PostmanSchaduleController extends Controller
 				WHERE a.Date between DATE_FORMAT((DATE_SUB('".$tglIn."', INTERVAL DAYOFMONTH(CURRENT_DATE)-1 DAY)), '%Y-%m-01') and LAST_DAY(DATE_ADD('".$tglIn."', INTERVAL 0 month))
 				ORDER BY a.Date	
 			")->queryAll(), */
-			'allModels'=>Yii::$app->db_esm->createCommand("Call ERP_CUSTOMER_VISIT_SchaduleReportHeader('".$tglIn."')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->createCommand("Call ERP_CUSTOMER_VISIT_ACTUAL_SchaduleReportHeader('".$tglIn."')")->queryAll(),
 		]);			
 		//FIELD TGL & PEKAN
 		$attributeHeader=$tanggalOfMonth->allModels; 
@@ -147,7 +147,7 @@ class PostmanSchaduleController extends Controller
 		
 		//row Data
 		$dataScdlOfMonth= new ArrayDataProvider([
-			'allModels'=>Yii::$app->db_esm->createCommand("Call ERP_CUSTOMER_VISIT_SchaduleReport('".$tglIn."')")->queryAll()
+			'allModels'=>Yii::$app->db_esm->createCommand("Call ERP_CUSTOMER_VISIT_ACTUAL_SchaduleReport('".$tglIn."')")->queryAll()
 		]);
 		$schaduleProvider=$dataScdlOfMonth->allModels;
 		$excelScdlData = Postman4ExcelBehavior::excelDataFormat($schaduleProvider);
@@ -157,17 +157,7 @@ class PostmanSchaduleController extends Controller
 		$schaduleGrpData= new ArrayDataProvider([
 			//'key' => 'ID',
 			//SELECT a.USER_ID,a.SCDL_GROUP AS GRP_ID, b.SCDL_GROUP_NM as GRP_NM,a.CUST_ID,c.CUST_NM,a.LAT,a.LAG 
-			'allModels'=>Yii::$app->db_esm->createCommand("				
-				SELECT b.SCDL_GROUP_NM as GRP_NM, b.KETERANGAN as GRP_DCRP,a.CUST_ID,c.CUST_NM,d.PROVINCE,e.CITY_NAME,e.POSTAL_CODE, a.LAT,a.LAG 
-				FROM c0002scdl_detail a 
-				LEFT JOIN c0007 b ON a.SCDL_GROUP=b.ID
-				LEFT JOIN c0001 c on c.CUST_KD=a.CUST_ID
-				LEFT JOIN c0001g1 d on d.PROVINCE_ID=c.PROVINCE_ID
-				LEFT JOIN c0001g2 e on e.CITY_ID=c.CITY_ID
-				WHERE a.CUST_ID<>c.CUST_GRP #Exception Customer Parent 
-				GROUP BY a.CUST_ID,a.SCDL_GROUP
-				ORDER BY a.SCDL_GROUP
-			")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->createCommand("call ERP_CUSTOMER_VISIT_ACTUAL_SchaduleReportList('')")->queryAll(),
 		]);	
 		$schaduleGrpProvider=$schaduleGrpData->allModels;
 		$excelScdlGrpData = Postman4ExcelBehavior::excelDataFormat($schaduleGrpProvider);
@@ -182,7 +172,7 @@ class PostmanSchaduleController extends Controller
 			'allModels'=>Yii::$app->db_esm->createCommand("				
 				SELECT b.ID_USER,a.username,b.NM_FIRST, b.NM_MIDDLE, b.KTP,ALAMAT, b.GENDER, b.EMAIL, b.HP, b.TLP_HOME 
 				FROM dbm001.user a LEFT JOIN dbm_086.user_profile b on b.ID_USER=a.id
-				WHERE a.POSITION_SITE='CRM' AND a.POSITION_LOGIN=1 AND a.status=10
+				WHERE a.POSITION_SITE='CRM' AND a.POSITION_LOGIN=1 AND a.POSITION_ACCESS=2 AND a.status=10
 			")->queryAll(),
 		]);	
 		$usrProvider=$userData->allModels;
@@ -257,26 +247,34 @@ class PostmanSchaduleController extends Controller
 			   'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
 			   'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
-			/* GROUP SCHADULE*/
+			/* LIST SCHADULE GROUP*/
 			[
-				'sheet_name' => 'LIST SCHADULE GROUP',
-                'sheet_title' => ['GRP_NM ','GRP_DCRP','CUST_ID','CUST_NM','PROVINSI','KOTA','KODE POS','LAT','LAG'], 
+				'sheet_name' => 'LIST SCHADULE GROUP', 
+                'sheet_title' => [
+					['USER_NM','TGL','HARI','LAYER','PEKAN','GRP_NM ','GRP_DCRP','CUST_ID','CUST_NM','PROVINSI','KOTA','KODE POS','LAT','LAG'],
+					//['USER_NM','TGL','HARI','LAYER','PEKAN','GRP_NM ','GRP_DCRP','CUST_ID','CUST_NM','PROVINSI','KOTA','KODE POS','LAT','LAG']
+				], 
                 'ceils' => $excel_ceilsScdlGrp,
-                //'freezePane' => 'E2',
+                'freezePane' => 'B2',
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
-                'headerColumnCssClass' => [
-					 // 'USER_ID' => Postman4ExcelBehavior::getCssClass('header'),
-                     //'GRP_ID' => Postman4ExcelBehavior::getCssClass('header'),
-                     'GRP_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                     'GRP_DCRP' => Postman4ExcelBehavior::getCssClass('header'),
-                     'CUST_ID' => Postman4ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                     'PROVINCE' => Postman4ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Postman4ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Postman4ExcelBehavior::getCssClass('header'),  
-					 'LAT' => Postman4ExcelBehavior::getCssClass('header'),              
-                     'LAG' => Postman4ExcelBehavior::getCssClass('header')              
-                ], //define each column's cssClass for header line only.  You can set as blank.
+				'headerStyle'=>[					
+					[
+						'USER_NM' =>['align'=>'center'],
+						'TGL' =>['align'=>'center'],
+						'LAYER' =>['align'=>'center'],
+					]
+					
+				],
+				'contentStyle'=>[
+					[						
+						'TGL' =>['align'=>'center'],
+						'LAYER' =>['align'=>'center'],
+						'PEKAN' =>['align'=>'center'],
+						'GRP_DCRP' =>['align'=>'center'],
+						'CUST_ID' =>['align'=>'center'],
+						'KODE POS' =>['align'=>'center'],						
+					]
+				], 
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
                'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
@@ -288,7 +286,7 @@ class PostmanSchaduleController extends Controller
 							$titleHeader2,		
 				],
                 'ceils' => $excel_ceilsScdl,
-               // 'freezePane' => 'A3',
+				'freezePane' => 'C3',
                	'headerStyle'=>$headerStyleMarge,
                	'contentStyle'=>[$contentStyleDinamikA],
                	// 'contentStyle'=>[
