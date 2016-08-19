@@ -338,8 +338,9 @@ class DraftPlanController extends Controller
 	//INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader 
 	self::conn_esm()->CreateCommand("
 					INSERT INTO c0002scdl_plan_header (
-						SELECT NULL,TGL,SCDL_ID,SCDL_GROUP,SCDL_GROUP_NM,NULL,0,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail
-						GROUP BY TGL,SCDL_ID
+						SELECT NULL,a.TGL,a.SCDL_ID,a.SCDL_GROUP,a.SCDL_GROUP_NM,(SELECT USER_ID FROM c0002scdl_plan_group WHERE SCL_NM=a.SCDL_GROUP_NM LIMIT 1),0
+							   ,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail a
+							   GROUP BY a.TGL,a.SCDL_ID
 					)       
 	")->execute(); 
 	
