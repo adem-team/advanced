@@ -451,6 +451,21 @@ $gvNewPlan=GridView::widget([
 ?>
 <?=$gvNewPlan?>
 <?php
+
+/*modal*/
+Modal::begin([
+    'id' => 'modalcus',
+    'header' => '<div style="float:left;margin-right:10px" class="fa fa-user"></div><div><h5 class="modal-title"><b>VIEW CUSTOMERS</b></h5></div>',
+    // 'size' => Modal::SIZE_SMALL,
+    'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+    ],
+  ]);
+  echo "<div id='modalContentcus'></div>";
+  Modal::end();
+
+
+
 $this->registerJs("
          $.fn.modal.Constructor.prototype.enforceFocus = function(){};
          $('#modal-create-draft').on('show.bs.modal', function (event) {

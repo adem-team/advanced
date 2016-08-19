@@ -167,6 +167,41 @@ foreach($gvHeadColomnBT as $key =>$value[]){
       ],
       ];
 
+    }elseif($value[$key]['FIELD'] == 'SCDL_GROUP'){
+
+      $attDinamik[]=[
+      'attribute'=>$value[$key]['FIELD'],
+      'label'=>$value[$key]['label'],
+      'filterType'=>GridView::FILTER_SELECT2,
+      'filter' => $scdl_group,
+      'filterWidgetOptions'=>[
+        'pluginOptions'=>['allowClear'=>true],
+      ],
+
+      'filterInputOptions'=>['placeholder'=>'Pilih '],
+      'hAlign'=>'right',
+      'vAlign'=>'middle',
+      'noWrap'=>true,
+      'group'=>false,
+      'headerOptions'=>[
+        'style'=>[
+          'text-align'=>'center',
+          'width'=>$value[$key]['SIZE'],
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+          'background-color'=>'rgba('.$value[$key]['warna'].')',
+        ]
+      ],
+      'contentOptions'=>[
+        'style'=>[
+          'width'=>$value[$key]['SIZE'],
+          'text-align'=>$value[$key]['align'],
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ],
+      ];
+
     }elseif($value[$key]['FIELD'] == 'weekofDate'){
     $attDinamik[]=[
     'attribute'=>$value[$key]['FIELD'],
@@ -336,7 +371,7 @@ $gvDraftPlan=GridView::widget([
                 [
                     'data-toggle-approve-all'=>"approve-plan-erp",
                     'id'=>'approvemodal-erp-plan',
-                    // 'data-pjax' => 0,
+                    // 'data-pjax' => true,
                     'class' => 'btn btn-success btn-sm'
                  
                 ]

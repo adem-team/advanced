@@ -34,6 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		'valStt'=>$valStt,
 		'pekan'=>$pekan,
 		'layer_nm'=>$layer_nm,
+		'scdl_group'=>$scdl_group
 
 	]);
 	$groupIndex=$this->render('_indexGroup',[
@@ -93,3 +94,5 @@ $this->params['breadcrumbs'][] = $this->title;
 		</div>
 	</div>
 </div>
+
+
