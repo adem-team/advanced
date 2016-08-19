@@ -328,11 +328,26 @@ class DraftPlanController extends Controller
 				])->execute();
 			}			
 		}
+		
+		//DELETE TABEL c0002scdl_plan_header
+		self::conn_esm()->CreateCommand("
+						DELETE FROM c0002scdl_plan_header  where SCDL_ID='".$dataField['IdDinamikScdl']."'
+		")->execute();
+
+		//INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader 
+		self::conn_esm()->CreateCommand("
+						INSERT INTO c0002scdl_plan_header (
+							SELECT NULL,a.TGL,a.SCDL_ID,a.SCDL_GROUP,a.SCDL_GROUP_NM,(SELECT USER_ID FROM c0002scdl_plan_group WHERE SCL_NM=a.SCDL_GROUP_NM LIMIT 1),0
+								   ,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail a
+								    where a.SCDL_ID='".$dataField['IdDinamikScdl']."'
+									GROUP BY a.TGL,a.SCDL_ID
+						)       
+		")->execute(); 		
 	}
 	
-	//DELETE TABEL c0002scdl_plan_header
+	/* //DELETE TABEL c0002scdl_plan_header
 	self::conn_esm()->CreateCommand("
-					DELETE FROM c0002scdl_plan_header   
+					DELETE FROM c0002scdl_plan_header  where STATUS=0
 	")->execute();
 
 	//INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader 
@@ -340,9 +355,9 @@ class DraftPlanController extends Controller
 					INSERT INTO c0002scdl_plan_header (
 						SELECT NULL,a.TGL,a.SCDL_ID,a.SCDL_GROUP,a.SCDL_GROUP_NM,(SELECT USER_ID FROM c0002scdl_plan_group WHERE SCL_NM=a.SCDL_GROUP_NM LIMIT 1),0
 							   ,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail a
-							   GROUP BY a.TGL,a.SCDL_ID
+							   GROUP BY a.TGL,a.SCDL_ID where a.STATUS<>1
 					)       
-	")->execute(); 
+	")->execute();  */
 	
 		
       //return $this->redirect(['index?tab=0']); 
