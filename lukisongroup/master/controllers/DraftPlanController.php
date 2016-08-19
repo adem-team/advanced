@@ -165,6 +165,13 @@ class DraftPlanController extends Controller
         return ArrayHelper::map($rslt,'scl_nm','scl_nm');
     }
 
+    public function get_arygeoplandetail2()
+    {
+        $sql ='SELECT DISTINCT left(SCDL_GROUP_NM,4) as scdl_group_nm,SCDL_GROUP  FROM `c0002scdl_plan_detail` where STATUS <>2';
+        $rslt = self::conn_esm()->CreateCommand($sql)->queryAll();
+        return ArrayHelper::map($rslt,'SCDL_GROUP','scdl_group_nm');
+    }
+
     // public function get_arygeo_sub()
     // {
     //    return ArrayHelper::map(DraftGeoSub::find()->where(['STATUS'=>1])->all(),'GEO_SUB','geo_nm');
@@ -328,6 +335,13 @@ class DraftPlanController extends Controller
 				])->execute();
 			}			
 		}
+
+
+    if(self::findCountStatus($dataField['CUST_KD'],$dataField['YEAR']) != 0)
+    {
+       self::ApproveValidasi($dataField['CUST_KD'],$dataField['YEAR']);
+    }
+   
 		
 		//DELETE TABEL c0002scdl_plan_header
 		self::conn_esm()->CreateCommand("
@@ -805,7 +819,8 @@ class DraftPlanController extends Controller
           'layer'=>self::ary_layer(),
           'layer_nm'=>self::layer_nm(),
           'Stt'=>$Stt,
-          'user'=>self::get_aryUserCrmSales()
+          'user'=>self::get_aryUserCrmSales(),
+          'scdl_group'=>self::get_arygeoplandetail2()
         ]);
     }
 
@@ -1023,25 +1038,25 @@ class DraftPlanController extends Controller
                 $request= Yii::$app->request;
                 $dataKeySelect=$request->post('keysSelect');
                 foreach ($dataKeySelect as $key => $value) {
-                    $model = DraftPlanDetail::find()->where(['ID'=>$value])->one();
+                  
+                    $model = DraftPlanDetail::find()->where(['LIKE', 'ID', $value])->one();
 
                     $scdl_group_nm = $model->SCDL_GROUP_NM;
+
+                    $cus_id = $model->CUST_ID;
               
                     $cari_user = DraftPlanGroup::find()->where(['SCL_NM'=>$scdl_group_nm])->one();
-                    
-                      
-                    if($cari_user->USER_ID != ""){
-                        $model->STATUS = 1;
-                        $model->save();
-                          # code...
-                        self::conn_esm()->createCommand()->update('c0002scdl_plan_header',['STATUS'=>1,'USER_ID'=>$cari_user->USER_ID],'NOTE="'.$scdl_group_nm.'"')->execute();
 
-                        self::conn_esm()->createCommand()->update('c0002scdl_plan',['STATUS'=>1],'CUST_KD="'.$model->CUST_ID.'"')->execute();     
-
-                    }   
                    
-             }
+                    
+                  if($cari_user->USER_ID != ''){
+                      self::conn_esm()->createCommand()->update('c0002scdl_plan_detail',['STATUS'=>1,'CUST_ID'=>$cus_id],'ID LIKE"'.$value.'" AND  STATUS = 0')->execute();
 
+                        self::conn_esm()->createCommand()->update('c0002scdl_plan_header',['STATUS'=>1,'USER_ID'=>$cari_user->USER_ID],'NOTE="'.$scdl_group_nm.'" AND STATUS = 0')->execute();
+
+                          self::conn_esm()->createCommand()->update('c0002scdl_plan',['STATUS'=>1],'CUST_KD="'.$model->CUST_ID.'" AND STATUS = 0')->execute();
+                    }
+                }
               
 
       return true;
@@ -1240,6 +1255,9 @@ class DraftPlanController extends Controller
         DraftPlanDetail::deleteAll('LEFT(TGL,4) ="'.$tgl.'" AND CUST_ID="'.$custId.'" AND STATUS = 0');
 
         DraftPlanHeader::deleteAll('LEFT(TGL,4) ="'.$tgl.'" AND STATUS = 0');
+
+        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan SET STATUS=0 WHERE YEAR ="'.$tgl.'" AND CUST_KD="'.$custId.'" AND STATUS = 1')->execute();
+
     }
 
       /**
@@ -1294,7 +1312,7 @@ class DraftPlanController extends Controller
        
     // }
 
-     protected function Approve($custId,$tgl)
+     protected function Approve($custId,$tgl,$user_id)
     {
        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_detail SET STATUS=1 WHERE LEFT(TGL,4) ="'.$tgl.'" AND CUST_ID="'.$custId.'" AND STATUS = 0')->execute();
 
@@ -1312,9 +1330,11 @@ class DraftPlanController extends Controller
     protected function ApproveValidasi($custId,$tgl)
     {
             # code...
-        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_detail SET STATUS=2 WHERE LEFT(TGL,4) ="'.$tgl.'" AND CUST_ID="'.$custId.'" And STATUS = 1')->execute();
+        self::conn_esm()->CreateCommand('UPDATE c0002scdl_plan_detail SET STATUS=2 WHERE LEFT(TGL,4) ="'.$tgl.'" AND CUST_ID="'.$custId.'" And STATUS = 1')->execute();
        
-        $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET STATUS=2 WHERE LEFT(TGL,4) ="'.$tgl.'" AND STATUS = 1')->execute();
+        self::conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET STATUS=2 WHERE LEFT(TGL,4) ="'.$tgl.'" AND STATUS = 1')->execute();
+
+         $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan SET STATUS=0 WHERE YEAR ="'.$tgl.'" AND CUST_KD="'.$custId.'" AND STATUS = 1')->execute();
     }
 
     public function Schdelete($id)

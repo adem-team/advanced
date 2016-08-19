@@ -14,6 +14,11 @@ use kartik\widgets\Alert;
 $this->title = $model->ID;
 $this->params['breadcrumbs'][] = ['label' => 'Draft Plans', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+if($model->STATUS != 0)
+{
+	$data_confirm ='apakah anda yakin ingin mengubah schedule?';
+}
 ?>
 <div class="draft-plan-view">
 
@@ -134,7 +139,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		
 
 			<div class="form-group">
-				<?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+				<?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'data-confirm'=>$data_confirm]) ?>
 
 			 <?= Html::button(Yii::t('app', 'Delete'),
 						[
@@ -154,6 +159,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 <?php
+
  $this->registerJs("
 $('#modalButton').on('click',function(e){
 e.preventDefault();
@@ -172,13 +178,9 @@ localStorage.setItem('nilaix','/master/draft-plan/set-scdl-fday?id='+ID+'');
         success: function (data, textStatus, jqXHR) {
         		if(textStatus == 'success')
         		{
-        			$(document).find('#modal-day-draft').modal('hide');
+        			alert('succes delete');
         			$.pjax.reload({container:'#gv-maintain-id'});
-        			 setTimeout(function(){
-				      $('#modal-day-draft').modal('toggle')
-				      .find('.modal-body')
-				      .load(nilaiaja);
-				    }, 2000); 
+        			 
         		}
                 
         },
