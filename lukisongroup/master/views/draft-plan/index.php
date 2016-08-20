@@ -48,6 +48,8 @@ $this->params['breadcrumbs'][] = $this->title;
 		'pekan'=>$pekan,
 		'user'=>$user
 	]);
+	$vwSchedulePlan=$this->render('_indexViewPlan');
+	$vwScheduleActual=$this->render('_indexViewActual');
 		
 	if($tab==0){
 		$tab0=true;
@@ -71,11 +73,19 @@ $this->params['breadcrumbs'][] = $this->title;
 		[
 			'label'=>'<i class="fa fa-braille fa-2x"></i> Plan Detail Maintain','content'=>$MaintainPlan,
 			'active'=>$tab1,
+		],		
+		[
+			'label'=>'<i class="fa fa-calendar-minus-o	 fa-2x"></i>  Schedule-Plan','content'=>$vwSchedulePlan,
+			'active'=>$tab2,
+		],
+		[
+			'label'=>'<i class="fa fa-calendar-plus-o	 fa-2x"></i>  Schedule-Actual','content'=>$vwScheduleActual,
+			'active'=>$tab2,
 		],
 		[
 			'label'=>'<i class="fa fa-user-plus	 fa-2x"></i> Group Setting','content'=>$groupIndex,
 			'active'=>$tab2,
-		]
+		],
 	];
 
 	$tabSchedulingSales= TabsX::widget([

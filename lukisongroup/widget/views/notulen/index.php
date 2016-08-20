@@ -86,7 +86,8 @@ EOF;
 				$calenderRt=yii2fullcalendar\yii2fullcalendar::widget([
 					'id'=>'calendar-notulen',
 					'options' => [
-					'lang' => 'id',
+						'lang' => 'id',
+						//'firstDay' => ['default' => '6'],
 					//... more options to be defined here!
 					],
 					// 'events'=> $events,
@@ -96,6 +97,7 @@ EOF;
 						'selectHelper' => true,
 						'droppable' => true,
 						'editable' => true,
+						'firstDay' =>'0',
 						//'drop' => new JsExpression($JSDropEvent),
 						'selectHelper'=>true,
 						'select' => new JsExpression($JSCode),
@@ -272,3 +274,12 @@ EOF;
 		</div>
 	</div>
 </div>
+<?php
+$this->registerJs("
+$('#calendar-notulen').fullCalendar({
+                      
+            firstDay: 6,
+			editable: true,
+ });
+ ",$this::POS_HEAD);
+ ?>

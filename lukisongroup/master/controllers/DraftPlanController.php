@@ -14,6 +14,10 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Response;
+use yii\helpers\Json;
+use yii\web\Request;
+use yii\helpers\Url;
+use yii\data\ArrayDataProvider;
 Use ptrnov\ salesforce\Jadwal;
 
 use lukisongroup\master\models\DraftPlanGroup;
@@ -1346,6 +1350,27 @@ class DraftPlanController extends Controller
         return true;
     }
 
+	
+	/*
+	 * @author piter [ptr.nov@gmail.com]
+	*/
+	public function actionJsoncalendarPlan($start=NULL,$end=NULL,$_=NULL){
+		$calendarPlan= new ArrayDataProvider([
+			'allModels'=>Yii::$app->db_esm->createCommand("
+				SELECT a1.ID as id, a1.TGL as start,a1.TGL as end, concat(a1.NOTE,'-',a2.NM_FIRST) as title  
+FROM c0002scdl_plan_header a1
+LEFT JOIN dbm_086.user_profile a2 on a2.ID_USER=a2.ID_USER GROUP BY NOTE,TGL
+			")->queryAll(),
+		]);
+		//FIELD HARUS [id,start,end,title]        
+		$eventCalendarPlan=$calendarPlan->allModels; 
+		//print_r($eventCalendarPlan);
+		//die();
+		header('Content-type: application/json');		
+        echo Json::encode($eventCalendarPlan);
+        Yii::$app->end();
+    }
+	
 
     /**
      * Finds the DraftPlan model based on its primary key value.
