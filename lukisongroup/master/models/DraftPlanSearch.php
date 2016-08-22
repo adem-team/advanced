@@ -46,7 +46,7 @@ class DraftPlanSearch extends DraftPlan
      */
     public function search($params)
     {
-        $query = DraftPlan::find()->orderBy([
+        $query = DraftPlan::find()->where('STATUS<>3')->orderBy([
 			'GEO_ID' => SORT_DESC,
 			'GEO_SUB' => SORT_DESC,
 			'ODD_EVEN' => SORT_DESC,

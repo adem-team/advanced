@@ -34,8 +34,8 @@ if($model->STATUS != 0)
                 'labelColOptions' => ['style' => 'text-align:right;width: 30%']
             ],
             [
-                'attribute' =>'SCDL_GROUP',
-                'value'=>$view_info->custgrp->SCDL_GROUP_NM, 
+                'attribute' =>'geoNm',
+                // 'value'=>$view_info->custgrp->SCDL_GROUP_NM, 
                 'label'=>'Schedule Group',
                 'labelColOptions' => ['style' => 'text-align:right;width: 30%']
             ],
@@ -52,8 +52,8 @@ if($model->STATUS != 0)
                 'labelColOptions' => ['style' => 'text-align:right;width: 30%']
             ],
             [
-                'attribute' =>'LAYER',
-                'value'=>$view_info->custlayer->LAYER, 
+                'attribute' =>'layerNm',
+                // 'value'=>$view_info->custlayer->LAYER, 
                 'label'=>'Layer',
                 'labelColOptions' => ['style' => 'text-align:right;width: 30%']
             ],

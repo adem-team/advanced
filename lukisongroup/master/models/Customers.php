@@ -169,6 +169,17 @@ public function getParentName() {
 	return $this->layerTbl!=''?$this->layerTbl->LAYER_NM:'none';
   }
 
+  /*JOIN GEO*/
+    public function getGeoTbl()
+    {
+        return $this->hasOne(DraftGeo::className(), ['GEO_ID' => 'GEO']);
+
+    }
+  public function getGeoNm() 
+    {
+        return $this->geoTbl!=''?$this->geoTbl->GEO_NM:'NotSet';
+    }
+
 
 
 
