@@ -101,6 +101,17 @@ EOF;
 		//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
 	]);
 	
+	$btn_export = Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'export plan',		
+                                   ['modelClass' => 'DraftPlan',]),'/master/draft-plan/export-modal?flag=1',[		
+                                       'data-toggle'=>"modal",		
+                                           'data-target'=>"#modal-export-plan",		
+                                               'class' => 'btn btn-default btn-sm'		
+                                                           ]);
+	
+	
+	
+	
+	
 	$vwScdlPlan= Html::panel(
 					['heading' => 'SCHEDULE PLAN ', 'body' =>$calenderPlan],
 					Html::TYPE_DANGER
@@ -112,6 +123,9 @@ EOF;
 ?>
 <div class="row">
 	<div class="col-sm-8 col-md-8 col-lg-8">
+		<div style="margin-bottom: 10px;">
+			<?= $btn_export?>
+		</div>
 		<?=$vwScdlPlan?>
 	</div>
 	<div class="col-sm-4 col-md-4 col-lg-4">
@@ -119,4 +133,28 @@ EOF;
 	</div>
 </div>
 
-
+<?php		
+ $this->registerJs("		
+          $.fn.modal.Constructor.prototype.enforceFocus = function(){};		
+          $('#modal-export-plan').on('show.bs.modal', function (event) {		
+             var button = $(event.relatedTarget)		
+             var modal = $(this)		
+             var title = button.data('title')		
+             var href = button.attr('href')		
+             //modal.find('.modal-title').html(title)		
+             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')		
+             $.post(href)		
+                 .done(function( data ) {		
+                     modal.find('.modal-body').html(data)		
+                 });		
+             })		
+     ",$this::POS_READY);		
+     Modal::begin([		
+         'id' => 'modal-export-plan',		
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title"> SCHEDULE PLAN OF CUSTOMER </h4></div>',		
+         'headerOptions'=>[		
+                 'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',		
+         ],		
+     ]);		
+     Modal::end();
+?>
