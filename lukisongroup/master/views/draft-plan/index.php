@@ -101,7 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'active'=>$tab3,
 		],
 		[
-			'label'=>'<i class="fa fa-user-plus	 fa-2x"></i> Group Setting','content'=>$groupIndex,
+			'label'=>'<i class="fa fa-key	 fa-2x"></i> Group Setting','content'=>$groupIndex,
 			'active'=>$tab4,
 		],
 	];

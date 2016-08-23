@@ -25,10 +25,10 @@ use yii\helpers\Url;
 	]);
 ?>
 <div  class="row" style="margin-top:0px,font-family: verdana, arial, sans-serif ;font-size: 8pt"> 
-	<div  class="col-lg-6">
+	<div  class="col-xs-6 col-sm-6 col-dm-6 col-lg-6">
 		<?=$groupSetting?>
 	</div>
-	<div  class="col-lg-6">
+	<div  class="col-xs-6 col-sm-6 col-dm-6 col-lg-6">
 		<?=$groupUser?>
 	</div>
 </div>

@@ -187,13 +187,13 @@ $gvGroupUser=GridView::widget([
   'panel' => [
        'heading'=>false,
         'type'=>'info',
-       'before'=> Html::a('<i class="fa fa-user"></i> '.Yii::t('app', 'Plan User',
+       'before'=> Html::a('<i class="fa fa-tags"></i> '.Yii::t('app', 'Plan User',
                             ['modelClass' => 'DraftPlan',]),'/master/draft-plan/plan-user',[
                                 'data-toggle'=>"modal",
                                     'data-target'=>"#modal-create-user",
-                                        'class' => 'btn btn-success'
+                                        'class' => 'btn btn-warning'
                                                     ]).' '.
-                  Html::a('<i class="fa fa-user"></i> '.Yii::t('app', 'Add User',
+                  Html::a('<i class="fa fa-user-plus"></i> '.Yii::t('app', 'Add User',
                             ['modelClass' => 'DraftPlan',]),'/master/draft-plan/create-user',[
                                 'data-toggle'=>"modal",
                                     'data-target'=>"#modal-create-user",

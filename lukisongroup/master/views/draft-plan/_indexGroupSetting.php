@@ -7,10 +7,6 @@ use yii\bootstrap\Modal;
 use lukisongroup\master\models\DraftPlan;
 Use ptrnov\salesforce\Jadwal;
 use yii\helpers\Url;
-
-
-?>
-<?php
       
 /*
  * GRID draft_plan
@@ -25,10 +21,10 @@ $attDinamik =[];
 $headColomn=[
 	['ID' =>0, 'ATTR' =>['FIELD'=>'SCDL_GROUP','SIZE' => '10px','label'=>'GROUP CODE','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
 	// ['ID' =>1, 'ATTR' =>['FIELD'=>'geonm','SIZE' => '20px','label'=>'GROUP_PRN','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
-  ['ID' =>1, 'ATTR' =>['FIELD'=>'SUB_GEO','SIZE' => '20px','label'=>'GEO_SUB','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
-   ['ID' =>2, 'ATTR' =>['FIELD'=>'ganjilGenap','SIZE' => '20px','label'=>'Week','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
-   ['ID' =>3, 'ATTR' =>['FIELD'=>'dayNm','SIZE' => '20px','label'=>'Day Name','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
-    ['ID' =>4, 'ATTR' =>['FIELD'=>'geonm','SIZE' => '20px','label'=>'GROUP_PRN','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
+   ['ID' =>1, 'ATTR' =>['FIELD'=>'ganjilGenap','SIZE' => '20px','label'=>'Week','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
+   ['ID' =>2, 'ATTR' =>['FIELD'=>'dayNm','SIZE' => '20px','label'=>'Day Name','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
+    ['ID' =>3, 'ATTR' =>['FIELD'=>'geonm','SIZE' => '20px','label'=>'GROUP_PRN','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
+	['ID' =>4, 'ATTR' =>['FIELD'=>'SUB_GEO','SIZE' => '20px','label'=>'GEO_SUB','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],
    ['ID' =>5, 'ATTR' =>['FIELD'=>'useridNm','SIZE' => '20px','label'=>'UserName','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>true]],     	
 ];
 $gvHeadColomnBT = ArrayHelper::map($headColomn, 'ID', 'ATTR');
@@ -199,7 +195,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
         'hAlign'=>'right',
         'vAlign'=>'middle',
         'noWrap'=>true,
-    'group'=>$value[$key]['grp'],
+		'group'=>$value[$key]['grp'],
         'headerOptions'=>[
             'style'=>[
             'text-align'=>'center',
@@ -285,21 +281,21 @@ $gvGroupSetting=GridView::widget([
   'panel' => [
        'heading'=>false,
         'type'=>'info',
-       'before'=> Html::a('<i class="fa fa-users"></i> '.Yii::t('app', 'Plan Group',
+       'before'=> Html::a('<i class="fa fa-gears"></i> '.Yii::t('app', 'add Group-Kode',
                             ['modelClass' => 'DraftPlanGroup',]),'/master/draft-plan/create-plan-group',[
                                 'data-toggle'=>"modal",
                                     'data-target'=>"#modal-create-group",
-                                        'class' => 'btn btn-success'
+                                        'class' => 'btn btn-danger btn-sm'
                                                     ]),
         'showFooter'=>false,
   ],
-  'export' =>['target' => GridView::TARGET_BLANK],
+  /* 'export' =>['target' => GridView::TARGET_BLANK],
   'exportConfig' => [
     GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
-    GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
-  ],
+    GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ], 
+  ],*/
   'toolbar'=> [
-        '{export}',
+        //'{export}',
     //'{items}',
   ],
   'hover'=>true, //cursor select
@@ -329,8 +325,9 @@ $this->registerJs("
     ",$this::POS_READY);
     Modal::begin([
         'id' => 'modal-create-group',
-        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search-plus"></div><div><h4 class="modal-title">GEOGRAFIS FILTER To PLAN MAINTAIN</h4></div>',
-        'headerOptions'=>[
+        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-gears"></div><div><h4 class="modal-title">SETUP KODE</h4></div>',
+         'size' => Modal::SIZE_SMALL,	
+		'headerOptions'=>[
                 'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
         ],
     ]);

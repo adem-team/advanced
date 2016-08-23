@@ -101,19 +101,21 @@ EOF;
 		//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
 	]);
 	
-	$btn_export = Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'export plan',		
-                                   ['modelClass' => 'DraftPlan',]),'/master/draft-plan/export-modal?flag=1',[		
-                                       'data-toggle'=>"modal",		
-                                           'data-target'=>"#modal-export-plan",		
-                                               'class' => 'btn btn-default btn-sm'		
-                                                           ]);
+	$btn_exportPlan = Html::a('<i class="fa fa-file-excel-o"></i> Export Excel',
+							'/master/draft-plan/export-modal?flag=1',
+							[		
+								'data-toggle'=>"modal",		
+								'data-target'=>"#modal-export-plan",		
+								'class' => 'btn btn-info btn-sm'		
+						   ]
+						);
 	
 	
 	
 	
 	
 	$vwScdlPlan= Html::panel(
-					['heading' => 'SCHEDULE PLAN ', 'body' =>$calenderPlan],
+					['heading' => $btn_exportPlan, 'body' =>$calenderPlan],
 					Html::TYPE_DANGER
 				);
 	$viewDetailPlan= Html::panel(
@@ -123,9 +125,6 @@ EOF;
 ?>
 <div class="row">
 	<div class="col-sm-8 col-md-8 col-lg-8">
-		<div style="margin-bottom: 10px;">
-			<?= $btn_export?>
-		</div>
 		<?=$vwScdlPlan?>
 	</div>
 	<div class="col-sm-4 col-md-4 col-lg-4">
@@ -151,7 +150,8 @@ EOF;
      ",$this::POS_READY);		
      Modal::begin([		
          'id' => 'modal-export-plan',		
-         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title"> SCHEDULE PLAN OF CUSTOMER </h4></div>',		
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title"> SCHEDULE PLAN</h4></div>',	
+		 'size' => Modal::SIZE_SMALL,	
          'headerOptions'=>[		
                  'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',		
          ],		
