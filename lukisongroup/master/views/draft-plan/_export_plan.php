@@ -28,7 +28,7 @@ use kartik\widgets\DatePicker;
 		])->label('Tanggal')  ?>
 		
 		<div style="text-align: right;"">
-			<?php echo Html::submitButton('Export Plan',['class' => 'btn btn-primary']); ?>
+			<?php echo Html::submitButton('Export Excel',['class' => 'btn btn-primary']); ?>
 		</div>
 
     

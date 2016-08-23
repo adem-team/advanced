@@ -370,7 +370,7 @@ $gvDraftPlan=GridView::widget([
                                 'id'=>'delete-erp-plan-all',
                                   'class' => 'btn btn-danger btn-sm'
                                                     ]).' '.
-               Html::a('<i class="fa fa-check-square-o"></i> '.Yii::t('app', 'Reschedule Draft',
+               Html::a('<i class="fa fa-mail-reply-all"></i> '.Yii::t('app', 'Reschedule Draft',
                             ['modelClass' => 'DraftPlan',]),'/master/draft-plan/ganti-jadwal',[
                                 'data-toggle'=>"modal",
                                     'data-target'=>"#modal-day",

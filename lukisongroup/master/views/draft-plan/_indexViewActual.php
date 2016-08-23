@@ -98,22 +98,21 @@ EOF;
 		],
 		//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
 	]);
-	$btn_export = Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'export actual',		
-                                  ['modelClass' => 'DraftPlan',]),'/master/draft-plan/export-modal?flag=0',[		
-                                       'data-toggle'=>"modal",		
-                                          'data-target'=>"#modal-export-actual",		
-                                               'class' => 'btn btn-default btn-sm'		
-                                                           ]);
+	$btn_exportActual = Html::a('<i class="fa fa-file-excel-o"></i> Export Excel',
+									'/master/draft-plan/export-modal?flag=0',
+									[		
+										'data-toggle'=>"modal",		
+										'data-target'=>"#modal-export-actual",		
+										'class' => 'btn btn-info btn-sm'		
+									]
+							);
 	$vwScdlActual= Html::panel(
-					['heading' => 'SCHEDULE PLAN ', 'body' =>$calenderActual],
+					['heading' => $btn_exportActual, 'body' =>$calenderActual],
 					Html::TYPE_SUCCESS
 				);	
 ?>
 <div class="row">
 	<div class="col-sm-8 col-md-8 col-lg-8" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
-		<div style="margin-bottom: 10px;">
-			<?= $btn_export?>
-		</div>
 		<?=$vwScdlActual?>
 	</div>
 	<div class="col-sm-4 col-md-4 col-lg-4">
@@ -138,7 +137,8 @@ $this->registerJs("
      ",$this::POS_READY);		
      Modal::begin([		
          'id' => 'modal-export-actual',		
-         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title"> SCHEDULE ACTUAL OF CUSTOMER </h4></div>',		
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title"> SCHEDULE ACTUAL</h4></div>',
+		 'size' => Modal::SIZE_SMALL,		 
          'headerOptions'=>[		
                  'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',		
          ],		
