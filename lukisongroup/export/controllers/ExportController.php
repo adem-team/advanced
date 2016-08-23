@@ -332,7 +332,14 @@ class ExportController extends Controller
      * export_data
     */
     public function actionSchedulePlan(){
-		$tglIn='2016-08-01';
+		// $tglIn='2016-08-01';
+        $request = Yii::$app->request->post();
+
+        $tgl_post = $request['DraftPlanDetail']['TGL'];
+
+        $tglIn = $tgl_post != ''? $tgl_post: date('Y-m-d');
+
+       
 		/* HEADER/FIELD MONTHLY SCHADULE*/
 		$tanggalOfMonth= new ArrayDataProvider([
 			'allModels'=>Yii::$app->db_esm->createCommand("Call ERP_CUSTOMER_VISIT_PLAN_SchaduleReportHeader('".$tglIn."')")->queryAll(),
@@ -532,7 +539,14 @@ class ExportController extends Controller
      * export_data
     */
     public function actionScheduleActual(){
-		$tglIn='2016-08-01';
+		// $tglIn='2016-08-01';
+
+        $request = Yii::$app->request->post();
+
+        $tgl_post = $request['DraftPlanDetail']['tglactual'];
+
+        $tglIn = $tgl_post != ''? $tgl_post: date('Y-m-d');
+       
 		/* HEADER/FIELD MONTHLY SCHADULE*/
 		$tanggalOfMonth= new ArrayDataProvider([
 			'allModels'=>Yii::$app->db_esm->createCommand("Call ERP_CUSTOMER_VISIT_ACTUAL_SchaduleReportHeader('".$tglIn."')")->queryAll(),

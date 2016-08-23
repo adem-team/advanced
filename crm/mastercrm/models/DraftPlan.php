@@ -1,11 +1,11 @@
 <?php
 
-namespace lukisongroup\master\models;
+namespace crm\mastercrm\models;
 
 use Yii;
-use lukisongroup\master\models\DraftGeo;
-use lukisongroup\master\models\DraftLayer;
-use lukisongroup\master\models\DraftPlanDetail;
+use crm\mastercrm\models\DraftGeo;
+use crm\mastercrm\models\DraftLayer;
+use crm\mastercrm\models\DraftPlanDetail;
 Use ptrnov\salesforce\Jadwal;
 
 /**

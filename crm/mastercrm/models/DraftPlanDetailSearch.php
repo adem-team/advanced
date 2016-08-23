@@ -1,11 +1,11 @@
 <?php
 
-namespace lukisongroup\master\models;
+namespace crm\mastercrm\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use lukisongroup\master\models\DraftPlanDetail;
+use crm\mastercrm\models\DraftPlanDetail;
 
 /**
  * DraftPlanDetailSearch represents the model behind the search form about `lukisongroup\master\models\DraftPlanDetail`.

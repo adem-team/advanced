@@ -1,30 +1,29 @@
 <?php
 
-namespace lukisongroup\master\models;
+namespace crm\mastercrm\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use lukisongroup\master\models\DraftPlan;
+use crm\mastercrm\models\DraftPlanGroup;
 
 /**
- * DraftPlanSearch represents the model behind the search form about `lukisongroup\master\models\DraftPlan`.
+ * DraftPlanGroupSearch represents the model behind the search form about `lukisongroup\master\models\DraftPlanGroup`.
  */
-class DraftPlanSearch extends DraftPlan
+class DraftPlanGroupSearch extends DraftPlanGroup
 {
     /**
      * @inheritdoc
      */
-    public $GanjilGenap;
-    public $LayerNm;
-    public $DayNm;
-    public $GeoNm;
-    public $CustNm;
+    public $geonm;
+    public $ganjilGenap;
+    public $dayNm;
+    public $useridNm;
     public function rules()
     {
         return [
-            [['ID','GEO_ID', 'LAYER_ID', 'DAY_ID', 'DAY_VALUE', 'STATUS','GanjilGenap'], 'integer'],
-            [['CUST_KD', 'CREATED_BY','DayNm','CREATED_AT', 'UPDATED_BY','GeoNm','UPDATED_AT','ODD_EVEN','YEAR','LayerNm','CustNm'], 'safe'],
+            [['GEO_ID','DAY_ID', 'DAY_VALUE', 'STATUS'], 'integer'],
+            [['TGL_START','SCDL_GROUP', 'SCL_NM', 'USER_ID', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT','geonm','GROUP_PRN','ganjilGenap','dayNm','useridNm'], 'safe'],
         ];
     }
 
@@ -46,18 +45,13 @@ class DraftPlanSearch extends DraftPlan
      */
     public function search($params)
     {
-        $query = DraftPlan::find()->where('STATUS<>3')->orderBy([
-			'GEO_ID' => SORT_DESC,
-			'GEO_SUB' => SORT_DESC,
-			'ODD_EVEN' => SORT_DESC,
-			'DAY_ID' => SORT_DESC,
-        ]);
+        $query = DraftPlanGroup::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort' =>false
+             'sort' =>false
         ]);
 
         $this->load($params);
@@ -70,20 +64,22 @@ class DraftPlanSearch extends DraftPlan
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'ID' => $this->ID,
-            'GEO_ID' => $this->GeoNm,
-            'LAYER_ID' => $this->LayerNm,
+            'SCDL_GROUP' => $this->SCDL_GROUP,
+            'TGL_START' => $this->TGL_START,
+            'GEO_ID' => $this->GEO_ID,
             'DAY_ID' => $this->DAY_ID,
-            'DAY_VALUE' => $this->DayNm,
+            'DAY_VALUE' => $this->DAY_VALUE,
             'STATUS' => $this->STATUS,
-            'YEAR' => $this->YEAR,
-            'ODD_EVEN'=>$this->GanjilGenap,
             'CREATED_AT' => $this->CREATED_AT,
             'UPDATED_AT' => $this->UPDATED_AT,
-            'CUST_KD' => $this->CUST_KD
+            'GROUP_PRN' => $this->geonm,
+            'DAY_ID'=>$this->ganjilGenap,
+            'DAY_VALUE'=>$this->dayNm,
+            'USER_ID'=>$this->useridNm
         ]);
 
-        $query->andFilterWhere(['like', 'CUST_KD', $this->CustNm])
+        $query->andFilterWhere(['like', 'SCL_NM', $this->SCL_NM])
+            ->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
             ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
             ->andFilterWhere(['like', 'UPDATED_BY', $this->UPDATED_BY]);
 

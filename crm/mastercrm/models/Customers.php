@@ -139,6 +139,30 @@ public function getNameColumn()
     return $this->hasOne(Distributor::className(), ['KD_DISTRIBUTOR'=>'KD_DISTRIBUTOR']);
   }
 
+  public function getCustlayer(){
+    return $this->hasOne(DraftLayer::className(), ['LAYER'=>'LAYER_ID']);
+  } 
+
+  public function getLayerTbl(){
+    return $this->hasOne(DraftLayer::className(), ['LAYER_ID' => 'LAYER']);
+  }
+
+  public function getLayerNm() //DetailView Value Name
+  {
+  return $this->layerTbl!=''?$this->layerTbl->LAYER_NM:'none';
+  }
+
+  /*JOIN GEO*/
+    public function getGeoTbl()
+    {
+        return $this->hasOne(DraftGeo::className(), ['GEO_ID' => 'GEO']);
+
+    }
+  public function getGeoNm() 
+    {
+        return $this->geoTbl!=''?$this->geoTbl->GEO_NM:'NotSet';
+    }
+
 	// public function getGrp_nm()
   //   {
   //       return $this->custgrp->SCDL_GROUP_NM;

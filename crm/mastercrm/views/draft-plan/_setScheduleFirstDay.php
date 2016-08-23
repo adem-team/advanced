@@ -77,7 +77,7 @@ if($model->STATUS != 0)
 			<?php $form = ActiveForm::begin(['id'=>$model->formName(),
 					'enableClientValidation' => true,
   					'enableAjaxValidation'=>true,
-  					 'validationUrl'=>Url::toRoute('/master/draft-plan/valid')
+  					 'validationUrl'=>Url::toRoute('/mastercrm/draft-plan/valid')
 			]); ?>
 			<?=$form->field($model, 'displyGeoId')->hiddenInput(['value'=>$model->GEO_ID,'id'=>'draftplan-displygeoid'])->label(false); ?>
 			
@@ -97,7 +97,7 @@ if($model->STATUS != 0)
 							'depends'=>['draftplan-displygeoid'],
 							 'initialize' => true,
 							  'loadingText' => 'Loading  ...',
-							'url' => Url::to(['/master/draft-plan/lis-geo-sub']),
+							'url' => Url::to(['/mastercrm/draft-plan/lis-geo-sub']),
 						]
 					])->label('AREA GROUP') 
 					?>
@@ -123,7 +123,7 @@ if($model->STATUS != 0)
 						'depends'=>['dayname-opt'],
 						 'initialize' => true,
 						  'loadingText' => 'Loading  ...',
-						'url' => Url::to(['/master/draft-plan/lisday']),
+						'url' => Url::to(['/mastercrm/draft-plan/lisday']),
 					]
 				])->label('Setel Hari') 
 			?>
@@ -171,7 +171,7 @@ var ID = '{$model->ID}';
 localStorage.setItem('nilaix','/master/draft-plan/set-scdl-fday?id='+ID+'');
 
    $.ajax({   
-        url: '/master/draft-plan/delete-schedule',
+        url: '/mastercrm/draft-plan/delete-schedule',
         dataType: 'json',
         type: 'GET',
         data:{id:idx},

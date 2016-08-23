@@ -73,18 +73,17 @@ EOF;
 
 
 	/*
-	 * MEMO CALENDAR 
-	 * PERIODE 23-22
+	 * VIEW SCHEDULE ACTUAL
 	 * @author ptrnov  [ptr.nov@gmail.com]
 	 * @since 1.2
 	*/
 	$calenderActual=yii2fullcalendar\yii2fullcalendar::widget([
-		'id'=>'calendar-actual',
+		'id'=>'scdl-actual',
 		'options' => [
 			'lang' => 'id',
 		],
 		// 'events'=> $events,
-		'ajaxEvents' => Url::to(['/master/draft-plan/jsoncalendar-plan']),
+		'ajaxEvents' => Url::to(['/master/draft-plan/jsoncalendar-actual']),
 		'clientOptions' => [
 			'selectable' => true,
 			'selectHelper' => true,
@@ -100,10 +99,19 @@ EOF;
 		//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
 	]);
 	
-	$vwScheduleActual= Html::panel(
+	$vwScdlActual= Html::panel(
 					['heading' => 'SCHEDULE PLAN ', 'body' =>$calenderActual],
-					Html::TYPE_DANGER
+					Html::TYPE_SUCCESS
 				);	
 ?>
+<div class="row">
+	<div class="col-sm-8 col-md-8 col-lg-8" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
+		<?=$vwScdlActual?>
+	</div>
+	<div class="col-sm-4 col-md-4 col-lg-4">
+		<?php //=$vwScheduleActual?>
+	</div>
+</div>
 
-<?=$vwScheduleActual?>
+
+

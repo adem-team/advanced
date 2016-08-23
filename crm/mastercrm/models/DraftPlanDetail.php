@@ -1,11 +1,11 @@
 <?php
 
-namespace lukisongroup\master\models;
+namespace crm\mastercrm\models;
 
 
 use Yii;
-use lukisongroup\master\models\DraftPlanGroup;
-use lukisongroup\master\models\DraftPlanHeader;
+use crm\mastercrm\models\DraftPlanGroup;
+use crm\mastercrm\models\DraftPlanHeader;
 /**
  * This is the model class for table "c0002scdl_plan_detail".
  *

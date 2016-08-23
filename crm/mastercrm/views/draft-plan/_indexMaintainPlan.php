@@ -4,8 +4,8 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
-use lukisongroup\master\models\DraftPlan;
-use lukisongroup\master\models\DraftPlanGroup;
+use crm\mastercrm\models\DraftPlan;
+use crm\mastercrm\models\DraftPlanGroup;
 Use ptrnov\salesforce\Jadwal;
 
 
@@ -349,7 +349,7 @@ $gvDraftPlan=GridView::widget([
   'panel' => [
        'heading'=>false,
         'type'=>'info',
-           'before'=>Html::a('<i class="fa fa-check-circle"></i> '.Yii::t('app', 'Approve'),'/master/draft-plan/approve-all',
+           'before'=>Html::a('<i class="fa fa-check-circle"></i> '.Yii::t('app', 'Approve'),'/mastercrm/draft-plan/approve-all',
                     [
                         'data-toggle-approve-all'=>"approve-plan-erp",
                         'id'=>'approvemodal-erp-plan',
@@ -371,7 +371,7 @@ $gvDraftPlan=GridView::widget([
                                   'class' => 'btn btn-danger btn-sm'
                                                     ]).' '.
                Html::a('<i class="fa fa-check-square-o"></i> '.Yii::t('app', 'Reschedule Draft',
-                            ['modelClass' => 'DraftPlan',]),'/master/draft-plan/ganti-jadwal',[
+                            ['modelClass' => 'DraftPlan',]),'/mastercrm/draft-plan/ganti-jadwal',[
                                 'data-toggle'=>"modal",
                                     'data-target'=>"#modal-day",
                                         'class' => 'btn btn-info btn-sm'
@@ -418,7 +418,7 @@ $(document).on('click', '[data-toggle-delete-all]', function(e){
   }else{
 
   $.ajax({
-           url: '/master/draft-plan/pilih-delete',
+           url: '/mastercrm/draft-plan/pilih-delete',
            //cache: true,
            type: 'POST',
            data:{keysSelect:keysSelect},
@@ -456,7 +456,7 @@ $(document).on('click', '[data-toggle-approve-all]', function(e){
   }else{
 
   $.ajax({
-           url: '/master/draft-plan/approve-all',
+           url: '/mastercrm/draft-plan/approve-all',
            //cache: true,
            type: 'POST',
            data:{keysSelect:keysSelect},

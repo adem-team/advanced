@@ -1,13 +1,13 @@
 <?php
 
-namespace lukisongroup\master\controllers;
+namespace crm\mastercrm\controllers;
 
 use Yii;
-use lukisongroup\master\models\DraftPlan;
-use lukisongroup\master\models\DraftPlanSearch;
-use lukisongroup\master\models\Customers;
-use lukisongroup\master\models\DraftGeo;
-use lukisongroup\master\models\DayName;
+use crm\mastercrm\models\DraftPlan;
+use crm\mastercrm\models\DraftPlanSearch;
+use crm\mastercrm\models\Customers;
+use crm\mastercrm\models\DraftGeo;
+use crm\mastercrm\models\DayName;
 
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -20,18 +20,18 @@ use yii\helpers\Url;
 use yii\data\ArrayDataProvider;
 Use ptrnov\ salesforce\Jadwal;
 
-use lukisongroup\master\models\DraftPlanGroup;
-use lukisongroup\master\models\DraftPlanHeader;
-use lukisongroup\master\models\DraftPlanDetailSearch;
-use lukisongroup\master\models\DraftPlanDetail;
-use lukisongroup\master\models\DraftPlanGroupSearch;
+use crm\mastercrm\models\DraftPlanGroup;
+use crm\mastercrm\models\DraftPlanHeader;
+use crm\mastercrm\models\DraftPlanDetailSearch;
+use crm\mastercrm\models\DraftPlanDetail;
+use crm\mastercrm\models\DraftPlanGroupSearch;
 use lukisongroup\sistem\models\UserloginSearch;
 use crm\sistem\models\Userprofile;
 
 
-use lukisongroup\master\models\DraftGeoSub;
-use lukisongroup\master\models\DraftLayer;
-use lukisongroup\master\models\DraftPlanProses;
+use crm\mastercrm\models\DraftGeoSub;
+use crm\mastercrm\models\DraftLayer;
+use crm\mastercrm\models\DraftPlanProses;
 use lukisongroup\sistem\models\Userlogin;
 use yii\widgets\ActiveForm;
 /**
@@ -230,7 +230,7 @@ class DraftPlanController extends Controller
 
  //         /*converting obejct to array*/
  //        $data = ArrayHelper::toArray($data_draft, [
-	// 		'lukisongroup\master\models\DraftPlan' => [
+	// 		'crmmastercrm\models\DraftPlan' => [
 	// 			// 'SCDL_GROUP' => function ($dynamick) {
 	// 					// return $dynamick->IdDinamikScdl;
 	// 				// },
@@ -299,7 +299,7 @@ class DraftPlanController extends Controller
 
          /*converting obejct to array*/
         $dataField = ArrayHelper::toArray($dataDraftMaintain, [
-  			'lukisongroup\master\models\DraftPlan' => [
+  			'crmmastercrm\models\DraftPlan' => [
   				'IdDinamikScdl',//SCDL_GROUP
   				'GEO_ID',
   				'LayerNm',	
@@ -553,7 +553,7 @@ class DraftPlanController extends Controller
         $model = new Userlogin();
         $user_profile = new UserProfile();
         //componen user option
-        $profile=Yii::$app->getUserOpt->Profile_user();
+        $profile=Yii::$app->getUserOptcrm->Profile_user();
         $usercreate = $profile->username;
 
         $model->scenario = Userlogin::SCENARIO_USER;
@@ -728,7 +728,7 @@ class DraftPlanController extends Controller
 
          /*converting obejct to array*/
         $data = ArrayHelper::toArray($data_draft, [
-        'lukisongroup\master\models\DraftPlan' => [
+        'crmmastercrm\models\DraftPlan' => [
             'ID' => function ($dynamick) {
                 return $dynamick->IdDinamikScdl;
             },
@@ -1480,15 +1480,14 @@ class DraftPlanController extends Controller
 
 	
 	/*
-	 * VIEW SCHEDULE PLAN
 	 * @author piter [ptr.nov@gmail.com]
 	*/
 	public function actionJsoncalendarPlan($start=NULL,$end=NULL,$_=NULL){
 		$calendarPlan= new ArrayDataProvider([
 			'allModels'=>Yii::$app->db_esm->createCommand("
 				SELECT a1.ID as id, a1.TGL as start,a1.TGL as end, concat(a1.NOTE,'-',a2.NM_FIRST) as title  
-				FROM c0002scdl_plan_header a1
-				LEFT JOIN dbm_086.user_profile a2 on a2.ID_USER=a1.USER_ID GROUP BY NOTE,TGL
+FROM c0002scdl_plan_header a1
+LEFT JOIN dbm_086.user_profile a2 on a2.ID_USER=a2.ID_USER GROUP BY NOTE,TGL
 			")->queryAll(),
 		]);
 		//FIELD HARUS [id,start,end,title]        
@@ -1497,27 +1496,6 @@ class DraftPlanController extends Controller
 		//die();
 		header('Content-type: application/json');		
         echo Json::encode($eventCalendarPlan);
-        Yii::$app->end();
-    }
-	
-	/*
-	 * VIEW SCHEDULE ACTUAL
-	 * @author piter [ptr.nov@gmail.com]
-	*/
-	public function actionJsoncalendarActual($start=NULL,$end=NULL,$_=NULL){
-		$calendarActual= new ArrayDataProvider([
-			'allModels'=>Yii::$app->db_esm->createCommand("				
-				SELECT a1.ID as id, a1.TGL1 as start,a1.TGL1 as end, concat(a1.NOTE,'-',a2.NM_FIRST) as title  
-				FROM c0002scdl_header a1
-				LEFT JOIN dbm_086.user_profile a2 on a2.ID_USER=a1.USER_ID GROUP BY NOTE,TGL1
-			")->queryAll(),
-		]);
-		//FIELD HARUS [id,start,end,title]        
-		$eventCalendarActual=$calendarActual->allModels; 
-		//print_r($eventCalendarPlan);
-		//die();
-		header('Content-type: application/json');		
-        echo Json::encode($eventCalendarActual);
         Yii::$app->end();
     }
 	

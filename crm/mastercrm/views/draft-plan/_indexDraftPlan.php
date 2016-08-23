@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
-use lukisongroup\master\models\DraftPlan;
+use crm\mastercrm\models\DraftPlan;
 Use ptrnov\salesforce\Jadwal;
   
 /*
@@ -331,7 +331,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 			}else{
 				$label = 'SETUP SCHEDULE';
 				return Html::a(Yii::t('app',$label,['modelClass' => 'DayName',]), 
-								['/master/draft-plan/set-scdl-fday','id'=>$model->ID],
+								['/mastercrm/draft-plan/set-scdl-fday','id'=>$model->ID],
 								['data-toggle'=>"modal",
 								'data-target'=>"#modal-day-draft",
 								'class' => 'btn btn-default btn-xs',
@@ -453,7 +453,7 @@ $gvNewPlan=GridView::widget([
         'heading'=>false,
         'type'=>'info',
       	'before'=> Html::a('<i class="fa fa-sign-in"></i> '.Yii::t('app', 'Start Draft Plan',
-                                  ['modelClass' => 'DraftPlan',]),'/master/draft-plan/create',[
+                                  ['modelClass' => 'DraftPlan',]),'/mastercrm/draft-plan/create',[
                                       'data-toggle'=>"modal",
                                           'data-target'=>"#modal-create-draft",
                                               'class' => 'btn btn-success'
@@ -506,7 +506,7 @@ $(document).on('click', '[data-toggle-delete]', function(e){
   }else{
 
   $.ajax({
-           url: '/master/draft-plan/delete-plan',
+           url: '/mastercrm/draft-plan/delete-plan',
            //cache: true,
            type: 'POST',
            data:{keysSelect:keysSelect},
