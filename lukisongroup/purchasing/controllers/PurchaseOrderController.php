@@ -1242,7 +1242,7 @@ class PurchaseOrderController extends Controller
 		$poDetailQry = "SELECT p.ID,p.KD_PO,p.KD_RO,p.KD_BARANG,p.NM_BARANG,p.UNIT,p.NM_UNIT,p.UNIT_QTY,p.KD_COSTCENTER,p.HARGA,p.STATUS,
 					  p.STATUS_DATE,p.NOTE,p.UNIT_WIGHT,SUM(QTY) AS QTY FROM `p0002` p
 					 LEFT JOIN p0004 a ON p.KD_COSTCENTER = a.KD_COSTCENTER
-					 WHERE p.KD_PO='".$kdpo."' GROUP BY p.KD_BARANG,p.NM_UNIT,p.HARGA";
+					 WHERE p.KD_PO='".$kdpo."' AND p.STATUS<>3 GROUP BY p.KD_BARANG,p.NM_UNIT,p.HARGA";
 
 		$poDetail=Purchasedetail::findBySql($poDetailQry)->all();
 		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
@@ -1314,7 +1314,7 @@ class PurchaseOrderController extends Controller
 		$poDetailQry = "SELECT p.ID,p.KD_PO,p.KD_RO,p.KD_BARANG,p.NM_BARANG,p.UNIT,p.NM_UNIT,p.UNIT_QTY,p.KD_COSTCENTER,p.HARGA,p.STATUS,
 					p.STATUS_DATE,p.NOTE,p.UNIT_WIGHT,SUM(QTY) AS QTY FROM `p0002` p
 					 LEFT JOIN p0004 a ON p.KD_COSTCENTER = a.KD_COSTCENTER
-					 WHERE p.KD_PO='".$kdpo."' GROUP BY p.KD_BARANG,p.NM_UNIT,p.HARGA";
+					 WHERE p.KD_PO='".$kdpo."' AND p.STATUS<>3 GROUP BY p.KD_BARANG,p.NM_UNIT,p.HARGA";
 		$poDetail=Purchasedetail::findBySql($poDetailQry)->all();
 		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
 		$dataProvider = new ArrayDataProvider([
@@ -1383,7 +1383,7 @@ class PurchaseOrderController extends Controller
 		$poDetailQry = "SELECT p.ID,p.KD_PO,p.KD_RO,p.KD_BARANG,p.NM_BARANG,p.UNIT,p.NM_UNIT,p.UNIT_QTY,p.KD_COSTCENTER,p.HARGA,p.STATUS,
 					  p.STATUS_DATE,p.NOTE,p.UNIT_WIGHT,SUM(QTY) AS QTY FROM `p0002` p
 					 LEFT JOIN p0004 a ON p.KD_COSTCENTER = a.KD_COSTCENTER
-					 WHERE p.KD_PO='".$kdpo."' GROUP BY p.KD_BARANG,p.NM_UNIT,p.HARGA";
+					 WHERE p.KD_PO='".$kdpo."' AND p.STATUS<>3 GROUP BY p.KD_BARANG,p.NM_UNIT,p.HARGA";
 
 		$poDetail=Purchasedetail::findBySql($poDetailQry)->all();
 		$poHeader = Purchaseorder::find()->where(['KD_PO' =>$kdpo])->one();
@@ -1688,7 +1688,7 @@ class PurchaseOrderController extends Controller
           $poDetailQry = "SELECT p.ID,p.KD_PO,p.KD_RO,p.KD_BARANG,p.NM_BARANG,p.UNIT,p.NM_UNIT,p.UNIT_QTY,p.KD_COSTCENTER,p.HARGA,p.STATUS,
                           p.STATUS_DATE,p.NOTE,p.UNIT_WIGHT,SUM(QTY) AS QTY FROM `p0002` p
                          LEFT JOIN p0004 a ON p.KD_COSTCENTER = a.KD_COSTCENTER
-                         WHERE p.KD_PO='".$kdpo."' GROUP BY p.KD_BARANG,p.NM_UNIT,p.HARGA";
+                         WHERE p.KD_PO='".$kdpo."' AND p.STATUS<>3 GROUP BY p.KD_BARANG,p.NM_UNIT,p.HARGA";
 
 		    $poDetail=Purchasedetail::findBySql($poDetailQry)->all();
         $dataProvider = new ArrayDataProvider([

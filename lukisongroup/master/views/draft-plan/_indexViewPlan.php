@@ -64,7 +64,7 @@ EOF;
 $JSEventClick = <<<EOF
 	function(calEvent, jsEvent, view) {
 		alert('Event: ' + calEvent.id);
-	   // alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+		//alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
 		//alert('View: ' + view.name);
 		// change the border color just for fun
 		$(this).css('border-color', 'red');
@@ -73,20 +73,19 @@ EOF;
 
 
 	/*
-	 * MEMO CALENDAR 
-	 * PERIODE 23-22
+	 * VIEW SCHEDULE PLAN 
 	 * @author ptrnov  [ptr.nov@gmail.com]
 	 * @since 1.2
 	*/
 	$calenderPlan=yii2fullcalendar\yii2fullcalendar::widget([
-		'id'=>'calendar-plan',
+		'id'=>'scdl-plan',
 		'options' => [
 			'lang' => 'id',
 			//'firstDay' => ['default' => '6'],
 		//... more options to be defined here!
 		],
 		// 'events'=> $events,
-		'ajaxEvents' => Url::to(['/sistem/personalia/jsoncalendar']),
+		'ajaxEvents' => Url::to(['/master/draft-plan/jsoncalendar-plan']),
 		'clientOptions' => [
 			'selectable' => true,
 			'selectHelper' => true,
@@ -95,56 +94,29 @@ EOF;
 			'firstDay' =>'0',
 			//'drop' => new JsExpression($JSDropEvent),
 			'selectHelper'=>true,
-			'select' => new JsExpression($JSCode),
+			//'select' => new JsExpression($JSCode),
 			'eventClick' => new JsExpression($JSEventClick),
 			//'defaultDate' => date('Y-m-d')
 		],
 		//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
 	]);
-
-	$btn_export = Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'export plan',
-                                  ['modelClass' => 'DraftPlan',]),'/master/draft-plan/export-modal?flag=1',[
-                                      'data-toggle'=>"modal",
-                                          'data-target'=>"#modal-export-plan",
-                                              'class' => 'btn btn-default btn-sm'
-                                                          ]);
 	
-	$vwSchedulePlan= Html::panel(
+	$vwScdlPlan= Html::panel(
 					['heading' => 'SCHEDULE PLAN ', 'body' =>$calenderPlan],
+					Html::TYPE_DANGER
+				);
+	$viewDetailPlan= Html::panel(
+					['heading' => 'DETAIl GROUP PLAN', 'body' =>''],
 					Html::TYPE_DANGER
 				);	
 ?>
-
-<div style="margin-bottom: 10px;">
-<?= $btn_export?>
+<div class="row">
+	<div class="col-sm-8 col-md-8 col-lg-8">
+		<?=$vwScdlPlan?>
+	</div>
+	<div class="col-sm-4 col-md-4 col-lg-4">
+		<?=$viewDetailPlan?>
+	</div>
 </div>
 
-<?=$vwSchedulePlan?>
 
-
-<?php
-$this->registerJs("
-         $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-         $('#modal-export-plan').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-            var modal = $(this)
-            var title = button.data('title')
-            var href = button.attr('href')
-            //modal.find('.modal-title').html(title)
-            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-            $.post(href)
-                .done(function( data ) {
-                    modal.find('.modal-body').html(data)
-                });
-            })
-    ",$this::POS_READY);
-    Modal::begin([
-        'id' => 'modal-export-plan',
-        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title"> SCHEDULE PLAN OF CUSTOMER </h4></div>',
-        'headerOptions'=>[
-                'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
-        ],
-    ]);
-    Modal::end();
-
-?>

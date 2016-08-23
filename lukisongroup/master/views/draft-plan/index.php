@@ -55,14 +55,32 @@ $this->params['breadcrumbs'][] = $this->title;
 		$tab0=true;
 		$tab1=false;
 		$tab2=false;
+		$tab3=false;
+		$tab4=false;
 	}elseif($tab==1){
 		$tab0=false;
 		$tab1=true;
 		$tab2=false;
+		$tab3=false;
+		$tab4=false;
 	}elseif($tab==2){
 		$tab0=false;
 		$tab1=false;
 		$tab2=true;
+		$tab3=false;
+		$tab4=false;
+	}elseif($tab==3){
+		$tab0=false;
+		$tab1=false;
+		$tab2=false;
+		$tab3=true;
+		$tab4=false;
+	}elseif($tab==4){
+		$tab0=false;
+		$tab1=false;
+		$tab2=false;
+		$tab3=false;
+		$tab4=true;
 	}
 	
 	$items=[
@@ -75,16 +93,16 @@ $this->params['breadcrumbs'][] = $this->title;
 			'active'=>$tab1,
 		],		
 		[
-			'label'=>'<i class="fa fa-calendar-minus-o	 fa-2x"></i>  Schedule-Plan','content'=>$vwSchedulePlan,
+			'label'=>'<i class="fa fa-calendar-minus-o fa-2x"></i>  Schedule-Plan','content'=>$vwSchedulePlan,
 			'active'=>$tab2,
 		],
 		[
-			'label'=>'<i class="fa fa-calendar-plus-o	 fa-2x"></i>  Schedule-Actual','content'=>$vwScheduleActual,
-			'active'=>$tab2,
+			'label'=>'<i class="fa fa-calendar-plus-o fa-2x"></i>  Schedule-Actual','content'=>$vwScheduleActual,
+			'active'=>$tab3,
 		],
 		[
 			'label'=>'<i class="fa fa-user-plus	 fa-2x"></i> Group Setting','content'=>$groupIndex,
-			'active'=>$tab2,
+			'active'=>$tab4,
 		],
 	];
 
@@ -94,13 +112,51 @@ $this->params['breadcrumbs'][] = $this->title;
 		'position'=>TabsX::POS_ABOVE,
 		'bordered'=>true,
 		'encodeLabels'=>false,
+		'pluginEvents' => [
+				"tabsX.click" => 'function() { 
+							var aryidx = [];
+								
+							setTimeout(function() {								
+								/*
+								* find array by ptrnov
+								* @author ptr.nov [ptr.nov@gmail.com]
+								*/
+								function isInArray(findValue) {
+									//Tab load by js
+									if((window.location.href).indexOf("?") != -1) {
+										var queryString = (window.location.href).substr((window.location.href).indexOf("?") + 1); 
+										aryidx = (queryString.split("="))[1];
+									}
+									//add Tab normal
+									array1=[0,1,4];
+									ary = array1.concat(aryidx);
+									//alert(ary);
+									for(var i=0; i<ary.length; i++) {
+										if (ary[i] == findValue) return true;
+									}
+									
+								};
+								
+								/*
+								* GET Eelemet ul li 
+								* @author ptr.nov [ptr.nov@gmail.com]
+								*/
+								var idx = $("ul li.active").index();
+								if(isInArray(idx) != true){
+									//alert(isInArray(idx));
+									//set URL by ?tab=idx
+									document.location.href = "/master/draft-plan?tab="+idx;
+								};
+							}, 1);							
+				 }'				 
+		]
 	]);	
 		
 ?>
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
-	<div  class="row" style="margin-top:0px"> 
-		<div  class="col-lg-12">
-			<?=$tabSchedulingSales?>
+	<div  class="col-lg-12" >
+		<div class="row">
+		<?=$tabSchedulingSales?>
 		</div>
 	</div>
 </div>

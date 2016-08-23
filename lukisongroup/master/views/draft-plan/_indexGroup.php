@@ -24,13 +24,11 @@ use yii\helpers\Url;
 		// 'SCL_NM'=>$SCL_NM
 	]);
 ?>
-<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
-	<div  class="row" style="margin-top:0px"> 
-		<div  class="col-lg-6">
-			<?=$groupSetting?>
-		</div>
-		<div  class="col-lg-6">
-			<?=$groupUser?>
-		</div>
+<div  class="row" style="margin-top:0px,font-family: verdana, arial, sans-serif ;font-size: 8pt"> 
+	<div  class="col-lg-6">
+		<?=$groupSetting?>
+	</div>
+	<div  class="col-lg-6">
+		<?=$groupUser?>
 	</div>
 </div>

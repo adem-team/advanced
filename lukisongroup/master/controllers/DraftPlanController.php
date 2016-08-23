@@ -1480,14 +1480,15 @@ class DraftPlanController extends Controller
 
 	
 	/*
+	 * VIEW SCHEDULE PLAN
 	 * @author piter [ptr.nov@gmail.com]
 	*/
 	public function actionJsoncalendarPlan($start=NULL,$end=NULL,$_=NULL){
 		$calendarPlan= new ArrayDataProvider([
 			'allModels'=>Yii::$app->db_esm->createCommand("
 				SELECT a1.ID as id, a1.TGL as start,a1.TGL as end, concat(a1.NOTE,'-',a2.NM_FIRST) as title  
-FROM c0002scdl_plan_header a1
-LEFT JOIN dbm_086.user_profile a2 on a2.ID_USER=a2.ID_USER GROUP BY NOTE,TGL
+				FROM c0002scdl_plan_header a1
+				LEFT JOIN dbm_086.user_profile a2 on a2.ID_USER=a1.USER_ID GROUP BY NOTE,TGL
 			")->queryAll(),
 		]);
 		//FIELD HARUS [id,start,end,title]        
@@ -1496,6 +1497,27 @@ LEFT JOIN dbm_086.user_profile a2 on a2.ID_USER=a2.ID_USER GROUP BY NOTE,TGL
 		//die();
 		header('Content-type: application/json');		
         echo Json::encode($eventCalendarPlan);
+        Yii::$app->end();
+    }
+	
+	/*
+	 * VIEW SCHEDULE ACTUAL
+	 * @author piter [ptr.nov@gmail.com]
+	*/
+	public function actionJsoncalendarActual($start=NULL,$end=NULL,$_=NULL){
+		$calendarActual= new ArrayDataProvider([
+			'allModels'=>Yii::$app->db_esm->createCommand("				
+				SELECT a1.ID as id, a1.TGL1 as start,a1.TGL1 as end, concat(a1.NOTE,'-',a2.NM_FIRST) as title  
+				FROM c0002scdl_header a1
+				LEFT JOIN dbm_086.user_profile a2 on a2.ID_USER=a1.USER_ID GROUP BY NOTE,TGL1
+			")->queryAll(),
+		]);
+		//FIELD HARUS [id,start,end,title]        
+		$eventCalendarActual=$calendarActual->allModels; 
+		//print_r($eventCalendarPlan);
+		//die();
+		header('Content-type: application/json');		
+        echo Json::encode($eventCalendarActual);
         Yii::$app->end();
     }
 	
