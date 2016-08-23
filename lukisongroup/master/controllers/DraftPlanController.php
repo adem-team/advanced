@@ -290,7 +290,7 @@ class DraftPlanController extends Controller
      * if success redirect page index
      * @return mixed
 	   * @author ptrnov 
-     * @since 1.3.0
+     * @since 1.4.0
      */
 	public static function sendMaintain($id)
     {   
@@ -299,19 +299,19 @@ class DraftPlanController extends Controller
 
          /*converting obejct to array*/
         $dataField = ArrayHelper::toArray($dataDraftMaintain, [
-			'lukisongroup\master\models\DraftPlan' => [
-				'IdDinamikScdl',//SCDL_GROUP
-				'GEO_ID',
-				'LayerNm',	
-				'DAY_ID',
-				'DAY_VALUE',
-				'CUST_KD',
-				'ODD_EVEN',
-				'YEAR',
-				'GEO_SUB',
+  			'lukisongroup\master\models\DraftPlan' => [
+  				'IdDinamikScdl',//SCDL_GROUP
+  				'GEO_ID',
+  				'LayerNm',	
+  				'DAY_ID',
+  				'DAY_VALUE',
+  				'CUST_KD',
+  				'ODD_EVEN',
+  				'YEAR',
+  				'GEO_SUB',
 
-			],
-		]);
+  			],
+  		]);
 
          $geo_nm = self::ary_subgeo($dataField['GEO_ID']);
 
@@ -319,66 +319,81 @@ class DraftPlanController extends Controller
          $geo_Id = $dataField['GEO_ID'].'.'.$dataField['GEO_SUB'];
         
 		
-		/* GET ROW DATE OF WEEK*/
-    if($dataField['IdDinamikScdl'] != 'NotSet'){
+  		/* GET ROW DATE OF WEEK*/
+      if($dataField['IdDinamikScdl'] != 'NotSet'){
 
-		$scdl_group_nm = self::code_scdl_group_nm($geo_nm['GEO_NM'],$dataField['GEO_SUB'],$dataField['ODD_EVEN'],$dataField['DAY_VALUE'],1);
-
-
-		$aryScdlPlan = Jadwal::getArrayDateCust($dataField['YEAR'],$dataField['LayerNm'],$dataField['ODD_EVEN'],$dataField['DAY_VALUE'],$dataField['IdDinamikScdl'],$dataField['CUST_KD'],$geo_nm->GEO_NM.'.'.$dataField['GEO_SUB']);
-
-		
-        $ary_scdlplndetail = self::findCount($dataField['CUST_KD'],$dataField['YEAR']);
-				//INSERT BIT To TABEL c0002scdl_plan_detail |MODEL DraftPlanDetail
-		if($ary_scdlplndetail == 0)
-		{
-			foreach ($aryScdlPlan as $val) {
-				self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_detail', 
-							['CUST_ID','TGL','SCDL_ID','ODD_EVEN','SCDL_GROUP_NM','GEO_SUB','SCDL_GROUP','CREATE_AT','CREATE_BY'], 
-							[[$val['custId'],$val['tg'],$val['scdlGrp'],$val['currenWeek'],$scdl_group_nm,$dataField['GEO_SUB'],$geo_Id,date("Y-m-d H:i:s"),Yii::$app->user->identity->username]
-				])->execute();
-			}			
-		}
+  		$scdl_group_nm = self::code_scdl_group_nm($geo_nm['GEO_NM'],$dataField['GEO_SUB'],$dataField['ODD_EVEN'],$dataField['DAY_VALUE'],1); //code scdl_group_nm
 
 
-    if(self::findCountStatus($dataField['CUST_KD'],$dataField['YEAR']) != 0)
-    {
-       self::ApproveValidasi($dataField['CUST_KD'],$dataField['YEAR']);
-    }
+  		$aryScdlPlan = Jadwal::getArrayDateCust($dataField['YEAR'],$dataField['LayerNm'],$dataField['ODD_EVEN'],$dataField['DAY_VALUE'],$dataField['IdDinamikScdl'],$dataField['CUST_KD'],$geo_nm->GEO_NM.'.'.$dataField['GEO_SUB']);
+
+  		
+          $ary_scdlplndetail = self::findCount($dataField['CUST_KD'],$dataField['YEAR']);
+  				//INSERT BIT To TABEL c0002scdl_plan_detail |MODEL DraftPlanDetail
+  		if($ary_scdlplndetail == 0)
+  		{
+  			foreach ($aryScdlPlan as $val) {
+  				self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan_detail', 
+  							['CUST_ID','TGL','SCDL_ID','ODD_EVEN','SCDL_GROUP_NM','GEO_SUB','SCDL_GROUP','CREATE_AT','CREATE_BY'], 
+  							[[$val['custId'],$val['tg'],$val['scdlGrp'],$val['currenWeek'],$scdl_group_nm,$dataField['GEO_SUB'],$geo_Id,date("Y-m-d H:i:s"),Yii::$app->user->identity->username]
+  				])->execute();
+  			}			
+  		}
+
+      // approve validasi
+      if(self::findCountStatus($dataField['CUST_KD'],$dataField['YEAR']) != 0)
+      {
+         self::ApproveValidasi($dataField['CUST_KD'],$dataField['YEAR']);
+      }
+
+
+      $transaction = DraftPlan::getDb()->beginTransaction();
+                    try {
+                       //DELETE TABEL c0002scdl_plan_header
+                        self::conn_esm()->CreateCommand("
+                                DELETE FROM c0002scdl_plan_header  where SCDL_ID='".$dataField['IdDinamikScdl']."'
+                        ")->execute();
+
+                          //INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader 
+                          self::conn_esm()->CreateCommand("
+                                  INSERT INTO c0002scdl_plan_header (
+                                    SELECT NULL,a.TGL,a.SCDL_ID,a.SCDL_GROUP,a.SCDL_GROUP_NM,(SELECT USER_ID FROM c0002scdl_plan_group WHERE SCL_NM=a.SCDL_GROUP_NM LIMIT 1),0
+                                         ,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail a
+                                          where a.SCDL_ID='".$dataField['IdDinamikScdl']."'
+                                        GROUP BY a.TGL,a.SCDL_ID
+                                  )       
+                          ")->execute();    
+
+                        
+                        // ...other DB operations...
+                        $transaction->commit();
+                    } catch(\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
+                    }
    
 		
-		//DELETE TABEL c0002scdl_plan_header
-		self::conn_esm()->CreateCommand("
-						DELETE FROM c0002scdl_plan_header  where SCDL_ID='".$dataField['IdDinamikScdl']."'
-		")->execute();
+		
 
-		//INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader 
-		self::conn_esm()->CreateCommand("
-						INSERT INTO c0002scdl_plan_header (
-							SELECT NULL,a.TGL,a.SCDL_ID,a.SCDL_GROUP,a.SCDL_GROUP_NM,(SELECT USER_ID FROM c0002scdl_plan_group WHERE SCL_NM=a.SCDL_GROUP_NM LIMIT 1),0
-								   ,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail a
-								    where a.SCDL_ID='".$dataField['IdDinamikScdl']."'
-									GROUP BY a.TGL,a.SCDL_ID
-						)       
-		")->execute(); 		
+	
 	}
 	
-	/* //DELETE TABEL c0002scdl_plan_header
-	self::conn_esm()->CreateCommand("
-					DELETE FROM c0002scdl_plan_header  where STATUS=0
-	")->execute();
+  	/* //DELETE TABEL c0002scdl_plan_header
+  	self::conn_esm()->CreateCommand("
+  					DELETE FROM c0002scdl_plan_header  where STATUS=0
+  	")->execute();
 
-	//INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader 
-	self::conn_esm()->CreateCommand("
-					INSERT INTO c0002scdl_plan_header (
-						SELECT NULL,a.TGL,a.SCDL_ID,a.SCDL_GROUP,a.SCDL_GROUP_NM,(SELECT USER_ID FROM c0002scdl_plan_group WHERE SCL_NM=a.SCDL_GROUP_NM LIMIT 1),0
-							   ,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail a
-							   GROUP BY a.TGL,a.SCDL_ID where a.STATUS<>1
-					)       
-	")->execute();  */
-	
-		
-      //return $this->redirect(['index?tab=0']); 
+  	//INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader 
+  	self::conn_esm()->CreateCommand("
+  					INSERT INTO c0002scdl_plan_header (
+  						SELECT NULL,a.TGL,a.SCDL_ID,a.SCDL_GROUP,a.SCDL_GROUP_NM,(SELECT USER_ID FROM c0002scdl_plan_group WHERE SCL_NM=a.SCDL_GROUP_NM LIMIT 1),0
+  							   ,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail a
+  							   GROUP BY a.TGL,a.SCDL_ID where a.STATUS<>1
+  					)       
+  	")->execute();  */
+  	
+  		
+        //return $this->redirect(['index?tab=0']); 
       return 'index';
     }
 
@@ -473,6 +488,46 @@ class DraftPlanController extends Controller
                 'proses'=>self::get_aryProses()
             ]);
         }
+    }
+
+
+    /**
+     * delete using ajax.
+     * @author wawan
+     * @since 1.1.0
+     * @return true
+     */
+   public function actionDeletePlan(){
+
+            if (Yii::$app->request->isAjax) {
+
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                $request= Yii::$app->request;
+                $dataKeySelect=$request->post('keysSelect');
+                foreach ($dataKeySelect as $key => $value) {
+              
+                   // self::conn_esm()->createCommand()->update('c0002scdl_plan',['STATUS'=>3],'ID="'.$value.'"')->execute();
+                   // DraftPlan::updateAll(['status' =>3], ['like', 'ID', $value]);
+
+                  $transaction = DraftPlan::getDb()->beginTransaction();
+                    try {
+                         self::conn_esm()->createCommand()->update('c0002scdl_plan',['STATUS'=>3],'ID="'.$value.'"')->execute(); 
+                        // ...other DB operations...
+                        $transaction->commit();
+                    } catch(\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
+                    }
+
+                   
+             }
+             
+         }
+         
+      return true;
+
+      // return $this->redirect(['index']);
+   
     }
 
     public function actionDeleteSchedule($id)
@@ -899,23 +954,63 @@ class DraftPlanController extends Controller
     /*
      * Delete DrafplanDetail Customers
     */
-    public function actionPilihDelete()
+    // public function actionPilihDelete()
+    // {
+    //    $model = new DraftPlanDetail();
+    //    $model->scenario = 'delete';
+
+    //      if ($model->load(Yii::$app->request->post())) {
+
+    //         self::DeleteDetailHeader($model->CUST_ID,$model->TGL);
+
+    //         return $this->redirect(['index?tab=1']); 
+
+    //      }else{
+    //       return $this->renderAjax('_pilihdelete', [
+    //         'model'=>$model,
+    //         'year'=>self::get_aryYearDetail()
+    //     ]);
+    //   }
+    // }
+
+ public function actionPilihDelete()
     {
-       $model = new DraftPlanDetail();
-       $model->scenario = 'delete';
+      if (Yii::$app->request->isAjax) {
 
-         if ($model->load(Yii::$app->request->post())) {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                $request= Yii::$app->request;
+                $dataKeySelect=$request->post('keysSelect');
+                  foreach ($dataKeySelect as $key => $value) {
+                
+                    $model = DraftPlanDetail::find()->where(['LIKE', 'ID', $value])->one();
 
-            self::DeleteDetailHeader($model->CUST_ID,$model->TGL);
+                    $scdl_group_nm = $model->SCDL_GROUP_NM;
 
-            return $this->redirect(['index?tab=1']); 
+                    $cus_id = $model->CUST_ID;
 
-         }else{
-          return $this->renderAjax('_pilihdelete', [
-            'model'=>$model,
-            'year'=>self::get_aryYearDetail()
-        ]);
-      }
+
+                     $transaction = DraftPlan::getDb()->beginTransaction();
+                    try {
+                        self::conn_esm()->createCommand()->update('c0002scdl_plan_detail',['STATUS'=>3],'CUST_ID LIKE"'.$cus_id.'"')->execute();
+
+                        self::conn_esm()->createCommand()->update('c0002scdl_plan_header',['STATUS'=>3],'NOTE="'.$scdl_group_nm.'"')->execute(); 
+                        // ...other DB operations...
+                        $transaction->commit();
+                    } catch(\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
+                    }
+              
+                      // self::conn_esm()->createCommand()->update('c0002scdl_plan_detail',['STATUS'=>3],'CUST_ID LIKE"'.$cus_id.'"')->execute();
+
+                      //   self::conn_esm()->createCommand()->update('c0002scdl_plan_header',['STATUS'=>3],'NOTE="'.$scdl_group_nm.'"')->execute();
+
+                  }
+               
+           }
+           
+        return true;
+
     }
 
     public function actionVal($id)
@@ -1054,11 +1149,25 @@ class DraftPlanController extends Controller
                    
                     
                   if($cari_user->USER_ID != ''){
-                      self::conn_esm()->createCommand()->update('c0002scdl_plan_detail',['STATUS'=>1,'CUST_ID'=>$cus_id],'ID LIKE"'.$value.'" AND  STATUS = 0')->execute();
 
-                        self::conn_esm()->createCommand()->update('c0002scdl_plan_header',['STATUS'=>1,'USER_ID'=>$cari_user->USER_ID],'NOTE="'.$scdl_group_nm.'" AND STATUS = 0')->execute();
+                      $transaction = DraftPlanDetail::getDb()->beginTransaction();
+                    try {
+                         self::conn_esm()->createCommand()->update('c0002scdl_plan_detail',['STATUS'=>1],'ID LIKE"'.$value.'" AND  STATUS = 0')->execute();
 
-                          self::conn_esm()->createCommand()->update('c0002scdl_plan',['STATUS'=>1],'CUST_KD="'.$model->CUST_ID.'" AND STATUS = 0')->execute();
+                          self::conn_esm()->createCommand()->update('c0002scdl_plan_header',['STATUS'=>1,'USER_ID'=>$cari_user->USER_ID],'NOTE="'.$scdl_group_nm.'" AND STATUS = 0')->execute();
+
+                          self::conn_esm()->createCommand()->update('c0002scdl_plan',['STATUS'=>1],'CUST_KD="'.$cus_id.'" AND STATUS = 0')->execute(); 
+                        // ...other DB operations...
+                        $transaction->commit();
+                    } catch(\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
+                    }
+                      // self::conn_esm()->createCommand()->update('c0002scdl_plan_detail',['STATUS'=>1,'CUST_ID'=>$cus_id],'ID LIKE"'.$value.'" AND  STATUS = 0')->execute();
+
+                      //   self::conn_esm()->createCommand()->update('c0002scdl_plan_header',['STATUS'=>1,'USER_ID'=>$cari_user->USER_ID],'NOTE="'.$scdl_group_nm.'" AND STATUS = 0')->execute();
+
+                      //     self::conn_esm()->createCommand()->update('c0002scdl_plan',['STATUS'=>1],'CUST_KD="'.$model->CUST_ID.'" AND STATUS = 0')->execute();
                     }
                 }
               

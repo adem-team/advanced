@@ -349,33 +349,33 @@ $gvDraftPlan=GridView::widget([
   'panel' => [
        'heading'=>false,
         'type'=>'info',
-       'before'=> Html::a('<i class="fa fa-check-square-o"></i> '.Yii::t('app', 'Reschedule Draft',
+           'before'=>Html::a('<i class="fa fa-check-circle"></i> '.Yii::t('app', 'Approve'),'/master/draft-plan/approve-all',
+                    [
+                        'data-toggle-approve-all'=>"approve-plan-erp",
+                        'id'=>'approvemodal-erp-plan',
+                        // 'data-pjax' => true,
+                        'class' => 'btn btn-success btn-sm'
+                     
+                    ]
+              ).' '.
+                // Html::a('<i class="fa fa-paper-plane"></i> '.Yii::t('app', 'Approve',
+                //             ['modelClass' => 'DraftPlan',]),'/master/draft-plan/pilih-approve',[
+                //                     'data-toggle'=>"modal",
+                //                     'data-target'=>"#modal-day",
+                //                         'class' => 'btn btn-info'
+                //                                     ]).' '.
+                Html::a('<i class="fa fa-trash"></i> '.Yii::t('app', 'Pilih Delete',
+                            ['modelClass' => 'DraftPlanDetail',]),'',[
+                                'data-toggle-delete-all'=>"delete-plan-erp-all",
+                                'id'=>'delete-erp-plan-all',
+                                  'class' => 'btn btn-danger btn-sm'
+                                                    ]).' '.
+               Html::a('<i class="fa fa-check-square-o"></i> '.Yii::t('app', 'Reschedule Draft',
                             ['modelClass' => 'DraftPlan',]),'/master/draft-plan/ganti-jadwal',[
                                 'data-toggle'=>"modal",
                                     'data-target'=>"#modal-day",
-                                        'class' => 'btn btn-success'
-                                                    ]).' '.
-                Html::a('<i class="fa fa-paper-plane"></i> '.Yii::t('app', 'Approve',
-                            ['modelClass' => 'DraftPlan',]),'/master/draft-plan/pilih-approve',[
-                                    'data-toggle'=>"modal",
-                                    'data-target'=>"#modal-day",
-                                        'class' => 'btn btn-info'
-                                                    ]).' '.
-                Html::a('<i class="fa fa-trash"></i> '.Yii::t('app', 'Pilih Delete',
-                            ['modelClass' => 'DraftPlanDetail',]),'/master/draft-plan/pilih-delete',[
-                                'data-toggle'=>"modal",
-                                  'data-target'=>"#modal-day",
-                                  'class' => 'btn btn-danger'
-                                                    ]).' '.  
-                Html::a('<i class="fa fa-check-circle"></i> '.Yii::t('app', 'Approve All'),'/master/draft-plan/approve-all',
-                [
-                    'data-toggle-approve-all'=>"approve-plan-erp",
-                    'id'=>'approvemodal-erp-plan',
-                    // 'data-pjax' => true,
-                    'class' => 'btn btn-success btn-sm'
-                 
-                ]
-          ),
+                                        'class' => 'btn btn-info btn-sm'
+                                                    ]),
 
         'showFooter'=>false,
   ],
@@ -397,6 +397,44 @@ $gvDraftPlan=GridView::widget([
 ?>
 <?=$gvDraftPlan?>
 <?php
+
+/** 
+    *js Approve 
+    *if click then approve 
+    *@author adityia@lukison.com
+    *@since 1.1.0  
+
+**/
+$this->registerJs("
+$(document).on('click', '[data-toggle-delete-all]', function(e){
+
+  e.preventDefault();
+
+  var keysSelect = $('#gv-maintain-id').yiiGridView('getSelectedRows');
+
+  if(keysSelect == '')
+  {
+    alert('sorry your not selected item')
+  }else{
+
+  $.ajax({
+           url: '/master/draft-plan/pilih-delete',
+           //cache: true,
+           type: 'POST',
+           data:{keysSelect:keysSelect},
+           dataType: 'json',
+           success: function(response) {
+             if (response == true ){
+                  $.pjax.reload({container:'#gv-maintain-id'});
+             }
+            }
+          });
+        }
+
+})
+
+
+",$this::POS_READY);
 
 /** 
     *js Approve 

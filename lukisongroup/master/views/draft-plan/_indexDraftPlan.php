@@ -35,6 +35,33 @@ $gvHeadColomnBT = ArrayHelper::map($headColomnBT, 'ID', 'ATTR');
 
 
 $attDinamik[] =[
+  'class' => '\kartik\grid\CheckboxColumn',
+  //'contentOptions'=>['class'=>'kartik-sheet-style'],
+  'width'=>'10px',
+  // 'header'=>'No.',
+  'checkboxOptions' => function ($model, $key, $index, $column){
+
+  },
+  'headerOptions'=>[
+    'style'=>[
+      'text-align'=>'center',
+      'width'=>'10px',
+      'font-family'=>'verdana, arial, sans-serif',
+      'font-size'=>'9pt',
+      'background-color'=>'rgba(73, 162, 182, 1)',
+    ]
+  ],
+  'contentOptions'=>[
+    'style'=>[
+      'text-align'=>'center',
+      'width'=>'10px',
+      'font-family'=>'tahoma, arial, sans-serif',
+      'font-size'=>'9pt',
+    ]
+  ],
+];
+
+$attDinamik[] =[
   'class'=>'kartik\grid\SerialColumn',
   //'contentOptions'=>['class'=>'kartik-sheet-style'],
   'width'=>'10px',
@@ -425,12 +452,19 @@ $gvNewPlan=GridView::widget([
   'panel' => [
         'heading'=>false,
         'type'=>'info',
-		'before'=> Html::a('<i class="fa fa-sign-in"></i> '.Yii::t('app', 'Start Draft Plan',
-                            ['modelClass' => 'DraftPlan',]),'/master/draft-plan/create',[
-                                'data-toggle'=>"modal",
-                                    'data-target'=>"#modal-create-draft",
-                                        'class' => 'btn btn-success'
-                                                    ]),
+      	'before'=> Html::a('<i class="fa fa-sign-in"></i> '.Yii::t('app', 'Start Draft Plan',
+                                  ['modelClass' => 'DraftPlan',]),'/master/draft-plan/create',[
+                                      'data-toggle'=>"modal",
+                                          'data-target'=>"#modal-create-draft",
+                                              'class' => 'btn btn-success'
+                                                          ]).' '.
+          Html::a('<i class="fa fa-trash"></i> '.Yii::t('app', 'Clear',
+                                  ['modelClass' => 'DraftPlan',]),'',[
+                                      'data-toggle-delete'=>"delete-draft-plan",
+                                        'data-pjax'=>true,
+                                      'id'=>'delete-erp-planning',
+                                              'class' => 'btn btn-danger'
+                                                          ]),
         'showFooter'=>false,
   ],
   'export' =>['target' => GridView::TARGET_BLANK],
@@ -452,17 +486,43 @@ $gvNewPlan=GridView::widget([
 <?=$gvNewPlan?>
 <?php
 
-/*modal*/
-Modal::begin([
-    'id' => 'modalcus',
-    'header' => '<div style="float:left;margin-right:10px" class="fa fa-user"></div><div><h5 class="modal-title"><b>VIEW CUSTOMERS</b></h5></div>',
-    // 'size' => Modal::SIZE_SMALL,
-    'headerOptions'=>[
-        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
-    ],
-  ]);
-  echo "<div id='modalContentcus'></div>";
-  Modal::end();
+/** 
+    *js Approve 
+    *if click then delete 
+    *@author adityia@lukison.com
+    *@since 1.1.0  
+
+**/
+$this->registerJs("
+$(document).on('click', '[data-toggle-delete]', function(e){
+
+  e.preventDefault();
+
+  var keysSelect = $('#gv-new-id').yiiGridView('getSelectedRows');
+
+  if(keysSelect == '')
+  {
+    alert('sorry your not selected item')
+  }else{
+
+  $.ajax({
+           url: '/master/draft-plan/delete-plan',
+           //cache: true,
+           type: 'POST',
+           data:{keysSelect:keysSelect},
+           dataType: 'json',
+           success: function(response) {
+             if (response == true ){
+                  $.pjax.reload({container:'#gv-new-id'});
+             }
+            }
+          });
+        }
+
+})
+
+
+",$this::POS_READY);
 
 
 
