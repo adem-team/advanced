@@ -85,4 +85,19 @@ class DraftPlanGroupSearch extends DraftPlanGroup
 
         return $dataProvider;
     }
+	/*
+	 * EMPTY CONDITION (SPEED LOAD CONTROLLER)
+	 * LOAD BY TAB.
+	*/
+	public function searchEmpty($params)
+    {
+        $query = DraftPlanGroup::find()->where('STATUS=100');
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+			'pagination'=>[
+				'pageSize'=>0,
+			]           
+        ]);
+        return $dataProvider;
+    }
 }
