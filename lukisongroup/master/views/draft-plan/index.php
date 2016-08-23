@@ -128,7 +128,7 @@ $this->params['breadcrumbs'][] = $this->title;
 										aryidx = (queryString.split("="))[1];
 									}
 									//add Tab normal
-									array1=[0,1,4];
+									array1=[8,9,10];
 									ary = array1.concat(aryidx);
 									//alert(ary);
 									for(var i=0; i<ary.length; i++) {
