@@ -480,7 +480,7 @@ class DraftPlanController extends Controller
             };
 
           
-           return $this->redirect(['index?tab=2']);
+           return $this->redirect(['index?tab=4']);
         } else {
             return $this->renderAjax('_plangroup', [
                 'model' => $model,
@@ -588,7 +588,7 @@ class DraftPlanController extends Controller
           $user_profile->CREATED_AT = date("Y-m-d H:i:s");
           $user_profile->save();
           
-           return $this->redirect(['index?tab=2']);
+           return $this->redirect(['index?tab=4']);
         } else {
             return $this->renderAjax('_usercreate', [
                 'model' => $model,
@@ -610,7 +610,7 @@ class DraftPlanController extends Controller
             $ary = self::get_execute_plan($model->SCL_NM,$model->USER_ID);
             
 
-             return $this->redirect(['index?tab=2']);
+             return $this->redirect(['index?tab=4']);
         } else {
             return $this->renderAjax('_pilihuser', [
                 'model' => $model,
@@ -824,8 +824,15 @@ class DraftPlanController extends Controller
      */
     public function actionIndex()
     {
-		    $tab=Yii::$app->getRequest()->getQueryParam('tab');
-
+		
+		/*PLAN DRAFT*/
+		$searchModelPlan = new DraftPlanSearch();
+		/*PLAN MAINTAIN*/
+		$searchModelMaintain = new DraftPlanDetailSearch();	
+		/*GROUP SETTING*/
+		$searchModelGrp = new DraftPlanGroupSearch();
+		/*GROUP USER*/
+		$searchModelUser = new UserloginSearch();	
         $SCL_NM=Yii::$app->getRequest()->getQueryParam('SCL_NM');
 		
         $aryStt= [
@@ -839,48 +846,71 @@ class DraftPlanController extends Controller
           ['STATUS' => 10, 'STT_NM' => 'Active'],
           ['STATUS' => 1, 'STT_NM' => 'InActive'],
         ];
-
+		$kosong='yii\data\ActiveDataProvider Object ( [query] => yii\db\ActiveQuery Object ( [sql] => [on] => [joinWith] => [select] => [selectOption] => [distinct] => [from] => [groupBy] => [join] => [having] => [union] => [params] => Array ( ) [_events:yii\base\Component:private] => Array ( ) [_behaviors:yii\base\Component:private] => Array ( ) [where] => [limit] => [offset] => [orderBy] => [indexBy] => [modelClass] => lukisongroup\master\models\DraftPlanGroup [with] => [asArray] => [multiple] => [primaryModel] => [link] => [via] => [inverseOf] => ) [key] => [db] => [id] => [_sort:yii\data\BaseDataProvider:private] => [_pagination:yii\data\BaseDataProvider:private] => [_keys:yii\data\BaseDataProvider:private] => [_models:yii\data\BaseDataProvider:private] => [_totalCount:yii\data\BaseDataProvider:private] => [_events:yii\base\Component:private] => Array ( ) [_behaviors:yii\base\Component:private] => )';
         $Stt = ArrayHelper::map($arySttAct, 'STATUS', 'STT_NM');
-
-
-		/*PLAN DRAFT*/
-        $searchModel = new DraftPlanSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		
-		/*PLAN MAINTAIN*/
-		$searchModelMaintain = new DraftPlanDetailSearch();
-        $dataProviderMaintain = $searchModelMaintain->search(Yii::$app->request->queryParams);
+		/*
+		 * Empety dataProvider
+		 * EMPTY CONDITION (SPEED LOAD CONTROLLER)
+		 * LOAD BY TAB.
+		*/
+		$tab=Yii::$app->getRequest()->getQueryParam('tab');
+		if ($tab==0){
+			/*PLAN DRAFT*/
+			$dataProviderPlanX = $searchModelPlan->search(Yii::$app->request->queryParams);
+			$dataProviderMaintainX = $searchModelMaintain->searchEmpty(Yii::$app->request->queryParams);
+			$dataProviderGrpX = $searchModelGrp->searchEmpty(Yii::$app->request->queryParams);
+			$dataProviderUserX = $searchModelUser->searchEmpty(Yii::$app->request->queryParams);
+		}elseif($tab==1){
+			/*PLAN MAINTAIN*/
+			$dataProviderPlanX = $searchModelPlan->searchEmpty(Yii::$app->request->queryParams);
+			$dataProviderMaintainX = $searchModelMaintain->search(Yii::$app->request->queryParams);
+			$dataProviderGrpX = $searchModelGrp->searchEmpty(Yii::$app->request->queryParams);
+			$dataProviderUserX = $searchModelUser->searchEmpty(Yii::$app->request->queryParams);
+		}elseif($tab==2){
+			/*SCHEDULE PLAN*/
+			$dataProviderPlanX = $searchModelPlan->searchEmpty(Yii::$app->request->queryParams);
+			$dataProviderMaintainX = $searchModelMaintain->searchEmpty(Yii::$app->request->queryParams);
+			$dataProviderGrpX = $searchModelGrp->searchEmpty(Yii::$app->request->queryParams);
+			$dataProviderUserX = $searchModelUser->searchEmpty(Yii::$app->request->queryParams);
+		}elseif($tab==3){
+			/*SCHEDULE ACTUAL*/
+			$dataProviderPlanX = $searchModelPlan->searchEmpty(Yii::$app->request->queryParams);
+			$dataProviderMaintainX = $searchModelMaintain->searchEmpty(Yii::$app->request->queryParams);
+			$dataProviderGrpX = $searchModelGrp->searchEmpty(Yii::$app->request->queryParams);
+			$dataProviderUserX = $searchModelUser->searchEmpty(Yii::$app->request->queryParams);			
+		}elseif($tab==4){
+			/*GROUP SETTING & USER*/
+			$dataProviderPlanX = $searchModelPlan->searchEmpty(Yii::$app->request->queryParams);
+			$dataProviderMaintainX = $searchModelMaintain->searchEmpty(Yii::$app->request->queryParams);
+			$dataProviderGrpX = $searchModelGrp->search(Yii::$app->request->queryParams);			
+			$dataProviderUserX = $searchModelUser->searchgroupplan(Yii::$app->request->queryParams);
+		};	
 		
-		/*GROUP SETTING*/
-		$searchModelGrp = new DraftPlanGroupSearch();
-        $dataProviderGrp = $searchModelGrp->search(Yii::$app->request->queryParams);
-
-		/*GROUP USER*/
-		$searchModelUser = new UserloginSearch();
-        $dataProviderUser = $searchModelUser->searchgroupplan(Yii::$app->request->queryParams);
-
-       
-        return $this->render('index', [
-			    'tab'=>$tab,
-          'searchModel' => $searchModel,
-          'dataProvider' => $dataProvider,
-          'valStt'=>$valStt,
-    			'searchModelMaintain'=>$searchModelMaintain,
-    			'dataProviderMaintain'=>$dataProviderMaintain,
-    			'searchModelGrp'=>$searchModelGrp,
-    			'dataProviderGrp'=>$dataProviderGrp,
-         	'searchModelUser'=>$searchModelUser,
-    			'dataProviderUser'=>$dataProviderUser,
-          'dropcus'=>self::ary_customers(),
-          'drop'=>self::get_arygeo(),
-          'SCL_NM'=>$SCL_NM,
-          'pekan'=>self::getPekan(),
-          'layer'=>self::ary_layer(),
-          'layer_nm'=>self::layer_nm(),
-          'Stt'=>$Stt,
-          'user'=>self::get_aryUserCrmSales(),
-          'scdl_group'=>self::get_arygeoplandetail2()
-        ]);
+		/*RENDER INDEX*/
+		return $this->render('index', [
+			//dataProvider Load
+			'searchModel' => $searchModelPlan,
+			'dataProvider' => $dataProviderPlanX,				
+			'searchModelMaintain'=>$searchModelMaintain,
+			'dataProviderMaintain'=>$dataProviderMaintainX,
+			'searchModelGrp'=>$searchModelGrp,
+			'dataProviderGrp'=>$dataProviderGrpX,
+			'searchModelUser'=>$searchModelUser,
+			'dataProviderUser'=>$dataProviderUserX,
+			//Other Data load
+			'valStt'=>$valStt,
+			'tab'=>$tab,
+			'dropcus'=>self::ary_customers(),
+			'drop'=>self::get_arygeo(),
+			'SCL_NM'=>$SCL_NM,
+			'pekan'=>self::getPekan(),
+			'layer'=>self::ary_layer(),
+			'layer_nm'=>self::layer_nm(),
+			'Stt'=>$Stt,
+			'user'=>self::get_aryUserCrmSales(),
+			'scdl_group'=>self::get_arygeoplandetail2()
+		]);
     }
 
     /**
@@ -955,7 +985,7 @@ class DraftPlanController extends Controller
             $rslt=self::sendMaintain($id);
 			//print_r(self::sendMaintain(248));
             //return $this->redirect(['index']);
-            return $this->redirect(['index?tab=1']); 
+            return $this->redirect(['index?tab=0']); 
             // return $this->redirect([$rslt]);
          }else{
 
@@ -1299,7 +1329,8 @@ class DraftPlanController extends Controller
             }
         
           
-            return $this->redirect(['index']);
+            //return $this->redirect(['index']);
+			 return $this->redirect(['index?tab=0']);
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,

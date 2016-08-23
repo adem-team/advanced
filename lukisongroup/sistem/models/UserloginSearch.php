@@ -103,7 +103,23 @@ class UserloginSearch extends Userlogin
 
         return $dataProvider_Userlogin;
     }
-
+	
+	/*
+	 * EMPTY CONDITION (SPEED LOAD CONTROLLER)
+	 * LOAD BY TAB.
+	*/
+	public function searchEmpty($params)
+    {
+		$query = Userlogin::find()->where('status=100');
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+			'pagination'=>[
+				'pageSize'=>0,
+			]           
+        ]);
+        return $dataProvider;
+    }
+	
 	public function attributes()
 	{
 		/*Author -ptr.nov- add related fields to searchable attributes */
