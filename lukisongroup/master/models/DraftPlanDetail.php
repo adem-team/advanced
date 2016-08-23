@@ -31,6 +31,7 @@ class DraftPlanDetail extends \yii\db\ActiveRecord
      */
      const SCENARIO_APROVE = 'approve';
 
+    public $tglactual;
     public static function tableName()
     {
         return 'c0002scdl_plan_detail';

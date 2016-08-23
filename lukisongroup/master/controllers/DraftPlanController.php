@@ -907,6 +907,25 @@ class DraftPlanController extends Controller
     }
 
 
+ /**
+    *link modal export.
+    *@param int flag
+    *@return mixed
+
+ **/
+ public function actionExportModal($flag)
+ {
+
+      $model = new DraftPlanDetail();
+
+      $link_ajax = $flag != 0 ? '_export_plan' : '_export_actual';
+
+      return $this->renderAjax($link_ajax, [
+            'model'=>$model,
+        ]);
+ }
+
+
 	/*
 	 * SETUP CUSTOMER SCHEDULE FIRST DAY
 	*/

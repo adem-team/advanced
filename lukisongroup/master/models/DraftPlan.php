@@ -32,6 +32,7 @@ class DraftPlan extends \yii\db\ActiveRecord
    
 	public $displyGeoId;
 	public $displyGeoNm;
+    
 	
 	/*checkvalidation */
 	const SCENARIO_EXIST = 'exist';
