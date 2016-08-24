@@ -63,7 +63,31 @@ EOF;
 	
 $JSEventClick = <<<EOF
 	function(calEvent, jsEvent, view) {
-		alert('Event: ' + calEvent.id);
+		// alert('Event: ' + calEvent.id);
+		var tgl = calEvent.start;
+		var tgl1 = new Date(tgl);
+		var id = moment(tgl1).format("YYYY-MM-DD");
+
+		 $.get("/master/draft-plan/get-data-plan?id="+id, function( data ) {
+            	 var peopleHTML = "";
+            	 var data = $.parseJSON(data);
+            	// console.log(data.custTbl['CUST_NM']); 
+			      // Loop through Object and create peopleHTML
+			      // for (var key in data) {
+			      //   if (data.hasOwnProperty(key)) {
+			          peopleHTML += "<tr>";
+			            peopleHTML += "<td>" + data["TGL"] + "</td>";
+			            peopleHTML += "<td>" + data.custTbl['CUST_NM'] + "</td>";
+			            peopleHTML += "<td>" + data["SCDL_GROUP_NM"] + "</td>";
+			          peopleHTML += "</tr>";
+			      //   }
+			      // }
+		 		 // Replace table’s tbody html with peopleHTML
+      			$("#detail tbody").html(peopleHTML);
+            });
+
+		
+
 		//alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
 		//alert('View: ' + view.name);
 		// change the border color just for fun
@@ -118,8 +142,20 @@ EOF;
 					['heading' => $btn_exportPlan, 'body' =>$calenderPlan],
 					Html::TYPE_DANGER
 				);
+	
+   
+   
+	$info = "<div id =detail><table class='table'><thead>
+      <tr>
+        <th>TGL Masuk</th>
+        <th>Customers</th>
+        <th>GROUP_NM</th>
+      </tr>
+    </thead> <tbody>
+    </tbody>
+  </table></div>";
 	$viewDetailPlan= Html::panel(
-					['heading' => 'DETAIl GROUP PLAN', 'body' =>''],
+					['heading' => 'DETAIl GROUP PLAN', 'body' =>$info],
 					Html::TYPE_DANGER
 				);	
 ?>

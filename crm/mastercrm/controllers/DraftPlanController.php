@@ -1041,6 +1041,8 @@ class DraftPlanController extends Controller
         echo json_encode($data_id);
     }
 
+   
+
     /*
      * Approve DrafplanDetail Customers
     */
@@ -1485,7 +1487,7 @@ class DraftPlanController extends Controller
 	public function actionJsoncalendarPlan($start=NULL,$end=NULL,$_=NULL){
 		$calendarPlan= new ArrayDataProvider([
 			'allModels'=>Yii::$app->db_esm->createCommand("
-				SELECT a1.ID as id, a1.TGL as start,a1.TGL as end, concat(a1.NOTE,'-',a2.NM_FIRST) as title  
+				SELECT a1.ID as id, a1.TGL as start,a1.TGL as end, concat(a1.NOTE,'-',a2.NM_FIRST) as title
 FROM c0002scdl_plan_header a1
 LEFT JOIN dbm_086.user_profile a2 on a2.ID_USER=a2.ID_USER GROUP BY NOTE,TGL
 			")->queryAll(),

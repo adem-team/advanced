@@ -21,6 +21,7 @@ use yii\data\ArrayDataProvider;
 Use ptrnov\ salesforce\Jadwal;
 
 use lukisongroup\master\models\DraftPlanGroup;
+use lukisongroup\master\models\Scheduledetail;
 use lukisongroup\master\models\DraftPlanHeader;
 use lukisongroup\master\models\DraftPlanDetailSearch;
 use lukisongroup\master\models\DraftPlanDetail;
@@ -1071,6 +1072,24 @@ class DraftPlanController extends Controller
         echo json_encode($data_id);
     }
 
+     public function actionGetDataPlan($id)
+    {
+
+        $data = DraftPlanDetail::find()->with('custTbl')->where(['TGL'=>$id])->asArray()->one();
+
+
+        echo json_encode($data);
+    }
+
+      public function actionGetDataActual($id,$userid)
+    {
+
+        $data = Scheduledetail::find()->with('cust')->where(['TGL'=>$id,'USER_ID'=>$userid])->asArray()->one();
+
+
+        echo json_encode($data);
+    }
+
     /*
      * Approve DrafplanDetail Customers
     */
@@ -1517,9 +1536,11 @@ class DraftPlanController extends Controller
 	public function actionJsoncalendarPlan($start=NULL,$end=NULL,$_=NULL){
 		$calendarPlan= new ArrayDataProvider([
 			'allModels'=>Yii::$app->db_esm->createCommand("
-				SELECT a1.ID as id, a1.TGL as start,a1.TGL as end, concat(a1.NOTE,'-',a2.NM_FIRST) as title  
+				SELECT a3.ID as id, a1.TGL as start,a1.TGL as end, concat(a1.NOTE,'-',a2.NM_FIRST) as title  
 				FROM c0002scdl_plan_header a1
-				LEFT JOIN dbm_086.user_profile a2 on a2.ID_USER=a1.USER_ID GROUP BY NOTE,TGL
+        LEFT JOIN  c0002scdl_plan_detail a3 on a3.SCDL_ID=a3.SCDL_ID
+				LEFT JOIN dbm_086.user_profile a2 on a2.ID_USER=a1.USER_ID
+         GROUP BY a1.NOTE,a1.TGL
 			")->queryAll(),
 		]);
 		//FIELD HARUS [id,start,end,title]        
@@ -1538,7 +1559,7 @@ class DraftPlanController extends Controller
 	public function actionJsoncalendarActual($start=NULL,$end=NULL,$_=NULL){
 		$calendarActual= new ArrayDataProvider([
 			'allModels'=>Yii::$app->db_esm->createCommand("				
-				SELECT a1.ID as id, a1.TGL1 as start,a1.TGL1 as end, concat(a1.NOTE,'-',a2.NM_FIRST) as title  
+				SELECT a1.USER_ID as id, a1.TGL1 as start,a1.TGL1 as end, concat(a1.NOTE,'-',a2.NM_FIRST) as title  
 				FROM c0002scdl_header a1
 				LEFT JOIN dbm_086.user_profile a2 on a2.ID_USER=a1.USER_ID GROUP BY NOTE,TGL1
 			")->queryAll(),
