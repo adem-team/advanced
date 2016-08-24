@@ -170,7 +170,7 @@ class PostmanSchaduleController extends Controller
 			//SELECT b.ID,a.username,b.NM_FIRST, b.NM_MIDDLE, b.KTP,ALAMAT, b.GENDER, b.EMAIL, b.HP, b.TLP_HOME 
 				
 			'allModels'=>Yii::$app->db_esm->createCommand("				
-				SELECT b.ID_USER,a.username,b.NM_FIRST, b.NM_MIDDLE, b.KTP,ALAMAT, b.GENDER, b.EMAIL, b.HP, b.TLP_HOME 
+				SELECT b.ID_USER,a.username,b.NM_FIRST, b.NM_MIDDLE, b.KTP,ALAMAT, b.GENDER, b.EMAIL, b.HP AS HANDPHONE, b.TLP_HOME 
 				FROM dbm001.user a LEFT JOIN dbm_086.user_profile b on b.ID_USER=a.id
 				WHERE a.POSITION_SITE='CRM' AND a.POSITION_LOGIN=1 AND a.POSITION_ACCESS=2 AND a.status=10
 			")->queryAll(),
@@ -179,58 +179,13 @@ class PostmanSchaduleController extends Controller
 		$excelUserData = Postman4ExcelBehavior::excelDataFormat($usrProvider);
 		$excel_ceilsUser = $excelUserData['excel_ceils']; 		
 		
-		$excel_content = [			
-			
-			
-			
-			
-			
-			/* DAILY SUMMARY AC|EC */
-			[
-				'sheet_name' => 'DAILY SUMMARY AC|EC',
-                //'sheet_title' => $attFieldAll,
-                'sheet_title' => [''], 
-			    //'ceils' => $excel_ceilsScdl,
-                //'freezePane' => 'E2',
-               //'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
-                //'headerColumnCssClass' => [
-					// 'USER_ID' => Postman4ExcelBehavior::getCssClass('header'),
-                     //'GRP_ID' => Postman4ExcelBehavior::getCssClass('header'),
-                     ///'GRP_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                    // 'CUST_ID' => Postman4ExcelBehavior::getCssClass('header'),
-                    // 'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                    // 'LAT' => Postman4ExcelBehavior::getCssClass('header'),              
-                    // 'LAG' => Postman4ExcelBehavior::getCssClass('header')              
-                //], //define each column's cssClass for header line only.  You can set as blank.
-               //'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
-               //'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
-			],
-			/* DAILY DETAIL AC|EC */
-			[
-				'sheet_name' => 'DAILY DETAIL AC|EC',
-                //'sheet_title' => $attFieldAll,
-				'sheet_title' => [''], 
-			    //'ceils' => $excel_ceilsScdl,
-                //'freezePane' => 'E2',
-               //'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
-                //'headerColumnCssClass' => [
-					// 'USER_ID' => Postman4ExcelBehavior::getCssClass('header'),
-                     //'GRP_ID' => Postman4ExcelBehavior::getCssClass('header'),
-                     ///'GRP_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                    // 'CUST_ID' => Postman4ExcelBehavior::getCssClass('header'),
-                    // 'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                    // 'LAT' => Postman4ExcelBehavior::getCssClass('header'),              
-                    // 'LAG' => Postman4ExcelBehavior::getCssClass('header')              
-                //], //define each column's cssClass for header line only.  You can set as blank.
-               //'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
-               //'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
-			], 
+		$excel_content = [				
 			/* USER */
 			[
 				'sheet_name' => 'SALES MD',
-				'sheet_title' => ['ID','USERNAME','NAMA DEPAN','NAMA BELAKANG','KTP','ALAMAT','GENDER','EMAIL','HP','TLP_HOME'], 
+				'sheet_title' => ['ID','USERNAME','NAMA DEPAN','NAMA BELAKANG','KTP','ALAMAT','GENDER','EMAIL','PHONE','TLP_HOME'], 
 				'ceils' => $excel_ceilsUser,
-				//'freezePane' => 'E2',
+				'freezePane' => 'A2',
 				'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
 				'headerColumnCssClass' => [
 					'ID' => Postman4ExcelBehavior::getCssClass('header'),
@@ -241,7 +196,7 @@ class PostmanSchaduleController extends Controller
 					'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),              
 					'GENDER' => Postman4ExcelBehavior::getCssClass('header'),              
 					'EMAIL' => Postman4ExcelBehavior::getCssClass('header'),              
-					'HP' => Postman4ExcelBehavior::getCssClass('header'),              
+					'PHONE ' => Postman4ExcelBehavior::getCssClass('header'),              
 					'TLP_HOME' => Postman4ExcelBehavior::getCssClass('header')              
 				], //define each column's cssClass for header line only.  You can set as blank.
 			   'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),

@@ -1075,7 +1075,7 @@ class DraftPlanController extends Controller
      public function actionGetDataPlan($id)
     {
 
-        $data = DraftPlanDetail::find()->with('custTbl')->where(['TGL'=>$id])->asArray()->all();
+        $data = DraftPlanDetail::find()->with('custTbl')->where("TGL='".$id."' AND (STATUS=0 or STATUS=1)")->asArray()->all();
 
 
         echo json_encode($data);
@@ -1084,7 +1084,7 @@ class DraftPlanController extends Controller
       public function actionGetDataActual($id,$userid)
     {
 
-        $data = Scheduledetail::find()->with('cust')->where(['TGL'=>$id,'USER_ID'=>$userid])->asArray()->all();
+        $data = Scheduledetail::find()->with('cust')->where("TGL='".$id."' and USER_ID='".$userid."' and (STATUS=0 or STATUS=1 ) AND STATUS_CASE=0")->asArray()->all();
 
 
         echo json_encode($data);
