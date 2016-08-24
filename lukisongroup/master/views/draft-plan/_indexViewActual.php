@@ -63,7 +63,28 @@ EOF;
 	
 $JSEventClick = <<<EOF
 	function(calEvent, jsEvent, view) {
-		alert('Event: ' + calEvent.id);
+		var tgl = calEvent.start;
+		var tgl1 = new Date(tgl);
+		var id = moment(tgl1).format("YYYY-MM-DD");
+		var user  =  calEvent.id;
+		 $.get("/master/draft-plan/get-data-actual?id="+id+"&userid="+user, function( data ) {
+            	 var peopleHTML = "";
+            	 var data = $.parseJSON(data);
+            	// console.log(data.cust['CUST_NM']); 
+			      // Loop through Object and create peopleHTML
+			      // for (var key in data) {
+			      //   if (data.hasOwnProperty(key)) {
+			          peopleHTML += "<tr>";
+			            peopleHTML += "<td>" + data["TGL"] + "</td>";
+			            peopleHTML += "<td>" + data.cust['CUST_NM'] + "</td>";
+			            peopleHTML += "<td>" + data["NOTE"] + "</td>";
+			          peopleHTML += "</tr>";
+			      //   }
+			      // }
+		 		 // Replace table’s tbody html with peopleHTML
+      			$("#actual tbody").html(peopleHTML);
+            });
+
 	   // alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
 		//alert('View: ' + view.name);
 		// change the border color just for fun
@@ -93,7 +114,7 @@ EOF;
 			//'drop' => new JsExpression($JSDropEvent),
 			'selectHelper'=>true,
 			//'select' => new JsExpression($JSCode),
-			//'eventClick' => new JsExpression($JSEventClick),
+			'eventClick' => new JsExpression($JSEventClick),
 			//'defaultDate' => date('Y-m-d')
 		],
 		//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
@@ -106,6 +127,21 @@ EOF;
 										'class' => 'btn btn-info btn-sm'		
 									]
 							);
+	$info = "<div id =actual><table class='table'><thead>
+      <tr>
+        <th>TGL Masuk</th>
+        <th>Customers</th>
+        <th>Note</th>
+      </tr>
+    </thead> <tbody>
+    </tbody>
+  </table></div>";
+
+  $viewDetailactual= Html::panel(
+					['heading' => 'DETAIl GROUP ACTUAL', 'body' =>$info],
+					Html::TYPE_DANGER
+				);	
+
 	$vwScdlActual= Html::panel(
 					['heading' => $btn_exportActual, 'body' =>$calenderActual],
 					Html::TYPE_SUCCESS
@@ -116,7 +152,7 @@ EOF;
 		<?=$vwScdlActual?>
 	</div>
 	<div class="col-sm-4 col-md-4 col-lg-4">
-		<?php //=$vwScheduleActual?>
+		<?php echo $viewDetailactual?>
 	</div>
 </div>
 <?php
