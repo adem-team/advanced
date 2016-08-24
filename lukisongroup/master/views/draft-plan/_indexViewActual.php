@@ -72,15 +72,15 @@ $JSEventClick = <<<EOF
             	 var data = $.parseJSON(data);
             	// console.log(data.cust['CUST_NM']); 
 			      // Loop through Object and create peopleHTML
-			      // for (var key in data) {
-			      //   if (data.hasOwnProperty(key)) {
+			      for (var key in data) {
+			        if (data.hasOwnProperty(key)) {
 			          peopleHTML += "<tr>";
-			            peopleHTML += "<td>" + data["TGL"] + "</td>";
-			            peopleHTML += "<td>" + data.cust['CUST_NM'] + "</td>";
-			            peopleHTML += "<td>" + data["NOTE"] + "</td>";
+			            peopleHTML += "<td>" + data[key]["TGL"] + "</td>";
+			            peopleHTML += "<td>" + data[key].cust['CUST_NM'] + "</td>";
+			            peopleHTML += "<td>" + data[key]["NOTE"] + "</td>";
 			          peopleHTML += "</tr>";
-			      //   }
-			      // }
+			        }
+			      }
 		 		 // Replace table’s tbody html with peopleHTML
       			$("#actual tbody").html(peopleHTML);
             });
