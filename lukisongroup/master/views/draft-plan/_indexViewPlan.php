@@ -150,10 +150,10 @@ EOF;
      ",$this::POS_READY);		
      Modal::begin([		
          'id' => 'modal-export-plan',		
-         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title"> SCHEDULE PLAN</h4></div>',	
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-file-excel-o"></div><div><h4 class="modal-title"> SCHEDULE PLAN</h4></div>',	
 		 'size' => Modal::SIZE_SMALL,	
          'headerOptions'=>[		
-                 'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',		
+                 'style'=> 'border-radius:5px; background-color: rgba(90, 171, 255, 0.7)',		
          ],		
      ]);		
      Modal::end();

@@ -543,8 +543,9 @@ $this->registerJs("
     ",$this::POS_READY);
     Modal::begin([
         'id' => 'modal-create-draft',
-        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search-plus"></div><div><h4 class="modal-title">GEOGRAFIS FILTER To PLAN MAINTAIN</h4></div>',
-        'headerOptions'=>[
+        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search-plus"></div><div><h4 class="modal-title">GEOGRAFIS FILTER</h4></div>',
+        'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
                 'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
         ],
     ]);

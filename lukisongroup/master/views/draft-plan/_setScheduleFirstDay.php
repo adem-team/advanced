@@ -19,11 +19,6 @@ if($model->STATUS != 0)
 {
 	$data_confirm ='apakah anda yakin ingin mengubah schedule?';
 }
-?>
-<div class="draft-plan-view">
-
-
-<?php
    /*info*/
     $cusviewinfo=DetailView::widget([
         'model' => $view_info,
@@ -39,19 +34,7 @@ if($model->STATUS != 0)
                 'label'=>'Schedule Group',
                 'labelColOptions' => ['style' => 'text-align:right;width: 30%']
             ],
-            
-        ],
-    ]); 
-
-    $layer_viewinfo=DetailView::widget([
-        'model' => $view_info,
-        'attributes' => [
-            [
-                'attribute' =>'CUST_NM',
-                'label'=>'Customer.NM',
-                'labelColOptions' => ['style' => 'text-align:right;width: 30%']
-            ],
-            [
+			[
                 'attribute' =>'layerNm',
                 // 'value'=>$view_info->custlayer->LAYER, 
                 'label'=>'Layer',
@@ -60,35 +43,26 @@ if($model->STATUS != 0)
             
         ],
     ]); 
-
-    ?>
-    <div class="row">
-        <div class="col-sm-6">
-        <?= $cusviewinfo ?>
-        </div>
-          <div class="col-sm-6">
-          <?= $layer_viewinfo ?>
-        </div>
-    </div>
+?>
+    
 
     <div class="row">
         <div class="col-sm-12">
-            
-			<?php $form = ActiveForm::begin(['id'=>$model->formName(),
-					'enableClientValidation' => true,
-  					'enableAjaxValidation'=>true,
-  					 'validationUrl'=>Url::toRoute('/master/draft-plan/valid')
-			]); ?>
-			<?=$form->field($model, 'displyGeoId')->hiddenInput(['value'=>$model->GEO_ID,'id'=>'draftplan-displygeoid'])->label(false); ?>
-			
-				<?=$form->field($model, 'CUST_KD')->hiddenInput(['value'=>$model->CUST_KD])->label(false); ?>
-
-				<?=$form->field($model, 'YEAR')->hiddenInput(['value'=>$model->YEAR])->label(false); ?>
-			<div class="row">
+            <div class="row">
 				<div class="col-sm-6">	
-						<?=$form->field($model, 'displyGeoNm')->textInput(['value' => $model->geoNm .' - '. $model->GeoDcrip,'readonly' => true])->label('CUSTOMER GROUP'); ?>
-				</div>
-				<div class="col-sm-6">
+					<?php $form = ActiveForm::begin(['id'=>$model->formName(),
+							'enableClientValidation' => true,
+							'enableAjaxValidation'=>true,
+							 'validationUrl'=>Url::toRoute('/master/draft-plan/valid')
+					]); ?>
+					<?=$form->field($model, 'displyGeoId')->hiddenInput(['value'=>$model->GEO_ID,'id'=>'draftplan-displygeoid'])->label(false); ?>
+					
+					<?=$form->field($model, 'CUST_KD')->hiddenInput(['value'=>$model->CUST_KD])->label(false); ?>
+
+					<?=$form->field($model, 'YEAR')->hiddenInput(['value'=>$model->YEAR])->label(false); ?>
+					
+					<?=$form->field($model, 'displyGeoNm')->textInput(['value' => $model->geoNm .' - '. $model->GeoDcrip,'readonly' => true])->label('CUSTOMER GROUP'); ?>
+						
 					<?= $form->field($model, 'GEO_SUB')->widget(DepDrop::classname(), [
 						'type'=>DepDrop::TYPE_SELECT2,
 						'options'=>['placeholder'=>'Select ...'],
@@ -100,62 +74,58 @@ if($model->STATUS != 0)
 							'url' => Url::to(['/master/draft-plan/lis-geo-sub']),
 						]
 					])->label('AREA GROUP') 
+					?>						
+					
+					<?= $form->field($model_day, 'OPT')->widget(Select2::classname(), [
+							'data' => $opt,
+							'options' => ['placeholder' => 'Pilih ...'],
+							'pluginOptions' => [
+								'allowClear' => true
+								 ],
+						])->label('Options Jeda Pekan');
+
 					?>
+
+					<?= $form->field($model, 'DAY_ID')->widget(DepDrop::classname(), [
+							'type'=>DepDrop::TYPE_SELECT2,
+							'options'=>['placeholder'=>'Select ...'],
+							'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+							'pluginOptions'=>[
+								'depends'=>['dayname-opt'],
+								 'initialize' => true,
+								  'loadingText' => 'Loading  ...',
+								'url' => Url::to(['/master/draft-plan/lisday']),
+							]
+						])->label('Setel Hari') 
+					?>
+
+				   <!--   $form->field($model, 'DAY_ID')->widget(Select2::classname(), [
+							// 'data' => $opt,
+							'options' => ['placeholder' => 'Pilih ...'],
+							'pluginOptions' => [
+								'allowClear' => true,
+
+								 ],
+						]);?> -->
+				
+
+					<div class="form-group">
+						<?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'data-confirm'=>$data_confirm]) ?>
+
+					 <?= Html::button(Yii::t('app', 'Delete'),
+								[
+								'id'=>'modalButton',
+								'class'=>"btn btn-danger btn",      
+							  ]); ?>				
+					</div>
+					<?php ActiveForm::end(); ?>
 				</div>
-			</div>		
-			
-			<?= $form->field($model_day, 'OPT')->widget(Select2::classname(), [
-					'data' => $opt,
-					'options' => ['placeholder' => 'Pilih ...'],
-					'pluginOptions' => [
-						'allowClear' => true
-						 ],
-				])->label('Options Jeda Pekan');
-
-			?>
-
-
-			<?= $form->field($model, 'DAY_ID')->widget(DepDrop::classname(), [
-					'type'=>DepDrop::TYPE_SELECT2,
-					'options'=>['placeholder'=>'Select ...'],
-					'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-					'pluginOptions'=>[
-						'depends'=>['dayname-opt'],
-						 'initialize' => true,
-						  'loadingText' => 'Loading  ...',
-						'url' => Url::to(['/master/draft-plan/lisday']),
-					]
-				])->label('Setel Hari') 
-			?>
-
-		   <!--   $form->field($model, 'DAY_ID')->widget(Select2::classname(), [
-					// 'data' => $opt,
-					'options' => ['placeholder' => 'Pilih ...'],
-					'pluginOptions' => [
-						'allowClear' => true,
-
-						 ],
-				]);?> -->
-		
-
-			<div class="form-group">
-				<?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'data-confirm'=>$data_confirm]) ?>
-
-			 <?= Html::button(Yii::t('app', 'Delete'),
-						[
-						'id'=>'modalButton',
-						'class'=>"btn btn-danger btn",      
-					  ]); ?>
-
-			
+				<div class="col-sm-6">
+					<?= $cusviewinfo ?>
+				</div>
 			</div>
-
-			<?php ActiveForm::end(); ?>
 		</div>
-
-    </div>
-
-</div>
+	</div>
 
 
 <?php

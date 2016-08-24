@@ -328,7 +328,7 @@ $this->registerJs("
         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-gears"></div><div><h4 class="modal-title">SETUP KODE</h4></div>',
          'size' => Modal::SIZE_SMALL,	
 		'headerOptions'=>[
-                'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+                'style'=> 'border-radius:5px; background-color: rgba(255, 129, 117, 1)',
         ],
     ]);
     Modal::end();
