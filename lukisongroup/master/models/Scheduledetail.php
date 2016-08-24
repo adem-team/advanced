@@ -4,6 +4,7 @@ namespace lukisongroup\master\models;
 
 use Yii;
 use lukisongroup\master\models\Schedulegroup;
+use lukisongroup\master\models\DraftLayer;
 use lukisongroup\master\models\Customers;
 use lukisongroup\sistem\models\Userlogin;
 /**
@@ -63,6 +64,10 @@ class Scheduledetail extends \yii\db\ActiveRecord
 	public function getCust()
     {
         return $this->hasOne(Customers::className(), ['CUST_KD' => 'CUST_ID']);
+    }
+	public function getTbllayer()
+    {
+        return $this->hasOne(DraftLayer::className(), ['LAYER_ID' => 'LAYER'])->via('cust');
     }
 	public function getNmcust()
     {

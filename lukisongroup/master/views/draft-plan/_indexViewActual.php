@@ -67,17 +67,19 @@ $JSEventClick = <<<EOF
 		var tgl1 = new Date(tgl);
 		var id = moment(tgl1).format("YYYY-MM-DD");
 		var user  =  calEvent.id;
-		 $.get("/master/draft-plan/get-data-actual?id="+id+"&userid="+user, function( data ) {
+		var grp =  calEvent.grp;
+		 $.get("/master/draft-plan/get-data-actual?id="+id+"&userid="+user+"&grp="+grp, function( data ) {
             	 var peopleHTML = "";
             	 var data = $.parseJSON(data);
-            	// console.log(data.cust['CUST_NM']); 
+            	 console.log(data); 
+            	// console.log(data.scdlheader['NOTE']); 				
 			      // Loop through Object and create peopleHTML
 			      for (var key in data) {
 			        if (data.hasOwnProperty(key)) {
 			          peopleHTML += "<tr>";
 			            peopleHTML += "<td>" + data[key]["TGL"] + "</td>";
 			            peopleHTML += "<td>" + data[key].cust['CUST_NM'] + "</td>";
-			            peopleHTML += "<td>" + data[key]["NOTE"] + "</td>";
+			            peopleHTML += "<td>" + data[key].tbllayer['LAYER_NM'] + "</td>";
 			          peopleHTML += "</tr>";
 			        }
 			      }
@@ -131,7 +133,7 @@ EOF;
       <tr>
         <th>TGL Masuk</th>
         <th>Customers</th>
-        <th>Note</th>
+        <th>LAYER LEVEL</th>
       </tr>
     </thead> <tbody>
     </tbody>
@@ -148,10 +150,10 @@ EOF;
 				);	
 ?>
 <div class="row">
-	<div class="col-sm-8 col-md-8 col-lg-8" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
+	<div class="col-sm-7 col-md-7 col-lg-7" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
 		<?=$vwScdlActual?>
 	</div>
-	<div class="col-sm-4 col-md-4 col-lg-4">
+	<div class="col-sm-5 col-md-5 col-lg-5">
 		<?php echo $viewDetailactual?>
 	</div>
 </div>

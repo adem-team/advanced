@@ -67,8 +67,9 @@ $JSEventClick = <<<EOF
 		var tgl = calEvent.start;
 		var tgl1 = new Date(tgl);
 		var id = moment(tgl1).format("YYYY-MM-DD");
-
-		 $.get("/master/draft-plan/get-data-plan?id="+id, function( data ) {
+		var grp =  calEvent.grp;
+		//alert(grp);
+		 $.get("/master/draft-plan/get-data-plan?id="+id+"&grp="+grp, function( data ) {
             	 var peopleHTML = "";
             	 var data = $.parseJSON(data);
             	// console.log(data.custTbl['CUST_NM']); 
@@ -78,7 +79,7 @@ $JSEventClick = <<<EOF
 			          peopleHTML += "<tr>";
 			            peopleHTML += "<td>" + data[key]["TGL"] + "</td>";
 			            peopleHTML += "<td>" + data[key].custTbl['CUST_NM'] + "</td>";
-			            peopleHTML += "<td>" + data[key]["SCDL_GROUP_NM"] + "</td>";
+			            peopleHTML += "<td>" + data[key].tbllayer["LAYER_NM"] + "</td>";
 			          peopleHTML += "</tr>";
 			        }
 			      }
@@ -149,7 +150,7 @@ EOF;
       <tr>
         <th>TGL Masuk</th>
         <th>Customers</th>
-        <th>GROUP_NM</th>
+        <th>LAYER LEVEL</th>
       </tr>
     </thead> <tbody>
     </tbody>
@@ -160,10 +161,10 @@ EOF;
 				);	
 ?>
 <div class="row">
-	<div class="col-sm-8 col-md-8 col-lg-8">
+	<div class="col-sm-7 col-md-7 col-lg-7">
 		<?=$vwScdlPlan?>
 	</div>
-	<div class="col-sm-4 col-md-4 col-lg-4">
+	<div class="col-sm-5 col-md-5 col-lg-5">
 		<?=$viewDetailPlan?>
 	</div>
 </div>

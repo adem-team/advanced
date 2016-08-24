@@ -105,6 +105,12 @@ class DraftPlanDetail extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Customers::className(), ['CUST_KD' => 'CUST_ID']);
     }	
+	
+	public function getTbllayer()
+    {
+        return $this->hasOne(DraftLayer::className(), ['LAYER_ID' => 'LAYER'])->via('custTbl');
+    }
+	
 	public function getCustNm() 
     {
         return $this->custTbl!=''?$this->custTbl->CUST_NM:'none';
