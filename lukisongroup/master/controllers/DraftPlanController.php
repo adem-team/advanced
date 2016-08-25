@@ -1034,16 +1034,30 @@ class DraftPlanController extends Controller
                 
                     $model = DraftPlanDetail::find()->where(['LIKE', 'ID', $value])->one();
 
-                    $scdl_group_nm = $model->SCDL_GROUP_NM;
+                    
+
+                    $scdl_id = $model->SCDL_ID;
+
+                  
+                    $baris = DraftPlanDetail::find()->select('CUST_ID')->where(['SCDL_ID'=>$scdl_id])->andwhere('STATUS<>3')->distinct()->count();
+                  
+                    if($baris != 1)
+                    {
+                      $status = 0;
+                    }else{
+                      $status = 3;
+                    }
 
                     $cus_id = $model->CUST_ID;
 
+                    $scdl_group_nm = $model->SCDL_GROUP_NM;
 
                      $transaction = DraftPlan::getDb()->beginTransaction();
                     try {
-                        self::conn_esm()->createCommand()->update('c0002scdl_plan_detail',['STATUS'=>3],'CUST_ID LIKE"'.$cus_id.'"')->execute();
 
-                        self::conn_esm()->createCommand()->update('c0002scdl_plan_header',['STATUS'=>3],'NOTE="'.$scdl_group_nm.'"')->execute(); 
+                       self::conn_esm()->createCommand()->update('c0002scdl_plan_detail',['STATUS'=>3],'CUST_ID="'.$cus_id.'" AND STATUS = 0')->execute();
+
+                        self::conn_esm()->createCommand()->update('c0002scdl_plan_header',['STATUS'=>$status],'NOTE="'.$scdl_group_nm.'" AND STATUS = 0')->execute(); 
                         // ...other DB operations...
                         $transaction->commit();
                     } catch(\Exception $e) {
@@ -1541,6 +1555,7 @@ class DraftPlanController extends Controller
 				FROM c0002scdl_plan_header a1
         LEFT JOIN  c0002scdl_plan_detail a3 on a3.SCDL_ID=a3.SCDL_ID
 				LEFT JOIN dbm_086.user_profile a2 on a2.ID_USER=a1.USER_ID
+        where a1.STATUS <> 3
          GROUP BY a1.NOTE,a1.TGL
 			")->queryAll(),
 		]);
