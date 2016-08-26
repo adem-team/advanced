@@ -76,10 +76,12 @@ $JSEventClick = <<<EOF
 			      // Loop through Object and create peopleHTML
 			      for (var key in data) {
 			        if (data.hasOwnProperty(key)) {
-			          peopleHTML += "<tr>";
+						var sttcase=data[key]['STATUS_CASE']!='0'?'PLAN':'CASE';
+					 peopleHTML += "<tr>";
 			            peopleHTML += "<td>" + data[key]["TGL"] + "</td>";
 			            peopleHTML += "<td>" + data[key].cust['CUST_NM'] + "</td>";
 			            peopleHTML += "<td>" + data[key].tbllayer['LAYER_NM'] + "</td>";
+			            peopleHTML += "<td>" + sttcase + "</td>";
 			          peopleHTML += "</tr>";
 			        }
 			      }
@@ -144,6 +146,7 @@ EOF;
         <th>TGL Masuk</th>
         <th>Customers</th>
         <th>LAYER LEVEL</th>
+        <th>STATUS</th>
       </tr>
     </thead> <tbody>
     </tbody>
