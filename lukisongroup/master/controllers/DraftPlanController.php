@@ -1125,7 +1125,8 @@ class DraftPlanController extends Controller
      public function actionGetDataPlan($id,$grp)
     {
 
-        $data = DraftPlanDetail::find()->with(['custTbl','tbllayer'])->where("TGL='".$id."' AND SCDL_GROUP_NM='".$grp."' AND (STATUS=0 or STATUS=1)")->asArray()->all();
+        //$data = DraftPlanDetail::find()->with(['custTbl','tbllayer'])->where("TGL='".$id."' AND SCDL_GROUP_NM='".$grp."' AND (STATUS=0 or STATUS=1)")->asArray()->all();
+        $data = DraftPlanDetail::find()->with(['custTbl','tbllayer'])->where("TGL='".$id."' AND SCDL_GROUP_NM='".$grp."' AND (STATUS<>2 or STATUS<>3)")->asArray()->all();
 
 
         echo json_encode($data);
@@ -1452,7 +1453,7 @@ class DraftPlanController extends Controller
             $model->save();
 
   
-       return $this->redirect(['index?tab=3']);
+			return $this->redirect(['index?tab=3']);
         } else {
             return $this->renderAjax('_setoutcase', [
                 'model' => $model,
@@ -1657,7 +1658,7 @@ class DraftPlanController extends Controller
 	public function actionJsoncalendarPlan($start=NULL,$end=NULL,$_=NULL){
 		$calendarPlan= new ArrayDataProvider([
 			'allModels'=>Yii::$app->db_esm->createCommand("
-				SELECT a3.ID as id, a1.TGL as start,a1.TGL as end, concat(a1.NOTE,'-',a2.NM_FIRST) as title,a1.NOTE as grp  
+				SELECT a3.ID as id, a1.TGL as start,a1.TGL as end, concat(a1.NOTE,'-',(CASE WHEN a2.NM_FIRST<>'' THEN a2.NM_FIRST ELSE 'NoUser' END)) as title,a1.NOTE as grp  
 				FROM c0002scdl_plan_header a1
         LEFT JOIN  c0002scdl_plan_detail a3 on a3.SCDL_ID=a3.SCDL_ID
 				LEFT JOIN dbm_086.user_profile a2 on a2.ID_USER=a1.USER_ID
