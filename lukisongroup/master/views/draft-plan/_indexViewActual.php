@@ -129,6 +129,16 @@ EOF;
 										'class' => 'btn btn-info btn-sm'		
 									]
 							);
+
+
+	$btn_set_outcase = Html::a('<i class="fa fa-plus"></i> SET OUT CASE',
+									'/master/draft-plan/set-out-case',
+									[		
+										'data-toggle'=>"modal",		
+										'data-target'=>"#modal-Case",		
+										'class' => 'btn btn-info btn-sm'		
+									]
+							);
 	$info = "<div id =actual><table class='table'><thead>
       <tr>
         <th>TGL Masuk</th>
@@ -140,7 +150,7 @@ EOF;
   </table></div>";
 
   $viewDetailactual= Html::panel(
-					['heading' => 'DETAIl GROUP ACTUAL', 'body' =>$info],
+					['heading' => $btn_set_outcase.' '.'DETAIl GROUP ACTUAL', 'body' =>$info],
 					Html::TYPE_DANGER
 				);	
 
@@ -176,6 +186,31 @@ $this->registerJs("
      Modal::begin([		
          'id' => 'modal-export-actual',		
          'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-file-excel-o"></div><div><h4 class="modal-title"> SCHEDULE ACTUAL</h4></div>',
+		 'size' => Modal::SIZE_SMALL,		 
+         'headerOptions'=>[		
+                 'style'=> 'border-radius:5px; background-color:  rgba(90, 171, 255, 0.7)',		
+         ],		
+     ]);		
+     Modal::end();
+
+     $this->registerJs("		
+         $.fn.modal.Constructor.prototype.enforceFocus = function(){};		
+         $('#modal-Case').on('show.bs.modal', function (event) {		
+             var button = $(event.relatedTarget)		
+             var modal = $(this)		
+             var title = button.data('title')		
+             var href = button.attr('href')		
+             //modal.find('.modal-title').html(title)		
+             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')		
+             $.post(href)		
+                 .done(function( data ) {		
+                     modal.find('.modal-body').html(data)		
+                 });		
+             })		
+     ",$this::POS_READY);		
+     Modal::begin([		
+         'id' => 'modal-Case',		
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-user"></div><div><h4 class="modal-title"> SET OUT CASE</h4></div>',
 		 'size' => Modal::SIZE_SMALL,		 
          'headerOptions'=>[		
                  'style'=> 'border-radius:5px; background-color:  rgba(90, 171, 255, 0.7)',		

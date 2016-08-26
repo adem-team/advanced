@@ -30,6 +30,9 @@ class Scheduledetail extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    /*validation */
+    const SCENARIO_CASE = 'setoutcase';
+
     public static function tableName()
     {
         return 'c0002scdl_detail';
@@ -100,8 +103,9 @@ class Scheduledetail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['TGL', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
-            [['SCDL_GROUP', 'STATUS'], 'integer'],
+            [['TGL', 'SCDL_GROUP', 'NOTE','USER_ID','CUST_ID'], 'required','on'=>self::SCENARIO_CASE],
+            [['TGL', 'CREATE_AT','SCDL_GROUP','UPDATE_AT'], 'safe'],
+            [['STATUS'], 'integer'],
             [['LAT', 'LAG', 'RADIUS'], 'number'],
             [['NOTE'], 'string'],
             [['CUST_ID', 'USER_ID'], 'string', 'max' => 50],
