@@ -71,18 +71,22 @@ $JSEventClick = <<<EOF
 		 $.get("/master/draft-plan/get-data-actual?id="+id+"&userid="+user+"&grp="+grp, function( data ) {
             	 var peopleHTML = "";
             	 var data = $.parseJSON(data);
+				 var i=1;
             	 console.log(data); 
             	// console.log(data.scdlheader['NOTE']); 				
 			      // Loop through Object and create peopleHTML
 			      for (var key in data) {
+					  
 			        if (data.hasOwnProperty(key)) {
 						var sttcase=data[key]['STATUS_CASE']!='0'?'CASE':'PLAN';
 					 peopleHTML += "<tr>";
+			            peopleHTML += "<td>" + i + "</td>";
 			            peopleHTML += "<td>" + data[key]["TGL"] + "</td>";
 			            peopleHTML += "<td>" + data[key].cust['CUST_NM'] + "</td>";
 			            peopleHTML += "<td>" + data[key].tbllayer['LAYER_NM'] + "</td>";
 			            peopleHTML += "<td>" + sttcase + "</td>";
 			          peopleHTML += "</tr>";
+					  i=i+1;
 			        }
 			      }
 		 		 // Replace table’s tbody html with peopleHTML
@@ -143,6 +147,7 @@ EOF;
 							);
 	$info = "<div id =actual><table class='table'><thead>
       <tr>
+        <th>#</th>
         <th>TGL Masuk</th>
         <th>Customers</th>
         <th>LAYER LEVEL</th>
