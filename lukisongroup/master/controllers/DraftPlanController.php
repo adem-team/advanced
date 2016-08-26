@@ -28,6 +28,7 @@ use lukisongroup\master\models\DraftPlanDetail;
 use lukisongroup\master\models\DraftPlanGroupSearch;
 use lukisongroup\sistem\models\UserloginSearch;
 use crm\sistem\models\Userprofile;
+use lukisongroup\hrd\models\Employe;
 
 
 use lukisongroup\master\models\DraftGeoSub;
@@ -103,11 +104,29 @@ class DraftPlanController extends Controller
         return $sql->username . ' - ' . $sql->crmUserprofileTbl->NM_FIRST; });
     }
 
+    public function getscdl_group()
+    {
+      $sql = DraftGeoSub::find()->with('geoTbl')->all();
+
+      return ArrayHelper::map($sql,function ($sql, $defaultValue) {
+        return $sql->GEO_ID.'.'.$sql->GEO_SUB; },function ($sql, $defaultValue) {
+        return $sql->geoTbl->GEO_NM . ' - ' . $sql->GEO_SUB; });
+    }
+
+    public function get_aryUserSalesmanager()
+    {
+      $sql = Userlogin::find()->with('emp')->where('  POSITION_ACCESS = 1 AND status <>1')->all();
+      return ArrayHelper::map($sql,'username',function ($sql, $defaultValue) {
+        return $sql->emp->EMP_NM . ' - ' . $sql->emp->EMP_NM_BLK; });
+    }
+
 
      public function get_arygeo()
     {
         return ArrayHelper::map(DraftGeo::find()->where('GEO_ID<>1 AND STATUS<>3')->all(),'GEO_ID','GEO_NM');
     }
+
+
 
      public function get_aryProses()
     {
@@ -942,7 +961,6 @@ class DraftPlanController extends Controller
     *link modal export.
     *@param int flag
     *@return mixed
-
  **/
  public function actionExportModal($flag)
  {
@@ -1023,6 +1041,13 @@ class DraftPlanController extends Controller
     //   }
     // }
 
+    /**
+        *delete using checkbox Models PlanDetail
+        *@author wawan
+        *@since ver  1.1.0
+        *@return true
+    **/
+
  public function actionPilihDelete()
     {
       if (Yii::$app->request->isAjax) {
@@ -1034,13 +1059,15 @@ class DraftPlanController extends Controller
                 
                     $model = DraftPlanDetail::find()->where(['LIKE', 'ID', $value])->one();
 
-                    
+                    $scdl_group = $model->SCDL_GROUP;
 
-                    $scdl_id = $model->SCDL_ID;
+                   // $scdl_id = $model->SCDL_ID;
+                    // $baris = DraftPlanDetail::find()->select('CUST_ID')->where(['SCDL_ID'=>$scdl_id])->andwhere('STATUS<>3')->distinct()->count();
 
-                  
-                    $baris = DraftPlanDetail::find()->select('CUST_ID')->where(['SCDL_ID'=>$scdl_id])->andwhere('STATUS<>3')->distinct()->count();
-                  
+                    // cek baris
+                    $baris = DraftPlanDetail::find()->select('CUST_ID')->where(['SCDL_GROUP'=>$scdl_group])->andwhere('STATUS<>3')->distinct()->count();
+
+                  // if @var baris not equal 1 then @var status equal 0
                     if($baris != 1)
                     {
                       $status = 0;
@@ -1048,16 +1075,17 @@ class DraftPlanController extends Controller
                       $status = 3;
                     }
 
+                   
                     $cus_id = $model->CUST_ID;
 
-                    $scdl_group_nm = $model->SCDL_GROUP_NM;
-
+                   
+                    // begin transcation if query not execution rollback
                      $transaction = DraftPlan::getDb()->beginTransaction();
                     try {
 
                        self::conn_esm()->createCommand()->update('c0002scdl_plan_detail',['STATUS'=>3],'CUST_ID="'.$cus_id.'" AND STATUS = 0')->execute();
 
-                        self::conn_esm()->createCommand()->update('c0002scdl_plan_header',['STATUS'=>$status],'NOTE="'.$scdl_group_nm.'" AND STATUS = 0')->execute(); 
+                        self::conn_esm()->createCommand()->update('c0002scdl_plan_header',['STATUS'=>$status],'SCDL_GROUP="'.$scdl_group.'" AND STATUS = 0')->execute(); 
                         // ...other DB operations...
                         $transaction->commit();
                     } catch(\Exception $e) {
@@ -1086,6 +1114,14 @@ class DraftPlanController extends Controller
         echo json_encode($data_id);
     }
 
+    /** 
+      * get data json from Models DraftPlanDetail
+      * place call function _indexViewPlan
+      * @param $id string
+      * @param $grp string
+      * @author wawan
+      * @since 1.1.0
+    **/
      public function actionGetDataPlan($id,$grp)
     {
 
@@ -1095,10 +1131,20 @@ class DraftPlanController extends Controller
         echo json_encode($data);
     }
 
+    /** 
+      * get data json from Models Scheduledetail
+      * place call function _indexViewActual
+      * @param $id string
+      * @param $grp string
+      * @param $userid int
+      * @author wawan
+      * @since 1.1.0
+    **/
       public function actionGetDataActual($id,$userid,$grp)
     {
 
         //$data = Scheduledetail::find()->with('cust')->where("TGL='".$id."' and NOTE='".$grp."' and USER_ID='".$userid."' and (STATUS=0 or STATUS=1 ) AND STATUS_CASE=0")->asArray()->all();
+
         $data = Scheduledetail::find()->with(['cust','tbllayer'])->where("TGL='".$id."' and USER_ID='".$userid."' and (STATUS=0 or STATUS=1 ) AND STATUS_CASE=0")->asArray()->all();
 
 
@@ -1212,6 +1258,12 @@ class DraftPlanController extends Controller
              
    }
 
+   /** 
+      * Approve using checkbox 
+      * place call function _indexMaintainPlan
+      * @author wawan
+      * @since 1.1.0
+    **/
    public function actionApproveAll()
   {
        if (Yii::$app->request->isAjax) {
@@ -1262,7 +1314,12 @@ class DraftPlanController extends Controller
 
   
 
-   /*AJAX Ganti Jadwal*/
+  /** 
+    * Dedpdrop Change Schedule
+    * place call function _gantijadwal
+    * @author wawan
+    * @since 1.1.0
+  **/
    public function actionLisGanti() {
 
          $out = [];
@@ -1283,6 +1340,13 @@ class DraftPlanController extends Controller
        echo Json::encode(['output'=>'', 'selected'=>'']);
              
    }
+
+   /** 
+    * Change Schedule if succesful redirect index tab1
+    * place call function _gantijadwal
+    * @author wawan
+    * @since 1.1.0
+  **/
 
    public function actionGantiJadwal()
    {
@@ -1373,6 +1437,33 @@ class DraftPlanController extends Controller
         }
     }
 
+
+    
+    public function actionSetOutCase()
+    {
+        $model = new Scheduledetail();
+         $model->scenario = 'setoutcase'; //scenario setoutcase
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->CREATE_AT = date('Y-m-d');
+            $model->CREATE_BY = Yii::$app->user->identity->username;
+            $model->STATUS_CASE = 1;
+            $model->save();
+
+  
+       return $this->redirect(['index?tab=3']);
+        } else {
+            return $this->renderAjax('_setoutcase', [
+                'model' => $model,
+                'user' => self::get_aryUserCrmSales(),
+                'cus'=> self::ary_customers(),
+                'group'=>self::getscdl_group(),
+                'note'=>self::get_aryUserSalesmanager()
+
+            ]);
+        }
+    }
+
     /**
      * Updates an existing DraftPlan model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -1442,7 +1533,7 @@ class DraftPlanController extends Controller
     }
 
 
-      /**
+    /**
      * Delete All
      * @param string $custId
      */
@@ -1457,9 +1548,11 @@ class DraftPlanController extends Controller
 
     }
 
-      /**
-     * Delete All
+    /**
+     * Delete All models DraftPlanDetail AND DraftPlanHeader
+     * call function ganti-jadwal
      * @param string $custId
+     * @param string $tgl
      */
     protected function GantiDetailHeader($custId,$tgl)
     {
@@ -1473,8 +1566,10 @@ class DraftPlanController extends Controller
 
 
      /**
-     * update STATUS 0
+     * update STATUS 0 according YEAR AND CUST_KD AND STATUS equal 1
+     * call funtion action ganti-jadwal
      * @param string $custId
+     * @param string $tgl
      */
     protected function GantiJadwalPlan($custId,$tgl)
     {
@@ -1521,8 +1616,11 @@ class DraftPlanController extends Controller
 
 
     /**
-     * update STATUS 2
+     * update STATUS 2 table c0002scdl_plan_detail or               c0002scdl_plan_header 
+     * update STATUS 1 table c0002scdl_plan
+     * call function sendMaintain 
      * @param string $custId
+     * @param string $tgl
      */
     protected function ApproveValidasi($custId,$tgl)
     {
@@ -1534,6 +1632,13 @@ class DraftPlanController extends Controller
          $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan SET STATUS=0 WHERE YEAR ="'.$tgl.'" AND CUST_KD="'.$custId.'" AND STATUS = 1')->execute();
     }
 
+    /**
+     * Delete all models DraftPlanDetail
+     * update STATUS 0 table c0002scdl_plan according CUST_KD AND STATUS equal 1
+     * call function action delete-schedule 
+     * @param string $id
+     * @since 1.1.1
+     */
     public function Schdelete($id)
     {
         $model = DraftPlanDetail::deleteAll('CUST_ID = :cus_id', [':cus_id' => $id]);
