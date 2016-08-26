@@ -32,8 +32,7 @@ class Scheduledetail extends \yii\db\ActiveRecord
      */
     /*validation */
     const SCENARIO_CASE = 'setoutcase';
-
-    public static function tableName()
+	public static function tableName()
     {
         return 'c0002scdl_detail';
     }
@@ -71,7 +70,7 @@ class Scheduledetail extends \yii\db\ActiveRecord
 	public function getTbllayer()
     {
         return $this->hasOne(DraftLayer::className(), ['LAYER_ID' => 'LAYER'])->via('cust');
-    }
+	}
 	public function getNmcust()
     {
         return $this->cust->CUST_NM;
@@ -105,7 +104,7 @@ class Scheduledetail extends \yii\db\ActiveRecord
         return [
             [['TGL', 'SCDL_GROUP', 'NOTE','USER_ID','CUST_ID'], 'required','on'=>self::SCENARIO_CASE],
             [['TGL', 'CREATE_AT','SCDL_GROUP','UPDATE_AT'], 'safe'],
-            [['STATUS'], 'integer'],
+            [['STATUS','STATUS_CASE'], 'integer'],
             [['LAT', 'LAG', 'RADIUS'], 'number'],
             [['NOTE'], 'string'],
             [['CUST_ID', 'USER_ID'], 'string', 'max' => 50],

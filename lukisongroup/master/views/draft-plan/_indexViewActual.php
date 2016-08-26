@@ -76,10 +76,12 @@ $JSEventClick = <<<EOF
 			      // Loop through Object and create peopleHTML
 			      for (var key in data) {
 			        if (data.hasOwnProperty(key)) {
-			          peopleHTML += "<tr>";
+						var sttcase=data[key]['STATUS_CASE']!='0'?'PLAN':'CASE';
+					 peopleHTML += "<tr>";
 			            peopleHTML += "<td>" + data[key]["TGL"] + "</td>";
 			            peopleHTML += "<td>" + data[key].cust['CUST_NM'] + "</td>";
 			            peopleHTML += "<td>" + data[key].tbllayer['LAYER_NM'] + "</td>";
+			            peopleHTML += "<td>" + sttcase + "</td>";
 			          peopleHTML += "</tr>";
 			        }
 			      }
@@ -131,12 +133,12 @@ EOF;
 							);
 
 
-	$btn_set_outcase = Html::a('<i class="fa fa-plus"></i> SET OUT CASE',
+	$btn_set_outcase = Html::a('<i class="fa fa-magic"></i> SET OUT CASE',
 									'/master/draft-plan/set-out-case',
 									[		
 										'data-toggle'=>"modal",		
 										'data-target'=>"#modal-Case",		
-										'class' => 'btn btn-info btn-sm'		
+										'class' => 'btn btn-danger btn-sm'		
 									]
 							);
 	$info = "<div id =actual><table class='table'><thead>
@@ -144,13 +146,14 @@ EOF;
         <th>TGL Masuk</th>
         <th>Customers</th>
         <th>LAYER LEVEL</th>
+        <th>STATUS</th>
       </tr>
     </thead> <tbody>
     </tbody>
   </table></div>";
 
   $viewDetailactual= Html::panel(
-					['heading' => $btn_set_outcase.' '.'DETAIl GROUP ACTUAL', 'body' =>$info],
+					['heading' => 'DETAIl GROUP ACTUAL'.' '.'<div style="float:right; top:0px;">'.$btn_set_outcase.'</div>', 'body' =>$info],
 					Html::TYPE_DANGER
 				);	
 
@@ -210,10 +213,10 @@ $this->registerJs("
      ",$this::POS_READY);		
      Modal::begin([		
          'id' => 'modal-Case',		
-         'header' => '<div style="float:left;margin-right:10px" class="fa fa-user"></div><div><h4 class="modal-title"> SET OUT CASE</h4></div>',
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-magic"></div><div><h4 class="modal-title"> SET OUT CASE</h4></div>',
 		 'size' => Modal::SIZE_SMALL,		 
          'headerOptions'=>[		
-                 'style'=> 'border-radius:5px; background-color:  rgba(90, 171, 255, 0.7)',		
+                 'style'=> 'border-radius:5px; background-color:  rgba(255, 129, 117, 1)',		
          ],		
      ]);		
      Modal::end();
