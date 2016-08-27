@@ -7,7 +7,8 @@ use yii\bootstrap\Modal;
 use lukisongroup\master\models\DraftPlan;
 use lukisongroup\master\models\DraftPlanGroup;
 Use ptrnov\salesforce\Jadwal;
-
+use kartik\widgets\Spinner;
+$ptr_spiner1=Spinner::widget(['id'=>'spn-gv-maintain','preset' => 'large', 'align' => 'center', 'color' => 'blue','hidden'=>false]);	
 
 $actionClass='btn btn-info btn-xs';
 $actionLabel='Update';
@@ -349,7 +350,8 @@ $gvDraftPlan=GridView::widget([
   'panel' => [
        'heading'=>false,
         'type'=>'info',
-           'before'=>Html::a('<i class="fa fa-check-circle"></i> '.Yii::t('app', 'Approve'),'/master/draft-plan/approve-all',
+           'before'=>$ptr_spiner1.
+		   Html::a('<i class="fa fa-check-circle"></i> '.Yii::t('app', 'Approve'),'/master/draft-plan/approve-all',
                     [
                         'data-toggle-approve-all'=>"approve-plan-erp",
                         'id'=>'approvemodal-erp-plan',
@@ -520,7 +522,23 @@ $this->registerJs("
         ],
     ]);
     Modal::end();
-
+	
+	 
+	$this->registerJs("	
+		window.onload = function(){ 
+			 var s= document.getElementById('spn-gv-maintain');
+			s.hidden=false;
+		};	
+		 $(document).on('ajaxStart', function() {
+				var s= document.getElementById('spn-actual');
+				s.hidden=true;
+		  });
+		$(document).on('ajaxStop', function() {
+			var s= document.getElementById('spn-gv-maintain');
+			s.hidden=true;
+		});			
+     ",$this::POS_READY)
+?>
 
   
 

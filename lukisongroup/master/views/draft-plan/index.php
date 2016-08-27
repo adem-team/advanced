@@ -10,6 +10,9 @@ use kartik\tabs\TabsX;
 use yii\widget\Pjax;
 use yii\helpers\Url;
 
+
+
+
 /* @var $this yii\web\View */
 /* @var $searchModel lukisongroup\master\models\DraftPlanSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -91,6 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		[
 			'label'=>'<i class="fa fa-braille fa-2x"></i> Plan Detail Maintain','content'=>$MaintainPlan,
 			'active'=>$tab1,
+			//'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['/master/draft-plan/maintain-plan-tab'])]
 		],		
 		[
 			'label'=>'<i class="fa fa-calendar-minus-o fa-2x"></i>  Schedule-Plan','content'=>$vwSchedulePlan,
@@ -128,7 +132,8 @@ $this->params['breadcrumbs'][] = $this->title;
 										aryidx = (queryString.split("="))[1];
 									}
 									//add Tab normal
-									array1=[8,9,10];
+									//array1=[0,1,4];
+									array1=[10,11,14];
 									ary = array1.concat(aryidx);
 									//alert(ary);
 									for(var i=0; i<ary.length; i++) {
@@ -142,13 +147,69 @@ $this->params['breadcrumbs'][] = $this->title;
 								* @author ptr.nov [ptr.nov@gmail.com]
 								*/
 								var idx = $("ul li.active").index();
-								if(isInArray(idx) != true){
-									//alert(isInArray(idx));
-									//set URL by ?tab=idx
-									document.location.href = "/master/draft-plan?tab="+idx;
-								};
+									/* $.get("/master/draft-plan/get-tab?tab="+idx, function( data ) {
+										 var data = $.parseJSON(data);
+										cnt=(data);
+										localStorage.setItem("draftplan_tabstt"+idx,data);
+									}); */
+									
+									if(isInArray(idx) != true){
+										//alert(isInArray(idx));
+										//set URL by ?tab=idx
+										document.location.href = "/master/draft-plan?tab="+idx;
+									}else{	
+										//alert(cnt);
+										 // alert(localStorage.getItem("draftplan_tabstt"+idx));
+										 /* $("#gv-new-id-container").dataTable( {
+										  "ajax": {
+											"url": "/master/draft-plan/get-tab-isi?tab="+idx,
+											"dataSrc": "tableData"
+										  }
+										} ); */
+										 
+										 
+										/* $.get("/master/draft-plan/get-tab?tab="+idx, function( data ) {
+											 //alert(data);
+											 $("ul li.active").attr(data);
+											 $("#example").dataTable(
+										}); */
+										
+										
+										//test Dev Tab2 
+										 // var elem = document.getElementById("scdl-plan");
+										 // var list = elem.getElementsByTagName("button")[2];
+										 
+										 // alert(list.innerHTML);
+										 //alert(list[2].innerHTML)
+										
+										
+										/* $("#scdl-plan").dataTable( {
+										  "ajax": {
+											"url": "/master/draft-plan/get-tab-isi?tab="+idx,
+											"dataSrc": "tableData"
+										  }
+										} ); */
+										 //$("#scdl-plan").load();
+										 //alert("ok");
+										 //$("sales-plan-scdl-tab2").load();
+										// $("sales-plan-scdl-tab").tab("show");
+										/* function load() { 
+										  var elem = document.getElementById("scdl-plan");
+										  var list = elem.getElementsByTagName("button")[2];
+										  list.onclick = donothing1;
+										  list.addEventListener("click",donothing1); 
+										}  */
+										
+										//document.addEventListener("DOMContentLoaded", load, false);
+										
+									};
+									
 							}, 1);							
-				 }'				 
+				 }',
+				/* "tabsX.success" => 'function() { 
+					var s= document.getElementById("spn-gv-maintain");
+					s.hidden=false;
+				}',	 */			 
 		]
 	]);	
 		

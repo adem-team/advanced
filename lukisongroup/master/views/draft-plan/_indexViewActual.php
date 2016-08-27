@@ -8,7 +8,9 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 use yii\web\JsExpression;
 use yii\widgets\Pjax;
+use kartik\widgets\Spinner;
 
+$ptr_spinerActual=Spinner::widget(['id'=>'spn-actual','preset' => 'large', 'align' => 'center', 'color' => 'blue']);
 $JSCode = <<<EOF
 	function(start, end) {
 		var title = prompt('Event Title:');
@@ -148,9 +150,9 @@ EOF;
 	$info = "<div id =actual><table class='table'><thead>
       <tr>
         <th>#</th>
-        <th>TGL Masuk</th>
-        <th>Customers</th>
-        <th>LAYER LEVEL</th>
+        <th>TGL</th>
+        <th>CUSTOMERS</th>
+        <th>LAYER</th>
         <th>STATUS</th>
       </tr>
     </thead> <tbody>
@@ -163,7 +165,7 @@ EOF;
 				);	
 
 	$vwScdlActual= Html::panel(
-					['heading' => $btn_exportActual, 'body' =>$calenderActual],
+					['heading' => $btn_exportActual, 'body' =>$ptr_spinerActual.$calenderActual],
 					Html::TYPE_SUCCESS
 				);	
 ?>
@@ -225,4 +227,21 @@ $this->registerJs("
          ],		
      ]);		
      Modal::end();
+	 $this->registerJs("		
+		/* $(document).ajaxStart(function(){
+			$(document).ready(function() {
+				 var s= document.getElementById('spn-actual');
+				 s.hidden=false;
+			});
+		 }).ajaxStop(function(){
+			$(document).ready(function() {
+				var s= document.getElementById('spn-actual');
+				s.hidden=true;
+			});
+		 });	 */
+		 $(document).on('ajaxStop', function() {
+				var s= document.getElementById('spn-actual');
+				s.hidden=true;
+		  });
+     ",$this::POS_READY);
 ?>

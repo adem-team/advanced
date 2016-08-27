@@ -933,6 +933,82 @@ class DraftPlanController extends Controller
 		]);
     }
 
+	public function actionGetTab($tab){
+		// if ($tab==1){
+			// $searchModelMaintain = new DraftPlanDetailSearch();	
+			// $dataProviderMaintain = $searchModelMaintain->search(Yii::$app->request->queryParams);
+			// echo json_encode($dataProviderMaintain);
+		// };
+		if ($tab==0){
+			$searchModelPlan = new DraftPlanSearch();
+			$dataProviderPlan = $searchModelPlan->search(Yii::$app->request->queryParams);
+			return $dataProviderPlan->getTotalCount();
+		}elseif ($tab==1){
+			$searchModelMaintain = new DraftPlanDetailSearch();	
+			$dataProviderMaintain = $searchModelMaintain->search(Yii::$app->request->queryParams);
+			return $dataProviderMaintain->getTotalCount();
+		}elseif ($tab==4){
+			$searchModelGrp = new DraftPlanGroupSearch();
+			$searchModelUser = new UserloginSearch();
+			$dataProviderGrp = $searchModelGrp->search(Yii::$app->request->queryParams);			
+			$dataProviderUser = $searchModelUser->searchgroupplan(Yii::$app->request->queryParams);
+			return ($dataProviderGrp->getTotalCount() +  $dataProviderUser->getTotalCount());
+		}else{
+			return 0;
+		}
+		
+	}
+	public function actionGetTabIsi($tab){
+		// if ($tab==1){
+			// $searchModelMaintain = new DraftPlanDetailSearch();	
+			// $dataProviderMaintain = $searchModelMaintain->search(Yii::$app->request->queryParams);
+			// echo json_encode($dataProviderMaintain);
+		// };
+		if ($tab==0){
+			$searchModelPlan = new DraftPlanSearch();
+			$dataProviderPlan = $searchModelPlan->search(Yii::$app->request->queryParams);
+			return $dataProviderPlan;
+		}elseif ($tab==1){
+			$searchModelMaintain = new DraftPlanDetailSearch();	
+			$dataProviderMaintain = $searchModelMaintain->search(Yii::$app->request->queryParams);
+			return Json::encode($dataProviderMaintain);
+		}elseif ($tab==4){
+			$searchModelGrp = new DraftPlanGroupSearch();
+			$searchModelUser = new UserloginSearch();
+			$dataProviderGrp = $searchModelGrp->search(Yii::$app->request->queryParams);			
+			$dataProviderUser = $searchModelUser->searchgroupplan(Yii::$app->request->queryParams);
+			return ($dataProviderGrp->getTotalCount() +  $dataProviderUser->getTotalCount());
+		}else{
+			return 0;
+		}
+		
+	}
+	
+	public function actionMaintainPlanTab(){
+		 $aryStt= [
+          ['STATUS' => 0, 'STT_NM' => 'Draft'],
+          ['STATUS' => 1, 'STT_NM' => 'Approve'],
+        ];
+        $valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
+		
+		$searchModelMaintain = new DraftPlanDetailSearch();	
+		$dataProviderMaintain = $searchModelMaintain->search(Yii::$app->request->queryParams);
+		$htmlMaintainPlan= $this->renderAjax('_indexMaintainPlan',[
+			'searchModelMaintain' =>$searchModelMaintain,
+			'dataProviderMaintain' =>$dataProviderMaintain,
+			'dropcus'=>self::ary_customers(),
+			'valStt'=>$valStt,
+			'pekan'=>self::getPekan(),
+			'layer_nm'=>self::layer_nm(),
+			'scdl_group'=>self::get_arygeoplandetail2()
+		]);
+		
+		return Json::encode($htmlMaintainPlan);
+		//return $htmlMaintainPlan;
+		//return "ok";
+	}
+	
+	
     /**
      * Displays a single DraftPlan model.
      * @param string $id

@@ -1,4 +1,4 @@
-<?php
+<?php		
 //use yii\helpers\Html;
 use kartik\helpers\Html;
 //use yii\widgets\DetailView;
@@ -8,7 +8,9 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 use yii\web\JsExpression;
 use yii\widgets\Pjax;
+use kartik\widgets\Spinner;
 
+$ptr_spiner=Spinner::widget(['id'=>'spn-plan','preset' => 'large', 'align' => 'center', 'color' => 'blue']);	
 $JSCode = <<<EOF
 	function(start, end) {
 		var title = prompt('Event Title:');
@@ -143,7 +145,7 @@ EOF;
 	
 	
 	$vwScdlPlan= Html::panel(
-					['heading' => $btn_exportPlan, 'body' =>$calenderPlan],
+					['heading' => $btn_exportPlan, 'body' =>$ptr_spiner.$calenderPlan],
 					Html::TYPE_DANGER
 				);
 	
@@ -198,4 +200,33 @@ EOF;
          ],		
      ]);		
      Modal::end();
+
+
+	$this->registerJs("		
+		//$(document).ready(function() {
+			//$(window).load(function(){
+				// var s= document.getElementById('spn-plan');
+					 // s.hidden=false;
+				// if(!window.onload) {
+					// var s= document.getElementById('spn-plan');
+					 // s.hidden=true;
+				// }
+			//});
+			// $(document).ajaxStart('scdl-plan',function(){
+					 // var s= document.getElementById('spn-plan');
+					 // s.hidden=false;			 
+			 // }).ajaxStop('scdl-plan',function(){				
+					// var s= document.getElementById('spn-plan');
+					 // s.hidden=true;				
+			 // });	
+		//});		
+		$(document).on('ajaxStop', function() {
+			var s= document.getElementById('spn-plan');
+			s.hidden=true;
+		});
+     ",$this::POS_READY);		
+
+
+
+
 ?>

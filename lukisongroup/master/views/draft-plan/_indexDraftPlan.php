@@ -6,6 +6,8 @@ use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use lukisongroup\master\models\DraftPlan;
 Use ptrnov\salesforce\Jadwal;
+use kartik\widgets\Spinner;
+$ptr_spiner=Spinner::widget(['id'=>'spn-gv-plan','preset' => 'large', 'align' => 'center', 'color' => 'blue','hidden'=>false]);	
   
 /*
  * GRID draft_plan
@@ -452,7 +454,7 @@ $gvNewPlan=GridView::widget([
   'panel' => [
         'heading'=>false,
         'type'=>'info',
-      	'before'=> Html::a('<i class="fa fa-sign-in"></i> '.Yii::t('app', 'Start Draft Plan',
+      	'before'=> $ptr_spiner.Html::a('<i class="fa fa-sign-in"></i> '.Yii::t('app', 'Start Draft Plan',
                                   ['modelClass' => 'DraftPlan',]),'/master/draft-plan/create',[
                                       'data-toggle'=>"modal",
                                           'data-target'=>"#modal-create-draft",
@@ -574,4 +576,14 @@ $this->registerJs("
         ],
     ]);
     Modal::end();
-
+	$this->registerJs("		
+		window.onload = function(){ 
+			 var s= document.getElementById('spn-gv-maintain');
+			s.hidden=false;
+		};	
+		$(document).on('ajaxStop', function() {
+			var s= document.getElementById('spn-gv-plan');
+			s.hidden=true;
+		});		
+     ",$this::POS_READY)
+?>
