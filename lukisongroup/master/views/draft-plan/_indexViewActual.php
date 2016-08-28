@@ -144,6 +144,14 @@ EOF;
 									[		
 										'data-toggle'=>"modal",		
 										'data-target'=>"#modal-Case",		
+										'class' => 'btn btn-warning btn-sm'		
+									]
+							);
+	$btn_sync = Html::a('<i class="fa fa-exchange"></i> Syncronize a month',
+									'/master/draft-plan/set-sync',
+									[	'id'=>'sync-approved',
+										'data-toggle'=>"modal",		
+										'data-target'=>"#modal-sync",		
 										'class' => 'btn btn-danger btn-sm'		
 									]
 							);
@@ -160,12 +168,12 @@ EOF;
   </table></div>";
 
   $viewDetailactual= Html::panel(
-					['heading' => 'DETAIl GROUP ACTUAL'.' '.'<div style="float:right; top:0px;">'.$btn_set_outcase.'</div>', 'body' =>$info],
+					['heading' => '<div style="width:160px">DETAIl GROUP ACTUAL </div>'.' '.'<div style="float:right; margin-top:-22px;margin-right:-12px;">'.$btn_set_outcase.'</div>', 'body' =>$info],
 					Html::TYPE_DANGER
 				);	
 
 	$vwScdlActual= Html::panel(
-					['heading' => $btn_exportActual, 'body' =>$ptr_spinerActual.$calenderActual],
+					['heading' => '<div style="width:160px">'.$btn_exportActual.'</div>'.' '.'<div style="float:right; margin-top:-32px;margin-right:0px;">'.$btn_sync.'</div>','body' =>$ptr_spinerActual.$calenderActual],
 					Html::TYPE_SUCCESS
 				);	
 ?>
@@ -227,6 +235,34 @@ $this->registerJs("
          ],		
      ]);		
      Modal::end();
+	
+	/*
+	  * Syncronize Plan to Actual
+	 */
+	 $this->registerJs("		
+         $.fn.modal.Constructor.prototype.enforceFocus = function(){};		
+         $('#modal-sync').on('show.bs.modal', function (event) {		
+             var button = $(event.relatedTarget)		
+             var modal = $(this)		
+             var title = button.data('title')		
+             var href = button.attr('href')		
+             //modal.find('.modal-title').html(title)		
+             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')		
+             $.post(href)		
+                 .done(function( data ) {		
+                     modal.find('.modal-body').html(data)		
+                 });		
+             })		
+     ",$this::POS_READY);		
+     Modal::begin([		
+         'id' => 'modal-sync',		
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-exchange"></div><div><h4 class="modal-title">SYNCRONIZE ACTUAL</h4></div>',
+		 'size' => Modal::SIZE_SMALL,		 
+         'headerOptions'=>[		
+                 'style'=> 'border-radius:5px; background-color:  rgba(255, 129, 117, 1)',		
+         ],		
+     ]);	
+	  Modal::end();
 	 $this->registerJs("		
 		/* $(document).ajaxStart(function(){
 			$(document).ready(function() {
@@ -244,4 +280,7 @@ $this->registerJs("
 				s.hidden=true;
 		  });
      ",$this::POS_READY);
+	 
+	 
+	 
 ?>

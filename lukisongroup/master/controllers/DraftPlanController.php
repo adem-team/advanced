@@ -26,7 +26,10 @@ use lukisongroup\master\models\DraftPlanHeader;
 use lukisongroup\master\models\DraftPlanDetailSearch;
 use lukisongroup\master\models\DraftPlanDetail;
 use lukisongroup\master\models\DraftPlanGroupSearch;
+use lukisongroup\master\models\ModelSync;
+
 use lukisongroup\sistem\models\UserloginSearch;
+
 use crm\sistem\models\Userprofile;
 use lukisongroup\hrd\models\Employe;
 
@@ -550,6 +553,36 @@ class DraftPlanController extends Controller
    
     }
 
+	/**
+	 * Syncronize plan to Actual
+	 * @author piter
+	 * @since 1.1.0
+	 * @return true
+	*/
+	public function actionSetSync(){
+		$modelSyncActual = new ModelSync;	
+		if (!$modelSyncActual->load(Yii::$app->request->post())) {
+			return $this->renderAjax('_formSync', [
+					'model' => $modelSyncActual,
+				]);
+		}else{
+			if(Yii::$app->request->isAjax){
+				$modelSyncActual->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($modelSyncActual));
+			}else{
+				if ($modelSyncActual->load(Yii::$app->request->post())) {
+						$hsl = \Yii::$app->request->post();
+						$tgl1 = $hsl['ModelSync']['tanggal1'];
+						$tgl2 = $hsl['ModelSync']['tanggal2'];
+						if($modelSyncActual->auth_validate()==true){
+							Yii::$app->db_esm->createCommand("Call CRONJOB_PLAN_TO_ACTUAL_ERP('".$tgl1."','".$tgl2."')")->execute();
+						}
+						return $this->redirect(['/master/draft-plan','tab'=>'3']);				
+				}
+			}
+		}
+    }
+	
     public function actionDeleteSchedule($id)
     {
       
