@@ -21,18 +21,35 @@ class ModelSync extends Model
     public function rules()
     {
         return [
+			[['tanggal1','tanggal2'], 'required'],
+			[['tanggal1','tanggal2'], 'date','format' => 'yyyy-mm-dd'],
+			//[['tanggal1','tanggal2'], 'safe'],
+			[['tanggal2'], 'findcheck_tgl'],
 			[['password'], 'required'],
 			['password', 'number','numberPattern' => '/^[0-9]*$/i'],
 			['password', 'string', 'min' => 8,  'message'=> 'Please enter 8 digit'],
 			['password', 'findPasswords'],
 			// ['status', 'required'],
 			// ['status', 'integer'],
-			[['tanggal1','tanggal2'], 'required'],
-			[['tanggal1','tanggal2'], 'date','format' => 'yyyy-mm-dd'],
-			[['empNm'], 'string']
+			
+			[['empNm'], 'string'],
         ];
     }
 
+	/**
+     * Check tanggal Schedule, 7 hari
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	public function findcheck_tgl($attribute, $params)
+    {         
+		if (!$this->hasErrors()) {
+			if (strtotime(\Yii::$app->formatter->asDate($this->tanggal1,'Y-M-d')) > strtotime(\Yii::$app->formatter->asDate($this->tanggal2,'Y-M-d'))) {
+                 $this->addError($attribute,'Date-End, should be higher or Equal than the Start-Date');				
+            } 
+       }
+    }
+	
 	/**
      * Password Find Oldpassword for validation
 	 * @author ptrnov  <piter@lukison.com>
