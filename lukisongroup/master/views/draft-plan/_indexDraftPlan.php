@@ -469,13 +469,13 @@ $gvNewPlan=GridView::widget([
                                                           ]),
         'showFooter'=>false,
   ],
-  'export' =>['target' => GridView::TARGET_BLANK],
+  /* 'export' =>['target' => GridView::TARGET_BLANK],
   'exportConfig' => [
     GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
     GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
-  ],
+  ], */
   'toolbar'=> [
-        '{export}',
+        //'{export}',
     //'{items}',
   ],
   'hover'=>true, //cursor select

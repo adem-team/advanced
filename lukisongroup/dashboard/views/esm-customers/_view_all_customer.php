@@ -11,8 +11,10 @@ use dashboard\assets\AppAssetFusionChart;
 AppAssetFusionChart::register($this);
 
 
-$this->sideCorp = 'ESM-Customers';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada sidemenu, get from table of database */  
+$this->sideCorp = 'PT. ESM';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'effenbi_dboard';                                      /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pada header page */
+$this->params['breadcrumbs'][] = $this->title;     
 
 
 	$valCustAll=$count_CustPrn>0?$model_CustPrn[0]['COUNT_ALL_CUST']:0;
@@ -35,7 +37,7 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 						 echo Html::panel(
 							[
 							//'heading' => '<a class="btn btn-info btn-xs full-right" href="/efenbi/report"><< BACK MENU </a> All Customer Category',
-								'body'=> '<div id="chart-cust-parent" style="height:200px"></div> <div id="chart-cust-active-call"  style="height:200px"></div>',
+								'body'=> '<div id="chart-cust-parent" style="height:200px"></div> <div id="chart-Sales-compare"></div>',
 							],
 							Html::TYPE_INFO
 						);
@@ -48,7 +50,7 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 				 echo Html::panel(
 					[
 						'heading' => 'SALES COMPARE',
-						'body'=> '<div id="chart-cust-active-call"></div>',
+						'body'=> '<div id="chart-Sales-compare"></div>',
 					],
 					Html::TYPE_INFO
 				);
@@ -131,7 +133,7 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 			dataFormat: "json",
 			dataSource: {
 				chart: {
-					caption: "Customers Modern Parent",
+					caption: "Modern Parent Customers",
 					//subcaption: "Daily Actual Total Stock sell-out",
 					subcaptionFontBold: "0",
 					subcaptionFontSize: "14",
@@ -165,13 +167,13 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 		$(document).ready(function () {
 			var ChartSalesCompare = new FusionCharts({
 				type: "msline",
-				renderAt: "chart-cust-active-call",
+				renderAt: "chart-Sales-compare",
 				width: "100%",
 				height: "80%",
 				dataFormat: "json",
 				dataSource: {
 					"chart": {
-						"caption": "Customer Active Call",
+						"caption": "Sales Compare",
 						//"subCaption": "Customers Modern",
 						//"subCaption": "Sales Compare",
 						"captionFontSize": "14",
@@ -205,8 +207,7 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 					},
 					"categories": [
 						{
-							"category": '.$cac_ctg.',
-							/* [
+							"category": [
 								{ "label": "Mon" }, 
 								{ "label": "Tue" }, 
 								{ "label": "Wed" },
@@ -223,36 +224,35 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 								{ "label": "Fri" }, 
 								{ "label": "Sat" }, 
 								{ "label": "Sun" }
-							] */
+							]
 						}
 					],
-					"dataset": '.$cac_val.',
-						/* [
-							{
-								"seriesname": "Bakersfield Central",
-								"data": [
-									{ "value": "15123" }, 
-									{ "value": "14233" }, 
-									{ "value": "25507" }, 
-									{ "value": "9110" }, 
-									{ "value": "15529" }, 
-									{ "value": "20803" }, 
-									{ "value": "19202" }
-								]
-							}, 
-							{
-								"seriesname": "Los Angeles Topanga",
-								"data": [
-									{ "value": "13400" }, 
-									{ "value": "12800" }, 
-									{ "value": "22800" }, 
-									{ "value": "12400" }, 
-									{ "value": "15800" }, 
-									{ "value": "19800" }, 
-									{ "value": "21800" }
-								]
-							}
-						],  */
+					"dataset": [
+						{
+							"seriesname": "Bakersfield Central",
+							"data": [
+								{ "value": "15123" }, 
+								{ "value": "14233" }, 
+								{ "value": "25507" }, 
+								{ "value": "9110" }, 
+								{ "value": "15529" }, 
+								{ "value": "20803" }, 
+								{ "value": "19202" }
+							]
+						}, 
+						{
+							"seriesname": "Los Angeles Topanga",
+							"data": [
+								{ "value": "13400" }, 
+								{ "value": "12800" }, 
+								{ "value": "22800" }, 
+								{ "value": "12400" }, 
+								{ "value": "15800" }, 
+								{ "value": "19800" }, 
+								{ "value": "21800" }
+							]
+						}
+					], 
 					"trendlines": [
 						{
 							"line": [
