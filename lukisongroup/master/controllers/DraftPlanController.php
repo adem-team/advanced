@@ -521,9 +521,7 @@ class DraftPlanController extends Controller
      * @return true
      */
    public function actionDeletePlan(){
-
             if (Yii::$app->request->isAjax) {
-
                 Yii::$app->response->format = Response::FORMAT_JSON;
                 $request= Yii::$app->request;
                 $dataKeySelect=$request->post('keysSelect');
@@ -534,15 +532,14 @@ class DraftPlanController extends Controller
 
                   $transaction = DraftPlan::getDb()->beginTransaction();
                     try {
-                         self::conn_esm()->createCommand()->update('c0002scdl_plan',['STATUS'=>3],'ID="'.$value.'"')->execute(); 
+                         //self::conn_esm()->createCommand()->update('c0002scdl_plan',['STATUS'=>3],'ID="'.$value.'"')->execute(); 
+                         self::conn_esm()->createCommand("DELETE FROM c0002scdl_plan where ID='".$value."'")->execute(); 
                         // ...other DB operations...
                         $transaction->commit();
                     } catch(\Exception $e) {
                         $transaction->rollBack();
                         throw $e;
-                    }
-
-                   
+                    }                  
              }
              
          }
@@ -1495,12 +1492,25 @@ class DraftPlanController extends Controller
         if ($model->load(Yii::$app->request->post())) {
 			$hsl = \Yii::$app->request->post();	
 			$tahun = $hsl['DraftPlan']['YEAR'];
-
+			$geoidf = $hsl['DraftPlan']['GEO_ID'];
+			//print_r($geoidf);
+			//die();
             // $model->save();
-            $check_exist = DraftPlan::find()->where(['GEO_ID'=>$model->GEO_ID,'YEAR'=>$tahun])->one();
-
+            $check_exist = DraftPlan::find()->where(['GEO_ID'=>$geoidf,'YEAR'=>$tahun])->one();
+            //$check_exist = DraftPlan::find()->where(['GEO_ID'=>$geoidf,'YEAR'=>$tahun])->andWhere('STATUS<>3')->one();			
+			
             /*get customers*/
-            $get_customers = Customers::find()->where(['GEO'=>$model->GEO_ID])->all();
+            //$get_customers = Customers::find()->where(['GEO'=>$geoidf])->all();
+			$aryCustomers= new ArrayDataProvider([			
+				'allModels'=>Yii::$app->db_esm->createCommand("SELECT * FROM c0001 WHERE GEO='".$geoidf."' AND CUST_KD NOT IN (
+								SELECT x1.CUST_KD FROM c0001 x1 INNER JOIN c0002scdl_plan x2 on x1.CUST_KD=x2.CUST_KD AND x2.GEO_ID=x1.GEO WHERE x1.GEO='".$geoidf."'
+								GROUP BY x1.CUST_KD
+							)")->queryAll()
+			]);	
+			$get_customers = $aryCustomers->allModels;
+			
+			// print_r($get_customers);
+			// die();
 
         //     if(count($check_exist) != 0)
         //     {
@@ -1525,17 +1535,20 @@ class DraftPlanController extends Controller
         //     }
         // }
 
-             if(count($check_exist) == 0)
-            {
+             // if(count($check_exist) == 0)
+            // {
                
                 /*batch insert*/
                 foreach ($get_customers as $key => $value) {
                     # code...
-                      $batch = self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan', ['CUST_KD', 'GEO_ID','LAYER_ID','YEAR'], [
-                    [$value->CUST_KD,$value->GEO,$value->LAYER,$tahun],
-                ])->execute();
+					// $batch = self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan', ['CUST_KD', 'GEO_ID','LAYER_ID','YEAR'], [
+							// [$value->CUST_KD,$value->GEO,$value->LAYER,$tahun],
+						// ])->execute();
+					$batch = self::conn_esm()->CreateCommand()->batchInsert('c0002scdl_plan', ['CUST_KD', 'GEO_ID','LAYER_ID','YEAR'], [
+						[$value['CUST_KD'],$value['GEO'],$value['LAYER'],$tahun],
+					])->execute();
                 }
-            }
+            //}
         
           
             //return $this->redirect(['index']);
