@@ -24,22 +24,22 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 <div class="container-fluid" style="padding-left: 20px; padding-right: 20px" >
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-dm-12  col-lg-12">			
-			<div class="row">
-				<!-- KIRI !-->
-				<div class="col-lg-4 col-md-4" style="padding-top:10px">
-					<div id="chart-piramid"></div>
-				</div>
+			<div class="row">				
 				<!-- KANAN !-->
 				<div class="col-lg-8 col-md-8" style="padding-top:10px">
 					<?php
 						 echo Html::panel(
 							[
 							//'heading' => '<a class="btn btn-info btn-xs full-right" href="/efenbi/report"><< BACK MENU </a> All Customer Category',
-								'body'=> '<div id="chart-cust-parent" style="height:200px"></div> <div id="chart-cust-active-call"  style="height:200px"></div>',
+								'body'=> '<div id="chart-cust-parent" ></div>',
 							],
 							Html::TYPE_INFO
 						);
 					?>
+				</div>
+				<!-- KIRI !-->
+				<div class="col-lg-4 col-md-4" style="padding-top:10px">
+					<div id="chart-piramid"></div>
 				</div>
 			</div>
 		</div>
@@ -75,7 +75,8 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 				dataSource: {
 					chart: {
 						//theme: "fint",
-						caption: "All Customer Category",
+						caption: "Customer Category",
+						"alignCaptionWithCanvas": "2",
 						//subcaption: "Credit Suisse 2013",
 						//captionOnTop: "1",
 						//captionPadding: "25",
@@ -124,26 +125,40 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 		*/
 		$(document).ready(function () {
 		var myChartCustParent = new FusionCharts({
-			type: "column2d",
+			type: "bar2d",
 			width: "100%",
-			height: "80%",			
+			height: "700%",			
 			renderAt: "chart-cust-parent",
 			dataFormat: "json",
 			dataSource: {
 				chart: {
-					caption: "Customers Modern Parent",
-					//subcaption: "Daily Actual Total Stock sell-out",
+					caption: "Customers Parent",
+					"alignCaptionWithCanvas": "1",
 					subcaptionFontBold: "0",
 					subcaptionFontSize: "14",
 					numberPrefix: "",
-					yaxismaxvalue: "500",	
-					"palettecolors": "#583e78,#008ee4,#f8bd19,#e44a00,#6baa01,#ff2e2e",					
-					borderAlpha: "20",
-					bgColor: "#ffffff",
-					usePlotGradientColor: "0",
-					plotBorderAlpha: "10", 
-					showAlternateHGridColor: "0",
-					showXAxisLine: "1"						
+					"palettecolors": "#583e78,#008ee4,#f8bd19,#e44a00,#6baa01,#ff2e2e",						
+					"paletteColors": "#0075c2",
+					"bgColor": "#ffffff",
+					"showBorder": "0",
+					"showCanvasBorder": "0",
+					"usePlotGradientColor": "0",
+					"plotBorderAlpha": "10",
+					"placeValuesInside": "1",
+					"valueFontColor": "#ffffff",
+					"showAxisLines": "1",
+					"axisLineAlpha": "25",
+					"divLineAlpha": "10",					
+					"showAlternateVGridColor": "0",
+					"captionFontSize": "14",
+					"subcaptionFontSize": "14",
+					"subcaptionFontBold": "0",
+					"toolTipColor": "#ffffff",
+					"toolTipBorderThickness": "0",
+					"toolTipBgColor": "#000000",
+					"toolTipBgAlpha": "80",
+					"toolTipBorderRadius": "2",
+					"toolTipPadding": "5"			
 				},
 				data: '.$resultCountChildParen.'			    
 			}
