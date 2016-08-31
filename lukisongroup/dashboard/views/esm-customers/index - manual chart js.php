@@ -26,31 +26,11 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 		'dataArray'=>$resultCountChildParen,					//array scource model or manual array or sqlquery
 		'dataField'=>['label','value'],							//field['label','value'], normaly value is numeric
 		'type'=>'bar2d',										//Chart Type 
-		'renderid'=>'chart-cust-parent',						//unix name render
+		'renderid'=>'chart-cust-parent1',						//unix name render
 		'width'=>'100%',
 		'height'=>'500%',
 		'chartOption'=>[				
-				'caption'=>'Summary Customers Parents',			//Header Title
-				'subCaption'=>'Children Count Details',			//Sub Title
-				'xaxisName'=>'Parents',				//Title Bawah/ posisi x
-				'yaxisName'=>'Total Child ', 				//Title Samping/ posisi y									
-				'theme'=>'fint',					//Theme
-				'palettecolors'=> "#583e78,#008ee4,#f8bd19,#e44a00,#6baa01,#ff2e2e",
-				'bgColor'=> "#ffffff",				//color Background / warna latar 
-				'showBorder'=> "0",					//border box outside atau garis kotak luar
-				'showCanvasBorder'=> "0",			//border box inside atau garis kotak dalam	
-		],
-	]);	 
-	
-	$kategoriCustomrt= Chart::Widget([
-		'dataArray'=>$resultCountChildParen,					//array scource model or manual array or sqlquery
-		'dataField'=>['label','value'],							//field['label','value'], normaly value is numeric
-		'type'=>'pyramid',										//Chart Type 
-		'renderid'=>'chart-piramid1',						//unix name render
-		'width'=>'100%',
-		'height'=>'',
-		'chartOption'=>[				
-				'caption'=>'Summary Customers Parent',					//Header Title
+				'caption'=>'Customers Parent',					//Header Title
 				'subCaption'=>'Count Child Details',			//Sub Title
 				'xaxisName'=>'Parent',				//Title Bawah/ posisi x
 				'yaxisName'=>'Total Child ', 				//Title Samping/ posisi y									
@@ -61,6 +41,8 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 				'showCanvasBorder'=> "0",			//border box inside atau garis kotak dalam	
 		],
 	]);	 
+	
+	
 
 	
 ?>
@@ -80,7 +62,7 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 						 echo Html::panel(
 							[
 							//'heading' => '<a class="btn btn-info btn-xs full-right" href="/efenbi/report"><< BACK MENU </a> All Customer Category',
-								'body'=> '<div id="chart-cust-parent" ></div>',
+								'body'=> '<div id="chart-cust-parent1" ></div>',
 							],
 							Html::TYPE_INFO
 						);
@@ -133,7 +115,7 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 						//alignCaptionWithCanvas: "1",						
 						//subCaptionFontSize: "12",
 						borderAlpha: "1",
-						//is2D: "0",
+						is2D: "0",
 						bgColor: "#ffffff",
 						showValues: "0",
 						showLegend: "1",
@@ -164,6 +146,59 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 			});
 			myPiramidChart.render();
 		});
+	',$this::POS_READY);
+?>
+<?php
+	$this->registerJs('
+		/* 
+		 * GRAPH CUSTOMER PARENT
+		 * @author piter [ptr.nov@gmail.com]
+		 * @since 1.1
+		*/
+		$(document).ready(function () {
+		var myChartCustParent = new FusionCharts({
+			type: "bar2d",
+			width: "100%",
+			height: "700%",			
+			renderAt: "chart-cust-parent",
+			dataFormat: "json",
+			dataSource: {
+				chart: {
+					caption: "Customers Parent",
+					"alignCaptionWithCanvas": "1",
+					subcaptionFontBold: "0",
+					subcaptionFontSize: "14",
+					numberPrefix: "",
+					"palettecolors": "#583e78,#008ee4,#f8bd19,#e44a00,#6baa01,#ff2e2e",						
+					"paletteColors": "#0075c2",
+					"bgColor": "#ffffff",
+					"showBorder": "0",
+					"showCanvasBorder": "0",
+					"usePlotGradientColor": "0",
+					"plotBorderAlpha": "10",
+					"placeValuesInside": "1",
+					"valueFontColor": "#ffffff",
+					"showAxisLines": "1",
+					"axisLineAlpha": "25",
+					"divLineAlpha": "10",					
+					"showAlternateVGridColor": "0",
+					"captionFontSize": "14",
+					"subcaptionFontSize": "14",
+					"subcaptionFontBold": "0",
+					"toolTipColor": "#ffffff",
+					"toolTipBorderThickness": "0",
+					"toolTipBgColor": "#000000",
+					"toolTipBgAlpha": "80",
+					"toolTipBorderRadius": "2",
+					"toolTipPadding": "5"			
+				},
+				data: '.$resultCountChildParen.'			    
+			}
+		});
+		myChartCustParent.render();
+	});
+		
+		
 	',$this::POS_READY);
 ?>
 

@@ -43,19 +43,32 @@ class EsmCustomersController extends Controller
         ]);		
     }
 	
-	/* TOTAl CHILD OF PARENT CUSTOMER */
+	/* CHART PARENT CUSTOMER */
 	public function CountChildCustomer(){		
 		$countChildParen= new ArrayDataProvider([
 			'key' => 'CUST_KD',
-			'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_custromer_ktg('ParentChildCountCustomer')")->queryAll(),
+			//'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_custromer_ktg('ParentChildCountCustomer')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->cache(function ($db_esm) {
+				return $db_esm->createCommand("
+					SELECT x1.label,x1.value
+					FROM
+						(SELECT #x1.CUST_KD,x1.CUST_GRP,
+								 x1.CUST_NM as label,
+								(SELECT COUNT(x2.CUST_KD) FROM c0001 x2 WHERE x2.CUST_GRP=x1.CUST_KD LIMIT 1 ) as value
+						FROM c0001 x1
+						WHERE x1.CUST_KD=x1.CUST_GRP) x1 
+					ORDER BY x1.value DESC;
+				")->queryAll();
+			}, 60),
 			'pagination' => [
-				'pageSize' => 50,
-				]
+				'pageSize' => 200,
+			]
 		]);		
-		//print_r(json_encode($resultCountChildParen));
+		//print_r(json_encode($countChildParen->getModels()));
 		//print_r(json_decode($resultCountChildParen));
 		//die(); 
-		return Json::encode($countChildParen->getModels());
+		//return Json::encode($countChildParen->getModels());
+		return $countChildParen->getModels();
 	}	
 	
 	/* Value Customer Active */
