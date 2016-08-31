@@ -372,7 +372,19 @@ class DraftPlanController extends Controller
 
       if(self::findCountStatus($dataField['CUST_KD'],$dataField['YEAR']) != 0)
       {
+
          self::ApproveValidasi($dataField['CUST_KD'],$dataField['YEAR']);
+      }
+
+      
+
+      
+
+      if(self::findNotExist($dataField['IdDinamikScdl']) != 0)
+      {
+        $status = 1;
+      }else{
+         $status = 0;
       }
       
 
@@ -385,14 +397,16 @@ class DraftPlanController extends Controller
                         ")->execute();
 
                           //INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader 
+                        //INSERT GROUP To TABEL c0002scdl_plan_header | MODEL DraftPlanHeader 
                           self::conn_esm()->CreateCommand("
                                   INSERT INTO c0002scdl_plan_header (
-                                    SELECT NULL,a.TGL,a.SCDL_ID,a.SCDL_GROUP,a.SCDL_GROUP_NM,(SELECT USER_ID FROM c0002scdl_plan_group WHERE SCL_NM=a.SCDL_GROUP_NM LIMIT 1),0
+                                    SELECT NULL,a.TGL,a.SCDL_ID,a.SCDL_GROUP,a.SCDL_GROUP_NM,(SELECT USER_ID FROM c0002scdl_plan_group WHERE SCL_NM=a.SCDL_GROUP_NM LIMIT 1),'".$status."'
                                          ,NULL,NULL,NULL,NULL,NULL FROM c0002scdl_plan_detail a
                                           where a.SCDL_ID='".$dataField['IdDinamikScdl']."'
                                         GROUP BY a.TGL,a.SCDL_ID
                                   )       
                           ")->execute();    
+    
 
                         
                         // ...other DB operations...
@@ -426,6 +440,8 @@ class DraftPlanController extends Controller
         //return $this->redirect(['index?tab=0']); 
       return 'index';
     }
+
+
 
 
     /*validation ajax*/
@@ -1186,7 +1202,7 @@ class DraftPlanController extends Controller
                     //   $status = 3;
                     // }
                        // cek baris
-                    $baris = DraftPlanDetail::find()->select('CUST_ID')->where(['SCDL_GROUP_NM'=>$scdl_group_nm])->andwhere('STATUS = 0')->distinct()->count();
+                    $baris = DraftPlanDetail::find()->select('CUST_ID')->where(['SCDL_GROUP_NM'=>$scdl_group_nm])->andwhere('STATUS<>3')->distinct()->count();
 
                     // print_r($baris);
                     // die();
@@ -1438,7 +1454,7 @@ class DraftPlanController extends Controller
 
                       $transaction = DraftPlanDetail::getDb()->beginTransaction();
                     try {
-                         self::conn_esm()->createCommand()->update('c0002scdl_plan_detail',['STATUS'=>1],'ID LIKE"'.$value.'" AND  STATUS = 0')->execute();
+                         self::conn_esm()->createCommand()->update('c0002scdl_plan_detail',['STATUS'=>1],'CUST_ID LIKE"'.$cus_id.'" AND  STATUS = 0')->execute();
 
                           self::conn_esm()->createCommand()->update('c0002scdl_plan_header',['STATUS'=>1,'USER_ID'=>$cari_user->USER_ID],'NOTE="'.$scdl_group_nm.'" AND STATUS = 0')->execute();
 
@@ -1705,12 +1721,12 @@ class DraftPlanController extends Controller
      * @param string $CUST_KD
      * @return @var ary_scdlplndetail
      */
-    protected function findNotExist($custId,$tgl)
+    protected function findNotExist($scdl_id)
     {
         // $ary = self::finddetailary_cus($custId);
         // $tahun = substr($ary->TGL,0,4);
        // $ary_scdlplndetail = DraftPlanDetail::find()->where(['CUST_ID'=>$custId,'STATUS' => 0])->count();
-        $ary_scdlplndetail = DraftPlanDetail::find()->where('LEFT(TGL,4) ="'.$tgl.'" AND CUST_ID="'.$custId.'"')->count();
+        $ary_scdlplndetail = DraftPlanDetail::find()->where(['SCDL_ID'=>$scdl_id,'STATUS'=>1])->count();
 
         // print_r($ary_scdlplndetail);
         // die();
