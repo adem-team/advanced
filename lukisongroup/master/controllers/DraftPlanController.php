@@ -1172,21 +1172,24 @@ class DraftPlanController extends Controller
                 
                     $model = DraftPlanDetail::find()->where(['LIKE', 'ID', $value])->one();
 
-                    $scdl_group = $model->SCDL_GROUP;
+                    // $scdl_group = $model->SCDL_GROUP;
 
+                    $scdl_group_nm = $model->SCDL_GROUP_NM;
                    // $scdl_id = $model->SCDL_ID;
                     // $baris = DraftPlanDetail::find()->select('CUST_ID')->where(['SCDL_ID'=>$scdl_id])->andwhere('STATUS<>3')->distinct()->count();
 
-                    // cek baris
-                    $baris = DraftPlanDetail::find()->select('CUST_ID')->where(['SCDL_GROUP'=>$scdl_group])->andwhere('STATUS<>3')->distinct()->count();
+                   
+                    // if($baris != 1)
+                    // {
+                    //   $status = 0;
+                    // }else{
+                    //   $status = 3;
+                    // }
+                       // cek baris
+                    $baris = DraftPlanDetail::find()->select('CUST_ID')->where(['SCDL_GROUP_NM'=>$scdl_group_nm])->andwhere('STATUS = 0')->distinct()->count();
 
-                  // if @var baris not equal 1 then @var status equal 0
-                    if($baris != 1)
-                    {
-                      $status = 0;
-                    }else{
-                      $status = 3;
-                    }
+                    // print_r($baris);
+                    // die();
 
                    
                     $cus_id = $model->CUST_ID;
@@ -1196,9 +1199,20 @@ class DraftPlanController extends Controller
                      $transaction = DraftPlan::getDb()->beginTransaction();
                     try {
 
-                       self::conn_esm()->createCommand()->update('c0002scdl_plan_detail',['STATUS'=>3],'CUST_ID="'.$cus_id.'" AND STATUS = 0')->execute();
+                      self::conn_esm()->createCommand()->delete('c0002scdl_plan_detail',['CUST_ID'=>$cus_id,'STATUS'=>0])->execute();
 
-                        self::conn_esm()->createCommand()->update('c0002scdl_plan_header',['STATUS'=>$status],'SCDL_GROUP="'.$scdl_group.'" AND STATUS = 0')->execute(); 
+                       // self::conn_esm()->createCommand()->update('c0002scdl_plan_detail',['STATUS'=>3],'CUST_ID="'.$cus_id.'" AND STATUS = 0')->execute();
+
+
+
+                      // if @var baris not equal 1 then @var status equal 0
+                      if($baris == 1)
+                        {
+                           // self::conn_esm()->createCommand()->update('c0002scdl_plan_header',['STATUS'=>3],'NOTE="'.$scdl_group.'" AND STATUS = 0')->execute();
+                          self::conn_esm()->createCommand()->delete('c0002scdl_plan_header',['NOTE'=>$scdl_group_nm,'STATUS'=>0])->execute();
+                        }
+
+                        
                         // ...other DB operations...
                         $transaction->commit();
                     } catch(\Exception $e) {
@@ -1531,10 +1545,13 @@ class DraftPlanController extends Controller
             /*get customers*/
             //$get_customers = Customers::find()->where(['GEO'=>$geoidf])->all();
 			$aryCustomers= new ArrayDataProvider([			
-				'allModels'=>Yii::$app->db_esm->createCommand("SELECT * FROM c0001 WHERE GEO='".$geoidf."' AND CUST_KD NOT IN (
-								SELECT x1.CUST_KD FROM c0001 x1 INNER JOIN c0002scdl_plan x2 on x1.CUST_KD=x2.CUST_KD AND x2.GEO_ID=x1.GEO WHERE x1.GEO='".$geoidf."'
-								GROUP BY x1.CUST_KD
-							)")->queryAll()
+				'allModels'=>Yii::$app->db_esm->createCommand("SELECT * FROM c0001 WHERE GEO='".$geoidf."' AND  STATUS<>3 AND
+									CUST_KD NOT IN (
+										SELECT x1.CUST_KD FROM c0001 x1 INNER JOIN c0002scdl_plan x2 on x1.CUST_KD=x2.CUST_KD AND x2.GEO_ID=x1.GEO WHERE x1.GEO='".$geoidf."'
+										AND x1.STATUS<>3
+										GROUP BY x1.CUST_KD
+									) 
+							")->queryAll()
 			]);	
 			$get_customers = $aryCustomers->allModels;
 			
@@ -1862,13 +1879,23 @@ class DraftPlanController extends Controller
 	*/
 	public function actionJsoncalendarPlan($start=NULL,$end=NULL,$_=NULL){
 		$calendarPlan= new ArrayDataProvider([
-			'allModels'=>Yii::$app->db_esm->createCommand("
-				SELECT a3.ID as id, a1.TGL as start,a1.TGL as end, concat(a1.NOTE,'-',(CASE WHEN a2.NM_FIRST<>'' THEN a2.NM_FIRST ELSE 'NoUser' END)) as title,a1.NOTE as grp  
-				FROM c0002scdl_plan_header a1
-        LEFT JOIN  c0002scdl_plan_detail a3 on a3.SCDL_ID=a3.SCDL_ID
-				LEFT JOIN dbm_086.user_profile a2 on a2.ID_USER=a1.USER_ID
-        where a1.STATUS <> 3
-         GROUP BY a1.NOTE,a1.TGL
+				// SELECT a3.ID as id, a1.TGL as start,a1.TGL as end, concat(a1.NOTE,'-',(CASE WHEN a2.NM_FIRST<>'' THEN a2.NM_FIRST ELSE 'NoUser' END)) as title,a1.NOTE as grp  
+				// FROM c0002scdl_plan_header a1
+				// LEFT JOIN  c0002scdl_plan_detail a3 on a3.SCDL_ID=a3.SCDL_ID
+				// LEFT JOIN dbm_086.user_profile a2 on a2.ID_USER=a1.USER_ID
+				// where a1.STATUS <> 3
+				// GROUP BY a1.NOTE,a1.TGL
+			'allModels'=>Yii::$app->db_esm->createCommand("			
+				SELECT  @rownum := @rownum + 1 as id,
+						start,end,title,grp
+				FROM 
+					(SELECT  x1.SCDL_ID,x1.TGL as start, x1.TGL as end, x1.USER_ID,
+							concat(x1.NOTE,'-',(CASE WHEN x2.NM_FIRST<>'' THEN x2.NM_FIRST ELSE 'NoUser' END)) as title,x1.NOTE as grp
+							FROM c0002scdl_plan_header x1 
+							LEFT JOIN dbm_086.user_profile x2 on x2.ID_USER=x1.USER_ID 
+							WHERE x1.STATUS<>3
+							GROUP BY x1.TGL,x1.SCDL_ID,x1.USER_ID 
+					) a cross join (select @rownum := 0) r
 			")->queryAll(),
 		]);
 		//FIELD HARUS [id,start,end,title]        
