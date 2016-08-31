@@ -369,6 +369,7 @@ $gvDraftPlan=GridView::widget([
                 Html::a('<i class="fa fa-trash"></i> '.Yii::t('app', 'Pilih Delete',
                             ['modelClass' => 'DraftPlanDetail',]),'',[
                                 'data-toggle-delete-all'=>"delete-plan-erp-all",
+                                 // 'data-pjax' => true,
                                 'id'=>'delete-erp-plan-all',
                                   'class' => 'btn btn-danger btn-sm'
                                                     ]).' '.
