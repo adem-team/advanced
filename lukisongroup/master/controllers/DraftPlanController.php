@@ -182,7 +182,7 @@ class DraftPlanController extends Controller
      public function ary_customers()
     {
       
-        return ArrayHelper::map(Customers::find()->where(['STATUS'=>1])->all(),'CUST_KD','CUST_NM');
+        return ArrayHelper::map(Customers::find()->where('STATUS = 1 AND CUST_KD = CUST_GRP')->all(),'CUST_KD','CUST_NM');
     }
 
     public function get_arygeoplangroup()
@@ -363,11 +363,11 @@ class DraftPlanController extends Controller
   			}			
   		}
 
-      // approve validasi
       if(self::findCountStatus($dataField['CUST_KD'],$dataField['YEAR']) != 0)
       {
          self::ApproveValidasi($dataField['CUST_KD'],$dataField['YEAR']);
       }
+      
 
 
       $transaction = DraftPlan::getDb()->beginTransaction();
@@ -1344,6 +1344,28 @@ class DraftPlanController extends Controller
    }
 
 
+  /*AJAX GEO SUB*/
+   public function actionParentCus() {
+
+         $out = [];
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+        if ($parents != null) {
+            $parentCus = $parents[0];
+        $model = Customers::find()->asArray()->where(['CUST_GRP'=>$parentCus])->andwhere('CUST_KD<> CUST_GRP')->all();
+           foreach ($model as $key => $value) {
+                   $out[] = ['id'=>$value['CUST_KD'],'name'=> $value['CUST_NM']];
+               }
+
+               echo json_encode(['output'=>$out, 'selected'=>'']);
+               return;
+           }
+       }
+       echo Json::encode(['output'=>'', 'selected'=>'']);
+             
+   }
+
+
    /*AJAX Customers Plan Detail*/
    public function actionLisCusPlan() {
 
@@ -1562,13 +1584,31 @@ class DraftPlanController extends Controller
     }
 
 
+   /**
+    * validation ajax
+    * call _setoutcase
+    * @author wawan
+   */
+    public function actionValidSetOutCase()
+    {
+      # code...
+      $model = new Scheduledetail();
+      $model->scenario = Scheduledetail::SCENARIO_CASE; //scenario setoutcase
+    if(Yii::$app->request->isAjax && $model->load($_POST))
+    {
+      Yii::$app->response->format = 'json';
+      return ActiveForm::validate($model);
+      }
+    }
+
+
     
-    public function actionSetOutCase()
+    public function actionSetOutCase($tgl,$userid,$group,$grpid,$username)
     {
         $model = new Scheduledetail();
-         $model->scenario = 'setoutcase'; //scenario setoutcase
-
         if ($model->load(Yii::$app->request->post())) {
+            $model->USER_ID = $userid;
+            $model->SCDL_GROUP = $group;
             $model->CREATE_AT = date('Y-m-d');
             $model->CREATE_BY = Yii::$app->user->identity->username;
             $model->STATUS_CASE = 1;
@@ -1579,13 +1619,27 @@ class DraftPlanController extends Controller
         } else {
             return $this->renderAjax('_setoutcase', [
                 'model' => $model,
-                'user' => self::get_aryUserCrmSales(),
+                'user'=> $username,
+                'tgl'=>$tgl,
+                'group'=>$grpid,
+                // 'user' => self::get_aryUserCrmSales(),
                 'cus'=> self::ary_customers(),
-                'group'=>self::getscdl_group(),
+                // 'group'=>self::getscdl_group(),
                 'note'=>self::get_aryUserSalesmanager()
 
             ]);
         }
+    }
+
+
+    public function actionSetOutValid()
+    {
+        
+
+  
+        return $this->renderAjax('_setoutvalid', [
+          ]);    
+        
     }
 
     /**
@@ -1620,6 +1674,28 @@ class DraftPlanController extends Controller
 
        return $ary_scdlplndetail;
     }
+
+
+     /**
+     * Finds the DraftPlandetail count  model based on its CUST_KD value AND STATUS equal 0.
+     * @param string $CUST_KD
+     * @return @var ary_scdlplndetail
+     */
+    protected function findNotExist($custId,$tgl)
+    {
+        // $ary = self::finddetailary_cus($custId);
+        // $tahun = substr($ary->TGL,0,4);
+       // $ary_scdlplndetail = DraftPlanDetail::find()->where(['CUST_ID'=>$custId,'STATUS' => 0])->count();
+        $ary_scdlplndetail = DraftPlanDetail::find()->where('LEFT(TGL,4) ="'.$tgl.'" AND CUST_ID="'.$custId.'"')->count();
+
+        // print_r($ary_scdlplndetail);
+        // die();
+
+       return $ary_scdlplndetail;
+    }
+
+
+
 
 
      /**
@@ -1804,7 +1880,7 @@ class DraftPlanController extends Controller
 	public function actionJsoncalendarActual($start=NULL,$end=NULL,$_=NULL){
 		$calendarActual= new ArrayDataProvider([
 			'allModels'=>Yii::$app->db_esm->createCommand("				
-				SELECT a1.USER_ID as id, a1.TGL1 as start,a1.TGL1 as end, concat(a1.NOTE,'-',a2.NM_FIRST) as title,a1.NOTE as grp 
+				SELECT a1.USER_ID as id, a1.TGL1 as start,a1.TGL1 as end, concat(a1.NOTE,'-',a2.NM_FIRST) as title,a1.NOTE as grp,a1.SCDL_GROUP as scdl,a2.NM_FIRST as name 
 				FROM c0002scdl_header a1
 				LEFT JOIN dbm_086.user_profile a2 on a2.ID_USER=a1.USER_ID GROUP BY NOTE,TGL1
 			")->queryAll(),

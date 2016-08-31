@@ -11,45 +11,10 @@ use yii\widgets\Pjax;
 use kartik\widgets\Spinner;
 
 $ptr_spinerActual=Spinner::widget(['id'=>'spn-actual','preset' => 'large', 'align' => 'center', 'color' => 'blue']);
+
 $JSCode = <<<EOF
 	function(start, end) {
-		var title = prompt('Event Title:');
-		var eventData;
-		var dateTime1 = new Date(start);
-		var dateTime2 = new Date(end);
-		tgl1 = moment(dateTime1).format("YYYY-MM-DD HH:mm:ss");
-		tgl2 = moment(dateTime2).format("YYYY-MM-DD HH:mm:ss");
-		if (title) {
-			$.ajax({
-				url:'/sistem/personalia/jsoncalendar_add',
-				type: 'POST',
-				data:'title=' + title + '&start='+ tgl1 + '&end=' + tgl2,
-				dataType:'json',
-				success: function(result){
-			//alert('ok')
-				  $.pjax.reload({container:'#calendar-user'});
-				  //$.pjax.reload({container:'#gv-schedule-id'});
-				}
-			});
-			/* calendar.fullCalendar('renderEvent', {
-					title:title,
-					start:start,
-					end:end
-				},
-				true
-			); */
-
-		   /*  eventData = {
-				title: title,
-				start: start,
-				end: end
-			};
-			//$('#w0').fullCalendar('renderEvent', eventData, true);
-			*/
-		}
-
-		//$('#w0').fullCalendar('unselect');
-		//$('#w0').fullCalendar('unselect');
+	$("#set-out-case-id").attr("href","/master/draft-plan/set-out-case")
 	}
 EOF;
 	
@@ -69,22 +34,27 @@ $JSEventClick = <<<EOF
 		var tgl1 = new Date(tgl);
 		var id = moment(tgl1).format("YYYY-MM-DD");
 		var user  =  calEvent.id;
+		var name =  calEvent.name;
 		var grp =  calEvent.grp;
+		var split = grp.substring(0, 4);
+		var group = calEvent.scdl;
 		 $.get("/master/draft-plan/get-data-actual?id="+id+"&userid="+user+"&grp="+grp, function( data ) {
             	 var peopleHTML = "";
             	 var data = $.parseJSON(data);
 				 var i=1;
-            	 console.log(data); 
+            	 // console.log(data); 
             	// console.log(data.scdlheader['NOTE']); 				
 			      // Loop through Object and create peopleHTML
 			      for (var key in data) {
 					  
 			        if (data.hasOwnProperty(key)) {
 						var sttcase=data[key]['STATUS_CASE']!='0'?'CASE':'PLAN';
+						var layernm =  data[key].tbllayer != null ?data[key].tbllayer['LAYER_NM'] : 'none';
 					 peopleHTML += "<tr>";
 			            peopleHTML += "<td>" + i + "</td>";
 			            peopleHTML += "<td>" + data[key]["TGL"] + "</td>";
 			            peopleHTML += "<td>" + data[key].cust['CUST_NM'] + "</td>";
+			            //peopleHTML += "<td>" + layernm + "</td>";
 			            peopleHTML += "<td>" + data[key].tbllayer['LAYER_NM'] + "</td>";
 			            peopleHTML += "<td>" + sttcase + "</td>";
 			          peopleHTML += "</tr>";
@@ -94,6 +64,10 @@ $JSEventClick = <<<EOF
 		 		 // Replace table’s tbody html with peopleHTML
       			$("#actual tbody").html(peopleHTML);
             });
+
+
+           $("#set-out-case-id").attr("href","/master/draft-plan/set-out-case?tgl="+id+"&username="+name+"&group="+group+"&grpid="+split+"&userid="+user);
+
 
 	   // alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
 		//alert('View: ' + view.name);
@@ -123,7 +97,7 @@ EOF;
 			'firstDay' =>'0',
 			//'drop' => new JsExpression($JSDropEvent),
 			'selectHelper'=>true,
-			//'select' => new JsExpression($JSCode),
+			// 'select' => new JsExpression($JSCode),
 			'eventClick' => new JsExpression($JSEventClick),
 			//'defaultDate' => date('Y-m-d')
 		],
@@ -140,8 +114,9 @@ EOF;
 
 
 	$btn_set_outcase = Html::a('<i class="fa fa-magic"></i> SET OUT CASE',
-									'/master/draft-plan/set-out-case',
-									[		
+									'/master/draft-plan/set-out-valid',
+									[
+										'id'=>'set-out-case-id',		
 										'data-toggle'=>"modal",		
 										'data-target'=>"#modal-Case",		
 										'class' => 'btn btn-warning btn-sm'		

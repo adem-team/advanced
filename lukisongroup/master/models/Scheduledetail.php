@@ -32,6 +32,7 @@ class Scheduledetail extends \yii\db\ActiveRecord
      */
     /*validation */
     const SCENARIO_CASE = 'setoutcase';
+    public $Cus_Kd;
 	public static function tableName()
     {
         return 'c0002scdl_detail';
@@ -102,7 +103,8 @@ class Scheduledetail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['TGL', 'SCDL_GROUP', 'NOTE','USER_ID','CUST_ID'], 'required','on'=>self::SCENARIO_CASE],
+            [['TGL','NOTE','CUST_ID'], 'required','on'=>self::SCENARIO_CASE], //validasi scenario setoutcase
+            [['CUST_ID'], 'CheckExistDetailCustomers','on'=>self::SCENARIO_CASE], //validasi scenario setoutcase
             [['TGL', 'CREATE_AT','SCDL_GROUP','UPDATE_AT'], 'safe'],
             [['STATUS','STATUS_CASE'], 'integer'],
             [['LAT', 'LAG', 'RADIUS'], 'number'],
@@ -121,6 +123,15 @@ class Scheduledetail extends \yii\db\ActiveRecord
 		];
 	}
 	 */
+
+    public function CheckExistDetailCustomers($model)
+    {
+        $cari_customersdetail = Scheduledetail::find()->where(['CUST_ID'=>$this->CUST_ID,'TGL'=>$this->TGL])->one();
+
+        if($cari_customersdetail){
+             $this->addError($model, 'duplicate Customers');
+        }
+    }
 	
     /**
      * @inheritdoc
