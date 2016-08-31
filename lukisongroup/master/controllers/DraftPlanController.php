@@ -185,6 +185,13 @@ class DraftPlanController extends Controller
         return ArrayHelper::map(Customers::find()->where('STATUS = 1 AND CUST_KD = CUST_GRP')->all(),'CUST_KD','CUST_NM');
     }
 
+     public function ary_customerx()
+    {
+      
+        return ArrayHelper::map(Customers::find()->where('STATUS = 1')->all(),'CUST_KD','CUST_NM');
+    }
+
+
     public function get_arygeoplangroup()
     {
         $sql ='SELECT DISTINCT(left(SCL_NM,4)) as scl_nm FROM `c0002scdl_plan_group` where STATUS = 1';
@@ -951,7 +958,7 @@ class DraftPlanController extends Controller
 			//Other Data load
 			'valStt'=>$valStt,
 			'tab'=>$tab,
-			'dropcus'=>self::ary_customers(),
+			'dropcus'=>self::ary_customerx(),
 			'drop'=>self::get_arygeo(),
 			'SCL_NM'=>$SCL_NM,
 			'pekan'=>self::getPekan(),
