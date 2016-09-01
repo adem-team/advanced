@@ -61,13 +61,6 @@ class EsmCustomersController extends Controller
 				}, 60), 
 				'pagination' => [
 					'pageSize' => 50,
-<<<<<<< HEAD
-					]
-			]);		
-			
-			$model_CustPrn=$dataProvider_CustPrn->getModels();
-			$count_CustPrn=$dataProvider_CustPrn->getCount();		
-=======
 				]
 			]);		
 			$parentKategori= $dataParentKategori->getModels();
@@ -99,25 +92,12 @@ class EsmCustomersController extends Controller
 				]
 			]);		
 			$ChartCountKategori= $dataChartCountKategori->getModels();
->>>>>>> e02eec9ee56de2edd082b1f2c48c368917fc2ec6
 			
 			//RENDER INDEX
 			return $this->render('index',[
-<<<<<<< HEAD
-				/* CUSTOMER CATEHORI COUNT [modern,general,horeca,other]*/
-				'model_CustPrn'=>$model_CustPrn,
-				'count_CustPrn'=>$count_CustPrn,
-				'dataProvider_CustPrn'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_custromer_ktg('count_kategory_customer_parent')")->queryAll(),
-				/*STOCK ALL CUSTOMER*/
-				'resultCountChildParen'=>$this->CountChildCustomer(),
-				'cac_val'=>$this->ValueCustomerActiveCall(),
-				'cac_ctg'=>$this->CtgCustomerActiveCall()
-					
-=======
 				'ChartCountKategori'=>$ChartCountKategori,
 				'parenCustomer'=>$parenCustomer,
 				'parentKategori'=>$parentKategori					
->>>>>>> e02eec9ee56de2edd082b1f2c48c368917fc2ec6
 			]);		
 		};	
     }	
