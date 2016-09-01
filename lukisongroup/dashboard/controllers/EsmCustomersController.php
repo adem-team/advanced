@@ -127,7 +127,8 @@ class EsmCustomersController extends Controller
 				'pagination' => [
 					'pageSize' => 50,
 					]
-			]);			
+			]);		
+			
 			$model_CustPrn=$dataProvider_CustPrn->getModels();
 			$count_CustPrn=$dataProvider_CustPrn->getCount();		
 			
@@ -136,7 +137,8 @@ class EsmCustomersController extends Controller
 			return $this->render('index',[
 				/* CUSTOMER CATEHORI COUNT [modern,general,horeca,other]*/
 				'model_CustPrn'=>$model_CustPrn,
-				'count_CustPrn'=>$count_CustPrn,  						
+				'count_CustPrn'=>$count_CustPrn,
+				'dataProvider_CustPrn'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_SALES_custromer_ktg('count_kategory_customer_parent')")->queryAll(),
 				/*STOCK ALL CUSTOMER*/
 				'resultCountChildParen'=>$this->CountChildCustomer(),
 				'cac_val'=>$this->ValueCustomerActiveCall(),

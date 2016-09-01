@@ -21,11 +21,14 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 	$valCustGeneral=$count_CustPrn>0?$model_CustPrn[2]['COUNT_CUST']:0;
 	$valCustHoreca=$count_CustPrn>0?$model_CustPrn[3]['COUNT_CUST']:0;
 	$valCustOther=$count_CustPrn>0?$model_CustPrn[4]['COUNT_CUST']:0;
-
+	// $data1=Json::encode($model_CustPrn);
+	// print_r($dataProvider_CustPrn);
+	// die();
+	//$parentCustomrt='';
 	$parentCustomrt= Chart::Widget([
 		'dataArray'=>$resultCountChildParen,					//array scource model or manual array or sqlquery
 		'dataField'=>['label','value'],							//field['label','value'], normaly value is numeric
-		'type'=>'bar2d',										//Chart Type 
+		'type'=>'bar3d',										//Chart Type 
 		'renderid'=>'chart-cust-parent',						//unix name render
 		'width'=>'100%',
 		'height'=>'500%',
@@ -35,6 +38,8 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 				'xaxisName'=>'Parents',							//Title Bawah/ posisi x
 				'yaxisName'=>'Total Child ', 					//Title Samping/ posisi y									
 				'theme'=>'fint',					//Theme
+				'is2D'=>"0",
+				'showValues'=> "1",
 				'palettecolors'=> "#583e78,#008ee4,#f8bd19,#e44a00,#6baa01,#ff2e2e",
 				'bgColor'=> "#ffffff",				//color Background / warna latar 
 				'showBorder'=> "0",					//border box outside atau garis kotak luar
@@ -43,26 +48,28 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 	]);	 
 	
 	$kategoriCustomrt= Chart::Widget([
-		'dataArray'=>$resultCountChildParen,					//array scource model or manual array or sqlquery
-		'dataField'=>['label','value'],							//field['label','value'], normaly value is numeric
+		'dataArray'=>$dataProvider_CustPrn,						//array scource model or manual array or sqlquery
+		'dataField'=>['PARENT_NM','COUNT_CUST'],				//field['label','value'], normaly value is numeric
 		'type'=>'pyramid',										//Chart Type 
-		'renderid'=>'chart-piramid1',						//unix name render
+		'renderid'=>'chart-piramid1',							//unix name render
 		'width'=>'100%',
-		'height'=>'',
+		'height'=>'300',
 		'chartOption'=>[				
-				'caption'=>'Summary Customers Parent',					//Header Title
+				'caption'=>'Summary Customers Parent',			//Header Title
 				'subCaption'=>'Count Child Details',			//Sub Title
-				'xaxisName'=>'Parent',				//Title Bawah/ posisi x
-				'yaxisName'=>'Total Child ', 				//Title Samping/ posisi y									
-				'theme'=>'fint',					//Theme
-				'palettecolors'=> "#583e78,#008ee4,#f8bd19,#e44a00,#6baa01,#ff2e2e",
-				'bgColor'=> "#ffffff",				//color Background / warna latar 
-				'showBorder'=> "0",					//border box outside atau garis kotak luar
-				'showCanvasBorder'=> "0",			//border box inside atau garis kotak dalam	
+				//'xaxisName'=>'Parent',							//Title Bawah/ posisi x
+				//'yaxisName'=>'Total Child ', 					//Title Samping/ posisi y									
+				'theme'=>'fint',								//Theme
+				//'palettecolors'=> "#583e78,#008ee4,#f8bd19,#e44a00,#6baa01,#ff2e2e",
+				'bgColor'=> "#ffffff",							//color Background / warna latar 
+				'showBorder'=> "0",								//border box outside atau garis kotak luar
+				'showCanvasBorder'=> "1",						//border box inside atau garis kotak dalam	
+				'is2D'=>"0",									//boolean
+				'showValues'=>"1",								//boolean
+				'showLegend'=>"0",								//boolean
+				'showPercentValues'=>"1"						//boolean
 		],
-	]);	 
-
-	
+	]);	 	
 ?>
 
 
@@ -75,12 +82,12 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 			<div class="row">	
 			
 				<!-- KANAN !-->
-				<div class="col-lg-8 col-md-8" style="padding-top:10px">
+				<div class="col-lg-7 col-md-7" style="padding-top:10px">
 					<?php
 						 echo Html::panel(
 							[
 							//'heading' => '<a class="btn btn-info btn-xs full-right" href="/efenbi/report"><< BACK MENU </a> All Customer Category',
-								'body'=> '<div id="chart-cust-parent" ></div>',
+								'body'=> $parentCustomrt,
 							],
 							Html::TYPE_INFO
 						);
@@ -88,8 +95,9 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 					?>
 				</div>
 				<!-- KIRI !-->
-				<div class="col-lg-4 col-md-4" style="padding-top:10px">
-					<div id="chart-piramid"></div>
+				<div class="col-lg-5 col-md-5" style="padding-top:10px">
+					<!--<div id="chart-piramid1"></div>!-->
+					<?=$kategoriCustomrt?>
 				</div>
 			</div>
 		</div>
@@ -133,12 +141,12 @@ $this->sideMenu = 'esm_customers';               /* kd_menu untuk list menu pada
 						//alignCaptionWithCanvas: "1",						
 						//subCaptionFontSize: "12",
 						borderAlpha: "1",
-						//is2D: "0",
-						bgColor: "#ffffff",
-						showValues: "0",
+						is2D: "0",
+						//bgColor: "#ffffff", //ok
+						//showValues: "1",
 						showLegend: "1",
-						numberPrefix: "$",
-						numberSuffix: "M",
+						//numberPrefix: "$",
+						//numberSuffix: "M",
 						showPercentValues: "1",
 						//chartLeftMargin: "40"
 					},
