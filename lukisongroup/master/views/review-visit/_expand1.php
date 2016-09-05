@@ -36,22 +36,22 @@ use yii\data\ArrayDataProvider;
 						 <div class="raw">
 							<div class="col-sm-8 col-md-8 col-lg-8" style="font-family:tahoma, arial, sans-serif;font-size:9pt">
 								<?php
-									//$gvHeaderInfo='';
 									$gvHeaderInfo=$this->render('_expand1HeaderInfo',['dataProviderInfo'=>$dataProviderInfo]);
-									//$gvCustVisit='';
 									$gvCustVisit=$this->render('_expand1CustVisit',['dataProviderTime'=>$dataProviderTime]);
+									$gvInventory=$this->render('_expand1Inventory',['inventoryProvider'=>$inventoryProvider]);
+									
 									$gvRo='';									
 									//$gvRo=$this->render('_expand1Ro',['inventoryProvider'=>$inventoryProvider]);			
-									$gvInventory='';
-									//$gvInventory=$this->render('_expand1Inventory',['inventoryProvider'=>$inventoryProvider]);	
+										
 									$gvExpired='';
 									//$gvExpired=$this->render('_expand1Expired',['inventoryProvider'=>$inventoryProvider]);
 													
 								?>
 								<?=$gvHeaderInfo?>
 								<?=$gvCustVisit?>
-								<?=$gvRo?>
 								<?=$gvInventory?>
+								<?=$gvRo?>
+								
 								<?=$gvExpired?>
 							</div>
 							<div class="col-sm-4 col-md-4 col-lg-4">

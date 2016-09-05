@@ -26,7 +26,7 @@ use yii\data\ArrayDataProvider;
 						'attribute'=>'TGL', 
 						'label'=>'DATE',
 						'displayOnly'=>true,
-						'valueColOptions'=>['style'=>'width:30%']
+						'valueColOptions'=>['style'=>'width:35%']
 					],
 					[
 						//JAM MEMULAI PERJALANAN DARI DISTRIBUTOR/OTHER
@@ -34,7 +34,7 @@ use yii\data\ArrayDataProvider;
 						'format'=>'raw',
 						'value'=> $dataProviderInfo[0]['ABSEN_MASUK']!=''?$dataProviderInfo[0]['ABSEN_MASUK']:"<span class='badge' style='background-color:#ff0000'>ABSENT </span>",
 						'label'=>'START TIME',
-						'valueColOptions'=>['style'=>'width:30%'], 
+						'valueColOptions'=>['style'=>'width:35%'], 
 						//'displayOnly'=>true
 					],
 				],
@@ -44,7 +44,7 @@ use yii\data\ArrayDataProvider;
 					[
 						'attribute'=>'SALES_NM', 
 						'label'=>'SALES NAME',
-						'valueColOptions'=>['style'=>'width:30%'], 
+						'valueColOptions'=>['style'=>'width:35%'], 
 						'displayOnly'=>true
 					],
 					[
@@ -53,7 +53,7 @@ use yii\data\ArrayDataProvider;
 						'format'=>'raw',
 						'value'=>$dataProviderInfo[0]['ABSEN_KELUAR']!=''?$dataProviderInfo[0]['ABSEN_KELUAR']:"<span class='badge' style='background-color:#ff0000'>ABSENT </span>",						
 						'label'=>'END TIME',
-						'valueColOptions'=>['style'=>'width:30%'], 
+						'valueColOptions'=>['style'=>'width:35%'], 
 						'displayOnly'=>true
 					],
 				],
@@ -64,7 +64,7 @@ use yii\data\ArrayDataProvider;
 						'attribute'=>'SCDL_GRP_NM', 
 						'label'=>'GROUP',
 						'displayOnly'=>true,
-						'valueColOptions'=>['style'=>'width:30%']
+						'valueColOptions'=>['style'=>'width:35%']
 					],
 					[
 						//GPS IN -> VALUE AND STATUS
@@ -74,7 +74,7 @@ use yii\data\ArrayDataProvider;
 						'value'=>$dataProviderInfo[0]['ABSEN_MASUK_DISTANCE'],
 						//'value'=>"<span class='badge' style='background-color:#ff0000'>'' </span>".' '.$dataProviderInfo[0]['ABSEN_MASUK_DISTANCE'],
 						//'value'=>'<kbd>'.$model->book_code.'</kbd>',
-						'valueColOptions'=>['style'=>'width:30%'], 
+						'valueColOptions'=>['style'=>'width:35%'], 
 						'displayOnly'=>true
 					],
 				],
@@ -84,7 +84,7 @@ use yii\data\ArrayDataProvider;
 					[
 						'attribute'=>'HP', 
 						'label'=>'Phone',
-						'valueColOptions'=>['style'=>'width:30%'], 
+						'valueColOptions'=>['style'=>'width:35%'], 
 						'displayOnly'=>true
 					],
 					[
@@ -95,7 +95,7 @@ use yii\data\ArrayDataProvider;
 						'value'=>$dataProviderInfo[0]['ABSEN_KELUAR_DISTANCE'],
 						//'value'=>"<span class='badge' style='background-color:#ff0000'>'' </span>".' '.$dataProviderInfo[0]['ABSEN_KELUAR_DISTANCE'],
 						//'value'=>'<kbd>'.$model->book_code.'</kbd>',
-						'valueColOptions'=>['style'=>'width:30%'], 
+						'valueColOptions'=>['style'=>'width:35%'], 
 						'displayOnly'=>true
 					],
 				],
@@ -106,13 +106,13 @@ use yii\data\ArrayDataProvider;
 						'attribute'=>'ABSEN_TOTAL', 
 						'label'=>'',
 						'value'=>'',
-						'valueColOptions'=>['style'=>'width:30%'], 
+						'valueColOptions'=>['style'=>'width:35%'], 
 						'displayOnly'=>true
 					],
 					[
 						'attribute'=>'ABSEN_TOTAL', 
 						'label'=>'TOTAL TIME',
-						'valueColOptions'=>['style'=>'width:30%'], 
+						'valueColOptions'=>['style'=>'width:35%'], 
 						'displayOnly'=>true
 					],
 				],

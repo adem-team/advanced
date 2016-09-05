@@ -90,14 +90,23 @@ $this->params['breadcrumbs'][] = $this->title;
 			// IMAGE VISIT 
 			$dataProviderImage = $dataProvider;
 						
-			/* [3] IVENTORY */
-			$inventoryProvider='';
-			// $inventoryProvider= new ArrayDataProvider([
+			// IVENTORY 
+			//$inventoryProvider='';
+			$inventoryProvider= new ArrayDataProvider([
 				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL ERP_CUSTOMER_VISIT_inventory('".$model['TGL']."','".$model['CUST_ID']."','".$model['USER_ID']."')")->queryAll(),
-				  // 'pagination' => [
-					// 'pageSize' =>50,
-				// ] 
-			// ]);
+				  'allModels'=>Yii::$app->db_esm->createCommand("
+						SELECT (SELECT DISTINCT NM_BARANG FROM b0001 WHERE KD_BARANG=so_t2.KD_BARANG) AS NAME_ITEM, 
+								   MAX(CASE WHEN SO_TYPE=5 THEN SO_QTY ELSE 0 END) as STOCK,
+									 MAX(CASE WHEN SO_TYPE=6 THEN SO_QTY ELSE 0 END) as SELL_IN,
+									 MAX(CASE WHEN SO_TYPE=7 THEN SO_QTY ELSE 0 END) as SELL_OUT,
+									 MAX(CASE WHEN SO_TYPE=8 THEN '0000-00-00' ELSE '0000-00-00' END) as ED
+						FROM so_t2
+						WHERE TGL='".$model['TGL']."' AND USER_ID='".$model['USER_ID']."'  GROUP BY KD_BARANG
+					")->queryAll(),
+				  'pagination' => [
+					'pageSize' =>50,
+				] 
+			]);
 			
 			/* [4] EXPIRED */
 			/* [5] REQUEST */
@@ -172,7 +181,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				'dataProviderTime'=>$dataProviderTime,
 				//'searchModelImage'=>$searchModelImage,
 				'dataProviderImage'=>$dataProviderImage,
-				// 'inventoryProvider'=>$inventoryProvider,
+				'inventoryProvider'=>$inventoryProvider,
 				
 				// 'aryproviderDetailSummary'=>$aryProviderDetailSummary,
 				//SUMMRY STOCK

@@ -123,7 +123,7 @@ use yii\data\ArrayDataProvider;
 			'',
 		],
 		'panel' => [
-			'heading'=>'<h3 class="panel-title">[D] SUMMARY INVENTORY</h3>',
+			'heading'=>"<i class='fa fa-stack-overflow fa-1x'></i>  SUMMARY INVENTORY",
 			'type'=>'info',
 			'footer'=>false,
 			

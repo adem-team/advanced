@@ -129,7 +129,7 @@ use yii\data\ArrayDataProvider;
 		'panel' => [
 			'heading'=>"<i class='fa fa-clock-o fa-1x'></i> SUMMARY TIME VISITING",
 			'type'=>'info',
-			'showFooter'=>false,
+			'footer'=>false,
 		],
 	]);	
 ?>
