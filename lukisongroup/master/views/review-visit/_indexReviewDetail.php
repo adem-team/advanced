@@ -18,7 +18,8 @@ use dosamigos\gallery\Gallery;
 
 // use dashboard\assets\AppAssetFusionChart;
 // AppAssetFusionChart::register($this);
-
+use lukisongroup\master\models\ReviewHeaderSearch;
+use lukisongroup\master\models\CustomercallTimevisitSearch;
 use lukisongroup\master\models\CustomerVisitImageSearch;
 
 $this->sideCorp = 'PT.Effembi Sukses Makmur';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
@@ -63,18 +64,11 @@ $this->params['breadcrumbs'][] = $this->title;
 	$attDinamik =[];
 	/*GRIDVIEW ARRAY FIELD HEAD*/
 	$headColomnEvent=[
-		['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'USER_NM','SIZE' => '10px','label'=>'User','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'SCDL_GRP_NM','SIZE' => '10px','label'=>'Schadule','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'TIME_DAYSTART','SIZE' => '10px','label'=>'Start Time','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'TIME_DAYEND','SIZE' => '10px','label'=>'End Time','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'DISTANCE_DAYSTART','SIZE' => '10px','label'=>'Radius.In','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'DISTANCE_DAYEND','SIZE' => '10px','label'=>'Radius.Out','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		
-		//['ID' =>5, 'ATTR' =>['FIELD'=>'CUST_TIPE_NM','SIZE' => '10px','label'=>'Type','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		//['ID' =>6, 'ATTR' =>['FIELD'=>'CUST_KTG_NM','SIZE' => '10px','label'=>'Cetegory','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		//['ID' =>7, 'ATTR' =>['FIELD'=>'radiusMeter','SIZE' => '10px','label'=>'Radius/Meter','align'=>'right','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		//['ID' =>8, 'ATTR' =>['FIELD'=>'sttKoordinat','SIZE' => '10px','label'=>'Status','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'DATE','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'USER_NM','SIZE' => '10px','label'=>'USER NAME','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'SCDL_GRP_NM','SIZE' => '10px','label'=>'SCHEDULE','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'TIME_DAYSTART','SIZE' => '10px','label'=>'START TIME','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'TIME_DAYEND','SIZE' => '10px','label'=>'END TIME','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 	];
 	$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');
 	
@@ -87,129 +81,115 @@ $this->params['breadcrumbs'][] = $this->title;
 			return GridView::ROW_COLLAPSED;
 		},
 		'detail'=>function ($model, $key, $index, $column){
-			/* [1] HEADER1 */
-			$dataModelsHeader1= new ArrayDataProvider([
-				//'key' => 'ID',
-				'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_header1('ALL_HEAD1','".$model['TGL']."','".$model['CUST_ID']."')")->queryAll(),
-				//'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_header1('ALL_HEAD1','2016-04-01','CUS.2016.000009')")->queryAll(),
-				  'pagination' => [
-					'pageSize' =>50,
-				] 
-			]);
-			
-			/* [2] HEADER2 */
-			$dataProviderHeader2= new ArrayDataProvider([
-				//'key' => 'ID',
-				'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_header2('ALL_HEAD2','".$model['USER_ID']."','".$model['TGL']."')")->queryAll(),
-				  'pagination' => [
-					'pageSize' =>50,
-				] 
-			]);	
-			
+			$searchModelTime = new CustomercallTimevisitSearch(['TGL'=>$model['TGL'],'USER_ID'=>$model['USER_ID']]);
+			$dataProvider=$searchModelTime->search(Yii::$app->request->queryParams);
+			// USER INFO
+			$dataProviderInfo = $dataProvider;			
+			//VISIT TIME
+			$dataProviderTime = $dataProvider;			
+			// IMAGE VISIT 
+			$dataProviderImage = $dataProvider;
+						
 			/* [3] IVENTORY */
-			$inventoryProvider= new ArrayDataProvider([
-				//'key' => 'ID',
-				'allModels'=>Yii::$app->db_esm->createCommand("CALL ERP_CUSTOMER_VISIT_inventory('".$model['TGL']."','".$model['CUST_ID']."','".$model['USER_ID']."')")->queryAll(),
-				  'pagination' => [
-					'pageSize' =>50,
-				] 
-			]);
+			$inventoryProvider='';
+			// $inventoryProvider= new ArrayDataProvider([
+				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL ERP_CUSTOMER_VISIT_inventory('".$model['TGL']."','".$model['CUST_ID']."','".$model['USER_ID']."')")->queryAll(),
+				  // 'pagination' => [
+					// 'pageSize' =>50,
+				// ] 
+			// ]);
 			
 			/* [4] EXPIRED */
 			/* [5] REQUEST */
 			
-			/* [6] IMAGE VISIT */
-			$searchModel = new CustomerVisitImageSearch([
-				'ID_DETAIL'=>''.$model['ID_DTL'].'',
-			]);
-			$dataProviderImage = $searchModel->search(Yii::$app->request->queryParams);
 			
 			
 			/* DETAIL & SUMMARY */
 			//'SUMMARY_ALL','2016-05-31','','30','1'
-			$aryProviderDetailSummary= new ArrayDataProvider([
-				//'key' => 'ID',
-				//'allModels'=>Yii::$app->db_esm->createCommand("DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_ALL','".$model['TGL']."','','".$model['USER_ID']."','1')")->queryAll(),
-				'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_ALL','2016-05-31','','30','1');")->queryAll(),
-				  'pagination' => [
-					'pageSize' =>50,
-				] 
-			]); 
+			$aryProviderDetailSummary='';
+			// $aryProviderDetailSummary= new ArrayDataProvider([
+				////'allModels'=>Yii::$app->db_esm->createCommand("DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_ALL','".$model['TGL']."','','".$model['USER_ID']."','1')")->queryAll(),
+				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_ALL','2016-05-31','','30','1');")->queryAll(),
+				  // 'pagination' => [
+					// 'pageSize' =>50,
+				// ] 
+			// ]); 
 			
 			
 			/*SUMMRY STOCK*/
-			$aryProviderDataStock = new ArrayDataProvider([
-				//'key' => 'ID',
-				'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_STOCK_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
-				'pagination' => [
-					'pageSize' =>50,
-				] 
-			]); 
-			$aryProviderHeaderStock=$aryProviderDataStock->allModels[0];				
+			// $aryProviderDataStock = new ArrayDataProvider([
+				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_STOCK_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
+				// 'pagination' => [
+					// 'pageSize' =>50,
+				// ] 
+			// ]); 
+			$aryProviderHeaderStock='';
+			// $aryProviderHeaderStock=$aryProviderDataStock->allModels[0];				
 			
 			/*SUMMRY SELL IN*/
-			$aryProviderDataSellIN = new ArrayDataProvider([
-				//'key' => 'ID',
-				'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_SELL_IN_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
-				'pagination' => [
-					'pageSize' =>50,
-				] 
-			]); 
-			$aryProviderHeaderSellIN=$aryProviderDataSellIN->allModels[0];
+			// $aryProviderDataSellIN = new ArrayDataProvider([
+				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_SELL_IN_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
+				// 'pagination' => [
+					// 'pageSize' =>50,
+				// ] 
+			// ]); 
+			$aryProviderHeaderSellIN='';
+			// $aryProviderHeaderSellIN=$aryProviderDataSellIN->allModels[0];
 			
 			/*SUMMRY SELL OUT*/
-			$aryProviderDataSellOut = new ArrayDataProvider([
-				//'key' => 'ID',
-				'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_SELL_OUT_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
-				'pagination' => [
-					'pageSize' =>50,
-				] 
-			]); 
-			$aryProviderHeaderSellOut=$aryProviderDataSellOut->allModels[0];
+			// $aryProviderDataSellOut = new ArrayDataProvider([
+				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_SELL_OUT_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
+				// 'pagination' => [
+					// 'pageSize' =>50,
+				// ] 
+			// ]); 
+			$aryProviderHeaderSellOut='';
+			// $aryProviderHeaderSellOut=$aryProviderDataSellOut->allModels[0];
 			
 			/*SUMMRY RETURE*/
-			$aryProviderDataReture = new ArrayDataProvider([
-				//'key' => 'ID',
-				'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_RETURE_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
-				'pagination' => [
-					'pageSize' =>50,
-				] 
-			]); 
-			$aryProviderHeaderReture=$aryProviderDataReture->allModels[0];
+			// $aryProviderDataReture = new ArrayDataProvider([
+				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_RETURE_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
+				// 'pagination' => [
+					// 'pageSize' =>50,
+				// ] 
+			// ]); 
+			$aryProviderHeaderReture='';
+			// $aryProviderHeaderReture=$aryProviderDataReture->allModels[0];
 			
 			/*SUMMRY REQUEST*/
-			$aryProviderDataRequest = new ArrayDataProvider([
-				//'key' => 'ID',
-				'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_REQUEST_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
-				'pagination' => [
-					'pageSize' =>50,
-				] 
-			]); 
-			$aryProviderHeaderRequest=$aryProviderDataRequest->allModels[0];
+			// $aryProviderDataRequest = new ArrayDataProvider([
+				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_REQUEST_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
+				// 'pagination' => [
+					// 'pageSize' =>50,
+				// ] 
+			// ]); 
+			$aryProviderHeaderRequest='';
+			// $aryProviderHeaderRequest=$aryProviderDataRequest->allModels[0];
 			
 			/* RENDER */
 			return Yii::$app->controller->renderPartial('_expand1',[
-				'dataModelsHeader1'=>$dataModelsHeader1->getModels(),
-				'dataProviderHeader2'=>$dataProviderHeader2,
-				'inventoryProvider'=>$inventoryProvider,
-				'searchModelImage'=>$searchModel,
+				'dataProviderInfo'=>$dataProviderInfo->getModels(),
+				'dataProviderTime'=>$dataProviderTime,
+				//'searchModelImage'=>$searchModelImage,
 				'dataProviderImage'=>$dataProviderImage,
-				'aryproviderDetailSummary'=>$aryProviderDetailSummary,
+				// 'inventoryProvider'=>$inventoryProvider,
+				
+				// 'aryproviderDetailSummary'=>$aryProviderDetailSummary,
 				//SUMMRY STOCK
-				'aryProviderHeaderStock'=>$aryProviderHeaderStock,
-				'aryProviderDataStock'=>$aryProviderDataStock,
+				// 'aryProviderHeaderStock'=>$aryProviderHeaderStock,
+				// 'aryProviderDataStock'=>$aryProviderDataStock,
 				//SUMMRY SELL IN
-				'aryProviderHeaderSellIN'=>$aryProviderHeaderSellIN,
-				'aryProviderDataSellIN'=>$aryProviderDataSellIN,
+				// 'aryProviderHeaderSellIN'=>$aryProviderHeaderSellIN,
+				// 'aryProviderDataSellIN'=>$aryProviderDataSellIN,
 				//SUMMRY SELL OUT
-				'aryProviderHeaderSellOut'=>$aryProviderHeaderSellOut,
-				'aryProviderDataSellOut'=>$aryProviderDataSellOut,
+				// 'aryProviderHeaderSellOut'=>$aryProviderHeaderSellOut,
+				// 'aryProviderDataSellOut'=>$aryProviderDataSellOut,
 				//SUMMRY RETURE
-				'aryProviderHeaderReture'=>$aryProviderHeaderReture,
-				'aryProviderDataReture'=>$aryProviderDataReture,
+				// 'aryProviderHeaderReture'=>$aryProviderHeaderReture,
+				// 'aryProviderDataReture'=>$aryProviderDataReture,
 				//SUMMRY REQUEST
-				'aryProviderHeaderRequest'=>$aryProviderHeaderRequest,
-				'aryProviderDataRequest'=>$aryProviderDataRequest
+				// 'aryProviderHeaderRequest'=>$aryProviderHeaderRequest,
+				// 'aryProviderDataRequest'=>$aryProviderDataRequest
 			]);
 		},
 		'collapseTitle'=>'Close Exploler',
@@ -247,9 +227,9 @@ $this->params['breadcrumbs'][] = $this->title;
 		$attDinamik[]=[
 			'attribute'=>$value[$key]['FIELD'],
 			'label'=>$value[$key]['label'],
-			'filterType'=>$value[$key]['filterType'],
-			'filter'=>$value[$key]['filter'],
-			'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
+			//'filterType'=>$value[$key]['filterType'],
+			//'filter'=>$value[$key]['filter'],
+			//'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
 			//'mergeHeader'=>true,
@@ -316,7 +296,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	$indexReviewDetail= GridView::widget([
 		'id'=>'cust-visit-list',
 		'dataProvider' => $dataProviderHeader1,
-		//'filterModel' => $searchModel,					
+		'filterModel' => $searchModelHeader1,					
 		//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
 		'columns' => $attDinamik,
 		/* [
@@ -334,8 +314,8 @@ $this->params['breadcrumbs'][] = $this->title;
 			],
 		],
 		'panel' => [
-					'heading'=>false,//'<h5><b>DAILY REVIEW VISIT</b> </h5>',
-					'type'=>'info',
+					'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-2x fa-bicycle"></div><div><h4 class="modal-title">DAILY REVIEW CUSTOMER CALL</h4></div>', 
+					'type'=>'success',
 					//'showFooter'=>false,
 		],
 		'toolbar'=> [

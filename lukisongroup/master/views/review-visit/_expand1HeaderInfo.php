@@ -15,10 +15,10 @@ use kartik\daterange\DateRangePicker;
 use yii\db\ActiveRecord;
 use yii\data\ArrayDataProvider;
 
-//print_r($dataModelsHeader1);
+	//print_r($dataProviderInfo);
 	/*[1] LIST VIEW INFO */
 	$vwHeader1=DetailView::widget([		
-        'model' => $dataModelsHeader1[0],
+        'model' => $dataProviderInfo[0],
         'attributes' => [
     		[
 				'columns' => [
@@ -30,9 +30,9 @@ use yii\data\ArrayDataProvider;
 					],
 					[
 						//JAM MEMULAI PERJALANAN DARI DISTRIBUTOR/OTHER
-						'attribute'=>'TIME_DAYSTART', 
+						'attribute'=>'ABSEN_MASUK', 
 						'format'=>'raw',
-						'value'=> $dataModelsHeader1[0]['TIME_DAYSTART']!=''?$dataModelsHeader1[0]['TIME_DAYSTART']:"<span class='badge' style='background-color:#ff0000'>ABSENT </span>",
+						'value'=> $dataProviderInfo[0]['ABSEN_MASUK']!=''?$dataProviderInfo[0]['ABSEN_MASUK']:"<span class='badge' style='background-color:#ff0000'>ABSENT </span>",
 						'label'=>'START TIME',
 						'valueColOptions'=>['style'=>'width:30%'], 
 						//'displayOnly'=>true
@@ -42,16 +42,16 @@ use yii\data\ArrayDataProvider;
 			[
 				'columns' => [
 					[
-						'attribute'=>'USER_NM', 
-						'label'=>'USER NAME',
+						'attribute'=>'SALES_NM', 
+						'label'=>'SALES NAME',
 						'valueColOptions'=>['style'=>'width:30%'], 
 						'displayOnly'=>true
 					],
 					[
 						//JAM SELESAI PERJALANAN DARI DISTRIBUTOR/OTHER
-						'attribute'=>'TIME_DAYEND',
+						'attribute'=>'ABSEN_KELUAR',
 						'format'=>'raw',
-						'value'=>$dataModelsHeader1[0]['TIME_DAYEND']!=''?$dataModelsHeader1[0]['TIME_DAYEND']:"<span class='badge' style='background-color:#ff0000'>ABSENT </span>",						
+						'value'=>$dataProviderInfo[0]['ABSEN_KELUAR']!=''?$dataProviderInfo[0]['ABSEN_KELUAR']:"<span class='badge' style='background-color:#ff0000'>ABSENT </span>",						
 						'label'=>'END TIME',
 						'valueColOptions'=>['style'=>'width:30%'], 
 						'displayOnly'=>true
@@ -68,11 +68,11 @@ use yii\data\ArrayDataProvider;
 					],
 					[
 						//GPS IN -> VALUE AND STATUS
-						'attribute'=>'DISTANCE_DAYSTART', 
+						'attribute'=>'ABSEN_MASUK_DISTANCE', 
 						'label'=>'Radius.In',
 						'format'=>'raw', 
-						'value'=>$dataModelsHeader1[0]['DISTANCE_DAYSTART'],
-						//'value'=>"<span class='badge' style='background-color:#ff0000'>'' </span>".' '.$dataModelsHeader1[0]['DISTANCE_DAYSTART'],
+						'value'=>$dataProviderInfo[0]['ABSEN_MASUK_DISTANCE'],
+						//'value'=>"<span class='badge' style='background-color:#ff0000'>'' </span>".' '.$dataProviderInfo[0]['ABSEN_MASUK_DISTANCE'],
 						//'value'=>'<kbd>'.$model->book_code.'</kbd>',
 						'valueColOptions'=>['style'=>'width:30%'], 
 						'displayOnly'=>true
@@ -82,30 +82,47 @@ use yii\data\ArrayDataProvider;
 			[
 				'columns' => [
 					[
-						'attribute'=>'TTL_TIME', 
-						'label'=>'TOTAL TIME',
+						'attribute'=>'HP', 
+						'label'=>'Phone',
 						'valueColOptions'=>['style'=>'width:30%'], 
 						'displayOnly'=>true
 					],
 					[
 						//GPS IN -> VALUE AND STATUS
-						'attribute'=>'DISTANCE_DAYEND', 
+						'attribute'=>'ABSEN_KELUAR_DISTANCE', 
 						'label'=>'Radius.Out',
 						'format'=>'raw', 
-						'value'=>$dataModelsHeader1[0]['DISTANCE_DAYEND'],
-						//'value'=>"<span class='badge' style='background-color:#ff0000'>'' </span>".' '.$dataModelsHeader1[0]['DISTANCE_DAYEND'],
+						'value'=>$dataProviderInfo[0]['ABSEN_KELUAR_DISTANCE'],
+						//'value'=>"<span class='badge' style='background-color:#ff0000'>'' </span>".' '.$dataProviderInfo[0]['ABSEN_KELUAR_DISTANCE'],
 						//'value'=>'<kbd>'.$model->book_code.'</kbd>',
 						'valueColOptions'=>['style'=>'width:30%'], 
 						'displayOnly'=>true
 					],
 				],
-			],					
+			],
+			[
+				'columns' => [
+					[
+						'attribute'=>'ABSEN_TOTAL', 
+						'label'=>'',
+						'value'=>'',
+						'valueColOptions'=>['style'=>'width:30%'], 
+						'displayOnly'=>true
+					],
+					[
+						'attribute'=>'ABSEN_TOTAL', 
+						'label'=>'TOTAL TIME',
+						'valueColOptions'=>['style'=>'width:30%'], 
+						'displayOnly'=>true
+					],
+				],
+			],				
         ],
 		'mode'=>DetailView::MODE_VIEW,
 		'enableEditMode'=>false,
 		'mainTemplate'=>'{detail}',
 		'panel'=>[
-			'heading'=>'[A] USER INFO',
+			'heading'=>"<i class='fa fa-info-circle fa-1x'></i> USER INFO",
 			'type'=>DetailView::TYPE_INFO,
 		],		
 		

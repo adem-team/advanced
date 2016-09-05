@@ -23,9 +23,9 @@ use yii\data\ArrayDataProvider;
 		['ID' =>0, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '10px','label'=>'Customer','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1','value'=>function($models){ return $models['CUST_NM'];}]],
 		['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_CHKIN','SIZE' => '10px','label'=>'In.Time','align'=>'center','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1','value'=>function($models){ return $models['CUST_CHKIN'];}]],
 		['ID' =>2, 'ATTR' =>['FIELD'=>'CUST_CHKOUT','SIZE' => '10px','label'=>'Out.Time','align'=>'center','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1','value'=>function($models){ return $models['CUST_CHKOUT'];}]],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'ttl_time_cust','SIZE' => '10px','label'=>'Visit.Time','align'=>'center','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1','value'=>function($models){ return $models['ttl_time_cust']!=''?$models['ttl_time_cust']:"<span class='badge' style='background-color:#ff0000'>ABSENT </span>";}]],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'LIVE_TIME','SIZE' => '10px','label'=>'Visit.Time','align'=>'center','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1','value'=>function($models){ return $models['LIVE_TIME'];}]],
 		['ID' =>4, 'ATTR' =>['FIELD'=>'JRK_TEMPUH','SIZE' => '10px','label'=>'Distance.Time','align'=>'center','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1','value'=>function($models){ return $models['JRK_TEMPUH']!=''?$models['JRK_TEMPUH']:"<span class='badge' style='background-color:#ff0000'>ABSENT </span>";}]],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'STT_VISIT','SIZE' => '10px','label'=>'Status','align'=>'center','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1','value'=>function($models){ return $models['STT_VISIT']!=''?$models['STT_VISIT']:"<span class='badge' style='background-color:#ff0000'>''</span>";}]],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'STS','SIZE' => '10px','label'=>'Status','align'=>'center','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1','value'=>function($models){ return $models['STS']!=0?$models['STS']:"<span class='badge' style='background-color:#ff0000'>''</span>";}]],
 	];
 	$gvHeadColomn2 = ArrayHelper::map($headColomnEvent2, 'ID', 'ATTR');
 	$attDinamik2[] =[
@@ -53,6 +53,7 @@ use yii\data\ArrayDataProvider;
 	];			
 	/*GRIDVIEW ARRAY ROWS*/
 	foreach($gvHeadColomn2 as $key =>$value[]){
+		$fldNm=$value[$key]['FIELD'];
 		$attDinamik2[]=[
 			'attribute'=>$value[$key]['FIELD'],
 			'value'=>$value[$key]['value'],
@@ -84,14 +85,41 @@ use yii\data\ArrayDataProvider;
 					//'background-color'=>'rgba(13, 127, 3, 0.1)',
 				]
 			],
+			'pageSummaryOptions' => [
+				'style'=>[
+						'border-left'=>'0px',
+						'border-right'=>'0px',
+				]
+			],
+			'pageSummary'=>function ($summary, $data, $widget)use($fldNm,$dataProviderTime){
+							$mdl=$dataProviderTime->getModels();
+							if ($fldNm=='CUST_NM'){
+								return 	'<div>  Distance Go Home</div>';
+							}elseif ($fldNm=='JRK_TEMPUH'){
+								return 	$mdl[0]['JRK_TEMPUH_PULANG'];
+							}else{
+								return 	'';
+							}							
+			},
+			'pageSummaryOptions' => [
+				'style'=>[
+						'font-family'=>'tahoma',
+						'font-size'=>'8pt',
+						'text-align'=>'center',
+						'border-left'=>'0px',
+						'border-right'=>'0px',
+				]
+			],
 		];
 	};
+	
 	
 	$gvCustDaily= GridView::widget([
 		'id'=>'header2-id',
 		'export' => false,
+		'showPageSummary' => true,
 		//'panel' => false,
-		'dataProvider' => $dataProviderHeader2,
+		'dataProvider' => $dataProviderTime,
 		//'filterModel' => $searchModel,					
 		//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
 		'columns' => $attDinamik2,
@@ -99,9 +127,9 @@ use yii\data\ArrayDataProvider;
 			'',
 		],
 		'panel' => [
-			'heading'=>'<h3 class="panel-title">[B] SUMMARY TIME VISITING</h3>',
+			'heading'=>"<i class='fa fa-clock-o fa-1x'></i> SUMMARY TIME VISITING",
 			'type'=>'info',
-			'footer'=>false,
+			'showFooter'=>false,
 		],
 	]);	
 ?>

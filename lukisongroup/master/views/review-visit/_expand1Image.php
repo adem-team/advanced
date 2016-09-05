@@ -44,14 +44,14 @@ use yii\data\ArrayDataProvider;
 				],
 			],
 			[
-				'attribute'=>'image_start',
+				'attribute'=>'IMG_DECODE_START',
 				'format'=>'raw', 
 				'label'=>'Image Start',
 				//'format'=>['image',['width'=>'100','height'=>'120']],
 				'value'=>function($model){				
-					$base64 ='data:image/jpg;charset=utf-8;base64,'.$model['IMG_START'];
+					$base64 ='data:image/jpg;charset=utf-8;base64,'.$model['IMG_DECODE_START'];
 					//return Html::img($base64,['width'=>'100','height'=>'60','class'=>'img-circle']);
-					return $model['IMG_START']!=''?Html::img($base64,['width'=>'140','height'=>'140']):Html::img(Yii::$app->urlManager->baseUrl.'/df.jpg',['width'=>'140','height'=>'140']);
+					return $model['IMG_DECODE_START']!=''?Html::img($base64,['width'=>'120','height'=>'120']):Html::img(Yii::$app->urlManager->baseUrl.'/df.jpg',['width'=>'120','height'=>'120']);
 				},
 				'headerOptions'=>[
 					'style'=>[
@@ -73,13 +73,13 @@ use yii\data\ArrayDataProvider;
 				],
 			],
 			[
-				'attribute'=>'image_end',
+				'attribute'=>'IMG_DECODE_END',
 				'format'=>'raw', 
 				'label'=>'Image End',
 				//'format'=>['image',['width'=>'100','height'=>'120']],
 				'value'=>function($model){				
-					$base64 ='data:image/jpg;charset=utf-8;base64,'.$model['IMG_END'];
-					return $model['IMG_END']!=''?Html::img($base64,['width'=>'140','height'=>'140']):Html::img(Yii::$app->urlManager->baseUrl.'/df.jpg',['width'=>'140','height'=>'140']);
+					$base64 ='data:image/jpg;charset=utf-8;base64,'.$model['IMG_DECODE_END'];
+					return $model['IMG_DECODE_END']!=''?Html::img($base64,['width'=>'120','height'=>'120']):Html::img(Yii::$app->urlManager->baseUrl.'/df.jpg',['width'=>'120','height'=>'120']);
 				},
 				'headerOptions'=>[
 					'style'=>[
@@ -106,7 +106,7 @@ use yii\data\ArrayDataProvider;
 			'',
 		],
 		'panel' => [
-			'heading'=>'<h3 class="panel-title">LIST IMAGE VISITING</h3>',
+			'heading'=>"<i class='fa fa-file-image-o fa-1x'></i> LIST IMAGES",
 			'type'=>'danger',
 			'footer'=>false,
 		],
