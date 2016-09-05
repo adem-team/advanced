@@ -290,6 +290,14 @@ $this->params['breadcrumbs'][] = $this->title;
 		];
 	*/
 	
+	$btn_srch = Html::a('<i class="fa fa-search"></i> Search Date',
+							'/master/review-visit/ambil-tanggal',
+							[		
+								'data-toggle'=>"modal",		
+								'data-target'=>"#modal-tgl",		
+								'class' => 'btn btn-info btn-sm'		
+						   ]
+						);
 	
 	
 	/*SHOW GRID VIEW LIST*/
@@ -313,8 +321,9 @@ $this->params['breadcrumbs'][] = $this->title;
 				'id'=>'cust-visit-list',
 			],
 		],
+		'summary'=>false,
 		'panel' => [
-					'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-2x fa-bicycle"></div><div><h4 class="modal-title">DAILY REVIEW CUSTOMER CALL</h4></div>', 
+					'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-2x fa-bicycle"></div><div><h4 class="modal-title">DAILY REVIEW CUSTOMER CALL</h4></div>'.' '.'<div style="float:right; margin-top:-22px;margin-right:0px;">'.$btn_srch.'</div>', 
 					'type'=>'success',
 					//'showFooter'=>false,
 		],
@@ -330,3 +339,30 @@ $this->params['breadcrumbs'][] = $this->title;
 	]);	
 ?>	
 <?=$indexReviewDetail?>
+
+<?php		
+	$this->registerJs("		
+          $.fn.modal.Constructor.prototype.enforceFocus = function(){};		
+          $('#modal-tgl').on('show.bs.modal', function (event) {		
+             var button = $(event.relatedTarget)		
+             var modal = $(this)		
+             var title = button.data('title')		
+             var href = button.attr('href')		
+             //modal.find('.modal-title').html(title)		
+             modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')		
+             $.post(href)		
+                 .done(function( data ) {		
+                     modal.find('.modal-body').html(data)		
+                 });		
+             })		
+     ",$this::POS_READY);		
+     Modal::begin([		
+         'id' => 'modal-tgl',		
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search"></div><div><h4 class="modal-title"> SEARCH DATE</h4></div>',	
+		 'size' => Modal::SIZE_SMALL,	
+         'headerOptions'=>[		
+                 'style'=> 'border-radius:5px; background-color: rgba(90, 171, 255, 0.7)',		
+         ],		
+     ]);		
+     Modal::end();
+?>
