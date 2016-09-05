@@ -41,6 +41,21 @@ class ReviewVisitController extends Controller
 			}
 		};	
     }
+	public function actionAmbilTanggal()
+	{
+		$model = new \yii\base\DynamicModel(['tanggal']);
+		$model->addRule(['tanggal'], 'safe');
+		if ($model->load(Yii::$app->request->post())) {
+			$hsl = Yii::$app->request->post();
+			$tgl = $hsl['DynamicModel']['tanggal'];
+			return $this->redirect(['index', 'tgl'=>$tgl]);
+		}else{			
+			return $this->renderAjax('_indexform', [
+			'model'=>$model,
+			]);
+		}
+	}
+	
 	
 	/**
 	 * NEW METHOD REPORT 
