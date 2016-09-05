@@ -43,7 +43,7 @@ class CustomerVisitImage extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['IMG_DECODE_START', 'IMG_DECODE_END'], 'string'],
+            [['CUSTOMER_ID','IMG_DECODE_START', 'IMG_DECODE_END'], 'string'],
             [['STATUS'], 'integer'],
             [['CREATE_AT', 'UPDATE_AT', 'TIME_END', 'TIME_START'], 'safe'],
             [['ID_DETAIL'], 'string', 'max' => 20],
