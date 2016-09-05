@@ -43,7 +43,7 @@ class PostmanSchaduleController extends Controller
 	*/
 	public function actionExport(){
 		
-		$tglIn='2016-08-01';
+		$tglIn='2016-09-01';
 		/* HEADER/FIELD MONTHLY SCHADULE*/
 		$tanggalOfMonth= new ArrayDataProvider([
 			//'key' => 'ID',
@@ -268,7 +268,7 @@ class PostmanSchaduleController extends Controller
 			
 		/*path & Name File*/
 		//$rootyii=dirname(dirname(__DIR__)).'/cronjob/';
-		$rootyii='/var/www/advanced/lukisongroup/cronjob/temp/';
+		$rootyii='/var/www/advanced/lukisongroup/cronjob/tmp_cronjob/';
 		//$folder=$rootyii.'/cronjob/'.$filename;
 		//$baseRoot = Yii::getAlias('@webroot') . "/uploads/temp/";
 		$filename = 'PostmanSalesSchadule';
