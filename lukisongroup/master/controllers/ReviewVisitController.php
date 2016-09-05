@@ -36,10 +36,9 @@ class ReviewVisitController extends Controller
 					'dataProviderHeader1'=>$dataProvider,
 					'searchModelHeader1'=>$searchModel,
 				]);
+			}else{
+				return $this->redirect(['index?tgl='.$setTgl]);
 			}
-			// else{
-				// return $this->redirect(['index?tab='.$setTgl]);
-			// }
 		};	
     }
 	
