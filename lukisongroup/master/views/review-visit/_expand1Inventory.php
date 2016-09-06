@@ -47,7 +47,7 @@ use yii\data\ArrayDataProvider;
 			],
 			[
 				'attribute'=>'NAME_ITEM',
-				'label'=>'ITEMS',
+				'label'=>'ITEMS/Pcs',
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -65,7 +65,7 @@ use yii\data\ArrayDataProvider;
 			],
 			[
 				'attribute'=>'STOCK',
-				'label'=>'STOCK/Pcs',
+				'label'=>'STOCK',
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -83,8 +83,44 @@ use yii\data\ArrayDataProvider;
 				],
 			],
 			[
+				'attribute'=>'RETURE',
+				'label'=>'RETURE',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'right',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			[
+				'attribute'=>'REQUEST',
+				'label'=>'REQUEST',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'right',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			[
 				'attribute'=>'SELL_IN',
-				'label'=>'SELL IN/Pcs',
+				'label'=>'SELL-IN',
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -102,7 +138,7 @@ use yii\data\ArrayDataProvider;
 			],
 			[
 				'attribute'=>'SELL_OUT',
-				'label'=>'SELL OUT/Pcs',
+				'label'=>'SELL-OUT',
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -117,7 +153,7 @@ use yii\data\ArrayDataProvider;
 						'font-size'=>'9pt',
 					]
 				],
-			]
+			]			
 		],
 		'toolbar' => [
 			'',

@@ -21,6 +21,8 @@ use dosamigos\gallery\Gallery;
 use lukisongroup\master\models\ReviewHeaderSearch;
 use lukisongroup\master\models\CustomercallTimevisitSearch;
 use lukisongroup\master\models\CustomerVisitImageSearch;
+use lukisongroup\master\models\CustomercallExpiredSearch;
+use lukisongroup\master\models\CustomercallMemoSearch;
 
 $this->sideCorp = 'PT.Effembi Sukses Makmur';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_customers';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -88,18 +90,18 @@ $this->params['breadcrumbs'][] = $this->title;
 			//VISIT TIME
 			$dataProviderTime = $dataProvider;			
 			// IMAGE VISIT 
-			$dataProviderImage = $dataProvider;
-						
-			// IVENTORY 
-			//$inventoryProvider='';
+			$dataProviderImage = $dataProvider;						
+			// IVENTORY STOCK|RETURE|REQUEST|SELL_IN|SELL_OUT
 			$inventoryProvider= new ArrayDataProvider([
 				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL ERP_CUSTOMER_VISIT_inventory('".$model['TGL']."','".$model['CUST_ID']."','".$model['USER_ID']."')")->queryAll(),
 				  'allModels'=>Yii::$app->db_esm->createCommand("
 						SELECT (SELECT DISTINCT NM_BARANG FROM b0001 WHERE KD_BARANG=so_t2.KD_BARANG) AS NAME_ITEM, 
-								   MAX(CASE WHEN SO_TYPE=5 THEN SO_QTY ELSE 0 END) as STOCK,
+								   MAX(CASE WHEN SO_TYPE=5 THEN SO_QTY ELSE 0 END) as STOCK,								    
 									 MAX(CASE WHEN SO_TYPE=6 THEN SO_QTY ELSE 0 END) as SELL_IN,
 									 MAX(CASE WHEN SO_TYPE=7 THEN SO_QTY ELSE 0 END) as SELL_OUT,
-									 MAX(CASE WHEN SO_TYPE=8 THEN '0000-00-00' ELSE '0000-00-00' END) as ED
+									 MAX(CASE WHEN SO_TYPE=8 THEN SO_QTY ELSE 0 END) as RETURE,									 
+									 MAX(CASE WHEN SO_TYPE=9 THEN SO_QTY ELSE 0 END) as REQUEST									
+									 #MAX(CASE WHEN SO_TYPE=8 THEN '0000-00-00' ELSE '0000-00-00' END) as ED
 						FROM so_t2
 						WHERE TGL='".$model['TGL']."' AND USER_ID='".$model['USER_ID']."'  GROUP BY KD_BARANG
 					")->queryAll(),
@@ -108,12 +110,18 @@ $this->params['breadcrumbs'][] = $this->title;
 				] 
 			]);
 			
-			/* [4] EXPIRED */
-			/* [5] REQUEST */
+			//EXPIRED DETAIL
+			$searchModelExpired = new CustomercallExpiredSearch(['TGL_KJG'=>$model['TGL'],'USER_ID'=>$model['USER_ID']]);
+			$dataProviderExpired=$searchModelExpired->searchReport(Yii::$app->request->queryParams);
 			
-			
+			//MEMO DETAIL
+			$searchModelMemo = new CustomercallMemoSearch(['TGL'=>$model['TGL'],'ID_USER'=>$model['USER_ID']]);
+			$dataProviderMemo=$searchModelMemo->search(Yii::$app->request->queryParams);
 			
 			/* DETAIL & SUMMARY */
+			
+			
+
 			//'SUMMARY_ALL','2016-05-31','','30','1'
 			$aryProviderDetailSummary='';
 			// $aryProviderDetailSummary= new ArrayDataProvider([
@@ -177,14 +185,25 @@ $this->params['breadcrumbs'][] = $this->title;
 			
 			/* RENDER */
 			return Yii::$app->controller->renderPartial('_expand1',[
+				//INFO
 				'dataProviderInfo'=>$dataProviderInfo->getModels(),
+				//VISIT TIME
 				'dataProviderTime'=>$dataProviderTime,
+				//IMAGE
 				//'searchModelImage'=>$searchModelImage,
 				'dataProviderImage'=>$dataProviderImage,
+				//SUMMRY STOCK|RETURE|SELL-IN|SELL-OUT
 				'inventoryProvider'=>$inventoryProvider,
+				//EXPIRED
+				'dataProviderExpired'=>$dataProviderExpired,
+				'searchModelExpired'=>$searchModelExpired,
+				//MEMO
+				'dataProviderMemo'=>$dataProviderMemo,
+				
+				
 				
 				// 'aryproviderDetailSummary'=>$aryProviderDetailSummary,
-				//SUMMRY STOCK
+				
 				// 'aryProviderHeaderStock'=>$aryProviderHeaderStock,
 				// 'aryProviderDataStock'=>$aryProviderDataStock,
 				//SUMMRY SELL IN
@@ -196,7 +215,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				//SUMMRY RETURE
 				// 'aryProviderHeaderReture'=>$aryProviderHeaderReture,
 				// 'aryProviderDataReture'=>$aryProviderDataReture,
-				//SUMMRY REQUEST
+				
 				// 'aryProviderHeaderRequest'=>$aryProviderHeaderRequest,
 				// 'aryProviderDataRequest'=>$aryProviderDataRequest
 			]);

@@ -50,8 +50,7 @@ use yii\data\ArrayDataProvider;
 				//'format'=>['image',['width'=>'100','height'=>'120']],
 				'value'=>function($model){				
 					$base64 ='data:image/jpg;charset=utf-8;base64,'.$model['IMG_DECODE_START'];
-					//return Html::img($base64,['width'=>'100','height'=>'60','class'=>'img-circle']);
-					return $model['IMG_DECODE_START']!=''?Html::img($base64,['width'=>'120','height'=>'120']):Html::img(Yii::$app->urlManager->baseUrl.'/df.jpg',['width'=>'120','height'=>'120']);
+					return $model['IMG_DECODE_START']!=''?Html::img($base64,['width'=>'120','height'=>'120']):Html::img($model['noImage'],['width'=>'120','height'=>'120']);
 				},
 				'headerOptions'=>[
 					'style'=>[
@@ -79,7 +78,7 @@ use yii\data\ArrayDataProvider;
 				//'format'=>['image',['width'=>'100','height'=>'120']],
 				'value'=>function($model){				
 					$base64 ='data:image/jpg;charset=utf-8;base64,'.$model['IMG_DECODE_END'];
-					return $model['IMG_DECODE_END']!=''?Html::img($base64,['width'=>'120','height'=>'120']):Html::img(Yii::$app->urlManager->baseUrl.'/df.jpg',['width'=>'120','height'=>'120']);
+					return $model['IMG_DECODE_END']!=''?Html::img($base64,['width'=>'120','height'=>'120']):Html::img($model['noImage'],['width'=>'120','height'=>'120']);
 				},
 				'headerOptions'=>[
 					'style'=>[

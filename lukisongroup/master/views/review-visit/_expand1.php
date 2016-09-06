@@ -25,7 +25,7 @@ use yii\data\ArrayDataProvider;
 				<div class="box-tools pull-left">
 					<!--<span data-toggle="tooltip" title="3 New Messages" class="badge bg-green">3</span>-->
 					<button class="btn btn-box-tool" data-toggle="tooltip" title="show/hide" data-widget="collapse"><i class="fa fa-minus"></i></button>
-					<button class="btn btn-box-tool" data-toggle="tooltip" title="Detail" data-widget="chat-pane-toggle"><i class="fa fa-navicon"></i></button>
+					<button class="btn btn-box-tool" data-toggle="tooltip" title="Detail" data-widget="chat-pane-toggle"><i class="fa fa-fast-backward"></i></button>
 					<!-- <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>-->
 				</div>
 			</div><!-- /.box-header -->
@@ -36,23 +36,18 @@ use yii\data\ArrayDataProvider;
 						 <div class="raw">
 							<div class="col-sm-8 col-md-8 col-lg-8" style="font-family:tahoma, arial, sans-serif;font-size:9pt">
 								<?php
-									$gvHeaderInfo=$this->render('_expand1HeaderInfo',['dataProviderInfo'=>$dataProviderInfo]);
-									$gvCustVisit=$this->render('_expand1CustVisit',['dataProviderTime'=>$dataProviderTime]);
-									$gvInventory=$this->render('_expand1Inventory',['inventoryProvider'=>$inventoryProvider]);
-									
-									$gvRo='';									
-									//$gvRo=$this->render('_expand1Ro',['inventoryProvider'=>$inventoryProvider]);			
-										
-									$gvExpired='';
-									//$gvExpired=$this->render('_expand1Expired',['inventoryProvider'=>$inventoryProvider]);
+									$dvInfo=$this->render('_expand1HeaderInfo',['dataProviderInfo'=>$dataProviderInfo]);
+									$gvVisitTime=$this->render('_expand1CustVisit',['dataProviderTime'=>$dataProviderTime]);
+									$gvInventory=$this->render('_expand1Inventory',['inventoryProvider'=>$inventoryProvider]);										
+									$gvExpired=$this->render('_expand1Expired',['dataProviderExpired'=>$dataProviderExpired,'searchModelExpired'=>$searchModelExpired]);
+									$gvMemo=$this->render('_expand1Memo',['dataProviderMemo'=>$dataProviderMemo]);
 													
 								?>
-								<?=$gvHeaderInfo?>
-								<?=$gvCustVisit?>
+								<?=$dvInfo?>
+								<?=$gvVisitTime?>
 								<?=$gvInventory?>
-								<?=$gvRo?>
-								
 								<?=$gvExpired?>
+								<?=$gvMemo?>
 							</div>
 							<div class="col-sm-4 col-md-4 col-lg-4">
 								<?php

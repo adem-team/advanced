@@ -9,9 +9,8 @@ use yii\widgets\Pjax;
 /*[4] GRID VIEW EXPIRED */
 	$expired=GridView::widget([
 		'id'=>'expired-rpt',
-        'dataProvider' => $dataProviderExpired,
-		//'filterModel' => $searchModelExpired,
-        'columns' => [
+        'dataProvider' => $dataProviderMemo,
+		'columns' => [
 			[
 				'class'=>'kartik\grid\SerialColumn',
 				//'contentOptions'=>['class'=>'kartik-sheet-style'],
@@ -36,8 +35,28 @@ use yii\widgets\Pjax;
 				],
 			],
 			[
-				'attribute'=>'custNm',
-				'label'=>'CUSTOMER',
+				'attribute'=>'NM_CUSTOMER',
+				'label'=>'CUSTOMERS',
+				'headerOptions'=>[
+					'style'=>[
+						'width'=>'10%',
+						'text-align'=>'center',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'width'=>'30%',
+						'text-align'=>'left',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			[
+				'attribute'=>'ISI_MESSAGES',
+				'label'=>'NOTES',
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
@@ -48,60 +67,6 @@ use yii\widgets\Pjax;
 				'contentOptions'=>[
 					'style'=>[
 						'text-align'=>'left',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-					]
-				],
-			],
-			[
-				'attribute'=>'barangNm',
-				'label'=>'ITEMS/Pcs',
-				'headerOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>'left',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-					]
-				],
-			],
-			[
-				'attribute'=>'QTY',
-				'label'=>'QTY/Pcs',
-				'headerOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>'right',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-					]
-				],
-			],
-			[
-				'attribute'=>'DATE_EXPIRED',
-				'label'=>'DATE_EXPIRED',
-				'headerOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]
@@ -112,7 +77,7 @@ use yii\widgets\Pjax;
 			'',
 		],
 		'panel' => [
-			'heading'=>"<i class='fa fa-times-circle fa-1x'></i> LIST EXPIRED",  
+			'heading'=>"<i class='fa fa-tags fa-1x'></i> LIST NOTES",  
 			'type'=>'info',
 			'footer'=>false,
 			
