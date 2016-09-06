@@ -17,6 +17,16 @@ use yii\data\ArrayDataProvider;
 /*[4] GRID VIEW IMAGE SHOW */
 	$visitImage=GridView::widget([
 		'id'=>'img-list',
+		'rowOptions' => function ($model, $key, $index, $grid) {
+                return ['id' => $model['ID'], 'onclick' => '
+						$(document).ready(function(){
+							$("#tampil-image").modal({
+								show: "true"
+							}); 
+						});				
+					'	
+				];
+        },
         'dataProvider' => $dataProviderHeader2,
 		//'filterModel' => $searchModelImage,
         'columns' => [
