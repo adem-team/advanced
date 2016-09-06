@@ -19,7 +19,7 @@ use yii\data\ArrayDataProvider;
 	/*[3] GRID VIEW INVENTORY */
 	$ro=GridView::widget([
 		'id'=>'ro-list',
-        'dataProvider' => $inventoryProvider,
+        'dataProvider' => $requestProvider,
 		//'filterModel' => $searchModelInventory,
         'columns' => [
 			[
