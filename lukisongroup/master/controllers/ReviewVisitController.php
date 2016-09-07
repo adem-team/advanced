@@ -11,6 +11,7 @@ use yii\helpers\ArrayHelper;
 use yii\data\ArrayDataProvider;
 use yii\filters\VerbFilter;
 use lukisongroup\master\models\ReviewHeaderSearch;
+use lukisongroup\master\models\CustomercallTimevisitSearch;
 
 class ReviewVisitController extends Controller
 {	
@@ -71,4 +72,30 @@ class ReviewVisitController extends Controller
 				")->execute();//->queryAll();
 		return $data;
 	}
+	
+	
+	public function actionDisplyImage($tgl,$user_id)
+    {
+		//print_r($tgl);
+		//die();
+		$searchModelViewImg = new CustomercallTimevisitSearch(['TGL'=>$tgl,'USER_ID'=>$user_id]);
+		$dataProviderViewImg=$searchModelViewImg->search(Yii::$app->request->queryParams);
+		$listImg=$dataProviderViewImg->getModels();
+		//if (Yii::$app->request->isAjax) {
+			// $request= Yii::$app->request;
+			// $id=$request->post('id');
+			// $roDetail = Purchasedetail::findOne($id);
+			// $roDetail->STATUS = 3;
+			// $roDetail->save();
+			// return true;
+			$model = new \yii\base\DynamicModel(['tanggal']);
+			$model->addRule(['tanggal'], 'safe');
+			return $this->renderAjax('_viewImageModal', [
+				'model'=>$listImg,
+			]);
+			
+		//}
+    }
+	
+	
 }
