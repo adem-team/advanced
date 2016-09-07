@@ -55,7 +55,7 @@
 									:
 								</td>
 								<td style="color:black; background:white;text-align:left">
-									4 <?php //=$cusCount[0]['CNT_ALL']; ?>
+									<?=$cusCount[0]['CNT_ALL']; ?>
 								</td>
 							</tr>
 							<tr>
