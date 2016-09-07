@@ -367,7 +367,18 @@ $this->params['breadcrumbs'][] = $this->title;
 	]);	
 ?>	
 <?=$indexReviewDetail?>
-
+<?php
+Modal::begin([
+			'id' => 'modal-view',
+			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-user"></div><div><h5 class="modal-title"><b>VIEW EMPLOYEE</b></h5></div>',
+			'size' => Modal::SIZE_LARGE,
+			'headerOptions'=>[
+					'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+			],
+		]);
+		echo "<div id='modalContent'></div>";
+		Modal::end();	
+?>
 <?php		
 	$this->registerJs("		
           $.fn.modal.Constructor.prototype.enforceFocus = function(){};		
@@ -383,7 +394,8 @@ $this->params['breadcrumbs'][] = $this->title;
                      modal.find('.modal-body').html(data)		
                  });		
              })		
-     ",$this::POS_READY);		
+     ",$this::POS_READY);
+	 
      Modal::begin([		
          'id' => 'modal-tgl',		
          'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search"></div><div><h4 class="modal-title"> SEARCH DATE</h4></div>',	

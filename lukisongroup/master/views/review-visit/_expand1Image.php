@@ -18,12 +18,17 @@ use yii\data\ArrayDataProvider;
 	$visitImage=GridView::widget([
 		'id'=>'img-list',
 		'rowOptions' => function ($model, $key, $index, $grid) {
-                return ['id' => $model['ID'], 'onclick' => '
+                return ['id' => $model['ID'], 'onclick' => '						
 						$(document).ready(function(){
-							$("#tampil-image").modal({
-								show: "true"
-							}); 
-						});				
+							var mtgl="'.$model["TGL"].'";
+							var muser_id="'.$model["USER_ID"].'";
+							//alert(user_id);
+								$.fn.modal.Constructor.prototype.enforceFocus = function(){};
+								// e.preventDefault(); 		
+								$("#modal-view").modal("show")
+								.find("#modalContent")
+								.load("/master/review-visit/disply-image?tgl='.$model["TGL"].'&user_id='.$model["USER_ID"].'");
+						}); 			
 					'	
 				];
         },
