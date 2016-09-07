@@ -68,7 +68,7 @@ class CustomercallTimevisit extends \yii\db\ActiveRecord
     {
         return [
             [['TGL', 'ABSEN_MASUK', 'ABSEN_KELUAR', 'ABSEN_TOTAL', 'CUST_CHKIN', 'CUST_CHKOUT', 'LIVE_TIME', 'JRK_TEMPUH', 'JRK_TEMPUH_PULANG', 'UPDATE_AT','IMG_DECODE_START','IMG_DECODE_END','noImage'], 'safe'],
-            [['STS'], 'integer'],
+            [['STS','STS_CASE'], 'integer'],
             [['CUST_ID', 'USER_ID','SALES_NM','HP','SCDL_GRP_NM', 'GPS_GRP_LAT', 'GPS_GRP_LONG', 'ABSEN_MASUK_LAT', 'ABSEN_MASUK_LONG', 'ABSEN_MASUK_DISTANCE', 'ABSEN_KELUAR_LAT', 'ABSEN_KELUAR_LONG', 'ABSEN_KELUAR_DISTANCE', 'GPS_CUST_LAT', 'GPS_CUST_LAG', 'LAT_CHEKIN', 'LONG_CHEKIN', 'DISTANCE_CHEKIN', 'LAT_CHEKOUT', 'LONG_CHEKOUT', 'DISTANCE_CHEKOUT'], 'string', 'max' => 50],
             [['CUST_NM'], 'string', 'max' => 255],
             [['USER_NM', 'UPDATE_BY'], 'string', 'max' => 100],

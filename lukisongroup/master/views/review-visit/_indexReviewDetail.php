@@ -66,11 +66,11 @@ $this->params['breadcrumbs'][] = $this->title;
 	$attDinamik =[];
 	/*GRIDVIEW ARRAY FIELD HEAD*/
 	$headColomnEvent=[
-		['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'DATE','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'DATE','align'=>'center','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>1, 'ATTR' =>['FIELD'=>'USER_NM','SIZE' => '10px','label'=>'USER NAME','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>2, 'ATTR' =>['FIELD'=>'SCDL_GRP_NM','SIZE' => '10px','label'=>'SCHEDULE','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'TIME_DAYSTART','SIZE' => '10px','label'=>'START TIME','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'TIME_DAYEND','SIZE' => '10px','label'=>'END TIME','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'TIME_DAYSTART','SIZE' => '10px','label'=>'START TIME','align'=>'center','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1','value'=>function($models){ return $models['TIME_DAYSTART']!=''?$models['TIME_DAYSTART']:"<span class='fa fa-remove fa-1x'></span>";}]],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'TIME_DAYEND','SIZE' => '10px','label'=>'END TIME','align'=>'center','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1','value'=>function($models){ return $models['TIME_DAYEND']!=''?$models['TIME_DAYEND']:"<span class='fa fa-remove fa-1x'></span>";}]],
 	];
 	$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');
 	
@@ -254,6 +254,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	foreach($gvHeadColomn as $key =>$value[]){
 		$attDinamik[]=[
 			'attribute'=>$value[$key]['FIELD'],
+			'value'=>$value[$key]['value'],
 			'label'=>$value[$key]['label'],
 			//'filterType'=>$value[$key]['filterType'],
 			//'filter'=>$value[$key]['filter'],
@@ -370,7 +371,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 Modal::begin([
 			'id' => 'modal-view',
-			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-user"></div><div><h5 class="modal-title"><b>VIEW EMPLOYEE</b></h5></div>',
+			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-file-image-o"></div><div><h5 class="modal-title"><b>VIEWS IMAGE</b></h5></div>',
 			'size' => Modal::SIZE_LARGE,
 			'headerOptions'=>[
 					'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',

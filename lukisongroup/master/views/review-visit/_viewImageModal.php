@@ -26,11 +26,27 @@ use dosamigos\gallery\Gallery;
 		$endImg=$value['IMG_DECODE_START']!=''?$value['IMG_DECODE_START']:$gambarkosong;
 	  $items[] = [
 					'src'=>'data:image/jpg;charset=utf-8;base64,'.$startImg,
-					'imageOptions'=>['width'=>"120px",'height'=>"120px",'class'=>'img-rounded'], //setting image display
+					'imageOptions'=>[
+						'width'=>"120px",
+						'height'=>"120px",
+						'padding-bottom'=>'20px',
+						'class'=>'img-rounded'
+					], 
+					'options'=>[
+						'title' => 'IMAGE START-'. $value['CUST_NM']
+					], 
 			];
 	  $items[] = [
 					'src'=>'data:image/jpg;charset=utf-8;base64,'.$endImg,
-					'imageOptions'=>['width'=>"120px",'height'=>"120px",'class'=>'img-rounded'], //setting image display
+					'imageOptions'=>[
+						'width'=>"120px",
+						'height'=>"120px",
+						'padding-bottom'=>'20px',
+						'class'=>'img-rounded'
+					],
+					'options'=>[
+						'title' => 'IMAGE END-'. $value['CUST_NM']
+					], 
 			];
 	};			
 
@@ -38,7 +54,7 @@ use dosamigos\gallery\Gallery;
 	$viewItemImge =dosamigos\gallery\Gallery::widget([
 		  'items' =>  $items]);
 	echo Html::panel([
-			'heading' => '<div> LIST IMAGE </div>',
+			'heading' =>false,// '<div> LIST IMAGE </div>',
 			'body'=>$viewItemImge,
 		],
 		Html::TYPE_INFO
