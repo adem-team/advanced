@@ -286,155 +286,286 @@ class PostmanCustomerController extends Controller
 		$excel_content = [
 			[
 				'sheet_name' => 'ALL CUSTOMER',
-                'sheet_title' => ['CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER_GRADE','GEO_MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE POS','PHONE','CONTACT PERSON'], //$excel_ceils,//'sad',//[$excel_title],
+                'sheet_title' => [
+					['CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER','GEO.MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE.POS','PHONE','CONTACT.PERSON'],
+				],
 			    'ceils' => $excel_ceilsAll,
-                //'freezePane' => 'E2',
+                'freezePane' => 'A2',
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
-                'headerColumnCssClass' => [
-					 'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
-                     'DIST_ID' => Postman4ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                     'LAYER_GRADE' => Postman4ExcelBehavior::getCssClass('header'),
-                     'GEO_MAINTAIN' => Postman4ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Postman4ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Postman4ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Postman4ExcelBehavior::getCssClass('header'),  
-                     'PHONE' => Postman4ExcelBehavior::getCssClass('header'),
-                     'CP' => Postman4ExcelBehavior::getCssClass('header')              
-                ], //define each column's cssClass for header line only.  You can set as blank.
+				'headerStyle'=>[					
+					[
+						'CUST_ID' =>['align'=>'center'],
+						'DIST_ID' =>['align'=>'center'],
+						'CUST_NM' => ['align'=>'center'],
+						'TYPE' => ['align'=>'center'],
+						'LAYER' => ['align'=>'center'],
+						'GEO.MAINTAIN' =>['align'=>'center'],
+						'ALAMAT' => ['align'=>'center'],
+						'PROVINSI' => ['align'=>'center'], 
+						'KOTA' => ['align'=>'center'],
+						'KODE.POS' => ['align'=>'center'],
+						'PHONE' => ['align'=>'center'],
+						'CONTACT.PERSON' => ['align'=>'center']
+					]
+						
+				],
+				'contentStyle'=>[
+					[						
+						'CUST_ID' =>['align'=>'center'],
+						'DIST_ID' =>['align'=>'center'],
+						'CUST_NM' => ['align'=>'left'],
+						'TYPE' => ['align'=>'left'],
+						'LAYER' => ['align'=>'center'],
+						'GEO.MAINTAIN' =>['align'=>'left'],
+						'ALAMAT' => ['align'=>'left'],
+						'PROVINSI' => ['align'=>'left'], 
+						'KOTA' => ['align'=>'left'],
+						'KODE.POS' => ['align'=>'center'],
+						'PHONE' => ['align'=>'left'],
+						'CONTACT.PERSON' => ['align'=>'left']
+					]
+				],
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
                'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			[
 				'sheet_name' => 'MODERN-NKA',
-                'sheet_title' => ['CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER_GRADE','GEO_MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE POS','PHONE','CONTACT PERSON'], //$excel_ceils,//'sad',//[$excel_title],
+                'sheet_title' => [
+					['CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER','GEO.MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE.POS','PHONE','CONTACT.PERSON'],
+				],
 			    'ceils' => $excel_ceilsNKA,
-                //'freezePane' => 'E2',
+                'freezePane' => 'A2',
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
-                'headerColumnCssClass' => [
-					 'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
-                     'DIST_ID' => Postman4ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                     'LAYER_GRADE' => Postman4ExcelBehavior::getCssClass('header'),
-                     'GEO_MAINTAIN' => Postman4ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Postman4ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Postman4ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Postman4ExcelBehavior::getCssClass('header'),  
-                     'PHONE' => Postman4ExcelBehavior::getCssClass('header'),
-                     'CP' => Postman4ExcelBehavior::getCssClass('header')              
-                ], //define each column's cssClass for header line only.  You can set as blank.
+                'headerStyle'=>[					
+					[
+						'CUST_ID' =>['align'=>'center'],
+						'DIST_ID' =>['align'=>'center'],
+						'CUST_NM' => ['align'=>'center'],
+						'TYPE' => ['align'=>'center'],
+						'LAYER' => ['align'=>'center'],
+						'GEO.MAINTAIN' =>['align'=>'center'],
+						'ALAMAT' => ['align'=>'center'],
+						'PROVINSI' => ['align'=>'center'], 
+						'KOTA' => ['align'=>'center'],
+						'KODE.POS' => ['align'=>'center'],
+						'PHONE' => ['align'=>'center'],
+						'CONTACT.PERSON' => ['align'=>'center']
+					]
+						
+				],
+				'contentStyle'=>[
+					[						
+						'CUST_ID' =>['align'=>'center'],
+						'DIST_ID' =>['align'=>'center'],
+						'CUST_NM' => ['align'=>'left'],
+						'TYPE' => ['align'=>'left'],
+						'LAYER' => ['align'=>'center'],
+						'GEO.MAINTAIN' =>['align'=>'left'],
+						'ALAMAT' => ['align'=>'left'],
+						'PROVINSI' => ['align'=>'left'], 
+						'KOTA' => ['align'=>'left'],
+						'KODE.POS' => ['align'=>'center'],
+						'PHONE' => ['align'=>'left'],
+						'CONTACT.PERSON' => ['align'=>'left']
+					]
+				],
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
                'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			[
 				'sheet_name' => 'MODERN-MTI',
-				'sheet_title' => ['CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER_GRADE','GEO_MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE POS','PHONE','CONTACT PERSON'], //$excel_ceils,//'sad',//[$excel_title],
+				'sheet_title' => [
+					['CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER','GEO.MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE.POS','PHONE','CONTACT.PERSON'],
+				],
 				'ceils' => $excel_ceilsMTI,
-                //'freezePane' => 'E2',
+                'freezePane' => 'A2',
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
-                'headerColumnCssClass' => [
-					 'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
-                     'DIST_ID' => Postman4ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                     'LAYER_GRADE' => Postman4ExcelBehavior::getCssClass('header'),
-                     'GEO_MAINTAIN' => Postman4ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Postman4ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Postman4ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Postman4ExcelBehavior::getCssClass('header'),  
-                     'PHONE' => Postman4ExcelBehavior::getCssClass('header'),
-                     'CP' => Postman4ExcelBehavior::getCssClass('header')                  
-                ], //define each column's cssClass for header line only.  You can set as blank.
+                'headerStyle'=>[					
+					[
+						'CUST_ID' =>['align'=>'center'],
+						'DIST_ID' =>['align'=>'center'],
+						'CUST_NM' => ['align'=>'center'],
+						'TYPE' => ['align'=>'center'],
+						'LAYER' => ['align'=>'center'],
+						'GEO.MAINTAIN' =>['align'=>'center'],
+						'ALAMAT' => ['align'=>'center'],
+						'PROVINSI' => ['align'=>'center'], 
+						'KOTA' => ['align'=>'center'],
+						'KODE.POS' => ['align'=>'center'],
+						'PHONE' => ['align'=>'center'],
+						'CONTACT.PERSON' => ['align'=>'center']
+					]
+						
+				],
+				'contentStyle'=>[
+					[						
+						'CUST_ID' =>['align'=>'center'],
+						'DIST_ID' =>['align'=>'center'],
+						'CUST_NM' => ['align'=>'left'],
+						'TYPE' => ['align'=>'left'],
+						'LAYER' => ['align'=>'center'],
+						'GEO.MAINTAIN' =>['align'=>'left'],
+						'ALAMAT' => ['align'=>'left'],
+						'PROVINSI' => ['align'=>'left'], 
+						'KOTA' => ['align'=>'left'],
+						'KODE.POS' => ['align'=>'center'],
+						'PHONE' => ['align'=>'left'],
+						'CONTACT.PERSON' => ['align'=>'left']
+					]
+				],
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
                'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			[
 				'sheet_name' => 'UNKNOWN',
-				'sheet_title' => ['CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER_GRADE','GEO_MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE POS','PHONE','CONTACT PERSON'], //$excel_ceils,//'sad',//[$excel_title],
+				'sheet_title' => [
+					['CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER','GEO.MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE.POS','PHONE','CONTACT.PERSON'],
+				],
 				'ceils' => $excel_ceilsOTHER,
-                //'freezePane' => 'E2',
+                'freezePane' => 'A2',
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
-                'headerColumnCssClass' => [
-					  'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
-                     'DIST_ID' => Postman4ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                     'LAYER_GRADE' => Postman4ExcelBehavior::getCssClass('header'),
-                     'GEO_MAINTAIN' => Postman4ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Postman4ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Postman4ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Postman4ExcelBehavior::getCssClass('header'),  
-                     'PHONE' => Postman4ExcelBehavior::getCssClass('header'),
-                     'CP' => Postman4ExcelBehavior::getCssClass('header')          
-                ],
+                'headerStyle'=>[					
+					[
+						'CUST_ID' =>['align'=>'center'],
+						'DIST_ID' =>['align'=>'center'],
+						'CUST_NM' => ['align'=>'center'],
+						'TYPE' => ['align'=>'center'],
+						'LAYER' => ['align'=>'center'],
+						'GEO.MAINTAIN' =>['align'=>'center'],
+						'ALAMAT' => ['align'=>'center'],
+						'PROVINSI' => ['align'=>'center'], 
+						'KOTA' => ['align'=>'center'],
+						'KODE.POS' => ['align'=>'center'],
+						'PHONE' => ['align'=>'center'],
+						'CONTACT.PERSON' => ['align'=>'center']
+					]
+						
+				],
+				'contentStyle'=>[
+					[						
+						'CUST_ID' =>['align'=>'center'],
+						'DIST_ID' =>['align'=>'center'],
+						'CUST_NM' => ['align'=>'left'],
+						'TYPE' => ['align'=>'left'],
+						'LAYER' => ['align'=>'center'],
+						'GEO.MAINTAIN' =>['align'=>'left'],
+						'ALAMAT' => ['align'=>'left'],
+						'PROVINSI' => ['align'=>'left'], 
+						'KOTA' => ['align'=>'left'],
+						'KODE.POS' => ['align'=>'center'],
+						'PHONE' => ['align'=>'left'],
+						'CONTACT.PERSON' => ['align'=>'left']
+					]
+				],
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
                'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			[
 				'sheet_name' => 'DELETE',
-				'sheet_title' => ['DELETE BY','DELETE AT','CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER_GRADE','GEO_MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE POS','PHONE','CONTACT PERSON'], //$excel_ceils,//'sad',//[$excel_title],
+				'sheet_title' => [
+					['DELETE.BY','DELETE.AT','CUST.ID','DIST.ID','CUST.NM','TYPE','LAYER','GEO.MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE.POS','PHONE','CONTACT.PERSON'],
+				],
 				'ceils' => $excel_ceilsDEL,
-                //'freezePane' => 'E2',
+                'freezePane' => 'A2',
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
-                'headerColumnCssClass' => [
-					 'DELETE_AT' => Postman4ExcelBehavior::getCssClass('header'),
-					 'DELETE_BY' => Postman4ExcelBehavior::getCssClass('header'),
-					 'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
-                     'DIST_ID' => Postman4ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                     'LAYER_GRADE' => Postman4ExcelBehavior::getCssClass('header'),
-                     'GEO_MAINTAIN' => Postman4ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Postman4ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Postman4ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Postman4ExcelBehavior::getCssClass('header'),  
-                     'PHONE' => Postman4ExcelBehavior::getCssClass('header'),
-                     'CP' => Postman4ExcelBehavior::getCssClass('header')          
-                ],
+				'headerStyle'=>[					
+					[
+						'DELETE.BY'=>['align'=>'center'],
+						'DELETE.AT'=>['align'=>'center'],
+						'CUST.ID' =>['align'=>'center'],
+						'DIST.ID' =>['align'=>'center'],
+						'CUST.NM' =>['align'=>'center'],
+						'TYPE' =>['align'=>'center'],
+						'LAYER' =>['align'=>'center'],
+						'GEO.MAINTAIN' =>['align'=>'center'],
+						'ALAMAT' =>['align'=>'center'],
+						'PROVINSI' =>['align'=>'center'], 
+						'KOTA' =>['align'=>'center'],
+						'KODE.POS' =>['align'=>'center'],
+						'PHONE' =>['align'=>'center'],
+						'CONTACT.PERSON' =>['align'=>'center']
+					]
+						
+				],
+				'contentStyle'=>[
+					[						
+						'DELETE.BY'=>['align'=>'center'],
+						'DELETE.AT'=>['align'=>'center'],
+						'CUST.ID' =>['align'=>'center'],
+						'DIST.ID' =>['align'=>'center'],
+						'CUST.NM' =>['align'=>'center'],
+						'TYPE' =>['align'=>'center'],
+						'LAYER' =>['align'=>'center'],
+						'GEO.MAINTAIN' =>['align'=>'center'],
+						'ALAMAT' =>['align'=>'center'],
+						'PROVINSI' =>['align'=>'center'], 
+						'KOTA' =>['align'=>'center'],
+						'KODE.POS' =>['align'=>'center'],
+						'PHONE' =>['align'=>'center'],
+						'CONTACT.PERSON' =>['align'=>'center']
+					]
+				],            
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
                'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			[
 				'sheet_name' => 'EDITING',
-				'sheet_title' => ['UPDATE BY','UPDATE AT','CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER_GRADE','GEO_MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE POS','PHONE','CONTACT PERSON'], //$excel_ceils,//'sad',//[$excel_title],
+				'sheet_title' => [
+					['UPDATE.BY','UPDATE.AT','CUST.ID','DIST.ID','CUST.NM','TYPE','LAYER','GEO.MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE.POS','PHONE','CONTACT.PERSON'],
+				],
 				'ceils' => $excel_ceilsEDIT,
-                //'freezePane' => 'E2',
+                'freezePane' => 'A2',
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
-                'headerColumnCssClass' => [
-					 'UPDATE_AT' => Postman4ExcelBehavior::getCssClass('header'),
-					 'UPDATE_BY' => Postman4ExcelBehavior::getCssClass('header'),
-					 'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
-                     'DIST_ID' => Postman4ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                     'LAYER_GRADE' => Postman4ExcelBehavior::getCssClass('header'),
-                     'GEO_MAINTAIN' => Postman4ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Postman4ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Postman4ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Postman4ExcelBehavior::getCssClass('header'),  
-                     'PHONE' => Postman4ExcelBehavior::getCssClass('header'),
-                     'CP' => Postman4ExcelBehavior::getCssClass('header')          
-                ],
+                'headerStyle'=>[					
+					[
+						'UPDATE.BY'=>['align'=>'center'],
+						'UPDATE.AT'=>['align'=>'center'],
+						'CUST.ID' =>['align'=>'center'],
+						'DIST.ID' =>['align'=>'center'],
+						'CUST.NM' =>['align'=>'center'],
+						'TYPE' =>['align'=>'center'],
+						'LAYER' =>['align'=>'center'],
+						'GEO.MAINTAIN' =>['align'=>'center'],
+						'ALAMAT' =>['align'=>'center'],
+						'PROVINSI' =>['align'=>'center'], 
+						'KOTA' =>['align'=>'center'],
+						'KODE.POS' =>['align'=>'center'],
+						'PHONE' =>['align'=>'center'],
+						'CONTACT.PERSON' =>['align'=>'center']
+					]						
+				],
+				'contentStyle'=>[
+					[						
+						'UPDATE.BY'=>['align'=>'center'],
+						'UPDATE.AT'=>['align'=>'center'],
+						'CUST.ID' =>['align'=>'center'],
+						'DIST.ID' =>['align'=>'center'],
+						'CUST.NM' =>['align'=>'center'],
+						'TYPE' =>['align'=>'center'],
+						'LAYER' =>['align'=>'center'],
+						'GEO.MAINTAIN' =>['align'=>'center'],
+						'ALAMAT' =>['align'=>'center'],
+						'PROVINSI' =>['align'=>'center'], 
+						'KOTA' =>['align'=>'center'],
+						'KODE.POS' =>['align'=>'center'],
+						'PHONE' =>['align'=>'center'],
+						'CONTACT.PERSON' =>['align'=>'center']
+					]
+				],
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
                'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			[
 				'sheet_name' => 'ADD NEW',
-				'sheet_title' => ['CREATE BY','CREATE AT','CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER_GRADE','GEO_MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE POS','PHONE','CONTACT PERSON'], //$excel_ceils,//'sad',//[$excel_title],
+				'sheet_title' => [
+					['CREATE.BY','CREATE.AT','CUST.ID','DIST.ID','CUST.NM','TYPE','LAYER','GEO.MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE.POS','PHONE','CONTACT.PERSON'],
+				],
 				'ceils' => $excel_ceilsNEW,
-                //'freezePane' => 'E2',
+                'freezePane' => 'A2',
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-					 'CREATE_AT' => Postman4ExcelBehavior::getCssClass('header'),
-					 'CREATE_BY' => Postman4ExcelBehavior::getCssClass('header'),
+					 'CREATE.AT' => Postman4ExcelBehavior::getCssClass('header'),
+					 'CREATE.BY' => Postman4ExcelBehavior::getCssClass('header'),
 					 'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
                      'DIST_ID' => Postman4ExcelBehavior::getCssClass('header'),
                      'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),

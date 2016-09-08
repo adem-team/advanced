@@ -43,7 +43,7 @@ class PostmanSchaduleController extends Controller
 	*/
 	public function actionExport(){
 		
-		$tglIn='2016-09-01';
+		$tglIn=date("Y-m-d");//'2016-09-01';
 		/* HEADER/FIELD MONTHLY SCHADULE*/
 		$tanggalOfMonth= new ArrayDataProvider([
 			//'key' => 'ID',
