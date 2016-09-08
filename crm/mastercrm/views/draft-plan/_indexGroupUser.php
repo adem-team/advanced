@@ -187,13 +187,13 @@ $gvGroupUser=GridView::widget([
   'panel' => [
        'heading'=>false,
         'type'=>'info',
-       'before'=> Html::a('<i class="fa fa-user"></i> '.Yii::t('app', 'Plan User',
+       'before'=> Html::a('<i class="fa fa-tags"></i> '.Yii::t('app', 'Plan User',
                             ['modelClass' => 'DraftPlan',]),'/mastercrm/draft-plan/plan-user',[
                                 'data-toggle'=>"modal",
-                                    'data-target'=>"#modal-create-user",
-                                        'class' => 'btn btn-success'
+                                    'data-target'=>"#modal-group-user",
+                                        'class' => 'btn btn-warning'
                                                     ]).' '.
-                  Html::a('<i class="fa fa-user"></i> '.Yii::t('app', 'Add User',
+                  Html::a('<i class="fa fa-user-plus"></i> '.Yii::t('app', 'Add User',
                             ['modelClass' => 'DraftPlan',]),'/mastercrm/draft-plan/create-user',[
                                 'data-toggle'=>"modal",
                                     'data-target'=>"#modal-create-user",
@@ -201,13 +201,13 @@ $gvGroupUser=GridView::widget([
                                                     ]),
         'showFooter'=>false,
   ],
-  'export' =>['target' => GridView::TARGET_BLANK],
-  'exportConfig' => [
-    GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
-    GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
-  ],
+  // 'export' =>['target' => GridView::TARGET_BLANK],
+  // 'exportConfig' => [
+    // GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
+    // GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
+  // ],
   'toolbar'=> [
-        '{export}',
+        // '{export}',
     //'{items}',
   ],
   'hover'=>true, //cursor select
@@ -221,7 +221,32 @@ $gvGroupUser=GridView::widget([
 
 <?php
 
-$this->registerJs("
+	$this->registerJs("
+         $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+         $('#modal-group-user').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title')
+            var href = button.attr('href')
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+    Modal::begin([
+        'id' => 'modal-group-user',
+        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-tags"></div><div><h4 class="modal-title">USER TO GROUP</h4></div>',
+		 'size' => Modal::SIZE_SMALL,	
+        'headerOptions'=>[
+                'style'=> 'border-radius:5px; background-color: rgba(255, 189, 117, 1)',
+        ],
+    ]);
+    Modal::end();
+
+	$this->registerJs("
          $.fn.modal.Constructor.prototype.enforceFocus = function(){};
          $('#modal-create-user').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
@@ -238,13 +263,12 @@ $this->registerJs("
     ",$this::POS_READY);
     Modal::begin([
         'id' => 'modal-create-user',
-        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search-plus"></div><div><h4 class="modal-title">User</h4></div>',
-        'headerOptions'=>[
+        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search-plus"></div><div><h4 class="modal-title">ADD USER</h4></div>',
+		'headerOptions'=>[
                 'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
         ],
     ]);
     Modal::end();
-
 
 ?>
 

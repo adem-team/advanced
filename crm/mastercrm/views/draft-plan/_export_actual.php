@@ -30,7 +30,7 @@ use kartik\widgets\DatePicker;
 	
 		
 		<div style="text-align: right;"">
-			<?php echo Html::submitButton('Export Actual',['class' => 'btn btn-primary']); ?>
+			<?php echo Html::submitButton('Export Excel',['class' => 'btn btn-primary']); ?>
 		</div>
 
     

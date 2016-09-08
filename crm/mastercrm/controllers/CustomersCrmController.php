@@ -72,7 +72,7 @@ class CustomersCrmController extends Controller
     public function actionIndex()
     {
       
-      if(Helper::checkRoute('index')){
+      // if(Helper::checkRoute('index')){
         
         $searchModel = new CustomersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -146,10 +146,10 @@ class CustomersCrmController extends Controller
       'searchModel' => $searchModel,
       'dataProvider' => $dataProvider,
     ]);
-      }else{
-          Yii::$app->user->logout();
-          $this->redirect(array('/site/login'));
-      }
+      // }else{
+      //     Yii::$app->user->logout();
+      //     $this->redirect(array('/site/login'));
+      // }
 
 	}
 

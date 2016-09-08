@@ -44,8 +44,8 @@ class Employe extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            // [['EMP_NM','EMP_KTP','EMP_ALAMAT'], 'required'],
-						['EMP_STS','default', 'value'=>0],
+            [['EMP_NM','EMP_KTP','EMP_ALAMAT'], 'required'],
+			['EMP_STS','default', 'value'=>0],
             [['EMP_ID','EMP_ZIP','EMP_CORP_ID'], 'string', 'max' => 20],
             [['EMP_NM','EMP_NM_BLK','EMP_IMG','EMP_KTP','GRP_NM'], 'string', 'max' => 20],
 			[['DEP_ID','JOBGRADE_ID'], 'string', 'max' => 5],
