@@ -43,7 +43,7 @@ class PostmanDailySalesmdController extends Controller
 	*/
 	public function actionExport(){
 		//Rpt Of [selasa=2;minggu=0]
-		$x=date('N', strtotime(date("Y-m-d"));		
+		$x=date('N', strtotime(date("Y-m-d")));		
 		if ($x!=2 or $x!=7){
 			$tglIn=date("Y-m-d");//'2016-09-07';
 			/* DAILY REPORT INVENTORY SALES */
@@ -71,7 +71,7 @@ class PostmanDailySalesmdController extends Controller
 						LEFT JOIN c0002 x6 on x6.KD_CUSTOMERS=x1.CUST_ID
 						LEFT JOIN b0002 x7 on x7.KD_BARANG=x2.KD_BARANG
 						LEFT JOIN dbm_086.user_profile x8 on x8.ID_USER=x1.USER_ID
-						WHERE  x1.TGL='".$tglIn."'
+						WHERE  x1.TGL='".$tglIn."' AND x1.USER_ID NOT IN ('61','62')
 						GROUP BY x1.CUST_ID,x2.KD_BARANG	
 						ORDER BY x1.USER_ID,x1.CUST_ID
 				")->queryAll(),
@@ -94,7 +94,7 @@ class PostmanDailySalesmdController extends Controller
 						SCDL_GRP_NM AS AREA,
 						(CASE WHEN STS_CASE=0 THEN 'PLAN' ELSE 'CASE' END) as SCDL_EVENT,
 						(CASE WHEN STS_CASE_PIC='' THEN 'SYSTEM' ELSE STS_CASE_PIC END) AS AUTHORIZED 
-					FROM c0002rpt_cc_time WHERE TGL='".$tglIn."'
+					FROM c0002rpt_cc_time WHERE TGL='".$tglIn."' AND USER_ID NOT IN ('61','62')
 					ORDER BY USER_ID,CUST_CHKIN,CUST_CHKOUT
 				")->queryAll(),
 			]);				
@@ -123,7 +123,7 @@ class PostmanDailySalesmdController extends Controller
 									LEFT JOIN dbm_086.user_profile u2 on u2.ID_USER=u1.id
 									WHERE u1.POSITION_SITE='CRM' AND u1.POSITION_LOGIN=1 AND u1.POSITION_ACCESS=2
 								) x6 on x6.USER_ID=x1.USER_ID
-					WHERE x1.TGL_KJG like '".$tglIn."%'
+					WHERE x1.TGL_KJG like '".$tglIn."%' AND x1.USER_ID NOT IN ('61','62')
 					GROUP BY x1.DATE_EXPIRED,x1.BRG_ID,x1.CUST_ID
 					ORDER BY x1.USER_ID,x1.CUST_ID,x1.BRG_ID,x1.DATE_EXPIRED
 				")->queryAll(),
@@ -276,7 +276,7 @@ class PostmanDailySalesmdController extends Controller
 	
 	/*SEND EMAIL*/
 	public function  actionSend(){
-		$x=date('N', strtotime(date("Y-m-d"));		
+		$x=date('N', strtotime(date("Y-m-d")));		
 		if ($x!=2 or $x!=7){ //off selasa dan minggu
 			/*Content template*/
 			$cusCount=Yii::$app->db_esm->createCommand("

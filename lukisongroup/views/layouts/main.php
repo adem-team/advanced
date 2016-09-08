@@ -16,6 +16,8 @@ use lukisongroup\sistem\models\M1000;
 //use lukisongroup\assets\AppAsset;
 use mdm\admin\components\MenuHelper;
 use yii\bootstrap\Modal;
+use lukisongroup\assets\AppAssetChat;
+AppAssetChat::register($this);
 use machour\yii2\notifications\widgets\NotificationsWidget;
 use common\components\Notification;
 //use lukisongroup\models\Notification;
@@ -23,6 +25,7 @@ use common\components\Notification;
 dmstr\web\AdminLteAsset::register($this);
 use lukisongroup\assets\AppAsset_style;
 AppAsset_style::register($this);
+
 
 $this->title = 'LukisonGroup.com';
 	/*
@@ -77,7 +80,7 @@ $this->title = 'LukisonGroup.com';
 			  'size' => 'large',
 		  ],
 		'listSelector' => '#notifications',
-	]);			
+	]);			 
 
 ?>
 <?php $this->beginPage() ?>
@@ -88,11 +91,12 @@ $this->title = 'LukisonGroup.com';
 			<meta name="viewport" content="width=device-width, initial-scale=1">
 			<?= Html::csrfMetaTags() ?>
 			<title><?= Html::encode($this->title) ?></title>
+			<script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
             <!-- tambahan variable untuk template Author: --ptr.nov-- !-->
             <title><?= Html::encode($this->sideMenu) ?></title>
             <title><?= Html::encode($this->sideCorp) ?></title>
-			<?php if (!Yii::$app->user->isGuest) { ?>
-            <meta http-equiv="refresh" content="<?php echo Yii::$app->params['sessionTimeoutSeconds'];?>;"/>
+			<?php if (!Yii::$app->user->isGuest) { ?>			
+            <meta http-equiv="refresh" content="<?php echo Yii::$app->params['sessionTimeoutSeconds'];?>;"/>			
 			<?php } ?>				
 			<?php $this->head() ?>
 		</head>
