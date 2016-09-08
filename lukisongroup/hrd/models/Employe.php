@@ -157,6 +157,12 @@ class Employe extends \yii\db\ActiveRecord
 			return $this->hasOne(Deptsub::className(), ['DEP_SUB_ID' => 'DEP_SUB_ID']);
 		}
 
+		/* Join Class SUB DEPARTMENT */
+		public function getDeptNm()
+		{
+			return $this->deptsub!=''?$this->deptsub->DEP_SUB_NM:'NotSet';
+		}
+
 		/* Join Class Group Function */
 		public function getGroupfunction()
 		{

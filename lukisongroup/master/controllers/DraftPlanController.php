@@ -378,8 +378,6 @@ class DraftPlanController extends Controller
 
       
 
-      
-
       if(self::findNotExist($dataField['IdDinamikScdl']) != 0)
       {
         $status = 1;
@@ -1202,7 +1200,7 @@ class DraftPlanController extends Controller
                     //   $status = 3;
                     // }
                        // cek baris
-                    $baris = DraftPlanDetail::find()->select('CUST_ID')->where(['SCDL_GROUP_NM'=>$scdl_group_nm])->andwhere('STATUS<>3')->distinct()->count();
+                    $baris = DraftPlanDetail::find()->select('CUST_ID')->where(['SCDL_GROUP_NM'=>$scdl_group_nm])->andwhere('STATUS<>2')->andwhere('STATUS<>3')->distinct()->count();
 
                     // print_r($baris);
                     // die();
