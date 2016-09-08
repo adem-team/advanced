@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 use kartik\widgets\Select2;
 use kartik\widgets\DepDrop;
 use yii\helpers\Url;
-use crm\mastercrm\models\DraftPlan;
+use lukisongroup\master\models\DraftPlan;
 use lukisongroup\sistem\models\Userlogin;
 
 /* @var $this yii\web\View */

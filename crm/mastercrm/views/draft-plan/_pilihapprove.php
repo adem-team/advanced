@@ -16,7 +16,7 @@ use yii\helpers\Url;
     <?php $form = ActiveForm::begin(['id'=>$model->formName(),
     	'enableClientValidation' => true,
         'enableAjaxValidation'=>true,
-        'validationUrl'=>Url::toRoute('/master/draft-plan/valid-user')
+        'validationUrl'=>Url::toRoute('/mastercrm/draft-plan/valid-user')
 
     ]); ?>
 

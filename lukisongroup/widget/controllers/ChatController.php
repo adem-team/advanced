@@ -13,6 +13,8 @@ use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Json;
+use yii\web\Response;
 
 /* namespace models */
 use lukisongroup\widget\models\Chat;
@@ -121,6 +123,70 @@ class ChatController extends Controller
         ]);
     }
 
+    public function actionMessage($notifOnly = false)
+    {
+       $MAX_CONN = 15; // 15 second
+      
+
+        $sse = new \common\components\SSE();
+        try {
+            $lastTime = Yii::$app->getRequest()->getHeaders()->get('last-event-id', 0);
+            $profile = Yii::$app->getUserOpt->profile_user()->emp;
+            $emp_id = $profile->EMP_ID;
+
+
+            $lastCount = -1;
+            for ($i = 0; $i <= $MAX_CONN; $i++) {
+                // load message
+                if (!$notifOnly) {
+                  
+                   $rows = Chat::find()->where('UPDATED_TIME <:ctime', [':ctime' => $lastTime])
+                               ->orderBy(['UPDATED_TIME' => SORT_DESC])
+                               ->asArray()
+                               ->all();
+
+                  $lastTime = microtime(true);
+                  
+                    $msgs = [];
+                    foreach (array_reverse($rows) as $row) {
+                        $self = $row['CREATED_BY'] == $emp_id;
+
+                        if ($row['UPDATED_TIME'] < ($lastTime - 86400)) { // lebih dari sehari
+                            $formatTime = date('d M H:i', $row['UPDATED_TIME']);
+                            
+                        } else {
+                            $formatTime = date('H:i:s', $row['UPDATED_TIME']);
+                          
+                        }
+                        $msgs[] = [
+                            'self' => $self,
+                            'time' => $formatTime,
+                            'name' => $self ? 'Me' : $profile->EMP_NM.' '.$profile->EMP_NM_BLK,
+                            'text' => $row['MESSAGE']
+                        ];
+                    }
+
+                       if (count($msgs) || ($i % 4 == 2)) {
+                        $sse->event('chat', ['msgs' => $msgs]);
+                        $sse->flush();
+                    }
+                }
+                sleep(1);
+
+                 
+            } 
+
+              
+        }catch (\Exception $exc) {
+            $sse->event('msgerror', ['msg' => $exc->getMessage()]);
+            $sse->flush();
+        }
+        $sse->id($lastTime);
+        $sse->flush();
+        exit();
+    }
+
+
 
 public function actionSendChat()
 {
@@ -134,15 +200,16 @@ public function actionSendChat()
     $connection = Yii::$app->db_widget;
 
     $request = Yii::$app->request;
-    $typechat = $request->post('chat');
-    $id=$request->post('id');
-    $chat = $request->post('comment');
+    // $typechat = $request->post('chat');
+    // $id=$request->post('id');
+    $chat = $request->post('chat');
     
       # code...
       $model = new Chat();
       $model->MESSAGE = $chat;
-      $model->GROUP_ID = $id;
+      // $model->GROUP_ID = $id;
       $model->CREATED_BY = $emp_id;
+      $model->UPDATED_TIME = time();
       $model->save();
     // }
 
@@ -153,6 +220,137 @@ public function actionSendChat()
     return true;
   }
 }
+
+// public function actionMessage($notifOnly = false){
+//    $MAX_CONN = 15; // 15 times
+//         $sse = new \common\components\SSE();
+//         try {
+//             $lastTime = Yii::$app->getRequest()->getHeaders()->get('last-event-id', 0);
+//             $user_id = Yii::$app->user->identity->id;
+//             $lastSeen = Yii::$app->profile->lastSeen ? : 0;
+
+//             // $chats = Chat::find()->where('[[UPDATED_TIME]]>:ctime')->orderBy(['UPDATED_TIME' => SORT_DESC])->limit(150);
+
+//             // $chats = (new \yii\db\Query())
+//             //     ->select(['UPDATED_TIME', 'MESSAGE'])
+//             //     ->from(['chat'])
+//             //     ->where('[[UPDATED_TIME]]>:ctime')
+//             //     ->orderBy(['UPDATED_TIME' => SORT_DESC])
+//             //     ->limit(150);
+//               $rows = Chat::find()->where('UPDATED_TIME > :ctime', [':ctime' => $lastTime])->orderBy(['UPDATED_TIME' => SORT_DESC])->asArray()->all();
+           
+
+//             // $unread = (new \yii\db\Query())
+//             //     ->from(['chat'])
+//             //     ->where('[[time]]>:ctime')
+//             //     ->andWhere(['<>', 'user_id', $user_id]);
+
+//             // $lastCount = -1;
+//             // for ($i = 0; $i <= $MAX_CONN; $i++) {
+//             //     // message belum terbaca
+//             //     $count = $unread->params([':ctime' => $lastSeen])->count();
+//             //     if ($count != $lastCount || ($i % 4 == 0)) {
+//             //         $lastCount = $count;
+//             //         $sse->event('unread', ['count' => $count]);
+//             //         $sse->flush();
+//             //     }
+
+//                 // load message
+//                 // if (!$notifOnly) {
+//                     // $rows = $chats->params([':ctime' => $lastTime])->asArray()->all();
+                  
+//                     $lastTime = microtime(true);
+//                     $msgs = [];
+//                     $self = Yii::$app->user->identity->username;
+//                     foreach (array_reverse($rows) as $row) {
+//                         // $self = $row['user_id'] == $user_id;
+
+//                         if ($row['UPDATED_TIME'] < ($lastTime - 86400)) { // lebih dari sehari
+//                             $formatTime = date('d M H:i', $row['UPDATED_TIME']);
+//                         } else {
+//                             $formatTime = date('H:i:s', $row['UPDATED_TIME']);
+//                         }
+//                         $msgs[] = [
+//                             // 'self' => $self,
+//                             'time' => $formatTime,
+//                             // 'name' => $self ? 'Me' : "{$row['username']}({$row['user_id']})",
+//                             'name' => $self,
+//                             'text' => $row['MESSAGE']
+//                         ];
+//                     }
+
+//                     // if (count($msgs) || ($i % 4 == 2)) {
+//                     // $sse->message('This is a message at time');
+//                         $sse->event('chat', ['msgs' => $msgs]);
+//                         $sse->flush();
+
+//                     // }
+//                 // }
+//                 sleep(1);
+//             // }
+//         } catch (\Exception $exc) {
+//             $sse->event('msgerror', ['msg' => $exc->getMessage()]);
+//             // $sse->flush();
+//         }
+//         $rows = Chat::find()->where('UPDATED_TIME > :ctime', [':ctime' => $lastTime])->orderBy(['UPDATED_TIME' => SORT_DESC])->asArray()->all();
+
+//                     $lastTime = microtime(true);
+//                     $msgs = [];
+//                     $profile = Yii::$app->getUserOpt->profile_user()->emp;
+//                     $emp_id = $profile->EMP_ID;
+
+
+//         foreach (array_reverse($rows) as $row) {
+//                         $self = $row['CREATED_BY'] == $emp_id;
+
+//                         if ($row['UPDATED_TIME'] < ($lastTime - 86400)) { // lebih dari sehari
+//                             $formatTime = date('d M H:i', $row['UPDATED_TIME']);
+//                         } else {
+//                             $formatTime = date('H:i:s', $row['UPDATED_TIME']);
+//                         }
+//                         $msgs[] = [
+//                             'self' => $self,
+//                             'time' => $formatTime,
+//                             // 'name' => $self ? 'Me' : "{$row['username']}({$row['user_id']})",
+//                             // 'name' => $self,
+//                             'text' => $row['MESSAGE']
+//                         ];
+//                     }
+
+//          // $chat = Chat::find()->asArray()->all();
+//         // $sse->id($lastTime);
+//          $sse->event('chat', ['msgs' => $msgs]);
+//         $sse->flush();
+//         exit();
+// }
+
+ // public function actionMessage()
+ //    {
+ //        $sse = new \common\components\SSE();
+ //        $counter = rand(1, 10);
+ //        $t = time();
+
+ //        //$sse->retry(3000);
+ //        while ((time() - $t) < 15) {
+ //            // Every second, sent a "ping" event.
+
+ //            $curDate = date(DATE_ISO8601);
+ //            $sse->event('ping',['time' => $curDate]);
+
+ //            // Send a simple message at random intervals.
+
+ //            $counter--;
+ //            if (!$counter) {
+ //                $sse->message("This is a message at time $curDate");
+ //                $counter = rand(1, 10);
+ //            }
+
+ //            $sse->flush();
+ //            sleep(1);
+ //        }
+ //        exit();
+ //    }
+
 
 	 public function actionCreateajax($id)
     {

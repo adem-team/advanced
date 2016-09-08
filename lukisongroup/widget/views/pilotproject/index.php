@@ -479,6 +479,12 @@ AppAssetChart::register($this);
 			//'target'=>GridView::TARGET_BLANK
 		],
     ]); 
+
+
+$calender=$this->render('calendar_pilot',[
+	]);
+
+
 	
 	
 	/**
@@ -492,9 +498,14 @@ AppAssetChart::register($this);
 	$items=[
 		[
 			'label'=>'<i class="glyphicon glyphicon-home"></i> Department Pilot Schedule','content'=>$dsp1,
-			//'active'=>true,
+			// 'active'=>true,
 
-		],	
+		],
+		[
+			'label'=>'<i class="glyphicon glyphicon-home"></i> Pilot Schedule Departement','content'=>$calender,
+			'active'=>true,
+
+		],		
 		[
 			'label'=>'<i class="glyphicon glyphicon-home"></i> Pilot Data Department','content'=>$gv_pilotDept,
 		],
@@ -502,7 +513,8 @@ AppAssetChart::register($this);
 			'label'=>'<i class="glyphicon glyphicon-home"></i> Employe Pilot Schedule','content'=>$dsp2,
 			//'active'=>true,
 
-		],			
+		],
+
 		[
 			'label'=>'<i class="glyphicon glyphicon-home"></i> Pilot Data Employee','content'=>$gv_pilotEmp,
 		],		

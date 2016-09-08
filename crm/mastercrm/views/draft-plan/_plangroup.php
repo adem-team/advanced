@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 use kartik\widgets\Select2;
 use kartik\widgets\DepDrop;
 use yii\helpers\Url;
-use crm\mastercrm\models\DraftPlan;
+use lukisongroup\master\models\DraftPlan;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\DraftPlan */
@@ -46,7 +46,7 @@ use crm\mastercrm\models\DraftPlan;
 							'depends'=>['draftplangroup-geo_id'],
 							 'initialize' => true,
 							  'loadingText' => 'Loading  ...',
-							'url' => Url::to(['/mastercrm/draft-plan/lis-geo-sub']),
+							'url' => Url::to(['/master/draft-plan/lis-geo-sub']),
 						]
 					])->label('AREA GROUP') 
 					?>

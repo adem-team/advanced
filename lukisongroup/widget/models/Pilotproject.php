@@ -4,6 +4,12 @@ use Yii;
 
 class Pilotproject extends \yii\db\ActiveRecord
 {
+    /*checkvalidation */
+    const SCENARIO_PARENT = 'parent';
+    /*checkvalidation */
+    const SCENARIO_CHILD = 'child';
+
+    public $parentpilot;
     public static function tableName()
     {
         return 'sc0001';
@@ -17,21 +23,24 @@ class Pilotproject extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['PILOT_NM','STATUS','PLAN_DATE1','PLAN_DATE2'], 'required'],
-            [['PARENT', 'STATUS','SORT','BOBOT'], 'integer'],
-            [['PLAN_DATE1','PLAN_DATE2','ACTUAL_DATE1', 'ACTUAL_DATE2','UPDATED_TIME'], 'safe'],
+            // [['PILOT_NM','STATUS','PLAN_DATE1','PLAN_DATE2'], 'required'],
+            [['PILOT_NM','DESTINATION_TO','DSCRP','TYPE'], 'required','on'=>self::SCENARIO_PARENT],
+             [['PILOT_NM','PARENT','DESTINATION_TO','DSCRP','TYPE'], 'required','on'=>self::SCENARIO_CHILD],
+            [['PARENT', 'STATUS','SORT','BOBOT','TYPE'], 'integer'],
+            [['PLAN_DATE1','PLAN_DATE2','ACTUAL_DATE1', 'ACTUAL_DATE2','UPDATED_TIME','DESTINATION_TO','USER_CC','DESTINATION_TO_DEP','DEP_SUB_ID'], 'safe'],
             [['PILOT_NM'], 'string', 'max' => 255],
 			[['DSCRP'], 'string'],
             [['CORP_ID', 'DEP_ID'], 'string', 'max' => 6],
-			[['DESTINATION_TO','CREATED_BY','UPDATED_BY'], 'string', 'max' => 50]			
+			[['CREATED_BY','UPDATED_BY'], 'string', 'max' => 50]			
         ];
     }
 
     public function attributeLabels()
     {
         return [
+            'parentpilot'=>'IsParent',
             'ID' => 'ID',
-            'PARENT' => 'Parent',
+            'PARENT' => 'Parent Name',
 			'SORT'=>'Sort',
 			'PILOT_ID' => 'Pilot.ID',
             'PILOT_NM' => 'Schedule.Nm',
@@ -48,6 +57,7 @@ class Pilotproject extends \yii\db\ActiveRecord
 			'UPDATED_BY'=> 'Updated',
 			'UPDATED_TIME'=> 'DateTime',
 			'STATUS' => 'Status',
+            'DEP_SUB_ID'=>'DEP_SUB'
         ];
     }
 }

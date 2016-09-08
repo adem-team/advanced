@@ -115,7 +115,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						'depends'=>['dayname-opt'],
 						 'initialize' => true,
 						  'loadingText' => 'Loading  ...',
-						'url' => Url::to(['/master/draft-plan/lisday']),
+						'url' => Url::to(['/mastercrm/draft-plan/lisday']),
 					]
 				])->label('Setel Hari') 
 			?>

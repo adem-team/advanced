@@ -6,6 +6,8 @@ use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use crm\mastercrm\models\DraftPlan;
 Use ptrnov\salesforce\Jadwal;
+use kartik\widgets\Spinner;
+$ptr_spiner=Spinner::widget(['id'=>'spn-gv-plan','preset' => 'large', 'align' => 'center', 'color' => 'blue','hidden'=>false]);	
   
 /*
  * GRID draft_plan
@@ -452,7 +454,7 @@ $gvNewPlan=GridView::widget([
   'panel' => [
         'heading'=>false,
         'type'=>'info',
-      	'before'=> Html::a('<i class="fa fa-sign-in"></i> '.Yii::t('app', 'Start Draft Plan',
+      	'before'=> $ptr_spiner.Html::a('<i class="fa fa-sign-in"></i> '.Yii::t('app', 'Start Draft Plan',
                                   ['modelClass' => 'DraftPlan',]),'/mastercrm/draft-plan/create',[
                                       'data-toggle'=>"modal",
                                           'data-target'=>"#modal-create-draft",
@@ -467,13 +469,13 @@ $gvNewPlan=GridView::widget([
                                                           ]),
         'showFooter'=>false,
   ],
-  'export' =>['target' => GridView::TARGET_BLANK],
+  /* 'export' =>['target' => GridView::TARGET_BLANK],
   'exportConfig' => [
     GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
     GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
-  ],
+  ], */
   'toolbar'=> [
-        '{export}',
+        //'{export}',
     //'{items}',
   ],
   'hover'=>true, //cursor select
@@ -543,8 +545,9 @@ $this->registerJs("
     ",$this::POS_READY);
     Modal::begin([
         'id' => 'modal-create-draft',
-        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search-plus"></div><div><h4 class="modal-title">GEOGRAFIS FILTER To PLAN MAINTAIN</h4></div>',
-        'headerOptions'=>[
+        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search-plus"></div><div><h4 class="modal-title">GEOGRAFIS FILTER</h4></div>',
+        'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
                 'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
         ],
     ]);
@@ -573,4 +576,14 @@ $this->registerJs("
         ],
     ]);
     Modal::end();
-
+	$this->registerJs("		
+		window.onload = function(){ 
+			 var s= document.getElementById('spn-gv-maintain');
+			s.hidden=false;
+		};	
+		$(document).on('ajaxStop', function() {
+			var s= document.getElementById('spn-gv-plan');
+			s.hidden=true;
+		});		
+     ",$this::POS_READY)
+?>

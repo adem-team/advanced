@@ -97,7 +97,8 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										'content' => 'New Customers',
 										'url' => '/mastercrm/customers-crm',
 										'badge' => '0'
-									],									
+									],
+
 								]),
 						],
 						Html::TYPE_SUCCESS
@@ -185,6 +186,14 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										*/
 										'content' => 'Penjualan perTahun',
 										'url' => '/salespromo/report-monthly',
+										'badge' => '0'
+									],
+									[
+										/*
+										 * Modul mastercrm  | Reporting visit sales
+										*/
+										'content' => 'Review Sales',
+										'url' => '/mastercrm/review-visit',
 										'badge' => '0'
 									],									
 								]),

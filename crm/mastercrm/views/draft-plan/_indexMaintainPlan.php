@@ -7,7 +7,8 @@ use yii\bootstrap\Modal;
 use crm\mastercrm\models\DraftPlan;
 use crm\mastercrm\models\DraftPlanGroup;
 Use ptrnov\salesforce\Jadwal;
-
+use kartik\widgets\Spinner;
+$ptr_spiner1=Spinner::widget(['id'=>'spn-gv-maintain','preset' => 'large', 'align' => 'center', 'color' => 'blue','hidden'=>false]);	
 
 $actionClass='btn btn-info btn-xs';
 $actionLabel='Update';
@@ -349,7 +350,8 @@ $gvDraftPlan=GridView::widget([
   'panel' => [
        'heading'=>false,
         'type'=>'info',
-           'before'=>Html::a('<i class="fa fa-check-circle"></i> '.Yii::t('app', 'Approve'),'/mastercrm/draft-plan/approve-all',
+           'before'=>$ptr_spiner1.
+		   Html::a('<i class="fa fa-check-circle"></i> '.Yii::t('app', 'Approve'),'/mastercrm/draft-plan/approve-all',
                     [
                         'data-toggle-approve-all'=>"approve-plan-erp",
                         'id'=>'approvemodal-erp-plan',
@@ -359,7 +361,7 @@ $gvDraftPlan=GridView::widget([
                     ]
               ).' '.
                 // Html::a('<i class="fa fa-paper-plane"></i> '.Yii::t('app', 'Approve',
-                //             ['modelClass' => 'DraftPlan',]),'/master/draft-plan/pilih-approve',[
+                //             ['modelClass' => 'DraftPlan',]),'/mastercrm/draft-plan/pilih-approve',[
                 //                     'data-toggle'=>"modal",
                 //                     'data-target'=>"#modal-day",
                 //                         'class' => 'btn btn-info'
@@ -367,10 +369,11 @@ $gvDraftPlan=GridView::widget([
                 Html::a('<i class="fa fa-trash"></i> '.Yii::t('app', 'Pilih Delete',
                             ['modelClass' => 'DraftPlanDetail',]),'',[
                                 'data-toggle-delete-all'=>"delete-plan-erp-all",
+                                 // 'data-pjax' => true,
                                 'id'=>'delete-erp-plan-all',
                                   'class' => 'btn btn-danger btn-sm'
                                                     ]).' '.
-               Html::a('<i class="fa fa-check-square-o"></i> '.Yii::t('app', 'Reschedule Draft',
+               Html::a('<i class="fa fa-mail-reply-all"></i> '.Yii::t('app', 'Reschedule Draft',
                             ['modelClass' => 'DraftPlan',]),'/mastercrm/draft-plan/ganti-jadwal',[
                                 'data-toggle'=>"modal",
                                     'data-target'=>"#modal-day",
@@ -379,13 +382,13 @@ $gvDraftPlan=GridView::widget([
 
         'showFooter'=>false,
   ],
-  'export' =>['target' => GridView::TARGET_BLANK],
-  'exportConfig' => [
-    GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
-    GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
-  ],
+  // 'export' =>['target' => GridView::TARGET_BLANK],
+  // 'exportConfig' => [
+    // GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
+    // GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
+  // ],
   'toolbar'=> [
-        '{export}',
+        // '{export}',
     //'{items}',
   ],
   'hover'=>true, //cursor select
@@ -520,7 +523,23 @@ $this->registerJs("
         ],
     ]);
     Modal::end();
-
+	
+	 
+	$this->registerJs("	
+		window.onload = function(){ 
+			 var s= document.getElementById('spn-gv-maintain');
+			s.hidden=false;
+		};	
+		 $(document).on('ajaxStart', function() {
+				var s= document.getElementById('spn-actual');
+				s.hidden=true;
+		  });
+		$(document).on('ajaxStop', function() {
+			var s= document.getElementById('spn-gv-maintain');
+			s.hidden=true;
+		});			
+     ",$this::POS_READY)
+?>
 
   
 

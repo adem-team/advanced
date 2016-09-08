@@ -192,6 +192,7 @@ $EmpDashboard=$this->render('login_index/_dashboard', [
 										'url' => '/salespromo/report-daily',
 										'badge' => '0'
 									],
+									
 								]),
 						],
 						Html::TYPE_INFO
