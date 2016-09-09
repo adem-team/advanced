@@ -8,8 +8,9 @@ use kartik\tabs\TabsX;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 use yii\web\View;
-use lukisongroup\widget\models\ChatTest;
-
+/* namespace models*/
+use lukisongroup\hrd\models\Employe;
+use lukisongroup\widget\models\Chatroom;
 
 	/*
 	 * Jangan di Hapus ...
@@ -19,16 +20,24 @@ use lukisongroup\widget\models\ChatTest;
 	*/
 	$this->sideMenu = $ctrl_chat!=''? $ctrl_chat:'mdefault';
 	/*GROUP CHART*/
+
+
+
 	
-// componen user
-    $profile = Yii::$app->getUserOpt->profile_user()->emp;
-    $emp_nm = $profile->EMP_NM.' '.$profile->EMP_NM_BLK;
-
-    $customer = ChatTest::find()->asArray()->all(); // find all by query (using the `active` scope)
-
-    // print_r($customer);
 
 ?>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!--[if IE]>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <![endif]-->
+    <!-- BOOTSTRAP CORE STYLE CSS -->
+    <link href="http://lukisongroup.com/widget/bootstrap-chat/assets/css/bootstrap.css" rel="stylesheet" />
+</head>
 
 <div class="col-lg-12">
     <div class="box box-primary direct-chat direct-chat-primary">
@@ -41,19 +50,10 @@ use lukisongroup\widget\models\ChatTest;
             </div>
         </div>
         <div class="box-footer">
-            <?= Html::beginForm(['/widget/chat/send-chat'], 'POST', [
-                    'id' => 'chat-form'
-                ]) ?>
             <div class="input-group">
-               <?= Html::textInput('message', null, [
-                                'id' => 'message-field',
-                                'class' => 'form-control',
-                                'placeholder' => 'Message'
-                            ]) ?>
+                <input type="text" id="inp-chat" placeholder="Type Message ..." class="form-control">
                 <span class="input-group-btn">
-                    <?= Html::submitButton('Send', [
-                                'class' => 'btn btn-primary btn-flat'
-                            ]) ?>
+                    <button type="button" class="btn btn-primary btn-flat" id="btn-chat">Send</button>
                 </span>
             </div>
         </div>
@@ -86,13 +86,13 @@ use lukisongroup\widget\models\ChatTest;
 <?php
 
 $opts = json_encode([
-    'messageUrl' => Url::to(['/widget/chat/send-chat']),
-    'emp_nm'=>$emp_nm,
+    'messageUrl' => Url::to(['/widget/chat/message']),
+    'chatUrl' => Url::to(['send-chat']),
     'templateYou' => $this->blocks['template_you'],
     'templateMe' => $this->blocks['template_me'],
     ]);
 
 $this->registerJs("var chatOpts = $opts;");
-$this->registerJs($this->render('chataja.js'));
+$this->registerJs($this->render('chat.js'));
 
 ?>

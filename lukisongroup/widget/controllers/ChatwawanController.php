@@ -8,14 +8,7 @@ use yii\web\Controller;
 
 class ChatwawanController extends \yii\web\Controller
 {
-   // public function actions()
-    // {
-        // return [
-            // 'error' => [
-                // 'class' => 'yii\web\ErrorAction',
-            // ],
-        // ];
-    // }
+  
 	public function actionIndex()
 	{
 		if (Yii::$app->request->post()) {
@@ -29,7 +22,7 @@ class ChatwawanController extends \yii\web\Controller
 			]);
 
 		}
-		//print_r(Yii::$app->redis);
+		
 		return $this->render('index');
 	}
 }
