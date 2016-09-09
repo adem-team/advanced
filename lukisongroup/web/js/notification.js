@@ -5,11 +5,21 @@ $( document ).ready(function() {
     socket.on('notification', function (data) {
 
         var message = JSON.parse(data);
-		
-		console.log(message);
+         console.log(message);
+        var $row;
 
-        $( "#notification" ).prepend( "<p><strong>" + message.name + "</strong>: " + message.message + "</p>" );
 
+		var $container = $('#message-container');
+		// if(message.yandm == 'me'){
+		// 	$row = $();
+		// }else{
+		// 	$row = $('<?php echo json_encode($this->blocks["template_you"]); ?>');
+		// }
+		// $container.prepend($row);
+        $container.prepend( "<p><strong>" + message.name + "</strong>: " + message.message + "</p>" );
+        if (message.length) {
+        $container.scrollTop($container.prop("scrollHeight"));
+		}
     });
 
 });
