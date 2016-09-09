@@ -16,8 +16,9 @@ use yii\data\ArrayDataProvider;
 
 use lukisongroup\master\models\Barang;
 
-//print_r($aryProviderDataRequest);
-//print_r($aryProviderHeaderRequest);
+//print_r($aryProviderDetailRequest);
+//die();
+//print_r($aryProviderDetailRequest);
 
 	/*
 	 * === REQUEST =======================
@@ -25,7 +26,7 @@ use lukisongroup\master\models\Barang;
 	 * @since 1.2
 	 * ===================================
 	 */
-	foreach($aryProviderHeaderRequest as $key =>$value){
+	foreach($aryProviderDetailRequest->allModels[0] as $key =>$value){
 		$colorb= 'rgba(255, 255, 142, 0.2)';
 		if ($key=='CUST_NM'){
 			$lbl="Customer Name";
@@ -81,10 +82,10 @@ use lukisongroup\master\models\Barang;
 			],
 		];					
 	};
-	
+	$gvStockSummary='';
 	$gvStockSummary = GridView::widget([
-		'id'=>'gv-summary-stock',
-        'dataProvider' => $aryProviderDataRequest,
+		'id'=>'gv-request',
+        'dataProvider' => $aryProviderDetailRequest,
         //'filterModel' => $searchModel,
 		//'beforeHeader'=>$getHeaderLabelWrap,
 		'showPageSummary' => true,
@@ -93,7 +94,7 @@ use lukisongroup\master\models\Barang;
 		'pjaxSettings'=>[
 		'options'=>[
 			'enablePushState'=>false,
-			'id'=>'gv-summary-stock',
+			'id'=>'gv-request',
 		   ],
 		],
 		'summary'=>false,
@@ -104,14 +105,14 @@ use lukisongroup\master\models\Barang;
 		//'striped'=>'4px',
 		//'autoXlFormat'=>true,
 		//'export' => false,
-		/* 'toolbar' =>false,
-		'panel' => [
-			'heading'=>'<h3 class="panel-title">DETAIL STOCK</h3>',
-			'type'=>'info',
-			'footer'=>false,			
-		], */
+		// 'toolbar' =>false,
+		// 'panel' => [
+			// 'heading'=>'<h3 class="panel-title">DETAIL STOCK</h3>',
+			// 'type'=>'info',
+			// 'footer'=>false,			
+		// ], 
     ]);
 
 ?>
-	<div style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:center;color:red"><b>REVIEW - REQUEST ORDER</b></div>
+	<div style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:center;color:red"><b>DETAIL - REQUEST ORDER</b></div>
 	<?=$gvStockSummary?>

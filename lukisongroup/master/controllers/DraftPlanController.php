@@ -1867,7 +1867,7 @@ class DraftPlanController extends Controller
        
         self::conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET STATUS=2 WHERE LEFT(TGL,4) ="'.$tgl.'" AND STATUS = 1')->execute();
 
-         $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan SET STATUS=0 WHERE YEAR ="'.$tgl.'" AND CUST_KD="'.$custId.'" AND STATUS = 1')->execute();
+        self::conn_esm()->CreateCommand('UPDATE c0002scdl_plan SET STATUS=0 WHERE YEAR ="'.$tgl.'" AND CUST_KD="'.$custId.'" AND STATUS = 1')->execute();
     }
 
     /**

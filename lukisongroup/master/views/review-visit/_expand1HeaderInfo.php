@@ -16,15 +16,17 @@ use yii\db\ActiveRecord;
 use yii\data\ArrayDataProvider;
 
 	//print_r($dataProviderInfo);
+	//die();
 	/*[1] LIST VIEW INFO */
 	$vwHeader1=DetailView::widget([		
-        'model' => $dataProviderInfo[0],
+        'model' => $dataProviderInfo,
         'attributes' => [
     		[
 				'columns' => [
 					[
 						'attribute'=>'TGL', 
 						'label'=>'DATE',
+						'value'=> $dataProviderInfo[0]['TGL'],
 						'displayOnly'=>true,
 						'valueColOptions'=>['style'=>'width:35%']
 					],
@@ -44,6 +46,7 @@ use yii\data\ArrayDataProvider;
 					[
 						'attribute'=>'SALES_NM', 
 						'label'=>'SALES NAME',
+						'value'=> $dataProviderInfo[0]['SALES_NM'],
 						'valueColOptions'=>['style'=>'width:35%'], 
 						'displayOnly'=>true
 					],
@@ -63,6 +66,7 @@ use yii\data\ArrayDataProvider;
 					[
 						'attribute'=>'SCDL_GRP_NM', 
 						'label'=>'GROUP',
+						'value'=> $dataProviderInfo[0]['SCDL_GRP_NM'],
 						'displayOnly'=>true,
 						'valueColOptions'=>['style'=>'width:35%']
 					],
@@ -85,6 +89,7 @@ use yii\data\ArrayDataProvider;
 						'attribute'=>'HP', 
 						'label'=>'Phone',
 						'valueColOptions'=>['style'=>'width:35%'], 
+						'value'=> $dataProviderInfo[0]['HP'],
 						'displayOnly'=>true
 					],
 					[

@@ -125,7 +125,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			//'SUMMARY_ALL','2016-05-31','','30','1'
 			$aryProviderDetailSummary='';
 			// $aryProviderDetailSummary= new ArrayDataProvider([
-				////'allModels'=>Yii::$app->db_esm->createCommand("DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_ALL','".$model['TGL']."','','".$model['USER_ID']."','1')")->queryAll(),
+				////'allModels'=>Yii::$app->db_esm->createCommand("REPORT_CUSTOMERCALL_DETAIL_INVENTORY('SUMMARY_ALL','".$model['TGL']."','','".$model['USER_ID']."','1')")->queryAll(),
 				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL MOBILE_CUSTOMER_VISIT_inventory_summary('SUMMARY_ALL','2016-05-31','','30','1');")->queryAll(),
 				  // 'pagination' => [
 					// 'pageSize' =>50,
@@ -133,19 +133,36 @@ $this->params['breadcrumbs'][] = $this->title;
 			// ]); 
 			
 			
-			/*SUMMRY STOCK*/
-			// $aryProviderDataStock = new ArrayDataProvider([
-				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_STOCK_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
-				// 'pagination' => [
-					// 'pageSize' =>50,
-				// ] 
-			// ]); 
-			$aryProviderHeaderStock='';
-			// $aryProviderHeaderStock=$aryProviderDataStock->allModels[0];				
+			/*DETAIL STOCK - Per Customer*/
+			$aryProviderDataStock = new ArrayDataProvider([
+				'allModels'=>Yii::$app->db_esm->createCommand("CALL REPORT_CUSTOMERCALL_DETAIL_INVENTORY('SUMMARY_STOCK_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
+				'pagination' => [
+					'pageSize' =>50,
+				] 
+			]); 
+			$aryProviderDetailStock=$aryProviderDataStock;//->allModels[0];				
 			
-			/*SUMMRY SELL IN*/
+			/*DETAIL REQUEST ORDER - Per Customer*/
+			$aryProviderDataRequest = new ArrayDataProvider([
+				'allModels'=>Yii::$app->db_esm->createCommand("CALL REPORT_CUSTOMERCALL_DETAIL_INVENTORY('SUMMARY_REQUEST_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
+				'pagination' => [
+					'pageSize' =>50,
+				] 
+			]); 
+			$aryProviderDetailRequest=$aryProviderDataRequest;//->allModels[0];
+			
+			/*DETAIL RETURE - Per Customer*/
+			$aryProviderDataReture = new ArrayDataProvider([
+				'allModels'=>Yii::$app->db_esm->createCommand("CALL REPORT_CUSTOMERCALL_DETAIL_INVENTORY('SUMMARY_RETURE_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
+				'pagination' => [
+					'pageSize' =>50,
+				] 
+			]); 
+			$aryProviderDetailReture=$aryProviderDataReture;
+			
+			/*DETAIL SELL IN - Per Customer*/ 
 			// $aryProviderDataSellIN = new ArrayDataProvider([
-				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_SELL_IN_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
+				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL REPORT_CUSTOMERCALL_DETAIL_INVENTORY('SUMMARY_SELL_IN_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
 				// 'pagination' => [
 					// 'pageSize' =>50,
 				// ] 
@@ -153,71 +170,55 @@ $this->params['breadcrumbs'][] = $this->title;
 			$aryProviderHeaderSellIN='';
 			// $aryProviderHeaderSellIN=$aryProviderDataSellIN->allModels[0];
 			
-			/*SUMMRY SELL OUT*/
+			/*DETAIL SELL OUT - Per Customer*/
 			// $aryProviderDataSellOut = new ArrayDataProvider([
-				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_SELL_OUT_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
+				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL REPORT_CUSTOMERCALL_DETAIL_INVENTORY('SUMMARY_SELL_OUT_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
 				// 'pagination' => [
 					// 'pageSize' =>50,
 				// ] 
 			// ]); 
 			$aryProviderHeaderSellOut='';
-			// $aryProviderHeaderSellOut=$aryProviderDataSellOut->allModels[0];
-			
-			/*SUMMRY RETURE*/
-			// $aryProviderDataReture = new ArrayDataProvider([
-				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_RETURE_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
-				// 'pagination' => [
-					// 'pageSize' =>50,
-				// ] 
-			// ]); 
-			$aryProviderHeaderReture='';
-			// $aryProviderHeaderReture=$aryProviderDataReture->allModels[0];
-			
-			/*SUMMRY REQUEST*/
-			// $aryProviderDataRequest = new ArrayDataProvider([
-				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL DASHBOARD_ESM_VISIT_inventory_summary('SUMMARY_REQUEST_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
-				// 'pagination' => [
-					// 'pageSize' =>50,
-				// ] 
-			// ]); 
-			$aryProviderHeaderRequest='';
-			// $aryProviderHeaderRequest=$aryProviderDataRequest->allModels[0];
+			// $aryProviderHeaderSellOut=$aryProviderDataSellOut->allModels[0];			
 			
 			/* RENDER */
 			return Yii::$app->controller->renderPartial('_expand1',[
-				//INFO
+				//=INFO
 				'dataProviderInfo'=>$dataProviderInfo->getModels(),
+				
 				//VISIT TIME
 				'dataProviderTime'=>$dataProviderTime,
-				//IMAGE
+				
+				//=IMAGE
 				//'searchModelImage'=>$searchModelImage,
 				'dataProviderImage'=>$dataProviderImage,
-				//SUMMRY STOCK|RETURE|SELL-IN|SELL-OUT
+				
+				//=SUMMRY STOCK|RETURE|SELL-IN|SELL-OUT
 				'inventoryProvider'=>$inventoryProvider,
-				//EXPIRED
+				
+				//=EXPIRED
 				'dataProviderExpired'=>$dataProviderExpired,
 				'searchModelExpired'=>$searchModelExpired,
-				//MEMO
+				
+				//=MEMO
 				'dataProviderMemo'=>$dataProviderMemo,
 				
+				/*DETAIL REQUEST ORDER - Per Customer*/
+				'aryProviderDetailRequest'=>$aryProviderDetailRequest,
 				
+				/*DETAIL STOCK - Per Customer*/
+				'aryProviderDetailStock'=>$aryProviderDetailStock,
 				
-				// 'aryproviderDetailSummary'=>$aryProviderDetailSummary,
+				/*DETAIL STOCK - Per Customer*/
+				'aryProviderDetailStock'=>$aryProviderDetailStock,
 				
-				// 'aryProviderHeaderStock'=>$aryProviderHeaderStock,
-				// 'aryProviderDataStock'=>$aryProviderDataStock,
-				//SUMMRY SELL IN
-				// 'aryProviderHeaderSellIN'=>$aryProviderHeaderSellIN,
-				// 'aryProviderDataSellIN'=>$aryProviderDataSellIN,
-				//SUMMRY SELL OUT
-				// 'aryProviderHeaderSellOut'=>$aryProviderHeaderSellOut,
-				// 'aryProviderDataSellOut'=>$aryProviderDataSellOut,
-				//SUMMRY RETURE
-				// 'aryProviderHeaderReture'=>$aryProviderHeaderReture,
-				// 'aryProviderDataReture'=>$aryProviderDataReture,
+				/*DETAIL RETURE - Per Customer*/
+				'aryProviderDetailReture'=>$aryProviderDetailReture,
 				
-				// 'aryProviderHeaderRequest'=>$aryProviderHeaderRequest,
-				// 'aryProviderDataRequest'=>$aryProviderDataRequest
+				/*DETAIL SellIN - Per Customer*/
+				//'aryProviderDetailSellIN'=>$aryProviderDetailSellIN,
+				
+				/*DETAIL SellOut - Per Customer*/
+				//'aryProviderDetailSellOut'=>$aryProviderDetailSellOut,				
 			]);
 		},
 		'collapseTitle'=>'Close Exploler',

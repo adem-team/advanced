@@ -16,8 +16,8 @@ use yii\data\ArrayDataProvider;
 
 use lukisongroup\master\models\Barang;
 
-//print_r($aryProviderDataStock);
-//print_r($aryProviderHeaderStock);
+//print_r($aryProviderDetailStock);
+//print_r($aryProviderDetailStock);
 
 	/*
 	 * === STOCK =======================
@@ -25,7 +25,7 @@ use lukisongroup\master\models\Barang;
 	 * @since 1.2
 	 * ===================================
 	 */
-	foreach($aryProviderHeaderStock as $key =>$value){
+	foreach($aryProviderDetailStock->allModels[0] as $key =>$value){
 		$colorb= 'rgba(255, 255, 142, 0.2)';
 		if ($key=='CUST_NM'){
 			$lbl="Customer Name";
@@ -84,7 +84,7 @@ use lukisongroup\master\models\Barang;
 	
 	$gvStockSummary = GridView::widget([
 		'id'=>'gv-summary-stock',
-        'dataProvider' => $aryProviderDataStock,
+        'dataProvider' => $aryProviderDetailStock,
         //'filterModel' => $searchModel,
 		//'beforeHeader'=>$getHeaderLabelWrap,
 		'showPageSummary' => true,
@@ -118,5 +118,5 @@ use lukisongroup\master\models\Barang;
 
 
 ?>
-	<div style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:center;color:red"><b>REVIEW - STOCK</b></div>
+	<div style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:center;color:red"><b>DETAIL - STOCK</b></div>
 	<?=$gvStockSummary?>

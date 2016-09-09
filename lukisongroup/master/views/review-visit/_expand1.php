@@ -70,11 +70,23 @@ use yii\data\ArrayDataProvider;
 									// 'dataProviderHeader2'=>$dataProviderHeader2,
 									// 'aryproviderDetailSummary'=>$aryproviderDetailSummary,
 								// ]);
+								
+								
 								/*STOCK*/
-								// $gvStock=$this->render('_expand1SlideStock',[
-									// 'aryProviderDataStock'=>$aryProviderDataStock,
-									// 'aryProviderHeaderStock'=>$aryProviderHeaderStock,
-								// ]);
+								$gvStock=$this->render('_expand1SlideStock',[
+									 'aryProviderDetailStock'=>$aryProviderDetailStock,
+								]);								 
+								 
+								/*SELL REQUEST*/								
+								$gvRequest=$this->render('_expand1SlideRequest',[
+									 'aryProviderDetailRequest'=>$aryProviderDetailRequest,
+								]);
+								
+								/*SELL RETURE*/								
+								$gvReture=$this->render('_expand1SlideReture',[
+									'aryProviderDetailReture'=>$aryProviderDetailReture,
+								]);
+								 
 								/*SELL IN*/								
 								// $gvSellIn=$this->render('_expand1SlideSin',[
 									// 'aryProviderDataSellIN'=>$aryProviderDataSellIN,
@@ -85,19 +97,12 @@ use yii\data\ArrayDataProvider;
 									// 'aryProviderDataSellOut'=>$aryProviderDataSellOut,
 									// 'aryProviderHeaderSellOut'=>$aryProviderHeaderSellOut,
 								// ]);
-								/*SELL RETURE*/								
-								// $gvReture=$this->render('_expand1SlideReture',[
-									// 'aryProviderDataReture'=>$aryProviderDataReture,
-									// 'aryProviderHeaderReture'=>$aryProviderHeaderReture,
-								// ]);
-								/*SELL REQUEST*/								
-								// $gvRequest=$this->render('_expand1SlideRequest',[
-									// 'aryProviderDataRequest'=>$aryProviderDataRequest,
-									// 'aryProviderHeaderRequest'=>$aryProviderHeaderRequest,
-								// ]);
+								
+								
 							?>
-							<?=$gvRequest?>
+							
 							<?=$gvStock?>
+							<?=$gvRequest?>
 							<?=$gvReture?>
 							<?=$gvSellOut?>
 							<?=$gvSellIn?>

@@ -23,7 +23,7 @@ use dosamigos\gallery\Gallery;
 	$endImg='';
 	foreach ($model as $key => $value) {
 		$startImg=$value['IMG_DECODE_START']!=''?$value['IMG_DECODE_START']:$gambarkosong;
-		$endImg=$value['IMG_DECODE_START']!=''?$value['IMG_DECODE_START']:$gambarkosong;
+		$endImg=$value['IMG_DECODE_END']!=''?$value['IMG_DECODE_END']:$gambarkosong;
 	  $items[] = [
 					'src'=>'data:image/jpg;charset=utf-8;base64,'.$startImg,
 					'imageOptions'=>[

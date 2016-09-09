@@ -16,8 +16,7 @@ use yii\data\ArrayDataProvider;
 
 use lukisongroup\master\models\Barang;
 
-//print_r($aryProviderDataReture);
-//print_r($aryProviderHeaderReture);
+	//print_r($aryProviderDetailReture);
 
 	/*
 	 * === RETURE =======================
@@ -25,7 +24,7 @@ use lukisongroup\master\models\Barang;
 	 * @since 1.2
 	 * ===================================
 	 */
-	foreach($aryProviderHeaderReture as $key =>$value){
+	foreach($aryProviderDetailReture->allModels[0] as $key =>$value){
 		$colorb= 'rgba(255, 255, 142, 0.2)';
 		if ($key=='CUST_NM'){
 			$lbl="Customer Name";
@@ -41,7 +40,7 @@ use lukisongroup\master\models\Barang;
 			$pageSummary=true;
 		}
 		
-		/* Attribute Dinamik */
+		// Attribute Dinamik 
 		$attDinamikReture[]=[
 			'attribute'=>$key,
 			'label'=>$lbl,
@@ -82,9 +81,9 @@ use lukisongroup\master\models\Barang;
 		];					
 	};
 	
-	$gvStockSummary = GridView::widget([
-		'id'=>'gv-summary-stock',
-        'dataProvider' => $aryProviderDataReture,
+	$gvReture = GridView::widget([
+		'id'=>'gv-reture',
+        'dataProvider' => $aryProviderDetailReture,
         //'filterModel' => $searchModel,
 		//'beforeHeader'=>$getHeaderLabelWrap,
 		'showPageSummary' => true,
@@ -93,7 +92,7 @@ use lukisongroup\master\models\Barang;
 		'pjaxSettings'=>[
 		'options'=>[
 			'enablePushState'=>false,
-			'id'=>'gv-summary-stock',
+			'id'=>'gv-reture',
 		   ],
 		],
 		'summary'=>false,
@@ -118,5 +117,5 @@ use lukisongroup\master\models\Barang;
 
 
 ?>
-	<div style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:center;color:red"><b>REVIEW - RETURE</b></div>
-	<?=$gvStockSummary?>
+	<div style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:center;color:red"><b>DETAIL - RETURE</b></div>
+	<?=$gvReture?>
