@@ -129,6 +129,8 @@ public function actionSendChat()
     $emp_nm = $profile->EMP_NM.' '.$profile->EMP_NM_BLK;
     $emp_id = $profile->EMP_ID;
     $date = date('Y-m-d h:i:s');
+    $me = $request->post('temp_me');
+    $you = $request->post('temp_you');
 
     $chattest = new ChatTest();
     $chattest->attributes = ['name' => $emp_nm];
@@ -143,7 +145,7 @@ public function actionSendChat()
 
     return Yii::$app->redis->executeCommand('PUBLISH', [
         'channel' => 'notification',
-        'message' => Json::encode(['name' =>$emp_nm, 'message' => $chat,'tgl'=>$date,'yandm'=>$yandm])
+        'message' => Json::encode(['name' =>$emp_nm, 'message' => $chat,'tgl'=>$date,'yandm'=>$yandm,'me'=>$me,'you'=>$you])
       ]);
 
   }
