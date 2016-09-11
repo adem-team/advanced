@@ -73,39 +73,44 @@ use yii\data\ArrayDataProvider;
 								
 								
 								/*STOCK*/
+								$gvStock='';
 								$gvStock=$this->render('_expand1SlideStock',[
 									 'aryProviderDetailStock'=>$aryProviderDetailStock,
+									 'aryProviderHeaderStock'=>$aryProviderHeaderStock
 								]);								 
 								 
-								/*SELL REQUEST*/								
+								/*SELL REQUEST*/
+								$gvRequest='';							
 								$gvRequest=$this->render('_expand1SlideRequest',[
 									 'aryProviderDetailRequest'=>$aryProviderDetailRequest,
+									 'aryProviderHeaderRequest'=>$aryProviderHeaderRequest,
 								]);
 								
-								/*SELL RETURE*/								
+								/*SELL RETURE*/	
+								$gvReture='';
 								$gvReture=$this->render('_expand1SlideReture',[
 									'aryProviderDetailReture'=>$aryProviderDetailReture,
+									'aryProviderHeaderReture'=>$aryProviderHeaderReture,
 								]);
 								 
-								/*SELL IN*/								
-								// $gvSellIn=$this->render('_expand1SlideSin',[
-									// 'aryProviderDataSellIN'=>$aryProviderDataSellIN,
-									// 'aryProviderHeaderSellIN'=>$aryProviderHeaderSellIN,
-								// ]);
 								/*SELL OUT*/								
-								// $gvSellOut=$this->render('_expand1SlideSout',[
-									// 'aryProviderDataSellOut'=>$aryProviderDataSellOut,
-									// 'aryProviderHeaderSellOut'=>$aryProviderHeaderSellOut,
-								// ]);
+								$gvSellOut=$this->render('_expand1SlideSout',[
+									'aryProviderDetailSellOut'=>$aryProviderDetailSellOut,
+									'aryProviderHeaderSellOut'=>$aryProviderHeaderSellOut,
+								]);
 								
-								
+								/*SELL IN*/								
+								$gvSellIn=$this->render('_expand1SlideSin',[
+									'aryProviderDetailSellIN'=>$aryProviderDetailSellIN,
+									'aryProviderHeaderSellIN'=>$aryProviderHeaderSellIN,
+								]);								
 							?>
 							
 							<?=$gvStock?>
 							<?=$gvRequest?>
-							<?=$gvReture?>
-							<?=$gvSellOut?>
+							<?=$gvReture?>							
 							<?=$gvSellIn?>
+							<?=$gvSellOut?>
 							<?=$gvDetailAll?>
 							</div>
 						</li><!-- End Contact Item -->

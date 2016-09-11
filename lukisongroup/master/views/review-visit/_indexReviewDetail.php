@@ -23,6 +23,7 @@ use lukisongroup\master\models\CustomercallTimevisitSearch;
 use lukisongroup\master\models\CustomerVisitImageSearch;
 use lukisongroup\master\models\CustomercallExpiredSearch;
 use lukisongroup\master\models\CustomercallMemoSearch;
+use lukisongroup\master\models\ReviewInventorySearch;
 
 $this->sideCorp = 'PT.Effembi Sukses Makmur';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_customers';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -84,6 +85,12 @@ $this->params['breadcrumbs'][] = $this->title;
 		},
 		'detail'=>function ($model, $key, $index, $column){
 			$searchModelTime = new CustomercallTimevisitSearch(['TGL'=>$model['TGL'],'USER_ID'=>$model['USER_ID']]);
+			$searchModelStock= new ReviewInventorySearch(['TGL'=>$model['TGL'],'USER_ID'=>$model['USER_ID'],'SO_TYPE'=>'5']);
+			$searchModelRequest= new ReviewInventorySearch(['TGL'=>$model['TGL'],'USER_ID'=>$model['USER_ID'],'SO_TYPE'=>'9']);
+			$searchModelReture= new ReviewInventorySearch(['TGL'=>$model['TGL'],'USER_ID'=>$model['USER_ID'],'SO_TYPE'=>'8']);
+			$searchModelSellIN= new ReviewInventorySearch(['TGL'=>$model['TGL'],'USER_ID'=>$model['USER_ID'],'SO_TYPE'=>'6']);
+			$searchModelSellOut= new ReviewInventorySearch(['TGL'=>$model['TGL'],'USER_ID'=>$model['USER_ID'],'SO_TYPE'=>'7']);
+			
 			$dataProvider=$searchModelTime->search(Yii::$app->request->queryParams);
 			// USER INFO
 			$dataProviderInfo = $dataProvider;			
@@ -96,12 +103,11 @@ $this->params['breadcrumbs'][] = $this->title;
 				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL ERP_CUSTOMER_VISIT_inventory('".$model['TGL']."','".$model['CUST_ID']."','".$model['USER_ID']."')")->queryAll(),
 				  'allModels'=>Yii::$app->db_esm->createCommand("
 						SELECT (SELECT DISTINCT NM_BARANG FROM b0001 WHERE KD_BARANG=so_t2.KD_BARANG) AS NAME_ITEM, 
-								   MAX(CASE WHEN SO_TYPE=5 THEN SO_QTY ELSE 0 END) as STOCK,								    
-									 MAX(CASE WHEN SO_TYPE=6 THEN SO_QTY ELSE 0 END) as SELL_IN,
-									 MAX(CASE WHEN SO_TYPE=7 THEN SO_QTY ELSE 0 END) as SELL_OUT,
-									 MAX(CASE WHEN SO_TYPE=8 THEN SO_QTY ELSE 0 END) as RETURE,									 
-									 MAX(CASE WHEN SO_TYPE=9 THEN SO_QTY ELSE 0 END) as REQUEST									
-									 #MAX(CASE WHEN SO_TYPE=8 THEN '0000-00-00' ELSE '0000-00-00' END) as ED
+									 SUM(CASE WHEN SO_TYPE=5 THEN SO_QTY ELSE 0 END) as STOCK,								    
+									 SUM(CASE WHEN SO_TYPE=6 THEN SO_QTY ELSE 0 END) as SELL_IN,
+									 SUM(CASE WHEN SO_TYPE=7 THEN SO_QTY ELSE 0 END) as SELL_OUT,
+									 SUM(CASE WHEN SO_TYPE=8 THEN SO_QTY ELSE 0 END) as RETURE,									 
+									 SUM(CASE WHEN SO_TYPE=9 THEN SO_QTY ELSE 0 END) as REQUEST	
 						FROM so_t2
 						WHERE TGL='".$model['TGL']."' AND USER_ID='".$model['USER_ID']."'  GROUP BY KD_BARANG
 					")->queryAll(),
@@ -133,52 +139,218 @@ $this->params['breadcrumbs'][] = $this->title;
 			// ]); 
 			
 			
-			/*DETAIL STOCK - Per Customer*/
-			$aryProviderDataStock = new ArrayDataProvider([
-				'allModels'=>Yii::$app->db_esm->createCommand("CALL REPORT_CUSTOMERCALL_DETAIL_INVENTORY('SUMMARY_STOCK_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
+			/**
+			 * DETAIL STOCK - Per Customer
+			 * ROW to COLUMN
+			 * @author piter novian [ptr.nov@gmail.com]
+			*/	
+			$aryDataStock=$searchModelStock->search(Yii::$app->request->queryParams);			//AR ArrayDataProvider
+			$dataModelStock=$aryDataStock->allModels; 											//Set ArrayProvider to Array	
+			$dataMapStock =  ArrayHelper::map($dataModelStock, 'NM_BARANG','SO_QTY','CUST_NM');	//Get index string	
+			$dataIndexStock =  ArrayHelper::index($dataModelStock, 'CUST_NM');					//Get index string	
+			$StockMergeRowColumn= ArrayHelper::merge($dataIndexStock,$dataMapStock);			//index string Merge / Like Join index	
+			$StockIndexVal=array_values($StockMergeRowColumn); 									//index string to int
+			//$aryProviderDetailStock ='';
+			$aryProviderDetailStock= new ArrayDataProvider([
+				'allModels'=>$StockIndexVal,
 				'pagination' => [
-					'pageSize' =>50,
-				] 
-			]); 
-			$aryProviderDetailStock=$aryProviderDataStock;//->allModels[0];				
+					'pageSize' => 50,
+				]
+			]);
+			//$aryProviderHeaderStock='';
+			/**
+			 * Foreach to get All column form rows
+			 * @author piter novian [ptr.nov@gmail.com]
+			*/
+			$getHeaderStck=[];
+			foreach($StockIndexVal as $key => $value){
+				$getHeaderStck=ArrayHelper::merge($getHeaderStck,$StockIndexVal[$key]);
+			};
 			
-			/*DETAIL REQUEST ORDER - Per Customer*/
-			$aryProviderDataRequest = new ArrayDataProvider([
-				'allModels'=>Yii::$app->db_esm->createCommand("CALL REPORT_CUSTOMERCALL_DETAIL_INVENTORY('SUMMARY_REQUEST_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
-				'pagination' => [
-					'pageSize' =>50,
-				] 
-			]); 
-			$aryProviderDetailRequest=$aryProviderDataRequest;//->allModels[0];
+			/**
+			 * Foreach to get All column Then remove Column selected
+			 * @author piter novian [ptr.nov@gmail.com]
+			*/
+			$splitHeaderStck=[];
+			foreach($getHeaderStck as $ky => $value){
+				//$splitHeaderStck=ArrayHelper::merge($splitHeaderStck, array_splice($getHeaderStck, 3, 2));
+				$splitHeaderStck=ArrayHelper::merge($splitHeaderStck, array_diff_key($getHeaderStck,[
+					'TGL'=>'','USER_ID'=>'','SCDL_GROUP'=>'','KD_BARANG'=>'','NM_BARANG'=>'','SO_TYPE'=>'','SO_QTY'=>''
+				]));
+			};			
+			$aryProviderHeaderStock=$splitHeaderStck;	
 			
-			/*DETAIL RETURE - Per Customer*/
-			$aryProviderDataReture = new ArrayDataProvider([
-				'allModels'=>Yii::$app->db_esm->createCommand("CALL REPORT_CUSTOMERCALL_DETAIL_INVENTORY('SUMMARY_RETURE_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
-				'pagination' => [
-					'pageSize' =>50,
-				] 
-			]); 
-			$aryProviderDetailReture=$aryProviderDataReture;
-			
-			/*DETAIL SELL IN - Per Customer*/ 
-			// $aryProviderDataSellIN = new ArrayDataProvider([
-				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL REPORT_CUSTOMERCALL_DETAIL_INVENTORY('SUMMARY_SELL_IN_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
+			//print_r($dataStock->allModels[0]);	
+			// $aryProviderDetailStock = new ArrayDataProvider([
+				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL REPORT_CUSTOMERCALL_DETAIL_INVENTORY('SUMMARY_STOCK_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
 				// 'pagination' => [
 					// 'pageSize' =>50,
 				// ] 
 			// ]); 
-			$aryProviderHeaderSellIN='';
-			// $aryProviderHeaderSellIN=$aryProviderDataSellIN->allModels[0];
 			
-			/*DETAIL SELL OUT - Per Customer*/
-			// $aryProviderDataSellOut = new ArrayDataProvider([
-				// 'allModels'=>Yii::$app->db_esm->createCommand("CALL REPORT_CUSTOMERCALL_DETAIL_INVENTORY('SUMMARY_SELL_OUT_ITEM_CUST','".$model['TGL']."','','".$model['USER_ID']."','".$model['SCDL_GROUP']."');")->queryAll(),
-				// 'pagination' => [
-					// 'pageSize' =>50,
-				// ] 
-			// ]); 
-			$aryProviderHeaderSellOut='';
-			// $aryProviderHeaderSellOut=$aryProviderDataSellOut->allModels[0];			
+			/**
+			 * DETAIL REQUEST ORDER - Per Customer
+			 * ROW to COLUMN
+			 * @author piter novian [ptr.nov@gmail.com]
+			*/	
+			$aryDataRequest=$searchModelRequest->search(Yii::$app->request->queryParams);			//AR ArrayDataProvider
+			$dataModelRequest=$aryDataRequest->allModels; 											//Set ArrayProvider to Array	
+			$dataMapRequest =  ArrayHelper::map($dataModelRequest, 'NM_BARANG','SO_QTY','CUST_NM');	//Get index string	
+			$dataIndexRequest =  ArrayHelper::index($dataModelRequest, 'CUST_NM');					//Get index string	
+			$RequestMergeRowColumn= ArrayHelper::merge($dataIndexRequest,$dataMapRequest);			//index string Merge / Like Join index	
+			$RequestIndexVal=array_values($RequestMergeRowColumn); 									//index string to int
+			//$aryProviderDetailRequest ='';
+			$aryProviderDetailRequest= new ArrayDataProvider([
+				'allModels'=>$RequestIndexVal,
+				'pagination' => [
+					'pageSize' => 50,
+				]
+			]);				
+			//$aryProviderHeaderRequest='';
+			/**
+			 * Foreach to get All column form rows
+			 * @author piter novian [ptr.nov@gmail.com]
+			*/
+			$getHeaderRequest=[];
+			foreach($RequestIndexVal as $key => $value){
+				$getHeaderRequest=ArrayHelper::merge($getHeaderRequest,$RequestIndexVal[$key]);
+			};
+			
+			/**
+			 * Foreach to get All column Then remove Column selected
+			 * @author piter novian [ptr.nov@gmail.com]
+			*/
+			$splitHeaderRequest=[];
+			foreach($getHeaderRequest as $ky => $value){
+				$splitHeaderRequest=ArrayHelper::merge($splitHeaderRequest, array_diff_key($getHeaderRequest,[
+					'TGL'=>'','USER_ID'=>'','SCDL_GROUP'=>'','KD_BARANG'=>'','NM_BARANG'=>'','SO_TYPE'=>'','SO_QTY'=>''
+				]));
+			};			
+			$aryProviderHeaderRequest=$splitHeaderRequest;	
+		
+		
+		
+			/**
+			 * DETAIL RETURE - Per Customer
+			 * ROW to COLUMN
+			 * @author piter novian [ptr.nov@gmail.com]
+			*/	
+			$aryDataReture=$searchModelReture->search(Yii::$app->request->queryParams);				//AR ArrayDataProvider
+			$dataModelReture=$aryDataReture->allModels; 											//Set ArrayProvider to Array	
+			$dataMapReture =  ArrayHelper::map($dataModelReture, 'NM_BARANG','SO_QTY','CUST_NM');	//Get index string	
+			$dataIndexReture =  ArrayHelper::index($dataModelReture, 'CUST_NM');					//Get index string	
+			$RetureMergeRowColumn= ArrayHelper::merge($dataIndexReture,$dataMapReture);				//index string Merge / Like Join index	
+			$RetureIndexVal=array_values($RetureMergeRowColumn); 									//index string to int
+			//$aryProviderDetailReture ='';
+			$aryProviderDetailReture= new ArrayDataProvider([
+				'allModels'=>$RetureIndexVal,
+				'pagination' => [
+					'pageSize' => 50,
+				]
+			]);			
+			//$aryProviderHeaderReture='';
+			/**
+			 * Foreach to get All column form rows
+			 * @author piter novian [ptr.nov@gmail.com]
+			*/
+			$getHeaderReture=[];
+			foreach($RetureIndexVal as $key => $value){
+				$getHeaderReture=ArrayHelper::merge($getHeaderReture,$RetureIndexVal[$key]);
+			};
+			
+			/**
+			 * Foreach to get All column Then remove Column selected
+			 * @author piter novian [ptr.nov@gmail.com]
+			*/
+			$splitHeaderReture=[];
+			foreach($getHeaderReture as $ky => $value){
+				$splitHeaderReture=ArrayHelper::merge($splitHeaderReture, array_diff_key($getHeaderReture,[
+					'TGL'=>'','USER_ID'=>'','SCDL_GROUP'=>'','KD_BARANG'=>'','NM_BARANG'=>'','SO_TYPE'=>'','SO_QTY'=>''
+				]));
+			};			
+			$aryProviderHeaderReture=$splitHeaderReture;
+								
+			/**
+			 * DETAIL SELL OUT - Per Customer
+			 * ROW to COLUMN
+			 * @author piter novian [ptr.nov@gmail.com]
+			*/	
+			$aryDataSellOut=$searchModelSellOut->search(Yii::$app->request->queryParams);				//AR ArrayDataProvider
+			$dataModelSellOut=$aryDataSellOut->allModels; 											//Set ArrayProvider to Array	
+			$dataMapSellOut =  ArrayHelper::map($dataModelSellOut, 'NM_BARANG','SO_QTY','CUST_NM');	//Get index string	
+			$dataIndexSellOut =  ArrayHelper::index($dataModelSellOut, 'CUST_NM');					//Get index string	
+			$SellOutMergeRowColumn= ArrayHelper::merge($dataIndexSellOut,$dataMapSellOut);				//index string Merge / Like Join index	
+			$SellOutIndexVal=array_values($SellOutMergeRowColumn); 									//index string to int
+			//$aryProviderDetailSellOut ='';
+			$aryProviderDetailSellOut= new ArrayDataProvider([
+				'allModels'=>$SellOutIndexVal,
+				'pagination' => [
+					'pageSize' => 50,
+				]
+			]);	
+			//$aryProviderHeaderSellOut='';
+			/**
+			 * Foreach to get All column form rows
+			 * @author piter novian [ptr.nov@gmail.com]
+			*/
+			$getHeaderSellOut=[];
+			foreach($SellOutIndexVal as $key => $value){
+				$getHeaderSellOut=ArrayHelper::merge($getHeaderSellOut,$SellOutIndexVal[$key]);
+			};
+			
+			/**
+			 * Foreach to get All column Then remove Column selected
+			 * @author piter novian [ptr.nov@gmail.com]
+			*/
+			$splitHeaderSellOut=[];
+			foreach($getHeaderSellOut as $ky => $value){
+				$splitHeaderSellOut=ArrayHelper::merge($splitHeaderSellOut, array_diff_key($getHeaderSellOut,[
+					'TGL'=>'','USER_ID'=>'','SCDL_GROUP'=>'','KD_BARANG'=>'','NM_BARANG'=>'','SO_TYPE'=>'','SO_QTY'=>''
+				]));
+			};			
+			$aryProviderHeaderSellOut=$splitHeaderSellOut;
+			
+			
+			/**
+			 * DETAIL SELL IN - Per Customer
+			 * ROW to COLUMN
+			 * @author piter novian [ptr.nov@gmail.com]
+			*/	
+			$aryDataSellIN=$searchModelSellIN->search(Yii::$app->request->queryParams);				//AR ArrayDataProvider
+			$dataModelSellIN=$aryDataSellIN->allModels; 												//Set ArrayProvider to Array	
+			$dataMapSellIN =  ArrayHelper::map($dataModelSellIN, 'NM_BARANG','SO_QTY','CUST_NM');	//Get index string	
+			$dataIndexSellIN =  ArrayHelper::index($dataModelSellIN, 'CUST_NM');					//Get index string	
+			$SellINMergeRowColumn= ArrayHelper::merge($dataIndexSellIN,$dataMapSellIN);				//index string Merge / Like Join index	
+			$SellINIndexVal=array_values($SellINMergeRowColumn); 									//index string to int
+			//$aryProviderDetailSellIN ='';
+			$aryProviderDetailSellIN= new ArrayDataProvider([
+				'allModels'=>$SellINIndexVal,
+				'pagination' => [
+					'pageSize' => 50,
+				]
+			]);
+			//$aryProviderHeaderSellIN='';
+			/**
+			 * Foreach to get All column form rows
+			 * @author piter novian [ptr.nov@gmail.com]
+			*/
+			$getHeaderSellIN=[];
+			foreach($SellINIndexVal as $key => $value){
+				$getHeaderSellIN=ArrayHelper::merge($getHeaderSellIN,$SellINIndexVal[$key]);
+			};
+			
+			/**
+			 * Foreach to get All column Then remove Column selected
+			 * @author piter novian [ptr.nov@gmail.com]
+			*/
+			$splitHeaderSellIN=[];
+			foreach($getHeaderSellIN as $ky => $value){
+				$splitHeaderSellIN=ArrayHelper::merge($splitHeaderSellIN, array_diff_key($getHeaderSellIN,[
+					'TGL'=>'','USER_ID'=>'','SCDL_GROUP'=>'','KD_BARANG'=>'','NM_BARANG'=>'','SO_TYPE'=>'','SO_QTY'=>''
+				]));
+			};			
+			$aryProviderHeaderSellIN=$splitHeaderSellIN;
+			
 			
 			/* RENDER */
 			return Yii::$app->controller->renderPartial('_expand1',[
@@ -204,21 +376,25 @@ $this->params['breadcrumbs'][] = $this->title;
 				
 				/*DETAIL REQUEST ORDER - Per Customer*/
 				'aryProviderDetailRequest'=>$aryProviderDetailRequest,
+				'aryProviderHeaderRequest'=>$aryProviderHeaderRequest,
 				
 				/*DETAIL STOCK - Per Customer*/
 				'aryProviderDetailStock'=>$aryProviderDetailStock,
-				
-				/*DETAIL STOCK - Per Customer*/
-				'aryProviderDetailStock'=>$aryProviderDetailStock,
+				'aryProviderHeaderStock'=>$aryProviderHeaderStock,
 				
 				/*DETAIL RETURE - Per Customer*/
 				'aryProviderDetailReture'=>$aryProviderDetailReture,
-				
-				/*DETAIL SellIN - Per Customer*/
-				//'aryProviderDetailSellIN'=>$aryProviderDetailSellIN,
+				'aryProviderHeaderReture'=>$aryProviderHeaderReture,
 				
 				/*DETAIL SellOut - Per Customer*/
-				//'aryProviderDetailSellOut'=>$aryProviderDetailSellOut,				
+				'aryProviderDetailSellOut'=>$aryProviderDetailSellOut,				
+				'aryProviderHeaderSellOut'=>$aryProviderHeaderSellOut,			
+				
+				/*DETAIL SellIN - Per Customer*/
+				'aryProviderDetailSellIN'=>$aryProviderDetailSellIN,
+				'aryProviderHeaderSellIN'=>$aryProviderHeaderSellIN,
+				
+					
 			]);
 		},
 		'collapseTitle'=>'Close Exploler',

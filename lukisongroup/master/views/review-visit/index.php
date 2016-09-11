@@ -8,6 +8,8 @@ Use ptrnov\salesforce\Jadwal;
 use kartik\tabs\TabsX;
 use yii\widget\Pjax;
 use yii\helpers\Url;
+use ptrnov\fusionchart\ChartAsset;
+ChartAsset::register($this);
 
 $this->sideCorp = 'PT.Effembi Sukses Makmur';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_customers';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -46,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		[
 			'label'=>'<i class="fa fa-newspaper-o fa-2x"></i> Weekly Summary','content'=>'',//$tabWeeklySummary,
 			'active'=>$tab1,
-			//'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['/master/draft-plan/maintain-plan-tab'])]
+			'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['/master/review-visit/tab1'])]
 		],		
 		[
 			'label'=>'<i class="fa fa-calculator fa-2x"></i>Monthly Summary','content'=>'',//$tabMonthSummary,
