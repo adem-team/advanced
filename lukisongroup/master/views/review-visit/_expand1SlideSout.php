@@ -16,8 +16,7 @@ use yii\data\ArrayDataProvider;
 
 use lukisongroup\master\models\Barang;
 
-//print_r($aryProviderDataSellOut);
-//print_r($aryProviderHeaderSellOut);
+	//print_r($aryProviderDetailSellOut);
 
 	/*
 	 * === STOCK =======================
@@ -25,75 +24,78 @@ use lukisongroup\master\models\Barang;
 	 * @since 1.2
 	 * ===================================
 	 */
-	foreach($aryProviderHeaderSellOut as $key =>$value){
-		$colorb= 'rgba(255, 255, 142, 0.2)';
-		if ($key=='CUST_NM'){
-			$lbl="Customer Name";
-			$align="left";
-			$pageSummary='Sub Total';
-		}else{
-			$kd = explode('_',$key);	
-			//echo $kd[1];
-			$nmBrg=Barang::find()->where("KD_BARANG='".$kd[1]."'")->one();
-			$lblR=$nmBrg['NM_BARANG'];
-			$lbl=str_replace('MAXI','',$lblR);	
-			$align="center";
-			$pageSummary=true;
-		}
-		
-		/* Attribute Dinamik */
-		$attDinamikSellOut[]=[
-			'attribute'=>$key,
-			'label'=>$lbl,
-			'hAlign'=>'right',
-			'vAlign'=>'middle',
-			'headerOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					//'width'=>'30px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'8pt',
-					'background-color'=>'rgba(97, 211, 96, 0.3)',
-				]
-			],
-			'contentOptions'=>[
-				'style'=>[
-					'text-align'=>$align,
-					//'width'=>'30px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'8pt',
-					'background-color'=>$colorb,
-				]
-			],
-			'pageSummaryFunc'=>GridView::F_SUM,
-			'pageSummary'=>$pageSummary,
-			'pageSummaryOptions' => [
-				'style'=>[
+	$attDinamikSellOut=[];
+	if($aryProviderDetailSellOut->allModels){
+		foreach($aryProviderHeaderSellOut as $key =>$value){
+			$colorb= 'rgba(255, 255, 142, 0.2)';
+			if ($key=='CUST_ID'){
+				$lbl="CUSTOMER.ID";
+				$align="center";
+				$pageSummary='Sub Total';
+			}elseif($key=='CUST_NM'){
+				$lbl="CUSTOMER";
+				$align="left";
+				$pageSummary='Sub Total';
+			}else{
+				$lbl=$key;
+				$align="right";
+				$pageSummary='Sub Total';
+			}
+			
+			/* Attribute Dinamik */
+			$attDinamikSellOut[]=[
+				'attribute'=>$key,
+				'label'=>$lbl,
+				'hAlign'=>'right',
+				'vAlign'=>'middle',
+				'headerOptions'=>[
+					'style'=>[
 						'text-align'=>'center',
-						'width'=>'30px',
-						'font-family'=>'tahoma',
+						//'width'=>'30px',
+						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'8pt',
-						//'text-decoration'=>'underline',
-						//'font-weight'=>'bold',
-						//'border-left-color'=>'transparant',
-						'border-left'=>'0px',
-				]
-			],
-		];					
-	};
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>$align,
+						//'width'=>'30px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						'background-color'=>$colorb,
+					]
+				],
+				'pageSummaryFunc'=>GridView::F_SUM,
+				'pageSummary'=>$pageSummary,
+				'pageSummaryOptions' => [
+					'style'=>[
+							'text-align'=>'center',
+							'width'=>'30px',
+							'font-family'=>'tahoma',
+							'font-size'=>'8pt',
+							//'text-decoration'=>'underline',
+							//'font-weight'=>'bold',
+							//'border-left-color'=>'transparant',
+							'border-left'=>'0px',
+					]
+				],
+			];	
+		};
+	}
 	
-	$gvStockSummary = GridView::widget([
-		'id'=>'gv-summary-stock',
-        'dataProvider' => $aryProviderDataSellOut,
+	$gvSellOut = GridView::widget([
+		'id'=>'gv-detail-sellout',
+        'dataProvider' => $aryProviderDetailSellOut,
         //'filterModel' => $searchModel,
 		//'beforeHeader'=>$getHeaderLabelWrap,
-		'showPageSummary' => true,
+		//'showPageSummary' => true,
 		'columns' =>$attDinamikSellOut,
 		'pjax'=>true,
 		'pjaxSettings'=>[
 		'options'=>[
 			'enablePushState'=>false,
-			'id'=>'gv-summary-stock',
+			'id'=>'gv-detail-sellout',
 		   ],
 		],
 		'summary'=>false,
@@ -101,15 +103,6 @@ use lukisongroup\master\models\Barang;
 		'responsive'=>true,
 		'responsiveWrap'=>true,
 		'bordered'=>true,
-		//'striped'=>'4px',
-		//'autoXlFormat'=>true,
-		//'export' => false,
-		/* 'toolbar' =>false,
-		'panel' => [
-			'heading'=>'<h3 class="panel-title">DETAIL STOCK</h3>',
-			'type'=>'info',
-			'footer'=>false,			
-		], */
     ]);
 
 
@@ -119,4 +112,4 @@ use lukisongroup\master\models\Barang;
 
 ?>
 	<div style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:center;color:red"><b>REVIEW - SELL.OUT</b></div>
-	<?=$gvStockSummary?>
+	<?=$gvSellOut?>

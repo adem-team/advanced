@@ -16,9 +16,13 @@ use yii\data\ArrayDataProvider;
 
 use lukisongroup\master\models\Barang;
 
-//print_r($aryProviderDetailRequest);
-//die();
-//print_r($aryProviderDetailRequest);
+	//print_r($aryProviderDetailRequest);
+	//print_r($aryProviderHeaderRequest);
+	$headColomnEvent=[
+		['ID' =>0, 'ATTR' =>['FIELD'=>'CUST_ID','SIZE' => '10px','label'=>'DATE','align'=>'center','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '10px','label'=>'USER NAME','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+	];
+	$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');
 
 	/*
 	 * === REQUEST =======================
@@ -26,69 +30,75 @@ use lukisongroup\master\models\Barang;
 	 * @since 1.2
 	 * ===================================
 	 */
-	foreach($aryProviderDetailRequest->allModels[0] as $key =>$value){
-		$colorb= 'rgba(255, 255, 142, 0.2)';
-		if ($key=='CUST_NM'){
-			$lbl="Customer Name";
-			$align="left";
-			$pageSummary='Sub Total';
-		}else{
-			$kd = explode('_',$key);	
-			//echo $kd[1];
-			$nmBrg=Barang::find()->where("KD_BARANG='".$kd[1]."'")->one();
-			$lblR=$nmBrg['NM_BARANG'];
-			$lbl=str_replace('MAXI','',$lblR);	
-			$align="center";
-			$pageSummary=true;
-		}
-		
-		/* Attribute Dinamik */
-		$attDinamikRequest[]=[
-			'attribute'=>$key,
-			'label'=>$lbl,
-			'hAlign'=>'right',
-			'vAlign'=>'middle',
-			'headerOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					//'width'=>'30px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'8pt',
-					'background-color'=>'rgba(97, 211, 96, 0.3)',
-				]
-			],
-			'contentOptions'=>[
-				'style'=>[
-					'text-align'=>$align,
-					//'width'=>'30px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'8pt',
-					'background-color'=>$colorb,
-				]
-			],
-			'pageSummaryFunc'=>GridView::F_SUM,
-			'pageSummary'=>$pageSummary,
-			'pageSummaryOptions' => [
-				'style'=>[
-						'text-align'=>'center',
-						'width'=>'30px',
-						'font-family'=>'tahoma',
-						'font-size'=>'8pt',
-						//'text-decoration'=>'underline',
-						//'font-weight'=>'bold',
-						//'border-left-color'=>'transparant',
-						'border-left'=>'0px',
-				]
-			],
-		];					
+	$attDinamikRequest=[];
+	if($aryProviderDetailRequest->allModels){
+		foreach($aryProviderHeaderRequest as $key =>$value){
+			$colorb= 'rgba(255, 255, 142, 0.2)';
+			if ($key!='USER_ID' AND $key!='SCDL_GROUP' AND $key!='TGL' AND $key!='KD_BARANG' AND $key!='NM_BARANG' AND $key!='SO_TYPE' AND $key!='SO_QTY'){	
+				if ($key=='CUST_ID'){
+					$lbl="CUSTOMER.ID";
+					$align="center";
+					$pageSummary='Sub Total';
+				}elseif($key=='CUST_NM'){
+					$lbl="CUSTOMER";
+					$align="left";
+					$pageSummary='Sub Total';
+				}else{
+					$lbl=$key;
+					$align="right";
+					$pageSummary='Sub Total';
+				}
+				
+				/* Attribute Dinamik */
+				$attDinamikRequest[]=[
+					'attribute'=>$key,
+					'label'=>$lbl,
+					'hAlign'=>'right',
+					'vAlign'=>'middle',
+					'headerOptions'=>[
+						'style'=>[
+							'text-align'=>'center',
+							//'width'=>'30px',
+							'font-family'=>'tahoma, arial, sans-serif',
+							'font-size'=>'8pt',
+							'background-color'=>'rgba(97, 211, 96, 0.3)',
+						]
+					],
+					'contentOptions'=>[
+						'style'=>[
+							'text-align'=>$align,
+							//'width'=>'30px',
+							'font-family'=>'tahoma, arial, sans-serif',
+							'font-size'=>'8pt',
+							'background-color'=>$colorb,
+						]
+					],
+					'pageSummaryFunc'=>GridView::F_SUM,
+					'pageSummary'=>$pageSummary,
+					'pageSummaryOptions' => [
+						'style'=>[
+								'text-align'=>'center',
+								'width'=>'30px',
+								'font-family'=>'tahoma',
+								'font-size'=>'8pt',
+								//'text-decoration'=>'underline',
+								//'font-weight'=>'bold',
+								//'border-left-color'=>'transparant',
+								'border-left'=>'0px',
+						]
+					],
+				];	
+			};
+		};
 	};
+	
 	$gvStockSummary='';
 	$gvStockSummary = GridView::widget([
 		'id'=>'gv-request',
         'dataProvider' => $aryProviderDetailRequest,
         //'filterModel' => $searchModel,
 		//'beforeHeader'=>$getHeaderLabelWrap,
-		'showPageSummary' => true,
+		//'showPageSummary' => true,
 		'columns' =>$attDinamikRequest,
 		'pjax'=>true,
 		'pjaxSettings'=>[
@@ -101,16 +111,7 @@ use lukisongroup\master\models\Barang;
 		'hover'=>true, //cursor select
 		'responsive'=>true,
 		'responsiveWrap'=>true,
-		'bordered'=>true,
-		//'striped'=>'4px',
-		//'autoXlFormat'=>true,
-		//'export' => false,
-		// 'toolbar' =>false,
-		// 'panel' => [
-			// 'heading'=>'<h3 class="panel-title">DETAIL STOCK</h3>',
-			// 'type'=>'info',
-			// 'footer'=>false,			
-		// ], 
+		'bordered'=>true 
     ]);
 
 ?>
