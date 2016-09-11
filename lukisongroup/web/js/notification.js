@@ -10,13 +10,13 @@ $( document ).ready(function() {
 
 
 		var $container = $('#message-container');
-		// if(message.yandm == 'me'){
-		// 	$row = $();
-		// }else{
-		// 	$row = $('<?php echo json_encode($this->blocks["template_you"]); ?>');
-		// }
-		// $container.prepend($row);
-        $container.prepend( "<p><strong>" + message.name + "</strong>: " + message.message + "</p>" );
+		if(message.yandm == 'me'){
+			$row = $(message.me);
+		}else{
+			$row = $(message.you);
+		}
+		$container.prepend($row);
+        // $container.prepend( "<p><strong>" + message.name + "</strong>: " + message.message + "</p>" );
         if (message.length) {
         $container.scrollTop($container.prop("scrollHeight"));
 		}
