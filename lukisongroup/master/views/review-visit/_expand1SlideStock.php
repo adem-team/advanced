@@ -31,7 +31,8 @@ use lukisongroup\master\models\Barang;
 	 * @since 1.2
 	 * ===================================
 	 */
-	if($aryProviderDetailStock->allModels){
+	$attDinamikSTCK=[];
+	if($aryProviderDetailStock){
 		//$cnt=count($aryProviderDetailStock->allModels)!=0?(count($aryProviderDetailStock->allModels)-1):0;
 		foreach($aryProviderHeaderStock as $key =>$value){
 			$colorb= 'rgba(255, 255, 142, 0.2)';
