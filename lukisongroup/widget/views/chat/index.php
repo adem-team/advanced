@@ -21,12 +21,12 @@ use lukisongroup\widget\models\ChatTest;
 	/*GROUP CHART*/
 	
 // componen user
-    $profile = Yii::$app->getUserOpt->profile_user()->emp;
-    $emp_nm = $profile->EMP_NM.' '.$profile->EMP_NM_BLK;
+    // $profile = Yii::$app->getUserOpt->profile_user()->emp;
+    // $emp_nm = $profile->EMP_NM.' '.$profile->EMP_NM_BLK;
 
     $customer = ChatTest::find()->asArray()->all(); // find all by query (using the `active` scope)
 
-    // print_r($customer);
+    //print_r($customer);
 
 ?>
 
@@ -37,7 +37,7 @@ use lukisongroup\widget\models\ChatTest;
         </div>
         <div class="box-body">
             <div class="direct-chat-messages" id="message-container">
-
+					<div id="notification" ></div>
             </div>
         </div>
         <div class="box-footer">
