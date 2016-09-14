@@ -16,10 +16,12 @@ $this->sideMenu = 'esm_customers';                                  /* kd_menu u
 $this->title = Yii::t('app', 'ESM - Produk');          				/* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;   
 
-	$tabReviewDetail=$this->render('_indexReviewDetail',[
-		'dataProviderHeader1' => $dataProviderHeader1
-	]);	
-	$tabReviewWeekly=$this->render('_indexWeekly');	
+	/* $tabReviewDetailStock=$this->render('_indexWeeklyStock',[
+		'dataProvider'=>$aryDataStock,	
+		'searchModelStock'=>$searchModelStock,				
+		'aryProviderDetailStock'=>$aryProviderDetailStock,		
+		'aryProviderHeaderStock'=>$aryProviderHeaderStock	
+	]);	 */
 		
 	if($tab==0){
 		$tab0=true;
@@ -43,22 +45,22 @@ $this->params['breadcrumbs'][] = $this->title;
 	
 	$items=[
 		[
-			'label'=>'<i class="fa fa-list-ol fa-2x"></i> Daily Detail','content'=>$tabReviewDetail,
-			'active'=>$tab0,
+			'label'=>' Weekly Detail Stock','content'=>'',//$tabReviewDetailStock,			
+			'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['/master/review-visit/tab-weekly-stock'])],
+			'active'=>true,			
 		],
 		[
-			'label'=>'<i class="fa fa-newspaper-o fa-2x"></i> Weekly Detail','content'=>$tabReviewWeekly,
-			'active'=>$tab1,
-			//'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['/master/review-visit/tab-weekly-stock'])]
+			'label'=>' Weekly Detail Request','content'=>'',
+			'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['/master/review-visit/tab-weekly-ro'])],
 		],		
 		[
-			'label'=>'<i class="fa fa-calculator fa-2x"></i>Monthly Summary','content'=>'',//$tabMonthSummary,
-			'active'=>$tab2,
+			'label'=>' Weekly Detail Reture','content'=>'',
+			//'active'=>$tab2,
 		],	 	
 	];
 
-	$tabReviewVisit= TabsX::widget([
-		'id'=>'review-visit-tab',
+	$tabReviewVisitWeekly= TabsX::widget([
+		'id'=>'weekly-tab',
 		'items'=>$items,
 		'position'=>TabsX::POS_ABOVE,
 		'bordered'=>true,
@@ -66,12 +68,9 @@ $this->params['breadcrumbs'][] = $this->title;
 	]);	
 		
 ?>
-<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
 <div class="row">
-	<div  class="col-lg-12" >
-		
-		<?=$tabReviewVisit?>
-		</div>
+	<div  class="col-lg-12" >		
+		<?=$tabReviewVisitWeekly?>
 	</div>
 </div>
 

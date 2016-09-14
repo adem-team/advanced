@@ -36,10 +36,15 @@ use yii\data\ArrayDataProvider;
 						 <div class="raw">
 							<div class="col-sm-8 col-md-8 col-lg-8" style="font-family:tahoma, arial, sans-serif;font-size:9pt">
 								<?php
+									$dvInfo='';
 									$dvInfo=$this->render('_expand1HeaderInfo',['dataProviderInfo'=>$dataProviderInfo]);
+									$gvVisitTime='';
 									$gvVisitTime=$this->render('_expand1CustVisit',['dataProviderTime'=>$dataProviderTime]);
-									$gvInventory=$this->render('_expand1Inventory',['inventoryProvider'=>$inventoryProvider]);										
+									$gvInventory='';
+									$gvInventory=$this->render('_expand1Inventory',['inventoryProvider'=>$inventoryProvider]);	
+									$gvExpired='';									
 									$gvExpired=$this->render('_expand1Expired',['dataProviderExpired'=>$dataProviderExpired,'searchModelExpired'=>$searchModelExpired]);
+									$gvMemo='';
 									$gvMemo=$this->render('_expand1Memo',['dataProviderMemo'=>$dataProviderMemo]);
 													
 								?>
@@ -72,38 +77,41 @@ use yii\data\ArrayDataProvider;
 								// ]);
 								
 								
-								/*STOCK*/
+								//STOCK
 								$gvStock='';
 								$gvStock=$this->render('_expand1SlideStock',[
 									 'aryProviderDetailStock'=>$aryProviderDetailStock,
 									 'aryProviderHeaderStock'=>$aryProviderHeaderStock
 								]);								 
 								 
-								/*SELL REQUEST*/
+								 
+								//SELL REQUEST
 								$gvRequest='';							
 								$gvRequest=$this->render('_expand1SlideRequest',[
 									 'aryProviderDetailRequest'=>$aryProviderDetailRequest,
 									 'aryProviderHeaderRequest'=>$aryProviderHeaderRequest,
 								]);
 								
-								/*SELL RETURE*/	
+								//SELL RETURE
 								$gvReture='';
 								$gvReture=$this->render('_expand1SlideReture',[
 									'aryProviderDetailReture'=>$aryProviderDetailReture,
 									'aryProviderHeaderReture'=>$aryProviderHeaderReture,
 								]);
 								 
-								/*SELL OUT*/								
+								//SELL OUT
+								$gvSellOut='';								
 								$gvSellOut=$this->render('_expand1SlideSout',[
 									'aryProviderDetailSellOut'=>$aryProviderDetailSellOut,
 									'aryProviderHeaderSellOut'=>$aryProviderHeaderSellOut,
 								]);
 								
-								/*SELL IN*/								
+								//SELL IN
+								$gvSellIn='';								
 								$gvSellIn=$this->render('_expand1SlideSin',[
 									'aryProviderDetailSellIN'=>$aryProviderDetailSellIN,
 									'aryProviderHeaderSellIN'=>$aryProviderHeaderSellIN,
-								]);								
+								]);	 						
 							?>
 							
 							<?=$gvStock?>
