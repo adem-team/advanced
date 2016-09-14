@@ -14,6 +14,17 @@ use kartik\daterange\DateRangePicker;
 use yii\db\ActiveRecord;
 use yii\data\ArrayDataProvider;
 
+	$rowModel=$dataProviderHeader2->getModels();
+	$tgl=$rowModel[0]['TGL'];
+	$user_id=$rowModel[0]['USER_ID'];
+	$btn_download = Html::a('<i class="fa fa-cloud-download"></i>',
+							'/master/review-visit/download-image?tgl='.$tgl.'&user_id='.$user_id,
+							[
+								'id'=>'export-download-image',
+								'data-pjax' => 0,
+							]);
+	
+						
 /*[4] GRID VIEW IMAGE SHOW */
 	$visitImage=GridView::widget([
 		'id'=>'img-list',
@@ -116,11 +127,12 @@ use yii\data\ArrayDataProvider;
 			] 
 		
 		],
+		'summary'=>false,
 		'toolbar' => [
 			'',
 		],
 		'panel' => [
-			'heading'=>"<i class='fa fa-file-image-o fa-1x'></i> LIST IMAGES",
+			'heading'=>'<div style="width:160px"><i class="fa fa-file-image-o fa-1x"></i> LIST IMAGES</div>'.' '.'<div style="float:right; margin-top:-16px;margin-right:0px;">'.$btn_download.'</div>',
 			'type'=>'danger',
 			'footer'=>false,
 		],
