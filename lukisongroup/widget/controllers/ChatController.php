@@ -79,8 +79,7 @@ class ChatController extends Controller
      */
 
     public function actionIndex()
-    {
-      
+    {      
 		/*MODEL CHAT MESSAGE*/
         $searchModelMsg = new ChatSearch();
         $dataProviderMsg = $searchModelMsg->search(Yii::$app->request->queryParams);
@@ -175,6 +174,13 @@ public function CariYouandme($emp_id){
       break;
   }
 
+}
+
+public function actionGetdata()
+{
+  $hasil = ChatTest::find()->all();
+
+  echo json_encode($hasil);
 }
 
 

@@ -15,8 +15,9 @@ $( document ).ready(function() {
 		}else{
 			$row = $(message.you);
 		}
+        $row.find('[data-attr="text"]').text(message.message);
 		$container.prepend($row);
-        // $container.prepend( "<p><strong>" + message.name + "</strong>: " + message.message + "</p>" );
+        $container.prepend( "<p><strong>" + message.name + "</strong>: " + message.tgl + "</p>" + message.message + "</p>" );
         if (message.length) {
         $container.scrollTop($container.prop("scrollHeight"));
 		}
