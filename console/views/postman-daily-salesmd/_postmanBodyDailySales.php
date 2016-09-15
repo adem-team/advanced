@@ -49,13 +49,57 @@
 							</tr>
 							<tr>
 								<td style="color:black; background:white;text-align:left">
-									Total Sales MD
+									SUBJECT
 								</td>
 								<td style="color:black; background:white;text-align:left">
 									:
 								</td>
 								<td style="color:black; background:white;text-align:left">
-									<?=$cusCount[0]['CNT_ALL']; ?>
+									EXCEL VISIT TIME, INVENTORY, IMAGE-ZIP
+								</td>
+							</tr>
+							<tr>
+								<td style="color:black; background:white;text-align:left">
+									CALL.CUST
+								</td>
+								<td style="color:black; background:white;text-align:left">
+									:
+								</td>
+								<td style="color:black; background:white;text-align:left">
+									<?=$cusCount[0]['TTL_CC']; ?>
+								</td>
+							</tr>
+							<tr>
+								<td style="color:black; background:white;text-align:left">
+									ACTIVE.CUST
+								</td>
+								<td style="color:black; background:white;text-align:left">
+									:
+								</td>
+								<td style="color:black; background:white;text-align:left">
+									<?=$cusCount[0]['TTL_AC']; ?>
+								</td>
+							</tr>
+							<tr>
+								<td style="color:black; background:white;text-align:left">
+									EFFECTIVE.CUST
+								</td>
+								<td style="color:black; background:white;text-align:left">
+									:
+								</td>
+								<td style="color:black; background:white;text-align:left">
+									<?=$cusCount[0]['TTL_EC']; ?>
+								</td>
+							</tr>
+							<tr>
+								<td style="color:black; background:white;text-align:left">
+									TOTAL SALES-MD
+								</td>
+								<td style="color:black; background:white;text-align:left">
+									:
+								</td>
+								<td style="color:black; background:white;text-align:left">
+									<?=$cusCount[0]['TTL_SALES']; ?>
 								</td>
 							</tr>
 							<tr>
