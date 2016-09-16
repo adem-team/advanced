@@ -2,25 +2,49 @@ $( document ).ready(function() {
 
     var socket = io.connect('http://lukisongroup.com:8890');
 
+    var content = $( "#message-container" );
+
+   
+  function scrollToBottom (mess) {
+    if (mess.length) {
+        content.scrollTop(content.prop("scrollHeight"));
+        }
+  }
+
+      /**
+   * renders messages to the DOM
+   * nothing fancy
+   */
+  function renderMessage(msg) {
+    msg = JSON.parse(msg);
+    var html = "<div class='direct-chat-msg'>";
+    html +="<div class='direct-chat-info clearfix'>"
+    html += "<span class='direct-chat-timestamp pull-right'>" + msg.tgl  + " </span>";
+    html += "<span class='direct-chat-name pull-left'>" + msg.name + ": </span>";
+    html += "</div>";
+    html += "<div class='direct-chat-img'><img  class='img-circle' style='width:50px;height:50px;' src=data:image/jpg;base64,"+ msg.base64 + "></div>";
+    html += "<div class='direct-chat-text'>"  + msg.message + "</div>";
+    html += "</div>";
+    content.append(html);  // append to list
+    return;
+  }
+
     socket.on('notification', function (data) {
-
-        var message = JSON.parse(data);
-         console.log(message);
-        var $row;
-
-
-		var $container = $('#message-container');
-		if(message.yandm == 'me'){
-			$row = $(message.me);
-		}else{
-			$row = $(message.you);
-		}
-        $row.find('[data-attr="text"]').text(message.message);
-		$container.prepend($row);
-        $container.prepend( "<p><strong>" + message.name + "</strong>: " + message.tgl + "</p>" + message.message + "</p>" );
-        if (message.length) {
-        $container.scrollTop($container.prop("scrollHeight"));
-		}
+        renderMessage(data);
+        
+        scrollToBottom(data);
     });
+
+     socket.on('load', function (data) {
+        data.map(function(msg){
+        renderMessage(msg);
+
+        })
+        scrollToBottom(data); 
+    });
+
+      socket.on('disconnect', function() {
+            console.log('disconnected');
+        });
 
 });
