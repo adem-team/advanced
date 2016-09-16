@@ -131,8 +131,9 @@ Modal::end();
 		//... more options to be defined here!
 		],
 		// 'events'=> $events,
-		'ajaxEvents' => Url::to(['/widget/pilotproject/json-calendar']),
+		
 	 'clientOptions' => [
+			'resourceLabelText'=> 'Rooms',
 			'selectable' => true,
 			'selectHelper' => true,
 			'droppable' => true,
@@ -145,6 +146,7 @@ Modal::end();
 			//'defaultDate' => date('Y-m-d')
 		],
 		//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
+		'ajaxEvents' => Url::to(['/widget/pilotproject/json-calendar']),
 	]);
 
 	$vwScdlPlan= Html::panel(

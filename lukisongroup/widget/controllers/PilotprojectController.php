@@ -523,4 +523,49 @@ class PilotprojectController extends Controller
         }
 
     }
+	
+	
+	public function actionTest(){
+		
+		return $this->render('test');
+	}
+	
+	public function actionResources($id)
+{
+    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+    return [
+        new Resource(["id" => "a", "title" => "Auditorium A"]),
+        new Resource(["id" => "b", "title" => "Auditorium B", "eventColor" => "green"]),
+        new Resource(["id" => "c", "title" => "Auditorium C", "eventColor" => "orange"]),
+        new Resource([
+            "id" => "d", "title" => "Auditorium D", "children" => [
+                new Resource(["id" => "d1", "title" => "Room D1"]),
+                new Resource(["id" => "d2", "title" => "Room D2"]),
+            ],
+        ]),
+        new Resource(["id" => "e", "title" => "Auditorium E"]),
+        new Resource(["id" => "f", "title" => "Auditorium F", "eventColor" => "red"]),
+        new Resource(["id" => "g", "title" => "Auditorium G"]),
+        new Resource(["id" => "h", "title" => "Auditorium H"]),
+        new Resource(["id" => "i", "title" => "Auditorium I"]),
+        new Resource(["id" => "j", "title" => "Auditorium J"]),
+        new Resource(["id" => "k", "title" => "Auditorium K"]),
+        new Resource(["id" => "l", "title" => "Auditorium L"]),
+        new Resource(["id" => "m", "title" => "Auditorium M"]),
+        new Resource(["id" => "n", "title" => "Auditorium N"]),
+        new Resource(["id" => "o", "title" => "Auditorium O"]),
+        new Resource(["id" => "p", "title" => "Auditorium P"]),
+        new Resource(["id" => "q", "title" => "Auditorium Q"]),
+        new Resource(["id" => "r", "title" => "Auditorium R"]),
+        new Resource(["id" => "s", "title" => "Auditorium S"]),
+        new Resource(["id" => "t", "title" => "Auditorium T"]),
+        new Resource(["id" => "u", "title" => "Auditorium U"]),
+        new Resource(["id" => "v", "title" => "Auditorium V"]),
+        new Resource(["id" => "w", "title" => "Auditorium W"]),
+        new Resource(["id" => "x", "title" => "Auditorium X"]),
+        new Resource(["id" => "y", "title" => "Auditorium Y"]),
+        new Resource(["id" => "z", "title" => "Auditorium Z"]),
+    ];
+}
 }

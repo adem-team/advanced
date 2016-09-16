@@ -470,7 +470,7 @@ class PostmanDailySalesmdController extends Controller
 			//->setTo(['it-dept@lukison.com'])
 			->setTo(['piter@lukison.com'])
 			//->setTo(['hrd@lukison.com'])
-			->setTo(['sales_esm@lukison.com','marketing_esm@lukison.com'])
+			->setTo(['sales_esm@lukison.com','marketing_esm@lukison.com','dpi@lukison.com'])
 			->setSubject('POSTMAN - DAILY REPORT SALES MD')
 			->setHtmlBody($contentBody);
 			// Array data Attach, checking exiting file
