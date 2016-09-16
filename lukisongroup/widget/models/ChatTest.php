@@ -8,14 +8,14 @@ class ChatTest extends \yii\redis\ActiveRecord
      */
     public function attributes()
     {
-        return ['id', 'name', 'message', 'date','emp_id'];
+        return ['id', 'name', 'message', 'date','emp_id','image_profile'];
     }
 
     public function rules()
     {
         return [
             [['id'], 'integer'],
-            [['name','date','emp_id'], 'safe'],
+            [['name','date','emp_id','image_profile'], 'safe'],
             [['name','message'], 'string', 'max' => 255]
         ];
     }

@@ -79,8 +79,10 @@ class ChatController extends Controller
      */
 
     public function actionIndex()
-    {      
-		/*MODEL CHAT MESSAGE*/
+    {
+      
+
+    		/*MODEL CHAT MESSAGE*/
         $searchModelMsg = new ChatSearch();
         $dataProviderMsg = $searchModelMsg->search(Yii::$app->request->queryParams);
         $dataProviderMsg->pagination->pageSize=100;
@@ -126,25 +128,29 @@ public function actionSendChat()
     $request = Yii::$app->request;
     $chat = $request->post('message');
     $emp_nm = $profile->EMP_NM.' '.$profile->EMP_NM_BLK;
+    $emp_img = $profile->IMG_BASE64;
     $emp_id = $profile->EMP_ID;
     $date = date('Y-m-d h:i:s');
-    $me = $request->post('temp_me');
-    $you = $request->post('temp_you');
 
     $chattest = new ChatTest();
     $chattest->attributes = ['name' => $emp_nm];
     $chattest->attributes = ['message' => $chat];
     $chattest->attributes = ['date' => $date];
     $chattest->attributes = ['emp_id' =>$emp_id];
+    $chattest->attributes = ['image_profile' =>$emp_img];
 
     $chattest->save();
     echo $chattest->id; // id will automatically be incremented if not set explicitly
 
-    $yandm = self::CariYouandme($emp_id);
+     /* set list key name */
+      Yii::$app->redis->executeCommand('RPUSH', [
+            'key'=>'chats:',
+            'value'=>Json::encode(['name' => $emp_nm, 'message' => $chat,'tgl'=>$date,'base64'=>$emp_img])
+          ]);
 
     return Yii::$app->redis->executeCommand('PUBLISH', [
         'channel' => 'notification',
-        'message' => Json::encode(['name' =>$emp_nm, 'message' => $chat,'tgl'=>$date,'yandm'=>$yandm,'me'=>$me,'you'=>$you])
+        'message' => Json::encode(['name' =>$emp_nm, 'message' => $chat,'tgl'=>$date,'base64'=>$emp_img])
       ]);
 
   }
