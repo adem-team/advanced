@@ -548,7 +548,7 @@ AppAssetChart::register($this);
 	]);	
 ?>
 
-<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt; padding-top:-150px">
+<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt; padding-top:-150px"s>
 <div class="row">
 	<div  class="col-lg-12" >		
 		<?=$tabProjct?>

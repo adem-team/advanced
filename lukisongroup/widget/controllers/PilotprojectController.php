@@ -573,7 +573,7 @@ class PilotprojectController extends Controller
 	
 	
 	
-	public function actionTestForm($start,$end)
+	public function actionSetDataSelect($start,$end)
     {
 		/* return $this->renderAjax('_formTest',[
 			'start'=>$start,
@@ -650,7 +650,7 @@ class PilotprojectController extends Controller
         } 
 	}
 	
-	public function actionDropCalendarSchedule($id,$start,$end){
+	public function actionChangeDataDrop($id,$start,$end){
 
 		echo "ID=".$id." START=".$start." EBD=".$end;
         //$model = Pilotproject::findOne(['ID'=>$id]);
@@ -662,9 +662,9 @@ class PilotprojectController extends Controller
 
     }
 	
-	public function actionDragable($start,$end){
+	public function actionDragableReceive($start,$end,$color){
 		//id new increment
-		echo " START=".$start." END=".$end;
+		echo " START=".$start." END=".$end," color=".$color;
         //$model = Pilotproject::findOne(['ID'=>$id]);
 
         //$model->PLAN_DATE1 = $start;
@@ -674,7 +674,19 @@ class PilotprojectController extends Controller
 
     }
 	
-	public function actionEventCalendarSchedule()
+	public function actionDragableDrop($start,$end,$object){
+		//id new increment
+		echo " START=".$start." END=".$end," color=".$object;
+        //$model = Pilotproject::findOne(['ID'=>$id]);
+
+        //$model->PLAN_DATE1 = $start;
+        //$model->PLAN_DATE2 = $end;
+
+       // $model->save();
+
+    }
+	
+	public function actionRenderDataEvents()
     {
 		$aryEvent=[
 				['id' => '1', 'resourceId' => 'b', 'start' => '2016-05-07T02:00:00', 'end' => '2016-05-07T07:00:00', 'title' => 'event 1'],
@@ -687,7 +699,7 @@ class PilotprojectController extends Controller
 		return Json::encode($aryEvent);
 	}
 	
-	public function actionResourceCalendarSchedule()
+	public function actionRenderDataResources()
     {
 		$aryResource=[
 				['id' => 'a', 'srcparent'=>'Penutupan FT', 'createby'=>'piter@lukicon.com', 'title' => 'Daily Report','eventColor' => 'green'],

@@ -47,6 +47,7 @@ function(event, element, view) {
 
 }
 EOF; */
+	
 	$wgCalendar=FullcalendarScheduler::widget([		
 		'modalSelect'=>[
 			/**
@@ -70,11 +71,12 @@ EOF; */
 			'language'=>'id',
 		],
 		'optionsEventUrl'=>[
-			'events' => Url::to(['/widget/pilotproject/event-calendar-schedule']),			//should be set "your Controller link" 	
-			'resources'=> Url::to(['/widget/pilotproject/resource-calendar-schedule']),		//should be set "your Controller link" 
-			'eventDropUrl'=>'/widget/pilotproject/drop-calendar-schedule',					//should be set "your Controller link" to get(start,end) from select. You can use model for scenario.
-			'eventSelectUrl'=>'/widget/pilotproject/test-form',								//should be set "your Controller link" to get(start,end) from select. You can use model for scenario			
-			'eventDragableUrl'=>'/fullcalendar/test/dragable',								//dragable, new data, star date, end date, id form increment db
+			//'events' => Url::to(['/widget/pilotproject/render-data-events']),			//should be set data event "your Controller link" 	
+			//'resources'=> Url::to(['/widget/pilotproject/render-data-resources']),		//should be set "your Controller link" 
+			'eventSelectUrl'=>'/widget/pilotproject/set-data-select',					//should be set "your Controller link" to get(start,end) from select. You can use model for scenario			
+			'changeDropUrl'=>'/widget/pilotproject/change-data-drop',					//should be set "your Controller link" to get(start,end) from select. You can use model for scenario.
+			'dragableReceiveUrl'=>'/widget/pilotproject/dragable-receive',				//dragable, new data, star date, end date, id form increment db
+			'dragableDropUrl'=>'/widget/pilotproject/dragable-drop',					//dragable, new data, star date, end date, id form increment db
 		],		
 		'clientOptions' => [
 			'customButtons'=>[ //additional button
@@ -83,7 +85,12 @@ EOF; */
 						'click'=>new JsExpression($JSaddButtonRooms)
 				]
 			],
-			'language'=>'id',
+			 'timezone'=> 'local',
+			//'language'=>'id',
+			 // 'locale'=>'id',
+			// 'isRTL'=> true,
+			//'ignoreTimezone'=> false,
+			//'timezone'=>'currentTimezone',
 			'selectHelper' => true,			
 			'editable' => true,
 			'selectable' => true,
@@ -91,11 +98,11 @@ EOF; */
 			'eventClick' => new JsExpression($JSEventClick),
 			'droppable' => true,
 			//'eventDrop' => new JsExpression($JSDropEvent),
-			'now' => '2016-05-07 06:00:00',
+			//'now' => \Yii::$app->ambilKonvesi->convert($model->start,'datetime'),//'2016-05-07 06:00:00',
 			'firstDay' =>'0',
 			'theme'=> true,
 			'aspectRatio'       => 1.8,
-			'scrollTime'        => '00:00', // undo default 6am scrollTime
+			//'scrollTime'        => '00:00', // undo default 6am scrollTime
 			'defaultView'       => 'timelineMonth',//'timelineDay',//agendaDay',
 			'views'             => [
 				'timelineOneDays' => [
@@ -114,17 +121,19 @@ EOF; */
 						'labelText'=>'Rooms',
 						'field'=> 'title',
 						'width'=>'150px',
-						'align'=>'center',
+						'align'=>'left',
 					],
 					[
 						'labelText'=> 'Department',
 						'field'=> 'title',
 						'width'=>'150px',
+						'align'=>'center',
 					],
 					[
 						'labelText'=> 'CreateBy',
 						'field'=> 'createby',
 						'width'=>'100px',
+						'align'=>'center',
 					]
 			],			
 		],	
@@ -147,30 +156,39 @@ EOF; */
 
 <?php
  $this->registerJs("
-	/* $('.resourceHeader').click(function(){
-      var   resourceId=$(this).attr('id');
-      //write a code to get all the events of selected resource 
-      //and render it on calendar
-     }); 	 */
-		/* $(function() { // document ready
-			 $('#external-events .fc-event').each(function() {
+	/* ADDING EVENTS */
+    var currColor = '#3c8dbc'; //Red by default
+    //Color chooser button
+    var colorChooser = $('#color-chooser-btn');
+    $('#color-chooser > li > a').click(function (e) {
+      e.preventDefault();
+      //Save color
+      currColor = $(this).css('color');
+      //Add color effect to button
+      $('#add-new-event').css({'background-color': currColor, 'eventColor': currColor});
+    });
 
-				// store data so the calendar knows to render an event upon drop
-				$(this).data('event', {
-					title: $.trim($(this).text()), // use the element's text as the event title
-					stick: true // maintain when user navigates (see docs on the renderEvent method)
-				});
+	$('#add-new-event').click(function (e) {
+      e.preventDefault();
+      //Get value and make sure it is not null
+      var val = $('#new-event').val();
+      if (val.length == 0) {
+        return;
+      }
 
-				// make the event draggable using jQuery UI
-				$(this).draggable({
-					zIndex: 999,
-					revert: true,      // will cause the event to go back to its
-					revertDuration: 0  //  original position after the drag
-				});
+      //Create events
+      var event = $('<div />');
+      event.css({'background-color': currColor, 'eventColor': currColor, 'color': '#fff'}).addClass('external-event');
+      event.html(val);
+      $('#external-events').prepend(event);
 
-			}); 
-		)}; */
-",$this::POS_BEGIN);
+      //Add draggable funtionality
+      ini_events(event);
+
+      //Remove event from text input
+      $('#new-event').val('');
+    });	
+",$this::POS_END);
 
 
 /*
@@ -178,25 +196,27 @@ EOF; */
  * @author piter novian [ptr.nov@gmail.com] 
 */	
  $this->registerJs("	
-	/* $(document).ready(function() {
-		$('#tab-project-id').click(function(){
-			setTimeout(function(){				
-				var idx = $('ul li.active').index();
-				//alert(idx);
-				if (idx==5){
+document.addEventListener('DOMContentLoaded', function(event) {
+		// $(document).ready(function() {
+			$('#tab-project-id').click(function(){
+				setTimeout(function(){				
+					var idx = $('ul li.active').index();
 					//alert(idx);
-					var elem = document.getElementById('calendar_test');
-					var list = elem.getElementsByTagName('button')[3];
-						//list.onmouseover = function() {
-						//list.className='ui-state-hover';
-						//list.focus();
-						setTimeout(function(){
-							list.click();
-						},100);
-				}
-			},100);
-		});	
-	}); */
+					if (idx==0){
+						//alert(idx);
+						var elem = document.getElementById('calendar_test');
+						var list = elem.getElementsByTagName('button')[4];
+							//list.onmouseover = function() {
+							//list.className='ui-state-hover';
+							//list.focus();
+							setTimeout(function(){
+								list.click();
+							},100);
+					}
+				},100);
+			});	
+		//});
+	}
  ",$this::POS_READY);
 
 ?>
@@ -204,6 +224,27 @@ EOF; */
 	<div  class="col-xs-12 col-sm-12 col-dm-2 col-lg-2">
 	<div class="row">
 		 <section class="content">
+			<div class="box box-solid">
+				<div class="box-body">
+					
+						<h5>Draggable Events</h5>
+						<div id='external-events'>
+						<div class='external-event bg-green '>My Event 1</div>
+						<div class='external-event bg-yellow'>My Event 2</div>
+						<div class='external-event bg-aqua'>My Event 3</div>
+						<div class='external-event bg-light-blue'>My Event 4</div>
+						<div class='external-event bg-red'>My Event 5</div>
+						<div class='external-event bg-aqua'>My Event 3</div>
+						<div class='external-event bg-light-blue'>My Event 4</div>
+						<div class='external-event bg-red'>My Event 5</div>
+						
+						<p>
+							<input type='checkbox' id='drop-remove' />
+							<label for='drop-remove'>remove after drop</label>
+						</p>
+					</div>
+				</div>
+			</div>
 			<div class="box box-solid">
 				<div class="box-header with-border">
 				  <h5>Create Event</h5>
@@ -237,20 +278,6 @@ EOF; */
 					<!-- /btn-group -->
 				  </div>
 				  <!-- /input-group -->
-				</div>
-			</div>
-			<div class="box-body">
-				<div id='external-events'>
-					<h5>Draggable Events</h5>
-					<div class='external-event bg-green '>My Event 1</div>
-					<div class='external-event bg-yellow'>My Event 2</div>
-					<div class='external-event bg-aqua'>My Event 3</div>
-					<div class='external-event bg-light-blue'>My Event 4</div>
-					<div class='external-event bg-red'>My Event 5</div>
-					<p>
-						<input type='checkbox' id='drop-remove' />
-						<label for='drop-remove'>remove after drop</label>
-					</p>
 				</div>
 			</div>
 		 </section>
