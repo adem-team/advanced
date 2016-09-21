@@ -80,8 +80,9 @@ class ChatController extends Controller
 
     public function actionIndex()
     {
-      
-
+          Yii::$app->redis->executeCommand('DEL', [
+            'key'=>'chats:',
+          ]);
     		/*MODEL CHAT MESSAGE*/
         $searchModelMsg = new ChatSearch();
         $dataProviderMsg = $searchModelMsg->search(Yii::$app->request->queryParams);
@@ -142,15 +143,21 @@ public function actionSendChat()
     $chattest->save();
     echo $chattest->id; // id will automatically be incremented if not set explicitly
 
+     if($chattest->id %2 == 0){
+                $idx = true;
+             }else{
+                 $idx = false;
+             }
+
      /* set list key name */
       Yii::$app->redis->executeCommand('RPUSH', [
             'key'=>'chats:',
-            'value'=>Json::encode(['name' => $emp_nm, 'message' => $chat,'tgl'=>$date,'base64'=>$emp_img])
+            'value'=>Json::encode(['name' => $emp_nm, 'message' => $chat,'tgl'=>$date,'base64'=>$emp_img,'id'=>$idx])
           ]);
 
     return Yii::$app->redis->executeCommand('PUBLISH', [
         'channel' => 'notification',
-        'message' => Json::encode(['name' =>$emp_nm, 'message' => $chat,'tgl'=>$date,'base64'=>$emp_img])
+        'message' => Json::encode(['name' =>$emp_nm, 'message' => $chat,'tgl'=>$date,'base64'=>$emp_img,'id'=>$idx])
       ]);
 
   }

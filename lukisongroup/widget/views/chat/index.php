@@ -48,7 +48,8 @@ use lukisongroup\widget\models\ChatTest;
                <?= Html::textInput('message', null, [
                                 'id' => 'message-field',
                                 'class' => 'form-control',
-                                'placeholder' => 'Message'
+                                'placeholder' => 'Message',
+                                'required'=>true
                             ]) ?>
                 <span class="input-group-btn">
                     <?= Html::submitButton('Send', [
