@@ -25,6 +25,11 @@ $JSEventClick = <<<EOF
 	}
 EOF;
 
+$JSaddButtonRooms = <<<EOF
+	function() {
+		alert('test');
+	}
+EOF;
 /* $JSDropEvent = <<<EOF
 function(event, element, view) {
     var child = event.parent;
@@ -56,7 +61,7 @@ EOF; */
 			'modal-size'=>'modal-lg'										//size of modal (modal-xs,modal-sm,modal-sm,modal-lg).
 		],
 		'header'        => [
-			'left'   => 'today prev,next',
+			'left'   => 'details, today prev,next',
 			'center' => 'title',
 			'right'  => 'timelineOneDays,agendaWeek,month,listWeek',
 		],
@@ -64,15 +69,20 @@ EOF; */
 			'id'=> 'calendar_test',															//set it, if used FullcalendarScheduler more the one on page.
 			'language'=>'id',
 		],
-		'optionsEventAdd'=>[
+		'optionsEventUrl'=>[
 			'events' => Url::to(['/widget/pilotproject/event-calendar-schedule']),			//should be set "your Controller link" 	
 			'resources'=> Url::to(['/widget/pilotproject/resource-calendar-schedule']),		//should be set "your Controller link" 
-			//disable 'eventDrop' => new JsExpression($JSDropEvent),
-			'eventDropUrl'=>'/widget/pilotproject/drop-calendar-schedule',								//should be set "your Controller link" to get(start,end) from select. You can use model for scenario.
+			'eventDropUrl'=>'/widget/pilotproject/drop-calendar-schedule',					//should be set "your Controller link" to get(start,end) from select. You can use model for scenario.
 			'eventSelectUrl'=>'/widget/pilotproject/test-form',								//should be set "your Controller link" to get(start,end) from select. You can use model for scenario			
 			'eventDragableUrl'=>'/fullcalendar/test/dragable',								//dragable, new data, star date, end date, id form increment db
 		],		
 		'clientOptions' => [
+			'customButtons'=>[ //additional button
+				'details'=>[
+					'text'=>'Rooms',
+						'click'=>new JsExpression($JSaddButtonRooms)
+				]
+			],
 			'language'=>'id',
 			'selectHelper' => true,			
 			'editable' => true,
@@ -81,34 +91,40 @@ EOF; */
 			'eventClick' => new JsExpression($JSEventClick),
 			'droppable' => true,
 			//'eventDrop' => new JsExpression($JSDropEvent),
-			'now' => '2016-05-07',
+			'now' => '2016-05-07 06:00:00',
 			'firstDay' =>'0',
 			'theme'=> true,
 			'aspectRatio'       => 1.8,
-			//'scrollTime'        => '00:00', // undo default 6am scrollTime
+			'scrollTime'        => '00:00', // undo default 6am scrollTime
 			'defaultView'       => 'timelineMonth',//'timelineDay',//agendaDay',
 			'views'             => [
 				'timelineOneDays' => [
 					'type'     => 'timeline',
 					'duration' => [
-						'days' => 1,
+						'days' => 2,
 					],
 				], 
 			
-			],			
-			'resourceLabelText' => 'Rooms',
-			'resourceColumns'=>[
+			],
+			'resourceAreaWidth'=>'30%',
+			'resourceLabelText' => 'Discriptions',
+			'resourceGroupField'=> 'srcparent',
+			'resourceColumns'=>[					
 					[
-						'labelText'=> 'Department',
-						'field'=> 'title'
+						'labelText'=>'Rooms',
+						'field'=> 'title',
+						'width'=>'150px',
+						'align'=>'center',
 					],
 					[
-						'labelText'=> 'parent Event',
-						'field'=> 'title'
+						'labelText'=> 'Department',
+						'field'=> 'title',
+						'width'=>'150px',
 					],
 					[
 						'labelText'=> 'CreateBy',
-						'field'=> 'create_at'
+						'field'=> 'createby',
+						'width'=>'100px',
 					]
 			],			
 		],	
@@ -130,7 +146,12 @@ EOF; */
 
 
 <?php
- $this->registerJs("		
+ $this->registerJs("
+	/* $('.resourceHeader').click(function(){
+      var   resourceId=$(this).attr('id');
+      //write a code to get all the events of selected resource 
+      //and render it on calendar
+     }); 	 */
 		/* $(function() { // document ready
 			 $('#external-events .fc-event').each(function() {
 
@@ -157,7 +178,7 @@ EOF; */
  * @author piter novian [ptr.nov@gmail.com] 
 */	
  $this->registerJs("	
-	$(document).ready(function() {
+	/* $(document).ready(function() {
 		$('#tab-project-id').click(function(){
 			setTimeout(function(){				
 				var idx = $('ul li.active').index();
@@ -165,7 +186,7 @@ EOF; */
 				if (idx==5){
 					//alert(idx);
 					var elem = document.getElementById('calendar_test');
-					var list = elem.getElementsByTagName('button')[0];
+					var list = elem.getElementsByTagName('button')[3];
 						//list.onmouseover = function() {
 						//list.className='ui-state-hover';
 						//list.focus();
@@ -175,27 +196,70 @@ EOF; */
 				}
 			},100);
 		});	
-	});
+	}); */
  ",$this::POS_READY);
 
 ?>
 <div  class="row" style="margin-top:0px,font-family: verdana, arial, sans-serif ;font-size: 8pt"> 
-	<div  class="col-xs-2 col-sm-2 col-dm-2 col-lg-2">
-		<div id='external-events'>
-			<h4>Draggable Events</h4>
-			<div class='fc-event'>My Event 1</div>
-			<div class='fc-event'>My Event 2</div>
-			<div class='fc-event'>My Event 3</div>
-			<div class='fc-event'>My Event 4</div>
-			<div class='fc-event'>My Event 5</div>
-			<p>
-				<input type='checkbox' id='drop-remove' />
-				<label for='drop-remove'>remove after drop</label>
-			</p>
+	<div  class="col-xs-12 col-sm-12 col-dm-2 col-lg-2">
+	<div class="row">
+		 <section class="content">
+			<div class="box box-solid">
+				<div class="box-header with-border">
+				  <h5>Create Event</h5>
+				</div>
+				<div class="box-body">
+				  <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
+					<!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
+					<ul class="fc-color-picker" id="color-chooser">
+					  <li><a class="text-aqua" href="#"><i class="fa fa-square"></i></a></li>
+					  <li><a class="text-blue" href="#"><i class="fa fa-square"></i></a></li>
+					  <li><a class="text-light-blue" href="#"><i class="fa fa-square"></i></a></li>
+					  <li><a class="text-teal" href="#"><i class="fa fa-square"></i></a></li>
+					  <li><a class="text-yellow" href="#"><i class="fa fa-square"></i></a></li>
+					  <li><a class="text-orange" href="#"><i class="fa fa-square"></i></a></li>
+					  <li><a class="text-green" href="#"><i class="fa fa-square"></i></a></li>
+					  <li><a class="text-lime" href="#"><i class="fa fa-square"></i></a></li>
+					  <li><a class="text-red" href="#"><i class="fa fa-square"></i></a></li>
+					  <li><a class="text-purple" href="#"><i class="fa fa-square"></i></a></li>
+					  <li><a class="text-fuchsia" href="#"><i class="fa fa-square"></i></a></li>
+					  <li><a class="text-muted" href="#"><i class="fa fa-square"></i></a></li>
+					  <li><a class="text-navy" href="#"><i class="fa fa-square"></i></a></li>
+					</ul>
+				  </div>
+				  <!-- /btn-group -->
+				  <div class="input-group">
+					<input id="new-event" type="text" class="form-control" placeholder="Event Title">
+
+					<div class="input-group-btn">
+					  <button id="add-new-event" type="button" class="btn btn-primary btn-flat">Add</button>
+					</div>
+					<!-- /btn-group -->
+				  </div>
+				  <!-- /input-group -->
+				</div>
+			</div>
+			<div class="box-body">
+				<div id='external-events'>
+					<h5>Draggable Events</h5>
+					<div class='external-event bg-green '>My Event 1</div>
+					<div class='external-event bg-yellow'>My Event 2</div>
+					<div class='external-event bg-aqua'>My Event 3</div>
+					<div class='external-event bg-light-blue'>My Event 4</div>
+					<div class='external-event bg-red'>My Event 5</div>
+					<p>
+						<input type='checkbox' id='drop-remove' />
+						<label for='drop-remove'>remove after drop</label>
+					</p>
+				</div>
+			</div>
+		 </section>
 		</div>
 	</div>
-	<div  class="col-xs-10 col-sm-10 col-dm-10 col-lg-10">
-		<?php echo $wgCalendar;?>
+	<div  class="col-xs-12 col-sm-12 col-dm-10 col-lg-10">
+		<div class="row">
+			<?php echo $wgCalendar;?>
+		</div>
 	</div>
 </div>
 

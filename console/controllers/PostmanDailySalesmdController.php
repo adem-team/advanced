@@ -60,7 +60,7 @@ class PostmanDailySalesmdController extends Controller
 				x2.KD_BARANG AS KD_BARANG_ESM, 
 				x7.KD_ALIAS As ID_BARANG_DISTRIBUTOR,
 				x4.NM_BARANG, 
-						SUM(CASE WHEN x2.SO_TYPE=5 THEN x2.SO_QTY ELSE 0 END) as STOCK,
+						SUM(CASE WHEN x2.SO_TYPE=5 THEN (CASE WHEN  x2.SO_QTY<>-1 THEN x2.SO_QTY ELSE 0 END) ELSE 0 END) as STOCK,
 						SUM(CASE WHEN x2.SO_TYPE=8 THEN x2.SO_QTY ELSE 0 END) as RETURN_INV,
 						SUM(CASE WHEN x2.SO_TYPE=9 THEN x2.SO_QTY ELSE 0 END) as REQUEST_INV,
 						SUM(CASE WHEN x2.SO_TYPE=6 THEN x2.SO_QTY ELSE 0 END) as SELL_IN,
@@ -107,7 +107,7 @@ class PostmanDailySalesmdController extends Controller
 			$dailySalesExpired= new ArrayDataProvider([
 				'allModels'=>Yii::$app->db_esm->createCommand("
 					SELECT 
-							DATE_FORMAT(x1.TGL_KJG,'%Y:%m:%d') AS TGL_KJG,
+							DATE_FORMAT(x1.TGL_KJG,'%Y-%m-%d') AS TGL_KJG,
 							x6.SALES_NM,
 							x1.CUST_ID,
 							#x4.KD_ALIAS,
@@ -409,7 +409,7 @@ class PostmanDailySalesmdController extends Controller
 									SCDL_GRP_NM AS AREA,
 									(CASE WHEN STS_CASE=0 THEN 'PLAN' ELSE 'CASE' END) as SCDL_EVENT,
 									(CASE WHEN STS_CASE_PIC='' THEN 'SYSTEM' ELSE STS_CASE_PIC END) AS AUTHORIZED 
-								FROM c0002rpt_cc_time WHERE TGL='2016-09-15' AND USER_ID NOT IN ('61','62')
+								FROM c0002rpt_cc_time WHERE TGL='".$tglIn."' AND USER_ID NOT IN ('61','62')
 								ORDER BY USER_ID,CUST_CHKIN,CUST_CHKOUT
 							) x1 GROUP BY x1.SALES_NM
 					) x2

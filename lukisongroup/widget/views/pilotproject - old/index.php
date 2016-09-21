@@ -483,7 +483,7 @@ AppAssetChart::register($this);
 
 	$calender=$this->render('calendar_pilot',[
 	]);
-	$_indexScheduleCalendar=$this->render('_indexCRUD',[
+	$calenderX=$this->render('test',[
 	]);
 
 
@@ -499,9 +499,6 @@ AppAssetChart::register($this);
 	 */	
 	$items=[
 		[
-			'label'=>'<i class="glyphicon glyphicon-home"></i> Pilot Data Input','content'=>$_indexScheduleCalendar,
-		],	
-		/* [
 			'label'=>'<i class="glyphicon glyphicon-home"></i> Department Pilot Schedule','content'=>$dsp1,
 			// 'active'=>true,
 
@@ -522,8 +519,10 @@ AppAssetChart::register($this);
 
 		[
 			'label'=>'<i class="glyphicon glyphicon-home"></i> Pilot Data Employee','content'=>$gv_pilotEmp,
-		], */
-			
+		],
+		[
+			'label'=>'<i class="glyphicon glyphicon-home"></i> Pilot Data Employee','content'=>$calenderX,
+		],		
 	];
 
 	/**
@@ -534,30 +533,19 @@ AppAssetChart::register($this);
 	  * @link https://github.com/C12D/advanced/blob/master/lukisongroup/view/widget/pilotp/index.php
 	  * @see https://github.com/C12D/advanced/blob/master/lukisongroup/view/widget/pilotp/index.php
 	 */	
-	$tabProjct= TabsX::widget([
+	echo TabsX::widget([
 		'id'=>'tab-project-id',
 		'items'=>$items,
 		'position'=>TabsX::POS_ABOVE,
 		//'height'=>'tab-height-xs',
-		'bordered'=>false,
+		'bordered'=>true,
 		'encodeLabels'=>false,
 		//'align'=>TabsX::ALIGN_LEFT,
-		/* 'pluginEvents' => [
+		'pluginEvents' => [
 				"tabsX.click" => 'function() { }',
-		] */
+		]
 	]);	
-?>
-
-<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt; padding-top:-150px">
-<div class="row">
-	<div  class="col-lg-12" >		
-		<?=$tabProjct?>
-		</div>
-	</div>
-</div>
-
-
-<?php    
+    
 	
 	 $this->registerJs("
 		    $('#gv-pilotp-view').on('show.bs.modal', function (event) {
