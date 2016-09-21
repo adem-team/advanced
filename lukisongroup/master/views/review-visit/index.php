@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	];
 
 	$tabReviewVisit= TabsX::widget([
-		'id'=>'review-visit-tab',
+		'id'=>'tab-project-id',
 		'items'=>$items,
 		'position'=>TabsX::POS_ABOVE,
 		'bordered'=>true,

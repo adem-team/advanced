@@ -122,8 +122,8 @@ Modal::end();
 	 * @author wawan
 	 * @since 1.1.0
 	*/
-	/* $calenderPlan=yii2fullcalendar\yii2fullcalendar::widget([
-		'id'=>'pilot-employe-id',
+	$calenderPlan=yii2fullcalendar\yii2fullcalendar::widget([
+		'id'=>'pilot-test-id',
 		'options' => [
 			'lang' => 'id',
 			
@@ -131,8 +131,9 @@ Modal::end();
 		//... more options to be defined here!
 		],
 		// 'events'=> $events,
-		'ajaxEvents' => Url::to(['/widget/pilotproject/json-calendar']),
+		
 	 'clientOptions' => [
+			'resourceLabelText'=> 'Rooms',
 			'selectable' => true,
 			'selectHelper' => true,
 			'droppable' => true,
@@ -145,7 +146,8 @@ Modal::end();
 			//'defaultDate' => date('Y-m-d')
 		],
 		//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
-	]); */
+		'ajaxEvents' => Url::to(['/widget/pilotproject/json-calendar']),
+	]);
 
 	$vwScdlPlan= Html::panel(
 					['heading' => 'Calender', 'body' =>$calenderPlan],
@@ -184,7 +186,7 @@ Modal::end();
 ?>
 	<div class="row">
 	<div class="col-sm-7 col-md-7 col-lg-7">
-		<?php //$vwScdlPlan?>
+		<?=$vwScdlPlan?>
 	</div>
 	<div class="col-sm-5 col-md-5 col-lg-5">
 		<!-- viewDetailPlan?> -->

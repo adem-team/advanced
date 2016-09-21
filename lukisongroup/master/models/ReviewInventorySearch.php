@@ -41,7 +41,8 @@ class ReviewInventorySearch extends Model
 	*/
     public function search($params){
 		$sqlData=Yii::$app->db_esm->createCommand("
-				SELECT x1.USER_ID,x1.SCDL_GROUP,x1.TGL,x1.CUST_ID,x3.CUST_NM,x2.KD_BARANG ,x4.NM_BARANG,x2.SO_TYPE, x2.SO_QTY
+				SELECT x1.USER_ID,x1.SCDL_GROUP,x1.TGL,x1.CUST_ID,x3.CUST_NM,x2.KD_BARANG ,x4.NM_BARANG,x2.SO_TYPE, 
+				(CASE WHEN  x2.SO_QTY<>'-1' THEN SO_QTY ELSE 0 END) AS SO_QTY
 				FROM c0002scdl_detail x1 INNER JOIN so_t2 x2 ON  x2.TGL=x1.TGL AND x2.CUST_KD=x1.CUST_ID 
 				LEFT JOIN c0001 x3 on x3.CUST_KD=x1.CUST_ID
 				LEFT JOIN b0001 x4 on x4.KD_BARANG=x2.KD_BARANG
@@ -75,7 +76,8 @@ class ReviewInventorySearch extends Model
 	*/
 	public function searchWeekly($params,$defaultTglStart,$defaultTglEnd){
 		$sqlData1=Yii::$app->db_esm->createCommand("
-				SELECT x1.TGL,x1.USER_ID,x5.SALES_NM,x6.SCDL_GRP_NM,x1.SCDL_GROUP,x1.CUST_ID,x3.CUST_NM,x2.KD_BARANG ,x4.NM_BARANG,x2.SO_TYPE, x2.SO_QTY
+				SELECT x1.TGL,x1.USER_ID,x5.SALES_NM,x6.SCDL_GRP_NM,x1.SCDL_GROUP,x1.CUST_ID,x3.CUST_NM,x2.KD_BARANG ,x4.NM_BARANG,x2.SO_TYPE, 
+				(CASE WHEN  x2.SO_QTY<>'-1' THEN SO_QTY ELSE 0 END) AS SO_QTY
 				FROM c0002scdl_detail x1 INNER JOIN so_t2 x2 ON  x2.TGL=x1.TGL AND x2.CUST_KD=x1.CUST_ID 
 				LEFT JOIN c0001 x3 on x3.CUST_KD=x1.CUST_ID
 				LEFT JOIN b0001 x4 on x4.KD_BARANG=x2.KD_BARANG

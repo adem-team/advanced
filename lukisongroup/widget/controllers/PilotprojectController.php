@@ -523,4 +523,225 @@ class PilotprojectController extends Controller
         }
 
     }
+	
+	
+	public function actionTest(){
+		
+		return $this->render('test');
+	}
+	
+	public function actionResources($id)
+	{
+		\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+		return [
+			new Resource(["id" => "a", "title" => "Auditorium A"]),
+			new Resource(["id" => "b", "title" => "Auditorium B", "eventColor" => "green"]),
+			new Resource(["id" => "c", "title" => "Auditorium C", "eventColor" => "orange"]),
+			new Resource([
+				"id" => "d", "title" => "Auditorium D", "children" => [
+					new Resource(["id" => "d1", "title" => "Room D1"]),
+					new Resource(["id" => "d2", "title" => "Room D2"]),
+				],
+			]),
+			new Resource(["id" => "e", "title" => "Auditorium E"]),
+			new Resource(["id" => "f", "title" => "Auditorium F", "eventColor" => "red"]),
+			new Resource(["id" => "g", "title" => "Auditorium G"]),
+			new Resource(["id" => "h", "title" => "Auditorium H"]),
+			new Resource(["id" => "i", "title" => "Auditorium I"]),
+			new Resource(["id" => "j", "title" => "Auditorium J"]),
+			new Resource(["id" => "k", "title" => "Auditorium K"]),
+			new Resource(["id" => "l", "title" => "Auditorium L"]),
+			new Resource(["id" => "m", "title" => "Auditorium M"]),
+			new Resource(["id" => "n", "title" => "Auditorium N"]),
+			new Resource(["id" => "o", "title" => "Auditorium O"]),
+			new Resource(["id" => "p", "title" => "Auditorium P"]),
+			new Resource(["id" => "q", "title" => "Auditorium Q"]),
+			new Resource(["id" => "r", "title" => "Auditorium R"]),
+			new Resource(["id" => "s", "title" => "Auditorium S"]),
+			new Resource(["id" => "t", "title" => "Auditorium T"]),
+			new Resource(["id" => "u", "title" => "Auditorium U"]),
+			new Resource(["id" => "v", "title" => "Auditorium V"]),
+			new Resource(["id" => "w", "title" => "Auditorium W"]),
+			new Resource(["id" => "x", "title" => "Auditorium X"]),
+			new Resource(["id" => "y", "title" => "Auditorium Y"]),
+			new Resource(["id" => "z", "title" => "Auditorium Z"]),
+		];
+	}
+	
+	
+	
+	
+	
+	public function actionSetDataSelect($start,$end)
+    {
+		/* return $this->renderAjax('_formTest',[
+			'start'=>$start,
+			'end'=>$end
+		]); */
+		$model = new Pilotproject();
+
+        $post =Yii::$app->request->post();
+        $val = $post['Pilotproject']['parentpilot'];
+
+        $gv_id = Yii::$app->getUserOpt->Profile_user()->emp->GF_ID;
+        
+        if ($model->load(Yii::$app->request->post())){
+            $model->DEP_ID =  Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+            // if($model->TYPE == 0)
+            // {
+            //   $model->DEP_ID = 'none';
+            // }else{
+            //   $model->DEP_ID =  Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+            // }
+            
+            if($val == 1)
+            {
+                $newdata = implode(",",$model->USER_CC);
+
+                $model->USER_CC = $newdata;
+
+                $newdata1 = implode(",",$model->DEP_SUB_ID);
+
+                $model->DEP_SUB_ID = $newdata1;
+                // $model->PLAN_DATE1 = $tgl1;
+                // $model->PLAN_DATE2 = $tgl2;
+                $pilot_id = Yii::$app->ambilkonci->getpilot($model->DEP_ID);
+                $model->PILOT_ID = $pilot_id;     
+                $model->PARENT = 0;
+                $sql = Pilotproject::find()->max('ID');                               
+                $model->SORT = $sql+1;
+            }else{
+                $newdata = implode(",",$model->USER_CC);
+
+                $model->USER_CC = $newdata;
+                // $model->PLAN_DATE1 = $tgl1;
+                // $model->PLAN_DATE2 = $tgl2;
+                $model->SORT = $model->PARENT;
+                $model->PILOT_ID = '';
+            }
+           
+            $model->CREATED_BY= Yii::$app->user->identity->username;     
+            $model->UPDATED_TIME = date('Y-m-d h:i:s');               
+
+               $transaction = Pilotproject::getDb()->beginTransaction();
+                    try {
+                          $model->save();
+                        // ...other DB operations...
+                        $transaction->commit();
+                    } catch(\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
+                    }      
+
+            return $this->redirect('index');
+                
+        }else {
+           
+            return $this->renderAjax('form_pilot', [
+                'model' => $model,
+                'parent' => self::get_aryParent(),
+                'dropemploy'=>self::get_aryEmploye(),
+                'tgl'=>$start,
+                'tgl_1'=> $end,
+                'model1'=>$model1,
+                'dep'=>self::get_aryDep_sub()
+            ]);
+        } 
+	}
+	
+	public function actionChangeDataDrop($id,$start,$end){
+
+		echo "ID=".$id." START=".$start." EBD=".$end;
+        //$model = Pilotproject::findOne(['ID'=>$id]);
+
+        //$model->PLAN_DATE1 = $start;
+        //$model->PLAN_DATE2 = $end;
+
+       // $model->save();
+
+    }
+	
+	public function actionDragableReceive($start,$end,$color){
+		//id new increment
+		echo " START=".$start." END=".$end," color=".$color;
+        //$model = Pilotproject::findOne(['ID'=>$id]);
+
+        //$model->PLAN_DATE1 = $start;
+        //$model->PLAN_DATE2 = $end;
+
+       // $model->save();
+
+    }
+	
+	public function actionDragableDrop($start,$end,$object){
+		//id new increment
+		echo " START=".$start." END=".$end," color=".$object;
+        //$model = Pilotproject::findOne(['ID'=>$id]);
+
+        //$model->PLAN_DATE1 = $start;
+        //$model->PLAN_DATE2 = $end;
+
+       // $model->save();
+
+    }
+	
+	public function actionRenderDataEvents()
+    {
+		$aryEvent=[
+				['id' => '1', 'resourceId' => 'b', 'start' => '2016-05-07T02:00:00', 'end' => '2016-05-07T07:00:00', 'title' => 'event 1'],
+				['id' => '2', 'resourceId' => 'c', 'start' => '2016-05-07T05:00:00', 'end' => '2016-05-07T22:00:00', 'title' => 'event 2'],
+				['id' => '3', 'resourceId' => 'd', 'start' => '2016-05-06', 'end' => '2016-05-08', 'title' => 'event 3'],
+				['id' => '4', 'resourceId' => 'e', 'start' => '2016-05-07T03:00:00', 'end' => '2016-05-07T08:00:00', 'title' => 'event 4'],
+				['id' => '5', 'resourceId' => 'f', 'start' => '2016-05-07T00:30:00', 'end' => '2016-05-07T02:30:00', 'title' => 'event 5'],
+		];
+		
+		return Json::encode($aryEvent);
+	}
+	
+	public function actionRenderDataResources()
+    {
+		$aryResource=[
+				['id' => 'a', 'srcparent'=>'Penutupan FT', 'createby'=>'piter@lukicon.com', 'title' => 'Daily Report','eventColor' => 'green'],
+				['id' => 'b', 'srcparent'=>'Penutupan FT', 'createby'=>'piter@lukicon.com', 'title' => 'Auditorium B', 'eventColor' => 'green'],
+				['id' => 'c', 'srcparent'=>'Penutupan FT', 'createby'=>'piter@lukicon.com', 'title' => 'Auditorium C', 'eventColor' => 'orange'],
+				/* [
+					'id'       => 'd', 'srcparent'=>'1','title' => 'Auditorium D',
+					'children' => [
+						['id' => 'd1', 'srcparent'=>'1','title' => 'Room D1',
+							'children' => [
+								['id' => 'd1a', 'srcparent'=>'1','title' => 'Room D1a'],
+								['id' => 'd1a', 'srcparent'=>'1','title' => 'Room D1a'],
+								['id' => 'd2b', 'srcparent'=>'1','title' => 'Room D2b'],
+							],
+						],
+						['id' => 'd2', 'title' => 'Room D2'],
+					],
+				], */
+				['id' => 'e', 'srcparent'=>'Penutupan FT', 'createby'=>'piter@lukicon.com', 'title' => 'Auditorium E'],
+				['id' => 'f', 'srcparent'=>'Penutupan FT', 'createby'=>'piter@lukicon.com', 'title' => 'Auditorium F', 'eventColor' => 'red'],
+				['id' => 'g', 'srcparent'=>'Sales Event','title' => 'Auditorium G'],
+				['id' => 'h', 'srcparent'=>'Sales Event','title' => 'Auditorium H'],
+				['id' => 'i', 'srcparent'=>'Sales Event','title' => 'Auditorium I'],
+				['id' => 'j', 'srcparent'=>'Sales Event','title' => 'Auditorium J'],
+				['id' => 'k', 'srcparent'=>'Sales Event','title' => 'Auditorium K'],
+				['id' => 'l', 'srcparent'=>'Sales Event','title' => 'Auditorium L'],
+				['id' => 'm', 'srcparent'=>'Sales Event','title' => 'Auditorium M'],
+				['id' => 'n', 'srcparent'=>'Sales Event','title' => 'Auditorium N'],
+				['id' => 'o', 'srcparent'=>'Sales Event','title' => 'Auditorium O'],
+				['id' => 'p', 'srcparent'=>'Sales Event','title' => 'Auditorium P'],
+				['id' => 'q', 'srcparent'=>'Sales Event','title' => 'Auditorium Q'],
+				['id' => 'r', 'srcparent'=>'Sales Event','title' => 'Auditorium R'],
+				['id' => 's', 'srcparent'=>'Sales Event','title' => 'Auditorium S'],
+				['id' => 't', 'srcparent'=>'Sales Event','title' => 'Auditorium T'],
+				['id' => 'u', 'srcparent'=>'Sales Event','title' => 'Auditorium U'],
+				['id' => 'v', 'srcparent'=>'Daily Report','title' => 'Auditorium V'],
+				['id' => 'w', 'srcparent'=>'Daily Report','title' => 'Auditorium W'],
+				['id' => 'x', 'srcparent'=>'Daily Report','title' => 'Auditorium X'],
+				['id' => 'y', 'srcparent'=>'Daily Report','title' => 'Auditorium Y'],
+				['id' => 'z', 'srcparent'=>'Daily Report','title' => 'Auditorium Z'],
+			];
+		
+		return Json::encode($aryResource);
+	}
 }
