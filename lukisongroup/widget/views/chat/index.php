@@ -86,14 +86,14 @@ use lukisongroup\widget\models\ChatTest;
 
 <?php
 
-$opts = json_encode([
-    'messageUrl' => Url::to(['/widget/chat/send-chat']),
-    'emp_nm'=>$emp_nm,
-    'templateYou' => $this->blocks['template_you'],
-    'templateMe' => $this->blocks['template_me'],
-    ]);
+// $opts = json_encode([
+//     'messageUrl' => Url::to(['/widget/chat/send-chat']),
+//     'emp_nm'=>$emp_nm,
+//     'templateYou' => $this->blocks['template_you'],
+//     'templateMe' => $this->blocks['template_me'],
+//     ]);
 
-$this->registerJs("var chatOpts = $opts;");
-$this->registerJs($this->render('chataja.js'));
+// $this->registerJs("var chatOpts = $opts;");
+// $this->registerJs($this->render('chataja.js'));
 
 ?>

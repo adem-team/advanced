@@ -11,6 +11,15 @@ $( document ).ready(function() {
         }
   }
 
+  $('#chat-tab').click(function(){
+
+    var val = $('#emp').val();
+    
+    socket.emit('new user',val);
+  })
+
+  
+
    /**
    * renders messages to the DOM ME
    * nothing fancy
