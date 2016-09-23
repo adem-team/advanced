@@ -47,7 +47,12 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	};
+
+	 $profile = Yii::$app->getUserOpt->profile_user()->emp;
+	 $emp_nm = $profile->EMP_NM;
 ?>
+
+	<input type="hidden" name="emp_nm" id='emp' value=<?= $emp_nm ?> >
 
 	<div class="container-fluid" style="padding-left: 20px; padding-right: 20px" >
 			<div class="row">
@@ -83,7 +88,11 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 										[
 											'content' => '<span class="fa fa-comments fa-lg"></span>'. '   '.'Chating ',
 											'url' => '/widget/chat',
-											'badge' => ''
+											'badge' => '',
+											'options'=>[
+												'id'=>'chat-tab'
+											]
+											
 										],
 										[
 											'content' => '<span class="fa fa-sticky-note-o fa-lg"></span>'. '   '.'Memo',
