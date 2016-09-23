@@ -5,7 +5,8 @@ use yii\bootstrap\Modal;
 use yii\web\JsExpression;
 use ptrnov\fullcalendar\FullcalendarScheduler;
 
-
+/* $personalUser=Yii::$app->getUserOpt->Profile_user();
+print_r($personalUser	); */
  /* $JSCode = <<<EOF
 	function( start, end, jsEvent, view) {
 		//alert('Event: ' + jsEvent.title);
@@ -27,7 +28,12 @@ EOF;
 
 $JSaddButtonRooms = <<<EOF
 	function() {
-		alert('test');
+		//alert('test');
+		$.get('/widget/pilotproject/room-form',function(data){
+						$('#modal-rooms').modal('show')
+						.find('#modalContentRooms')
+						.html(data);
+		});
 	}
 EOF;
 /* $JSDropEvent = <<<EOF
@@ -140,16 +146,16 @@ EOF; */
 	
 	]);
 	
-/* 	Modal::begin([
-		'headerOptions' => ['id' => 'modalHeader'],
-		'id' => 'modal-select',
-		// 'size' => 'modal-sm',
+ 	Modal::begin([
+		'header'=>'Rooms',
+		'id' => 'modal-rooms',
+		'size' => 'modal-sm',
 		//keeps from closing modal with esc key or by clicking out of the modal.
 		// user must click cancel or X to close
 		// 'clientOptions' => ['backdrop' => 'static', 'keyboard' => FALSE]
 	]);
-	echo "<div id='modalContent'></div>";
-	Modal::end(); */
+	echo "<div id='modalContentRooms'></div>";
+	Modal::end(); 
 
 ?>
 
