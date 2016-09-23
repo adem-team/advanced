@@ -661,7 +661,7 @@ class PilotprojectController extends Controller
        // $model->save();
 
     }
-	
+		
 	public function actionDragableReceive($start,$end,$color){
 		//id new increment
 		echo " START=".$start." END=".$end," color=".$color;
@@ -744,4 +744,59 @@ class PilotprojectController extends Controller
 		
 		return Json::encode($aryResource);
 	}
+	
+	public function actionRoomForm(){
+
+		/* if ($model->load(Yii::$app->request->post())){
+            $model->DEP_ID =  Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;                 
+            $model->CREATED_BY= Yii::$app->user->identity->username;     
+            $model->UPDATED_TIME = date('Y-m-d h:i:s');               
+
+               $transaction = Pilotproject::getDb()->beginTransaction();
+                    try {
+                          $model->save();
+                        // ...other DB operations...
+                        $transaction->commit();
+                    } catch(\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
+                    }      
+
+            return $this->redirect('index');
+                
+        }else { */
+			$model = new \yii\base\DynamicModel(['klikparent','srcparent']);
+			$model->addRule(['klikparent','srcparent'], 'safe');
+			if(Yii::$app->request->isAjax && $model->load($_POST)){
+			  Yii::$app->response->format = 'json';
+			  return ActiveForm::validate($model);
+			}else{
+				if ($model->load(Yii::$app->request->post())) {
+					$hsl = Yii::$app->request->post();
+					$tgl = $hsl['DynamicModel']['srcparent'];
+					return $this->redirect(['index', 'tgl'=>$tgl]);
+				}else{			
+					return $this->renderAjax('_formRooms', [
+					'model'=>$model,
+					]);
+				}
+			}
+                  
+		//} # code...
+        /* $post = Yii::$app->request->post();
+        if($post['Pilotproject']['parentpilot'] == 1)
+        {
+          $model = new Pilotproject();
+          $model->scenario = "parent";
+        }else{
+          $model = new Pilotproject();
+          $model->scenario = "child";
+        }
+
+        if(Yii::$app->request->isAjax && $model->load($_POST))
+        {
+          Yii::$app->response->format = 'json';
+          return ActiveForm::validate($model);
+        } */
+    }
 }
