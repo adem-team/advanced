@@ -18,8 +18,8 @@ use mdm\admin\components\MenuHelper;
 use yii\bootstrap\Modal;
 use lukisongroup\assets\AppAssetChat;
 AppAssetChat::register($this);
-use machour\yii2\notifications\widgets\NotificationsWidget;
-use common\components\Notification;
+//use machour\yii2\notifications\widgets\NotificationsWidget;
+//use common\components\Notification;
 //use lukisongroup\models\Notification;
 //AppAsset::register($this);
 dmstr\web\AdminLteAsset::register($this);
@@ -66,7 +66,7 @@ $this->title = 'LukisonGroup.com';
 	 *	'theme' => NotificationsWidget::THEME_NOTY,
 	 *	'theme' => NotificationsWidget::THEME_GROWL,
 	*/
-	NotificationsWidget::widget([
+	/* NotificationsWidget::widget([
 		'theme' => NotificationsWidget::THEME_NOTIFIT,
 		 'clientOptions' => [
 			'location' => 'id',
@@ -80,7 +80,7 @@ $this->title = 'LukisonGroup.com';
 			  'size' => 'large',
 		  ],
 		'listSelector' => '#notifications',
-	]);			 
+	]);		 */	 
 
 ?>
 <?php $this->beginPage() ?>
@@ -91,7 +91,7 @@ $this->title = 'LukisonGroup.com';
 			<meta name="viewport" content="width=device-width, initial-scale=1">
 			<?= Html::csrfMetaTags() ?>
 			<title><?= Html::encode($this->title) ?></title>
-			<script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+			
             <!-- tambahan variable untuk template Author: --ptr.nov-- !-->
             <title><?= Html::encode($this->sideMenu) ?></title>
             <title><?= Html::encode($this->sideCorp) ?></title>

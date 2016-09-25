@@ -197,4 +197,9 @@ public function actionGetdata()
 }
 
 
+	public function actionLogin(){
+		return $this->render('test');
+		//echo "ok";
+	}
+
 }
