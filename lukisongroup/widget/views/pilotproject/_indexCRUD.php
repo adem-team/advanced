@@ -5,6 +5,33 @@ use yii\bootstrap\Modal;
 use yii\web\JsExpression;
 use ptrnov\fullcalendar\FullcalendarScheduler;
 
+//  function buildTree( $ar, $pid = 0 ) {
+//     $op = array();
+//     foreach( $ar as $item ) {
+//         if( $item['PARENT'] == $pid ) {
+//             $op[] = [
+//                 'id' => $item['ID'],
+//                 'title' => $item['PILOT_NM']
+//                 ];
+           
+//             // using recursion
+//             $children =  buildTree( $ar, $item['ID'] );
+//             if( $children ) {
+//                 $op['children'] = $children;
+//             }
+//         }
+//     }
+//     return $op;
+// }
+
+// $sql = 'select PARENT,ID ,PILOT_NM,CREATED_BY as title from sc0001 ORDER BY SORT';
+//         $ary = Yii::$app->db_widget->createCommand($sql)->queryAll();
+
+//   $aryResource = buildTree($ary, $pid = 0);
+  // print_r($aryResource);
+  // die();
+  
+
 /* $personalUser=Yii::$app->getUserOpt->Profile_user();
 print_r($personalUser	); */
  /* $JSCode = <<<EOF
@@ -119,29 +146,31 @@ EOF; */
 				], 
 			
 			],
-			'resourceAreaWidth'=>'30%',
-			'resourceLabelText' => 'Discriptions',
-			'resourceGroupField'=> 'srcparent',
-			'resourceColumns'=>[					
-					[
-						'labelText'=>'Rooms',
-						'field'=> 'title',
-						'width'=>'150px',
-						'align'=>'left',
-					],
-					[
-						'labelText'=> 'Department',
-						'field'=> 'title',
-						'width'=>'150px',
-						'align'=>'center',
-					],
-					[
-						'labelText'=> 'CreateBy',
-						'field'=> 'createby',
-						'width'=>'100px',
-						'align'=>'center',
-					]
-			],			
+			//'resources'=> \yii\helpers\Url::to(['pilotproject/render-data-resources', 'id' => 1]),
+			//'events'=> \yii\helpers\Url::to(['pilotproject/render-data-events', 'id' => 2]),
+			// 'resourceAreaWidth'=>'30%',
+			// 'resourceLabelText' => 'Discriptions',
+			 'resourceGroupField'=> 'srcparent',
+			// 'resourceColumns'=>[					
+			// 		[
+			// 			'labelText'=>'Rooms',
+			// 			'field'=> 'title',
+			// 			'width'=>'150px',
+			// 			'align'=>'left',
+			// 		],
+			// 		[
+			// 			'labelText'=> 'Department',
+			// 			'field'=> 'title',
+			// 			'width'=>'150px',
+			// 			'align'=>'center',
+			// 		],
+			// 		[
+			// 			'labelText'=> 'CreateBy',
+			// 			'field'=> 'createby',
+			// 			'width'=>'100px',
+			// 			'align'=>'center',
+			// 		]
+			// ],			
 		],	
 	
 	]);

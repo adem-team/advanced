@@ -9,6 +9,11 @@ class Pilotproject extends \yii\db\ActiveRecord
     /*checkvalidation */
     const SCENARIO_CHILD = 'child';
 
+    /*checkvalidation */
+    const SCENARIO_PARENT_ROOMS = 'parentrooms';
+    /*checkvalidation */
+    const SCENARIO_CHILD_ROOMS = 'childrooms';
+
     public $parentpilot;
     public static function tableName()
     {
@@ -23,6 +28,8 @@ class Pilotproject extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+             [['PILOT_NM'], 'required','on'=>self::SCENARIO_PARENT_ROOMS],
+             [['PILOT_NM','PARENT'], 'required','on'=>self::SCENARIO_CHILD_ROOMS],
             // [['PILOT_NM','STATUS','PLAN_DATE1','PLAN_DATE2'], 'required'],
             [['PILOT_NM','DESTINATION_TO','DSCRP','TYPE'], 'required','on'=>self::SCENARIO_PARENT],
              [['PILOT_NM','PARENT','DESTINATION_TO','DSCRP','TYPE'], 'required','on'=>self::SCENARIO_CHILD],
@@ -60,4 +67,6 @@ class Pilotproject extends \yii\db\ActiveRecord
             'DEP_SUB_ID'=>'DEP_SUB'
         ];
     }
+
+ 
 }
