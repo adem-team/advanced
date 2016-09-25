@@ -4,7 +4,7 @@ namespace lukisongroup\widget\controllers;
 
 use Yii;
 use lukisongroup\widget\models\Pilotproject;
-use lukisongroup\widget\models\Projectdest;
+use lukisongroup\widget\models\Postpilot;
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\esm\models\Kategoricus;
 use lukisongroup\widget\models\PilotprojectSearch;
@@ -16,23 +16,36 @@ use yii\web\Response;
 use yii\widgets\ActiveForm;
 use yii\helpers\Json;
 use yii\data\ArrayDataProvider;
+use yii\filters\ContentNegotiator;
 
 /**
  * PilotprojectController implements the CRUD actions for Pilotproject model.
  */
 class PilotprojectController extends Controller
 {
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
+	public function behaviors()    {
+        return ArrayHelper::merge(parent::behaviors(), [           
+			'bootstrap'=> [
+				'class' => ContentNegotiator::className(),
+				'formats' => [
+					'application/json' => Response::FORMAT_JSON,'charset' => 'UTF-8',
+				],
+				'languages' => [
+					'en',
+					'de',
+				],
+			],	
+			'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
                 ],
-            ],
-        ];
+            ],			
+			
+        ]);
+		
     }
+   
 
     /**
      * Lists all Pilotproject models.
@@ -236,7 +249,8 @@ class PilotprojectController extends Controller
     **/
     public function get_aryParent()
     {
-        return ArrayHelper::map(Pilotproject::find()->where('PARENT = 0 AND STATUS<>1')->all(),'ID','PILOT_NM');
+         $dep = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+        return ArrayHelper::map(Pilotproject::find()->where('PARENT = 0 AND STATUS<>1')->andwhere(['DEP_ID'=>$dep])->all(),'ID','PILOT_NM');
     }
 
     /**
@@ -256,6 +270,32 @@ class PilotprojectController extends Controller
         }else{
           $model = new Pilotproject();
           $model->scenario = "child";
+        }
+
+        if(Yii::$app->request->isAjax && $model->load($_POST))
+        {
+          Yii::$app->response->format = 'json';
+          return ActiveForm::validate($model);
+        }
+      }
+
+       /**
+     * validasi ajax in page form_pilot
+     * @author wawan
+     * @since 1.1.0
+     * @return mixed
+     */
+      public function actionValidPilot()
+      {
+        # code...
+        $post = Yii::$app->request->post();
+        if($post['Pilotproject']['parentpilot'] == 1)
+        {
+          $model = new Pilotproject();
+          $model->scenario = "parentrooms";
+        }else{
+          $model = new Pilotproject();
+          $model->scenario = "childrooms";
         }
 
         if(Yii::$app->request->isAjax && $model->load($_POST))
@@ -688,99 +728,140 @@ class PilotprojectController extends Controller
 	
 	public function actionRenderDataEvents()
     {
-		$aryEvent=[
-				['id' => '1', 'resourceId' => 'b', 'start' => '2016-05-07T02:00:00', 'end' => '2016-05-07T07:00:00', 'title' => 'event 1'],
-				['id' => '2', 'resourceId' => 'c', 'start' => '2016-05-07T05:00:00', 'end' => '2016-05-07T22:00:00', 'title' => 'event 2'],
-				['id' => '3', 'resourceId' => 'd', 'start' => '2016-05-06', 'end' => '2016-05-08', 'title' => 'event 3'],
-				['id' => '4', 'resourceId' => 'e', 'start' => '2016-05-07T03:00:00', 'end' => '2016-05-07T08:00:00', 'title' => 'event 4'],
-				['id' => '5', 'resourceId' => 'f', 'start' => '2016-05-07T00:30:00', 'end' => '2016-05-07T02:30:00', 'title' => 'event 5'],
-		];
+      $aryEvent = Pilotproject::find()->orderBy('SORT')->all();
+		// $aryEvent=[
+		// 		['id' => '1', 'resourceId' => 'b', 'start' => '2016-05-07T02:00:00', 'end' => '2016-05-07T07:00:00', 'title' => 'event 1'],
+		// 		['id' => '2', 'resourceId' => 'c', 'start' => '2016-05-07T05:00:00', 'end' => '2016-05-07T22:00:00', 'title' => 'event 2'],
+		// 		['id' => '3', 'resourceId' => 'd', 'start' => '2016-05-06', 'end' => '2016-05-08', 'title' => 'event 3'],
+		// 		['id' => '4', 'resourceId' => 'e', 'start' => '2016-05-07T03:00:00', 'end' => '2016-05-07T08:00:00', 'title' => 'event 4'],
+		// 		['id' => '5', 'resourceId' => 'f', 'start' => '2016-05-07T00:30:00', 'end' => '2016-05-07T02:30:00', 'title' => 'event 5'],
+		// ];
 		
 		return Json::encode($aryEvent);
 	}
+
+  
+ 
+   public function buildTree($ar,$pid) {
+    $op = array();
+    foreach( $ar as $item ) {
+        if( $item['PARENT'] == $pid ) {
+            $op[] = [
+                'id'=> $item['id'],
+                'srcparent'=>$item['title'],
+                'createby'=>$item['CREATED_BY'],
+                'title' => $item['title']
+                ];
+           
+            // using recursion
+            $children = self::buildTree($ar,$item['id']);
+            if( $children ) {
+                $op[]['children'] = $children;
+            }
+        }
+        
+    }
+    return $op;
+}
+
 	
 	public function actionRenderDataResources()
     {
-		$aryResource=[
-				['id' => 'a', 'srcparent'=>'Penutupan FT', 'createby'=>'piter@lukicon.com', 'title' => 'Daily Report','eventColor' => 'green'],
-				['id' => 'b', 'srcparent'=>'Penutupan FT', 'createby'=>'piter@lukicon.com', 'title' => 'Auditorium B', 'eventColor' => 'green'],
-				['id' => 'c', 'srcparent'=>'Penutupan FT', 'createby'=>'piter@lukicon.com', 'title' => 'Auditorium C', 'eventColor' => 'orange'],
-				/* [
-					'id'       => 'd', 'srcparent'=>'1','title' => 'Auditorium D',
-					'children' => [
-						['id' => 'd1', 'srcparent'=>'1','title' => 'Room D1',
-							'children' => [
-								['id' => 'd1a', 'srcparent'=>'1','title' => 'Room D1a'],
-								['id' => 'd1a', 'srcparent'=>'1','title' => 'Room D1a'],
-								['id' => 'd2b', 'srcparent'=>'1','title' => 'Room D2b'],
-							],
-						],
-						['id' => 'd2', 'title' => 'Room D2'],
-					],
-				], */
-				['id' => 'e', 'srcparent'=>'Penutupan FT', 'createby'=>'piter@lukicon.com', 'title' => 'Auditorium E'],
-				['id' => 'f', 'srcparent'=>'Penutupan FT', 'createby'=>'piter@lukicon.com', 'title' => 'Auditorium F', 'eventColor' => 'red'],
-				['id' => 'g', 'srcparent'=>'Sales Event','title' => 'Auditorium G'],
-				['id' => 'h', 'srcparent'=>'Sales Event','title' => 'Auditorium H'],
-				['id' => 'i', 'srcparent'=>'Sales Event','title' => 'Auditorium I'],
-				['id' => 'j', 'srcparent'=>'Sales Event','title' => 'Auditorium J'],
-				['id' => 'k', 'srcparent'=>'Sales Event','title' => 'Auditorium K'],
-				['id' => 'l', 'srcparent'=>'Sales Event','title' => 'Auditorium L'],
-				['id' => 'm', 'srcparent'=>'Sales Event','title' => 'Auditorium M'],
-				['id' => 'n', 'srcparent'=>'Sales Event','title' => 'Auditorium N'],
-				['id' => 'o', 'srcparent'=>'Sales Event','title' => 'Auditorium O'],
-				['id' => 'p', 'srcparent'=>'Sales Event','title' => 'Auditorium P'],
-				['id' => 'q', 'srcparent'=>'Sales Event','title' => 'Auditorium Q'],
-				['id' => 'r', 'srcparent'=>'Sales Event','title' => 'Auditorium R'],
-				['id' => 's', 'srcparent'=>'Sales Event','title' => 'Auditorium S'],
-				['id' => 't', 'srcparent'=>'Sales Event','title' => 'Auditorium T'],
-				['id' => 'u', 'srcparent'=>'Sales Event','title' => 'Auditorium U'],
-				['id' => 'v', 'srcparent'=>'Daily Report','title' => 'Auditorium V'],
-				['id' => 'w', 'srcparent'=>'Daily Report','title' => 'Auditorium W'],
-				['id' => 'x', 'srcparent'=>'Daily Report','title' => 'Auditorium X'],
-				['id' => 'y', 'srcparent'=>'Daily Report','title' => 'Auditorium Y'],
-				['id' => 'z', 'srcparent'=>'Daily Report','title' => 'Auditorium Z'],
-			];
+
+
+      $sql = 'select PARENT,ID as id ,PILOT_NM as title,CREATED_BY from sc0001';
+        $ary = Yii::$app->db_widget->createCommand($sql)->queryAll();
+
+        // print_r($ary);
+
+        // $aryResource = self::buildTree($ary,0);
+        // print_r($aryResource);
+
+        $aryResource = $ary;
+
+         $aryR = self::buildTree($ary,0);
+        //print_r($aryR);
+        // print_r($aryResource);
+
+  
+
+       // $aryResource = Pilotproject::find()->orderBy('SORT')->all();
+		   
+        
+
+        // [
+        //   'id'       => 'd', 'srcparent'=>'Grp test1','createby'=>'syaka','title' => 'room D',
+        //   'children' => [
+        //     ['id' => 'd1', 'srcparent'=>'Grp test1','createby'=>'syaka','title' => 'Room D1',
+        //       'children' => [
+        //         ['id' => 'd1a', 'srcparent'=>'Grp test1','createby'=>'syaka','title' => 'Room D1a'],
+        //         ['id' => 'd1a', 'srcparent'=>'Grp test1','createby'=>'syaka','title' => 'Room D1a'],
+        //         ['id' => 'd2b', 'srcparent'=>'Grp test1','createby'=>'syaka','title' => 'Room D2b'],
+        //       ],
+        //     ],
+        
 		
-		return Json::encode($aryResource);
+		return Json::encode($aryR);
 	}
+
+    public function actionRoomForm(){
+
+        $model = new Pilotproject();
+
+        if ($model->load(Yii::$app->request->post())){
+
+            $model->DEP_ID = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+            $model->CREATED_BY =  Yii::$app->getUserOpt->Profile_user()->emp->EMP_NM;
+            $model->save();
+           
+        }else{
+          return $this->renderAjax('_formRooms', [
+               'model'=>$model,
+               'data'=>self::get_aryParent()
+            ]);
+        }
+
+    }
+
+
+  
 	
-	public function actionRoomForm(){
+	// public function actionRoomForm(){
 
-		/* if ($model->load(Yii::$app->request->post())){
-            $model->DEP_ID =  Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;                 
-            $model->CREATED_BY= Yii::$app->user->identity->username;     
-            $model->UPDATED_TIME = date('Y-m-d h:i:s');               
+	// 	 if ($model->load(Yii::$app->request->post())){
+ //            $model->DEP_ID =  Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;                 
+ //            $model->CREATED_BY= Yii::$app->user->identity->username;     
+ //            $model->UPDATED_TIME = date('Y-m-d h:i:s');               
 
-               $transaction = Pilotproject::getDb()->beginTransaction();
-                    try {
-                          $model->save();
-                        // ...other DB operations...
-                        $transaction->commit();
-                    } catch(\Exception $e) {
-                        $transaction->rollBack();
-                        throw $e;
-                    }      
+ //               $transaction = Pilotproject::getDb()->beginTransaction();
+ //                    try {
+ //                          $model->save();
+ //                        // ...other DB operations...
+ //                        $transaction->commit();
+ //                    } catch(\Exception $e) {
+ //                        $transaction->rollBack();
+ //                        throw $e;
+ //                    }      
 
-            return $this->redirect('index');
+ //            return $this->redirect('index');
                 
-        }else { */
-			$model = new \yii\base\DynamicModel(['klikparent','srcparent']);
-			$model->addRule(['klikparent','srcparent'], 'safe');
-			if(Yii::$app->request->isAjax && $model->load($_POST)){
-			  Yii::$app->response->format = 'json';
-			  return ActiveForm::validate($model);
-			}else{
-				if ($model->load(Yii::$app->request->post())) {
-					$hsl = Yii::$app->request->post();
-					$tgl = $hsl['DynamicModel']['srcparent'];
-					return $this->redirect(['index', 'tgl'=>$tgl]);
-				}else{			
-					return $this->renderAjax('_formRooms', [
-					'model'=>$model,
-					]);
-				}
-			}
+ //        }else { 
+	// 		$model = new \yii\base\DynamicModel(['klikparent','srcparent']);
+	// 		$model->addRule(['klikparent','srcparent'], 'safe');
+	// 		if(Yii::$app->request->isAjax && $model->load($_POST)){
+	// 		  Yii::$app->response->format = 'json';
+	// 		  return ActiveForm::validate($model);
+	// 		}else{
+	// 			if ($model->load(Yii::$app->request->post())) {
+	// 				$hsl = Yii::$app->request->post();
+	// 				$tgl = $hsl['DynamicModel']['srcparent'];
+	// 				return $this->redirect(['index', 'tgl'=>$tgl]);
+	// 			}else{			
+	// 				return $this->renderAjax('_formRooms', [
+	// 				'model'=>$model,
+	// 				]);
+	// 			}
+	// 		}
                   
 		//} # code...
         /* $post = Yii::$app->request->post();
@@ -798,5 +879,5 @@ class PilotprojectController extends Controller
           Yii::$app->response->format = 'json';
           return ActiveForm::validate($model);
         } */
-    }
+    // }
 }

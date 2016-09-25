@@ -3,6 +3,8 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\DatePicker;
+use kartik\widgets\Select2;
+use yii\helpers\Url;
 ?>
 	
 	<?php
@@ -10,37 +12,51 @@ use kartik\widgets\DatePicker;
 			'id'=> $model->formName(),
 			'enableClientValidation'=> true,
 			'enableAjaxValidation'=>true,
-			//'validationUrl'=>Url::toRoute('/widget/pilotproject/room-form')
+			'validationUrl'=>Url::toRoute('/widget/pilotproject/valid-pilot')
 		]);
 	?>
 	<div>
-	<?=$form->field($model,'klikparent')->checkbox(['id'=>'test123']) ?>
+	<?=$form->field($model,'parentpilot')->checkbox() ?>
 	</div>
+
 	<div id='tampilkan'>
-		<?=$form->field($model, 'srcparent')->textInput()->label('Tanggal')  ?>		
-		
+	 <?= $form->field($model, 'PARENT')->widget(Select2::classname(), [
+        'data' => $data,
+        'options' => [
+        'id'=>'pilotproject-parent',
+        'placeholder' => 'Pilih...'],
+        'pluginOptions' => [
+            'allowClear' => true
+             ],
+
+    ]);
+    ?>			
 	</div>
+
+	<?=$form->field($model, 'PILOT_NM')->textInput()  ?>	
 		
 	<div style="text-align: right;"">
 		<?php echo Html::submitButton('Submit',['class' => 'btn btn-primary']); ?>
 	</div>
 	<?php ActiveForm::end(); ?>	
 <?php	
-	$this->registerJs("
-		$('#test123').click(function(){
-		 var checkedValue = $('#test123:checked').val();
+$this->registerJs("
 
-		  if(checkedValue == 1)
-		  {
-			$('#tampilkan').hide();
-		  }
-		  else
-		  {
-			  $('#tampilkan').show();
-		  }
+	$('#pilotproject-parentpilot').click(function(){
+	 var checkedValue = $('#pilotproject-parentpilot:checked').val();
 
-		});
-	",$this::POS_READY);
+	  if(checkedValue == 1)
+	  {
+	    $('#tampilkan').hide();
+	  }
+	  else
+	  {
+	      $('#tampilkan').show();
+	  }
+
+	});
+
+ ",$this::POS_READY);
 ?>
 
 
