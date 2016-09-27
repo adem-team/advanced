@@ -457,6 +457,27 @@ class PilotprojectController extends Controller
 
     }
 
+
+public function actionSaveEvent(){
+     if (Yii::$app->request->isAjax) {
+            $request= Yii::$app->request;
+            $event=$request->post('event');
+
+            $model = new Pilotproject();
+            $model->DEP_ID = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+            $model->CREATED_BY =  Yii::$app->getUserOpt->Profile_user()->emp->EMP_NM;
+            $pilot_id = Yii::$app->ambilkonci->getpilot($model->DEP_ID);
+            $model->PILOT_ID = $pilot_id;     
+            $model->PARENT = 0;
+            $sql = Pilotproject::find()->max('ID');                               
+            $model->SORT = $sql+1;
+            $model->PILOT_NM = $event;
+            $model->save();
+            return true;
+        }
+
+    }
+
     /**
      * Deletes an existing Pilotproject model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -702,16 +723,76 @@ class PilotprojectController extends Controller
 
     }
 		
-	public function actionDragableReceive($start,$end,$color){
-		//id new increment
-		echo " START=".$start." END=".$end," color=".$color;
-        //$model = Pilotproject::findOne(['ID'=>$id]);
+	public function actionDragableReceive($start,$end){
+		$model = new Pilotproject();
 
-        //$model->PLAN_DATE1 = $start;
-        //$model->PLAN_DATE2 = $end;
+        $post =Yii::$app->request->post();
+        $val = $post['Pilotproject']['parentpilot'];
 
-       // $model->save();
+        $gv_id = Yii::$app->getUserOpt->Profile_user()->emp->GF_ID;
+        
+        if ($model->load(Yii::$app->request->post())){
+            $model->DEP_ID =  Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+            // if($model->TYPE == 0)
+            // {
+            //   $model->DEP_ID = 'none';
+            // }else{
+            //   $model->DEP_ID =  Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+            // }
+            
+            if($val == 1)
+            {
+                $newdata = implode(",",$model->USER_CC);
 
+                $model->USER_CC = $newdata;
+
+                $newdata1 = implode(",",$model->DEP_SUB_ID);
+
+                $model->DEP_SUB_ID = $newdata1;
+                // $model->PLAN_DATE1 = $tgl1;
+                // $model->PLAN_DATE2 = $tgl2;
+                $pilot_id = Yii::$app->ambilkonci->getpilot($model->DEP_ID);
+                $model->PILOT_ID = $pilot_id;     
+                $model->PARENT = 0;
+                $sql = Pilotproject::find()->max('ID');                               
+                $model->SORT = $sql+1;
+            }else{
+                $newdata = implode(",",$model->USER_CC);
+
+                $model->USER_CC = $newdata;
+                // $model->PLAN_DATE1 = $tgl1;
+                // $model->PLAN_DATE2 = $tgl2;
+                $model->SORT = $model->PARENT;
+                $model->PILOT_ID = '';
+            }
+           
+            $model->CREATED_BY= Yii::$app->user->identity->username;     
+            $model->UPDATED_TIME = date('Y-m-d h:i:s');               
+
+               $transaction = Pilotproject::getDb()->beginTransaction();
+                    try {
+                          $model->save();
+                        // ...other DB operations...
+                        $transaction->commit();
+                    } catch(\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
+                    }      
+
+            return $this->redirect('index');
+                
+        }else {
+           
+            return $this->renderAjax('form_pilot', [
+                'model' => $model,
+                'parent' => self::get_aryParent(),
+                'dropemploy'=>self::get_aryEmploye(),
+                'tgl'=>$start,
+                'tgl_1'=> $end,
+                'model1'=>$model1,
+                'dep'=>self::get_aryDep_sub()
+            ]);
+        } 
     }
 	
 	public function actionDragableDrop($start,$end,$object){
@@ -726,9 +807,26 @@ class PilotprojectController extends Controller
 
     }
 	
-	public function actionRenderDataEvents()
+	public function actionRenderDataEvents($start,$end)
     {
-      $aryEvent = Pilotproject::find()->orderBy('SORT')->all();
+            
+        $end_1 = strtotime($end);
+        $dep_id1 = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+         $emp_id = Yii::$app->getUserOpt->Profile_user()->emp->EMP_ID;
+         $gf_id = Yii::$app->getUserOpt->Profile_user()->emp->GF_ID;
+
+            if($gf_id <= 4)
+            {
+                $sql = "select ID as id,PILOT_ID as resourceId, PLAN_DATE1 as start , PLAN_DATE2 as end, PILOT_NM as title from sc0001 where DEP_ID = '".$dep_id1."' and UNIX_TIMESTAMP(PLAN_DATE2) ='".$end_1."'";
+            }else{
+                $sql = "select PLAN_DATE1 as start , PLAN_DATE2 as end, PILOT_NM as title from sc0001 where DESTINATION_TO = '".$emp_id."'";
+
+            }
+      // $aryEvent = Pilotproject::find()->orderBy('SORT')->all();
+
+        
+
+        $aryEvent =  Yii::$app->db_widget->createCommand($sql)->queryAll();
 		// $aryEvent=[
 		// 		['id' => '1', 'resourceId' => 'b', 'start' => '2016-05-07T02:00:00', 'end' => '2016-05-07T07:00:00', 'title' => 'event 1'],
 		// 		['id' => '2', 'resourceId' => 'c', 'start' => '2016-05-07T05:00:00', 'end' => '2016-05-07T22:00:00', 'title' => 'event 2'],
@@ -741,85 +839,81 @@ class PilotprojectController extends Controller
 	}
 
   
- 
-   public function buildTree($ar,$pid) {
-    $op = array();
-    foreach( $ar as $item ) {
-        if( $item['PARENT'] == $pid ) {
-            $op[] = [
-                'id'=> $item['id'],
-                'srcparent'=>$item['title'],
-                'createby'=>$item['CREATED_BY'],
-                'title' => $item['title']
-                ];
-           
-            // using recursion
-            $children = self::buildTree($ar,$item['id']);
-            if( $children ) {
-                $op[]['children'] = $children;
-            }
-        }
-        
-    }
-    return $op;
-}
 
 	
 	public function actionRenderDataResources()
     {
-
-
-      $sql = 'select PARENT,ID as id ,PILOT_NM as title,CREATED_BY from sc0001';
+         $dep_id1 = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+         $emp_id = Yii::$app->getUserOpt->Profile_user()->emp->EMP_ID;
+         $gf_id = Yii::$app->getUserOpt->Profile_user()->emp->GF_ID;
+         if( $gf_id <= 4)
+         {
+           
+            $sql ="SELECT a.PILOT_NM as srcparent ,b.PILOT_NM as title ,b.DEP_ID as dep_id,b.CREATED_BY as createby
+                FROM sc0001 AS a 
+                INNER JOIN sc0001 AS b 
+                WHERE a.ID=b.SORT and b.DEP_ID='".$dep_id1."'";
+        }else{
+             
+             $sql ="SELECT a.PILOT_NM as srcparent ,b.PILOT_NM as title ,b.DEP_ID as dep_id,b.CREATED_BY as createby
+                FROM sc0001 AS a 
+                INNER JOIN sc0001 AS b 
+                WHERE a.ID=b.SORT and b.DESTINATION_TO='".$emp_id."'";
+        }
+            
+          
         $ary = Yii::$app->db_widget->createCommand($sql)->queryAll();
 
-        // print_r($ary);
-
-        // $aryResource = self::buildTree($ary,0);
-        // print_r($aryResource);
-
-        $aryResource = $ary;
-
-         $aryR = self::buildTree($ary,0);
-        //print_r($aryR);
-        // print_r($aryResource);
-
-  
-
-       // $aryResource = Pilotproject::find()->orderBy('SORT')->all();
-		   
-        
-
-        // [
-        //   'id'       => 'd', 'srcparent'=>'Grp test1','createby'=>'syaka','title' => 'room D',
-        //   'children' => [
-        //     ['id' => 'd1', 'srcparent'=>'Grp test1','createby'=>'syaka','title' => 'Room D1',
-        //       'children' => [
-        //         ['id' => 'd1a', 'srcparent'=>'Grp test1','createby'=>'syaka','title' => 'Room D1a'],
-        //         ['id' => 'd1a', 'srcparent'=>'Grp test1','createby'=>'syaka','title' => 'Room D1a'],
-        //         ['id' => 'd2b', 'srcparent'=>'Grp test1','createby'=>'syaka','title' => 'Room D2b'],
-        //       ],
-        //     ],
-        
 		
-		return Json::encode($aryR);
+		return Json::encode($ary);
 	}
 
     public function actionRoomForm(){
 
         $model = new Pilotproject();
+         $post =Yii::$app->request->post();
+        $val = $post['Pilotproject']['parentpilot'];
 
         if ($model->load(Yii::$app->request->post())){
+
+            if($val == 1){
+                $dep_id = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+                $pilot_id = Yii::$app->ambilkonci->getpilot($dep_id);
+                $model->PILOT_ID = $pilot_id;     
+                $model->PARENT = 0;
+                $sql = Pilotproject::find()->max('ID');                               
+                $model->SORT = $sql+1;
+            }else{
+                $model->SORT = $model->PARENT;
+                $model->PILOT_ID = '';
+            }
 
             $model->DEP_ID = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
             $model->CREATED_BY =  Yii::$app->getUserOpt->Profile_user()->emp->EMP_NM;
             $model->save();
+
+             return $this->redirect('index');
            
         }else{
           return $this->renderAjax('_formRooms', [
                'model'=>$model,
-               'data'=>self::get_aryParent()
+               'data'=>self::get_aryParent(),
+               'dropemploy'=>self::get_aryEmploye(),
             ]);
         }
+
+    }
+
+
+    public function actionJsonevent(){
+
+
+
+     $sql = 'select PILOT_NM as title,ID as id, PLAN_DATE1 as start,PLAN_DATE2 as end from sc0001 where PARENT<>0 ';
+
+      $data = Yii::$app->db_widget->createCommand($sql)->queryAll();
+
+        echo json_encode($data);
 
     }
 
