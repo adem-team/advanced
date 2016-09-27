@@ -9,12 +9,16 @@ class Pilotproject extends \yii\db\ActiveRecord
     /*checkvalidation */
     const SCENARIO_CHILD = 'child';
 
+
+
     /*checkvalidation */
     const SCENARIO_PARENT_ROOMS = 'parentrooms';
     /*checkvalidation */
     const SCENARIO_CHILD_ROOMS = 'childrooms';
 
     public $parentpilot;
+    public $srcparent;
+    public $title;
     public static function tableName()
     {
         return 'sc0001';
@@ -28,8 +32,8 @@ class Pilotproject extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-             [['PILOT_NM'], 'required','on'=>self::SCENARIO_PARENT_ROOMS],
-             [['PILOT_NM','PARENT'], 'required','on'=>self::SCENARIO_CHILD_ROOMS],
+             [['PILOT_NM','PLAN_DATE2','PLAN_DATE1','DESTINATION_TO'], 'required','on'=>self::SCENARIO_PARENT_ROOMS],
+             [['PILOT_NM','PARENT','PLAN_DATE2','PLAN_DATE1','DESTINATION_TO'], 'required','on'=>self::SCENARIO_CHILD_ROOMS],
             // [['PILOT_NM','STATUS','PLAN_DATE1','PLAN_DATE2'], 'required'],
             [['PILOT_NM','DESTINATION_TO','DSCRP','TYPE'], 'required','on'=>self::SCENARIO_PARENT],
              [['PILOT_NM','PARENT','DESTINATION_TO','DSCRP','TYPE'], 'required','on'=>self::SCENARIO_CHILD],
@@ -41,6 +45,8 @@ class Pilotproject extends \yii\db\ActiveRecord
 			[['CREATED_BY','UPDATED_BY'], 'string', 'max' => 50]			
         ];
     }
+
+    
 
     public function attributeLabels()
     {

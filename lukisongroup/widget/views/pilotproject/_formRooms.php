@@ -5,6 +5,7 @@ use yii\helpers\ArrayHelper;
 use kartik\widgets\DatePicker;
 use kartik\widgets\Select2;
 use yii\helpers\Url;
+use kartik\widgets\DateTimePicker;
 ?>
 	
 	<?php
@@ -33,7 +34,42 @@ use yii\helpers\Url;
     ?>			
 	</div>
 
-	<?=$form->field($model, 'PILOT_NM')->textInput()  ?>	
+	<?=$form->field($model, 'PILOT_NM')->textInput()  ?>
+
+	<?= $form->field($model, 'PLAN_DATE1')->widget(DateTimePicker::classname(), [
+    'options' => ['placeholder' => 'Enter date ...'],
+    'pluginOptions' => [
+        'autoclose'=>true
+    ],
+    'pluginEvents' => [
+                      'show' => "function(e) {show}",
+    ],
+]);?>
+
+  
+
+ <?= $form->field($model, 'PLAN_DATE2')->widget(DateTimePicker::classname(), [
+    'options' => ['placeholder' => 'Enter date ...'],
+    'pluginOptions' => [
+        'autoclose'=>true
+    ],
+    'pluginEvents' => [
+                      'show' => "function(e) {show}",
+    ],
+]);?>
+
+    
+
+<?= $form->field($model, 'DESTINATION_TO')->widget(Select2::classname(), [
+         'data' => $dropemploy,
+        'options' => [
+//            'id'=>'parent',
+        'placeholder' => 'Pilih Karyawan ...'],
+        'pluginOptions' => [
+            'allowClear' => true
+             ],
+        
+    ]);?>	
 		
 	<div style="text-align: right;"">
 		<?php echo Html::submitButton('Submit',['class' => 'btn btn-primary']); ?>

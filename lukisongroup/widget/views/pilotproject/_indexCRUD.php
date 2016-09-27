@@ -4,32 +4,9 @@ use yii\helpers\Url;
 use yii\bootstrap\Modal;
 use yii\web\JsExpression;
 use ptrnov\fullcalendar\FullcalendarScheduler;
+use lukisongroup\widget\models\Pilotproject;
+use yii\helpers\ArrayHelper;
 
-//  function buildTree( $ar, $pid = 0 ) {
-//     $op = array();
-//     foreach( $ar as $item ) {
-//         if( $item['PARENT'] == $pid ) {
-//             $op[] = [
-//                 'id' => $item['ID'],
-//                 'title' => $item['PILOT_NM']
-//                 ];
-           
-//             // using recursion
-//             $children =  buildTree( $ar, $item['ID'] );
-//             if( $children ) {
-//                 $op['children'] = $children;
-//             }
-//         }
-//     }
-//     return $op;
-// }
-
-// $sql = 'select PARENT,ID ,PILOT_NM,CREATED_BY as title from sc0001 ORDER BY SORT';
-//         $ary = Yii::$app->db_widget->createCommand($sql)->queryAll();
-
-//   $aryResource = buildTree($ary, $pid = 0);
-  // print_r($aryResource);
-  // die();
   
 
 /* $personalUser=Yii::$app->getUserOpt->Profile_user();
@@ -47,10 +24,19 @@ print_r($personalUser	); */
 	}
 EOF; */
 
+
+
 $JSEventClick = <<<EOF
 	function(calEvent, jsEvent, view) {
 		alert('test');
 	}
+EOF;
+
+$view = <<<EOF
+	function(view, element) {
+        console.log("The view's title is " + view.intervalStart.format());
+        console.log("The view's title is " + view.name);
+    }
 EOF;
 
 $JSaddButtonRooms = <<<EOF
@@ -95,7 +81,7 @@ EOF; */
 			'modal-size'=>'modal-lg'										//size of modal (modal-xs,modal-sm,modal-sm,modal-lg).
 		],
 		'header'        => [
-			'left'   => 'details, today prev,next',
+			'left'   => 'details, today, prev,next',
 			'center' => 'title',
 			'right'  => 'timelineOneDays,agendaWeek,month,listWeek',
 		],
@@ -115,10 +101,11 @@ EOF; */
 			'customButtons'=>[ //additional button
 				'details'=>[
 					'text'=>'Rooms',
-						'click'=>new JsExpression($JSaddButtonRooms)
+						'click'=>new JsExpression($JSaddButtonRooms),
 				]
 			],
 			 'timezone'=> 'local',
+			 // 'viewRender'=> new JsExpression($view),
 			//'language'=>'id',
 			 // 'locale'=>'id',
 			// 'isRTL'=> true,
@@ -146,31 +133,31 @@ EOF; */
 				], 
 			
 			],
-			//'resources'=> \yii\helpers\Url::to(['pilotproject/render-data-resources', 'id' => 1]),
-			//'events'=> \yii\helpers\Url::to(['pilotproject/render-data-events', 'id' => 2]),
-			// 'resourceAreaWidth'=>'30%',
-			// 'resourceLabelText' => 'Discriptions',
-			 'resourceGroupField'=> 'srcparent',
-			// 'resourceColumns'=>[					
-			// 		[
-			// 			'labelText'=>'Rooms',
-			// 			'field'=> 'title',
-			// 			'width'=>'150px',
-			// 			'align'=>'left',
-			// 		],
-			// 		[
-			// 			'labelText'=> 'Department',
-			// 			'field'=> 'title',
-			// 			'width'=>'150px',
-			// 			'align'=>'center',
-			// 		],
-			// 		[
-			// 			'labelText'=> 'CreateBy',
-			// 			'field'=> 'createby',
-			// 			'width'=>'100px',
-			// 			'align'=>'center',
-			// 		]
-			// ],			
+			'resources'=> \yii\helpers\Url::to(['pilotproject/render-data-resources', 'id' => 1]),
+			'events'=> \yii\helpers\Url::to(['pilotproject/render-data-events', 'id' => 2]),
+			'resourceAreaWidth'=>'30%',
+			'resourceLabelText' => 'Discriptions',
+			'resourceGroupField'=> 'srcparent',
+			'resourceColumns'=>[					
+					[
+						'labelText'=>'Rooms',
+						'field'=> 'title',
+						'width'=>'150px',
+						'align'=>'left',
+					],
+					[
+						'labelText'=> 'Department',
+						'field'=> 'dep_id',
+						'width'=>'150px',
+						'align'=>'center',
+					],
+					[
+						'labelText'=> 'CreateBy',
+						'field'=> 'createby',
+						'width'=>'100px',
+						'align'=>'center',
+					]
+			],			
 		],	
 	
 	]);
@@ -190,40 +177,43 @@ EOF; */
 
 
 <?php
- $this->registerJs("
-	/* ADDING EVENTS */
-    var currColor = '#3c8dbc'; //Red by default
-    //Color chooser button
-    var colorChooser = $('#color-chooser-btn');
-    $('#color-chooser > li > a').click(function (e) {
-      e.preventDefault();
-      //Save color
-      currColor = $(this).css('color');
-      //Add color effect to button
-      $('#add-new-event').css({'background-color': currColor, 'eventColor': currColor});
-    });
+//  $this->registerJs("
+// 	/* ADDING EVENTS */
+//     var currColor = '#3c8dbc'; //Red by default
+//     //Color chooser button
+//     var colorChooser = $('#color-chooser-btn');
+//     $('#color-chooser > li > a').click(function (e) {
+//       e.preventDefault();
+//       //Save color
+//       currColor = $(this).css('color');
+//       //Add color effect to button
+//       $('#add-new-event').css({'background-color': currColor, 'eventColor': currColor});
+//     });
 
-	$('#add-new-event').click(function (e) {
-      e.preventDefault();
-      //Get value and make sure it is not null
-      var val = $('#new-event').val();
-      if (val.length == 0) {
-        return;
-      }
+// 	$('#add-new-event').click(function (e) {
+//       e.preventDefault();
+//       //Get value and make sure it is not null
+//       var val = $('#new-event').val();
+//       if (val.length == 0) {
+//         return;
+//       }
 
-      //Create events
-      var event = $('<div />');
-      event.css({'background-color': currColor, 'eventColor': currColor, 'color': '#fff'}).addClass('external-event');
-      event.html(val);
-      $('#external-events').prepend(event);
+//       //Create events
+//       var event = $('<div />');
+//       event.css({'background-color': currColor, 'eventColor': currColor, 'color': '#fff'}).addClass('external-event');
+//       event.html(val);
+//       $('#external-events').prepend(event);
 
-      //Add draggable funtionality
-      ini_events(event);
+//       //Add draggable funtionality
+//       ini_events(event);
 
-      //Remove event from text input
-      $('#new-event').val('');
-    });	
-",$this::POS_END);
+//       //Remove event from text input
+//       $('#new-event').val('');
+//     });	
+// ",$this::POS_END);
+
+
+$this->registerJs($this->render('save_external_event.js'),$this::POS_END);
 
 
 /*
@@ -261,22 +251,21 @@ document.addEventListener('DOMContentLoaded', function(event) {
 		 <section class="content">
 			<div class="box box-solid">
 				<div class="box-body">
-					
 						<h5>Draggable Events</h5>
 						<div id='external-events'>
-						<div class='external-event bg-green '>My Event 1</div>
+						<!-- <div class='external-event bg-green '>My Event 1</div>
 						<div class='external-event bg-yellow'>My Event 2</div>
 						<div class='external-event bg-aqua'>My Event 3</div>
 						<div class='external-event bg-light-blue'>My Event 4</div>
 						<div class='external-event bg-red'>My Event 5</div>
 						<div class='external-event bg-aqua'>My Event 3</div>
 						<div class='external-event bg-light-blue'>My Event 4</div>
-						<div class='external-event bg-red'>My Event 5</div>
+						<div class='external-event bg-red'>My Event 5</div> -->
 						
-						<p>
+						<!-- <p>
 							<input type='checkbox' id='drop-remove' />
 							<label for='drop-remove'>remove after drop</label>
-						</p>
+						</p> -->
 					</div>
 				</div>
 			</div>
