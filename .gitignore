@@ -1,3 +1,9 @@
+#Backup app
+/Backup
+
+#dailyBacku
+/DailyBackup
+
 #fullcalender
 /node_modules
 
