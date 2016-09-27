@@ -47,6 +47,7 @@ class PostmanDailySalesmdController extends Controller
 		$x=date('N', strtotime(date("Y-m-d")));		
 		if ($x!=2 or $x!=7){
 			$tglIn=date("Y-m-d");//'2016-09-07';
+			//$tglIn='2016-09-26';
 			//DAILY REPORT INVENTORY SALES
 			$dailySalesReport= new ArrayDataProvider([
 				'key' => 'ID',
@@ -378,6 +379,7 @@ class PostmanDailySalesmdController extends Controller
 		$x=date('N', strtotime(date("Y-m-d")));	 //date to string days	
 		if ($x!=2 or $x!=7){ 					 //off selasa dan minggu
 			$tglIn=date("Y-m-d");
+			//$tglIn='2016-09-26';
 			/*Content template*/
 			// $cusCount=Yii::$app->db_esm->createCommand("
 				// SELECT count(u1.id) as CNT_ALL
