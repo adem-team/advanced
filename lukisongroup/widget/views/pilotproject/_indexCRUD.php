@@ -49,6 +49,17 @@ $JSaddButtonRooms = <<<EOF
 		});
 	}
 EOF;
+
+$JSaddButton= <<<EOF
+	function() {
+		//alert('test');
+		$.get('/widget/pilotproject/modal-row',function(data){
+						$('#modal-rooms').modal('show')
+						.find('#modalContentRooms')
+						.html(data);
+		});
+	}
+EOF;
 /* $JSDropEvent = <<<EOF
 function(event, element, view) {
     var child = event.parent;
@@ -81,7 +92,7 @@ EOF; */
 			'modal-size'=>'modal-lg'										//size of modal (modal-xs,modal-sm,modal-sm,modal-lg).
 		],
 		'header'        => [
-			'left'   => 'details, today, prev,next',
+			'left'   => 'plus,details, today, prev,next',
 			'center' => 'title',
 			'right'  => 'timelineOneDays,agendaWeek,month,listWeek',
 		],
@@ -98,11 +109,17 @@ EOF; */
 			'dragableDropUrl'=>'/widget/pilotproject/dragable-drop',					//dragable, new data, star date, end date, id form increment db
 		],		
 		'clientOptions' => [
+		'theme'=> true,
 			'customButtons'=>[ //additional button
+
 				'details'=>[
 					'text'=>'Rooms',
 						'click'=>new JsExpression($JSaddButtonRooms),
-				]
+				],
+				'plus'=>[
+					'text'=>'Plus',
+						'click'=>new JsExpression($JSaddButton),
+				]	
 			],
 			 'timezone'=> 'local',
 			 // 'viewRender'=> new JsExpression($view),

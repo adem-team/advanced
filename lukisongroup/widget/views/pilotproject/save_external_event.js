@@ -17,48 +17,56 @@
 
   $('.fc-next-button ').click(function(){
      var date =  $('#calendar_test').fullCalendar('getDate').endOf('month');  ;
-     alert(date);
      return false;
   });
 
-   //  function displaydata(){
-   //    $.getJSON('/widget/pilotproject/jsonevent', function(info){
-   //        for (var numero = 0;numero < info.length;numero++) {
-   //          var eventObjectFromDB = info[numero];
-   //          var eventToExternalEvents =                      
-   //                                         {"title":eventObjectFromDB.title,
-   //                              "id":eventObjectFromDB.id,
-   //                              "start":eventObjectFromDB.start,
-   //                                      "end":eventObjectFromDB.end,
-   //                                      // "allDay":eventObjectFromDB.allDay,
-   //                  "editable":true};
+    function displaydata(){
+      $.getJSON('/widget/pilotproject/jsonevent', function(info){
+          for (var numero = 0;numero < info.length;numero++) {
+            var eventObjectFromDB = info[numero];
+            var eventToExternalEvents =                      
+                                           {"title":eventObjectFromDB.title,
+                                "id":eventObjectFromDB.id,
+                                "start":eventObjectFromDB.start,
+                                        "end":eventObjectFromDB.end,
+                                        "color":eventObjectFromDB.color,
+                                        // "allDay":eventObjectFromDB.allDay,
+                    "editable":true};
 
-   // $('#external-events').append("<div class='external-event' id='mec"+numero+"'>"+ eventToExternalEvents.title +"</div>");
-   //          var eventObject2 = {
-   //              title: $.trim(eventToExternalEvents.title) // use the element's text as the event title
-   //          };
-   //          var events = $('#mec'+numero).data('eventObject', eventObject2);
-   //          // alert('#mec'+numero+'');
-   //          // $('.external-event').draggable({
-   //          //   editable: true,
-   //          //     zIndex: 999,
-   //          //     revert: true,      // will cause the event to go back to its
-   //          //     revertDuration: 0  });
-   //          // $('#calendar_test').fullCalendar( 'refetchEvents' );
+                    //Create events
+              var event = $('<div/>');
+              event.css({'background-color': eventToExternalEvents.color, 'eventColor': eventToExternalEvents.color, 'color': '#fff'}).addClass('external-event');
+              event.html(eventToExternalEvents.title);
+              $('#external-events').append(event);
 
-   //          ini_events(events);
-   //       }
-   //    });
-   //  }
+   // $('#external-events').append("<div id='mec"+numero+"'>"+ eventToExternalEvents.title +"</div>").css({'background-color': eventToExternalEvents.color, 'eventColor': eventToExternalEvents.color, 'color': '#fff'}).addClass('external-event');
+            var eventObject2 = {
+                title: $.trim(eventToExternalEvents.title), // use the element's text as the event title
+                
+            };
+            var events = $('#mec'+numero).data('eventObject', eventObject2);
+            // alert('#mec'+numero+'');
+            // $('.external-event').draggable({
+            //   editable: true,
+            //     zIndex: 999,
+            //     revert: true,      // will cause the event to go back to its
+            //     revertDuration: 0  });
+            // $('#calendar_test').fullCalendar( 'refetchEvents' );
 
-   //  $(window).load(function(){
-   //    displaydata();
-   //  })
+            ini_events(event);
+            $('#calendar_test').fullCalendar( 'refetchEvents' );
+         }
+      });
+    }
+
+    $(window).load(function(){
+      displaydata();
+    })
 
     function save(ev){
             $.ajax({
               type:'POST',
-              data:{'event':ev},
+              data:{'event':ev,'color':currColor},
               url:'/widget/pilotproject/save-event',
               success:function(data) {
               //Create events
@@ -73,6 +81,9 @@
         });
   }
 
+
+ 
+
 	$('#add-new-event').click(function (e) {
       e.preventDefault();
       //Get value and make sure it is not null
@@ -80,6 +91,7 @@
       if (val.length == 0) {
         return;
       }
+
 
       // //Create events
       save(val);
