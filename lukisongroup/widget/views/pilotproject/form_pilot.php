@@ -25,16 +25,33 @@ use kartik\widgets\SwitchInput;
         'validationUrl'=>Url::toRoute('/widget/pilotproject/valid')
 
     ]); ?>
-	
+
+   
+  
+    <!-- panel -->
+ <div class="panel panel-primary">
+  <div class="panel-heading"></div>
+    <div class="panel-body">
+
+    <!-- row -->
+	 <div class="row"> 
+        <div class="col-sm-6">
 	 <?= $form->field($model, 'TYPE')->widget(SwitchInput::classname(), [
      'pluginOptions' => [
         'onText' => 'Private',
         'offText' => 'Public',
     ]
    ]) ?>
-
+   </div>
+       <div class="col-sm-6" style="margin-top:3%">
     <?=  $form->field($model, 'parentpilot')->checkbox() ?>
 
+     </div>
+     </div>
+
+
+    <div class="row">
+        <div class="col-sm-6">
     <div id='prnt'>
     <?= $form->field($model, 'PARENT')->widget(Select2::classname(), [
         'data' => $parent,
@@ -55,65 +72,12 @@ use kartik\widgets\SwitchInput;
 	
     <?= $form->field($model, 'DSCRP')->textInput() ?>
 
+    
+    </div>
 
-     <!--  $form->field($model, 'DEP_SUB_ID')->widget(Select2::classname(), [
-         'data' => $dep,
-        'options' => [
-        'placeholder' => 'Pilih  ...'],
-        'pluginOptions' => [
-            'allowClear' => true,
-            'multiple'=>true
-             ],
-        
-    ]);?> -->
+    <div class="col-sm-6">
 
-    <?php
-     $options = [
-        'multiple' => true,
-        // 'size' => 100,
-    ];
-    // echo $form->field($model, $attribute)->listBox($items, $options);
-    echo $form->field($model, 'DEP_SUB_ID')->widget(DualListbox::className(),[
-        'items' => $dep,
-        'options' => $options,
-        'clientOptions' => [
-            'moveOnSelect' => false,
-            'selectedListLabel' => 'Selected Items',
-            'nonSelectedListLabel' => 'Available Items',
-        ],
-    ]);
-    ?>
-
-
-    <?= $form->field($model, 'DESTINATION_TO')->widget(Select2::classname(), [
-         'data' => $dropemploy,
-        'options' => [
-        'placeholder' => 'Pilih Karyawan ...'],
-        'pluginOptions' => [
-            'allowClear' => true
-             ],
-        
-    ]);?>
-<?php
-     $options = [
-        'multiple' => true,
-        // 'size' => 100,
-    ];
-    // echo $form->field($model, $attribute)->listBox($items, $options);
-    echo $form->field($model, 'USER_CC')->widget(DualListbox::className(),[
-        'items' => $dropemploy,
-        'options' => $options,
-        'clientOptions' => [
-            'moveOnSelect' => false,
-            'selectedListLabel' => 'Selected Items',
-            'nonSelectedListLabel' => 'Available Items',
-        ],
-    ]);
-    ?>
-	
- 
-
-  <?= $form->field($model, 'PLAN_DATE1')->widget(DatePicker::classname(), [
+     <?= $form->field($model, 'PLAN_DATE1')->widget(DatePicker::classname(), [
       'options' => ['placeholder' => 'Enter...',
           'value'=>$tgl
         ],
@@ -138,7 +102,68 @@ use kartik\widgets\SwitchInput;
       ],
   ]);?>
 
+     <?= $form->field($model, 'Sendto')->widget(Select2::classname(), [
+         'data' => $dropemploy,
+        'options' => [
+        'placeholder' => 'Pilih Karyawan ...'],
+        'pluginOptions' => [
+            'allowClear' => true
+             ],
+        
+    ]);?>
+
    
+    </div>
+    </div>
+
+     <?php
+     $options = [
+        'multiple' => true,
+        // 'size' => 100,
+    ];
+    // echo $form->field($model, $attribute)->listBox($items, $options);
+    echo $form->field($model, 'DEP_SUB_ID')->widget(DualListbox::className(),[
+        'items' => $dep,
+        'options' => $options,
+        'clientOptions' => [
+            'moveOnSelect' => false,
+            'selectedListLabel' => 'Selected Items',
+            'nonSelectedListLabel' => 'Available Items',
+        ],
+    ]);
+    ?>
+    
+
+    <?php
+     $options = [
+        'multiple' => true,
+        // 'size' => 100,
+    ];
+    // echo $form->field($model, $attribute)->listBox($items, $options);
+    echo $form->field($model, 'USER_CC')->widget(DualListbox::className(),[
+        'items' => $dropemploy,
+        'options' => $options,
+        'clientOptions' => [
+            'moveOnSelect' => false,
+            'selectedListLabel' => 'Selected Items',
+            'nonSelectedListLabel' => 'Available Items',
+        ],
+    ]);
+    ?>
+
+
+  
+     <!--  $form->field($model, 'DEP_SUB_ID')->widget(Select2::classname(), [
+         'data' => $dep,
+        'options' => [
+        'placeholder' => 'Pilih  ...'],
+        'pluginOptions' => [
+            'allowClear' => true,
+            'multiple'=>true
+             ],
+        
+    ]);?> -->
+
 
 
       <!--$form->field($model, 'ACTUAL_DATE2')->widget(DatePicker::classname(), [
@@ -159,9 +184,12 @@ use kartik\widgets\SwitchInput;
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
+
     <?php ActiveForm::end(); ?>
 
 </div>
+  </div>
+  </div>
 
 <?php
 $this->registerJs("

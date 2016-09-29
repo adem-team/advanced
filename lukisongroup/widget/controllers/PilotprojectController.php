@@ -76,12 +76,12 @@ class PilotprojectController extends Controller
     {
         $searchModel = new PilotprojectSearch();
         $dataProviderDept = $searchModel->searchDept(Yii::$app->request->queryParams);
-		$dataProviderEmp = $searchModel->searchEmp(Yii::$app->request->queryParams);
+		    $dataProviderEmp = $searchModel->searchEmp(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProviderDept' => $dataProviderDept,
-			'dataProviderEmp' => $dataProviderEmp,
+			       'dataProviderEmp' => $dataProviderEmp,
         ]);
     }
 
@@ -279,6 +279,33 @@ class PilotprojectController extends Controller
         }
       }
 
+
+      public function actionModalRow(){
+
+        return $this->renderAjax('tambah_row', [
+            ]);
+      }
+
+      public function actionTambahRow(){
+
+
+         $sql = Pilotproject::find()->max('SORT');                               
+
+          $connection = Yii::$app->db_widget;
+
+            $connection->createCommand()->insert('sc0001', [
+                          'SORT' => $sql,
+                          'DEP_ID' => Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID,
+                          'CREATED_BY'=>Yii::$app->getUserOpt->Profile_user()->emp->EMP_NM,
+                          'TEMP_EVENT'=>2
+                      ])->execute();
+
+             return $this->redirect('index');
+           
+
+
+      }
+
        /**
      * validasi ajax in page form_pilot
      * @author wawan
@@ -317,6 +344,7 @@ class PilotprojectController extends Controller
 
         $post =Yii::$app->request->post();
         $val = $post['Pilotproject']['parentpilot'];
+        $sendto = $post['Pilotproject']['Sendto'];
 
         $gv_id = Yii::$app->getUserOpt->Profile_user()->emp->GF_ID;
         
@@ -341,7 +369,8 @@ class PilotprojectController extends Controller
                 // $model->PLAN_DATE1 = $tgl1;
                 // $model->PLAN_DATE2 = $tgl2;
                 $pilot_id = Yii::$app->ambilkonci->getpilot($model->DEP_ID);
-                $model->PILOT_ID = $pilot_id;     
+                $model->PILOT_ID = $pilot_id;
+
                 $model->PARENT = 0;
                 $sql = Pilotproject::find()->max('ID');                               
                 $model->SORT = $sql+1;
@@ -354,6 +383,7 @@ class PilotprojectController extends Controller
                 $model->SORT = $model->PARENT;
                 $model->PILOT_ID = '';
             }
+             $model->DESTINATION_TO =  $sendto; 
            
             $model->CREATED_BY= Yii::$app->user->identity->username;     
             $model->UPDATED_TIME = date('Y-m-d h:i:s');               
@@ -462,16 +492,19 @@ public function actionSaveEvent(){
      if (Yii::$app->request->isAjax) {
             $request= Yii::$app->request;
             $event=$request->post('event');
+            $color=$request->post('color');
+            $sql = Pilotproject::find()->max('SORT');    
 
             $model = new Pilotproject();
             $model->DEP_ID = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
             $model->CREATED_BY =  Yii::$app->getUserOpt->Profile_user()->emp->EMP_NM;
-            $pilot_id = Yii::$app->ambilkonci->getpilot($model->DEP_ID);
-            $model->PILOT_ID = $pilot_id;     
-            $model->PARENT = 0;
-            $sql = Pilotproject::find()->max('ID');                               
-            $model->SORT = $sql+1;
+            // $pilot_id = Yii::$app->ambilkonci->getpilot($model->DEP_ID);
+            // $model->PILOT_ID = $pilot_id;   
+            $model->TEMP_EVENT = 0;  
+            // $model->PARENT = 0;
+            $model->SORT = $sql;
             $model->PILOT_NM = $event;
+            $model->COLOR = $color;
             $model->save();
             return true;
         }
@@ -723,7 +756,7 @@ public function actionSaveEvent(){
 
     }
 		
-	public function actionDragableReceive($start,$end){
+	public function actionDragableReceive($start,$title){
 		$model = new Pilotproject();
 
         $post =Yii::$app->request->post();
@@ -817,9 +850,11 @@ public function actionSaveEvent(){
 
             if($gf_id <= 4)
             {
-                $sql = "select ID as id,PILOT_ID as resourceId, PLAN_DATE1 as start , PLAN_DATE2 as end, PILOT_NM as title from sc0001 where DEP_ID = '".$dep_id1."' and UNIX_TIMESTAMP(PLAN_DATE2) ='".$end_1."'";
+                $sql = "select COLOR as color, ID as resourceId, PLAN_DATE1 as start , PLAN_DATE2 as end, PILOT_NM as title from sc0001 where DEP_ID = '".$dep_id1."'";
+
+                // $sql = "select ID as resourceId, PLAN_DATE1 as start , PLAN_DATE2 as end, PILOT_NM as title from sc0001 where DEP_ID = '".$dep_id1."' and UNIX_TIMESTAMP(PLAN_DATE2) ='".$end_1."'";
             }else{
-                $sql = "select PLAN_DATE1 as start , PLAN_DATE2 as end, PILOT_NM as title from sc0001 where DESTINATION_TO = '".$emp_id."'";
+                $sql = "select COLOR as color, ID as resourceId, PLAN_DATE1 as start , PLAN_DATE2 as end, PILOT_NM as title from sc0001 where DESTINATION_TO = '".$emp_id."'";
 
             }
       // $aryEvent = Pilotproject::find()->orderBy('SORT')->all();
@@ -849,13 +884,13 @@ public function actionSaveEvent(){
          if( $gf_id <= 4)
          {
            
-            $sql ="SELECT a.PILOT_NM as srcparent ,b.PILOT_NM as title ,b.DEP_ID as dep_id,b.CREATED_BY as createby
+            $sql ="SELECT b.ID as id, a.PILOT_NM as srcparent ,b.PILOT_NM as title ,b.DEP_ID as dep_id,b.CREATED_BY as createby
                 FROM sc0001 AS a 
                 INNER JOIN sc0001 AS b 
                 WHERE a.ID=b.SORT and b.DEP_ID='".$dep_id1."'";
         }else{
              
-             $sql ="SELECT a.PILOT_NM as srcparent ,b.PILOT_NM as title ,b.DEP_ID as dep_id,b.CREATED_BY as createby
+             $sql ="SELECT b.ID as id, a.PILOT_NM as srcparent ,b.PILOT_NM as title ,b.DEP_ID as dep_id,b.CREATED_BY as createby
                 FROM sc0001 AS a 
                 INNER JOIN sc0001 AS b 
                 WHERE a.ID=b.SORT and b.DESTINATION_TO='".$emp_id."'";
@@ -881,8 +916,8 @@ public function actionSaveEvent(){
                 $pilot_id = Yii::$app->ambilkonci->getpilot($dep_id);
                 $model->PILOT_ID = $pilot_id;     
                 $model->PARENT = 0;
-                $sql = Pilotproject::find()->max('ID');                               
-                $model->SORT = $sql+1;
+                // $sql = Pilotproject::find()->max('ID');                               
+                // $model->SORT = $sql+1;
             }else{
                 $model->SORT = $model->PARENT;
                 $model->PILOT_ID = '';
@@ -891,6 +926,16 @@ public function actionSaveEvent(){
             $model->DEP_ID = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
             $model->CREATED_BY =  Yii::$app->getUserOpt->Profile_user()->emp->EMP_NM;
             $model->save();
+
+
+            if($val == 1)
+            {
+              $update_model = self::findModel($model->ID);
+
+              $update_model->SORT = $model->ID;
+
+              $update_model->save();
+            }
 
              return $this->redirect('index');
            
@@ -907,9 +952,9 @@ public function actionSaveEvent(){
 
     public function actionJsonevent(){
 
+      $dep = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
 
-
-     $sql = 'select PILOT_NM as title,ID as id, PLAN_DATE1 as start,PLAN_DATE2 as end from sc0001 where PARENT<>0 ';
+     $sql = 'select COLOR as color, PILOT_NM as title,ID as id, PLAN_DATE1 as start,PLAN_DATE2 as end from sc0001 where TEMP_EVENT<> 1 AND DEP_ID="'.$dep.'"';
 
       $data = Yii::$app->db_widget->createCommand($sql)->queryAll();
 
