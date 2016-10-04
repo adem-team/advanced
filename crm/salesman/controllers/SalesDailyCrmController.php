@@ -36,7 +36,7 @@ class SalesDailyCrmController extends Controller
      * @return mixed
      */
 
-    public function beforeAction(){
+    public function beforeAction($action){
             if (Yii::$app->user->isGuest)  {
                  Yii::$app->user->logout();
                    $this->redirect(array('/site/login'));  //

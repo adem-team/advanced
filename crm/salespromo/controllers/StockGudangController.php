@@ -34,7 +34,7 @@ class StockGudangController extends Controller
      * ACTION INDEX
      */
 	/* -- Created By ptr.nov --*/
-	public function beforeAction(){
+	public function beforeAction($action){
 			if (Yii::$app->user->isGuest)  {
 				 Yii::$app->user->logout();
                    $this->redirect(array('/site/login'));  //
