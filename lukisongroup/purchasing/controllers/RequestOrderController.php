@@ -63,7 +63,7 @@ class RequestOrderController extends Controller
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
      */
-	public function beforeAction(){
+	public function beforeAction($action){
 			if (Yii::$app->user->isGuest)  {
 				 Yii::$app->user->logout();
                    $this->redirect(array('/site/login'));  //
