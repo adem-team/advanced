@@ -376,10 +376,10 @@ class PostmanDailySalesmdController extends Controller
 	
 	/*SEND EMAIL*/
 	public function  actionSend(){
-		$x=date('N', strtotime(date("Y-m-d")));	 //date to string days	
-		if ($x!=2 or $x!=7){ 					 //off selasa dan minggu
-			$tglIn=date("Y-m-d");
-			//$tglIn='2016-09-26';
+		//$x=date('N', strtotime(date("Y-m-d")));	 //date to string days	
+		//if ($x!=2 or $x!=7){ 					 //off selasa dan minggu
+			//$tglIn=date("Y-m-d");
+			//$tglIn='2016-09-28';
 			/*Content template*/
 			// $cusCount=Yii::$app->db_esm->createCommand("
 				// SELECT count(u1.id) as CNT_ALL
@@ -387,7 +387,7 @@ class PostmanDailySalesmdController extends Controller
 				// LEFT JOIN dbm_086.user_profile u2 on u2.ID_USER=u1.id
 				// WHERE u1.POSITION_SITE='CRM' AND u1.POSITION_LOGIN=1 AND u1.POSITION_ACCESS=2 AND u1.username LIKE 'salesmd%'
 			// ")->queryAll();
-			$cusCount=Yii::$app->db_esm->createCommand("
+			/* $cusCount=Yii::$app->db_esm->createCommand("
 				SELECT
 					x2.TGL,x2.SALES_NM,x2.AREA
 					,sum(x2.STS_CC) as TTL_CC
@@ -425,7 +425,7 @@ class PostmanDailySalesmdController extends Controller
 					WHERE x1.TGL='".$tglIn."' AND x1.USER_ID NOT IN ('61','62')
 					GROUP BY x1.TGL,x1.USER_ID					
 				")->queryAll(),
-			]);			
+			]); */			
 			
 			/**
 			 * MAP ATTACH 
@@ -434,7 +434,7 @@ class PostmanDailySalesmdController extends Controller
 			*/	
 			//$rootPathExcel='/var/www/advanced/lukisongroup/cronjob/tmp_cronjob/';			
 			//$rootPathImageZip='/var/www/advanced/lukisongroup/cronjob/tmp_cronjob/img/';
-			$rootPathExcel=Yii::getAlias('@lukisongroup').'/cronjob/tmp_cronjob/';	
+			/* $rootPathExcel=Yii::getAlias('@lukisongroup').'/cronjob/tmp_cronjob/';	
 			$rootPathImageZip=Yii::getAlias('@lukisongroup').'/cronjob/tmp_cronjob/img/';				
 			$filename = 'PostmanDailySalesMd';
 			if ($dataList){
@@ -453,7 +453,7 @@ class PostmanDailySalesmdController extends Controller
 					
 				};	
 				$filenameAll=ArrayHelper::merge($filenameAll,$fileAttach);				
-			};
+			}; */
 			//print_r($filenameAll);
 				
 			/**
@@ -462,9 +462,9 @@ class PostmanDailySalesmdController extends Controller
 			 * @author Piter Novian [ptr.nov@gmail.com] 
 			*/	
 			// Get Content
-			$contentBody= $this->renderPartial('_postmanBodyDailySales',[
-				'cusCount'=>$cusCount
-			]);	
+			// $contentBody= $this->renderPartial('_postmanBodyDailySales',[
+				// 'cusCount'=>$cusCount
+			// ]);	
 				
 			// Send-to,Subject,Body
 			Yii::$app->mailer->compose()
@@ -472,17 +472,18 @@ class PostmanDailySalesmdController extends Controller
 			//->setTo(['it-dept@lukison.com'])
 			->setTo(['piter@lukison.com'])
 			//->setTo(['hrd@lukison.com'])
-			->setTo(['sales_esm@lukison.com','marketing_esm@lukison.com','dpi@lukison.com'])
-			->setSubject('POSTMAN - DAILY REPORT SALES MD')
-			->setHtmlBody($contentBody);
+			//->setTo(['sales_esm@lukison.com','marketing_esm@lukison.com','dpi@lukison.com'])
+			//->setSubject('POSTMAN - DAILY REPORT SALES MD')
+			->setSubject('test');
+			//->setHtmlBody($contentBody);
 			// Array data Attach, checking exiting file
-			foreach($filenameAll as $row => $value){
+			/* foreach($filenameAll as $row => $value){
 				if (file_exists($value['path'])) {
 					Yii::$app->mailer->compose()->attach($value['path'],[$value['filename'],$value['type']]);
 				}
-			}			
+			}	 */		
 			Yii::$app->mailer->compose()->send(); 		 
-		}
+		//}
 	}
 	
 	/**
