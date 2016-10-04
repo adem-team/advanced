@@ -284,11 +284,11 @@ class PostmanSchaduleController extends Controller
 			Yii::$app->mailer->compose()
 			->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
 			//->setTo(['it-dept@lukison.com'])
-			->setTo(['piter@lukison.com'])
-			//->setTo(['sales_esm@lukison.com','marketing_esm@lukison.com'])
+			//->setTo(['piter@lukison.com'])
+			->setTo(['sales_esm@lukison.com','marketing_esm@lukison.com'])
 			->setSubject('WEEKLY SCHADULE')
 			->setHtmlBody($contentBody)
-			//->attach($filenameAll,[$filename,'xlsx'])
+			->attach($filenameAll,[$filename,'xlsx'])
 			->send(); 		
 		} else {
 			//echo "The file $filenameAll does not exist";
