@@ -55,7 +55,7 @@ class CustomersController extends Controller
      * @since 1.1.0
      */
 
-    public function beforeAction(){
+    public function beforeAction($action){
             if (Yii::$app->user->isGuest)  {
                  Yii::$app->user->logout();
                    $this->redirect(array('/site/login'));  //
