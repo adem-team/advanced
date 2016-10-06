@@ -1,6 +1,7 @@
 <?php
 namespace lukisongroup\widget\models;
 use Yii;
+use lukisongroup\hrd\models\Employe;
 
 class Pilotproject extends \yii\db\ActiveRecord
 {
@@ -74,6 +75,47 @@ class Pilotproject extends \yii\db\ActiveRecord
             'DEP_SUB_ID'=>'DEP_SUB'
         ];
     }
+
+    // get parent query : author wawan
+public function getParent() {
+    return $this->hasOne(self::classname(),
+           ['PARENT'=>'SORT'])->
+           from(self::tableName() . ' AS PARENT');
+}
+
+/* Getter for parent name */
+public function getParentName() {
+    return $this->parent->PILOT_NM;
+}
+
+
+    /* Join Class Employe */
+        public function getEmploye()
+        {
+            return $this->hasOne(Employe::className(), ['EMP_ID' => 'DESTINATION_TO']);
+        }
+
+         /* Join Class Employe */
+        public function getEmployecc()
+        {
+            return $this->hasOne(Employe::className(), ['EMP_ID' => 'USER_CC']);
+        }
+
+           /* Join Class Employe */
+        public function getEmployenmcc()
+        {
+            return $this->employecc->EMP_NM != ''?$this->employecc->EMP_NM : 'none';
+        }
+
+          /* Join Class Employe */
+        public function getEmployenm()
+        {
+            return $this->employe->EMP_NM != ''?$this->employe->EMP_NM : 'none';
+        }
+
+        public function getDateplan(){
+             return $this->PLAN_DATE1.' - '.$this->PLAN_DATE2; 
+        }
 
  
 }
