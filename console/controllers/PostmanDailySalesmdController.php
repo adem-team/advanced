@@ -381,12 +381,12 @@ class PostmanDailySalesmdController extends Controller
 			//$tglIn=date("Y-m-d");
 			//$tglIn='2016-09-28';
 			/*Content template*/
-			// $cusCount=Yii::$app->db_esm->createCommand("
-				// SELECT count(u1.id) as CNT_ALL
-				// FROM dbm001.user u1 
-				// LEFT JOIN dbm_086.user_profile u2 on u2.ID_USER=u1.id
-				// WHERE u1.POSITION_SITE='CRM' AND u1.POSITION_LOGIN=1 AND u1.POSITION_ACCESS=2 AND u1.username LIKE 'salesmd%'
-			// ")->queryAll();
+			$cusCount=Yii::$app->db_esm->createCommand("
+				SELECT count(u1.id) as CNT_ALL
+				FROM dbm001.user u1 
+				LEFT JOIN dbm_086.user_profile u2 on u2.ID_USER=u1.id
+				WHERE u1.POSITION_SITE='CRM' AND u1.POSITION_LOGIN=1 AND u1.POSITION_ACCESS=2 AND u1.username LIKE 'salesmd%'
+			")->queryAll();
 			/* $cusCount=Yii::$app->db_esm->createCommand("
 				SELECT
 					x2.TGL,x2.SALES_NM,x2.AREA
@@ -462,9 +462,9 @@ class PostmanDailySalesmdController extends Controller
 			 * @author Piter Novian [ptr.nov@gmail.com] 
 			*/	
 			// Get Content
-			// $contentBody= $this->renderPartial('_postmanBodyDailySales',[
-				// 'cusCount'=>$cusCount
-			// ]);	
+			$contentBody= $this->renderPartial('_postmanBodyDailySales',[
+				'cusCount'=>$cusCount
+			]);	
 				
 			// Send-to,Subject,Body
 			Yii::$app->mailer->compose()

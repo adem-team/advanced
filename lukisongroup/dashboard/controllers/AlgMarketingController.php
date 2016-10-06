@@ -16,6 +16,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use zyx\phpmailer\Mailer;
+//use yii\swiftmailer\Mailer;
 use yii\widgets\ActiveForm;
 use yii\base\DynamicModel;
 use lukisongroup\widget\models\Chat;
@@ -93,11 +94,17 @@ class AlgMarketingController extends Controller
 		  Yii::$app->mailer->compose()
 		 ->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
 		 //->setTo(['piter@lukison.com'])
-		 ->setTo(['piter@lukison.com'])
-		 ->setSubject('DAILY ERP TEST EMAIL')
+		 ->setTo('piter@lukison.com')
+		 ->setSubject('daily test email')
 		 ->setTextBody($ok)
 		 ->send();
-		 
+		  
+		
+		/* \Yii::$app->mailer->compose()
+		->setFrom('postman@lukison.com')
+		->setTo('piter@lukison.com')
+		->setSubject('test subject')
+		->send(); */
 		
     }
 	
