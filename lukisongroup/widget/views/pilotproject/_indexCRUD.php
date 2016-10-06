@@ -7,6 +7,8 @@ use ptrnov\fullcalendar\FullcalendarScheduler;
 use lukisongroup\widget\models\Pilotproject;
 use yii\helpers\ArrayHelper;
 
+
+
   
 
 /* $personalUser=Yii::$app->getUserOpt->Profile_user();
@@ -28,8 +30,28 @@ EOF; */
 
 $JSEventClick = <<<EOF
 	function(calEvent, jsEvent, view) {
-		alert('test');
+		var dateTime1 = new Date(calEvent.start);
+		var dateTime2 = new Date(calEvent.end);
+		var tgl1 = moment(dateTime1).format('YYYY-MM-DD LTS');
+		var tgl2 = moment(dateTime2).subtract(1, 'days').format('YYYY-MM-DD LTS');
+	$.get('/widget/pilotproject/detail-pilot',{'id':calEvent.resourceId},function(data){
+						$('#modal-up').modal('show')
+						.find('#modalContentUp')
+						.html(data);
+		});
 	}
+EOF;
+
+$Jseventcolor = <<<EOF
+function (event, element, view) {
+var status1 = event.status;
+
+	if(status1 == 1)
+	{
+		 element.html('close');
+	}
+}
+ 
 EOF;
 
 $view = <<<EOF
@@ -54,8 +76,8 @@ $JSaddButton= <<<EOF
 	function() {
 		//alert('test');
 		$.get('/widget/pilotproject/modal-row',function(data){
-						$('#modal-rooms').modal('show')
-						.find('#modalContentRooms')
+						$('#modal-row').modal('show')
+						.find('#modalContentRow')
 						.html(data);
 		});
 	}
@@ -133,6 +155,7 @@ EOF; */
 			'selectable' => true,
 			//'select' => new JsExpression($JSCode),										// don't set if used "modalSelect"
 			'eventClick' => new JsExpression($JSEventClick),
+			'eventAfterRender'=> new JsExpression($Jseventcolor),
 			'droppable' => true,
 			//'eventDrop' => new JsExpression($JSDropEvent),
 			//'now' => \Yii::$app->ambilKonvesi->convert($model->start,'datetime'),//'2016-05-07 06:00:00',
@@ -179,18 +202,49 @@ EOF; */
 	
 	]);
 	
- 	Modal::begin([
-		'header'=>'Rooms',
-		'id' => 'modal-rooms',
-		'size' => 'modal-sm',
-		//keeps from closing modal with esc key or by clicking out of the modal.
-		// user must click cancel or X to close
-		// 'clientOptions' => ['backdrop' => 'static', 'keyboard' => FALSE]
-	]);
+
+
+	/*modal*/
+Modal::begin([
+    'id' => 'modal-rooms',
+    'header' => '<div style="float:left;margin-right:10px" class="fa fa-user"></div><div><h5 class="modal-title"><b>Create Rooms</b></h5></div>',
+    'size' => Modal::SIZE_SMALL,
+    'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+    ],
+  ]);
 	echo "<div id='modalContentRooms'></div>";
+	Modal::end();  
+	
+
+/*modal*/
+Modal::begin([
+    'id' => 'modal-up',
+    'header' => '<div style="float:left;margin-right:10px" class="fa fa-user"></div><div><h5 class="modal-title"><b>VIEW Pilot Project</b></h5></div>',
+    'size' => Modal::SIZE_LARGE,
+    'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+    ],
+  ]);
+	echo "<div id='modalContentUp'></div>";
+	Modal::end(); 
+
+	/*modal*/
+Modal::begin([
+    'id' => 'modal-row',
+    'header' => '<div style="float:left;margin-right:10px" class="fa fa-plus"></div><div><h5 class="modal-title"><b>Tambah Row</b></h5></div>',
+    'size' => Modal::SIZE_SMALL,
+    'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+    ],
+  ]);
+	echo "<div id='modalContentRow'></div>";
 	Modal::end(); 
 
 ?>
+
+
+
 
 
 <?php

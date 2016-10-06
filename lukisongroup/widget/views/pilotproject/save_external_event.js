@@ -10,26 +10,52 @@
       $('#add-new-event').css({'background-color': currColor, 'eventColor': currColor});
     });
 
-     $('.fc-button-prev span').click(function(){
-    var date =  $('#calendar_test').fullCalendar('getDate').endOf('days');
-     return false;
-  });
 
-  $('.fc-next-button ').click(function(){
-     var date =  $('#calendar_test').fullCalendar('getDate').endOf('month');  ;
-     return false;
-  });
+    function count(){
+       $.getJSON('/widget/pilotproject/count-event', function(data){
 
+         // var datx = parseInt(data);
+         return data;
+
+       });
+
+    }
+
+    var return_first = function () {
+    var tmp = null;
+     $.getJSON('/widget/pilotproject/count-event', function(data){
+
+         // var datx = parseInt(data);
+          tmp = data;
+           return tmp;
+       });
+    
+    // $.ajax({
+    //     'async': false,
+    //     'type': "POST",
+    //     'global': false,
+    //     'dataType': 'html',
+    //     'url': "/widget/pilotproject/count-event",
+    //     'data': { 'request': "", 'target': 'arrange_url', 'method': 'method_target' },
+    //     'success': function (data) {
+    //         tmp = data;
+    //     }
+    // });
+    // return tmp;
+}();
+
+
+  /* display data json event */
     function displaydata(){
       $.getJSON('/widget/pilotproject/jsonevent', function(info){
           for (var numero = 0;numero < info.length;numero++) {
             var eventObjectFromDB = info[numero];
             var eventToExternalEvents =                      
                                            {"title":eventObjectFromDB.title,
-                                "id":eventObjectFromDB.id,
-                                "start":eventObjectFromDB.start,
-                                        "end":eventObjectFromDB.end,
-                                        "color":eventObjectFromDB.color,
+											"id":eventObjectFromDB.id,
+											"start":eventObjectFromDB.start,
+											"end":eventObjectFromDB.end,
+											"color":eventObjectFromDB.color,
                                         // "allDay":eventObjectFromDB.allDay,
                     "editable":true};
 
@@ -59,8 +85,11 @@
       });
     }
 
+
+    /*after load display data*/
     $(window).load(function(){
       displaydata();
+       alert(return_first);
     })
 
     function save(ev){
@@ -70,22 +99,41 @@
               url:'/widget/pilotproject/save-event',
               success:function(data) {
               //Create events
-              var event = $('<div/>');
-              event.css({'background-color': currColor, 'eventColor': currColor, 'color': '#fff'}).addClass('external-event');
-              event.html(ev);
-              $('#external-events').prepend(event);
+              // var event = $('<div/>');
+              // event.css({'background-color': currColor, 'eventColor': currColor, 'color': '#fff'}).addClass('external-event');
+              // event.html(ev);
+              // $('#external-events').prepend(event);
 
-              //Add draggable funtionality
-              ini_events(event);
+              // Add draggable funtionality
+              // ini_events(event);
               }
         });
   }
 
+// keyup enter
+  $('#new-event').keyup(function(e) {
+    e.preventDefault();
+     var val = $('#new-event').val();
+    if (e.which == 13) {
+        // do it
+      save(val);
+      var event = $('<div/>');
+      event.css({'background-color': currColor, 'eventColor': currColor, 'color': '#fff'}).addClass('external-event');
+      event.html(val);
+      $('#external-events').prepend(event);
 
+      // Add draggable funtionality
+      ini_events(event);
+
+      //Remove event from text input
+      $('#new-event').val('');
+    }
+});
  
 
 	$('#add-new-event').click(function (e) {
       e.preventDefault();
+
       //Get value and make sure it is not null
       var val = $('#new-event').val();
       if (val.length == 0) {
@@ -95,13 +143,13 @@
 
       // //Create events
       save(val);
-      // var event = $('<div/>');
-      // event.css({'background-color': currColor, 'eventColor': currColor, 'color': '#fff'}).addClass('external-event');
-      // event.html(val);
-      // $('#external-events').prepend(event);
+      var event = $('<div/>');
+      event.css({'background-color': currColor, 'eventColor': currColor, 'color': '#fff'}).addClass('external-event');
+      event.html(val);
+      $('#external-events').prepend(event);
 
-      //Add draggable funtionality
-      // ini_events(event);
+      // Add draggable funtionality
+      ini_events(event);
 
       //Remove event from text input
       $('#new-event').val('');
