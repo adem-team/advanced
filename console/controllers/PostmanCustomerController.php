@@ -24,8 +24,9 @@ class PostmanCustomerController extends Controller
         return [
 			'export4excel' => [
 				'class' => Postman4ExcelBehavior::className(),
-				'downloadPath'=>Yii::getAlias('@lukisongroup').'/cronjob/',
-				'widgetType'=>'CRONJOB',
+				//'downloadPath'=>Yii::getAlias('@lukisongroup').'/cronjob/',
+				'downloadPath'=>'/var/www/backup/customer/',
+				'widgetType'=>'CUSTOMPATH',
 			], 
 			'verbs' => [
                 'class' => VerbFilter::className(),
@@ -582,8 +583,9 @@ class PostmanCustomerController extends Controller
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
                'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
-		];		
-		$excel_file = "PostmanCustomer";
+		];	
+		$tglIn=date("Y-m-d");		
+		$excel_file = "PostmanCustomer"."-".$tglIn;
 		$this->export4excel($excel_content, $excel_file,0); 
 	}
 	
@@ -595,10 +597,13 @@ class PostmanCustomerController extends Controller
 			
 		/*path & Name File*/
 		//$rootyii=dirname(dirname(__DIR__)).'/cronjob/';
-		$rootyii='/var/www/advanced/lukisongroup/cronjob/tmp_cronjob/';
+		//$rootyii='/var/www/advanced/lukisongroup/cronjob/tmp_cronjob/';
+		$rootyii='/var/www/backup/customer/';
 		//$folder=$rootyii.'/cronjob/'.$filename;
 		//$baseRoot = Yii::getAlias('@webroot') . "/uploads/temp/";
-		$filename = 'PostmanCustomer';
+		$tglIn=date("Y-m-d");		
+		$filename = "PostmanCustomer"."-".$tglIn;
+		//$filename = 'PostmanCustomer';
 		//$filenameAll=$baseRoot.$filename;
 		$filenameAll=$rootyii.$filename.'.xlsx';
 		

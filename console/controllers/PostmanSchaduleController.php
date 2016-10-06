@@ -24,8 +24,9 @@ class PostmanSchaduleController extends Controller
         return [
 			'export4excel' => [
 				'class' => Postman4ExcelBehavior::className(),
-				'downloadPath'=>Yii::getAlias('@lukisongroup').'/cronjob/',
-				'widgetType'=>'CRONJOB',
+				//'downloadPath'=>Yii::getAlias('@lukisongroup').'/cronjob/',
+				'downloadPath'=>'/var/www/backup/salesmd/schedule/',
+				'widgetType'=>'CUSTOMPATH',
 				'columnAutoSize'=>true,
 			], 
 			'verbs' => [
@@ -157,7 +158,7 @@ class PostmanSchaduleController extends Controller
 		$schaduleGrpData= new ArrayDataProvider([
 			//'key' => 'ID',
 			//SELECT a.USER_ID,a.SCDL_GROUP AS GRP_ID, b.SCDL_GROUP_NM as GRP_NM,a.CUST_ID,c.CUST_NM,a.LAT,a.LAG 
-			'allModels'=>Yii::$app->db_esm->createCommand("call ERP_CUSTOMER_VISIT_ACTUAL_SchaduleReportList('')")->queryAll(),
+			'allModels'=>Yii::$app->db_esm->createCommand("call ERP_CUSTOMER_VISIT_ACTUAL_SchaduleReportList('".$tglIn."')")->queryAll(),
 		]);	
 		$schaduleGrpProvider=$schaduleGrpData->allModels;
 		$excelScdlGrpData = Postman4ExcelBehavior::excelDataFormat($schaduleGrpProvider);
@@ -255,8 +256,8 @@ class PostmanSchaduleController extends Controller
                 'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			
-		];		
-		$excel_file = "PostmanSalesSchadule";
+		];						
+		$excel_file = "PostmanSalesSchadule"."-".$tglIn;
 		$this->export4excel($excel_content, $excel_file,0); 
 	}
 	
@@ -268,10 +269,12 @@ class PostmanSchaduleController extends Controller
 			
 		/*path & Name File*/
 		//$rootyii=dirname(dirname(__DIR__)).'/cronjob/';
-		$rootyii='/var/www/advanced/lukisongroup/cronjob/tmp_cronjob/';
+		//$rootyii='/var/www/advanced/lukisongroup/cronjob/tmp_cronjob/';
+		$rootyii='/var/www/backup/salesmd/schedule/';
 		//$folder=$rootyii.'/cronjob/'.$filename;
 		//$baseRoot = Yii::getAlias('@webroot') . "/uploads/temp/";
-		$filename = 'PostmanSalesSchadule';
+		$tglIn=date("Y-m-d");
+		$filename = 'PostmanSalesSchadule'."-".$tglIn;
 		//$filenameAll=$baseRoot.$filename;
 		$filenameAll=$rootyii.$filename.'.xlsx';
 		
@@ -284,11 +287,11 @@ class PostmanSchaduleController extends Controller
 			Yii::$app->mailer->compose()
 			->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
 			//->setTo(['it-dept@lukison.com'])
-			->setTo(['piter@lukison.com'])
-			//->setTo(['sales_esm@lukison.com','marketing_esm@lukison.com'])
+			//->setTo(['piter@lukison.com'])
+			->setTo(['sales_esm@lukison.com','marketing_esm@lukison.com','dpi@lukison.com'])
 			->setSubject('WEEKLY SCHADULE')
 			->setHtmlBody($contentBody)
-			//->attach($filenameAll,[$filename,'xlsx'])
+			->attach($filenameAll,[$filename,'xlsx'])
 			->send(); 		
 		} else {
 			//echo "The file $filenameAll does not exist";

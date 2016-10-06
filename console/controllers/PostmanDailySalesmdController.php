@@ -25,8 +25,9 @@ class PostmanDailySalesmdController extends Controller
         return [
 			'export4excel' => [
 				'class' => Postman4ExcelBehavior::className(),
-				'downloadPath'=>Yii::getAlias('@lukisongroup').'/cronjob/',
-				'widgetType'=>'CRONJOB',
+				//'downloadPath'=>Yii::getAlias('@lukisongroup').'/cronjob/',
+				'downloadPath'=>'/var/www/backup/salesmd/excel/',
+				'widgetType'=>'CUSTOMPATH',
 				'columnAutoSize'=>true,
 			], 
 			'verbs' => [
@@ -47,7 +48,7 @@ class PostmanDailySalesmdController extends Controller
 		$x=date('N', strtotime(date("Y-m-d")));		
 		if ($x!=2 or $x!=7){
 			$tglIn=date("Y-m-d");//'2016-09-07';
-			//$tglIn='2016-09-26';
+			//$tglIn='2016-09-7';
 			//DAILY REPORT INVENTORY SALES
 			$dailySalesReport= new ArrayDataProvider([
 				'key' => 'ID',
@@ -62,10 +63,10 @@ class PostmanDailySalesmdController extends Controller
 				x7.KD_ALIAS As ID_BARANG_DISTRIBUTOR,
 				x4.NM_BARANG, 
 						SUM(CASE WHEN x2.SO_TYPE=5 THEN (CASE WHEN  x2.SO_QTY<>-1 THEN x2.SO_QTY ELSE 0 END) ELSE 0 END) as STOCK,
-						SUM(CASE WHEN x2.SO_TYPE=8 THEN x2.SO_QTY ELSE 0 END) as RETURN_INV,
-						SUM(CASE WHEN x2.SO_TYPE=9 THEN x2.SO_QTY ELSE 0 END) as REQUEST_INV,
-						SUM(CASE WHEN x2.SO_TYPE=6 THEN x2.SO_QTY ELSE 0 END) as SELL_IN,
-						SUM(CASE WHEN x2.SO_TYPE=7 THEN x2.SO_QTY ELSE 0 END) as SELL_OUT,					
+						SUM(CASE WHEN x2.SO_TYPE=8 THEN (CASE WHEN  x2.SO_QTY<>-1 THEN x2.SO_QTY ELSE 0 END) ELSE 0 END) as RETURN_INV,
+						SUM(CASE WHEN x2.SO_TYPE=9 THEN (CASE WHEN  x2.SO_QTY<>-1 THEN x2.SO_QTY ELSE 0 END) ELSE 0 END) as REQUEST_INV,
+						SUM(CASE WHEN x2.SO_TYPE=6 THEN (CASE WHEN  x2.SO_QTY<>-1 THEN x2.SO_QTY ELSE 0 END) ELSE 0 END) as SELL_IN,
+						SUM(CASE WHEN x2.SO_TYPE=7 THEN (CASE WHEN  x2.SO_QTY<>-1 THEN x2.SO_QTY ELSE 0 END) ELSE 0 END) as SELL_OUT,				
 						x5.ISI_MESSAGES
 						FROM c0002rpt_cc_time x1 INNER JOIN so_t2 x2 ON  x2.TGL=x1.TGL AND x2.CUST_KD=x1.CUST_ID 
 						LEFT JOIN b0001 x4 on x4.KD_BARANG=x2.KD_BARANG		
@@ -135,7 +136,7 @@ class PostmanDailySalesmdController extends Controller
 			$excel_ceilsSalesExpired = $excel_DailySalesExpired['excel_ceils'];
 			
 			$excel_content = [
-				 [ 	// DAILY REPORT INVENTORY SALES 
+				  [ 	// DAILY REPORT INVENTORY SALES 
 					'sheet_name' => 'DAILY REPORT INVENTORY',
 					'sheet_title' => [
 						['TGL','SALESMD','CUST_ID_ESM','CUST_ID_DIST','CUST_NM','KD_BARANG_ESM','ID_BARANG_DIST','NM_BARANG',
@@ -183,7 +184,7 @@ class PostmanDailySalesmdController extends Controller
 					], 
 				   'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
 				   'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
-				],
+				], 
 				[	// DAILY REPORT SALES QUALITY TIME 
 					'sheet_name' => 'DAILY REPORT QUALITY TIME',
 					'sheet_title' => [
@@ -269,10 +270,10 @@ class PostmanDailySalesmdController extends Controller
 					],            
 				   'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
 				   'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
-				],
+				], 
 			];		
-			$excel_file = "PostmanDailySalesMd";
-			$this->export4excel($excel_content, $excel_file,0);
+			$excel_file = "PostmanDailySalesMd"."-".$tglIn;
+			$this->export4excel($excel_content, $excel_file,0); 
 				
 			/**
 			 * EXPORT IMAGE64 & NAME FROM ARRAY DATA PROVIDER
@@ -339,7 +340,8 @@ class PostmanDailySalesmdController extends Controller
 					 * @author Piter Novian [ptr.nov@gmail.com] 
 					*/	
 					//$rootPathImageZip='/var/www/advanced/lukisongroup/cronjob/tmp_cronjob/img/';
-					$rootPathImageZip=Yii::getAlias('@lukisongroup').'/cronjob/tmp_cronjob/img/';				
+					//$rootPathImageZip=Yii::getAlias('@lukisongroup').'/cronjob/tmp_cronjob/img/';				
+					$rootPathImageZip='/var/www/backup/salesmd/photo/';				
 					foreach($aryRslt as $key => $value){
 						$dataImgScr=$value['img64'];
 						$namefile=$value['name'];
@@ -376,18 +378,12 @@ class PostmanDailySalesmdController extends Controller
 	
 	/*SEND EMAIL*/
 	public function  actionSend(){
-		//$x=date('N', strtotime(date("Y-m-d")));	 //date to string days	
-		//if ($x!=2 or $x!=7){ 					 //off selasa dan minggu
-			//$tglIn=date("Y-m-d");
+		$x=date('N', strtotime(date("Y-m-d")));	 //date to string days	
+		if ($x!=2 or $x!=7){ 					 //off selasa dan minggu
+			$tglIn=date("Y-m-d");
 			//$tglIn='2016-09-28';
 			/*Content template*/
 			$cusCount=Yii::$app->db_esm->createCommand("
-				SELECT count(u1.id) as CNT_ALL
-				FROM dbm001.user u1 
-				LEFT JOIN dbm_086.user_profile u2 on u2.ID_USER=u1.id
-				WHERE u1.POSITION_SITE='CRM' AND u1.POSITION_LOGIN=1 AND u1.POSITION_ACCESS=2 AND u1.username LIKE 'salesmd%'
-			")->queryAll();
-			/* $cusCount=Yii::$app->db_esm->createCommand("
 				SELECT
 					x2.TGL,x2.SALES_NM,x2.AREA
 					,sum(x2.STS_CC) as TTL_CC
@@ -425,7 +421,7 @@ class PostmanDailySalesmdController extends Controller
 					WHERE x1.TGL='".$tglIn."' AND x1.USER_ID NOT IN ('61','62')
 					GROUP BY x1.TGL,x1.USER_ID					
 				")->queryAll(),
-			]); */			
+			]); 		
 			
 			/**
 			 * MAP ATTACH 
@@ -434,9 +430,11 @@ class PostmanDailySalesmdController extends Controller
 			*/	
 			//$rootPathExcel='/var/www/advanced/lukisongroup/cronjob/tmp_cronjob/';			
 			//$rootPathImageZip='/var/www/advanced/lukisongroup/cronjob/tmp_cronjob/img/';
-			/* $rootPathExcel=Yii::getAlias('@lukisongroup').'/cronjob/tmp_cronjob/';	
-			$rootPathImageZip=Yii::getAlias('@lukisongroup').'/cronjob/tmp_cronjob/img/';				
-			$filename = 'PostmanDailySalesMd';
+			//$rootPathExcel=Yii::getAlias('@lukisongroup').'/cronjob/tmp_cronjob/';	
+			$rootPathExcel='/var/www/backup/salesmd/excel/';
+			$rootPathImageZip='/var/www/backup/salesmd/photo/';				
+			//$rootPathImageZip=Yii::getAlias('@lukisongroup').'/cronjob/tmp_cronjob/img/';				
+			$filename = "PostmanDailySalesMd"."-".$tglIn;
 			if ($dataList){
 				$listImg=$dataList->getModels();				
 				$filenameAll[]=[
@@ -453,7 +451,7 @@ class PostmanDailySalesmdController extends Controller
 					
 				};	
 				$filenameAll=ArrayHelper::merge($filenameAll,$fileAttach);				
-			}; */
+			}; 
 			//print_r($filenameAll);
 				
 			/**
@@ -461,7 +459,7 @@ class PostmanDailySalesmdController extends Controller
 			 * EXISTING ATTACH xlsx,zip
 			 * @author Piter Novian [ptr.nov@gmail.com] 
 			*/	
-			// Get Content
+			//Get Content
 			$contentBody= $this->renderPartial('_postmanBodyDailySales',[
 				'cusCount'=>$cusCount
 			]);	
@@ -470,20 +468,20 @@ class PostmanDailySalesmdController extends Controller
 			Yii::$app->mailer->compose()
 			->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
 			//->setTo(['it-dept@lukison.com'])
-			->setTo(['piter@lukison.com'])
+			//->setTo(['piter@lukison.com'])
 			//->setTo(['hrd@lukison.com'])
-			//->setTo(['sales_esm@lukison.com','marketing_esm@lukison.com','dpi@lukison.com'])
-			//->setSubject('POSTMAN - DAILY REPORT SALES MD')
-			->setSubject('test');
-			//->setHtmlBody($contentBody);
+			->setTo(['sales_esm@lukison.com','marketing_esm@lukison.com','dpi@lukison.com'])
+			->setSubject('POSTMAN - DAILY REPORT SALES MD')
+			//->setSubject('test');
+			->setHtmlBody($contentBody);
 			// Array data Attach, checking exiting file
-			/* foreach($filenameAll as $row => $value){
+			foreach($filenameAll as $row => $value){
 				if (file_exists($value['path'])) {
 					Yii::$app->mailer->compose()->attach($value['path'],[$value['filename'],$value['type']]);
 				}
-			}	 */		
+			}	 	
 			Yii::$app->mailer->compose()->send(); 		 
-		//}
+		}
 	}
 	
 	/**

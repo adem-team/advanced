@@ -38,7 +38,7 @@ class TrigerReviewVisitController extends Controller
 	public function actionTriger(){
 		$tglIn=date("Y-m-d");
 		Yii::$app->db_esm->createCommand("
-					call REPORT_CUSTOMERCALL_TIMEVISIT('".$tglIn."')
+					call CRONJOB_CUSTOMERCALL_TIMEVISIT('".$tglIn."')
 		")->execute();
 	}
 }
