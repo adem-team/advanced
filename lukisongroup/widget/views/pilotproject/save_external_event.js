@@ -11,24 +11,16 @@
     });
 
 
-    function count(){
-       $.getJSON('/widget/pilotproject/count-event', function(data){
+    // function count(){
+    //    $.getJSON('/widget/pilotproject/count-event', function(data){
 
-         // var datx = parseInt(data);
-         return data;
+    //      // var datx = parseInt(data);
+    //      return data;
 
-       });
+    //    });
 
-    }
+    // }
 
-    var return_first = function () {
-    var tmp = null;
-     $.getJSON('/widget/pilotproject/count-event', function(data){
-
-         // var datx = parseInt(data);
-          tmp = data;
-           return tmp;
-       });
     
     // $.ajax({
     //     'async': false,
@@ -42,7 +34,7 @@
     //     }
     // });
     // return tmp;
-}();
+// }();
 
 
   /* display data json event */
@@ -88,8 +80,8 @@
 
     /*after load display data*/
     $(window).load(function(){
-      displaydata();
-       alert(return_first);
+      displaydata(); 
+       
     })
 
     function save(ev){
@@ -114,20 +106,33 @@
   $('#new-event').keyup(function(e) {
     e.preventDefault();
      var val = $('#new-event').val();
-    if (e.which == 13) {
-        // do it
-      save(val);
-      var event = $('<div/>');
-      event.css({'background-color': currColor, 'eventColor': currColor, 'color': '#fff'}).addClass('external-event');
-      event.html(val);
-      $('#external-events').prepend(event);
+       // $.getJSON('/widget/pilotproject/count-event', function(data){
 
-      // Add draggable funtionality
-      ini_events(event);
+         // var datx = parseInt(data);
+          // tmp = data;
 
-      //Remove event from text input
-      $('#new-event').val('');
-    }
+          // if(tmp != 0)
+          // {
+             if (e.which == 13) {
+                // do it
+                save(val);
+                var event = $('<div/>');
+                event.css({'background-color': currColor, 'eventColor': currColor, 'color': '#fff'}).addClass('external-event');
+                event.html(val);
+                $('#external-events').prepend(event);
+
+                // Add draggable funtionality
+                ini_events(event);
+
+                //Remove event from text input
+                $('#new-event').val('');
+              }
+         // }else{
+         //    console.log('tambahkan row dahulu')
+         // }
+         
+       // });
+   
 });
  
 
@@ -140,17 +145,26 @@
         return;
       }
 
+      $.getJSON('/widget/pilotproject/count-event', function(data){
 
-      // //Create events
-      save(val);
-      var event = $('<div/>');
-      event.css({'background-color': currColor, 'eventColor': currColor, 'color': '#fff'}).addClass('external-event');
-      event.html(val);
-      $('#external-events').prepend(event);
+              // tmp = data;
+              // if(tmp != 0)
+              // {
+                 // //Create events
+                save(val);
+                var event = $('<div/>');
+                event.css({'background-color': currColor, 'eventColor': currColor, 'color': '#fff'}).addClass('external-event');
+                event.html(val);
+                $('#external-events').prepend(event);
 
-      // Add draggable funtionality
-      ini_events(event);
+                // Add draggable funtionality
+                ini_events(event);
 
-      //Remove event from text input
-      $('#new-event').val('');
-    });	
+                //Remove event from text input
+                $('#new-event').val('');
+              // }else{
+              //   alert('tolong tambahkan row');
+              // }
+          });
+     
+});	

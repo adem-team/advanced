@@ -92,13 +92,13 @@ public function getParentName() {
     /* Join Class Employe */
         public function getEmploye()
         {
-            return $this->hasOne(Employe::className(), ['EMP_ID' => 'DESTINATION_TO']);
+            return $this->hasOne(Employe::className(), ['EMP_EMAIL' => 'DESTINATION_TO']);
         }
 
          /* Join Class Employe */
         public function getEmployecc()
         {
-            return $this->hasOne(Employe::className(), ['EMP_ID' => 'USER_CC']);
+            return $this->hasOne(Employe::className(), ['EMP_EMAIL' => 'USER_CC']);
         }
 
            /* Join Class Employe */
