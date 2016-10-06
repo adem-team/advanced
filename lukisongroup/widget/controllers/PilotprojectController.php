@@ -150,22 +150,25 @@ class PilotprojectController extends Controller
      {
         $model = self::findModel($id);
 
-        $post =Yii::$app->request->post();
+         $post =Yii::$app->request->post();
          $val = $post['Pilotproject']['parentpilot'];
-         $sendto = $post['Pilotproject']['Sendto'];
 
         if ($model->load(Yii::$app->request->post())){
 
-          if($val == 0)
+
+          if($val != 0 || $val == '')
           {
-            $model->SORT = $model->PARENT;
-          }else{
              $model->SORT = $id;
              $model->PARENT = 0;
+          }else{
+            
+              $model->SORT = $model->PARENT;
           }
           // $model->DESTINATION_TO = $sendto;
 
-            $model->save();
+            if($model->save()){
+              self::Sendmail($model->ID); // call function send mail
+            }
             return $this->redirect('index');
         }else{
             return $this->renderAjax('detail_pilot', [
@@ -251,7 +254,7 @@ class PilotprojectController extends Controller
     public function get_aryEmploye()
     {
         $emp = \lukisongroup\hrd\models\Employe::find()->where('STATUS<>3')->all();
-        return $dropemploy = ArrayHelper::map($emp,'EMP_ID', function ($emp, $defaultValue) {
+        return $dropemploy = ArrayHelper::map($emp,'EMP_EMAIL', function ($emp, $defaultValue) {
           return $emp['EMP_NM'] . ' ' . $emp['EMP_NM_BLK'];
     });
     }
@@ -312,17 +315,28 @@ class PilotprojectController extends Controller
 
       public function actionTambahRow(){
 
-        $dep_id = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
-         $sql = Pilotproject::find()->where(['DEP_ID'=>$dep_id])->max('SORT');                               
+         $dep_id = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+         $sql = Pilotproject::find()->where(['DEP_ID'=>$dep_id])->max('SORT');
+
+          $max = Pilotproject::find()->orderBy(['ID' => SORT_DESC])->max('ID');
+
+         if(count($sql) == 0){
+            $sort = 0;
+            $parent = 0;
+         }else{
+            $sort = $sql;
+            $parent = $sql;
+         }                              
 
           $connection = Yii::$app->db_widget;
 
             $connection->createCommand()->insert('sc0001', [
-                          'SORT' => $sql,
+                          'PARENT' => $parent,
                           'DEP_ID' => $dep_id,
-                          'CREATED_BY'=>Yii::$app->getUserOpt->Profile_user()->emp->EMP_NM,
+                          'CREATED_BY'=>Yii::$app->getUserOpt->Profile_user()->emp->EMP_EMAIL,
                           'TEMP_EVENT'=>2
                       ])->execute();
+
 
              return $this->redirect('index');
            
@@ -519,22 +533,52 @@ public function actionSaveEvent(){
             $color=$request->post('color');
 
             $dep_id = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
-            $sql = Pilotproject::find()->where(['DEP_ID'=>$dep_id])->max('SORT');    
+            $sql = Pilotproject::find()->where(['DEP_ID'=>$dep_id])->max('SORT');
+
+            $max = Pilotproject::find()->max('ID');
+            if(count($sql) == 0){ 
+              $parent = 0;
+              $sort = $max;
+            }else{
+              $parent = $sql;
+              $sort = $sql;
+
+            }    
 
             $model = new Pilotproject();
             $model->DEP_ID = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
-            $model->CREATED_BY =  Yii::$app->getUserOpt->Profile_user()->emp->EMP_NM;
+            $model->CREATED_BY =  Yii::$app->getUserOpt->Profile_user()->emp->EMP_EMAIL;
             // $pilot_id = Yii::$app->ambilkonci->getpilot($model->DEP_ID);
             // $model->PILOT_ID = $pilot_id;   
             $model->TEMP_EVENT = 0;  
-            // $model->PARENT = 0;
-            $model->SORT = $sql;
+            $model->PARENT = $parent;
+            $model->SORT = 0;
             $model->PILOT_NM = $event;
             $model->COLOR = $color;
             $model->save();
+            print_r($model->save());
+
             return true;
         }
 
+    }
+
+  // send mail function
+    public function Sendmail($id){
+
+      $data_pilot = self::findModel($id);
+
+       $contentMailAttach = '<div><h1>hello world<h1> </div>';
+
+       $contentMailAttachBody = '<div> <h1>hello world<h1></div>';
+
+       if(count($data_pilot->CREATED_BY) != 0 && count($data_pilot->USER_CC) != 0)
+       {
+          /* KIRIM ATTACH emaiL */
+          $to=[$data_pilot->CREATED_BY,$data_pilot->USER_CC,$data_pilot->DESTINATION_TO];
+        \Yii::$app->kirim_email->pdf($contentMailAttach,'Pilot Project',$to,'Pilot-Project',$contentMailAttachBody);
+       }
+        
     }
 
 
@@ -888,7 +932,7 @@ public function actionSaveEvent(){
             
         $end_1 = strtotime($end);
         $dep_id1 = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
-         $emp_id = Yii::$app->getUserOpt->Profile_user()->emp->EMP_ID;
+         $emp_email = Yii::$app->getUserOpt->Profile_user()->emp->EMP_EMAIL;
          $gf_id = Yii::$app->getUserOpt->Profile_user()->emp->GF_ID;
 
             if($gf_id <= 4)
@@ -897,7 +941,7 @@ public function actionSaveEvent(){
 
                 // $sql = "select ID as resourceId, PLAN_DATE1 as start , PLAN_DATE2 as end, PILOT_NM as title from sc0001 where DEP_ID = '".$dep_id1."' and UNIX_TIMESTAMP(PLAN_DATE2) ='".$end_1."'";
             }else{
-                $sql = "select STATUS as status, COLOR as color, ID as resourceId, PLAN_DATE1 as start , PLAN_DATE2 as end, PILOT_NM as title from sc0001 where DESTINATION_TO = '".$emp_id."'and TEMP_EVENT <>0";
+                $sql = "select STATUS as status, COLOR as color, ID as resourceId, PLAN_DATE1 as start , PLAN_DATE2 as end, PILOT_NM as title from sc0001 where DESTINATION_TO = '".$emp_email."'and TEMP_EVENT <>0";
 
             }
       // $aryEvent = Pilotproject::find()->orderBy('SORT')->all();
@@ -922,7 +966,7 @@ public function actionSaveEvent(){
 	public function actionRenderDataResources()
     {
          $dep_id1 = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
-         $emp_id = Yii::$app->getUserOpt->Profile_user()->emp->EMP_ID;
+         $emp_email = Yii::$app->getUserOpt->Profile_user()->emp->EMP_EMAIL;
          $gf_id = Yii::$app->getUserOpt->Profile_user()->emp->GF_ID;
          if( $gf_id <= 4)
          {
@@ -930,15 +974,15 @@ public function actionSaveEvent(){
             $sql ="SELECT b.ID as id, a.PILOT_NM as srcparent ,b.PILOT_NM as title ,b.DEP_ID as dep_id,b.CREATED_BY as createby
                 FROM sc0001 AS a 
                 INNER JOIN sc0001 AS b 
-                WHERE a.ID=b.SORT and b.DEP_ID='".$dep_id1."'and b.TEMP_EVENT <>0";
+                WHERE a.ID=b.SORT and b.DEP_ID='".$dep_id1."'and b.TEMP_EVENT <>0 OR b.SORT = 0";
         }else{
              
              $sql ="SELECT b.ID as id, a.PILOT_NM as srcparent ,b.PILOT_NM as title ,b.DEP_ID as dep_id,b.CREATED_BY as createby
                 FROM sc0001 AS a 
                 INNER JOIN sc0001 AS b 
-                WHERE a.ID=b.SORT and b.DESTINATION_TO='".$emp_id."'and b.TEMP_EVENT <>0";
+                WHERE a.ID=b.SORT and b.DESTINATION_TO='".$emp_email."'and b.TEMP_EVENT <>0 OR b.SORT = 0";
         }
-            
+              
           
         $ary = Yii::$app->db_widget->createCommand($sql)->queryAll();
 
@@ -967,7 +1011,7 @@ public function actionSaveEvent(){
             }
 
             $model->DEP_ID = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
-            $model->CREATED_BY =  Yii::$app->getUserOpt->Profile_user()->emp->EMP_NM;
+            $model->CREATED_BY =  Yii::$app->getUserOpt->Profile_user()->emp->EMP_EMAIL;
             $model->save();
 
 
