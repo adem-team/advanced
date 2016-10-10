@@ -75,10 +75,29 @@ EOF;
 $JSaddButton= <<<EOF
 	function() {
 		//alert('test');
-		$.get('/widget/pilotproject/modal-row',function(data){
-						$('#modal-row').modal('show')
-						.find('#modalContentRow')
-						.html(data);
+		$.get('/widget/pilotproject/tambah-row',function(data){
+		 setTimeout(function(){	
+			 $.pjax.reload({container:'#calendar_test'});		
+			 //alert(data);
+		},100);
+
+			// alert(data);
+			//     $('#calendar_test').fullCalendar('removeEventSource');
+			 //  $('#calendar_test').fullCalendar( 'addEventSource', data ) 
+             // $('#calendar_test').fullCalendar('rerenderEvents' );
+			
+			// $('#calendar_test').load(location.href + " #calendar_test");
+			// $.pjax.reload({container:'#tes1'});
+			// $("#tes1").load(#tes1);
+			// $('#calendar_test').fullCalendar( 'refetchEvents' );
+			// $('div#tes1').load('http://labtest1-erp.int/widget/pilotproject/index div#tes1');
+			 // $('#calendar').fullCalendar('refetchEvents');
+							// if(data == 'true'){
+							//  $('#calendar_test').fullCalendar( 'rerenderEvents' );
+							// }
+						// $('#modal-row').modal('show')
+						// .find('#modalContentRow')
+						// .html(data);
 		});
 	}
 EOF;
@@ -379,7 +398,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
 		</div>
 	</div>
 	<div  class="col-xs-12 col-sm-12 col-dm-10 col-lg-10">
-		<div class="row">
+		<div id="tes1" class="row">
 			<?php echo $wgCalendar;?>
 		</div>
 	</div>
