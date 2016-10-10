@@ -875,8 +875,8 @@ public function actionSaveEvent(){
     $update_event = new Pilotproject();
 		$update_event->COLOR = $color;
     $update_event->PILOT_NM = $title;
-    $update_event->PLAN_DATE1 = $start;
-    $update_event->PLAN_DATE2 = $start;
+    $update_event->PLAN_DATE1 =Yii::$app->formatter->asDatetime($start, 'php:Y-m-d H:i:s'); 
+    $update_event->PLAN_DATE2 =Yii::$app->formatter->asDatetime($start, 'php:Y-m-d H:i:s');
     $update_event->DEP_ID = $dep_id;
     $update_event->save();
 
