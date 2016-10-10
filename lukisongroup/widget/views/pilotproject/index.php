@@ -9,8 +9,8 @@ use kartik\rating\StarRating;
 use kartik\builder\Form;
 use lukisongroup\widget\models\Pilotproject;
 use kartik\helpers\Html;
-use lukisongroup\assets\AppAssetChart;  	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
-AppAssetChart::register($this);
+//use lukisongroup\assets\AppAssetChart;  	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
+//AppAssetChart::register($this);
 
 
 	/**
@@ -24,12 +24,12 @@ AppAssetChart::register($this);
 	  * @link https://github.com/C12D/advanced/blob/master/lukisongroup/view/widget/pilotp/index.php
 	  * @see https://github.com/C12D/advanced/blob/master/lukisongroup/view/widget/pilotp/index.php
 	 */
-	$this->registerJs('FusionCharts.ready(function () {
+	/* $this->registerJs('FusionCharts.ready(function () {
 			var  jsonData1= $.ajax({
 			  url: "http://api.lukisongroup.com/chart/pilotps?access-token=azLSTAYr7Y7TLsEAML-LsVq9cAXLyAWa",
 			  type: "GET",
 			  dataType:"json",
-			  data:"id_user='. Yii::$app->user->identity->id.'&pilih=0", /*[0=Dept,1=user]*/
+			  data:"id_user='. Yii::$app->user->identity->id.'&pilih=0", //[0=Dept,1=user]
 			  async: false
 			  }).responseText;		  
 			  var myData1 = jsonData1;
@@ -43,7 +43,7 @@ AppAssetChart::register($this);
 				dataSource: myData1
 			}).render();
 		});
-	',$this::POS_READY);
+	',$this::POS_READY); */
 
 	/**
 	  * Js Ajax request cUrl Json Data
@@ -56,13 +56,13 @@ AppAssetChart::register($this);
 	  * @link https://github.com/C12D/advanced/blob/master/lukisongroup/view/widget/pilotp/index.php
 	  * @see https://github.com/C12D/advanced/blob/master/lukisongroup/view/widget/pilotp/index.php
 	 */
-	$this->registerJs('FusionCharts.ready(function () {
+	/* $this->registerJs('FusionCharts.ready(function () {
 			var  jsonData2= $.ajax({
 			  //url: "http://api.lukisongroup.int/chart/pilotps?access-token=azLSTAYr7Y7TLsEAML-LsVq9cAXLyAWa",
 			  url: "http://api.lukisongroup.com/chart/pilotps?access-token=azLSTAYr7Y7TLsEAML-LsVq9cAXLyAWa",
 			  type: "GET",
 			  dataType:"json",
-			  data:"id_user='. Yii::$app->user->identity->id.'&pilih=1", /*[0=Dept,1=user]*/
+			  data:"id_user='. Yii::$app->user->identity->id.'&pilih=1", //[0=Dept,1=user]
 			  async: false
 			  }).responseText;		  
 			  var myData2 = jsonData2;
@@ -78,7 +78,7 @@ AppAssetChart::register($this);
 			
 			.render();
 		});
-	',$this::POS_READY);
+	',$this::POS_READY); */
 	
 	/**
 	  * Js Ajax Render HTML FusionCharts id='chart1-container'

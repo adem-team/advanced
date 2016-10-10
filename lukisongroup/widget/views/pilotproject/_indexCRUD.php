@@ -163,7 +163,6 @@ EOF; */
 		'clientOptions' => [
 		'theme'=> true,
 			'customButtons'=>[ //additional button
-
 				'details'=>[
 					'text'=>'Rooms',
 						'click'=>new JsExpression($JSaddButtonRooms),
@@ -206,7 +205,7 @@ EOF; */
 				'timelineOneDays' => [
 					'type'     => 'timeline',
 					'duration' => [
-						'days' => 2,
+						'days' => 1,
 					],
 				], 
 			
@@ -330,8 +329,8 @@ $this->registerJs($this->render('save_external_event.js'),$this::POS_END);
  * @author piter novian [ptr.nov@gmail.com] 
 */	
  $this->registerJs("	
-document.addEventListener('DOMContentLoaded', function(event) {
-		// $(document).ready(function() {
+	document.addEventListener('DOMContentLoaded', function(event) {
+		//$(document).ready(function() {
 			$('#tab-project-id').click(function(){
 				setTimeout(function(){				
 					var idx = $('ul li.active').index();
@@ -340,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
 						//alert(idx);
 						var elem = document.getElementById('calendar_test');
 						var list = elem.getElementsByTagName('button')[4];
-							//list.onmouseover = function() {
+							//list.onmouseover = function() {}
 							//list.className='ui-state-hover';
 							//list.focus();
 							setTimeout(function(){
@@ -350,7 +349,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
 				},100);
 			});	
 		//});
-	}
+	})
  ",$this::POS_READY);
 
 ?>

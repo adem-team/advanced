@@ -16,10 +16,10 @@ use lukisongroup\sistem\models\M1000;
 //use lukisongroup\assets\AppAsset;
 use mdm\admin\components\MenuHelper;
 use yii\bootstrap\Modal;
-use lukisongroup\assets\AppAssetChat;
-AppAssetChat::register($this);
-//use machour\yii2\notifications\widgets\NotificationsWidget;
-//use common\components\Notification;
+//use lukisongroup\assets\AppAssetChat;
+//AppAssetChat::register($this);
+use machour\yii2\notifications\widgets\NotificationsWidget;
+use common\components\Notification;
 //use lukisongroup\models\Notification;
 //AppAsset::register($this);
 dmstr\web\AdminLteAsset::register($this);
@@ -66,7 +66,7 @@ $this->title = 'LukisonGroup.com';
 	 *	'theme' => NotificationsWidget::THEME_NOTY,
 	 *	'theme' => NotificationsWidget::THEME_GROWL,
 	*/
-	/* NotificationsWidget::widget([
+	 NotificationsWidget::widget([
 		'theme' => NotificationsWidget::THEME_NOTIFIT,
 		 'clientOptions' => [
 			'location' => 'id',
@@ -80,7 +80,7 @@ $this->title = 'LukisonGroup.com';
 			  'size' => 'large',
 		  ],
 		'listSelector' => '#notifications',
-	]);		 */	 
+	]);		  
 
 ?>
 <?php $this->beginPage() ?>
