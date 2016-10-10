@@ -492,13 +492,13 @@ use kartik\widgets\Select2;
 	
 	
 	
-$this->registerJs("
+// $this->registerJs("
  
- $('#pilotproject-pilot_nm').change(function(){
- 	alert('tes');
- })
+//  $('#pilotproject-pilot_nm').change(function(){
+//  	alert('tes');
+//  })
 
-",$this::POS_READY);
+// ",$this::POS_READY);
 
 	
 ?>

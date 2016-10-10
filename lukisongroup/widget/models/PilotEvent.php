@@ -8,9 +8,14 @@ use Yii;
  * This is the model class for table "sc0001a".
  *
  * @property integer $ID
- * @property integer $TYPE
+ * @property string $NM_EVENT
+ * @property integer $STATUS
+ * @property string $COLOR
+ * @property string $CREATED_BY
+ * @property string $CREATED_AT
+ * @property string $DEP_ID
  */
-class Projectdest extends \yii\db\ActiveRecord
+class PilotEvent extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -34,7 +39,11 @@ class Projectdest extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['TYPE'], 'integer'],
+            [['STATUS'], 'integer'],
+            [['COLOR'], 'string'],
+            [['CREATED_AT'], 'safe'],
+            [['NM_EVENT', 'DEP_ID'], 'string', 'max' => 225],
+            [['CREATED_BY'], 'string', 'max' => 20],
         ];
     }
 
@@ -45,7 +54,12 @@ class Projectdest extends \yii\db\ActiveRecord
     {
         return [
             'ID' => 'ID',
-            'TYPE' => 'Type',
+            'NM_EVENT' => 'Nm  Event',
+            'STATUS' => 'Status',
+            'COLOR' => 'Color',
+            'CREATED_BY' => 'Created  By',
+            'CREATED_AT' => 'Created  At',
+            'DEP_ID' => 'Dep  ID',
         ];
     }
 }
