@@ -2,6 +2,7 @@
 use yii\helpers\Html;
 	$imgPo1= Html::img('@web/widget/docHelp/img_pur/IlustrasiCreatePO.png',  ['class' => 'pnjg', 'style'=>'width:400px;height:200px;']); 
 ?>
+<p>
 Dalam program ini, untuk proses pembuatan PO atau Purchase Order, diperlukan komponen pendukung sebagai berikut:</br>
 1. <b>Master Barang</b>, terdiri dari unit barang dan kategori barang.</br>
 2. <b>Master Supplier</b>, terdiri dari data supplier yang sudah di input.</br>

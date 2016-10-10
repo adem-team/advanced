@@ -72,7 +72,7 @@ $JSaddButtonRooms = <<<EOF
 	}
 EOF;
 
-$JSaddButton= <<<EOF
+$JSaddAddRow= <<<EOF
 	function() {
 		//alert('test');
 		$.get('/widget/pilotproject/tambah-row',function(data){
@@ -80,7 +80,6 @@ $JSaddButton= <<<EOF
 			 $.pjax.reload({container:'#calendar_test'});		
 			 //alert(data);
 		},100);
-
 			// alert(data);
 			//     $('#calendar_test').fullCalendar('removeEventSource');
 			 //  $('#calendar_test').fullCalendar( 'addEventSource', data ) 
@@ -101,6 +100,18 @@ $JSaddButton= <<<EOF
 		});
 	}
 EOF;
+
+$JSaddGrp= <<<EOF
+	function(groupValue) {
+		//var grp = groupValue;
+		//alert(groupValue.html);
+		//groupValue='resourceGroupField:srcparent';
+		//$('#calendar').fullCalendar({
+		//	grp='srcparent',
+		//});
+	}
+EOF;
+
 /* $JSDropEvent = <<<EOF
 function(event, element, view) {
     var child = event.parent;
@@ -133,7 +144,7 @@ EOF; */
 			'modal-size'=>'modal-lg'										//size of modal (modal-xs,modal-sm,modal-sm,modal-lg).
 		],
 		'header'        => [
-			'left'   => 'plus,details, today, prev,next',
+			'left'   => 'plus,today, prev,next, details, group, excel-export',
 			'center' => 'title',
 			'right'  => 'timelineOneDays,agendaWeek,month,listWeek',
 		],
@@ -157,9 +168,17 @@ EOF; */
 					'text'=>'Rooms',
 						'click'=>new JsExpression($JSaddButtonRooms),
 				],
+				'group'=>[
+					'text'=>'Group',
+						'click'=>new JsExpression($JSaddGrp),
+				],
 				'plus'=>[
 					'text'=>'Plus',
-						'click'=>new JsExpression($JSaddButton),
+						'click'=>new JsExpression($JSaddAddRow),
+				],
+				'excel-export'=>[
+					'text'=>'Excel-Export',
+						//'click'=>new JsExpression($JSaddButton),
 				]	
 			],
 			 'timezone'=> 'local',
@@ -196,7 +215,7 @@ EOF; */
 			'events'=> \yii\helpers\Url::to(['pilotproject/render-data-events', 'id' => 2]),
 			'resourceAreaWidth'=>'30%',
 			'resourceLabelText' => 'Discriptions',
-			'resourceGroupField'=> 'srcparent',
+			//'resourceGroupField'=> false,
 			'resourceColumns'=>[					
 					[
 						'labelText'=>'Rooms',
@@ -227,7 +246,7 @@ EOF; */
 Modal::begin([
     'id' => 'modal-rooms',
     'header' => '<div style="float:left;margin-right:10px" class="fa fa-user"></div><div><h5 class="modal-title"><b>Create Rooms</b></h5></div>',
-    'size' => Modal::SIZE_SMALL,
+    'size' => 'modal-dm',
     'headerOptions'=>[
         'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
     ],
@@ -335,11 +354,16 @@ document.addEventListener('DOMContentLoaded', function(event) {
  ",$this::POS_READY);
 
 ?>
-<div  class="row" style="margin-top:0px,font-family: verdana, arial, sans-serif ;font-size: 8pt"> 
-	<div  class="col-xs-12 col-sm-12 col-dm-2 col-lg-2">
-	<div class="row">
-		 <section class="content">
-			<div class="box box-solid">
+<div  class="row" style="margin-top:0px,font-family: verdana, arial, sans-serif ;font-size: 8pt"> 	
+	<div  class="col-xs-12 col-sm-12 col-dm-9 col-lg-9">
+		<div id="tes1" class="row">
+			<?php echo $wgCalendar;?>
+		</div>
+	</div>
+	<div  class="col-xs-12 col-sm-12 col-dm-3 col-lg-3">
+		<div class="row">
+			<section class="content">
+				<div class="box box-solid">
 				<div class="box-body">
 						<h5>Draggable Events</h5>
 						<div id='external-events'>
@@ -395,11 +419,6 @@ document.addEventListener('DOMContentLoaded', function(event) {
 				</div>
 			</div>
 		 </section>
-		</div>
-	</div>
-	<div  class="col-xs-12 col-sm-12 col-dm-10 col-lg-10">
-		<div id="tes1" class="row">
-			<?php echo $wgCalendar;?>
 		</div>
 	</div>
 </div>

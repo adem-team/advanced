@@ -16,11 +16,6 @@ use kartik\widgets\DateTimePicker;
 			'validationUrl'=>Url::toRoute('/widget/pilotproject/valid-pilot')
 		]);
 	?>
-	<!-- panel -->
- <div class="panel panel-primary">
-  <div class="panel-heading"> Rooms</div>
-    <div class="panel-body">
-
 	<div>
 	<?=$form->field($model,'parentpilot')->checkbox() ?>
 	</div>
@@ -80,8 +75,7 @@ use kartik\widgets\DateTimePicker;
 		<?php echo Html::submitButton('Submit',['class' => 'btn btn-primary']); ?>
 	</div>
 	<?php ActiveForm::end(); ?>	
-	</div>
-	</div>
+
 <?php	
 $this->registerJs("
 
