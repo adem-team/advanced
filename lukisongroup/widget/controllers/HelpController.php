@@ -61,12 +61,15 @@ class HelpController extends Controller
      */
     public function actionIndex()
     {		
+		$introduction =$this->renderPartial('erp_introduction');
 		$pur_penjelasan =$this->renderPartial('purchasing\CreatePo');
 		$pur_permission =$this->renderPartial('purchasing\Permission');
 		
 		$hrm_penjelasan =$this->renderPartial('hrm\penjelasan');
 		
 		return $this->render('index',[
+			/*Introduction*/
+			'introduction'=>$introduction,
 			/*Purchasing*/
 			'pur_penjelasan'=>$pur_penjelasan,
 			'pur_permission'=>$pur_permission,

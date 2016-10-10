@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+	$imgPopPermission1=Html::img('@web/widget/docHelp/img_pur/IlustrasiAlurPo.png',  ['class' => 'pnjg', 'style'=>'width:500px;height:200px;']);
 ?>
 Hak akses hanya bisa di lakukan sebagai berikut: </br>
 1. <b>Departmen Purchasing</b>, berwenang membuat PO Normal dan PO Plus.</br>
@@ -8,4 +9,4 @@ Hak akses hanya bisa di lakukan sebagai berikut: </br>
 4. <b>Departmen Warehouse</b>, berwenng menerima barang berdasarkan kecocokan surat jalan dari supplier  dan PO yang diterbitkan. </br>
 </br>
 ilustrasi Alur Proces PO :</br>
-<?php echo Html::img('@web/widget/docHelp/pur_image/IlustrasiAlurPo.png',  ['class' => 'pnjg', 'style'=>'width:500px;height:200px;']); ?>	</br>
+<?=$imgPopPermission1?>	</br>

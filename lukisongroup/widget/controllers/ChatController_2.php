@@ -10,7 +10,6 @@ namespace lukisongroup\widget\controllers;
 
 /* VARIABLE BASE YII2 Author: -YII2- */
 use Yii;
-use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -45,7 +44,7 @@ class ChatController extends Controller
         ];
     }
 
-	   public function beforeAction($action){
+	   public function beforeAction(){
             if (Yii::$app->user->isGuest)  {
                  Yii::$app->user->logout();
                    $this->redirect(array('/site/login'));  //
@@ -81,10 +80,36 @@ class ChatController extends Controller
 
     public function actionIndex()
     {
-			//return $this->redirect('http://chat.lukisongroup.com:8890','htmloptions'=>['target' => '_blank']]);
-			//echo Html::a('http://chat.lukisongroup.com:8890', ['target'=>'_blank']);
-			return $this->render('loadtab');
-			
+          Yii::$app->redis->executeCommand('DEL', [
+            'key'=>'chats:',
+          ]);
+    		/*MODEL CHAT MESSAGE*/
+        $searchModelMsg = new ChatSearch();
+        $dataProviderMsg = $searchModelMsg->search(Yii::$app->request->queryParams);
+        $dataProviderMsg->pagination->pageSize=100;
+		/*MODEL CHAT GROUP*/
+        $searchmodelGrp = new ChatroomSearch();
+        $dataproviderGrp = $searchmodelGrp->search(Yii::$app->request->queryParams);
+        $dataproviderGrp->pagination->pageSize=100;
+        /*MODEL CHAT USER*/
+        $searchModelUser = new ChatSearch();
+        $dataProviderUser = $searchModelUser->searchonline(Yii::$app->request->queryParams);
+        $dataProviderUser->pagination->pageSize=100;
+
+
+        return $this->render('index', [
+			/*RENDER CHAT MESSAGE*/
+            'searchModelMsg' => $searchModelMsg,
+            'dataProviderMsg' => $dataProviderMsg,
+			/*RENDER CHAT GROUP*/
+            'searchmodelGrp' => $searchmodelGrp,
+            'dataproviderGrp' => $dataproviderGrp,
+			/*RENDER CHAT USER*/
+            'searchModelUser' => $searchModelUser,
+            'dataProviderUser' => $dataProviderUser,
+			/*MENU DEFAULT*/
+			'ctrl_chat'=>'mdefault',
+        ]);
     }
 
     

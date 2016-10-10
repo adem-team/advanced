@@ -317,8 +317,13 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
 ?>
 <div  class="row" style="margin-top:0px,font-family: verdana, arial, sans-serif ;font-size: 8pt"> 
+	<div  class="col-xs-12 col-sm-12 col-dm-10 col-lg-10">
+		<div class="row">
+			<?php echo $wgCalendar;?>
+		</div>
+	</div>
 	<div  class="col-xs-12 col-sm-12 col-dm-2 col-lg-2">
-	<div class="row">
+		<div class="row">
 		 <section class="content">
 			<div class="box box-solid">
 				<div class="box-body">
@@ -378,11 +383,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
 		 </section>
 		</div>
 	</div>
-	<div  class="col-xs-12 col-sm-12 col-dm-10 col-lg-10">
-		<div class="row">
-			<?php echo $wgCalendar;?>
-		</div>
-	</div>
+	
 </div>
 
 	
