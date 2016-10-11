@@ -76,10 +76,35 @@ $JSaddAddRow= <<<EOF
 	function() {
 		//alert('test');
 		$.get('/widget/pilotproject/tambah-row',function(data){
-		 setTimeout(function(){	
-			 $.pjax.reload({container:'#calendar_test'});		
-			 //alert(data);
-		},100);
+			/* function(isLoading, view ) {
+				//$('#calendar_test').find('.fc-loading').toggle(isLoading);
+			}; */
+			//$('#calendar').fullCalendar('refetchResources');
+			
+			$('#calendar_test').fullCalendar( 'addResource', 
+					function(callback) {
+						somethingAsynchonous(function(resourceObjects) {
+							callback(resourceObjects);
+					})}, 
+			
+			scroll );
+			
+			/* $('#calendar_test').fullCalendar('option', {				
+				resource:  function(callback) {
+						somethingAsynchonous(function(resourceObjects) {
+							callback(resourceObjects);
+						});
+					}
+			
+			});  */
+			
+			
+			
+			// setTimeout(function(){	
+			// $.pjax.reload({container:'#calendar_test'});		
+			// //alert(data);
+			//},100);
+			
 			// alert(data);
 			//     $('#calendar_test').fullCalendar('removeEventSource');
 			 //  $('#calendar_test').fullCalendar( 'addEventSource', data ) 
