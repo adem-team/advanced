@@ -14,7 +14,7 @@ use dosamigos\ckeditor\CKEditor;
 
     <?php $form = ActiveForm::begin([
         'id'=>$model->formName(),
-        'enableClientValidation' => true,
+        // 'enableClientValidation' => true,
     ]); ?>
 
     <?= $form->field($model, 'SCHEDULE')->widget(CKEditor::className(), [

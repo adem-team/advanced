@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use dosamigos\ckeditor\CKEditor;
+use kartik\widgets\TimePicker;
 
 
 /* @var $this yii\web\View */
@@ -17,10 +17,9 @@ use dosamigos\ckeditor\CKEditor;
         // 'enableClientValidation' => true,
     ]); ?>
 
-    <?= $form->field($model, 'RESULT_SCHEDULE')->widget(CKEditor::className(), [
-        'options' => ['rows' => 6],
-        'preset' => 'basic'
-    ]) ?>
+   <?= $form->field($model, 'TIME_START')->widget(TimePicker::classname(), []) ?>
+
+   <?= $form->field($model, 'TIME_END')->widget(TimePicker::classname(), []) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -88,9 +88,10 @@ class NotulenController extends Controller
       public function actionSetAcara($id)
     {
         $model = NotulenModul::find()->where(['NOTULEN_ID'=>$id])->one();
+       
         if ($model->load(Yii::$app->request->post())) {
             $model->save();
-            return $this->redirect('view',['id'=>$id]);
+           return $this->redirect(['view', 'id' => $id]);
         } else {
             return $this->renderAjax('set_acara', [
                 'model' => $model,
@@ -104,7 +105,7 @@ class NotulenController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             $model->save();
-            return $this->redirect('view',['id'=>$id]);
+             return $this->redirect(['view', 'id' => $id]);
         } else {
             return $this->renderAjax('set_hasil', [
                 'model' => $model,
@@ -120,11 +121,11 @@ class NotulenController extends Controller
     public function actionView($id)
     {
         $model = self::findModel($id);
-        $modul = $model->notulenTbl;
+        $acara = $model->notulenTbl;
     
         return $this->render('view', [
             'model' => $model,
-            'acara' =>  $modul,
+            'acara' =>  $acara,
             'ttd'=>self::Get_profile()->emp->SIGSVGBASE64,
             'emp_nm'=>self::Get_profile()->emp->EMP_NM
         ]);
@@ -162,7 +163,7 @@ class NotulenController extends Controller
                         throw $e;
                     }
           
-            return $this->redirect(['index']);
+           return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,

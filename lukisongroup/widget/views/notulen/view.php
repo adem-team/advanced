@@ -52,7 +52,7 @@ use yii\bootstrap\Modal;
         // $icon = '<span class="fa fa-rotate-left fa-xs"> Back</span>';
         $label = $title;
         //$label = 'Reply';
-        $url = Url::toRoute(['/widget/notulen/set-acara','id'=>$model[0]->NOTULEN_ID]);
+        $url = Url::toRoute(['/widget/notulen/set-acara','id'=>$model->id]);
         $content = Html::a($label,$url, $options);
         return $content;
     }
@@ -68,7 +68,7 @@ use yii\bootstrap\Modal;
         // $icon = '<span class="fa fa-rotate-left fa-xs"> Back</span>';
         $label = $title;
         //$label = 'Reply';
-        $url = Url::toRoute(['/widget/notulen/set-hasil','id'=>$model[0]->NOTULEN_ID]);
+        $url = Url::toRoute(['/widget/notulen/set-hasil','id'=>$model->id]);
         $content = Html::a($label,$url, $options);
         return $content;
     }
@@ -137,7 +137,7 @@ use yii\bootstrap\Modal;
           <div class="col-sm-12">
             <dl>
               <dt style="width:150px; float:left;">Susunan Acara</dt>
-              <dd style="color:rgba(87, 163, 247, 1)">:<?php echo $acara[0]->SCHEDULE != ''?$acara[0]->SCHEDULE->MODUL : btnAcara($acara);?></dd>
+              <dd style="color:rgba(87, 163, 247, 1)">:<?php echo $acara[0]->SCHEDULE != ''?$acara[0]->SCHEDULE : btnAcara($model);?></dd>
             </dl>
 
         </div>
@@ -147,7 +147,7 @@ use yii\bootstrap\Modal;
         <div class="col-sm-12">
           <dl>
             <dt style="width:150px; float:left;">Hasil Rapat</dt>
-            <dd style="color:rgba(87, 163, 247, 1)">:<?php echo $acara[0]->RESULT_SCHEDULE != ''?$acara[0]->RESULT_SCHEDULE->MODUL : btnRapat($acara);?></dd>
+            <dd style="color:rgba(87, 163, 247, 1)">:<?php echo $acara[0]->RESULT_SCHEDULE != ''?$acara[0]->RESULT_SCHEDULE : btnRapat($model);?></dd>
           </dl>
 
       </div>
