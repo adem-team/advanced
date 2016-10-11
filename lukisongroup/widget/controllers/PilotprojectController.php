@@ -862,8 +862,8 @@ public function actionSaveEvent(){
 		echo "ID=".$id." START=".$start." EBD=".$end;
         $model = Pilotproject::findOne(['ID'=>$id]);
 
-        $model->PLAN_DATE1 = $start;
-        $model->PLAN_DATE2 = $end;
+        $model->PLAN_DATE1 = Yii::$app->formatter->asDatetime($start, 'php:Y-m-d H:i:s');
+        $model->PLAN_DATE2 = Yii::$app->formatter->asDatetime($end, 'php:Y-m-d H:i:s');
 
        $model->save();
 
@@ -1103,6 +1103,30 @@ public function actionSaveEvent(){
     }
 
 
+	public function actionSendCalTest(){
+		$from_name = "postman";        
+		$from_address = "postman@lukison.com";        
+		$to_name = "piter";        
+		$to_address = "piter@lukison.com";        
+		$startTime = "11/10/2016 18:00:00";        
+		$endTime = "11/10/2016 19:00:00";        
+		$subject = "Meeting";        
+		$description = "Tese calendar Event";        
+		$location = "HO Lukison ";
+
+		Yii::$app->emailevent->sendIcalEvent(
+			$from_name, 
+			$from_address, 
+			$to_name, 
+			$to_address, 
+			$startTime, 
+			$endTime, 
+			$subject, 
+			$description, 
+			$location
+		);
+	}
+	
   
 	
 	// public function actionRoomForm(){
@@ -1159,4 +1183,13 @@ public function actionSaveEvent(){
           return ActiveForm::validate($model);
         } */
     // }
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
