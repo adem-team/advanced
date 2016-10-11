@@ -102,7 +102,43 @@ $JSaddAddRow= <<<EOF
 EOF;
 
 $JSaddGrp= <<<EOF
-	function(groupValue) {
+	function() {
+		var calendarOptions = $('#calendar_test')
+			.fullCalendar('getView').options.resourceGroupField;
+			
+		//alert(calendarOptions);
+		$('#calendar_test').fullCalendar('option', {
+			//resourceGroupField: 'srcparent',
+			//if (){
+				resourceGroupField: calendarOptions==''?'srcparent':'',
+			//};
+			//resourceGroupField:calendarOptions.resourceGroupField,
+		}); 
+		
+		
+		 // var calendarOptions = $('#calendar_test')
+			 // .fullCalendar('getView')
+			 // .options;
+	    // calendarOptions.resourceGroupField='srcparent';
+		// $('#calendar_test').fullCalendar('render'); 
+		
+		
+	// make your changes to the calendar options
+	// I wanted to change the slotDuration
+	
+
+
+	// $("calendar").fullCalendar({
+		// eventAfterAllRender: function(){
+			// $("#button").click();
+		// }
+	// });
+	 // jQuery('#calendar_test').fullCalendar({
+		// resourceGroupField: 'srcparent',
+	// }); 
+	//
+		
+		//""
 		//var grp = groupValue;
 		//alert(groupValue.html);
 		//groupValue='resourceGroupField:srcparent';
@@ -200,7 +236,7 @@ EOF; */
 			'theme'=> true,
 			'aspectRatio'       => 1.8,
 			//'scrollTime'        => '00:00', // undo default 6am scrollTime
-			'defaultView'       => 'timelineMonth',//'timelineDay',//agendaDay',
+			'defaultView'       => 'timelineOneDays',//'timelineDay',//agendaDay',
 			'views'             => [
 				'timelineOneDays' => [
 					'type'     => 'timeline',
@@ -214,9 +250,11 @@ EOF; */
 			'events'=> \yii\helpers\Url::to(['pilotproject/render-data-events', 'id' => 2]),
 			'resourceAreaWidth'=>'30%',
 			'resourceLabelText' => 'Discriptions',
-			//'resourceGroupField'=> false,
+			//'resourceGroupField'=> 'srcparent',
+			//'resourceGroupField'=> \yii\helpers\Url::to(['pilotproject/group-data-resources']),
 			'resourceColumns'=>[					
 					[
+						//'group'=> true,
 						'labelText'=>'Rooms',
 						'field'=> 'title',
 						'width'=>'150px',

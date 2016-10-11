@@ -1010,6 +1010,11 @@ public function actionSaveEvent(){
 
   
 
+	public function actionGroupDataResources()
+    {
+		return 'Discriptions';
+		return 'Discriptions';
+	}
 	
 	public function actionRenderDataResources()
     {
@@ -1019,13 +1024,13 @@ public function actionSaveEvent(){
          if( $gf_id <= 4)
          {
            
-            $sql ="SELECT b.ID as id, a.PILOT_NM as srcparent ,b.PILOT_NM as title ,b.DEP_ID as dep_id,b.CREATED_BY as createby
+            $sql ="SELECT b.ID as id, b.PILOT_NM as title ,a.PILOT_NM as srcparent ,b.DEP_ID as dep_id,b.CREATED_BY as createby
                 FROM sc0001 AS a 
                 INNER JOIN sc0001 AS b 
                 WHERE a.ID=b.SORT and b.DEP_ID='".$dep_id1."'and b.TEMP_EVENT <>0 ORDER BY b.TEMP_EVENT ASC";
         }else{
              
-             $sql ="SELECT b.ID as id, a.PILOT_NM as srcparent ,b.PILOT_NM as title ,b.DEP_ID as dep_id,b.CREATED_BY as createby
+             $sql ="SELECT b.ID as id, b.PILOT_NM as title ,a.PILOT_NM as srcparent ,b.DEP_ID as dep_id,b.CREATED_BY as createby
                 FROM sc0001 AS a 
                 INNER JOIN sc0001 AS b 
                 WHERE a.ID=b.SORT and b.DESTINATION_TO='".$emp_email."'and b.TEMP_EVENT <>0 ORDER BY b.TEMP_EVENT ASC ";
