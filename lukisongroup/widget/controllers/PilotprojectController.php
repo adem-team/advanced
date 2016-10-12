@@ -790,56 +790,90 @@ public function actionSaveEvent(){
 
         $post =Yii::$app->request->post();
         $val = $post['Pilotproject']['parentpilot'];
+        $val_parent = $post['Pilotproject']['parent'];
+        $val_dest = $post['Pilotproject']['destination'];
 
         $gv_id = Yii::$app->getUserOpt->Profile_user()->emp->GF_ID;
-        
         if ($model->load(Yii::$app->request->post())){
-            $model->DEP_ID =  Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
-            // if($model->TYPE == 0)
-            // {
-            //   $model->DEP_ID = 'none';
-            // }else{
-            //   $model->DEP_ID =  Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
-            // }
-            
-            if($val == 1)
-            {
-                $newdata = implode(",",$model->USER_CC);
 
-                $model->USER_CC = $newdata;
-
-                $newdata1 = implode(",",$model->DEP_SUB_ID);
-
-                $model->DEP_SUB_ID = $newdata1;
-                // $model->PLAN_DATE1 = $tgl1;
-                // $model->PLAN_DATE2 = $tgl2;
-                $pilot_id = Yii::$app->ambilkonci->getpilot($model->DEP_ID);
+            if($val == 1){
+                $dep_id = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+                $pilot_id = Yii::$app->ambilkonci->getpilot($dep_id);
                 $model->PILOT_ID = $pilot_id;     
                 $model->PARENT = 0;
-                $sql = Pilotproject::find()->max('ID');                               
-                $model->SORT = $sql+1;
+                // $sql = Pilotproject::find()->max('ID');                               
+                // $model->SORT = $sql+1;
             }else{
-                $newdata = implode(",",$model->USER_CC);
-
-                $model->USER_CC = $newdata;
-                // $model->PLAN_DATE1 = $tgl1;
-                // $model->PLAN_DATE2 = $tgl2;
-                $model->SORT = $model->PARENT;
+                $model->SORT = $val_parent;
                 $model->PILOT_ID = '';
             }
-           
-            $model->CREATED_BY= Yii::$app->user->identity->username;     
-            $model->UPDATED_TIME = date('Y-m-d h:i:s');               
 
-               $transaction = Pilotproject::getDb()->beginTransaction();
-                    try {
-                          $model->save();
-                        // ...other DB operations...
-                        $transaction->commit();
-                    } catch(\Exception $e) {
-                        $transaction->rollBack();
-                        throw $e;
-                    }      
+            $model->DEP_ID = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+            $model->CREATED_BY =  Yii::$app->getUserOpt->Profile_user()->emp->EMP_EMAIL;
+            $model->DESTINATION_TO = $val_dest;
+            $model->PARENT = $val_parent;
+            $model->save();
+
+
+            if($val == 1)
+            {
+              $update_model = self::findModel($model->ID);
+
+              $update_model->SORT = $model->ID;
+
+              $update_model->save();
+            }
+
+        
+        // if ($model->load(Yii::$app->request->post())){
+        //     $model->DEP_ID =  Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+        //     // if($model->TYPE == 0)
+        //     // {
+        //     //   $model->DEP_ID = 'none';
+        //     // }else{
+        //     //   $model->DEP_ID =  Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+        //     // }
+
+
+            
+        //     if($val == 1)
+        //     {
+        //         $newdata = implode(",",$model->USER_CC);
+
+        //         $model->USER_CC = $newdata;
+
+        //         $newdata1 = implode(",",$model->DEP_SUB_ID);
+
+        //         $model->DEP_SUB_ID = $newdata1;
+        //         // $model->PLAN_DATE1 = $tgl1;
+        //         // $model->PLAN_DATE2 = $tgl2;
+        //         $pilot_id = Yii::$app->ambilkonci->getpilot($model->DEP_ID);
+        //         $model->PILOT_ID = $pilot_id;     
+        //         $model->PARENT = 0;
+        //         $sql = Pilotproject::find()->max('ID');                               
+        //         $model->SORT = $sql+1;
+        //     }else{
+        //         $newdata = implode(",",$model->USER_CC);
+
+        //         $model->USER_CC = $newdata;
+        //         // $model->PLAN_DATE1 = $tgl1;
+        //         // $model->PLAN_DATE2 = $tgl2;
+        //         $model->SORT = $model->PARENT;
+        //         $model->PILOT_ID = '';
+        //     }
+           
+        //     $model->CREATED_BY= Yii::$app->user->identity->username;     
+        //     $model->UPDATED_TIME = date('Y-m-d h:i:s');               
+
+        //        $transaction = Pilotproject::getDb()->beginTransaction();
+        //             try {
+        //                   $model->save();
+        //                 // ...other DB operations...
+        //                 $transaction->commit();
+        //             } catch(\Exception $e) {
+        //                 $transaction->rollBack();
+        //                 throw $e;
+        //             }      
 
             return $this->redirect('index');
                 
@@ -1045,9 +1079,11 @@ public function actionSaveEvent(){
 
     public function actionRoomForm(){
 
-        $model = new Pilotproject();
+         $model = new Pilotproject();
          $post =Yii::$app->request->post();
          $val = $post['Pilotproject']['parentpilot'];
+         $val_parent = $post['Pilotproject']['parent'];
+         $val_dest = $post['Pilotproject']['destination'];
 
         if ($model->load(Yii::$app->request->post())){
 
@@ -1059,12 +1095,14 @@ public function actionSaveEvent(){
                 // $sql = Pilotproject::find()->max('ID');                               
                 // $model->SORT = $sql+1;
             }else{
-                $model->SORT = $model->PARENT;
+                $model->SORT = $val_parent;
                 $model->PILOT_ID = '';
             }
 
             $model->DEP_ID = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
             $model->CREATED_BY =  Yii::$app->getUserOpt->Profile_user()->emp->EMP_EMAIL;
+            $model->DESTINATION_TO = $val_dest;
+            $model->PARENT = $val_parent;
             $model->save();
 
 

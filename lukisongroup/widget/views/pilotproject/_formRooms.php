@@ -21,7 +21,7 @@ use kartik\widgets\DateTimePicker;
 	</div>
 
 	<div id='tampilkan'>
-	 <?= $form->field($model, 'PARENT')->widget(Select2::classname(), [
+	 <?= $form->field($model, 'parent')->widget(Select2::classname(), [
         'data' => $data,
         'options' => [
         'id'=>'pilotproject-parent',
@@ -60,7 +60,7 @@ use kartik\widgets\DateTimePicker;
 
     
 
-<?= $form->field($model, 'DESTINATION_TO')->widget(Select2::classname(), [
+<?= $form->field($model, 'destination')->widget(Select2::classname(), [
          'data' => $dropemploy,
         'options' => [
 //            'id'=>'parent',
@@ -94,7 +94,11 @@ $this->registerJs("
 	});
 
  ",$this::POS_READY);
+
+
 ?>
+
+
 
 
 

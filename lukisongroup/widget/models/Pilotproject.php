@@ -19,6 +19,8 @@ class Pilotproject extends \yii\db\ActiveRecord
 
      public $Sendto;
      public $parentpilot;
+     public $destination;
+     public $parent;
 
     public static function tableName()
     {
@@ -47,6 +49,7 @@ class Pilotproject extends \yii\db\ActiveRecord
 			[['CREATED_BY','UPDATED_BY'], 'string', 'max' => 50]			
         ];
     }
+
 
     
 
