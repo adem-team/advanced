@@ -76,9 +76,23 @@ class NotulenController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             $model->save();
-            return $this->redirect('view',['id'=>$id]);
+            return $this->redirect(['view','id'=>$id]);
         } else {
             return $this->renderAjax('set_tanggal', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+     public function actionSetTitle($id)
+    {
+        $model = self::findModel($id);
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->save();
+            return $this->redirect(['view','id'=>$id]);
+        } else {
+            return $this->renderAjax('set_title', [
                 'model' => $model,
             ]);
         }
@@ -94,6 +108,20 @@ class NotulenController extends Controller
            return $this->redirect(['view', 'id' => $id]);
         } else {
             return $this->renderAjax('set_acara', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    public function actionSetTime($id)
+    {
+        $model = NotulenModul::find()->where(['NOTULEN_ID'=>$id])->one();
+       
+        if ($model->load(Yii::$app->request->post())) {
+            $model->save();
+           return $this->redirect(['view', 'id' => $id]);
+        } else {
+            return $this->renderAjax('set_time', [
                 'model' => $model,
             ]);
         }

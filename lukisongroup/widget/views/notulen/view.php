@@ -14,35 +14,49 @@ use yii\bootstrap\Modal;
 
   function kembali(){
         $title = Yii::t('app','');
-        $options = [ 'id'=>'berita-back-id',
+        $options = [ 'id'=>'notulen-back-id',
              'class'=>'btn-xs',
              'title'=>'Back',
         ];
         $icon = '<span class="fa fa-rotate-left fa-xs"> Back</span>';
         $label = $icon . ' ' . $title;
         //$label = 'Reply';
-        $url = Url::toRoute('/widget/berita');
+        $url = Url::toRoute('/widget/notulen');
         $content = Html::a($label,$url, $options);
         return $content;
     }
 
 
   function btnTanggal($model){
-        $title = Yii::t('app','xxxx-xx-xx');
+    if($model->start != '' && $model->end == '')
+    {
+      $title = Yii::t('app',substr($model->start,0,11).' - '.'xxxx-xx-xx');
+    }elseif($model->end != '' && $model->start == '')
+    {
+      $title = Yii::t('app','xxxx-xx-xx'.' - '.substr($model->end,0,11));
+    }elseif($model->start != '' && $model->end != '')
+    {
+       $title = Yii::t('app',substr($model->start,0,11).' - '.substr($model->end,0,11));
+     }else{
+        $title = Yii::t('app','xxxx-xx-xx'.' - '.'xxxx-xx-xx');
+     }
+        // $title = Yii::t('app','xxxx-xx-xx');
         $options = [ 'id'=>'notu-tgl-id',
+             'data-toggle'=>"modal",
+             'data-target'=>"#acara",
              'class'=>'btn-xs',
              'title'=>$title,
         ];
         // $icon = '<span class="fa fa-rotate-left fa-xs"> Back</span>';
         $label = $title;
         //$label = 'Reply';
-        $url = Url::toRoute('/widget/berita');
+        $url = Url::toRoute(['/widget/notulen/set-tanggal','id'=>$model->id]);
         $content = Html::a($label,$url, $options);
         return $content;
     }
 
-    function btnAcara($model){
-        $title = Yii::t('app','---------------');
+    function btnAcara($acara){
+      $title = $acara[0]->SCHEDULE != '' ? $acara[0]->SCHEDULE : Yii::t('app','---------------');
         $options = [ 'id'=>'notu-acara-id',
              'class'=>'btn-xs',
              'data-toggle'=>"modal",
@@ -51,14 +65,14 @@ use yii\bootstrap\Modal;
         ];
         // $icon = '<span class="fa fa-rotate-left fa-xs"> Back</span>';
         $label = $title;
-        //$label = 'Reply';
-        $url = Url::toRoute(['/widget/notulen/set-acara','id'=>$model->id]);
+        //$label = 'Reply'; $acara[0]->SCHEDULE 
+        $url = Url::toRoute(['/widget/notulen/set-acara','id'=>$acara[0]->NOTULEN_ID]);
         $content = Html::a($label,$url, $options);
         return $content;
     }
 
-      function btnRapat($model){
-        $title = Yii::t('app','---------------');
+      function btnRapat($acara){
+        $title = $acara[0]->RESULT_SCHEDULE != '' ? $acara[0]->RESULT_SCHEDULE : Yii::t('app','---------------');
         $options = [ 'id'=>'notu-rapat-id',
              'class'=>'btn-xs',
              'data-toggle'=>"modal",
@@ -68,7 +82,49 @@ use yii\bootstrap\Modal;
         // $icon = '<span class="fa fa-rotate-left fa-xs"> Back</span>';
         $label = $title;
         //$label = 'Reply';
-        $url = Url::toRoute(['/widget/notulen/set-hasil','id'=>$model->id]);
+        $url = Url::toRoute(['/widget/notulen/set-hasil','id'=>$acara[0]->NOTULEN_ID]);
+        $content = Html::a($label,$url, $options);
+        return $content;
+    }
+
+    function btnSetMateri($model){
+        $title = $model->title != '' ? $model->title : Yii::t('app','---------------');
+        $options = [ 'id'=>'notu-rapat-id',
+             'class'=>'btn-xs',
+             'data-toggle'=>"modal",
+             'data-target'=>"#rapat",
+             'title'=>$title,
+        ];
+        // $icon = '<span class="fa fa-rotate-left fa-xs"> Back</span>';
+        $label = $title;
+        //$label = 'Reply';
+        $url = Url::toRoute(['/widget/notulen/set-title','id'=>$model->id]);
+        $content = Html::a($label,$url, $options);
+        return $content;
+    }
+
+    function btnSetTime($acara){
+      if( $acara[0]->TIME_START != '' && $acara[0]->TIME_END != '' )
+      {
+         $title = $acara[0]->TIME_START.' - '.$acara[0]->TIME_END;
+      }elseif($acara[0]->TIME_END != '' && $acara[0]->TIME_START == '' ){
+         $title ='xx:xx'.' - '.$acara[0]->TIME_END;
+      }elseif($acara[0]->TIME_START != '' && $acara[0]->TIME_END == '')
+      {
+         $title =$acara[0]->TIME_START.' - '.'xx:xx';
+       }else{
+           $title ='xx:xx'.' - '.'xx:xx';
+       }
+        $options = [ 'id'=>'notu-set-time',
+             'class'=>'btn-xs',
+             'data-toggle'=>"modal",
+             'data-target'=>"#rapat",
+             'title'=>$title,
+        ];
+        // $icon = '<span class="fa fa-rotate-left fa-xs"> Back</span>';
+        $label = $title;
+        //$label = 'Reply';
+        $url = Url::toRoute(['/widget/notulen/set-time','id'=>$acara[0]->NOTULEN_ID]);
         $content = Html::a($label,$url, $options);
         return $content;
     }
@@ -101,7 +157,7 @@ use yii\bootstrap\Modal;
     <div class="box box-success direct-chat direct-chat-success" >
          <!-- box-header -->
         <div class="box-header with-border">
-            <h3 class="box-title"><?= $model->title?></h3>
+            <h3 class="box-title"><i class="fa fa-2x fa fa-pencil"></i><?= $model->title?></h3>
             <div class="box-tools pull-right">
                 <!--<span data-toggle="tooltip" title="3 New Messages" class="badge bg-green">3</span>-->
                 <button class="btn btn-box-tool" data-toggle="tooltip" title="show/hide" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -116,28 +172,56 @@ use yii\bootstrap\Modal;
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"  style="margin-left:0;">
         <dl>
           <dt style="width:150px; float:left;">Tanggal</dt>
-          <dd style="color:rgba(87, 163, 247, 1)">:<b><?php echo $model->start != '' ? $model->start : btnTanggal() ?></b></dd>
+          <dd style="color:rgba(87, 163, 247, 1)">:<b><?php echo btnTanggal($model) ?></b></dd>
 
           <dt style="width:150px; float:left;">Waktu</dt>
-          <dd>: ---- </dd>
+          <dd style="color:rgba(87, 163, 247, 1)">:<?= btnSetTime($acara) ?> </dd>
         </dl>
         </div>
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"  style="margin-right:0;">
         <dl>
           <dt style="width:150px; float:left;">Tempat</dt>
-          <dd style="color:rgba(87, 163, 247, 1)">:<b>Ruang Meetiing</b></dd>
+          <dd style="color:rgba(87, 163, 247, 1)">:  <b>Ruang Meetiing</b></dd>
 
           <dt style="width:150px; float:left;">Materi Rapat</dt>
-          <dd>: <?php echo $model->title ?></dd>
+          <dd>: <?php echo btnSetMateri($model); ?></dd>
         </dl>
         </div>
         </div>
+
+          <div class="row">
+          <div class="col-sm-12">
+            <!-- <dl> -->
+              <dt style="width:150px; float:left;">Peserta Rapat</dt>
+              <!-- <div class="col-sm-1"> -->
+              <br>
+                 <ul float:left;">
+               <?php
+               $peserta = explode(',',$acara[0]->USER_ID);
+               foreach ($peserta as  $value) {
+                 # code...
+
+                ?>
+                <li> <?= $value ?> </li>
+                <?php
+                }
+               ?>
+
+              </ul>
+              </br>
+
+              <!-- </div> -->
+             
+            <!-- </dl> -->
+
+        </div>
+      </div>
 
         <div class="row">
           <div class="col-sm-12">
             <dl>
               <dt style="width:150px; float:left;">Susunan Acara</dt>
-              <dd style="color:rgba(87, 163, 247, 1)">:<?php echo $acara[0]->SCHEDULE != ''?$acara[0]->SCHEDULE : btnAcara($model);?></dd>
+              <dd style="color:rgba(87, 163, 247, 1)">:<?= btnAcara($acara) ?> </dd>
             </dl>
 
         </div>
@@ -147,7 +231,7 @@ use yii\bootstrap\Modal;
         <div class="col-sm-12">
           <dl>
             <dt style="width:150px; float:left;">Hasil Rapat</dt>
-            <dd style="color:rgba(87, 163, 247, 1)">:<?php echo $acara[0]->RESULT_SCHEDULE != ''?$acara[0]->RESULT_SCHEDULE : btnRapat($model);?></dd>
+            <dd style="color:rgba(87, 163, 247, 1)">:<?php echo btnRapat($acara);?></dd>
           </dl>
 
       </div>
@@ -193,7 +277,7 @@ use yii\bootstrap\Modal;
           <div class="col-sm-3">
           </div>
           <div class="col-sm-3">
-            <b class="text-right"><?php echo $model->start != '' ? $model->start : btnTanggal($model) ?></b>
+            <b class="text-right"><?php echo btnTanggal($model) ?></b>
           </div>
 
         <!-- <dl> -->
