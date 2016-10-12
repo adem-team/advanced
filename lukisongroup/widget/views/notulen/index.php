@@ -11,24 +11,30 @@ use yii\widgets\Pjax;
 
 $JSCode = <<<EOF
 	function(start, end) {
-		var title = prompt('Event Title:');
+		// var title = prompt('Event Title:');
 		var eventData;
 		var dateTime1 = new Date(start);
 		var dateTime2 = new Date(end);
 		tgl1 = moment(dateTime1).format("YYYY-MM-DD HH:mm:ss");
 		tgl2 = moment(dateTime2).format("YYYY-MM-DD HH:mm:ss");
-		if (title) {
-			$.ajax({
-				url:'/sistem/personalia/jsoncalendar_add',
-				type: 'POST',
-				data:'title=' + title + '&start='+ tgl1 + '&end=' + tgl2,
-				dataType:'json',
-				success: function(result){
-			//alert('ok')
-				  $.pjax.reload({container:'#calendar-user'});
-				  //$.pjax.reload({container:'#gv-schedule-id'});
-				}
-			});
+		// if (title) {
+			$.fn.modal.Constructor.prototype.enforceFocus = function(){};
+			$.get('/widget/notulen/create',{'start':tgl1,'end':tgl2},function(data){
+						$('#modal-notulen').modal('show')
+						.find('#modalContentNotulen')
+						.html(data);
+		});
+			// $.ajax({
+			// 	url:'/sistem/personalia/jsoncalendar_add',
+			// 	type: 'POST',
+			// 	data:'title=' + title + '&start='+ tgl1 + '&end=' + tgl2,
+			// 	dataType:'json',
+			// 	success: function(result){
+			// //alert('ok')
+			// 	  $.pjax.reload({container:'#calendar-user'});
+			// 	  //$.pjax.reload({container:'#gv-schedule-id'});
+			// 	}
+			// });
 			/* calendar.fullCalendar('renderEvent', {
 					title:title,
 					start:start,
@@ -44,7 +50,7 @@ $JSCode = <<<EOF
 			};
 			//$('#w0').fullCalendar('renderEvent', eventData, true);
 			*/
-		}
+		// }
 
 		//$('#w0').fullCalendar('unselect');
 		//$('#w0').fullCalendar('unselect');
@@ -91,7 +97,7 @@ EOF;
 					//... more options to be defined here!
 					],
 					// 'events'=> $events,
-					'ajaxEvents' => Url::to(['/sistem/personalia/jsoncalendar']),
+					// 'ajaxEvents' => Url::to(['/sistem/personalia/jsoncalendar']),
 					'clientOptions' => [
 						'selectable' => true,
 						'selectHelper' => true,
@@ -101,7 +107,8 @@ EOF;
 						//'drop' => new JsExpression($JSDropEvent),
 						'selectHelper'=>true,
 						'select' => new JsExpression($JSCode),
-						'eventClick' => new JsExpression($JSEventClick),
+						// 'eventClick' => new JsExpression($JSEventClick),
+						'eventClick' => new JsExpression($JSCode),
 						//'defaultDate' => date('Y-m-d')
 					],
 					//'ajaxEvents' => Url::toRoute(['/site/jsoncalendar'])
@@ -135,7 +142,7 @@ EOF;
 				$attDinamikNotulen[]=[
 					'class'=>'kartik\grid\ActionColumn',
 					'dropdown' => true,
-					'template' => '{view}{review}{delete}',
+					'template' => '{view}',
 					'dropdownOptions'=>['class'=>'pull-left dropdown','style'=>['disable'=>true]],
 					'dropdownButton'=>[
 						'class' => $actionClass,
@@ -144,26 +151,11 @@ EOF;
 					],
 					'buttons' => [
 						'view' =>function($url, $model, $key){
-								return  '<li>' .Html::a('<span class="fa fa-random fa-dm"></span>'.Yii::t('app', 'Set Alias Customer'),
-															['/sistem/personalia/view','id'=>$model->id],[
-															'id'=>'alias-cust-id',
-															'data-toggle'=>"modal",
-															'data-target'=>"#alias-cust",
-															]). '</li>' . PHP_EOL;
-						},				
-						'review' =>function($url, $model, $key){
-								return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'Set Alias Prodak'),
-															['/sistem/personalia/view','id'=>$model->id],[
-															'id'=>'alias-prodak-id',
-															'data-toggle'=>"modal",
-															'data-target'=>"#alias-prodak",
-															]). '</li>' . PHP_EOL;
-						},	
-						'delete' =>function($url, $model, $key){
-								return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'new Customer'),
-															['/sistem/personalia/view','id'=>$model->id],[
-															'data-toggle'=>"modal",
-															'data-target'=>"#alias-prodak",
+								return  '<li>' .Html::a('<span class="fa fa-eye"></span>'.Yii::t('app', 'View'),
+															['/widget/notulen/view','id'=>$model->id],[
+															'id'=>'notulen-id',
+															// 'data-toggle'=>"modal",
+															// 'data-target'=>"#alias-cust",
 															]). '</li>' . PHP_EOL;
 						},				
 					],
@@ -269,17 +261,30 @@ EOF;
 		<div class="col-sm-12 col-md-12 col-lg-12">
 			<?php
 			
-				print_r($dataProviderNotulen);
+				// print_r($dataProviderNotulen);
 			?>
 		</div>
 	</div>
 </div>
 <?php
-$this->registerJs("
-$('#calendar-notulen').fullCalendar({
+// $this->registerJs("
+// $('#calendar-notulen').fullCalendar({
                       
-            firstDay: 6,
-			editable: true,
- });
- ",$this::POS_HEAD);
+//             firstDay: 6,
+// 			editable: true,
+//  });
+//  ",$this::POS_HEAD);
+
+
+/*modal*/
+Modal::begin([
+    'id' => 'modal-notulen',
+    'header' => '<div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>NOTULEN</b></h5></div>',
+    'size' => Modal::SIZE_SMALL,
+    'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+    ],
+  ]);
+	echo "<div id='modalContentNotulen'></div>";
+	Modal::end(); 
  ?>

@@ -44,8 +44,8 @@ class NotulenModul extends \yii\db\ActiveRecord
         return [
             [['MODUL_POLICY'], 'string'],
             [['STATUS'], 'integer'],
-            [['CREATE_AT', 'UPDATE_AT'], 'safe'],
-            [['MODUL_NM', 'MODUL_DEST'], 'string', 'max' => 255],
+            [['CREATE_AT', 'UPDATE_AT','SCHEDULE','RESULT_SCHEDULE','NOTULEN_ID','TIME_START','TIME_END'], 'safe'],
+            [['SCHEDULE', 'RESULT_SCHEDULE'], 'string', 'max' => 255],
             [['USER_ID'], 'string', 'max' => 50],
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100],
         ];

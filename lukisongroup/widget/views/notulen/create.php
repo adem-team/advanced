@@ -12,10 +12,12 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="notulen-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <!-- <h1Html::encode($this->title) ?></h1> -->
 
     <?= $this->render('_form', [
         'model' => $model,
+        'data_modul'=>$data_modul,
+        'data_emp'=>$data_emp
     ]) ?>
 
 </div>

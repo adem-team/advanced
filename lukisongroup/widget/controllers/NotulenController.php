@@ -4,10 +4,13 @@ namespace lukisongroup\widget\controllers;
 
 use Yii;
 use lukisongroup\widget\models\Notulen;
+use lukisongroup\widget\models\NotulenModul;
+use lukisongroup\hrd\models\Employe;
 use lukisongroup\widget\models\NotulenSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * NotulenController implements the CRUD actions for Notulen model.
@@ -29,6 +32,29 @@ class NotulenController extends Controller
         ];
     }
 
+     
+    /*array modul from table M0002*/
+    public function getary_modul()
+    {
+        return $data =  ArrayHelper::map(NotulenModul::find()->where('STATUS <>3')->asArray()->all(),'ID','MODUL_NM');
+    }
+
+     /**
+    *array employe
+    **/
+    public function get_aryEmploye()
+    {
+        $emp = \lukisongroup\hrd\models\Employe::find()->where('STATUS<>3')->all();
+        return $dropemploy = ArrayHelper::map($emp,'EMP_ID', function ($emp, $defaultValue) {
+          return $emp['EMP_NM'] . ' ' . $emp['EMP_NM_BLK'];
+    });
+    }
+
+    public function Get_profile()
+    {
+        return Yii::$app->getUserOpt->Profile_user();
+    }
+
     /**
      * Lists all Notulen models.
      * @return mixed
@@ -44,6 +70,77 @@ class NotulenController extends Controller
         ]);
     }
 
+    public function actionSetTanggal($id)
+    {
+        $model = self::findModel($id);
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->save();
+            return $this->redirect(['view','id'=>$id]);
+        } else {
+            return $this->renderAjax('set_tanggal', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+     public function actionSetTitle($id)
+    {
+        $model = self::findModel($id);
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->save();
+            return $this->redirect(['view','id'=>$id]);
+        } else {
+            return $this->renderAjax('set_title', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+
+      public function actionSetAcara($id)
+    {
+        $model = NotulenModul::find()->where(['NOTULEN_ID'=>$id])->one();
+       
+        if ($model->load(Yii::$app->request->post())) {
+            $model->save();
+           return $this->redirect(['view', 'id' => $id]);
+        } else {
+            return $this->renderAjax('set_acara', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    public function actionSetTime($id)
+    {
+        $model = NotulenModul::find()->where(['NOTULEN_ID'=>$id])->one();
+       
+        if ($model->load(Yii::$app->request->post())) {
+            $model->save();
+           return $this->redirect(['view', 'id' => $id]);
+        } else {
+            return $this->renderAjax('set_time', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+     public function actionSetHasil($id)
+    {
+        $model = NotulenModul::find()->where(['NOTULEN_ID'=>$id])->one();
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->save();
+             return $this->redirect(['view', 'id' => $id]);
+        } else {
+            return $this->renderAjax('set_hasil', [
+                'model' => $model,
+            ]);
+        }
+    }
+
     /**
      * Displays a single Notulen model.
      * @param string $id
@@ -51,8 +148,14 @@ class NotulenController extends Controller
      */
     public function actionView($id)
     {
+        $model = self::findModel($id);
+        $acara = $model->notulenTbl;
+    
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'acara' =>  $acara,
+            'ttd'=>self::Get_profile()->emp->SIGSVGBASE64,
+            'emp_nm'=>self::Get_profile()->emp->EMP_NM
         ]);
     }
 
@@ -61,15 +164,39 @@ class NotulenController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($start,$end)
     {
         $model = new Notulen();
+        $model->scenario = Notulen::SCENARIO_NOTE;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $model_modul = new NotulenModul();
+
+        if ($model->load(Yii::$app->request->post())) {
+
+              $transaction = Notulen::getDb()->beginTransaction();
+                    try {
+                            $model->start = $start;
+                            $model->end = $end;
+                            $model->CREATE_BY = self::Get_profile()->username;
+                            $model->CREATE_AT = date("Y-m-d H:i:s");
+                            $model->save();
+
+
+                            $model_modul->NOTULEN_ID = $model->id;
+                            $model_modul->save();
+                        // ...other DB operations...
+                        $transaction->commit();
+                    } catch(\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
+                    }
+          
+           return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            return $this->render('create', [
+            return $this->renderAjax('create', [
                 'model' => $model,
+                'data_modul'=>self::getary_modul(),
+                'data_emp'=>self::get_aryEmploye()
             ]);
         }
     }
@@ -116,6 +243,15 @@ class NotulenController extends Controller
     protected function findModel($id)
     {
         if (($model = Notulen::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+     protected function findModul($id)
+    {
+        if (($model = NotulenModul::find(['NOTULEN_ID'=>$id])) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
