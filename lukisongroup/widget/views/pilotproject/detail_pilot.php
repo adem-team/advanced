@@ -141,7 +141,7 @@ use kartik\widgets\Select2;
 	       'value'=>$model->employenm,
 	       'widgetOptions'=>[
 				'data'=>$dropemploy,
-				'options'=>['placeholder'=>'Select ...'],
+				'options'=>['id'=>'destination-id-view','placeholder'=>'Select ...'],
 				'pluginOptions'=>['allowClear'=>true],
 			],	
 	        'valueColOptions'=>['style'=>'width:30%']
@@ -170,7 +170,7 @@ use kartik\widgets\Select2;
 	        'format'=>'raw',
         	'value'=>$model->PARENT == 0 ? '<span class="label label-success">Parent</span>' : '<span class="label label-danger">No Parent</span>',
 			'widgetOptions' => [
-			'options'=>['id'=>'parent-id'],
+			'options'=>['id'=>'parentzxc-id'],
             'pluginOptions' => [
                 'onText' => 'Yes',
                 'offText' => 'No',
@@ -184,7 +184,7 @@ use kartik\widgets\Select2;
 	       'value'=>$model->PARENT != 0?$model->parentName : $model->PILOT_NM,
 	       'widgetOptions'=>[
 				'data'=>$pilot,
-				'options'=>['placeholder'=>'Select ...'],
+				'options'=>['id'=>'parent-id-view','placeholder'=>'Select ...'],
 				'pluginOptions'=>['allowClear'=>true],
 			],	
 	        'valueColOptions'=>['style'=>'width:30%']

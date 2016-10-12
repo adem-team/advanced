@@ -19,8 +19,6 @@ class Pilotproject extends \yii\db\ActiveRecord
 
      public $Sendto;
      public $parentpilot;
-     public $destination;
-     public $parent;
 
     public static function tableName()
     {

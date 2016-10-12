@@ -790,8 +790,8 @@ public function actionSaveEvent(){
 
         $post =Yii::$app->request->post();
         $val = $post['Pilotproject']['parentpilot'];
-        $val_parent = $post['Pilotproject']['parent'];
-        $val_dest = $post['Pilotproject']['destination'];
+        // $val_parent = $post['Pilotproject']['parent'];
+        // $val_dest = $post['Pilotproject']['destination'];
 
         $gv_id = Yii::$app->getUserOpt->Profile_user()->emp->GF_ID;
         if ($model->load(Yii::$app->request->post())){
@@ -804,14 +804,14 @@ public function actionSaveEvent(){
                 // $sql = Pilotproject::find()->max('ID');                               
                 // $model->SORT = $sql+1;
             }else{
-                $model->SORT = $val_parent;
+                $model->SORT = $model->PARENT;
                 $model->PILOT_ID = '';
             }
 
             $model->DEP_ID = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
             $model->CREATED_BY =  Yii::$app->getUserOpt->Profile_user()->emp->EMP_EMAIL;
-            $model->DESTINATION_TO = $val_dest;
-            $model->PARENT = $val_parent;
+            // $model->DESTINATION_TO = $val_dest;
+            // $model->PARENT = $val_parent;
             $model->save();
 
 
@@ -1082,8 +1082,8 @@ public function actionSaveEvent(){
          $model = new Pilotproject();
          $post =Yii::$app->request->post();
          $val = $post['Pilotproject']['parentpilot'];
-         $val_parent = $post['Pilotproject']['parent'];
-         $val_dest = $post['Pilotproject']['destination'];
+         // $val_parent = $post['Pilotproject']['parent'];
+         // $val_dest = $post['Pilotproject']['destination'];
 
         if ($model->load(Yii::$app->request->post())){
 
@@ -1095,14 +1095,14 @@ public function actionSaveEvent(){
                 // $sql = Pilotproject::find()->max('ID');                               
                 // $model->SORT = $sql+1;
             }else{
-                $model->SORT = $val_parent;
+                $model->SORT = $model->PARENT;
                 $model->PILOT_ID = '';
             }
 
             $model->DEP_ID = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
             $model->CREATED_BY =  Yii::$app->getUserOpt->Profile_user()->emp->EMP_EMAIL;
-            $model->DESTINATION_TO = $val_dest;
-            $model->PARENT = $val_parent;
+            // $model->DESTINATION_TO = $val_dest;
+            // $model->PARENT = $val_parent;
             $model->save();
 
 

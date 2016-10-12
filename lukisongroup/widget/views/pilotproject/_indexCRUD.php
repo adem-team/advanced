@@ -324,7 +324,7 @@ EOF; */
 	/*modal*/
 Modal::begin([
     'id' => 'modal-rooms',
-    'header' => '<div style="float:left;margin-right:10px" class="fa fa-user"></div><div><h5 class="modal-title"><b>Create Rooms</b></h5></div>',
+    'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa fa-user"></div><div><h5 class="modal-title"><b>Create Rooms</b></h5></div>',
     'size' => 'modal-dm',
 
     'headerOptions'=>[
