@@ -170,6 +170,7 @@ use kartik\widgets\Select2;
 	        'format'=>'raw',
         	'value'=>$model->PARENT == 0 ? '<span class="label label-success">Parent</span>' : '<span class="label label-danger">No Parent</span>',
 			'widgetOptions' => [
+			'options'=>['id'=>'parent-id'],
             'pluginOptions' => [
                 'onText' => 'Yes',
                 'offText' => 'No',
@@ -513,18 +514,21 @@ use kartik\widgets\Select2;
 		</div>
 		<div class="row" >
 		<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-			<?= $actual_view?>
+			<?= $dest_view?>
 		</div>
 		<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-			<?= $dest_view?> 
+			<?= $desta?>
 		</div>
 		</div>
 		<div class="row" >
 		<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+			
 			<?= $detail_update?>
 		</div>
 		<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-			<?= $desta?> 
+			
+			
+			<?= $actual_view?>
 		</div>
 	</div>
 </div>
