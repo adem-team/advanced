@@ -27,6 +27,21 @@ print_r($personalUser	); */
 EOF; */
 
 
+$JSSelect = <<<EOF
+	function(calEvent, jsEvent, view) {
+		var dateTime1 = new Date(calEvent.start);
+		var dateTime2 = new Date(calEvent.end);
+		var tgl1 = moment(dateTime1).format('YYYY-MM-DD LTS');
+		var tgl2 = moment(dateTime2).subtract(1, 'days').format('YYYY-MM-DD LTS');
+		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
+	$.get('/widget/pilotproject/set-data-select',{'start':tgl1,'end':tgl2},function(data){
+						$('#modal-rooms').modal('show')
+						.find('#modalContentRooms')
+						.html(data);
+		});
+	}
+EOF;
+
 
 $JSEventClick = <<<EOF
 	function(calEvent, jsEvent, view) {
@@ -34,6 +49,7 @@ $JSEventClick = <<<EOF
 		var dateTime2 = new Date(calEvent.end);
 		var tgl1 = moment(dateTime1).format('YYYY-MM-DD LTS');
 		var tgl2 = moment(dateTime2).subtract(1, 'days').format('YYYY-MM-DD LTS');
+		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
 	$.get('/widget/pilotproject/detail-pilot',{'id':calEvent.resourceId},function(data){
 						$('#modal-up').modal('show')
 						.find('#modalContentUp')
@@ -64,6 +80,7 @@ EOF;
 $JSaddButtonRooms = <<<EOF
 	function() {
 		//alert('test');
+		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		$.get('/widget/pilotproject/room-form',function(data){
 						$('#modal-rooms').modal('show')
 						.find('#modalContentRooms')
@@ -216,7 +233,7 @@ EOF; */
 		'optionsEventUrl'=>[
 			//'events' => Url::to(['/widget/pilotproject/render-data-events']),			//should be set data event "your Controller link" 	
 			//'resources'=> Url::to(['/widget/pilotproject/render-data-resources']),		//should be set "your Controller link" 
-			'eventSelectUrl'=>'/widget/pilotproject/set-data-select',					//should be set "your Controller link" to get(start,end) from select. You can use model for scenario			
+			// 'eventSelectUrl'=>'/widget/pilotproject/set-data-select',					//should be set "your Controller link" to get(start,end) from select. You can use model for scenario			
 			'changeDropUrl'=>'/widget/pilotproject/change-data-drop',					//should be set "your Controller link" to get(start,end) from select. You can use model for scenario.
 			'dragableReceiveUrl'=>'/widget/pilotproject/dragable-receive',				//dragable, new data, star date, end date, id form increment db
 			'dragableDropUrl'=>'/widget/pilotproject/dragable-drop',					//dragable, new data, star date, end date, id form increment db
@@ -251,7 +268,7 @@ EOF; */
 			'selectHelper' => true,			
 			'editable' => true,
 			'selectable' => true,
-			//'select' => new JsExpression($JSCode),										// don't set if used "modalSelect"
+			'select' => new JsExpression($JSSelect),										// don't set if used "modalSelect"
 			'eventClick' => new JsExpression($JSEventClick),
 			'eventAfterRender'=> new JsExpression($Jseventcolor),
 			'droppable' => true,
@@ -309,6 +326,7 @@ Modal::begin([
     'id' => 'modal-rooms',
     'header' => '<div style="float:left;margin-right:10px" class="fa fa-user"></div><div><h5 class="modal-title"><b>Create Rooms</b></h5></div>',
     'size' => 'modal-dm',
+
     'headerOptions'=>[
         'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
     ],
@@ -320,7 +338,7 @@ Modal::begin([
 /*modal*/
 Modal::begin([
     'id' => 'modal-up',
-    'header' => '<div style="float:left;margin-right:10px" class="fa fa-user"></div><div><h5 class="modal-title"><b>VIEW Pilot Project</b></h5></div>',
+    'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa fa-user"></div><div><h5 class="modal-title"><b>Pilot Project</b></h5></div>',
     'size' => Modal::SIZE_LARGE,
     'headerOptions'=>[
         'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
@@ -330,16 +348,16 @@ Modal::begin([
 	Modal::end(); 
 
 	/*modal*/
-Modal::begin([
-    'id' => 'modal-row',
-    'header' => '<div style="float:left;margin-right:10px" class="fa fa-plus"></div><div><h5 class="modal-title"><b>Tambah Row</b></h5></div>',
-    'size' => Modal::SIZE_SMALL,
-    'headerOptions'=>[
-        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
-    ],
-  ]);
-	echo "<div id='modalContentRow'></div>";
-	Modal::end(); 
+// Modal::begin([
+//     'id' => 'modal-row',
+//     'header' => '<div style="float:left;margin-right:10px" class="fa fa-plus"></div><div><h5 class="modal-title"><b>Tambah Row</b></h5></div>',
+//     'size' => Modal::SIZE_SMALL,
+//     'headerOptions'=>[
+//         'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+//     ],
+//   ]);
+// 	echo "<div id='modalContentRow'></div>";
+// 	Modal::end(); 
 
 ?>
 
