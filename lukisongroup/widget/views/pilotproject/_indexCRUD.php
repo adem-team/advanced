@@ -272,7 +272,7 @@ EOF; */
 			
 			],
 			'resources'=> \yii\helpers\Url::to(['pilotproject/render-data-resources', 'id' => 1]),
-			'events'=> \yii\helpers\Url::to(['pilotproject/render-data-events', 'id' => 2]),
+			'events'=> \yii\helpers\Url::to(['pilotproject/render-data-events']),
 			'resourceAreaWidth'=>'30%',
 			'resourceLabelText' => 'Discriptions',
 			//'resourceGroupField'=> 'srcparent',

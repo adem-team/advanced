@@ -55,7 +55,7 @@ use kartik\widgets\Select2;
 	        'format'=>'datetime',
 	        'type'=>DetailView::INPUT_DATETIME,
 	        'widgetOptions' => [
-	            'pluginOptions'=>['format' => 'dd-MM-yyyy HH:ii P'],
+	            'pluginOptions'=>['format' => 'yyyy-mm-dd H:i:s'],
 	            'pluginEvents'=>[
 		       'show' => "function(e) {errror}",
 		           ],
@@ -69,7 +69,7 @@ use kartik\widgets\Select2;
 	        'value'=>new DateTime(),
 	        'type'=>DetailView::INPUT_DATETIME,
 	        'widgetOptions' => [
-	            'pluginOptions'=>['format' => 'dd-MM-yyyy HH:ii P'],
+	             'pluginOptions'=>['format' => 'yyyy-mm-dd H:i:s'],
 	            'pluginEvents'=>[
 		       'show' => "function(e) {errror}",
 		           ],
@@ -169,7 +169,7 @@ use kartik\widgets\Select2;
 	        'type'=>DetailView::INPUT_SWITCH,
 	        'format'=>'raw',
         	'value'=>$model->PARENT == 0 ? '<span class="label label-success">Parent</span>' : '<span class="label label-danger">No Parent</span>',
-        'widgetOptions' => [
+			'widgetOptions' => [
             'pluginOptions' => [
                 'onText' => 'Yes',
                 'offText' => 'No',

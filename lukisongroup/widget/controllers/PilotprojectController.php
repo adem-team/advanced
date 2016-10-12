@@ -869,14 +869,14 @@ public function actionSaveEvent(){
 
     }
 		
-	public function actionDragableReceive($start,$title,$color){
+	public function actionDragableReceive($start,$end,$title,$color){
 		 $dep_id = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
 		// $update_event = Pilotproject::find()->where(['PILOT_NM'=>$title,'TEMP_EVENT'=>0,'DEP_ID'=>$dep_id])->one();
     $update_event = new Pilotproject();
 		$update_event->COLOR = $color;
     $update_event->PILOT_NM = $title;
     $update_event->PLAN_DATE1 =Yii::$app->formatter->asDatetime($start, 'php:Y-m-d H:i:s'); 
-    $update_event->PLAN_DATE2 =Yii::$app->formatter->asDatetime($start, 'php:Y-m-d H:i:s');
+    $update_event->PLAN_DATE2 =Yii::$app->formatter->asDatetime($end, 'php:Y-m-d H:i:s');
     $update_event->DEP_ID = $dep_id;
     $update_event->save();
 
