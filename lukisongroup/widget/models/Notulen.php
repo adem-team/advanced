@@ -33,6 +33,9 @@ class Notulen extends \yii\db\ActiveRecord
         return 'm0001';
     }
 
+   
+
+
     /**
      * @return \yii\db\Connection the database connection used by this AR class.
      */
