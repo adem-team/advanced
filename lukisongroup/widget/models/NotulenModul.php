@@ -28,6 +28,8 @@ class NotulenModul extends \yii\db\ActiveRecord
         return 'm0002';
     }
 
+
+
     /**
      * @return \yii\db\Connection the database connection used by this AR class.
      */
@@ -35,6 +37,7 @@ class NotulenModul extends \yii\db\ActiveRecord
     {
         return Yii::$app->get('db_widget');
     }
+
 
     /**
      * @inheritdoc

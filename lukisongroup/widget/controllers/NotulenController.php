@@ -7,10 +7,14 @@ use lukisongroup\widget\models\Notulen;
 use lukisongroup\widget\models\NotulenModul;
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\widget\models\NotulenSearch;
+use lukisongroup\widget\models\PostPerson;
+use lukisongroup\widget\models\Authmodel1;
+use lukisongroup\widget\models\Authmodel2;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 
 /**
  * NotulenController implements the CRUD actions for Notulen model.
@@ -46,6 +50,17 @@ class NotulenController extends Controller
     {
         $emp = \lukisongroup\hrd\models\Employe::find()->where('STATUS<>3')->all();
         return $dropemploy = ArrayHelper::map($emp,'EMP_ID', function ($emp, $defaultValue) {
+          return $emp['EMP_NM'] . ' ' . $emp['EMP_NM_BLK'];
+    });
+    }
+
+     /**
+    *array employe
+    **/
+    public function get_aryPerson()
+    {
+        $emp = \lukisongroup\hrd\models\Employe::find()->where('STATUS<>3')->all();
+        return $dropemploy = ArrayHelper::map($emp,'EMP_NM', function ($emp, $defaultValue) {
           return $emp['EMP_NM'] . ' ' . $emp['EMP_NM_BLK'];
     });
     }
@@ -99,6 +114,29 @@ class NotulenController extends Controller
     }
 
 
+
+      public function actionSetPerson($id)
+    {
+        $model = new PostPerson();
+
+         $model->NotulenId = $id;
+
+
+        if ($model->load(Yii::$app->request->post())) {
+
+
+            $model->saveAccount();
+            return $this->redirect(['view','id'=>$id]);
+        } else {
+            return $this->renderAjax('set_person', [
+                'model' => $model,
+                'id'=>$id,
+                'items'=>self::get_aryPerson()
+            ]);
+        }
+    }
+
+
       public function actionSetAcara($id)
     {
         $model = NotulenModul::find()->where(['NOTULEN_ID'=>$id])->one();
@@ -141,6 +179,59 @@ class NotulenController extends Controller
         }
     }
 
+     public function actionSignAuth1View($id){
+        $auth1Mdl = new Authmodel1();
+        $acara = NotulenModul::find()->where(['NOTULEN_ID' =>$id])->one();
+
+            return $this->renderAjax('sign_auth1', [
+                'acara' => $acara,
+                'auth1Mdl' => $auth1Mdl,
+            ]);
+
+    }
+    public function actionSignAuth1Save(){
+        $auth1Mdl = new Authmodel1();
+        /*Ajax Load*/
+        if(Yii::$app->request->isAjax){
+            $auth1Mdl->load(Yii::$app->request->post());
+            return Json::encode(\yii\widgets\ActiveForm::validate($auth1Mdl));
+        }else{  /*Normal Load*/
+            if($auth1Mdl->load(Yii::$app->request->post())){
+                if ($auth1Mdl->auth1_saved()){
+                    $hsl = \Yii::$app->request->post();
+                    $id = $hsl['Authmodel1']['NotuID'];
+                    return $this->redirect(['view', 'id'=>$id]);
+                }
+            }
+        }
+    }
+
+     public function actionSignAuth2View($id){
+        $auth2Mdl = new Authmodel2();
+        $acara = NotulenModul::find()->where(['NOTULEN_ID' =>$id])->one();
+            return $this->renderAjax('sign_auth2', [
+                'acara' => $acara,
+                'auth2Mdl' => $auth2Mdl,
+            ]);
+    }
+    public function actionSignAuth2Save(){
+        $auth2Mdl = new Authmodel2();
+        /*Ajax Load*/
+        if(Yii::$app->request->isAjax){
+            $auth2Mdl->load(Yii::$app->request->post());
+            return Json::encode(\yii\widgets\ActiveForm::validate($auth2Mdl));
+        }else{  /*Normal Load*/
+            if($auth2Mdl->load(Yii::$app->request->post())){
+                if ($auth2Mdl->auth2_saved()){
+                    $hsl = \Yii::$app->request->post();
+                    $id = $hsl['Authmodel2']['NotuID'];
+                    return $this->redirect(['view', 'id'=>$id]);
+                }
+            }
+        }
+    }
+
+
     /**
      * Displays a single Notulen model.
      * @param string $id
@@ -155,6 +246,7 @@ class NotulenController extends Controller
             'model' => $model,
             'acara' =>  $acara,
             'ttd'=>self::Get_profile()->emp->SIGSVGBASE64,
+            'profile'=>self::Get_profile()->emp,
             'emp_nm'=>self::Get_profile()->emp->EMP_NM
         ]);
     }

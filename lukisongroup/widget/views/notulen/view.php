@@ -1,3 +1,4 @@
+
 <?php
 use kartik\helpers\Html;
 use yii\helpers\Url;
@@ -6,13 +7,10 @@ use kartik\grid\GridView;
 use kartik\editable\Editable;
 use yii\bootstrap\Modal;
 
+use lukisongroup\hrd\models\Employe;
 
-   
-  /* button print next print-berita-acara */
-  $print = Html::a('<i class="fa fa-print fa-fw fa-xs"></i> Print', ['print-berita-acara','kd_berita'=>$model->id], ['target' => '_blank', 'class' => 'btn btn-success btn-xs','style'=>['width'=>'90px']]);
-
-
-  function kembali(){
+$this->registerCss($this->render('letter.css'));
+function kembali(){
         $title = Yii::t('app','');
         $options = [ 'id'=>'notulen-back-id',
              'class'=>'btn-xs',
@@ -129,95 +127,124 @@ use yii\bootstrap\Modal;
         return $content;
     }
 
-    
+    function SignCreated($acara){
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'notulen-auth1',
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#notulen-auth1-sign",
+					  'class'=>'btn btn-warning btn-xs',
+					  'style'=>['width'=>'100px'],
+					  'title'=>'Detail'
+		];
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/widget/notulen/sign-auth1-view','id'=>$acara[0]->NOTULEN_ID]);
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
 
+	  function SignCreated2($acara){
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'notulen-auth2',
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#notulen-auth2-sign",
+					  'class'=>'btn btn-warning btn-xs',
+					  'style'=>['width'=>'100px'],
+					  'title'=>'Detail'
+		];
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/widget/notulen/sign-auth2-view','id'=>$acara[0]->NOTULEN_ID]);
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
 
- ?>
-<head>
-    <style type="text/css">
-        .blueimp-gallery > .slides > .slide > .text-content {
-            overflow: auto;
-            margin: 60px auto;
-            padding: 0 60px;
-            max-width: 920px;
-            text-align: left;
-        }
-        .piter-chat1-text:after {
-          border-width: 5px;
-          margin-top: -5px;
-        }
-        .piter-chat1-text:before {
-          border-width: 6px;
-          margin-top: -6px;
-        }
-    </style>
-</head>
-<div class='' style="margin-top:0px;font-family: tahoma ;font-size: 10pt;">
-    <!-- HEADER JUDUL/ISI/ATTACH ptr.nov-->
-    <div class="box box-success direct-chat direct-chat-success" >
-         <!-- box-header -->
-        <div class="box-header with-border">
-            <h3 class="box-title"><i class="fa fa-2x fa fa-pencil"></i><?= $model->title?></h3>
-            <div class="box-tools pull-right">
-                <!--<span data-toggle="tooltip" title="3 New Messages" class="badge bg-green">3</span>-->
-                <button class="btn btn-box-tool" data-toggle="tooltip" title="show/hide" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                <button class="btn btn-box-tool" data-toggle="tooltip" title="Attach" data-widget="chat-pane-toggle"><i class="fa fa-picture-o"></i></button>
-                <!-- <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button> -->
-            </div>
-        </div><!-- /.box-header -->
-        <div class="box-body">
-            <!-- Conversations are loaded here -->
-            <div class="direct-chat-messages">
-        <div class="row">
+	function SIGN_2($acara)
+	{
+		$data = Employe::find()->where(['EMP_ID'=>$acara[0]->SIG2_ID])->one();
+		return $data->SIGSVGBASE64;
+	}
+
+	function SIGN_1($acara)
+	{
+		$data = Employe::find()->where(['EMP_ID'=>$acara[0]->SIG1_ID])->one();
+		return $data->SIGSVGBASE64;
+	}
+
+?>
+<div id='body-notulen'>
+<div class="fold">
+<!-- Tema  -->
+ <div>
+		<div style="width:240px; float:left;">
+			<?php echo Html::img('http://lukisongroup.com/img_setting/kop/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
+		</div>
+		<div style="padding-top:40px;">
+			<!-- <h5 class="text-left"><b>FORM PERMINTAAN BARANG & JASA</b></h5> !-->
+			<h4 class="text-left"><b><?= $model->title ?></b></h4>
+		</div>
+		<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
+		<hr style="height:1px;margin-top: 1px; margin-bottom: 10px;">
+
+	</div>
+<!-- header -->
+   <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"  style="margin-left:0;">
         <dl>
-          <dt style="width:150px; float:left;">Tanggal</dt>
+        <!-- tanggal -->
+          <dt style="width:150px; float:left;">Tanggal</dt> 
           <dd style="color:rgba(87, 163, 247, 1)">:<b><?php echo btnTanggal($model) ?></b></dd>
-
+          <!-- waktu -->
           <dt style="width:150px; float:left;">Waktu</dt>
           <dd style="color:rgba(87, 163, 247, 1)">:<?= btnSetTime($acara) ?> </dd>
         </dl>
         </div>
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"  style="margin-right:0;">
         <dl>
+        <!-- tempat -->
           <dt style="width:150px; float:left;">Tempat</dt>
           <dd style="color:rgba(87, 163, 247, 1)">:  <b>Ruang Meetiing</b></dd>
-
+          <!-- materi rapat -->
           <dt style="width:150px; float:left;">Materi Rapat</dt>
           <dd>: <?php echo btnSetMateri($model); ?></dd>
         </dl>
         </div>
-        </div>
+ 
+</div>
 
-          <div class="row">
+<div class="row">
           <div class="col-sm-12">
-            <!-- <dl> -->
-              <dt style="width:150px; float:left;">Peserta Rapat</dt>
-              <!-- <div class="col-sm-1"> -->
+          	  <dt style="width:150px; float:left;">Peserta Rapat</dt>
               <br>
                  <ul float:left;">
                <?php
                $peserta = explode(',',$acara[0]->USER_ID);
-               foreach ($peserta as  $value) {
-                 # code...
+               if(count($peserta) != 0)
+               {
 
-                ?>
-                <li> <?= $value ?> </li>
-                <?php
-                }
-               ?>
+	               foreach ($peserta as  $value) {
+	                 # code...
+
+	                ?>
+	                <li><?= Html::a($value, ['/widget/notulen/set-person','id'=>$acara[0]->NOTULEN_ID],
+	                						['data-toggle'=>"modal",
+	                              			'data-target'=>"#person-notulen"]) ?> 
+	                </li>
+	                <?php
+	                }
+	              }else{
+	              	echo Html::a('none', ['/widget/notulen/set-person',
+	              							'id'=>$acara[0]->NOTULEN_ID],
+	                						['data-toggle'=>"modal",
+	                              			'data-target'=>"#person-notulen"]);
+	              }  
+	               ?>
 
               </ul>
               </br>
-
-              <!-- </div> -->
-             
-            <!-- </dl> -->
-
-        </div>
-      </div>
-
-        <div class="row">
+          </div>
+ </div>
+  <div class="row">
           <div class="col-sm-12">
             <dl>
               <dt style="width:150px; float:left;">Susunan Acara</dt>
@@ -227,57 +254,79 @@ use yii\bootstrap\Modal;
         </div>
       </div>
 
+
       <div class="row">
         <div class="col-sm-12">
           <dl>
             <dt style="width:150px; float:left;">Hasil Rapat</dt>
             <dd style="color:rgba(87, 163, 247, 1)">:<?php echo btnRapat($acara);?></dd>
           </dl>
-
       </div>
     </div>
+
 
     <div class="row">
       <div class="col-sm-1">
       </div>
           <div class="col-sm-2">
                  <dl>
-                <dt style="float:left">Director,</dt>
+                <dt>Director,</dt>
                 </dl>
                   <dl>
                   <?php
-                    $ttd1 = $ttd!='' ?  '<img style="width:80; height:40px" src='.$ttd.'></img>' :"";
-                    echo $ttd1;
+                  if($profile->GF_ID == 1 || $profile->GF_ID == 2)
+                  {
+
+	                $ttd1 = $acara[0]->SIGN_STT1!= 0 ?  '<img style="width:80; height:40px" src='.$ttd.'></img>' : SignCreated($acara);
+	                 echo $ttd1;
+             }else{
+             	 $ttd1 = $acara[0]->SIGN_STT1!= 0 ?  '<img style="width:80; height:40px" src='.SIGN_1($acara).'></img>' : '<div class="a_demo_two">sign</div>';
+	                 echo $ttd1;
+
+             }
+
                   ?>
                 </dl>
-                 <dl>
-          <?php
-            echo $emp_nm
-           ?>
-        </dl>
+	            <dl>
+			          <?php
+			            $name = $acara[0]->SIG1_NM != '' ? $acara[0]->SIG1_NM : 'none' ;;
+			            echo $name;
+			           ?>
+	        	</dl>
           </div>
            <div class="col-sm-1">
             </div>
              <div class="col-sm-2">
                 <dl>
-                <dt style="float:left;margin-left:40%"">Notulis,</dt>
+                <dt>Notulis,</dt>
                 </dl>
                  <dl>
                   <?php
-                    $ttd1 = $ttd!='' ?  '<img style="width:80; height:40px" src='.$ttd.'></img>' :"";
-                    echo $ttd1;
+                    $ttd2 = $acara[0]->SIGN_STT2!= 0 ?  '<img style="width:80 ; height:40px;" src='.SIGN_2($acara).'></img>' :SignCreated2($acara);
+                    echo $ttd2;
                   ?>
                 </dl>
                  <dl>
-          <?php
-            echo $emp_nm
-           ?>
-        </dl>
+                 	<?php
+			            $name2 = $acara[0]->SIG2_NM != '' ? $acara[0]->SIG2_NM : 'none' ;
+			            echo $name2;
+			           ?>
+        		</dl>
           </div>
           <div class="col-sm-3">
+            <!-- <b class="text-right"> echo btnTanggal($model) ?></b> -->
           </div>
           <div class="col-sm-3">
-            <b class="text-right"><?php echo btnTanggal($model) ?></b>
+          		<nav class="menu">
+					  <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open" />
+					  <label class="menu-open-button" for="menu-open"> <span class="lines line-1"></span> <span class="lines line-2"></span> <span class="lines line-3"></span> </label>
+					  <a href="#" class="menu-item item-1"> <i class="fa fa-anchor"></i> </a> 
+					  <a href="#" class="menu-item item-2"> <i class="fa fa-coffee"></i> </a> 
+					  <a href="#" class="menu-item item-3"> <i class="fa fa-envelope-o"></i> </a> 
+					  <a href="/widget/notulen/" class="menu-item item-4"> <i class="fa fa-undo"></i> </a> <a href="#" class="menu-item item-5"> <i class="fa fa-print fa-fw"></i> </a> 
+					  <a href="#" class="menu-item item-6"> <i class="fa fa-diamond"></i> </a>
+				 </nav>
+
           </div>
 
         <!-- <dl> -->
@@ -293,59 +342,69 @@ use yii\bootstrap\Modal;
         
 
     </div>
-    
-  </div>
-                <!-- Message. Default to the left -->
-                <!-- <div> -->
-                <!-- </div> -->
 
 
-                <?php
-                    // echo $model->ISI;
-                ?>
-                <!-- Message to the right -->
-            </div><!--/.direct-chat-messages-->
-            <!-- Contacts are loaded here -->
-            <div class="direct-chat-contacts">
-                <ul class="contacts-list">
-                    <li>
-                        <?php
-
-                            //echo $headerImage;
-                            // echo $itemHeaderAttach;
-                        ?>
-                    </li><!-- End Contact Item -->
-                </ul><!-- /.contatcts-list -->
-            </div><!-- /.direct-chat-pane -->
-        </div><!-- /.box-body -->
-            <div>
-            <?php
-                            //echo $itemHeaderAttach;
-            ?>
-            </div>
-            <div>
-                <?php
-                            //echo $itemDetailAttach;
-
-                        // echo Html::panel(
-                            // [
-                                // 'id'=>'ad',
-                                //'heading' => '<div>Attach</div>',
-                                // 'body'=>$itemHeaderAttach,
-                            // ],
-                            // Html::TYPE_INFO
-                        // );
-                    ?>
-            </div>
-    </div><!--/.direct-chat -->
-    <div>
-    
-    </div>
-    <div class="piter-chat1-text">
-    </div>
 </div>
 
+
 <?php
+
+$this->registerJs("
+            $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+            $('#notulen-auth1-sign').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget)
+                var modal = $(this)
+                var title = button.data('title')
+                var href = button.attr('href')
+                modal.find('.modal-title').html(title)
+                modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+                $.post(href)
+                    .done(function( data ) {
+                        modal.find('.modal-body').html(data)
+                    });
+                }),
+    ",$this::POS_READY);
+
+/*modal*/
+Modal::begin([
+    'id' => 'notulen-auth1-sign',
+    'header' => '<div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>NOTULEN</b></h5></div>',
+    'size' => Modal::SIZE_SMALL,
+    'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+    ],
+  ]);
+    echo "<div id='modalContentSign1'></div>";
+    Modal::end(); 
+
+    $this->registerJs("
+            $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+            $('#notulen-auth2-sign').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget)
+                var modal = $(this)
+                var title = button.data('title')
+                var href = button.attr('href')
+                modal.find('.modal-title').html(title)
+                modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+                $.post(href)
+                    .done(function( data ) {
+                        modal.find('.modal-body').html(data)
+                    });
+                }),
+    ",$this::POS_READY);
+
+/*modal*/
+Modal::begin([
+    'id' => 'notulen-auth2-sign',
+    'header' => '<div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>NOTULEN</b></h5></div>',
+    'size' => Modal::SIZE_SMALL,
+    'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+    ],
+  ]);
+    echo "<div id='modalContentSign2'></div>";
+    Modal::end(); 
+
 
 $this->registerJs("
             $.fn.modal.Constructor.prototype.enforceFocus = function() {};
@@ -402,7 +461,36 @@ Modal::begin([
     ],
   ]);
     echo "<div id='modalContentacara'></div>";
-    Modal::end(); 
+    Modal::end();
+
+     $this->registerJs("
+            $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+            $('#person-notulen').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget)
+                var modal = $(this)
+                var title = button.data('title')
+                var href = button.attr('href')
+                modal.find('.modal-title').html(title)
+                modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+                $.post(href)
+                    .done(function( data ) {
+                        modal.find('.modal-body').html(data)
+                    });
+                }),
+    ",$this::POS_READY);
+
+
+    /*modal*/
+Modal::begin([
+    'id' => 'person-notulen',
+    'header' => '<div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>NOTULEN</b></h5></div>',
+    // 'size' => Modal::SIZE_SMALL,
+    'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+    ],
+  ]);
+    echo "<div id='modalContentPerson'></div>";
+    Modal::end();  
 
 
 ?>

@@ -17,9 +17,23 @@ use kartik\widgets\TimePicker;
         // 'enableClientValidation' => true,
     ]); ?>
 
-   <?= $form->field($model, 'TIME_START')->widget(TimePicker::classname(), []) ?>
+   <?= $form->field($model, 'TIME_START')->widget(TimePicker::classname(), [
+        'pluginOptions' => [
+                'showSeconds' => true,
+                'showMeridian' => false,
+                'minuteStep' => 1,
+                'secondStep' => 5,
+    ]
+   ]) ?>
 
-   <?= $form->field($model, 'TIME_END')->widget(TimePicker::classname(), []) ?>
+   <?= $form->field($model, 'TIME_END')->widget(TimePicker::classname(), [
+          'pluginOptions' => [
+                'showSeconds' => true,
+                'showMeridian' => false,
+                'minuteStep' => 1,
+                'secondStep' => 5,
+        ]
+   ]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
