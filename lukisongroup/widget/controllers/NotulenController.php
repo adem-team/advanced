@@ -10,11 +10,13 @@ use lukisongroup\widget\models\NotulenSearch;
 use lukisongroup\widget\models\PostPerson;
 use lukisongroup\widget\models\Authmodel1;
 use lukisongroup\widget\models\Authmodel2;
+
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
+use yii\widgets\ActiveForm;
 
 /**
  * NotulenController implements the CRUD actions for Notulen model.
@@ -34,6 +36,31 @@ class NotulenController extends Controller
                 ],
             ],
         ];
+    }
+
+    /**
+     * Lists all Pilotproject models.
+     * @return mixed
+     */
+     public function beforeAction($action){
+            if (Yii::$app->user->isGuest)  {
+                 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+            }
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+                   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true; 
+               }
+            } else {
+                return true;
+            }
     }
 
      
@@ -90,6 +117,10 @@ class NotulenController extends Controller
         $model = self::findModel($id);
 
         if ($model->load(Yii::$app->request->post())) {
+            $format_start = Yii::$app->formatter->asDate($model->start, 'yyyy-MM-dd');
+            $format_end = Yii::$app->formatter->asDate($model->end, 'yyyy-MM-dd');
+            $model->start = $format_start;
+            $model->end = $format_end;
             $model->save();
             return $this->redirect(['view','id'=>$id]);
         } else {
@@ -97,6 +128,32 @@ class NotulenController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+    /* ajax validation  author:wawan*/
+    public function actionValidNotulenDetail()
+    {
+      # code...
+        $model = new NotulenModul();
+        $model->scenario = NotulenModul::SCENARIOWAKTU;
+      if(Yii::$app->request->isAjax && $model->load($_POST))
+      {
+        Yii::$app->response->format = 'json';
+        return ActiveForm::validate($model);
+      }
+    }
+
+    /* ajax validation  author:wawan*/
+    public function actionValidNotulenTanggal()
+    {
+      # code...
+        $model = new Notulen();
+        $model->scenario = Notulen::SCENARIO_TGL;
+      if(Yii::$app->request->isAjax && $model->load($_POST))
+      {
+        Yii::$app->response->format = 'json';
+        return ActiveForm::validate($model);
+      }
     }
 
      public function actionSetTitle($id)
@@ -121,7 +178,15 @@ class NotulenController extends Controller
 
          $model->NotulenId = $id;
 
+        // $data =  NotulenModul::find()->where(['NOTULEN_ID'=>$id])->asArray()->all();
 
+        //  $datax = explode(',', $data['USER_ID']);
+        //  foreach ($datax as  $value) {
+        //      # code...
+        //     $tes [] = $value; 
+        //  }
+
+        // $tes =  ArrayHelper::map(NotulenModul::find()->where(['NOTULEN_ID'=>$id])->asArray()->all(),'ID','MODUL_NM');
         if ($model->load(Yii::$app->request->post())) {
 
 
@@ -131,7 +196,8 @@ class NotulenController extends Controller
             return $this->renderAjax('set_person', [
                 'model' => $model,
                 'id'=>$id,
-                'items'=>self::get_aryPerson()
+                'items'=>self::get_aryPerson(),
+                'tes'=>$tes
             ]);
         }
     }
