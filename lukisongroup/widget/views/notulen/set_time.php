@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\widgets\TimePicker;
+use yii\helpers\Url;
 
 
 /* @var $this yii\web\View */
@@ -14,7 +15,9 @@ use kartik\widgets\TimePicker;
 
     <?php $form = ActiveForm::begin([
         'id'=>$model->formName(),
-        // 'enableClientValidation' => true,
+        'enableClientValidation' => true,
+        'enableAjaxValidation'=>true,
+         'validationUrl'=>Url::toRoute('/widget/notulen/valid-notulen-detail')
     ]); ?>
 
    <?= $form->field($model, 'TIME_START')->widget(TimePicker::classname(), [

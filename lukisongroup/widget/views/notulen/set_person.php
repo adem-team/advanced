@@ -2,6 +2,8 @@
 use softark\duallistbox\DualListbox;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use lukisongroup\widget\models\NotulenModul;
+
 
  $form = ActiveForm::begin([
     'id' => 'person-form',
@@ -13,19 +15,36 @@ echo Html::activeHiddenInput($model, 'NotulenId',['value'=>$id]) ;
 $options = [
        'multiple' => true,
        'size' => 20,
+
    ];
 //    // echo Html::activeListBox($model, $attribute, $items, $options);
-   echo DualListbox::widget([
-       'model' => $model,
-       'attribute' => 'Person',
-       'items' => $items,
-       'options' => $options,
-       'clientOptions' => [
-           'moveOnSelect' => false,
-           'selectedListLabel' => 'Selected Items',
-           'nonSelectedListLabel' => 'Available Items',
-       ],
-   ]);
+
+   //  echo DualListbox::widget([
+   //     'model' => $model,
+   //     'attribute' => 'Person',
+   //    // 'name' => 'coy',
+      
+   //     'items' => $items,
+   //     // 'selection' => $items1,
+   //     'options' => $options,
+   //     'clientOptions' => [
+   //         'moveOnSelect' => false,
+
+   //         'selectedListLabel' => 'Selected Items',
+   //         'nonSelectedListLabel' => 'Available Items',
+   //     ],
+   // ]);
+
+   echo $form->field($model, 'Person')->widget(DualListbox::className(),[
+        'items' => $items,
+        'options' => $options,
+        // 'selection' => $items1,
+        'clientOptions' => [
+            'moveOnSelect' => false,
+            'selectedListLabel' => 'Selected Items',
+            'nonSelectedListLabel' => 'Available Items',
+        ],
+    ]);
    ?>
 
    <div class="form-group">
@@ -35,4 +54,8 @@ $options = [
    </div>
 
   <?php ActiveForm::end(); ?>
+
+  <?php
+
+  ?>
 

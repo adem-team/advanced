@@ -10,8 +10,6 @@ use yii\bootstrap\Modal;
 use lukisongroup\hrd\models\Employe;
 
 $this->registerCss($this->render('letter.css'));
-
-$this->registerCss($this->render('accordion.css'));
 function kembali(){
         $title = Yii::t('app','');
         $options = [ 'id'=>'notulen-back-id',
@@ -161,8 +159,6 @@ function kembali(){
 		return $content;
 	}
 
- 
-
 	function SIGN_2($acara)
 	{
 		$data = Employe::find()->where(['EMP_ID'=>$acara[0]->SIG2_ID])->one();
@@ -193,7 +189,7 @@ function kembali(){
 	</div>
 <!-- header -->
    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"  style="margin-left:0;">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"  style="margin-left:0;">
         <dl>
         <!-- tanggal -->
           <dt style="width:150px; float:left;">Tanggal</dt> 
@@ -201,83 +197,75 @@ function kembali(){
           <!-- waktu -->
           <dt style="width:150px; float:left;">Waktu</dt>
           <dd style="color:rgba(87, 163, 247, 1)">:<?= btnSetTime($acara) ?> </dd>
-
-           <!-- tempat -->
-                <dt style="width:150px; float:left;">Tempat</dt>
-                <dd style="color:rgba(87, 163, 247, 1)">:  <b>Ruang Meeting</b></dd>
-                <!-- materi rapat -->
-                <dt style="width:150px; float:left;">Materi Rapat</dt>
-                <dd>: <?php echo btnSetMateri($model); ?></dd>
         </dl>
-
-         <div class="hidden-xs">
-            <!-- <b class="text-right"> echo btnTanggal($model) ?></b> -->
-            <nav class="menu">
-            <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open" />
-            <label class="menu-open-button" for="menu-open"> <span class="lines line-1"></span> <span class="lines line-2"></span> <span class="lines line-3"></span> </label>
-            <a href="#" class="menu-item item-1"> <i class="fa fa-anchor"></i> </a> 
-            <a href="#" class="menu-item item-2"> <i class="fa fa-coffee"></i> </a> 
-            <a href="#" class="menu-item item-3"> <i class="fa fa-envelope-o"></i> </a> 
-            <a href="/widget/notulen/" class="menu-item item-4"> <i class="fa fa-undo"></i> </a> <a href="#" class="menu-item item-5"> <i class="fa fa-print fa-fw"></i> </a> 
-            <a href="#" class="menu-item item-6"> <i class="fa fa-diamond"></i> </a>
-         </nav>
-         </div>
         </div>
-    </div>
-    
-
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"  style="margin-right:0;">
+        <dl>
+        <!-- tempat -->
+          <dt style="width:150px; float:left;">Tempat</dt>
+          <dd style="color:rgba(87, 163, 247, 1)">:  <b>Ruang Meetiing</b></dd>
+          <!-- materi rapat -->
+          <dt style="width:150px; float:left;">Materi Rapat</dt>
+          <dd>: <?php echo btnSetMateri($model); ?></dd>
+        </dl>
+        </div>
+ 
+</div>
 
 <div class="row">
           <div class="col-sm-12">
-          <section class="ac-container">
-        <div>
-          <input id="ac-1" name="accordion-1" type="radio" checked="">
-
-          <label for="ac-1">Peserta Rapat </label>
-          <article class="ac-small">
-          <br>
-            <ul>
+          	  <dt style="width:150px; float:left;">Peserta Rapat</dt>
+              <br>
+                 <ul>
                <?php
                $peserta = explode(',',$acara[0]->USER_ID);
                if(count($peserta) != 0)
                {
 
-                 foreach ($peserta as  $value) {
-                   # code...
-                  ?>
-                    <li><?= Html::a($value, ['/widget/notulen/set-person','id'=>$acara[0]->NOTULEN_ID],
-                                ['data-toggle'=>"modal",
-                                        'data-target'=>"#person-notulen"]) ?> 
-                    </li>
-                  <?php
-                    }
-                }
-                 ?>
+	               foreach ($peserta as  $value) {
+	                 # code...
+
+	                ?>
+	                <li><?= Html::a($value, ['/widget/notulen/set-person','id'=>$acara[0]->NOTULEN_ID],
+	                						['data-toggle'=>"modal",
+	                              			'data-target'=>"#person-notulen"]) ?> 
+	                </li>
+	                <?php
+	                }
+	              }else{
+	              	echo Html::a('none', ['/widget/notulen/set-person',
+	              							'id'=>$acara[0]->NOTULEN_ID],
+	                						['data-toggle'=>"modal",
+	                              			'data-target'=>"#person-notulen"]);
+	              }  
+	               ?>
 
               </ul>
-              <br>
-          </article>
+              </br>
+          </div>
+ </div>
+  <div class="row">
+          <div class="col-sm-12">
+            <dl>
+              <dt style="width:150px; float:left;">Susunan Acara</dt>
+              <dd style="color:rgba(87, 163, 247, 1)">:<?= btnAcara($acara) ?> </dd>
+            </dl>
+
         </div>
-        <div>
-          <input id="ac-2" name="accordion-1" type="radio">
-          <label for="ac-2">Susunan Acara</label>
-          <article class="ac-medium">
-             <?= btnAcara($acara) ?>
-          </article>
-        </div>
-        <div>
-          <input id="ac-3" name="accordion-1" type="radio">
-          <label for="ac-3">Hasil Rapat</label>
-          <article class="ac-large">
-             <?= btnRapat($acara) ?>
-          </article>
-        </div>
-      </section>
+      </div>
+
+
+      <div class="row">
+        <div class="col-sm-12">
+          <dl>
+            <dt style="width:150px; float:left;">Hasil Rapat</dt>
+            <dd style="color:rgba(87, 163, 247, 1)">:<?php echo btnRapat($acara);?></dd>
+          </dl>
       </div>
     </div>
 
 
-    <div style="margin-top:10%" class="row">
+    <div class="row">
       <div class="col-sm-1">
       </div>
           <div class="col-sm-2">
@@ -326,10 +314,18 @@ function kembali(){
         		</dl>
           </div>
           <div class="col-sm-3">
-         
+            <!-- <b class="text-right"> echo btnTanggal($model) ?></b> -->
           </div>
           <div class="col-sm-3">
-          		
+          		<nav class="menu">
+					  <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open" />
+					  <label class="menu-open-button" for="menu-open"> <span class="lines line-1"></span> <span class="lines line-2"></span> <span class="lines line-3"></span> </label>
+					  <a href="#" class="menu-item item-1"> <i class="fa fa-anchor"></i> </a> 
+					  <a href="#" class="menu-item item-2"> <i class="fa fa-coffee"></i> </a> 
+					  <a href="#" class="menu-item item-3"> <i class="fa fa-envelope-o"></i> </a> 
+					  <a href="/widget/notulen/" class="menu-item item-4"> <i class="fa fa-undo"></i> </a> <a href="#" class="menu-item item-5"> <i class="fa fa-print fa-fw"></i> </a> 
+					  <a href="#" class="menu-item item-6"> <i class="fa fa-diamond"></i> </a>
+				 </nav>
 
           </div>
 

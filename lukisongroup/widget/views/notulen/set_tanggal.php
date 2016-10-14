@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\widgets\Select2;
 use kartik\widgets\DatePicker;
+use yii\helpers\Url;
 
 
 /* @var $this yii\web\View */
@@ -15,14 +16,17 @@ use kartik\widgets\DatePicker;
 
     <?php $form = ActiveForm::begin([
         'id'=>$model->formName(),
-        // 'enableClientValidation' => true,
+        'enableClientValidation' => true,
+        'enableAjaxValidation'=>true,
+        'validationUrl'=>Url::toRoute('/widget/notulen/valid-notulen-tanggal')
     ]); ?>
 
    <?php echo $form->field($model, 'start')->widget(DatePicker::classname(), [
                     'options' => ['placeholder' => '...'],
                         'pluginOptions' => [
                             'todayHighlight' => true,
-                            'autoclose'=>true
+                            'autoclose'=>true,
+                              'format' => 'yyyy-m-dd'
                         ],
                         'pluginEvents'=>[
                             'show' => "function(e) {show}",
@@ -34,7 +38,8 @@ use kartik\widgets\DatePicker;
                     'options' => ['placeholder' => '...'],
                         'pluginOptions' => [
                             'todayHighlight' => true,
-                            'autoclose'=>true
+                            'autoclose'=>true,
+                              'format' => 'yyyy-m-dd'
                         ],
                         'pluginEvents'=>[
                             'show' => "function(e) {show}",

@@ -50,6 +50,7 @@ a { color: inherit; }
   width: 80px;
   height: 80px;
   margin-left: -40px;
+  /*margin-top: 20%;*/
   position: absolute;
   color: #FFFFFF;
   text-align: center;
@@ -114,8 +115,8 @@ a { color: inherit; }
   margin: auto;
   position: absolute;
   top: 0;
-  bottom: 0;
-  left: 0;
+  bottom: 20%;
+  left: 50%;
   right: 0;
   width: 80px;
   height: 80px;
@@ -368,3 +369,5 @@ a { color: inherit; }
 .a_demo_two:active::before {
   top:-2px;
 }
+
+

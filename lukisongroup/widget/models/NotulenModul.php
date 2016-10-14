@@ -23,6 +23,9 @@ class NotulenModul extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    // scenario check time
+    const SCENARIOWAKTU = 'checkwaktu';
+
     public static function tableName()
     {
         return 'm0002';
@@ -45,6 +48,7 @@ class NotulenModul extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['TIME_START','TIME_END'],'Validtime','on'=>self::SCENARIOWAKTU],
             [['MODUL_POLICY'], 'string'],
             [['STATUS'], 'integer'],
             [['CREATE_AT', 'UPDATE_AT','SCHEDULE','RESULT_SCHEDULE','NOTULEN_ID','TIME_START','TIME_END'], 'safe'],
@@ -53,6 +57,20 @@ class NotulenModul extends \yii\db\ActiveRecord
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100],
         ];
     }
+
+    public function Validtime($attribute)
+    {
+             $start =  strtotime($this->TIME_START);
+             $end = strtotime($this->TIME_END);
+        
+        if ( $start > $end) {
+                // whatever you have to do here
+            $this->addError($attribute,'Time Start greather Time End');
+        }
+
+    }
+
+   
 
     /**
      * @inheritdoc
