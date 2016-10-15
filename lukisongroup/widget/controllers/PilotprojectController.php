@@ -1009,21 +1009,23 @@ public function actionSaveEvent(){
 
     }
 	
-	public function actionRenderDataEvents($start,$end)
+	public function actionRenderDataEvents($claster,$start,$end)
     {
             
         $end_1 = strtotime($end);
         $dep_id1 = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
          $emp_email = Yii::$app->getUserOpt->Profile_user()->emp->EMP_EMAIL;
          $gf_id = Yii::$app->getUserOpt->Profile_user()->emp->GF_ID;
-
+		
             if($gf_id <= 4)
             {
-                $sql = "select STATUS as status, COLOR as color, ID as resourceId, PLAN_DATE1 as start , PLAN_DATE2 as end, PILOT_NM as title from sc0001 where DEP_ID = '".$dep_id1."' and TEMP_EVENT <>0 and PLAN_DATE1 != 'null'";
+				//$sql = "select STATUS as status, COLOR as color, ID as resourceId, PLAN_DATE1 as start , PLAN_DATE2 as end, PILOT_NM as title from sc0001 where DEP_ID = '".$dep_id1."' and TEMP_EVENT <>0 and PLAN_DATE1 != 'null'";
+               $sql = "select STATUS as status, COLOR as color, ID as resourceId, PLAN_DATE1 as start , PLAN_DATE2 as end, PILOT_NM as title from sc0001 where DEP_ID = '".$dep_id1."' and TEMP_EVENT <>0 and ((date(PLAN_DATE1)  BETWEEN '".$start."'  AND '".$end."') or (date(PLAN_DATE1)  BETWEEN '".$start."'  AND '".$end."'))";
 
                 // $sql = "select ID as resourceId, PLAN_DATE1 as start , PLAN_DATE2 as end, PILOT_NM as title from sc0001 where DEP_ID = '".$dep_id1."' and UNIX_TIMESTAMP(PLAN_DATE2) ='".$end_1."'";
             }else{
-                $sql = "select STATUS as status, COLOR as color, ID as resourceId, PLAN_DATE1 as start , PLAN_DATE2 as end, PILOT_NM as title from sc0001 where DESTINATION_TO = '".$emp_email."'and TEMP_EVENT <>0 and PLAN_DATE1 != 'null'";
+                //$sql = "select STATUS as status, COLOR as color, ID as resourceId, PLAN_DATE1 as start , PLAN_DATE2 as end, PILOT_NM as title from sc0001 where DESTINATION_TO = '".$emp_email."'and TEMP_EVENT <>0 and PLAN_DATE1 != 'null'";
+				$sql = "select STATUS as status, COLOR as color, ID as resourceId, PLAN_DATE1 as start , PLAN_DATE2 as end, PILOT_NM as title from sc0001 where DEP_ID = '".$emp_email."' and TEMP_EVENT <>0 and ((date(PLAN_DATE1)  BETWEEN '".$start."'  AND '".$end."') or (date(PLAN_DATE1)  BETWEEN '".$start."'  AND '".$end."'))";
 
             }
       // $aryEvent = Pilotproject::find()->orderBy('SORT')->all();
@@ -1033,7 +1035,7 @@ public function actionSaveEvent(){
         $aryEvent =  Yii::$app->db_widget->createCommand($sql)->queryAll();
 		// $aryEvent=[
 		// 		['id' => '1', 'resourceId' => 'b', 'start' => '2016-05-07T02:00:00', 'end' => '2016-05-07T07:00:00', 'title' => 'event 1'],
-		// 		['id' => '2', 'resourceId' => 'c', 'start' => '2016-05-07T05:00:00', 'end' => '2016-05-07T22:00:00', 'title' => 'event 2'],
+		// 		['id' => '2', 'resourceId' => 'c', 'start' => '2016-05-07T05:00:00', 'end' => '2016-05-07T	:00:00', 'title' => 'event 2'],
 		// 		['id' => '3', 'resourceId' => 'd', 'start' => '2016-05-06', 'end' => '2016-05-08', 'title' => 'event 3'],
 		// 		['id' => '4', 'resourceId' => 'e', 'start' => '2016-05-07T03:00:00', 'end' => '2016-05-07T08:00:00', 'title' => 'event 4'],
 		// 		['id' => '5', 'resourceId' => 'f', 'start' => '2016-05-07T00:30:00', 'end' => '2016-05-07T02:30:00', 'title' => 'event 5'],
@@ -1061,13 +1063,13 @@ public function actionSaveEvent(){
             $sql ="SELECT b.ID as id, b.PILOT_NM as title ,a.PILOT_NM as srcparent ,b.DEP_ID as dep_id,b.CREATED_BY as createby
                 FROM sc0001 AS a 
                 INNER JOIN sc0001 AS b 
-                WHERE a.ID=b.SORT and b.DEP_ID='".$dep_id1."'and b.TEMP_EVENT <>0 ORDER BY b.TEMP_EVENT ASC";
+                WHERE a.ID=b.SORT and b.DEP_ID='".$dep_id1."'and b.TEMP_EVENT <>0 ORDER BY  a.PLAN_DATE1,b.TEMP_EVENT ASC";
         }else{
              
              $sql ="SELECT b.ID as id, b.PILOT_NM as title ,a.PILOT_NM as srcparent ,b.DEP_ID as dep_id,b.CREATED_BY as createby
                 FROM sc0001 AS a 
                 INNER JOIN sc0001 AS b 
-                WHERE a.ID=b.SORT and b.DESTINATION_TO='".$emp_email."'and b.TEMP_EVENT <>0 ORDER BY b.TEMP_EVENT ASC ";
+                WHERE a.ID=b.SORT and b.DESTINATION_TO='".$emp_email."'and b.TEMP_EVENT <>0  ORDER BY  a.PLAN_DATE1,b.TEMP_EVENT ASC ";
         }
               
           
@@ -1077,6 +1079,33 @@ public function actionSaveEvent(){
 		return Json::encode($ary);
 	}
 
+	public function actionUpdateDataResources($start)
+    {
+         $dep_id1 = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+         $emp_email = Yii::$app->getUserOpt->Profile_user()->emp->EMP_EMAIL;
+         $gf_id = Yii::$app->getUserOpt->Profile_user()->emp->GF_ID;
+         if( $gf_id <= 4)
+         {
+           
+            $sql ="SELECT b.ID as id, b.PILOT_NM as title ,a.PILOT_NM as srcparent ,b.DEP_ID as dep_id,b.CREATED_BY as createby
+                FROM sc0001 AS a 
+                INNER JOIN sc0001 AS b 
+                WHERE a.ID=b.SORT and b.DEP_ID='".$dep_id1."'and b.TEMP_EVENT <>0 and date(a.PLAN_DATE1)='".$start."' ORDER BY a.PLAN_DATE1,b.TEMP_EVENT ASC";
+        }else{
+             
+             $sql ="SELECT b.ID as id, b.PILOT_NM as title ,a.PILOT_NM as srcparent ,b.DEP_ID as dep_id,b.CREATED_BY as createby
+                FROM sc0001 AS a 
+                INNER JOIN sc0001 AS b 
+                WHERE a.ID=b.SORT and b.DESTINATION_TO='".$emp_email."'and b.TEMP_EVENT <>0 and date(a.PLAN_DATE1)='".$start."' ORDER BY  a.PLAN_DATE1, b.TEMP_EVENT ASC ";
+        }
+              
+          
+        $ary = Yii::$app->db_widget->createCommand($sql)->queryAll();
+
+		
+		return Json::encode($ary);
+	}
+	
     public function actionRoomForm(){
 
          $model = new Pilotproject();
@@ -1224,7 +1253,20 @@ public function actionSaveEvent(){
 	
 	
 	
-	
+	public function actionTestDataEvents()
+    {
+		$aryEvent=[
+			["id"=>"135","title"=>"jadi dah sync","srcparent"=>"wawkakak","dep_id"=>"IT","createby"=>"none"],
+			["id"=>"139","title"=>"wawan","srcparent"=>"wwww","dep_id"=>"IT","createby"=>"none"],
+			["id"=>"142","title"=>"radumta","srcparent"=>"test1asdasd","dep_id"=>"IT","createby"=>"none"],
+			["id"=>"202","title"=>"test1","srcparent"=>"asdasd","dep_id"=>"IT","createby"=>"none"],
+			["id"=>"204","title"=>"test2","srcparent"=>"dasd","dep_id"=>"IT","createby"=>"none"],
+			["id"=>"206","title"=>"sip","srcparent"=>"asdsadasds","dep_id"=>"IT","createby"=>"none"]		
+		];
+		
+		//return $aryEvent;
+		return  json_encode($aryEvent);
+	}
 	
 	
 	

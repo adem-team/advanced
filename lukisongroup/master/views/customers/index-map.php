@@ -145,7 +145,7 @@ function tombolMap(){
 		</div>
 		<div class="col-sm-12">
 			<?php
-				 echo $map = '<div id ="map" style="width:100%;height:450px; padding-bottom:50px"></div>';
+				 echo $map = '<div id ="map" style="width:100%;height:650px; padding-bottom:50px"></div>';
 			?>
 		</div>
 	</div>
@@ -158,7 +158,7 @@ function tombolMap(){
    /*nampilin MAP*/
     var map = new google.maps.Map(document.getElementById('map'),
        {
-       zoom: 12,
+       zoom: 9,
        center: new google.maps.LatLng(-6.229191531958687,106.65994325550469),
        mapTypeId: google.maps.MapTypeId.ROADMAP
 
@@ -195,7 +195,7 @@ function tombolMap(){
         public_markers[i] = marker;
 
         google.maps.event.addListener(public_markers[i], 'mouseover', function () {
-          infowindow.setContent('<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>');
+          infowindow.setContent('<h1>' + point.CUST_NM + '</h1>' + '<p>' + point.ALAMAT + '</p>');
           infowindow.open(map, public_markers[i]);
         });
 

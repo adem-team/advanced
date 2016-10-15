@@ -42,15 +42,12 @@ EOF;
 
 
 $JSEventClick = <<<EOF
-	
 	function(calEvent, jsEvent, view) {
-		$('#calendar_test').fullCalendar('refetchEvents');
 		var dateTime1 = new Date(calEvent.start);
 		var dateTime2 = new Date(calEvent.end);
 		var tgl1 = moment(dateTime1).format('YYYY-MM-DD LTS');
 		var tgl2 = moment(dateTime2).subtract(1, 'days').format('YYYY-MM-DD LTS');
 		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
-		alert(calEvent.resourceId);
 	$.get('/widget/pilotproject/detail-pilot',{'id':calEvent.resourceId},function(data){
 						$('#modal-up').modal('show')
 						.find('#modalContentUp')
@@ -58,7 +55,110 @@ $JSEventClick = <<<EOF
 		});
 	}
 EOF;
+$JsBefore = <<<EOF
 
+	function() {
+			//setInterval(function(){
+				 $.get('http://lukisongroup.com/widget/pilotproject/render-data-resources', function(data, status){
+							//var obj = new JSONObject(data);
+					coba =  JSON.parse(data);
+					for (var key in coba) {
+						$('#calendar_test').fullCalendar('removeResource',coba[key].id);
+						console.log(coba[key].id);
+					};
+					//alert(coba[1].id);
+					//alert(coba.count);
+				});
+			//},50);
+		
+		
+		//$('#calendar_test').fullCalendar('option',{
+					/* header:{
+						left:'plus,today, prev,next, details, group, excel-export',
+						center: 'title',
+						right: 'timelineOneDays,agendaWeek,month,listWeek',
+					},
+					views: {
+						timelineOneDays: {
+							type: 'timeline',
+							duration: {
+								days: 1,
+							},
+						}, 
+					
+					},
+					defaultView:'timelineOneDays', */
+					
+					//event:'/widget/pilotproject/render-data-events?claster=event',
+					//events:'/widget/pilotproject/render-data-events?claster=event',
+					//resources:'/widget/pilotproject/render-data-resources?start='+tgl,
+					//resources:'/widget/pilotproject/render-data-resources?start=2016-10-12',
+					/* resources: function(start, end, timezone, callback) {
+							var dateTime1 = new Date(start);
+							var dateTime2 = new Date(end);
+							var tgl1 = moment(dateTime1).format('YYYY-MM-DD LTS');
+							var tgl2 = moment(dateTime2).subtract(1, 'days').format('YYYY-MM-DD LTS');
+							$.ajax({
+								url: 'http://lukisongroup.com/widget/pilotproject/render-data-resources',
+								type: 'POST',								
+								data: {
+									//claster:'event',
+									start: tgl1,
+									//end: tgl2
+								},
+								cache: false,
+								error: function(data) {
+									alert(data);
+								},
+							}).done(function(data){
+								//on success call `callback` with the data
+								callback(data)
+							})
+						} */
+				//});
+		// [
+			// {id:"135",title:"test1 test1 test1 test1 test1",srcparent:"test1 test1 test1 test1 test1",dep_id:"IT",createby:"none"},
+			// {id:"139",title:"test1 test1 test1 test1 test1",srcparent:"test1 test1 test1 test1 test1",dep_id:"IT",createby:"none"}
+		// ]	
+		
+		
+		// [
+			//your event source
+			// {
+				// url: '/widget/pilotproject/render-data-resources?start=2016-10-10', // use the `url` property
+				// type: 'POST',
+				// data: function() { // a function that returns an object
+					// return {
+						// dynamic_value: Math.random()
+					// };
+				// },
+				// color: 'yellow',    // an option!
+				// textColor: 'black'  // an option!
+			// }
+			//any other sources...
+		// ] 
+	
+			//$('#calendar_test').fullCalendar('option', {
+					//resources:'/widget/pilotproject/render-data-resources',								
+			//})
+		
+		/* $('#calendar_test').fullCalendar('option',{
+			 resources:{
+				url:'/widget/pilotproject/render-data-resources?start=2016-10-10'
+			 },
+			 eventSources:
+			  {
+				 url: '/widget/pilotproject/render-data-resources',
+				// type: 'POST'
+				},
+			
+		})  */
+		
+		 // function(resourceObj, labelTds, bodyTds) {
+			//labelTds.css('background', 'blue');
+		 // }
+	}
+EOF;
 
 $Jseventcolor = <<<EOF
 function (event, element, view) {
@@ -69,7 +169,47 @@ var tgl = event.start;
 	{
 		 element.html('close');
 	};
+		
+		// $('#calendar_test').fullCalendar({
+			// defaultView: 'timelineOneDays',
+			// eventResourceEditable: true,
+			// resources:'/widget/pilotproject/test-data-events', 
+			// editable: true, // event resources editable by default
+			// events: '/widget/pilotproject/render-data-events'
+		// });
+		
+		// $('#calendar_test').fullCalendar('getResourceEvents', 'id:11'); 
+		// $('#calendar_test').fullCalendar( 'getResources', 
+					 // function(callback) {
+						// somethingAsynchonous(function(resourceObjects) {
+							// callback(resourceObjects);
+					// })},  
+			
+			// scroll );
+		//$('#calendar_test').fullCalendar('destroy');
+		//$('#calendar_test').fullCalendar('render');
+		
+		// $('#calendar_test').fullCalendar('removeResource');
+		
+		// $('#calendar_test').fullCalendar( 'addResource', '/widget/pilotproject/test-data-events', scroll );
+		// setInterval(function(){
+		//$('#calendar_test').fullCalendar('refetchResources', '/widget/pilotproject/test-data-events');
+		// },3000);
+		//setTimeout(function(){
+			// $('#calendar_test').fullCalendar({
+				// resources: '/widget/pilotproject/test-data-events'
+			// });
+			
+				// $('#calendar_test').fullCalendar( 'addResource','/widget/pilotproject/render-data-resources' 
+					
+					// , 
+			
+			// scroll ); 
+			
+		//},100);
 	
+		
+		//setTimeout(function()
 }
  
 EOF;
@@ -97,7 +237,11 @@ $JSaddAddRow= <<<EOF
 	function() {
 		//alert('test');
 		$.get('/widget/pilotproject/tambah-row',function(data){
-				
+			/* function(isLoading, view ) {
+				//$('#calendar_test').find('.fc-loading').toggle(isLoading);
+			}; */
+			//$('#calendar').fullCalendar('refetchResources');
+			
 		 	$('#calendar_test').fullCalendar( 'addResource', 
 					function(callback) {
 						somethingAsynchonous(function(resourceObjects) {
@@ -105,7 +249,40 @@ $JSaddAddRow= <<<EOF
 					})}, 
 			
 			scroll );
+			 
+			/* $('#calendar_test').fullCalendar('option', {				
+				resource:  function(callback) {
+						somethingAsynchonous(function(resourceObjects) {
+							callback(resourceObjects);
+						});
+					}
 			
+			});  */
+			
+			
+			
+			// setTimeout(function(){	
+			// $.pjax.reload({container:'#calendar_test'});		
+			// //alert(data);
+			//},100);
+			
+			// alert(data);
+			//     $('#calendar_test').fullCalendar('removeEventSource');
+			 //  $('#calendar_test').fullCalendar( 'addEventSource', data ) 
+             // $('#calendar_test').fullCalendar('rerenderEvents' );
+			
+			// $('#calendar_test').load(location.href + " #calendar_test");
+			// $.pjax.reload({container:'#tes1'});
+			// $("#tes1").load(#tes1);
+			// $('#calendar_test').fullCalendar( 'refetchEvents' );
+			// $('div#tes1').load('http://labtest1-erp.int/widget/pilotproject/index div#tes1');
+			 // $('#calendar').fullCalendar('refetchEvents');
+							// if(data == 'true'){
+							//  $('#calendar_test').fullCalendar( 'rerenderEvents' );
+							// }
+						// $('#modal-row').modal('show')
+						// .find('#modalContentRow')
+						// .html(data);
 		});
 	}
 EOF;
@@ -175,26 +352,6 @@ function(event, element, view) {
 }
 EOF; */
 
-$JsBeforeRender = <<<EOF
-	function(){
-		//if(window.onload) {
-		//setTimeout(function(){
-			var elem = document.getElementById('calendar_test');
-			//var list1 = elem.getElementsByTagName('button')[7];
-			var list1 = elem.getElementsByClassName('fc-timelineOneDays-button');
-			console.log(list1[0].innerText);
-			list1[0].click();
-		//},60000);
-		
-		
-		
-	//};
-		
-		
-	}
-EOF;
-
-
 	$wgCalendar=FullcalendarScheduler::widget([		
 		'modalSelect'=>[
 			/**
@@ -219,7 +376,7 @@ EOF;
 		],
 		'optionsEventUrl'=>[
 			'events' => Url::to(['/widget/pilotproject/render-data-events','claster'=>'event']),				//should be set data event "your Controller link" 	
-			//'resources'=> Url::to(['/widget/pilotproject/render-data-resources']),		//should be set "your Controller link" 
+			'resources'=> Url::to(['/widget/pilotproject/render-data-resources']),		//should be set "your Controller link" 
 			'resources'=>[],		//should be set "your Controller link" 
 			//'resources'=> Url::to(['/widget/pilotproject/render-data-resources','start'=>'2016-10-12']),		//should be set "your Controller link" 
 			// 'resources'=> Url::to(['/widget/pilotproject/render-data-resources','start'=>'{moment($(#calendar_test).fullCalendar(getDate).format(YYYY-MM-DD)}']),		//should be set "your Controller link" 
@@ -264,7 +421,7 @@ EOF;
 			'selectable' => true,
 			'select' => new JsExpression($JSSelect),										// don't set if used "modalSelect"
 			'eventClick' => new JsExpression($JSEventClick),
-			'rerenderEvents'=> new JsExpression($JsBeforeRender), 
+			'eventBeforeRender'=> new JsExpression($JsBefore),
 			'eventAfterRender'=> new JsExpression($Jseventcolor),
 			'droppable' => true,
 			//'eventDrop' => new JsExpression($JSDropEvent),
@@ -273,7 +430,7 @@ EOF;
 			'theme'=> true,
 			'aspectRatio'       => 1.8,
 			//'scrollTime'        => '00:00', // undo default 6am scrollTime
-			'defaultView'       => 'month',//'timelineDay',//agendaDay',
+			'defaultView'       => 'timelineOneDays',//'timelineDay',//agendaDay',
 			'views'             => [
 				'timelineOneDays' => [
 					'type'     => 'timeline',
@@ -434,56 +591,152 @@ $this->registerJs($this->render('save_external_event.js'),$this::POS_END);
 	})
  ",$this::POS_READY);
  
+ $urlSrc=Url::to('/widget/pilotproject/test-data-events');
  $this->registerJs("
-	
  
- 
- 
- 	$('.fc-prev-button,.fc-next-button span, .fc-today-button, .fc-timelineOneDays-button').click(function(){
-		 /**
-		   * Remove Resources fullcalendar
-		   * author piter novian [ptr.nov@gmail.com]
-		 */
-		
-		$.get('http://lukisongroup.com/widget/pilotproject/render-data-resources', function(data, status){
-			//var obj = new JSONObject(data);
-			coba =  JSON.parse(data);
-			for (var key in coba) {
-				$('#calendar_test').fullCalendar('removeResource',coba[key].id);
-				console.log(coba[key].id);
-			};
-			//alert(coba[1].id);
-			//alert(coba.count);
-		}); 
-		
-		/**
-		   * Add Resources fullcalendar with timeout dalay time.
-		   * get current date from event.
-		   * author piter novian [ptr.nov@gmail.com].
-		 */		
-		setTimeout(function(){	
-			var tglCurrent = $('#calendar_test').fullCalendar('getDate');
-			var	tgl=moment(tglCurrent).format('YYYY-MM-DD');
-			$.get('http://lukisongroup.com/widget/pilotproject/update-data-resources?start='+tgl, function(datarcvd, status){
-				rcvd =  JSON.parse(datarcvd);
-				for (var key in rcvd) {
-					$('#calendar_test').fullCalendar('addResource',
-						rcvd[key]
-					, scroll );
-					console.log(rcvd[1]);
-				};						
-			});
-				$('#calendar_test').fullCalendar('refetchEvents');
-		},50);		
-	
-		
-		//$('#calendar_test').fullCalendar( 'rerenderEvents' )
-		/* 	$.get('http://lukisongroup.com/widget/pilotproject/render-data-events?claster=event&start=2016-10-10&end=2016-10-11', function(dataEvent, status){
-			dataEventDay=  JSON.parse(dataEvent);
-			$('#calendar_test').fullCalendar('updateEvent', dataEventDay );	
-			console.log(dataEventDay[1]);							
-		}) */		
+	$('#calendar_test').fullCalendar({
+    eventClick: function(calEvent, jsEvent, view) {
+
+        alert('Event: ' + calEvent.title);
+        alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+        alert('View: ' + view.name);
+
+        // change the border color just for fun
+        $(this).css('border-color', 'red');
+
+    }
+});
+	$('#calendar_test').click(function(){
+		var elem = document.getElementById('calendar_test');
+		var list = elem.getElementsByTagName('button');
+		//var list = elem.getElementsByClassName('button')[2];
+		//console.log(list);
+		//if(list[2]){ //is prev button
+		if(list[2]){ //is prev button
+			//alert('prev');
+				
+				//alert(tgl);
+				
+				 $.get('http://lukisongroup.com/widget/pilotproject/render-data-resources', function(data, status){
+					//var obj = new JSONObject(data);
+					coba =  JSON.parse(data);
+					for (var key in coba) {
+						$('#calendar_test').fullCalendar('removeResource',coba[key].id);
+						console.log(coba[key].id);
+					};
+					//alert(coba[1].id);
+					//alert(coba.count);
+				}); 
+				
+				
+				/* function testAjax() {
+				  return $.ajax({
+					url: 'http://lukisongroup.com/widget/pilotproject/render-data-resources',
+					type: 'POST',								
+					success: function(data) {
+					  return data; 
+					}
+				  });
+				}
+				var srcData=testAjax();
+				alert(srcData.id); */
+				
+				
+				// srcData.success(function (data) {
+					  // alert(data);
+					// });
+				//srcData.success(data => alert(data));
+				
+				
+				// $('#calend	ar_test').fullCalendar('removeResource')		
+				// .fullCalendar( 'addResource', '/widget/pilotproject/render-data-resources?start=2016-10-12', scroll );
+				
+		var a = $('#calendar_test').fullCalendar('getResources');
+				var b = $('#calendar_test').fullCalendar('getResourceEvents');
+					
+				 //p =  JSON.parse(a);
+				// $('#calendar_test').fullCalendar({
+					 // eventSources: [
+						// '/widget/pilotproject/render-data-events?claster=event',
+						// '/widget/pilotproject/render-data-resources?start=2016-10-12',						
+					 // ]
+				 // });
+				//	alert(srcData);
+				 //$('#calendar_test').fullCalendar('removeResource',a);
+				 // $('#calendar_test').fullCalendar('removeResource','139');
+				 // $('#calendar_test').fullCalendar('removeResource','142');
+				 // $('#calendar_test').fullCalendar('removeResource','202');
+				 // $('#calendar_test').fullCalendar('removeResource','204');
+				 //$('#calendar_test').fullCalendar('removeResource','135');
+				 
+					setTimeout(function(){	
+							var tglCurrent = $('#calendar_test').fullCalendar('getDate');
+							var	tgl=moment(tglCurrent).format('YYYY-MM-DD');
+						/* $('#calendar_test').fullCalendar('addResource',
+							{id:'135',title:'test1 test1 test1 test1 test1',srcparent:'test1 test1 test1 test1 test1',dep_id:'IT',createby:'none'}
+							//,
+							//{id:'139',title:'test1 test1 test1 test1 test1',srcparent:'test1 test1 test1 test1 test1',dep_id:'IT',createby:'none'}
+						, scroll ); */
+					
+						$.get('http://lukisongroup.com/widget/pilotproject/update-data-resources?start='+tgl, function(datarcvd, status){
+							rcvd =  JSON.parse(datarcvd);
+							for (var key in rcvd) {
+								$('#calendar_test').fullCalendar('addResource',
+									rcvd[key]
+								, scroll );
+								console.log(rcvd[1]);
+							};						
+						});
+						
+					},50);
+					//$('#calendar_test').fullCalendar( 'rerenderEvents' )
+					/* 	$.get('http://lukisongroup.com/widget/pilotproject/render-data-events?claster=event&start=2016-10-10&end=2016-10-11', function(dataEvent, status){
+								dataEventDay=  JSON.parse(dataEvent);
+								$('#calendar_test').fullCalendar('updateEvent', dataEventDay );	
+								console.log(dataEventDay[1]);							
+							}) */
+					
+					
+					
+					
+					
+				 
+				/* $('#calendar_test').fullCalendar('option',{
+					//event:'/widget/pilotproject/render-data-events?claster=event',
+					//events:'/widget/pilotproject/render-data-events?claster=event',
+					//resources:'/widget/pilotproject/render-data-resources?start='+tgl,
+					resources: function(start, end, timezone, callback) {
+							var dateTime1 = new Date(start);
+							var dateTime2 = new Date(end);
+							var tgl1 = moment(dateTime1).format('YYYY-MM-DD LTS');
+							var tgl2 = moment(dateTime2).subtract(1, 'days').format('YYYY-MM-DD LTS');
+							$.ajax({
+								url: 'http://lukisongroup.com/widget/pilotproject/render-data-resources',
+								type: 'POST',								
+								data: {
+									//claster:'event',
+									start: tgl1,
+									//end: tgl2
+								},
+								cache: false,
+								error: function(data) {
+									alert(data);
+								},
+							}).done(function(data){
+								//on success call `callback` with the data
+								callback(data)
+							})
+						}
+				});   */
+				
+				//$('#calendar_test').fullCalendar('refetchResources',{
+				//	resources: 
+				//});
+				
+			//moment($('#calendar_test').fullCalendar('getDate').format('YYYY-MM-DD');
+				
 			
+		}
 	});
 	",$this::POS_READY); 
 ?>
