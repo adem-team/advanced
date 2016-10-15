@@ -145,6 +145,22 @@ function kembali(){
 		return $content;
 	}
 
+   function Signvalid(){
+    $title = Yii::t('app', 'Sign Hire');
+    $options = [ 'id'=>'notulen-auth1',
+            // 'data-toggle'=>"modal",
+            // 'data-target'=>"#notulen-auth1-sign",
+            'class'=>'a_demo_two',
+            'style'=>['width'=>'100px'],
+            'title'=>'Detail'
+    ];
+    $icon = '<span class="glyphicon glyphicon-retweet"></span>';
+    $label = $icon . ' ' . $title;
+    // $url = Url::toRoute(['/widget/notulen/sign-auth1-view','id'=>$acara[0]->NOTULEN_ID]);
+    $content = Html::a($label,'#', $options);
+    return $content;
+  }
+
 	  function SignCreated2($acara){
 		$title = Yii::t('app', 'Sign Hire');
 		$options = [ 'id'=>'notulen-auth2',
@@ -209,7 +225,6 @@ function kembali(){
                 <dt style="width:150px; float:left;">Materi Rapat</dt>
                 <dd>: <?php echo btnSetMateri($model); ?></dd>
         </dl>
-
          <div class="hidden-xs">
             <!-- <b class="text-right"> echo btnTanggal($model) ?></b> -->
             <nav class="menu">
@@ -218,7 +233,8 @@ function kembali(){
             <a href="#" class="menu-item item-1"> <i class="fa fa-anchor"></i> </a> 
             <a href="#" class="menu-item item-2"> <i class="fa fa-coffee"></i> </a> 
             <a href="#" class="menu-item item-3"> <i class="fa fa-envelope-o"></i> </a> 
-            <a href="/widget/notulen/" class="menu-item item-4"> <i class="fa fa-undo"></i> </a> <a href="#" class="menu-item item-5"> <i class="fa fa-print fa-fw"></i> </a> 
+            <a href="/widget/notulen/" class="menu-item item-4"> <i class="fa fa-undo"></i></a> 
+            <a href="#" class="menu-item item-5"> <i class="fa fa-print fa-fw"></i> </a> 
             <a href="#" class="menu-item item-6"> <i class="fa fa-diamond"></i> </a>
          </nav>
          </div>
@@ -228,16 +244,26 @@ function kembali(){
 
 
 <div class="row">
-          <div class="col-sm-12">
+          <!-- <div class="col-sm-12"> -->
           <section class="ac-container">
         <div>
           <input id="ac-1" name="accordion-1" type="radio" checked="">
 
-          <label for="ac-1">Peserta Rapat </label>
+          <label for="ac-1"> 
+
+             <?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-person','id'=>$acara[0]->NOTULEN_ID],
+                                ['data-toggle'=>"modal",
+                                'id'=>'per-id',
+                                        'data-target'=>"#person-notulen"]) ?>
+               Peserta Rapat
+
+
+          </label>
           <article class="ac-small">
           <br>
             <ul>
                <?php
+
                $peserta = explode(',',$acara[0]->USER_ID);
                if(count($peserta) != 0)
                {
@@ -260,20 +286,37 @@ function kembali(){
         </div>
         <div>
           <input id="ac-2" name="accordion-1" type="radio">
-          <label for="ac-2">Susunan Acara</label>
+          <label for="ac-2">
+          
+             <?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-acara','id'=>$acara[0]->NOTULEN_ID],
+                                ['data-toggle'=>"modal",
+                                        'data-target'=>"#acara"]) ?>
+               Susunan Acara
+
+          </label>
           <article class="ac-medium">
              <?= btnAcara($acara) ?>
           </article>
         </div>
         <div>
           <input id="ac-3" name="accordion-1" type="radio">
-          <label for="ac-3">Hasil Rapat</label>
+          <label for="ac-3">
+
+
+             <?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-hasil','id'=>$acara[0]->NOTULEN_ID],
+                                ['data-toggle'=>"modal",
+                                        'data-target'=>"#rapat"]) ?>
+
+          Hasil Rapat
+
+
+          </label>
           <article class="ac-large">
              <?= btnRapat($acara) ?>
           </article>
         </div>
       </section>
-      </div>
+      <!-- </div> -->
     </div>
 
 
@@ -292,7 +335,7 @@ function kembali(){
 	                $ttd1 = $acara[0]->SIGN_STT1!= 0 ?  '<img style="width:80; height:40px" src='.$ttd.'></img>' : SignCreated($acara);
 	                 echo $ttd1;
              }else{
-             	 $ttd1 = $acara[0]->SIGN_STT1!= 0 ?  '<img style="width:80; height:40px" src='.SIGN_1($acara).'></img>' : '<div class="a_demo_two">sign</div>';
+             	 $ttd1 = $acara[0]->SIGN_STT1!= 0 ?  '<img style="width:80; height:40px" src='.SIGN_1($acara).'></img>' :  Signvalid();
 	                 echo $ttd1;
 
              }
@@ -494,7 +537,11 @@ Modal::begin([
     ],
   ]);
     echo "<div id='modalContentPerson'></div>";
-    Modal::end();  
+    Modal::end(); 
+
+ 
+
+    
 
 
 ?>

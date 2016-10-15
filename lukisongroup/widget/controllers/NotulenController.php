@@ -8,6 +8,7 @@ use lukisongroup\widget\models\NotulenModul;
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\widget\models\NotulenSearch;
 use lukisongroup\widget\models\PostPerson;
+use lukisongroup\widget\models\Person;
 use lukisongroup\widget\models\Authmodel1;
 use lukisongroup\widget\models\Authmodel2;
 
@@ -87,6 +88,10 @@ class NotulenController extends Controller
     public function get_aryPerson()
     {
         $emp = \lukisongroup\hrd\models\Employe::find()->where('STATUS<>3')->all();
+        // $sql = 'SELECT  EMP_NM,EMP_NM_BLK  FROM dbm002.`a0001`
+        //         WHERE NOT EXISTS 
+        //         (SELECT PERSON_NAME FROM m0003 WHERE PERSON_NAME = EMP_NM);';
+        // $exec = Yii::$app->db_widget->createCommand($sql)->queryAll();
         return $dropemploy = ArrayHelper::map($emp,'EMP_NM', function ($emp, $defaultValue) {
           return $emp['EMP_NM'] . ' ' . $emp['EMP_NM_BLK'];
     });
@@ -95,6 +100,12 @@ class NotulenController extends Controller
     public function Get_profile()
     {
         return Yii::$app->getUserOpt->Profile_user();
+    }
+
+    public function JsonPerson($id)
+    {
+      $data = Person::find()->where(['NOTULEN_ID'=>$id])->asArray()->all();
+      return $data;
     }
 
     /**
@@ -178,6 +189,10 @@ class NotulenController extends Controller
 
          $model->NotulenId = $id;
 
+         $datax = self::JsonPerson($id);
+
+
+
         // $data =  NotulenModul::find()->where(['NOTULEN_ID'=>$id])->asArray()->all();
 
         //  $datax = explode(',', $data['USER_ID']);
@@ -193,11 +208,13 @@ class NotulenController extends Controller
             $model->saveAccount();
             return $this->redirect(['view','id'=>$id]);
         } else {
+
             return $this->renderAjax('set_person', [
                 'model' => $model,
                 'id'=>$id,
                 'items'=>self::get_aryPerson(),
-                'tes'=>$tes
+                'tes'=>$tes,
+                'datax'=>$datax
             ]);
         }
     }
@@ -307,13 +324,16 @@ class NotulenController extends Controller
     {
         $model = self::findModel($id);
         $acara = $model->notulenTbl;
+
+        $person = Person::find()->where(['NOTULEN_ID'=>$id])->all();
     
         return $this->render('view', [
             'model' => $model,
             'acara' =>  $acara,
             'ttd'=>self::Get_profile()->emp->SIGSVGBASE64,
             'profile'=>self::Get_profile()->emp,
-            'emp_nm'=>self::Get_profile()->emp->EMP_NM
+            'emp_nm'=>self::Get_profile()->emp->EMP_NM,
+            'person'=>$person
         ]);
     }
 
