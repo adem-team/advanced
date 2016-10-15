@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use lukisongroup\widget\models\NotulenModul;
 
+?>
+<?php
 
  $form = ActiveForm::begin([
     'id' => 'person-form',
@@ -11,6 +13,7 @@ use lukisongroup\widget\models\NotulenModul;
 ]);
 
 echo Html::activeHiddenInput($model, 'NotulenId',['value'=>$id]) ;
+
 
 $options = [
        'multiple' => true,
@@ -47,6 +50,8 @@ $options = [
     ]);
    ?>
 
+
+
    <div class="form-group">
        <?= Html::submitButton('Update', [
            'class' => 'btn btn-primary'
@@ -55,7 +60,4 @@ $options = [
 
   <?php ActiveForm::end(); ?>
 
-  <?php
-
-  ?>
 
