@@ -7,6 +7,7 @@ use ptrnov\fullcalendar\FullcalendarScheduler;
 use lukisongroup\widget\models\Pilotproject;
 use yii\helpers\ArrayHelper;
 
+$baseurlYii =Url::base();
 
 $JSSelect = <<<EOF
 	/**
@@ -169,12 +170,48 @@ $afterAllRender = <<<EOF
 			var nilaiValue = localStorage.getItem('tglNilai');
 			if(nilaiValue!=tglCheck){
 				//alert(tglCheck);
-				var elemClickTriger = document.getElementById('calendar_test');
-				var btnDayTriger = elemClickTriger.getElementsByClassName('fc-timelineOneDays-button');
-				console.log(btnDayTriger[0].innerText);
-				btnDayTriger[0].click();
+				/* 	Problem Month, if prev/next for month, focus to day
+					var elemClickTriger = document.getElementById('calendar_test');
+					var btnDayTriger = elemClickTriger.getElementsByClassName('fc-timelineOneDays-button');
+					console.log(btnDayTriger[0].innerText);
+					btnDayTriger[0].click(); 
+				*/
+				loadFirst();
 			};		
-			localStorage.setItem('tglNilai',tglCheck);		
+			localStorage.setItem('tglNilai',tglCheck);	
+			
+			function loadFirst(){
+				/**
+				   * Remove Resources and Add Resources fullcalendar
+				   * author piter novian [ptr.nov@gmail.com]
+				 */	
+				setTimeout(function(){					
+					$.get('widget/pilotproject/render-data-resources', function(data, status){
+						//var obj = new JSONObject(data);
+						coba =  JSON.parse(data);
+						for (var key in coba) {
+							$('#calendar_test').fullCalendar('removeResources',coba[key].id);
+							console.log(coba[key].id);
+						};
+						//alert(coba[1].id);
+						//alert(coba.count);
+					}); 
+					
+					var tglCurrent = $('#calendar_test').fullCalendar('getDate');
+					var	tgl=moment(tglCurrent).format('YYYY-MM-DD');
+					$.get('/widget/pilotproject/update-data-resources?start='+tgl, function(datarcvd, status){
+						rcvd =  JSON.parse(datarcvd);
+						for (var key in rcvd) {
+							$('#calendar_test').fullCalendar('addResource',
+								rcvd[key]
+							, scroll );
+							console.log(rcvd[1]);
+						};						
+					});									
+						$('#calendar_test').fullCalendar('refetchEvents');
+						$('#calendar_test').fullCalendar('refetchResources');
+				},500);					
+			}
 	}
 EOF;
 
@@ -190,15 +227,15 @@ $JSaddButtonExport = <<<EOF
 	//$(document).on('click','.fc-excel-export-button', function(){
 		//jQuery(this).addClass('active');
 		//$('.fc-timelineOneDays-button').removeClass('ui-state-active');
-		$('.fc-timelineOneDays-button').addClass('fc-timelineOneDays-button ui-button ui-state-default ui-corner-left');
+		//$('.fc-timelineOneDays-button').addClass('fc-timelineOneDays-button ui-button ui-state-default ui-corner-left');
 		//alert();
 	//});
 		//var elem = document.getElementById('calendar_test');
 		//var listBtn = elem.getElementsByTagName('button');
 		//var focused = listBtn.activeElement;
-		 $('.fc-timelineOneDays-button').addClass('selected');
+		// $('.fc-timelineOneDays-button').addClass('selected');
 		//$('.fc-timelineOneDays-button').toggleClass('ui-state-active');
-		 setTimeout(function(){
+		/*  setTimeout(function(){
 			if($('.fc-timelineOneDays-button').hasClass('ui-state-active')){
 					//$('.fc-timelineOneDays-button').classList.toggle('ui-state-active');
 	
@@ -210,7 +247,7 @@ $JSaddButtonExport = <<<EOF
 				// console.log(list1[0].innerText);
 				// list1[0].click();
 			};
-		},500); 
+		},500);  */
 		
 	}
 EOF;
@@ -479,40 +516,6 @@ $this->registerJs($this->render('save_external_event.js'),$this::POS_END);
 					$('#calendar_test').fullCalendar('refetchResources');
 			},500);					
 		});
-	",$this::POS_READY);
-	
-	$this->registerJs(" 
-	var calendar = $('#calendar_test').fullCalendar('getCalendar');
-
-		calendar.on('dayChange', function() {
-			alert('haha');
-		});
-		
-		
-		/* $('#calendar_test').fullCalendar({
-			  loading: function(isLoading, view ) {
-				if(isLoading) {// isLoading gives boolean value
-					console.log('test load');
-				} else {
-					console.log('test compalte');
-				}
-			}
-		
-		}); */
-	
-		// $(document).hasClass('change',$('.fc-timelineOneDays-button').hasClass('ui-state-active')	, function(){
-			// alert('tet');
-			//if($('.fc-timelineOneDays-button').hasClass('ui-state-active')){
-				
-				  // var elem1 = document.getElementById('calendar_test');
-				// var list1 = elem1.getElementsByClassName('fc-timelineOneDays-button');
-				// console.log(list1[0].innerText);
-				// list1[0].click();
-				// $('.fc-timelineOneDays-button').toggleClass('ui-state-active'); 
-			//};
-		// })
-			
-			
 	",$this::POS_READY);
 ?>
 <div  class="row" style="margin-top:0px,font-family: verdana, arial, sans-serif ;font-size: 8pt"> 	
