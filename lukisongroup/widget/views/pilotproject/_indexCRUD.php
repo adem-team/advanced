@@ -454,7 +454,7 @@ $this->registerJs($this->render('save_external_event.js'),$this::POS_END);
 			   * author piter novian [ptr.nov@gmail.com]
 			 */						
 			setTimeout(function(){
-				$.get('http://lukisongroup.com/widget/pilotproject/render-data-resources', function(data, status){
+				$.get('".Url::base()."/widget/pilotproject/render-data-resources', function(data, status){
 					//var obj = new JSONObject(data);
 					coba =  JSON.parse(data);
 					for (var key in coba) {
@@ -466,7 +466,7 @@ $this->registerJs($this->render('save_external_event.js'),$this::POS_END);
 				}); 					
 				var tglCurrent = $('#calendar_test').fullCalendar('getDate');
 				var	tgl=moment(tglCurrent).format('YYYY-MM-DD');
-				$.get('http://lukisongroup.com/widget/pilotproject/update-data-resources?start='+tgl, function(datarcvd, status){
+				$.get('".Url::base()."/widget/pilotproject/update-data-resources?start='+tgl, function(datarcvd, status){
 					rcvd =  JSON.parse(datarcvd);
 					for (var key in rcvd) {
 						$('#calendar_test').fullCalendar('addResource',
