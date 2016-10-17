@@ -8,20 +8,31 @@ use lukisongroup\widget\models\Pilotproject;
 use yii\helpers\ArrayHelper;
 
 
+
+/* $personalUser=Yii::$app->getUserOpt->Profile_user();
+print_r($personalUser	); */
+ /* $JSCode = <<<EOF
+	function( start, end, jsEvent, view) {
+		//alert('Event: ' + jsEvent.title);
+		//alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+		//$.get('/widget/pilotproject/createparent',{'tgl1':tgl1,'tgl2':tgl2},function(data){
+		$.get('/fullcalendar/test/test-form',function(data){
+						$('#modal-select').modal('show')
+						.find('#modalContent')
+						.html(data);
+		});
+	}
+EOF; */
+
+
 $JSSelect = <<<EOF
-	/**
-	* Click Event Add, drag new event.
-	* depedence with eventReceive (set url, harus di reload. refetchResources, refetchEvents).
-	* Status : issue, render reload refresh, harusnya refresh fulcalendar bukan page.
-	* author wawan
-	*/	
 	function(calEvent, jsEvent, view) {
 		var dateTime1 = new Date(calEvent.start);
 		var dateTime2 = new Date(calEvent.end);
 		var tgl1 = moment(dateTime1).format('YYYY-MM-DD LTS');
 		var tgl2 = moment(dateTime2).subtract(1, 'days').format('YYYY-MM-DD LTS');
 		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
-		$.get('/widget/pilotproject/set-data-select',{'start':tgl1,'end':tgl2},function(data){
+	$.get('/widget/pilotproject/set-data-select',{'start':tgl1,'end':tgl2},function(data){
 						$('#modal-rooms').modal('show')
 						.find('#modalContentRooms')
 						.html(data);
@@ -31,12 +42,6 @@ EOF;
 
 
 $JSEventClick = <<<EOF
-	/**
-	* Click Event Add, drag new event.
-	* depedence with eventReceive (set url, harus di reload. refetchResources, refetchEvents).
-	* Status : Fixed.
-	* author wawan, update piter novian [ptr.nov@gmail.com]
-	*/	
 	function(calEvent, jsEvent, event,view) {
 		$('#calendar_test').fullCalendar('refetchEvents');
 		var dateTime1 = new Date(calEvent.start);
@@ -45,7 +50,7 @@ $JSEventClick = <<<EOF
 		var tgl2 = moment(dateTime2).subtract(1, 'days').format('YYYY-MM-DD LTS');
 		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		//alert(calEvent.resourceId);
-		$.get('/widget/pilotproject/detail-pilot',{'id':calEvent.resourceId},function(data){
+	$.get('/widget/pilotproject/detail-pilot',{'id':calEvent.resourceId},function(data){
 						$('#modal-up').modal('show')
 						.find('#modalContentUp')
 						.html(data);
@@ -55,11 +60,6 @@ EOF;
 
 
 $Jseventcolor = <<<EOF
-	/**
-	* View 
-	* Status : unkown.
-	* author wawan [wawan@lukison.com]
-	*/
 	function (event, element, view) {
 		var status1 = event.status;
 		var tgl = event.start;
@@ -67,16 +67,19 @@ $Jseventcolor = <<<EOF
 			if(status1 == 1)
 			{
 				 element.html('close');
-			};		
+			};
+		
 	} 
 EOF;
 
+$afterAllRender = <<<EOF
+	function(){
+		$('#calendar_test').fullCalendar( 'changeView', 'timelineDay' );
+	}
+EOF;
+
+
 $view = <<<EOF
-	/**
-	* View 
-	* Status : unkown.
-	* author wawan [wawan@lukison.com]
-	*/
 	function(view, element) {
         console.log("The view's title is " + view.intervalStart.format());
         console.log("The view's title is " + view.name);
@@ -84,11 +87,6 @@ $view = <<<EOF
 EOF;
 
 $JSaddButtonRooms = <<<EOF
-	/**
-	* Add Room with Modal Class Yii. 
-	* Status : Issue render refresh. harus js render.
-	* author wawan [wawan@lukison.com]
-	*/	
 	function() {
 		//alert('test');
 		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
@@ -102,28 +100,15 @@ EOF;
 
 $JSaddAddRow= <<<EOF
 	function() {
-		/**
-		* Add Row. 
-		* Status : Fixed.
-		* temporary from fulcalendar, jangan dengan $.get('/widget/pilotproject/tambah-row?tgl=2016-10-16',function(data){};
-		* author piter novian [ptr.nov@gmail.com]
-		*/	
-		$('#calendar_test').fullCalendar( 'addResource', 
-				function(callback) {
-					somethingAsynchonous(function(data) {
-						callback(data);
-					})
-				},scroll 
-		);
-			
+		//alert('test');
 		//$.get('/widget/pilotproject/tambah-row?tgl=2016-10-16',function(data){				
-		// $('#calendar_test').fullCalendar( 'addResource', 
-				// function(callback) {
-					// somethingAsynchonous(function(data) {
-						// callback(data);
-				// })}, 
-		
-		// scroll );
+		 	$('#calendar_test').fullCalendar( 'addResource', 
+					function(callback) {
+						somethingAsynchonous(function(data) {
+							callback(data);
+					})}, 
+			
+			scroll );
 			
 		//});
 		// setTimeout(function(){
@@ -133,88 +118,87 @@ $JSaddAddRow= <<<EOF
 EOF;
 
 $JSaddGrp= <<<EOF
-	/**
-	* Change Group/ungroup fullcalendar.
-	* Status : Fixed.
-	* JS Button click Benar	: $(document).on('click', '.fc-prev-button, .fc-next-button, .fc-today-button, .fc-timelineOneDays-button', function(){});
-	* JS Button Click Salah : $('.fc-prev-button, .fc-next-button, .fc-today-button, .fc-timelineOneDays-button').click(function(){});
-	* author piter novian [ptr.nov@gmail.com]
-	*/	
 	function () {
-		var calendarOptions = $('#calendar_test')
-			.fullCalendar('getView').options.resourceGroupField;	
-			//alert(calendarOptions);
+		   /**
+			 * Remove/add Resources and Event render fullcalendar
+		     * author piter novian [ptr.nov@gmail.com]
+			*/			
+			$.get('http://lukisongroup.com/widget/pilotproject/render-data-resources', function(data, status){
+				//var obj = new JSONObject(data);
+				coba =  JSON.parse(data);
+				for (var key in coba) {
+					$('#calendar_test').fullCalendar('removeResource',coba[key].id);
+					console.log(coba[key].id);
+				};
+				//alert(coba[1].id);
+				//alert(coba.count);
+			}); 	
+			setTimeout(function(){	
+				var tglCurrent = $('#calendar_test').fullCalendar('getDate');
+				var	tgl=moment(tglCurrent).format('YYYY-MM-DD');
+				$.get('http://lukisongroup.com/widget/pilotproject/update-data-resources?start='+tgl, function(datarcvd, status){
+					rcvd =  JSON.parse(datarcvd);
+					for (var key in rcvd) {
+						$('#calendar_test').fullCalendar('addResource',
+							rcvd[key]
+						, scroll );
+						console.log(rcvd[1]);
+					};						
+				});
+					
+					var calendarOptions = $('#calendar_test')
+					.fullCalendar('getView').options.resourceGroupField;	
+					//alert(calendarOptions);
+					
+					$('#calendar_test').fullCalendar('option',{
+							resourceGroupField: calendarOptions==''?'srcparent':'',
+							isRTL: false, //kiri/kanan
+					});  
+					
+					$('#calendar_test').fullCalendar('refetchResources');
+					$('#calendar_test').fullCalendar('refetchEvents');
+					//$('#calendar_test').fullCalendar('rerenderEvents');	
+			},100);
 				
-			$('#calendar_test').fullCalendar('option',{
-					resourceGroupField: calendarOptions==''?'srcparent':'',
-					isRTL: false, //kiri/kanan
-			});			
 	}
 EOF;
 
-$afterAllRender = <<<EOF
-	/**
-	* day load.
-	* Status : Fixed.
-	* windows load ; clear storage.
-	* deferent date, show render.
-	* author piter novian [ptr.nov@gmail.com]
-	*/	
-	function(){	
-			$(window).bind("load", function() {
-				   localStorage.clear();
-				});	
-			var tglCurrentCheck = $('#calendar_test').fullCalendar('getDate');
-				var	tglCheck=moment(tglCurrentCheck).format('YYYY-MM-DD');
-			var nilaiValue = localStorage.getItem('tglNilai');
-			if(nilaiValue!=tglCheck){
-				//alert(tglCheck);
-				var elemClickTriger = document.getElementById('calendar_test');
-				var btnDayTriger = elemClickTriger.getElementsByClassName('fc-timelineOneDays-button');
-				console.log(btnDayTriger[0].innerText);
-				btnDayTriger[0].click();
-			};		
-			localStorage.setItem('tglNilai',tglCheck);		
-	}
-EOF;
+/* $JSDropEvent = <<<EOF
+function(event, element, view) {
+    var child = event.parent;
+    var status = event.status;
 
-$JSaddButtonExport = <<<EOF
-	 function(){
-		// var elem = document.getElementById('calendar_test');
-		// var listBtn = elem.getElementsByTagName('button');
-		//var listBtnUl = listBtn('ui-button ul state.active');
-		// console.log(listBtn);
+    var dateTime2 = new Date(event.end);
+	var dateTime1 = new Date(event.start);
+	var tgl1 = moment(dateTime1).format("YYYY-MM-DD");
+	var tgl2 = moment(dateTime2).subtract(1, "days").format("YYYY-MM-DD");
+	alert(tgl1);
+    var id = event.id;
+    if(child != 0 && status != 1){
+    	$.get('/widget/pilotproject/drop-child',{'id':id,'tgl1':tgl1,'tgl2':tgl2});
+    }
+
+}
+EOF; */
+
+$JsBeforeRender = <<<EOF
+	function(){
+		//if(window.onload) {
+		//setTimeout(function(){
+			var elem = document.getElementById('calendar_test');
+			//var list1 = elem.getElementsByTagName('button')[7];
+			var list1 = elem.getElementsByClassName('fc-timelineOneDays-button');
+			console.log(list1[0].innerText);
+			list1[0].click();
+		//},60000);
 		
 		
-	// }
-	//$(document).on('click','.fc-excel-export-button', function(){
-		//jQuery(this).addClass('active');
-		//$('.fc-timelineOneDays-button').removeClass('ui-state-active');
-		$('.fc-timelineOneDays-button').addClass('fc-timelineOneDays-button ui-button ui-state-default ui-corner-left');
-		//alert();
-	//});
-		//var elem = document.getElementById('calendar_test');
-		//var listBtn = elem.getElementsByTagName('button');
-		//var focused = listBtn.activeElement;
-		 $('.fc-timelineOneDays-button').addClass('selected');
-		//$('.fc-timelineOneDays-button').toggleClass('ui-state-active');
-		 setTimeout(function(){
-			if($('.fc-timelineOneDays-button').hasClass('ui-state-active')){
-					//$('.fc-timelineOneDays-button').classList.toggle('ui-state-active');
-	
-			  // $('ui-state-active').removeClass();
-			   //$('fc-agendaWeek-button ui-button ui-state-default').addClass('ui-state-default');
-			   //alert('focused');
-			    // var elem1 = document.getElementById('calendar_test');
-				// var list1 = elem1.getElementsByClassName('fc-timelineOneDays-button');
-				// console.log(list1[0].innerText);
-				// list1[0].click();
-			};
-		},500); 
+		
+	//};
+		
 		
 	}
 EOF;
-
 
 
 	$wgCalendar=FullcalendarScheduler::widget([		
@@ -240,9 +224,15 @@ EOF;
 			'language'=>'id',
 		],
 		'optionsEventUrl'=>[
-			'events' => Url::to(['/widget/pilotproject/render-data-events','claster'=>'event']),		//should be set data event "your Controller link" 	
-			//'resources'=> Url::to(['/widget/pilotproject/render-data-resources']),					//should be set "your Controller link" 
-			'resources'=>[],		//should be set "your Controller link" 								//harus kosong, depedensi dengan button prev/next get resources
+			'events' => Url::to(['/widget/pilotproject/render-data-events','claster'=>'event']),				//should be set data event "your Controller link" 	
+			//'resources'=> Url::to(['/widget/pilotproject/render-data-resources']),		//should be set "your Controller link" 
+			'resources'=>[],		//should be set "your Controller link" 
+			//'resources'=> Url::to(['/widget/pilotproject/render-data-resources','start'=>'2016-10-12']),		//should be set "your Controller link" 
+			// 'resources'=> Url::to(['/widget/pilotproject/render-data-resources','start'=>'{moment($(#calendar_test).fullCalendar(getDate).format(YYYY-MM-DD)}']),		//should be set "your Controller link" 
+			//'resources'=> Url::to(['/widget/pilotproject/render-data-resources','tgl'=>'
+			//{moment($this.fullCalendar("getDate").format("YYYY-MM-DD");
+			//	}
+			//']),		//should be set "your Controller link" 
 			// 'eventSelectUrl'=>'/widget/pilotproject/set-data-select',				//should be set "your Controller link" to get(start,end) from select. You can use model for scenario			
 			'changeDropUrl'=>'/widget/pilotproject/change-data-drop',					//should be set "your Controller link" to get(start,end) from select. You can use model for scenario.
 			'dragableReceiveUrl'=>'/widget/pilotproject/dragable-receive',				//dragable, new data, star date, end date, id form increment db
@@ -265,30 +255,32 @@ EOF;
 				],
 				'excel-export'=>[
 					'text'=>'Excel-Export',
-						'click'=>new JsExpression($JSaddButtonExport),
+						//'click'=>new JsExpression($JSaddButton),
 				]	
 			],
-			 'timezone'=> 'local',															//local timezone, wajib di gunakan.
-			 //'timezone'=>'currentTimezone',												//not used, customize
-			 //'viewRender'=> new JsExpression($view),										//not used, customize
-			 //'language'=>'id',															//not used, customize
-			 // 'locale'=>'id',																//not used, customize
-			 // 'isRTL'=> true,																//not used, customize
-			 //'ignoreTimezone'=> false,													//not used, customize			
+			 'timezone'=> 'local',
+			 // 'viewRender'=> new JsExpression($view),
+			//'language'=>'id',
+			 // 'locale'=>'id',
+			// 'isRTL'=> true,
+			//'ignoreTimezone'=> false,
+			//'timezone'=>'currentTimezone',
 			'selectHelper' => true,			
 			'editable' => true,
 			'selectable' => true,
 			'select' => new JsExpression($JSSelect),										// don't set if used "modalSelect"
 			'eventClick' => new JsExpression($JSEventClick),
-			//'rerenderEvents'=> new JsExpression($JsBeforeRender), 
+			'rerenderEvents'=> new JsExpression($JsBeforeRender), 
 			'eventAfterRender'=> new JsExpression($Jseventcolor),
-			'eventAfterAllRender'=> new JsExpression($afterAllRender),
+			//'eventAfterAllRender'=> new JsExpression($afterAllRender),
 			'droppable' => true,
+			//'eventDrop' => new JsExpression($JSDropEvent),
+			//'now' => \Yii::$app->ambilKonvesi->convert($model->start,'datetime'),//'2016-05-07 06:00:00',
 			'firstDay' =>'0',
 			'theme'=> true,
 			'aspectRatio'       => 1.8,
-			//'scrollTime'        => '00:00', 												// undo default 6am scrollTime, not used, customize
-			//'defaultView'       => 'month',												// 'timelineDay',//agendaDay',not used, customize
+			//'scrollTime'        => '00:00', // undo default 6am scrollTime
+			//'defaultView'       => 'month',//'timelineDay',//agendaDay',
 			'defaultView'       => 'timelineDay',//agendaDay',
 			'views'             => [
 				'timelineOneDays' => [
@@ -299,15 +291,22 @@ EOF;
 				], 
 			
 			],
-			//'lazyFetching'=>true,															//not used, customize
-			//'eventOverlap'=> true,														//not used, customize
+			'lazyFetching'=>true,
+			//'eventOverlap'=> true,
+			//'resources'=> \yii\helpers\Url::to(['pilotproject/render-data-resources', 'id' => 1]),
+			//'eventSources'=>new JsExpression($JsBefore),
+			//'events'=> \yii\helpers\Url::to(['pilotproject/render-data-events']),
+			//'renderResources'=>new JsExpression($JsBefore),
+			//'resources'=>new JsExpression($JsBefore),
+			//'eventSources'=>new JsExpression($JsBefore),
 			'resourceAreaWidth'=>'30%',
 			'resourceLabelText' => 'Discriptions',
-			//'resourceEditable'=>true, 													//not used, customize
-			//'resourceGroupField'=> 'srcparent',											//handling button group
+			//'resourceEditable'=>true,
+			//'resourceGroupField'=> 'srcparent',
+			//'resourceGroupField'=> \yii\helpers\Url::to(['pilotproject/group-data-resources']),
 			'resourceColumns'=>[					
 					[
-						//'group'=> true,													//not used, customize
+						//'group'=> true,
 						'labelText'=>'Rooms',
 						'field'=> 'title',
 						'width'=>'150px',
@@ -333,42 +332,42 @@ EOF;
 
 
 	/*modal*/
-	Modal::begin([
-		'id' => 'modal-rooms',
-		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa fa-user"></div><div><h5 class="modal-title"><b>Create Rooms</b></h5></div>',
-		'size' => 'modal-dm',
+Modal::begin([
+    'id' => 'modal-rooms',
+    'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa fa-user"></div><div><h5 class="modal-title"><b>Create Rooms</b></h5></div>',
+    'size' => 'modal-dm',
 
-		'headerOptions'=>[
-			'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
-		],
-	]);
-		echo "<div id='modalContentRooms'></div>";
+    'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+    ],
+  ]);
+	echo "<div id='modalContentRooms'></div>";
 	Modal::end();  
 	
 
-	/*modal*/
-	Modal::begin([
-		'id' => 'modal-up',
-		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa fa-user"></div><div><h5 class="modal-title"><b>Pilot Project</b></h5></div>',
-		'size' => Modal::SIZE_LARGE,
-		'headerOptions'=>[
-			'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
-		],
-	]);	
-		echo "<div id='modalContentUp'></div>";
+/*modal*/
+Modal::begin([
+    'id' => 'modal-up',
+    'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa fa-user"></div><div><h5 class="modal-title"><b>Pilot Project</b></h5></div>',
+    'size' => Modal::SIZE_LARGE,
+    'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+    ],
+  ]);
+	echo "<div id='modalContentUp'></div>";
 	Modal::end(); 
 
 	/*modal*/
-	// Modal::begin([
-	//     'id' => 'modal-row',
-	//     'header' => '<div style="float:left;margin-right:10px" class="fa fa-plus"></div><div><h5 class="modal-title"><b>Tambah Row</b></h5></div>',
-	//     'size' => Modal::SIZE_SMALL,
-	//     'headerOptions'=>[
-	//         'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
-	//     ],
-	//   ]);
-	// 	echo "<div id='modalContentRow'></div>";
-	// 	Modal::end(); 
+// Modal::begin([
+//     'id' => 'modal-row',
+//     'header' => '<div style="float:left;margin-right:10px" class="fa fa-plus"></div><div><h5 class="modal-title"><b>Tambah Row</b></h5></div>',
+//     'size' => Modal::SIZE_SMALL,
+//     'headerOptions'=>[
+//         'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+//     ],
+//   ]);
+// 	echo "<div id='modalContentRow'></div>";
+// 	Modal::end(); 
 
 ?>
 
@@ -416,36 +415,36 @@ EOF;
 $this->registerJs($this->render('save_external_event.js'),$this::POS_END);
 
 
-	/*
-	* Triger timeout button triger with timeout.
-	* @author piter novian [ptr.nov@gmail.com] 
-	*/	
-	 $this->registerJs("	
-		document.addEventListener('DOMContentLoaded', function(event) {
-			//$(document).ready(function() {
-				$('#tab-project-id').click(function(){
-					setTimeout(function(){				
-						var idx = $('ul li.active').index();
+/*
+ * Triger timeout button triger with timeout.
+ * @author piter novian [ptr.nov@gmail.com] 
+*/	
+ $this->registerJs("	
+	document.addEventListener('DOMContentLoaded', function(event) {
+		//$(document).ready(function() {
+			$('#tab-project-id').click(function(){
+				setTimeout(function(){				
+					var idx = $('ul li.active').index();
+					//alert(idx);
+					if (idx==0){
 						//alert(idx);
-						if (idx==0){
-							//alert(idx);
-							var elem = document.getElementById('calendar_test');
-							var list = elem.getElementsByTagName('button')[4];
-								//list.onmouseover = function() {}
-								//list.className='ui-state-hover';
-								//list.focus();
-								setTimeout(function(){
-									list.click();
-								},100);
-						}
-					},100);
-				});	
-			//});
-		})
-	",$this::POS_READY); 
+						var elem = document.getElementById('calendar_test');
+						var list = elem.getElementsByTagName('button')[4];
+							//list.onmouseover = function() {}
+							//list.className='ui-state-hover';
+							//list.focus();
+							setTimeout(function(){
+								list.click();
+							},100);
+					}
+				},100);
+			});	
+		//});
+	})
+ ",$this::POS_READY); 
  
-	
-	$this->registerJs("  
+ $this->registerJs(" 
+ 
 		//$('.fc-prev-button, .fc-next-button, .fc-today-button, .fc-timelineOneDays-button').click(function(){
 		$(document).on('click', '.fc-prev-button, .fc-next-button, .fc-today-button, .fc-timelineOneDays-button', function(){
 			console.log('test button next');		
@@ -477,43 +476,29 @@ $this->registerJs($this->render('save_external_event.js'),$this::POS_END);
 				});									
 					$('#calendar_test').fullCalendar('refetchEvents');
 					$('#calendar_test').fullCalendar('refetchResources');
-			},500);					
-		});
-	",$this::POS_READY);
-	
-	$this->registerJs(" 
-	var calendar = $('#calendar_test').fullCalendar('getCalendar');
-
-		calendar.on('dayChange', function() {
-			alert('haha');
-		});
-		
-		
-		/* $('#calendar_test').fullCalendar({
-			  loading: function(isLoading, view ) {
-				if(isLoading) {// isLoading gives boolean value
-					console.log('test load');
-				} else {
-					console.log('test compalte');
-				}
-			}
-		
-		}); */
-	
-		// $(document).hasClass('change',$('.fc-timelineOneDays-button').hasClass('ui-state-active')	, function(){
-			// alert('tet');
-			//if($('.fc-timelineOneDays-button').hasClass('ui-state-active')){
-				
-				  // var elem1 = document.getElementById('calendar_test');
-				// var list1 = elem1.getElementsByClassName('fc-timelineOneDays-button');
-				// console.log(list1[0].innerText);
-				// list1[0].click();
-				// $('.fc-timelineOneDays-button').toggleClass('ui-state-active'); 
-			//};
-		// })
+					//$('#calendar_test').fullCalendar('refetchEvents');
+					/* */
+			},500);		
 			
+			//$('#calendar_test').fullCalendar( 'rerenderEvents' )
+			/* 	$.get('http://lukisongroup.com/widget/pilotproject/render-data-events?claster=event&start=2016-10-10&end=2016-10-11', function(dataEvent, status){
+				dataEventDay=  JSON.parse(dataEvent);
+				$('#calendar_test').fullCalendar('updateEvent', dataEventDay );	
+				console.log(dataEventDay[1]);							
+			}) */		
 			
-	",$this::POS_READY);
+		});
+		function second() {
+			/* $('#calendar_test').fullCalendar(function(){
+				$('#calendar_test').fullCalendar('option',{
+								resourceGroupField:'',
+						});
+			});	 */
+			$('#calendar_test').fullCalendar('refetchEvents');
+			$('#calendar_test').fullCalendar('refetchResources');
+		}
+	//
+	",$this::POS_READY); 
 ?>
 <div  class="row" style="margin-top:0px,font-family: verdana, arial, sans-serif ;font-size: 8pt"> 	
 	<div  class="col-xs-12 col-sm-12 col-dm-9 col-lg-9">

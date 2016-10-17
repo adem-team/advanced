@@ -152,32 +152,6 @@ $JSaddGrp= <<<EOF
 	}
 EOF;
 
-$afterAllRender = <<<EOF
-	/**
-	* day load.
-	* Status : Fixed.
-	* windows load ; clear storage.
-	* deferent date, show render.
-	* author piter novian [ptr.nov@gmail.com]
-	*/	
-	function(){	
-			$(window).bind("load", function() {
-				   localStorage.clear();
-				});	
-			var tglCurrentCheck = $('#calendar_test').fullCalendar('getDate');
-				var	tglCheck=moment(tglCurrentCheck).format('YYYY-MM-DD');
-			var nilaiValue = localStorage.getItem('tglNilai');
-			if(nilaiValue!=tglCheck){
-				//alert(tglCheck);
-				var elemClickTriger = document.getElementById('calendar_test');
-				var btnDayTriger = elemClickTriger.getElementsByClassName('fc-timelineOneDays-button');
-				console.log(btnDayTriger[0].innerText);
-				btnDayTriger[0].click();
-			};		
-			localStorage.setItem('tglNilai',tglCheck);		
-	}
-EOF;
-
 $JSaddButtonExport = <<<EOF
 	 function(){
 		// var elem = document.getElementById('calendar_test');
@@ -215,7 +189,19 @@ $JSaddButtonExport = <<<EOF
 	}
 EOF;
 
-
+$afterAllRender = <<<EOF
+	function(){		
+			//$('.fc-timelineOneDays-button').addClass('ui-state-active');
+			$('.fc-timelineOneDays-button').toggleClass('ui-state-active');
+			//test();
+			//$('.fc-timelineOneDays-button').toggleClass('ui-state-active');
+			// var i;
+			// for (i = 0; i < 10; i++) {
+				// if (i === 1) { break; }
+				// alert('sss');
+			// }
+	}
+EOF;
 
 	$wgCalendar=FullcalendarScheduler::widget([		
 		'modalSelect'=>[

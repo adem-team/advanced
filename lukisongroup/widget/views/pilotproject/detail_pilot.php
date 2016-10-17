@@ -66,7 +66,7 @@ use kartik\widgets\Select2;
 		[
         	'attribute'=>'PLAN_DATE2', 
 	        'format'=>'datetime',
-	        'value'=>new DateTime(),
+	        //'value'=>new DateTime(),
 	        'type'=>DetailView::INPUT_DATETIME,
 	        'widgetOptions' => [
 	             'pluginOptions'=>['format' => 'yyyy-mm-dd H:i:s'],
@@ -87,12 +87,13 @@ use kartik\widgets\Select2;
 			'groupOptions'=>['class'=>'text-left'] //text-center 
 		],
 		[
-        	'attribute'=>'ACTUAL_DATE1', 
+        	'attribute'=>'actualtglreplace', 
 	        'format'=>'datetime',
-	        'value'=>new DateTime(),
+	        //'value'=>new DateTime(),
 	        'type'=>DetailView::INPUT_DATETIME,
 	        'widgetOptions' => [
-	            'pluginOptions'=>['format' => 'dd-MM-yyyy HH:ii P'],
+				'pluginOptions'=>['format' => 'yyyy-mm-dd H:i:s'],
+	            //'pluginOptions'=>['format' => 'dd-MM-yyyy HH:ii P'],
 	            'pluginEvents'=>[
 		       'show' => "function(e) {errror}",
 		           ],
@@ -106,8 +107,8 @@ use kartik\widgets\Select2;
 	         'type'=>DetailView::INPUT_DATETIME,
 	        'value'=>new DateTime(),
 	        'widgetOptions' => [
-
-	            'pluginOptions'=>['format' => 'dd-MM-yyyy HH:ii P'],
+				'pluginOptions'=>['format' => 'yyyy-mm-dd H:i:s'],
+	            //'pluginOptions'=>['format' => 'dd-MM-yyyy HH:ii P'],
 	            'pluginEvents'=>[
 		       'show' => "function(e) {errror}",
 		           ],
