@@ -98,6 +98,30 @@ $JSaddButtonRooms = <<<EOF
 						.find('#modalContentRooms')
 						.html(data);
 		});
+		
+		/* $.ajax({
+            url: '/widget/pilotproject/room-form',
+            type: 'get',
+            success: function (response) {	
+              	if(response.value==false) {
+                    window.location = '/widget/pilotproject';
+					//console.log(response);
+                }else {
+                    $.get('/widget/pilotproject/room-form',function(data){
+							$('#modal-rooms').modal('show')
+							.find('#modalContentRooms')
+							.html(data);
+                        }
+                    );
+					if (status==true){
+						  console.log('refresh');
+						  aleret('asd');
+						//$('#calendar_test').fullCalendar('refetchEvents');
+						//$('#calendar_test').fullCalendar('refetchResources');
+					} 
+               }
+            }
+        }); */
 	}
 EOF;
 
@@ -186,7 +210,7 @@ $afterAllRender = <<<EOF
 				   * author piter novian [ptr.nov@gmail.com]
 				 */	
 				setTimeout(function(){					
-					$.get('widget/pilotproject/render-data-resources', function(data, status){
+					$.get('/widget/pilotproject/render-data-resources', function(data, status){
 						//var obj = new JSONObject(data);
 						coba =  JSON.parse(data);
 						for (var key in coba) {
@@ -251,8 +275,6 @@ $JSaddButtonExport = <<<EOF
 		
 	}
 EOF;
-
-
 
 	$wgCalendar=FullcalendarScheduler::widget([		
 		'modalSelect'=>[
@@ -372,8 +394,8 @@ EOF;
 	/*modal*/
 	Modal::begin([
 		'id' => 'modal-rooms',
-		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa fa-user"></div><div><h5 class="modal-title"><b>Create Rooms</b></h5></div>',
-		'size' => 'modal-dm',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa fa-user"></div><div><h5 class="modal-title"><b>Create Rooms With Parent</b></h5></div>',
+		'size' => 'modal-sm',
 
 		'headerOptions'=>[
 			'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
@@ -447,7 +469,7 @@ EOF;
 //       //Remove event from text input
 //       $('#new-event').val('');
 //     });	
-// ",$this::POS_END);
+// 		
 
 
 $this->registerJs($this->render('save_external_event.js'),$this::POS_END);

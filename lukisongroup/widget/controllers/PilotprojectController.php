@@ -3,11 +3,6 @@
 namespace lukisongroup\widget\controllers;
 
 use Yii;
-use lukisongroup\widget\models\Pilotproject;
-use lukisongroup\widget\models\PilotEvent;
-use lukisongroup\hrd\models\Employe;
-use lukisongroup\esm\models\Kategoricus;
-use lukisongroup\widget\models\PilotprojectSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -17,6 +12,12 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Json;
 use yii\data\ArrayDataProvider;
 use yii\filters\ContentNegotiator;
+use lukisongroup\widget\models\Pilotproject;
+use lukisongroup\widget\models\PilotEvent;
+use lukisongroup\hrd\models\Employe;
+use lukisongroup\esm\models\Kategoricus;
+use lukisongroup\widget\models\PilotprojectSearch;
+use lukisongroup\widget\models\PilotprojectParent;
 
 /**
  * PilotprojectController implements the CRUD actions for Pilotproject model.
@@ -1109,7 +1110,46 @@ public function actionSaveEvent(){
 		return Json::encode($ary);
 	}
 	
-    public function actionRoomForm(){
+	/**
+	* Button Rooms for Create Parent
+	* Action Modal, BeforeSumbil form, cookie and refresh fullcalendar.
+	* Status : Fixed.
+	* author piter novian [ptr.nov@gmail.com].
+	*/
+	public function actionRoomForm(){
+		$parentPilotProject = new PilotprojectParent();	
+		$parentPilotProject->scenario = "create";	
+		if (!$parentPilotProject->load(Yii::$app->request->post())) {	
+			return $this->renderAjax('_formRooms', [
+				'model' => $parentPilotProject,
+				'data'=>self::get_aryParent(),
+				'dropemploy'=>self::get_aryEmploye(),
+			]);
+		}else{
+			if(Yii::$app->request->isAjax && $parentPilotProject->load($_POST)){
+				//$parentPilotProject->load(Yii::$app->request->post());	
+				if(\yii\widgets\ActiveForm::validate($parentPilotProject)){
+					return Json::encode(\yii\widgets\ActiveForm::validate($parentPilotProject));	
+				}else{
+					if ($parentPilotProject->auth_saved()){
+						$rsltPost = \Yii::$app->request->post();
+						$tanggalRetuen = Yii::$app->formatter->asDatetime($rsltPost['PilotprojectParent']['pARENT_TGLPLAN1'], 'php:Y-m-d');	
+						setcookie('PilotprojectParent_cookie1',$tanggalRetuen);					
+					}	
+					//localStorage.setItem('tglParenRoom',$tanggalRetuen);
+					return Json::encode(['value'=>$tanggalRetuen]);
+					//localStorage.clear();
+					
+				}
+			}					
+			
+			
+		} 
+	}
+	
+	
+	
+    /* public function actionRoomForm(){
 
          $model = new Pilotproject();
          $post =Yii::$app->request->post();
@@ -1157,7 +1197,7 @@ public function actionSaveEvent(){
             ]);
         }
 
-    }
+    } */
 
 
     public function actionJsonevent(){
