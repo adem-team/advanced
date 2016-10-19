@@ -91,16 +91,28 @@ class PilotprojectParent extends Model
 	 * @since 1.1
 	*/
 	public function auth_saved(){
-		if ($this->validate()) {			
-						/* $parentNm = $rsltPost['PilotprojectParent']['pARENT_NM'];
-						$tglPlan1 = $rsltPost['PilotprojectParent']['pARENT_TGLPLAN1'];
-						$tglPlan2 = $rsltPost['PilotprojectParent']['pARENT_TGLPLAN2'];
-						$destination = $rsltPost['PilotprojectParent']['DESTINATION_TO'];
-						$parentNm;	
-						Yii::$app->formatter->asDatetime($tglPlan1.' 00:00:01', 'php:Y-m-d H:i:s');
-						Yii::$app->formatter->asDatetime($tglPlan2.' 23:59:01', 'php:Y-m-d H:i:s');
-						$destination;*/
-			return true; 
+		if ($this->validate()) {	
+			$model = new Pilotproject();		
+			//$model->PARENT = $id;
+			//$model->SORT = $id;
+			$model->PILOT_NM =  $this->pARENT_NM;
+			
+				// print_r($model->PILOT_NM);
+			// die();
+			
+			$model->PLAN_DATE1 = Yii::$app->formatter->asDatetime($this->pARENT_TGLPLAN1 .' 00:00:01', 'php:Y-m-d H:i:s');
+			$model->PLAN_DATE2 = Yii::$app->formatter->asDatetime($this->pARENT_TGLPLAN2 .' 00:00:01', 'php:Y-m-d H:i:s');
+			$model->DEP_ID =  Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;		
+			$model->DESTINATION_TO = $this->DESTINATION_TO;		
+			$model->CREATED_BY= Yii::$app->user->identity->username;		
+			$model->UPDATED_TIME = date('Y-m-d h:i:s'); 
+			if($model->save()){
+				return false;
+			};			
+			//$model->save();
+			/* print_r($model->getErrors());
+			die(); */
+			//return true; 
 		}
 		return true;
 	}

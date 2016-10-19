@@ -14,8 +14,8 @@ use kartik\widgets\DateTimePicker;
 			'id'=> $model->formName(),
 			'enableClientValidation'=> true,
 			'enableAjaxValidation'=>true,
-			//'validationUrl'=>Url::toRoute('/widget/pilotproject/room-form'),
-			//'options' => ['data-pjax' => true],
+			// 'validationUrl'=>Url::toRoute('/widget/pilotproject/room-form'),
+			// 'options' => ['data-pjax' => true],
 		]);
 	?>
 
@@ -73,16 +73,16 @@ $this->registerJs("
 	* author piter novian [ptr.nov@gmail.com].
 	*/
 	$(document).on('beforeSubmit',".$model->formName().", function () {
-		 var form = $(this);
+		 var form = $(".$model->formName().");
 		 // return false if form still have some validation errors
 		 if (form.find('.has-error').length) {
 			  return false;
 		 }
 		 // submit form
 		 $.ajax({
-			  url:'/widget/pilotproject/room-form',
+			  url:'/widget/pilotproject/room-form?savests=1',
 			  type: 'post',
-			  //data: form.serialize(),
+			  data: form.serialize(),
 			  success: function (response) {
 				 	$('#modal-rooms').modal('hide');	
 					//alert(getCookie('tglParenRoom'));

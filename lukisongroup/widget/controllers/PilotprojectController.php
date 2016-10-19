@@ -1110,13 +1110,15 @@ public function actionSaveEvent(){
 		return Json::encode($ary);
 	}
 	
+
+	
 	/**
 	* Button Rooms for Create Parent
 	* Action Modal, BeforeSumbil form, cookie and refresh fullcalendar.
 	* Status : Fixed.
 	* author piter novian [ptr.nov@gmail.com].
 	*/
-	public function actionRoomForm(){
+	public function actionRoomForm($savests){
 		$parentPilotProject = new PilotprojectParent();	
 		$parentPilotProject->scenario = "create";	
 		if (!$parentPilotProject->load(Yii::$app->request->post())) {	
@@ -1131,10 +1133,13 @@ public function actionSaveEvent(){
 				if(\yii\widgets\ActiveForm::validate($parentPilotProject)){
 					return Json::encode(\yii\widgets\ActiveForm::validate($parentPilotProject));	
 				}else{
-					if ($parentPilotProject->auth_saved()){
+					$parentPilotProject->load(Yii::$app->request->post());
+					//if ($parentPilotProject->auth_saved()){
+					if ($savests==1){
+						$parentPilotProject->auth_saved();
 						$rsltPost = \Yii::$app->request->post();
 						$tanggalRetuen = Yii::$app->formatter->asDatetime($rsltPost['PilotprojectParent']['pARENT_TGLPLAN1'], 'php:Y-m-d');	
-						setcookie('PilotprojectParent_cookie1',$tanggalRetuen);					
+						setcookie('PilotprojectParent_cookie1',$tanggalRetuen);								
 					}	
 					//localStorage.setItem('tglParenRoom',$tanggalRetuen);
 					return Json::encode(['value'=>$tanggalRetuen]);
