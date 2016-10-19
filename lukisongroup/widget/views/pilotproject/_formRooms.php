@@ -92,8 +92,8 @@ $this->registerJs("
 					//console.log(response);
 					$('#modal-rooms').modal('hide');
 					//$('#calendar_test').load(location.href + ' #calendar_test');					
-					//fcRefresh();
-					//eraseCookie('PilotprojectParent_cookie1');					
+					fcRefresh();
+					eraseCookie('PilotprojectParent_cookie1');					
 					//$('#calendar_test').load(location.href + ' #calendar_test');
 					// window.location = '/widget/pilotproject';					
 				   // console.log('chck before submit ptr.nov');
