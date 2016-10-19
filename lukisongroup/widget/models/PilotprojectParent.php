@@ -106,9 +106,20 @@ class PilotprojectParent extends Model
 			$model->DESTINATION_TO = $this->DESTINATION_TO;		
 			$model->CREATED_BY= Yii::$app->user->identity->username;		
 			$model->UPDATED_TIME = date('Y-m-d h:i:s'); 
-			if($model->save()){
-				return false;
-			};			
+			// if($model->save()){
+			// 	return false;
+			// };
+			$connection = Yii::$app->db_widget;
+			$transaction = $connection->beginTransaction();
+		try {
+				$model->save();
+			     $execute = Yii::$app->db_widget->createCommand()->update('sc0001',['SORT'=>$model->ID],'ID="'.$model->ID.'"')->execute(); 
+	    		//.... other SQL executions
+	    		$transaction->commit();
+			} catch (\Exception $e) {
+	    		$transaction->rollBack();
+	    		throw $e;
+			}
 			//$model->save();
 			/* print_r($model->getErrors());
 			die(); */
