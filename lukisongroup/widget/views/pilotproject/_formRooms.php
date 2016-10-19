@@ -13,16 +13,17 @@ use kartik\widgets\DateTimePicker;
 		$form = ActiveForm::begin([
 			'id'=> $model->formName(),
 			'enableClientValidation'=> true,
-			'enableAjaxValidation'=>true,
-			// 'validationUrl'=>Url::toRoute('/widget/pilotproject/room-form'),
-			// 'options' => ['data-pjax' => true],
+			'enableAjaxValidation'=>false, 															//true = harus beda url action controller dengan post saved  url controller.
+			//'validationUrl'=>Url::toRoute('/widget/pilotproject/room-form-ajax-validation'),		//true = harus dengan action url sendiri.
+			//'validateOnChange'=>false,
+			//'options' => ['data-pjax' => true],
 		]);
 	?>
 
 
-	<?=$form->field($model, 'pARENT_NM')->textInput()  ?>
+	<?=$form->field($model, 'PILOT_NM')->textInput()  ?>
 
-	<?= $form->field($model, 'pARENT_TGLPLAN1')->widget(DatePicker::classname(), [
+	<?= $form->field($model, 'PLAN_DATE1')->widget(DatePicker::classname(), [
 			'options' => ['placeholder' => 'Enter date ...'],
 			'convertFormat' => true,
 			'pluginOptions' => [
@@ -30,12 +31,12 @@ use kartik\widgets\DateTimePicker;
 				'todayHighlight' => true,
 				'format' => 'yyyy-M-dd'
 			],
-			'pluginEvents' => [
-							  'show' => "function(e) {show}",
-			],
+			// 'pluginEvents' => [
+							  // 'show' => "function(e) {show}",
+			// ], 
 		]);
 	?>
-	 <?= $form->field($model, 'pARENT_TGLPLAN2')->widget(DatePicker::classname(), [
+	 <?= $form->field($model, 'PLAN_DATE2')->widget(DatePicker::classname(), [
 			'options' => ['placeholder' =>'date greater or equal '],
 			'convertFormat' => true,
 			'pluginOptions' => [
@@ -43,9 +44,9 @@ use kartik\widgets\DateTimePicker;
 				'todayHighlight' => true,
 				'format' => 'yyyy-M-dd'
 			],
-			'pluginEvents' => [
-							  'show' => "function(e) {show}",
-			],
+			// 'pluginEvents' => [
+							  // 'show' => "function(e) {show}",
+			// ],
 		]);
 	?>    
 
@@ -60,7 +61,7 @@ use kartik\widgets\DateTimePicker;
     ]);?>	
 		
 	<div style="text-align: right;"">
-		<?php echo Html::submitButton('Submit',['class' => 'btn btn-primary', 'data-pjax' => 0]); ?>
+		<?php echo Html::submitButton('Submit',['class' => 'btn btn-primary', 'data-pjax' =>0]); ?>
 	</div>
 	<?php ActiveForm::end(); ?>
 <?php //yii\widgets\Pjax::end() ?>	
@@ -72,33 +73,41 @@ $this->registerJs("
 	* Status : Fixed.
 	* author piter novian [ptr.nov@gmail.com].
 	*/
-	$(document).on('beforeSubmit',".$model->formName().", function () {
+	$(".$model->formName().").on('beforeSubmit',".$model->formName().", function (e) {
 		 var form = $(".$model->formName().");
+		 var stt = true;
 		 // return false if form still have some validation errors
 		 if (form.find('.has-error').length) {
 			  return false;
-		 }
-		 // submit form
+		 };
+		 
 		 $.ajax({
-			  url:'/widget/pilotproject/room-form?savests=1',
+			  url:'/widget/pilotproject/room-form',
 			  type: 'post',
-			  data: form.serialize(),
+			  cache: false,
+			 // async: true,
+			  data: form.serialize(), //+'&sttsave='+stt,
 			  success: function (response) {
-				 	$('#modal-rooms').modal('hide');	
-					//alert(getCookie('tglParenRoom'));
-					//document.cookie = 'tglParenRoom';
-					fcRefresh();
-					document.cookie = 'tglParenRoom';					
+					//requestCallback.requestComplete(true);
+					//console.log(response);
+					$('#modal-rooms').modal('hide');
+					//$('#calendar_test').load(location.href + ' #calendar_test');					
+					//fcRefresh();
+					//eraseCookie('PilotprojectParent_cookie1');					
 					//$('#calendar_test').load(location.href + ' #calendar_test');
-					// window.location = '/widget/pilotproject';
-					
+					// window.location = '/widget/pilotproject';					
 				   // console.log('chck before submit ptr.nov');
 				   
+			  },
+			  error: function (xhr, ajaxOptions, thrownError) {
+				alert(xhr.status);
+				alert(thrownError);
 			  }
 		 });
-		 return false;
-		 
-		/**
+		 return false;		
+	});
+	
+	/**
 		* Fullcalendar Refresh by date, rooms parent submit.
 		* Status : Fixed.
 		* author piter novian [ptr.nov@gmail.com].
@@ -153,7 +162,17 @@ $this->registerJs("
 			}
 			return '';
 		};
-	}); 
+		
+		/**
+		* Delete Cookie from PHP 
+		* Status : Fixed.
+		* author piter novian [ptr.nov@gmail.com].
+		*/
+		function eraseCookie(name) {
+			 document.cookie = name + '=; Max-Age=0';
+		};
+	
+	
 ",$this::POS_READY);
 ?>
 

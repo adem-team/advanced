@@ -18,7 +18,7 @@ use lukisongroup\widget\models\Pilotproject;
  * @author ptrnov  <piter@lukison.com>
  * @since 1.1
  */
-class PilotprojectParent extends Model
+class PilotprojectParent 
 {
     public $pARENT_ID;				//ID parent Auto Increment.
     public $pARENT_NM;				//Nama parent	value (Nama parent ditambah tgl).
@@ -36,9 +36,8 @@ class PilotprojectParent extends Model
 	public function rules()
     {
         return [
-			['pARENT_NM', 'required'],
 			[['pARENT_NM','DESTINATION_TO'], 'string'],
-			[['pARENT_TGLPLAN1','pARENT_TGLPLAN2','DESTINATION_TO'], 'required','on'=>self::SCENARIO_PARENT],
+			[['pARENT_NM','pARENT_TGLPLAN1','pARENT_TGLPLAN2','DESTINATION_TO'], 'required','on'=>self::SCENARIO_PARENT],
 			//[['pARENT_TGLPLAN2','validateTglPlan2']],
 			//[['pARENT_TGLACTUAL1','validateTglActual1']],
 			//[['pARENT_TGLACTUAL2','validateTglActual2']],
@@ -90,8 +89,8 @@ class PilotprojectParent extends Model
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
 	*/
-	public function auth_saved(){
-		if ($this->validate()) {	
+	public function saved(){
+		//if ($this->validate()) {	
 			$model = new Pilotproject();		
 			//$model->PARENT = $id;
 			//$model->SORT = $id;
@@ -111,21 +110,23 @@ class PilotprojectParent extends Model
 			// };
 			$connection = Yii::$app->db_widget;
 			$transaction = $connection->beginTransaction();
-		try {
-				$model->save();
-			     $execute = Yii::$app->db_widget->createCommand()->update('sc0001',['SORT'=>$model->ID],'ID="'.$model->ID.'"')->execute(); 
-	    		//.... other SQL executions
-	    		$transaction->commit();
+			try {
+					$model->save();
+					// $execute = Yii::$app->db_widget->createCommand()->update('sc0001',['SORT'=>$model->ID],'ID="'.$model->ID.'"')->execute(); 
+					//.... other SQL executions
+					$transaction->commit();
 			} catch (\Exception $e) {
-	    		$transaction->rollBack();
-	    		throw $e;
+					$transaction->rollBack();
+					throw $e;
 			}
-			//$model->save();
-			/* print_r($model->getErrors());
-			die(); */
-			//return true; 
-		}
-		return true;
+				//$model->save();
+				/* print_r($model->getErrors());
+				die(); */
+				//return true; 
+			//return true;
+		//}else{
+		//	return false;
+		//}		
 	}
 	
 	    public function attributeLabels()

@@ -1112,44 +1112,107 @@ public function actionSaveEvent(){
 	
 
 	
+	
+	
+	public function actionRoomFormAjaxValidation(){
+		$modelParentPilotProject = new Pilotproject();	
+		$modelParentPilotProject->scenario = "parentrooms";	
+		if(Yii::$app->request->isAjax){
+			$modelParentPilotProject->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($modelParentPilotProject));
+		}
+	}
 	/**
 	* Button Rooms for Create Parent
 	* Action Modal, BeforeSumbil form, cookie and refresh fullcalendar.
 	* Status : Fixed.
 	* author piter novian [ptr.nov@gmail.com].
 	*/
-	public function actionRoomForm($savests){
-		$parentPilotProject = new PilotprojectParent();	
-		$parentPilotProject->scenario = "create";	
-		if (!$parentPilotProject->load(Yii::$app->request->post())) {	
+	public function actionRoomForm(){
+		$modelParentPilotProject = new Pilotproject();	
+		$modelParentPilotProject->scenario = "parentrooms";	
+		$rsltPost = Yii::$app->request->post();
+		if ($modelParentPilotProject->load(Yii::$app->request->post())){
+			if($modelParentPilotProject->validate()){
+				$modelParentPilotProject->PARENT = 0;
+				//$modelParentPilotProject->PLAN_DATE1 = Yii::$app->formatter->asDatetime($rsltPost['Pilotproject']['PLAN_DATE1'] .' 00:00:01', 'php:Y-m-d H:i:s');
+				//$modelParentPilotProject->PLAN_DATE2 = Yii::$app->formatter->asDatetime($rsltPost['Pilotproject']['PLAN_DATE2'] .' 00:00:01', 'php:Y-m-d H:i:s');
+				//$modelParentPilotProject->$rsltPost['Pilotproject']['DESTINATION_TO'];		
+				$modelParentPilotProject->DEP_ID = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
+				$modelParentPilotProject->CREATED_BY =  Yii::$app->getUserOpt->Profile_user()->emp->EMP_EMAIL;
+				$modelParentPilotProject->CREATED_BY= Yii::$app->user->identity->username;		
+				$modelParentPilotProject->UPDATED_TIME = date('Y-m-d h:i:s');   	
+				$connection = Yii::$app->db_widget;
+				$transaction = $connection->beginTransaction();
+					try {
+						$modelParentPilotProject->save();
+							 $execute = Yii::$app->db_widget->createCommand()->update('sc0001',['SORT'=>$modelParentPilotProject->ID],'ID="'.$modelParentPilotProject->ID.'"')->execute(); 
+							//.... other SQL executions
+							$transaction->commit();
+					} catch (\Exception $e) {
+							$transaction->rollBack();
+							throw $e;
+					}
+					
+				//if ($modelParentPilotProject->save()) {
+				$tanggalRetuen = Yii::$app->formatter->asDatetime($rsltPost['Pilotproject']['PLAN_DATE1'], 'php:Y-m-d');	
+				setcookie('PilotprojectParent_cookie1',$tanggalRetuen);	
+				//}	
+			}
+		}else{
+			return $this->renderAjax('_formRooms', [
+				'model' => $modelParentPilotProject,
+				'data'=>self::get_aryParent(),
+				'dropemploy'=>self::get_aryEmploye(),
+			]);
+		}
+		return Json::encode('success');
+	}
+	
+	public function actionRoomFormModal(){
+		$modelParentPilotProject = new Pilotproject();	
+		return $this->renderAjax('_formRooms', [
+			'model' => $modelParentPilotProject,
+			'data'=>self::get_aryParent(),
+			'dropemploy'=>self::get_aryEmploye(),
+		]);
+	
+		
+		
+		/* if (!$parentPilotProject->load(Yii::$app->request->post())) {	
 			return $this->renderAjax('_formRooms', [
 				'model' => $parentPilotProject,
 				'data'=>self::get_aryParent(),
 				'dropemploy'=>self::get_aryEmploye(),
 			]);
 		}else{
-			if(Yii::$app->request->isAjax && $parentPilotProject->load($_POST)){
+			//if(Yii::$app->request->isAjax && $parentPilotProject->load($_POST)){
 				//$parentPilotProject->load(Yii::$app->request->post());	
-				if(\yii\widgets\ActiveForm::validate($parentPilotProject)){
-					return Json::encode(\yii\widgets\ActiveForm::validate($parentPilotProject));	
-				}else{
-					$parentPilotProject->load(Yii::$app->request->post());
-					//if ($parentPilotProject->auth_saved()){
-					if ($savests==1){
-						$parentPilotProject->auth_saved();
-						$rsltPost = \Yii::$app->request->post();
-						$tanggalRetuen = Yii::$app->formatter->asDatetime($rsltPost['PilotprojectParent']['pARENT_TGLPLAN1'], 'php:Y-m-d');	
-						setcookie('PilotprojectParent_cookie1',$tanggalRetuen);								
-					}	
-					//localStorage.setItem('tglParenRoom',$tanggalRetuen);
+				//if(\yii\widgets\ActiveForm::validate($parentPilotProject)){
+				//	return Json::encode(\yii\widgets\ActiveForm::validate($parentPilotProject));	
+				//}else{
+					//$rsltPost = \Yii::$app->request->post();
+					// if ($rsltPost['sttsave']==true){
+						//$parentPilotProject->saved();
+						
+					//};				
+						//$tanggalRetuen = Yii::$app->formatter->asDatetime($rsltPost['PilotprojectParent']['pARENT_TGLPLAN1'], 'php:Y-m-d');
+					//	setcookie('PilotprojectParent_cookie1',$tanggalRetuen);		
+					//return Json::encode(['value'=>$tanggalRetuen]);
+					//$parentPilotProject->load(Yii::$app->request->post());
+					if ($parentPilotProject->auth_saved()){
+							$rsltPost = \Yii::$app->request->post();
+							$tanggalRetuen = Yii::$app->formatter->asDatetime($rsltPost['PilotprojectParent']['pARENT_TGLPLAN1'], 'php:Y-m-d');	
+							setcookie('PilotprojectParent_cookie1',$tanggalRetuen);	
+					}
 					return Json::encode(['value'=>$tanggalRetuen]);
 					//localStorage.clear();
 					
-				}
-			}					
+				//}
+			//}					
 			
 			
-		} 
+		}  */
 	}
 	
 	

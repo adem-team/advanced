@@ -93,7 +93,7 @@ $JSaddButtonRooms = <<<EOF
 	function() {
 		//alert('test');
 		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
-		$.get('/widget/pilotproject/room-form?savests=false',function(data){
+		$.get('/widget/pilotproject/room-form',function(data){
 						$('#modal-rooms').modal('show')
 						.find('#modalContentRooms')
 						.html(data);
