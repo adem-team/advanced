@@ -481,12 +481,17 @@ use kartik\helpers\Html;
     ]); 
 
 
-	$calender=$this->render('calendar_pilot',[
-	]);
-	$_indexScheduleCalendar=$this->render('_indexCRUD',[
+	
+	
+	$_indexPilotProject=$this->render('_indexCRUD',[
 	]);
 
-
+	$_vwPilotProject=$this->render('_indexView',[
+		
+	]);
+	$_vwPilotProjectTest=$this->render('_indexView_test.php',[
+		
+	]);
 	
 	
 	/**
@@ -499,14 +504,16 @@ use kartik\helpers\Html;
 	 */	
 	$items=[
 		[
-			'label'=>'<i class="glyphicon glyphicon-home"></i> Pilot Data Input','content'=>$_indexScheduleCalendar,
+			'label'=>'<i class="glyphicon glyphicon-home"></i> Pilot Project Data Input','content'=>$_indexPilotProject,
 		],	
-		/* [
-			'label'=>'<i class="glyphicon glyphicon-home"></i> Department Pilot Schedule','content'=>$dsp1,
-			// 'active'=>true,
-
+		[
+			'label'=>'<i class="glyphicon glyphicon-home"></i> View Pilot Project','content'=>$_vwPilotProject,
 		],
 		[
+			'label'=>'<i class="glyphicon glyphicon-home"></i> View Temorary Test','content'=>$_vwPilotProjectTest,
+		],
+		
+		/*[
 			'label'=>'<i class="glyphicon glyphicon-home"></i> Pilot Schedule Departement','content'=>$calender,
 			'active'=>true,
 
@@ -548,7 +555,7 @@ use kartik\helpers\Html;
 	]);	
 ?>
 
-<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt; padding-top:-150px"s>
+<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt; padding-top:-150px">
 <div class="row">
 	<div  class="col-lg-12" >		
 		<?=$tabProjct?>

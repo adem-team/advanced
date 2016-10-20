@@ -40,13 +40,15 @@ class Pilotproject extends \yii\db\ActiveRecord
             // [['PILOT_NM','STATUS','PLAN_DATE1','PLAN_DATE2'], 'required'],
             [['PILOT_NM','DSCRP','TYPE'], 'required','on'=>self::SCENARIO_PARENT],
              [['PILOT_NM','PARENT','DSCRP','TYPE'], 'required','on'=>self::SCENARIO_CHILD],
-            [['PARENT', 'STATUS','SORT','BOBOT','TYPE'], 'integer'],
+            [['PARENT','STATUS','SORT','BOBOT','TYPE','TEMP_EVENT'], 'integer'],
             [['actualtglreplace','PLAN_DATE1','PLAN_DATE2','ACTUAL_DATE1', 'ACTUAL_DATE2','UPDATED_TIME','DESTINATION_TO','USER_CC','DESTINATION_TO_DEP','DEP_SUB_ID','COLOR','TEMP_EVENT'], 'safe'],
-           
-			[['PILOT_NM'], 'string', 'max' => 255],
+            [['PILOT_NM'], 'string', 'max' => 255],
 			[['DSCRP'], 'string'],
             [['CORP_ID', 'DEP_ID'], 'string', 'max' => 6],
-			[['CREATED_BY','UPDATED_BY'], 'string', 'max' => 50]			
+			[['CREATED_BY','UPDATED_BY'], 'string', 'max' => 50],
+			//NEW FIELD
+			[['PATENT_TREE','ENABLE_ACTUAL','PROCESS_VALUE'], 'integer'],
+						
         ];
     }
 

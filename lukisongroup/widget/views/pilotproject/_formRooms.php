@@ -73,7 +73,7 @@ $this->registerJs("
 	* Status : Fixed.
 	* author piter novian [ptr.nov@gmail.com].
 	*/
-	$(".$model->formName().").on('beforeSubmit',".$model->formName().", function (e) {
+	$(".$model->formName().").on('beforeSubmit',".$model->formName().", function (options, originalOptions, jqXHR) {
 		 var form = $(".$model->formName().");
 		 var stt = true;
 		 // return false if form still have some validation errors
@@ -81,30 +81,45 @@ $this->registerJs("
 			  return false;
 		 };
 		 
-		 $.ajax({
-			  url:'/widget/pilotproject/room-form',
-			  type: 'post',
-			  cache: false,
-			 // async: true,
-			  data: form.serialize(), //+'&sttsave='+stt,
-			  success: function (response) {
-					//requestCallback.requestComplete(true);
-					//console.log(response);
-					$('#modal-rooms').modal('hide');
-					//$('#calendar_test').load(location.href + ' #calendar_test');					
-					fcRefresh();
-					eraseCookie('PilotprojectParent_cookie1');					
-					//$('#calendar_test').load(location.href + ' #calendar_test');
-					// window.location = '/widget/pilotproject';					
-				   // console.log('chck before submit ptr.nov');
-				   
-			  },
-			  error: function (xhr, ajaxOptions, thrownError) {
-				alert(xhr.status);
-				alert(thrownError);
-			  }
-		 });
-		 return false;		
+		
+		$.ajax({
+				  url:'/widget/pilotproject/room-form',
+				  type: 'post',
+				  cache: false,
+				    async: true,
+                    crossDomain: true,
+                    timeout: 500,
+                    dataType: 'json',
+                    xhrFields: {
+                        withCredentials: true
+                    },
+					/* beforeSend: function () {
+                      $('#modal-rooms').modal('hide');
+                    }, */
+				  //global: false,
+				  //throws: true,
+				  data: form.serialize(), //+'&sttsave='+stt,
+				  success: function (response) {
+						//requestCallback.requestComplete(true);
+						//console.log(response);
+						$('#modal-rooms').modal('hide');
+						// $('#modal-rooms').on('click', function() {
+						//  $(this).hide();
+						//});
+						//$('#calendar_test').load(location.href + ' #calendar_test');					
+						fcRefresh();
+						eraseCookie('PilotprojectParent_cookie1');					
+						//$('#calendar_test').load(location.href + ' #calendar_test');
+						// window.location = '/widget/pilotproject';					
+					   // console.log('chck before submit ptr.nov');
+					   
+				  },
+				  error: function (xhr, ajaxOptions, thrownError) {
+					alert(xhr.status);
+					alert(thrownError);
+				  }
+			 });
+			return false;
 	});
 	
 	/**
