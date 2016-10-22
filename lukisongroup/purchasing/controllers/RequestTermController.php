@@ -196,7 +196,8 @@ class RequestTermController extends Controller
         $model->ID_USER = Yii::$app->getUserOpt->Profile_user()->EMP_ID;
         $model->save();
         $term_invest->KD_RIB = $model->KD_RIB;
-        $term_invest->ID_INVEST;
+        $term_invest->INVESTASI_TYPE = $term_invest->ID_INVEST;
+        // $term_invest->ID_INVEST = $term_invest->ID_INVEST;
         $term_invest->TERM_ID = $cari_term ;
         $term_invest->save();
 
@@ -216,6 +217,7 @@ class RequestTermController extends Controller
        $model = new Rtdetail();
     if ($model->load(Yii::$app->request->post())) {
           $model->KD_RIB = $kd;
+          $model->ID_INVEST = $model->INVESTASI_TYPE;
           $model->save();
         return $this->redirect(['/purchasing/request-term/edit?kd='.$model->KD_RIB]);
     } else {

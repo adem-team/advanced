@@ -2,11 +2,12 @@
 use kartik\helpers\Html;	
 use ptrnov\fusionchart\Chart;
 use ptrnov\fusionchart\ChartAsset;
+use yii\helpers\Url;
 ChartAsset::register($this);
 
 	
 	$vwGrantPilotProject= Chart::Widget([
-		'urlSource'=>'http://lukisongroup.com/widget/pilotproject-chat',
+		'urlSource'=> url::base().'/widget/pilotproject-chat',
 		'userid'=>'piter@lukison.com',
 		'dataArray'=>'[]',//$actionChartGrantPilotproject,				//array scource model or manual array or sqlquery
 		'dataField'=>'[]',//['label','value'],							//field['label','value'], normaly value is numeric

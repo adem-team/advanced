@@ -70,6 +70,7 @@ class Termheader extends \yii\db\ActiveRecord
         return [
             [['TERM_ID','CUST_KD_PARENT', 'PRINCIPAL_KD', 'DIST_KD'], 'required'],
             [['image'], 'file'],
+            [['PERIOD_START','PERIOD_END'], 'default','value'=>date('Y-m-d')],
             [['TARGET_TEXT', 'RABATE_CNDT','BUDGET_AWAL'], 'string'],
             [['PERIOD_START', 'PERIOD_END', 'CREATED_AT', 'UPDATE_AT','GENERAL_TERM'], 'safe'],
             [['PERIOD_END'], 'cekdate'],

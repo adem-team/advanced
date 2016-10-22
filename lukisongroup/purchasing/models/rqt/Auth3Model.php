@@ -108,7 +108,7 @@ class Auth3Model extends Model
             }else{
               $rtHeaderStt_3->STATUS = 102;
             }
-						$rtHeaderStt_3->UPDATE_AT = date('Y-m-d H:m:s');
+						$rtHeaderStt_3->UPDATED_AT = date('Y-m-d H:m:s');
 						if ($rtHeaderStt_3->save()) {
 
 

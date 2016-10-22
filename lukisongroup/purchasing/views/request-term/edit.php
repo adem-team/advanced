@@ -53,8 +53,8 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	 * Modul Name[1=pO]
 	*/
 	function getPermission(){
-		if (Yii::$app->getUserOpt->Modul_akses(3)){
-			return Yii::$app->getUserOpt->Modul_akses(3);
+		if (Yii::$app->getUserOpt->Modul_akses(5)){
+			return Yii::$app->getUserOpt->Modul_akses(5);
 		}else{
 			return false;
 		}

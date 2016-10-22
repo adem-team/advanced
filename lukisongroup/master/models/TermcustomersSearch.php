@@ -92,6 +92,8 @@ class TermcustomersSearch extends Termcustomers
              ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
              ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
 
+             $query->orderby(['CREATED_AT'=>SORT_DESC]); //SORT PENTING UNTUK RECURSIVE BIAR TREE BISA URUTAN, save => (IF (PATENT =0) {SORT=ID}, ELSE {
+
          return $dataProvider;
      }
 
@@ -153,6 +155,8 @@ class TermcustomersSearch extends Termcustomers
             ->andFilterWhere(['like', 'TOP', $this->TOP])
             ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
+
+              $query->orderby(['CREATED_AT'=>SORT_DESC]); //SORT PENTING UNTUK RECURSIVE BIAR TREE BISA URUTAN, save => (IF (PATENT =0) {SORT=ID}, ELSE {
 
         return $dataProvider;
     }
