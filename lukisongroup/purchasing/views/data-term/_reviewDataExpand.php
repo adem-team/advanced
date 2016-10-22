@@ -29,7 +29,7 @@ use yii\data\ArrayDataProvider;
 				'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves
 			]);
 
-
+ 
 
 				$items=[
 					[

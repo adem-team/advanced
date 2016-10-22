@@ -536,8 +536,10 @@ $id = $_GET['id'];
 	/*modal awal*/
 	$modal_awal = $model->BUDGET_AWAL !='' ? $model->BUDGET_AWAL: number_format(0.00,2);
 
+
 	/*budget sisa */
-	$budget_sisa = $Budget_tambahan-$modal_awal-$invets;
+	// $budget_sisa = $Budget_tambahan-$modal_awal-$invets;
+	$budget_sisa = ($modal_awal + $Budget_tambahan)-$invets;
 
   ?>
 	<!-- BUDGET !-->

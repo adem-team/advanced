@@ -78,7 +78,7 @@ function tombolCreate(){
 	*/
 	function tombolReview($url, $model){
 		if(getPermission()){
-			if(getPermission()->BTN_REVIEW==1){
+			// if(getPermission()->BTN_REVIEW==1){
 				$title = Yii::t('app', 'Review');
 				$options = [ 'id'=>'term-date-review'];
 				$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
@@ -86,7 +86,7 @@ function tombolCreate(){
 				$url = Url::toRoute(['/purchasing/data-term/review','id'=>$model->TERM_ID,'cus_kd'=>$model->CUST_KD_PARENT]);
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
-			}
+			// }
 		}
 	}
 

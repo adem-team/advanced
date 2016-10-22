@@ -75,7 +75,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 						'id'=>'tab-term-plan',
 						'items'=>$items,
 						'position'=>TabsX::POS_ABOVE,
-										'encodeLabels'=>false
+						'encodeLabels'=>false
 					]);				
 				?>
 		</div>

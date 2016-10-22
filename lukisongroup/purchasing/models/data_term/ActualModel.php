@@ -45,11 +45,13 @@ class ActualModel extends Model{
 						$term_header->NOTE = $this->invesProgram;
 						$term_header->PPH23 = $this->pph23;
 						$term_header->PPN = $this->ppn;
+						$term_header->KD_CORP = $corp;
 					 	$term_header->save();
 
 							/*detail term */
 						$term_detail = new Rtdetail();
 						$term_detail->TERM_ID = $term_header->TERM_ID;
+						$term_detail->INVESTASI_TYPE = $this->investId;
 					  	$term_detail->KD_RIB = $term_header->KD_RIB;
 						$term_detail->ID_INVEST = $this->investId;
 						$term_detail->INVESTASI_PROGRAM = $this->invesProgram;
