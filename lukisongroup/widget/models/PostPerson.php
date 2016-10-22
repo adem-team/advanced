@@ -46,9 +46,15 @@ class PostPerson extends Model
      */
     public function saveAccount()
     {
-       $data = implode(",",$this->Person);
-        $execute = Yii::$app->db_widget->createCommand()->update('m0002',['USER_ID'=>$data],'NOTULEN_ID="'.$this->NotulenId.'"')->execute(); 
+          
+           $data = $this->Person != 0 ?implode(",",$this->Person) : '';
 
+              $execute = Yii::$app->db_widget->createCommand()->update('m0002',['USER_ID'=>$data],'NOTULEN_ID="'.$this->NotulenId.'"')->execute(); 
+
+       
+ 
+        
+       
                //     # code...
                 // $pc = NotulenModul::find()->where(['NOTULEN_ID'=>$this->NotulenId])->one();
                 // $pc->USER_ID = ;

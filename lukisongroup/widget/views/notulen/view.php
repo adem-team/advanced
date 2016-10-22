@@ -12,6 +12,9 @@ use lukisongroup\hrd\models\Employe;
 $this->registerCss($this->render('letter.css'));
 
 $this->registerCss($this->render('accordion.css'));
+
+$this->registerJs($this->render('set_person.js'),$this::POS_READY);
+
 function kembali(){
         $title = Yii::t('app','');
         $options = [ 'id'=>'notulen-back-id',
@@ -191,6 +194,8 @@ function kembali(){
 		return $data->SIGSVGBASE64;
 	}
 
+
+
 ?>
 <div id='body-notulen'>
 <div class="fold">
@@ -251,10 +256,11 @@ function kembali(){
 
           <label for="ac-1"> 
 
-             <?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-person','id'=>$acara[0]->NOTULEN_ID],
+           <!--    Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-person','id'=>$acara[0]->NOTULEN_ID],
                                 ['data-toggle'=>"modal",
                                 'id'=>'per-id',
-                                        'data-target'=>"#person-notulen"]) ?>
+                                        'data-target'=>"#person-notulen"]) ?> -->
+              <?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>','#',['id'=>'per-id']) ?>
                Peserta Rapat
 
 
@@ -299,13 +305,17 @@ function kembali(){
           </article>
         </div>
         <div>
-          <input id="ac-3" name="accordion-1" type="radio">
+          <input  id="ac-3" name="accordion-1" type="radio">
           <label for="ac-3">
+
 
 
              <?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-hasil','id'=>$acara[0]->NOTULEN_ID],
                                 ['data-toggle'=>"modal",
-                                        'data-target'=>"#rapat"]) ?>
+                                 'data-target'=>"#rapat",
+                                 
+
+                                 ]) ?>
 
           Hasil Rapat
 
@@ -372,7 +382,7 @@ function kembali(){
          
           </div>
           <div class="col-sm-3">
-          		
+          		 <input type="hidden" value='<?= $acara[0]->NOTULEN_ID ?>' id='hide' name="person-hide">
 
           </div>
 
@@ -392,6 +402,34 @@ function kembali(){
 
 
 </div>
+
+
+ <!-- Modal -->
+  <div class="modal fade" id="person-notulen" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+           <div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>NOTULEN</b></h5></div>
+        </div>
+        <div class="modal-body">
+          <?= $this->render('set_person',[
+              'person_form'=>$person_form,
+              'items'=>$items,
+              'id'=>$model->id
+          ]) ?>
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+
 
 
 <?php
@@ -510,34 +548,34 @@ Modal::begin([
     echo "<div id='modalContentacara'></div>";
     Modal::end();
 
-     $this->registerJs("
-            $.fn.modal.Constructor.prototype.enforceFocus = function() {};
-            $('#person-notulen').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget)
-                var modal = $(this)
-                var title = button.data('title')
-                var href = button.attr('href')
-                modal.find('.modal-title').html(title)
-                modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-                $.post(href)
-                    .done(function( data ) {
-                        modal.find('.modal-body').html(data)
-                    });
-                }),
-    ",$this::POS_READY);
+//      $this->registerJs("
+//             $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+//             $('#person-notulen').on('show.bs.modal', function (event) {
+//                 var button = $(event.relatedTarget)
+//                 var modal = $(this)
+//                 var title = button.data('title')
+//                 var href = button.attr('href')
+//                 modal.find('.modal-title').html(title)
+//                 modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+//                 $.post(href)
+//                     .done(function( data ) {
+//                         modal.find('.modal-body').html(data)
+//                     });
+//                 }),
+//     ",$this::POS_READY);
 
 
-    /*modal*/
-Modal::begin([
-    'id' => 'person-notulen',
-    'header' => '<div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>NOTULEN</b></h5></div>',
-    // 'size' => Modal::SIZE_SMALL,
-    'headerOptions'=>[
-        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
-    ],
-  ]);
-    echo "<div id='modalContentPerson'></div>";
-    Modal::end(); 
+//     /*modal*/
+// Modal::begin([
+//     'id' => 'person-notulen',
+//     'header' => '<div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>NOTULEN</b></h5></div>',
+//     // 'size' => Modal::SIZE_SMALL,
+//     'headerOptions'=>[
+//         'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+//     ],
+//   ]);
+//     echo "<div id='modalContentPerson'></div>";
+//     Modal::end(); 
 
  
 

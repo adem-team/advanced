@@ -20,11 +20,11 @@ use yii\data\ArrayDataProvider;
 	<!-- PARTIES/PIHAK !-->
 	<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt">
 		<?php
-			$expandPlan=$this->render('_viewDataExpandPlan',[
-				'dataProviderDetailBudget'=>$dataProviderDetailBudget
+			$expandActual=$this->render('_viewDataExpandPlan',[
+				'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves
 			]);
 			
-			$expandActual=$this->render('_viewDataExpandActual',[
+			$expandPlan=$this->render('_viewDataExpandActual',[
 				'dataProviderDetailBudget'=>$dataProviderDetailBudget
 			]); 
 			
@@ -32,19 +32,19 @@ use yii\data\ArrayDataProvider;
 				[
 					'label'=>'<i class="fa fa-mortar-board fa-lg"></i>Plan budget','content'=>$expandPlan,
 					// 'active'=>true,
-					'options' => ['id' => 'term-detail-plan-budget'],
+					'options' => ['id' => 'term-detail-plan-budget'.$id],
 				],
 				[
 					'label'=>'<i class="fa fa-bar-chart fa-lg"></i>  Actual Budget','content'=>$expandActual,
-					'options' => ['id' => 'term-chart-actual-budget'],
+					'options' => ['id' => 'term-chart-actual-budget'.$id],
 				],	
 				[
 					'label'=>'<i class="fa fa-bar-chart fa-lg"></i>  Chart','content'=>'',
-					'options' => ['id' => 'term-chart-actual-budget'],
+					'options' => ['id' => 'term-chart-actual-budget'.$id],
 				]			
 			];
 			echo TabsX::widget([
-				'id'=>'tab-detail-plan-actual',
+				'id'=>'tab-detail-plan-actual'.$id,
 				'items'=>$items,
 				'position'=>TabsX::POS_ABOVE,
 				'bordered'=>true,

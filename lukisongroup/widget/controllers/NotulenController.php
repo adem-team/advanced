@@ -123,6 +123,18 @@ class NotulenController extends Controller
         ]);
     }
 
+    public function actionSetPersonSelect($id)
+    {
+      $data = NotulenModul::find()->where(['NOTULEN_ID'=>$id])->asArray()->one();
+
+      $explode = explode(',', $data['USER_ID']);
+      foreach ($explode as $value) {
+        # code...
+        $option = '<option value='.$value.' selected>'.$value.'</option>';
+        echo $option;
+      }
+    }
+
     public function actionSetTanggal($id)
     {
         $model = self::findModel($id);
@@ -189,7 +201,7 @@ class NotulenController extends Controller
 
          $model->NotulenId = $id;
 
-         $datax = self::JsonPerson($id);
+         // $datax = self::JsonPerson($id);
 
 
 
@@ -207,16 +219,18 @@ class NotulenController extends Controller
 
             $model->saveAccount();
             return $this->redirect(['view','id'=>$id]);
-        } else {
+        } 
 
-            return $this->renderAjax('set_person', [
-                'model' => $model,
-                'id'=>$id,
-                'items'=>self::get_aryPerson(),
-                'tes'=>$tes,
-                'datax'=>$datax
-            ]);
-        }
+        // else {
+
+        //     return $this->renderAjax('set_person', [
+        //         'model' => $model,
+        //         'id'=>$id,
+        //         'items'=>self::get_aryPerson(),
+        //         'tes'=>$tes,
+        //         'datax'=>$datax
+        //     ]);
+        // }
     }
 
 
@@ -325,6 +339,8 @@ class NotulenController extends Controller
         $model = self::findModel($id);
         $acara = $model->notulenTbl;
 
+        $person_form =  new PostPerson();
+
         $person = Person::find()->where(['NOTULEN_ID'=>$id])->all();
     
         return $this->render('view', [
@@ -333,7 +349,9 @@ class NotulenController extends Controller
             'ttd'=>self::Get_profile()->emp->SIGSVGBASE64,
             'profile'=>self::Get_profile()->emp,
             'emp_nm'=>self::Get_profile()->emp->EMP_NM,
-            'person'=>$person
+            'person'=>$person,
+            'person_form'=>$person_form,
+            'items'=>self::get_aryPerson(),
         ]);
     }
 
