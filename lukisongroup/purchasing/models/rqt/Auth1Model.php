@@ -127,8 +127,8 @@ class Auth1Model extends Model
 	}
 
   function getPermission(){
-    if (Yii::$app->getUserOpt->Modul_akses(3)){
-      return Yii::$app->getUserOpt->Modul_akses(3);
+    if (Yii::$app->getUserOpt->Modul_akses(5)){
+      return Yii::$app->getUserOpt->Modul_akses(5);
     }else{
       return false;
     }

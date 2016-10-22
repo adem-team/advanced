@@ -38,6 +38,7 @@ class ActualModel extends Model{
 						/*header term */
 						$term_header = new Requesttermheader();
 						$corp =  $this->getProfile()->EMP_CORP_ID;
+						$dep = $this->getProfile()->DEP_ID;
 						$term_header->KD_RIB = Yii::$app->ambilkonci->getRedirectCode($corp);
 						$term_header->TERM_ID = $this->temId;
 						$term_header->CUST_ID_PARENT = $this->cusPerent;
@@ -46,6 +47,8 @@ class ActualModel extends Model{
 						$term_header->PPH23 = $this->pph23;
 						$term_header->PPN = $this->ppn;
 						$term_header->KD_CORP = $corp;
+						$term_header->KD_CAB = $corp;
+						$term_header->KD_DEP = $dep;
 					 	$term_header->save();
 
 							/*detail term */
