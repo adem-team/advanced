@@ -12,6 +12,7 @@ ChartAsset::register($this);
 		'dataField'=>'[]',//['label','value'],							//field['label','value'], normaly value is numeric
 		'type'=>'gantt',//'bar3d',//'gantt',										//Chart Type 
 		'renderid'=>'testing',						//unix name render
+		'autoRender'=>true,
 		'width'=>'100%',
 		'height'=>'500%',
 		'chartOption'=>[				

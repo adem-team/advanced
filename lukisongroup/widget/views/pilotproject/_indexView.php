@@ -6,14 +6,15 @@ ChartAsset::register($this);
 
 	
 	$vwGrantPilotProject= Chart::Widget([
-		'urlSource'=>'http://lukisongroup.com/widget/pilotproject/chart-test1',
+		'urlSource'=>'http://lukisongroup.com/widget/pilotproject-chat',
 		'userid'=>'piter@lukison.com',
 		'dataArray'=>'[]',//$actionChartGrantPilotproject,				//array scource model or manual array or sqlquery
 		'dataField'=>'[]',//['label','value'],							//field['label','value'], normaly value is numeric
 		'type'=>'gantt',//'bar3d',//'gantt',										//Chart Type 
-		'renderid'=>'chart-cust-parent',						//unix name render
+		'renderid'=>'gant-pilotproject',								//unix name render
+		'autoRender'=>true,
 		'width'=>'100%',
-		'height'=>'500%',
+		'height'=>'350%',
 		'chartOption'=>[				
 			'caption'=>'Summary Customers Parents',			//Header Title
 			'subCaption'=>'Children Count Details',			//Sub Title
@@ -42,4 +43,12 @@ ChartAsset::register($this);
 					Html::TYPE_INFO
 				);
 			?>
+			<button id="print">Print</button>
 	</div>
+<?php
+	$this->registerJs("	
+		$(document).ready(function() {
+			//revenueChart.render();
+		});
+	",$this::POS_READY); 
+?>

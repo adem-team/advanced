@@ -1481,51 +1481,29 @@ public function actionSaveEvent(){
 		]);
 		
 		//***Task
+		$taskPIC=[];
 		foreach($_modalPilot->getModels() as $row => $value){
-			$taskCtg[]=[
+			 $taskCtg[]=[
 				'label'=>$value['PILOT_NM'],
-				'id'=>strval($value['ID']),
+				'id'=>$value['ID']
 			];					
-			$taskPIC[]=[
-				'label'=>$value['CREATED_BY'],
+			 $taskPIC=[
+				'label'=>$value['CREATED_BY']
 			];	
-			$task[]=[
-				"label"=> "Planned",
-				"processid"=> strval($value['ID']),
-				"start"=> Yii::$app->formatter->asDatetime($value['PLAN_DATE1'], 'php:d/m/Y'),
-				"end"=> Yii::$app->formatter->asDatetime($value['PLAN_DATE2'], 'php:d/m/Y'),
-				"id"=> strval($value['ID'])."-1",
-				"color"=> "#008ee4",
-				"height"=> "32%",
-				"toppadding"=> "12%"
-			];
+			 $task[]=[
+					"label"=> "Planned",
+					"processid"=> $value['ID'],
+					"start"=> Yii::$app->formatter->asDatetime($value['PLAN_DATE1'], 'php:d/m/Y'),
+					"end"=> Yii::$app->formatter->asDatetime($value['PLAN_DATE2'], 'php:d/m/Y'),
+					"id"=> $value['ID']."-1",
+					"color"=> "#008ee4",
+					"height"=> "32%",
+					"toppadding"=> "12%"
+			 ];
 		};	 
+		$dataTaskPic=Json::encode($taskPIC);
 		
-		$cntTask=sizeof($taskCtg);
-		$maxRow=$cntTask<=26?(26-$cntTask):$cntTask;
-		/* if($cntTask==0){
-			$maxRow=29;
-		}elseif($cntTask<=29){
-			$maxRow=29-$cntTask;
-		}else{
-			$maxRow=$cntTask;
-		} */
-		
-		for ($x = 0; $x <= $maxRow; $x++) {
-			$taskCtgKosong[]=[
-				'label'=>'',
-				'id'=>''
-			];	 
-		}		 
-		$mrgTaskCtg=ArrayHelper::merge($taskCtg,$taskCtgKosong);
-		
-		for ($x = 0; $x <= $maxRow; $x++) {
-			$taskPICKosong[]=[
-				'label'=>''
-			];	 
-		}
-		$mrgtaskPIC=ArrayHelper::merge($taskPIC,$taskPICKosong);
-		
+		 
 		$rslt='{
 			"chart": {
 				"subcaption": "Pilot Project Planned vs Actual",                
@@ -1533,8 +1511,8 @@ public function actionSaveEvent(){
 				"outputdateformat": "ddds mns yy",
 				"ganttwidthpercent": "70",
 				"ganttPaneDuration": "50",
-				"ganttPaneDurationUnit": "d",
-				"flatScrollBars": "0",				
+				"ganttPaneDurationUnit": "d",	
+				"height":"500%",
 				"fontsize": "14",				
 				"plottooltext": "$processName{br} $label starting date $start{br}$label ending date $end",
 				"theme": "fint"
@@ -1558,20 +1536,25 @@ public function actionSaveEvent(){
 			],
 			"processes": {
 				"headertext": "Pilot Task",
+				"fontsize": "12",
 				"fontcolor": "#000000",
 				"fontsize": "10",
-				"isanimated": "0",
+				"isanimated": "1",
 				"bgcolor": "#6baa01",
 				"headervalign": "middle",
 				"headeralign": "center",
 				"headerbgcolor": "#6baa01",
 				"headerfontcolor": "#ffffff",
-				"headerfontsize": "12",
+				"headerfontsize": "16",
 				"width":"200",
 				"align": "left",
 				"isbold": "1",
 				"bgalpha": "25",
-				"process": '.Json::encode($mrgTaskCtg).'
+				"process": [
+					{
+						
+					}
+				]
 			},
 			"datatable": {
                 "headervalign": "bottom",
@@ -1580,25 +1563,23 @@ public function actionSaveEvent(){
                         "headertext": "PIC",
                         "fontcolor": "#000000",
 						"fontsize": "10",
-						"isanimated": "0",
+						"isanimated": "1",
 						"bgcolor": "#6baa01",
 						"headervalign": "middle",
 						"headeralign": "center",
 						"headerbgcolor": "#6baa01",
 						"headerfontcolor": "#ffffff",
-						"headerfontsize": "12",
+						"headerfontsize": "16",
 						"width":"150",
 						"align": "left",
 						"isbold": "1",
 						"bgalpha": "25",				
-                        "text": '.Json::encode($mrgtaskPIC).'
+                        "text": [
+                            
+                        ]
                     }
                 ]
             },
-			"tasks": {
-				"task":'.Json::encode($task).'
-			}
-			
 		}';
 		
 		return $rslt;

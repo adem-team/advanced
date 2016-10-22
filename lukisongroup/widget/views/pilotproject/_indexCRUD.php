@@ -474,13 +474,12 @@ EOF;
 
 $this->registerJs($this->render('save_external_event.js'),$this::POS_END);
 
-
 	/*
 	* Triger timeout button triger with timeout.
 	* @author piter novian [ptr.nov@gmail.com] 
 	*/	
 	 $this->registerJs("	
-		document.addEventListener('DOMContentLoaded', function(event) {
+		/* document.addEventListener('DOMContentLoaded', function(event) {
 			//$(document).ready(function() {
 				$('#tab-project-id').click(function(){
 					setTimeout(function(){				
@@ -500,7 +499,7 @@ $this->registerJs($this->render('save_external_event.js'),$this::POS_END);
 					},100);
 				});	
 			//});
-		})
+		}) */
 	",$this::POS_READY); 
  
 	
