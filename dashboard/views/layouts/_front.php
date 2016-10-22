@@ -1,13 +1,15 @@
 <?php
 use kartik\icons\Icon;
-use kartik\nav\NavX;
+//use kartik\nav\NavX;
 use kartik\sidenav\SideNav;
 use yii\bootstrap\NavBar;
 use kartik\helpers\Html;
 use yii\bootstrap\Carousel;
 use yii\bootstrap\Modal;
-use lukisongroup\assets\AppAsset_front;
-AppAsset_front::register($this);
+//use lukisongroup\assets\AppAsset_front;
+//AppAsset_front::register($this);
+$this->registerCss($this->render('letter.css'));
+$this->registerJs($this->render('set_person.js'),$this::POS_READY);
 ?>
 
 <?php $this->beginBody('class="content-fluid" style="background-color:lightgrey"'); ?>  

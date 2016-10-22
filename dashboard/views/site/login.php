@@ -82,7 +82,7 @@ $formlogin= FormGrid::widget([
 <?php
     Modal::begin([
         'id' => 'dashboard_login',
-        'header' => '<img src="http://dashboard.lukisongroup.com/upload/dashboard-login.png" style="width:100px; height:50px"/>',
+        'header' => '<img src="http://dashboard.lukisongroup.com/login.png" style="width:100px; height:50px"/>',
 		'size' => Modal::SIZE_SMALL,
         'options' => ['class'=>'slide'],
 		'headerOptions'=>[
