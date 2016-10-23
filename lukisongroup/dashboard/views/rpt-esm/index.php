@@ -62,29 +62,29 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				
 				$items=[
 					[
-						'label'=>'<i class="glyphicon glyphicon-home"></i> Map','content'=>$_indexMap,
+						'label'=>'<i class="fa fa-map-marker fa-md"></i> Map','content'=>$_indexMap,
 						'active'=>true,
 					],					
 					[
-						'label'=>'<i class="glyphicon glyphicon-home"></i> Seles','content'=>$_indexSalesMd,
+						'label'=>'<i class="fa fa-chain fa-md"></i> Seles','content'=>$_indexSalesMd,
 					],
 					[
-						'label'=>'<i class="glyphicon glyphicon-home"></i> PO Distributor','content'=>'',
+						'label'=>'<i class="fa fa-truck fa-md"></i> PO Distributor','content'=>'',
 					],
 					[
-						'label'=>'<i class="glyphicon glyphicon-home"></i> PO NKA','content'=>'',
+						'label'=>'<i class="fa fa-rocket fa-md"></i> PO NKA','content'=>'',
 					],
 					[
-						'label'=>'<i class="glyphicon glyphicon-home"></i> PO Supplier','content'=>'',
+						'label'=>'<i class="fa fa-university fa-md"></i> PO Supplier','content'=>'',
 					],
 					[
-						'label'=>'<i class="glyphicon glyphicon-home"></i> Component','content'=>$_indexComponent,	
+						'label'=>'<i class="fa fa-sitemap fa-md"></i> Component','content'=>$_indexComponent,	
 					],
 					[
-						'label'=>'<i class="glyphicon glyphicon-home"></i> Schaduling','content'=>'',	
+						'label'=>'<i class="fa fa-calendar-o fa-md"></i> Schaduling','content'=>'',	
 					],
 					[
-						'label'=>'<i class="glyphicon glyphicon-home"></i> Trading Terms','content'=>'',	
+						'label'=>'<i class="fa fa-book fa-md"></i> Trading Terms','content'=>'',	
 					],
 					[
 						'label'=>'<i class="glyphicon glyphicon-home"></i> Example Chat','content'=>$exampleChart,
