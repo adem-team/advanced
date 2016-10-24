@@ -67,7 +67,7 @@ MapAsset::register($this);
   <div  class="row" style="padding-left:3px">
 		<div class="col-sm-12">
 			<?php
-				 echo $map = '<div id ="map" style="width:100%;height:650px; padding-bottom:50px"></div>';
+				 echo $map = '<div id ="map" style="width:100%;height:500px; padding-bottom:50px"></div>';
 			?>
 		</div>
 	</div>

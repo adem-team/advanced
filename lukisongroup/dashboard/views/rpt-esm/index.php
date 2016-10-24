@@ -39,6 +39,47 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	$_indexSalesMd=$this->render('_indexSalesMd');
 
 	/**
+	 * Chart Distributor PO.
+	 * Status 	: Fixed.
+	 * Issue	: PO Online/ import PO manual / Po MTI/NKA
+	 * Author piter novian [ptr.nov@gmail.com]
+	*/
+	$_indexDistibutorPo=$this->render('_indexDistibutorPo');
+	
+	/**
+	 * Chart NKA PO.
+	 * Status 	: Fixed.
+	 * Issue	: PO Online/ import PO detail. NKA
+	 * Author piter novian [ptr.nov@gmail.com]
+	*/
+	$_indexNKAPo=$this->render('_indexNKA');
+	
+	/**
+	 * Chart Supplier PO.
+	 * Status 	: Fixed.
+	 * Issue	: PO under Purchasing.
+	 * Author piter novian [ptr.nov@gmail.com]
+	*/
+	$_indexSupplierPo=$this->render('_indexSupplierPo');
+	
+	/**
+	 * Chart TRAIDINg TERM.
+	 * Status 	: Dev.
+	 * Issue	: Inputan Term, Data sales.
+	 * Author piter novian [ptr.nov@gmail.com]
+	*/
+	$_indexTerm=$this->render('_indexTerm');
+	
+	/**
+	 * Chart Sales Schedule Visit.
+	 * Status 	: Dev.
+	 * Issue	: Outomaicly Setting 1 week.
+	 * Author piter novian [ptr.nov@gmail.com]
+	*/
+	$_indexScdl=$this->render('_indexScdl');
+	
+	
+	/**
 	 * Chart Component Saless.
 	 * Status : Fixed.
 	 * Customer Visit, Stock.
@@ -66,26 +107,28 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						'active'=>true,
 					],					
 					[
-						'label'=>'<i class="fa fa-chain fa-md"></i> Seles','content'=>$_indexSalesMd,
+						'label'=>'<i class="fa fa-chain fa-md"></i> Seles MD','content'=>$_indexSalesMd,
 					],
 					[
-						'label'=>'<i class="fa fa-truck fa-md"></i> PO Distributor','content'=>'',
+						'label'=>'<i class="fa fa-truck fa-md"></i> PO Distributor','content'=>$_indexDistibutorPo,
 					],
 					[
-						'label'=>'<i class="fa fa-rocket fa-md"></i> PO NKA','content'=>'',
+						'label'=>'<i class="fa fa-rocket fa-md"></i> PO NKA','content'=>$_indexNKAPo,
 					],
 					[
-						'label'=>'<i class="fa fa-university fa-md"></i> PO Supplier','content'=>'',
+						'label'=>'<i class="fa fa-university fa-md"></i> PO Supplier','content'=>$_indexSupplierPo,
+					],
+					[
+						'label'=>'<i class="fa fa-book fa-md"></i> Trading Terms','content'=>$_indexTerm,	
+					],
+					[
+						'label'=>'<i class="fa fa-calendar-o fa-md"></i> Schaduling','content'=>$_indexScdl,	
 					],
 					[
 						'label'=>'<i class="fa fa-sitemap fa-md"></i> Component','content'=>$_indexComponent,	
 					],
-					[
-						'label'=>'<i class="fa fa-calendar-o fa-md"></i> Schaduling','content'=>'',	
-					],
-					[
-						'label'=>'<i class="fa fa-book fa-md"></i> Trading Terms','content'=>'',	
-					],
+					
+					
 					[
 						'label'=>'<i class="glyphicon glyphicon-home"></i> Example Chat','content'=>$exampleChart,
 					]

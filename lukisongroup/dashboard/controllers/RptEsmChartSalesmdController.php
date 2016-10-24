@@ -102,7 +102,7 @@ class RptEsmChartSalesmdController extends Controller
 				"captionFontSize": "12",
 				"subcaptionFontSize": "10",
 				"subcaptionFontBold": "0",
-				"paletteColors": "#cc0000,#e7ff1f,#16ce87,#1e86e5",
+				"paletteColors": "#cc0000,#1e86e5,#16ce87,#b7843d",
 				"bgcolor": "#ffffff",
 				"showBorder": "0",
 				"showShadow": "0",
@@ -169,6 +169,8 @@ class RptEsmChartSalesmdController extends Controller
 	
 	/**
      * DAILY STOCK VISIT.
+	 * STATUS	: FIX, waiting selin/po distributor.
+	 * STATE	: SALES_MD
      * @author ptr.nov [ptr.nov@gmail.com]
 	 * @since 1.2
      */
@@ -186,6 +188,11 @@ class RptEsmChartSalesmdController extends Controller
 				FROM c0002scdl_detail x1 INNER JOIN so_t2 x2 ON  x2.TGL=x1.TGL AND x2.CUST_KD=x1.CUST_ID LEFT JOIN c0001 x3 on x3.CUST_KD=x1.CUST_ID
 				LEFT JOIN b0001 x4 on x4.KD_BARANG=x2.KD_BARANG
 				WHERE  month(x1.TGL)=10  
+				AND x1.CUST_ID NOT IN('
+					CUS.2016.000618,CUS.2016.000619,CUS.2016.000620,CUS.2016.000621,CUS.2016.000622,CUS.2016.000623,
+					CUS.2016.000624,CUS.2016.000625,CUS.2016.000626,CUS.2016.000627,CUS.2016.000628,CUS.2016.000629,
+					CUS.2016.000630'
+				)
 				GROUP BY x1.TGL,x2.KD_BARANG
 			")->queryAll(), 
 			'pagination' => [
@@ -223,7 +230,7 @@ class RptEsmChartSalesmdController extends Controller
 		$rsltSrc='{
 			"chart": {
 				"caption": " Daily Stock Update",
-				"subCaption": "Maxi Product",
+				"subCaption": "Maxi Product/Pcs",
 				"captionFontSize": "12",
 				"subcaptionFontSize": "10",
 				"subcaptionFontBold": "0",
@@ -241,6 +248,7 @@ class RptEsmChartSalesmdController extends Controller
 				"divLineIsDashed": "1",
 				"divLineDashLen": "1",
 				"divLineGapLen": "1",
+				"yAxisName": "Pcs",
 				"xAxisName": "Day",
 				"showValues": "0"               
 			},
@@ -273,6 +281,447 @@ class RptEsmChartSalesmdController extends Controller
 		//return $keyHari;
 	}
 	
+	/**
+     * DAILY REQUEST VISIT.
+	 * STATUS	: FIX.
+	 * STATE	: SALES_MD
+     * @author ptr.nov [ptr.nov@gmail.com]
+	 * @since 1.2
+     */
+	public function actionVisitRequest(){
+		//***get count data visiting
+		$_visitingRequest= new ArrayDataProvider([
+			'allModels'=>Yii::$app->db_esm->createCommand("	
+				SELECT x1.TGL,month(x1.TGL) AS bulan,DATE_FORMAT(x1.TGL,'%d') as TGL_NO,LEFT(COMPONEN_hari(x1.TGL),2) as hari, 
+					x2.KD_BARANG ,x4.NM_BARANG, 
+					SUM(CASE WHEN x2.SO_TYPE=9 AND x2.SO_QTY>=0 THEN x2.SO_QTY ELSE 0 END) as REQUEST_INV
+				FROM c0002scdl_detail x1 INNER JOIN so_t2 x2 ON  x2.TGL=x1.TGL AND x2.CUST_KD=x1.CUST_ID LEFT JOIN c0001 x3 on x3.CUST_KD=x1.CUST_ID
+				LEFT JOIN b0001 x4 on x4.KD_BARANG=x2.KD_BARANG
+				WHERE  month(x1.TGL)=10  
+				AND x1.CUST_ID NOT IN('
+					CUS.2016.000618,CUS.2016.000619,CUS.2016.000620,CUS.2016.000621,CUS.2016.000622,CUS.2016.000623,
+					CUS.2016.000624,CUS.2016.000625,CUS.2016.000626,CUS.2016.000627,CUS.2016.000628,CUS.2016.000629,
+					CUS.2016.000630'
+				)
+				GROUP BY x1.TGL,x2.KD_BARANG
+			")->queryAll(), 
+			'pagination' => [
+					'pageSize' => 200,
+			],				 
+		]);
+		$_modelVisitingRequest=ArrayHelper::toArray($_visitingRequest->getModels());
+		//
+		foreach($_modelVisitingRequest as $row => $value){			
+			$hari[]=["label"=>$value['hari']."-".$value['TGL_NO']."-".$value['bulan']];	
+			if ($value['KD_BARANG']=='BRG.ESM.2016.01.0001'){
+				$RequestProdak1[]=["value"=>$value['REQUEST_INV']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0003'){
+				$RequestProdak2[]=["value"=>$value['REQUEST_INV']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0004'){
+				$RequestProdak3[]=["value"=>$value['REQUEST_INV']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0005'){
+				$RequestProdak4[]=["value"=>$value['REQUEST_INV']];	
+			};		
+		};
+		//Grouping Array for CATEGORY CHART
+		$a='';
+		foreach($hari as $key => $value){
+			if($a!=$value['label']){
+				$hariCtg[]=["label"=>$value['label']];
+				$a=$value['label'];
+			}
+		};	
+			
+		/**
+		 * Maping Chart 
+		 * Type : msline
+		 * 
+		*/
+		$rsltSrc='{
+			"chart": {
+				"caption": " Daily Request Update",
+				"subCaption": "Maxi Product/pcs",
+				"captionFontSize": "12",
+				"subcaptionFontSize": "10",
+				"subcaptionFontBold": "0",
+				"paletteColors": "#cc0000,#e7ff1f,#16ce87,#1e86e5",
+				"bgcolor": "#ffffff",
+				"showBorder": "0",
+				"showShadow": "0",
+				"showCanvasBorder": "0",
+				"usePlotGradientColor": "0",
+				"legendBorderAlpha": "0",
+				"legendShadow": "0",
+				"showAxisLines": "0",
+				"showAlternateHGridColor": "0",
+				"divlineThickness": "1",
+				"divLineIsDashed": "1",
+				"divLineDashLen": "1",
+				"divLineGapLen": "1",
+				"xAxisName": "Day",
+				"yAxisName": "Pcs",	
+				"showValues": "0"               
+			},
+			"categories": [
+				{
+					"category": '.Json::encode($hariCtg).'
+				}
+			],
+			"dataset": [
+				{
+					"seriesname": "Cassava Chips Balado",
+					"data":'.Json::encode($RequestProdak1).'
+				}, 
+				{
+					"seriesname": "Talos Roasted Corn",
+					"data":'.Json::encode($RequestProdak2).'
+				},
+				{
+					"seriesname": "Cassava Crackers Hot Spicy",
+					"data":'.Json::encode($RequestProdak3).'
+				},
+				{
+					"seriesname": "mixed Roots",
+					"data":'.Json::encode($RequestProdak4).'
+				}
+			]			
+		}';
+		
+		return json::decode($rsltSrc);
+		//return $keyHari;
+	}
+	
+	/**
+     * DAILY SELL-OUT VISIT.
+     * @author ptr.nov [ptr.nov@gmail.com]
+	 * STATUS	: FIX, ESTIMATE. waiting selin/po distributor.
+	 * STATE	: SALES_MD
+	 * @since 1.2
+     */
+	public function actionVisitSellout(){
+		//***get count data visiting
+		$_visitingSellout= new ArrayDataProvider([
+			'allModels'=>Yii::$app->db_esm->createCommand("	
+				SELECT x1.TGL,month(x1.TGL) AS bulan,DATE_FORMAT(x1.TGL,'%d') as TGL_NO,LEFT(COMPONEN_hari(x1.TGL),2) as hari, 
+					x2.KD_BARANG ,x4.NM_BARANG, 
+					SUM(CASE WHEN x2.SO_TYPE=7 AND x2.SO_QTY>=0 THEN x2.SO_QTY ELSE 0 END) as SELL_OUT
+				FROM c0002scdl_detail x1 INNER JOIN so_t2 x2 ON  x2.TGL=x1.TGL AND x2.CUST_KD=x1.CUST_ID LEFT JOIN c0001 x3 on x3.CUST_KD=x1.CUST_ID
+				LEFT JOIN b0001 x4 on x4.KD_BARANG=x2.KD_BARANG
+				WHERE  month(x1.TGL)=10  
+				AND x1.CUST_ID NOT IN('
+					CUS.2016.000618,CUS.2016.000619,CUS.2016.000620,CUS.2016.000621,CUS.2016.000622,CUS.2016.000623,
+					CUS.2016.000624,CUS.2016.000625,CUS.2016.000626,CUS.2016.000627,CUS.2016.000628,CUS.2016.000629,
+					CUS.2016.000630'
+				)
+				GROUP BY x1.TGL,x2.KD_BARANG
+			")->queryAll(), 
+			'pagination' => [
+					'pageSize' => 200,
+			],				 
+		]);
+		$_modelVisitingSellout=ArrayHelper::toArray($_visitingSellout->getModels());
+		//
+		foreach($_modelVisitingSellout as $row => $value){			
+			$hari[]=["label"=>$value['hari']."-".$value['TGL_NO']."-".$value['bulan']];	
+			if ($value['KD_BARANG']=='BRG.ESM.2016.01.0001'){
+				$SelloutProdak1[]=["value"=>$value['SELL_OUT']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0003'){
+				$SelloutProdak2[]=["value"=>$value['SELL_OUT']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0004'){
+				$SelloutProdak3[]=["value"=>$value['SELL_OUT']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0005'){
+				$SelloutProdak4[]=["value"=>$value['SELL_OUT']];	
+			};		
+		};
+		//Grouping Array for CATEGORY CHART
+		$a='';
+		foreach($hari as $key => $value){
+			if($a!=$value['label']){
+				$hariCtg[]=["label"=>$value['label']];
+				$a=$value['label'];
+			}
+		};	
+			
+		/**
+		 * Maping Chart 
+		 * Type : msline
+		 * 
+		*/
+		$rsltSrc='{
+			"chart": {
+				"caption": " Daily Update Estimate Sell-Out",
+				"subCaption": "Maxi Product/Pcs",
+				"captionFontSize": "12",
+				"subcaptionFontSize": "10",
+				"subcaptionFontBold": "0",
+				"paletteColors": "#cc0000,#e7ff1f,#16ce87,#1e86e5",
+				"bgcolor": "#ffffff",
+				"showBorder": "0",
+				"showShadow": "0",
+				"showCanvasBorder": "0",
+				"usePlotGradientColor": "0",
+				"legendBorderAlpha": "0",
+				"legendShadow": "0",
+				"showAxisLines": "0",
+				"showAlternateHGridColor": "0",
+				"divlineThickness": "1",
+				"divLineIsDashed": "1",
+				"divLineDashLen": "1",
+				"divLineGapLen": "1",
+				"yAxisName": "Pcs",
+				"xAxisName": "Day",
+				"showValues": "0"               
+			},
+			"categories": [
+				{
+					"category": '.Json::encode($hariCtg).'
+				}
+			],
+			"dataset": [
+				{
+					"seriesname": "Cassava Chips Balado",
+					"data":'.Json::encode($SelloutProdak1).'
+				}, 
+				{
+					"seriesname": "Talos Roasted Corn",
+					"data":'.Json::encode($SelloutProdak2).'
+				},
+				{
+					"seriesname": "Cassava Crackers Hot Spicy",
+					"data":'.Json::encode($SelloutProdak3).'
+				},
+				{
+					"seriesname": "mixed Roots",
+					"data":'.Json::encode($SelloutProdak4).'
+				}
+			]			
+		}';
+		
+		return json::decode($rsltSrc);
+		//return $_modelVisitingSellout;
+	}
+	
+	/**
+     * DAILY DISTRIBUTOR PO CUSTOMER.
+     * @author ptr.nov [ptr.nov@gmail.com]
+	 * STATUS	: FIX, 
+	 * ISSUE	: Online PO/ input Manual.
+	 * STATE	: DISTRIBUTOR PO
+	 * @since 1.2
+     */
+	public function actionVisitDistributorPo(){
+		//***get count data visiting
+		$_visitingDistPo= new ArrayDataProvider([
+			'allModels'=>Yii::$app->db_esm->createCommand("	
+				SELECT x1.TGL,month(x1.TGL) AS bulan,DATE_FORMAT(x1.TGL,'%d') as TGL_NO,LEFT(COMPONEN_hari(x1.TGL),2) as hari, 
+					x2.KD_BARANG ,x4.NM_BARANG, 
+					SUM(CASE WHEN x2.SO_TYPE=7 AND x2.SO_QTY>=0 THEN x2.SO_QTY ELSE 0 END) as DIST_PO
+				FROM c0002scdl_detail x1 INNER JOIN so_t2 x2 ON  x2.TGL=x1.TGL AND x2.CUST_KD=x1.CUST_ID LEFT JOIN c0001 x3 on x3.CUST_KD=x1.CUST_ID
+				LEFT JOIN b0001 x4 on x4.KD_BARANG=x2.KD_BARANG
+				WHERE  month(x1.TGL)=10  
+				AND x1.CUST_ID NOT IN('
+					CUS.2016.000618,CUS.2016.000619,CUS.2016.000620,CUS.2016.000621,CUS.2016.000622,CUS.2016.000623,
+					CUS.2016.000624,CUS.2016.000625,CUS.2016.000626,CUS.2016.000627,CUS.2016.000628,CUS.2016.000629,
+					CUS.2016.000630'
+				)
+				GROUP BY x1.TGL,x2.KD_BARANG
+			")->queryAll(), 
+			'pagination' => [
+					'pageSize' => 200,
+			],				 
+		]);
+		$_modelVisitingDistPo=ArrayHelper::toArray($_visitingDistPo->getModels());
+		//
+		foreach($_modelVisitingDistPo as $row => $value){			
+			$hari[]=["label"=>$value['hari']."-".$value['TGL_NO']."-".$value['bulan']];	
+			if ($value['KD_BARANG']=='BRG.ESM.2016.01.0001'){
+				$distpoProduct1[]=["value"=>$value['DIST_PO']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0003'){
+				$distpoProduct2[]=["value"=>$value['DIST_PO']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0004'){
+				$distpoProduct3[]=["value"=>$value['DIST_PO']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0005'){
+				$distpoProduct4[]=["value"=>$value['DIST_PO']];	
+			};		
+		};
+		//Grouping Array for CATEGORY CHART
+		$a='';
+		foreach($hari as $key => $value){
+			if($a!=$value['label']){
+				$hariCtg[]=["label"=>$value['label']];
+				$a=$value['label'];
+			}
+		};	
+			
+		/**
+		 * Maping Chart 
+		 * Type : msline
+		 * 
+		*/
+		$rsltSrc='{
+			"chart": {
+				"caption": " Distributor PO Update",
+				"subCaption": "Maxi Product/Pcs",
+				"captionFontSize": "12",
+				"subcaptionFontSize": "10",
+				"subcaptionFontBold": "0",
+				"paletteColors": "#cc0000,#e7ff1f,#16ce87,#1e86e5",
+				"bgcolor": "#ffffff",
+				"showBorder": "0",
+				"showShadow": "0",
+				"showCanvasBorder": "0",
+				"usePlotGradientColor": "0",
+				"legendBorderAlpha": "0",
+				"legendShadow": "0",
+				"showAxisLines": "0",
+				"showAlternateHGridColor": "0",
+				"divlineThickness": "1",
+				"divLineIsDashed": "1",
+				"divLineDashLen": "1",
+				"divLineGapLen": "1",
+				"yAxisName": "Pcs",
+				"xAxisName": "Day",
+				"showValues": "0"               
+			},
+			"categories": [
+				{
+					"category": '.Json::encode($hariCtg).'
+				}
+			],
+			"dataset": [
+				{
+					"seriesname": "Cassava Chips Balado",
+					"data":'.Json::encode($distpoProduct1).'
+				}, 
+				{
+					"seriesname": "Talos Roasted Corn",
+					"data":'.Json::encode($distpoProduct2).'
+				},
+				{
+					"seriesname": "Cassava Crackers Hot Spicy",
+					"data":'.Json::encode($distpoProduct3).'
+				},
+				{
+					"seriesname": "mixed Roots",
+					"data":'.Json::encode($distpoProduct4).'
+				}
+			]			
+		}';
+		
+		return json::decode($rsltSrc);
+		//return $_modelVisitingSellout;
+	}
+	
+	/**
+     * DAILY NKA PO CUSTOMER.
+     * @author ptr.nov [ptr.nov@gmail.com]
+	 * STATUS	: FIX.
+	 * ISSUE	: Online PO/ input Manual, mendapatkan PO Detail.
+	 * STATE	: NKA PO
+	 * @since 1.2
+     */
+	public function actionVisitNkaPo(){
+		//***get count data visiting
+		$_visitingNkaPo= new ArrayDataProvider([
+			'allModels'=>Yii::$app->db_esm->createCommand("	
+				SELECT x1.TGL,month(x1.TGL) AS bulan,DATE_FORMAT(x1.TGL,'%d') as TGL_NO,LEFT(COMPONEN_hari(x1.TGL),2) as hari, 
+					x2.KD_BARANG ,x4.NM_BARANG, 
+					SUM(CASE WHEN x2.SO_TYPE=7 AND x2.SO_QTY>=0 THEN x2.SO_QTY ELSE 0 END) as NKA_PO
+				FROM c0002scdl_detail x1 INNER JOIN so_t2 x2 ON  x2.TGL=x1.TGL AND x2.CUST_KD=x1.CUST_ID LEFT JOIN c0001 x3 on x3.CUST_KD=x1.CUST_ID
+				LEFT JOIN b0001 x4 on x4.KD_BARANG=x2.KD_BARANG
+				WHERE  month(x1.TGL)=10  
+				AND x1.CUST_ID NOT IN('
+					CUS.2016.000618,CUS.2016.000619,CUS.2016.000620,CUS.2016.000621,CUS.2016.000622,CUS.2016.000623,
+					CUS.2016.000624,CUS.2016.000625,CUS.2016.000626,CUS.2016.000627,CUS.2016.000628,CUS.2016.000629,
+					CUS.2016.000630'
+				)
+				GROUP BY x1.TGL,x2.KD_BARANG
+			")->queryAll(), 
+			'pagination' => [
+					'pageSize' => 200,
+			],				 
+		]);
+		$_modelVisitingNkaPo=ArrayHelper::toArray($_visitingNkaPo->getModels());
+		//
+		foreach($_modelVisitingNkaPo as $row => $value){			
+			$hari[]=["label"=>$value['hari']."-".$value['TGL_NO']."-".$value['bulan']];	
+			if ($value['KD_BARANG']=='BRG.ESM.2016.01.0001'){
+				$NkaPoProduct1[]=["value"=>$value['NKA_PO']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0003'){
+				$NkaPoProduct2[]=["value"=>$value['NKA_PO']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0004'){
+				$NkaPoProduct3[]=["value"=>$value['NKA_PO']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0005'){
+				$NkaPoProduct4[]=["value"=>$value['NKA_PO']];	
+			};		
+		};
+		//Grouping Array for CATEGORY CHART
+		$a='';
+		foreach($hari as $key => $value){
+			if($a!=$value['label']){
+				$hariCtg[]=["label"=>$value['label']];
+				$a=$value['label'];
+			}
+		};	
+			
+		/**
+		 * Maping Chart 
+		 * Type : msline
+		 * 
+		*/
+		$rsltSrc='{
+			"chart": {
+				"caption": " Distributor PO Update",
+				"subCaption": "Maxi Product/Pcs",
+				"captionFontSize": "12",
+				"subcaptionFontSize": "10",
+				"subcaptionFontBold": "0",
+				"paletteColors": "#cc0000,#e7ff1f,#16ce87,#1e86e5",
+				"bgcolor": "#ffffff",
+				"showBorder": "0",
+				"showShadow": "0",
+				"showCanvasBorder": "0",
+				"usePlotGradientColor": "0",
+				"legendBorderAlpha": "0",
+				"legendShadow": "0",
+				"showAxisLines": "0",
+				"showAlternateHGridColor": "0",
+				"divlineThickness": "1",
+				"divLineIsDashed": "1",
+				"divLineDashLen": "1",
+				"divLineGapLen": "1",
+				"yAxisName": "Pcs",
+				"xAxisName": "Day",
+				"showValues": "0"               
+			},
+			"categories": [
+				{
+					"category": '.Json::encode($hariCtg).'
+				}
+			],
+			"dataset": [
+				{
+					"seriesname": "Cassava Chips Balado",
+					"data":'.Json::encode($NkaPoProduct1).'
+				}, 
+				{
+					"seriesname": "Talos Roasted Corn",
+					"data":'.Json::encode($NkaPoProduct2).'
+				},
+				{
+					"seriesname": "Cassava Crackers Hot Spicy",
+					"data":'.Json::encode($NkaPoProduct3).'
+				},
+				{
+					"seriesname": "mixed Roots",
+					"data":'.Json::encode($NkaPoProduct4).'
+				}
+			]			
+		}';
+		
+		return json::decode($rsltSrc);
+		//return $_modelVisitingSellout;
+	}
 	
 	public function actionVisitTest(){
 		$rsltSrc='{

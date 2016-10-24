@@ -122,7 +122,7 @@ class Auth3Model extends Model
             $copy_term->SIG3_TGL = $model->SIG3_TGL;
             $copy_term->SIG3_SVGBASE64 = $model->SIG3_SVGBASE64;
             $copy_term->CREATED_BY = $model->CREATED_BY;
-            $copy_term->CREATED_AT = date('Y-m-d H:m:s')
+            $copy_term->CREATED_AT = date('Y-m-d H:m:s');
             $copy_term->save();
 
 
