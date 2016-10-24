@@ -1391,7 +1391,7 @@ $history= GridView::widget([
 		Modal::begin([
 			'id' => 'new-ro',
 			//'header' => '<h4 class="modal-title">Entry Request Order</h4>',
-			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">RO - New RO</h4></div>',
+			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">RQT - New RQT</h4></div>',
 			'size' => 'modal-md',
 			'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color: rgba(131, 160, 245, 0.5)',
