@@ -197,6 +197,9 @@ class RequestTermController extends Controller
         $model->save();
         $term_invest->KD_RIB = $model->KD_RIB;
         $term_invest->INVESTASI_TYPE = $term_invest->ID_INVEST;
+        $term_invest->INVESTASI_PROGRAM = $model->NOTE;
+        $term_invest->CREATED_AT = date('Y-m-d');
+        $term_invest->CREATED_BY = Yii::$app->user->identity->username;
         // $term_invest->ID_INVEST = $term_invest->ID_INVEST;
         $term_invest->TERM_ID = $cari_term ;
         $term_invest->save();
