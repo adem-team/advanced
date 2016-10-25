@@ -723,6 +723,389 @@ class RptEsmChartSalesmdController extends Controller
 		//return $_modelVisitingSellout;
 	}
 	
+	
+	/**
+     * MONTHS OF YEAR, SUPPLIER PO PRICE.
+     * @author ptr.nov [ptr.nov@gmail.com]
+	 * STATUS	: FIX.
+	 * ISSUE	: Online PO/ input Manual, mendapatkan PO Detail.
+	 * STATE	: Maxindo PO
+	 * @since 1.2
+     */
+	public function actionSupplierPopriceYear(){
+		//***get Supplier PO
+		$_visitingSplPoYear= new ArrayDataProvider([
+			'allModels'=>Yii::$app->db_esm->createCommand("	
+				SELECT 	a1.TGL,a1.NmBulan,a1.bulan,a1.TGL_NO,
+						sum(a1.QTY) as QTY,
+						sum(a1.TTL) as Price
+				FROM
+					(SELECT  DATE_FORMAT(x1.CREATE_AT,'%d-%m-%Y') as TGL, DATE_FORMAT(x1.CREATE_AT,'%d') as TGL_NO,
+									 month(x1.CREATE_AT) AS bulan,monthname(x1.CREATE_AT) as NmBulan,
+									x1.KD_PO,x2.KD_BARANG,x2.NM_BARANG,x2.NM_UNIT,
+									x2.QTY,x2.HARGA,(x2.QTY * x2.HARGA) as TTL
+					FROM p0001 x1 INNER JOIN p0002 x2 on x2.KD_PO=x1.KD_PO
+					WHERE x1.KD_CORP='ESM' AND x1.KD_SUPPLIER='SPL.ESM.00001' AND x1.STATUS='102' 
+					ORDER BY x1.CREATE_AT) a1
+				GROUP BY a1.bulan
+			")->queryAll(), 
+			'pagination' => [
+					'pageSize' => 200,
+			],				 
+		]);
+		$_modelVisitingSplPoYear=ArrayHelper::toArray($_visitingSplPoYear->getModels());
+		//
+		foreach($_modelVisitingSplPoYear as $row => $value){			
+			//$hari[]=["label"=>$value['hari']."-".$value['TGL_NO']."-".$value['bulan']];	
+			$NmBulan[]=["label"=>$value['NmBulan']];	
+			//$SplPoProductQty[]=["value"=>strval($value['QTY'])];	
+			$SplPoProductPrc[]=["value"=>strval($value['Price'])];	
+	
+		};
+					
+		/**
+		 * Maping Chart 
+		 * Type : msline
+		 * 
+		*/
+		$rsltSrc='{
+			"chart": {
+				"caption": " Maxindo Price List PO",
+				"subCaption":"List Months of Year",
+				"captionFontSize": "12",
+				"subcaptionFontSize": "10",
+				"subcaptionFontBold": "0",
+				"paletteColors": "#e7ff1f",
+				"bgcolor": "#ffffff",
+				"showBorder": "0",
+				"showShadow": "0",
+				"showCanvasBorder": "0",
+				"usePlotGradientColor": "0",
+				"showAxisLines": "0",
+				"showAlternateHGridColor": "0",
+				"divlineThickness": "1",
+				"divLineIsDashed": "1",
+				"divLineDashLen": "1",
+				"divLineGapLen": "1",
+				"yAxisName": "IDR(Rp,Jt,M)",
+				"xAxisName": "Days",
+				"numberscalevalue":"1000,1000,1000",
+				"numberscaleunit":"Rp,Jt,M",
+				"showValues": "1"              
+			},
+			"categories": [
+				{
+					"category": '.Json::encode($NmBulan).'
+				}
+			],
+			"dataset": [ 
+				{
+					"seriesname": "Prices",
+					"data":'.Json::encode($SplPoProductPrc).'
+				}
+			]			
+		}';
+		
+		return json::decode($rsltSrc);
+		//return $_modelVisitingSellout;
+	}
+	
+	/**
+     * MONTHS OF YEAR, PO QTY.
+     * @author ptr.nov [ptr.nov@gmail.com]
+	 * STATUS	: FIX.
+	 * ISSUE	: Online PO/ input Manual, mendapatkan PO Detail.
+	 * STATE	: Maxindo PO
+	 * @since 1.2
+     */
+	public function actionSupplierPoqtyYear(){
+		//***get Supplier PO
+		$_visitingSplPoqtyYear= new ArrayDataProvider([
+			'allModels'=>Yii::$app->db_esm->createCommand("	
+				SELECT 	a1.TGL,a1.NmBulan,a1.bulan,a1.TGL_NO,
+						sum(a1.QTY) as QTY,
+						sum(a1.TTL) as Price
+				FROM
+					(SELECT  DATE_FORMAT(x1.CREATE_AT,'%d-%m-%Y') as TGL, DATE_FORMAT(x1.CREATE_AT,'%d') as TGL_NO,
+									 month(x1.CREATE_AT) AS bulan,monthname(x1.CREATE_AT) as NmBulan,
+									x1.KD_PO,x2.KD_BARANG,x2.NM_BARANG,x2.NM_UNIT,
+									x2.QTY,x2.HARGA,(x2.QTY * x2.HARGA) as TTL
+					FROM p0001 x1 INNER JOIN p0002 x2 on x2.KD_PO=x1.KD_PO
+					WHERE x1.KD_CORP='ESM' AND x1.KD_SUPPLIER='SPL.ESM.00001' AND x1.STATUS='102' 
+					ORDER BY x1.CREATE_AT) a1
+				GROUP BY a1.bulan
+			")->queryAll(), 
+			'pagination' => [
+					'pageSize' => 200,
+			],				 
+		]);
+		$_modelVisitingSplPoqtyYear=ArrayHelper::toArray($_visitingSplPoqtyYear->getModels());
+		//
+		foreach($_modelVisitingSplPoqtyYear as $row => $value){			
+			$NmBulan[]=["label"=>$value['NmBulan']];	
+			$SplPoProductQty[]=["value"=>strval($value['QTY'])];	
+			//$SplPoProductPrc[]=["value"=>strval($value['Price'])];
+		};
+					
+		/**
+		 * Maping Chart 
+		 * Type : msline
+		 * 
+		*/
+		$rsltSrc='{
+			"chart": {
+				"caption": " Maxindo Qty PO, Months of Year",
+				"subCaption": "Qty/Carton",
+				"captionFontSize": "12",
+				"subcaptionFontSize": "10",
+				"subcaptionFontBold": "0",
+				"paletteColors": "#1e86e5",
+				"bgcolor": "#ffffff",
+				"showBorder": "0",
+				"showShadow": "0",
+				"showCanvasBorder": "0",
+				"usePlotGradientColor": "0",
+				"showAxisLines": "0",
+				"showAlternateHGridColor": "0",
+				"divlineThickness": "1",
+				"divLineIsDashed": "1",
+				"divLineDashLen": "1",
+				"divLineGapLen": "1",
+				"yAxisName": "Crt",
+				"xAxisName": "Days",
+				"showValues": "1"              
+			},
+			"categories": [
+				{
+					"category": '.Json::encode($NmBulan).'
+				}
+			],
+			"dataset": [ 
+				{
+					"seriesname": "Qty/Carton",
+					"data":'.Json::encode($SplPoProductQty).'
+				}
+			]			
+		}';
+		
+		return json::decode($rsltSrc);
+		//return $_modelVisitingSellout;
+	}
+	
+	/**
+     * DAILY OF MONTHS SUPPLIER PO BY QTY.
+     * @author ptr.nov [ptr.nov@gmail.com]
+	 * STATUS	: FIX.
+	 * ISSUE	: Online PO/ input Manual, mendapatkan PO Detail.
+	 * STATE	: Maxindo PO
+	 * @since 1.2
+     */
+	public function actionSupplierPoStock(){
+		//***get Supplier PO
+		$_visitingSplPo= new ArrayDataProvider([
+			'allModels'=>Yii::$app->db_esm->createCommand("	
+				SELECT  DATE_FORMAT(x1.CREATE_AT,'%d-%m-%Y') as TGL, month(x1.CREATE_AT) AS bulan,DATE_FORMAT(x1.CREATE_AT,'%d') as TGL_NO,LEFT(COMPONEN_hari(x1.CREATE_AT),2) as hari,
+						x1.KD_PO,x2.KD_BARANG,x2.NM_BARANG,x2.NM_UNIT,x2.QTY
+				FROM p0001 x1 INNER JOIN p0002 x2 on x2.KD_PO=x1.KD_PO
+				WHERE x1.KD_CORP='ESM' AND x1.KD_SUPPLIER='SPL.ESM.00001' #AND x1.STATUS='102' 
+				ORDER BY x1.CREATE_AT
+			")->queryAll(), 
+			'pagination' => [
+					'pageSize' => 200,
+			],				 
+		]);
+		$_modelVisitingSplPo=ArrayHelper::toArray($_visitingSplPo->getModels());
+		//
+		foreach($_modelVisitingSplPo as $row => $value){			
+			//$hari[]=["label"=>$value['hari']."-".$value['TGL_NO']."-".$value['bulan']];	
+			$hari[]=["label"=>$value['TGL']];	
+			if ($value['KD_BARANG']=='BRG.ESM.2016.01.0001'){
+				$SplPoProduct1[]=["value"=>$value['QTY']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0003'){
+				$SplPoProduct2[]=["value"=>$value['QTY']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0004'){
+				$SplPoProduct3[]=["value"=>$value['QTY']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0005'){
+				$SplPoProduct4[]=["value"=>$value['QTY']];	
+			};		
+		};
+		//Grouping Array for CATEGORY CHART
+		$a='';
+		foreach($hari as $key => $value){
+			if($a!=$value['label']){
+				$hariCtg[]=["label"=>$value['label']];
+				$a=$value['label'];
+			}
+		};	
+			
+		/**
+		 * Maping Chart 
+		 * Type : msline
+		 * 
+		*/
+		$rsltSrc='{
+			"chart": {
+				"caption": " Maxindo PO by Qty/Carton",
+				"subCaption": "List product, days of month",
+				"captionFontSize": "12",
+				"subcaptionFontSize": "10",
+				"subcaptionFontBold": "0",
+				"paletteColors": "#cc0000,#e7ff1f,#16ce87,#1e86e5",
+				"bgcolor": "#ffffff",
+				"showBorder": "0",
+				"showShadow": "0",
+				"showCanvasBorder": "0",
+				"usePlotGradientColor": "0",
+				"legendBorderAlpha": "0",
+				"legendShadow": "0",
+				"showAxisLines": "0",
+				"showAlternateHGridColor": "0",
+				"divlineThickness": "1",
+				"divLineIsDashed": "1",
+				"divLineDashLen": "1",
+				"divLineGapLen": "1",
+				"yAxisName": "Crt",
+				"xAxisName": "Days",
+				"showValues": "1"
+			},
+			"categories": [
+				{
+					"category": '.Json::encode($hariCtg).'
+				}
+			],
+			"dataset": [
+				{
+					"seriesname": "Cassava Chips Balado",
+					"data":'.Json::encode($SplPoProduct1).'
+				}, 
+				{
+					"seriesname": "Talos Roasted Corn",
+					"data":'.Json::encode($SplPoProduct2).'
+				},
+				{
+					"seriesname": "Cassava Crackers Hot Spicy",
+					"data":'.Json::encode($SplPoProduct3).'
+				},
+				{
+					"seriesname": "mixed Roots",
+					"data":'.Json::encode($SplPoProduct4).'
+				}
+			]			
+		}';
+		
+		return json::decode($rsltSrc);
+		//return $_modelVisitingSellout;
+	}
+	
+	/**
+     * DAILY OF MONTHS SUPPLIER PO BY PRICE.
+     * @author ptr.nov [ptr.nov@gmail.com]
+	 * STATUS	: FIX.
+	 * ISSUE	: Online PO/ input Manual, mendapatkan PO Detail.
+	 * STATE	: Maxindo PO
+	 * @since 1.2
+     */
+	public function actionSupplierPoPrice(){
+		//***get Supplier PO
+		$_visitingSplPo= new ArrayDataProvider([
+			'allModels'=>Yii::$app->db_esm->createCommand("	
+				SELECT  DATE_FORMAT(x1.CREATE_AT,'%d-%m-%Y') as TGL, month(x1.CREATE_AT) AS bulan,DATE_FORMAT(x1.CREATE_AT,'%d') as TGL_NO,LEFT(COMPONEN_hari(x1.CREATE_AT),2) as hari,
+						x1.KD_PO,x2.KD_BARANG,x2.NM_BARANG,x2.NM_UNIT,x2.QTY,x2.HARGA,(x2.QTY * x2.HARGA) as TTL
+				FROM p0001 x1 INNER JOIN p0002 x2 on x2.KD_PO=x1.KD_PO
+				WHERE x1.KD_CORP='ESM' AND x1.KD_SUPPLIER='SPL.ESM.00001' #AND x1.STATUS='102' 
+				ORDER BY x1.CREATE_AT
+			")->queryAll(), 
+			'pagination' => [
+					'pageSize' => 200,
+			],				 
+		]);
+		$_modelVisitingSplPo=ArrayHelper::toArray($_visitingSplPo->getModels());
+		//
+		foreach($_modelVisitingSplPo as $row => $value){			
+			//$hari[]=["label"=>$value['hari']."-".$value['TGL_NO']."-".$value['bulan']];	
+			$hari[]=["label"=>$value['TGL']];	
+			if ($value['KD_BARANG']=='BRG.ESM.2016.01.0001'){
+				$SplPoProduct1[]=["value"=>$value['TTL']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0003'){
+				$SplPoProduct2[]=["value"=>$value['TTL']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0004'){
+				$SplPoProduct3[]=["value"=>$value['TTL']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0005'){
+				$SplPoProduct4[]=["value"=>$value['TTL']];	
+			};		
+		};
+		//Grouping Array for CATEGORY CHART
+		$a='';
+		foreach($hari as $key => $value){
+			if($a!=$value['label']){
+				$hariCtg[]=["label"=>$value['label']];
+				$a=$value['label'];
+			}
+		};	
+			
+		/**
+		 * Maping Chart 
+		 * Type : msline
+		 * 
+		*/
+		$rsltSrc='{
+			"chart": {
+				"caption": " Maxindo PO Update By Price/Carton",
+				"subCaption": "List days of month",
+				"captionFontSize": "12",
+				"subcaptionFontSize": "10",
+				"subcaptionFontBold": "0",
+				"paletteColors": "#cc0000,#e7ff1f,#16ce87,#1e86e5",
+				"bgcolor": "#ffffff",
+				"showBorder": "0",
+				"showShadow": "0",
+				"showCanvasBorder": "0",
+				"usePlotGradientColor": "0",
+				"legendBorderAlpha": "0",
+				"legendShadow": "0",
+				"showAxisLines": "0",
+				"showAlternateHGridColor": "0",
+				"divlineThickness": "1",
+				"divLineIsDashed": "1",
+				"divLineDashLen": "1",
+				"divLineGapLen": "1",
+				"yAxisName": "IDR(Rp,Jt,M)",
+				"xAxisName": "Day",
+				"numberscalevalue":"1000,1000,1000",
+				"numberscaleunit":"Rp,Jt,M",
+				"showValues": "1"               
+			},
+			"categories": [
+				{
+					"category": '.Json::encode($hariCtg).'
+				}
+			],
+			"dataset": [
+				{
+					"seriesname": "Cassava Chips Balado",
+					"data":'.Json::encode($SplPoProduct1).'
+				}, 
+				{
+					"seriesname": "Talos Roasted Corn",
+					"data":'.Json::encode($SplPoProduct2).'
+				},
+				{
+					"seriesname": "Cassava Crackers Hot Spicy",
+					"data":'.Json::encode($SplPoProduct3).'
+				},
+				{
+					"seriesname": "mixed Roots",
+					"data":'.Json::encode($SplPoProduct4).'
+				}
+			]			
+		}';
+		
+		return json::decode($rsltSrc);
+		//return $_modelVisitingSellout;
+	}
+	
+	
+	
 	public function actionVisitTest(){
 		$rsltSrc='{
             "chart": {

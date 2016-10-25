@@ -294,7 +294,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 		'items' => [
 			['label' => 'MENU', 'active'=>true, 'items' => [
 				['label' => '<span class="fa fa-user fa-md"></span>Customers', 'url' => '/master/customers/esm-index'],
-				['label' => '<span class="fa fa-cogs fa-md"></span>Alias Customers', 'url' => '/master/customers/login-alias','linkOptions'=>['id'=>'performance','data-toggle'=>'modal','data-target'=>'#formlogin']],
+				['label' => '<span class="fa fa-cogs fa-md"></span>Alias Customers', 'url' => '/master/customers/index-alias'],
 				'<li class="divider"></li>',
 				['label' => 'Properties', 'items' => [
 					['label' => '<span class="fa fa-flag fa-md"></span>Kota', 'url' => '/master/customers/esm-index-city'],

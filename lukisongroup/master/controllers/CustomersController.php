@@ -85,6 +85,16 @@ class CustomersController extends Controller
 	public function aryData_Geo(){ 
 		return ArrayHelper::map(DraftGeo::find()->Where("GEO_ID<>1")->all(), 'GEO_ID','GEO_NM');
 	}
+	/*customers  array*/
+	public function aryData_Customers(){ 
+		return ArrayHelper::map(Customers::find()->where('CUST_KD = CUST_GRP')->andwhere('STATUS<>3')->all(), 'CUST_GRP','CUST_NM');
+	}
+	
+	/*Distributor  array*/
+	public function aryData_Dis(){ 
+		return ArrayHelper::map( Distributor::find()->where('STATUS<>3')
+                              ->all(), 'KD_DISTRIBUTOR','NM_DISTRIBUTOR');
+	}
 
 
 /**
@@ -165,6 +175,10 @@ class CustomersController extends Controller
 
                
                     $output = $model->GEO;                  
+                }
+				if (isset($posted['DC_STATUS'])) {
+                    $model->save();
+                    $output = $model->DC_STATUS;                 
                 }
 
         }
@@ -304,6 +318,10 @@ class CustomersController extends Controller
 
                
                     $output = $model->GEO;                  
+                }
+				if (isset($posted['DC_STATUS'])) {
+                    $model->save();
+                    $output = $model->DC_STATUS;                 
                 }
 
 			  }
@@ -612,14 +630,14 @@ class CustomersController extends Controller
    //      return ActiveForm::validate($model);
    //    }
    //  }
-   //  public function actionLoginAlias()
-   //  {
-   //    # code...
-   //    $ValidationLoginPrice = new ValidationLoginPrice();
-   //    return $this->renderAjax('login_alias', [
-   //      'ValidationLoginPrice' => $ValidationLoginPrice,
-   //    ]);
-   //  }
+    // public function actionLoginAlias()
+    // {
+      // # code...
+      // $ValidationLoginPrice = new ValidationLoginPrice();
+      // return $this->renderAjax('login_alias', [
+        // 'ValidationLoginPrice' => $ValidationLoginPrice,
+      // ]);
+    // }
 
    //  public function actionLoginCek(){
    //    $ValidationLoginPrice = new ValidationLoginPrice();
@@ -635,22 +653,48 @@ class CustomersController extends Controller
    //      }
    //    }
    //  }
+   
+   
+   /*create alias customers */
+   public function actionTambahAliasCustomers()
+   {
+	   $model = new Customersalias();
 
-   //  public function actionIndexAlias()
-   //  {
-   //    # code...
-   //    $searchModel = new CustomersaliasSearch();
-   //    $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    if ($model->load(Yii::$app->request->post()) ) {
+			if($model->validate())
+			{
+				$model->CREATED_BY =  Yii::$app->user->identity->username;
+				$model->CREATED_AT = date("Y-m-d H:i:s");
+				$model->save();
 
-   //    return $this->render('index_alias', [
-   //            'searchModel' => $searchModel,
-   //            'dataProvider' => $dataProvider,
-   //        ]);
-   //  }
+        return $this->redirect(['index-alias']);
 
-   //  public function actionPriceLogout(){
-  	// 	$this->redirect('esm-index');
-  	// }
+			}
+        } else {
+            return $this->renderAjax('formalias', [
+                'model' => $model,
+				'cus_data'=>self::aryData_Customers(),
+				'cus_dis'=>self::aryData_Dis()
+            ]);
+        }
+   }
+
+    public function actionIndexAlias()
+    {
+      # code...
+      $searchModel = new CustomersaliasSearch();
+      $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+	   $sideMenu_control='esm_customers';
+      return $this->render('index_alias', [
+              'searchModel' => $searchModel,
+              'dataProvider' => $dataProvider,
+			   'sideMenu_control'=>$sideMenu_control
+          ]);
+    }
+
+    public function actionPriceLogout(){
+  		$this->redirect('index');
+  	}
 
 
     /**
@@ -677,9 +721,10 @@ class CustomersController extends Controller
          }
          else {
            # code...
+		  
            return $this->render('_formaddmap', [
              'id'=>$id,
-               'model' => $model,
+               'model' => $model
            ]);
          }
      }
@@ -778,6 +823,55 @@ class CustomersController extends Controller
             // ]
             foreach ($model as $key => $value) {
                    $out[] = ['id'=>$value['CUST_KTG'],'name'=> $value['CUST_KTG_NM']];
+               }
+
+               echo json_encode(['output'=>$out, 'selected'=>'']);
+               return;
+           }
+       }
+       echo Json::encode(['output'=>'', 'selected'=>'']);
+   }
+   
+    public function actionValidAliasCustomers()
+    {
+      # code...
+      $model = new Customersalias();
+	  $model->scenario = "create";
+    if(Yii::$app->request->isAjax && $model->load($_POST))
+    {
+      Yii::$app->response->format = 'json';
+      return ActiveForm::validate($model);
+      }
+    }
+   
+   
+   /**
+     * Depdrop child customers
+     * @author wawan
+     * @since 1.1.0
+     * @return mixed
+     */
+   public function actionLisChildCus() {
+    $out = [];
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+        if ($parents != null) {
+            $id = $parents[0];
+
+            $model = Customers::find()->asArray()->where(['CUST_GRP'=>$id])
+                                                     ->andwhere('STATUS <> 3')
+                                                    ->all();
+                                                    // print_r($model);
+                                                    // die();
+            //$out = self::getSubCatList($cat_id);
+            // the getSubCatList function will query the database based on the
+            // cat_id and return an array like below:
+            // [
+            //    ['id'=>'<sub-cat-id-1>', 'name'=>'<sub-cat-name1>'],
+            //    ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
+            // ]
+            foreach ($model as $key => $value) {
+                   $out[] = ['id'=>$value['CUST_KD'],'name'=> $value['CUST_NM']];
                }
 
                echo json_encode(['output'=>$out, 'selected'=>'']);
@@ -1082,33 +1176,33 @@ class CustomersController extends Controller
     //     }
     // }
 
-    // public function actionUpdateAlias($id)
-    // {
-    //     $model = Customersalias::find()->where(['KD_CUSTOMERS'=>$id])->one();
+    public function actionUpdateAlias($id)
+    {
+        $model = Customersalias::find()->where(['KD_CUSTOMERS'=>$id])->one();
 
-    //     $id = Customers::find()->where(['CUST_KD'=>$id])->one();
+        $id = Customers::find()->where(['CUST_KD'=>$id])->one();
 
-    //     $nama = $id->CUST_NM;
+        $nama = $id->CUST_NM;
 
-    //     if(Yii::$app->request->isAjax && $model->load($_POST))
-    //     {
-    //       Yii::$app->response->format = 'json';
-    //       return ActiveForm::validate($model);
-    //     }
+        if(Yii::$app->request->isAjax && $model->load($_POST))
+        {
+          Yii::$app->response->format = 'json';
+          return ActiveForm::validate($model);
+        }
 
-    //     if ($model->load(Yii::$app->request->post()) ) {
-    //       $model->UPDATED_AT = date('Y-m-d');
-    //       $model->UPDATED_BY = Yii::$app->user->identity->username;
-    //       $model->save();
-    //         return $this->redirect(['index-alias']);
-    //     } else {
-    //         return $this->renderAjax('alias_customers', [
-    //             'model' => $model,
-    //             'id'=>$id,
-    //             'nama'=>$nama,
-    //         ]);
-    //     }
-    // }
+        if ($model->load(Yii::$app->request->post()) ) {
+          $model->UPDATED_AT = date('Y-m-d');
+          $model->UPDATED_BY = Yii::$app->user->identity->username;
+          $model->save();
+            return $this->redirect(['index-alias']);
+        } else {
+            return $this->renderAjax('alias_customers', [
+                'model' => $model,
+                'id'=>$id,
+                'nama'=>$nama,
+            ]);
+        }
+    }
 
 	 // public function actionUpdatecus($id)
   //   {

@@ -6,15 +6,10 @@ use yii\bootstrap\Modal;
 use yii\helpers\ArrayHelper;
 use lukisongroup\master\models\Customers;
 
-
-/* @var $this yii\web\View */
-/* @var $searchModel lukisongroup\master\models\BarangaliasSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
-/*
- * Declaration Componen User Permission
- * Function profile_user
-*/
+$this->params['breadcrumbs'][] = $this->title;
+$this->sideCorp = 'Customers';                 				 /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = $sideMenu_control;//'umum_datamaster';   	 /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->title = Yii::t('app', 'Customers');   	 			 /* title pada header page */
 
 
 $datatype =  ArrayHelper::map(Customers::find()->where('STATUS<>3')->groupBy('CUST_NM')->all(), 'CUST_KD', 'CUST_NM');
@@ -22,7 +17,7 @@ $datatype =  ArrayHelper::map(Customers::find()->where('STATUS<>3')->groupBy('CU
 
 
 $gridColumns = [
-          [
+        [
       'class'=>'kartik\grid\SerialColumn',
       'contentOptions'=>['class'=>'kartik-sheet-style'],
       'width'=>'10px',
@@ -33,7 +28,7 @@ $gridColumns = [
           'width'=>'10px',
           'font-family'=>'verdana, arial, sans-serif',
           'font-size'=>'9pt',
-          'background-color'=>'rgba(97, 211, 96, 0.3)',
+          'background-color'=>'rgba(126, 189, 188, 0.9)',
         ]
       ],
       'contentOptions'=>[
@@ -41,82 +36,82 @@ $gridColumns = [
           'text-align'=>'center',
           'width'=>'10px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
         ]
       ],
     ],
-
-    [
+	[
       'attribute' => 'disnm',
-      'label'=>'Nama Distributor',
+      'label'=>'Distributor',
       'hAlign'=>'left',
       'vAlign'=>'middle',
       'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
-          'width'=>'150px',
+          'width'=>'210px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-          'background-color'=>'rgba(97, 211, 96, 0.3)',
+          'font-size'=>'8pt',
+          'background-color'=>'rgba(126, 189, 188, 0.9)',
         ]
       ],
       'contentOptions'=>[
         'style'=>[
           'text-align'=>'left',
-          'width'=>'150px',
+          'width'=>'210px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
         ]
       ],
     ],
-
-    [
+	 
+	[
+      'attribute' => 'custpnma',
+      'label'=>' Customers.Parent',
+      'hAlign'=>'left',
+      'vAlign'=>'middle',
+	  'group'=>true,
+      'headerOptions'=>[
+        'style'=>[
+          'text-align'=>'center',
+          'width'=>'250px',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+          'background-color'=>'rgba(126, 189, 188, 0.9)',
+        ]
+      ],
+      'contentOptions'=>[
+        'style'=>[
+          'text-align'=>'left',
+          'width'=>'250px',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ],
+    ],
+	 [
       'attribute' => 'custnm',
-      'label'=>'Nama Customers',
+      'label'=>'Customers',
       'hAlign'=>'left',
       'vAlign'=>'middle',
       'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
-          'width'=>'150px',
+          'width'=>'250px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-          'background-color'=>'rgba(97, 211, 96, 0.3)',
+          'font-size'=>'8pt',
+          'background-color'=>'rgba(126, 189, 188, 0.9)',
         ]
       ],
       'contentOptions'=>[
         'style'=>[
           'text-align'=>'left',
-          'width'=>'150px',
+          'width'=>'250px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
         ]
       ],
     ],
-    [
-      'attribute' => 'KD_CUSTOMERS',
-      'label'=>'Kode Customers',
-      'hAlign'=>'left',
-      'vAlign'=>'middle',
-      'headerOptions'=>[
-        'style'=>[
-          'text-align'=>'center',
-          'width'=>'200px',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-          'background-color'=>'rgba(97, 211, 96, 0.3)',
-        ]
-      ],
-      'contentOptions'=>[
-        'style'=>[
-          'text-align'=>'left',
-          'width'=>'200px',
-          'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-        ]
-      ],
-    ],
-    [
+	[
       'attribute' => 'KD_ALIAS',
       'label'=>' Alias Code',
       'hAlign'=>'left',
@@ -124,28 +119,50 @@ $gridColumns = [
       'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
-          'width'=>'200px',
+          'width'=>'60px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-          'background-color'=>'rgba(97, 211, 96, 0.3)',
+          'font-size'=>'8pt',
+          'background-color'=>'rgba(126, 189, 188, 0.9)',
         ]
       ],
       'contentOptions'=>[
         'style'=>[
           'text-align'=>'left',
-          'width'=>'200px',
+          'width'=>'50px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
         ]
       ],
     ],
-
+	[
+      'attribute' => 'KD_CUSTOMERS',
+      'label'=>' ESM.Code',
+      'hAlign'=>'left',
+      'vAlign'=>'middle',
+      'headerOptions'=>[
+        'style'=>[
+          'text-align'=>'center',
+          'width'=>'50px',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+          'background-color'=>'rgba(126, 189, 188, 0.9)',
+        ]
+      ],
+      'contentOptions'=>[
+        'style'=>[
+          'text-align'=>'left',
+          'width'=>'50px',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'8pt',
+        ]
+      ],
+    ],
     [
       'class'=>'kartik\grid\ActionColumn',
       'dropdown' => true,
       'template' => '{view}{update}{price}',
       'dropdownOptions'=>['class'=>'pull-right dropup'],
-	  'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
+	    'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
       'buttons' => [
           'view' =>function($url, $model, $key){
               return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
@@ -169,19 +186,18 @@ $gridColumns = [
       'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
-          'width'=>'150px',
+          'width'=>'10px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
-          'background-color'=>'rgba(97, 211, 96, 0.3)',
+          'font-size'=>'8pt',
+          'background-color'=>'rgba(126, 189, 188, 0.9)',
         ]
       ],
       'contentOptions'=>[
         'style'=>[
           'text-align'=>'left',
-          'width'=>'150px',
-          'height'=>'10px',
+          'width'=>'10px',
           'font-family'=>'tahoma, arial, sans-serif',
-          'font-size'=>'9pt',
+          'font-size'=>'8pt',
         ]
       ],
 
@@ -196,7 +212,7 @@ $gridColumns = [
 				'id'=>'gv-brg-alias',
 				'dataProvider'=> $dataProvider,
 				'filterModel' => $searchModel,
-				'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+				'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.9); align:center'],
 				'columns' => $gridColumns,
 				'pjax'=>true,
 					'pjaxSettings'=>[
@@ -209,11 +225,19 @@ $gridColumns = [
 					'{export}',
 				],
 				'panel' => [
-					'heading'=>'<h3 class="panel-title">List Nama Alias</h3>',
-					'type'=>'warning',
-					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Logout',
-							['modelClass' => 'Kategori',]),'/master/customers/price-logout',[
-                'class' => 'btn btn-success'
+					'heading'=>'<h7 class="panel-title">DISTRIBUTOR ALIAS CODE</h7>',
+					// 'type'=>'warning',
+					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Plus',
+							['modelClass' => 'Customersalias',]),'/master/customers/tambah-alias-customers',[
+                'class' => 'btn btn-primary',
+                              'data-toggle'=>"modal",
+                              'id'=>'aliasmod',
+                               'data-target'=>"#modal-create",
+                               'class' => 'btn btn-primary btn-sm'
+                              
+              ]).' '. Html::a('<i class="glyphicon glyphicon-off"></i> '.Yii::t('app', 'Back',
+							['modelClass' => 'Customersalias',]),'/master/customers',[
+                'class' => 'btn btn-success btn-sm'
               ]),
 					      'showFooter'=>false,
 				],

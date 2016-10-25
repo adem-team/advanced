@@ -19,7 +19,7 @@ class CustomersaliasSearch extends Customersalias
     {
         return [
             [['ID', 'KD_PARENT'], 'integer'],
-            [['KD_CUSTOMERS', 'KD_ALIAS', 'KD_DISTRIBUTOR', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT'], 'safe'],
+            [['KD_CUSTOMERS', 'KD_ALIAS', 'KD_DISTRIBUTOR', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT','disnm','custnm','custpnma'], 'safe'],
         ];
     }
 
