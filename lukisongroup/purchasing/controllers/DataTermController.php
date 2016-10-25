@@ -92,6 +92,7 @@ class DataTermController extends Controller
           $model->TERM_ID = Yii::$app->ambilkonci->getkdTermData();
           $model->CREATED_AT = date("Y-m-d H:i:s");
           $model->CREATED_BY = Yii::$app->user->identity->username;
+          $model->STATUS = 1;
           $model->save();
           return $this->redirect(['review', 'id'=>$model->TERM_ID,'cus_kd'=>$model->CUST_KD_PARENT]);
       }else {

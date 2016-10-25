@@ -123,17 +123,70 @@ class NotulenController extends Controller
         ]);
     }
 
-    public function actionSetPersonSelect($id)
+    // public function actionSetPersonSelect($id)
+    // {
+    //   $data = NotulenModul::find()->where(['NOTULEN_ID'=>$id])->asArray()->one();
+
+    //   $explode = explode(',', $data['USER_ID']);
+    //   foreach ($explode as $value) {
+    //     # code...
+    //     $option = '<option value='.$value.' selected>'.$value.'</option>';
+    //     echo $option;
+    //   }
+    // }
+
+     public function actionSetPersonSelect($id)
     {
       $data = NotulenModul::find()->where(['NOTULEN_ID'=>$id])->asArray()->one();
 
       $explode = explode(',', $data['USER_ID']);
       foreach ($explode as $value) {
         # code...
-        $option = '<option value='.$value.' selected>'.$value.'</option>';
-        echo $option;
+
+         $datax[] = '<option value='.$value.' selected>'.$value.'</option>';
+
+         $ary1[] = $value;
+
       }
+
+      $emp = \lukisongroup\hrd\models\Employe::find()->where('STATUS<>3')->asArray()->all();
+
+       foreach ($emp as $key => $valuex) {
+         # code...
+         // $op[] ='<option value='.$valuex['EMP_NM'].' '.$valuex['EMP_NM_BLK'].'>'.$valuex['EMP_NM'].' '.$valuex['EMP_NM_BLK'].'</option>';
+
+         $ary2[] = $valuex['EMP_NM'].' '.$valuex['EMP_NM_BLK'];
+       }
+
+       $ary_dif = array_merge($ary1,$ary2);
+
+       $ary_uniq = array_unique($ary_dif);
+
+       foreach ($ary_uniq as $key => $values) {
+         # code...
+        if($values != '')
+        {
+
+          $op[] ='<option value='.$values.'>'.$values.'</option>';
+        }
+       }
+
+       echo json_encode(['selected'=>$datax,'option'=>$op]);
+
+      // echo json_encode(['selected'=>$datax,'option'=>$op]);
+
     }
+
+    //  public function actionSetPersonOption($id)
+    // {
+    //    $emp = \lukisongroup\hrd\models\Employe::find()->where('STATUS<>3')->asArray()->all();
+
+    //    foreach ($explode as $key => $value) {
+    //      # code...
+    //     $option = '<option value='.$value['EMP_NM'].' '.$value['EMP_NM_BLK'].'>'.$value['EMP_NM'].' '.$value['EMP_NM_BLK'].'</option>';
+    //     echo $option;
+    //    }
+    // }
 
     public function actionSetTanggal($id)
     {

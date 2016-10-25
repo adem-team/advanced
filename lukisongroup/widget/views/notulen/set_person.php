@@ -47,7 +47,7 @@ $options = [
    // ]);
 
    echo $form->field($person_form, 'Person')->widget(DualListbox::className(),[
-        'items' => $items,
+        // 'items' => $items,
         'options' => $options,
         // 'id'=>'tes',
         // 'selection' => $items,

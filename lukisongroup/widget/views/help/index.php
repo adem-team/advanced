@@ -21,8 +21,8 @@
 			'items' => [
 				['url' => '#sec-1-1', 'label' => 'Buat PO', 'content' => $pur_penjelasan],
 				['url' => '#sec-1-2', 'label' => 'Hak Akses', 'content' => $pur_permission],
-				['url' => '#sec-1-3', 'label' => 'Request Order', 'content' => $content],
-				['url' => '#sec-1-4', 'label' => 'Salest Order', 'content' => $content],
+				['url' => '#sec-1-3', 'label' => 'Request Order', 'content' => $ro_tutorial],
+				['url' => '#sec-1-4', 'label' => 'Sales Order', 'content' => $so_tutorial],
 				['url' => '#sec-1-5', 'label' => 'PO Normal', 'content' => $content],
 				['url' => '#sec-1-6', 'label' => 'PO Plus', 'content' => $content],
 			],

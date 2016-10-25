@@ -13,7 +13,13 @@
     
 
     $.get('/widget/notulen/set-person-select?id='+val,function(data){ 
-          $('#tes').append(data); // add data
+         
+
+          var x = JSON.parse(data);
+          var y = x.option;
+          // alert(y);
+          $('#tes').append(x.selected); // add data
+           $('#tes').append(y); // add data
           // $('#tes option:selected').remove() //remove data
 
           // $('#tes').trigger('bootstrapduallistbox.refresh');
@@ -21,6 +27,9 @@
 
 
         });
+
+
+
 
          }); 
 
@@ -106,7 +115,7 @@
 
   $('#person-notulen').on("hidden.bs.modal",function(){
   $('#tes option:selected').remove()
-   // $('#tes option:nonselected').remove()
+   $('#tes option').remove()
    $('#tes').bootstrapDualListbox('refresh');
 
     // $('#tes').bootstrapDualListbox('destroy');

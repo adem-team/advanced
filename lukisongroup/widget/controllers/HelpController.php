@@ -64,8 +64,12 @@ class HelpController extends Controller
 		$introduction =$this->renderPartial('erp_introduction');
 		$pur_penjelasan =$this->renderPartial('purchasing\CreatePo');
 		$pur_permission =$this->renderPartial('purchasing\Permission');
+		$ro_tutorial =$this->renderPartial('ro\ro_tutorial');
+		$so_tutorial =$this->renderPartial('so\so_tutorial');
+		
 		
 		$hrm_penjelasan =$this->renderPartial('hrm\penjelasan');
+		
 		
 		return $this->render('index',[
 			/*Introduction*/
@@ -75,6 +79,10 @@ class HelpController extends Controller
 			'pur_permission'=>$pur_permission,
 			/*HRM*/
 			'hrm_penjelasan'=>$hrm_penjelasan,
+			/*RO Tutorial*/
+			'ro_tutorial'=>$ro_tutorial,
+			/*SO Tutorial*/
+			'so_tutorial'=>$so_tutorial
 		]);
     
     }

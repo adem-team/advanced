@@ -169,10 +169,10 @@ class RequestTermController extends Controller
     public function actionCreate()
     {
 
-		  $model = new Requesttermheader();
+		  $model = new Requesttermheader(); //t0001header
       $model->scenario = 'simpan';
       $radiorqt = Yii::$app->request->post();
-      $term_invest = new Rtdetail();
+      $term_invest = new Rtdetail(); //t0001detail
 
 
       if ($model->load(Yii::$app->request->post())&&$term_invest->load(Yii::$app->request->post())) {
