@@ -61,7 +61,7 @@ class Termcustomers extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['CUST_KD', 'PRINCIPAL_KD', 'DIST_KD'], 'required'],
+            [['CUST_KD', 'PRINCIPAL_KD', 'DIST_KD','BUDGET_AWAL'], 'required'],
             [['image'], 'file'],
              [['PERIOD_START','PERIOD_END'], 'default','value'=>date('Y-m-d')],
             [['DCRP_SIGNARURE', 'TARGET_TEXT', 'RABATE_CNDT', 'TOP','JOBGRADE_ID','JABATAN_CUS','JABATAN_DIST'], 'string'],

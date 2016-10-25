@@ -96,17 +96,20 @@ class TermheaderSearch extends Termheader
     {
       	$profile=Yii::$app->getUserOpt->Profile_user();
 
-        if($profile->emp->DEP_ID == 'GM'|| $profile->emp->DEP_ID == 'DRC')
-          {
-            $query = Termheader::find();
-          }
-        elseif($profile->emp->DEP_ID == 'ACT')
-        {
-            $query = Termheader::find();
-        }else{
-              // $query = Termheader::find()->where(['CREATED_BY'=>$profile->username]);
-              $query = Termheader::find();
-          }
+        // if($profile->emp->DEP_ID == 'GM'|| $profile->emp->DEP_ID == 'DRC')
+        //   {
+        //     $query = Termheader::find();
+        //   }
+        // elseif($profile->emp->DEP_ID == 'ACT')
+        // {
+        //     $query = Termheader::find();
+        // }else{
+        //       // $query = Termheader::find()->where(['CREATED_BY'=>$profile->username]);
+        //       $query = Termheader::find();
+        //   }
+
+
+        $query = Termheader::find()->where('PERIOD_END >= CURDATE()');
 
 
         $dataProvider = new ActiveDataProvider([

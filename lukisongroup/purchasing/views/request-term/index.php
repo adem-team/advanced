@@ -26,6 +26,7 @@ $this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu p
 $this->title = Yii::t('app', 'Trading Terms ');
 
 
+
 	/*
 	 * Declaration Componen User Permission
 	 * Function getPermission

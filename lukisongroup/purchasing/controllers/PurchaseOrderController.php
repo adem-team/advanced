@@ -1298,9 +1298,18 @@ class PurchaseOrderController extends Controller
 			  'SetFooter'=>['{PAGENO}'],
 			]
 		]);
+			
+		$url_dev = Url::base(true);
+			if($url_dev == 'http://labtest1-erp.int')
+			{
+				$to =['labtest@lukison.com'];
+			}else{
+				$to =['purchasing@lukison.com'];
+			}
+		
 
 		/* KIRIM ATTACH emaiL */
-		$to=['purchasing@lukison.com'];
+		//$to=[ 'purchasing@lukison.com'];
 		\Yii::$app->kirim_email->pdf($contentMailAttach,'PO',$to,'Purchase-Order',$contentMailAttachBody);
     }
 
@@ -1369,7 +1378,16 @@ class PurchaseOrderController extends Controller
 			]
 		]);
 		/* KIRIM ATTACH emaiL */
-		$to=['purchasing@lukison.com'];//,'piter@lukison.com'];
+		 //$to=['purchasing@lukison.com'];//,'piter@lukison.com'];
+
+		$url_dev = Url::base(true);
+			if($url_dev == 'http://labtest1-erp.int')
+			{
+				$to =['labtest@lukison.com'];
+			}else{
+				$to =['purchasing@lukison.com'];
+			}
+
 		\Yii::$app->kirim_email->pdf($contentMailAttach,'PO',$to,'Purchase-Order',$contentMailAttachBody);
 	}
 
@@ -1439,8 +1457,19 @@ class PurchaseOrderController extends Controller
 			]
 		]);
 
+			$url_dev = Url::base(true);
+		
+			
+			if($url_dev == 'http://labtest1-erp.int')
+			{
+				$to =['labtest@lukison.com'];
+			}else{
+				$to =['purchasing@lukison.com'];
+			}
+		
+
 		/* KIRIM ATTACH emaiL */
-		$to=['purchasing@lukison.com'];//,'piter@lukison.com','ridwan@lukison.com'];
+		 //$to=['purchasing@lukison.com'];//,'piter@lukison.com','ridwan@lukison.com'];
 		\Yii::$app->kirim_email->pdf($contentMailAttach,'PO',$to,'Purchase-Order',$contentMailAttachBody);
 	}
 
@@ -1508,7 +1537,7 @@ class PurchaseOrderController extends Controller
 				if ($auth2Mdl->auth2_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth2Model']['kdpo'];
-					$this->Sendmail2($kdpo);//call function email
+						 $this->Sendmail2($kdpo);//call function email
 					return $this->redirect(['review', 'kdpo'=>$kdpo]);
 				}
 			}
@@ -1577,7 +1606,7 @@ class PurchaseOrderController extends Controller
 				if ($auth3Mdl->auth3_saved()){
 					$hsl = \Yii::$app->request->post();
 					$kdpo = $hsl['Auth3Model']['kdpo'];
-          $this->Sendmail3($kdpo);//call function email
+          			$this->Sendmail3($kdpo);//call function email
 					return $this->redirect(['review', 'kdpo'=>$kdpo]);
 				}
 			}

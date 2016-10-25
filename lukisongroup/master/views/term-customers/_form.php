@@ -8,6 +8,7 @@ use lukisongroup\hrd\models\Corp;
 use lukisongroup\master\models\Distributor;
 use kartik\label\LabelInPlace;
 use lukisongroup\master\models\Terminvest;
+use kartik\money\MaskMoney;
 
 
 /* @var $this yii\web\View */
@@ -57,6 +58,15 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
       ],
       'data' =>$model->data($data2,$to2,$from2)
     ]);?>
+
+
+    <?= $form->field($model, 'BUDGET_AWAL')->widget(MaskMoney::classname(), [
+        'pluginOptions' => [
+            'allowNegative' => false
+        ]
+    ]) ?>
+
+
 
     <?php
       if(!$model->IsNewRecord)

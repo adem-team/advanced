@@ -9,6 +9,7 @@ use lukisongroup\purchasing\models\rqt\Rtdetail;
 use lukisongroup\purchasing\models\rqt\Requesttermstatus;
 use common\components\Notification;
 use common\models\MessageNotify;
+use lukisongroup\purchasing\models\data_term\Termdetail;
 /**
  * @author ptrnov  <piter@lukison.com>
  * @since 1.1
@@ -26,6 +27,8 @@ class Auth3Model extends Model
     public $kdrib;
   	public $status;
   	public $password;
+    public $trm_id;
+    public $cus_id;
 
   	//public $findPasswords; // @property Digunakan jika Form Attribute di gunakan
   	private $_empid = false;
@@ -109,8 +112,27 @@ class Auth3Model extends Model
               $rtHeaderStt_3->STATUS = 102;
             }
 						$rtHeaderStt_3->UPDATED_AT = date('Y-m-d H:m:s');
-						if ($rtHeaderStt_3->save()) {
 
+            
+              $trdetail = Termdetail::find()->where(['TERM_ID'=>$this->trm_id])->one();
+
+               // detail
+            $t_detail = Rtdetail::find()
+            ->where(['TERM_ID'=>$this->trm_id])
+            ->andwhere(['KD_RIB'=>$this->kdrib])
+            ->andwhere(['<>','ID_INVEST', $trdetail->INVES_ID])
+            ->all();
+
+            foreach ($t_detail as $key => $value) {
+              # code...
+             
+              //t0000detail
+              $connection = Yii::$app->db_esm;
+              $connection->createCommand()->batchInsert('t0000detail',['TERM_ID','CUST_KD_PARENT','INVES_ID','BUDGET_PLAN','PROGRAM'],[[$value->TERM_ID,$this->cus_id,$value->ID_INVEST,$value->HARGA,$value->INVESTASI_PROGRAM]])->execute();
+              
+             
+            }
+						if ($rtHeaderStt_3->save()) {
 
 
 						}

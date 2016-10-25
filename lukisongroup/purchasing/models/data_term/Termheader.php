@@ -43,6 +43,8 @@ class Termheader extends \yii\db\ActiveRecord
      public $term;
      public $image;
 
+     CONST EXIST_RUNNING = 'exist_running';
+
     public static function tableName()
     {
         return 't0000header';
@@ -104,6 +106,15 @@ class Termheader extends \yii\db\ActiveRecord
            $this->addError($model, 'Tanggal harus lebih Besar'.$datestart);
        }
 
+    }
+
+    public function cekExistTermrunning($model)
+    {
+       $data = Termheader::find()->where(['CUST_KD_PARENT'=>$this->CUST_KD_PARENT,'STATUS'=>1])->one();
+       if($data)
+       {
+         $this->addError($model, 'sorry Customer already been there');
+       }
     }
 
 

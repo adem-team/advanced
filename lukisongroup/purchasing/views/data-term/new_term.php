@@ -11,6 +11,7 @@ use lukisongroup\master\models\Customers;
 use lukisongroup\hrd\models\Corp;
 use lukisongroup\master\models\Distributor;
 use lukisongroup\master\models\Terminvest;
+use kartik\widgets\DatePicker;
 
 
 /* @var $this yii\web\View */
@@ -58,6 +59,33 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
       ],
       'data' =>$model->dataarray($data2,$to2,$from2)
     ]);?>
+
+
+   <?php echo $form->field($model, 'PERIOD_START')->widget(DatePicker::classname(), [
+                    'options' => ['placeholder' => 'Tgl Term Dibuat'],
+                        'pluginOptions' => [
+                            'todayHighlight' => true,
+                            'autoclose'=>true,
+                              'format' => 'yyyy-m-dd'
+                        ],
+                        'pluginEvents'=>[
+                            'show' => "function(e) {show}",
+                        ],
+                    ]);
+        ?>
+
+        <?php echo $form->field($model, 'PERIOD_END')->widget(DatePicker::classname(), [
+                    'options' => ['placeholder' => 'Tgl Term Berakhir'],
+                        'pluginOptions' => [
+                            'todayHighlight' => true,
+                            'autoclose'=>true,
+                              'format' => 'yyyy-m-dd'
+                        ],
+                        'pluginEvents'=>[
+                            'show' => "function(e) {show}",
+                        ],
+                    ]);
+        ?>
 
     <?= $form->field($model, 'BUDGET_AWAL')->widget(MaskMoney::classname(), [
         'pluginOptions' => [
