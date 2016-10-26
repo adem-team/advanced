@@ -14,14 +14,17 @@ $this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu p
 $this->title = Yii::t('app', 'Trading Terms ');                       /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
 
+##### array status #####
 $aryStt= [
-    ['STATUS' => 0, 'STT_NM' => 'DISABLE'],
-    ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
+    ['STATUS' => 0, 'STT_NM' => 'DISABLE'], # set status 0 disable 
+    ['STATUS' => 1, 'STT_NM' => 'ENABLE'], # set status 1 enable
 ];
 $valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
 
+
+
 $gridColumns = [
-    [
+    [   #serial column
       'class'=>'kartik\grid\SerialColumn',
       'contentOptions'=>['class'=>'kartik-sheet-style'],
       'width'=>'10px',
@@ -45,7 +48,7 @@ $gridColumns = [
       ],
     ],
 
-    [
+    [  # INVES_TYPE
       'attribute' => 'INVES_TYPE',
       'label'=>'Type Investasi',
       'hAlign'=>'left',
@@ -68,7 +71,7 @@ $gridColumns = [
         ]
       ],
     ],
-    [
+    [  #KETERANGAN
       'attribute' => 'KETERANGAN',
       'label'=>'Keterangan',
       'hAlign'=>'left',
@@ -91,9 +94,9 @@ $gridColumns = [
         ]
       ],
     ],
-    [
+    [ # STATUS
       'attribute' => 'STATUS',
-      'filter' => $valStt,
+      'filter' => $valStt,  
       'format' => 'raw',
       'hAlign'=>'center',
       'value'=>function($model){
@@ -123,11 +126,12 @@ $gridColumns = [
         ]
       ],
     ],
-    [
+    [ #action column
       'class'=>'kartik\grid\ActionColumn',
       'dropdown' => true,
       'template' => '{view}{update}',
       'dropdownOptions'=>['class'=>'pull-right dropup'],
+      'dropdownButton'=>['class'=>'btn btn-default btn-xs'], #set css dropdown button
       'buttons' => [
           'view' =>function($url, $model, $key){
               return  '<li>' .Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'View'),
@@ -192,12 +196,12 @@ $gridColumns = [
 				],
 				'panel' => [
 					'heading'=>'<h3 class="panel-title">Type Investasi</h3>',
-					'type'=>'warning',
+					// 'type'=>'warning',
 					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Investasi ',
 							['modelClass' => 'Termcustomers',]),'/master/term-invest/create',[
 								'data-toggle'=>"modal",
 									'data-target'=>"#modal-create",
-										'class' => 'btn btn-success'
+										'class' => 'btn btn-success btn-sm'
 													]),
 					'showFooter'=>false,
 				],
@@ -212,6 +216,9 @@ $gridColumns = [
 	</div>
 </div>
 <?php
+/* Js modal 
+  * JS modal create
+*/
 $this->registerJs("
    $.fn.modal.Constructor.prototype.enforceFocus = function(){};
    $('#modal-create').on('show.bs.modal', function (event) {
@@ -237,6 +244,9 @@ $this->registerJs("
   Modal::end();
 
 
+/* Js modal 
+  * JS modal view
+*/
   $this->registerJs("
      $.fn.modal.Constructor.prototype.enforceFocus = function(){};
      $('#modal-view').on('show.bs.modal', function (event) {

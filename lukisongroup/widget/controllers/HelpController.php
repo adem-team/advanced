@@ -66,6 +66,7 @@ class HelpController extends Controller
 		$pur_permission =$this->renderPartial('purchasing\Permission');
 		$ro_tutorial =$this->renderPartial('ro\ro_tutorial');
 		$so_tutorial =$this->renderPartial('so\so_tutorial');
+		$po_normal_tutorial =$this->renderPartial('po\po_normal_tutorial');
 		
 		
 		$hrm_penjelasan =$this->renderPartial('hrm\penjelasan');
@@ -82,7 +83,9 @@ class HelpController extends Controller
 			/*RO Tutorial*/
 			'ro_tutorial'=>$ro_tutorial,
 			/*SO Tutorial*/
-			'so_tutorial'=>$so_tutorial
+			'so_tutorial'=>$so_tutorial,
+			/*PO Tutorial*/
+			'po_normal_tutorial'=>$po_normal_tutorial			
 		]);
     
     }

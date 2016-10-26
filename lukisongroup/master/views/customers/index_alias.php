@@ -17,7 +17,7 @@ $datatype =  ArrayHelper::map(Customers::find()->where('STATUS<>3')->groupBy('CU
 
 
 $gridColumns = [
-        [
+        [ #serial column
       'class'=>'kartik\grid\SerialColumn',
       'contentOptions'=>['class'=>'kartik-sheet-style'],
       'width'=>'10px',
@@ -40,11 +40,26 @@ $gridColumns = [
         ]
       ],
     ],
-	[
+	[ # disnm
       'attribute' => 'disnm',
       'label'=>'Distributor',
       'hAlign'=>'left',
       'vAlign'=>'middle',
+      'filterType'=>GridView::FILTER_SELECT2,
+      'filter' => $cus_dis,
+      'filterWidgetOptions'=>[
+      'pluginOptions'=>[
+        'allowClear'=>true,
+        'contentOptions'=>[
+          'style'=>[
+            'text-align'=>'left',
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+          ] 
+        ]
+      ],
+    ],
+    'filterInputOptions'=>['placeholder'=>'Select'],
       'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
@@ -64,12 +79,27 @@ $gridColumns = [
       ],
     ],
 	 
-	[
-      'attribute' => 'custpnma',
+	[  #custpnma
+      'attribute' =>'custpnma',
       'label'=>' Customers.Parent',
       'hAlign'=>'left',
       'vAlign'=>'middle',
-	  'group'=>true,
+	    'group'=>true,
+      'filterType'=>GridView::FILTER_SELECT2,
+      'filter' => $cus_data,
+      'filterWidgetOptions'=>[
+      'pluginOptions'=>[
+        'allowClear'=>true,
+        'contentOptions'=>[
+          'style'=>[
+            'text-align'=>'left',
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+          ] 
+        ]
+      ],
+    ],
+    'filterInputOptions'=>['placeholder'=>'Select'],
       'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
@@ -88,11 +118,26 @@ $gridColumns = [
         ]
       ],
     ],
-	 [
+	 [  #custnm
       'attribute' => 'custnm',
       'label'=>'Customers',
       'hAlign'=>'left',
       'vAlign'=>'middle',
+      'filterType'=>GridView::FILTER_SELECT2,
+      'filter' => $child,
+      'filterWidgetOptions'=>[
+      'pluginOptions'=>[
+        'allowClear'=>true,
+        'contentOptions'=>[
+          'style'=>[
+            'text-align'=>'left',
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+          ] 
+        ]
+      ],
+    ],
+    'filterInputOptions'=>['placeholder'=>'Select'],
       'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
@@ -111,7 +156,7 @@ $gridColumns = [
         ]
       ],
     ],
-	[
+	[    #KD_ALIAS
       'attribute' => 'KD_ALIAS',
       'label'=>' Alias Code',
       'hAlign'=>'left',
@@ -134,7 +179,7 @@ $gridColumns = [
         ]
       ],
     ],
-	[
+	[  #KD_CUSTOMERS
       'attribute' => 'KD_CUSTOMERS',
       'label'=>' ESM.Code',
       'hAlign'=>'left',
@@ -157,21 +202,13 @@ $gridColumns = [
         ]
       ],
     ],
-    [
+    [   #action column
       'class'=>'kartik\grid\ActionColumn',
       'dropdown' => true,
-      'template' => '{view}{update}{price}',
+      'template' => '{update}{price}',
       'dropdownOptions'=>['class'=>'pull-right dropup'],
 	    'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
       'buttons' => [
-          'view' =>function($url, $model, $key){
-              return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
-                            ['view-alias','id'=>$model->ID],[
-                            'data-toggle'=>"modal",
-                            'data-target'=>"#modal-view",
-                            'data-title'=> $model->KD_CUSTOMERS,
-                            ]). '</li>';
-          },
           'update' =>function($url, $model, $key){
               return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Edit'),
                             ['update-alias','id'=>$model->KD_CUSTOMERS],[
@@ -271,7 +308,7 @@ $this->registerJs("
 ",$this::POS_READY);
   Modal::begin([
       'id' => 'modal-create',
-  'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+  'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-user"></div><div><h4 class="modal-title">ALIAS CUSTOMERS</h4></div>',
   'headerOptions'=>[
       'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
   ],
