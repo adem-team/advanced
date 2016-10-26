@@ -85,10 +85,16 @@ class CustomersController extends Controller
 	public function aryData_Geo(){ 
 		return ArrayHelper::map(DraftGeo::find()->Where("GEO_ID<>1")->all(), 'GEO_ID','GEO_NM');
 	}
-	/*customers  array*/
+
+	/*customers parent array*/
 	public function aryData_Customers(){ 
 		return ArrayHelper::map(Customers::find()->where('CUST_KD = CUST_GRP')->andwhere('STATUS<>3')->all(), 'CUST_GRP','CUST_NM');
 	}
+
+  /*customers Child array*/
+  public function aryData_CustomersChild(){ 
+    return ArrayHelper::map(Customers::find()->where('STATUS<>3')->all(), 'CUST_KD','CUST_NM');
+  }
 	
 	/*Distributor  array*/
 	public function aryData_Dis(){ 
@@ -673,8 +679,8 @@ class CustomersController extends Controller
         } else {
             return $this->renderAjax('formalias', [
                 'model' => $model,
-				'cus_data'=>self::aryData_Customers(),
-				'cus_dis'=>self::aryData_Dis()
+				        'cus_data'=>self::aryData_Customers(),
+				        'cus_dis'=>self::aryData_Dis()
             ]);
         }
    }
@@ -688,7 +694,10 @@ class CustomersController extends Controller
       return $this->render('index_alias', [
               'searchModel' => $searchModel,
               'dataProvider' => $dataProvider,
-			   'sideMenu_control'=>$sideMenu_control
+			       'sideMenu_control'=>$sideMenu_control,
+              'cus_data'=>self::aryData_Customers(), #array parent customers
+              'cus_dis'=>self::aryData_Dis(), #array distributor
+              'child'=>self::aryData_CustomersChild() #array customers child
           ]);
     }
 
@@ -1180,16 +1189,6 @@ class CustomersController extends Controller
     {
         $model = Customersalias::find()->where(['KD_CUSTOMERS'=>$id])->one();
 
-        $id = Customers::find()->where(['CUST_KD'=>$id])->one();
-
-        $nama = $id->CUST_NM;
-
-        if(Yii::$app->request->isAjax && $model->load($_POST))
-        {
-          Yii::$app->response->format = 'json';
-          return ActiveForm::validate($model);
-        }
-
         if ($model->load(Yii::$app->request->post()) ) {
           $model->UPDATED_AT = date('Y-m-d');
           $model->UPDATED_BY = Yii::$app->user->identity->username;
@@ -1198,8 +1197,8 @@ class CustomersController extends Controller
         } else {
             return $this->renderAjax('alias_customers', [
                 'model' => $model,
-                'id'=>$id,
-                'nama'=>$nama,
+                'cus_data'=>self::aryData_Customers(),
+                'cus_dis'=>self::aryData_Dis()
             ]);
         }
     }

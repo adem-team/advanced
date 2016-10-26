@@ -15,11 +15,18 @@ class CustomersaliasSearch extends Customersalias
     /**
      * @inheritdoc
      */
+
+
+    /*attribute join */
+    public $disnm;  
+    public $custnm;
+    public $custpnma;
+
     public function rules()
     {
         return [
-            [['ID', 'KD_PARENT'], 'integer'],
-            [['KD_CUSTOMERS', 'KD_ALIAS', 'KD_DISTRIBUTOR', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT','disnm','custnm','custpnma'], 'safe'],
+            [['ID'], 'integer'],
+            [['KD_CUSTOMERS', 'KD_ALIAS', 'KD_DISTRIBUTOR', 'CREATED_BY', 'CREATED_AT', 'UPDATED_BY', 'UPDATED_AT','disnm','custnm','custpnma','KD_PARENT'], 'safe'],
         ];
     }
 
@@ -57,14 +64,17 @@ class CustomersaliasSearch extends Customersalias
 
         $query->andFilterWhere([
             'ID' => $this->ID,
-            'KD_PARENT' => $this->KD_PARENT,
+            'KD_PARENT' => $this->custpnma,
+            'KD_CUSTOMERS'=>$this->custnm,
             'CREATED_AT' => $this->CREATED_AT,
             'UPDATED_AT' => $this->UPDATED_AT,
+            'KD_DISTRIBUTOR'=>$this->disnm,
         ]);
 
-        $query->andFilterWhere(['like', 'KD_CUSTOMERS', $this->KD_CUSTOMERS])
+        $query->andFilterWhere(['like', 'KD_CUSTOMERS', $this->custnm])
             ->andFilterWhere(['like', 'KD_ALIAS', $this->KD_ALIAS])
-            ->andFilterWhere(['like', 'KD_DISTRIBUTOR', $this->KD_DISTRIBUTOR])
+            ->andFilterWhere(['like', 'KD_PARENT', $this->custpnma])
+            ->andFilterWhere(['like', 'KD_DISTRIBUTOR', $this->disnm])
             ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
             ->andFilterWhere(['like', 'UPDATED_BY', $this->UPDATED_BY]);
 

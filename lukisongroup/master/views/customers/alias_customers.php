@@ -7,80 +7,131 @@ use lukisongroup\master\models\barangalias;
 use lukisongroup\master\models\Distributor;
 use yii\helpers\Url;
 use kartik\widgets\Select2;
-use kartik\label\LabelInPlace;
-
-
+use kartik\detail\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model lukisongroup\master\models\Barangalias */
+/* @var $model lukisongroup\master\models\Customersalias */
 /* @var $form yii\widgets\ActiveForm */
 
+    /*Customers alias info*/
+  $cusviewinfo=DetailView::widget([
+    'model' => $model,
+    'attributes' => [
+     [ # custnm
+        'attribute' =>'KD_CUSTOMERS',
+        'label'=>'Kd Customer',
+        'labelColOptions' => ['style' => 'text-align:right;width: 30%']
+      ],
+      [ # custnm
+        'attribute' =>'custnm',
+        'label'=>'Customer.NM',
+        'labelColOptions' => ['style' => 'text-align:right;width: 30%']
+      ],
+      [ # custpnma
+        'attribute' =>'custpnma',
+        'label'=>'Customers.parent',
+        'labelColOptions' => ['style' => 'text-align:right;width: 30%']
+      ],
+      [ #disnm
+        'attribute' =>'disnm',
+        // 'value'=>$model->custype->CUST_KTG_NM, 
+        'label'=>'Nama Distributor',
+        'labelColOptions' => ['style' => 'text-align:right;width: 30%']
+      ],
+        [
+          #KD_ALIAS
+        'attribute' =>'KD_ALIAS',
+        'label'=>'Alias Code :',
+        'labelColOptions' => ['style' => 'text-align:right;width: 30%']
+      ],
+      
+    ],
+  ]);
 
-$datadis = Distributor::find()->where('STATUS<>3')
-                              ->all();
-$todis = 'KD_DISTRIBUTOR';
-$fromdis = 'NM_DISTRIBUTOR';
-$config = ['template'=>"{input}\n{error}\n{hint}"]
-?>
+    /*update customers alias*/
+  $attalias = [
+    [
+      'group'=>true,
+      'label'=>false,
+      'rowOptions'=>['class'=>'info'],
+      'groupOptions'=>['class'=>'text-left'] //text-center 
+    ],
+    [   #KD_PARENT
+      'attribute' =>'KD_PARENT',
+      'format'=>'raw',
+      'value'=>$model->cusp->CUST_NM,
+      'type'=>DetailView::INPUT_SELECT2,
+      'widgetOptions'=>[
+        'data'=>$cus_data,
+        'options'=>['placeholder'=>'Select ...'],
+        'pluginOptions'=>['allowClear'=>true],
+      ],  
+    ],
+     [   #KD_CUSTOMERS
+      'attribute' =>'KD_CUSTOMERS',
+      'format'=>'raw',
+      'value'=>$model->cus->CUST_NM,
+      'type'=>DetailView::INPUT_DEPDROP,
+      'widgetOptions'=>[
+          'options' => ['id'=>'customers-city_id',
+          'placeholder' => 'Select Kota'],
+      'type' => DepDrop::TYPE_SELECT2,
+      'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+      'pluginOptions'=>[
+        'depends'=>['customersalias-kd_parent'],
+        'url' => Url::to(['/master/customers/lis-child-cus']),
+        'loadingText' => 'Loading data ...',
+        ]
+      ],  
+    ],
+     [   # KD_DISTRIBUTOR
+      'attribute' =>'KD_DISTRIBUTOR',
+      'format'=>'raw',
+      'value'=>$model->dis->NM_DISTRIBUTOR,
+      'type'=>DetailView::INPUT_SELECT2,
+      'widgetOptions'=>[
+        'data'=>$cus_dis,
+        'options'=>['placeholder'=>'Select ...'],
+        'pluginOptions'=>['allowClear'=>true],
+      ],  
+    ],
+    
+    [   # CUST_KD_ALIAS
+      'attribute' =>'KD_ALIAS',
+      'label'=>'alias code',
+      'type'=>DetailView::INPUT_TEXT,
+      'labelColOptions' => ['style' => 'text-align:right;width: 15px']
+    ],
+  ];
 
-<div class="barangalias-form">
+  /* Customers alias View Editing*/
+  $alias=DetailView::widget([
+    'id'=>'customers-alias-view-id',
+    'model' => $model,
+    'attributes'=>$attalias,
+    'condensed'=>true,
+    'hover'=>true,
+    'mode'=>DetailView::MODE_VIEW,
+    'buttons1'=>'{update}',
+    'buttons2'=>'{view}{save}',
+    'panel'=>[
+          'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-1x fa-list-alt"></div><div><h6 class="modal-title"><b>Alias Customers</b></h6></div>',
+          'type'=>DetailView::TYPE_INFO,
+        ],
+  ]);
 
-    <?php $form = ActiveForm::begin([
-      'id'=>$model->formName(),
-      'enableClientValidation'=>true,
-      'enableAjaxValidation'=>true,
-      'validationUrl'=>Url::toRoute('/master/customers/valid-alias')
-    ]); ?>
+  ?>
 
-    <?= $form->field($model, 'KD_CUSTOMERS')->textInput(['value'=>$id->CUST_KD,'readonly'=>true])->label('Kode Customers') ?>
 
-    <?= $form->field($model, 'CUST_NM')->textInput(['value'=>$nama,'disabled'=>true]) ?>
-
-    <?= $form->field($model, 'KD_ALIAS',$config)->widget(LabelInPlace::classname()); ?>
-
-    <?= $form->field($model, 'KD_DISTRIBUTOR')->widget(Select2::classname(), [
-      'data' => $model->data($datadis,$todis,$fromdis),
-      'options' => ['placeholder' => 'Pilih KD DISTRIBUTOR ...'],
-      'pluginOptions' => [
-        'allowClear' => true
-         ],
-    ]);?>
-
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+<div style="height:100%;font-family: verdana, arial, sans-serif ;font-size: 8pt">
+  <div class="row" >
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+      <?= $cusviewinfo ?> 
     </div>
-
-    <?php ActiveForm::end(); ?>
-
-</div>
-<?php
-
-$this->registerJs("
-
-   $('form#{$model->formName()}').on('beforeSubmit',function(e)
-    {
-        var \$form = $(this);
-        $.post(
-            \$form.attr('action'),
-            \$form.serialize()
-
-        )
-            .done(function(result){
-			        if(result == 1 )
-                {
-                  $(document).find('#formalias').modal('hide');
-                  $('form#{$model->formName()}').trigger('reset');
-                  }
-                else{
-                      console.log(result)
-                    }
-
-            });
-
-return false;
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+    <?= $alias ?>
+    </div>
+    </div>
+  </div>
 
 
-});
-
-
- ",$this::POS_END);
