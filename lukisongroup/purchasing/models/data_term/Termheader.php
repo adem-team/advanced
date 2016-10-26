@@ -42,6 +42,11 @@ class Termheader extends \yii\db\ActiveRecord
      */
      public $term;
      public $image;
+     public $tgl_dibuat;
+     public $tgl_berakhir;
+     public $budget_start;
+     public $text_target;
+     public $value_target;
 
      CONST EXIST_RUNNING = 'exist_running';
 

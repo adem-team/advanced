@@ -684,7 +684,13 @@ class CustomersController extends Controller
             ]);
         }
    }
-
+   
+    /**
+     * INDEX 
+     * Lists all  Customersalias models.
+     * @author wawan
+     * @since 1.1.0
+     */
     public function actionIndexAlias()
     {
       # code...

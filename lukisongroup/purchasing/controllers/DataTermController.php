@@ -29,8 +29,10 @@ use lukisongroup\purchasing\models\data_term\Requesttermheader;
 use lukisongroup\purchasing\models\data_term\PostAccount;
 use lukisongroup\purchasing\models\data_term\RtdetailSearch;
 use lukisongroup\purchasing\models\data_term\Rtdetail;
-
 use lukisongroup\purchasing\models\data_term\ActualModel;
+use lukisongroup\hrd\models\Corp;
+use lukisongroup\master\models\Distributor;
+
 
 class DataTermController extends Controller
 {
@@ -83,21 +85,46 @@ class DataTermController extends Controller
     }
 
 
+    /*customers parent array*/
+  public function aryData_Customers(){ 
+    return ArrayHelper::map(Customers::find()->where('CUST_KD = CUST_GRP')->andwhere('STATUS<>3')->all(), 'CUST_KD','CUST_NM');
+  }
 
+  /*Distributor array*/
+  public function aryData_Dis(){ 
+    return ArrayHelper::map( Distributor::find()->where('STATUS<>3')
+                              ->all(), 'KD_DISTRIBUTOR','NM_DISTRIBUTOR');
+  }
+
+   /*Corp array*/
+  public function aryData_Corp(){ 
+    return ArrayHelper::map(Corp::find()->all(), 'CORP_ID','CORP_NM');
+  }
+
+
+    /**
+      *create models Termheader
+      *if successful redirect review
+      * @author wawan
+      * @since 1.1.0 
+    */
     public function actionCreateTermData()
     {
       $model = new Termheader();
       # code...
       if ($model->load(Yii::$app->request->post()) ) {
-          $model->TERM_ID = Yii::$app->ambilkonci->getkdTermData();
-          $model->CREATED_AT = date("Y-m-d H:i:s");
-          $model->CREATED_BY = Yii::$app->user->identity->username;
-          $model->STATUS = 1;
+          $model->TERM_ID = Yii::$app->ambilkonci->getkdTermData(); # set kode term_id
+          $model->CREATED_AT = date("Y-m-d H:i:s"); #set datetime
+          $model->CREATED_BY = Yii::$app->user->identity->username; #set username
+          $model->STATUS = 1; # default status running
           $model->save();
           return $this->redirect(['review', 'id'=>$model->TERM_ID,'cus_kd'=>$model->CUST_KD_PARENT]);
       }else {
         return $this->renderAjax('new_term', [
             'model' => $model,
+            'parent_customers' => self::aryData_Customers(), #array parent customers
+            'data_distributor' => self::aryData_Dis(), #array distributor
+            'data_corp' => self::aryData_Corp(), #array corp
         ]);
       }
     }
@@ -237,6 +264,99 @@ class DataTermController extends Controller
               'items'=>$items
         ]);
       }
+
+
+ public function actionUpdateTarget($id,$cus_kd)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) ) {
+          $model->TARGET_TEXT =  Yii::$app->mastercode->terbilang($model->TARGET_VALUE);
+          $model->UPDATE_AT = date('Y-m-d');
+          $model->UPDATE_BY = Yii::$app->user->identity->username;
+          $model->save();
+              return $this->redirect(['review', 'id'=>$model->TERM_ID,'cus_kd'=>$model->CUST_KD_PARENT]);
+        } else {
+            return $this->renderAjax('set_target', [
+                'model' => $model,
+                'cus_data'=>self::aryData_Customers(),
+                'cus_dis'=>self::aryData_Dis()
+            ]);
+        }
+    }
+
+
+    public function actionUpdateTgl($id,$cus_kd)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) ) {
+          $model->UPDATE_AT = date('Y-m-d');
+          $model->UPDATE_BY = Yii::$app->user->identity->username;
+          $model->save();
+              return $this->redirect(['review', 'id'=>$model->TERM_ID,'cus_kd'=>$model->CUST_KD_PARENT]);
+        } else {
+            return $this->renderAjax('set_tanggal', [
+                'model' => $model,
+                'cus_data'=>self::aryData_Customers(),
+                'cus_dis'=>self::aryData_Dis()
+            ]);
+        }
+    }
+
+     public function actionUpdatePihak($id,$cus_kd)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) ) {
+          $model->UPDATE_AT = date('Y-m-d');
+          $model->UPDATE_BY = Yii::$app->user->identity->username;
+          $model->save();
+              return $this->redirect(['review', 'id'=>$model->TERM_ID,'cus_kd'=>$model->CUST_KD_PARENT]);
+        } else {
+            return $this->renderAjax('set_pihak', [
+                'model' => $model,
+                'cus_data'=>self::aryData_Customers(),#array parent customers
+                'cus_dis'=>self::aryData_Dis(), #array parent distributor
+                'corp'=>self::aryData_Corp() #array corp
+            ]);
+        }
+    }
+
+     public function actionUpdateBudget($id,$cus_kd)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) ) {
+          $model->UPDATE_AT = date('Y-m-d');
+          $model->UPDATE_BY = Yii::$app->user->identity->username;
+          $model->save();
+              return $this->redirect(['review', 'id'=>$model->TERM_ID,'cus_kd'=>$model->CUST_KD_PARENT]);
+        } else {
+            return $this->renderAjax('set_budget', [
+                'model' => $model,
+                'cus_data'=>self::aryData_Customers(),
+                'cus_dis'=>self::aryData_Dis()
+            ]);
+        }
+    }
+
+
+    /**
+     * Finds the Termheader model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Termheader the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Termheader::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
 
 
       /**

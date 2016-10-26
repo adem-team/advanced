@@ -1,4 +1,5 @@
 <?php
+#extensions
 use kartik\helpers\Html;
 use yii\widgets\DetailView;
 use kartik\grid\GridView;
@@ -15,6 +16,7 @@ use kartik\daterange\DateRangePicker;
 use yii\db\ActiveRecord;
 use yii\data\ArrayDataProvider;
 
+# namespace models
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Termcustomers;
 use lukisongroup\master\models\Distributor;
@@ -25,10 +27,6 @@ use lukisongroup\hrd\models\Corp;
 $this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'Trading Terms ');
-
-//print_r($model[0]);
-
-//echo $model[0]->NmDis;
 ?>
 <div class="content" >
 	<!-- HEADER !-->
