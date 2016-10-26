@@ -22,8 +22,8 @@ MapAsset::register($this);
      var infowindow = new google.maps.InfoWindow();
 
    /*data json*/
-    $.getJSON('http://www.lukisongroup.com/master/customers/map', function(json) {
-
+    $.getJSON('http://lukisongroup.com/master/customers/map', function(json) {
+		//public_markers =  JSON.parse(json);
      for (var i in public_markers)
      {
        public_markers[i].setMap(null);
