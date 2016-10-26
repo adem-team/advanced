@@ -230,6 +230,27 @@ $this->title = Yii::t('app', 'Trading Terms ');
 			}
 	}
 
+	/**
+	 * LINK  Note
+	 * @author wawan  
+     * @since 1.2
+	*/
+	function PoNote($kd){
+			$title = Yii::t('app','');
+			$options = [ 'id'=>'rqt-note-id',
+						  'data-toggle'=>"modal",
+						  'data-target'=>"#rqt-note-review",
+						  'class'=>'btn btn-info btn-xs',
+						  'title'=>'RQT Note'
+			];
+			$icon = '<span class="fa fa-plus fa-lg"></span>';
+			$label = $icon . ' ' . $title;
+			$url = Url::toRoute(['/purchasing/request-term/update-note','id'=>$kd]);
+			$content = Html::a($label,$url, $options);
+			return $content;
+	}
+
+
 	/*
 	 * Tombol Approval Item
 	 * Permission Auth2 | Auth3
@@ -746,6 +767,24 @@ $this->title = Yii::t('app', 'Trading Terms ');
 		?>
 	</div>
 
+	<!-- PO Note !-->
+	<div  class="row">
+		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
+			<dt><b>General Notes :</b></dt>
+			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
+			<div>
+				<div style="float:right;text-align:right;">
+					 <?= PoNote($roHeader->KD_RIB) ?>
+				</div>
+				<div style="margin-left:5px">
+					<dd><?= $roHeader->NOTE ?></dd>
+					<dt>Invoice exchange can be performed on Monday through Tuesday time of 09:00AM-16:00PM</dt>
+				</div>
+			</div>
+			<hr style="height:1px;margin-top: 1px;">
+		</div>
+	</div>
+
 	<!-- Signature !-->
 	<div  class="col-md-12">
 		<div  class="row" >
@@ -944,6 +983,32 @@ $this->title = Yii::t('app', 'Trading Terms ');
 		});
 
 	",$this::POS_READY);
+
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#rqt-note-review').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+		",$this::POS_READY);
+
+	Modal::begin([
+		'id' => 'rqt-note-review',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-pencil-square-o"></div><div><h4 class="modal-title">Note</h4></div>',
+		//'size' => 'modal-lg',
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(131, 160, 245, 0.5)',
+			]
+	]);
+	Modal::end();
 
 	/*SIGN AUTHOR1*/
 	$this->registerJs("

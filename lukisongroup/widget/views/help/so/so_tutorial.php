@@ -22,3 +22,4 @@ Berikut Cara Pembuatan Sales Order (SO) :</br>
 <?php  echo $imgSo5;?><p></br>
 6.	Setelah Signature di isi SO yang kita buat telah selesai. Untuk selanjutnya tinggal menunggu <b>“Checked dan Approved SO”</b> oleh bagian terkait.</br>
 <?php  echo $imgSo6;?><p></br>
+_END_

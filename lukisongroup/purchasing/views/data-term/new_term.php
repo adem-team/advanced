@@ -5,32 +5,17 @@ use yii\widgets\ActiveForm;
 use kartik\widgets\Select2;
 use kartik\money\MaskMoney;
 use kartik\label\LabelInPlace;
-
-/*namespace models*/
-use lukisongroup\master\models\Customers;
-use lukisongroup\hrd\models\Corp;
-use lukisongroup\master\models\Distributor;
-use lukisongroup\master\models\Terminvest;
 use kartik\widgets\DatePicker;
 
+/*namespace models*/
+use lukisongroup\master\models\Terminvest;
 
 /* @var $this yii\web\View */
-/* @var $model lukisongroup\master\models\Termcustomers */
+/* @var $model lukisongroup\purchasing\data_term\models\Termheader */
 /* @var $form yii\widgets\ActiveForm */
 
-$data = Customers::find()->where('CUST_KD = CUST_GRP')->all();
-$to = "CUST_KD";
-$from = "CUST_NM";
-
-$data1 = Corp::find()->all();
-$to1 = "CORP_ID";
-$from1 = "CORP_NM";
-
-$data2 = Distributor::find()->all();
-$to2 = 'KD_DISTRIBUTOR';
-$from2 = "NM_DISTRIBUTOR";
-
-$config = ['template'=>"{input}\n{error}\n{hint}"];
+  
+$config = ['template'=>"{input}\n{error}\n{hint}"]; #config kartik label place
 
 
 ?>
@@ -44,20 +29,20 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
     <?= $form->field($model, 'CUST_KD_PARENT')->widget(Select2::classname(),[
   		'options'=>[  'placeholder' => 'Select Customers parent ...'
   		],
-  		'data' =>$model->dataarray($data,$to,$from)
+  		'data' =>$parent_customers
   	]);?>
 
 
     <?= $form->field($model, 'PRINCIPAL_KD')->widget(Select2::classname(),[
   		'options'=>[  'placeholder' => 'Select Nama Principal ...'
   		],
-  		'data' =>$model->dataarray($data1,$to1,$from1)
+  		'data' =>$data_corp
   	]);?>
 
     <?= $form->field($model, 'DIST_KD')->widget(Select2::classname(),[
       'options'=>[  'placeholder' => 'Select Nama Distributor ...'
       ],
-      'data' =>$model->dataarray($data2,$to2,$from2)
+      'data' =>$data_distributor
     ]);?>
 
 

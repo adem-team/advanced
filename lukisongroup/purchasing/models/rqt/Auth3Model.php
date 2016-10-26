@@ -87,6 +87,7 @@ class Auth3Model extends Model
 	public function auth3_saved(){
 		if ($this->validate()) {
 			$rtHeader_3 = Requesttermheader::find()->where(['KD_RIB' =>$this->kdrib])->one();
+      $rtdetail = Rtdetail::find()->where(['KD_RIB'=>$this->kdrib])->one();#detail
 			$rtSignStt_3 = Requesttermstatus::find()->where(['KD_RIB'=>$this->kdrib,'ID_USER'=>$this->getProfile()->EMP_ID])->one();
 				$profile=Yii::$app->getUserOpt->Profile_user();
 				$rtHeader_3->STATUS = $this->status;
@@ -101,6 +102,8 @@ class Auth3Model extends Model
 				$rtHeader_3->SIG3_NM = $profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;
 				$rtHeader_3->SIG3_TGL = date('Y-m-d');
 			if ($rtHeader_3->save()) {
+        $rtdetail->STATUS = 102;
+        $rtdetail->save();
 					if (!$rtSignStt_3){
 						$rtHeaderStt_3 = new Requesttermstatus;
 						$rtHeaderStt_3->KD_RIB = $this->kdrib;

@@ -1,4 +1,5 @@
 <?php
+#extensions
 use kartik\helpers\Html;
 use yii\widgets\DetailView;
 use kartik\grid\GridView;
@@ -26,12 +27,8 @@ use lukisongroup\purchasing\models\data_term\Rtdetail;
 use lukisongroup\purchasing\models\data_term\Requesttermheader;
 
 
-//print_r($dataProviderBudget->getModels());
-
-//echo $model[0]->NmDis;
 
 $id = $_GET['id'];
-
 
 
 	/*
@@ -48,6 +45,74 @@ $id = $_GET['id'];
 		$icon = '<span class="glyphicon glyphicon-search"></span>';
 		$label = $icon . ' ' . $title;
 		$url = Url::toRoute(['/purchasing/data-term/account-investment','id'=>$id_term,'cus_kd'=>$cust_kd]);
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
+
+	/*
+	 * Tombol Edit pihak
+	*/
+	function tombolEditPihak($id_term,$cust_kd){
+		$title = Yii::t('app', '');
+		$options = ['id'=>'edit-pihak',
+					'data-toggle'=>"modal",
+					'data-target'=>"#pihak",
+					'class'=>'btn btn-info btn-xs',
+		];
+		$icon = '<span class="glyphicon glyphicon-save"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/data-term/update-pihak','id'=>$id_term,'cus_kd'=>$cust_kd]);
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
+
+	/*
+	 * Tombol Edit tanggal
+	*/
+	function tombolEditTgl($id_term,$cust_kd){
+		$title = Yii::t('app', '');
+		$options = ['id'=>'edit-tgl',
+					'data-toggle'=>"modal",
+					'data-target'=>"#tgl",
+					'class'=>'btn btn-info btn-xs',
+		];
+		$icon = '<span class="glyphicon glyphicon-save"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/data-term/update-tgl','id'=>$id_term,'cus_kd'=>$cust_kd]);
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
+
+	/*
+	 * Tombol Edit target
+	*/
+	function tombolEditTarget($id_term,$cust_kd){
+		$title = Yii::t('app', '');
+		$options = ['id'=>'edit-target',
+					'data-toggle'=>"modal",
+					'data-target'=>"#target",
+					'class'=>'btn btn-info btn-xs',
+		];
+		$icon = '<span class="glyphicon glyphicon-save"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/data-term/update-target','id'=>$id_term,'cus_kd'=>$cust_kd]);
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
+
+	/*
+	 * Tombol Edit budget
+	*/
+	function tombolEditBudgetawal($id_term,$cust_kd){
+		$title = Yii::t('app', '');
+		$options = ['id'=>'edit-budget',
+					'data-toggle'=>"modal",
+					'data-target'=>"#budget",
+					'class'=>'btn btn-info btn-xs',
+		];
+		$icon = '<span class="glyphicon glyphicon-save"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/data-term/update-budget','id'=>$id_term,'cus_kd'=>$cust_kd]);
 		$content = Html::a($label,$url, $options);
 		return $content;
 	}
@@ -456,7 +521,7 @@ $id = $_GET['id'];
 	<!-- PARTIES/PIHAK !-->
 	<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" style="font-family: tahoma ;font-size: 8pt">
 		<div>
-			<?php //echo pihak($model); ?>
+			<?php echo tombolEditPihak($model['TERM_ID'],$cus_kd); ?>
 		</div>
 		<dl>
 			<dt><u><b>PARTIES/PIHAK BERSANGKUTAN :</b></u></dt>
@@ -474,7 +539,7 @@ $id = $_GET['id'];
 	<!-- PERIODE/JANGKA WAKTU !-->
 	<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" style="font-family: tahoma ;font-size: 8pt">
 		<div>
-			<?php //echo periode($model); ?>
+			<?php echo tombolEditTgl($model['TERM_ID'],$cus_kd); ?>
 		</div>
 		<dl>
 			<dt><u><b>PERIODE/JANGKA WAKTU :</b></u></dt>
@@ -489,7 +554,7 @@ $id = $_GET['id'];
 	<!-- TARGET !-->
 	<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" style="font-family: tahoma ;font-size: 8pt">
 		<div>
-			<?php //echo target($model); ?>
+			<?php echo tombolEditTarget($model['TERM_ID'],$cus_kd); ?>
 		</div>
 		<dl>
 			<dt style="width:80px;"><u><b>TARGET :</b></u></dt>
@@ -545,18 +610,18 @@ $id = $_GET['id'];
 	<!-- BUDGET !-->
 	<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" style="font-family: tahoma ;font-size: 8pt">
 		<div>
-			<?php //echo target($model); ?>
+			<?php echo tombolEditBudgetawal($model['TERM_ID'],$cus_kd); ?>
 		</div>
 		<dl>
 			<dt style="width:80px;"><u><b>BUDGET :</b></u></dt><dd></dd>
 			<dt style="width:120px; float:left;"> Budget Awal</dt>
-			<dd>:  <?= $modal_awal ?> </dd>
+			<dd>: Rp. <?= number_format($modal_awal,2) ?> </dd>  
 			<dt style="width:120px; float:left;"> Budget Tambahan</dt>
-			<dd>:<?= $budget ?></dd>
+			<dd>:Rp. <?= $budget ?></dd>
 			<dt style="width:120px; float:left;" > Total Inves</dt>
-			<dd>: <?= $total_invest ?></dd>
+			<dd>:Rp. <?= $total_invest ?></dd>
 			<dt style="width:120px; float:left;" > Budget Sisa</dt>
-			<dd>:<?= number_format($budget_sisa,2) ?></dd>
+			<dd>:Rp. <?= number_format($budget_sisa,2) ?></dd>
 		</dl>
 	</div>
 </div>
@@ -571,6 +636,7 @@ $id = $_GET['id'];
 	<?=$gvDetalPlanActual;?>
 </div>
 <?php
+#js modal account
 $this->registerJs("
 	 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
 	 $('#account-invest-plan').on('show.bs.modal', function (event) {
@@ -588,6 +654,112 @@ $this->registerJs("
 ",$this::POS_READY);
 	Modal::begin([
 			'id' => 'account-invest-plan',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Account</b></h4></div>',
+		// 'size' => Modal::SIZE_LARGE,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+		]
+	]);
+	Modal::end();
+
+
+	#js modal pihak
+	$this->registerJs("
+	 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+	 $('#pihak').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget)
+		var modal = $(this)
+		var title = button.data('title')
+		var href = button.attr('href')
+		//modal.find('.modal-title').html(title)
+		modal.find('.modal-body').html('<i class=\"fa fa-dolar fa-spin\"></i>')
+		$.post(href)
+			.done(function( data ) {
+				modal.find('.modal-body').html(data)
+			});
+		})
+",$this::POS_READY);
+	Modal::begin([
+			'id' => 'pihak',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Account</b></h4></div>',
+		// 'size' => Modal::SIZE_LARGE,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+		]
+	]);
+	Modal::end();
+
+	#js modal tgl
+	$this->registerJs("
+	 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+	 $('#tgl').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget)
+		var modal = $(this)
+		var title = button.data('title')
+		var href = button.attr('href')
+		//modal.find('.modal-title').html(title)
+		modal.find('.modal-body').html('<i class=\"fa fa-dolar fa-spin\"></i>')
+		$.post(href)
+			.done(function( data ) {
+				modal.find('.modal-body').html(data)
+			});
+		})
+",$this::POS_READY);
+	Modal::begin([
+			'id' => 'tgl',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Account</b></h4></div>',
+		// 'size' => Modal::SIZE_LARGE,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+		]
+	]);
+	Modal::end();
+
+
+	#js modal target
+	$this->registerJs("
+	 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+	 $('#target').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget)
+		var modal = $(this)
+		var title = button.data('title')
+		var href = button.attr('href')
+		//modal.find('.modal-title').html(title)
+		modal.find('.modal-body').html('<i class=\"fa fa-dolar fa-spin\"></i>')
+		$.post(href)
+			.done(function( data ) {
+				modal.find('.modal-body').html(data)
+			});
+		})
+",$this::POS_READY);
+	Modal::begin([
+			'id' => 'target',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Account</b></h4></div>',
+		// 'size' => Modal::SIZE_LARGE,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+		]
+	]);
+	Modal::end();
+
+	#js modal budget
+	$this->registerJs("
+	 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+	 $('#budget').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget)
+		var modal = $(this)
+		var title = button.data('title')
+		var href = button.attr('href')
+		//modal.find('.modal-title').html(title)
+		modal.find('.modal-body').html('<i class=\"fa fa-dolar fa-spin\"></i>')
+		$.post(href)
+			.done(function( data ) {
+				modal.find('.modal-body').html(data)
+			});
+		})
+",$this::POS_READY);
+	Modal::begin([
+			'id' => 'budget',
 			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Account</b></h4></div>',
 		// 'size' => Modal::SIZE_LARGE,
 		'headerOptions'=>[

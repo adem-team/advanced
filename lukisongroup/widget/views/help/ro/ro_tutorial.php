@@ -19,9 +19,10 @@ Berikut Cara Pembuatan Request Order (RO) :</br>
 <?php  echo $imgRo3;?><p></br>
 4.	Checked <b>“ Search”</b> (Jika ingin membuat RO yang sudah ada) dan Pilih <b>“Nama Barang, Request Quantity, Satuan Barang, Informasi (jika diperlukan)”.</b> Lalu Klik <b>“Create”.</b></br>
 <?php  echo $imgRo4;?><p></br>
-5.	Setelah RO selesai dibuat selanjutnya klik <b>“Sign Here”</b> di kolom Created untuk memasukan Signature untuk selanjutnya di cek oleh bagian terkait.
+5.	Setelah RO selesai dibuat selanjutnya klik <b>“Sign Here”</b> di kolom Created untuk memasukan Signature untuk selanjutnya di cek oleh bagian terkait.</br>
 <?php  echo $imgRo5;?><p></br>
 6.	Pilih <b>“Employe Cc”</b> (User yang akan mengecek RO) serta masukan <b>"Password Signature”</b>, lalu klik <b>“login”</b></br>
 <?php  echo $imgRo6;?><p></br>
 7.	Setelah Signature di isi RO yang kita buat telah selesai. Untuk selanjutnya tinggal menunggu <b>“Checked dan Approved RO”</b> oleh bagian terkait.</br>
 <?php  echo $imgRo7;?><p></br>
+_END_

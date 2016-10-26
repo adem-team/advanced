@@ -24,7 +24,7 @@
 				['url' => '#sec-1-3', 'label' => 'Request Order', 'content' => $ro_tutorial],
 				['url' => '#sec-1-4', 'label' => 'Sales Order', 'content' => $so_tutorial],
 				['url' => '#sec-1-5', 'label' => 'PO Normal', 'content' => $po_normal_tutorial],
-				['url' => '#sec-1-6', 'label' => 'PO Plus', 'content' => $content],
+				['url' => '#sec-1-6', 'label' => 'PO Plus', 'content' => $po_plus_tutorial],
 			],
 		],
 		[

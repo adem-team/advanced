@@ -214,11 +214,12 @@ class RequestTermController extends Controller
     }
   }
 
-  public function actionAddNewInvest($kd)
+  public function actionAddNewInvest($kd,$term_id)
   {
     # code...
        $model = new Rtdetail();
     if ($model->load(Yii::$app->request->post())) {
+          $model->TERM_ID = $term_id; 
           $model->KD_RIB = $kd;
           $model->ID_INVEST = $model->INVESTASI_TYPE;
           $model->save();
@@ -1653,6 +1654,29 @@ class RequestTermController extends Controller
      * @param string $id
      * @return mixed
      */
+    public function actionUpdateNote($id)
+    {
+        $model = $this->findModel($id);
+
+        $term_id = $model->TERM_ID;
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['/purchasing/request-term/edit?kd='.$id]);
+        } else {
+            return $this->renderAjax('note', [
+                'model' => $model,
+                'header'=>$term_id
+            ]);
+        }
+    }
+
+
+      /**
+     * Updates an existing Requestorder model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param string $id
+     * @return mixed
+     */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
@@ -1705,6 +1729,22 @@ class RequestTermController extends Controller
 
     /**
      * Finds the Requestorder model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return Requestorder the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModeldetail($id)
+    {
+        if (($model = Rtdetail::find(['KD_RIB'=>$id])) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the Requesttermheader model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
      * @return Requestorder the loaded model

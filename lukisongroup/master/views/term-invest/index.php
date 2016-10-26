@@ -6,7 +6,7 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
-/* @var $searchModel lukisongroup\master\models\TermcustomersSearch */
+/* @var $searchModel lukisongroup\master\models\TermInvest */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
@@ -129,18 +129,10 @@ $gridColumns = [
     [ #action column
       'class'=>'kartik\grid\ActionColumn',
       'dropdown' => true,
-      'template' => '{view}{update}',
+      'template' => '{update}',
       'dropdownOptions'=>['class'=>'pull-right dropup'],
       'dropdownButton'=>['class'=>'btn btn-default btn-xs'], #set css dropdown button
       'buttons' => [
-          'view' =>function($url, $model, $key){
-              return  '<li>' .Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'View'),
-                            ['/master/term-invest/view','id'=>$model->ID],[
-                            'data-toggle'=>"modal",
-                            'data-target'=>"#modal-view",
-                            // 'data-title'=> $model->ID_TERM,
-                            ]). '</li>' . PHP_EOL;
-          },
           'update' =>function($url, $model, $key){
               return  '<li>' . Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'Update'),
                             ['/master/term-invest/update','id'=>$model->ID],[
@@ -151,7 +143,7 @@ $gridColumns = [
           },
 
               ],
-              'headerOptions'=>[
+      'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
           'width'=>'150px',
@@ -236,37 +228,10 @@ $this->registerJs("
 ",$this::POS_READY);
   Modal::begin([
       'id' => 'modal-create',
-  'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+  'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Items Investasi</h4></div>',
   'headerOptions'=>[
       'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
   ],
   ]);
   Modal::end();
 
-
-/* Js modal 
-  * JS modal view
-*/
-  $this->registerJs("
-     $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-     $('#modal-view').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget)
-      var modal = $(this)
-      var title = button.data('title')
-      var href = button.attr('href')
-      //modal.find('.modal-title').html(title)
-      modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-      $.post(href)
-        .done(function( data ) {
-          modal.find('.modal-body').html(data)
-        });
-      })
-  ",$this::POS_READY);
-    Modal::begin([
-        'id' => 'modal-view',
-    'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
-    'headerOptions'=>[
-        'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
-    ],
-    ]);
-    Modal::end();
