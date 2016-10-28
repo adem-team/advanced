@@ -21,7 +21,9 @@ use yii\widgets\ActiveForm;
 use lukisongroup\purchasing\models\rqt\Requesttermheader;
 use lukisongroup\purchasing\models\rqt\RequesttermheaderSearch;
 use lukisongroup\purchasing\models\rqt\Rtdetail;
+use lukisongroup\purchasing\models\rqt\Arsipterm;
 use lukisongroup\purchasing\models\data_term\Termheader;
+use lukisongroup\purchasing\models\data_term\Termdetail;
 use lukisongroup\purchasing\models\rqt\RtdetailSearch;
 
 use lukisongroup\purchasing\models\rqt\AdditemValidation;
@@ -41,6 +43,7 @@ use lukisongroup\sistem\models\Userlogin;
 use lukisongroup\purchasing\models\rqt\Validateitem;
 use lukisongroup\hrd\models\Dept;
 use lukisongroup\hrd\models\Corp;
+use yii\web\UploadedFile;
 
 // use lukisongroup\hrd\models\Employe;
 
@@ -197,12 +200,30 @@ class RequestTermController extends Controller
         $model->save();
         $term_invest->KD_RIB = $model->KD_RIB;
         $term_invest->INVESTASI_TYPE = $term_invest->ID_INVEST;
-        $term_invest->INVESTASI_PROGRAM = $model->NOTE;
         $term_invest->CREATED_AT = date('Y-m-d');
         $term_invest->CREATED_BY = Yii::$app->user->identity->username;
         // $term_invest->ID_INVEST = $term_invest->ID_INVEST;
         $term_invest->TERM_ID = $cari_term ;
-        $term_invest->save();
+        if($term_invest->save())
+        {
+            $cari_account = Termdetail::find()->where(['TERM_ID'=>$model->TERM_ID,'INVES_ID'=>$term_invest->ID_INVEST])->andwhere(['<>','STATUS',2])->one();
+            if(!$cari_account)
+            {
+              $termdetail = new Termdetail();
+              $termdetail->CUST_KD_PARENT = $model->CUST_ID_PARENT;
+              $termdetail->INVES_ID = $term_invest->INVESTASI_TYPE;
+              $termdetail->INVES_TYPE =  $termdetail->INVES_ID;
+              $termdetail->TERM_ID = $model->TERM_ID;
+              $termdetail->CORP_ID = $model->KD_CORP;
+              $termdetail->STATUS  = 2;
+              $termdetail->CREATE_BY  = Yii::$app->user->identity->username;
+              $termdetail->CREATE_AT = date('Y-m-d');
+              $termdetail->save();
+            }
+            
+        }
+       
+        
 
         	return $this->redirect(['/purchasing/request-term/edit?kd='.$model->KD_RIB]);
       } else {
@@ -214,7 +235,7 @@ class RequestTermController extends Controller
     }
   }
 
-  public function actionAddNewInvest($kd,$term_id)
+  public function actionAddNewInvest($kd,$term_id,$cust_kd)
   {
     # code...
        $model = new Rtdetail();
@@ -222,7 +243,26 @@ class RequestTermController extends Controller
           $model->TERM_ID = $term_id; 
           $model->KD_RIB = $kd;
           $model->ID_INVEST = $model->INVESTASI_TYPE;
-          $model->save();
+          if($model->save())
+          {
+
+             $cari_account = Termdetail::find()->where(['TERM_ID'=>$model->TERM_ID,'INVES_ID'=>$model->ID_INVEST])->andwhere(['<>','STATUS',2])->one();
+             if(!$cari_account)
+             {
+                   $termdetail = new Termdetail();
+                    $termdetail->CUST_KD_PARENT = $cust_kd;
+                    $termdetail->INVES_ID = $model->INVESTASI_TYPE;
+                    $termdetail->INVES_TYPE =  $termdetail->INVES_ID;
+                    $termdetail->TERM_ID = $model->TERM_ID;
+                    $termdetail->CORP_ID = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
+                    $termdetail->STATUS  = 2;
+                    $termdetail->CREATE_BY  = Yii::$app->user->identity->username;
+                    $termdetail->CREATE_AT = date('Y-m-d');
+                    $termdetail->save();
+             }
+
+             
+          }
         return $this->redirect(['/purchasing/request-term/edit?kd='.$model->KD_RIB]);
     } else {
     return $this->renderAjax('_new_invest', [
@@ -1527,6 +1567,47 @@ class RequestTermController extends Controller
     $to=[$usersign1,$usercc,$user_dephead];
 
     \Yii::$app->kirim_email->pdf($contentMail,'RO',$to,'Request-Order',$contentMailAttachBody);
+
+    }
+
+    /*
+      *convert base 64 image
+      *@author:wawan since 1.0
+    */
+    public function saveimage($base64)
+    {
+      $base64 = str_replace('data:image/jpg;base64,', '', $base64);
+      $base64 = base64_encode($base64);
+      $base64 = str_replace(' ', '+', $base64);
+
+      return $base64;
+
+    }
+
+
+
+    public function actionUploadTerm($id,$trm_id)
+    {
+
+      $arsip = new Arsipterm();
+
+    if ($arsip->load(Yii::$app->request->post())) {
+          $data = UploadedFile::getInstances($arsip, 'IMG_BASE64');
+
+
+          $base64 = self::saveimage(file_get_contents($data[0]->tempName)); //call function
+         
+          $arsip->IMG_BASE64 = $base64;
+          $arsip->TERM_ID = $trm_id;
+          $arsip->KD_RIB = $id;
+          $arsip->save();
+     
+              return $this->redirect(['/purchasing/request-term/edit?kd='.$arsip->KD_RIB]);
+        } else {
+            return $this->renderAjax('arsip_term', [
+                    'arsip' => $arsip,
+                  ]);
+        }
 
     }
 

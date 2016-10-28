@@ -17,9 +17,11 @@ use yii\widgets\Pjax;
 use kartik\mpdf\Pdf;
 use zyx\phpmailer\Mailer;
 use yii\widgets\ActiveForm;
+use yii\web\UploadedFile;
 
 /* namespace models */
 use lukisongroup\purchasing\models\data_term\Termheader;
+use lukisongroup\purchasing\models\rqt\Arsipterm;
 use lukisongroup\master\models\Terminvest;
 use lukisongroup\master\models\Customers;
 use lukisongroup\purchasing\models\data_term\TermheaderSearch;
@@ -128,6 +130,46 @@ class DataTermController extends Controller
         ]);
       }
     }
+
+      /*
+      *convert base 64 image
+      *@author:wawan since 1.0
+    */
+    public function saveimage($base64)
+    {
+      $base64 = str_replace('data:image/jpg;base64,', '', $base64);
+      $base64 = base64_encode($base64);
+      $base64 = str_replace(' ', '+', $base64);
+
+      return $base64;
+
+    }
+
+
+     public function actionUploadTerm($trm_id,$cus_kd)
+    {
+
+      $arsip = new Arsipterm();
+
+    if ($arsip->load(Yii::$app->request->post())) {
+          $data = UploadedFile::getInstances($arsip, 'IMG_BASE64');
+
+
+          $base64 = self::saveimage(file_get_contents($data[0]->tempName)); //call function
+         
+          $arsip->IMG_BASE64 = $base64;
+          $arsip->TERM_ID = $trm_id;
+          $arsip->save();
+     
+          return $this->redirect(['review', 'id'=>$trm_id,'cus_kd'=>$cus_kd]);
+        } else {
+            return $this->renderAjax('arsip_data_term', [
+                    'arsip' => $arsip,
+                  ]);
+        }
+
+    }
+
 
    /**
      * Index

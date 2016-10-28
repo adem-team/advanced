@@ -285,6 +285,26 @@ $this->title = Yii::t('app', 'Trading Terms ');
 		}
 	}
 
+		/**
+	 * LINK  upload
+	 * @author wawan  
+     * @since 1.2
+	*/
+	function Upload($kd){
+			$title = Yii::t('app','');
+			$options = [ 'id'=>'rqt-upload-id',
+						  'data-toggle'=>"modal",
+						  'data-target'=>"#rqt-upload-review",
+						  'class'=>'btn btn-info btn-xs',
+						  'title'=>'Upload'
+			];
+			$icon = '<span class="fa fa-cloud-upload"></span>';
+			$label = $icon . ' ' . $title;
+			$url = Url::toRoute(['/purchasing/request-term/upload-term','id'=>$kd->KD_RIB,'trm_id'=>$kd->TERM_ID]);
+			$content = Html::a($label,$url, $options);
+			return $content;
+	}
+
 	/*
 	 * Tombol add Item Barang baru
 	 * permission crate Ro
@@ -303,7 +323,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 				];
 				$icon1 = '<span class="fa fa-edit fa-xs"></span>';
 				$label1 = $icon1 . ' ' . $title1;
-				$url1 = Url::toRoute(['/purchasing/request-term/add-new-invest','kd'=>$kd,'term_id'=>$roHeader->TERM_ID]);
+				$url1 = Url::toRoute(['/purchasing/request-term/add-new-invest','kd'=>$kd,'term_id'=>$roHeader->TERM_ID,'cust_kd'=>$roHeader->CUST_ID_PARENT]);
 				$content = Html::a($label1,$url1, $options1);
 				return $content;
 			}else{
@@ -382,9 +402,12 @@ $this->title = Yii::t('app', 'Trading Terms ');
 			  <dd>: <?php echo date('d-M-Y'); ?></dd>
 			  <dt style="width:100px; float:left;">Kode Rqt</dt>
 			  <dd>: <?php echo $roHeader->KD_RIB; ?></dd>
+			  <dt style="width:100px; float:left;">Customers</dt>
+			  <dd>: <?php echo $roHeader->cus->CUST_NM; ?></dd>
 			  <dt style="width:100px; float:left;">Departement</dt>
 			  <dd>:
 				<?php
+				
 					if (count($dept)!=0){
 						echo $dept->DEP_NM;
 					}else{
@@ -601,6 +624,9 @@ $this->title = Yii::t('app', 'Trading Terms ');
 							/* Attribute HARGA SUPPLIER */
 							'class'=>'kartik\grid\EditableColumn',
 							'attribute'=>'HARGA',
+							'value'=>function($model){
+									number_format($model->HARGA,2);
+								},
 							'label'=>'Price/Pcs',
 							'vAlign'=>'middle',
 							'hAlign'=>'center',
@@ -611,11 +637,11 @@ $this->title = Yii::t('app', 'Trading Terms ');
 							},
 							'editableOptions' => [
 								'header' => 'Update Price',
-								'inputType' => \kartik\editable\Editable::INPUT_TEXT,
+								'inputType' => \kartik\editable\Editable::INPUT_MONEY ,
 								'size' => 'sm',
-								'options' => [
-								  'pluginOptions' => ['min'=>0, 'max'=>50000]
-								]
+								// 'options' => [
+								//   'pluginOptions' => ['min'=>0, 'max'=>50000]
+								// ]
 							],
 							'headerOptions'=>[
 								'style'=>[
@@ -683,7 +709,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 							'mergeHeader'=>true,
 							'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
 								//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
-								return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
+								// return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
 							},
 							'editableOptions' => [
 								'header' => 'Update NoFaktur pajak',
@@ -719,7 +745,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 							'hAlign'=>'left',
 							'mergeHeader'=>true,
 							'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
-								return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0;
+								// return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0;
 							},
 							'editableOptions' => [
 								'header' => 'Update program',
@@ -813,6 +839,21 @@ $this->title = Yii::t('app', 'Trading Terms ');
 				</div>
 			</div>
 			<hr style="height:1px;margin-top: 1px;">
+		</div>
+	</div>
+
+	<!-- PO Note !-->
+	<div  class="row">
+		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
+			<div style="margin-bottom:2%;">
+
+				 <?= upload($roHeader) ?>
+				 
+					 <b> upload file</b>
+				
+			</div>
+			
+			
 		</div>
 	</div>
 
@@ -984,6 +1025,32 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	]);
 	Modal::end();
 
+
+$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#rqt-upload-review').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+		",$this::POS_READY);
+
+	Modal::begin([
+		'id' => 'rqt-upload-review',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-pencil-square-o"></div><div><h4 class="modal-title">Note</h4></div>',
+		//'size' => 'modal-lg',
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(131, 160, 245, 0.5)',
+			]
+	]);
+	Modal::end();
 
 	$this->registerJs("
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
