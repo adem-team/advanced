@@ -36,7 +36,10 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * Customer Visit, Stock.
 	 * Author piter novian [ptr.nov@gmail.com]
 	*/
-	$_indexSalesMd=$this->render('_indexSalesMd');
+	$_indexSalesMd=$this->render('_indexSalesMd',[
+		'searchModelIssue' => $searchModelIssue,
+		'dataProviderIssue' => $dataProviderIssue
+	]);
 
 	/**
 	 * Chart Distributor PO.

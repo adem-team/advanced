@@ -466,7 +466,13 @@ $gvNewPlan=GridView::widget([
                                         'data-pjax'=>true,
                                       'id'=>'delete-erp-planning',
                                               'class' => 'btn btn-danger'
-                                                          ]),
+                                                          ]).' '.
+          Html::a('<i class="fa fa-eye"></i> '.Yii::t('app', 'Check Week',
+                                   ['modelClass' => 'DraftPlan',]),'/master/draft-plan/check-week',[
+                                      'data-toggle'=>"modal",
+									  'data-target'=>"#modal-week-check",
+									  'class' => 'btn btn-info'
+								   ]),
         'showFooter'=>false,
   ],
   /* 'export' =>['target' => GridView::TARGET_BLANK],
@@ -572,10 +578,11 @@ $this->registerJs("
         'id' => 'modal-day-draft',
         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search-plus"></div><div><h4 class="modal-title">GEOGRAFIS FILTER To PLAN MAINTAIN</h4></div>',
         'headerOptions'=>[
-                'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+            'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
         ],
     ]);
     Modal::end();
+	
 	$this->registerJs("		
 		window.onload = function(){ 
 			 var s= document.getElementById('spn-gv-maintain');
@@ -585,5 +592,38 @@ $this->registerJs("
 			var s= document.getElementById('spn-gv-plan');
 			s.hidden=true;
 		});		
-     ",$this::POS_READY)
+     ",$this::POS_READY);
+	 
+	 
+	 
+	/**
+	* CHECK DAY OF WEEk EVEN/ODD [minggu ganjil/genap].
+	*/
+	$this->registerJs("		
+		$('#modal-week-check').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				//modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				})
+	",$this::POS_READY);
+		
+	Modal::begin([
+		'id' => 'modal-week-check',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search-plus"></div><div><h4 class="modal-title">CHECK GENJIL GENAP</h4></div>',
+		'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+		],
+	]);
+	Modal::end(); 
+	 
+	 
+	 
 ?>

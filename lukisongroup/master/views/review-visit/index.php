@@ -20,6 +20,10 @@ $this->params['breadcrumbs'][] = $this->title;
 		'dataProviderHeader1' => $dataProviderHeader1
 	]);	
 	$tabReviewWeekly=$this->render('_indexWeekly');	
+	$tabReviewIssue=$this->render('_indexIssue',[
+		'searchModelIssue' => $searchModelIssue,
+		'dataProviderIssue' => $dataProviderIssue
+	]);	
 		
 	if($tab==0){
 		$tab0=true;
@@ -40,11 +44,20 @@ $this->params['breadcrumbs'][] = $this->title;
 		$tab3=false;
 		$tab4=false;
 	}
-	
+	elseif($tab==3){
+		$tab0=false;
+		$tab1=false;
+		$tab2=false;
+		$tab3=true;
+		$tab4=false;
+	}
 	$items=[
 		[
 			'label'=>'<i class="fa fa-list-ol fa-2x"></i> Daily Detail','content'=>$tabReviewDetail,
 			'active'=>$tab0,
+		],
+		[
+			'label'=>'<i class="fa fa-list-ol fa-2x"></i> Issue Memo','content'=>$tabReviewIssue,
 		],
 		[
 			'label'=>'<i class="fa fa-newspaper-o fa-2x"></i> Weekly Detail','content'=>$tabReviewWeekly,

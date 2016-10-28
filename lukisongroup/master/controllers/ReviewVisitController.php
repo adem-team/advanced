@@ -15,6 +15,8 @@ use yii\filters\VerbFilter;
 use lukisongroup\master\models\ReviewHeaderSearch;
 use lukisongroup\master\models\CustomercallTimevisitSearch;
 use lukisongroup\master\models\ReviewInventorySearch;
+use lukisongroup\master\models\Issuemd;
+use lukisongroup\master\models\IssuemdSearch;
 
 class ReviewVisitController extends Controller
 {	
@@ -35,15 +37,30 @@ class ReviewVisitController extends Controller
 				$searchModel = new ReviewHeaderSearch([
 					'TGL'=>$setTgl
 				]);
+				$searchModelIssue = new IssuemdSearch([
+					'TGL'=>$setTgl
+				]);
+				
 				$dataProvider = $searchModel->searchHeaderReview(Yii::$app->request->queryParams);				
+				$dataProviderIssue = $searchModelIssue->search(Yii::$app->request->queryParams);				
 				return $this->render('index',[
 					'dataProviderHeader1'=>$dataProvider,
 					'searchModelHeader1'=>$searchModel,
+					'searchModelIssue' => $searchModelIssue,
+					'dataProviderIssue' => $dataProviderIssue
 				]);
 			}else{
 				return $this->redirect(['index?tgl='.$setTgl]);
 			}
 		};	
+		
+		$searchModel = new IssuemdSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 	public function actionAmbilTanggal()
 	{
@@ -549,5 +566,55 @@ class ReviewVisitController extends Controller
 			'aryProviderDetailStock'=>$aryProviderDetailStock,		
 			'aryProviderHeaderStock'=>$aryProviderHeaderStock			
 		]);
+	}
+	
+	/**
+	 * Button Search Set Date
+	 * @author piter
+	 * @since 1.1.0
+	 * @return date
+	*/
+	public function actionButtonSetDate(){
+		return $this->renderAjax('_formButtonSetDate', [
+			'model' => $modelSyncActual,
+		]);
+    }
+	public function actionIssueMemo($tgl){
+		
+		//$tgl=Yii::$app->getRequest()->getQueryParam('tgl');
+		$setTgl=$tgl!=''?$tgl:date('Y-m-d');
+		
+		$searchModelIssueMemo= new IssuemdSearch([
+			'TGL'=>$tgl//'2016-10-27'//$setTgl
+		]);
+		
+		$dataProviderIssue = $searchModelIssueMemo->search(Yii::$app->request->queryParams);				
+		// $adpIssue= new ArrayDataProvider([
+			// 'allModels'=>$dataProviderIssue->,
+			// 'pagination' => [
+				// 'pageSize' => 1000,
+			// ]
+		// ]);
+		
+		//$rslt= ArrayHelper::toArray($adpIssue);	
+		$posts = Issuemd::find()->where(['TGL'=>$setTgl])->all();
+		$data = ArrayHelper::toArray($posts, [
+			'lukisongroup\master\models\Issuemd' => [
+				'TGL',
+				'NM_CUSTOMER',
+				'NM_USER',
+				'ISI_MESSAGES'
+				// the key name in array result => property name
+				//'createTime' => 'created_at',
+				// the key name in array result => anonymous function
+				//'length' => function ($post) {
+					//return strlen($post->content);
+				//},
+			],
+		]);
+	
+		//print_r(ArrayHelper::toArray($dataProviderIssue->getModels()));
+		 \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+		return $data;
 	}
 }

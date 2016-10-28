@@ -16,7 +16,8 @@ use yii\filters\ContentNegotiator;
 use yii\web\Response;
 
 use lukisongroup\dashboard\models\RptesmGraph;
-
+use lukisongroup\dashboard\models\Issuemd;
+use lukisongroup\dashboard\models\IssuemdSearch;
 /**
  * DashboardController implements the CRUD actions for Dashboard model.
  */
@@ -107,7 +108,11 @@ class RptEsmController extends Controller
      */
     public function actionIndex()
     {
-		//print_r($this->graphEsmStockPerSku());
+		//if($this->checkRpt($setTgl)==0 or $this->checkRpt($setTgl)==1){			
+			$searchModelIssue = new IssuemdSearch([
+				'TGL'=>$setTgl
+			]);
+		//}
 		
 		$dataProvider_CustPrn= new ArrayDataProvider([
 			'key' => 'PARENT_ID',
@@ -118,11 +123,14 @@ class RptEsmController extends Controller
 		]);
 		$model_CustPrn=$dataProvider_CustPrn->getModels();
 		$count_CustPrn=$dataProvider_CustPrn->getCount();
+		$dataProviderIssue = $searchModelIssue->search(Yii::$app->request->queryParams);
 		return $this->render('index',[
 			'model_CustPrn'=>$model_CustPrn,
 			'count_CustPrn'=>$count_CustPrn,  // Condition  validation model_CustPrn offset array -ptr.nov-
 			'dataEsmStockAll'=>$this->graphEsmStockAll(),
-			'graphEsmStockPerSku'=>$this->graphEsmStockPerSku()
+			'graphEsmStockPerSku'=>$this->graphEsmStockPerSku(),
+			'searchModelIssue' => $searchModelIssue,
+			'dataProviderIssue' => $dataProviderIssue
 		]);
 
     }
