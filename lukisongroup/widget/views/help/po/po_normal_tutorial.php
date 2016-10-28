@@ -13,9 +13,11 @@ use yii\helpers\Html;
 	$imgPo10= Html::img('@web/widget/docHelp/img_po/PO10.PNG',  ['class' => 'pnjg', 'style'=>'width:900px;height:500px;']);
 	$imgPo11= Html::img('@web/widget/docHelp/img_po/PO11.PNG',  ['class' => 'pnjg', 'style'=>'width:400px;height:150px;']); 
 	$imgPo12= Html::img('@web/widget/docHelp/img_po/PO12.PNG',  ['class' => 'pnjg', 'style'=>'width:200px;height:200px;']);  
-	$imgPo13= Html::img('@web/widget/docHelp/img_po/PO13.PNG',  ['class' => 'pnjg', 'style'=>'width:450px;height:150px;']); 	
+	$imgPo13= Html::img('@web/widget/docHelp/img_po/PO13.PNG',  ['class' => 'pnjg', 'style'=>'width:450px;height:150px;']); 
+	$imgPo14= Html::img('@web/widget/docHelp/img_po/PO14.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:400px;']); 	
 ?>	
 <p>
+Penjelasan : PO yang di buat melalui proses RO (Request Order barang General) dan SO (Sales Order barang hasil Produksi).</br>
 Berikut Cara Pembuatan Purchase Order (PO) :</br>
 <p>
 1.	Klik <b>“Purchase Order”.</b></br>
@@ -46,4 +48,6 @@ Berikut tampilan PO awal yang akan di buat :</br>
 <?php  echo $imgPo12;?><p></br>
 13.	Setelah Signature di isi, PO yang kita buat telah selesai. Untuk selanjutnya tinggal menunggu <b>“Checked dan Approved PO”</b> oleh bagian terkait.</br>
 <?php  echo $imgPo13;?><p></br>
+14. Masukan Lampiran Penawaran dengan Klik pada tanda (+) berwarna biru pada <b>"Quotation/Penawaran"</b> lalu klik <b>“Drop files here to upload”</b> dan cari file (Attachment) yang ingin di upload, setelah selesai klik <b>“Close”</b> maka PO telah selesai dibuat.</br>
+<?php  echo $imgPo14;?><p></br>
 _END_

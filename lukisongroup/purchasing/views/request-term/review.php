@@ -571,21 +571,24 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					/* Attribute HARGA SUPPLIER */
 					'class'=>'kartik\grid\EditableColumn',
 					'attribute'=>'HARGA',
+					'value'=>function($model){
+						number_format($model->HARGA,2);
+					},
 					'label'=>'Price/Pcs',
 					'vAlign'=>'middle',
 					'hAlign'=>'center',
 					'mergeHeader'=>true,
-					'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
-						//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
-						return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
-					},
+					// 'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+					// 	//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
+					// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
+					// },
 					'editableOptions' => [
 						'header' => 'Update Price',
-						'inputType' => \kartik\editable\Editable::INPUT_TEXT,
+						'inputType' => \kartik\editable\Editable::INPUT_MONEY ,
 						'size' => 'sm',
-						'options' => [
-							'pluginOptions' => ['min'=>0, 'max'=>50000]
-						]
+						// 'options' => [
+						// 	'pluginOptions' => ['min'=>0, 'max'=>50000]
+						// ]
 					],
 					'headerOptions'=>[
 						'style'=>[

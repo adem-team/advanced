@@ -4,6 +4,7 @@ namespace lukisongroup\purchasing\models\rqt;
 
 use Yii;
 use lukisongroup\hrd\models\Employe;
+use lukisongroup\master\models\Customers;
 use lukisongroup\hrd\models\Dept;
 use lukisongroup\purchasing\models\rqt\Rtdetail;
 use lukisongroup\hrd\models\Corp;
@@ -66,6 +67,16 @@ class Requesttermheader extends \yii\db\ActiveRecord
     public function getDetro()
     {
         return $this->hasMany(Rtdetail::className(), ['KD_RIB' => 'KD_RIB']);
+    }
+
+    public function getCus()
+    {
+         return $this->hasOne(Customers::className(), ['CUST_KD' => 'CUST_ID_PARENT']);
+    }
+
+    public function Nmcus()
+    {
+            return $this->cus->CUST_NM;
     }
 
     public function getEmploye()

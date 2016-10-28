@@ -33,7 +33,7 @@
 			'icon' => 'play-circle',
 			'content' => $content,
 			'items' => [
-				['url' => '#sec-2-1', 'label' => 'Section 2.1', 'content' => $content],
+				['url' => '#sec-2-1', 'label' => 'Customer', 'content' => $customer],
 				['url' => '#sec-2-2', 'label' => 'Section 2.2', 'content' => $content],
 				['url' => '#sec-2-3', 'label' => 'Section 2.3', 'content' => $content],
 				['url' => '#sec-2-4', 'label' => 'Section 2.4', 'content' => $content],

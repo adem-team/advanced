@@ -40,7 +40,7 @@ $id = $_GET['id'];
 		$options = ['id'=>'account-invest',
 					'data-toggle'=>"modal",
 					'data-target'=>"#account-invest-plan",
-					'class' => 'btn btn-info btn-sm'
+					'class'=>'btn btn-info btn-xs',
 		];
 		$icon = '<span class="glyphicon glyphicon-search"></span>';
 		$label = $icon . ' ' . $title;
@@ -99,6 +99,26 @@ $id = $_GET['id'];
 		$content = Html::a($label,$url, $options);
 		return $content;
 	}
+	/**
+	 * LINK  upload
+	 * @author wawan  
+     * @since 1.2
+	*/
+	function Upload($id_term,$cust_kd){
+			$title = Yii::t('app','Upload File');
+			$options = [ 'id'=>'rqt-upload-id',
+						  'data-toggle'=>"modal",
+						  'data-target'=>"#rqt-upload-review",
+						  'class'=>'btn btn-info btn-xs',
+						  'title'=>'Upload'
+			];
+			$icon = '<span class="fa fa-cloud-upload"></span>';
+			$label = $icon . ' ' . $title;
+			$url = Url::toRoute(['/purchasing/data-term/upload-term','trm_id'=>$id_term,'cus_kd'=>$cust_kd]);
+			$content = Html::a($label,$url, $options);
+			return $content;
+	}
+
 
 	/*
 	 * Tombol Edit budget
@@ -124,7 +144,7 @@ $id = $_GET['id'];
 	function tombolActual($id_term){
 		$title = Yii::t('app', 'Actual Investment');
 		$options = ['id'=>'actual-invest',
-					'class' => 'btn btn-info btn-sm'
+					'class'=>'btn btn-info btn-xs',
 		];
 		$icon = '<span class="glyphicon glyphicon-search"></span>';
 		$label = $icon . ' ' . $title;
@@ -141,9 +161,9 @@ $id = $_GET['id'];
 		['ID' =>0, 'ATTR' =>['FIELD'=>'Namainvest','SIZE' => '50px','label'=>'Trade Investment','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>1, 'ATTR' =>['FIELD'=>'PERIODE_START','SIZE' => '10px','label'=>'Periode','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>2, 'ATTR' =>['FIELD'=>'BUDGET_PLAN','SIZE' => '10px','label'=>'Budget Plan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'BUDGET_ACTUAL','SIZE' => '10px','label'=>'Budget Actual','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		// ['ID' =>3, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'BUDGET_ACTUAL','SIZE' => '10px','label'=>'Budget Actual','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		// ['ID' =>5, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 	];
 	$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');
 	/*GRIDVIEW SERIAL ROWS*/
@@ -632,10 +652,37 @@ $id = $_GET['id'];
 		//print_r($model[0]->TERM_ID);
 	?>
 	<div style="margin-bottom:5px;margin-right:5px; float:left"><?=tombolInvest($model['TERM_ID'],$cus_kd);?></div>
-	<div style="margin-bottom:5px"><?=tombolActual($model->TERM_ID);?></div>
+	<div style="margin-bottom:5px"><?=tombolActual($model->TERM_ID);?>   <?=upload($model['TERM_ID'],$cus_kd);?></div>
+	
 	<?=$gvDetalPlanActual;?>
 </div>
 <?php
+$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#rqt-upload-review').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+		",$this::POS_READY);
+
+	Modal::begin([
+		'id' => 'rqt-upload-review',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-pencil-square-o"></div><div><h4 class="modal-title">Note</h4></div>',
+		//'size' => 'modal-lg',
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(131, 160, 245, 0.5)',
+			]
+	]);
+	Modal::end();
+
 #js modal account
 $this->registerJs("
 	 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
