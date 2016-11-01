@@ -20,8 +20,6 @@ use yii\widgets\ActiveForm;
 /* namespace models*/
 use lukisongroup\purchasing\models\rqt\Requesttermheader;
 use lukisongroup\purchasing\models\rqt\RequesttermheaderSearch;
-use lukisongroup\purchasing\models\rqt\DetailListSearch;
-use lukisongroup\purchasing\models\rqt\DetailList;
 use lukisongroup\purchasing\models\rqt\Rtdetail;
 use lukisongroup\purchasing\models\rqt\Arsipterm;
 use lukisongroup\purchasing\models\data_term\Termheader;
@@ -46,7 +44,6 @@ use lukisongroup\purchasing\models\rqt\Validateitem;
 use lukisongroup\hrd\models\Dept;
 use lukisongroup\hrd\models\Corp;
 use yii\web\UploadedFile;
-use lukisongroup\master\models\Customers;
 
 // use lukisongroup\hrd\models\Employe;
 
@@ -166,33 +163,6 @@ class RequestTermController extends Controller
 
     }
 
-    public function aryData_Customers(){ 
-        return ArrayHelper::map(Customers::find()->where('STATUS<>3')->all(), 'CUST_NM','CUST_NM');
-  }
-  public function aryData_invest($term_id){
-     return ArrayHelper::map(Termdetail::find()->where(['STATUS'=>2,'TERM_ID'=>$term_id])->all(), 'INVES_ID','namainvest');
-  }
-
-    public function actionListAll($kd,$term_id){
-        $model = new DetailList();
-       
-         if ($model->load(Yii::$app->request->post()) ) {
-             $model->TERM_ID = $term_id;
-            $model->KD_RIB = $kd;
-           $model->save();
-           
-        
-            return $this->redirect(['/purchasing/request-term/edit?kd='.$model->KD_RIB]);
-        } else {
-            return $this->renderAjax('list_store', [
-                'model' => $model,
-                'items' => self::aryData_Customers(),
-                'list_store'=>self::aryData_invest($term_id),
-            ]);
-        }
-
-    }
-
     /**
      * Creates a new Requestorder model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -232,8 +202,6 @@ class RequestTermController extends Controller
         $term_invest->INVESTASI_TYPE = $term_invest->ID_INVEST;
         $term_invest->CREATED_AT = date('Y-m-d');
         $term_invest->CREATED_BY = Yii::$app->user->identity->username;
-        $term_invest->PERIODE_START  = $model->PERIODE_START;
-        $term_invest->PERIODE_END =  $model->PERIODE_END;
         // $term_invest->ID_INVEST = $term_invest->ID_INVEST;
         $term_invest->TERM_ID = $cari_term ;
         if($term_invest->save())
@@ -250,8 +218,6 @@ class RequestTermController extends Controller
               $termdetail->STATUS  = 2;
               $termdetail->CREATE_BY  = Yii::$app->user->identity->username;
               $termdetail->CREATE_AT = date('Y-m-d');
-              $termdetail->PERIODE_START  = $model->PERIODE_START;
-              $termdetail->PERIODE_END =  $model->PERIODE_END;
               $termdetail->save();
             }
             
@@ -927,10 +893,6 @@ class RequestTermController extends Controller
      */
 	public function actionEdit($kd)
     {
-
-        /*inbox tab ||index*/
-        $searchModel1 = new DetailListSearch();
-        $dataProviderList = $searchModel1->search(Yii::$app->request->queryParams,$kd);
 		/*
 		 * Init Models
 		 * @author ptrnov  <piter@lukison.com>
@@ -965,7 +927,6 @@ class RequestTermController extends Controller
 			if (Yii::$app->request->post('hasEditable')) {
 				$id = Yii::$app->request->post('editableKey');
 				$model = Rtdetail::findOne($id);
-        $termdetail = Termdetail::find()->where(['TERM_ID'=>$model->TERM_ID,'INVES_ID'=>$model->ID_INVEST,'STATUS'=>2])->one();
 				$out = Json::encode(['output'=>'', 'message'=>'']);
 				$post = [];
 				$posted = current($_POST['Rtdetail']);
@@ -992,22 +953,6 @@ class RequestTermController extends Controller
           if (isset($posted['NOMER_FAKTURPAJAK'])) {
             $output = $model->NOMER_FAKTURPAJAK;
           }
-          if (isset($posted['PERIODE_START'])) {
-            $output = $model->PERIODE_START;
-          }
-           if (isset($posted['PERIODE_END'])) {
-            $output = $model->PERIODE_START;
-          }
-           if (isset($posted['PPN'])) {
-            $output = $model->PPN;
-            $termdetail->PPN = $model->PPN;
-            $termdetail->save();
-          }
-          if (isset($posted['PPH23'])) {
-            $output = $model->PPH23;
-            $termdetail->PPH23 = $model->PPH23;
-            $termdetail->save();
-          }
 					$out = Json::encode(['output'=>$output, 'message'=>'']);
 				}
 				// return ajax json encoded response and exit
@@ -1026,7 +971,6 @@ class RequestTermController extends Controller
 				'employ' => $employ,
 				'dept' => $dept,
 				'dataProvider'=>$detroProvider,
-        'dataProviderList'=>$dataProviderList
 			]);
 		}else{
 			return $this->redirect('index');
@@ -1105,9 +1049,6 @@ class RequestTermController extends Controller
 		]);
 		return $pdf->render();
 	}
-
-
-
 
 	/**
      * Tmp Cetak PDF Approvad

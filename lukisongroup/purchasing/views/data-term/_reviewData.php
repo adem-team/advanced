@@ -158,11 +158,11 @@ $id = $_GET['id'];
 	$attDinamik =[];
 	/*GRIDVIEW ARRAY FIELD HEAD*/
 	$headColomnEvent=[
-		['ID' =>0, 'ATTR' =>['FIELD'=>'Namainvest','SIZE' => '50px','label'=>'Trade Investment','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'PERIODE_START','SIZE' => '10px','label'=>'Periode','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'BUDGET_PLAN','SIZE' => '10px','label'=>'Budget Plan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'Namainvest','SIZE' => '50px','label'=>'Trade Investment','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>'true','filterType'=>'true','filterwarna'=>'249, 215, 100, 1']],
+		// ['ID' =>1, 'ATTR' =>['FIELD'=>'PERIODE_START','SIZE' => '10px','label'=>'Periode','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'BUDGET_PLAN','SIZE' => '10px','label'=>'Budget Plan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		// ['ID' =>3, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'BUDGET_ACTUAL','SIZE' => '10px','label'=>'Budget Actual','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'BUDGET_ACTUAL','SIZE' => '10px','label'=>'Budget Actual','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		// ['ID' =>5, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 	];
 	$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');
@@ -201,23 +201,29 @@ $id = $_GET['id'];
 					$connect = Yii::$app->db_esm;
 		
 					/*caculate ppn*/
-					 $sql_ppn = "select sum(PPN) as PPN from t0001header where TERM_ID='".$model->TERM_ID."' AND STATUS = 102 AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
+					 $sql_ppn = "select sum(PPN) as PPN from t0001detail where TERM_ID='".$model->TERM_ID."'  AND ID_INVEST='".$model->INVES_ID."' AND STATUS = 102 AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
           		     $total_ppn =  $connect->createCommand($sql_ppn)->queryScalar();
-					
 
+					
 					/*caculate harga*/
 		          	$total_sql = "select sum(HARGA) as harga from t0001detail where TERM_ID='".$model->TERM_ID."' and ID_INVEST='".$model->INVES_ID."' and STATUS = 102 and (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
 				  	$total_harga = Yii::$app->db_esm->createCommand($total_sql)->queryScalar();
 
 					/*caculate pph23*/
-					$sql_pph = "select sum(PPH23) as PPH23 from t0001header where TERM_ID='".$model->TERM_ID."' AND STATUS = 102 AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
+					$sql_pph = "select sum(PPH23) as PPH23 from t0001detail where TERM_ID='".$model->TERM_ID."'AND ID_INVEST='".$model->INVES_ID."' AND STATUS = 102 AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
           			$total_pph = $connect->createCommand($sql_pph)->queryScalar();
+
+          			#baris
+          			$sql_count = "select COUNT(PPN) as baris from t0001detail where TERM_ID='".$model->TERM_ID."'AND ID_INVEST='".$model->INVES_ID."'AND `STATUS` = 102  AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
+          			$total_count = $connect->createCommand($sql_count)->queryScalar();
+          			$persen = $total_count.'00';
+
 					
 
 					/*formula sub total*/
-					$hitung_ppn = ($total_harga*$total_ppn)/100;
-					$hitung_pph = ($total_harga*$total_pph)/100;
-					$sub_total = ($hitung_ppn + $total_harga)-$hitung_pph;
+					$hitung_ppn = ($total_harga*$total_ppn)/$persen;
+					$hitung_pph = ($total_harga*$total_pph)/$persen;
+					$sub_total = ($total_harga+$hitung_ppn)-$hitung_pph;
 					
 					 /* if subtotal equal null then number format using sub total*/
 
@@ -327,6 +333,44 @@ $id = $_GET['id'];
           ]
         ],
       ];
+		}elseif($value[$key]['FIELD'] == 'Namainvest'){
+			$attDinamik[]=[
+			'attribute'=>$value[$key]['FIELD'],
+			'label'=>$value[$key]['label'],
+			'filterType'=>GridView::FILTER_SELECT2,
+			'filter' =>$data_invest,
+		    'filterWidgetOptions'=>[
+		      'pluginOptions'=>['allowClear'=>true],
+		    ],
+    		'filterInputOptions'=>['placeholder'=>'Pilih'],
+			'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
+			'hAlign'=>'right',
+			'vAlign'=>'middle',
+			//'mergeHeader'=>true,
+			'noWrap'=>true,
+			'group'=>$value[$key]['GRP'],
+			'format'=>$value[$key]['FORMAT'],
+			'headerOptions'=>[
+					'style'=>[
+					'text-align'=>'center',
+					'width'=>$value[$key]['FIELD'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(74, 206, 231, 1)',
+					'background-color'=>'rgba('.$value[$key]['warna'].')',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>$value[$key]['align'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(13, 127, 3, 0.1)',
+				]
+			],
+		];
+
+
 		}else {
 			# code...
 			$attDinamik[]=[
@@ -361,7 +405,50 @@ $id = $_GET['id'];
 				],
 			];
 		}
+			
 	};
+
+	/*GRIDVIEW ARRAY ACTION*/
+			$actionClass='btn btn-info btn-xs';
+			$actionLabel='Action';
+			$attDinamik[]=[
+				'class'=>'kartik\grid\ActionColumn',
+				'dropdown' => true,
+				'template' => '{delete}',
+				'dropdownOptions'=>['class'=>'pull-right dropup','style'=>['disable'=>true]],
+				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
+				'dropdownButton'=>[
+					'class' => $actionClass,
+					'label'=>$actionLabel,
+					'caret'=>'<span class="caret"></span>',
+				],
+				 'buttons' => [
+					 'delete' =>function($url, $model, $key)use($cus_kd){
+							 return  '<li>' . Html::a('<span class="fa fa-trash fa-dm"></span>'.Yii::t('app', 'Delete'),
+														 ['delete-header-acc','id'=>$model->TERM_ID,'id_invest'=>$model->INVES_ID,'cus_kd'=>$cus_kd],[
+														 ]). '</li>' . PHP_EOL;
+					 },
+				],
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(249, 215, 100, 1)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'height'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			];
+
 	/*GRIDVIEW EXPAND*/
 	$attDinamik[]=[
 		'class'=>'kartik\grid\ExpandRowColumn',
@@ -377,7 +464,15 @@ $id = $_GET['id'];
 		$connect = Yii::$app->db_esm;
 
 		/* reviewDataexpandPlan || budget_plan */
-		$sql = "SELECT * FROM `t0001detail` ti
+		// $sql = "SELECT * FROM `t0001detail` ti
+		// 			LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
+		// 			LEFT JOIN c0006 c on ti.ID_INVEST = c.ID
+		// 			WHERE ti.TERM_ID ='".$model->TERM_ID."'
+		// 			AND ti.ID_INVEST ='".$model->INVES_ID."'
+		// 			AND ti.STATUS = 102
+		// 			AND (ti.KD_RIB LIKE 'RID%' OR ti.KD_RIB LIKE 'RI%')";
+
+		$sql = "SELECT c.INVES_TYPE,ti.PERIODE_START,ti.PERIODE_END,ti.PPN,ti.PPH23,ti.HARGA FROM `t0001detail` ti
 					LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
 					LEFT JOIN c0006 c on ti.ID_INVEST = c.ID
 					WHERE ti.TERM_ID ='".$model->TERM_ID."'
@@ -494,7 +589,7 @@ $id = $_GET['id'];
 	$gvDetalPlanActual= GridView::widget([
 		'id'=>'plan-term-budget',
 		'dataProvider' => $dataProviderBudget,
-		//'filterModel' => $searchModel,
+		'filterModel' => $searchModel,
 		//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
 		/* 'beforeHeader'=>[
 			[
@@ -588,33 +683,61 @@ $id = $_GET['id'];
   	/*connect db esm*/
 	$connect_esm = Yii::$app->db_esm;
 
+		#baris
+        $sql_count1 = "select COUNT(PPN) as baris from t0001detail where TERM_ID='".$model->TERM_ID."'AND `STATUS` = 102  AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
+        $total_count1 = $connect_esm->createCommand($sql_count1)->queryScalar();
+        $persen_ri = $total_count1.'00';
+
+
+        $sql_count2 = "select COUNT(PPN) as baris from t0001detail where TERM_ID='".$model->TERM_ID."'AND `STATUS` = 102  AND (KD_RIB LIKE 'RA%' OR KD_RIB LIKE 'RB%')";
+        $total_count2 = $connect_esm->createCommand($sql_count2)->queryScalar();
+        $persen_rb = $total_count2.'00';
+
+
+
   	/*budget tambahan*/
-  	$sql_tambahan_ppn = "select sum(PPN) as PPN from t0001header where TERM_ID ='".$id."' AND STATUS = 102 AND (KD_RIB LIKE 'RA%' OR KD_RIB LIKE 'RB%')";
+  	$sql_tambahan_ppn = "select sum(PPN) as PPN from t0001detail where TERM_ID ='".$id."' AND STATUS = 102 AND (KD_RIB LIKE 'RA%' OR KD_RIB LIKE 'RB%')";
 	$total_tambahan_ppn = $connect_esm->createCommand($sql_tambahan_ppn)->queryScalar();
 
 
 	$sql_budget_tambahan = "select sum(HARGA) as harga from t0001detail where TERM_ID='".$id."'and STATUS = 102 and (KD_RIB LIKE 'RA%' OR KD_RIB LIKE 'RB%')";
 	$total_tamabahan_harga = $connect_esm->createCommand($sql_budget_tambahan)->queryScalar();
 
-	$sql_tambahan_pph = "select sum(PPH23) as PPH23 from t0001header where TERM_ID ='".$id."' AND STATUS = 102 AND (KD_RIB LIKE 'RA%' OR KD_RIB LIKE 'RB%')";
+	$sql_tambahan_pph = "select sum(PPH23) as PPH23 from t0001detail where TERM_ID ='".$id."' AND STATUS = 102 AND (KD_RIB LIKE 'RA%' OR KD_RIB LIKE 'RB%')";
 	$total_tambahan_pph =$connect_esm->createCommand($sql_tambahan_pph)->queryScalar();
 
 	/*caculate bubget tambhan*/
-	$hitung_ppn_tambahan = ($total_tamabahan_harga*$total_tambahan_ppn)/100;
-	$hitung_pph_tambahan = ($total_tamabahan_harga*$total_tambahan_pph)/100;
-	$Budget_tambahan = ($hitung_ppn_tambahan + $total_tamabahan_harga)-$hitung_pph_tambahan;
+	if($persen_rb != 0)
+	{
+		$hitung_ppn_tambahan = ($total_tamabahan_harga*$total_tambahan_ppn)/$persen_rb;
+		$hitung_pph_tambahan = ($total_tamabahan_harga*$total_tambahan_pph)/$persen_rb;
+		$Budget_tambahan = ($hitung_ppn_tambahan + $total_tamabahan_harga)-$hitung_pph_tambahan;
+	}else{
+		$Budget_tambahan = 0.00;
+	}
+	
 
 	$budget = number_format($Budget_tambahan,2);
 
 	/*total invest*/
-	$total_tambahan_ppn1 = Requesttermheader::find()->where(['TERM_ID'=>$id])->andwhere(['like','KD_RIB','RI'])->sum('PPN');
+	// $total_tambahan_ppn1 = Requesttermheader::find()->where(['TERM_ID'=>$id])->andwhere(['like','KD_RIB','RI'])->sum('PPN');
+	$sql_ppn5 = "select sum(PPN) as PPN from t0001detail where TERM_ID='".$id."' AND STATUS = 102 AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
+    $total_tambahan_ppn1 =  $connect_esm->createCommand($sql_ppn5)->queryScalar();
 	
 	$sql_invest = "select sum(HARGA) as harga from t0001detail where TERM_ID='".$id."'and STATUS = 102 and (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
 	$total_tamabahan_harga1 =$connect_esm->createCommand($sql_invest)->queryScalar();
-	$total_tambahan_pph1 = Requesttermheader::find()->where(['TERM_ID'=>$id])->andwhere(['like','KD_RIB','RI'])->sum('PPH23');
+
+	#pph23
+	$sql_pph6 = "select sum(PPH23) as PPH23 from t0001detail where TERM_ID='".$id."' AND STATUS = 102 AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
+    $total_tambahan_pph1 =  $connect_esm->createCommand($sql_pph6)->queryScalar();
+
+  
+
+	// $total_tambahan_pph1 = Requesttermheader::find()->where(['TERM_ID'=>$id])->andwhere(['like','KD_RIB','RI'])->sum('PPH23');
+
 	/*caculate investasi*/
-	$hitung_ppn_tambahan1 = ($total_tamabahan_harga1*$total_tambahan_ppn1)/100;
-	$hitung_pph_tambahan1 = ($total_tamabahan_harga1*$total_tambahan_pph1)/100;
+	$hitung_ppn_tambahan1 = ($total_tamabahan_harga1*$total_tambahan_ppn1)/$persen_ri;
+	$hitung_pph_tambahan1 = ($total_tamabahan_harga1*$total_tambahan_pph1)/$persen_ri;
 	$invets = ($hitung_ppn_tambahan1 + $total_tamabahan_harga1)-$hitung_pph_tambahan1;
 	$total_invest= number_format($invets,2);
 
