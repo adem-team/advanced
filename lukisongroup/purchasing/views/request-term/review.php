@@ -478,10 +478,10 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					'vAlign'=>'middle',
 					'hAlign'=>'center',
 					'mergeHeader'=>true,
-					'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
-						//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
-						return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
-					},
+					// 'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+					// 	//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
+					// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
+					// },
 					'editableOptions' => [
 						'header' => 'Update Quantity',
 						'inputType' => \kartik\editable\Editable::INPUT_TEXT,
@@ -616,10 +616,10 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					'vAlign'=>'middle',
 					'hAlign'=>'center',
 					'mergeHeader'=>true,
-					'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
-						//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
-						return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
-					},
+					// 'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+					// 	//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
+					// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
+					// },
 					'editableOptions' => [
 						'header' => 'Update Invoice',
 						'inputType' => \kartik\editable\Editable::INPUT_TEXT,
@@ -654,10 +654,10 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					'vAlign'=>'middle',
 					'hAlign'=>'center',
 					'mergeHeader'=>true,
-					'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
-						//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
-						return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
-					},
+					// 'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+					// 	//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
+					// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
+					// },
 					'editableOptions' => [
 						'header' => 'Update NoFaktur pajak',
 						'inputType' => \kartik\editable\Editable::INPUT_TEXT,
@@ -691,9 +691,9 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					'label'=>'Notes',
 					'hAlign'=>'left',
 					'mergeHeader'=>true,
-					'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
-						return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0;
-					},
+					// 'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+					// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0;
+					// },
 					'editableOptions' => [
 						'header' => 'Update program',
 						'inputType' => \kartik\editable\Editable::INPUT_TEXTAREA,

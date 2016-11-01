@@ -86,6 +86,15 @@ class DataTermController extends Controller
       return $this->redirect(['actual-review','id'=>$id]);
     }
 
+     /*delete */
+    public function actionDeleteHeaderAcc($id,$id_invest,$cus_kd)
+    {
+
+      $model = Termdetail::find()->where(['TERM_ID'=>$id,'INVES_ID'=>$id_invest])->one();
+      $model->delete();
+      return $this->redirect(['review','id'=>$id,'cus_kd'=>$cus_kd]);
+    }
+
 
     /*customers parent array*/
   public function aryData_Customers(){ 
@@ -101,6 +110,11 @@ class DataTermController extends Controller
    /*Corp array*/
   public function aryData_Corp(){ 
     return ArrayHelper::map(Corp::find()->all(), 'CORP_ID','CORP_NM');
+  }
+
+  /*invest array*/
+  public function aryData_invest(){ 
+    return ArrayHelper::map(Terminvest::find()->all(), 'ID','INVES_TYPE');
   }
 
 
@@ -180,7 +194,11 @@ class DataTermController extends Controller
 		$searchModel = new TermheaderSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		return $this->render('index',[
-			'dataProvider'=>$dataProvider
+			'dataProvider'=>$dataProvider,
+      'searchModel'=>$searchModel,
+      'cus_data'=>self::aryData_Customers(),
+      'dis_data'=>self::aryData_Dis(),
+      'co_data'=>self::aryData_Corp()
 		]);
 	}
 
@@ -237,7 +255,9 @@ class DataTermController extends Controller
 			'dataProviderBudget'=>$dataProviderBudget,
       'dataProviderBudgetdetail'=>$dataProviderBudgetdetail,
       'cus_kd'=>$cus_kd,
-      'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves
+      'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves,
+      'searchModel'=>$searchModelBudget,
+      'data_invest'=>self::aryData_invest()
 		]);
 		/*
 		 * NOTED VIEWS FILES:

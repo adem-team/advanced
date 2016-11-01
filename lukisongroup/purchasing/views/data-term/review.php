@@ -53,7 +53,9 @@ $this->title = Yii::t('app', 'Trading Terms ');
 						'dataProvider'=>$dataProvider,
 						'dataProviderBudget'=>$dataProviderBudget,
 						'dataProviderBudgetdetail'=>$dataProviderBudgetdetail,
-						'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves
+						'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves,
+						'searchModel'=>$searchModel,
+						'data_invest'=>$data_invest
 					]);
 					$contentChart=$this->render('_reviewChart');
 
