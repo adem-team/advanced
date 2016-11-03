@@ -40,7 +40,7 @@ $this->registerJs("
 	* Status : Fixed.
 	* author piter novian [ptr.nov@gmail.com].
 	*/
-	$(".$model->formName().'issue'.").on('ajaxComplete',".$model->formName().", function () {
+	$(".$model->formName().'issue'.").on('ajaxComplete',".$model->formName().'issue'.", function () {
 		 var form = $(".$model->formName().'issue'.");
 		 // return false if form still have some validation errors
 		 if (form.find('.has-error').length) {
@@ -60,6 +60,5 @@ $this->registerJs("
 	});	
 ",$this::POS_READY);
 ?>
-
 
 
