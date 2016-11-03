@@ -296,6 +296,16 @@ class RequestTermController extends Controller
     }
   }
 
+  public function actionDisplayImage($kd)
+  {
+   
+
+    return $this->renderAjax('display_image',[
+                            'kd'=>$kd
+      ]);
+
+  }
+
   public function actionAddNewInvest($kd,$term_id,$cust_kd)
   {
     # code...
@@ -329,6 +339,7 @@ class RequestTermController extends Controller
     } else {
     return $this->renderAjax('_new_invest', [
               'model' => $model,
+              'data_invest'=>self::ary_invets()
           ]);
         }
 

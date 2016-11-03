@@ -19,11 +19,6 @@ use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\hrd\models\Corp;
 
-
-
-/* array*/
- $data_invest = ArrayHelper::map(Terminvest::find()->all(),'ID','INVES_TYPE')
-
 ?>
 
 

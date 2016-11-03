@@ -8,6 +8,9 @@ use yii\helpers\Url;
 // AppAssetJqueryJSignature::register($this);
 
 use lukisongroup\master\models\Unitbarang;
+use lukisongroup\purchasing\models\rqt\Arsipterm;
+
+$this->registerCss($this->render('lightbox.css'));
 
 
 
@@ -301,6 +304,27 @@ $this->title = Yii::t('app', 'Trading Terms ');
 			$icon = '<span class="fa fa-cloud-upload"></span>';
 			$label = $icon . ' ' . $title;
 			$url = Url::toRoute(['/purchasing/request-term/upload-term','id'=>$kd->KD_RIB,'trm_id'=>$kd->TERM_ID]);
+			$content = Html::a($label,$url, $options);
+			return $content;
+	}
+
+
+		/**
+	 * LINK view upload
+	 * @author wawan  
+     * @since 1.2
+	*/
+	function displayimage($kd){
+			$title = Yii::t('app','');
+			$options = [ 'id'=>'rqt-view-id',
+						  'data-toggle'=>"modal",
+						  'data-target'=>"#rqt-view-review",
+						  'class'=>'btn btn-info btn-xs',
+						  'title'=>'view'
+			];
+			$icon = '<span class="fa fa-eye"></span>';
+			$label = $icon . ' ' . $title;
+			$url = Url::toRoute(['/purchasing/request-term/display-image','kd'=>$kd->KD_RIB]);
 			$content = Html::a($label,$url, $options);
 			return $content;
 	}
@@ -1145,12 +1169,60 @@ $gvlist=GridView::widget([
 				 <?= upload($roHeader) ?>
 				 
 					 <b> upload file</b>
+
+					 <?= displayimage($roHeader) ?>
+				 
+					 <b> view image</b>
 				
 			</div>
 			
 			
-		</div>
+		</div>	
+		
 	</div>
+
+	 <div class="row">
+            <div class="box">
+                <div class="col-lg-12">
+                    <hr>
+                    <h2 id='about-product' class="intro-text text-center">
+                        <strong>Product</strong>
+                    </h2>
+                    <hr>
+                </div>
+        <div id="body-thumb">
+        <?php
+        $arsip_file = Arsipterm::find()->where(['KD_RIB'=>$kd])->all();
+        foreach ($arsip_file as $key => $value) {
+        	# code...
+        ?>
+        <a href=<?php echo'#img'.$value->ID ?>>
+        <img class="thumb" src=<?php echo 'data:image/jpeg;base64,'.$value->IMG_BASE64 ?>>
+    </a>
+
+    
+    <?php
+	}
+
+    ?>
+    <?php
+        $arsip_file = Arsipterm::find()->where(['KD_RIB'=>$kd])->all();
+        foreach ($arsip_file as $key => $value) {
+        	# code...
+        ?>
+    <!-- lightbox container hidden with CSS -->
+    <div class="lightbox" id=<?php echo'img'.$value->ID ?>>
+        <a href="#img3" class="light-btn btn-prev">prev</a>
+            <a href="#_" class="btn-close">X</a>
+            <img src=<?php echo 'data:image/jpeg;base64,'.$value->IMG_BASE64 ?>>
+        <a href="#img2" class="light-btn btn-next">next</a>
+    </div>
+    <?php
+}
+    ?>
+   
+            </div>
+        </div>
 
 	<!-- Signature !-->
 	<div  class="col-md-12">
@@ -1365,6 +1437,32 @@ $this->registerJs("
 
 	Modal::begin([
 		'id' => 'rqt-upload-review',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-pencil-square-o"></div><div><h4 class="modal-title">Note</h4></div>',
+		//'size' => 'modal-lg',
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(131, 160, 245, 0.5)',
+			]
+	]);
+	Modal::end();
+
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#rqt-view-review').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+		",$this::POS_READY);
+
+	Modal::begin([
+		'id' => 'rqt-view-review',
 		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-pencil-square-o"></div><div><h4 class="modal-title">Note</h4></div>',
 		//'size' => 'modal-lg',
 		'headerOptions'=>[
