@@ -25,7 +25,7 @@ $userCorp = ArrayHelper::map(Corp::find()->all(), 'CORP_ID', 'CORP_NM');
 		'action' => ['tipebarang/simpan'],
 		]); 
 	?>
-	<?= $form->field($model, 'CORP_ID')->dropDownList($userCorp, ['id'=>'rodetail-kd_type'])->label('Type'); ?>
+	<?= $form->field($model, 'CORP_ID')->dropDownList($userCorp, ['id'=>'rodetail-kd_type'])->label('Perusahaan'); ?>
 	<?= $form->field($model, 'PARENT')->dropDownList($valParent); ?>
     <?= $form->field($model, 'NM_TYPE')->textInput(['maxlength' => true]) ?>
 

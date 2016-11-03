@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\Select2;
+use kartik\widgets\DatePicker;
 
 /* namespace model*/
 use lukisongroup\master\models\Terminvest;
@@ -48,9 +49,22 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 			<?=$form->field($model, 'NOMER_FAKTURPAJAK')->textInput(['maxlength' => true])->label('FAKTUR'); ?>
 
 			<?=$form->field($model, 'HARGA')->textInput(['maxlength' => true])->label('COST'); ?>
+
+			 <?= $form->field($model, 'PERIODE_START')->widget(DatePicker::classname(), [
+			    'options' => ['placeholder' => 'Enter date  ...'],
+			    'pluginOptions' => [
+                            'todayHighlight' => true,
+                            'autoclose'=>true,
+                              'format' => 'yyyy-m-dd'
+                        ],
+                        'pluginEvents'=>[
+                            'show' => "function(e) {show}",
+                        ],
+				]) ?>
+
 				</div>
 				<div class="col-sm-6">
-					<?= $form->field($model_header, 'PPH23')->widget(Select2::classname(), [
+					<?= $form->field($model, 'PPH23')->widget(Select2::classname(), [
 					     'data' => $data,
 					     'options' => ['placeholder' => 'Pilih Percentage ...'],
 					     'pluginOptions' => [
@@ -60,7 +74,19 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 				</div>
 
 				<div class="col-sm-6">
-					<?= $form->field($model_header, 'PPN')->textinput()?>
+					<?= $form->field($model, 'PPN')->textinput()?>
+
+					<?= $form->field($model, 'PERIODE_END')->widget(DatePicker::classname(), [
+			    'options' => ['placeholder' => 'Enter date  ...'],
+			    'pluginOptions' => [
+                            'todayHighlight' => true,
+                            'autoclose'=>true,
+                              'format' => 'yyyy-m-dd'
+                        ],
+                        'pluginEvents'=>[
+                            'show' => "function(e) {show}",
+                        ],
+				]) ?>
 				</div>
 
 		<div class="col-lg-12 pull-right" style="text-align: right;">

@@ -290,6 +290,34 @@ class DataTermController extends Controller
 		$searchModelRdetail= new RtdetailSearch();
 		$dataProviderRdetail = $searchModelRdetail->search(Yii::$app->request->queryParams,$id);
 
+    /*
+       * Process Editable Row [Columm SQTY]
+       * @author ptrnov  <piter@lukison.com>
+       * @since 1.1
+      **/
+      if (Yii::$app->request->post('hasEditable')) {
+        $id = Yii::$app->request->post('editableKey');
+        $model = Rtdetail::findOne($id);
+        $out = Json::encode(['output'=>'', 'message'=>'']);
+        $post = [];
+        $posted = current($_POST['Rtdetail']);
+        $post['Rtdetail'] = $posted;
+        if ($model->load($post)) {
+          $model->save();
+          $output = '';
+          if (isset($posted['PERIODE_START'])) {
+            $output = $model->PERIODE_START;
+          }
+           if (isset($posted['PERIODE_END'])) {
+            $output = $model->PERIODE_START;
+          }
+          $out = Json::encode(['output'=>$output, 'message'=>'']);
+        }
+        // return ajax json encoded response and exit
+        echo $out;
+        return;
+      }
+
 		return $this->render('actual_review',[
 			'dataProvider'=>$dataProvider,
 			'model'=>$modelRslt,
@@ -437,11 +465,12 @@ class DataTermController extends Controller
           $cari_customers = Customers::find()->where(['CUST_GRP'=>$cari_header_term->CUST_KD_PARENT])->one();
 
 
-          if ($model->load(Yii::$app->request->post())&&$model_header->load(Yii::$app->request->post())) {
+          if ($model->load(Yii::$app->request->post())) {
 
 
               $model->save();
-              $model_header->save();
+
+            
 
               return $this->redirect(['actual-review', 'id'=>$model_header->TERM_ID]);
             }else {

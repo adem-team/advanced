@@ -25,8 +25,9 @@ use yii\data\ArrayDataProvider;
 		// ['ID' =>2, 'ATTR' =>['FIELD'=>'BUDGET_PLAN','SIZE' => '10px','label'=>'Budget Plan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>3, 'ATTR' =>['FIELD'=>'PPN','SIZE' => '10px','label'=>'PPN %','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>4, 'ATTR' =>['FIELD'=>'PPH23','SIZE' => '10px','label'=>'PPHH 23 %','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'HARGA','SIZE' => '10px','label'=>'Budget Actual','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'TOTAL','SIZE' => '10px','label'=>'Total','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'INVESTASI_PROGRAM','SIZE' => '10px','label'=>'Keterangan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'HARGA','SIZE' => '10px','label'=>'Budget Actual','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'TOTAL','SIZE' => '10px','label'=>'Total','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		//['ID' =>5, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 	];
 	$gvHeadColomnActual = ArrayHelper::map($headColomnActial, 'ID', 'ATTR');
@@ -99,6 +100,46 @@ use yii\data\ArrayDataProvider;
 					]
 				],
 			];
+		}elseif($value[$key]['FIELD'] == 'HARGA'){
+
+
+			$attDinamikActual[]=[
+				'attribute'=>$value[$key]['FIELD'],
+				'value' => function($model) {
+
+					return number_format($model['HARGA'],2);
+					
+				},
+				'label'=>$value[$key]['label'],
+				'filterType'=>$value[$key]['filterType'],
+				'filter'=>$value[$key]['filter'],
+				// 'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
+				'hAlign'=>'right',
+				'vAlign'=>'middle',
+				//'mergeHeader'=>true,
+				// 'noWrap'=>true,
+				'group'=>$value[$key]['GRP'],
+				// 'format'=>$value[$key]['FORMAT'],
+				'headerOptions'=>[
+						'style'=>[
+						'text-align'=>'center',
+						'width'=>$value[$key]['FIELD'],
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(74, 206, 231, 1)',
+						'background-color'=>'rgba('.$value[$key]['warna'].')',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>$value[$key]['align'],
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(13, 127, 3, 0.1)',
+					]
+				],
+			];
+
 		}else {
 			# code...
 			$attDinamikActual[]=[
@@ -191,6 +232,7 @@ use yii\data\ArrayDataProvider;
 					['content'=>'ITEMS TRAIDE INVESTMENT', 'options'=>['colspan'=>2,'class'=>'text-center info',]],
 					['content'=>'PERIODE', 'options'=>['colspan'=>2, 'class'=>'text-center info']],
 					['content'=>'PPN AND PPH 23', 'options'=>['colspan'=>2, 'class'=>'text-center info']],
+					['content'=>'Keterangan', 'options'=>['colspan'=>1, 'class'=>'text-center info']],
 					['content'=>'ACTUAL BUDGET', 'options'=>['colspan'=>1, 'class'=>'text-center info']],
 					['content'=>'TOTAL', 'options'=>['colspan'=>1, 'class'=>'text-center info']],
 					//['content'=>'Action Status ', 'options'=>['colspan'=>1,  'class'=>'text-center info']],
