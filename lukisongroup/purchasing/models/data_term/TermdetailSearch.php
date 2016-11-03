@@ -82,7 +82,7 @@ class TermdetailSearch extends Termdetail
     public function searchbudget($params,$id)
     {
 
-        $query = Termdetail::find()->where(['TERM_ID'=>$id])->andwhere(['<>','STATUS',2]);
+        $query = Termdetail::find()->where(['TERM_ID'=>$id,'STATUS'=>0]);
 
 
         $dataProvider = new ActiveDataProvider([

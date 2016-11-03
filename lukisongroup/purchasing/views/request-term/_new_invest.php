@@ -9,6 +9,7 @@ use yii\helpers\ArrayHelper;
 use kartik\widgets\Select2;
 use kartik\money\MaskMoney;
 use yii\helpers\Url;
+use kartik\widgets\DatePicker;
 
 /* namespace models*/
 use lukisongroup\master\models\Customers;
@@ -42,6 +43,33 @@ use lukisongroup\hrd\models\Corp;
             'allowClear' => true
           ],
       ])->label('Investasi') ?>
+
+
+        <?php echo $form->field($model, 'PERIODE_START')->widget(DatePicker::classname(), [
+                    'options' => ['placeholder' => 'Tgl Term Dibuat'],
+                        'pluginOptions' => [
+                            'todayHighlight' => true,
+                            'autoclose'=>true,
+                              'format' => 'yyyy-m-dd'
+                        ],
+                        'pluginEvents'=>[
+                            'show' => "function(e) {show}",
+                        ],
+                    ]);
+        ?>
+
+        <?php echo $form->field($model, 'PERIODE_END')->widget(DatePicker::classname(), [
+                    'options' => ['placeholder' => 'Tgl Term Berakhir'],
+                        'pluginOptions' => [
+                            'todayHighlight' => true,
+                            'autoclose'=>true,
+                              'format' => 'yyyy-m-dd'
+                        ],
+                        'pluginEvents'=>[
+                            'show' => "function(e) {show}",
+                        ],
+                    ]);
+        ?>
 
     </div>
 

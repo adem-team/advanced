@@ -47,6 +47,7 @@ use lukisongroup\hrd\models\Dept;
 use lukisongroup\hrd\models\Corp;
 use yii\web\UploadedFile;
 use lukisongroup\master\models\Customers;
+use lukisongroup\master\models\Terminvest;
 
 // use lukisongroup\hrd\models\Employe;
 
@@ -193,6 +194,28 @@ class RequestTermController extends Controller
 
     }
 
+    public function ary_cus_term()
+    {
+       $sql = 'SELECT td.CUST_NM,th.TERM_ID,th.CUST_KD_PARENT FROM `t0000header` th INNER JOIN c0001 td on th.CUST_KD_PARENT = td.CUST_KD where th.`STATUS` = 1';
+       $connent = Yii::$app->db_esm;
+       $execute = $connent->createCommand($sql)->queryAll();
+
+       $customers = ArrayHelper::map($execute,
+                  function ($customers, $defaultValue) {
+                      return $customers['TERM_ID'] . '-' . $customers['CUST_KD_PARENT'];
+                  },'CUST_NM'
+          );
+
+      return $customers;
+    }
+
+    public function ary_invets()
+    {
+      /* array*/
+      $data_invest = ArrayHelper::map(Terminvest::find()->all(),'ID','INVES_TYPE');
+      return $data_invest;
+    }
+
     /**
      * Creates a new Requestorder model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -222,13 +245,15 @@ class RequestTermController extends Controller
 
         }
 
-        $cari_term = Yii::$app->db_esm->createCommand('SELECT TERM_ID from t0000header where CUST_KD_PARENT ="'.$model->CUST_ID_PARENT.'"')->queryScalar();
-        // $cari_term = Requesttermheader::find()->where(['CUST_ID_PARENT'=>$model->CUST_ID_PARENT])->one();
-        $model->TERM_ID = $cari_term;
+        $explode = explode('-',$model->CUST_ID_PARENT);
+        $model->CUST_ID_PARENT = $explode[1];
+        $model->TERM_ID = $explode[0];
         $model->CREATED_AT = date('Y-m-d');
         $model->ID_USER = Yii::$app->getUserOpt->Profile_user()->EMP_ID;
         $model->KD_DEP = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
         $model->save();
+
+
         $term_invest->KD_RIB = $model->KD_RIB;
         $term_invest->INVESTASI_TYPE = $term_invest->ID_INVEST;
         $term_invest->CREATED_AT = date('Y-m-d');
@@ -257,14 +282,15 @@ class RequestTermController extends Controller
             }
             
         }
-       
-        
 
         	return $this->redirect(['/purchasing/request-term/edit?kd='.$model->KD_RIB]);
       } else {
       return $this->renderAjax('_form', [
                 'model' => $model,
-                'term_invest'=>$term_invest
+                'term_invest'=>$term_invest,
+                'cus_data'=>self::ary_cus_term(),
+                'corp'=>Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID,
+                'data_invest'=>self::ary_invets()
             ]);
 
     }
@@ -274,6 +300,7 @@ class RequestTermController extends Controller
   {
     # code...
        $model = new Rtdetail();
+       $model->scenario = 'simpan';
     if ($model->load(Yii::$app->request->post())) {
           $model->TERM_ID = $term_id; 
           $model->KD_RIB = $kd;
@@ -356,90 +383,6 @@ class RequestTermController extends Controller
 
     }
 
-
-	/**
-     * Add Item Barang to SAVED | AJAX
-     * @author ptrnov  <piter@lukison.com>
-     * @since 1.1
-     */
-	public function actionAdditem_saved(){
-		//$roDetail = new Rodetail();
-    $roDetail = new AdditemValidation();
-    $hsl = \Yii::$app->request->post();
-    $radio = $hsl['AdditemValidation']['addnew'];
-    if($radio == 2)
-    {
-
-		if(Yii::$app->request->isAjax){
-			$roDetail->load(Yii::$app->request->post());
-			return Json::encode(\yii\widgets\ActiveForm::validate($roDetail));
-		}else{
-			if($roDetail->load(Yii::$app->request->post())){
-				if($roDetail->additem_saved()){
-					$hsl = \Yii::$app->request->post();
-					$kdro = $hsl['AdditemValidation']['kD_RO'];
-					return $this->redirect(['/purchasing/request-term/edit?kd='.$kdro]);
-				}
-				//Request Result
-			/*	$hsl = \Yii::$app->request->post();
-				$kdRo = $hsl['Rodetail']['KD_RO'];
-				$kdBarang = $hsl['Rodetail']['KD_BARANG'];
-				$nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
-				$kdUnit = $hsl['Rodetail']['UNIT'];
-				$rqty = $hsl['Rodetail']['RQTY'];
-				$note = $hsl['Rodetail']['NOTE'];
-
-					//Request Put
-					$roDetail->CREATED_AT = date('Y-m-d H:i:s');
-					$roDetail->KD_RO = $kdRo;
-					$roDetail->KD_BARANG = $kdBarang;
-					$roDetail->NM_BARANG = $nmBarang->NM_BARANG;
-					$roDetail->UNIT = $kdUnit;
-					$roDetail->RQTY = $rqty;
-					$roDetail->NOTE = $note;
-					$roDetail->STATUS = 0;
-					$roDetail->save();
-				return $this->redirect(['/purchasing/request-order/edit?kd='.$kdRo]);*/
-			}
-		}
-  }
-  else{
-
-    // $roDetail = new AddNewitemValidation();
-    if(Yii::$app->request->isAjax){
-      $roDetail->load(Yii::$app->request->post());
-      return Json::encode(\yii\widgets\ActiveForm::validate($roDetail));
-    }else{
-      if($roDetail->load(Yii::$app->request->post())){
-        if($roDetail->addnewitem_saved()){
-          $hsl = \Yii::$app->request->post();
-          $kdro = $hsl['AdditemValidation']['kD_RO'];
-          return $this->redirect(['/purchasing/request-term/edit?kd='.$kdro]);
-        }
-        //Request Result
-      /*	$hsl = \Yii::$app->request->post();
-        $kdRo = $hsl['Rodetail']['KD_RO'];
-        $kdBarang = $hsl['Rodetail']['KD_BARANG'];
-        $nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
-        $kdUnit = $hsl['Rodetail']['UNIT'];
-        $rqty = $hsl['Rodetail']['RQTY'];
-        $note = $hsl['Rodetail']['NOTE'];
-
-          //Request Put
-          $roDetail->CREATED_AT = date('Y-m-d H:i:s');
-          $roDetail->KD_RO = $kdRo;
-          $roDetail->KD_BARANG = $kdBarang;
-          $roDetail->NM_BARANG = $nmBarang->NM_BARANG;
-          $roDetail->UNIT = $kdUnit;
-          $roDetail->RQTY = $rqty;
-          $roDetail->NOTE = $note;
-          $roDetail->STATUS = 0;
-          $roDetail->save();
-        return $this->redirect(['/purchasing/request-order/edit?kd='.$kdRo]);*/
-      }
-    }
-  }
-	}
 
 	/**
 	 * Edit Form - Add New Item Barang | Tambah Barang
@@ -640,177 +583,7 @@ class RequestTermController extends Controller
 		   echo Json::encode(['output'=>'', 'selected'=>'']);
 	}
 
-	/*
-	 * actionSimpanfirst() <- actionCreate()
-	 * First Create RO |  Requestorder | Rodetail
-	 * Add: component Yii::$app->getUserOpt->Profile_user()
-	 * Add: component \Yii::$app->ambilkonci->getRoCode();
-	 * @author ptrnov  <piter@lukison.com>
-     * @since 1.1
-	**/
-	public function actionSimpanfirst(){
-
-				// $cons = \Yii::$app->db_esm;
-				$roHeader = new Requesttermheader();
-				//$reqorder = new Roatribute();
-				$roDetail = new Rtdetail();
-        $BARANG = new Barang();
-				$profile= Yii::$app->getUserOpt->Profile_user();
-        // $corp = Yii::$app->getUserOpt->Profile_user()->EMP_ID;
-        // $Corp1 = Employe::find()->where(['KD_CORP'=>$corp])->asArray()->one();
-        $corp = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
-        $hsl = \Yii::$app->request->post();
-         $radio =  $hsl['Rodetail']['NEW'];
-
-				//if($roDetail->load(Yii::$app->request->post()) && $roDetail->validate()){
-			if($roDetail->load(Yii::$app->request->post())){
-
-
-
-            // print_r($radio);
-            // die();
-            $selectCorp = $corp;
-            if($radio == 2 )
-            {
-              // rodetail
-              	$kdBarang = $roDetail->KD_BARANG;
-                $nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
-                $GneratekodeRo=\Yii::$app->ambilkonci->getRoCode($selectCorp);
-                $roDetail->KD_RO = $GneratekodeRo;
-                $roDetail->PARENT_ROSO=0;
-                $roDetail->KD_CORP = $selectCorp;
-                $roDetail->CREATED_AT = date('Y-m-d H:i:s');
-                $roDetail->NM_BARANG = $nmBarang->NM_BARANG;
-                $roDetail->KD_BARANG = $kdBarang;
-                $roDetail->SQTY = $roDetail->RQTY;
-                $roDetail->HARGA= $nmBarang->HARGA_SPL;
-                $roDetail->STATUS = 0;
-                $roDetail->save();
-                      // getErrors()
-                // print_r($roDetail->getErrors());
-                // die();
-                // roheader
-                $roHeader->PARENT_ROSO=0; // RO=0
-                $roHeader->KD_RO =$GneratekodeRo;
-                $roHeader->CREATED_AT = date('Y-m-d H:i:s');
-                $roHeader->TGL = date('Y-m-d');
-                $roHeader->ID_USER = $profile->emp->EMP_ID;
-                $roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
-                $roHeader->KD_CORP = $selectCorp;
-                $roHeader->KD_DEP = $profile->emp->DEP_ID;
-                //$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
-                //$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
-                $roHeader->STATUS = 0;
-
-                $roHeader->PARENT_ROSO=0; // RO=0
-                $roHeader->KD_RO =$GneratekodeRo;
-                $roHeader->CREATED_AT = date('Y-m-d H:i:s');
-                $roHeader->TGL = date('Y-m-d');
-                $roHeader->ID_USER = $profile->emp->EMP_ID;
-                $roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
-                $roHeader->KD_CORP = $selectCorp;
-                $roHeader->KD_DEP = $profile->emp->DEP_ID;
-                //$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
-                //$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
-                $roHeader->STATUS = 0;
-                $roHeader->save();
-
-            }
-            else
-            {
-              // barang
-              $kdcorp = $BARANG->KD_CORP =  $roDetail->KD_CORP;
-              $kdType = Yii::$app->esmcode->kdTipe();
-              $kdUnit = Yii::$app->esmcode->kdUnit();
-              $nw1 = Yii::$app->esmcode->kdKategori();
-              $kdKategori = $BARANG->KD_KATEGORI =  $nw1;
-              $kdPrn = 0;
-              $kdbrg =  Yii::$app->esmcode->kdbarangUmum($kdPrn,$kdcorp,$kdType,$kdKategori,$kdUnit);
-              $BARANG->KD_BARANG = $kdbrg;
-              $BARANG->NM_BARANG = $roDetail->NM_BARANG ;
-              $BARANG->HARGA_SPL =  $roDetail->HARGA;
-              $BARANG->STATUS = 1;
-              $BARANG->KD_SUPPLIER = 'SPL.LG.0000';
-              $BARANG->KD_KATEGORI = 39;
-              $BARANG->KD_UNIT = $roDetail->UNIT;
-              $BARANG->KD_TYPE = 30;
-              $BARANG->CREATED_BY = Yii::$app->user->identity->username;
-              $BARANG->CREATED_AT = date('Y-m-d H:i:s');
-              $BARANG->save();
-
-              // rodetail
-              $GneratekodeRo=\Yii::$app->ambilkonci->getRoCode($selectCorp);
-              $roDetail->KD_RO = $GneratekodeRo;
-              $roDetail->PARENT_ROSO=0;
-              $roDetail->KD_CORP = $selectCorp;
-              $roDetail->CREATED_AT = date('Y-m-d H:i:s');
-              $roDetail->NM_BARANG = $hsl['Rodetail']['NM_BARANG'];
-              $roDetail->KD_BARANG = $kdbrg ;
-              // $roDetail->UNIT = 'none';
-              $roDetail->SQTY =   $roDetail->RQTY;
-              $roDetail->STATUS = 0;
-              $roDetail->save();
-            //   print_r($BARANG->getErrors());
-            // die();
-
-            // roheader
-              $roHeader->PARENT_ROSO=0; // RO=0
-              $roHeader->KD_RO =$GneratekodeRo;
-              $roHeader->CREATED_AT = date('Y-m-d H:i:s');
-              $roHeader->TGL = date('Y-m-d');
-              $roHeader->ID_USER = $profile->emp->EMP_ID;
-              $roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
-              $roHeader->KD_CORP = $selectCorp;
-              $roHeader->KD_DEP = $profile->emp->DEP_ID;
-              //$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
-              //$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
-              $roHeader->STATUS = 0;
-
-              $roHeader->PARENT_ROSO=0; // RO=0
-              $roHeader->KD_RO =$GneratekodeRo;
-              $roHeader->CREATED_AT = date('Y-m-d H:i:s');
-              $roHeader->TGL = date('Y-m-d');
-              $roHeader->ID_USER = $profile->emp->EMP_ID;
-              $roHeader->EMP_NM = $profile->emp->EMP_NM .' ' .$profile->emp->EMP_NM_BLK;
-              $roHeader->KD_CORP = $selectCorp;
-              $roHeader->KD_DEP = $profile->emp->DEP_ID;
-              //$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
-              //$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
-              $roHeader->STATUS = 0;
-              $roHeader->save();
-            //   print_r($roHeader->getErrors());
-            //  die();
-            }
-
-				// //$roHeader->SIG1_SVGBASE64 = $profile->emp->SIGSVGBASE64;
-				// //$roHeader->SIG1_SVGBASE30 = $profile->emp->SIGSVGBASE30;
-				// $roHeader->STATUS = 0;
-				// 	$transaction = $cons->beginTransaction();
-				// 	try {
-				// 		if (!$roDetail->save()) {
-				// 				$transaction->rollback();
-				// 				return false;
-				// 		}
-        //
-				// 		if (!$roHeader->save()) {
-				// 				$transaction->rollback();
-				// 				return false;
-				// 		}
-				// 		$transaction->commit();
-				// 	} catch (Exception $ex) {
-				// 		//print_r("error");
-				// 		$transaction->rollback();
-				// 		return false;
-				// 	}
-					//return $this->redirect(['index','param'=>$getkdro]);
-					//return $this->redirect(['index?RequestorderSearch[KD_RO]='.$getkdro]);
-					return $this->redirect(['/purchasing/request-term/edit?kd='.$GneratekodeRo]);
-			}else{
-				return $this->redirect(['index']);
-		}
-
-	}
-
+	
 	/**
      * Add Request Detail
      * @author ptrnov  <piter@lukison.com>
@@ -842,43 +615,7 @@ class RequestTermController extends Controller
     //   }
     // }
 
-	/*
-	 * actionSimpansecondt() <- actionTambah($kd)
-	 * First Create RO |Rodetail
-	 * Add: component Yii::$app->getUserOpt->Profile_user()
-	 * Add: component \Yii::$app->ambilkonci->getRoCode();
-	 * @author ptrnov  <piter@lukison.com>
-     * @since 1.1
-	**/
-	public function actionSimpantambah(){
-		$roDetail = new Rtdetail();
-		if($roDetail->load(Yii::$app->request->post()) && $roDetail->validate()){
-			$hsl = \Yii::$app->request->post();
-			$kdro = $hsl['Rodetail']['KD_RO'];
-			$kdBarang = $hsl['Rodetail']['KD_BARANG'];
-			$nmBarang = Barang::findOne(['KD_BARANG' => $kdBarang]);
-			$kdUnit = $hsl['Rodetail']['UNIT'];
-			$rqty = $hsl['Rodetail']['RQTY'];
-			$note = $hsl['Rodetail']['NOTE'];
-
-			/*
-			 * Detail Request Order
-			**/
-			$roDetail->KD_RO = $kdro;
-			$roDetail->CREATED_AT = date('Y-m-d H:i:s');
-			$roDetail->NM_BARANG = $nmBarang->NM_BARANG;
-			$roDetail->KD_BARANG = $kdBarang;
-			$roDetail->UNIT = $kdUnit;
-			$roDetail->RQTY = $rqty;
-			$roDetail->NOTE = $note;
-			$roDetail->STATUS = 0;
-			$roDetail->save();
-
-			return $this->redirect(['index?RequesttermheaderSearch[KD_RO]='.$kdro]);
-		}else{
-			return $this->redirect(['index']);
-		}
-	}
+	
 
 	 /**
      * View Requestorder & Detail
