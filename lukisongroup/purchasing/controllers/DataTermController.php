@@ -97,8 +97,13 @@ class DataTermController extends Controller
 
 
     /*customers parent array*/
-  public function aryData_Customers(){ 
-    return ArrayHelper::map(Customers::find()->where('CUST_KD = CUST_GRP')->andwhere('STATUS<>3')->all(), 'CUST_KD','CUST_NM');
+  public function aryData_Customers(){
+      $sql = 'SELECT * FROM `c0001` c WHERE NOT EXISTS(SELECT * from t0000header th WHERE th.CUST_KD_PARENT = c.CUST_GRP) and CUST_KD = CUST_GRP and STATUS <>3';
+      $connent = Yii::$app->db_esm;
+      $execute = $connent->createCommand($sql)->queryAll();
+
+      return ArrayHelper::map($execute, 'CUST_KD','CUST_NM');
+    // return ArrayHelper::map(Customers::find()->where('CUST_KD = CUST_GRP')->andwhere('STATUS<>3')->all(), 'CUST_KD','CUST_NM');
   }
 
   /*Distributor array*/

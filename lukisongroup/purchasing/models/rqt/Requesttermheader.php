@@ -99,7 +99,7 @@ class Requesttermheader extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['NEW','CUST_ID_PARENT','NOTE'], 'required','on'=>'simpan'],
+            [['NEW','CUST_ID_PARENT','NOTE','PERIOD_START','PERIOD_END'], 'required','on'=>'simpan'],
             [['TGL', 'CREATED_AT', 'SIG1_TGL', 'SIG2_TGL', 'SIG3_TGL','SIG1_SVGBASE64','SIG1_SVGBASE30','TERM_ID','PERIOD_START','PERIOD_END'], 'safe'],
             [['PPN', 'PPH23'], 'number'],
             [['NOTE', 'DATA_ALL', 'SIG2_SVGBASE64', 'SIG2_SVGBASE30', 'SIG3_SVGBASE64', 'SIG3_SVGBASE30','TERM_ID'], 'string'],
