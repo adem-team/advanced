@@ -741,6 +741,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 							/* Attribute */
 							'class'=>'kartik\grid\EditableColumn',
 							'attribute'=>'PERIODE_START',
+							'refreshGrid'=>true,
 							'label'=>'periode start',
 							'vAlign'=>'middle',
 							'hAlign'=>'center',
@@ -781,6 +782,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 							/* Attribute */
 							'class'=>'kartik\grid\EditableColumn',
 							'attribute'=>'PERIODE_END',
+							'refreshGrid'=>true,
 							'label'=>'periode end',
 							'vAlign'=>'middle',
 							'hAlign'=>'center',
@@ -1036,7 +1038,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
         'filter'=>true,
         'hAlign'=>'right',
         'vAlign'=>'middle',
-        'noWrap'=>true,
+        'noWrap'=>false,
 		//'group'=>$value[$key]['grp'],
         'headerOptions'=>[
             'style'=>[
@@ -1060,7 +1062,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
     };
 
 
-$urlx = Url::toRoute(['request-term/list-all','kd'=>$roHeader->KD_RIB,'term_id'=>$roHeader->TERM_ID]);
+$urlx = Url::toRoute(['request-term/list-all','kd'=>$roHeader->KD_RIB,'term_id'=>$roHeader->TERM_ID,'cust_kd'=>$roHeader->CUST_ID_PARENT]);
 /*SHOW GRID VIEW LIST*/
 $gvlist=GridView::widget([
   'id'=>'gv-list-id',
@@ -1088,6 +1090,7 @@ $gvlist=GridView::widget([
                                                           ]),
         'showFooter'=>false,
   ],
+
   /* 'export' =>['target' => GridView::TARGET_BLANK],
   'exportConfig' => [
     GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
@@ -1160,7 +1163,7 @@ $gvlist=GridView::widget([
 						<th  class="col-md-1" style="text-align: center; height:20px">
 							<div style="text-align:center;">
 								<?php
-									$placeTgl1=$roHeader->SIG1_TGL!=0 ? Yii::$app->ambilKonvesi->convert($roHeader->SIG1_TGL,'date') :'';
+									$placeTgl1=date('Y-m-d');
 									echo '<b>Tanggerang</b>,' . $placeTgl1;
 								?>
 							</div>
@@ -1170,7 +1173,7 @@ $gvlist=GridView::widget([
 						<th class="col-md-1" style="text-align: center; height:20px">
 							<div style="text-align:center;">
 								<?php
-									$placeTgl2=$roHeader->SIG2_TGL!=0 ? Yii::$app->ambilKonvesi->convert($roHeader->SIG2_TGL,'date') :'';
+									$placeTgl2=date('Y-m-d');
 									echo '<b>Tanggerang</b>,' . $placeTgl2;
 								?>
 							</div>
@@ -1180,7 +1183,7 @@ $gvlist=GridView::widget([
 						<th class="col-md-1" style="text-align: center; height:20px">
 							<div style="text-align:center;">
 								<?php
-									$placeTgl3=$roHeader->SIG3_TGL!=0 ? Yii::$app->ambilKonvesi->convert($roHeader->SIG3_TGL,'date') :'';
+									$placeTgl3=date('Y-m-d');
 									echo '<b>Tanggerang</b>,' . $placeTgl3;
 								?>
 							</div>

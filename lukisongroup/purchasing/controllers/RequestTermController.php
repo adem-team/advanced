@@ -166,14 +166,14 @@ class RequestTermController extends Controller
 
     }
 
-    public function aryData_Customers(){ 
-        return ArrayHelper::map(Customers::find()->where('STATUS<>3')->all(), 'CUST_NM','CUST_NM');
+    public function aryData_Customers($cust_kd){ 
+        return ArrayHelper::map(Customers::find()->where('STATUS<>3')->andwhere(['CUST_GRP'=>$cust_kd])->all(), 'CUST_NM','CUST_NM');
   }
   public function aryData_invest($term_id){
      return ArrayHelper::map(Termdetail::find()->where(['STATUS'=>2,'TERM_ID'=>$term_id])->all(), 'INVES_ID','namainvest');
   }
 
-    public function actionListAll($kd,$term_id){
+    public function actionListAll($kd,$term_id,$cust_kd){
         $model = new DetailList();
        
          if ($model->load(Yii::$app->request->post()) ) {
@@ -186,7 +186,7 @@ class RequestTermController extends Controller
         } else {
             return $this->renderAjax('list_store', [
                 'model' => $model,
-                'items' => self::aryData_Customers(),
+                'items' => self::aryData_Customers($cust_kd),
                 'list_store'=>self::aryData_invest($term_id),
             ]);
         }
@@ -227,13 +227,14 @@ class RequestTermController extends Controller
         $model->TERM_ID = $cari_term;
         $model->CREATED_AT = date('Y-m-d');
         $model->ID_USER = Yii::$app->getUserOpt->Profile_user()->EMP_ID;
+        $model->KD_DEP = Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID;
         $model->save();
         $term_invest->KD_RIB = $model->KD_RIB;
         $term_invest->INVESTASI_TYPE = $term_invest->ID_INVEST;
         $term_invest->CREATED_AT = date('Y-m-d');
         $term_invest->CREATED_BY = Yii::$app->user->identity->username;
-        $term_invest->PERIODE_START  = $model->PERIODE_START;
-        $term_invest->PERIODE_END =  $model->PERIODE_END;
+        $term_invest->PERIODE_START  = $model->PERIOD_START;
+        $term_invest->PERIODE_END =  $model->PERIOD_END;
         // $term_invest->ID_INVEST = $term_invest->ID_INVEST;
         $term_invest->TERM_ID = $cari_term ;
         if($term_invest->save())
@@ -250,8 +251,8 @@ class RequestTermController extends Controller
               $termdetail->STATUS  = 2;
               $termdetail->CREATE_BY  = Yii::$app->user->identity->username;
               $termdetail->CREATE_AT = date('Y-m-d');
-              $termdetail->PERIODE_START  = $model->PERIODE_START;
-              $termdetail->PERIODE_END =  $model->PERIODE_END;
+              $termdetail->PERIODE_START  = $model->PERIOD_START;
+              $termdetail->PERIODE_END =  $model->PERIOD_END;
               $termdetail->save();
             }
             
@@ -889,6 +890,11 @@ class RequestTermController extends Controller
     {
     	$ro = new Requesttermheader();
 		$roHeader = Requesttermheader::find()->where(['KD_RIB' => $kd])->one();
+
+     /*inbox tab ||index*/
+        $searchModel1 = new DetailListSearch();
+        $dataProviderList = $searchModel1->search(Yii::$app->request->queryParams,$kd);
+
 		if(count($roHeader['KD_RIB'])<>0){
 			$detro = $roHeader->detro;
 			$employ = $roHeader->employe;
@@ -913,6 +919,7 @@ class RequestTermController extends Controller
 				'employ' => $employ,
 				'dept' => $dept,
 				'dataProvider'=>$detroProvider,
+        'dataProviderList'=>$dataProviderList
 			]);
 		}else{
 			return $this->redirect('index');
@@ -1263,6 +1270,12 @@ class RequestTermController extends Controller
 		 * @author ptrnov  <piter@lukison.com>
 		 * @since 1.1
 		**/
+
+     /*inbox tab ||index*/
+        $searchModel1 = new DetailListSearch();
+        $dataProviderList = $searchModel1->search(Yii::$app->request->queryParams,$kd);
+
+
 		//$ro = new Requestorder();
 		$roHeader = Requesttermheader::find()->where(['KD_RIB' =>$kd])->one();
 		$detro = $roHeader->detro;
@@ -1338,7 +1351,8 @@ class RequestTermController extends Controller
             'employ' => $employ,
       			'dept' => $dept,
       			'dataProvider'=>$detroProvider,
-            'roDetail'=>$roDetail
+            'roDetail'=>$roDetail,
+            'dataProviderList'=>$dataProviderList
         ]);
 
     }
