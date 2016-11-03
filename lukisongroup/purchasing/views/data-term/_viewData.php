@@ -50,11 +50,11 @@ use lukisongroup\hrd\models\Corp;
 	/*GRIDVIEW ARRAY FIELD HEAD*/
 	$headColomnEvent=[
 		['ID' =>0, 'ATTR' =>['FIELD'=>'Namainvest','SIZE' => '50px','label'=>'Trade Investment','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'PERIODE_START','SIZE' => '10px','label'=>'Periode','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'BUDGET_PLAN','SIZE' => '10px','label'=>'Budget Plan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'BUDGET_ACTUAL','SIZE' => '10px','label'=>'Budget Actual','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		// ['ID' =>1, 'ATTR' =>['FIELD'=>'PERIODE_START','SIZE' => '10px','label'=>'Periode','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'BUDGET_PLAN','SIZE' => '10px','label'=>'Budget Plan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		// ['ID' =>3, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'BUDGET_ACTUAL','SIZE' => '10px','label'=>'Budget Actual','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		// ['ID' =>5, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 	];
 	$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');	
 	/*GRIDVIEW SERIAL ROWS*/
@@ -92,23 +92,35 @@ use lukisongroup\hrd\models\Corp;
 					$connect = Yii::$app->db_esm;
 		
 					/*caculate ppn*/
-					 $sql_ppn = "select sum(PPN) as PPN from t0001header where TERM_ID='".$model->TERM_ID."' AND STATUS = 102 AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
+					 $sql_ppn = "select sum(PPN) as PPN from t0001detail where TERM_ID='".$model->TERM_ID."'AND ID_INVEST='".$model->INVES_ID."' AND STATUS = 102 AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
           		     $total_ppn =  $connect->createCommand($sql_ppn)->queryScalar();
-					
 
+					
 					/*caculate harga*/
 		          	$total_sql = "select sum(HARGA) as harga from t0001detail where TERM_ID='".$model->TERM_ID."' and ID_INVEST='".$model->INVES_ID."' and STATUS = 102 and (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
 				  	$total_harga = Yii::$app->db_esm->createCommand($total_sql)->queryScalar();
 
 					/*caculate pph23*/
-					$sql_pph = "select sum(PPH23) as PPH23 from t0001header where TERM_ID='".$model->TERM_ID."' AND STATUS = 102 AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
+					$sql_pph = "select sum(PPH23) as PPH23 from t0001detail where TERM_ID='".$model->TERM_ID."'AND ID_INVEST='".$model->INVES_ID."' AND STATUS = 102 AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
           			$total_pph = $connect->createCommand($sql_pph)->queryScalar();
+
+          			#baris
+          			$sql_count = "select COUNT(PPN) as baris from t0001detail where TERM_ID='".$model->TERM_ID."'AND ID_INVEST='".$model->INVES_ID."'AND `STATUS` = 102  AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
+          			$total_count = $connect->createCommand($sql_count)->queryScalar();
+          			$persen = $total_count.'00';
+
 					
 
 					/*formula sub total*/
-					$hitung_ppn = ($total_harga*$total_ppn)/100;
-					$hitung_pph = ($total_harga*$total_pph)/100;
-					$sub_total = ($hitung_ppn + $total_harga)-$hitung_pph;
+					if($total_count != 0)
+					{
+						$hitung_ppn = ($total_harga*$total_ppn)/$persen;
+						$hitung_pph = ($total_harga*$total_pph)/$persen;
+						$sub_total = ($total_harga+$hitung_ppn)-$hitung_pph;
+					}else{
+						$subtotal = '00';
+					}
+					
 					
 					 /* if subtotal equal null then number format using sub total*/
 
@@ -120,6 +132,7 @@ use lukisongroup\hrd\models\Corp;
 						return number_format(0.00,2);
 						
 					}
+
 
 				},
 				'label'=>$value[$key]['label'],
@@ -268,7 +281,7 @@ use lukisongroup\hrd\models\Corp;
 				$connect = Yii::$app->db_esm;
 
 		/* viewDataexpandPlan || budget_plan */
-		$sql = "SELECT * FROM `t0001detail` ti
+		$sql = "SELECT c.INVES_TYPE,ti.PERIODE_START,ti.PERIODE_END,ti.PPN,ti.PPH23,ti.HARGA FROM `t0001detail` ti
 					LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
 					LEFT JOIN c0006 c on ti.ID_INVEST = c.ID
 					WHERE ti.TERM_ID ='".$model->TERM_ID."'
@@ -289,7 +302,7 @@ use lukisongroup\hrd\models\Corp;
 
 
 		/* viewDataexpandActual || budget_actual */
-		$sql2 = "SELECT * FROM t0001detail ti
+		$sql2 = "SELECT c.INVES_TYPE,ti.PERIODE_START,ti.PERIODE_END,ti.PPN,ti.PPH23,ti.HARGA FROM t0001detail ti
 					LEFT JOIN c0006 c on ti.ID_INVEST = c.ID
 					LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
 					WHERE ti.TERM_ID ='".$model->TERM_ID."'

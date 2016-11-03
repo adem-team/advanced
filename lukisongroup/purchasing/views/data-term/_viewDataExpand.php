@@ -20,11 +20,11 @@ use yii\data\ArrayDataProvider;
 	<!-- PARTIES/PIHAK !-->
 	<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt">
 		<?php
-			$expandActual=$this->render('_viewDataExpandPlan',[
+			$expandActual=$this->render('_viewDataExpandActual',[
 				'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves
 			]);
 			
-			$expandPlan=$this->render('_viewDataExpandActual',[
+			$expandPlan=$this->render('_viewDataExpandPlan',[
 				'dataProviderDetailBudget'=>$dataProviderDetailBudget
 			]); 
 			

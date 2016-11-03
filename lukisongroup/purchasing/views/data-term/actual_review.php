@@ -50,6 +50,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 $id_term = $_GET['id'];
 
 
+
 	/*
 	 * GRID DETAIL BUDGET
 	 * Table [t0001header,t0001detail]
@@ -60,14 +61,14 @@ $id_term = $_GET['id'];
 	$headColomnInputActual=[
 		// ['ID' =>0, 'ATTR' =>['FIELD'=>'KD_RIB','SIZE' => '50px','label'=>'Trade Investment','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>0, 'ATTR' =>['FIELD'=>'nminvest','SIZE' => '10px','label'=>'Type Investasi','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'INVESTASI_PROGRAM','SIZE' => '10px','label'=>'Program','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'INVESTASI_PROGRAM','SIZE' => '10px','label'=>'Keterangan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>2, 'ATTR' =>['FIELD'=>'PERIODE_START','SIZE' => '10px','label'=>'periode start','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>3, 'ATTR' =>['FIELD'=>'PERIODE_END','SIZE' => '10px','label'=>'periode end','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>4, 'ATTR' =>['FIELD'=>'NOMER_FAKTURPAJAK','SIZE' => '10px','label'=>'Nomer Faktur','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>5, 'ATTR' =>['FIELD'=>'NOMER_INVOCE','SIZE' => '10px','label'=>'Nomer Invoice','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>6, 'ATTR' =>['FIELD'=>'HARGA','SIZE' => '10px','label'=>'Biaya','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'ppn','SIZE' => '10px','label'=>'Ppn','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>8, 'ATTR' =>['FIELD'=>'pph','SIZE' => '10px','label'=>'PPH 23','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'PPN','SIZE' => '10px','label'=>'Ppn','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>8, 'ATTR' =>['FIELD'=>'PPH23','SIZE' => '10px','label'=>'PPH 23','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>9, 'ATTR' =>['FIELD'=>'total','SIZE' => '10px','label'=>'Total','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 	];
 	$gvHeadColomnInputActual = ArrayHelper::map($headColomnInputActual, 'ID', 'ATTR');
@@ -103,8 +104,8 @@ $id_term = $_GET['id'];
 				'attribute'=>$value[$key]['FIELD'],
 				'value' => function($model) {
 
-					$total_pp23 = ($model->HARGA*$model->pph)/100;
-					$total_ppn =  ($model->HARGA*$model->ppn)/100;
+					$total_pp23 = ($model->HARGA*$model->PPH23)/100;
+					$total_ppn =  ($model->HARGA*$model->PPN)/100;
 
 						$total = ($total_ppn + $model->HARGA)-$total_pp23 ;
 
@@ -195,6 +196,177 @@ $id_term = $_GET['id'];
 					]
 				],
 			];
+		}elseif($value[$key]['FIELD'] == 'PPH23'){
+
+			$attDinamikInputActual[]=[
+				'attribute'=>$value[$key]['FIELD'],
+				'value' => function($model) {
+
+					if($model->PPH23)
+					{
+						return $model->PPH23;
+					}else{
+						return '0';
+					}
+					//return $model->PERIODE_START . " - " . $model->PERIODE_END;
+					
+				},
+				'label'=>$value[$key]['label'],
+				'filterType'=>$value[$key]['filterType'],
+				'filter'=>$value[$key]['filter'],
+				// 'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
+				'hAlign'=>'right',
+				'vAlign'=>'middle',
+				//'mergeHeader'=>true,
+				// 'noWrap'=>true,
+				'group'=>$value[$key]['GRP'],
+				// 'format'=>$value[$key]['FORMAT'],
+				'headerOptions'=>[
+						'style'=>[
+						'text-align'=>'center',
+						'width'=>$value[$key]['FIELD'],
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(74, 206, 231, 1)',
+						'background-color'=>'rgba('.$value[$key]['warna'].')',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>$value[$key]['align'],
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(13, 127, 3, 0.1)',
+					]
+				],
+			];
+
+		}elseif($value[$key]['FIELD'] == 'HARGA'){
+
+
+			$attDinamikInputActual[]=[
+				'attribute'=>$value[$key]['FIELD'],
+				'value' => function($model) {
+
+					return number_format($model->HARGA,2);
+					
+				},
+				'label'=>$value[$key]['label'],
+				'filterType'=>$value[$key]['filterType'],
+				'filter'=>$value[$key]['filter'],
+				// 'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
+				'hAlign'=>'right',
+				'vAlign'=>'middle',
+				//'mergeHeader'=>true,
+				// 'noWrap'=>true,
+				'group'=>$value[$key]['GRP'],
+				// 'format'=>$value[$key]['FORMAT'],
+				'headerOptions'=>[
+						'style'=>[
+						'text-align'=>'center',
+						'width'=>$value[$key]['FIELD'],
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(74, 206, 231, 1)',
+						'background-color'=>'rgba('.$value[$key]['warna'].')',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>$value[$key]['align'],
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(13, 127, 3, 0.1)',
+					]
+				],
+			];
+
+		}elseif($value[$key]['FIELD'] == 'PERIODE_START'){
+			$attDinamikInputActual[]=[
+							/* Attribute */
+							'class'=>'kartik\grid\EditableColumn',
+							'attribute'=>$value[$key]['FIELD'],
+							'refreshGrid'=>true,
+							'label'=>$value[$key]['label'],
+							'vAlign'=>'middle',
+							'hAlign'=>'center',
+							'mergeHeader'=>true,
+							// 'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+							// 	//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
+							// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
+							// },
+							'editableOptions' => [
+								'header' => 'Update periode',
+								'inputType' => \kartik\editable\Editable::INPUT_DATE,
+								'size' => 'sm',
+								'options' => [
+									'pluginOptions' => ['todayHighlight' => true,
+                            		'autoclose'=>true,
+                              		'format' => 'yyyy-m-dd']
+								]
+							],
+								'headerOptions'=>[
+								'style'=>[
+								'text-align'=>'center',
+								'width'=>$value[$key]['FIELD'],
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'8pt',
+								//'background-color'=>'rgba(74, 206, 231, 1)',
+								'background-color'=>'rgba('.$value[$key]['warna'].')',
+							]
+						],
+							'contentOptions'=>[
+								'style'=>[
+									'text-align'=>'left',
+									'width'=>'120px',
+									'font-family'=>'verdana, arial, sans-serif',
+									'font-size'=>'8pt',
+								]
+							],
+						];
+		}elseif($value[$key]['FIELD'] == 'PERIODE_END'){
+			$attDinamikInputActual[]=[
+							/* Attribute */
+							'class'=>'kartik\grid\EditableColumn',
+							'attribute'=>$value[$key]['FIELD'],
+							'refreshGrid'=>true,
+							'label'=>$value[$key]['label'],
+							'vAlign'=>'middle',
+							'hAlign'=>'center',
+							'mergeHeader'=>true,
+							// 'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+							// 	//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
+							// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
+							// },
+							'editableOptions' => [
+								'header' => 'Update periode',
+								'inputType' => \kartik\editable\Editable::INPUT_DATE,
+								'size' => 'sm',
+								'options' => [
+									'pluginOptions' => ['todayHighlight' => true,
+                            		'autoclose'=>true,
+                              		'format' => 'yyyy-m-dd']
+								]
+							],
+								'headerOptions'=>[
+								'style'=>[
+								'text-align'=>'center',
+								'width'=>$value[$key]['FIELD'],
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'8pt',
+								//'background-color'=>'rgba(74, 206, 231, 1)',
+								'background-color'=>'rgba('.$value[$key]['warna'].')',
+							]
+						],
+							'contentOptions'=>[
+								'style'=>[
+									'text-align'=>'left',
+									'width'=>'120px',
+									'font-family'=>'verdana, arial, sans-serif',
+									'font-size'=>'8pt',
+								]
+							],
+						];
 		}else{
 			$attDinamikInputActual[]=[
 				'attribute'=>$value[$key]['FIELD'],
@@ -325,10 +497,19 @@ $id_term = $_GET['id'];
 			</dl>
 		</div>
 
+
+<?php
+$url = "/purchasing/data-term/review?id=".$model->TERM_ID."&cus_kd=".$model->CUST_KD_PARENT."";
+
+?>
 	<!-- GRID VIEW !-->
 	<div  class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="font-family: tahoma ;font-size: 9pt;padding-left:30px">
-			<div style="margin-bottom:5px;margin-right:5px"><?=tombolInvestInput($model->TERM_ID);?></div>
+			<div style="margin-bottom:5px;margin-right:5px">
+			<?=tombolInvestInput($model->TERM_ID);?>
+			<a href=<?php echo $url ?> class="btn btn-info btn-sm" role="button" style="width:90px">Kembali</a>
+				
+			</div>
 			<?=$gvDetalInputActual?>
 		</div>
 	</div>
