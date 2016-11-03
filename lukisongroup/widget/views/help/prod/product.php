@@ -5,7 +5,11 @@ use yii\helpers\Html;
 	$imgProd2= Html::img('@web/widget/docHelp/img_prod/PROD2.PNG',  ['class' => 'pnjg', 'style'=>'width:220px;height:500px;']); 	
 	$imgProd3= Html::img('@web/widget/docHelp/img_prod/PROD3.PNG',  ['class' => 'pnjg', 'style'=>'width:200px;height:100px;']);
 	$imgProd4= Html::img('@web/widget/docHelp/img_prod/PROD4.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:600px;']); 	
-	$imgProd5= Html::img('@web/widget/docHelp/img_prod/PROD5.PNG',  ['class' => 'pnjg', 'style'=>'width:170px;height:120px;']);	
+	$imgProd5= Html::img('@web/widget/docHelp/img_prod/PROD5.PNG',  ['class' => 'pnjg', 'style'=>'width:170px;height:120px;']);
+	$imgUmum1= Html::img('@web/widget/docHelp/img_prod/UMUM1.PNG',  ['class' => 'pnjg', 'style'=>'width:220px;height:500px;']);	
+	$imgUmum2= Html::img('@web/widget/docHelp/img_prod/UMUM2.PNG',  ['class' => 'pnjg', 'style'=>'width:150px;height:100px;']);
+	$imgUmum3= Html::img('@web/widget/docHelp/img_prod/UMUM3.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:600px;']);
+	$imgUmum4= Html::img('@web/widget/docHelp/img_prod/UMUM4.PNG',  ['class' => 'pnjg', 'style'=>'width:170px;height:120px;']);	
 ?>	
 <p>
 <h4>Barang Produk</h4></br>
@@ -25,3 +29,21 @@ kita juga bisa melihat Item Barang Produk, menghapus, merubah, serta membuat kod
   <?php  echo $imgProd5;?><p></br>
 
 _END_
+
+<p></br></br>
+<h4>Barang Umum</h4></br>
+<p>
+Berikut cara pembuatan Barang Umum :</br>
+1. Setelah Login, Klik <b>Company</b> lalu klik <b>Master Data.</b></br>
+<?php  echo $imgProd1;?><p></br>
+2. Pilih <b>Barang Umum.</b></br>
+<?php  echo $imgUmum1;?><p></br>
+3. Pilih <b>Add Items.</b></br>
+<?php  echo $imgUmum2;?><p></br>
+4. Masukan pada form seperti <b>Nama Perusahaan, Type, Category, Nama Barang, Unit, Nama Supplier, Harga Suplier, Note, Status dan Upload Gambar Produk tersebut,</b> lalu klik <b>Tambah Barang.</b></br>
+<?php  echo $imgUmum3;?><p></br>  
+kita juga bisa melihat Item Barang Umum, menghapus, dan merubah barang umum tersebut dengan cara klik <b>Actions.</b></br>
+  <?php  echo $imgUmum4;?><p></br>
+
+_END_
+
