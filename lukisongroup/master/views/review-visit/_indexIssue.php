@@ -16,6 +16,21 @@ use yii\db\ActiveRecord;
 use yii\data\ArrayDataProvider;
 use dosamigos\gallery\Gallery;
 
+$btn_srch = Html::button(Yii::t('app', 'Search Date'),
+						['value'=>url::to(['ambil-tanggal-issue']),
+						'id'=>'modalButtonIssueTgl',
+						'class'=>"btn btn-info btn-sm"						
+					  ]);
+					  
+					  // Html::a('<i class="fa fa-search"></i> Search Date',
+							// '/master/review-visit/ambil-tanggal-issue',
+							// [		
+								// 'data-toggle'=>"modal",		
+								// 'data-target'=>"#modal-tgl-issue",		
+								// 'class' => 'btn btn-info btn-sm'		
+						   // ]
+						// );
+						
 $gridColumns = [
 	[ #serial column
 		'class'=>'kartik\grid\SerialColumn',
@@ -154,12 +169,7 @@ $issueMemo= GridView::widget([
 	'panel' => [
 		'heading'=>false,//'<div style="float:left;margin-right:10px" class="fa fa-2x fa-bicycle"></div><div><h4 class="modal-title">Store Issue</h4></div>'.' '.'<div style="float:right; margin-top:-22px;margin-right:0px;">'.$btn_srch.'</div>', 
 		'type'=>'success',
-		'before'=> Html::a('<i class="fa fa-calendar"></i> '.Yii::t('app', 'Set Date',
-				   ['modelClass' => 'DraftPlan',]),'/master/review-visit/button-set-date',[
-					  'data-toggle'=>"modal",
-					  'data-target'=>"#modal-button-set-date-issue",
-					  'class' => 'btn btn-info'
-				   ]),
+		'before'=> $btn_srch
 	],
 	'toolbar'=> [
 		//['content'=>toMenuAwal().toExportExcel()],
@@ -195,4 +205,52 @@ $issueMemo= GridView::widget([
 	Modal::end(); 
 ?>
 <?=$issueMemo?>
-<div id='test'>
+<?php
+$this->registerJs("		
+        $.fn.modal.Constructor.prototype.enforceFocus = function(){};	
+		$(document).on('click','#modalButtonIssueTgl', function(ehead){ 			  
+			$('#modal-issue-tgl').modal('show')
+			.find('#modalContentIssueTgl')
+			.load(ehead.target.value);
+		});		  
+			
+         // $('#modal-tgl-issue').on('show.bs.modal', function (event) {		
+          //   var button = $(event.relatedTarget)		
+          //   var modal = $('#modal-tgl-issue').find('#modalContenTglIssue').load(event.target.value);
+			 
+            // var title = button.data('title')		
+            // var href = button.attr('href')		
+             //modal.find('.modal-title').html(title)		
+             //modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')		
+             // $.post(href)		
+                 // .done(function( data ) {		
+                     // modal.find('.modal-body').html(data)		
+                 // });		
+           //  })		
+			 // $('#modal-rooms').modal('show')
+						// .find('#modalContentRooms')
+						// .html(data)
+			 
+			 
+			 
+     ",$this::POS_READY);
+	 
+     Modal::begin([		
+         'id' => 'modal-issue-tgl',		
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search"></div><div><h4 class="modal-title"> SEARCH DATE</h4></div>',	
+		 'size' => Modal::SIZE_SMALL,	
+         'headerOptions'=>[		
+                 'style'=> 'border-radius:5px; background-color: rgba(90, 171, 255, 0.7)',		
+         ],		
+     ]);		
+		echo "<div id='modalContentIssueTgl'></div>";
+     Modal::end();
+	 
+	 
+	
+	 
+	 
+	 
+	 
+	 
+?>

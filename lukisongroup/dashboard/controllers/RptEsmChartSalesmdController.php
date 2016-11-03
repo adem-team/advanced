@@ -43,6 +43,10 @@ class RptEsmChartSalesmdController extends Controller
 	 * @since 1.2
      */
 	public function actionVisit(){
+		$request = Yii::$app->request;		
+		$tgl= $request->get('tgl');	
+		$tglParam=$tgl!=''?$tgl:date('Y-m-d');
+		
 		//***get count data visiting
 		$_visiting= new ArrayDataProvider([
 			'allModels'=>Yii::$app->db_esm->createCommand("	
@@ -63,7 +67,8 @@ class RptEsmChartSalesmdController extends Controller
 					WHERE CUST_NM not LIKE 'customer demo%'	
 					GROUP BY TGL
 				) x2 on x2.TGL=x1.TGL
-				WHERE MONTH(x1.TGL)=10 AND x1.TGL <= CURDATE()
+				#WHERE MONTH(x1.TGL)=10 AND x1.TGL <= CURDATE()
+				WHERE MONTH(x1.TGL)=month('".$tglParam."') AND x1.TGL <= CURDATE()
 			")->queryAll(), 
 			'pagination' => [
 					'pageSize' => 200,
@@ -175,6 +180,10 @@ class RptEsmChartSalesmdController extends Controller
 	 * @since 1.2
      */
 	public function actionVisitStock(){
+		$request = Yii::$app->request;		
+		$tgl= $request->get('tgl');	
+		$tglParamStock=$tgl!=''?$tgl:date('Y-m-d');
+		
 		//***get count data visiting
 		$_visitingStock= new ArrayDataProvider([
 			'allModels'=>Yii::$app->db_esm->createCommand("	
@@ -187,7 +196,7 @@ class RptEsmChartSalesmdController extends Controller
 					SUM(CASE WHEN x2.SO_TYPE=9 AND x2.SO_QTY>=0 THEN x2.SO_QTY ELSE 0 END) as REQUEST_INV
 				FROM c0002scdl_detail x1 INNER JOIN so_t2 x2 ON  x2.TGL=x1.TGL AND x2.CUST_KD=x1.CUST_ID LEFT JOIN c0001 x3 on x3.CUST_KD=x1.CUST_ID
 				LEFT JOIN b0001 x4 on x4.KD_BARANG=x2.KD_BARANG
-				WHERE  month(x1.TGL)=10  
+				WHERE  month(x1.TGL)=month('".$tglParamStock."')
 				AND x1.CUST_ID NOT IN('
 					CUS.2016.000618,CUS.2016.000619,CUS.2016.000620,CUS.2016.000621,CUS.2016.000622,CUS.2016.000623,
 					CUS.2016.000624,CUS.2016.000625,CUS.2016.000626,CUS.2016.000627,CUS.2016.000628,CUS.2016.000629,
@@ -289,6 +298,9 @@ class RptEsmChartSalesmdController extends Controller
 	 * @since 1.2
      */
 	public function actionVisitRequest(){
+		$request = Yii::$app->request;		
+		$tgl= $request->get('tgl');	
+		$tglParamRequest=$tgl!=''?$tgl:date('Y-m-d');
 		//***get count data visiting
 		$_visitingRequest= new ArrayDataProvider([
 			'allModels'=>Yii::$app->db_esm->createCommand("	
@@ -297,7 +309,7 @@ class RptEsmChartSalesmdController extends Controller
 					SUM(CASE WHEN x2.SO_TYPE=9 AND x2.SO_QTY>=0 THEN x2.SO_QTY ELSE 0 END) as REQUEST_INV
 				FROM c0002scdl_detail x1 INNER JOIN so_t2 x2 ON  x2.TGL=x1.TGL AND x2.CUST_KD=x1.CUST_ID LEFT JOIN c0001 x3 on x3.CUST_KD=x1.CUST_ID
 				LEFT JOIN b0001 x4 on x4.KD_BARANG=x2.KD_BARANG
-				WHERE  month(x1.TGL)=10  
+				WHERE  month(x1.TGL)=month('".$tglParamRequest."') 
 				AND x1.CUST_ID NOT IN('
 					CUS.2016.000618,CUS.2016.000619,CUS.2016.000620,CUS.2016.000621,CUS.2016.000622,CUS.2016.000623,
 					CUS.2016.000624,CUS.2016.000625,CUS.2016.000626,CUS.2016.000627,CUS.2016.000628,CUS.2016.000629,

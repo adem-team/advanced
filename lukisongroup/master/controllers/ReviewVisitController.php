@@ -11,7 +11,9 @@ use yii\helpers\ArrayHelper;
 use yii\data\ArrayDataProvider;
 use kartik\tabs\TabsX;
 use yii\filters\VerbFilter;
-
+use yii\web\Request;
+use yii\web\NotFoundHttpException;
+use yii\helpers\Url;
 use lukisongroup\master\models\ReviewHeaderSearch;
 use lukisongroup\master\models\CustomercallTimevisitSearch;
 use lukisongroup\master\models\ReviewInventorySearch;
@@ -20,25 +22,68 @@ use lukisongroup\master\models\IssuemdSearch;
 
 class ReviewVisitController extends Controller
 {	
+
+	public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                ],
+            ],
+        ];
+    }
+
+    public function beforeAction($action){
+            if (Yii::$app->user->isGuest)  {
+                 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+            }
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+                   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true;
+               }
+            } else {
+                return true;
+            }
+    }
+	
 	public function actionIndex()
     {
+		Yii::$app->response->getHeaders()->set('Vary', 'Accept');
+		//Yii::$app->response->format = Response::FORMAT_JSON;
+		
 		if (\Yii::$app->user->isGuest) {
             return $this->render('../../../views/site/index_nologin');
         }else{	
-
-			//Get value tgl from $tab
-			$tgl=Yii::$app->getRequest()->getQueryParam('tgl');
-			$setTgl=$tgl!=''?$tgl:date('Y-m-d');
-						
-			/**
-			 * Syncronize Report Customercall Time
-			 */
-			if($this->checkRpt($setTgl)==0 or $this->checkRpt($setTgl)==1){			
+			$model = new \yii\base\DynamicModel(['tgl']);
+			$model->addRule(['tgl'], 'safe');
+			$hsl = Yii::$app->request->post();
+		    $tgl = $hsl['DynamicModel']['tgl'];
+			setcookie('issuememoTglVal',$tgl);	
+			$setTglCookie=$_COOKIE['issuememoTglVal'];
+			$tglParam=$setTglCookie!=''?$setTglCookie:date('Y-m-d');
+			
+			/* if ($model->load(Yii::$app->request->post())) {
+				$hsl = Yii::$app->request->post();
+				$tgl = $hsl['DynamicModel']['tgl'];
+				$setTgl=$tgl1!=''?$tgl1:date('Y-m-d');
+				$tglParam=$tgl!=''?$tgl:$setTgl;
+				
+				//if($this->checkRpt($setTgl)==0 or $this->checkRpt($setTgl)==1){			
 				$searchModel = new ReviewHeaderSearch([
-					'TGL'=>$setTgl
+					'TGL'=>$tglParam
 				]);
 				$searchModelIssue = new IssuemdSearch([
-					'TGL'=>$setTgl
+					'TGL'=>$tglParam,//'2016-10-28'
 				]);
 				
 				$dataProvider = $searchModel->searchHeaderReview(Yii::$app->request->queryParams);				
@@ -49,34 +94,167 @@ class ReviewVisitController extends Controller
 					'searchModelIssue' => $searchModelIssue,
 					'dataProviderIssue' => $dataProviderIssue
 				]);
-			}else{
-				return $this->redirect(['index?tgl='.$setTgl]);
-			}
-		};	
+			}else{ */
+				//$tgl1=Yii::$app->getRequest()->getQueryParam('tgl');
+				//$tglParam1=$tgl1!=''?$tgl1:date('Y-m-d');
+				//$tglParam=$setTglCookie!=''?$setTglCookie:$tglParam1;
+				
+				/**
+				* Syncronize Report Customercall Time
+				*/
+				if($this->checkRpt($tglParam)==0 or $this->checkRpt($tglParam)==1){			
+					$searchModel = new ReviewHeaderSearch([
+						'TGL'=>$tglParam
+					]);
+					$searchModelIssue = new IssuemdSearch([
+						'TGL'=>$tglParam,//'2016-10-28'
+					]);
+					
+					$dataProvider = $searchModel->searchHeaderReview(Yii::$app->request->queryParams);				
+					$dataProviderIssue = $searchModelIssue->search(Yii::$app->request->queryParams);				
+					return $this->render('index',[
+						'dataProviderHeader1'=>$dataProvider,
+						'searchModelHeader1'=>$searchModel,
+						'searchModelIssue' => $searchModelIssue,
+						'dataProviderIssue' => $dataProviderIssue
+					]);
+				}		
 		
-		$searchModel = new IssuemdSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+		
+			//if (Yii::$app->request->post('tgl')) {
+				//$tglpost = Yii::$app->request->post('tgl');
+				// $tglpost=Yii::$app->getRequest()->getQueryParam('tgl');
+				// setcookie('issuememoVal',$tglpost);	
+				// $cookies = Yii::$app->request->cookies;
+				// $cookVal =$cookies->get('issuememoVal');
+				//Yii::$app->response->format = Response::FORMAT_JSON;
+				// $tgl1=Yii::$app->request->post('tgl');
+				// $tglParam=$tgl1!=''?$tgl1:'2016-10-28';//date('Y-m-d');
+				// $setTgl=$_COOKIE['issuememoVal']!=0?$_COOKIE['issuememoVal']:$tglParam;
+				
+				//setcookie('issuememoValxx',1);	
+				//echo $setTgl;
+				//return;
+			//}
+			//else{
+				//$tgl1=Yii::$app->getRequest()->getQueryParam('tgl');
+				//$setTgl=$tgl1!=''?$tgl1:'2016-10-28';//date('Y-m-d');
+				
+			//};
+			//$setTgl=$tglpost!=''?$tglpost:$tglParam;
+		
+			//if (Yii::$app->request->isAjax) {
+				// if(isset($_POST['tgl']){
+					 // $tglpost = $_POST['tgl'];
+				// }else{
+					// $tgl1=Yii::$app->getRequest()->getQueryParam('tgl');
+					// $tglParam=$tgl1!=''?$tgl1:date('Y-m-d');
+				// };
+				//$model = new \yii\base\DynamicModel(['tgl']);
+				//$model->load(Yii::$app->request->post());
+				// $hsl = Yii::$app->request->get();
+				// $tgl1=Yii::$app->getRequest()->getQueryParam('tgl');
+				// $tglParam=$tgl1!=''?$tgl1:'2016-10-28';//date('Y-m-d');
+				// $tglpost=$hsl['tgl'];
+				// $setTgl=$tglpost!=''?$tglpost:$tglParam;
+				
+				//$setTgl=$tglpost!=''?$tglpost:date('Y-m-d');
+				/*$searchModel = new ReviewHeaderSearch([
+					'TGL'=>$setTgl
+				]);
+				 $searchModelIssue = new IssuemdSearch([
+					'TGL'=>$setTgl,//'2016-10-28'
+				]);
+				
+				$dataProvider = $searchModel->searchHeaderReview(Yii::$app->request->queryParams);				
+				$dataProviderIssue = $searchModelIssue->search(Yii::$app->request->queryParams);				
+				return $this->render('index',[
+					'dataProviderHeader1'=>$dataProvider,
+					'searchModelHeader1'=>$searchModel,
+					'searchModelIssue' => $searchModelIssue,
+					'dataProviderIssue' => $dataProviderIssue
+				]); */
+			//}else{
+				//Get value tgl from $tab
+				
+				//
+				
+			//};		
+				
+			//}else{
+			//	return $this->redirect(['index?tgl='.$setTgl]);
+			//}
+		};	
     }
+	
 	public function actionAmbilTanggal()
 	{
-		$model = new \yii\base\DynamicModel(['tanggal']);
-		$model->addRule(['tanggal'], 'safe');
-		if ($model->load(Yii::$app->request->post())) {
-			$hsl = Yii::$app->request->post();
-			$tgl = $hsl['DynamicModel']['tanggal'];
-			return $this->redirect(['index', 'tgl'=>$tgl]);
-		}else{			
+		// $model = new \yii\base\DynamicModel(['tanggal']);
+		// $model->addRule(['tanggal'], 'safe');
+		// if ($model->load(Yii::$app->request->post())) {
+			// $hsl = Yii::$app->request->post();
+			// $tgl = $hsl['DynamicModel']['tanggal'];
+			// return $this->redirect(['index', 'tgl'=>$tgl]);
+		// }else{			
+			// return $this->renderAjax('_indexform', [
+			// 'model'=>$model,
+			// ]);
+		// }
+		$model = new \yii\base\DynamicModel(['tgl']);
+		$model->addRule(['tgl'], 'required');
+		if (!$model->load(Yii::$app->request->post())){
 			return $this->renderAjax('_indexform', [
 			'model'=>$model,
 			]);
+		}else{
+			if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}
 		}
 	}
 	
+	/**
+	 * ISSUE NOTE -> CHECK DATE
+	 * @author Piter Novian [ptr.nov@gmail.com]
+	 * @since 2.0
+	*/
+	public function actionAmbilTanggalIssue()
+	{
+		$model = new \yii\base\DynamicModel(['tgl']);
+		$model->addRule(['tgl'], 'required');
+		if (!$model->load(Yii::$app->request->post())){
+			return $this->renderAjax('_indexformIssue', [
+			'model'=>$model,
+			]);
+		}else{
+			if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}
+		}
+	}
+	
+	/**
+	 * CHART -> CHECK DATE
+	 * @author Piter Novian [ptr.nov@gmail.com]
+	 * @since 2.0
+	*/
+	public function actionAmbilTanggalChart()
+	{
+		$model = new \yii\base\DynamicModel(['tgl']);
+		$model->addRule(['tgl'], 'required');
+		if (!$model->load(Yii::$app->request->post())){
+			return $this->renderAjax('_indexformChart', [
+			'model'=>$model,
+			]);
+		}else{
+			if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}
+		}
+	}
 	
 	/**
 	 * NEW METHOD REPORT 
@@ -588,7 +766,22 @@ class ReviewVisitController extends Controller
 			'TGL'=>$tgl//'2016-10-27'//$setTgl
 		]);
 		
-		$dataProviderIssue = $searchModelIssueMemo->search(Yii::$app->request->queryParams);				
+		$dataProviderIssue = $searchModelIssueMemo->search(Yii::$app->request->queryParams);	
+		$searchModelIssue = new IssuemdSearch([
+			'TGL'=>'2016-10-28'
+		]);
+		
+		$dataProvider = $searchModel->searchHeaderReview(Yii::$app->request->queryParams);				
+		$dataProviderIssue = $searchModelIssue->search(Yii::$app->request->queryParams);				
+		return $this->render('index',[
+			'searchModelIssue' => $searchModelIssue,
+			'dataProviderIssue' => $dataProviderIssue
+		]);
+
+
+
+
+		
 		// $adpIssue= new ArrayDataProvider([
 			// 'allModels'=>$dataProviderIssue->,
 			// 'pagination' => [
@@ -597,7 +790,7 @@ class ReviewVisitController extends Controller
 		// ]);
 		
 		//$rslt= ArrayHelper::toArray($adpIssue);	
-		$posts = Issuemd::find()->where(['TGL'=>$setTgl])->all();
+		/* $posts = Issuemd::find()->where(['TGL'=>$setTgl])->all();
 		$data = ArrayHelper::toArray($posts, [
 			'lukisongroup\master\models\Issuemd' => [
 				'TGL',
@@ -611,10 +804,10 @@ class ReviewVisitController extends Controller
 					//return strlen($post->content);
 				//},
 			],
-		]);
+		]); */
 	
 		//print_r(ArrayHelper::toArray($dataProviderIssue->getModels()));
-		 \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-		return $data;
+		/*  \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+		return $data; */
 	}
 }

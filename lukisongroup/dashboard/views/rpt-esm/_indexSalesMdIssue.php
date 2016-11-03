@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 //use yii\grid\GridView;
 use kartik\grid\GridView;
+
+
 $gridColumns = [
 	[ #serial column
 		'class'=>'kartik\grid\SerialColumn',
@@ -137,3 +139,5 @@ $issueMemo= GridView::widget([
 ]); 
 ?>
 <?=$issueMemo?>
+
+

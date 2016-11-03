@@ -504,7 +504,11 @@ $this->params['breadcrumbs'][] = $this->title;
 								'class' => 'btn btn-info btn-sm'		
 						   ]
 						);
-	
+	$btn_srchReviewDetail = Html::button(Yii::t('app', 'Search Date'),
+						['value'=>url::to(['ambil-tanggal']),
+						'id'=>'modalButtonReviewTgl',
+						'class'=>"btn btn-info btn-sm"						
+					  ]);
 	
 	/*SHOW GRID VIEW LIST*/
 	$indexReviewDetail= GridView::widget([
@@ -529,7 +533,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		],
 		'summary'=>false,
 		'panel' => [
-					'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-2x fa-bicycle"></div><div><h4 class="modal-title">DAILY REVIEW CUSTOMER CALL</h4></div>'.' '.'<div style="float:right; margin-top:-22px;margin-right:0px;">'.$btn_srch.'</div>', 
+					'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-2x fa-bicycle"></div><div><h4 class="modal-title">DAILY REVIEW CUSTOMER CALL</h4></div>'.' '.'<div style="float:right; margin-top:-22px;margin-right:0px;">'.$btn_srchReviewDetail.'</div>', 
 					'type'=>'success',
 					//'showFooter'=>false,
 		],
@@ -545,6 +549,41 @@ $this->params['breadcrumbs'][] = $this->title;
 	]);	
 ?>	
 <?=$indexReviewDetail?>
+
+<?php
+	$this->registerJs("		
+		$.fn.modal.Constructor.prototype.enforceFocus = function(){};	
+		$(document).on('click','#modalButtonReviewTgl', function(ehead){ 			  
+			$('#modal-review-tgl').modal('show')
+			.find('#modalContentReviewTgl')
+			.load(ehead.target.value);
+		});		  
+			 
+	",$this::POS_READY);
+	 
+     Modal::begin([		
+         'id' => 'modal-review-tgl',		
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search"></div><div><h4 class="modal-title"> SEARCH DATE</h4></div>',	
+		 'size' => Modal::SIZE_SMALL,	
+         'headerOptions'=>[		
+                 'style'=> 'border-radius:5px; background-color: rgba(90, 171, 255, 0.7)',		
+         ],		
+     ]);		
+		echo "<div id='modalContentReviewTgl'></div>";
+     Modal::end();
+	 
+	//$("#msline-salesmd-visit").updateFusionCharts({dataSource: 'jsonURL', dataFormat: 'MyNewChart.json’});
+
+?>
+
+
+
+
+
+
+
+
+
 <?php
 Modal::begin([
 			'id' => 'modal-view',

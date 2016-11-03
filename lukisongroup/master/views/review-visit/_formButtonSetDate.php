@@ -24,29 +24,52 @@ $JSEventClickIssue = <<<EOF
 		var rsltTgl = moment(date).format('YYYY-MM-DD');
 		//alert(rsltTgl);
 		//$.pjax.reload({container:'#gv-dashboard-issue'});
+		
+		$.get('/master/review-visit/index?tgl='+rsltTgl,function(){
+				 $.pjax.reload({container:'#gv-dashboard-issue'});
+	
+		});	
+		
 		/* $.get('/master/review-visit/issue-memo', function(data){
 					//coba =  JSON.parse(data);
 					console.log(data[1]);
 				});  */
-		$.ajax({
-			url: '/master/review-visit/issue-memo',
-			type: 'GET',
+		/* $.ajax({
+			//url: '/master/review-visit/issue-memo',
+			url: '/master/review-visit/index',
+			type: 'POST',
+			//async: true,
+			//data:'IssuemdSearch["tgl"]='+rsltTgl,
 			data:'tgl='+rsltTgl,
 			dataType: 'json',
-			success: function(data) {
-				//$.pjax.reload({container:'#gv-po-detail'});
+			success: function(response) {
+				if(response){
+					$.pjax.reload({container:'#gv-dashboard-issue'});
+				}
+				// $.fn.yiiGridView.update('gv-dashboard-issue', {
+					// data: dataProvider
+				// });
+				//$('.grid-view').yiiGridView('applyFilter');
+				//if(dataProvider){
+					
+				//};
+				
 				// $.each(data[1], function (i,listData) {
 					
 					
 					// dataprovider[i]=listData;
 				// });
 				//console.log(data);
-				'$datatest='+data;
-				$('test').reload;
-			}
-		});
+				//'$datatest='+data;
+				//$('test').reload;
+			} 
+		}); */
+		// setTimeout(function(){
+			// $.pjax.reload({container:'#gv-dashboard-issue'});
+		// },1);
 		// var elemWeek = document.getElementById("id-week"); 
 		// elemWeek.value = weekNilai; 
+		//$.pjax.reload({container:'#gv-dashboard-issue'})
 	}
 EOF;
 	
