@@ -71,7 +71,7 @@ class IssuemdSearch extends Issuemd
         ]);
 
         $query->andFilterWhere(['like', 'KD_CUSTOMER', $this->KD_CUSTOMER])
-            ->andFilterWhere(['like', 'NM_CUSTOMER', $this->NM_CUSTOMER])
+			->andFilterWhere(['like', 'NM_CUSTOMER', $this->NM_CUSTOMER])
             ->andFilterWhere(['like', 'NM_USER', $this->NM_USER])
             ->andFilterWhere(['like', 'ISI_MESSAGES', $this->ISI_MESSAGES]);
 

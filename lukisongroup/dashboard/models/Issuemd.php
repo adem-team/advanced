@@ -2,6 +2,9 @@
 
 namespace lukisongroup\dashboard\models;
 
+use lukisongroup\master\models\Customers;
+use lukisongroup\master\models\DraftPlanGroup;
+use lukisongroup\sistem\models\CrmUserprofile;
 use Yii;
 
 /**
@@ -72,5 +75,31 @@ class Issuemd extends \yii\db\ActiveRecord
             'UPDATE_BY' => 'Update  By',
             'UPDATE_AT' => 'Update  At',
         ];
+    }
+	
+	/* JOIN Model Customers*/
+	public function getCustTbl()
+    {
+        return $this->hasOne(Customers::className(), ['CUST_KD' => 'KD_CUSTOMER']);
+    }	
+	
+	public function getTblGeo()
+    {
+        return $this->hasOne(DraftPlanGroup::className(), ['GEO_ID' => 'GEO'])->via('custTbl');
+    }
+	public function getGeonm() 
+    {
+        return $this->custTbl!=''?$this->custTbl->geoNm:'none';
+    }
+	
+	/* JOIN CRM  CrmUserprofile*/
+	public function getUserprofile()
+    {
+        return $this->hasOne(CrmUserprofile::className(), ['ID_USER' => 'ID_USER']);
+    }	
+	
+	public function getUserNm() 
+    {
+        return $this->userprofile!=''?$this->NM_USER.' ('.$this->userprofile->NM_FIRST.') ':'none';
     }
 }

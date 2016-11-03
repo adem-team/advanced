@@ -108,10 +108,19 @@ class RptEsmController extends Controller
      */
     public function actionIndex()
     {
+		
+		$model = new \yii\base\DynamicModel(['tgl_issue']);
+		$model->addRule(['tgl_issue'], 'safe');
+		$hsl = Yii::$app->request->post();
+		$tgl = $hsl['DynamicModel']['tgl_issue'];
+		setcookie('esmDashboardIssueTglVal',$tgl);	
+		$setTglCookie=$_COOKIE['esmDashboardIssueTglVal'];
+		$tglParam=$setTglCookie!=''?$setTglCookie:date('Y-m-d');
+			
 		//if($this->checkRpt($setTgl)==0 or $this->checkRpt($setTgl)==1){			
-			$searchModelIssue = new IssuemdSearch([
-				'TGL'=>$setTgl
-			]);
+		$searchModelIssue = new IssuemdSearch([
+			'TGL'=>$tglParam
+		]);
 		//}
 		
 		$dataProvider_CustPrn= new ArrayDataProvider([
@@ -134,6 +143,50 @@ class RptEsmController extends Controller
 		]);
 
     }
+	
+	/**
+	 * ISSUE NOTE -> CHECK DATE
+	 * @author Piter Novian [ptr.nov@gmail.com]
+	 * @since 2.0
+	*/
+	public function actionAmbilTanggalIssue()
+	{
+		$model = new \yii\base\DynamicModel(['tgl_issue']);
+		$model->addRule(['tgl_issue'], 'required');
+		if (!$model->load(Yii::$app->request->post())){
+			return $this->renderAjax('_indexSalesMdIssueForm', [
+			'model'=>$model,
+			]);
+		}else{
+			if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}
+		}
+	}
+	
+	/**
+	 * CHART -> CHECK DATE
+	 * @author Piter Novian [ptr.nov@gmail.com]
+	 * @since 2.0
+	*/
+	public function actionAmbilTanggalChart()
+	{
+		$model = new \yii\base\DynamicModel(['tglchartmd']);
+		$model->addRule(['tglchartmd'], 'required');
+		if (!$model->load(Yii::$app->request->post())){
+			return $this->renderAjax('_indexSalesMdChartForm', [
+			'model'=>$model,
+			]);
+		}else{
+			if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}
+		}
+	}
+	
+	
 	
 	public function actionTabsData()
 	{    	$html = $this->renderPartial('tabContent');

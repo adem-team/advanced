@@ -12,14 +12,15 @@ $_indexSalesMdIssue=$this->render('_indexSalesMdIssue',[
 	'dataProviderIssue' => $dataProviderIssue
 ]);	
 
-$items=[
+$items=[						
 	[
-		'label'=>'<i class="fa fa-area-chart fa-md"></i> Chart','content'=>$_indexSalesMdChart,
+		'label'=>'<i class="fa fa-eye fa-2x"></i> Issue','content'=>$_indexSalesMdIssue,
 		'active'=>true,
-	],					
-	[
-		'label'=>'<i class="fa fa-book fa-md"></i> Issue','content'=>$_indexSalesMdIssue,
 	],
+	[
+		'label'=>'<i class="fa fa-area-chart fa-2x"></i> Chart','content'=>$_indexSalesMdChart,
+		
+	]
 ];
 
 $tabSalesMd= TabsX::widget([

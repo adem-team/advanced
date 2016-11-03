@@ -7,31 +7,28 @@ use yii\helpers\Url;
 use ptrnov\fusionchart\Chart;
 use ptrnov\fusionchart\ChartAsset;
 ChartAsset::register($this);
+
+
 ?>
-<?php yii\widgets\Pjax::begin(['id' => 'issue-chek-tgl']) ?>
+<?php yii\widgets\Pjax::begin(['id' => 'chartmd-chek-tgl']) ?>
 	<?php
 		$form = ActiveForm::begin([
-				'id'=>$model->formName(),
+				'id'=>$model->formName().'md',
 				'enableClientValidation' => false,
 				'enableAjaxValidation'=>true,
-				'validationUrl'=>Url::toRoute('/master/review-visit/ambil-tanggal-chart'),	
+				'validationUrl'=>Url::toRoute('/dashboard/rpt-esm/ambil-tanggal-chart'),	
 				//'method' => 'post',
 				//'action' => ['/master/review-visit/index'],
 		]);
 	?>	
-	<?= $form->field($model, 'tgl')->widget(DatePicker::classname(), [
+	<?= $form->field($model, 'tglchartmd')->widget(DatePicker::classname(), [
 		'options' => ['placeholder' => 'Pilih  ...'],
 		'pluginOptions' => [
 		   'autoclose'=>true,
 		   'format' => 'yyyy-mm-dd',
 		]
-		])->label('Tanggal')  ?>
-		
-		<div style="text-align: right;"">
-		<?php //echo Html::submitButton('Submit',['class' => 'btn btn-primary', 'data-pjax' =>1]); ?>
-	</div>
-
-    
+		])->label('Tanggal')
+	?>		
 	<?php ActiveForm::end(); ?>	
 <?php yii\widgets\Pjax::end() ?>	
 
@@ -42,13 +39,13 @@ $this->registerJs("
 	* Status : Fixed.
 	* author piter novian [ptr.nov@gmail.com].
 	*/
-	$(".$model->formName().").on('ajaxComplete',".$model->formName().", function () {
-		 var form = $(".$model->formName().");
+	$(".$model->formName().'md'.").on('ajaxComplete',".$model->formName().'md'.", function () {
+		 var form = $(".$model->formName().'md'.");
 		 // return false if form still have some validation errors
 		 if (form.find('.has-error').length) {
 			  return false;
 		 }; 		
-		var valTgl = $('#dynamicmodel-tgl').val();
+		var valTgl = $('#dynamicmodel-tglchartmd').val();
 		$.ajax({
 			url: 'http://lukisongroup.com/dashboard/rpt-esm-chart-salesmd/visit',
 			type: 'GET',
@@ -58,7 +55,7 @@ $this->registerJs("
 				$('document').ready(function(){
 					var revenueChart = new FusionCharts({
 						type: 'msline',					
-						renderAt: 'msline-salesmd-visit',
+						renderAt: 'msline-dashboard-salesmd-visit',
 						width: '100%',	
 						height:'500%',	
 						dataFormat: 'json',
@@ -79,7 +76,7 @@ $this->registerJs("
 				$('document').ready(function(){
 					var revenueChart = new FusionCharts({
 						type: 'mscolumn3d',					
-						renderAt: 'msline-salesmd-visit-stock',
+						renderAt: 'msline-dashboard-salesmd-visit-stock',
 						width: '100%',	
 						height:'500%',	
 						dataFormat: 'json',
@@ -100,7 +97,7 @@ $this->registerJs("
 				$('document').ready(function(){
 					var revenueChart = new FusionCharts({
 						type: 'mscolumn3d',					
-						renderAt: 'msline-salesmd-visit-request',
+						renderAt: 'msline-dashboard-salesmd-visit-request',
 						width: '100%',	
 						height:'500%',	
 						dataFormat: 'json',

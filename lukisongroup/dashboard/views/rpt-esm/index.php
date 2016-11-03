@@ -106,35 +106,35 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				
 				$items=[
 					[
-						'label'=>'<i class="fa fa-map-marker fa-md"></i> Map','content'=>$_indexMap,
+						'label'=>'<i class="fa fa-map-marker fa-2x"></i> Map','content'=>$_indexMap,
 						'active'=>true,
 					],					
 					[
-						'label'=>'<i class="fa fa-chain fa-md"></i> Seles MD','content'=>$_indexSalesMd,
+						'label'=>'<i class="fa fa-chain fa-2x"></i> Seles MD','content'=>$_indexSalesMd,
 					],
 					[
-						'label'=>'<i class="fa fa-truck fa-md"></i> PO Distributor','content'=>$_indexDistibutorPo,
+						'label'=>'<i class="fa fa-truck fa-2x"></i> PO Distributor','content'=>$_indexDistibutorPo,
 					],
 					[
-						'label'=>'<i class="fa fa-rocket fa-md"></i> PO NKA','content'=>$_indexNKAPo,
+						'label'=>'<i class="fa fa-rocket fa-2x"></i> PO NKA','content'=>$_indexNKAPo,
 					],
 					[
-						'label'=>'<i class="fa fa-university fa-md"></i> PO Supplier','content'=>$_indexSupplierPo,
+						'label'=>'<i class="fa fa-university fa-2x"></i> PO Supplier','content'=>$_indexSupplierPo,
 					],
 					[
-						'label'=>'<i class="fa fa-book fa-md"></i> Trading Terms','content'=>$_indexTerm,	
+						'label'=>'<i class="fa fa-book fa-2x"></i> Trading Terms','content'=>$_indexTerm,	
 					],
 					[
-						'label'=>'<i class="fa fa-calendar-o fa-md"></i> Schaduling','content'=>$_indexScdl,	
+						'label'=>'<i class="fa fa-calendar-o fa-2x"></i> Schaduling','content'=>$_indexScdl,	
 					],
 					[
-						'label'=>'<i class="fa fa-sitemap fa-md"></i> Component','content'=>$_indexComponent,	
+						'label'=>'<i class="fa fa-sitemap fa-2x"></i> Component','content'=>$_indexComponent,	
 					],
 					
 					
-					[
-						'label'=>'<i class="glyphicon glyphicon-home"></i> Example Chat','content'=>$exampleChart,
-					]
+					// [
+						// 'label'=>'<i class="glyphicon glyphicon-home"></i> Example Chat','content'=>$exampleChart,
+					// ]
 				];
 			
 				$tabDdashboardEsm= TabsX::widget([

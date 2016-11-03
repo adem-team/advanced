@@ -113,7 +113,7 @@ class TermheaderSearch extends Termheader
         //   }
 
 
-        $query = Termheader::find()->where('PERIOD_END >= CURDATE()');
+        $query = Termheader::find();
 
 
         $dataProvider = new ActiveDataProvider([
