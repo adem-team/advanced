@@ -68,7 +68,8 @@ class HelpController extends Controller
 		$so_tutorial =$this->renderPartial('so\so_tutorial');
 		$po_normal_tutorial =$this->renderPartial('po\po_normal_tutorial');
 		$po_plus_tutorial =$this->renderPartial('po\po_plus_tutorial');	
-		$customer =$this->renderPartial('cust\customer');			
+		$customer =$this->renderPartial('cust\customer');	
+		$product =$this->renderPartial('prod\product');			
 		$hrm_penjelasan =$this->renderPartial('hrm\penjelasan');
 		
 		
@@ -90,7 +91,9 @@ class HelpController extends Controller
 			/*PO Plus Tutorial*/
 			'po_plus_tutorial'=>$po_plus_tutorial,
 			/*Customer*/
-			'customer'=>$customer,			
+			'customer'=>$customer,
+			/*Product*/
+			'product'=>$product					
 		]);
     
     }

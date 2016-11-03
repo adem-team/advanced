@@ -54,7 +54,7 @@ use yii\data\ArrayDataProvider;
 					'enableStickyTabs' => true,
 					'stickyTabsOptions' => [
 						'selectorAttribute' => 'data-target',
-						'backToTop' => true,
+						'backToTop' => false,
 					],
 					'items'=>$items,
 					'sideways'=>true,

@@ -386,6 +386,8 @@ $this->title = Yii::t('app', 'Trading Terms ');
 			<dd>: <?php echo date('d-M-Y'); ?></dd>
 			<dt style="width:100px; float:left;">Kode Rqt</dt>
 			<dd>: <?php echo $roHeader->KD_RIB; ?></dd>
+			  <dt style="width:100px; float:left;">Customers</dt>
+			  <dd>: <?php echo $roHeader->cus->CUST_NM; ?></dd>
 			<dt style="width:100px; float:left;">Departement</dt>
 			<dd>:
 			<?php
@@ -769,6 +771,132 @@ $this->title = Yii::t('app', 'Trading Terms ');
 		]);
 		?>
 	</div>
+	<?php
+	/*
+ * GRID list
+ * @author wawan  [aditiya@lukison.com]
+ * @since 1.2
+*/
+$actionClass='btn btn-info btn-xs';
+$actionLabel='Update';
+$attDinamik =[];
+/*GRIDVIEW ARRAY FIELD HEAD*/
+
+$headColomnBT=[
+	['ID' =>0, 'ATTR' =>['FIELD'=>'nminvest','SIZE' => '30px','label'=>'Investasi','center'=>'left','warna'=>'126, 189, 188, 0.3','grp'=>false]],
+	['ID' =>1, 'ATTR' =>['FIELD'=>'LIST_ALL','SIZE' => '30px','label'=>'Store','align'=>'left','warna'=>'126, 189, 188, 0.3','grp'=>false]],
+];
+$gvHeadColomnBT = ArrayHelper::map($headColomnBT, 'ID', 'ATTR');
+
+
+
+
+$attDinamik[] =[
+  'class'=>'kartik\grid\SerialColumn',
+  //'contentOptions'=>['class'=>'kartik-sheet-style'],
+  'width'=>'10px',
+  'header'=>'No.',
+  'headerOptions'=>[
+    'style'=>[
+      'text-align'=>'center',
+      'width'=>'10px',
+      'font-family'=>'verdana, arial, sans-serif',
+      'font-size'=>'9pt',
+      'background-color'=>'rgba(126, 189, 188, 0.3)',
+    ]
+  ],
+  'contentOptions'=>[
+    'style'=>[
+      'text-align'=>'center',
+      'width'=>'10px',
+      'font-family'=>'tahoma, arial, sans-serif',
+      'font-size'=>'9pt',
+    ]
+  ],
+];
+
+
+/*GRIDVIEW ARRAY ROWS*/
+foreach($gvHeadColomnBT as $key =>$value[]){
+      # code...
+      $attDinamik[]=[
+        'attribute'=>$value[$key]['FIELD'],
+        'label'=>$value[$key]['label'],
+        'filter'=>true,
+        'hAlign'=>'right',
+        'vAlign'=>'middle',
+        'noWrap'=>false,
+		//'group'=>$value[$key]['grp'],
+        'headerOptions'=>[
+            'style'=>[
+            'text-align'=>'center',
+            'width'=>$value[$key]['SIZE'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+            'background-color'=>'rgba('.$value[$key]['warna'].')',
+          ]
+        ],
+        'contentOptions'=>[
+          'style'=>[
+			'width'=>$value[$key]['SIZE'],
+            'text-align'=>$value[$key]['align'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+          ]
+        ],
+      ];
+
+    };
+
+
+// $urlx = Url::toRoute(['request-term/list-all','kd'=>$roHeader->KD_RIB,'term_id'=>$roHeader->TERM_ID,'cust_kd'=>$roHeader->CUST_ID_PARENT]);
+/*SHOW GRID VIEW LIST*/
+$gvlist=GridView::widget([
+  'id'=>'gv-list-id',
+  'dataProvider' => $dataProviderList,
+  // 'filterModel' => $searchModel,
+  'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+  'columns' => $attDinamik,
+  'pjax'=>true,
+  'pjaxSettings'=>[
+    'options'=>[
+		'enablePushState'=>false,
+		'id'=>'gv-list-id',
+    ],
+  ],
+  'panel' => [
+        'heading'=>false,
+        'type'=>'info',
+      'before'=> '',
+        'showFooter'=>false,
+  ],
+  /* 'export' =>['target' => GridView::TARGET_BLANK],
+  'exportConfig' => [
+    GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
+    GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
+  ], */
+  'toolbar'=> [
+        //'{export}',
+    //'{items}',
+  ],
+  'hover'=>true, //cursor select
+  'responsive'=>true,
+  'responsiveWrap'=>true,
+  'bordered'=>true,
+  'striped'=>true,
+]);
+?>
+<div class="col-md-12">
+		<div style="align:right;">
+
+		<?= $gvlist ?>
+</div>	
+<!-- </div> -->
+
+
+		
+
+	</div>
 
 	<!-- PO Note !-->
 	<div  class="row">
@@ -799,7 +927,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 						<th  class="col-md-1" style="text-align: center; height:20px">
 							<div style="text-align:center;">
 								<?php
-									$placeTgl1=$roHeader->SIG1_TGL!=0 ? Yii::$app->ambilKonvesi->convert($roHeader->SIG1_TGL,'date') :'';
+									$placeTgl1=date('Y-m-d') ;
 									echo '<b>Tanggerang</b>,' . $placeTgl1;
 								?>
 							</div>
@@ -809,7 +937,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 						<th class="col-md-1" style="text-align: center; height:20px">
 							<div style="text-align:center;">
 								<?php
-									$placeTgl2=$roHeader->SIG2_TGL!=0 ? Yii::$app->ambilKonvesi->convert($roHeader->SIG2_TGL,'date') :'';
+									$placeTgl2=date('Y-m-d') ;
 									echo '<b>Tanggerang</b>,' . $placeTgl2;
 								?>
 							</div>
@@ -819,7 +947,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 						<th class="col-md-1" style="text-align: center; height:20px">
 							<div style="text-align:center;">
 								<?php
-									$placeTgl3=$roHeader->SIG3_TGL!=0 ? Yii::$app->ambilKonvesi->convert($roHeader->SIG3_TGL,'date') :'';
+									$placeTgl3=date('Y-m-d');
 									echo '<b>Tanggerang</b>,' . $placeTgl3;
 								?>
 							</div>
