@@ -17,8 +17,10 @@ use yii\helpers\Url;
 				'action' => ['/master/review-visit/index'],
 		]);
 	?>	
-	<?= $form->field($model, 'tgl')->widget(DatePicker::classname(), [
-		'options' => ['placeholder' => 'Pilih  ...'],
+	<?= $form->field($model, 'tgl_issue')->widget(DatePicker::classname(), [
+		'options' => [
+			'placeholder' => 'Pilih  ...'
+		],
 		'pluginOptions' => [
 		   'autoclose'=>true,
 		   'format' => 'yyyy-mm-dd',

@@ -16,7 +16,20 @@ use yii\db\ActiveRecord;
 use yii\data\ArrayDataProvider;
 use dosamigos\gallery\Gallery;
 
-$btn_srch = Html::button(Yii::t('app', 'Search Date'),
+	function statusIssue($model){
+		if($model->STATUS==1){
+			/*REVIEW*/
+			return Html::a('<i class="fa fa-square-o fa-md"></i> REVIEW', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'100px'],'title'=>'Review']);
+		}elseif($model->STATUS==2){
+			/*PROCESS*/
+			return Html::a('<i class="fa fa-check-square-o fa-md"></i> PROCESS', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Process']);
+		}elseif ($model->STATUS==3){
+			/*CLODED*/
+			return Html::a('<i class="glyphicon glyphicon-remove"></i> CLOSED', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Closed']);
+		};
+	}
+	
+	$btn_srch = Html::button(Yii::t('app', 'Search Date'),
 						['value'=>url::to(['ambil-tanggal-issue']),
 						'id'=>'modalButtonIssueTgl',
 						'class'=>"btn btn-info btn-sm"						
@@ -86,6 +99,9 @@ $gridColumns = [
 		'attribute' => 'NM_CUSTOMER',
 		'label'=>'CUSTOMER',
 		'hAlign'=>'left',
+		'filterOptions'=>[
+			'colspan'=>3,
+		],
 		'vAlign'=>'middle',
 		'headerOptions'=>[
 			'style'=>[
@@ -106,10 +122,11 @@ $gridColumns = [
 		],
 	],
 	[
-		'attribute' => 'NM_USER',
-		'label'=>'SALES',
+		'attribute' => 'UserNm',
+		'label'=>'SALES.NM',
 		'hAlign'=>'left',
-		'vAlign'=>'middle',
+		'vAlign'=>'top',
+		'mergeHeader'=>true,
 		'headerOptions'=>[
 			'style'=>[
 			  'text-align'=>'center',
@@ -123,6 +140,30 @@ $gridColumns = [
 			'style'=>[
 			  'text-align'=>'left',
 			  'width'=>'100px',
+			  'font-family'=>'tahoma, arial, sans-serif',
+			  'font-size'=>'8pt',
+			]
+		],
+	],
+	[
+		'attribute' => 'Geonm',
+		'label'=>'GEO',
+		'hAlign'=>'left',
+		'vAlign'=>'top',
+		'mergeHeader'=>true,
+		'headerOptions'=>[
+			'style'=>[
+			  'text-align'=>'center',
+			  'width'=>'50px',
+			  'font-family'=>'tahoma, arial, sans-serif',
+			  'font-size'=>'8pt',
+			  'background-color'=>'rgba(126, 189, 188, 0.9)',
+			]
+		],
+		'contentOptions'=>[
+			'style'=>[
+			  'text-align'=>'left',
+			  'width'=>'50px',
 			  'font-family'=>'tahoma, arial, sans-serif',
 			  'font-size'=>'8pt',
 			]
@@ -136,7 +177,7 @@ $gridColumns = [
 		'headerOptions'=>[
 			'style'=>[
 			  'text-align'=>'center',
-			  'width'=>'500px',
+			  'width'=>'400px',
 			  'font-family'=>'tahoma, arial, sans-serif',
 			  'font-size'=>'8pt',
 			  'background-color'=>'rgba(126, 189, 188, 0.9)',
@@ -145,7 +186,38 @@ $gridColumns = [
 		'contentOptions'=>[
 			'style'=>[
 			  'text-align'=>'left',
-			  'width'=>'500px',
+			  'width'=>'400px',
+			  'font-family'=>'tahoma, arial, sans-serif',
+			  'font-size'=>'8pt',
+			]
+		],
+	],
+	[	//COL-1
+		/* Attribute Status Detail RO */
+		'attribute'=>'STATUS',
+		'options'=>['id'=>'test-ro'],
+		'label'=>'Status',
+		'hAlign'=>'center',
+		'vAlign'=>'middle',
+		'mergeHeader'=>true,
+		'contentOptions'=>['style'=>'width: 100px'],
+		'format' => 'html',
+		'value'=>function ($model, $key, $index, $widget) {
+					return statusIssue($model);
+		},
+		'headerOptions'=>[
+			'style'=>[
+			  'text-align'=>'center',
+			  'width'=>'80px',
+			  'font-family'=>'tahoma, arial, sans-serif',
+			  'font-size'=>'8pt',
+			  'background-color'=>'rgba(126, 189, 188, 0.9)',
+			]
+		],
+		'contentOptions'=>[
+			'style'=>[
+			  'text-align'=>'center',
+			  'width'=>'80px',
 			  'font-family'=>'tahoma, arial, sans-serif',
 			  'font-size'=>'8pt',
 			]
@@ -157,6 +229,7 @@ $issueMemo= GridView::widget([
 	'id'=>'gv-dashboard-issue',
 	'dataProvider' => $dataProviderIssue,
 	'filterModel' => $searchModelIssue,
+	'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.9); align:center'],
 	'columns' => $gridColumns,
 	'pjax'=>true,
 	'pjaxSettings'=>[

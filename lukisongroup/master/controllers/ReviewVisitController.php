@@ -56,6 +56,12 @@ class ReviewVisitController extends Controller
             }
     }
 	
+	/**
+	 * Review Detail Index, refresh by ajax and dinamic model
+	 * Index Issue, refresh by ajax
+	 * @author Piter Novian [ptr.nov@gmail.com]
+	 * @since 2.0
+	*/
 	public function actionIndex()
     {
 		Yii::$app->response->getHeaders()->set('Vary', 'Accept');
@@ -64,21 +70,20 @@ class ReviewVisitController extends Controller
 		if (\Yii::$app->user->isGuest) {
             return $this->render('../../../views/site/index_nologin');
         }else{	
-			$model = new \yii\base\DynamicModel(['tgl']);
-			$model->addRule(['tgl'], 'safe');
+			$model = new \yii\base\DynamicModel(['tgl_detail','tgl_issue']);
+			$model->addRule(['tgl_detail','tgl_issue'], 'safe');
 			$hsl = Yii::$app->request->post();
-		    $tgl = $hsl['DynamicModel']['tgl'];
+		    $tglDetail = $hsl['DynamicModel']['tgl_detail'];
+		    $tglIssue = $hsl['DynamicModel']['tgl_issue'];
+		    $tgl = $tglDetail!=''?$tglDetail:$tglIssue;
 			setcookie('issuememoTglVal',$tgl);	
 			$setTglCookie=$_COOKIE['issuememoTglVal'];
 			$tglParam=$setTglCookie!=''?$setTglCookie:date('Y-m-d');
 			
-			/* if ($model->load(Yii::$app->request->post())) {
-				$hsl = Yii::$app->request->post();
-				$tgl = $hsl['DynamicModel']['tgl'];
-				$setTgl=$tgl1!=''?$tgl1:date('Y-m-d');
-				$tglParam=$tgl!=''?$tgl:$setTgl;
-				
-				//if($this->checkRpt($setTgl)==0 or $this->checkRpt($setTgl)==1){			
+			/**
+			* Syncronize Report Customercall Time
+			*/
+			if($this->checkRpt($tglParam)==0 or $this->checkRpt($tglParam)==1){			
 				$searchModel = new ReviewHeaderSearch([
 					'TGL'=>$tglParam
 				]);
@@ -94,114 +99,19 @@ class ReviewVisitController extends Controller
 					'searchModelIssue' => $searchModelIssue,
 					'dataProviderIssue' => $dataProviderIssue
 				]);
-			}else{ */
-				//$tgl1=Yii::$app->getRequest()->getQueryParam('tgl');
-				//$tglParam1=$tgl1!=''?$tgl1:date('Y-m-d');
-				//$tglParam=$setTglCookie!=''?$setTglCookie:$tglParam1;
-				
-				/**
-				* Syncronize Report Customercall Time
-				*/
-				if($this->checkRpt($tglParam)==0 or $this->checkRpt($tglParam)==1){			
-					$searchModel = new ReviewHeaderSearch([
-						'TGL'=>$tglParam
-					]);
-					$searchModelIssue = new IssuemdSearch([
-						'TGL'=>$tglParam,//'2016-10-28'
-					]);
-					
-					$dataProvider = $searchModel->searchHeaderReview(Yii::$app->request->queryParams);				
-					$dataProviderIssue = $searchModelIssue->search(Yii::$app->request->queryParams);				
-					return $this->render('index',[
-						'dataProviderHeader1'=>$dataProvider,
-						'searchModelHeader1'=>$searchModel,
-						'searchModelIssue' => $searchModelIssue,
-						'dataProviderIssue' => $dataProviderIssue
-					]);
-				}		
-		
-		
-			//if (Yii::$app->request->post('tgl')) {
-				//$tglpost = Yii::$app->request->post('tgl');
-				// $tglpost=Yii::$app->getRequest()->getQueryParam('tgl');
-				// setcookie('issuememoVal',$tglpost);	
-				// $cookies = Yii::$app->request->cookies;
-				// $cookVal =$cookies->get('issuememoVal');
-				//Yii::$app->response->format = Response::FORMAT_JSON;
-				// $tgl1=Yii::$app->request->post('tgl');
-				// $tglParam=$tgl1!=''?$tgl1:'2016-10-28';//date('Y-m-d');
-				// $setTgl=$_COOKIE['issuememoVal']!=0?$_COOKIE['issuememoVal']:$tglParam;
-				
-				//setcookie('issuememoValxx',1);	
-				//echo $setTgl;
-				//return;
-			//}
-			//else{
-				//$tgl1=Yii::$app->getRequest()->getQueryParam('tgl');
-				//$setTgl=$tgl1!=''?$tgl1:'2016-10-28';//date('Y-m-d');
-				
-			//};
-			//$setTgl=$tglpost!=''?$tglpost:$tglParam;
-		
-			//if (Yii::$app->request->isAjax) {
-				// if(isset($_POST['tgl']){
-					 // $tglpost = $_POST['tgl'];
-				// }else{
-					// $tgl1=Yii::$app->getRequest()->getQueryParam('tgl');
-					// $tglParam=$tgl1!=''?$tgl1:date('Y-m-d');
-				// };
-				//$model = new \yii\base\DynamicModel(['tgl']);
-				//$model->load(Yii::$app->request->post());
-				// $hsl = Yii::$app->request->get();
-				// $tgl1=Yii::$app->getRequest()->getQueryParam('tgl');
-				// $tglParam=$tgl1!=''?$tgl1:'2016-10-28';//date('Y-m-d');
-				// $tglpost=$hsl['tgl'];
-				// $setTgl=$tglpost!=''?$tglpost:$tglParam;
-				
-				//$setTgl=$tglpost!=''?$tglpost:date('Y-m-d');
-				/*$searchModel = new ReviewHeaderSearch([
-					'TGL'=>$setTgl
-				]);
-				 $searchModelIssue = new IssuemdSearch([
-					'TGL'=>$setTgl,//'2016-10-28'
-				]);
-				
-				$dataProvider = $searchModel->searchHeaderReview(Yii::$app->request->queryParams);				
-				$dataProviderIssue = $searchModelIssue->search(Yii::$app->request->queryParams);				
-				return $this->render('index',[
-					'dataProviderHeader1'=>$dataProvider,
-					'searchModelHeader1'=>$searchModel,
-					'searchModelIssue' => $searchModelIssue,
-					'dataProviderIssue' => $dataProviderIssue
-				]); */
-			//}else{
-				//Get value tgl from $tab
-				
-				//
-				
-			//};		
-				
-			//}else{
-			//	return $this->redirect(['index?tgl='.$setTgl]);
-			//}
+			}
 		};	
     }
 	
+	/**
+	 * REVIEW DETAIL -> CHECK DATE
+	 * @author Piter Novian [ptr.nov@gmail.com]
+	 * @since 2.0
+	*/
 	public function actionAmbilTanggal()
 	{
-		// $model = new \yii\base\DynamicModel(['tanggal']);
-		// $model->addRule(['tanggal'], 'safe');
-		// if ($model->load(Yii::$app->request->post())) {
-			// $hsl = Yii::$app->request->post();
-			// $tgl = $hsl['DynamicModel']['tanggal'];
-			// return $this->redirect(['index', 'tgl'=>$tgl]);
-		// }else{			
-			// return $this->renderAjax('_indexform', [
-			// 'model'=>$model,
-			// ]);
-		// }
-		$model = new \yii\base\DynamicModel(['tgl']);
-		$model->addRule(['tgl'], 'required');
+		$model = new \yii\base\DynamicModel(['tgl_detail']);
+		$model->addRule(['tgl_detail'], 'required');
 		if (!$model->load(Yii::$app->request->post())){
 			return $this->renderAjax('_indexform', [
 			'model'=>$model,
@@ -221,8 +131,8 @@ class ReviewVisitController extends Controller
 	*/
 	public function actionAmbilTanggalIssue()
 	{
-		$model = new \yii\base\DynamicModel(['tgl']);
-		$model->addRule(['tgl'], 'required');
+		$model = new \yii\base\DynamicModel(['tgl_issue']);
+		$model->addRule(['tgl_issue'], 'required');
 		if (!$model->load(Yii::$app->request->post())){
 			return $this->renderAjax('_indexformIssue', [
 			'model'=>$model,
@@ -242,8 +152,8 @@ class ReviewVisitController extends Controller
 	*/
 	public function actionAmbilTanggalChart()
 	{
-		$model = new \yii\base\DynamicModel(['tgl']);
-		$model->addRule(['tgl'], 'required');
+		$model = new \yii\base\DynamicModel(['tglchart']);
+		$model->addRule(['tglchart'], 'required');
 		if (!$model->load(Yii::$app->request->post())){
 			return $this->renderAjax('_indexformChart', [
 			'model'=>$model,

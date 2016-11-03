@@ -8,10 +8,10 @@ use ptrnov\fusionchart\Chart;
 use ptrnov\fusionchart\ChartAsset;
 ChartAsset::register($this);
 ?>
-<?php yii\widgets\Pjax::begin(['id' => 'chart-chek-tgl']) ?>
+<?php yii\widgets\Pjax::begin(['id' => 'issue-chek-tgl']) ?>
 	<?php
 		$form = ActiveForm::begin([
-				'id'=>$model->formName().'chart',
+				'id'=>$model->formName(),
 				'enableClientValidation' => false,
 				'enableAjaxValidation'=>true,
 				'validationUrl'=>Url::toRoute('/master/review-visit/ambil-tanggal-chart'),	
@@ -19,10 +19,8 @@ ChartAsset::register($this);
 				//'action' => ['/master/review-visit/index'],
 		]);
 	?>	
-	<?= $form->field($model, 'tglchart')->widget(DatePicker::classname(), [
-		'options' => [
-			'placeholder' => 'Pilih  ...'
-		],
+	<?= $form->field($model, 'tgl')->widget(DatePicker::classname(), [
+		'options' => ['placeholder' => 'Pilih  ...'],
 		'pluginOptions' => [
 		   'autoclose'=>true,
 		   'format' => 'yyyy-mm-dd',
@@ -44,13 +42,13 @@ $this->registerJs("
 	* Status : Fixed.
 	* author piter novian [ptr.nov@gmail.com].
 	*/
-	$(".$model->formName().'chart'.").on('ajaxComplete',".$model->formName().'chart'.", function () {
-		 var form = $(".$model->formName().'chart'.");
+	$(".$model->formName().").on('ajaxComplete',".$model->formName().", function () {
+		 var form = $(".$model->formName().");
 		 // return false if form still have some validation errors
 		 if (form.find('.has-error').length) {
 			  return false;
 		 }; 		
-		var valTgl = $('#dynamicmodel-tglchart').val();
+		var valTgl = $('#dynamicmodel-tgl').val();
 		$.ajax({
 			url: 'http://lukisongroup.com/dashboard/rpt-esm-chart-salesmd/visit',
 			type: 'GET',
@@ -69,7 +67,7 @@ $this->registerJs("
 									
 			
 				})
-			   console.log(valTgl);
+			   //console.log(valTgl);
 			}
 		});
 		
