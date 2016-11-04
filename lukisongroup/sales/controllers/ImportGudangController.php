@@ -33,12 +33,7 @@ use lukisongroup\master\models\Barang;
 //use lukisongroup\master\models\Customersalias;
 use ptrnov\postman4excel\Postman4ExcelBehavior;
 
-// use lukisongroup\sales\models\Sot2;
-// use lukisongroup\sales\models\Sot2Search;
 
-/**
- * SalesDetailController implements the CRUD actions for Sot2 model.
- */
 class ImportGudangController extends Controller
 {
     public function behaviors()
@@ -60,23 +55,6 @@ class ImportGudangController extends Controller
         ];
     }
 
-	/*EXCEl IMPORT*/
-	public function actions()
-    {
-        return [
-            /* 'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ], */
-            /* 'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ], */
-            //new add download action
-            // 'download' => [
-                // 'class' => 'scotthuangzl\export2excel\DownloadAction',
-            // ],
-        ];
-    }
 	private function aryCustID(){
 		$dataCust =  ArrayHelper::map(Customers::find()->orderBy('CUST_NM')->asArray()->all(), 'CUST_KD','CUST_NM');
 		return $dataCust;
@@ -93,24 +71,24 @@ class ImportGudangController extends Controller
 	 * @since 1.1
      */
 	public function beforeAction($action){
-			if (Yii::$app->user->isGuest)  {
-				 Yii::$app->user->logout();
-                   $this->redirect(array('/site/login'));  //
-			}
-            // Check only when the user is logged in
-            if (!Yii::$app->user->isGuest)  {
-               if (Yii::$app->session['userSessionTimeout']< time() ) {
-                   // timeout
-                   Yii::$app->user->logout();
-                   $this->redirect(array('/site/login'));  //
-               } else {
-                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
-				   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
-                   return true;
-               }
-            } else {
-                return true;
-            }
+		if (Yii::$app->user->isGuest)  {
+			 Yii::$app->user->logout();
+			   $this->redirect(array('/site/login'));  //
+		}
+		// Check only when the user is logged in
+		if (!Yii::$app->user->isGuest)  {
+		   if (Yii::$app->session['userSessionTimeout']< time() ) {
+			   // timeout
+			   Yii::$app->user->logout();
+			   $this->redirect(array('/site/login'));  //
+		   } else {
+			   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+			   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+			   return true;
+		   }
+		} else {
+			return true;
+		}
     }
 
 	 /**
@@ -137,15 +115,11 @@ class ImportGudangController extends Controller
 			/*VIEW ARRAY FILE*/
 			'getArryFile'=>$this->getArryFile($paramFile),
 			'fileName'=>$paramFile,
-			'gvColumnAryFile'=>$this->gvColumnAryFile(),
 			/*GRID VALIDATE*/
-			'gvValidateColumn'=>$this->gvValidateColumn(),
-			//'gvValidateArrayDataProvider'=>$this->gvValidateArrayDataProvider(),
 			'gvValidateArrayDataProvider'=>$dataProvider,
 			'searchModelValidate'=>$searchModel,
 			'modelFile'=>$model,
-			/*VIEW IMPORT*/
-			'gvRows'=>$this->gvRows(),
+			/*List Data IMPORT*/
 			'searchModelViewImport'=>$searchModelViewImport,
 			'dataProviderViewImport'=>$dataProviderViewImport,
 		]);
@@ -282,239 +256,7 @@ class ImportGudangController extends Controller
 			//return Spinner::widget(['preset' => 'medium', 'align' => 'center', 'color' => 'blue','hidden'=>false]);
 			return $aryDataProvider;
 	}
-	/*
-	 * HEADER GRID DINAMIK | FORM GET ARRAY FILE
-	 * Arry Setting Attribute
-	 * @author ptrnov [ptr.nov@gmail.com]
-	 * @since 1.2
-	*/
-	private function gvAttribute(){
-		$aryField= [
-			['ID' =>0, 'ATTR' =>['FIELD'=>'DATE','SIZE' => '10px','label'=>'DATE','align'=>'center']],
-			['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'CUST_KD','align'=>'left']],
-			['ID' =>2, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '20px','label'=>'CUST_NM','align'=>'left']],
-			['ID' =>3, 'ATTR' =>['FIELD'=>'SKU_ID','SIZE' => '20px','label'=>'SKU_ID','align'=>'left']],
-			['ID' =>4, 'ATTR' =>['FIELD'=>'SKU_NM','SIZE' => '20px','label'=>'SKU_NM','align'=>'left']],
-			['ID' =>5, 'ATTR' =>['FIELD'=>'QTY_PCS','SIZE' => '20px','label'=>'QTY_PCS','align'=>'right']],
-			['ID' =>6, 'ATTR' =>['FIELD'=>'DIS_REF','SIZE' => '20px','label'=>'DIS_REF','align'=>'right']],
-		];
-		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR');
-
-		return $valFields;
-	}
-
-	/**
-     * GRID ROWS | FORM GET ARRAY FILE
-     * @return mixed
-	 * @author piter [ptr.nov@gmail.com]
-     */
-	public function gvColumnAryFile() {
-		$attDinamik =[];
-		foreach($this->gvAttribute() as $key =>$value[]){
-			$attDinamik[]=[
-				'attribute'=>$value[$key]['FIELD'],
-				'label'=>$value[$key]['label'],
-				//'format' => 'html',
-				/* 'value'=>function($model)use($value,$key){
-					if ($value[$key]['FIELD']=='EMP_IMG'){
-						 return Html::img(Yii::getAlias('@HRD_EMP_UploadUrl') . '/'. $model->EMP_IMG, ['width'=>'20']);
-					}
-				}, */
-				//'filterType'=>$gvfilterType,
-				//'filter'=>$gvfilter,
-				//'filterWidgetOptions'=>$filterWidgetOpt,
-				//'filterInputOptions'=>$filterInputOpt,
-				'hAlign'=>'right',
-				'vAlign'=>'middle',
-				//'mergeHeader'=>true,
-				'noWrap'=>true,
-				'headerOptions'=>[
-						'style'=>[
-						'text-align'=>'center',
-						'width'=>$value[$key]['FIELD'],
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'8pt',
-						'background-color'=>'rgba(97, 211, 96, 0.3)',
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>$value[$key]['align'],
-						//'width'=>'12px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'8pt',
-						//'background-color'=>'rgba(13, 127, 3, 0.1)',
-					]
-				],
-				//'pageSummaryFunc'=>GridView::F_SUM,
-				//'pageSummary'=>true,
-				'pageSummaryOptions' => [
-					'style'=>[
-							'text-align'=>'right',
-							//'width'=>'12px',
-							'font-family'=>'tahoma',
-							'font-size'=>'8pt',
-							'text-decoration'=>'underline',
-							'font-weight'=>'bold',
-							'border-left-color'=>'transparant',
-							'border-left'=>'0px',
-					]
-				],
-			];
-		}
-		return $attDinamik;
-	}
-
-
-	/**=====================================
-     * GET ARRAY FROM FILE | TO VALIDATE
-     * @return mixed
-	 * @author piter [ptr.nov@gmail.com]
-	 * =====================================
-     */
-	 /*GRID HEADER COLUMN*/
-	 private function gvValidateAttribute(){
-		$aryField= [
-			['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-			['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '10px','label'=>'Customer','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-			['ID' =>2, 'ATTR' =>['FIELD'=>'ITEM_NM','SIZE' => '10px','label'=>'SKU NM','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-			['ID' =>3, 'ATTR' =>['FIELD'=>'QTY_PCS','SIZE' => '10px','label'=>'QTY.PCS','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-			['ID' =>4, 'ATTR' =>['FIELD'=>'DIS_REF_NM','SIZE' => '10px','label'=>'DIS_REF','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-			/*REFRENSI ALIAS*/
-			['ID' =>5, 'ATTR' =>['FIELD'=>'CUST_KD_ALIAS','SIZE' => '10px','label'=>'CUST_KD','align'=>'left','warna'=>'255, 154, 48, 1']],
-			['ID' =>6, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'CUST ALIAS','align'=>'left','warna'=>'255, 154, 48, 1']],
-			['ID' =>7, 'ATTR' =>['FIELD'=>'ITEM_ID_ALIAS','SIZE' => '10px','label'=>'SKU ID','align'=>'left','warna'=>'255, 255, 48, 4']],
-			['ID' =>8, 'ATTR' =>['FIELD'=>'ITEM_ID','SIZE' => '10px','label'=>'SKU.ID.ALIAS','align'=>'left','warna'=>'255, 255, 48, 4']],
-			['ID' =>9, 'ATTR' =>['FIELD'=>'DIS_REF','SIZE' => '10px','label'=>'DIS_REF','align'=>'left','warna'=>'215, 255, 48, 1']],
-		];
-		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR');
-
-		return $valFields;
-	}
-	/*GRID ARRAY DATA PROVIDER*/
-	// private function gvValidateArrayDataProvider(){
-		// $user= Yii::$app->user->identity->username;
-		// $data=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$user."')")->queryAll();
-		// $aryDataProvider= new ArrayDataProvider([
-			// 'key' => 'ID',
-			// 'allModels'=>$data,
-			 // 'pagination' => [
-				// 'pageSize' => 500,
-			// ]
-		// ]);
-
-		// return $aryDataProvider;
-	// }
-	/*GRID ROWS VALIDATE*/
-	public function gvValidateColumn() {
-		$actionClass='btn btn-info btn-xs';
-		$actionLabel='Update';
-		$attDinamik =[];
-		$attDinamik[]=[
-			'class'=>'kartik\grid\ActionColumn',
-			'dropdown' => true,
-			'template' => '{cust}{prodak}',
-			//'template' => '{cust}{prodak}{customer}',
-			'dropdownOptions'=>['class'=>'pull-left dropdown','style'=>['disable'=>true]],
-			'dropdownButton'=>[
-				'class' => $actionClass,
-				'label'=>$actionLabel,
-				//'caret'=>'<span class="caret"></span>',
-			],
-			'buttons' => [
-				'cust' =>function($url, $model, $key){
-						return  '<li>' .Html::a('<span class="fa fa-random fa-dm"></span>'.Yii::t('app', 'Set Alias Customer'),
-													['/sales/import-data/alias_cust','id'=>$model['ID']],[
-													'id'=>'alias-cust-id',
-													'data-toggle'=>"modal",
-													'data-target'=>"#alias-cust",
-													]). '</li>' . PHP_EOL;
-				},
-				'prodak' =>function($url, $model, $key){
-						return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'Set Alias Prodak'),
-													['/sales/import-data/alias_prodak','id'=>$model['ID']],[
-													'id'=>'alias-prodak-id',
-													'data-toggle'=>"modal",
-													'data-target'=>"#alias-prodak",
-													]). '</li>' . PHP_EOL;
-				},
-				/* 'customer' =>function($url, $model, $key){
-						return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'new Customer'),
-													['/sales/import-data/new_customer','id'=>$model['ID']],[
-													'data-toggle'=>"modal",
-													'data-target'=>"#alias-prodak",
-													]). '</li>' . PHP_EOL;
-				},	 */
-			],
-			'headerOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'10px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'9pt',
-					'background-color'=>'rgba(97, 211, 96, 0.3)',
-				]
-			],
-			'contentOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'10px',
-					'height'=>'10px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'9pt',
-				]
-			],
-
-		];
-
-		foreach($this->gvValidateAttribute() as $key =>$value[]){
-			$attDinamik[]=[
-				'attribute'=>$value[$key]['FIELD'],
-				'label'=>$value[$key]['label'],
-				'filter'=>true,
-				'hAlign'=>'right',
-				'vAlign'=>'middle',
-				//'mergeHeader'=>true,
-				'noWrap'=>true,
-				'headerOptions'=>[
-						'style'=>[
-						'text-align'=>'center',
-						'width'=>$value[$key]['FIELD'],
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'8pt',
-						//'background-color'=>'rgba(97, 211, 96, 0.3)',
-						'background-color'=>'rgba('.$value[$key]['warna'].')',
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>$value[$key]['align'],
-						//'width'=>'12px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'8pt',
-						//'background-color'=>'rgba(13, 127, 3, 0.1)',
-					]
-				],
-				//'pageSummaryFunc'=>GridView::F_SUM,
-				//'pageSummary'=>true,
-				// 'pageSummaryOptions' => [
-					// 'style'=>[
-							// 'text-align'=>'right',
-							'width'=>'12px',
-							// 'font-family'=>'tahoma',
-							// 'font-size'=>'8pt',
-							// 'text-decoration'=>'underline',
-							// 'font-weight'=>'bold',
-							// 'border-left-color'=>'transparant',
-							// 'border-left'=>'0px',
-					// ]
-				// ],
-			];
-		}
-		return $attDinamik;
-	}
-
-
+	
 	/**====================================
      * IMPORT DATA EXCEL >> TEMP VALIDATION
      * @return mixed
@@ -586,13 +328,11 @@ class ImportGudangController extends Controller
 		/* PR
 		 * $model->field dan $model['field']
 		*/
-
 		$searchModelX = new TempDataSearch();
 		$dataProviderX = $searchModelX->search(Yii::$app->request->queryParams);
 		$dataProvider1= $dataProviderX->getModels();
 		$dataProvider2= $dataProviderX->getModels();
 		$dataProvider3= $dataProviderX->getModels();
-
 		$excel_data = Postman4ExcelBehavior::excelDataFormat($aryDataProviderFormat);
         $excel_title = $excel_data['excel_title'];
         $excel_ceils = $excel_data['excel_ceils'];
@@ -638,15 +378,10 @@ class ImportGudangController extends Controller
 			],
 
 		];
-
-		 $excel_file = "StockImportFormat";
-		 $this->export4excel($excel_content, $excel_file,0);
-
-
-
-
-
+		$excel_file = "StockImportFormat";
+		$this->export4excel($excel_content, $excel_file,0);
 	}
+	
 	/**====================================
      * DELETE & CLEAR >> TEMP VALIDATION
      * @return mixed
@@ -668,7 +403,6 @@ class ImportGudangController extends Controller
 
 			return true;
 		}
-
 	}
 
 	/**====================================
@@ -729,7 +463,7 @@ class ImportGudangController extends Controller
 	public function actionAlias_cust($id){
 		$AliasCustomer = new AliasCustomer();
 		$tempDataImport = TempData::find()->where(['ID' =>$id])->one();
-		return $this->renderAjax('alias_customer',[
+		return $this->renderAjax('formAliasCustomer',[
 			'AliasCustomer'=>$AliasCustomer,
 			'tempDataImport'=>$tempDataImport,
 			'aryCustID'=>$this->aryCustID(),
@@ -773,7 +507,7 @@ class ImportGudangController extends Controller
 	public function actionAlias_prodak($id){
 		$AliasProdak = new AliasProdak();
 		$tempDataImport = TempData::find()->where(['ID' =>$id])->one();
-		return $this->renderAjax('alias_prodak',[
+		return $this->renderAjax('formAliasProdak',[
 			'AliasProdak'=>$AliasProdak,
 			'tempDataImport'=>$tempDataImport,
 			'aryBrgID'=>$this->aryBrgID()
@@ -800,91 +534,8 @@ class ImportGudangController extends Controller
 	}
 
 
-	/**=====================================
-     * VIEW IMPORT DATA STORAGE
-     * @return mixed
-	 * @author piter [ptr.nov@gmail.com]
-	 * =====================================
-     */
-	 /*GRID HEADER COLUMN*/
-	 private function gvHeadColomn(){
-		$aryField= [
-			/*MAIN DATA*/
-			['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-			['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_KD_ALIAS','SIZE' => '10px','label'=>'CUST.KD','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-			['ID' =>2, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '10px','label'=>'CUSTOMER','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-			['ID' =>3, 'ATTR' =>['FIELD'=>'NM_BARANG','SIZE' => '10px','label'=>'SKU','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-			['ID' =>4, 'ATTR' =>['FIELD'=>'SO_QTY','SIZE' => '10px','label'=>'QTY.PCS','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-			['ID' =>5, 'ATTR' =>['FIELD'=>'NM_DIS','SIZE' => '10px','label'=>'DISTRIBUTION','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-			['ID' =>6, 'ATTR' =>['FIELD'=>'SO_TYPE','SIZE' => '10px','label'=>'TYPE','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-			['ID' =>7, 'ATTR' =>['FIELD'=>'USER_ID','SIZE' => '10px','label'=>'IMPORT.BY','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-			/*REFRENSI DATA*/
-			['ID' =>8, 'ATTR' =>['FIELD'=>'UNIT_BARANG','SIZE' => '10px','label'=>'UNIT','align'=>'left','warna'=>'255, 255, 48, 4']],
-			['ID' =>9, 'ATTR' =>['FIELD'=>'UNIT_QTY','SIZE' => '10px','label'=>'UNIT.QTY','align'=>'left','warna'=>'255, 255, 48, 4']],
-			['ID' =>10, 'ATTR' =>['FIELD'=>'UNIT_BERAT','SIZE' => '10px','label'=>'WEIGHT','align'=>'left','warna'=>'255, 255, 48, 4']],
-			['ID' =>11, 'ATTR' =>['FIELD'=>'HARGA_PABRIK','SIZE' => '10px','label'=>'FACTORY.PRICE','align'=>'right','warna'=>'255, 255, 48, 4']],
-			['ID' =>12, 'ATTR' =>['FIELD'=>'HARGA_DIS','SIZE' => '10px','label'=>'DIST.PRICE','align'=>'right','warna'=>'255, 255, 48, 4']],
-			['ID' =>13, 'ATTR' =>['FIELD'=>'HARGA_SALES','SIZE' => '10px','label'=>'SALES.PRICE','align'=>'right','warna'=>'255, 255, 48, 4']],
-			/*SUPPORT DATA ID*/
-			['ID' =>14, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'CUST.KD_ALIAS','align'=>'left','warna'=>'255, 255, 48, 4']],
-			['ID' =>15, 'ATTR' =>['FIELD'=>'KD_BARANG','SIZE' => '10px','label'=>'SKU.ID.ALIAS','align'=>'left','warna'=>'255, 255, 48, 4']],
-			['ID' =>16, 'ATTR' =>['FIELD'=>'KD_DIS','SIZE' => '10px','label'=>'KD_DIS','align'=>'left','warna'=>'215, 255, 48, 1']],
-		];
-		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR');
-
-		return $valFields;
-	}
-	public function gvRows() {
-		$actionClass='btn btn-info btn-xs';
-		$actionLabel='Update';
-		$attDinamik =[];
-		foreach($this->gvHeadColomn() as $key =>$value[]){
-			$attDinamik[]=[
-				'attribute'=>$value[$key]['FIELD'],
-				'label'=>$value[$key]['label'],
-				'filter'=>true,
-				'hAlign'=>'right',
-				'vAlign'=>'middle',
-				//'mergeHeader'=>true,
-				'noWrap'=>true,
-				'headerOptions'=>[
-						'style'=>[
-						'text-align'=>'center',
-						'width'=>$value[$key]['FIELD'],
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'8pt',
-						//'background-color'=>'rgba(97, 211, 96, 0.3)',
-						'background-color'=>'rgba('.$value[$key]['warna'].')',
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>$value[$key]['align'],
-						//'width'=>'12px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'8pt',
-						//'background-color'=>'rgba(13, 127, 3, 0.1)',
-					]
-				],
-				//'pageSummaryFunc'=>GridView::F_SUM,
-				//'pageSummary'=>true,
-				// 'pageSummaryOptions' => [
-					// 'style'=>[
-							// 'text-align'=>'right',
-							'width'=>'12px',
-							// 'font-family'=>'tahoma',
-							// 'font-size'=>'8pt',
-							// 'text-decoration'=>'underline',
-							// 'font-weight'=>'bold',
-							// 'border-left-color'=>'transparant',
-							// 'border-left'=>'0px',
-					// ]
-				// ],
-			];
-		}
-		return $attDinamik;
-	}
-
+	
+	
 
 
 

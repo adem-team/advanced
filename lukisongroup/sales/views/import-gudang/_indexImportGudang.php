@@ -24,7 +24,6 @@ use kartik\date\DatePicker;
 	*/
 	$gvImportFile=$this->render('_indexImportGudangFile',[
 		'getArryFile'=>$getArryFile,
-		'gvColumnAryFile'=>$gvColumnAryFile
 	]);
 	
 	/**
@@ -35,7 +34,6 @@ use kartik\date\DatePicker;
 	$gvValidateFile=$this->render('_indexImportGudangValidate',[
 		'gvValidateArrayDataProvider'=>$gvValidateArrayDataProvider,
 		'searchModelValidate'=>$searchModelValidate,
-		'gvValidateColumn'=>$gvValidateColumn
 	]);	
 
 	/**
@@ -43,11 +41,10 @@ use kartik\date\DatePicker;
 	* @return mixed
 	* @author piter [ptr.nov@gmail.com]
 	*/
-	$gvListImport=$this->render('_indexImportGudangListData',[
-		'dataProviderViewImport'=>$dataProviderViewImport,
-		'searchModelViewImport'=>$searchModelViewImport,
-		'gvRows'=>$gvRows
-	]);	
+	// $gvListImport=$this->render('_indexImportGudangListData',[
+		// 'dataProviderViewImport'=>$dataProviderViewImport,
+		// 'searchModelViewImport'=>$searchModelViewImport,
+	// ]);	
 	
 ?>
 
@@ -61,7 +58,7 @@ use kartik\date\DatePicker;
         </div>
 		<!--VIEW IMPORT!-->
 		<div class="col-sm-12 col-md-12 col-lg-12">
-            <?=$gvListImport?>
+            <?php //$gvListImport?>
         </div>
     </div>
 </div>
@@ -82,7 +79,7 @@ use kartik\date\DatePicker;
 		$form = ActiveForm::begin([
 			'options'=>['enctype'=>'multipart/form-data'], // important,
 			'method' => 'post',
-			'action' => ['/sales/import-data/upload'],
+			'action' => ['/sales/import-gudang/upload'],
 		]);
 			echo $form->field($modelFile, 'uploadExport')->widget(FileInput::classname(), [
 				'options' => ['accept' => '*'],
@@ -111,7 +108,7 @@ use kartik\date\DatePicker;
 			e.preventDefault();
 			var idx = $(this).data('toggle-approved');
 			$.ajax({
-				url: '/sales/import-data/import_temp_validation',
+				url: '/sales/import-gudang/import_temp_validation',
 				type: 'POST',
 				//contentType: 'application/json; charset=utf-8',
 				data:'id='+idx,
@@ -119,7 +116,7 @@ use kartik\date\DatePicker;
 				success: function(result) {
 					if (result == 1){
 						// Success
-						$.pjax.reload({container:'#gv-validate'});
+						$.pjax.reload({container:'#gv-validate-gudang-id'});
 					} else {
 						// Fail
 					}
@@ -139,7 +136,7 @@ use kartik\date\DatePicker;
 			e.preventDefault();
 			var idx = $(this).data('toggle-clear');
 			$.ajax({
-				url: '/sales/import-data/clear_temp_validation',
+				url: '/sales/import-gudang/clear_temp_validation',
 				type: 'POST',
 				//contentType: 'application/json; charset=utf-8',
 				data:'id='+idx,
@@ -147,7 +144,7 @@ use kartik\date\DatePicker;
 				success: function(result) {
 					if (result == 1){
 						// Success
-						$.pjax.reload({container:'#gv-validate'});
+						$.pjax.reload({container:'#gv-validate-gudang-id'});
 					} else {
 						// Fail
 					}
@@ -167,7 +164,7 @@ use kartik\date\DatePicker;
 			e.preventDefault();
 			var idx = $(this).data('toggle-fix');
 			$.ajax({
-				url: '/sales/import-data/send_temp_validation',
+				url: '/sales/import-gudang/send_temp_validation',
 				type: 'POST',
 				//contentType: 'application/json; charset=utf-8',
 				data:'id='+idx,
@@ -175,7 +172,7 @@ use kartik\date\DatePicker;
 				success: function(result) {
 					if (result == 1){
 						// Success
-						$.pjax.reload({container:'#gv-validate'});
+						$.pjax.reload({container:'#gv-validate-gudang-id'});
 					} else {
 						// Fail
 					}
