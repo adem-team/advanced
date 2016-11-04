@@ -25,6 +25,7 @@ use lukisongroup\master\models\Distributor;
 use lukisongroup\hrd\models\Corp;
 use lukisongroup\purchasing\models\data_term\Rtdetail;
 use lukisongroup\purchasing\models\data_term\Requesttermheader;
+use lukisongroup\purchasing\models\data_term\RtdetailSearch;
 
 
 
@@ -491,23 +492,26 @@ $id = $_GET['id'];
 		// 			AND ti.STATUS = 102
 		// 			AND (ti.KD_RIB LIKE 'RID%' OR ti.KD_RIB LIKE 'RI%')";
 
-		$sql = "SELECT c.INVES_TYPE,ti.PERIODE_START,ti.PERIODE_END,ti.PPN,ti.PPH23,ti.HARGA,ti.INVESTASI_PROGRAM FROM `t0001detail` ti
-					LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
-					LEFT JOIN c0006 c on ti.ID_INVEST = c.ID
-					WHERE ti.TERM_ID ='".$model->TERM_ID."'
-					AND ti.ID_INVEST ='".$model->INVES_ID."'
-					AND ti.STATUS = 102
-					AND (ti.KD_RIB LIKE 'RID%' OR ti.KD_RIB LIKE 'RI%')";
+		// $sql = "SELECT c.INVES_TYPE,ti.PERIODE_START,ti.PERIODE_END,ti.PPN,ti.PPH23,ti.HARGA,ti.INVESTASI_PROGRAM FROM `t0001detail` ti
+		// 			LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
+		// 			LEFT JOIN c0006 c on ti.ID_INVEST = c.ID
+		// 			WHERE ti.TERM_ID ='".$model->TERM_ID."'
+		// 			AND ti.ID_INVEST ='".$model->INVES_ID."'
+		// 			AND ti.STATUS = 102
+		// 			AND (ti.KD_RIB LIKE 'RID%' OR ti.KD_RIB LIKE 'RI%')";
 
 
-		$hasil = $connect->createCommand($sql)->queryAll();
+		// $hasil = $connect->createCommand($sql)->queryAll();
+		$searchModel_inves = new RtdetailSearch();
+		$dataProviderBudgetdetail_inves = $searchModel_inves->searchInvest(Yii::$app->request->queryParams,$model->TERM_ID,$model->INVES_ID);
 
-		$dataProviderBudgetdetail_inves = new ArrayDataProvider([
-				    'allModels' => $hasil,
-				    'pagination' => [
-				        'pageSize' => 10,
-				    ],
-				]);
+
+		// $dataProviderBudgetdetail_inves = new ArrayDataProvider([
+		// 		    'allModels' => $hasil,
+		// 		    'pagination' => [
+		// 		        'pageSize' => 10,
+		// 		    ],
+		// 		]);
 
 
 
@@ -536,6 +540,7 @@ $id = $_GET['id'];
 				'dataProviderBudgetdetail'=>$dataProviderBudgetdetail,
 				'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves, //actual_detail
 				'dataProviderBudget'=>$dataProviderBudget,
+				'searchModel_inves'=>$searchModel_inves,
 				'id'=>$model->ID
 			]);
 

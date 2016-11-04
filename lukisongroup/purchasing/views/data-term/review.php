@@ -21,6 +21,7 @@ use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Termcustomers;
 use lukisongroup\master\models\Distributor;
 use lukisongroup\hrd\models\Corp;
+use lukisongroup\purchasing\models\data_term\RtdetailSearch;
 
 
 

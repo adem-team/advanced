@@ -100,6 +100,51 @@ use yii\data\ArrayDataProvider;
 					]
 				],
 			];
+		}elseif($value[$key]['FIELD'] == 'PERIODE_START'){
+
+			$attDinamikActual[]=[
+			'attribute'=>$value[$key]['FIELD'],
+			'label'=>$value[$key]['label'],
+			'filterType'=>GridView::FILTER_DATE,
+			'filter'=>$value[$key]['filter'],
+
+			'filterWidgetOptions'=>[
+
+				'pluginOptions' => [
+        				'autoclose'=>true,
+        			'format' => 'yyyy-mm-dd',
+
+
+    				],
+    				// 'options'=>['id'=>'term-actual'.$model['ID']],
+			],
+			'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
+			'hAlign'=>'right',
+			'vAlign'=>'middle',
+			//'mergeHeader'=>true,
+			'noWrap'=>true,
+			'group'=>$value[$key]['GRP'],
+			'format'=>$value[$key]['FORMAT'],
+			'headerOptions'=>[
+					'style'=>[
+					'text-align'=>'center',
+					'width'=>$value[$key]['FIELD'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(74, 206, 231, 1)',
+					'background-color'=>'rgba('.$value[$key]['warna'].')',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>$value[$key]['align'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(13, 127, 3, 0.1)',
+				]
+			],
+		];
+
 		}elseif($value[$key]['FIELD'] == 'HARGA'){
 
 
@@ -224,7 +269,7 @@ use yii\data\ArrayDataProvider;
 	$gvDetalActual= GridView::widget([
 		'id'=>'detail-actual',
 		'dataProvider' => $dataProviderBudgetdetail_inves,
-		//'filterModel' => $searchModel,
+		// 'filterModel' => $searchModel_inves,
 		//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
 		'beforeHeader'=>[
 			[
