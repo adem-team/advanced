@@ -299,9 +299,9 @@ class RequestTermController extends Controller
   public function actionDisplayImage($kd)
   {
    
-
+    $arsip_file = Arsipterm::find()->where(['KD_RIB'=>$kd])->asArray()->all();
     return $this->renderAjax('display_image',[
-                            'kd'=>$kd
+                            'arsip_file'=>$arsip_file
       ]);
 
   }

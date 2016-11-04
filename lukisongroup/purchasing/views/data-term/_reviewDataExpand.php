@@ -26,7 +26,8 @@ use yii\data\ArrayDataProvider;
 
 
 			$expandActual=$this->render('_reviewDataExpandActual',[
-				'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves
+				'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves,
+				'searchModel_inves'=>$searchModel_inves
 			]);
 
  
@@ -34,7 +35,7 @@ use yii\data\ArrayDataProvider;
 				$items=[
 					[
 						'label'=>'<i class="fa fa-mortar-board fa-lg"></i>Plan budget','content'=>$expandPlan,
-						'active'=>true,
+						// 'active'=>true,
 						'options' => ['id' => 'term-detail-plan-budget'.$id],
 					],
 					[
