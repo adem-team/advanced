@@ -269,6 +269,8 @@ use yii\data\ArrayDataProvider;
 	$gvDetalActual= GridView::widget([
 		'id'=>'detail-actual'.$id,
 		'dataProvider' => $dataProviderBudgetdetail_inves,
+		'floatOverflowContainer'=>true,
+		'floatHeader'=>true,
 		// 'filterModel' => $searchModel_inves,
 		//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
 		'beforeHeader'=>[
