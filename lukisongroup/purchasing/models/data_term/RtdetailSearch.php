@@ -60,7 +60,7 @@ class RtdetailSearch extends Rtdetail
         $dataProviderBudgetdetail_inves = new ArrayDataProvider([
                     'allModels' => $hasil,
                     'pagination' => [
-                        'pageSize' => 10,
+                        'pageSize' => 1000,
                     ],
                 ]);
 

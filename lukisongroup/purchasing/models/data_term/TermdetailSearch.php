@@ -173,7 +173,7 @@ class TermdetailSearch extends Termdetail
 
 
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+            'query' => $query
         ]);
 
         $this->load($params);
