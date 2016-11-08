@@ -112,6 +112,12 @@ class DataTermController extends Controller
                               ->all(), 'KD_DISTRIBUTOR','NM_DISTRIBUTOR');
   }
 
+  /*Customers array*/
+  public function aryData_cus(){ 
+    return ArrayHelper::map(Customers::find()->where('STATUS<>3')
+                              ->all(), 'CUST_KD','CUST_NM');
+  }
+
    /*Corp array*/
   public function aryData_Corp(){ 
     return ArrayHelper::map(Corp::find()->all(), 'CORP_ID','CORP_NM');
@@ -311,6 +317,9 @@ class DataTermController extends Controller
            if (isset($posted['PERIODE_END'])) {
             $output = $model->PERIODE_START;
           }
+           if (isset($posted['STORE_ID'])) {
+            $output = $model->STORE_ID;
+          }
           $out = Json::encode(['output'=>$output, 'message'=>'']);
         }
         // return ajax json encoded response and exit
@@ -323,7 +332,8 @@ class DataTermController extends Controller
 			'model'=>$modelRslt,
 			'dataProviderBudget'=>$dataProviderBudget,
 			'dataProviderRdetail'=>$dataProviderRdetail,
-      'searchModelRdetail'=>$searchModelRdetail
+      'searchModelRdetail'=>$searchModelRdetail,
+      'data_toko'=>self::aryData_cus()
 		]);
 		/*
 		 * NOTED VIEWS FILES:
