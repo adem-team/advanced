@@ -120,6 +120,7 @@ if(count($attach_file)== 0)
     foreach ($query as $key => $value) {
       $emp_ID = $value->profile->EMP_ID;
 
+
      
     //   $condition = ['and',
     //   // ['ID_USER'=>$emp_ID],
@@ -142,11 +143,12 @@ if(count($attach_file)== 0)
 		if ($x==0){
 			$a=$this->render('_message_left', [
 				'profile'=>$profile,
+        'id'=>$value->ID,
         'attach_image'=>$attach_image,
         'kd_berita'=>$model->KD_BERITA,
 				'nama'=>$value->profile->EMP_NM,
 				'messageReply'=>$value->CHAT,
-				'jamwaktu'=> date('Y-m-d h:i A', strtotime($value->CREATED_AT)),
+				'jamwaktu'=> date(" Y-m-d g:i a", strtotime($value->CREATED_AT)),
 				'items'=>$items,
 				'lampiran'=>Html::panel(
 						[
@@ -170,9 +172,11 @@ if(count($attach_file)== 0)
 			$a=$this->render('_message_right', [
 				'profile'=>$profile,
         'kd_berita'=>$model->KD_BERITA,
+        'id'=>$value->ID,
         'attach_image'=>$attach_image,
 				'messageReply'=>$value->CHAT,
-				'jamwaktu'=>date('Y-m-d h:i A', strtotime($value->CREATED_AT)),
+				// 'jamwaktu'=>date('Y-m-d h:i A', strtotime($value->CREATED_AT)),
+        'jamwaktu'=>date(" Y-m-d g:i a", strtotime($value->CREATED_AT)),
 				'nama'=>$value->profile->EMP_NM,
         'ttd'=>$value->profile->SIGSVGBASE64,
 				'items'=>$items,

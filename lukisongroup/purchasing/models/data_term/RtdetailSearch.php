@@ -127,6 +127,7 @@ class RtdetailSearch extends Rtdetail
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            
         ]);
 
         $this->load($params);

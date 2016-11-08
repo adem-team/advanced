@@ -48,6 +48,7 @@ class TermdetailSearch extends Termdetail
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+
         ]);
 
         $this->load($params);
@@ -87,6 +88,9 @@ class TermdetailSearch extends Termdetail
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                        'pageSize' => 10,
+                    ],
         ]);
 
         $this->load($params);

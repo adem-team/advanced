@@ -17,7 +17,10 @@ use yii\helpers\Html;
 	$imgKtg1= Html::img('@web/widget/docHelp/img_prod/KTG1.PNG',  ['class' => 'pnjg', 'style'=>'width:220px;height:500px;']);
 	$imgKtg2= Html::img('@web/widget/docHelp/img_prod/KTG2.PNG',  ['class' => 'pnjg', 'style'=>'width:150px;height:100px;']);	
 	$imgKtg3= Html::img('@web/widget/docHelp/img_prod/KTG3.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:400px;']);	
-	$imgKtg4= Html::img('@web/widget/docHelp/img_prod/KTG4.PNG',  ['class' => 'pnjg', 'style'=>'width:170px;height:120px;']);		
+	$imgKtg4= Html::img('@web/widget/docHelp/img_prod/KTG4.PNG',  ['class' => 'pnjg', 'style'=>'width:170px;height:120px;']);
+	$imgUnit1= Html::img('@web/widget/docHelp/img_prod/UNIT1.PNG',  ['class' => 'pnjg', 'style'=>'width:220px;height:500px;']);	
+	$imgUnit2= Html::img('@web/widget/docHelp/img_prod/UNIT2.PNG',  ['class' => 'pnjg', 'style'=>'width:150px;height:100px;']);		
+	$imgUnit3= Html::img('@web/widget/docHelp/img_prod/UNIT3.PNG',	 ['class' => 'pnjg', 'style'=>'width:500px;height:400px;']);	
 ?>	
 <p>
 <h4>Barang Produk</h4></br>
@@ -93,6 +96,25 @@ Berikut cara penambahan Kategori untuk Barang Produk / Umum :</br>
 kita juga bisa melihat, merubah dan menghapus barang type tersebut dengan cara klik <b>Actions.</b></br>
   <?php  echo $imgType4;?><p></br>
 dan jika ingin mengeksport Data Barang Kategori klik <b>Tanda Panah keatas berikut.</b></br> 
+  <?php  echo $imgKtg4;?><p></br>  
+
+_END_
+
+<p></br></br>
+<h4>Barang Unit</h4></br>
+<p>
+Berikut cara penambahan Unit untuk Barang Produk / Umum :</br>
+1. Setelah Login, Klik <b>Company</b> lalu klik <b>Master Data.</b></br>
+<?php  echo $imgProd1;?><p></br>
+2. Pilih <b>Barang Unit.</b></br>
+<?php  echo $imgUnit1;?><p></br>
+3. Pilih <b>Add Unit.</b></br>
+<?php  echo $imgUnit2;?><p></br>
+4. Masukan pada form seperti <b>Unit, QTY, Size, Weight PCS, Colour, Note dan Status,</b> lalu klik <b>Create.</b></br>
+<?php  echo $imgUnit3;?><p></br>  
+kita juga bisa melihat, merubah dan menghapus barang unit tersebut dengan cara klik <b>Actions.</b></br>
+  <?php  echo $imgUmum4;?><p></br>
+dan jika ingin mengeksport Data Barang Unit klik <b>Tanda Panah keatas berikut.</b></br> 
   <?php  echo $imgKtg4;?><p></br>  
 
 _END_
