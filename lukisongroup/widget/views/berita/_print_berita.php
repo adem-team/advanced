@@ -3,6 +3,15 @@
 /* extensions */
 use yii\helpers\Html;
 
+$explode = explode('-', $model->JUDUL);
+
+
+if($explode[1] != ''){
+  $keterangan = ' -'.$explode[1];
+}else{
+  $keterangan = '';
+}
+
  ?>
 <div class="container-fluid" style="font-family: tahoma ;font-size: 8pt;">
 <!-- logo  -->
@@ -28,7 +37,7 @@ use yii\helpers\Html;
   <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="margin-right:0">
   <dl>
     <dt style="width:150px; float:left;">Kode Ref</dt>
-    <dd style="color:rgba(87, 163, 247, 1)">:<b> <?php  echo $kd_ref = $model->KD_REF !=""? $model->KD_REF: "xxx-xxx-xx" ;?></b></dd>
+    <dd style="color:rgba(87, 163, 247, 1)">:<b> <?php  echo $kd_ref = $model->KD_REF !=""? $model->KD_REF.''.$keterangan: "xxx-xxx-xx" ;?></b></dd>
 
     <dt style="width:150px; float:left;">Jam</dt>
     <dd>: <?php echo $jam = $model->CREATED_ATCREATED_BY!=""? date('h:i A', strtotime($model->CREATED_ATCREATED_BY)) : "00-00";?></dd>
@@ -52,7 +61,7 @@ use yii\helpers\Html;
   <div class="col-sm-12">
     <dl>
       <dt style="width:150px; float:left;">Keterangan</dt>
-      <dd>:<b> <?php echo $keterangan =  $model->DATA_ALL!= ""?:"-------------"; ?></b></dd>
+      <dd>:<b> <?php echo $keterangan =  $model->DATA_ALL!= ""?$model->DATA_ALL:"-------------"; ?></b></dd>
     </dl>
   </div>
 </div>

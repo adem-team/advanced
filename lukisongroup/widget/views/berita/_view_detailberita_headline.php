@@ -6,6 +6,8 @@ use kartik\grid\GridView;
 
 
 
+$explode = explode('-', $model->JUDUL);
+
 	//print_r($dataProviderImageHeader);
 	//print_r($dataProviderImageHeader->getModels());
 	/*
@@ -62,6 +64,38 @@ use kartik\grid\GridView;
 		$label = $icon . ' ' . $title;
 		//$label = 'Reply';
 		$url = Url::toRoute('/widget/berita');
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
+
+
+	function kembali_visit(){
+		$title = Yii::t('app','');
+		$options = [ 'id'=>'berita-back-id-issue',
+			 'class'=>'btn-xs',
+			 'title'=>'Back',
+		];
+		$icon = '<span class="fa fa-rotate-left fa-xs"> Back issue</span>';
+		$label = $icon . ' ' . $title;
+		//$label = 'Reply';
+		$url = Url::toRoute('/master/review-visit');
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
+
+	/*
+	 * Tombol Edit keterangan
+	*/
+	function tombolEditketerangan($model){
+		$title = Yii::t('app', '');
+		$options = ['id'=>'edit-keterangan',
+					'data-toggle'=>"modal",
+					'data-target'=>"#keterangan",
+					'class'=>'btn btn-info btn-xs',
+		];
+		$icon = '<span class="glyphicon glyphicon-save"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/widget/berita/set-keterangan','id'=>$model->KD_BERITA]);
 		$content = Html::a($label,$url, $options);
 		return $content;
 	}
@@ -145,7 +179,7 @@ use kartik\grid\GridView;
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"  style="margin-right:0;">
         <dl>
           <dt style="width:150px; float:left;">Kode Ref</dt>
-          <dd style="color:rgba(87, 163, 247, 1)">:<b> <?php  echo $kd_ref = $model->KD_REF !=""? $model->KD_REF: "xxx-xxx-xx" ;?></b></dd>
+          <dd style="color:rgba(87, 163, 247, 1)">:<b> <?php  echo $kd_ref = count($model->KD_REF) != 0? $model->KD_REF.' -'.$explode[1]: "xxx-xxx-xx" ;?></b></dd>
 
           <dt style="width:150px; float:left;">Jam</dt>
           <dd>: <?php echo $jam ?></dd>
@@ -163,11 +197,13 @@ use kartik\grid\GridView;
         </div>
       </div>
 
+      
+
       <div class="row">
         <div class="col-sm-12">
           <dl>
             <dt style="width:150px; float:left;">Keterangan</dt>
-            <dd style="color:rgba(87, 163, 247, 1)">:<b> <?php echo $keterangan =  $model->DATA_ALL!= ""?:"-------------"; ?></b></dd>
+            <dd style="color:rgba(87, 163, 247, 1)">:<b> <?php echo $keterangan =  $model->DATA_ALL!= ""?$model->DATA_ALL:"-------------"; ?></b><?= tombolEditketerangan($model)?></dd>
           </dl>
 
       </div>
@@ -240,7 +276,7 @@ use kartik\grid\GridView;
 	<!-- REPLAY DETAIL ptr.nov-->
 	<div>
     <?php
-			echo kembali().' '.$btnreply.''.$btnclose.''.$print;
+			echo kembali().' '.kembali_visit().' '.$btnreply.''.$btnclose.''.$print;
 		?>
 	</div>
 	<div>
@@ -251,3 +287,6 @@ use kartik\grid\GridView;
 	<div class="piter-chat1-text">
 	</div>
 </div>
+
+
+

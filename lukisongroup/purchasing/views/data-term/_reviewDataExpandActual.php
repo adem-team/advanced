@@ -267,7 +267,7 @@ use yii\data\ArrayDataProvider;
 	/*GRID VIEW BASE*/
 
 	$gvDetalActual= GridView::widget([
-		'id'=>'detail-actual',
+		'id'=>'detail-actual'.$id,
 		'dataProvider' => $dataProviderBudgetdetail_inves,
 		// 'filterModel' => $searchModel_inves,
 		//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
@@ -289,7 +289,7 @@ use yii\data\ArrayDataProvider;
 		'pjaxSettings'=>[
 			'options'=>[
 				'enablePushState'=>false,
-				'id'=>'detail-actual',
+				'id'=>'detail-actual'.$id,
 			],
 		],
 		/* 'panel' => [

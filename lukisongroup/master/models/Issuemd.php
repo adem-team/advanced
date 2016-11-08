@@ -50,7 +50,7 @@ class Issuemd extends \yii\db\ActiveRecord
         return [
             [['ID_DETAIL', 'ID_USER', 'STATUS', 'CREATE_BY', 'UPDATE_BY'], 'integer'],
             [['ISI_MESSAGES'], 'string'],
-            [['TGL', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
+            [['TGL', 'CREATE_AT', 'UPDATE_AT','ID_ISSUE_REF'], 'safe'],
             [['KD_CUSTOMER', 'NM_CUSTOMER', 'NM_USER'], 'string', 'max' => 255],
         ];
     }
