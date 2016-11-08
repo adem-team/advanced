@@ -54,7 +54,7 @@ class Rtdetail extends \yii\db\ActiveRecord
     {
         return [
 			[['KD_RIB'], 'required'],
-            [['INVESTASI_PROGRAM','HARGA','PERIODE_START','PERIODE_END','PPN','PPH23'], 'safe'],
+            [['INVESTASI_PROGRAM','HARGA','PERIODE_START','PERIODE_END','PPN','PPH23','STORE_ID'], 'safe'],
 			['HARGA','default', 'value'=>0.00],
       ['PPN','default', 'value'=>0],
        ['PPH23','default', 'value'=>0],

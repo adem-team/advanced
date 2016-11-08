@@ -62,14 +62,15 @@ $id_term = $_GET['id'];
 		// ['ID' =>0, 'ATTR' =>['FIELD'=>'KD_RIB','SIZE' => '50px','label'=>'Trade Investment','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>0, 'ATTR' =>['FIELD'=>'nminvest','SIZE' => '10px','label'=>'Type Investasi','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>1, 'ATTR' =>['FIELD'=>'INVESTASI_PROGRAM','SIZE' => '10px','label'=>'Keterangan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'PERIODE_START','SIZE' => '10px','label'=>'periode start','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'PERIODE_END','SIZE' => '10px','label'=>'periode end','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'NOMER_FAKTURPAJAK','SIZE' => '10px','label'=>'Nomer Faktur','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'NOMER_INVOCE','SIZE' => '10px','label'=>'Nomer Invoice','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'HARGA','SIZE' => '10px','label'=>'Biaya','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'PPN','SIZE' => '10px','label'=>'Ppn','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>8, 'ATTR' =>['FIELD'=>'PPH23','SIZE' => '10px','label'=>'PPH 23','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>9, 'ATTR' =>['FIELD'=>'total','SIZE' => '10px','label'=>'Total','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'STORE_ID','SIZE' => '10px','label'=>'Toko','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'PERIODE_START','SIZE' => '10px','label'=>'periode start','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'PERIODE_END','SIZE' => '10px','label'=>'periode end','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'NOMER_FAKTURPAJAK','SIZE' => '10px','label'=>'Nomer Faktur','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'NOMER_INVOCE','SIZE' => '10px','label'=>'Nomer Invoice','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'HARGA','SIZE' => '10px','label'=>'Biaya','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>8, 'ATTR' =>['FIELD'=>'PPN','SIZE' => '10px','label'=>'Ppn','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>9, 'ATTR' =>['FIELD'=>'PPH23','SIZE' => '10px','label'=>'PPH 23','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>10, 'ATTR' =>['FIELD'=>'total','SIZE' => '10px','label'=>'Total','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 	];
 	$gvHeadColomnInputActual = ArrayHelper::map($headColomnInputActual, 'ID', 'ATTR');
 	/*GRIDVIEW SERIAL ROWS*/
@@ -367,6 +368,56 @@ $id_term = $_GET['id'];
 								]
 							],
 						];
+		}elseif($value[$key]['FIELD'] == 'STORE_ID'){
+			$attDinamikInputActual[]=[
+							/* Attribute */
+							'class'=>'kartik\grid\EditableColumn',
+							'attribute'=>$value[$key]['FIELD'],
+							// 'refreshGrid'=>true,
+							'label'=>$value[$key]['label'],
+							'vAlign'=>'middle',
+							'hAlign'=>'center',
+							'mergeHeader'=>true,
+							// 'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+							// 	//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
+							// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
+							// },
+							'editableOptions' => [
+								'header' => 'Update Toko',
+								'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+								'size' => 'xs',
+							'options' => [
+							  'data' =>$data_toko,
+							  'pluginOptions' => [
+								'allowClear' => true,
+								
+							  ],
+							],    
+								// Refresh Display
+								'displayValueConfig' => $data_toko,
+								],
+								'headerOptions'=>[
+								'style'=>[
+								'text-align'=>'center',
+								'width'=>$value[$key]['FIELD'],
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'8pt',
+								//'background-color'=>'rgba(74, 206, 231, 1)',
+								'background-color'=>'rgba('.$value[$key]['warna'].')',
+							]
+						],
+
+							'contentOptions'=>[
+								'style'=>[
+									'text-align'=>'left',
+									'width'=>'120px',
+									'font-family'=>'verdana, arial, sans-serif',
+									'font-size'=>'8pt',
+								]
+							],
+
+						// ],
+					];
 		}else{
 			$attDinamikInputActual[]=[
 				'attribute'=>$value[$key]['FIELD'],

@@ -1,6 +1,7 @@
 <?php
 use yii\helpers\Html;
 	$imgTerm= Html::img('@web/widget/docHelp/img_term/TERM.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:250px;']); 
+	$imgTipro1= Html::img('@web/widget/docHelp/img_term/TIPRO1.PNG',  ['class' => 'pnjg', 'style'=>'width:200px;height:250px;']); 	
 
 ?>	
 <p>
@@ -10,8 +11,8 @@ untuk masuk ke menu TERM, Setelah Login silahkan klik <b>Request Trade Invest</b
 <?php  echo $imgTerm;?><p></br>
 <h4>TIPRO Plan</h4></br>
 Berikut cara pembuatan TIPRO Plan :</br>
-1. Klik <b>Company</b> lalu klik <b>Master Data.</b></br>
-<?php  echo $imgProd1;?><p></br>
+1. Klik <b>TIPRO Plan.</b></br>
+<?php  echo $imgTipro1;?><p></br>
 
 
 _END_
