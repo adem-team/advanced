@@ -55,6 +55,76 @@ class ReviewVisitController extends Controller
                 return true;
             }
     }
+
+
+    public function actionLinkBerita($id)
+    {
+    	$model = new \yii\base\DynamicModel(['status']);
+		$model->addRule(['status'], 'required');
+
+		$aryStt= [
+		  ['STATUS' => 0, 'STT_NM' => 'Close Berita Acara'],
+		  ['STATUS' => 1, 'STT_NM' => 'Open Berita Acara'],
+	];
+	$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
+
+    	return $this->renderAjax('_issue',[
+    		'id'=>$id,
+    		'model'=>$model,
+    		'valStt'=>$valStt
+				]);
+    }
+
+    public function actionProsesBerita($id){
+
+    	$berita_save = Issuemd::find()->where(['ID'=>$id])->one();
+
+    	$profile = $berita_save->userprofile;
+    	$con = Yii::$app->db_esm;
+        $connection = Yii::$app->db_widget;
+    	$post = Yii::$app->request->post();
+    	 $status = $post['DynamicModel']['status'];
+    	if($status == 1)
+    	{
+    		
+    		$transaction = $connection->beginTransaction();
+			try {
+			  	$generate_code = \Yii::$app->ambilkonci->getBeritaCode();
+			  	$code = \Yii::$app->ambilkonci->getkdIssue();
+	    		$connection->createCommand()->insert('bt0001', [
+				    'KD_BERITA' =>$generate_code,
+				    'JUDUL'=> $berita_save->NM_CUSTOMER.' - '.$profile->NM_FIRST,
+				    'ISI'=>$berita_save->NM_CUSTOMER,
+				    'KD_CORP'=>Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID,
+				    'KD_DEP'=>Yii::$app->getUserOpt->Profile_user()->emp->DEP_ID,
+				    'CREATED_BY'=>Yii::$app->getUserOpt->Profile_user()->EMP_ID,
+				    'CREATED_ATCREATED_BY'=>date('y-m-d h:i:s'),
+				    'KD_REF'=>$code,
+				    'DATA_ALL'=>$berita_save->ISI_MESSAGES
+				])->execute();
+
+		    	$con->createCommand()
+	            ->update('c0014', ['STATUS'=>2,'ID_ISSUE_REF'=>$code],['ID'=>$id])
+	            ->execute();
+			    //.... other SQL executions
+			    $transaction->commit();
+			} catch (\Exception $e) {
+			    $transaction->rollBack();
+			    throw $e;
+			}
+	    	return $this->redirect(['/widget/berita/detail-berita','KD_BERITA' =>$generate_code]);
+
+	    }else{
+	    	
+	    	$con->createCommand()
+            ->update('c0014', ['STATUS'=>3],['ID'=>$id])
+            ->execute();
+
+            return $this->redirect(['index']);
+
+	    }
+
+    }
 	
 	/**
 	 * Review Detail Index, refresh by ajax and dinamic model

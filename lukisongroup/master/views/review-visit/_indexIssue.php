@@ -16,16 +16,26 @@ use yii\db\ActiveRecord;
 use yii\data\ArrayDataProvider;
 use dosamigos\gallery\Gallery;
 
+
+$this->registerJs($this->render('modal_issue.js'));
+
 	function statusIssue($model){
 		if($model->STATUS==1){
 			/*REVIEW*/
-			return Html::a('<i class="fa fa-square-o fa-md"></i> REVIEW', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'100px'],'title'=>'Review']);
+			// return Html::a('<i class="fa fa-square-o fa-md"></i> REVIEW','#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'100px'],'title'=>'Review']);
+			return  Html::button(Yii::t('app', 'Review'),
+						['value'=>url::to(['link-berita','id'=>$model->ID]),
+						'id'=>'modal-btn-issue',
+						'class'=>"btn btn-info btn-xs",
+						'style'=>['width'=>'100px'],						
+					  ]);
+
 		}elseif($model->STATUS==2){
 			/*PROCESS*/
-			return Html::a('<i class="fa fa-check-square-o fa-md"></i> PROCESS', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Process']);
+			return Html::a('<i class="fa fa-check-square-o fa-md"></i> OPEN',url::toRoute(['/widget/berita/detail-berita-open','id'=>$model->ID_ISSUE_REF]),['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Process']);
 		}elseif ($model->STATUS==3){
 			/*CLODED*/
-			return Html::a('<i class="glyphicon glyphicon-remove"></i> CLOSED', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Closed']);
+			return Html::a('<i class="glyphicon glyphicon-remove"></i> CLOSED',url::toRoute(['/widget/berita/detail-berita-open','id'=>$model->ID_ISSUE_REF]),['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Closed']);
 		};
 	}
 	
@@ -201,7 +211,7 @@ $gridColumns = [
 		'vAlign'=>'middle',
 		'mergeHeader'=>true,
 		'contentOptions'=>['style'=>'width: 100px'],
-		'format' => 'html',
+		'format' => 'raw',
 		'value'=>function ($model, $key, $index, $widget) {
 					return statusIssue($model);
 		},
@@ -280,12 +290,12 @@ $issueMemo= GridView::widget([
 <?=$issueMemo?>
 <?php
 $this->registerJs("		
-        $.fn.modal.Constructor.prototype.enforceFocus = function(){};	
-		$(document).on('click','#modalButtonIssueTgl', function(ehead){ 			  
-			$('#modal-issue-tgl').modal('show')
-			.find('#modalContentIssueTgl')
-			.load(ehead.target.value);
-		});		  
+  //       $.fn.modal.Constructor.prototype.enforceFocus = function(){};	
+		// $(document).on('click','#modalButtonIssueTgl', function(ehead){ 			  
+		// 	$('#modal-issue-tgl').modal('show')
+		// 	.find('#modalContentIssueTgl')
+		// 	.load(ehead.target.value);
+		// });		  
 			
          // $('#modal-tgl-issue').on('show.bs.modal', function (event) {		
           //   var button = $(event.relatedTarget)		
@@ -318,12 +328,24 @@ $this->registerJs("
      ]);		
 		echo "<div id='modalContentIssueTgl'></div>";
      Modal::end();
-	 
-	 
-	
-	 
-	 
-	 
-	 
-	 
-?>
+
+    
+
+   
+
+
+      Modal::begin([		
+         'id' => 'modal-issue',		
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-address-book-o"></div><div><h4 class="modal-title">Berita Acara</h4></div>',	
+		 'size' => Modal::SIZE_SMALL,	
+         'headerOptions'=>[		
+                 'style'=> 'border-radius:5px; background-color: rgba(90, 171, 255, 0.7)',		
+         ],		
+     ]);		
+		echo "<div id='modalContentIssue'></div>";
+     Modal::end();
+
+
+    ?>
+    
+

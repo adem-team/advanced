@@ -21,13 +21,15 @@ use yii\data\ArrayDataProvider;
 	<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt">
 		<?php
 			$expandPlan=$this->render('_reviewDataExpandPlan',[
-				'dataProviderBudgetdetail'=>$dataProviderBudgetdetail
+				'dataProviderBudgetdetail'=>$dataProviderBudgetdetail,
+				'id'=>$id
 			]);
 
 
 			$expandActual=$this->render('_reviewDataExpandActual',[
 				'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves,
-				'searchModel_inves'=>$searchModel_inves
+				'searchModel_inves'=>$searchModel_inves,
+				'id'=>$id
 			]);
 
  

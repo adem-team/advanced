@@ -61,7 +61,7 @@ use kartik\helpers\Html;
             'useHtmlData' => false,
             'htmlOptions' => [
                 'class' => 'custom-class',
-                'id' => 'custom-id',
+                'id' => 'custom-id-left',
             ],
         ]
     );

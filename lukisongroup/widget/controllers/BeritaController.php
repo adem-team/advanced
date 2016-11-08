@@ -19,6 +19,7 @@ use lukisongroup\widget\models\BeritaImage;
 use lukisongroup\widget\models\BeritaNotify;
 use lukisongroup\widget\models\Commentberita;
 use lukisongroup\widget\models\BeritaSearch;
+use lukisongroup\master\models\Issuemd;
 use lukisongroup\hrd\models\Dept;
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\hrd\models\Corp;
@@ -136,6 +137,52 @@ class BeritaController extends Controller
         ]);
     }
 
+
+    public function actionSetKeterangan($id)
+    {
+      $model = Berita::find()->where(['KD_BERITA'=>$id])->one();
+      $connection = Yii::$app->db_widget;
+
+        if ($model->load(Yii::$app->request->post())) {
+          $connection->createCommand()
+              ->update('bt0001', ['DATA_ALL'=>$model->DATA_ALL],['KD_BERITA'=>$id])
+              ->execute();
+
+              return $this->redirect(['detail-berita','KD_BERITA' => $id]);
+
+        }else{
+
+          return $this->renderAjax('set_keterangan', [
+            'model' => $model,
+        ]);
+
+        }
+
+       
+    }
+
+
+    /**@author : wawan
+     * Displays a single Berita model.
+     * bt0001notify update TYPE equal 0 after action DetailBerita
+     * @param string $KD_BERITA
+     * @return mixed
+     */
+    public function actionDetailBeritaOpen($id)
+    {
+      //componen
+      $profile = Yii::$app->getUserOpt->profile_user()->emp;
+      $idx = $profile->EMP_ID;
+
+      $model = Berita::find()->where(['KD_REF' => $id])->one();
+      
+
+        return $this->render('view_detailberita', [
+            'model' => $model,
+            'id'=>$idx
+        ]);
+    }
+
     /*
       *convert base 64 image
       *@author:wawan since 1.0
@@ -199,6 +246,7 @@ class BeritaController extends Controller
             $model->KD_BERITA = $KD_BERITA;
             $model->ID_USER = $id;
             $model->CREATED_BY = $cariemp_inberita['CREATED_BY'];
+            $model->CREATED_AT = date("Y-m-d H:i:s");
             $model->ATTACH64 = $data;
             $model->TYPE = 0;
             if ($model->save()) {
@@ -311,6 +359,7 @@ class BeritaController extends Controller
           $model->KD_CORP =  	Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
 	        $model->CREATED_BY = Yii::$app->user->identity->EMP_ID;
           $model->CREATED_ATCREATED_BY = date('Y-m-d h:i:s');
+         
 
 
           if($model->save())
@@ -404,17 +453,18 @@ class BeritaController extends Controller
           //componen
           $model->ID_USER = Yii::$app->user->identity->EMP_ID;
 		      $model->CREATED_AT = date('Y-m-d h:i:s');
+         
 	        $model->CREATED_BY = Yii::$app->user->identity->EMP_ID;
 
 		      if($model->save())
           {
 
-            $condition = ['and',
-            ['ID_USER'=>$profile->EMP_ID],
-            ['KD_BERITA'=> $model->KD_BERITA],
-            ['TYPE'=> 0],
-          ];
-              $update_image = BeritaImage::updateAll(['CREATED_AT' => $model->CREATED_AT],$condition);
+          //   $condition = ['and',
+          //   ['ID_USER'=>$profile->EMP_ID],
+          //   ['KD_BERITA'=> $model->KD_BERITA],
+          //   ['TYPE'=> 0],
+          // ];
+              // $update_image = BeritaImage::updateAll(['CREATED_AT' => $model->CREATED_AT],$condition);
 
             /* update read or unread  notifikasion */
             $notifupdateread = BeritaNotify::updateAll(['TYPE' => 1], ['KD_BERITA'=>$model->KD_BERITA]);
@@ -460,23 +510,44 @@ class BeritaController extends Controller
      * @return mixed
      */
      public function actionCloseBerita()
-       {
+      {
    		if (Yii::$app->request->isAjax) {
    			$request= Yii::$app->request;
    			$id=$request->post('id');
+        $kd_ref = $request->post('kd_ref');
+
+
         $connection = Yii::$app->db_widget;
 
-        $connection->createCommand()
-	            ->update('bt0001', ['STATUS' => 0], 'KD_BERITA="'.$id.'"')
-	            ->execute();
 
-        $close = $connection->createCommand('DELETE FROM bt0001notify WHERE KD_BERITA=:kd_berita');
-        $close->bindParam(':kd_berita', $kd_berita);
-        $kd_berita = $id;
-        $close->execute();
+        $transaction = $connection->beginTransaction();
+          try {
+                $connection->createCommand()
+          	            ->update('bt0001', ['STATUS' => 0], 'KD_BERITA="'.$id.'"')
+          	            ->execute();
+
+              if(count($kd_ref) != 0)
+              {
+                $issue = Issuemd::findOne(['ID_ISSUE_REF'=>$kd_ref]);
+
+                 $issue->STATUS = 3;
+
+                 $issue->save();
+              }
+                 
+
+                $close = $connection->createCommand('DELETE FROM bt0001notify WHERE KD_BERITA=:kd_berita');
+                $close->bindParam(':kd_berita', $kd_berita);
+                $kd_berita = $id;
+                $close->execute();
+              $transaction->commit();
+          } catch (\Exception $e) {
+              $transaction->rollBack();
+              throw $e;
+          }
    			return true;
-   		}
-      }
+   		 }
+    }
 
 /* get user cc usage depdrop not used anymore */
     // public function getusercc($id)
