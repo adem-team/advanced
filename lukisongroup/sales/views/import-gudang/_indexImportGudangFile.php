@@ -219,7 +219,7 @@ use app\models\hrd\Dept;
 								]
 						).' '.				
 						Html::a('<i class="fa fa-database"></i> '.Yii::t('app', 'Send Data',
-							['modelClass' => 'Kategori',]),'',[												
+							['modelClass' => 'send-import',]),'',[												
 									'id'=>'fix',
 									'data-pjax' => true,
 									'data-toggle-fix'=>'1',

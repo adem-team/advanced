@@ -105,18 +105,18 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 		</div>
 	</div>
 	<?php
-		Modal::begin([
-		'id' => 'error-msg-stockgudang',
-		'header' => 'WARNING',
-		'size' => Modal::SIZE_SMALL,
-		'headerOptions'=>[
-			'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
-		]
-	]);
-		echo "<div>Check Excel Data<br>";
-		echo "1.Pastikan Format Excel sudah sesuai</br>";
-		echo "2.Pastikan Column STATUS='stock-gudang' </br>";
-		echo "</div>";
-	Modal::end();
+		// Modal::begin([
+		// 'id' => 'error-msg-stockgudang',
+		// 'header' => 'WARNING',
+		// 'size' => Modal::SIZE_SMALL,
+		// 'headerOptions'=>[
+			// 'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+		// ]
+	// ]);
+		// echo "<div>Check Excel Data<br>";
+		// echo "1.Pastikan Format Excel sudah sesuai.</br>";
+		// echo "2.Pastikan Column STATUS='stock-gudang' </br>";
+		// echo "</div>";
+	// Modal::end();
 	?>
 </div>

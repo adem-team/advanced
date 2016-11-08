@@ -55,7 +55,7 @@ use kartik\date\DatePicker;
             <?=$gvImportFile?>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-12">
-            <?=$gvValidateFile?>
+            <?php //$gvValidateFile?>
         </div>
 		<!--VIEW IMPORT!-->
 		<div class="col-sm-12 col-md-12 col-lg-12">
@@ -96,6 +96,22 @@ use kartik\date\DatePicker;
 		ActiveForm::end();
 	Modal::end();
 	
+	/**
+	 * MODAL NOTIFY ERROR UPLOAD DATA FILE
+	*/
+	Modal::begin([
+		'id' => 'error-msg-stockgudang',
+		'header' => 'WARNING',
+		'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+		]
+	]);
+		echo "<div>Check Excel Data<br>";
+		echo "1.Pastikan Format Excel sudah sesuai.</br>";
+		echo "2.Pastikan Column STATUS='stock-gudang' </br>";
+		echo "</div>";
+	Modal::end();
 	
 	/**
 	 * MODAL NOTIFY SUCCESS IMPORT DATA
@@ -109,6 +125,20 @@ use kartik\date\DatePicker;
 		]
 	]);
 		echo "<div>Data berhasil di Import<br></div>";
+	Modal::end();
+	
+	/**
+	 * MODAL NOTIFY NO DATA IMPORT
+	*/
+	Modal::begin([
+		'id' => 'nodata-msg-stockgudang',
+		'header' => 'WARNING',
+		'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+		]
+	]);
+		echo "<div>Data tidak ada, pastikan upload file<br></div>";
 	Modal::end();
 ?>
 
@@ -126,18 +156,18 @@ use kartik\date\DatePicker;
 			e.preventDefault();
 			var idx = $(this).data('toggle-fix');
 			$.ajax({
-				url: '/sales/import-gudang/send_temp_validation',
+				url: '/sales/import-gudang/send-fix',
 				type: 'POST',
 				//contentType: 'application/json; charset=utf-8',
 				data:'id='+idx,
 				dataType: 'json',
 				success: function(result) {
-					if (result == 1){
+					if (result == true){
 						// Success
 						//$.pjax.reload({container:'#gv-validate-gudang-id'});
 						$('#success-msg-stockgudang').modal('show');
 					} else {
-						// Fail
+						$('#nodata-msg-stockgudang').modal('show');
 					}
 				}
 			});
