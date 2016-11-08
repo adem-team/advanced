@@ -14,14 +14,14 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use kartik\widgets\Spinner;
-use yii\bootstrap\Modal;
 use \moonland\phpexcel\Excel;
+
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 use yii\web\Response;
 
-use lukisongroup\sales\models\UserFileGudang;
-use lukisongroup\sales\models\UserFileGudangSearch;
+use lukisongroup\sales\models\UserFileSalesPo;
+use lukisongroup\sales\models\UserFileSalesPoSearch;
 use lukisongroup\sales\models\TempData;
 use lukisongroup\sales\models\TempDataSearch;
 
@@ -34,7 +34,7 @@ use lukisongroup\master\models\Barang;
 use ptrnov\postman4excel\Postman4ExcelBehavior;
 
 
-class ImportGudangController extends Controller
+class ImportSalesPoController extends Controller
 {
     public function behaviors()
     {
@@ -93,6 +93,7 @@ class ImportGudangController extends Controller
 
 	 /**
      * IMPORT DATA EXCEL
+	 * TYPE	: 3= stock-salespo /SELL OUT Distributor.
      * @return mixed
 	 * @author piter [ptr.nov@gmail.com]
      */
@@ -102,21 +103,17 @@ class ImportGudangController extends Controller
 		$user_id=['USER_ID'=>$username];
 		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
 		if ($paramFile){
-			$errorModal=self::setDataImport($paramFile);
-			if($errorModal==1){
-				$js='$("#error-msg-stockgudang").modal("show")';
-				$this->getView()->registerJs($js);
-			}
+			self::setDataImport($paramFile);
 		}else{			
 			//DELETE STOCK GUDANG | SO_TYPE=1
 			$cmd_clear=Yii::$app->db_esm->createCommand("
-					DELETE FROM so_t2_tmp_file WHERE USER_ID='".$username."'  AND SO_TYPE=1;
+					DELETE FROM so_t2_tmp_file WHERE USER_ID='".$username."'  AND SO_TYPE=3;
 			");
 			$cmd_clear->execute();
 		};
 		
 		//echo $paramCari;
-		$model = new UserFileGudang();
+		$model = new UserFileSalesPo();
 
 		
 		/*IMPORT VALIDATION*/
@@ -138,7 +135,6 @@ class ImportGudangController extends Controller
 			/*List Data IMPORT*/
 			'searchModelViewImport'=>$searchModelViewImport,
 			'dataProviderViewImport'=>$dataProviderViewImport,
-			'errorModal'=>$errorModal
 		]);
     }
 
@@ -221,7 +217,7 @@ class ImportGudangController extends Controller
     }
 
 	public function actionUpload(){
-		$model = new UserFileGudang();
+		$model = new UserFileSalesPo();
 		if ($model->load(Yii::$app->request->post()) ) {
 			if($model->validate()){
 				$model->USER_ID = Yii::$app->user->identity->username;
@@ -240,25 +236,11 @@ class ImportGudangController extends Controller
 
 	/**
 	 * GET DATA FROM ArrayFile set to Temp Data.
-	 * TYPE : STOCK-GUDANG=1
 	*/
 	private function setDataImport($paramFile){
 		$data=$this->getArryFile($paramFile)->getModels();
 		$username=  Yii::$app->user->identity->username;
-		
-		//Validate Import Bukan STOCK-GUDANG
-		$intCheck=0;
-		$validateStockGudang=0;
-		foreach($data as $key => $value){
-			$nilai=$value['STATUS']=='stock-gudang'?1:0;
-			$validateStockGudang=$validateStockGudang +$nilai ;
-			$intCheck=$intCheck+1;
-		}
-		
-		//print_r ($validateStockGudang);
-		//die();
-		if ($validateStockGudang==$intCheck){
-			$stt=0;
+		$stt=0;
 			// print_r($data);
 			// die();
 			foreach($data as $key => $value){
@@ -283,20 +265,14 @@ class ImportGudangController extends Controller
 					$cmd1->execute();
 				};
 				//print_r($result);
-				$cmd=Yii::$app->db_esm->createCommand("
-					CALL ESM_SALES_IMPORT_TEMP_create(
-						'STOCK_GUDANG','".$tgl."','','','".$item_kd."','".$item_nm."','".$qty."','".$dis_ref."','".$pos."','".$user_id."'
-					);
+				$cmd=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
+								'STOCK','".$tgl."','".$cust_kd."','".$cust_nm."','".$item_kd."','".$item_nm."','".$qty."','".$dis_ref."','".$pos."','".$user_id."'
+						);
 				");
 				$cmd->execute();
 				//$spinnerVal=false;
 				$stt=$stt+1;
 			}
-			return 0;
-		}else{
-			return 1;
-		}
-		
 	}
 
 	/**=====================================
@@ -308,21 +284,20 @@ class ImportGudangController extends Controller
 	public function getArryFile($paramFile){
 		
 			$pathDefault='/var/www/backup/ExternalData/default_format/';
-			$pathImport='/var/www/backup/ExternalData/import_gudang/';
-			$fileData=$paramFile!=''?$pathImport.$paramFile:$pathDefault.'default_import_gudang.xlsx';
+			$pathImport='/var/www/backup/ExternalData/import_salespo/';
+			$fileData=$paramFile!=''?$pathImport.$paramFile:$pathDefault.'default_import_salespo.xlsx';
 			//$fileName='/var/www/backup/ExternalData/import_gudang/'.$fileData;
 			$config='';
 			//$data = \moonland\phpexcel\Excel::import($fileName, $config);
 
 			$data = \moonland\phpexcel\Excel::widget([
-				'id'=>'export-gudang',
+				'id'=>'export-salespo-id',
 				'mode' => 'import',
 				'fileName' => $fileData,
 				'setFirstRecordAsKeys' => true, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel.
 				'setIndexSheetByName' => true, // set this if your excel data with multiple worksheet, the index of array will be set with the sheet name. If this not set, the index will use numeric.
-				'getOnlySheet' => 'STOCK-GUDANG', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
-				]);
-
+				'getOnlySheet' => 'STOCK-SALESPO', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
+			]);
 			//print_r($data);
 			$aryDataProvider= new ArrayDataProvider([
 				//'key' => 'ID',
@@ -335,7 +310,64 @@ class ImportGudangController extends Controller
 			//return Spinner::widget(['preset' => 'medium', 'align' => 'center', 'color' => 'blue','hidden'=>false]);
 			return $aryDataProvider;
 			
-	}	
+	}
+	
+	
+	
+	
+	
+	/**====================================
+     * IMPORT DATA EXCEL >> TEMP VALIDATION
+     * @return mixed
+	 * @author piter [ptr.nov@gmail.com]
+	 * @since 1.2
+	 * ====================================
+     */
+	public function actionImport_temp_validation(){
+		if (Yii::$app->request->isAjax) {
+			$request= Yii::$app->request;
+			$id=$request->post('id');
+			$username=  Yii::$app->user->identity->username;
+			$pos='WEB_LUKISONGROUP';
+			$data=$this->getArryFile($id)->getModels();
+			//'STOCK','2016-01-23','O041','ROBINSON MALL TATURA PALU','EF001','MAXI Cassava Crackers Hot Spicy','1','admin'
+			$stt=0;
+			// print_r($data);
+			// die();
+			foreach($data as $key => $value){
+
+				//$cmd->reset();
+				$tgl=$value['DATE'];
+				$cust_kd= $value['CUST_KD'];
+				$cust_nm= $value['CUST_NM'];
+				$item_kd= $value['SKU_ID'];
+				$item_nm=$value['SKU_NM'];
+				$qty=$value['QTY_PCS'];
+				$dis_ref=$value['DIS_REF'];
+				$user_id=$username;
+				//$result='('."'".$a."','".$b."')";
+
+				/*DELETE TEMPORARY FIRST EXECUTE*/
+				if ($stt==0){
+					$cmd1=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
+									'STOCK_DELETE','','','','','','','','','".$user_id."'
+								);
+						");
+					$cmd1->execute();
+				};
+				//print_r($result);
+				$cmd=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
+								'STOCK','".$tgl."','".$cust_kd."','".$cust_nm."','".$item_kd."','".$item_nm."','".$qty."','".$dis_ref."','".$pos."','".$user_id."'
+						);
+				");
+				$cmd->execute();
+				//$spinnerVal=false;
+				$stt=$stt+1;
+			}
+			//return '[{'.$tgl.'}]';
+			return true;
+		}
+	}
 
 	/**====================================
      * EXPORT FORMAT
@@ -349,8 +381,7 @@ class ImportGudangController extends Controller
 			 'key' => 'ID',
 			  'allModels'=>Yii::$app->db_esm->createCommand("
 					#CALL ESM_SALES_IMPORT_format()
-					#SELECT DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF,STATUS FROM so_t2_format WHERE STATUS='stock-gudang';
-					SELECT DATE,SKU_ID,SKU_NM,QTY_PCS,DIS_REF,STATUS FROM so_t2_format WHERE STATUS='stock-gudang';
+					SELECT DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF,STATUS FROM so_t2_format WHERE STATUS='stock-gudang';
 			  ")->queryAll(),
 			   'pagination' => [
 				 'pageSize' => 10,
@@ -371,10 +402,9 @@ class ImportGudangController extends Controller
         $excel_ceils = $excel_data['excel_ceils'];
 		$excel_content = [
 			 [
-				'sheet_name' => 'STOCK-GUDANG',
+				'sheet_name' => 'STOCK-SALESPO',
                 'sheet_title' => [
-					//['DATE','CUST_KD','CUST_NM','SKU_ID','SKU_NM','QTY_PCS','DIS_REF','STATUS']
-					['DATE','SKU_ID','SKU_NM','QTY_PCS','DIS_REF','STATUS']
+					['DATE','CUST_KD','CUST_NM','SKU_ID','SKU_NM','QTY_PCS','DIS_REF','STATUS']
 				],
 			    'ceils' => $excel_ceils,
                 'freezePane' => 'A2',
@@ -382,8 +412,8 @@ class ImportGudangController extends Controller
                 'headerStyle'=>[					
 					[
 						'DATE' =>['align'=>'center'],
-						//'CUST_KD' =>['align'=>'center'],
-						//'CUST_NM' => ['align'=>'center'],
+						'CUST_KD' =>['align'=>'center'],
+						'CUST_NM' => ['align'=>'center'],
 						'SKU_ID' => ['align'=>'center'],
 						'SKU_NM' => ['align'=>'center'],
 						'QTY_PCS' =>['align'=>'center'],
@@ -395,8 +425,8 @@ class ImportGudangController extends Controller
 				'contentStyle'=>[
 					[						
 						'DATE' =>['align'=>'center'],
-						//'CUST_KD' =>['align'=>'left'],
-						//'CUST_NM' => ['align'=>'left'],
+						'CUST_KD' =>['align'=>'left'],
+						'CUST_NM' => ['align'=>'left'],
 						'SKU_ID' => ['align'=>'left'],
 						'SKU_NM' => ['align'=>'left'],
 						'QTY_PCS' =>['align'=>'right'],
@@ -409,15 +439,17 @@ class ImportGudangController extends Controller
 			],
 			[
 				'sheet_name' => 'CATATAN',
-                'sheet_title' => ["CATATAN IMPORT DATA STOCK GUDANG"],
+                'sheet_title' => ["CATATAN IMPORT DATA STOCK SALES-PO"],
                 'ceils' => [
 					["1.Pastikan format sesuai dengan yang sudah di download."],
                     ["2.Format yang tidak boleh di ganti:"],
                     ["  A. NAMA SHEET1: STOCK-GUDANG "],
-					["  B. NAMA HEADER COLUMN : DATE,SKU_ID,SKU_NM,QTY_PCS,DIS_REF"],
+					["  B. NAMA HEADER COLUMN : DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF"],
 					["3.Refrensi."],
 					["  'Sheet1 adalah data yang akan di import,sedangkan Sheet2 hanya berupa catatan format"],
 					["  'DATE'= Tanggal dari data stok yang akan di import "],
+					["  'CUST_KD'= Kode dari customer, tambahkan/edit jika kode alias customer berlum ada, sesuaikan dengan kode customer pada distributor"],
+					["  'CUST_NM'= Nama dari customer"],
 					["  'SKU_ID'=  Kode dari Prodak Item ESM, tambahkan/edit jika kode alias customer berlum ada, sesuaikan dengan kode customer pada distributor "],
 					["  'SKU_NM'=  Nama dari Prodak Item"],
 					["  'QTY_PCS'= Quantity dalam unit PCS "],
@@ -429,7 +461,7 @@ class ImportGudangController extends Controller
 			],
 
 		];
-		$excel_file = "ImportFormat-StockGudang";
+		$excel_file = "ImportFormat-Salespo";
 		$this->export4excel($excel_content, $excel_file,0);
 	}
 	
@@ -505,6 +537,50 @@ class ImportGudangController extends Controller
 	}
 
 	/**====================================
+     * Action Set Alias Customer
+     * @return mixed
+	 * @author piter [ptr.nov@gmail.com]
+	 * @since 1.2
+	 * ====================================
+     */
+	public function actionAlias_cust($id){
+		$AliasCustomer = new AliasCustomer();
+		$tempDataImport = TempData::find()->where(['ID' =>$id])->one();
+		return $this->renderAjax('formAliasCustomer',[
+			'AliasCustomer'=>$AliasCustomer,
+			'tempDataImport'=>$tempDataImport,
+			'aryCustID'=>$this->aryCustID(),
+			//'test'=>Yii::$app->request->referrer
+		]);
+	}
+	public function actionAlias_cust_save(){
+		$AliasCustomer = new AliasCustomer;
+		/*Ajax Load*/
+		if(Yii::$app->request->isAjax){
+			$AliasCustomer->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($AliasCustomer));
+		}else{	/*Normal Load*/
+			if($AliasCustomer->load(Yii::$app->request->post())){
+			   //$aliasCustomer->alias_customer_save();
+				if ($AliasCustomer->alias_customer_save()){
+					//$hsl = \Yii::$app->request->post();
+					// $kdpo = $hsl['AliasCustomer']['kdpo'];
+					// $this->Sendmail2($kdpo);
+					 //$paramFile=Yii::$app->getRequest()->getQueryParam('id');
+					// $paramFile=Yii::$app->request->referrer;
+					//return $this->redirect(['index', 'id'=>$paramFile]);
+					//return Yii::$app->request->referrer;
+					//return true;
+					if(Yii::$app->request->referrer){
+						return $this->redirect(Yii::$app->request->referrer);
+					}else{
+						return $this->goHome();
+					}
+				}
+			}
+		}
+	}
+	/**====================================
      * Action Set Alias Product
      * @return mixed
 	 * @author piter [ptr.nov@gmail.com]
@@ -541,58 +617,6 @@ class ImportGudangController extends Controller
 	}
 
 
-	/**====================================
-     * IMPORT DATA EXCEL >> TEMP VALIDATION
-     * @return mixed
-	 * @author piter [ptr.nov@gmail.com]
-	 * @since 1.2
-	 * ====================================
-     */
-	public function actionImport_temp_validation(){
-		if (Yii::$app->request->isAjax) {
-			$request= Yii::$app->request;
-			$id=$request->post('id');
-			$username=  Yii::$app->user->identity->username;
-			$pos='WEB_LUKISONGROUP';
-			$data=$this->getArryFile($id)->getModels();
-			//'STOCK','2016-01-23','O041','ROBINSON MALL TATURA PALU','EF001','MAXI Cassava Crackers Hot Spicy','1','admin'
-			$stt=0;
-			// print_r($data);
-			// die();
-			foreach($data as $key => $value){
-
-				//$cmd->reset();
-				$tgl=$value['DATE'];
-				$cust_kd= $value['CUST_KD'];
-				$cust_nm= $value['CUST_NM'];
-				$item_kd= $value['SKU_ID'];
-				$item_nm=$value['SKU_NM'];
-				$qty=$value['QTY_PCS'];
-				$dis_ref=$value['DIS_REF'];
-				$user_id=$username;
-				//$result='('."'".$a."','".$b."')";
-
-				/*DELETE TEMPORARY FIRST EXECUTE*/
-				if ($stt==0){
-					$cmd1=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-									'STOCK_DELETE','','','','','','','','','".$user_id."'
-								);
-						");
-					$cmd1->execute();
-				};
-				//print_r($result);
-				$cmd=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-								'STOCK','".$tgl."','".$cust_kd."','".$cust_nm."','".$item_kd."','".$item_nm."','".$qty."','".$dis_ref."','".$pos."','".$user_id."'
-						);
-				");
-				$cmd->execute();
-				//$spinnerVal=false;
-				$stt=$stt+1;
-			}
-			//return '[{'.$tgl.'}]';
-			return true;
-		}
-	}
 	
 	
 

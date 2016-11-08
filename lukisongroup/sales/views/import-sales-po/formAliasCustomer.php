@@ -13,7 +13,7 @@ use kartik\widgets\Select2;
 				'enableClientValidation' => true,
 				'enableAjaxValidation' => true,
 				'method' => 'post',
-				'action' => ['/sales/import-gudang/alias_cust_save'],
+				'action' => ['/sales/import-sales-po/alias_cust_save'],
 		]);
 		//print_r($test);
 	?>	
