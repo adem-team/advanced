@@ -1,6 +1,8 @@
 <?php
 /* extensions */
 use kartik\helpers\Html;
+
+
 ?>
 <div class="direct-chat" style="margin-top:10px;font-family: tahoma ;font-size: 10pt;">
 	<div class="direct-chat-msg">
@@ -61,7 +63,7 @@ use kartik\helpers\Html;
             'useHtmlData' => false,
             'htmlOptions' => [
                 'class' => 'custom-class',
-                'id' => 'custom-id-left',
+                'id' => 'custom-id-left'.$id,
             ],
         ]
     );

@@ -611,7 +611,7 @@ $id = $_GET['id'];
 
 	/*GRID VIEW BASE*/
 	$gvDetalPlanActual= GridView::widget([
-		'id'=>'plan-term-budget',
+		'id'=>'plan-term-budget-idx',
 		'dataProvider' => $dataProviderBudget,
 		'filterModel' => $searchModel,
 		//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
@@ -638,7 +638,7 @@ $id = $_GET['id'];
 		'pjaxSettings'=>[
 			'options'=>[
 				'enablePushState'=>false,
-				'id'=>'plan-term-budget',
+				'id'=>'plan-term-budget-idx',
 			],
 		],
 		'panel' => [

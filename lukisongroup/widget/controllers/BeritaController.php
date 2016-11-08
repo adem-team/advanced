@@ -358,7 +358,7 @@ class BeritaController extends Controller
           //componen
           $model->KD_CORP =  	Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
 	        $model->CREATED_BY = Yii::$app->user->identity->EMP_ID;
-          $model->CREATED_ATCREATED_BY = date('Y-m-d h:i:s');
+          $model->CREATED_ATCREATED_BY = date('Y-m-d H:i:s');
          
 
 
@@ -452,7 +452,7 @@ class BeritaController extends Controller
 
           //componen
           $model->ID_USER = Yii::$app->user->identity->EMP_ID;
-		      $model->CREATED_AT = date('Y-m-d h:i:s');
+		      $model->CREATED_AT = date('Y-m-d H:i:s');
          
 	        $model->CREATED_BY = Yii::$app->user->identity->EMP_ID;
 
