@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * Issue	: PO Online/ import PO manual / Po MTI/NKA
 	 * Author piter novian [ptr.nov@gmail.com]
 	*/
-	$_indexImportGudang=$this->render('_indexImportGudang',[
+	$_indexImportSalesPo=$this->render('_indexImportSalesPo',[
 		/*VIEW ARRAY FILE*/
 			'getArryFile'=>$getArryFile,
 			'fileName'=>$fileName,
@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * Issue	: PO Online/ import PO detail. NKA
 	 * Author piter novian [ptr.nov@gmail.com]
 	*/
-	$_indexGudangLastImport=$this->render('_indexImportGudangListData',[
+	$_indexSalesPoLastImport=$this->render('_indexImportSalesPoListData',[
 		'gvRows'=>$gvRows,
 		'searchModelViewImport'=>$searchModelViewImport,
 		'dataProviderViewImport'=>$dataProviderViewImport	
@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * Issue	: PO Online/ import PO detail. NKA
 	 * Author piter novian [ptr.nov@gmail.com]
 	*/
-	$_indexGudangWeekly=$this->render('_indexGudangWeekly');
+	$_indexSalesPoWeekly=$this->render('_indexImportSalesPoWeekly');
 
 		
 	if($tab==0){
@@ -75,21 +75,21 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	}
 	$items=[
 		[
-			'label'=>'<i class="fa fa-database fa-2x"></i> Import Gudang','content'=>$_indexImportGudang,
+			'label'=>'<i class="fa fa-map-marker fa-2x"></i> Import Po-Sales','content'=>$_indexImportSalesPo,
 			'active'=>$tab0,
 		],
 		[
-			'label'=>'<i class="fa fa-cubes fa-2x"></i> Latest Import Data','content'=>$_indexGudangLastImport,
+			'label'=>'<i class="fa fa-list-ol fa-2x"></i> Latest Import Data','content'=>$_indexSalesPoLastImport,
 			'active'=>$tab1,
 		], 	
 		[
-			'label'=>'<i class="fa fa-calendar-o fa-2x"></i> Wekly Data','content'=>$_indexGudangWeekly,
+			'label'=>'<i class="fa fa-list-ol fa-2x"></i> Wekly Data','content'=>$_indexSalesPoWeekly,
 			'active'=>$tab1,
 		], 	
 	];
 
-	$tabSalesImport= TabsX::widget([
-		'id'=>'tab-sales-import-id',
+	$tabSalesPoImport= TabsX::widget([
+		'id'=>'tab-sales-po-import-id',
 		'items'=>$items,
 		'position'=>TabsX::POS_ABOVE,
 		'bordered'=>true,
@@ -101,22 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 <div class="row">
 	<div  class="col-lg-12" >
 		
-		<?=$tabSalesImport?>
+		<?=$tabSalesPoImport?>
 		</div>
 	</div>
-	<?php
-		Modal::begin([
-		'id' => 'error-msg-stockgudang',
-		'header' => 'WARNING',
-		'size' => Modal::SIZE_SMALL,
-		'headerOptions'=>[
-			'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
-		]
-	]);
-		echo "<div>Check Excel Data<br>";
-		echo "1.Pastikan Format Excel sudah sesuai</br>";
-		echo "2.Pastikan Column STATUS='stock-gudang' </br>";
-		echo "</div>";
-	Modal::end();
-	?>
 </div>

@@ -3,7 +3,7 @@
 namespace lukisongroup\sales\models;
 
 use Yii;
-
+use lukisongroup\master\models\Distributor;
 /**
  * This is the model class for table "so_t2_tmp_file".
  *
@@ -28,6 +28,7 @@ use Yii;
  */
 class TempData extends \yii\db\ActiveRecord
 {
+	//public $DIS_NM;
     /**
      * @inheritdoc
      */
@@ -52,10 +53,11 @@ class TempData extends \yii\db\ActiveRecord
         return [
             [['TGL'], 'safe'],
             [['QTY_PCS', 'QTY_UNIT'], 'number'],
-            [['SO_TYPE', 'STATUS'], 'integer'],
+            [['SO_TYPE', 'STATUS','STT_ERROR'], 'integer'],
             [['CUST_KD', 'CUST_KD_ALIAS', 'ITEM_ID_ALIAS', 'DIS_REF', 'USER_ID'], 'string', 'max' => 50],
             [['CUST_NM', 'CUST_NM_ALIAS', 'ITEM_NM', 'ITEM_NM_ALIAS', 'DIS_REF_NM', 'POS'], 'string', 'max' => 255],
             [['ITEM_ID'], 'string', 'max' => 30],
+			['MSG_ERROR','safe']
         ];
     }
 
@@ -85,4 +87,12 @@ class TempData extends \yii\db\ActiveRecord
             'STATUS' => 'Status',
         ];
     }
+	
+	public function getDistributor(){
+		return $this->hasOne(Distributor::className(), ['KD_DISTRIBUTOR'=>'DIS_REF']);
+	}
+	
+	public function getDisNm(){
+		return $this->distributor!=''?$this->distributor->NM_DISTRIBUTOR:'none';
+	}
 }

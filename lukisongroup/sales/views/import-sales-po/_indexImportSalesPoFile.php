@@ -27,14 +27,18 @@ use app\models\hrd\Dept;
 		['ID' =>7, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '20px','label'=>'STATUS','align'=>'center']],
 	]; */
 	$aryField= [
-		['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'center','warna'=>'97, 211, 96, 0.3']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'ITEM_NM','SIZE' => '10px','label'=>'SKU NM','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'DisNm','SIZE' => '10px','label'=>'DISTRIBUTOR','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'QTY_PCS','SIZE' => '10px','label'=>'QTY.PCS','align'=>'right','warna'=>'97, 211, 96, 0.3']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '10px','label'=>'Customer Alias','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'CUST_NM_ALIAS','SIZE' => '10px','label'=>'Customer ','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'ITEM_NM','SIZE' => '10px','label'=>'SKU NM','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'QTY_PCS','SIZE' => '10px','label'=>'QTY.PCS','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'DIS_REF_NM','SIZE' => '10px','label'=>'DIS_REF','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 		/*REFRENSI ALIAS*/
-		['ID' =>4, 'ATTR' =>['FIELD'=>'ITEM_ID_ALIAS','SIZE' => '10px','label'=>'SKU ID','align'=>'center','warna'=>'255, 154, 48, 1']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'ITEM_ID','SIZE' => '10px','label'=>'SKU.ID.ALIAS','align'=>'center','warna'=>'255, 154, 48, 1']],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'DIS_REF','SIZE' => '10px','label'=>'DIS_REF','align'=>'center','warna'=>'255, 154, 48, 1']],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'CUST_KD_ALIAS','SIZE' => '10px','label'=>'CUST_KD','align'=>'left','warna'=>'255, 154, 48, 1']],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'CUST ALIAS','align'=>'left','warna'=>'255, 154, 48, 1']],
+		['ID' =>8, 'ATTR' =>['FIELD'=>'ITEM_ID_ALIAS','SIZE' => '10px','label'=>'SKU ID','align'=>'left','warna'=>'255, 154, 48, 1']],
+		['ID' =>9, 'ATTR' =>['FIELD'=>'ITEM_ID','SIZE' => '10px','label'=>'SKU.ID.ALIAS','align'=>'left','warna'=>'255, 154, 48, 1']],
+		['ID' =>10, 'ATTR' =>['FIELD'=>'DIS_REF','SIZE' => '10px','label'=>'DIS_REF','align'=>'left','warna'=>'255, 154, 48, 1']],
 	];
 	$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR');
 	$attDinamik =[];
@@ -129,9 +133,17 @@ use app\models\hrd\Dept;
 			//'caret'=>'<span class="caret"></span>',
 		],
 		'buttons' => [
+			'cust' =>function($url, $model, $key){
+					return  '<li>' .Html::a('<span class="fa fa-random fa-dm"></span>'.Yii::t('app', 'Set Alias Customer'),
+												['/sales/import-sales-po/alias_cust','id'=>$model['ID']],[
+												'id'=>'alias-cust-id',
+												'data-toggle'=>"modal",
+												'data-target'=>"#alias-cust",
+												]). '</li>' . PHP_EOL;
+			},
 			'prodak' =>function($url, $model, $key){
 					return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'Set Alias Prodak'),
-												['/sales/import-data/alias_prodak','id'=>$model['ID']],[
+												['/sales/import-sales-po/alias_prodak','id'=>$model['ID']],[
 												'id'=>'alias-prodak-id',
 												'data-toggle'=>"modal",
 												'data-target'=>"#alias-prodak",
@@ -165,11 +177,11 @@ use app\models\hrd\Dept;
 	* @author piter [ptr.nov@gmail.com]
 	*/
 	$gvImportFile=GridView::widget([
-		'id'=>'gv-arryFile-gudang-id',
+		'id'=>'gv-arryFile-salespo-id',
 		'dataProvider' => $getArryFile,
 		//'filterModel' => $searchModel,
 		'rowOptions' => function($model, $key, $index, $grid){
-				if ($model->ITEM_ID=='NotSet' or $model->ITEM_NM=='NotSet'){
+				if ($model->CUST_KD=='NotSet' or $model->ITEM_NM=='NotSet'){
 					return ['class' => 'danger'];
 				};
 		},		
@@ -181,7 +193,7 @@ use app\models\hrd\Dept;
 		'pjaxSettings'=>[
 		'options'=>[
 			'enablePushState'=>false,
-			'id'=>'gv-arryFile-gudang-id',
+			'id'=>'gv-arryFile-salespo-id',
 		   ],						  
 		],
 		'hover'=>true, //cursor select
@@ -195,9 +207,9 @@ use app\models\hrd\Dept;
 			''
 		],
 		'panel' => [
-			'heading'=>'<h3 class="panel-title">IMPORT STOCK GUDANG</h3>',
+			'heading'=>'<h3 class="panel-title">IMPORT PO SALES</h3>',
 			'type'=>'info',
-			'before'=> Html::a('<i class="fa fa-clone"></i> '.Yii::t('app', 'Download Format Import File'),'/sales/import-gudang/export_format',
+			'before'=> Html::a('<i class="fa fa-clone"></i> '.Yii::t('app', 'Download Format Import File'),'/sales/import-sales-po/export_format',
 									[
 										'id'=>'export-x-id',
 										'data-pjax' => true,
@@ -212,12 +224,20 @@ use app\models\hrd\Dept;
 								]
 						).' '.	
 						Html::a('<i class="fa fa-remove"></i> '.
-								Yii::t('app', 'Clear',['modelClass' => 'Clear',]),'/sales/import-gudang',[
+								Yii::t('app', 'Clear',['modelClass' => 'Clear',]),'/sales/import-sales-po',[
 									'id'=>'clear',
 									'data-pjax' => '0',
 									'class' => 'btn btn-danger btn-sm'
 								]
 						).' '.				
+						Html::a('<i class="fa fa-check-square"></i> '.
+								Yii::t('app', 'Check',['modelClass' => 'check',]),'',[
+									'id'=>'check-data',
+									'data-pjax' => true,
+									'data-toggle-check'=>$fileName,
+									'class' => 'btn btn-warning btn-sm'
+								]
+						).' '.
 						Html::a('<i class="fa fa-database"></i> '.Yii::t('app', 'Send Data',
 							['modelClass' => 'Kategori',]),'',[												
 									'id'=>'fix',
@@ -234,6 +254,34 @@ use app\models\hrd\Dept;
 <?php
 $this->registerJs("
 		/**====================================
+		 * ACTION : VALIDATION 
+		 * @return mixed
+		 * @author piter [ptr.nov@gmail.com]
+		 * @since 1.2
+		 * ====================================
+		 */
+		$(document).on('click', '[data-toggle-check]', function(e){
+			e.preventDefault();
+			var idx = $(this).data('toggle-approved');
+			$.ajax({
+				url: '/sales/import-sales-po/import_temp_validation',
+				type: 'POST',
+				//contentType: 'application/json; charset=utf-8',
+				data:'id='+idx,
+				dataType: 'json',
+				success: function(result) {
+					if (result == 1){
+						// Success
+						$.pjax.reload({container:'#gv-validate-salespo-id'});
+					} else {
+						// Fail
+					}
+				}
+			});
+		});
+		
+		
+		/**====================================
 		 * ACTION : DELETE & CLEAR VALIDATION 
 		 * @return mixed
 		 * @author piter [ptr.nov@gmail.com]
@@ -244,7 +292,7 @@ $this->registerJs("
 			e.preventDefault();
 			var idx = $(this).data('toggle-clear');
 			$.ajax({
-				url: '/sales/import-gudang/clear_temp_validation',
+				url: '/sales/import-sales-po/clear_temp_validation',
 				type: 'POST',
 				//contentType: 'application/json; charset=utf-8',
 				data:'id='+idx,
@@ -252,7 +300,7 @@ $this->registerJs("
 				success: function(result) {
 					if (result == 1){
 						// Success
-						$.pjax.reload({container:'#gv-validate-gudang-id'});
+						$.pjax.reload({container:'#gv-validate-salespo-id'});
 					} else {
 						// Fail
 					}

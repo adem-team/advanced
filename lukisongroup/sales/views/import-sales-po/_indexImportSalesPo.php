@@ -22,7 +22,7 @@ use kartik\date\DatePicker;
 	* @return mixed
 	* @author piter [ptr.nov@gmail.com]
 	*/
-	$gvImportFile=$this->render('_indexImportGudangFile',[
+	$gvImportFile=$this->render('_indexImportSalesPoFile',[
 		'getArryFile'=>$getArryFile,
 		'fileName'=>$fileName,
 	]);
@@ -32,7 +32,7 @@ use kartik\date\DatePicker;
 	* @return mixed
 	* @author piter [ptr.nov@gmail.com]
 	*/
-	$gvValidateFile=$this->render('_indexImportGudangValidate',[
+	$gvValidateFile=$this->render('_indexImportSalesPoValidate',[
 		'gvValidateArrayDataProvider'=>$gvValidateArrayDataProvider,
 		'searchModelValidate'=>$searchModelValidate,
 	]);	
@@ -80,35 +80,19 @@ use kartik\date\DatePicker;
 		$form = ActiveForm::begin([
 			'options'=>['enctype'=>'multipart/form-data'], // important,
 			'method' => 'post',
-			'action' => ['/sales/import-gudang/upload'],
+			'action' => ['/sales/import-sales-po/upload'],
 		]);
 			echo $form->field($modelFile, 'uploadExport')->widget(FileInput::classname(), [
 				'options' => ['accept' => '*'],
 				'pluginOptions' => [
 					'showPreview' => false,
-					'showUpload' => false,
-					//'uploadUrl' => Url::to(['/sales/import-data/upload']),
+					'showUpload' => false
 				] 
 			]);
 			echo '<div style="text-align:right; padding-top:10px">';
 			echo Html::submitButton('Upload',['class' => 'btn btn-success']);
 			echo '</div>';
 		ActiveForm::end();
-	Modal::end();
-	
-	
-	/**
-	 * MODAL NOTIFY SUCCESS IMPORT DATA
-	*/
-	Modal::begin([
-		'id' => 'success-msg-stockgudang',
-		'header' => 'WARNING',
-		'size' => Modal::SIZE_SMALL,
-		'headerOptions'=>[
-			'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
-		]
-	]);
-		echo "<div>Data berhasil di Import<br></div>";
 	Modal::end();
 ?>
 
@@ -126,7 +110,7 @@ use kartik\date\DatePicker;
 			e.preventDefault();
 			var idx = $(this).data('toggle-fix');
 			$.ajax({
-				url: '/sales/import-gudang/send_temp_validation',
+				url: '/sales/import-sales-po/send_temp_validation',
 				type: 'POST',
 				//contentType: 'application/json; charset=utf-8',
 				data:'id='+idx,
@@ -134,8 +118,7 @@ use kartik\date\DatePicker;
 				success: function(result) {
 					if (result == 1){
 						// Success
-						//$.pjax.reload({container:'#gv-validate-gudang-id'});
-						$('#success-msg-stockgudang').modal('show');
+						$.pjax.reload({container:'#gv-validate-salespo-id'});
 					} else {
 						// Fail
 					}
@@ -143,15 +126,6 @@ use kartik\date\DatePicker;
 			});
 
 		});
-		
-		$(document).ready(function(){
-			$('#success-msg-stockgudang').on('hidden.bs.modal', function () {
-				//alert('The modal is now hidden.');
-				//$.post('/controller/action/whatever');
-				window.location.assign('http://lukisongroup.com/sales/import-gudang/');
-			});
-		});
-		
 	",$this::POS_READY);
 	
 	$this->registerJs("
