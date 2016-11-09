@@ -1,7 +1,10 @@
 <?php
 use yii\helpers\Html;
 	$imgTerm= Html::img('@web/widget/docHelp/img_term/TERM.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:250px;']); 
-	$imgTipro1= Html::img('@web/widget/docHelp/img_term/TIPRO1.PNG',  ['class' => 'pnjg', 'style'=>'width:200px;height:250px;']); 	
+	$imgTipro= Html::img('@web/widget/docHelp/img_term/TIPRO.PNG',  ['class' => 'pnjg', 'style'=>'width:1000px;height:600px;']);  	
+	$imgTipro1= Html::img('@web/widget/docHelp/img_term/TIPRO1.PNG',  ['class' => 'pnjg', 'style'=>'width:200px;height:250px;']); 
+	$imgTipro2= Html::img('@web/widget/docHelp/img_term/TIPRO2.PNG',  ['class' => 'pnjg', 'style'=>'width:150px;height:100px;']);
+	$imgTipro3= Html::img('@web/widget/docHelp/img_term/TIPRO3.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:400px;']);  	
 
 ?>	
 <p>
@@ -13,6 +16,11 @@ untuk masuk ke menu TERM, Setelah Login silahkan klik <b>Request Trade Invest</b
 Berikut cara pembuatan TIPRO Plan :</br>
 1. Klik <b>TIPRO Plan.</b></br>
 <?php  echo $imgTipro1;?><p></br>
-
+2. Klik <b>Add Term.</b></br>
+<?php  echo $imgTipro2;?><p></br>
+3. Pada Form Masukan <b>Nama TIPRO, Nama Customers, Nama Principal, Nama Distributor dan Budget awal lalu Klik <b>Create.</b></br>
+<?php  echo $imgTipro3;?><p></br>
+Berikut tampilan Form TIPRO Plan :</br>
+<?php  echo $imgTipro;?><p></br>
 
 _END_
