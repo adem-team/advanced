@@ -7,12 +7,12 @@ ChartAsset::register($this);
 
 	
 	$mslineDistPo= Chart::Widget([
-		'urlSource'=> url::base().'/dashboard/rpt-esm-chart-salesmd/visit-distributor-po',
+		'urlSource'=> url::base().'/dashboard/rpt-esm-chart-salesmd/dist-stock-gudang',
 		'userid'=>'piter@lukison.com',
 		'dataArray'=>'[]',//$actionChartGrantPilotproject,				//array scource model or manual array or sqlquery
 		'dataField'=>'[]',//['label','value'],							//field['label','value'], normaly value is numeric
 		'type'=>'mscolumn3d',//msline//'bar3d',//'gantt',					//Chart Type 
-		'renderid'=>'mscolumn3d-distributor-po-all',						//unix name render
+		'renderid'=>'mscolumn3d-dist-stock-gudang',						//unix name render
 		'autoRender'=>true,
 		'width'=>'100%',
 		'height'=>'500%',

@@ -130,7 +130,8 @@ class ImportGudangController extends Controller
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		/*VIEW IMPORT*/
 		$searchModelViewImport = new ImportViewSearch();
-		$dataProviderViewImport = $searchModelViewImport->search(Yii::$app->request->queryParams);
+		$dataProviderViewImport = $searchModelViewImport->searchViewLatesGudang(Yii::$app->request->queryParams);
+		$dataProviderAllDataImport = $searchModelViewImport->searchViewHistoryGudang(Yii::$app->request->queryParams);
 		//echo $this->actionExport_format();
 		//print_r($dataProvider->getModels());
 		return $this->render('index',[
@@ -141,9 +142,12 @@ class ImportGudangController extends Controller
 			'gvValidateArrayDataProvider'=>$dataProvider,
 			'searchModelValidate'=>$searchModel,
 			'modelFile'=>$model,
-			/*List Data IMPORT*/
+			/*Latest Dadta IMPORT*/
 			'searchModelViewImport'=>$searchModelViewImport,
 			'dataProviderViewImport'=>$dataProviderViewImport,
+			/*Latest Dadta IMPORT*/
+			'searchModelViewImport'=>$searchModelViewImport,
+			'dataProviderAllDataImport'=>$dataProviderAllDataImport,
 			'errorModal'=>$errorModal
 		]);
     }
@@ -204,6 +208,7 @@ class ImportGudangController extends Controller
 				$item_kd= $value['SKU_ID'];
 				$item_nm=$value['SKU_NM'];
 				$qty=$value['QTY_PCS'];
+				$price=$value['PRICE_PCS'];
 				$dis_ref=$value['DIS_REF'];
 				$user_id=$username;
 				//$result='('."'".$a."','".$b."')";
@@ -219,7 +224,7 @@ class ImportGudangController extends Controller
 				//print_r($result);
 				$cmd=Yii::$app->db_esm->createCommand("
 					CALL ESM_SALES_IMPORT_TEMP_create(
-						'STOCK_GUDANG','".$tgl."','','','".$item_kd."','".$item_nm."','".$qty."','".$dis_ref."','".$pos."','".$user_id."'
+						'STOCK_GUDANG','".$tgl."','','','".$item_kd."','".$item_nm."','".$qty."','".$price."','".$dis_ref."','".$pos."','".$user_id."'
 					);
 				");
 				$cmd->execute();
@@ -284,7 +289,7 @@ class ImportGudangController extends Controller
 			  'allModels'=>Yii::$app->db_esm->createCommand("
 					#CALL ESM_SALES_IMPORT_format()
 					#SELECT DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF,STATUS FROM so_t2_format WHERE STATUS='stock-gudang';
-					SELECT DATE,SKU_ID,SKU_NM,QTY_PCS,DIS_REF,STATUS FROM so_t2_format WHERE STATUS='stock-gudang';
+					SELECT DATE,SKU_ID,SKU_NM,QTY_PCS,HARGA_PCS,DIS_REF,STATUS FROM so_t2_format WHERE STATUS='stock-gudang';
 			  ")->queryAll(),
 			   'pagination' => [
 				 'pageSize' => 10,
@@ -308,7 +313,7 @@ class ImportGudangController extends Controller
 				'sheet_name' => 'STOCK-GUDANG',
                 'sheet_title' => [
 					//['DATE','CUST_KD','CUST_NM','SKU_ID','SKU_NM','QTY_PCS','DIS_REF','STATUS']
-					['DATE','SKU_ID','SKU_NM','QTY_PCS','DIS_REF','STATUS']
+					['DATE','SKU_ID','SKU_NM','QTY_PCS','PRICE_PCS','DIS_REF','STATUS']
 				],
 			    'ceils' => $excel_ceils,
                 'freezePane' => 'A2',
@@ -321,6 +326,7 @@ class ImportGudangController extends Controller
 						'SKU_ID' => ['align'=>'center'],
 						'SKU_NM' => ['align'=>'center'],
 						'QTY_PCS' =>['align'=>'center'],
+						'PRICE_PCS' => ['align'=>'center'],
 						'DIS_REF' => ['align'=>'center'],
 						'STATUS' => ['align'=>'center']
 					]
@@ -334,6 +340,7 @@ class ImportGudangController extends Controller
 						'SKU_ID' => ['align'=>'left'],
 						'SKU_NM' => ['align'=>'left'],
 						'QTY_PCS' =>['align'=>'right'],
+						'PRICE_PCS' => ['align'=>'right'],
 						'DIS_REF' => ['align'=>'left'],
 						'STATUS' => ['align'=>'center','color-font'=>'ee4343']
 					]
@@ -355,6 +362,7 @@ class ImportGudangController extends Controller
 					["  'SKU_ID'=  Kode dari Prodak Item ESM, tambahkan/edit jika kode alias customer berlum ada, sesuaikan dengan kode customer pada distributor "],
 					["  'SKU_NM'=  Nama dari Prodak Item"],
 					["  'QTY_PCS'= Quantity dalam unit PCS "],
+					["  'PRICE'= harga per PCS "],
 					["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],
 					["4.Refrensi Kode."],
 					["  'DIS.001'= PT. Cahaya Inti Putra Sejahtera"],
@@ -369,14 +377,19 @@ class ImportGudangController extends Controller
 	
 	/**====================================
      * Action SEND DATA TO STORED LIVE
-     * @return mixed
+     * TYPE : STOCK-GUDANG=1
 	 * @author piter [ptr.nov@gmail.com]
 	 * @since 1.2
 	 * ====================================
      */
 	public function actionSendFix(){
 		$username=  Yii::$app->user->identity->username;
-		$data_view=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$username."')")->queryAll();
+		$data_view=Yii::$app->db_esm->createCommand("
+			#CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$username."')
+			SELECT ID,TGL,ITEM_ID_ALIAS,ITEM_NM,QTY_PCS,HARGA_PCS,QTY_UNIT,DIS_REF,DIS_REF_NM,SO_TYPE,POS,USER_ID
+			FROM so_t2_tmp_file			
+			WHERE USER_ID='".$username."' AND SO_TYPE=1
+		")->queryAll();
 		\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 		if (Yii::$app->request->isAjax && $data_view) {			
 				$viewDataProvider= new ArrayDataProvider([
@@ -389,31 +402,49 @@ class ImportGudangController extends Controller
 				$dataImport=$viewDataProvider->allModels;
 				// print_r($viewDataProvider->allModels);
 				// die();
-
+				
+				//Validation column
+				$sttValidationColumn=0;
 				foreach($dataImport as $key => $value){
-					//$cmd->reset();
-					$tgl=$value['TGL'];
-					$cust_kd= $value['CUST_KD_ALIAS'];
-					$item_kd= $value['ITEM_ID_ALIAS'];
-					$item_qty= $value['QTY_PCS'];
-					$import_live=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_LIVE_create(
-										'STOCK','".$tgl."','".$cust_kd."','".$item_kd."','".$item_qty."','WEB_IMPORT','".$username."'
-									)");
-					$import_live->execute();
-					$stt=1;
+					if($value['TGL']=='NotSet' or $value['ITEM_ID_ALIAS']=='NotSet' or $value['ITEM_NM']=='NotSet' or $value['QTY_PCS']=='NotSet' or $value['DIS_REF']=='NotSet' or $value['HARGA_PCS']=='' ){
+						$sttValidationColumn=1;
+					}
 				}
-				/*Delete After Import*/
-				$cmd_del=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-										'STOCK_DELETE','','','','','','','','','".$username."'
-									);
-							");
-				$cmd_del->execute();
-				return true;
+				//print_r($sttValidationColumn);
+				//die();
+				if($sttValidationColumn!=1){
+					foreach($dataImport as $key => $value){
+						//$cmd->reset();
+						$tgl=$value['TGL'];
+						$cust_kd= $value['CUST_KD_ALIAS'];
+						$item_kd= $value['ITEM_ID_ALIAS'];
+						$item_qty= $value['QTY_PCS'];
+						$item_price= $value['HARGA_PCS'];
+						$dis_id= $value['DIS_REF'];
+						$import_live=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_LIVE_create(
+											'STOCKG_GUDANG','".$tgl."','".$cust_kd."','".$item_kd."','".$item_qty."','".$item_price."','WEB_IMPORT','".$dis_id."','".$username."'
+										)");
+						$import_live->execute();
+						//$stt=1;
+					}
+					/*Delete After Import*/
+					/* $cmd_del=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
+											'STOCK_DELETE','','','','','','','','','".$username."'
+										);
+								");
+					$cmd_del->execute(); */
+					$rslt='sukses';
+				}else{
+					$rslt='validasi';
+				}
+				//return true;
 		}else{
 			//return $this->redirect(['index']);
-			return false;
+			//return false;
+			$rslt='nodata';
 		}
 		//return $this->redirect(['index']);
+		return $rslt;
 	}
 
 	/**====================================
@@ -450,6 +481,27 @@ class ImportGudangController extends Controller
 				}
 			}
 		}
+	}
+	
+	/**====================================
+     * EXPORT DATA GUDANG
+     * @return mixed
+	 * @author piter [ptr.nov@gmail.com]
+	 * @since 1.2
+	 * ====================================
+     */
+	public function actionExport_datagudang(){
+		$searchModelViewImport = new ImportViewSearch();
+		$dataProvidergudang= $searchModelViewImport->searchViewHistoryGudang(Yii::$app->request->queryParams);
+		$dataProviderAllDataImport= new ArrayDataProvider([
+			  'allModels'=>$dataProvidergudang->getModels(),
+			   'pagination' => [
+				 'pageSize' => 10,
+			 ]
+		 ]);
+		 //$modelDataExport=$dataProviderAllDataImport->allModels;
+		print_r($dataProviderAllDataImport);
+		
 	}
 	
 }

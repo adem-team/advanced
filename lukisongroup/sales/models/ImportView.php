@@ -3,6 +3,9 @@
 namespace lukisongroup\sales\models;
 
 use Yii;
+use lukisongroup\master\models\Distributor;
+use lukisongroup\master\models\Barang;
+use lukisongroup\master\models\Unitbarang;
 
 /**
  * This is the model class for table "so_t2".
@@ -55,7 +58,7 @@ class ImportView extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['TGL'], 'safe'],
+            [['TGL','disNm'], 'safe'],
             [['SO_QTY', 'UNIT_QTY', 'UNIT_BERAT', 'HARGA_PABRIK', 'HARGA_DIS', 'HARGA_SALES', 'HARGA_LG'], 'number'],
             [['SO_TYPE', 'STATUS'], 'integer'],
             [['NOTED'], 'string'],
@@ -95,5 +98,60 @@ class ImportView extends \yii\db\ActiveRecord
             'NOTED' => 'Noted',
             'STATUS' => 'Status',
         ];
+    }
+	
+	public function getDistributor(){
+		return $this->hasOne(Distributor::className(), ['KD_DISTRIBUTOR'=>'KD_DIS']);
+	}
+	
+	public function getDisNm(){
+		return $this->distributor!=''?$this->distributor->NM_DISTRIBUTOR:'';
+	}
+	
+	/* Unit Via Brang Model*/
+	public function getBarangTbl()
+    {
+        return $this->hasOne(Barang::className(), ['KD_BARANG' => 'KD_BARANG']);
+    }	
+	
+	public function getUnitTbl()
+    {
+        return $this->hasOne(Unitbarang::className(), ['KD_UNIT' => 'KD_UNIT'])->via('barangTbl');
+    }
+	
+	public function getUnitweight() 
+    {
+        return $this->barangTbl!=''?$this->barangTbl->Unitweight:0;
+    }
+	
+	public function getKartonqty() 
+    {
+        $valKartonQty=round(($this->SO_QTY * $this->UNIT_QTY),0,PHP_ROUND_HALF_UP);
+		return  number_format($valKartonQty,2);
+    }
+	
+	
+	public function getSubtotaldist() 
+    {
+        $valSubTtlDist=round(($this->SO_QTY * $this->HARGA_DIS),0,PHP_ROUND_HALF_UP);
+		 return  number_format($valSubTtlDist,2);
+    }
+	
+	public function getSubtotalpabrik() 
+    {
+        $valSubTtlPabrik=round(($this->SO_QTY * $this->HARGA_PABRIK),0,PHP_ROUND_HALF_UP);
+		return  number_format($valSubTtlPabrik,2);
+    }
+	
+	public function getSubtotalSales() 
+    {
+        $valSubTtlSales=round(($this->SO_QTY * $this->HARGA_SALES),0,PHP_ROUND_HALF_UP);
+		 return  number_format($valSubTtlSales,2);
+    }
+	
+	public function getBeratunit() 
+    {
+		$valBerat=round(($this->SO_QTY * $this->UNIT_BERAT),0,PHP_ROUND_HALF_UP);
+		return  number_format($valBerat,2);
     }
 }

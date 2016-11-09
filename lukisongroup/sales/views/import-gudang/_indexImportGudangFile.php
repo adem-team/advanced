@@ -16,25 +16,17 @@ use kartik\date\DatePicker;
 
 use app\models\hrd\Dept;
 
-/* 	$aryField= [
-		['ID' =>0, 'ATTR' =>['FIELD'=>'DATE','SIZE' => '10px','label'=>'DATE','align'=>'center']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'CUST_KD','align'=>'left']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '20px','label'=>'CUST_NM','align'=>'left']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'SKU_ID','SIZE' => '20px','label'=>'SKU_ID','align'=>'left']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'SKU_NM','SIZE' => '20px','label'=>'SKU_NM','align'=>'left']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'QTY_PCS','SIZE' => '20px','label'=>'QTY_PCS','align'=>'right']],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'DIS_REF','SIZE' => '20px','label'=>'DIS_REF','align'=>'right']],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '20px','label'=>'STATUS','align'=>'center']],
-	]; */
 	$aryField= [
 		['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'center','warna'=>'97, 211, 96, 0.3']],
 		['ID' =>1, 'ATTR' =>['FIELD'=>'ITEM_NM','SIZE' => '10px','label'=>'SKU NM','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 		['ID' =>2, 'ATTR' =>['FIELD'=>'DisNm','SIZE' => '10px','label'=>'DISTRIBUTOR','align'=>'left','warna'=>'97, 211, 96, 0.3']],
 		['ID' =>3, 'ATTR' =>['FIELD'=>'QTY_PCS','SIZE' => '10px','label'=>'QTY.PCS','align'=>'right','warna'=>'97, 211, 96, 0.3']],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'HARGA_PCS','SIZE' => '10px','label'=>'HARGA.PCS','align'=>'right','warna'=>'97, 211, 96, 0.3']],
 		/*REFRENSI ALIAS*/
-		['ID' =>4, 'ATTR' =>['FIELD'=>'ITEM_ID_ALIAS','SIZE' => '10px','label'=>'SKU ID','align'=>'center','warna'=>'255, 154, 48, 1']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'ITEM_ID','SIZE' => '10px','label'=>'SKU.ID.ALIAS','align'=>'center','warna'=>'255, 154, 48, 1']],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'DIS_REF','SIZE' => '10px','label'=>'DIS_REF','align'=>'center','warna'=>'255, 154, 48, 1']],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'ITEM_ID_ALIAS','SIZE' => '10px','label'=>'SKU ID','align'=>'center','warna'=>'255, 154, 48, 1']],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'ITEM_ID','SIZE' => '10px','label'=>'SKU.ID.ALIAS','align'=>'center','warna'=>'255, 154, 48, 1']],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'DIS_REF','SIZE' => '10px','label'=>'DIS_REF','align'=>'center','warna'=>'255, 154, 48, 1']],
+		['ID' =>8, 'ATTR' =>['FIELD'=>'CREATE_AT','SIZE' => '10px','label'=>'CREATE_AT','align'=>'center','warna'=>'255, 154, 48, 1']],
 	];
 	$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR');
 	$attDinamik =[];
@@ -219,7 +211,7 @@ use app\models\hrd\Dept;
 								]
 						).' '.				
 						Html::a('<i class="fa fa-database"></i> '.Yii::t('app', 'Send Data',
-							['modelClass' => 'send-import',]),'',[												
+							['modelClass' => 'send-fix',]),'',[												
 									'id'=>'fix',
 									'data-pjax' => true,
 									'data-toggle-fix'=>'1',

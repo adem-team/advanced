@@ -140,6 +140,20 @@ use kartik\date\DatePicker;
 	]);
 		echo "<div>Data tidak ada, pastikan upload file<br></div>";
 	Modal::end();
+	
+	/**
+	 * MODAL NOTIFY Validasi data column tidak komplit
+	*/
+	Modal::begin([
+		'id' => 'validate-msg-stockgudang',
+		'header' => 'WARNING',
+		'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+		]
+	]);
+		echo "<div>Data Gagal di Import, Excel data Column tidak Komplit, Check kembali data sebelum di import<br></div>";
+	Modal::end();
 ?>
 
 <?php
@@ -162,11 +176,13 @@ use kartik\date\DatePicker;
 				data:'id='+idx,
 				dataType: 'json',
 				success: function(result) {
-					if (result == true){
+					if (result == 'sukses'){
 						// Success
 						//$.pjax.reload({container:'#gv-validate-gudang-id'});
 						$('#success-msg-stockgudang').modal('show');
-					} else {
+					}else if(result == 'validasi') {
+						$('#validate-msg-stockgudang').modal('show');
+					}else if(result == 'nodata'){
 						$('#nodata-msg-stockgudang').modal('show');
 					}
 				}

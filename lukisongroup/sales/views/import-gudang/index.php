@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * Issue	: PO Online/ import PO detail. NKA
 	 * Author piter novian [ptr.nov@gmail.com]
 	*/
-	$_indexGudangLastImport=$this->render('_indexImportGudangListData',[
+	$_indexGudangLatestImport=$this->render('_indexImportGudangLatestImport',[
 		'gvRows'=>$gvRows,
 		'searchModelViewImport'=>$searchModelViewImport,
 		'dataProviderViewImport'=>$dataProviderViewImport	
@@ -63,7 +63,11 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * Issue	: PO Online/ import PO detail. NKA
 	 * Author piter novian [ptr.nov@gmail.com]
 	*/
-	$_indexGudangWeekly=$this->render('_indexGudangWeekly');
+	$_indexGudangDataAll=$this->render('_indexImportGudangdataAll',[
+		'gvRows'=>$gvRows,
+		'searchModelViewImport'=>$searchModelViewImport,
+		'dataProviderAllDataImport'=>$dataProviderAllDataImport	
+	]);
 
 		
 	if($tab==0){
@@ -75,15 +79,15 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	}
 	$items=[
 		[
-			'label'=>'<i class="fa fa-database fa-2x"></i> Import Gudang','content'=>$_indexImportGudang,
+			'label'=>'<i class="fa fa-sign-in fa-2x"></i> Import Gudang','content'=>$_indexImportGudang,
 			'active'=>$tab0,
 		],
 		[
-			'label'=>'<i class="fa fa-cubes fa-2x"></i> Latest Import Data','content'=>$_indexGudangLastImport,
+			'label'=>'<i class="fa fa-cubes fa-2x"></i> Latest Import Data','content'=>$_indexGudangLatestImport,
 			'active'=>$tab1,
 		], 	
 		[
-			'label'=>'<i class="fa fa-calendar-o fa-2x"></i> Wekly Data','content'=>$_indexGudangWeekly,
+			'label'=>'<i class="fa fa-database fa-2x"></i> History Data','content'=>$_indexGudangDataAll,
 			'active'=>$tab1,
 		], 	
 	];
