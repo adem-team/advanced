@@ -53,11 +53,11 @@ class TempData extends \yii\db\ActiveRecord
         return [
             [['TGL'], 'safe'],
             [['QTY_PCS', 'QTY_UNIT'], 'number'],
-            [['SO_TYPE', 'STATUS','STT_ERROR'], 'integer'],
+            [['SO_TYPE', 'STATUS'], 'integer'],
             [['CUST_KD', 'CUST_KD_ALIAS', 'ITEM_ID_ALIAS', 'DIS_REF', 'USER_ID'], 'string', 'max' => 50],
             [['CUST_NM', 'CUST_NM_ALIAS', 'ITEM_NM', 'ITEM_NM_ALIAS', 'DIS_REF_NM', 'POS'], 'string', 'max' => 255],
             [['ITEM_ID'], 'string', 'max' => 30],
-			['MSG_ERROR','safe']
+			['HARGA_PCS','safe']
         ];
     }
 

@@ -103,8 +103,14 @@ class ImportGudangController extends Controller
 		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
 		if ($paramFile){
 			$errorModal=self::setDataImport($paramFile);
+			$data_view=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$username."')")->queryAll();
+			//print_r($data_view);
+			//die();
 			if($errorModal==1){
 				$js='$("#error-msg-stockgudang").modal("show")';
+				$this->getView()->registerJs($js);
+			}elseif(!$data_view){
+				$js='$("#nodata-msg-stockgudang").modal("show")';
 				$this->getView()->registerJs($js);
 			}
 		}else{			
@@ -124,7 +130,8 @@ class ImportGudangController extends Controller
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		/*VIEW IMPORT*/
 		$searchModelViewImport = new ImportViewSearch();
-		$dataProviderViewImport = $searchModelViewImport->search(Yii::$app->request->queryParams);
+		$dataProviderViewImport = $searchModelViewImport->searchViewLatesGudang(Yii::$app->request->queryParams);
+		$dataProviderAllDataImport = $searchModelViewImport->searchViewHistoryGudang(Yii::$app->request->queryParams);
 		//echo $this->actionExport_format();
 		//print_r($dataProvider->getModels());
 		return $this->render('index',[
@@ -135,91 +142,21 @@ class ImportGudangController extends Controller
 			'gvValidateArrayDataProvider'=>$dataProvider,
 			'searchModelValidate'=>$searchModel,
 			'modelFile'=>$model,
-			/*List Data IMPORT*/
+			/*Latest Dadta IMPORT*/
 			'searchModelViewImport'=>$searchModelViewImport,
 			'dataProviderViewImport'=>$dataProviderViewImport,
+			/*Latest Dadta IMPORT*/
+			'searchModelViewImport'=>$searchModelViewImport,
+			'dataProviderAllDataImport'=>$dataProviderAllDataImport,
 			'errorModal'=>$errorModal
 		]);
     }
 
-    /**
-     * Displays a single Sot2 model.
-     * @param string $id
+     /**
+     * UPLOAD FILE 
      * @return mixed
+	 * @author piter [ptr.nov@gmail.com]
      */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new Sot2 model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Sot2();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Updates an existing Sot2 model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Deletes an existing Sot2 model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Sot2 model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return Sot2 the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Sot2::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
-
 	public function actionUpload(){
 		$model = new UserFileGudang();
 		if ($model->load(Yii::$app->request->post()) ) {
@@ -239,6 +176,7 @@ class ImportGudangController extends Controller
 	}
 
 	/**
+	 * PREPARE BEFORE SEND
 	 * GET DATA FROM ArrayFile set to Temp Data.
 	 * TYPE : STOCK-GUDANG=1
 	*/
@@ -270,6 +208,7 @@ class ImportGudangController extends Controller
 				$item_kd= $value['SKU_ID'];
 				$item_nm=$value['SKU_NM'];
 				$qty=$value['QTY_PCS'];
+				$price=$value['PRICE_PCS'];
 				$dis_ref=$value['DIS_REF'];
 				$user_id=$username;
 				//$result='('."'".$a."','".$b."')";
@@ -285,7 +224,7 @@ class ImportGudangController extends Controller
 				//print_r($result);
 				$cmd=Yii::$app->db_esm->createCommand("
 					CALL ESM_SALES_IMPORT_TEMP_create(
-						'STOCK_GUDANG','".$tgl."','','','".$item_kd."','".$item_nm."','".$qty."','".$dis_ref."','".$pos."','".$user_id."'
+						'STOCK_GUDANG','".$tgl."','','','".$item_kd."','".$item_nm."','".$qty."','".$price."','".$dis_ref."','".$pos."','".$user_id."'
 					);
 				");
 				$cmd->execute();
@@ -350,7 +289,7 @@ class ImportGudangController extends Controller
 			  'allModels'=>Yii::$app->db_esm->createCommand("
 					#CALL ESM_SALES_IMPORT_format()
 					#SELECT DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF,STATUS FROM so_t2_format WHERE STATUS='stock-gudang';
-					SELECT DATE,SKU_ID,SKU_NM,QTY_PCS,DIS_REF,STATUS FROM so_t2_format WHERE STATUS='stock-gudang';
+					SELECT DATE,SKU_ID,SKU_NM,QTY_PCS,HARGA_PCS,DIS_REF,STATUS FROM so_t2_format WHERE STATUS='stock-gudang';
 			  ")->queryAll(),
 			   'pagination' => [
 				 'pageSize' => 10,
@@ -374,7 +313,7 @@ class ImportGudangController extends Controller
 				'sheet_name' => 'STOCK-GUDANG',
                 'sheet_title' => [
 					//['DATE','CUST_KD','CUST_NM','SKU_ID','SKU_NM','QTY_PCS','DIS_REF','STATUS']
-					['DATE','SKU_ID','SKU_NM','QTY_PCS','DIS_REF','STATUS']
+					['DATE','SKU_ID','SKU_NM','QTY_PCS','PRICE_PCS','DIS_REF','STATUS']
 				],
 			    'ceils' => $excel_ceils,
                 'freezePane' => 'A2',
@@ -387,6 +326,7 @@ class ImportGudangController extends Controller
 						'SKU_ID' => ['align'=>'center'],
 						'SKU_NM' => ['align'=>'center'],
 						'QTY_PCS' =>['align'=>'center'],
+						'PRICE_PCS' => ['align'=>'center'],
 						'DIS_REF' => ['align'=>'center'],
 						'STATUS' => ['align'=>'center']
 					]
@@ -400,6 +340,7 @@ class ImportGudangController extends Controller
 						'SKU_ID' => ['align'=>'left'],
 						'SKU_NM' => ['align'=>'left'],
 						'QTY_PCS' =>['align'=>'right'],
+						'PRICE_PCS' => ['align'=>'right'],
 						'DIS_REF' => ['align'=>'left'],
 						'STATUS' => ['align'=>'center','color-font'=>'ee4343']
 					]
@@ -421,6 +362,7 @@ class ImportGudangController extends Controller
 					["  'SKU_ID'=  Kode dari Prodak Item ESM, tambahkan/edit jika kode alias customer berlum ada, sesuaikan dengan kode customer pada distributor "],
 					["  'SKU_NM'=  Nama dari Prodak Item"],
 					["  'QTY_PCS'= Quantity dalam unit PCS "],
+					["  'PRICE'= harga per PCS "],
 					["  'DIS_REF'= Kode dari pendistribusian, contoh pendistribusian ke Distributor, Subdisk, Agen dan lain-lain"],
 					["4.Refrensi Kode."],
 					["  'DIS.001'= PT. Cahaya Inti Putra Sejahtera"],
@@ -434,74 +376,75 @@ class ImportGudangController extends Controller
 	}
 	
 	/**====================================
-     * DELETE & CLEAR >> TEMP VALIDATION
-     * @return mixed
-	 * @author piter [ptr.nov@gmail.com]
-	 * @since 1.2
-	 * ====================================
-     */
-	public function actionClear_temp_validation(){
-		if (Yii::$app->request->isAjax) {
-			$request= Yii::$app->request;
-			$user_id=$request->post('id');
-			$username=  Yii::$app->user->identity->username;
-				/*DELETE STORED FIRST EXECUTE*/
-				$cmd_clear=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-									'STOCK_DELETE','','','','','','','','','".$username."'
-								);
-						");
-				$cmd_clear->execute();
-
-			return true;
-		}
-	}
-
-	/**====================================
      * Action SEND DATA TO STORED LIVE
-     * @return mixed
+     * TYPE : STOCK-GUDANG=1
 	 * @author piter [ptr.nov@gmail.com]
 	 * @since 1.2
 	 * ====================================
      */
-	public function actionSend_temp_validation(){
-		if (Yii::$app->request->isAjax) {
-			$username=  Yii::$app->user->identity->username;
-			$data_view=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$username."')")->queryAll();
-
-			$viewDataProvider= new ArrayDataProvider([
-				'key' => 'ID',
-				 'allModels'=>$data_view,
-				  'pagination' => [
-					 'pageSize' => 1000,
-				]
-			]);
-			$dataImport=$viewDataProvider->allModels;
-			// print_r($viewDataProvider->allModels);
-			// die();
-
-			foreach($dataImport as $key => $value){
-				//$cmd->reset();
-				$tgl=$value['TGL'];
-				$cust_kd= $value['CUST_KD_ALIAS'];
-				$item_kd= $value['ITEM_ID_ALIAS'];
-				$item_qty= $value['QTY_PCS'];
-				$import_live=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_LIVE_create(
-									'STOCK','".$tgl."','".$cust_kd."','".$item_kd."','".$item_qty."','WEB_IMPORT','".$username."'
-								)");
-				$import_live->execute();
-				$stt=1;
-			}
-			/*Delete After Import*/
-			$cmd_del=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-									'STOCK_DELETE','','','','','','','','','".$username."'
-								);
-						");
-			$cmd_del->execute();
-			return true;
+	public function actionSendFix(){
+		$username=  Yii::$app->user->identity->username;
+		$data_view=Yii::$app->db_esm->createCommand("
+			#CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$username."')
+			SELECT ID,TGL,ITEM_ID_ALIAS,ITEM_NM,QTY_PCS,HARGA_PCS,QTY_UNIT,DIS_REF,DIS_REF_NM,SO_TYPE,POS,USER_ID
+			FROM so_t2_tmp_file			
+			WHERE USER_ID='".$username."' AND SO_TYPE=1
+		")->queryAll();
+		\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+		if (Yii::$app->request->isAjax && $data_view) {			
+				$viewDataProvider= new ArrayDataProvider([
+					'key' => 'ID',
+					 'allModels'=>$data_view,
+					  'pagination' => [
+						 'pageSize' => 1000,
+					]
+				]);
+				$dataImport=$viewDataProvider->allModels;
+				// print_r($viewDataProvider->allModels);
+				// die();
+				
+				//Validation column
+				$sttValidationColumn=0;
+				foreach($dataImport as $key => $value){
+					if($value['TGL']=='NotSet' or $value['ITEM_ID_ALIAS']=='NotSet' or $value['ITEM_NM']=='NotSet' or $value['QTY_PCS']=='NotSet' or $value['DIS_REF']=='NotSet' or $value['HARGA_PCS']=='' ){
+						$sttValidationColumn=1;
+					}
+				}
+				//print_r($sttValidationColumn);
+				//die();
+				if($sttValidationColumn!=1){
+					foreach($dataImport as $key => $value){
+						//$cmd->reset();
+						$tgl=$value['TGL'];
+						$cust_kd= $value['CUST_KD_ALIAS'];
+						$item_kd= $value['ITEM_ID_ALIAS'];
+						$item_qty= $value['QTY_PCS'];
+						$item_price= $value['HARGA_PCS'];
+						$dis_id= $value['DIS_REF'];
+						$import_live=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_LIVE_create(
+											'STOCKG_GUDANG','".$tgl."','".$cust_kd."','".$item_kd."','".$item_qty."','".$item_price."','WEB_IMPORT','".$dis_id."','".$username."'
+										)");
+						$import_live->execute();
+						//$stt=1;
+					}
+					/*Delete After Import*/
+					/* $cmd_del=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
+											'STOCK_DELETE','','','','','','','','','".$username."'
+										);
+								");
+					$cmd_del->execute(); */
+					$rslt='sukses';
+				}else{
+					$rslt='validasi';
+				}
+				//return true;
 		}else{
-			return $this->redirect(['index']);
+			//return $this->redirect(['index']);
+			//return false;
+			$rslt='nodata';
 		}
-		return $this->redirect(['index']);
+		//return $this->redirect(['index']);
+		return $rslt;
 	}
 
 	/**====================================
@@ -539,71 +482,26 @@ class ImportGudangController extends Controller
 			}
 		}
 	}
-
-
+	
 	/**====================================
-     * IMPORT DATA EXCEL >> TEMP VALIDATION
+     * EXPORT DATA GUDANG
      * @return mixed
 	 * @author piter [ptr.nov@gmail.com]
 	 * @since 1.2
 	 * ====================================
      */
-	public function actionImport_temp_validation(){
-		if (Yii::$app->request->isAjax) {
-			$request= Yii::$app->request;
-			$id=$request->post('id');
-			$username=  Yii::$app->user->identity->username;
-			$pos='WEB_LUKISONGROUP';
-			$data=$this->getArryFile($id)->getModels();
-			//'STOCK','2016-01-23','O041','ROBINSON MALL TATURA PALU','EF001','MAXI Cassava Crackers Hot Spicy','1','admin'
-			$stt=0;
-			// print_r($data);
-			// die();
-			foreach($data as $key => $value){
-
-				//$cmd->reset();
-				$tgl=$value['DATE'];
-				$cust_kd= $value['CUST_KD'];
-				$cust_nm= $value['CUST_NM'];
-				$item_kd= $value['SKU_ID'];
-				$item_nm=$value['SKU_NM'];
-				$qty=$value['QTY_PCS'];
-				$dis_ref=$value['DIS_REF'];
-				$user_id=$username;
-				//$result='('."'".$a."','".$b."')";
-
-				/*DELETE TEMPORARY FIRST EXECUTE*/
-				if ($stt==0){
-					$cmd1=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-									'STOCK_DELETE','','','','','','','','','".$user_id."'
-								);
-						");
-					$cmd1->execute();
-				};
-				//print_r($result);
-				$cmd=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-								'STOCK','".$tgl."','".$cust_kd."','".$cust_nm."','".$item_kd."','".$item_nm."','".$qty."','".$dis_ref."','".$pos."','".$user_id."'
-						);
-				");
-				$cmd->execute();
-				//$spinnerVal=false;
-				$stt=$stt+1;
-			}
-			//return '[{'.$tgl.'}]';
-			return true;
-		}
+	public function actionExport_datagudang(){
+		$searchModelViewImport = new ImportViewSearch();
+		$dataProvidergudang= $searchModelViewImport->searchViewHistoryGudang(Yii::$app->request->queryParams);
+		$dataProviderAllDataImport= new ArrayDataProvider([
+			  'allModels'=>$dataProvidergudang->getModels(),
+			   'pagination' => [
+				 'pageSize' => 10,
+			 ]
+		 ]);
+		 //$modelDataExport=$dataProviderAllDataImport->allModels;
+		print_r($dataProviderAllDataImport);
+		
 	}
 	
-	
-
-
-
-
-
-
-
-
-
-
-
 }

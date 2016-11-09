@@ -641,6 +641,113 @@ class RptEsmChartSalesmdController extends Controller
 	}
 	
 	/**
+     * DAILY DISTRIBUTOR STOCK GUDANG.
+     * @author ptr.nov [ptr.nov@gmail.com]
+	 * STATUS	: FIX, 
+	 * ISSUE	: Online PO/ input Manual.
+	 * STATE	: DISTRIBUTOR PO
+	 * @since 1.2
+     */
+	public function actionDistStockGudang(){
+		//***get count data visiting
+		$_distributorStockGudang= new ArrayDataProvider([
+			'allModels'=>Yii::$app->db_esm->createCommand("	
+				SELECT x2.TGL,month(x2.TGL) AS bulan,DATE_FORMAT(x2.TGL,'%d') as TGL_NO,LEFT(COMPONEN_hari(x2.TGL),2) as hari, 
+					x2.KD_BARANG ,x4.NM_BARANG, 
+					SUM(CASE WHEN x2.SO_TYPE=1 AND x2.SO_QTY>=0 THEN x2.SO_QTY ELSE 0 END) as STCK_GUDANG
+				FROM so_t2 x2 
+				LEFT JOIN b0001 x4 on x4.KD_BARANG=x2.KD_BARANG
+				WHERE  month(x2.TGL)=3  AND x2.SO_TYPE=1
+				GROUP BY x2.TGL,x2.KD_BARANG
+			")->queryAll(), 
+			'pagination' => [
+					'pageSize' => 200,
+			],				 
+		]);
+		$_modelDistributorStockGudang=ArrayHelper::toArray($_distributorStockGudang->getModels());
+		//
+		foreach($_modelDistributorStockGudang as $row => $value){			
+			$hari[]=["label"=>$value['hari']."-".$value['TGL_NO']."-".$value['bulan']];	
+			if ($value['KD_BARANG']=='BRG.ESM.2016.01.0001'){
+				$distStockGudangProduct1[]=["value"=>$value['STCK_GUDANG']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0003'){
+				$distStockGudangProduct2[]=["value"=>$value['STCK_GUDANG']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0004'){
+				$distStockGudangProduct3[]=["value"=>$value['STCK_GUDANG']];	
+			}elseif($value['KD_BARANG']=='BRG.ESM.2016.01.0005'){
+				$distStockGudangProduct4[]=["value"=>$value['STCK_GUDANG']];	
+			};		
+		};
+		//Grouping Array for CATEGORY CHART
+		$a='';
+		foreach($hari as $key => $value){
+			if($a!=$value['label']){
+				$hariCtg[]=["label"=>$value['label']];
+				$a=$value['label'];
+			}
+		};	
+			
+		/**
+		 * Maping Chart 
+		 * Type : msline
+		 * 
+		*/
+		$rsltSrc='{
+			"chart": {
+				"caption": " Distributor Stock Gudang",
+				"subCaption": "Maxi Product/Pcs",
+				"captionFontSize": "12",
+				"subcaptionFontSize": "10",
+				"subcaptionFontBold": "0",
+				"paletteColors": "#cc0000,#e7ff1f,#16ce87,#1e86e5",
+				"bgcolor": "#ffffff",
+				"showBorder": "0",
+				"showShadow": "0",
+				"showCanvasBorder": "0",
+				"usePlotGradientColor": "0",
+				"legendBorderAlpha": "0",
+				"legendShadow": "0",
+				"showAxisLines": "0",
+				"showAlternateHGridColor": "0",
+				"divlineThickness": "1",
+				"divLineIsDashed": "1",
+				"divLineDashLen": "1",
+				"divLineGapLen": "1",
+				"yAxisName": "Pcs",
+				"xAxisName": "Day",
+				"showValues": "0"               
+			},
+			"categories": [
+				{
+					"category": '.Json::encode($hariCtg).'
+				}
+			],
+			"dataset": [
+				{
+					"seriesname": "Cassava Chips Balado",
+					"data":'.Json::encode($distStockGudangProduct1).'
+				}, 
+				{
+					"seriesname": "Talos Roasted Corn",
+					"data":'.Json::encode($distStockGudangProduct2).'
+				},
+				{
+					"seriesname": "Cassava Crackers Hot Spicy",
+					"data":'.Json::encode($distStockGudangProduct3).'
+				},
+				{
+					"seriesname": "mixed Roots",
+					"data":'.Json::encode($distStockGudangProduct4).'
+				}
+			]			
+		}';
+		
+		return json::decode($rsltSrc);
+		//return $_distributorStockGudang;
+	}
+	
+	
+	/**
      * DAILY NKA PO CUSTOMER.
      * @author ptr.nov [ptr.nov@gmail.com]
 	 * STATUS	: FIX.
