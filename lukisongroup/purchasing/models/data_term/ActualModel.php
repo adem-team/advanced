@@ -26,6 +26,8 @@ class ActualModel extends Model{
 			[['temId','investId','cusPerent'], 'string'],
 			[['pph23','ppn','invesHarga'], 'default','value'=>0.00],
 			[['pph23','ppn','invesHarga'], 'number'],
+			[['invoiceNo'],'validasiInvoce'],
+			[['faktureNo'],'validasiNofaktur'],
 			[['temId','investId','invesProgram'], 'required'],
 			[['invesProgram','invoiceNo','faktureNo','invesHarga','pph23','ppn','periode_start','periode_end'], 'safe'],
         ];
@@ -76,6 +78,30 @@ class ActualModel extends Model{
 			}
 			return $term_header;
 		}
+
+
+		public function validasiInvoce($attribute){
+	      
+		      $kondisi = Rtdetail::find()->where(['TERM_ID'=>$this->temId,'NOMER_INVOCE'=>$this->invoiceNo])->one();
+
+		      if($kondisi)
+		      {
+		        $this->addError($attribute, 'Nomer Invoce sudah ada'.' '.$this->invoiceNo);
+		      }
+
+	    }
+
+
+	    public function validasiNofaktur($attribute){
+	      
+		      $kondisi = Rtdetail::find()->where(['TERM_ID'=>$this->temId,'NOMER_FAKTURPAJAK'=>$this->faktureNo])->one();
+
+		      if($kondisi)
+		      {
+		        $this->addError($attribute, 'Nomer faktur pajak sudah ada'.' '.$this->faktureNo);
+		      }
+
+	    }
 
 		public function getProfile(){
 			$profile=Yii::$app->getUserOpt->Profile_user();

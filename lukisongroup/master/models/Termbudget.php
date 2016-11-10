@@ -144,6 +144,7 @@ class Termbudget extends \yii\db\ActiveRecord
             'CREATE_AT' => 'Create  At',
             'UPDATE_BY' => 'Update  By',
             'UPDATE_AT' => 'Update  At',
+            'PROGRAM'=>'Notes',
         ];
     }
 }
