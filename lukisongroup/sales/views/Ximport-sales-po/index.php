@@ -23,14 +23,14 @@ $this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pad
 $this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
 /**
-	 * Import Data Salespo.
+	 * Import Data Gudang.
 	 * Status 	: Fixed.
 	 * Issue	: PO Online/ import PO manual / Po MTI/NKA
 	 * Author piter novian [ptr.nov@gmail.com]
 	*/
-	$_indexImportSalespo=$this->render('_indexImportSalespo',[
+	$_indexImportSalesPo=$this->render('_indexImportSalesPo',[
 		/*VIEW ARRAY FILE*/
-			'dataProviderTemp'=>$dataProviderTemp,
+			'getArryFile'=>$getArryFile,
 			'fileName'=>$fileName,
 			'gvColumnAryFile'=>$gvColumnAryFile,
 			/*GRID VALIDATE*/
@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * Issue	: PO Online/ import PO detail. NKA
 	 * Author piter novian [ptr.nov@gmail.com]
 	*/
-	$_indexSalespoLatestImport=$this->render('_indexImportSalespoLatestImport',[
+	$_indexSalesPoLastImport=$this->render('_indexImportSalesPoListData',[
 		'gvRows'=>$gvRows,
 		'searchModelViewImport'=>$searchModelViewImport,
 		'dataProviderViewImport'=>$dataProviderViewImport	
@@ -63,11 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * Issue	: PO Online/ import PO detail. NKA
 	 * Author piter novian [ptr.nov@gmail.com]
 	*/
-	$_indexSalespoDataAll=$this->render('_indexImportSalespodataAll',[
-		'gvRows'=>$gvRows,
-		'searchModelViewImport'=>$searchModelViewImport,
-		'dataProviderAllDataImport'=>$dataProviderAllDataImport	
-	]);
+	$_indexSalesPoWeekly=$this->render('_indexImportSalesPoWeekly');
 
 		
 	if($tab==0){
@@ -79,21 +75,21 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	}
 	$items=[
 		[
-			'label'=>'<i class="fa fa-sign-in fa-2x"></i> Import Salespo','content'=>$_indexImportSalespo,
+			'label'=>'<i class="fa fa-map-marker fa-2x"></i> Import Po-Sales','content'=>$_indexImportSalesPo,
 			'active'=>$tab0,
 		],
 		[
-			'label'=>'<i class="fa fa-cubes fa-2x"></i> Latest Import Data','content'=>$_indexSalespoLatestImport,
+			'label'=>'<i class="fa fa-list-ol fa-2x"></i> Latest Import Data','content'=>$_indexSalesPoLastImport,
 			'active'=>$tab1,
 		], 	
 		[
-			'label'=>'<i class="fa fa-database fa-2x"></i> History Data','content'=>$_indexSalespoDataAll,
+			'label'=>'<i class="fa fa-list-ol fa-2x"></i> Wekly Data','content'=>$_indexSalesPoWeekly,
 			'active'=>$tab1,
 		], 	
 	];
 
-	$tabSalesImport= TabsX::widget([
-		'id'=>'tab-sales-import-id',
+	$tabSalesPoImport= TabsX::widget([
+		'id'=>'tab-sales-po-import-id',
 		'items'=>$items,
 		'position'=>TabsX::POS_ABOVE,
 		'bordered'=>true,
@@ -103,8 +99,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 ?>
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
 <div class="row">
-	<div  class="col-lg-12">		
-		<?=$tabSalesImport?>
+	<div  class="col-lg-12" >
+		
+		<?=$tabSalesPoImport?>
 		</div>
 	</div>
 </div>

@@ -108,7 +108,7 @@ use lukisongroup\master\models\Distributor;
 			''
 		],
 		'panel' => [
-			'heading'=>'<h3 class="panel-title">All Stok Data Gudang</h3>',
+			'heading'=>'GUDANG -  ALL Stok Data Gudang <i class="fa fa fa-shield fa-1x"></i>', 
 			'type'=>'info',
 			'before'=> Html::a('<i class="fa fa-clone"></i> '.Yii::t('app', 'Export Data'),'/sales/import-gudang/export_datagudang',
 									[
