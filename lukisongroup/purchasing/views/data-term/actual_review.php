@@ -62,17 +62,17 @@ $id_term = $_GET['id'];
 	/*GRIDVIEW ARRAY FIELD HEAD*/
 	$headColomnInputActual=[
 		// ['ID' =>0, 'ATTR' =>['FIELD'=>'KD_RIB','SIZE' => '50px','label'=>'Trade Investment','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>0, 'ATTR' =>['FIELD'=>'nminvest','SIZE' => '10px','label'=>'Type Investasi','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'filter'=>true,'filterType'=>true,'filterwarna'=>'126, 189, 188, 0.9']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'INVESTASI_PROGRAM','SIZE' => '10px','label'=>'Keterangan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>true,'filterwarna'=>'126, 189, 188, 0.9']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'STORE_ID','SIZE' => '10px','label'=>'Toko','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'PERIODE_START','SIZE' => '10px','label'=>'periode start','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'PERIODE_END','SIZE' => '10px','label'=>'periode end','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'NOMER_FAKTURPAJAK','SIZE' => '10px','label'=>'Nomer Faktur','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'NOMER_INVOCE','SIZE' => '10px','label'=>'Nomer Invoice','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'HARGA','SIZE' => '10px','label'=>'Biaya','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>8, 'ATTR' =>['FIELD'=>'PPN','SIZE' => '10px','label'=>'Ppn','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>9, 'ATTR' =>['FIELD'=>'PPH23','SIZE' => '10px','label'=>'PPH 23','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>10, 'ATTR' =>['FIELD'=>'total','SIZE' => '10px','label'=>'Total','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'nminvest','SIZE' => '10px','label'=>'Type Investasi','align'=>'left','warna'=>'126, 189, 188, 0.9','GRP'=>false,'filter'=>true,'filterType'=>true,'filterwarna'=>'126, 189, 188, 0.9']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'INVESTASI_PROGRAM','SIZE' => '10px','label'=>'Keterangan','align'=>'left','warna'=>'126, 189, 188, 0.9','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'126, 189, 188, 0.9']],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'STORE_ID','SIZE' => '10px','label'=>'Toko','align'=>'left','warna'=>'126, 189, 188, 0.9','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'126, 189, 188, 0.9']],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'PERIODE_START','SIZE' => '10px','label'=>'periode start','align'=>'left','warna'=>'126, 189, 188, 0.9','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'126, 189, 188, 0.9']],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'PERIODE_END','SIZE' => '10px','label'=>'periode end','align'=>'left','warna'=>'126, 189, 188, 0.9','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'126, 189, 188, 0.9']],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'NOMER_FAKTURPAJAK','SIZE' => '10px','label'=>'Nomer Faktur','align'=>'left','warna'=>'126, 189, 188, 0.9','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'126, 189, 188, 0.9']],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'NOMER_INVOCE','SIZE' => '10px','label'=>'Nomer Invoice','align'=>'left','warna'=>'126, 189, 188, 0.9','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'126, 189, 188, 0.9']],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'HARGA','SIZE' => '10px','label'=>'Biaya','align'=>'left','warna'=>'126, 189, 188, 0.9','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'126, 189, 188, 0.9']],
+		['ID' =>8, 'ATTR' =>['FIELD'=>'PPN','SIZE' => '10px','label'=>'Ppn','align'=>'left','warna'=>'126, 189, 188, 0.9','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'126, 189, 188, 0.9']],
+		['ID' =>9, 'ATTR' =>['FIELD'=>'PPH23','SIZE' => '10px','label'=>'PPH 23','align'=>'left','warna'=>'126, 189, 188, 0.9','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'126, 189, 188, 0.9']],
+		['ID' =>10, 'ATTR' =>['FIELD'=>'total','SIZE' => '10px','label'=>'Total','align'=>'left','warna'=>'126, 189, 188, 0.9','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'126, 189, 188, 0.9']],
 	];
 	$gvHeadColomnInputActual = ArrayHelper::map($headColomnInputActual, 'ID', 'ATTR');
 	/*GRIDVIEW SERIAL ROWS*/
@@ -87,7 +87,7 @@ $id_term = $_GET['id'];
 				'width'=>'10px',
 				'font-family'=>'verdana, arial, sans-serif',
 				'font-size'=>'9pt',
-				'background-color'=>'rgba(249,215,100,1)',
+				'background-color'=>'rgba(126, 189, 188, 0.9)',
 			]
 		],
 		'contentOptions'=>[
@@ -150,7 +150,7 @@ $id_term = $_GET['id'];
 			$attDinamikInputActual[]=[
 				'class'=>'kartik\grid\ActionColumn',
 				'dropdown' => true,
-				'template' => '{edit}{delete}',
+				'template' => '{edit}{delete}{view}',
 				'dropdownOptions'=>['class'=>'pull-right dropup','style'=>['disable'=>true]],
 				'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 				'dropdownButton'=>[
@@ -170,15 +170,14 @@ $id_term = $_GET['id'];
 							 return  '<li>' . Html::a('<span class="fa fa-trash fa-dm"></span>'.Yii::t('app', 'delete'),
 														 ['delete-actual','id'=>$id_term,'kd'=>$model->KD_RIB],[
 														 ]). '</li>' . PHP_EOL;
-													 }
-					/* 'view1' =>function($url, $model, $key){
-							return  '<li>' .Html::a('<span class="fa fa-search-plus fa-dm"></span>'.Yii::t('app', 'Review'),
-														['/purchasing/data-term/review','id'=>$model->TERM_ID],[
-														'id'=>'img1-id',
-														'data-toggle'=>"modal",
-														//'data-target'=>"#img1-visit",
+													 },
+					 'view' =>function($url, $model, $key)use($id_term){
+							return  '<li>' .Html::a('<span class="fa fa-eye "></span>'.Yii::t('app', 'view'),
+														['/purchasing/data-term/actual-view','id'=>$model->KD_RIB,'kd_term'=>$id_term],[
+														 'data-toggle'=>"modal",
+														 'data-target'=>"#modal-update",
 														]). '</li>' . PHP_EOL ;
-					}*/
+					}
 				],
 				'headerOptions'=>[
 					'style'=>[
@@ -186,7 +185,7 @@ $id_term = $_GET['id'];
 						'width'=>'10px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
-						'background-color'=>'rgba(249, 215, 100, 1)',
+						'background-color'=>'rgba(126, 189, 188, 0.9)',
 					]
 				],
 				'contentOptions'=>[
@@ -514,7 +513,7 @@ $id_term = $_GET['id'];
 				 'hAlign'=>'left',
       			'vAlign'=>'top',
 				'mergeHeader'=>true,
-				'filter'=>false,
+				// 'filter'=>true,
 				// 'noWrap'=>true,
 				'group'=>$value[$key]['GRP'],
 				// 'format'=>$value[$key]['FORMAT'],

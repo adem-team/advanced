@@ -143,12 +143,12 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 
   /* term data View Editing*/
   $edit_data_term=DetailView::widget([
-    'id'=>'term-actual-edit-view-id',
+    'id'=>'term-actual-view-id',
     'model' => $model,
     'attributes'=>$update_data_term,
     'condensed'=>true,
     'hover'=>true,
-    'mode'=>DetailView::MODE_EDIT,
+    'mode'=>DetailView::MODE_VIEW,
     'buttons1'=>'{update}',
     'buttons2'=>'{view}{save}',
     'panel'=>[

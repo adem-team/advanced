@@ -1441,12 +1441,16 @@ class TermCustomersController extends Controller
      * @param integer $id
      * @return mixed
      */
-    // public function actionDelete($id)
-    // {
-    //     $this->findModel($id)->delete();
-    //
-    //     return $this->redirect(['index']);
-    // }
+    public function actionDelete($id)
+    {
+         $model = $this->findModel($id);
+         $model->STATUS = 3;
+         $model->save();
+    
+        return $this->redirect(['index']);
+    }
+
+    
 
     /**
      * Finds the Termcustomers model based on its primary key value.

@@ -8,7 +8,8 @@ use yii\helpers\Html;
 	$imgTipro4= Html::img('@web/widget/docHelp/img_term/TIPRO4.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:400px;']);
 	$imgTipro5= Html::img('@web/widget/docHelp/img_term/TIPRO5.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:300px;']); 
 	$imgTipro6= Html::img('@web/widget/docHelp/img_term/TIPRO6.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:300px;']);
-	$imgTipro7= Html::img('@web/widget/docHelp/img_term/TIPRO7.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:500px;']); 		
+	$imgTipro7= Html::img('@web/widget/docHelp/img_term/TIPRO7.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:500px;']); 
+	$imgTipro8= Html::img('@web/widget/docHelp/img_term/TIPRO8.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:200px;']); 	
 ?>	
 <p>
 Penjelasan : Suatu bentuk perjanjian kerjasama yang persyaratannya disepakati oleh kedua belah pihak dalam hal ini retailer dan produsen / principle yang umumnya berlaku 1 tahun.</br>
@@ -33,5 +34,7 @@ Berikut tampilan Form TIPRO Plan : </br>
 <?php  echo $imgTipro6;?><p></br>
 7. Klik <b>Add Investment</b> untuk memasukan <b>Invest Type, Periode Start, Periode End, Notes, dan Budget Plan</b> lalu klik <b>Create.</b></br>
 <?php  echo $imgTipro7;?><p></br>
+8. Klik Tanda panah keatas pada <b>Conditional Rebates</b> untuk memasukan Reward yang diberikan yang tidak dalam target.</br>
+<?php  echo $imgTipro8;?><p></br>
 
 _END_
