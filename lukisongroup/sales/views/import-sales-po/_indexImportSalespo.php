@@ -22,31 +22,11 @@ use kartik\date\DatePicker;
 	* @return mixed
 	* @author piter [ptr.nov@gmail.com]
 	*/
-	$gvImportFile=$this->render('_indexImportGudangFile',[
-		'getArryFile'=>$getArryFile,
+	$gvImportFile=$this->render('_indexImportSalespoFile',[
+		'dataProviderTemp'=>$dataProviderTemp,
 		'fileName'=>$fileName,
 	]);
-	
-	/**
-	* GRIDVIEW VALIDATE DATA| EDITING 
-	* @return mixed
-	* @author piter [ptr.nov@gmail.com]
-	*/
-	// $gvValidateFile=$this->render('_indexImportGudangValidate',[
-		// 'gvValidateArrayDataProvider'=>$gvValidateArrayDataProvider,
-		// 'searchModelValidate'=>$searchModelValidate,
-	// ]);	
-
-	/**
-	* GRIDVIEW LIST IMPORT DATA
-	* @return mixed
-	* @author piter [ptr.nov@gmail.com]
-	*/
-	// $gvListImport=$this->render('_indexImportGudangListData',[
-		// 'dataProviderViewImport'=>$dataProviderViewImport,
-		// 'searchModelViewImport'=>$searchModelViewImport,
-	// ]);	
-	
+		
 ?>
 
 <div class="body-content">
@@ -54,20 +34,13 @@ use kartik\date\DatePicker;
         <div class="col-sm-12 col-md-12 col-lg-12 ">
             <?=$gvImportFile?>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-12">
-            <?php //$gvValidateFile?>
-        </div>
-		<!--VIEW IMPORT!-->
-		<div class="col-sm-12 col-md-12 col-lg-12">
-            <?php //$gvListImport?>
-        </div>
     </div>
 </div>
 
 <?php
 
 	Modal::begin([
-		'id' => 'file-import',
+		'id' => 'file-import-salespo',
 		'header' => '<div style="float:left;margin-right:10px">'. 
 						Html::img('@web/img_setting/warning/upload1.png',  
 						['class' => 'pnjg', 'style'=>'width:40px;height:40px;'])
@@ -80,14 +53,13 @@ use kartik\date\DatePicker;
 		$form = ActiveForm::begin([
 			'options'=>['enctype'=>'multipart/form-data'], // important,
 			'method' => 'post',
-			'action' => ['/sales/import-gudang/upload'],
+			'action' => ['/sales/import-sales-po/upload'],
 		]);
 			echo $form->field($modelFile, 'uploadExport')->widget(FileInput::classname(), [
 				'options' => ['accept' => '*'],
 				'pluginOptions' => [
 					'showPreview' => false,
 					'showUpload' => false,
-					//'uploadUrl' => Url::to(['/sales/import-data/upload']),
 				] 
 			]);
 			echo '<div style="text-align:right; padding-top:10px">';
@@ -100,7 +72,7 @@ use kartik\date\DatePicker;
 	 * MODAL NOTIFY ERROR UPLOAD DATA FILE
 	*/
 	Modal::begin([
-		'id' => 'error-msg-stockgudang',
+		'id' => 'error-msg-stock-salespo',
 		'header' => 'WARNING',
 		'size' => Modal::SIZE_SMALL,
 		'headerOptions'=>[
@@ -109,7 +81,7 @@ use kartik\date\DatePicker;
 	]);
 		echo "<div>Check Excel Data<br>";
 		echo "1.Pastikan Format Excel sudah sesuai.</br>";
-		echo "2.Pastikan Column STATUS='stock-gudang' </br>";
+		echo "2.Pastikan Column STATUS='stock-salespo' </br>";
 		echo "</div>";
 	Modal::end();
 	
@@ -117,7 +89,7 @@ use kartik\date\DatePicker;
 	 * MODAL NOTIFY SUCCESS IMPORT DATA
 	*/
 	Modal::begin([
-		'id' => 'success-msg-stockgudang',
+		'id' => 'success-msg-stocksalespo',
 		'header' => 'WARNING',
 		'size' => Modal::SIZE_SMALL,
 		'headerOptions'=>[
@@ -131,7 +103,7 @@ use kartik\date\DatePicker;
 	 * MODAL NOTIFY NO DATA IMPORT
 	*/
 	Modal::begin([
-		'id' => 'nodata-msg-stockgudang',
+		'id' => 'nodata-msg-stock-salespo',
 		'header' => 'WARNING',
 		'size' => Modal::SIZE_SMALL,
 		'headerOptions'=>[
@@ -145,7 +117,7 @@ use kartik\date\DatePicker;
 	 * MODAL NOTIFY Validasi data column tidak komplit
 	*/
 	Modal::begin([
-		'id' => 'validate-msg-stockgudang',
+		'id' => 'validate-msg-stocksalespo',
 		'header' => 'WARNING',
 		'size' => Modal::SIZE_SMALL,
 		'headerOptions'=>[
@@ -166,11 +138,11 @@ use kartik\date\DatePicker;
 		 * @since 1.2
 		 * ====================================
 		 */
-		$(document).on('click', '[data-toggle-fix]', function(e){
+		$(document).on('click', '[data-toggle-fix-salespo]', function(e){
 			e.preventDefault();
-			var idx = $(this).data('toggle-fix');
+			var idx = $(this).data('toggle-fix-salespo');
 			$.ajax({
-				url: '/sales/import-gudang/send-fix',
+				url: '/sales/import-sales-po/send-fix',
 				type: 'POST',
 				//contentType: 'application/json; charset=utf-8',
 				data:'id='+idx,
@@ -178,12 +150,12 @@ use kartik\date\DatePicker;
 				success: function(result) {
 					if (result == 'sukses'){
 						// Success
-						//$.pjax.reload({container:'#gv-validate-gudang-id'});
-						$('#success-msg-stockgudang').modal('show');
+						//$.pjax.reload({container:'#gv-validate-salespo-id'});
+						$('#success-msg-stocksalespo').modal('show');
 					}else if(result == 'validasi') {
-						$('#validate-msg-stockgudang').modal('show');
+						$('#validate-msg-stocksalespo').modal('show');
 					}else if(result == 'nodata'){
-						$('#nodata-msg-stockgudang').modal('show');
+						$('#nodata-msg-stocksalespo').modal('show');
 					}
 				}
 			});
@@ -191,10 +163,10 @@ use kartik\date\DatePicker;
 		});
 		
 		$(document).ready(function(){
-			$('#success-msg-stockgudang').on('hidden.bs.modal', function () {
+			$('#success-msg-stocksalespo').on('hidden.bs.modal', function () {
 				//alert('The modal is now hidden.');
 				//$.post('/controller/action/whatever');
-				window.location.assign('http://lukisongroup.com/sales/import-gudang/');
+				window.location.assign('http://lukisongroup.com/sales/import-sales-po/');
 			});
 		});
 		

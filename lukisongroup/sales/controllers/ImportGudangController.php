@@ -103,7 +103,12 @@ class ImportGudangController extends Controller
 		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
 		if ($paramFile){
 			$errorModal=self::setDataImport($paramFile);
-			$data_view=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$username."')")->queryAll();
+			$data_view=Yii::$app->db_esm->createCommand("
+				#CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$username."')
+				SELECT ID,TGL,CUST_KD_ALIAS,CUST_NM,ITEM_ID_ALIAS,ITEM_NM,QTY_PCS,QTY_UNIT,DIS_REF,DIS_REF_NM,SO_TYPE,POS,USER_ID,STATUS
+				FROM so_t2_tmp_file
+				WHERE USER_ID='".$username."' AND SO_TYPE=1
+			")->queryAll();
 			//print_r($data_view);
 			//die();
 			if($errorModal==1){
@@ -127,7 +132,7 @@ class ImportGudangController extends Controller
 		
 		/*IMPORT VALIDATION*/
 		$searchModel = new TempDataSearch($user_id);
-		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider = $searchModel->searchGudang(Yii::$app->request->queryParams);
 		/*VIEW IMPORT*/
 		$searchModelViewImport = new ImportViewSearch();
 		$dataProviderViewImport = $searchModelViewImport->searchViewLatesGudang(Yii::$app->request->queryParams);
@@ -203,8 +208,8 @@ class ImportGudangController extends Controller
 
 				//$cmd->reset();
 				$tgl=$value['DATE'];
-				$cust_kd= $value['CUST_KD'];
-				$cust_nm= $value['CUST_NM'];
+				//$cust_kd= $value['CUST_KD'];
+				//$cust_nm= $value['CUST_NM'];
 				$item_kd= $value['SKU_ID'];
 				$item_nm=$value['SKU_NM'];
 				$qty=$value['QTY_PCS'];

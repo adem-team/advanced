@@ -108,7 +108,7 @@ use lukisongroup\master\models\Distributor;
 			''
 		],
 		'panel' => [
-			'heading'=>'<h3 class="panel-title">Lates Data Import </h3>',
+			'heading'=>'GUDANG - Lates Data Import <i class="fa fa fa-shield fa-1x"></i>',  
 			'type'=>'info',
 			'showFooter'=>false,
 		],

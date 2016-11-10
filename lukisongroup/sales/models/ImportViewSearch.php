@@ -98,11 +98,8 @@ class ImportViewSearch extends ImportView
     }
 	
 	 /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
+     * View Latest Data  GUDANG
+     * @author piter [ptr.nov@gmail.com]
      */
     public function searchViewLatesGudang($params)
     {
@@ -158,6 +155,10 @@ class ImportViewSearch extends ImportView
         return $dataProvider;
     }
 	
+	 /**
+     * View History Data  GUDANG
+     * @author piter [ptr.nov@gmail.com]
+     */
 	public function searchViewHistoryGudang($params)
     {
 		$query = ImportView::find()->orderBy('TGL DESC');
@@ -209,4 +210,120 @@ class ImportViewSearch extends ImportView
 
         return $dataProvider;
     }
+	
+	 /**
+     * View Latest Data  SALES PO
+     * @author piter [ptr.nov@gmail.com]
+     */
+    public function searchViewLatesSalespo($params)
+    {
+		$maxTgl = ImportView::find()->where(['POS'=>'WEB_IMPORT','SO_TYPE' => '3'])->max('TGL');
+		//print_r($this->disNm);
+        $query = ImportView::find()->orderBy('TGL DESC');
+
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+			'pagination' => [
+				 'pageSize' => 200,
+			]
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+	
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'ID' => $this->ID,
+            'TGL' =>$this->TGL,
+            'SO_QTY' => $this->SO_QTY, 
+            'SO_TYPE' => '3',
+            'UNIT_QTY' => $this->UNIT_QTY,
+            'UNIT_BERAT' => $this->UNIT_BERAT,
+            'HARGA_PABRIK' => $this->HARGA_PABRIK,
+            'HARGA_DIS' => $this->HARGA_DIS,
+            'HARGA_SALES' => $this->HARGA_SALES,
+            'HARGA_LG' => $this->HARGA_LG,
+            'STATUS' => $this->STATUS,
+        ]);
+
+        $query->andFilterWhere(['like', 'CUST_KD', $this->CUST_KD])
+            ->andFilterWhere(['like', 'CUST_KD_ALIAS', $this->CUST_KD_ALIAS])
+            ->andFilterWhere(['like', 'CUST_NM', $this->CUST_NM])
+            ->andFilterWhere(['like', 'KD_BARANG', $this->KD_BARANG])
+            ->andFilterWhere(['like', 'KD_BARANG_ALIAS', $this->KD_BARANG_ALIAS])
+            ->andFilterWhere(['like', 'NM_BARANG', $this->NM_BARANG])
+            ->andFilterWhere(['like', 'POS', 'WEB_IMPORT'])
+            ->andFilterWhere(['like', 'KD_DIS',$this->getAttribute('disNm')])
+            ->andFilterWhere(['like', 'NM_DIS', $this->NM_DIS])
+            ->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
+            ->andFilterWhere(['like', 'UNIT_BARANG', $this->UNIT_BARANG])
+            ->andFilterWhere(['like', 'NOTED', $this->NOTED]);
+
+        return $dataProvider;
+    }
+	
+	 /**
+     * View History Data  SALES PO
+     * @author piter [ptr.nov@gmail.com]
+     */
+	public function searchViewHistorySalespo($params)
+    {
+		$query = ImportView::find()->orderBy('TGL DESC');
+
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+			'pagination' => [
+				 'pageSize' => 200,
+			]
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+	
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'ID' => $this->ID,
+            'TGL' => $this->TGL,
+            'SO_QTY' => $this->SO_QTY,
+            'SO_TYPE' => '3',
+            'UNIT_QTY' => $this->UNIT_QTY,
+            'UNIT_BERAT' => $this->UNIT_BERAT,
+            'HARGA_PABRIK' => $this->HARGA_PABRIK,
+            'HARGA_DIS' => $this->HARGA_DIS,
+            'HARGA_SALES' => $this->HARGA_SALES,
+            'HARGA_LG' => $this->HARGA_LG,
+            'STATUS' => $this->STATUS,
+        ]);
+
+        $query->andFilterWhere(['like', 'CUST_KD', $this->CUST_KD])
+            ->andFilterWhere(['like', 'CUST_KD_ALIAS', $this->CUST_KD_ALIAS])
+            ->andFilterWhere(['like', 'CUST_NM', $this->CUST_NM])
+            ->andFilterWhere(['like', 'KD_BARANG', $this->KD_BARANG])
+            ->andFilterWhere(['like', 'KD_BARANG_ALIAS', $this->KD_BARANG_ALIAS])
+            ->andFilterWhere(['like', 'NM_BARANG', $this->NM_BARANG])
+            ->andFilterWhere(['like', 'POS', 'WEB_IMPORT'])
+            ->andFilterWhere(['like', 'KD_DIS',$this->getAttribute('disNm')])
+            ->andFilterWhere(['like', 'NM_DIS', $this->NM_DIS])
+            ->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
+            ->andFilterWhere(['like', 'UNIT_BARANG', $this->UNIT_BARANG])
+            ->andFilterWhere(['like', 'NOTED', $this->NOTED]);
+
+        return $dataProvider;
+    }
+	
+	
 }

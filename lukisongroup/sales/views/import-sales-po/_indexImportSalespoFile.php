@@ -18,15 +18,19 @@ use app\models\hrd\Dept;
 
 	$aryField= [
 		['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '10px','label'=>'Date','align'=>'center','warna'=>'97, 211, 96, 0.3']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'ITEM_NM','SIZE' => '10px','label'=>'SKU NM','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'DisNm','SIZE' => '10px','label'=>'DISTRIBUTOR','align'=>'left','warna'=>'97, 211, 96, 0.3']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'QTY_PCS','SIZE' => '10px','label'=>'QTY.PCS','align'=>'right','warna'=>'97, 211, 96, 0.3']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'HARGA_PCS','SIZE' => '10px','label'=>'HARGA.PCS','align'=>'right','warna'=>'97, 211, 96, 0.3']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'CUST_NM','SIZE' => '10px','label'=>'Customer Alias','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'CUST_NM_ALIAS','SIZE' => '10px','label'=>'Customer ','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'ITEM_NM','SIZE' => '10px','label'=>'SKU NM','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'DisNm','SIZE' => '10px','label'=>'DISTRIBUTOR','align'=>'left','warna'=>'97, 211, 96, 0.3']],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'QTY_PCS','SIZE' => '10px','label'=>'QTY.PCS','align'=>'right','warna'=>'97, 211, 96, 0.3']],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'HARGA_PCS','SIZE' => '10px','label'=>'HARGA.PCS','align'=>'right','warna'=>'97, 211, 96, 0.3']],
 		/*REFRENSI ALIAS*/
-		['ID' =>5, 'ATTR' =>['FIELD'=>'ITEM_ID_ALIAS','SIZE' => '10px','label'=>'SKU ID','align'=>'center','warna'=>'255, 154, 48, 1']],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'ITEM_ID','SIZE' => '10px','label'=>'SKU.ID.ALIAS','align'=>'center','warna'=>'255, 154, 48, 1']],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'DIS_REF','SIZE' => '10px','label'=>'DIS_REF','align'=>'center','warna'=>'255, 154, 48, 1']],
-		['ID' =>8, 'ATTR' =>['FIELD'=>'CREATE_AT','SIZE' => '10px','label'=>'CREATE_AT','align'=>'center','warna'=>'255, 154, 48, 1']],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'CUST_KD_ALIAS','SIZE' => '10px','label'=>'CUST_KD','align'=>'left','warna'=>'255, 154, 48, 1']],
+		['ID' =>8, 'ATTR' =>['FIELD'=>'CUST_KD','SIZE' => '10px','label'=>'CUST ALIAS','align'=>'left','warna'=>'255, 154, 48, 1']],
+		['ID' =>9, 'ATTR' =>['FIELD'=>'ITEM_ID_ALIAS','SIZE' => '10px','label'=>'SKU ID','align'=>'center','warna'=>'255, 154, 48, 1']],
+		['ID' =>10, 'ATTR' =>['FIELD'=>'ITEM_ID','SIZE' => '10px','label'=>'SKU.ID.ALIAS','align'=>'center','warna'=>'255, 154, 48, 1']],
+		['ID' =>11, 'ATTR' =>['FIELD'=>'DIS_REF','SIZE' => '10px','label'=>'DIS_REF','align'=>'center','warna'=>'255, 154, 48, 1']],
+		['ID' =>12, 'ATTR' =>['FIELD'=>'CREATE_AT','SIZE' => '10px','label'=>'CREATE_AT','align'=>'center','warna'=>'255, 154, 48, 1']],
 	];
 	$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR');
 	$attDinamik =[];
@@ -121,6 +125,14 @@ use app\models\hrd\Dept;
 			//'caret'=>'<span class="caret"></span>',
 		],
 		'buttons' => [
+			'cust' =>function($url, $model, $key){
+					return  '<li>' .Html::a('<span class="fa fa-random fa-dm"></span>'.Yii::t('app', 'Set Alias Customer'),
+												['/sales/import-sales-po/alias_cust','id'=>$model['ID']],[
+												'id'=>'alias-cust-id',
+												'data-toggle'=>"modal",
+												'data-target'=>"#alias-cust",
+												]). '</li>' . PHP_EOL;
+			},
 			'prodak' =>function($url, $model, $key){
 					return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'Set Alias Prodak'),
 												['/sales/import-data/alias_prodak','id'=>$model['ID']],[
@@ -128,7 +140,8 @@ use app\models\hrd\Dept;
 												'data-toggle'=>"modal",
 												'data-target'=>"#alias-prodak",
 												]). '</li>' . PHP_EOL;
-			}
+			},
+			
 		],
 		'headerOptions'=>[
 			'style'=>[
@@ -156,9 +169,9 @@ use app\models\hrd\Dept;
 	* @return mixed
 	* @author piter [ptr.nov@gmail.com]
 	*/
-	$gvImportFile=GridView::widget([
-		'id'=>'gv-arryFile-gudang-id',
-		'dataProvider' => $getArryFile,
+	$gvImportFileSalespo=GridView::widget([
+		'id'=>'gv-arryfile-salespo-id',
+		'dataProvider' => $dataProviderTemp,
 		//'filterModel' => $searchModel,
 		'rowOptions' => function($model, $key, $index, $grid){
 				if ($model->ITEM_ID=='NotSet' or $model->ITEM_NM=='NotSet'){
@@ -173,7 +186,7 @@ use app\models\hrd\Dept;
 		'pjaxSettings'=>[
 		'options'=>[
 			'enablePushState'=>false,
-			'id'=>'gv-arryFile-gudang-id',
+			'id'=>'gv-arryfile-salespo-id',
 		   ],						  
 		],
 		'hover'=>true, //cursor select
@@ -187,11 +200,11 @@ use app\models\hrd\Dept;
 			''
 		],
 		'panel' => [
-			'heading'=>'GUDANG - Import Stock Gudang <i class="fa fa fa-shield fa-1x"></i>',
-			'type'=>'info',
-			'before'=> Html::a('<i class="fa fa-clone"></i> '.Yii::t('app', 'Download Format Import File'),'/sales/import-gudang/export_format',
+			'heading'=>'SALES-PO - IMPORT STOCK <i class="fa fa-external-link-square fa-1x"></i>',
+			'type'=>'warning',
+			'before'=> Html::a('<i class="fa fa-clone"></i> '.Yii::t('app', 'Download Format Import File'),'/sales/import-sales-po/export_format',
 									[
-										'id'=>'export-x-id',
+										'id'=>'export-salespo-id',
 										'data-pjax' => true,
 										'class' => 'btn btn-info btn-sm'
 									]
@@ -199,22 +212,22 @@ use app\models\hrd\Dept;
 						Html::a('<i class="fa fa-upload"></i> '.Yii::t('app', 'Import File',
 								['modelClass' => 'Kategori',]),'',[
 									'data-toggle'=>"modal",
-									'data-target'=>"#file-import",
+									'data-target'=>"#file-import-salespo",
 									'class' => 'btn btn-success btn-sm'
 								]
 						).' '.	
 						Html::a('<i class="fa fa-remove"></i> '.
-								Yii::t('app', 'Clear',['modelClass' => 'Clear',]),'/sales/import-gudang',[
-									'id'=>'clear',
+								Yii::t('app', 'Clear',['modelClass' => 'Clear',]),'/sales/import-sales-po',[
+									'id'=>'clear-salespo',
 									'data-pjax' => '0',
 									'class' => 'btn btn-danger btn-sm'
 								]
 						).' '.				
 						Html::a('<i class="fa fa-database"></i> '.Yii::t('app', 'Send Data',
 							['modelClass' => 'send-fix',]),'',[												
-									'id'=>'fix',
+									'id'=>'fix-salespo',
 									'data-pjax' => true,
-									'data-toggle-fix'=>'1',
+									'data-toggle-fix-salespo'=>'1',
 								'class' => 'btn btn-success btn-sm'
 							]
 						),											
@@ -222,7 +235,7 @@ use app\models\hrd\Dept;
 		],
 	]); 
 ?>
-<?=$gvImportFile?>
+<?=$gvImportFileSalespo?>
 <?php
 $this->registerJs("
 		/**====================================
@@ -236,7 +249,7 @@ $this->registerJs("
 			e.preventDefault();
 			var idx = $(this).data('toggle-clear');
 			$.ajax({
-				url: '/sales/import-gudang/clear_temp_validation',
+				url: '/sales/import-sales-po/clear_temp_validation',
 				type: 'POST',
 				//contentType: 'application/json; charset=utf-8',
 				data:'id='+idx,
@@ -244,7 +257,7 @@ $this->registerJs("
 				success: function(result) {
 					if (result == 1){
 						// Success
-						$.pjax.reload({container:'#gv-validate-gudang-id'});
+						$.pjax.reload({container:'#gv-validate-salespo-id'});
 					} else {
 						// Fail
 					}

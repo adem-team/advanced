@@ -12,8 +12,7 @@ use kartik\widgets\Select2;
 				'enableClientValidation' => true,
 				'enableAjaxValidation' => true,
 				'method' => 'post',
-				'action' => ['/sales/import-sales-po/alias_prodak_save'],
-				//'action' => [Yii::$app->request->baseUrl.'/alias_prodak_save'],
+				'action' => ['/sales/import-sales-po/alias_prodak_save']
 		]);
 	?>	
 		

@@ -14,8 +14,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use kartik\widgets\Spinner;
+use yii\bootstrap\Modal;
 use \moonland\phpexcel\Excel;
-
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 use yii\web\Response;
@@ -93,7 +93,6 @@ class ImportSalesPoController extends Controller
 
 	 /**
      * IMPORT DATA EXCEL
-	 * TYPE	: 3= stock-salespo /SELL OUT Distributor.
      * @return mixed
 	 * @author piter [ptr.nov@gmail.com]
      */
@@ -103,9 +102,24 @@ class ImportSalesPoController extends Controller
 		$user_id=['USER_ID'=>$username];
 		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
 		if ($paramFile){
-			self::setDataImport($paramFile);
+			$errorModal=self::setDataImport($paramFile);
+			$data_view=Yii::$app->db_esm->createCommand("
+				#CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$username."')
+				SELECT ID,TGL,CUST_KD_ALIAS,CUST_NM,ITEM_ID_ALIAS,ITEM_NM,QTY_PCS,QTY_UNIT,DIS_REF,DIS_REF_NM,SO_TYPE,POS,USER_ID,STATUS
+				FROM so_t2_tmp_file
+				WHERE USER_ID='".$username."' AND SO_TYPE=3
+			")->queryAll();
+			//print_r($data_view);
+			//die();
+			if($errorModal==1){
+				$js='$("#error-msg-stock-salespo").modal("show")';
+				$this->getView()->registerJs($js);
+			}elseif(!$data_view){
+				$js='$("#nodata-msg-stock-salespo").modal("show")';
+				$this->getView()->registerJs($js);
+			}
 		}else{			
-			//DELETE STOCK GUDANG | SO_TYPE=1
+			//DELETE STOCK Salespo | SO_TYPE=3
 			$cmd_clear=Yii::$app->db_esm->createCommand("
 					DELETE FROM so_t2_tmp_file WHERE USER_ID='".$username."'  AND SO_TYPE=3;
 			");
@@ -116,106 +130,36 @@ class ImportSalesPoController extends Controller
 		$model = new UserFileSalesPo();
 
 		
-		/*IMPORT VALIDATION*/
+		/*FILE IMPORT TO TMP*/
 		$searchModel = new TempDataSearch($user_id);
-		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-		/*VIEW IMPORT*/
+		$dataProviderTemp = $searchModel->searchSalespo(Yii::$app->request->queryParams);
+		/*VIEW IMPORT FIX*/
 		$searchModelViewImport = new ImportViewSearch();
-		$dataProviderViewImport = $searchModelViewImport->search(Yii::$app->request->queryParams);
+		$dataProviderViewImport = $searchModelViewImport->searchViewLatesSalespo(Yii::$app->request->queryParams);
+		$dataProviderAllDataImport = $searchModelViewImport->searchViewHistorySalespo(Yii::$app->request->queryParams);
 		//echo $this->actionExport_format();
 		//print_r($dataProvider->getModels());
 		return $this->render('index',[
 			/*VIEW ARRAY FILE*/
-			'getArryFile'=>$dataProvider,//self::setDataImport($paramFile),//$this->getArryFile($paramFile),
+			'dataProviderTemp'=>$dataProviderTemp,//self::setDataImport($paramFile),//$this->getArryFile($paramFile),
 			'fileName'=>$paramFile,
 			/*GRID VALIDATE*/
 			'gvValidateArrayDataProvider'=>$dataProvider,
 			'searchModelValidate'=>$searchModel,
 			'modelFile'=>$model,
-			/*List Data IMPORT*/
+			/*Salespo - Latest Dadta IMPORT*/
 			'searchModelViewImport'=>$searchModelViewImport,
 			'dataProviderViewImport'=>$dataProviderViewImport,
+			'dataProviderAllDataImport'=>$dataProviderAllDataImport,
+			'errorModal'=>$errorModal
 		]);
     }
 
-    /**
-     * Displays a single Sot2 model.
-     * @param string $id
+     /**
+     * UPLOAD FILE 
      * @return mixed
+	 * @author piter [ptr.nov@gmail.com]
      */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new Sot2 model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Sot2();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Updates an existing Sot2 model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Deletes an existing Sot2 model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Sot2 model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return Sot2 the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Sot2::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
-
 	public function actionUpload(){
 		$model = new UserFileSalesPo();
 		if ($model->load(Yii::$app->request->post()) ) {
@@ -235,102 +179,26 @@ class ImportSalesPoController extends Controller
 	}
 
 	/**
+	 * PREPARE BEFORE SEND
 	 * GET DATA FROM ArrayFile set to Temp Data.
+	 * TYPE : STOCK-Salespo=3
 	*/
 	private function setDataImport($paramFile){
 		$data=$this->getArryFile($paramFile)->getModels();
 		$username=  Yii::$app->user->identity->username;
-		$stt=0;
-			// print_r($data);
-			// die();
-			foreach($data as $key => $value){
-
-				//$cmd->reset();
-				$tgl=$value['DATE'];
-				$cust_kd= $value['CUST_KD'];
-				$cust_nm= $value['CUST_NM'];
-				$item_kd= $value['SKU_ID'];
-				$item_nm=$value['SKU_NM'];
-				$qty=$value['QTY_PCS'];
-				$dis_ref=$value['DIS_REF'];
-				$user_id=$username;
-				//$result='('."'".$a."','".$b."')";
-
-				/*DELETE TEMPORARY FIRST EXECUTE*/
-				if ($stt==0){
-					$cmd1=Yii::$app->db_esm->createCommand("
-							#CALL ESM_SALES_IMPORT_TEMP_create('STOCK_DELETE','','','','','','','','','".$user_id."');
-							DELETE FROM so_t2_tmp_file WHERE USER_ID='".$username."'  AND SO_TYPE=1;
-						");
-					$cmd1->execute();
-				};
-				//print_r($result);
-				$cmd=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-								'STOCK','".$tgl."','".$cust_kd."','".$cust_nm."','".$item_kd."','".$item_nm."','".$qty."','".$dis_ref."','".$pos."','".$user_id."'
-						);
-				");
-				$cmd->execute();
-				//$spinnerVal=false;
-				$stt=$stt+1;
-			}
-	}
-
-	/**=====================================
-     * GET ARRAY FROM FILE
-     * @return mixed
-	 * @author piter [ptr.nov@gmail.com]
-	 * =====================================
-     */
-	public function getArryFile($paramFile){
 		
-			$pathDefault='/var/www/backup/ExternalData/default_format/';
-			$pathImport='/var/www/backup/ExternalData/import_salespo/';
-			$fileData=$paramFile!=''?$pathImport.$paramFile:$pathDefault.'default_import_salespo.xlsx';
-			//$fileName='/var/www/backup/ExternalData/import_gudang/'.$fileData;
-			$config='';
-			//$data = \moonland\phpexcel\Excel::import($fileName, $config);
-
-			$data = \moonland\phpexcel\Excel::widget([
-				'id'=>'export-salespo-id',
-				'mode' => 'import',
-				'fileName' => $fileData,
-				'setFirstRecordAsKeys' => true, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel.
-				'setIndexSheetByName' => true, // set this if your excel data with multiple worksheet, the index of array will be set with the sheet name. If this not set, the index will use numeric.
-				'getOnlySheet' => 'STOCK-SALESPO', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
-			]);
-			//print_r($data);
-			$aryDataProvider= new ArrayDataProvider([
-				//'key' => 'ID',
-				'allModels'=>$data,
-				 'pagination' => [
-					'pageSize' => 1000,
-				]
-			]);
-
-			//return Spinner::widget(['preset' => 'medium', 'align' => 'center', 'color' => 'blue','hidden'=>false]);
-			return $aryDataProvider;
-			
-	}
-	
-	
-	
-	
-	
-	/**====================================
-     * IMPORT DATA EXCEL >> TEMP VALIDATION
-     * @return mixed
-	 * @author piter [ptr.nov@gmail.com]
-	 * @since 1.2
-	 * ====================================
-     */
-	public function actionImport_temp_validation(){
-		if (Yii::$app->request->isAjax) {
-			$request= Yii::$app->request;
-			$id=$request->post('id');
-			$username=  Yii::$app->user->identity->username;
-			$pos='WEB_LUKISONGROUP';
-			$data=$this->getArryFile($id)->getModels();
-			//'STOCK','2016-01-23','O041','ROBINSON MALL TATURA PALU','EF001','MAXI Cassava Crackers Hot Spicy','1','admin'
+		//Validate Import Bukan STOCK-SALES_PO
+		$intCheckSalespo=0;
+		$validateStockSalespo=0;
+		foreach($data as $key => $value){
+			$nilai=$value['STATUS']=='stock-salespo'?3:0;
+			$validateStockSalespo=$validateStockSalespo +$nilai ;
+			$intCheckSalespo=$intCheckSalespo+3;
+		}
+		
+		//print_r ($validateStockSalespo);
+		//die();
+		if ($validateStockSalespo==$intCheckSalespo){
 			$stt=0;
 			// print_r($data);
 			// die();
@@ -343,31 +211,71 @@ class ImportSalesPoController extends Controller
 				$item_kd= $value['SKU_ID'];
 				$item_nm=$value['SKU_NM'];
 				$qty=$value['QTY_PCS'];
+				$price=$value['PRICE_PCS'];
 				$dis_ref=$value['DIS_REF'];
 				$user_id=$username;
 				//$result='('."'".$a."','".$b."')";
 
 				/*DELETE TEMPORARY FIRST EXECUTE*/
 				if ($stt==0){
-					$cmd1=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-									'STOCK_DELETE','','','','','','','','','".$user_id."'
-								);
+					$cmd1=Yii::$app->db_esm->createCommand("
+							#CALL ESM_SALES_IMPORT_TEMP_create('STOCK_DELETE','','','','','','','','','".$user_id."');
+							DELETE FROM so_t2_tmp_file WHERE USER_ID='".$username."'  AND SO_TYPE=3;
 						");
 					$cmd1->execute();
 				};
 				//print_r($result);
-				$cmd=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-								'STOCK','".$tgl."','".$cust_kd."','".$cust_nm."','".$item_kd."','".$item_nm."','".$qty."','".$dis_ref."','".$pos."','".$user_id."'
-						);
+				$cmd=Yii::$app->db_esm->createCommand("
+					CALL ESM_SALES_IMPORT_TEMP_create(
+						'STOCK_Salespo','".$tgl."','".$cust_kd."','".$cust_nm."','".$item_kd."','".$item_nm."','".$qty."','".$price."','".$dis_ref."','".$pos."','".$user_id."'
+					);
 				");
 				$cmd->execute();
 				//$spinnerVal=false;
 				$stt=$stt+1;
 			}
-			//return '[{'.$tgl.'}]';
-			return true;
+			return 0;
+		}else{
+			return 1;
 		}
+		
 	}
+
+	/**=====================================
+     * GET ARRAY FROM FILE
+     * @return mixed
+	 * @author piter [ptr.nov@gmail.com]
+	 * =====================================
+     */
+	public function getArryFile($paramFile){
+		
+			$pathDefault='/var/www/backup/ExternalData/default_format/';
+			$pathImport='/var/www/backup/ExternalData/import_salespo/';
+			$fileData=$paramFile!=''?$pathImport.$paramFile:$pathDefault.'default_import_Salespo.xlsx';
+			$config='';
+			//$data = \moonland\phpexcel\Excel::import($fileName, $config);
+			$data = \moonland\phpexcel\Excel::widget([
+				'id'=>'export-Salespo',
+				'mode' => 'import',
+				'fileName' => $fileData,
+				'setFirstRecordAsKeys' => true, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel.
+				'setIndexSheetByName' => true, // set this if your excel data with multiple worksheet, the index of array will be set with the sheet name. If this not set, the index will use numeric.
+				'getOnlySheet' => 'STOCK-SALES-PO', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
+				]);
+
+			//print_r($data);
+			$aryDataProvider= new ArrayDataProvider([
+				//'key' => 'ID',
+				'allModels'=>$data,
+				 'pagination' => [
+					'pageSize' => 1000,
+				]
+			]);
+
+			//return Spinner::widget(['preset' => 'medium', 'align' => 'center', 'color' => 'blue','hidden'=>false]);
+			return $aryDataProvider;
+			
+	}	
 
 	/**====================================
      * EXPORT FORMAT
@@ -381,7 +289,8 @@ class ImportSalesPoController extends Controller
 			 'key' => 'ID',
 			  'allModels'=>Yii::$app->db_esm->createCommand("
 					#CALL ESM_SALES_IMPORT_format()
-					SELECT DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF,STATUS FROM so_t2_format WHERE STATUS='stock-gudang';
+					#SELECT DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF,STATUS FROM so_t2_format WHERE STATUS='stock-salespo';
+					SELECT DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,HARGA_PCS,DIS_REF,STATUS FROM so_t2_format WHERE STATUS='stock-salespo';
 			  ")->queryAll(),
 			   'pagination' => [
 				 'pageSize' => 10,
@@ -402,9 +311,9 @@ class ImportSalesPoController extends Controller
         $excel_ceils = $excel_data['excel_ceils'];
 		$excel_content = [
 			 [
-				'sheet_name' => 'STOCK-SALESPO',
+				'sheet_name' => 'STOCK-SALES-PO',
                 'sheet_title' => [
-					['DATE','CUST_KD','CUST_NM','SKU_ID','SKU_NM','QTY_PCS','DIS_REF','STATUS']
+					['DATE','CUST_KD','CUST_NM','SKU_ID','SKU_NM','QTY_PCS','PRICE_PCS','DIS_REF','STATUS']
 				],
 			    'ceils' => $excel_ceils,
                 'freezePane' => 'A2',
@@ -417,6 +326,7 @@ class ImportSalesPoController extends Controller
 						'SKU_ID' => ['align'=>'center'],
 						'SKU_NM' => ['align'=>'center'],
 						'QTY_PCS' =>['align'=>'center'],
+						'PRICE_PCS' => ['align'=>'center'],
 						'DIS_REF' => ['align'=>'center'],
 						'STATUS' => ['align'=>'center']
 					]
@@ -430,6 +340,7 @@ class ImportSalesPoController extends Controller
 						'SKU_ID' => ['align'=>'left'],
 						'SKU_NM' => ['align'=>'left'],
 						'QTY_PCS' =>['align'=>'right'],
+						'PRICE_PCS' => ['align'=>'right'],
 						'DIS_REF' => ['align'=>'left'],
 						'STATUS' => ['align'=>'center','color-font'=>'ee4343']
 					]
@@ -443,7 +354,7 @@ class ImportSalesPoController extends Controller
                 'ceils' => [
 					["1.Pastikan format sesuai dengan yang sudah di download."],
                     ["2.Format yang tidak boleh di ganti:"],
-                    ["  A. NAMA SHEET1: STOCK-GUDANG "],
+                    ["  A. NAMA SHEET1: STOCK-SALES-PO "],
 					["  B. NAMA HEADER COLUMN : DATE,CUST_KD,CUST_NM,SKU_ID,SKU_NM,QTY_PCS,DIS_REF"],
 					["3.Refrensi."],
 					["  'Sheet1 adalah data yang akan di import,sedangkan Sheet2 hanya berupa catatan format"],
@@ -461,81 +372,120 @@ class ImportSalesPoController extends Controller
 			],
 
 		];
-		$excel_file = "ImportFormat-Salespo";
+		$excel_file = "ImportFormat-StockSalespo";
 		$this->export4excel($excel_content, $excel_file,0);
 	}
 	
 	/**====================================
-     * DELETE & CLEAR >> TEMP VALIDATION
-     * @return mixed
+     * Action SEND DATA TO STORED LIVE
+     * TYPE : STOCK-Salespo=1
 	 * @author piter [ptr.nov@gmail.com]
 	 * @since 1.2
 	 * ====================================
      */
-	public function actionClear_temp_validation(){
-		if (Yii::$app->request->isAjax) {
-			$request= Yii::$app->request;
-			$user_id=$request->post('id');
-			$username=  Yii::$app->user->identity->username;
-				/*DELETE STORED FIRST EXECUTE*/
-				$cmd_clear=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-									'STOCK_DELETE','','','','','','','','','".$username."'
-								);
-						");
-				$cmd_clear->execute();
-
-			return true;
+	public function actionSendFix(){
+		$username=  Yii::$app->user->identity->username;
+		$data_view=Yii::$app->db_esm->createCommand("
+			#CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$username."')
+			SELECT ID,TGL,CUST_KD,CUST_KD_ALIAS,CUST_NM,ITEM_ID_ALIAS,ITEM_NM,QTY_PCS,HARGA_PCS,QTY_UNIT,DIS_REF,DIS_REF_NM,SO_TYPE,POS,USER_ID
+			FROM so_t2_tmp_file			
+			WHERE USER_ID='".$username."' AND SO_TYPE=3
+		")->queryAll();
+		\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+		if (Yii::$app->request->isAjax && $data_view) {			
+				$viewDataProvider= new ArrayDataProvider([
+					'key' => 'ID',
+					 'allModels'=>$data_view,
+					  'pagination' => [
+						 'pageSize' => 1000,
+					]
+				]);
+				$dataImport=$viewDataProvider->allModels;
+				// print_r($viewDataProvider->allModels);
+				// die();
+				
+				//Validation column
+				$sttValidationColumn=0;
+				foreach($dataImport as $key => $value){
+					if($value['TGL']=='NotSet' or $value['CUST_KD']=='NotSet' or $value['CUST_KD_ALIAS']=='NotSet'
+					or $value['ITEM_ID_ALIAS']=='NotSet' or $value['ITEM_NM']=='NotSet' or $value['QTY_PCS']=='NotSet' 
+					or $value['DIS_REF']=='NotSet' or $value['HARGA_PCS']=='' ){
+						$sttValidationColumn=1;
+					}
+				}
+				//print_r($sttValidationColumn);
+				//die();
+				if($sttValidationColumn!=1){
+					foreach($dataImport as $key => $value){
+						//$cmd->reset();
+						$tgl=$value['TGL'];
+						$cust_kd= $value['CUST_KD_ALIAS'];
+						$item_kd= $value['ITEM_ID_ALIAS'];
+						$item_qty= $value['QTY_PCS'];
+						$item_price= $value['HARGA_PCS'];
+						$dis_id= $value['DIS_REF'];
+						$import_live=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_LIVE_create(
+											'STOCKG_SALESPO','".$tgl."','".$cust_kd."','".$item_kd."','".$item_qty."','".$item_price."','WEB_IMPORT','".$dis_id."','".$username."'
+										)");
+						$import_live->execute();
+						//$stt=1;
+					}
+					/*Delete After Import*/
+					/* $cmd_del=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
+											'STOCK_DELETE','','','','','','','','','".$username."'
+										);
+								");
+					$cmd_del->execute(); */
+					$rslt='sukses';
+				}else{
+					$rslt='validasi';
+				}
+				//return true;
+		}else{
+			//return $this->redirect(['index']);
+			//return false;
+			$rslt='nodata';
 		}
+		//return $this->redirect(['index']);
+		return $rslt;
 	}
 
 	/**====================================
-     * Action SEND DATA TO STORED LIVE
+     * Action Set Alias Product
      * @return mixed
 	 * @author piter [ptr.nov@gmail.com]
 	 * @since 1.2
 	 * ====================================
      */
-	public function actionSend_temp_validation(){
-		if (Yii::$app->request->isAjax) {
-			$username=  Yii::$app->user->identity->username;
-			$data_view=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_view('STOCK','".$username."')")->queryAll();
-
-			$viewDataProvider= new ArrayDataProvider([
-				'key' => 'ID',
-				 'allModels'=>$data_view,
-				  'pagination' => [
-					 'pageSize' => 1000,
-				]
-			]);
-			$dataImport=$viewDataProvider->allModels;
-			// print_r($viewDataProvider->allModels);
-			// die();
-
-			foreach($dataImport as $key => $value){
-				//$cmd->reset();
-				$tgl=$value['TGL'];
-				$cust_kd= $value['CUST_KD_ALIAS'];
-				$item_kd= $value['ITEM_ID_ALIAS'];
-				$item_qty= $value['QTY_PCS'];
-				$import_live=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_LIVE_create(
-									'STOCK','".$tgl."','".$cust_kd."','".$item_kd."','".$item_qty."','WEB_IMPORT','".$username."'
-								)");
-				$import_live->execute();
-				$stt=1;
-			}
-			/*Delete After Import*/
-			$cmd_del=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-									'STOCK_DELETE','','','','','','','','','".$username."'
-								);
-						");
-			$cmd_del->execute();
-			return true;
-		}else{
-			return $this->redirect(['index']);
-		}
-		return $this->redirect(['index']);
+	public function actionAlias_prodak($id){
+		$AliasProdak = new AliasProdak();
+		$tempDataImport = TempData::find()->where(['ID' =>$id])->one();
+		return $this->renderAjax('formAliasProdak',[
+			'AliasProdak'=>$AliasProdak,
+			'tempDataImport'=>$tempDataImport,
+			'aryBrgID'=>$this->aryBrgID()
+		]);
 	}
-
+	public function actionAlias_prodak_save(){
+		$AliasProdak = new AliasProdak();
+		/*Ajax Load*/
+		if(Yii::$app->request->isAjax){
+			$AliasProdak->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($AliasProdak));
+		}else{
+			/*Normal Load*/
+			if($AliasProdak->load(Yii::$app->request->post())){
+			 	if ($AliasProdak->alias_barang_save()){
+					if(Yii::$app->request->referrer){
+						return $this->redirect(Yii::$app->request->referrer);
+					}else{
+						return $this->goHome();
+					}
+				}
+			}
+		}
+	}
+	
 	/**====================================
      * Action Set Alias Customer
      * @return mixed
@@ -580,54 +530,94 @@ class ImportSalesPoController extends Controller
 			}
 		}
 	}
+	
 	/**====================================
-     * Action Set Alias Product
+     * EXPORT DATA Salespo
      * @return mixed
 	 * @author piter [ptr.nov@gmail.com]
 	 * @since 1.2
 	 * ====================================
      */
-	public function actionAlias_prodak($id){
-		$AliasProdak = new AliasProdak();
-		$tempDataImport = TempData::find()->where(['ID' =>$id])->one();
-		return $this->renderAjax('formAliasProdak',[
-			'AliasProdak'=>$AliasProdak,
-			'tempDataImport'=>$tempDataImport,
-			'aryBrgID'=>$this->aryBrgID()
-		]);
+	public function actionExport_dataSalespo(){
+		$searchModelViewImport = new ImportViewSearch();
+		$dataProviderSalespo= $searchModelViewImport->searchViewHistorySalespo(Yii::$app->request->queryParams);
+		$dpSalespo=$dataProviderSalespo->getModels();
+		$aryData=[];
+		foreach ($dpSalespo as $key => $value){
+				$aryData[]=[
+					'TGL'=>$value['TGL'],
+					'CUST_KD_ALIAS'=>$value['CUST_KD_ALIAS'],
+					'CUST_NM'=>$value['CUST_NM'],
+					'NM_BARANG'=>$value['NM_BARANG'],
+					'SO_QTY'=>$value['SO_QTY'],
+					'UNIT_BARANG'=>$value['UNIT_BARANG'],
+					'kartonqty'=>$value['kartonqty'],
+					'beratunit'=>$value['beratunit'],
+					'HARGA_DIS'=>$value['HARGA_DIS'],
+					'subtotaldist'=>$value['subtotaldist'],
+					'disNm'=>$value['disNm'],
+					'USER_ID'=>$value['USER_ID']
+				];
+		};
+		$dataProviderAllDataImport= new ArrayDataProvider([
+			  'allModels'=>$aryData,
+			   'pagination' => [
+				 'pageSize' => 10,
+			 ]
+		 ]);
+		$modelDataExport=$dataProviderAllDataImport->getModels();
+		//print_r($modelDataExport);
+		
+		 $excel_data = Postman4ExcelBehavior::excelDataFormat($modelDataExport);
+        $excel_title = $excel_data['excel_title'];
+        $excel_ceils = $excel_data['excel_ceils'];
+		$excel_content = [
+			 [
+				'sheet_name' => 'STOCK-SALES-PO',
+                'sheet_title' => [
+					['DATE','BARANG','CUST_ID','CUSTOMER','QTY_PCS','UNIT_BARANG','QTY_KARTON','BERAT_GRAM','HARGA_DIS','SUB_TOTAL','DISTRIBUTOR','USER_ID']
+				],
+			    'ceils' => $excel_ceils,
+                'freezePane' => 'A2',
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
+                'headerStyle'=>[						
+					[
+						'TGL' =>['align'=>'center'],
+						'CUST_ID' =>['align'=>'center'],
+						'CUSTOMER' =>['align'=>'center'],
+						'NM_BARANG' =>['align'=>'center'],
+						'SO_QTY' => ['align'=>'center'],
+						'UNIT_BARANG' => ['align'=>'center'],
+						'kartonqty' => ['align'=>'center'],
+						'beratunit' =>['align'=>'center'],
+						'HARGA_DIS' => ['align'=>'center'],
+						'subtotaldist' => ['align'=>'center'],
+						'disNm' => ['align'=>'center'],
+						'USER_ID' => ['align'=>'center']
+					]						
+				],
+				'contentStyle'=>[
+					[
+						'DATE' =>['align'=>'center'],
+						'CUST_ID' =>['align'=>'left'],
+						'CUSTOMER' =>['align'=>'left'],
+						'BARANG' =>['align'=>'left'],
+						'QTY_PCS' => ['align'=>'right'],
+						'UNIT_BARANG' => ['align'=>'center'],
+						'QTY_KARTON' => ['align'=>'right'],
+						'BERAT_GRAM' =>['align'=>'right'],
+						'HARGA_DIS' => ['align'=>'right'],
+						'SUB_TOTAL' => ['align'=>'right'],
+						'DISTRIBUTOR' => ['align'=>'left'],
+						'USER_ID' => ['align'=>'center']
+					]
+				],
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
+			]
+		];
+		$excel_file = "ImportDataSalespo";
+		$this->export4excel($excel_content, $excel_file,0); 
 	}
-	public function actionAlias_prodak_save(){
-		$AliasProdak = new AliasProdak();
-		/*Ajax Load*/
-		if(Yii::$app->request->isAjax){
-			$AliasProdak->load(Yii::$app->request->post());
-			return Json::encode(\yii\widgets\ActiveForm::validate($AliasProdak));
-		}else{
-			/*Normal Load*/
-			if($AliasProdak->load(Yii::$app->request->post())){
-			 	if ($AliasProdak->alias_barang_save()){
-					if(Yii::$app->request->referrer){
-						return $this->redirect(Yii::$app->request->referrer);
-					}else{
-						return $this->goHome();
-					}
-				}
-			}
-		}
-	}
-
-
 	
-	
-
-
-
-
-
-
-
-
-
-
-
 }
