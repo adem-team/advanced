@@ -38,6 +38,8 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 				'action' => ['/purchasing/data-term/actual-review-save'],
 		]);
 	?>
+	<?= $form->errorSummary($actualModel,['class'=>'btn-danger']); ?>
+
 		<div class="col-lg-4">
 			<?php echo  $form->field($actualModel, 'temId')->textInput(['value' => $termHeader->TERM_ID,'maxlength' => true, 'readonly' => true])->label('TERM ID'); ?>
 		</div>
