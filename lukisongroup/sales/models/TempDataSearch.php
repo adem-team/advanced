@@ -19,8 +19,9 @@ class TempDataSearch extends TempData
     {
         return [
             [['ID', 'SO_TYPE', 'STATUS'], 'integer'],
-            [['TGL', 'CUST_KD', 'CUST_KD_ALIAS', 'CUST_NM', 'CUST_NM_ALIAS', 'ITEM_ID', 'ITEM_ID_ALIAS', 'ITEM_NM', 'ITEM_NM_ALIAS', 'DIS_REF', 'DIS_REF_NM', 'POS', 'USER_ID','HARGA_PCS'], 'safe'],
+            [['TGL', 'CUST_KD', 'CUST_KD_ALIAS', 'CUST_NM', 'CUST_NM_ALIAS', 'ITEM_ID', 'ITEM_ID_ALIAS', 'ITEM_NM', 'ITEM_NM_ALIAS', 'DIS_REF', 'DIS_REF_NM', 'POS', 'USER_ID'], 'safe'],
             [['QTY_PCS', 'QTY_UNIT'], 'number'],
+			['HARGA_PCS','string']
         ];
     }
 

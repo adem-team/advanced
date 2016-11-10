@@ -213,7 +213,11 @@ class ImportGudangController extends Controller
 				$item_kd= $value['SKU_ID'];
 				$item_nm=$value['SKU_NM'];
 				$qty=$value['QTY_PCS'];
-				$price=$value['PRICE_PCS'];
+				//$price=str_replace(',','.',str_replace('.','',$value['PRICE_PCS']));
+				//$price1=str_replace('.','-',$value['PRICE_PCS']);
+				$price=str_replace(",","",$value['PRICE_PCS']);
+				//$price=str_replace('-','',$price2);
+				//$price=$value['PRICE_PCS'];
 				$dis_ref=$value['DIS_REF'];
 				$user_id=$username;
 				//$result='('."'".$a."','".$b."')";

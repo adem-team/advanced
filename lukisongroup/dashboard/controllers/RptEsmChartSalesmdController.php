@@ -657,7 +657,7 @@ class RptEsmChartSalesmdController extends Controller
 					SUM(CASE WHEN x2.SO_TYPE=1 AND x2.SO_QTY>=0 THEN x2.SO_QTY ELSE 0 END) as STCK_GUDANG
 				FROM so_t2 x2 
 				LEFT JOIN b0001 x4 on x4.KD_BARANG=x2.KD_BARANG
-				WHERE  month(x2.TGL)=3  AND x2.SO_TYPE=1
+				WHERE  x2.SO_TYPE=1 #AND month(x2.TGL)=3
 				GROUP BY x2.TGL,x2.KD_BARANG
 			")->queryAll(), 
 			'pagination' => [
@@ -715,7 +715,7 @@ class RptEsmChartSalesmdController extends Controller
 				"divLineGapLen": "1",
 				"yAxisName": "Pcs",
 				"xAxisName": "Day",
-				"showValues": "0"               
+				"showValues": "1"               
 			},
 			"categories": [
 				{
