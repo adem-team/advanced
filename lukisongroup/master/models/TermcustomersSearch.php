@@ -103,13 +103,13 @@ class TermcustomersSearch extends Termcustomers
 
         if($profile->emp->DEP_ID == 'GM'|| $profile->emp->DEP_ID == 'DRC')
           {
-            $query = Termcustomers::find()->where('STATUS = 101 OR STATUS = 102');
+            $query = Termcustomers::find()->where('STATUS <> 3 AND STATUS = 101 OR STATUS = 102');
           }
         elseif($profile->emp->DEP_ID == 'ACT')
         {
-            $query = Termcustomers::find();
+            $query = Termcustomers::find()->where('STATUS<>3');
         }else{
-              $query = Termcustomers::find()->where(['CREATED_BY'=>$profile->username]);
+              $query = Termcustomers::find()->where(['CREATED_BY'=>$profile->username])->andwhere('STATUS<>3');
           }
 
 
