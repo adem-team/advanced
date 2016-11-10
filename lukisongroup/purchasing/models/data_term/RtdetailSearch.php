@@ -12,7 +12,7 @@ use yii\debug\components\search\matchers;
 
 class RtdetailSearch extends Rtdetail
 {
-	public $termheader;
+	public $nminvest;
     /**
      * @inheritdoc
      */
@@ -22,13 +22,16 @@ class RtdetailSearch extends Rtdetail
 		return array_merge(parent::attributes(), ['termheader.TERM_ID']);
 	} */
 
-	public function rules()
+	 public function rules()
     {
         return [
-            [['ID','STATUS'], 'integer'],
-			//[['termheader.TERM_ID','RQTY','SQTY'], 'safe'],
-			[['RQTY','SQTY','label'], 'safe'],
-            [['CREATED_AT', 'UPDATED_AT','TERM_ID','ID_INVEST','PERIODE_START'], 'safe']
+            [['KD_RIB'], 'required'],
+            [['INVESTASI_PROGRAM','HARGA','PERIODE_START','PERIODE_END','PPN','PPH23','STORE_ID','nminvest'], 'safe'],
+            [['STATUS','INVESTASI_TYPE'], 'integer'],
+            //[['UNIT'], 'string'],
+            [['UNIT','label','STORE_ID'], 'string'],
+            [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT','HARGA'], 'safe'],
+            [['KD_RIB','UNIT', 'NOMER_INVOCE','NOMER_FAKTURPAJAK'], 'string', 'max' => 50],
         ];
     }
 
@@ -125,7 +128,7 @@ class RtdetailSearch extends Rtdetail
                  ->andwhere(['LIKE', 'KD_RIB','RID']);
 
 
-        $dataProvider = new ActiveDataProvider([
+        $dataProviderRdetail = new ActiveDataProvider([
             'query' => $query,
             
         ]);
@@ -139,14 +142,25 @@ class RtdetailSearch extends Rtdetail
         //}
 
         $query->andFilterWhere([
-            'ID' => $this->ID,
+            'STORE_ID' => $this->STORE_ID,
+            'NOMER_INVOCE'=> $this->NOMER_INVOCE,
+            'NOMER_FAKTURPAJAK'=> $this->NOMER_FAKTURPAJAK,
             // 'TERM_ID' => 'asd123',
 		    'STATUS' => $this->STATUS,
-            'CREATED_AT' => $this->CREATED_AT,
-            'UPDATED_AT' => $this->UPDATED_AT,
+            'PERIODE_START' => $this->PERIODE_START,
+            'PERIODE_END' => $this->PERIODE_END,
         ]);
 
-              return $dataProvider;
+
+        $query->andFilterWhere(['like', 'INVESTASI_TYPE', $this->nminvest]);
+            //->andFilterWhere(['like', 'r0001.CREATED_AT',$this->getAttribute('parentro.CREATED_AT')])
+            // ->andFilterWhere(['like', 'KD_BARANG', $this->KD_BARANG])
+            // ->andFilterWhere(['like', 'NM_BARANG', $this->NM_BARANG])
+            // ->andFilterWhere(['like', 'NO_URUT', $this->NO_URUT])
+            // ->andFilterWhere(['like', 'NOTE', $this->NOTE]);
+
+
+              return $dataProviderRdetail;
     }
 
 

@@ -27,7 +27,7 @@ class ActualModel extends Model{
 			[['pph23','ppn','invesHarga'], 'default','value'=>0.00],
 			[['pph23','ppn','invesHarga'], 'number'],
 			[['invoiceNo'],'validasiInvoce'],
-			[['faktureNo'],'validasiNofaktur'],
+			// [['faktureNo'],'validasiNofaktur'],
 			[['temId','investId','invesProgram'], 'required'],
 			[['invesProgram','invoiceNo','faktureNo','invesHarga','pph23','ppn','periode_start','periode_end'], 'safe'],
         ];
@@ -92,16 +92,16 @@ class ActualModel extends Model{
 	    }
 
 
-	    public function validasiNofaktur($attribute){
+	    // public function validasiNofaktur($attribute){
 	      
-		      $kondisi = Rtdetail::find()->where(['TERM_ID'=>$this->temId,'NOMER_FAKTURPAJAK'=>$this->faktureNo])->one();
+		   //    $kondisi = Rtdetail::find()->where(['TERM_ID'=>$this->temId,'NOMER_FAKTURPAJAK'=>$this->faktureNo])->one();
 
-		      if($kondisi)
-		      {
-		        $this->addError($attribute, 'Nomer faktur pajak sudah ada'.' '.$this->faktureNo);
-		      }
+		   //    if($kondisi)
+		   //    {
+		   //      $this->addError($attribute, 'Nomer faktur pajak sudah ada'.' '.$this->faktureNo);
+		   //    }
 
-	    }
+	    // }
 
 		public function getProfile(){
 			$profile=Yii::$app->getUserOpt->Profile_user();

@@ -51,6 +51,8 @@ $id_term = $_GET['id'];
 
 
 
+
+
 	/*
 	 * GRID DETAIL BUDGET
 	 * Table [t0001header,t0001detail]
@@ -60,8 +62,8 @@ $id_term = $_GET['id'];
 	/*GRIDVIEW ARRAY FIELD HEAD*/
 	$headColomnInputActual=[
 		// ['ID' =>0, 'ATTR' =>['FIELD'=>'KD_RIB','SIZE' => '50px','label'=>'Trade Investment','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>0, 'ATTR' =>['FIELD'=>'nminvest','SIZE' => '10px','label'=>'Type Investasi','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'INVESTASI_PROGRAM','SIZE' => '10px','label'=>'Keterangan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'nminvest','SIZE' => '10px','label'=>'Type Investasi','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'filter'=>true,'filterType'=>true,'filterwarna'=>'126, 189, 188, 0.9']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'INVESTASI_PROGRAM','SIZE' => '10px','label'=>'Keterangan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>true,'filterwarna'=>'126, 189, 188, 0.9']],
 		['ID' =>2, 'ATTR' =>['FIELD'=>'STORE_ID','SIZE' => '10px','label'=>'Toko','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>3, 'ATTR' =>['FIELD'=>'PERIODE_START','SIZE' => '10px','label'=>'periode start','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
 		['ID' =>4, 'ATTR' =>['FIELD'=>'PERIODE_END','SIZE' => '10px','label'=>'periode end','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'249, 215, 100, 1']],
@@ -289,9 +291,18 @@ $id_term = $_GET['id'];
 							'attribute'=>$value[$key]['FIELD'],
 							'refreshGrid'=>true,
 							'label'=>$value[$key]['label'],
+
 							'vAlign'=>'middle',
 							'hAlign'=>'center',
-							'mergeHeader'=>true,
+							'filterType'=>GridView::FILTER_DATE,
+							'filter'=>$value[$key]['filter'],
+							'filterWidgetOptions'=>[
+								'pluginOptions' => [
+				        				'autoclose'=>true,
+				        			'format' => 'yyyy-mm-dd'
+				    				],
+							],
+							// 'mergeHeader'=>true,
 							// 'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
 							// 	//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
 							// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
@@ -319,7 +330,7 @@ $id_term = $_GET['id'];
 							'contentOptions'=>[
 								'style'=>[
 									'text-align'=>'left',
-									'width'=>'120px',
+									'width'=>'220px',
 									'font-family'=>'verdana, arial, sans-serif',
 									'font-size'=>'8pt',
 								]
@@ -334,7 +345,15 @@ $id_term = $_GET['id'];
 							'label'=>$value[$key]['label'],
 							'vAlign'=>'middle',
 							'hAlign'=>'center',
-							'mergeHeader'=>true,
+							'filterType'=>GridView::FILTER_DATE,
+							'filter'=>$value[$key]['filter'],
+							'filterWidgetOptions'=>[
+								'pluginOptions' => [
+				        				'autoclose'=>true,
+				        			'format' => 'yyyy-mm-dd'
+				    				],
+							],
+							// 'mergeHeader'=>true,
 							// 'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
 							// 	//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
 							// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
@@ -362,7 +381,7 @@ $id_term = $_GET['id'];
 							'contentOptions'=>[
 								'style'=>[
 									'text-align'=>'left',
-									'width'=>'120px',
+									'width'=>'220px',
 									'font-family'=>'verdana, arial, sans-serif',
 									'font-size'=>'8pt',
 								]
@@ -377,7 +396,74 @@ $id_term = $_GET['id'];
 							'label'=>$value[$key]['label'],
 							'vAlign'=>'middle',
 							'hAlign'=>'center',
-							'mergeHeader'=>true,
+							'filterType'=>GridView::FILTER_SELECT2,
+								'filter' =>$data_toko,
+							    'filterWidgetOptions'=>[
+							      'pluginOptions'=>['allowClear'=>true],
+							    ],
+    						'filterInputOptions'=>['placeholder'=>'Pilih'],
+							// 'mergeHeader'=>true,
+							// 'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+							// 	//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
+							// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
+							// },
+							'editableOptions' => [
+								'header' => 'Update Toko',
+								'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+								'size' => 'xs',
+							'options' => [
+							  'data' =>$data_toko,
+							  'pluginOptions' => [
+								'allowClear' => true,
+								
+							  ],
+							],    
+								// Refresh Display
+								'displayValueConfig' => $data_toko,
+								],
+								'headerOptions'=>[
+								'style'=>[
+								'text-align'=>'center',
+								'width'=>$value[$key]['FIELD'],
+								'font-family'=>'tahoma, arial, sans-serif',
+								'font-size'=>'8pt',
+								//'background-color'=>'rgba(74, 206, 231, 1)',
+								'background-color'=>'rgba('.$value[$key]['warna'].')',
+							]
+						],
+
+							'contentOptions'=>[
+								'style'=>[
+									'text-align'=>'left',
+									'width'=>'220px',
+									'font-family'=>'verdana, arial, sans-serif',
+									'font-size'=>'8pt',
+								]
+							],
+
+						// ],
+					];
+		}elseif($value[$key]['FIELD'] == 'nminvest'){
+			$attDinamikInputActual[]=[
+							/* Attribute */
+							'class'=>'kartik\grid\EditableColumn',
+							'attribute'=>$value[$key]['FIELD'],
+							// 'refreshGrid'=>true,
+							'label'=>$value[$key]['label'],
+							
+							'hAlign'=>'left',
+     					 	'vAlign'=>'top',
+							'filterType'=>GridView::FILTER_SELECT2,
+								'filter' =>$data_invest,
+							    'filterWidgetOptions'=>[
+							      'pluginOptions'=>['allowClear'=>true],
+							    ],
+    						'filterInputOptions'=>['placeholder'=>'Pilih'],
+    						'filterOptions'=>[
+									'colspan'=>2,
+			 				 ],
+
+							// 'mergeHeader'=>true,
 							// 'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
 							// 	//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
 							// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
@@ -418,6 +504,41 @@ $id_term = $_GET['id'];
 
 						// ],
 					];
+		}elseif($value[$key]['FIELD'] == 'INVESTASI_PROGRAM'){
+			$attDinamikInputActual[]=[
+				'attribute'=>$value[$key]['FIELD'],
+				'label'=>$value[$key]['label'],
+				'filterType'=>$value[$key]['filterType'],
+				'filter'=>$value[$key]['filter'],
+				'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
+				 'hAlign'=>'left',
+      			'vAlign'=>'top',
+				'mergeHeader'=>true,
+				'filter'=>false,
+				// 'noWrap'=>true,
+				'group'=>$value[$key]['GRP'],
+				// 'format'=>$value[$key]['FORMAT'],
+				'headerOptions'=>[
+						'style'=>[
+						'text-align'=>'center',
+						'width'=>$value[$key]['FIELD'],
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(74, 206, 231, 1)',
+						'background-color'=>'rgba('.$value[$key]['warna'].')',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>$value[$key]['align'],
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(13, 127, 3, 0.1)',
+					],
+				],
+
+			];
+
 		}else{
 			$attDinamikInputActual[]=[
 				'attribute'=>$value[$key]['FIELD'],
@@ -427,7 +548,7 @@ $id_term = $_GET['id'];
 				// 'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
 				'hAlign'=>'right',
 				'vAlign'=>'middle',
-				//'mergeHeader'=>true,
+				// 'mergeHeader'=>true,
 				// 'noWrap'=>true,
 				'group'=>$value[$key]['GRP'],
 				// 'format'=>$value[$key]['FORMAT'],
@@ -455,9 +576,10 @@ $id_term = $_GET['id'];
 	};
 	/*GRID VIEW BASE*/
 	$gvDetalInputActual= GridView::widget([
-		'id'=>'input-actual-budget',
+		'id'=>'input-actual-budget-id',
 		'dataProvider' => $dataProviderRdetail,
-		// 'filterModel' => $searchModelRdetail,
+		'filterModel' => $searchModelRdetail,
+		'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.9); align:center'],
 		// 'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
 		/* 'beforeHeader'=>[
 			[
@@ -482,7 +604,7 @@ $id_term = $_GET['id'];
 		'pjaxSettings'=>[
 			'options'=>[
 				'enablePushState'=>false,
-				'id'=>'input-actual-budget',
+				'id'=>'input-actual-budget-id',
 			],
 		],
 		'panel' => [
