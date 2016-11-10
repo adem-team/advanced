@@ -110,23 +110,6 @@ use lukisongroup\master\models\Distributor;
 		'panel' => [
 			'heading'=>'<h3 class="panel-title">Lates Data Import </h3>',
 			'type'=>'info',
-			'before'=> Html::a('<i class="fa fa-remove"></i> '.
-								Yii::t('app', 'Clear',['modelClass' => 'Clear',]),'',[
-									'id'=>'clear',
-									'data-pjax' => true,
-									'data-toggle-clear'=>'1',
-									'class' => 'btn btn-danger btn-sm'
-								]
-						).' '.
-						Html::a('<i class="fa fa-database"></i> '.Yii::t('app', 'Send Data',
-							['modelClass' => 'Kategori',]),'',[												
-									'id'=>'fix',
-									'data-pjax' => true,
-									'data-toggle-fix'=>'1',
-								'class' => 'btn btn-success btn-sm'
-							]
-						),								
-						
 			'showFooter'=>false,
 		],
 	]); 

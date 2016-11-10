@@ -493,15 +493,77 @@ class ImportGudangController extends Controller
 	public function actionExport_datagudang(){
 		$searchModelViewImport = new ImportViewSearch();
 		$dataProvidergudang= $searchModelViewImport->searchViewHistoryGudang(Yii::$app->request->queryParams);
+		$dpGudang=$dataProvidergudang->getModels();
+		$aryData=[];
+		foreach ($dpGudang as $key => $value){
+				$aryData[]=[
+					'TGL'=>$value['TGL'],
+					'NM_BARANG'=>$value['NM_BARANG'],
+					'SO_QTY'=>$value['SO_QTY'],
+					'UNIT_BARANG'=>$value['UNIT_BARANG'],
+					'kartonqty'=>$value['kartonqty'],
+					'beratunit'=>$value['beratunit'],
+					'HARGA_DIS'=>$value['HARGA_DIS'],
+					'subtotaldist'=>$value['subtotaldist'],
+					'disNm'=>$value['disNm'],
+					'USER_ID'=>$value['USER_ID']
+				];
+		};
 		$dataProviderAllDataImport= new ArrayDataProvider([
-			  'allModels'=>$dataProvidergudang->getModels(),
+			  'allModels'=>$aryData,
 			   'pagination' => [
 				 'pageSize' => 10,
 			 ]
 		 ]);
-		 //$modelDataExport=$dataProviderAllDataImport->allModels;
-		print_r($dataProviderAllDataImport);
+		$modelDataExport=$dataProviderAllDataImport->getModels();
+		//print_r($modelDataExport);
 		
+		 $excel_data = Postman4ExcelBehavior::excelDataFormat($modelDataExport);
+        $excel_title = $excel_data['excel_title'];
+        $excel_ceils = $excel_data['excel_ceils'];
+		$excel_content = [
+			 [
+				'sheet_name' => 'STOCK-GUDANG',
+                'sheet_title' => [
+					['DATE','BARANG','QTY_PCS','UNIT_BARANG','QTY_KARTON','BERAT_GRAM','HARGA_DIS','SUB_TOTAL','DISTRIBUTOR','USER_ID']
+				],
+			    'ceils' => $excel_ceils,
+                'freezePane' => 'A2',
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
+                'headerStyle'=>[						
+					[
+						'TGL' =>['align'=>'center'],
+						'NM_BARANG' =>['align'=>'center'],
+						'SO_QTY' => ['align'=>'center'],
+						'UNIT_BARANG' => ['align'=>'center'],
+						'kartonqty' => ['align'=>'center'],
+						'beratunit' =>['align'=>'center'],
+						'HARGA_DIS' => ['align'=>'center'],
+						'subtotaldist' => ['align'=>'center'],
+						'disNm' => ['align'=>'center'],
+						'USER_ID' => ['align'=>'center']
+					]						
+				],
+				'contentStyle'=>[
+					[
+						'DATE' =>['align'=>'center'],
+						'BARANG' =>['align'=>'left'],
+						'QTY_PCS' => ['align'=>'right'],
+						'UNIT_BARANG' => ['align'=>'center'],
+						'QTY_KARTON' => ['align'=>'right'],
+						'BERAT_GRAM' =>['align'=>'right'],
+						'HARGA_DIS' => ['align'=>'right'],
+						'SUB_TOTAL' => ['align'=>'right'],
+						'DISTRIBUTOR' => ['align'=>'left'],
+						'USER_ID' => ['align'=>'center']
+					]
+				],
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
+			]
+		];
+		$excel_file = "ImportDataGudang";
+		$this->export4excel($excel_content, $excel_file,0); 
 	}
 	
 }

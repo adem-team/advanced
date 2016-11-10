@@ -110,23 +110,7 @@ use lukisongroup\master\models\Distributor;
 		'panel' => [
 			'heading'=>'<h3 class="panel-title">All Stok Data Gudang</h3>',
 			'type'=>'info',
-			'before'=> Html::a('<i class="fa fa-remove"></i> '.
-								Yii::t('app', 'Clear',['modelClass' => 'Clear',]),'',[
-									'id'=>'clear',
-									'data-pjax' => true,
-									'data-toggle-clear'=>'1',
-									'class' => 'btn btn-danger btn-sm'
-								]
-						).' '.
-						Html::a('<i class="fa fa-database"></i> '.Yii::t('app', 'Send Data',
-							['modelClass' => 'Kategori',]),'',[												
-									'id'=>'fix',
-									'data-pjax' => true,
-									'data-toggle-fix'=>'1',
-								'class' => 'btn btn-success btn-sm'
-							]
-						).' '.
-						Html::a('<i class="fa fa-clone"></i> '.Yii::t('app', 'Export Data'),'/sales/import-gudang/export_datagudang',
+			'before'=> Html::a('<i class="fa fa-clone"></i> '.Yii::t('app', 'Export Data'),'/sales/import-gudang/export_datagudang',
 									[
 										'id'=>'export-datagudang-id',
 										'data-pjax' => true,
