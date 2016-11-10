@@ -333,7 +333,8 @@ class DataTermController extends Controller
 			'dataProviderBudget'=>$dataProviderBudget,
 			'dataProviderRdetail'=>$dataProviderRdetail,
       'searchModelRdetail'=>$searchModelRdetail,
-      'data_toko'=>self::aryData_cus()
+      'data_toko'=>self::aryData_cus(),
+      'data_invest'=>self::aryData_invest()
 		]);
 		/*
 		 * NOTED VIEWS FILES:

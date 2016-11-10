@@ -537,6 +537,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 
 
 	<div style="text-align:right;float:right">
+	<a href="/master/term-customers/" class="btn btn-info btn-xs" role="button" style="width:90px">Back</a>
 		<?php echo PrintPdf($model); ?>
 	</div>
 
