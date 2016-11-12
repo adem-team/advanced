@@ -6,6 +6,7 @@ use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use kartik\nav\NavX;
 use lukisongroup\master\models\Customers;
+use lukisongroup\master\models\CustomersImage;
 use yii\helpers\ArrayHelper;
 // use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
 // MapAsset::register($this);
@@ -63,6 +64,51 @@ $tabcustomersData = \kartik\grid\GridView::widget([
         ]
       ],
     ],
+	[
+		'class'=>'kartik\grid\ExpandRowColumn',
+		'width'=>'50px',
+		'header'=>'Detail',
+		'value'=>function ($model, $key, $index, $column) {
+			return GridView::ROW_COLLAPSED;
+		},
+		'detail'=>function ($model, $key, $index, $column){
+			$modelCustImg = CustomersImage::find()->where(['CUST_KD'=>$model->CUST_KD])->asArray()->all();
+			//$searchModelImg = new CustomersImageSearch(['CUST_KD'=>$model->CUST_KD]);
+			//$dataProviderImg = $searchModel->search(Yii::$app->request->queryParams);
+			return Yii::$app->controller->renderPartial('_expand1',[
+				'modelCust'=>$model,
+				'modelCustImg'=>$modelCustImg
+			]);
+		},
+		'collapseTitle'=>'Close Exploler',
+		'expandTitle'=>'Click to views detail',
+		
+		//'headerOptions'=>['class'=>'kartik-sheet-style'] ,
+		// 'allowBatchToggle'=>true,
+		'expandOneOnly'=>true,
+		// 'enableRowClick'=>true,
+		//'disabled'=>true,
+		'headerOptions'=>[
+			'style'=>[
+				
+				'text-align'=>'center',
+				'width'=>'10px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'9pt',
+				'background-color'=>'rgba(74, 206, 231, 1)',
+			]
+		],
+		'contentOptions'=>[
+			'style'=>[
+			
+				'text-align'=>'center',
+				'width'=>'10px',
+				'height'=>'10px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'9pt',
+			]
+		],
+	],
      [
       'class' => '\kartik\grid\CheckboxColumn',
       'contentOptions'=>['class'=>'kartik-sheet-style'],
