@@ -260,6 +260,8 @@ class DataTermController extends Controller
 
     $searchModelBudgetdetail_inves = new TermdetailSearch();
     $dataProviderBudgetdetail_inves = $searchModelBudgetdetail_inves->searchbudgetdetailinves(Yii::$app->request->queryParams,$id);
+
+    
 		return $this->render('review',[
 			'dataProvider'=>$dataProvider,
 			'model'=>$modelRslt,
@@ -293,8 +295,23 @@ class DataTermController extends Controller
 		$searchModelBudget= new TermdetailSearch();
 		$dataProviderBudget = $searchModelBudget->searchbudget(Yii::$app->request->queryParams,$id);
 
-		$searchModelRdetail= new RtdetailSearch();
+
+    //*search */
+      $paramCari=Yii::$app->getRequest()->getQueryParam('nomerfaktur');
+
+       // if parent not equal null then search NOMER_FAKTURPAJAK
+      
+      if($paramCari != ''){
+        $cari=['NOMER_FAKTURPAJAK'=>$paramCari];
+      }else{
+        $cari='';
+      };
+
+
+		$searchModelRdetail= new RtdetailSearch($cari);
 		$dataProviderRdetail = $searchModelRdetail->search(Yii::$app->request->queryParams,$id);
+
+    
 
     /*
        * Process Editable Row [Columm SQTY]
@@ -564,10 +581,13 @@ class DataTermController extends Controller
 				if ($ActualModel->actualmodel_saved()){
           // $hsl = \Yii::$app->request->post();
 				}
-
+       
 			}
-			return $this->redirect(['actual-review', 'id'=>$ActualModel->temId]);
+			 return $this->redirect(['actual-review', 'id'=>$ActualModel->temId,'nomerfaktur'=>$ActualModel->faktureNo]);
 		}
 
-    }
+  }
+
+ 
+
 }
