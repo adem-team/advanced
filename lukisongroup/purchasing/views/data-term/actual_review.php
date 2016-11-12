@@ -680,6 +680,20 @@ $url = "/purchasing/data-term/review?id=".$model->TERM_ID."&cus_kd=".$model->CUS
 			<div style="margin-bottom:5px;margin-right:5px">
 			<?=tombolInvestInput($model->TERM_ID);?>
 			<a href=<?php echo $url ?> class="btn btn-info btn-sm" role="button" style="width:90px">Kembali</a>
+			<?= Html::a('<i class="fa fa-history "></i> '.Yii::t('app', 'Refresh',
+					['modelClass' => 'Rtdetail',]),'/purchasing/data-term/actual-review?id='.$model->TERM_ID,[
+									   'id'=>'erp-data-term-id',
+									   'data-pjax' => 0,
+									   'class' => 'btn btn-info btn-sm'
+									  ]) ?>
+
+	        <?= Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export',
+					// ['modelClass' => 'Rtdetail',]),'/export/export/export-data-investasi?id='.$model->TERM_ID,[
+	        	['modelClass' => 'Rtdetail',]),'/export/export/export-data-investasi?id='.$model->TERM_ID,[
+									   'id'=>'erp-data-term-export-id',
+									   'data-pjax' => true,
+									   'class' => 'btn btn-info btn-sm'
+									  ]) ?>
 				
 			</div>
 			<?=$gvDetalInputActual?>

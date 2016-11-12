@@ -807,8 +807,14 @@ $id = $_GET['id'];
 	<?php
 		//print_r($model[0]->TERM_ID);
 	?>
-	<div style="margin-bottom:5px;margin-right:5px; float:left"><?=tombolInvest($model['TERM_ID'],$cus_kd);?></div>
-	<div style="margin-bottom:5px"><?=tombolActual($model->TERM_ID);?>   <?=upload($model['TERM_ID'],$cus_kd);?></div>
+
+	<div style="margin-bottom:5px;margin-right:5px; float:left"><?=tombolInvest($model['TERM_ID'],$cus_kd);?>
+		
+	</div>
+	<div style="margin-bottom:5px"><?=tombolActual($model->TERM_ID);?>   <?=upload($model['TERM_ID'],$cus_kd);?>
+		<a href="/purchasing/data-term" class="btn btn-info btn-xs" role="button">Kembali</a>
+		
+	</div>
 	
 	<?=$gvDetalPlanActual;?>
 </div>

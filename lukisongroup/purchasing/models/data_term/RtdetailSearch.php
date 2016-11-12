@@ -130,6 +130,9 @@ class RtdetailSearch extends Rtdetail
 
         $dataProviderRdetail = new ActiveDataProvider([
             'query' => $query,
+            // 'pagination' => [
+            //   'pageSize' => 100,
+            //         ],
             
         ]);
 
@@ -152,15 +155,74 @@ class RtdetailSearch extends Rtdetail
         ]);
 
 
-        $query->andFilterWhere(['like', 'INVESTASI_TYPE', $this->nminvest]);
+        $query->andFilterWhere(['like', 'INVESTASI_TYPE', $this->nminvest])
             //->andFilterWhere(['like', 'r0001.CREATED_AT',$this->getAttribute('parentro.CREATED_AT')])
-            // ->andFilterWhere(['like', 'KD_BARANG', $this->KD_BARANG])
+            ->andFilterWhere(['like', 'NOMER_FAKTURPAJAK', $this->NOMER_FAKTURPAJAK]);
             // ->andFilterWhere(['like', 'NM_BARANG', $this->NM_BARANG])
             // ->andFilterWhere(['like', 'NO_URUT', $this->NO_URUT])
             // ->andFilterWhere(['like', 'NOTE', $this->NOTE]);
 
 
               return $dataProviderRdetail;
+    }
+
+
+    /**
+     * Creates data provider instance with search query applied
+     *
+     * @param array $params
+     *
+     * @return ActiveDataProvider
+     */
+    public function searchExportInvestasi($params,$id)
+    {
+
+      /**
+        *search redirect accounting only RI and RID
+        *@author wawan
+        */
+         $query = Rtdetail::find()
+                 ->where(['TERM_ID'=>$id])
+                 ->andwhere(['<>','STATUS',3])
+                 ->andwhere(['LIKE','KD_RIB','RI'])
+                 ->andwhere(['LIKE', 'KD_RIB','RID']);
+
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+              'pageSize' => 1000,
+                    ],
+
+            
+        ]);
+
+        $this->load($params);
+
+        //if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+         //   return $dataProvider;
+        //}
+
+        $query->andFilterWhere([
+            'STORE_ID' => $this->STORE_ID,
+            'NOMER_INVOCE'=> $this->NOMER_INVOCE,
+            'NOMER_FAKTURPAJAK'=> $this->NOMER_FAKTURPAJAK,
+            'PERIODE_START' => $this->PERIODE_START,
+            'PERIODE_END' => $this->PERIODE_END,
+        ]);
+
+
+        $query->andFilterWhere(['like', 'INVESTASI_TYPE', $this->nminvest])
+            //->andFilterWhere(['like', 'r0001.CREATED_AT',$this->getAttribute('parentro.CREATED_AT')])
+            ->andFilterWhere(['like', 'NOMER_FAKTURPAJAK', $this->NOMER_FAKTURPAJAK]);
+            // ->andFilterWhere(['like', 'NM_BARANG', $this->NM_BARANG])
+            // ->andFilterWhere(['like', 'NO_URUT', $this->NO_URUT])
+            // ->andFilterWhere(['like', 'NOTE', $this->NOTE]);
+
+
+              return $dataProvider;
     }
 
 
