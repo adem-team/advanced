@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	* Customer Visit, Stock.
 	* Author piter novian [ptr.nov@gmail.com]
 	*/   
-	$_indexMap=$this->render('_indexMap');
+	$_indexGeneral=$this->render('_indexGeneral');
 	
 	/**
 	 * Chart Sales MD.
@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	 * Issue	: PO Online/ import PO manual / Po MTI/NKA
 	 * Author piter novian [ptr.nov@gmail.com]
 	*/
-	$_indexDistibutorPo=$this->render('_indexDistibutorPo');
+	$_indexDistibutor=$this->render('_indexDistibutor');
 	
 	/**
 	 * Chart NKA PO.
@@ -106,21 +106,21 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				
 				$items=[
 					[
-						'label'=>'<i class="fa fa-map-marker fa-2x"></i> Map','content'=>$_indexMap,
+						'label'=>'<i class="fa fa-balance-scale fa-2x"></i> Balance','content'=>$_indexGeneral,
 						'active'=>true,
 					],					
+					[
+						'label'=>'<i class="fa fa-university fa-2x"></i> PO Supplier','content'=>$_indexSupplierPo,
+					],
+					[
+						'label'=>'<i class="fa fa-truck fa-2x"></i> Distributor Stock','content'=>$_indexDistibutor,
+					],
 					[
 						'label'=>'<i class="fa fa-chain fa-2x"></i> Seles MD','content'=>$_indexSalesMd,
 					],
 					[
-						'label'=>'<i class="fa fa-truck fa-2x"></i> PO Distributor','content'=>$_indexDistibutorPo,
-					],
-					[
 						'label'=>'<i class="fa fa-rocket fa-2x"></i> PO NKA','content'=>$_indexNKAPo,
-					],
-					[
-						'label'=>'<i class="fa fa-university fa-2x"></i> PO Supplier','content'=>$_indexSupplierPo,
-					],
+					],					
 					[
 						'label'=>'<i class="fa fa-book fa-2x"></i> Trading Terms','content'=>$_indexTerm,	
 					],

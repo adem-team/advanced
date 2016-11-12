@@ -588,7 +588,7 @@ class RptEsmChartSalesmdController extends Controller
 		*/
 		$rsltSrc='{
 			"chart": {
-				"caption": " Distributor PO Update",
+				"caption": " SALES PO",
 				"subCaption": "Maxi Product/Pcs",
 				"captionFontSize": "12",
 				"subcaptionFontSize": "10",
@@ -654,7 +654,7 @@ class RptEsmChartSalesmdController extends Controller
 			'allModels'=>Yii::$app->db_esm->createCommand("	
 				SELECT x2.TGL,month(x2.TGL) AS bulan,DATE_FORMAT(x2.TGL,'%d') as TGL_NO,LEFT(COMPONEN_hari(x2.TGL),2) as hari, 
 					x2.KD_BARANG ,x4.NM_BARANG, 
-					SUM(CASE WHEN x2.SO_TYPE=1 AND x2.SO_QTY>=0 THEN x2.SO_QTY ELSE 0 END) as STCK_GUDANG
+					SUM(CASE WHEN x2.SO_TYPE=1 AND x2.SO_QTY>=0 THEN (x2.SO_QTY / x2.UNIT_QTY) ELSE 0 END) as STCK_GUDANG
 				FROM so_t2 x2 
 				LEFT JOIN b0001 x4 on x4.KD_BARANG=x2.KD_BARANG
 				WHERE  x2.SO_TYPE=1 #AND month(x2.TGL)=3
@@ -694,8 +694,8 @@ class RptEsmChartSalesmdController extends Controller
 		*/
 		$rsltSrc='{
 			"chart": {
-				"caption": " Distributor Stock Gudang",
-				"subCaption": "Maxi Product/Pcs",
+				"caption": " STOK GUDANG",
+				"subCaption": "Maxi Product/Karton",
 				"captionFontSize": "12",
 				"subcaptionFontSize": "10",
 				"subcaptionFontBold": "0",
@@ -713,7 +713,7 @@ class RptEsmChartSalesmdController extends Controller
 				"divLineIsDashed": "1",
 				"divLineDashLen": "1",
 				"divLineGapLen": "1",
-				"yAxisName": "Pcs",
+				"yAxisName": "Karton",
 				"xAxisName": "Day",
 				"showValues": "1"               
 			},
@@ -1467,6 +1467,139 @@ class RptEsmChartSalesmdController extends Controller
 		return $grouped;
 	}
 	
-	
+	/**
+     * GENERAL SALES - monthly-Stock.
+     * @author ptr.nov [ptr.nov@gmail.com]
+	 * @since 1.2
+     */
+	public function actionStockMonthly(){
+		$request = Yii::$app->request;		
+		$tgl= $request->get('tgl');	
+		$tglParam=$tgl!=''?$tgl:date('Y-m-d');
+		
+		//***get count data visiting
+		$_visiting= new ArrayDataProvider([
+			'allModels'=>Yii::$app->db_esm->createCommand("	
+				SELECT 	x1.TGL, month(x1.TGL) AS bulan,DATE_FORMAT(x1.TGL,'%d') as TGL_NO,LEFT(COMPONEN_hari(x1.TGL),2) as hari, 
+						x1.CCval,x1.ACval,x2.ECval,x1.CASEval,x2.ACval_COMPARE			
+				FROM
+				(	SELECT 
+					sum(CASE WHEN  a1.CUST_ID <> '' AND a1.STATUS_CASE<>1 THEN  1 ELSE 0 END) AS CCval,
+					sum(CASE WHEN a1.CUST_ID <> '' AND a1.STATUS= 1 THEN  1 ELSE 0 END) AS ACval,
+					sum(CASE WHEN a1.CUST_ID <> '' AND a1.STATUS_CASE=1 THEN  1 ELSE 0 END) AS CASEval,a1.TGL
+					FROM c0002scdl_detail a1 LEFT JOIN c0001 a2 ON a2.CUST_KD=a1.CUST_ID
+					WHERE a1.STATUS<>3 AND a2.CUST_NM not LIKE 'customer demo%'
+					GROUP BY  a1.TGL
+				) x1 LEFT JOIN
+				(	SELECT sum(CASE WHEN  ID IS NOT NULL THEN  1 ELSE 0 END) AS ACval_COMPARE,
+							sum(CASE WHEN STATUS_EC IS NOT NULL THEN  1 ELSE 0 END) AS ECval,TGL
+					FROM c0002rpt_cc_time x1
+					WHERE CUST_NM not LIKE 'customer demo%'	
+					GROUP BY TGL
+				) x2 on x2.TGL=x1.TGL
+				#WHERE MONTH(x1.TGL)=10 AND x1.TGL <= CURDATE()
+				WHERE MONTH(x1.TGL)=month('".$tglParam."') AND x1.TGL <= CURDATE()
+			")->queryAll(), 
+			'pagination' => [
+					'pageSize' => 200,
+			],				 
+		]);
+		$_modelVisiting=ArrayHelper::toArray($_visiting->getModels());		
+		foreach($_modelVisiting as $row => $value){			
+			$hari[]=["label"=>$value['hari']."-".$value['TGL_NO']."-".$value['bulan']];					
+			$cc[]=["value"=> strval($value['CCval'])];					
+			$ac[]=["value"=>strval($value['ACval'])];					
+			$ec[]=["value"=> strval($value['ECval'])];					
+			$case[]=["value"=> strval($value['CASEval'])];
+			$acSum[] =$value['ACval'];
+			$ecSum[] =$value['ECval'];
+		};
+		//***get AVG AC FROM data visiting
+		$cntAC=count($acSum);
+		$sumAC =array_sum($acSum);
+		$avgAC=($sumAC/$cntAC);
+		$avgACnm="AvgAC (".number_format($avgAC,2).")";
+		//***get AVG EC FROM data visiting
+		$cntEC=count($ecSum);
+		$sumEC =array_sum($ecSum);
+		$avgEC=($sumEC/$cntEC);
+		$avgECnm="AvgEC (".number_format($avgEC,2).")";
+		
+		/**
+		 * Maping Chart 
+		 * Type : msline
+		 * 
+		*/
+		$rsltSrc='{
+			"chart": {
+				"caption": "Summary Stock Month Of Year",
+				"subCaption": "Supllier, Distributor, Sales ",
+				"captionFontSize": "12",
+				"subcaptionFontSize": "10",
+				"subcaptionFontBold": "0",
+				"paletteColors": "#cc0000,#1e86e5,#16ce87,#b7843d",
+				"bgcolor": "#ffffff",
+				"showBorder": "0",
+				"showShadow": "0",
+				"showCanvasBorder": "0",
+				"usePlotGradientColor": "0",
+				"legendBorderAlpha": "0",
+				"legendShadow": "0",
+				"showAxisLines": "0",
+				"showAlternateHGridColor": "0",
+				"divlineThickness": "1",
+				"divLineIsDashed": "1",
+				"divLineDashLen": "1",
+				"divLineGapLen": "1",
+				"xAxisName": "Day",
+				"showValues": "1"               
+			},
+			"categories": [
+				{
+					"category": '.Json::encode($hari).'
+				}
+			],
+			"dataset": [
+				{
+					"seriesname": "PO-Purchase",
+					"data":'.Json::encode($cc).'
+				}, 
+				{
+					"seriesname": "Stock-Gudang",
+					"data":'.Json::encode($ac).'
+				},
+				{
+					"seriesname": "PO-Sales",
+					"data":'.Json::encode($ec).'
+				},
+				{
+					"seriesname": "CASE",
+					"data":'.Json::encode($case).'
+				}
+			],
+			"trendlines": [
+                {
+                    "line": [
+                        {
+                            "startvalue": "'.$avgAC.'",
+                            "color": "#0b0d0f",
+                            "valueOnRight": "1",
+                            "displayvalue":"'.$avgACnm.'"
+                        },
+						{
+                            "startvalue": "'.$avgEC.'",
+                            "color": "#0b0d0f",
+                            "valueOnRight": "1",
+                            "displayvalue": "'.$avgECnm.'"
+                        }
+                    ]
+                }
+            ]
+			
+		}';
+		
+		return json::decode($rsltSrc);
+		//return $avgAc;
+	}
 	
 }

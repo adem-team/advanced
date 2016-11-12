@@ -227,4 +227,72 @@ class CustomersSearch extends Customers
 
         return $dataProvider;
     }
+	
+	public function searchNoo($params)
+    {
+        // $query = Customers::find()->joinWith('cus',true,'JOIN')
+				// 				  ->where('c0001.STATUS <> 3');
+        $query = Customers::find()->where("STATUS<>3 AND CUST_GRP='CUS.2016.000637'");
+
+									// ->orderBy(['CUST_KD'=>SORT_ASC]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+			'pagination' => [
+				'pageSize' => 50,
+			],
+        ]);
+
+
+      $dataProvider->sort->attributes['cus.CUST_KTG_NM'] = [
+                'asc' => ['c0001k.CUST_KTG_NM' => SORT_ASC],
+                'desc' => ['c0001k.CUST_KTG_NM' => SORT_DESC],
+            ];
+
+			$dataProvider->sort->attributes['custype.CUST_KTG_NM'] = [
+                'asc' => ['c0001k.CUST_KTG_NM' => SORT_ASC],
+                'desc' => ['c0001k.CUST_KTG_NM' => SORT_DESC],
+            ];
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+
+
+        $query->andFilterWhere(['like', 'CUST_KD', $this->CUST_KD])
+        ->andFilterWhere(['like', 'CUST_KD_ALIAS', $this->CUST_KD_ALIAS])
+        ->andFilterWhere(['like', 'TLP1', $this->TLP1])
+        ->andFilterWhere(['like', 'TLP2', $this->TLP2])
+        ->andFilterWhere(['like', 'FAX', $this->FAX])
+        ->andFilterWhere(['like', 'CUST_KTG', $this->getAttribute('c0001k.CUST_KTG')])
+        ->andFilterWhere(['like', 'CUST_TYPE', $this->getAttribute('custype.CUST_KTG_NM')])
+        ->andFilterWhere(['like', 'CUST_NM', $this->CUST_NM])
+        ->andFilterWhere(['like', 'CUST_GRP', 'CUS.2016.000637'])
+        ->andFilterWhere(['like', 'MAP_LAT', $this->MAP_LAT])
+        ->andFilterWhere(['like', 'MAP_LNG', $this->MAP_LNG])
+        ->andFilterWhere(['like', 'PIC', $this->PIC])
+        ->andFilterWhere(['like', 'ALAMAT', $this->ALAMAT])
+        ->andFilterWhere(['like', 'EMAIL', $this->EMAIL])
+        ->andFilterWhere(['like', 'WEBSITE', $this->WEBSITE])
+        ->andFilterWhere(['like', 'NOTE', $this->NOTE])
+        ->andFilterWhere(['like', 'NPWP', $this->NPWP])
+        ->andFilterWhere(['like', 'DATA_ALL', $this->DATA_ALL])
+        ->andFilterWhere(['like', 'JOIN_DATE', $this->JOIN_DATE])
+        ->andFilterWhere(['like', 'CUST_GRP', $this->parentName])
+        ->andFilterWhere(['like', 'LAYER', $this->LAYER])
+        ->andFilterWhere(['like', 'GEO', $this->GEO])
+		->andFilterWhere(['like', 'c0001.STATUS', $this->STATUS])
+		->andFilterWhere(['like', 'c0001.DC_STATUS', $this->DC_STATUS]);
+            // ->andFilterWhere(['like', 'CORP_ID', $this->CORP_ID])
+            // ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
+            // ->andFilterWhere(['like', 'UPDATED_BY', $this->UPDATED_BY]);
+
+	        $query->orderby(['CUST_GRP'=>SORT_ASC]); //SORT PENTING UNTUK RECURSIVE BIAR TREE BISA URUTAN, save => (IF (PATENT =0) {SORT=ID}, ELSE {SORT=PATENT}, note Parent=ID header
+        return $dataProvider;
+    }
 }
