@@ -4,10 +4,13 @@ namespace lukisongroup\widget\controllers;
 
 use Yii;
 use lukisongroup\widget\models\Notulen;
+use lukisongroup\widget\models\NotulenModul;
+use lukisongroup\hrd\models\Employe;
 use lukisongroup\widget\models\NotulenSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * NotulenController implements the CRUD actions for Notulen model.
@@ -27,6 +30,29 @@ class NotulenController extends Controller
                 ],
             ],
         ];
+    }
+
+     
+    /*array modul from table M0002*/
+    public function getary_modul()
+    {
+        return $data =  ArrayHelper::map(NotulenModul::find()->where('STATUS <>3')->asArray()->all(),'ID','MODUL_NM');
+    }
+
+     /**
+    *array employe
+    **/
+    public function get_aryEmploye()
+    {
+        $emp = \lukisongroup\hrd\models\Employe::find()->where('STATUS<>3')->all();
+        return $dropemploy = ArrayHelper::map($emp,'EMP_EMAIL', function ($emp, $defaultValue) {
+          return $emp['EMP_NM'] . ' ' . $emp['EMP_NM_BLK'];
+    });
+    }
+
+    public function Get_profile()
+    {
+        return Yii::$app->getUserOpt->Profile_user();
     }
 
     /**
@@ -61,15 +87,21 @@ class NotulenController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($start,$end)
     {
         $model = new Notulen();
+        $model->scenario = Notulen::SCENARIO_NOTE;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->CREATE_BY = ;
+            $model->CREATE_AT = date("Y-m-d H:i:s");
+            $model->save();
+            return $this->redirect(['index']);
         } else {
-            return $this->render('create', [
+            return $this->renderAjax('create', [
                 'model' => $model,
+                'data_modul'=>self::getary_modul(),
+                'data_emp'=>self::get_aryEmploye()
             ]);
         }
     }

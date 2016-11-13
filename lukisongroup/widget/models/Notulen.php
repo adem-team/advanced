@@ -24,6 +24,10 @@ class Notulen extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+
+   /*checkvalidation */
+    const SCENARIO_NOTE = 'note';
+
     public static function tableName()
     {
         return 'm0001';
@@ -37,12 +41,14 @@ class Notulen extends \yii\db\ActiveRecord
         return Yii::$app->get('db_widget');
     }
 
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
+            [['MODUL', 'title', 'USER_ID'],'required','on'=>self::SCENARIO_NOTE],
             [['start', 'end', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
             [['MODUL', 'STATUS'], 'integer'],
             [['title'], 'string', 'max' => 255],
@@ -60,7 +66,7 @@ class Notulen extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'start' => Yii::t('app', 'Start'),
             'end' => Yii::t('app', 'End'),
-            'title' => Yii::t('app', 'Title'),
+            'title' => Yii::t('app', 'Keterangan'),
             'USER_ID' => Yii::t('app', 'dbm001->EMP_ID'),
             'MODUL' => Yii::t('app', 'MODUL -> M0002'),
             'STATUS' => Yii::t('app', 'Status'),
