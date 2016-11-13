@@ -84,32 +84,29 @@ class SalesmanOrderController extends Controller
      * @since 1.1
      */
     public function actionIndex()
-    {
-		//Check componen generate kode RO
-		//print_r(\Yii::$app->ambilkonci->getRoCode());
-
-
-		//function getPermission(){
-			//return Yii::$app->getUserOpt->Modul_akses(1);
-
-		//}
-		//$getPermission=Yii::$app->getUserOpt->Modul_akses(1);
-
-		/*  if (isset($_GET['param'])){
-			  $dataProvider = $searchModel->searchChildRo(Yii::$app->request->queryParams,$_GET['param']);
-		}else{
-			$dataProvider = $searchModel->searchChildRo(Yii::$app->request->queryParams);
-		}  */
-
-		//$searchModel->KD_RO ='2015.12.04.RO.0070';
-
-		// $dataProvider = $searchModel->searchSo(Yii::$app->request->queryParams);
-		  // return $this->render('index', [
-            // 'searchModel' => $searchModel,
-            // 'dataProvider' => $dataProvider,
-			//'getPermission'=> $getPermission,
-        // ]);
-
+    {		
+		$apSalemanOrderInbox= new ArrayDataProvider([
+			'allModels'=>Yii::$app->db_esm->createCommand("
+				SELECT x1.ID,x1.TGL,x1.WAKTU_INPUT_INVENTORY,x1.CUST_KD,x1.CUST_NM,x1.KD_BARANG,x1.NM_BARANG,x1.SO_QTY,x1.SO_TYPE,x1.POS,x1.STATUS,x1.ID_GROUP,
+					x1.HARGA_PABRIK,x1.HARGA_DIS,x1.HARGA_LG,x1.HARGA_SALES,
+					x1.KODE_REF,x1.USER_ID,x2.username,x3.NM_FIRST,x1.SUBMIT_QTY,x1.SUBMIT_PRICE,x1.NOTED,x4.ISI_MESSAGES,x5.CHECKIN_TIME,x5.CHECKOUT_TIME,
+					x6.PIC,x6.TLP1,x6.KTP,x6.NPWP,x6.SIUP,x6.ALAMAT,x6.JOIN_DATE,x6.TLP1,x6.TLP2
+				FROM `so_t2_13-11-2016` x1 
+					LEFT JOIN dbm001.user x2 ON x2.id=x1.USER_ID
+					LEFT JOIN dbm_086.user_profile x3 ON x3.ID_USER=x2.id
+					LEFT JOIN c0014 x4 on x4.TGL=x1.TGL AND x4.ID_USER=x1.USER_ID
+					LEFT JOIN c0002scdl_detail x5 on x5.TGL=x1.TGL AND x5.CUST_ID=x1.CUST_KD
+					LEFT JOIN c0001 x6 on x6.CUST_KD=x1.CUST_KD
+				WHERE x1.SO_TYPE=10
+				GROUP BY x1.TGL,x1.USER_ID,x1.CUST_KD
+			")->queryAll(),
+			'pagination' => [
+				'pageSize' => 1000,
+			]
+		]);
+		//print_r($aryProviderSalemanOrder);	
+		//die();
+		
 		$searchModel = new SalesorderSearch();
 
 		$dataProvider = $searchModel->searchSo(Yii::$app->request->queryParams);
@@ -142,19 +139,10 @@ class SalesmanOrderController extends Controller
                                                     ],
                                             ]);
 
-		  return $this->render('index', [
-      'searchModel' => $searchModel,
-      'dataProvider' => $dataProvider,
-			'dataProviderInbox' =>$dataProviderInbox,
-			'dataProviderOutbox' =>$dataProviderOutbox,
-      'dataapprove'=>$dataapprove,
-      'datacheckedso'=>$datacheckedso,
-      'dataAprroveso'=>$dataAprroveso,
-      'dataCheckedso'=>$dataCheckedso,
-      'dataCreateso'=>$dataCreateso,
-      'datacreateso'=>$datacreateso,
-
-			//'getPermission'=> $getPermission,
+		return $this->render('index', [
+			'apSoHeaderInbox'=>$apSalemanOrderInbox,
+			'apSoHeaderOutbox'=>$apSalemanOrderInbox,
+			'apSoHeaderHistory'=>$apSalemanOrderInbox
         ]);
 
     }
