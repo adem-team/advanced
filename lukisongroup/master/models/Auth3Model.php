@@ -122,6 +122,8 @@ class Auth3Model extends Model
             $copy_term->SIG3_TGL = $model->SIG3_TGL;
             $copy_term->SIG3_SVGBASE64 = $model->SIG3_SVGBASE64;
             $copy_term->CREATED_BY = $model->CREATED_BY;
+            $copy_term->CREATED_AT = date('Y-m-d H:m:s');
+            $copy_term->BUDGET_AWAL = $model->BUDGET_AWAL;
             $copy_term->save();
 
 
@@ -149,7 +151,7 @@ class Auth3Model extends Model
               $connection->createCommand()->batchInsert('t0000detail',['TERM_ID','CUST_KD_PARENT','INVES_ID','BUDGET_SOURCE','BUDGET_PLAN','BUDGET_ACTUAL','PERIODE_START','PERIODE_END','PPH23','PPN','PROGRAM'],[[$copy_term->TERM_ID,$copy_term->CUST_KD_PARENT,$value->INVES_TYPE,$value->BUDGET_SOURCE,$value->BUDGET_PLAN,$value->BUDGET_ACTUAL,$value->PERIODE_START,$value->PERIODE_END,$value->PPH23,$value->PPN,$value->PROGRAM]])->execute();
               
                //t0001detail
-              $connection->createCommand()->batchInsert('t0001detail',['KD_RIB','TERM_ID','ID_INVEST','HARGA','STATUS'],[[$copy_budget->KD_RIB,$copy_budget->TERM_ID,$value->INVES_TYPE,$value->BUDGET_PLAN,102]])->execute();
+              $connection->createCommand()->batchInsert('t0001detail',['KD_RIB','TERM_ID','ID_INVEST','HARGA','STATUS','PPH23','PPN','PERIODE_START','PERIODE_END'],[[$copy_budget->KD_RIB,$copy_budget->TERM_ID,$value->INVES_TYPE,$value->BUDGET_PLAN,102,$value->PPH23,$value->PPN,$value->PERIODE_START,$value->PERIODE_END]])->execute();
              
             }
 

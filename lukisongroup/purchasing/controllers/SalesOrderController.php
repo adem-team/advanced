@@ -1249,7 +1249,7 @@ class SalesOrderController extends Controller
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth1Model']['kdro'];
           $empid = $hsl['Auth1Model']['empID'];
-          $this->Sendmail($kdro,$empid); //send email
+          // $this->Sendmail($kdro,$empid); //send email
 					return $this->redirect(['/purchasing/sales-order/view','kd'=>$kdro]);
 				}
 			}
@@ -1286,7 +1286,7 @@ class SalesOrderController extends Controller
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth2Model']['kdro'];
           $empid = $hsl['Auth1Model']['empID'];
-          $this->Sendmail2($kdro,$empid);//send email
+          // $this->Sendmail2($kdro,$empid);//send email
 					return $this->redirect(['/purchasing/sales-order/review','kd'=>$kdro]);
 				}
 			}
@@ -1323,7 +1323,7 @@ class SalesOrderController extends Controller
 					$hsl = \Yii::$app->request->post();
 					$kdro = $hsl['Auth3Model']['kdro'];
           $empid = $hsl['Auth1Model']['empID'];
-          $this->Sendmail3($kdro,$empid); // send email
+          // $this->Sendmail3($kdro,$empid); // send email
 					return $this->redirect(['/purchasing/sales-order/review','kd'=>$kdro]);
 				}
 			}

@@ -6,11 +6,13 @@ use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use kartik\nav\NavX;
 use lukisongroup\master\models\Customers;
+use lukisongroup\master\models\CustomersImage;
 use yii\helpers\ArrayHelper;
 // use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
 // MapAsset::register($this);
 
-
+$arraySttDC= [ '0' => 'STORE','1' => 'DC'];
+	
 $this->params['breadcrumbs'][] = $this->title;
 $this->sideCorp = 'Customers';                 				 /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = $sideMenu_control;//'umum_datamaster';   	 /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -62,6 +64,51 @@ $tabcustomersData = \kartik\grid\GridView::widget([
         ]
       ],
     ],
+	[
+		'class'=>'kartik\grid\ExpandRowColumn',
+		'width'=>'50px',
+		'header'=>'Detail',
+		'value'=>function ($model, $key, $index, $column) {
+			return GridView::ROW_COLLAPSED;
+		},
+		'detail'=>function ($model, $key, $index, $column){
+			$modelCustImg = CustomersImage::find()->where(['CUST_KD'=>$model->CUST_KD])->asArray()->all();
+			//$searchModelImg = new CustomersImageSearch(['CUST_KD'=>$model->CUST_KD]);
+			//$dataProviderImg = $searchModel->search(Yii::$app->request->queryParams);
+			return Yii::$app->controller->renderPartial('_expand1',[
+				'modelCust'=>$model,
+				'modelCustImg'=>$modelCustImg
+			]);
+		},
+		'collapseTitle'=>'Close Exploler',
+		'expandTitle'=>'Click to views detail',
+		
+		//'headerOptions'=>['class'=>'kartik-sheet-style'] ,
+		// 'allowBatchToggle'=>true,
+		'expandOneOnly'=>true,
+		// 'enableRowClick'=>true,
+		//'disabled'=>true,
+		'headerOptions'=>[
+			'style'=>[
+				
+				'text-align'=>'center',
+				'width'=>'10px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'9pt',
+				'background-color'=>'rgba(74, 206, 231, 1)',
+			]
+		],
+		'contentOptions'=>[
+			'style'=>[
+			
+				'text-align'=>'center',
+				'width'=>'10px',
+				'height'=>'10px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'9pt',
+			]
+		],
+	],
      [
       'class' => '\kartik\grid\CheckboxColumn',
       'contentOptions'=>['class'=>'kartik-sheet-style'],
@@ -396,6 +443,62 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 		],
 	], */
     [
+		'class'=>'kartik\grid\EditableColumn',
+		'attribute' => 'DC_STATUS',
+		'refreshGrid'=>true,
+		'hAlign'=>'left',
+		'vAlign'=>'top',
+		'filter'=>true,
+		'filterType'=>GridView::FILTER_SELECT2,
+		'filter' => $arraySttDC,
+		'filterWidgetOptions'=>[
+		'pluginOptions'=>[
+			'allowClear'=>true,
+			'contentOptions'=>[
+					'style'=>[
+					  'text-align'=>'left',
+					  'font-family'=>'tahoma, arial, sans-serif',
+					  'font-size'=>'8pt',
+					]
+				]
+			],
+		],
+		'filterInputOptions'=>['placeholder'=>'Select'],
+		// 'mergeHeader'=>true,
+		'headerOptions'=>[
+			'style'=>[
+			  'text-align'=>'center',
+			  'width'=>'120px',
+			  'font-family'=>'tahoma, arial, sans-serif',
+			  'font-size'=>'8pt',
+			  'background-color'=>'rgba(126, 189, 188, 0.9)',
+			]
+		],
+		'contentOptions'=>[
+			'style'=>[
+				'vertical-align'=>'text-middle',
+				'text-align'=>'center',
+				'width'=>'120px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'8pt',
+			]
+		],    
+		'editableOptions' => [
+		'header' => 'INVENTORY',
+		'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+		'size' => 'xs',
+		'options' => [
+				'data' =>$arraySttDC,
+				'pluginOptions' => [
+					'allowClear' => true,
+					// 'class'=>'pull-top dropup'
+				],
+			],    
+			// Refresh Display
+			'displayValueConfig' => $arraySttDC,
+		],
+	],
+	[
       'attribute' => 'STATUS',
       'filter' => $valStt,
       'format' => 'raw',
@@ -554,7 +657,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 		'items' => [
 			['label' => 'MENU', 'active'=>true, 'items' => [
 				['label' => '<span class="fa fa-user fa-md"></span>Customers', 'url' => '/master/customers/esm-index'],
-				['label' => '<span class="fa fa-cogs fa-md"></span>Alias Customers', 'url' => '/master/customers/login-alias','linkOptions'=>['id'=>'performance','data-toggle'=>'modal','data-target'=>'#formlogin']],
+				['label' => '<span class="fa fa-cogs fa-md"></span>Alias Customers', 'url' => '/master/customers/index-alias'],
 				'<li class="divider"></li>',
 				['label' => 'Properties', 'items' => [
 					['label' => '<span class="fa fa-flag fa-md"></span>Kota', 'url' => '/master/kota-customers/esm-index-city'],

@@ -23,12 +23,26 @@ class AliasCustomer extends Model
     {
         return [
 			[['kD_CUST','kD_CUST_ALIAS'], 'required'],
+			['kD_CUST','cekalias'],
 			[['kD_REF','kD_REF_NM'], 'safe'],
         ];
     }
+	
+	public function cekalias($attribute, $params)
+    {
+		$kondisi =  SalesCustomerAlias::find()->where(['KD_CUSTOMERS'=>$this->kD_CUST,'KD_DISTRIBUTOR'=>$this->kD_REF])->one();
+		
+		
+		
+		if($kondisi){
+			$this->addError($attribute, 'Customer aliascode Already exist.');
+		}
+    }
+	
+	
 	public function alias_customer_save(){
 		$rcCustomer= new SalesCustomerAlias;
-		//if ($this->validate()) {
+		if ($this->validate()) {
 			$rcCustomer->KD_CUSTOMERS=$this->kD_CUST;
 			$rcCustomer->KD_ALIAS=$this->kD_CUST_ALIAS;
 			$rcCustomer->KD_PARENT = '1';
@@ -39,7 +53,7 @@ class AliasCustomer extends Model
 			// print_r($rcCustomer->save());
 			// die();			
 			return $rcCustomer;
-		//}
+		}
 		//return null;
 	}
 }

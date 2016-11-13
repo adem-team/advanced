@@ -16,7 +16,8 @@ use yii\filters\ContentNegotiator;
 use yii\web\Response;
 
 use lukisongroup\dashboard\models\RptesmGraph;
-
+use lukisongroup\dashboard\models\Issuemd;
+use lukisongroup\dashboard\models\IssuemdSearch;
 /**
  * DashboardController implements the CRUD actions for Dashboard model.
  */
@@ -107,7 +108,20 @@ class RptEsmController extends Controller
      */
     public function actionIndex()
     {
-		//print_r($this->graphEsmStockPerSku());
+		
+		$model = new \yii\base\DynamicModel(['tgl_issue']);
+		$model->addRule(['tgl_issue'], 'safe');
+		$hsl = Yii::$app->request->post();
+		$tgl = $hsl['DynamicModel']['tgl_issue'];
+		setcookie('esmDashboardIssueTglVal',$tgl);	
+		$setTglCookie=$_COOKIE['esmDashboardIssueTglVal'];
+		$tglParam=$setTglCookie!=''?$setTglCookie:date('Y-m-d');
+			
+		//if($this->checkRpt($setTgl)==0 or $this->checkRpt($setTgl)==1){			
+		$searchModelIssue = new IssuemdSearch([
+			'TGL'=>$tglParam
+		]);
+		//}
 		
 		$dataProvider_CustPrn= new ArrayDataProvider([
 			'key' => 'PARENT_ID',
@@ -118,14 +132,61 @@ class RptEsmController extends Controller
 		]);
 		$model_CustPrn=$dataProvider_CustPrn->getModels();
 		$count_CustPrn=$dataProvider_CustPrn->getCount();
+		$dataProviderIssue = $searchModelIssue->search(Yii::$app->request->queryParams);
 		return $this->render('index',[
 			'model_CustPrn'=>$model_CustPrn,
 			'count_CustPrn'=>$count_CustPrn,  // Condition  validation model_CustPrn offset array -ptr.nov-
 			'dataEsmStockAll'=>$this->graphEsmStockAll(),
-			'graphEsmStockPerSku'=>$this->graphEsmStockPerSku()
+			'graphEsmStockPerSku'=>$this->graphEsmStockPerSku(),
+			'searchModelIssue' => $searchModelIssue,
+			'dataProviderIssue' => $dataProviderIssue
 		]);
 
     }
+	
+	/**
+	 * ISSUE NOTE -> CHECK DATE
+	 * @author Piter Novian [ptr.nov@gmail.com]
+	 * @since 2.0
+	*/
+	public function actionAmbilTanggalIssue()
+	{
+		$model = new \yii\base\DynamicModel(['tgl_issue']);
+		$model->addRule(['tgl_issue'], 'required');
+		if (!$model->load(Yii::$app->request->post())){
+			return $this->renderAjax('_indexSalesMdIssueForm', [
+			'model'=>$model,
+			]);
+		}else{
+			if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}
+		}
+	}
+	
+	/**
+	 * CHART -> CHECK DATE
+	 * @author Piter Novian [ptr.nov@gmail.com]
+	 * @since 2.0
+	*/
+	public function actionAmbilTanggalChart()
+	{
+		$model = new \yii\base\DynamicModel(['tglchartmd']);
+		$model->addRule(['tglchartmd'], 'required');
+		if (!$model->load(Yii::$app->request->post())){
+			return $this->renderAjax('_indexSalesMdChartForm', [
+			'model'=>$model,
+			]);
+		}else{
+			if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}
+		}
+	}
+	
+	
 	
 	public function actionTabsData()
 	{    	$html = $this->renderPartial('tabContent');
@@ -493,9 +554,6 @@ class RptEsmController extends Controller
 		}';
 		return $prn;
 	}
-	
-	
-	
 	
 	
 	

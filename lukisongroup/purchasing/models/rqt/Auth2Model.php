@@ -85,7 +85,8 @@ class Auth2Model extends Model
 	*/
 	public function auth2_saved(){
 		if ($this->validate()) {
-			$rtHeader_2 = Requesttermheader::find()->where(['KD_RIB' =>$this->kdrib])->one();
+			$rtHeader_2 = Requesttermheader::find()->where(['KD_RIB' =>$this->kdrib])->one(); #header
+			$rtdetail = Rtdetail::find()->where(['KD_RIB'=>$this->kdrib])->one();#detail
 			$poSignStt = Requesttermstatus::find()->where(['KD_RIB'=>$this->kdrib,'ID_USER'=>$this->getProfile()->EMP_ID])->one();
 				$profile=Yii::$app->getUserOpt->Profile_user();
 				$rtHeader_2->STATUS = $this->status;
@@ -94,6 +95,8 @@ class Auth2Model extends Model
 				$rtHeader_2->SIG2_NM = $profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;
 				$rtHeader_2->SIG2_TGL = date('Y-m-d');
 			if ($rtHeader_2->save()) {
+				$rtdetail->STATUS = 101;
+				$rtdetail->save();
 					if (!$poSignStt){
 						$rtHeader_2Stt = new Requesttermstatus;
 						$rtHeader_2Stt->KD_RIB = $this->kdrib;

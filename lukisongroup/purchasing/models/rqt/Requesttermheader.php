@@ -4,6 +4,7 @@ namespace lukisongroup\purchasing\models\rqt;
 
 use Yii;
 use lukisongroup\hrd\models\Employe;
+use lukisongroup\master\models\Customers;
 use lukisongroup\hrd\models\Dept;
 use lukisongroup\purchasing\models\rqt\Rtdetail;
 use lukisongroup\hrd\models\Corp;
@@ -68,6 +69,16 @@ class Requesttermheader extends \yii\db\ActiveRecord
         return $this->hasMany(Rtdetail::className(), ['KD_RIB' => 'KD_RIB']);
     }
 
+    public function getCus()
+    {
+         return $this->hasOne(Customers::className(), ['CUST_KD' => 'CUST_ID_PARENT']);
+    }
+
+    public function Nmcus()
+    {
+            return $this->cus->CUST_NM;
+    }
+
     public function getEmploye()
     {
         return $this->hasOne(Employe::className(), ['EMP_ID' => 'ID_USER']);
@@ -88,8 +99,8 @@ class Requesttermheader extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['NEW','CUST_ID_PARENT','NOTE'], 'required','on'=>'simpan'],
-            [['TGL', 'CREATED_AT', 'SIG1_TGL', 'SIG2_TGL', 'SIG3_TGL','SIG1_SVGBASE64','SIG1_SVGBASE30','TERM_ID'], 'safe'],
+            [['NEW','CUST_ID_PARENT','NOTE','PERIOD_START','PERIOD_END'], 'required','on'=>'simpan'],
+            [['TGL', 'CREATED_AT', 'SIG1_TGL', 'SIG2_TGL', 'SIG3_TGL','SIG1_SVGBASE64','SIG1_SVGBASE30','TERM_ID','PERIOD_START','PERIOD_END'], 'safe'],
             [['PPN', 'PPH23'], 'number'],
             [['NOTE', 'DATA_ALL', 'SIG2_SVGBASE64', 'SIG2_SVGBASE30', 'SIG3_SVGBASE64', 'SIG3_SVGBASE30','TERM_ID'], 'string'],
             [['STATUS'], 'integer'],

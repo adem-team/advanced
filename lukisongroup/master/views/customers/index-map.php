@@ -117,12 +117,12 @@ function tombolMap(){
 		'items' => [
 			['label' => 'MENU', 'active'=>true, 'items' => [
 				['label' => '<span class="fa fa-user fa-md"></span>Customers', 'url' => '/master/customers/esm-index'],
-				['label' => '<span class="fa fa-cogs fa-md"></span>Alias Customers', 'url' => '/master/customers/login-alias','linkOptions'=>['id'=>'performance','data-toggle'=>'modal','data-target'=>'#formlogin']],
+				['label' => '<span class="fa fa-cogs fa-md"></span>Alias Customers', 'url' => '/master/customers/index-alias'],
 				'<li class="divider"></li>',
 				['label' => 'Properties', 'items' => [
-					['label' => '<span class="fa fa-flag fa-md"></span>Kota', 'url' => '/master/customers/esm-index-city'],
+					['label' => '<span class="fa fa-flag fa-md"></span>Kota', 'url' => '/master/kota-customers/esm-index-city'],
 					['label' => '<span class="fa fa-flag-o fa-md"></span>Province', 'url' => '/master/customers/esm-index-provinsi'],
-					['label' => '<span class="fa fa-table fa-md"></span>Category', 'url' => '/master/customers/esm-index-kategori'],
+					['label' => '<span class="fa fa-table fa-md"></span>Category', 'url' => '/master/customers-kategori/esm-index-kategori'],
 					['label' => '<span class="fa fa-table fa-md"></span>Geografis', 'url' => '/master/customers/esm-index-geo'],
 					['label' => '<span class="fa fa-table fa-md"></span>Layers', 'url' => '/master/customers/esm-index-layer'],
 					['label' => '<span class="fa fa-table fa-md"></span>Layers Mutasi', 'url' => '/master/customers/esm-index-layermutasi'],
@@ -145,7 +145,7 @@ function tombolMap(){
 		</div>
 		<div class="col-sm-12">
 			<?php
-				 echo $map = '<div id ="map" style="width:100%;height:450px; padding-bottom:50px"></div>';
+				 echo $map = '<div id ="map" style="width:100%;height:650px; padding-bottom:50px"></div>';
 			?>
 		</div>
 	</div>
@@ -158,7 +158,7 @@ function tombolMap(){
    /*nampilin MAP*/
     var map = new google.maps.Map(document.getElementById('map'),
        {
-       zoom: 12,
+       zoom: 9,
        center: new google.maps.LatLng(-6.229191531958687,106.65994325550469),
        mapTypeId: google.maps.MapTypeId.ROADMAP
 
@@ -195,7 +195,7 @@ function tombolMap(){
         public_markers[i] = marker;
 
         google.maps.event.addListener(public_markers[i], 'mouseover', function () {
-          infowindow.setContent('<h1>' + point.ALAMAT + '</h1>' + '<p>' + point.CUST_NM + '</p>');
+          infowindow.setContent('<h1>' + point.CUST_NM + '</h1>' + '<p>' + point.ALAMAT + '</p>');
           infowindow.open(map, public_markers[i]);
         });
 

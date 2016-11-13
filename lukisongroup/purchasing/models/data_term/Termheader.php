@@ -42,6 +42,13 @@ class Termheader extends \yii\db\ActiveRecord
      */
      public $term;
      public $image;
+     public $tgl_dibuat;
+     public $tgl_berakhir;
+     public $budget_start;
+     public $text_target;
+     public $value_target;
+
+     CONST EXIST_RUNNING = 'exist_running';
 
     public static function tableName()
     {
@@ -70,6 +77,7 @@ class Termheader extends \yii\db\ActiveRecord
         return [
             [['TERM_ID','CUST_KD_PARENT', 'PRINCIPAL_KD', 'DIST_KD'], 'required'],
             [['image'], 'file'],
+            [['PERIOD_START','PERIOD_END'], 'default','value'=>date('Y-m-d')],
             [['TARGET_TEXT', 'RABATE_CNDT','BUDGET_AWAL'], 'string'],
             [['PERIOD_START', 'PERIOD_END', 'CREATED_AT', 'UPDATE_AT','GENERAL_TERM'], 'safe'],
             [['PERIOD_END'], 'cekdate'],
@@ -103,6 +111,15 @@ class Termheader extends \yii\db\ActiveRecord
            $this->addError($model, 'Tanggal harus lebih Besar'.$datestart);
        }
 
+    }
+
+    public function cekExistTermrunning($model)
+    {
+       $data = Termheader::find()->where(['CUST_KD_PARENT'=>$this->CUST_KD_PARENT,'STATUS'=>1])->one();
+       if($data)
+       {
+         $this->addError($model, 'sorry Customer already been there');
+       }
     }
 
 

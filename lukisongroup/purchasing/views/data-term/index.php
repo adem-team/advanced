@@ -78,7 +78,7 @@ function tombolCreate(){
 	*/
 	function tombolReview($url, $model){
 		if(getPermission()){
-			if(getPermission()->BTN_REVIEW==1){
+			// if(getPermission()->BTN_REVIEW==1){
 				$title = Yii::t('app', 'Review');
 				$options = [ 'id'=>'term-date-review'];
 				$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
@@ -86,7 +86,7 @@ function tombolCreate(){
 				$url = Url::toRoute(['/purchasing/data-term/review','id'=>$model->TERM_ID,'cus_kd'=>$model->CUST_KD_PARENT]);
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
-			}
+			// }
 		}
 	}
 
@@ -113,11 +113,11 @@ function tombolCreate(){
 	$attDinamik =[];
 	/*GRIDVIEW ARRAY FIELD HEAD*/
 	$headColomnEvent=[
-		['ID' =>0, 'ATTR' =>['FIELD'=>'NmCustomer','SIZE' => '50px','label'=>'CUSTOMER PARENT','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'PERIOD_START','SIZE' => '10px','label'=>'tanggal term di buat ','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'PERIOD_END','SIZE' => '10px','label'=>'tanggal term  berakhir','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'Nmprincipel','SIZE' => '10px','label'=>'PRINCIPAL','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'NmDis','SIZE' => '10px','label'=>'DISTRIBUTOR','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'NmCustomer','SIZE' => '50px','label'=>'CUSTOMER PARENT','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>true,'filterwarna'=>'126, 189, 188, 0.9']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'PERIOD_START','SIZE' => '10px','label'=>'tanggal term di buat ','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'126, 189, 188, 0.9']],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'PERIOD_END','SIZE' => '10px','label'=>'tanggal term  berakhir','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'126, 189, 188, 0.9']],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'Nmprincipel','SIZE' => '10px','label'=>'PRINCIPAL','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'126, 189, 188, 0.9']],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'NmDis','SIZE' => '10px','label'=>'DISTRIBUTOR','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'126, 189, 188, 0.9']],
 		//['ID' =>4, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'STATUS','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 	];
 	$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');
@@ -147,7 +147,198 @@ function tombolCreate(){
 	];
 	/*GRIDVIEW ARRAY ROWS*/
 	foreach($gvHeadColomn as $key =>$value[]){
+		if($value[$key]['FIELD'] == 'PERIOD_START')
+		{
+			$attDinamik[]=[
+			'attribute'=>$value[$key]['FIELD'],
+			'label'=>$value[$key]['label'],
+			'filterType'=>GridView::FILTER_DATE,
+			'filter'=>$value[$key]['filter'],
+			'filterWidgetOptions'=>[
+				'pluginOptions' => [
+        				'autoclose'=>true,
+        			'format' => 'yyyy-mm-dd'
+    				],
+			],
+			'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
+			'hAlign'=>'right',
+			'vAlign'=>'middle',
+			//'mergeHeader'=>true,
+			'noWrap'=>true,
+			'group'=>$value[$key]['GRP'],
+			'format'=>$value[$key]['FORMAT'],
+			'headerOptions'=>[
+					'style'=>[
+					'text-align'=>'center',
+					'width'=>$value[$key]['FIELD'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(74, 206, 231, 1)',
+					'background-color'=>'rgba('.$value[$key]['warna'].')',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>$value[$key]['align'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(13, 127, 3, 0.1)',
+				]
+			],
+		];
+		}elseif($value[$key]['FIELD'] == 'PERIOD_END'){
+
+			$attDinamik[]=[
+			'attribute'=>$value[$key]['FIELD'],
+			'label'=>$value[$key]['label'],
+			'filterType'=>GridView::FILTER_DATE,
+			'filter'=>$value[$key]['filter'],
+			'filterWidgetOptions'=>[
+				'pluginOptions' => [
+        				'autoclose'=>true,
+        			'format' => 'yyyy-mm-dd'
+    				],
+			],
+			'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
+			'hAlign'=>'right',
+			'vAlign'=>'middle',
+			//'mergeHeader'=>true,
+			'noWrap'=>true,
+			'group'=>$value[$key]['GRP'],
+			'format'=>$value[$key]['FORMAT'],
+			'headerOptions'=>[
+					'style'=>[
+					'text-align'=>'center',
+					'width'=>$value[$key]['FIELD'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(74, 206, 231, 1)',
+					'background-color'=>'rgba('.$value[$key]['warna'].')',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>$value[$key]['align'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(13, 127, 3, 0.1)',
+				]
+			],
+		];
+
+		}elseif($value[$key]['FIELD'] == 'NmCustomer'){
 		$attDinamik[]=[
+			'attribute'=>$value[$key]['FIELD'],
+			'label'=>$value[$key]['label'],
+			'filterType'=>GridView::FILTER_SELECT2,
+			'filter' =>$cus_data,
+		    'filterWidgetOptions'=>[
+		      'pluginOptions'=>['allowClear'=>true],
+		    ],
+    		'filterInputOptions'=>['placeholder'=>'Pilih'],
+			'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
+			'hAlign'=>'right',
+			'vAlign'=>'middle',
+			//'mergeHeader'=>true,
+			'noWrap'=>true,
+			'group'=>$value[$key]['GRP'],
+			'format'=>$value[$key]['FORMAT'],
+			'headerOptions'=>[
+					'style'=>[
+					'text-align'=>'center',
+					'width'=>$value[$key]['FIELD'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(74, 206, 231, 1)',
+					'background-color'=>'rgba('.$value[$key]['warna'].')',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>$value[$key]['align'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(13, 127, 3, 0.1)',
+				]
+			],
+		];
+
+		}elseif($value[$key]['FIELD'] == 'Nmprincipel'){
+
+		$attDinamik[]=[
+			'attribute'=>$value[$key]['FIELD'],
+			'label'=>$value[$key]['label'],
+			'filterType'=>GridView::FILTER_SELECT2,
+			'filter' =>$co_data,
+		    'filterWidgetOptions'=>[
+		      'pluginOptions'=>['allowClear'=>true],
+		    ],
+    		'filterInputOptions'=>['placeholder'=>'Pilih'],
+			'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
+			'hAlign'=>'right',
+			'vAlign'=>'middle',
+			//'mergeHeader'=>true,
+			'noWrap'=>true,
+			'group'=>$value[$key]['GRP'],
+			'format'=>$value[$key]['FORMAT'],
+			'headerOptions'=>[
+					'style'=>[
+					'text-align'=>'center',
+					'width'=>$value[$key]['FIELD'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(74, 206, 231, 1)',
+					'background-color'=>'rgba('.$value[$key]['warna'].')',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>$value[$key]['align'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(13, 127, 3, 0.1)',
+				]
+			],
+		];
+
+		}elseif($value[$key]['FIELD'] == 'NmDis'){
+		$attDinamik[]=[
+			'attribute'=>$value[$key]['FIELD'],
+			'label'=>$value[$key]['label'],
+			'filterType'=>GridView::FILTER_SELECT2,
+			 'filter' =>$dis_data,
+		    'filterWidgetOptions'=>[
+		      'pluginOptions'=>['allowClear'=>true],
+		    ],
+    		'filterInputOptions'=>['placeholder'=>'Pilih'],
+			'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
+			'hAlign'=>'right',
+			'vAlign'=>'middle',
+			//'mergeHeader'=>true,
+			'noWrap'=>true,
+			'group'=>$value[$key]['GRP'],
+			'format'=>$value[$key]['FORMAT'],
+			'headerOptions'=>[
+					'style'=>[
+					'text-align'=>'center',
+					'width'=>$value[$key]['FIELD'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(74, 206, 231, 1)',
+					'background-color'=>'rgba('.$value[$key]['warna'].')',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>$value[$key]['align'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(13, 127, 3, 0.1)',
+				]
+			],
+		];
+		}else{
+			$attDinamik[]=[
 			'attribute'=>$value[$key]['FIELD'],
 			'label'=>$value[$key]['label'],
 			'filterType'=>$value[$key]['filterType'],
@@ -178,6 +369,8 @@ function tombolCreate(){
 				]
 			],
 		];
+		}
+		
 	};
 	/*STATUS TERM*/
 	$attDinamik[] =[
@@ -252,8 +445,8 @@ function tombolCreate(){
 	$gvPlanTerm= GridView::widget([
 		'id'=>'plan-term',
 		'dataProvider' => $dataProvider,
-		//'filterModel' => $searchModel,
-		//'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],
+		'filterModel' => $searchModel,
+		'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.9); align:center'],
 		'columns' => $attDinamik,
 		/* [
 			['class' => 'yii\grid\SerialColumn'],

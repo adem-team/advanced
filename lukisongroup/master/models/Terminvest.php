@@ -21,6 +21,8 @@ class Terminvest extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public $status_info; #attribute di luar model 
+
     public static function tableName()
     {
         return 'c0006';

@@ -23,11 +23,15 @@ class TermheaderSearch extends Termheader
 		return array_merge(parent::attributes(), ['cus.CUST_NM','dis.NM_DISTRIBUTOR','corp.CORP_NM']);
 	} */
 
+    public $NmCustomer;
+    public $Nmprincipel;
+    public $NmDis;
+
     public function rules()
     {
         return [
             [[ 'STATUS'], 'integer'],
-            [['GENERAL_TERM','CUST_KD_PARENT','PRINCIPAL_KD','DIST_KD','PERIOD_START', 'PERIOD_END', 'TARGET_TEXT', 'RABATE_CNDT', 'TOP', 'CREATED_BY', 'CREATED_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
+            [['GENERAL_TERM','CUST_KD_PARENT','PRINCIPAL_KD','DIST_KD','PERIOD_START', 'PERIOD_END', 'TARGET_TEXT', 'RABATE_CNDT', 'TOP', 'CREATED_BY', 'CREATED_AT', 'UPDATE_BY', 'UPDATE_AT','NmCustomer','Nmprincipel','NmDis'], 'safe'],
             [['TARGET_VALUE', 'GROWTH'], 'number'],
         ];
     }
@@ -87,6 +91,8 @@ class TermheaderSearch extends Termheader
              ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
              ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
 
+             $query->orderby(['CREATED_AT'=>SORT_DESC]); //SORT PENTING UNTUK RECURSIVE BIAR TREE BISA URUTAN, save => (IF (PATENT =0) {SORT=ID}, ELSE {
+
          return $dataProvider;
      }
 
@@ -94,17 +100,20 @@ class TermheaderSearch extends Termheader
     {
       	$profile=Yii::$app->getUserOpt->Profile_user();
 
-        if($profile->emp->DEP_ID == 'GM'|| $profile->emp->DEP_ID == 'DRC')
-          {
-            $query = Termheader::find();
-          }
-        elseif($profile->emp->DEP_ID == 'ACT')
-        {
-            $query = Termheader::find();
-        }else{
-              // $query = Termheader::find()->where(['CREATED_BY'=>$profile->username]);
-              $query = Termheader::find();
-          }
+        // if($profile->emp->DEP_ID == 'GM'|| $profile->emp->DEP_ID == 'DRC')
+        //   {
+        //     $query = Termheader::find();
+        //   }
+        // elseif($profile->emp->DEP_ID == 'ACT')
+        // {
+        //     $query = Termheader::find();
+        // }else{
+        //       // $query = Termheader::find()->where(['CREATED_BY'=>$profile->username]);
+        //       $query = Termheader::find();
+        //   }
+
+
+        $query = Termheader::find();
 
 
         $dataProvider = new ActiveDataProvider([
@@ -129,14 +138,16 @@ class TermheaderSearch extends Termheader
             'UPDATE_AT' => $this->UPDATE_AT,
         ]);
 
-        $query->andFilterWhere(['like', 'CUST_KD_PARENT', $this->CUST_KD_PARENT])
-            ->andFilterWhere(['like', 'PRINCIPAL_KD', $this->PRINCIPAL_KD])
-            ->andFilterWhere(['like', 'DIST_KD', $this->DIST_KD])
+        $query->andFilterWhere(['like', 'CUST_KD_PARENT', $this->NmCustomer])
+            ->andFilterWhere(['like', 'PRINCIPAL_KD', $this->Nmprincipel])
+            ->andFilterWhere(['like', 'DIST_KD', $this->NmDis])
             ->andFilterWhere(['like', 'TARGET_TEXT', $this->TARGET_TEXT])
             ->andFilterWhere(['like', 'RABATE_CNDT', $this->RABATE_CNDT])
             ->andFilterWhere(['like', 'TOP', $this->TOP])
             ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
+
+            $query->orderby(['CREATED_AT'=>SORT_DESC]); //SORT PENTING UNTUK RECURSIVE BIAR TREE BISA URUTAN, save => (IF (PATENT =0) {SORT=ID}, ELSE {
 
         return $dataProvider;
     }

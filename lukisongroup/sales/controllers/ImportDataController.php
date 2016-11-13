@@ -19,7 +19,6 @@ use \moonland\phpexcel\Excel;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 use yii\web\Response;
-use scotthuangzl\export2excel\Export2ExcelBehavior;
 
 use lukisongroup\sales\models\UserFile;
 use lukisongroup\sales\models\UserFileSearch;
@@ -32,7 +31,7 @@ use lukisongroup\sales\models\ImportViewSearch;
 use lukisongroup\master\models\Customers;
 use lukisongroup\master\models\Barang;
 //use lukisongroup\master\models\Customersalias;
-
+use ptrnov\postman4excel\Postman4ExcelBehavior;
 
 // use lukisongroup\sales\models\Sot2;
 // use lukisongroup\sales\models\Sot2Search;
@@ -46,9 +45,12 @@ class ImportDataController extends Controller
     {
         return [
 			/*EXCEl IMPORT*/
-			'export2excel' => [
-				'class' => Export2ExcelBehavior::className(),
-			],
+			'export4excel' => [
+				'class' => Postman4ExcelBehavior::className(),
+				//'downloadPath'=>Yii::getAlias('@lukisongroup').'/cronjob/',
+				//'downloadPath'=>'/var/www/backup/ExternalData/',
+				'widgetType'=>'download',
+			], 
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -70,9 +72,9 @@ class ImportDataController extends Controller
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ], */
             //new add download action
-            'download' => [
-                'class' => 'scotthuangzl\export2excel\DownloadAction',
-            ],
+            // 'download' => [
+                // 'class' => 'scotthuangzl\export2excel\DownloadAction',
+            // ],
         ];
     }
 	private function aryCustID(){
@@ -254,7 +256,8 @@ class ImportDataController extends Controller
      */
 	public function getArryFile($paramFile){
 			$fileData=$paramFile!=''?$paramFile:'default_import_sales.xlsx';
-			$fileName=Yii::$app->basePath . '/web/upload/sales_import/'.$fileData;
+			//$fileName=Yii::$app->basePath . '/web/upload/sales_import/'.$fileData;
+			$fileName='/var/www/backup/ExternalData/'.$fileData;
 			$config='';
 			//$data = \moonland\phpexcel\Excel::import($fileName, $config);
 
@@ -571,11 +574,9 @@ class ImportDataController extends Controller
 	 * ====================================
      */
 	public function actionExport_format(){
-		$data_format=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_format()")->queryAll();
-
 		 $DataProviderFormat= new ArrayDataProvider([
 			 'key' => 'ID',
-			  'allModels'=>$data_format,
+			  'allModels'=>Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_format()")->queryAll(),
 			   'pagination' => [
 				 'pageSize' => 10,
 			 ]
@@ -592,93 +593,29 @@ class ImportDataController extends Controller
 		$dataProvider2= $dataProviderX->getModels();
 		$dataProvider3= $dataProviderX->getModels();
 
-
-		//if (Yii::$app->request->isAjax) {
-		/* echo  \moonland\phpexcel\Excel::widget([
-				'id'=>'export',
-				'isMultipleSheet' => true,
-				 'models' => [
-					'sheet1' => $dataProvider1,
-					//'sheet2' => $dataProvider2,
-					//'sheet3' => $dataProvider3
-				],
-				'mode' => 'export',
-				'fileName'=>'FORMAT IMPORT STOCK',
-				'setFirstTitle'=>true,//'IMPORT STOCK',
-				//default value as 'export'
-				'properties'=>[
-					//'sheet1.name'=>'ere'
-				],
-				'columns' => [
-					'sheet1' => [
-						[
-							'attribute'=>'TGL',
-							'header' => 'DATE',
-							'format' => 'date',
-
-						],
-						[
-							'attribute'=>'CUST_KD_ALIAS',
-							'header' => 'CUST_KD',
-							'format' => 'text',
-						],
-						[
-							'attribute'=>'ITEM_ID_ALIAS',
-							'header' => 'SKU_KD',
-							'format' => 'text',
-						],
-					],
-				],
-				// 'columns' => [
-					// 'sheet1' => [
-						// 'column1'=>'TGL',
-						// 'column2'=>'CUST_KD_ALIAS',
-						// 'column3'=>'ITEM_ID_ALIAS'
-					// ],
-					//'sheet1' => ['column1'=>'TGL','column2'=>'CUST_KD_ALIAS','column3'=>'ITEM_ID_ALIAS'],
-					//'sheet2' => ['column1'=>'TGL','column2'=>'CUST_KD_ALIAS','column3'=>'ITEM_ID_ALIAS'],
-					//'sheet3' => ['column1'=>'TGL','column2'=>'CUST_KD_ALIAS','column3'=>'ITEM_ID_ALIAS']
-				// ],
-					//without header working, because the header will be get label from attribute label.
-				//'header' => [
-					// 'sheet1' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3']
-					// 'sheet2' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3'],
-					// 'sheet3' => ['column1' => 'Header Column 1','column2' => 'Header Column 2', 'column3' => 'Header Column 3']
-				 //],
-				////'sheet1' => ['TGL','CUST_KD_ALIAS','ITEM_ID_ALIAS'],
-
-			]);	 */
-			//return true;
-			//return $this->redirect('index');
-			//echo $data1;
-			//if(Yii::$app->request->referrer){
-			//			return $this->redirect(Yii::$app->request->referrer);
-			//		}else{
-			//			return $this->goHome();
-			//		}
-		//}
-
-		$excel_data = Export2ExcelBehavior::excelDataFormat($aryDataProviderFormat);
+		$excel_data = Postman4ExcelBehavior::excelDataFormat($aryDataProviderFormat);
         $excel_title = $excel_data['excel_title'];
         $excel_ceils = $excel_data['excel_ceils'];
 		$excel_content = [
 			 [
 				'sheet_name' => 'IMPORT FORMAT STOCK',
-                'sheet_title' => ['DATE','CUST_KD','CUST_NM','SKU_ID','SKU_NM','QTY_PCS','DIS_REF'], //$excel_ceils,//'sad',//[$excel_title],
+                'sheet_title' => [
+					['DATE','CUST_KD','CUST_NM','SKU_ID','SKU_NM','QTY_PCS','DIS_REF']
+				],
 			    'ceils' => $excel_ceils,
                 //'freezePane' => 'E2',
-                'headerColor' => Export2ExcelBehavior::getCssClass("header"),
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerColumnCssClass' => [
-					 'TGL' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_KD' => Export2ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'SKU_ID' => Export2ExcelBehavior::getCssClass('header'),
-                     'SKU_NM' => Export2ExcelBehavior::getCssClass('header'),
-                     'QTY_PCS' => Export2ExcelBehavior::getCssClass('header'),
-                     'DIS_REF' => Export2ExcelBehavior::getCssClass('header'),
+					 'TGL' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
+                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'SKU_ID' => Postman4ExcelBehavior::getCssClass('header'),
+                     'SKU_NM' => Postman4ExcelBehavior::getCssClass('header'),
+                     'QTY_PCS' => Postman4ExcelBehavior::getCssClass('header'),
+                     'DIS_REF' => Postman4ExcelBehavior::getCssClass('header'),
                 ], //define each column's cssClass for header line only.  You can set as blank.
-               'oddCssClass' => Export2ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Export2ExcelBehavior::getCssClass("even"),
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
 			[
 				'sheet_name' => 'IMPORTANT NOTE ',
@@ -703,7 +640,7 @@ class ImportDataController extends Controller
 		];
 
 		 $excel_file = "StockImportFormat";
-			 $this->export2excel($excel_content, $excel_file);
+		 $this->export4excel($excel_content, $excel_file,0);
 
 
 

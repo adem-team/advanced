@@ -6,7 +6,7 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
-/* @var $searchModel lukisongroup\master\models\TermcustomersSearch */
+/* @var $searchModel lukisongroup\master\models\TermInvest */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->sideCorp = 'ESM-Trading Terms';              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
@@ -14,14 +14,17 @@ $this->sideMenu = 'esm_trading_term';               /* kd_menu untuk list menu p
 $this->title = Yii::t('app', 'Trading Terms ');                       /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
 
+##### array status #####
 $aryStt= [
-    ['STATUS' => 0, 'STT_NM' => 'DISABLE'],
-    ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
+    ['STATUS' => 0, 'STT_NM' => 'DISABLE'], # set status 0 disable 
+    ['STATUS' => 1, 'STT_NM' => 'ENABLE'], # set status 1 enable
 ];
 $valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
 
+
+
 $gridColumns = [
-    [
+    [   #serial column
       'class'=>'kartik\grid\SerialColumn',
       'contentOptions'=>['class'=>'kartik-sheet-style'],
       'width'=>'10px',
@@ -45,7 +48,7 @@ $gridColumns = [
       ],
     ],
 
-    [
+    [  # INVES_TYPE
       'attribute' => 'INVES_TYPE',
       'label'=>'Type Investasi',
       'hAlign'=>'left',
@@ -68,7 +71,7 @@ $gridColumns = [
         ]
       ],
     ],
-    [
+    [  #KETERANGAN
       'attribute' => 'KETERANGAN',
       'label'=>'Keterangan',
       'hAlign'=>'left',
@@ -91,9 +94,9 @@ $gridColumns = [
         ]
       ],
     ],
-    [
+    [ # STATUS
       'attribute' => 'STATUS',
-      'filter' => $valStt,
+      'filter' => $valStt,  
       'format' => 'raw',
       'hAlign'=>'center',
       'value'=>function($model){
@@ -123,20 +126,13 @@ $gridColumns = [
         ]
       ],
     ],
-    [
+    [ #action column
       'class'=>'kartik\grid\ActionColumn',
       'dropdown' => true,
-      'template' => '{view}{update}',
+      'template' => '{update}',
       'dropdownOptions'=>['class'=>'pull-right dropup'],
+      'dropdownButton'=>['class'=>'btn btn-default btn-xs'], #set css dropdown button
       'buttons' => [
-          'view' =>function($url, $model, $key){
-              return  '<li>' .Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'View'),
-                            ['/master/term-invest/view','id'=>$model->ID],[
-                            'data-toggle'=>"modal",
-                            'data-target'=>"#modal-view",
-                            // 'data-title'=> $model->ID_TERM,
-                            ]). '</li>' . PHP_EOL;
-          },
           'update' =>function($url, $model, $key){
               return  '<li>' . Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'Update'),
                             ['/master/term-invest/update','id'=>$model->ID],[
@@ -147,7 +143,7 @@ $gridColumns = [
           },
 
               ],
-              'headerOptions'=>[
+      'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
           'width'=>'150px',
@@ -192,12 +188,12 @@ $gridColumns = [
 				],
 				'panel' => [
 					'heading'=>'<h3 class="panel-title">Type Investasi</h3>',
-					'type'=>'warning',
+					// 'type'=>'warning',
 					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Investasi ',
 							['modelClass' => 'Termcustomers',]),'/master/term-invest/create',[
 								'data-toggle'=>"modal",
 									'data-target'=>"#modal-create",
-										'class' => 'btn btn-success'
+										'class' => 'btn btn-success btn-sm'
 													]),
 					'showFooter'=>false,
 				],
@@ -212,6 +208,9 @@ $gridColumns = [
 	</div>
 </div>
 <?php
+/* Js modal 
+  * JS modal create
+*/
 $this->registerJs("
    $.fn.modal.Constructor.prototype.enforceFocus = function(){};
    $('#modal-create').on('show.bs.modal', function (event) {
@@ -229,34 +228,10 @@ $this->registerJs("
 ",$this::POS_READY);
   Modal::begin([
       'id' => 'modal-create',
-  'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+  'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Items Investasi</h4></div>',
   'headerOptions'=>[
       'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
   ],
   ]);
   Modal::end();
 
-
-  $this->registerJs("
-     $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-     $('#modal-view').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget)
-      var modal = $(this)
-      var title = button.data('title')
-      var href = button.attr('href')
-      //modal.find('.modal-title').html(title)
-      modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-      $.post(href)
-        .done(function( data ) {
-          modal.find('.modal-body').html(data)
-        });
-      })
-  ",$this::POS_READY);
-    Modal::begin([
-        'id' => 'modal-view',
-    'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
-    'headerOptions'=>[
-        'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
-    ],
-    ]);
-    Modal::end();

@@ -28,10 +28,18 @@ class Notulen extends \yii\db\ActiveRecord
    /*checkvalidation */
     const SCENARIO_NOTE = 'note';
 
+<<<<<<< HEAD
+=======
+    const SCENARIO_TGL = 'checktgl';
+
+>>>>>>> ad86637c0dc6fbf5a104e568c2a7da58df95468e
     public static function tableName()
     {
         return 'm0001';
     }
+
+   
+
 
     /**
      * @return \yii\db\Connection the database connection used by this AR class.
@@ -48,7 +56,12 @@ class Notulen extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+<<<<<<< HEAD
             [['MODUL', 'title', 'USER_ID'],'required','on'=>self::SCENARIO_NOTE],
+=======
+            [['title'],'required','on'=>self::SCENARIO_NOTE],
+            [['start','end'],'ValidDate','on'=>self::SCENARIO_TGL],
+>>>>>>> ad86637c0dc6fbf5a104e568c2a7da58df95468e
             [['start', 'end', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
             [['MODUL', 'STATUS'], 'integer'],
             [['title'], 'string', 'max' => 255],
@@ -56,6 +69,30 @@ class Notulen extends \yii\db\ActiveRecord
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100],
         ];
     }
+
+     public function ValidDate($attribute)
+    {
+             $start =  strtotime($this->start);
+             $end = strtotime($this->end);
+        
+        if ( $start > $end) {
+                // whatever you have to do here
+            $this->addError($attribute,'Date Start greather Date End');
+        }
+
+    }
+
+    public function getNotulenTbl()
+    {
+        return $this->hasMany(NotulenModul::className(), ['NOTULEN_ID' => 'id']);
+    }
+
+    public function getSchedule() 
+  {
+    return $this->notulenTbl!=''?$this->notulenTbl->SCHEDULE:'none';
+  }
+
+ 
 
     /**
      * @inheritdoc
@@ -66,7 +103,11 @@ class Notulen extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'start' => Yii::t('app', 'Start'),
             'end' => Yii::t('app', 'End'),
+<<<<<<< HEAD
             'title' => Yii::t('app', 'Keterangan'),
+=======
+            'title' => Yii::t('app', 'Tema'),
+>>>>>>> ad86637c0dc6fbf5a104e568c2a7da58df95468e
             'USER_ID' => Yii::t('app', 'dbm001->EMP_ID'),
             'MODUL' => Yii::t('app', 'MODUL -> M0002'),
             'STATUS' => Yii::t('app', 'Status'),

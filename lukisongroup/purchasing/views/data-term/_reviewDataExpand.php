@@ -21,20 +21,23 @@ use yii\data\ArrayDataProvider;
 	<div class="col-xs-12 col-sm-12 col-md-12" style="font-family: tahoma ;font-size: 9pt">
 		<?php
 			$expandPlan=$this->render('_reviewDataExpandPlan',[
-				'dataProviderBudgetdetail'=>$dataProviderBudgetdetail
+				'dataProviderBudgetdetail'=>$dataProviderBudgetdetail,
+				'id'=>$id
 			]);
 
 
 			$expandActual=$this->render('_reviewDataExpandActual',[
-				'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves
+				'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves,
+				'searchModel_inves'=>$searchModel_inves,
+				'id'=>$id
 			]);
 
-
+ 
 
 				$items=[
 					[
 						'label'=>'<i class="fa fa-mortar-board fa-lg"></i>Plan budget','content'=>$expandPlan,
-						'active'=>true,
+						// 'active'=>true,
 						'options' => ['id' => 'term-detail-plan-budget'.$id],
 					],
 					[
@@ -54,7 +57,7 @@ use yii\data\ArrayDataProvider;
 					'enableStickyTabs' => true,
 					'stickyTabsOptions' => [
 						'selectorAttribute' => 'data-target',
-						'backToTop' => true,
+						'backToTop' => false,
 					],
 					'items'=>$items,
 					'sideways'=>true,

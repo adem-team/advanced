@@ -15,6 +15,8 @@ use yii\web\Response;
 
 /*namespace models*/
 use lukisongroup\master\models\Customers;
+use lukisongroup\purchasing\models\data_term\RtdetailSearch;
+use yii\helpers\ArrayHelper;
 
 
  /**
@@ -742,4 +744,93 @@ class ExportController extends Controller
 		$this->export4excel($excel_content, $excel_file,0);
 		
 	}
+
+
+
+     /**====================================
+     * EXPORT DATA Investasi
+     * @return mixed
+     * @author wawan
+     * @since 1.0
+   * ====================================
+     */
+  public function actionExportDataInvestasi($id){
+
+
+    $searchModelExport  = new RtdetailSearch();
+    $dataProviderInvestasi = $searchModelExport->searchExportInvestasi(Yii::$app->request->queryParams,$id);
+    $investasi = $dataProviderInvestasi->getModels();
+
+
+     $data = ArrayHelper::toArray($investasi, [
+        'lukisongroup\purchasing\models\data_term\Rtdetail' => [ 
+            'PERIODE_START',
+            'PERIODE_END',
+            'nmcus',
+            'nminvest',
+            'hrga',
+            'PPN',
+            'PPH23',
+            'totals',
+            'INVESTASI_PROGRAM',
+            'NOMER_INVOCE',
+            'NOMER_FAKTURPAJAK'     
+        ],
+    ]);
+
+
+
+
+     $excel_data = Postman4ExcelBehavior::excelDataFormat($data);
+        $excel_title = $excel_data['excel_title'];
+        $excel_ceils = $excel_data['excel_ceils'];
+
+    $excel_content = [
+       [
+        'sheet_name' => 'Investasi',
+                'sheet_title' => [
+          ['Periode Start','Periode end','Nama Toko','Nama Investasi','Harga','PPN','PPH23','TOTAL','Keterangan','Nomer Invoce','Nomer Faktur']
+        ],
+          'ceils' => $excel_ceils,
+                'freezePane' => 'A2',
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
+                'headerStyle'=>[            
+          [
+            'PERIODE_START' =>['align'=>'center'],
+            'PERIODE_END' =>['align'=>'center'],
+            'nmcus' => ['align'=>'center'],
+            'nminvest' => ['align'=>'center'],
+            'HARGA' => ['align'=>'center'],
+            'PPN' =>['align'=>'center'],
+            'PPH23' => ['align'=>'center'],
+            'totals' => ['align'=>'center'],
+            'INVESTASI_PROGRAM' => ['align'=>'center'],
+            'NOMER_INVOCE' => ['align'=>'center'],
+            'NOMER_FAKTURPAJAK' => ['align'=>'center']
+          ]           
+        ],
+        'contentStyle'=>[
+          [
+            'PERIODE_START' =>['align'=>'left'],
+            'PERIODE_END' =>['align'=>'left'],
+            'nmcus' => ['align'=>'center'],
+            'nminvest' => ['align'=>'center'],
+            'HARGA' => ['align'=>'center'],
+            'PPN' =>['align'=>'center'],
+            'PPH23' => ['align'=>'center'],
+            'totals' => ['align'=>'right'],
+            'INVESTASI_PROGRAM' => ['align'=>'center'],
+            'NOMER_INVOCE' => ['align'=>'center'],
+            'NOMER_FAKTURPAJAK' => ['align'=>'center']
+          ]           
+        ],
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
+      ]
+    ];
+
+
+    $excel_file = "Data Investasi";
+    $this->export4excel($excel_content, $excel_file,0); 
+  }
 }

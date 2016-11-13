@@ -49,12 +49,12 @@ use lukisongroup\hrd\models\Corp;
 	$attDinamik =[];
 	/*GRIDVIEW ARRAY FIELD HEAD*/
 	$headColomnEvent=[
-		['ID' =>0, 'ATTR' =>['FIELD'=>'INVES_TYPE','SIZE' => '50px','label'=>'Trade Investment','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'PERIODE_START','SIZE' => '10px','label'=>'Periode','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'BUDGET_PLAN','SIZE' => '10px','label'=>'Budget Plan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'BUDGET_ACTUAL','SIZE' => '10px','label'=>'Budget Actual','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'Namainvest','SIZE' => '50px','label'=>'Trade Investment','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>false,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		// ['ID' =>1, 'ATTR' =>['FIELD'=>'PERIODE_START','SIZE' => '10px','label'=>'Periode','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'BUDGET_PLAN','SIZE' => '10px','label'=>'Budget Plan','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		// ['ID' =>3, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'BUDGET_ACTUAL','SIZE' => '10px','label'=>'Budget Actual','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
+		// ['ID' =>5, 'ATTR' =>['FIELD'=>'STATUS','SIZE' => '10px','label'=>'%','align'=>'left','warna'=>'249, 215, 100, 1','GRP'=>false,'FORMAT'=>'html','filter'=>true,'filterType'=>false,'filterwarna'=>'249, 215, 100, 1']],
 	];
 	$gvHeadColomn = ArrayHelper::map($headColomnEvent, 'ID', 'ATTR');	
 	/*GRIDVIEW SERIAL ROWS*/
@@ -83,37 +83,188 @@ use lukisongroup\hrd\models\Corp;
 	];
 	/*GRIDVIEW ARRAY ROWS*/
 	foreach($gvHeadColomn as $key =>$value[]){
-		$attDinamik[]=[
-			'attribute'=>$value[$key]['FIELD'],
-			'label'=>$value[$key]['label'],
-			'filterType'=>$value[$key]['filterType'],
-			'filter'=>$value[$key]['filter'],
-			'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
-			'hAlign'=>'right',
-			'vAlign'=>'middle',
-			//'mergeHeader'=>true,
-			'noWrap'=>true,
-			'group'=>$value[$key]['GRP'],
-			'format'=>$value[$key]['FORMAT'],						
-			'headerOptions'=>[
+	if($value[$key]['FIELD'] == 'BUDGET_ACTUAL')
+		{
+			$attDinamik[]=[
+				'attribute'=>$value[$key]['FIELD'],
+				'value'=>function($model){
+					  /*connect*/
+					$connect = Yii::$app->db_esm;
+		
+					/*caculate ppn*/
+					 $sql_ppn = "select sum(PPN) as PPN from t0001detail where TERM_ID='".$model->TERM_ID."'AND ID_INVEST='".$model->INVES_ID."' AND STATUS = 102 AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
+          		     $total_ppn =  $connect->createCommand($sql_ppn)->queryScalar();
+
+					
+					/*caculate harga*/
+		          	$total_sql = "select sum(HARGA) as harga from t0001detail where TERM_ID='".$model->TERM_ID."' and ID_INVEST='".$model->INVES_ID."' and STATUS = 102 and (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
+				  	$total_harga = Yii::$app->db_esm->createCommand($total_sql)->queryScalar();
+
+					/*caculate pph23*/
+					$sql_pph = "select sum(PPH23) as PPH23 from t0001detail where TERM_ID='".$model->TERM_ID."'AND ID_INVEST='".$model->INVES_ID."' AND STATUS = 102 AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
+          			$total_pph = $connect->createCommand($sql_pph)->queryScalar();
+
+          			#baris
+          			$sql_count = "select COUNT(PPN) as baris from t0001detail where TERM_ID='".$model->TERM_ID."'AND ID_INVEST='".$model->INVES_ID."'AND `STATUS` = 102  AND (KD_RIB LIKE 'RI%' OR KD_RIB LIKE 'RID%')";
+          			$total_count = $connect->createCommand($sql_count)->queryScalar();
+          			$persen = $total_count.'00';
+
+					
+
+					/*formula sub total*/
+					if($total_count != 0)
+					{
+						$hitung_ppn = ($total_harga*$total_ppn)/$persen;
+						$hitung_pph = ($total_harga*$total_pph)/$persen;
+						$sub_total = ($total_harga+$hitung_ppn)-$hitung_pph;
+					}else{
+						$subtotal = '00';
+					}
+					
+					
+					 /* if subtotal equal null then number format using sub total*/
+
+					if($sub_total!= '')
+					{
+					    return  number_format($sub_total,2);
+					}else {
+						# code...
+						return number_format(0.00,2);
+						
+					}
+
+
+				},
+				'label'=>$value[$key]['label'],
+				'filterType'=>$value[$key]['filterType'],
+				'filter'=>$value[$key]['filter'],
+				'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
+				'hAlign'=>'right',
+				'vAlign'=>'middle',
+				//'mergeHeader'=>true,
+				'noWrap'=>true,
+				'group'=>$value[$key]['GRP'],
+				'format'=>$value[$key]['FORMAT'],
+				'headerOptions'=>[
+						'style'=>[
+						'text-align'=>'center',
+						'width'=>$value[$key]['FIELD'],
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(74, 206, 231, 1)',
+						'background-color'=>'rgba('.$value[$key]['warna'].')',
+					]
+				],
+				'contentOptions'=>[
 					'style'=>[
-					'text-align'=>'center',
-					'width'=>$value[$key]['FIELD'],
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'8pt',
-					//'background-color'=>'rgba(74, 206, 231, 1)',
-					'background-color'=>'rgba('.$value[$key]['warna'].')',
-				]
-			],
-			'contentOptions'=>[
-				'style'=>[
-					'text-align'=>$value[$key]['align'],
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'8pt',
-					//'background-color'=>'rgba(13, 127, 3, 0.1)',
-				]
-			],
-		];
+						'text-align'=>$value[$key]['align'],
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(13, 127, 3, 0.1)',
+					]
+				],
+			];
+		}elseif ($value[$key]['FIELD'] == 'BUDGET_PLAN') {
+		  # code...
+      $attDinamik[]=[
+        'attribute'=>$value[$key]['FIELD'],
+        'value'=>function($model){
+          /*connect*/
+          $connect = Yii::$app->db_esm;
+          
+          /*caculate ppn*/
+          $sql_ppn = "select sum(PPN) as PPN from t0001header where TERM_ID='".$model->TERM_ID."' AND STATUS = 102 AND (KD_RIB LIKE 'RA%' OR KD_RIB LIKE 'RB%')";
+          $total_ppn =  $connect->createCommand($sql_ppn)->queryScalar();
+
+        
+          /*caculate harga*/
+          $total_sql = "select sum(HARGA) as harga from t0001detail where TERM_ID='".$model->TERM_ID."' and ID_INVEST='".$model->INVES_ID."' and STATUS = 102 and (KD_RIB LIKE 'RA%' OR KD_RIB LIKE 'RB%')";
+		  $total_harga = Yii::$app->db_esm->createCommand($total_sql)->queryScalar();
+          
+		  /*caculate pph23*/
+		  $sql_pph = "select sum(PPH23) as PPH23 from t0001header where TERM_ID='".$model->TERM_ID."' AND STATUS = 102 AND (KD_RIB LIKE 'RA%' OR KD_RIB LIKE 'RB%')";
+          $total_pph = $connect->createCommand($sql_pph)->queryScalar();
+         
+         	/*formula sub total*/
+          $hitung_ppn = ($total_harga*$total_ppn)/100;
+          $hitung_pph = ($total_harga*$total_pph)/100;
+          $sub_total = ($hitung_ppn + $total_harga)-$hitung_pph;
+      
+          
+
+       	  /* if subtotal equal null then number format using sub total*/
+          if($sub_total!= '')
+          {
+             return  number_format($sub_total,2);
+          }else {
+            # code...
+             return number_format(0.00,2);
+          }
+
+        },
+        'label'=>$value[$key]['label'],
+        'filterType'=>$value[$key]['filterType'],
+        'filter'=>$value[$key]['filter'],
+        'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
+        'hAlign'=>'right',
+        'vAlign'=>'middle',
+        //'mergeHeader'=>true,
+        'noWrap'=>true,
+        'group'=>$value[$key]['GRP'],
+        'format'=>$value[$key]['FORMAT'],
+        'headerOptions'=>[
+            'style'=>[
+            'text-align'=>'center',
+            'width'=>$value[$key]['FIELD'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+            //'background-color'=>'rgba(74, 206, 231, 1)',
+            'background-color'=>'rgba('.$value[$key]['warna'].')',
+          ]
+        ],
+        'contentOptions'=>[
+          'style'=>[
+            'text-align'=>$value[$key]['align'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+            //'background-color'=>'rgba(13, 127, 3, 0.1)',
+          ]
+        ],
+      ];
+		}else {
+			# code...
+			$attDinamik[]=[
+				'attribute'=>$value[$key]['FIELD'],
+				'label'=>$value[$key]['label'],
+				'filterType'=>$value[$key]['filterType'],
+				'filter'=>$value[$key]['filter'],
+				'filterOptions'=>['style'=>'background-color:rgba('.$value[$key]['filterwarna'].'); align:center'],
+				'hAlign'=>'right',
+				'vAlign'=>'middle',
+				//'mergeHeader'=>true,
+				'noWrap'=>true,
+				'group'=>$value[$key]['GRP'],
+				'format'=>$value[$key]['FORMAT'],
+				'headerOptions'=>[
+						'style'=>[
+						'text-align'=>'center',
+						'width'=>$value[$key]['FIELD'],
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(74, 206, 231, 1)',
+						'background-color'=>'rgba('.$value[$key]['warna'].')',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>$value[$key]['align'],
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'8pt',
+						//'background-color'=>'rgba(13, 127, 3, 0.1)',
+					]
+				],
+			];
+		}
 	};
 	/*GRIDVIEW EXPAND*/
 	$attDinamik[]=[	
@@ -126,9 +277,55 @@ use lukisongroup\hrd\models\Corp;
 			return GridView::ROW_COLLAPSED;
 		},
 		'detail'=>function ($model, $key, $index, $column) use($dataProviderBudget){
+
+				$connect = Yii::$app->db_esm;
+
+		/* viewDataexpandPlan || budget_plan */
+		$sql = "SELECT c.INVES_TYPE,ti.PERIODE_START,ti.PERIODE_END,ti.PPN,ti.PPH23,ti.HARGA FROM `t0001detail` ti
+					LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
+					LEFT JOIN c0006 c on ti.ID_INVEST = c.ID
+					WHERE ti.TERM_ID ='".$model->TERM_ID."'
+					AND ti.ID_INVEST ='".$model->INVES_ID."'
+					AND ti.STATUS = 102
+					AND (ti.KD_RIB LIKE 'RID%' OR ti.KD_RIB LIKE 'RI%')";
+
+
+		$hasil = $connect->createCommand($sql)->queryAll();
+
+		$dataProviderBudgetdetail_inves = new ArrayDataProvider([
+				    'allModels' => $hasil,
+				    'pagination' => [
+				        'pageSize' => 10,
+				    ],
+				]);
+
+
+
+		/* viewDataexpandActual || budget_actual */
+		$sql2 = "SELECT c.INVES_TYPE,ti.PERIODE_START,ti.PERIODE_END,ti.PPN,ti.PPH23,ti.HARGA FROM t0001detail ti
+					LEFT JOIN c0006 c on ti.ID_INVEST = c.ID
+					LEFT JOIN t0001header th on ti.KD_RIB = th.KD_RIB
+					WHERE ti.TERM_ID ='".$model->TERM_ID."'
+					AND ti.ID_INVEST ='".$model->INVES_ID."'
+					AND ti.STATUS = 102
+					AND (ti.KD_RIB LIKE 'RA%' OR ti.KD_RIB LIKE 'RB%')";
+
+				
+
+		$hasil1 = $connect->createCommand($sql2)->queryAll();
+
+		$dataProviderBudgetdetail = new ArrayDataProvider([
+								'allModels' => $hasil1,
+								'pagination' => [
+										'pageSize' => 10,
+								],
+						]);
+
 			/* RENDER */
 			return Yii::$app->controller->renderPartial('_viewDataExpand',[
-				'dataProviderDetailBudget'=>$dataProviderBudget,
+				'dataProviderDetailBudget'=>$dataProviderBudgetdetail, //viewDataexpandActual
+				'dataProviderBudgetdetail_inves'=>$dataProviderBudgetdetail_inves, //viewDataexpandPlan
+				'id'=>$model->ID,
 			]); 
 		},
 		'headerOptions'=>[

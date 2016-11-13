@@ -10,93 +10,25 @@ $this->title = 'Dashboard';
 	 $content1 ='<div style="background-color:black; height:70px"></div>';
 
 ?>
-<div class="mainbody-section text-center">
-	<div class="container">
-		<div class="row">
-			<!-- COLOMN 1 !-->
-			<div class="col-md-3">	
-				<!-- COLOMN 1 ROW1!-->
-				<div class="menu-item blue">
-					<a href="/site/login" data-toggle="modal">
-						<i class="fa fa-cutlery"></i> </br>PT.Efenbi Sukses Makmur
-						
-					</a>
-				</div>		
-				<!-- COLOMN 1 ROW2!-->				
-				<div class="menu-item green">
-					<a href="/site/login" data-toggle="modal">
-						<i class="fa fa-coffee"></i></br>PT.Sarana Sinar Surya
-					</a>
-				</div>									
-			</div>
-			<!-- COLOMN 2 !-->
-			<div class="col-md-6">
-				<?php
-				$content1=Yii::$app->controller->renderPartial('carousel_nologin');
-				echo Html::panel(
-					['heading' => '<h3>LUKISONGROUP DASHBOARD</h3>', 'body' => $content1],
-					Html::TYPE_INFO
-				);
-				?>						                
-			</div>
-			
-			<!-- COLOMN 4 !-->
-			<div class="col-md-3">	
-				<!-- COLOMN 1 ROW1!-->			
-				<div class="menu-item light-red">
-					<a href="/site/login" data-toggle="modal">
-						<i class="fa fa-map-o"></i></br>PT.Artha Lipat Ganda
-					</a>
-				</div>	
-				<!-- COLOMN 1 ROW2!-->				
-				<div class="menu-item color">
-					<a href="/site/login" data-toggle="modal">
-						<i class="fa fa-truck"></i></br>PT.Gosend
-					</a>
-				</div>						
-			</div>
-		</div>
-		
-		<div class="row">
-			<!-- COLOMN 1 !-->
-			<div class="col-md-3">	
-				<!-- COLOMN 1 ROW1!-->
-				<div class="menu-item blue">
-					<a href="/site/login" data-toggle="modal">
-						<i class="fa fa-users"></i></br>HIRS
-						
-					</a>
-				</div>							
-			</div>
-			<!-- COLOMN 2 !-->
-			<div class="col-md-3">
-				<!-- COLOMN 1 ROW1!-->
-				<div class="menu-item color">
-					<a href="/site/login" data-toggle="modal">
-						<i class="fa fa-shopping-basket"></i></br>Purchasing
-					</a>
-				</div>				                    
-			</div>
-			
-			<!-- COLOMN 2 !-->
-			<div class="col-md-3">
-				<!-- COLOMN 1 ROW1!-->
-				<div class="menu-item color">
-					<a href="/site/login" data-toggle="modal">
-						<i class="fa fa-money"></i></br>Accounting
-					</a>
-				</div>	
-				                    
-			</div>
-			<!-- COLOMN 4 !-->
-			<div class="col-md-3">	
-				<!-- COLOMN 1 ROW1!-->			
-				<div class="menu-item light-red">
-					<a href="/site/login" data-toggle="modal">
-						<i class="fa fa-exchange"></i></br>General Affair
-					</a>
-				</div>								
-			</div>
-		</div>
+<div class="container-fluid">
+
+		<div class="row" style="background-color:blue">
+	
+			<div class="col-xs-12 col-sm-12 col-md-12col-lg-12   " style="margin-top:210px">
+				<div class="col-xs-12 col-sm-12 col-md-12col-lg-12" style="padding-top:0px	">
+					<!-- <b class="text-right"> echo btnTanggal($model) ?></b> -->
+					<nav class="menu">
+						<input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open" />
+						<label class="menu-open-button" for="menu-open"> <span>LG</span></label>
+						<a href="/site/login" class="menu-item item-1"> <i class="fa fa-anchor"></i> </a> 
+						<a href="/site/login" class="menu-item item-2"> <i class="fa fa-coffee"></i> </a> 
+						<a href="/site/login" class="menu-item item-3"> <i class="fa fa-envelope-o"></i> </a> 
+						<a href="http://dashboard.lukisongroup.com/" class="menu-item item-4"> <i class="fa fa-undo"></i></a> 
+						<a href="/site/login" class="menu-item item-5"> <i class="fa fa-print fa-fw"></i> </a> 
+						<a href="/site/login" class="menu-item item-6"> <i class="fa fa-diamond"></i> </a>
+					</nav>
+				</div>
+			</div>		
 	</div>
+
 </div>

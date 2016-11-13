@@ -9,6 +9,7 @@ use lukisongroup\purchasing\models\rqt\Rtdetail;
 use lukisongroup\purchasing\models\rqt\Requesttermstatus;
 use common\components\Notification;
 use common\models\MessageNotify;
+use lukisongroup\purchasing\models\data_term\Termdetail;
 /**
  * @author ptrnov  <piter@lukison.com>
  * @since 1.1
@@ -26,6 +27,8 @@ class Auth3Model extends Model
     public $kdrib;
   	public $status;
   	public $password;
+    public $trm_id;
+    public $cus_id;
 
   	//public $findPasswords; // @property Digunakan jika Form Attribute di gunakan
   	private $_empid = false;
@@ -42,7 +45,7 @@ class Auth3Model extends Model
 			['status', 'required'],
 			['status', 'integer'],
 			[['kdrib'], 'required'],
-			[['kdrib','empNm'], 'string']
+			[['kdrib','empNm','trm_id'], 'string']
         ];
     }
 
@@ -82,45 +85,82 @@ class Auth3Model extends Model
    * if purchaseoder header equal 4 then purchaseoderstatus STATUS equal 4
 	*/
 	public function auth3_saved(){
+          
+             
+                     
+      $conn = Yii::$app->db_esm;
+
 		if ($this->validate()) {
-			$rtHeader_3 = Requesttermheader::find()->where(['KD_RIB' =>$this->kdrib])->one();
-			$rtSignStt_3 = Requesttermstatus::find()->where(['KD_RIB'=>$this->kdrib,'ID_USER'=>$this->getProfile()->EMP_ID])->one();
-				$profile=Yii::$app->getUserOpt->Profile_user();
-				$rtHeader_3->STATUS = $this->status;
-        if($rtHeader_3->STATUS == 4)
-        {
-          $rtHeader_3->SIG3_SVGBASE64 = "";
-  				$rtHeader_3->SIG3_SVGBASE30 = "";
-        }else{
-          $rtHeader_3->SIG3_SVGBASE64 = $profile->emp->SIGSVGBASE64;
-          $rtHeader_3->SIG3_SVGBASE30 = $profile->emp->SIGSVGBASE30;
-        }
-				$rtHeader_3->SIG3_NM = $profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;
-				$rtHeader_3->SIG3_TGL = date('Y-m-d');
-			if ($rtHeader_3->save()) {
-					if (!$rtSignStt_3){
-						$rtHeaderStt_3 = new Requesttermstatus;
-						$rtHeaderStt_3->KD_RIB = $this->kdrib;
-						$rtHeaderStt_3->ID_USER = $this->getProfile()->EMP_ID;
-            if($rtHeader_3->STATUS == 4)
-            {
-              $rtHeaderStt_3->STATUS = 4;
-            }else{
-              $rtHeaderStt_3->STATUS = 102;
-            }
-						$rtHeaderStt_3->UPDATE_AT = date('Y-m-d H:m:s');
-						if ($rtHeaderStt_3->save()) {
+
+       $transaction = $conn->beginTransaction();
+                    try {
+                      $rtHeader_3 = Requesttermheader::find()->where(['KD_RIB' =>$this->kdrib])->one();
+
+                      $rtSignStt_3 = Requesttermstatus::find()->where(['KD_RIB'=>$this->kdrib,'ID_USER'=>$this->getProfile()->EMP_ID])->one();
+
+                      $profile=Yii::$app->getUserOpt->Profile_user();
+                      $rtHeader_3->STATUS = $this->status;
+                    if($rtHeader_3->STATUS == 4)
+                    {
+                      $rtHeader_3->SIG3_SVGBASE64 = "";
+                      $rtHeader_3->SIG3_SVGBASE30 = "";
+                    }else{
+                      $rtHeader_3->SIG3_SVGBASE64 = $profile->emp->SIGSVGBASE64;
+                      $rtHeader_3->SIG3_SVGBASE30 = $profile->emp->SIGSVGBASE30;
+                    }
+                      $rtHeader_3->SIG3_NM = $profile->emp->EMP_NM . ' ' . $profile->emp->EMP_NM_BLK;
+                      $rtHeader_3->SIG3_TGL = date('Y-m-d');
+
+                      $rtHeader_3->save();
+
+                      if (!$rtSignStt_3){
+                      $rtHeaderStt_3 = new Requesttermstatus;
+                      $rtHeaderStt_3->KD_RIB = $this->kdrib;
+                      $rtHeaderStt_3->ID_USER = $this->getProfile()->EMP_ID;
+                        if($rtHeader_3->STATUS == 4)
+                        {
+                          $rtHeaderStt_3->STATUS = 4;
+                        }else{
+                          $rtHeaderStt_3->STATUS = 102;
+                        }
+                          $rtHeaderStt_3->UPDATED_AT = date('Y-m-d H:m:s');
+         
+                      }
 
 
+                      if($this->status == 102)
+                      {
+                         $conn->createCommand()
+                       ->update('t0001detail', ['STATUS' =>102], ['TERM_ID'=>$this->trm_id])
+                       ->execute();
 
-						}
-					}
-                return $rtHeader_3;
-            }
-			return $rtHeader_3;
-		}
-		return null;
+                        $conn->createCommand()
+                        ->update('t0000detail', ['STATUS'=>0], ['TERM_ID'=>$this->trm_id])
+                        ->execute();
+                      }else{
+                         $conn->createCommand()
+                               ->update('t0001detail', ['STATUS' =>4], ['TERM_ID'=>$this->trm_id])
+                               ->execute();
+
+                         $conn->createCommand()
+                            ->delete('t0000detail',['STATUS'=>2,'TERM_ID'=>$this->trm_id])
+                            ->execute();
+                      }
+                      
+
+                        $transaction->commit();
+                       
+                    } catch (\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
+                    }
+            return $rtHeader_3;
+			
+    }
+
 	}
+
+  
 
 	/**
      * Finds record by EMP_ID

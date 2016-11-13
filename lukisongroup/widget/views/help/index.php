@@ -21,10 +21,10 @@
 			'items' => [
 				['url' => '#sec-1-1', 'label' => 'Buat PO', 'content' => $pur_penjelasan],
 				['url' => '#sec-1-2', 'label' => 'Hak Akses', 'content' => $pur_permission],
-				['url' => '#sec-1-3', 'label' => 'Request Order', 'content' => $content],
-				['url' => '#sec-1-4', 'label' => 'Salest Order', 'content' => $content],
-				['url' => '#sec-1-5', 'label' => 'PO Normal', 'content' => $content],
-				['url' => '#sec-1-6', 'label' => 'PO Plus', 'content' => $content],
+				['url' => '#sec-1-3', 'label' => 'Request Order', 'content' => $ro_tutorial],
+				['url' => '#sec-1-4', 'label' => 'Sales Order', 'content' => $so_tutorial],
+				['url' => '#sec-1-5', 'label' => 'PO Normal', 'content' => $po_normal_tutorial],
+				['url' => '#sec-1-6', 'label' => 'PO Plus', 'content' => $po_plus_tutorial],
 			],
 		],
 		[
@@ -33,9 +33,9 @@
 			'icon' => 'play-circle',
 			'content' => $content,
 			'items' => [
-				['url' => '#sec-2-1', 'label' => 'Section 2.1', 'content' => $content],
-				['url' => '#sec-2-2', 'label' => 'Section 2.2', 'content' => $content],
-				['url' => '#sec-2-3', 'label' => 'Section 2.3', 'content' => $content],
+				['url' => '#sec-2-1', 'label' => 'Customer', 'content' => $customer],
+				['url' => '#sec-2-2', 'label' => 'Product', 'content' => $product],
+				['url' => '#sec-2-3', 'label' => 'Term', 'content' => $term],
 				['url' => '#sec-2-4', 'label' => 'Section 2.4', 'content' => $content],
 				['url' => '#sec-2-5', 'label' => 'Section 2.5', 'content' => $content],
 			],

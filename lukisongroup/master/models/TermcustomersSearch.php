@@ -92,6 +92,8 @@ class TermcustomersSearch extends Termcustomers
              ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
              ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
 
+             $query->orderby(['CREATED_AT'=>SORT_DESC]); //SORT PENTING UNTUK RECURSIVE BIAR TREE BISA URUTAN, save => (IF (PATENT =0) {SORT=ID}, ELSE {
+
          return $dataProvider;
      }
 
@@ -101,13 +103,13 @@ class TermcustomersSearch extends Termcustomers
 
         if($profile->emp->DEP_ID == 'GM'|| $profile->emp->DEP_ID == 'DRC')
           {
-            $query = Termcustomers::find()->where('STATUS = 101 OR STATUS = 102');
+            $query = Termcustomers::find()->where('STATUS <> 3 AND STATUS = 101 OR STATUS = 102');
           }
         elseif($profile->emp->DEP_ID == 'ACT')
         {
-            $query = Termcustomers::find();
+            $query = Termcustomers::find()->where('STATUS<>3');
         }else{
-              $query = Termcustomers::find()->where(['CREATED_BY'=>$profile->username]);
+              $query = Termcustomers::find()->where(['CREATED_BY'=>$profile->username])->andwhere('STATUS<>3');
           }
 
 
@@ -153,6 +155,8 @@ class TermcustomersSearch extends Termcustomers
             ->andFilterWhere(['like', 'TOP', $this->TOP])
             ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY])
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
+
+              $query->orderby(['CREATED_AT'=>SORT_DESC]); //SORT PENTING UNTUK RECURSIVE BIAR TREE BISA URUTAN, save => (IF (PATENT =0) {SORT=ID}, ELSE {
 
         return $dataProvider;
     }

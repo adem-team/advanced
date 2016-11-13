@@ -13,8 +13,10 @@ use yii\web\UploadedFile;
  * @property string $FILE_NM
  * @property integer $STATUS
  */
- Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/upload/sales_import/';
- Yii::$app->params['uploadUrl'] = Yii::$app->urlManager->baseUrl . '/web/upload/sales_import/';
+ // Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/upload/sales_import/';
+ // Yii::$app->params['uploadUrl'] = Yii::$app->urlManager->baseUrl . '/web/upload/sales_import/';
+ Yii::$app->params['uploadPath'] = '/var/www/backup/ExternalData/';
+ Yii::$app->params['uploadUrl'] = '/var/www/backup/ExternalData/';
 class UserFile extends \yii\db\ActiveRecord
 {
 	

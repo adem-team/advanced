@@ -23,10 +23,15 @@ class NotulenModul extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    // scenario check time
+    const SCENARIOWAKTU = 'checkwaktu';
+
     public static function tableName()
     {
         return 'm0002';
     }
+
+
 
     /**
      * @return \yii\db\Connection the database connection used by this AR class.
@@ -36,20 +41,36 @@ class NotulenModul extends \yii\db\ActiveRecord
         return Yii::$app->get('db_widget');
     }
 
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
+            [['TIME_START','TIME_END'],'Validtime','on'=>self::SCENARIOWAKTU],
             [['MODUL_POLICY'], 'string'],
             [['STATUS'], 'integer'],
-            [['CREATE_AT', 'UPDATE_AT'], 'safe'],
-            [['MODUL_NM', 'MODUL_DEST'], 'string', 'max' => 255],
+            [['CREATE_AT', 'UPDATE_AT','SCHEDULE','RESULT_SCHEDULE','NOTULEN_ID','TIME_START','TIME_END'], 'safe'],
+            [['SCHEDULE', 'RESULT_SCHEDULE'], 'string', 'max' => 255],
             [['USER_ID'], 'string', 'max' => 50],
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100],
         ];
     }
+
+    public function Validtime($attribute)
+    {
+             $start =  strtotime($this->TIME_START);
+             $end = strtotime($this->TIME_END);
+        
+        if ( $start > $end) {
+                // whatever you have to do here
+            $this->addError($attribute,'Time Start greather Time End');
+        }
+
+    }
+
+   
 
     /**
      * @inheritdoc

@@ -64,8 +64,16 @@ class HelpController extends Controller
 		$introduction =$this->renderPartial('erp_introduction');
 		$pur_penjelasan =$this->renderPartial('purchasing\CreatePo');
 		$pur_permission =$this->renderPartial('purchasing\Permission');
-		
+		$ro_tutorial =$this->renderPartial('ro\ro_tutorial');
+		$so_tutorial =$this->renderPartial('so\so_tutorial');
+		$po_normal_tutorial =$this->renderPartial('po\po_normal_tutorial');
+		$po_plus_tutorial =$this->renderPartial('po\po_plus_tutorial');	
+		$customer =$this->renderPartial('cust\customer');	
+		$product =$this->renderPartial('prod\product');	
+		$term =$this->renderPartial('term\term');		
 		$hrm_penjelasan =$this->renderPartial('hrm\penjelasan');
+		
+		
 		
 		return $this->render('index',[
 			/*Introduction*/
@@ -73,8 +81,22 @@ class HelpController extends Controller
 			/*Purchasing*/
 			'pur_penjelasan'=>$pur_penjelasan,
 			'pur_permission'=>$pur_permission,
+			/*RO Tutorial*/
+			'ro_tutorial'=>$ro_tutorial,
+			/*SO Tutorial*/
+			'so_tutorial'=>$so_tutorial,
+			/*PO Normal Tutorial*/
+			'po_normal_tutorial'=>$po_normal_tutorial,
+			/*PO Plus Tutorial*/
+			'po_plus_tutorial'=>$po_plus_tutorial,
+			/*Customer*/
+			'customer'=>$customer,
+			/*Product*/
+			'product'=>$product,
+			/*Term*/
+			'term'=>$term,	
 			/*HRM*/
-			'hrm_penjelasan'=>$hrm_penjelasan,
+			'hrm_penjelasan'=>$hrm_penjelasan,			
 		]);
     
     }

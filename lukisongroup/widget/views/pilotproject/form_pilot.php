@@ -1,40 +1,101 @@
 <?php
-use kartik\widgets\ActiveForm;
-use kartik\builder\Form;
-use kartik\builder\FormGrid;
 use yii\helpers\Html;
-$form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL]);
+use yii\bootstrap\ActiveForm;
+use yii\helpers\ArrayHelper;
+use kartik\widgets\DatePicker;
+use kartik\widgets\Select2;
+use yii\helpers\Url;
+use kartik\widgets\DateTimePicker;
+?>
+  
+  <?php
+    $form = ActiveForm::begin([
+      'id'=> $model->formName(),
+      'enableClientValidation'=> true,
+      'enableAjaxValidation'=>true,
+      'validationUrl'=>Url::toRoute('/widget/pilotproject/valid-pilot')
+    ]);
+  ?>
+  <div>
+  <?=$form->field($model,'parentpilot')->checkbox() ?>
+  </div>
 
-echo FormGrid::widget([
-    'model'=>$model,
-    'form'=>$form,
-    'autoGenerateColumns'=>true,
-    'rows'=>[
-        [
-            'contentBefore'=>'<legend class="text-info"><small>Schedule</small></legend>',
-            'attributes'=>[       // 2 column layout
-                'PILOT_NM'=>['type'=>Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter...']],
-                'DSCRP'=>['type'=>Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter...']],
-            ]
-        ],
-         [
-            'contentBefore'=>'<legend class="text-info"><small>Planning Date</small></legend>',
-            'attributes'=>[       // 2 column layout
-                 'PLAN_DATE1'=>['type'=>Form::INPUT_WIDGET, 'widgetClass'=>'\kartik\widgets\DateTimePicker', 'hint'=>'Planning Start'],
-               'PLAN_DATE2'=>['type'=>Form::INPUT_WIDGET, 'widgetClass'=>'\kartik\widgets\DateTimePicker', 'hint'=>'Planning End'],
-            ]
-        ],
-         [
-            'contentBefore'=>'<legend class="text-info"><small>Destination and User CC</small></legend>',
-            'attributes'=>[       // 2 column layout
-                 'USER_CC'=>['type'=>Form::INPUT_WIDGET, 'widgetClass'=>'\kartik\widgets\Select2','items'=>$dropemploy],
-               'DESTINATION_TO'=>['type'=>Form::INPUT_WIDGET, 'widgetClass'=>'\kartik\widgets\Select2','items'=>$dropemploy],
-            ]
-        ],
+  <div id='tampilkan'>
+   <?= $form->field($model, 'PARENT')->widget(Select2::classname(), [
+        'data' => $parent,
+        'options' => [
+        'id'=>'pilotproject-parent',
+        'placeholder' => 'Pilih...'],
+        'pluginOptions' => [
+            'allowClear' => true
+             ],
 
-     ],
-]);
-	
+    ]);
+    ?>      
+  </div>
 
-echo Html::button('Submit', ['type'=>'button', 'class'=>'btn btn-primary']);
-ActiveForm::end();
+  <?=$form->field($model, 'PILOT_NM')->textInput()  ?>
+
+  <?= $form->field($model, 'PLAN_DATE1')->widget(DateTimePicker::classname(), [
+    'options' => ['placeholder' => 'Enter date ...'],
+    'pluginOptions' => [
+        'autoclose'=>true
+    ],
+    'pluginEvents' => [
+                      'show' => "function(e) {show}",
+    ],
+]);?>
+
+  
+
+ <?= $form->field($model, 'PLAN_DATE2')->widget(DateTimePicker::classname(), [
+    'options' => ['placeholder' => 'Enter date ...'],
+    'pluginOptions' => [
+        'autoclose'=>true
+    ],
+    'pluginEvents' => [
+                      'show' => "function(e) {show}",
+    ],
+]);?>
+
+    
+
+<?= $form->field($model, 'DESTINATION_TO')->widget(Select2::classname(), [
+         'data' => $dropemploy,
+        'options' => [
+//            'id'=>'parent',
+        'placeholder' => 'Pilih Karyawan ...'],
+        'pluginOptions' => [
+            'allowClear' => true
+             ],
+        
+    ]);?> 
+    
+  <div style="text-align: right;"">
+    <?php echo Html::submitButton('Submit',['class' => 'btn btn-primary']); ?>
+  </div>
+  <?php ActiveForm::end(); ?> 
+
+<?php 
+$this->registerJs("
+
+  $('#pilotproject-parentpilot').click(function(){
+   var checkedValue = $('#pilotproject-parentpilot:checked').val();
+
+    if(checkedValue == 1)
+    {
+      $('#tampilkan').hide();
+    }
+    else
+    {
+        $('#tampilkan').show();
+    }
+
+  });
+
+ ",$this::POS_READY);
+?>
+
+
+
+

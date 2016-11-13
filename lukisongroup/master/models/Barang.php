@@ -60,6 +60,11 @@ class Barang extends \yii\db\ActiveRecord
     {
         return $this->unitb->NM_UNIT;
     }
+	
+	public function getUnitweight()
+    {
+        return $this->unitb->WEIGHT;
+    }
 
 
 

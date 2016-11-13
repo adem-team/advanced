@@ -145,6 +145,19 @@ function tombolview($url,$model)
 
 }
 
+function delete($url,$model){
+
+      $title1 = Yii::t('app', 'Delete');
+      $options1 = [ 'id'=>'term-view-delete',
+      ];
+      $icon1 = '<span class="fa fa-trash"></span>';
+      $label = $icon1 . ' ' . $title1;
+      $url = Url::toRoute(['/master/term-customers/delete','id'=>$model->ID_TERM]);
+      $options1['tabindex'] = '-1';
+      return '<li>' . Html::a($label, $url, $options1) . '</li>' . PHP_EOL;
+
+}
+
 // print_r(getPermissionEmp()->DEP_ID);
 // die();
 
@@ -463,7 +476,7 @@ $gridColumns = [
     [
       'class'=>'kartik\grid\ActionColumn',
       'dropdown' => true,
-      'template' => '{review}{view}',
+      'template' => '{review}{view}{delete}',
       'dropdownOptions'=>['class'=>'pull-right dropup'],
       'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
       'buttons' => [
@@ -479,6 +492,9 @@ $gridColumns = [
               //               'data-title'=> $model->ID_TERM,
               //               ]). '</li>' . PHP_EOL;
           },
+          'delete' => function ($url, $model) {
+                return delete($url, $model);
+              },
 
               ],
               'headerOptions'=>[

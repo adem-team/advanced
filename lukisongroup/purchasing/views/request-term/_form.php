@@ -9,24 +9,16 @@ use yii\helpers\ArrayHelper;
 use kartik\widgets\Select2;
 use kartik\money\MaskMoney;
 use yii\helpers\Url;
+use kartik\widgets\DatePicker;
 
 /* namespace models*/
 use lukisongroup\master\models\Customers;
-use lukisongroup\master\models\Terminvest;
 use lukisongroup\master\models\Tipebarang;
 use lukisongroup\master\models\Kategori;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\hrd\models\Corp;
 
 
-
-/* array*/
- $brgUnit = ArrayHelper::map(Unitbarang::find()->where('STATUS<>3')->orderBy('NM_UNIT')->all(), 'KD_UNIT', 'NM_UNIT');
- $corp = Yii::$app->getUserOpt->Profile_user()->emp->EMP_CORP_ID;
- $query_cari_customers = Yii::$app->db_esm->createCommand('SELECT td.CUST_NM,th.TERM_ID,th.CUST_KD_PARENT FROM `t0000header` th INNER JOIN c0001 td on th.CUST_KD_PARENT = td.CUST_KD')->queryAll();
-
- $data_group_cus = ArrayHelper::map($query_cari_customers,'CUST_KD_PARENT','CUST_NM');
- $data_invest = ArrayHelper::map(Terminvest::find()->all(),'ID','INVES_TYPE')
 
 ?>
 
@@ -56,7 +48,7 @@ use lukisongroup\hrd\models\Corp;
 
 
   <?=  $form->field($model, 'CUST_ID_PARENT')->widget(Select2::classname(), [
-				'data' => $data_group_cus,
+				'data' => $cus_data,
 				'options' => [
           'placeholder' => 'Pilih Customers ...'
       ],
@@ -74,6 +66,32 @@ use lukisongroup\hrd\models\Corp;
             'allowClear' => true
           ],
       ])->label('Investasi') ?>
+
+       <?php echo $form->field($model, 'PERIOD_START')->widget(DatePicker::classname(), [
+                    'options' => ['placeholder' => 'Tgl Term Dibuat'],
+                        'pluginOptions' => [
+                            'todayHighlight' => true,
+                            'autoclose'=>true,
+                              'format' => 'yyyy-m-dd'
+                        ],
+                        'pluginEvents'=>[
+                            'show' => "function(e) {show}",
+                        ],
+                    ]);
+        ?>
+
+        <?php echo $form->field($model, 'PERIOD_END')->widget(DatePicker::classname(), [
+                    'options' => ['placeholder' => 'Tgl Term Berakhir'],
+                        'pluginOptions' => [
+                            'todayHighlight' => true,
+                            'autoclose'=>true,
+                              'format' => 'yyyy-m-dd'
+                        ],
+                        'pluginEvents'=>[
+                            'show' => "function(e) {show}",
+                        ],
+                    ]);
+        ?>
 
     </div>
 
@@ -94,28 +112,4 @@ use lukisongroup\hrd\models\Corp;
 
 
 	<?php ActiveForm::end(); ?>
-<?php
-  $this->registerJs('
 
-  $("div#rodetail-new").click(function()
-  {
-      var val = $("#radiochek:checked").val();
-      if(val === "2")
-      {
-      		$("#rodetail-nm_barang").hide();
-          $("label[for=rodetail-nm_barang]").hide();
-          $("#tes").show();
-          $("label[for=rodetail-kd_barang]").show();
-          $("#hrg").hide();
-
-      }
-      else{
-        $("#rodetail-nm_barang").show();
-        $("label[for=rodetail-nm_barang]").show();
-        $("#tes").hide();
-        $("label[for=rodetail-kd_barang]").hide();
-        $("#hrg").show();
-      }
-  });
-
-	',$this::POS_READY);

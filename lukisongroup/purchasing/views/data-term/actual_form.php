@@ -5,6 +5,7 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\Select2;
 use kartik\money\MaskMoney;
+use kartik\widgets\DatePicker;
 
 /* namespace model*/
 use lukisongroup\master\models\Terminvest;
@@ -37,6 +38,8 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 				'action' => ['/purchasing/data-term/actual-review-save'],
 		]);
 	?>
+	<?= $form->errorSummary($actualModel,['class'=>'btn-danger']); ?>
+
 		<div class="col-lg-4">
 			<?php echo  $form->field($actualModel, 'temId')->textInput(['value' => $termHeader->TERM_ID,'maxlength' => true, 'readonly' => true])->label('TERM ID'); ?>
 		</div>
@@ -55,18 +58,34 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 			?>
 			</div>
 				<div class="col-sm-6">
+
+				
 			<?=$form->field($actualModel, 'invoiceNo')->textInput(['maxlength' => true])->label('INVOICE'); ?>
 
 			<?=$form->field($actualModel, 'faktureNo')->textInput(['maxlength' => true])->label('FAKTUR'); ?>
 
-      <?= $form->field($actualModel, 'invesHarga')->widget(MaskMoney::classname(), [
+        	<?= $form->field($actualModel, 'invesHarga')->widget(MaskMoney::classname(), [
                     'pluginOptions' => [
                         'allowNegative' => false
                     ]
                 ])->label('COST') ?>
+
+                 <?= $form->field($actualModel, 'periode_start')->widget(DatePicker::classname(), [
+			    'options' => ['placeholder' => 'Enter date start ...'],
+			    'pluginOptions' => [
+                            'todayHighlight' => true,
+                            'autoclose'=>true,
+                              'format' => 'yyyy-m-dd'
+                        ],
+                        'pluginEvents'=>[
+                            'show' => "function(e) {show}",
+                        ],
+				]) ?>
 			<!-- $form->field($actualModel, 'invesHarga')->textInput(['maxlength' => true])->label('COST'); ?> -->
 				</div>
 				<div class="col-sm-6">
+				
+
 					<?= $form->field($actualModel, 'pph23')->widget(Select2::classname(), [
 					     'data' => $data,
 					     'options' => ['placeholder' => 'Pilih Percentage ...'],
@@ -77,7 +96,20 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 				</div>
 
 				<div class="col-sm-6">
+
 					<?= $form->field($actualModel, 'ppn')->textinput()?>
+
+					<?= $form->field($actualModel, 'periode_end')->widget(DatePicker::classname(), [
+			    'options' => ['placeholder' => 'Enter date start ...'],
+			    'pluginOptions' => [
+                            'todayHighlight' => true,
+                            'autoclose'=>true,
+                              'format' => 'yyyy-m-dd'
+                        ],
+                        'pluginEvents'=>[
+                            'show' => "function(e) {show}",
+                        ],
+				]) ?>
 				</div>
 
 		<div class="col-lg-12 pull-right" style="text-align: right;">

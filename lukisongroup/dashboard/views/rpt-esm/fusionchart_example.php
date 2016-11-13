@@ -194,7 +194,7 @@ $this->registerJs("
 	/*msbar2d | CUSTOMER DAERAH KONSUMSI RODAK TERBANYAK*/
 	FusionCharts.ready(function () {
 		var revenueChart = new FusionCharts({
-			type: 'msbar2d',
+			type: 'msstackedcolumn2dlinedy',
 			renderAt: 'chart-msbar2d',
 			width: '100%',
 			height: '420',

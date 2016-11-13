@@ -60,7 +60,7 @@ $form = ActiveForm::begin([
            ],
 ])  ?>
 
-<?= $form->field($budget, 'PROGRAM', $config)->textArea([
+<?= $form->field($budget, 'PROGRAM')->textArea([
   'options'=>['rows'=>5]
 ]) ?>
 

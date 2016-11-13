@@ -49,12 +49,12 @@ class Rtdetail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-			[['KD_RIB'], 'required'],
+			[['KD_RIB','PERIODE_END','PERIODE_START','INVESTASI_TYPE'],'required','on'=>'simpan'],
             [['INVESTASI_PROGRAM','HARGA'], 'safe'],
 			['HARGA','default', 'value'=>0.00],
-			[['STATUS','INVESTASI_TYPE','ID_INVEST'], 'integer'],
+			[['STATUS','INVESTASI_TYPE','ID_INVEST','PPN','PPH23'], 'integer'],
             [['UNIT'], 'string'],
-            [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT','HARGA'], 'safe'],
+            [['RQTY','SQTY','CREATED_AT', 'UPDATED_AT','HARGA','PERIODE_END','PERIODE_START'], 'safe'],
             [['KD_RIB','UNIT', 'NOMER_INVOCE','NOMER_FAKTURPAJAK'], 'string', 'max' => 50],
         ];
     }

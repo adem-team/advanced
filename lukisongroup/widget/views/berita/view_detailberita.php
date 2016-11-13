@@ -119,13 +119,18 @@ if(count($attach_file)== 0)
 	$x=0;
     foreach ($query as $key => $value) {
       $emp_ID = $value->profile->EMP_ID;
-      $condition = ['and',
-      ['ID_USER'=>$emp_ID],
-      ['KD_BERITA'=> $model->KD_BERITA],
-      ['TYPE'=> 0],
-      ['CREATED_AT'=> $value->CREATED_AT],
-    ];
-      $attach_image = BeritaImage::find()->where($condition)->All();
+
+
+     
+    //   $condition = ['and',
+    //   // ['ID_USER'=>$emp_ID],
+    //   ['KD_BERITA'=> $model->KD_BERITA],
+    //   // ['TYPE'=> 0],
+    //   // ['CREATED_AT'=> $value->CREATED_AT],
+    // ];
+      // $attach_image = BeritaImage::find()->where($condition)->All();
+
+      $attach_image = BeritaImage::find()->where(['KD_BERITA'=>$model->KD_BERITA,'ID_USER'=>$emp_ID])->All();
 
 
       if($value->EMP_IMG == "default.jpg")
@@ -138,11 +143,12 @@ if(count($attach_file)== 0)
 		if ($x==0){
 			$a=$this->render('_message_left', [
 				'profile'=>$profile,
+        'id'=>$value->ID,
         'attach_image'=>$attach_image,
         'kd_berita'=>$model->KD_BERITA,
 				'nama'=>$value->profile->EMP_NM,
 				'messageReply'=>$value->CHAT,
-				'jamwaktu'=> date('Y-m-d h:i A', strtotime($value->CREATED_AT)),
+				'jamwaktu'=> date(" Y-m-d g:i a", strtotime($value->CREATED_AT)),
 				'items'=>$items,
 				'lampiran'=>Html::panel(
 						[
@@ -155,6 +161,8 @@ if(count($attach_file)== 0)
 			]);
 			$x=1;
 		}else{
+      
+      // $attach_image1 = BeritaImage::find()->where($condition)->All();
       if($value->EMP_IMG == "default.jpg")
       {
         $profile = '/upload/hrd/Employee/default.jpg';
@@ -164,9 +172,11 @@ if(count($attach_file)== 0)
 			$a=$this->render('_message_right', [
 				'profile'=>$profile,
         'kd_berita'=>$model->KD_BERITA,
+        'id'=>$value->ID,
         'attach_image'=>$attach_image,
 				'messageReply'=>$value->CHAT,
-				'jamwaktu'=>date('Y-m-d h:i A', strtotime($value->CREATED_AT)),
+				// 'jamwaktu'=>date('Y-m-d h:i A', strtotime($value->CREATED_AT)),
+        'jamwaktu'=>date(" Y-m-d g:i a", strtotime($value->CREATED_AT)),
 				'nama'=>$value->profile->EMP_NM,
         'ttd'=>$value->profile->SIGSVGBASE64,
 				'items'=>$items,
@@ -252,6 +262,7 @@ if(count($attach_file)== 0)
 
 
 <?php
+
 /**@author wawan
   *js close news
   *event click(POS_READY)
@@ -261,17 +272,20 @@ $this->registerJs("
   $('#berita-isi-id-close').click(function(e){
     e.preventDefault();
     var idx = $(this).data('toggle-close');
+    var kd_ref = \"$model->KD_REF\";
     $.ajax({
         url: '/widget/berita/close-berita',
         type: 'POST',
-        data:'id='+idx,
+        data:'id='+idx+'&kd_ref='+kd_ref,
         dataType: 'json',
         success: function(result) {
           if (result == 1){
             // Success
+
             $('#berita-reply-id').hide(); //TO hide
           } else {
             // Fail
+            
           }
         }
       });
@@ -308,13 +322,30 @@ Modal::begin([
 ]);
 Modal::end();
 
+#js modal target
+  $this->registerJs("
+   $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+   $('#keterangan').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var modal = $(this)
+    var title = button.data('title')
+    var href = button.attr('href')
+    //modal.find('.modal-title').html(title)
+    modal.find('.modal-body').html('<i class=\"fa fa-dolar fa-spin\"></i>')
+    $.post(href)
+      .done(function( data ) {
+        modal.find('.modal-body').html(data)
+      });
+    })
+",$this::POS_READY);
+  Modal::begin([
+      'id' => 'keterangan',
+      'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Account</b></h4></div>',
+    // 'size' => Modal::SIZE_LARGE,
+    'headerOptions'=>[
+      'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+    ]
+  ]);
+  Modal::end();
 
-// $this->registerJs("
-// 	// dosamigos.gallery = (function($){
-// 		// var options = {
-// 			// container: document.getElementById('blueimp-gallery');
-// 		// };
-//
-// 	// }
-// ",$this::POS_READY);
 ?>

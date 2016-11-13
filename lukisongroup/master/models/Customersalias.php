@@ -46,6 +46,16 @@ class Customersalias extends \yii\db\ActiveRecord
       # code...
       return $this->cus->CUST_NM;
     }
+	
+	public function getCusp()
+    {
+        return $this->hasOne(Customers::className(), ['CUST_GRP' => 'KD_PARENT']);
+    }
+    public function getCustpnma()
+    {
+      # code...
+      return $this->cusp->CUST_NM;
+    }
 
     public function getDis()
     {
@@ -64,14 +74,16 @@ class Customersalias extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['KD_PARENT'], 'integer'],
-            [['CREATED_AT', 'UPDATED_AT'], 'safe'],
+            [['KD_PARENT','KD_CUSTOMERS','KD_DISTRIBUTOR','KD_ALIAS'], 'required'],
+            [['CREATED_AT', 'UPDATED_AT','KD_PARENT'], 'safe'],
             [['KD_CUSTOMERS', 'KD_ALIAS'], 'string', 'max' => 30],
-            [['KD_CUSTOMERS','KD_ALIAS','KD_DISTRIBUTOR'], 'cekalias'],
+            [['KD_CUSTOMERS','KD_ALIAS'], 'cekalias','on'=>'create'],
             [['KD_DISTRIBUTOR'], 'string', 'max' => 50],
             [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 100]
         ];
     }
+	
+	
 
     public function data($data,$to,$from)
     {
@@ -79,26 +91,16 @@ class Customersalias extends \yii\db\ActiveRecord
       return ArrayHelper::map($data, $to, $from);
     }
 
+	/*check exits customers*/
     public function cekalias($model)
     {
       # code...
       $data = $this->KD_CUSTOMERS;
-      $dataalias = $this->KD_ALIAS;
       $datadis = $this->KD_DISTRIBUTOR;
 
-      // $dataid =$sql['KD_CUSTOMERS'];
-      // $datakdalias = $sql1['KD_ALIAS'];
-      // $datadis1 =   $sql2['KD_DISTRIBUTOR'];
-      $kondisi =  Customersalias::find()->where(['KD_CUSTOMERS'=>$data,'KD_ALIAS'=> $dataalias,'KD_DISTRIBUTOR'=>  $datadis])->asArray()
-                                                                        ->one();
-      $kondisi1 = $kondisi['KD_CUSTOMERS'];
-      $kondisi2 = $kondisi['KD_ALIAS'];
-      $kondisi3 = $kondisi['KD_DISTRIBUTOR'];
-      // print_r($kondisi);
-      // die();
+      $kondisi =  Customersalias::find()->where(['KD_CUSTOMERS'=>$data,'KD_DISTRIBUTOR'=>$datadis])->one();
 
-      //  $kondisiTrue = Customersalias::find()->where("KD_ALIAS='".$this->KD_ALIAS. "' AND KD_DISTRIBUTOR='".$this->KD_DISTRIBUTOR."'")->one();
-       if( $kondisi1 && $kondisi2 && $kondisi3  )
+       if($kondisi)
        {
            $this->addError($model, 'Duplicated code because the code already exists in this distributor !, attention  change name distributor or change code ');
        }

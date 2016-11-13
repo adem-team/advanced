@@ -230,6 +230,27 @@ $this->title = Yii::t('app', 'Trading Terms ');
 			}
 	}
 
+	/**
+	 * LINK  Note
+	 * @author wawan  
+     * @since 1.2
+	*/
+	function PoNote($kd){
+			$title = Yii::t('app','');
+			$options = [ 'id'=>'rqt-note-id',
+						  'data-toggle'=>"modal",
+						  'data-target'=>"#rqt-note-review",
+						  'class'=>'btn btn-info btn-xs',
+						  'title'=>'RQT Note'
+			];
+			$icon = '<span class="fa fa-plus fa-lg"></span>';
+			$label = $icon . ' ' . $title;
+			$url = Url::toRoute(['/purchasing/request-term/update-note','id'=>$kd]);
+			$content = Html::a($label,$url, $options);
+			return $content;
+	}
+
+
 	/*
 	 * Tombol Approval Item
 	 * Permission Auth2 | Auth3
@@ -365,6 +386,8 @@ $this->title = Yii::t('app', 'Trading Terms ');
 			<dd>: <?php echo date('d-M-Y'); ?></dd>
 			<dt style="width:100px; float:left;">Kode Rqt</dt>
 			<dd>: <?php echo $roHeader->KD_RIB; ?></dd>
+			  <dt style="width:100px; float:left;">Customers</dt>
+			  <dd>: <?php echo $roHeader->cus->CUST_NM; ?></dd>
 			<dt style="width:100px; float:left;">Departement</dt>
 			<dd>:
 			<?php
@@ -457,10 +480,10 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					'vAlign'=>'middle',
 					'hAlign'=>'center',
 					'mergeHeader'=>true,
-					'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
-						//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
-						return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
-					},
+					// 'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+					// 	//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
+					// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
+					// },
 					'editableOptions' => [
 						'header' => 'Update Quantity',
 						'inputType' => \kartik\editable\Editable::INPUT_TEXT,
@@ -550,21 +573,24 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					/* Attribute HARGA SUPPLIER */
 					'class'=>'kartik\grid\EditableColumn',
 					'attribute'=>'HARGA',
+					'value'=>function($model){
+						number_format($model->HARGA,2);
+					},
 					'label'=>'Price/Pcs',
 					'vAlign'=>'middle',
 					'hAlign'=>'center',
 					'mergeHeader'=>true,
-					'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
-						//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
-						return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
-					},
+					// 'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+					// 	//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
+					// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
+					// },
 					'editableOptions' => [
 						'header' => 'Update Price',
-						'inputType' => \kartik\editable\Editable::INPUT_TEXT,
+						'inputType' => \kartik\editable\Editable::INPUT_MONEY ,
 						'size' => 'sm',
-						'options' => [
-							'pluginOptions' => ['min'=>0, 'max'=>50000]
-						]
+						// 'options' => [
+						// 	'pluginOptions' => ['min'=>0, 'max'=>50000]
+						// ]
 					],
 					'headerOptions'=>[
 						'style'=>[
@@ -592,10 +618,10 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					'vAlign'=>'middle',
 					'hAlign'=>'center',
 					'mergeHeader'=>true,
-					'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
-						//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
-						return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
-					},
+					// 'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+					// 	//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
+					// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
+					// },
 					'editableOptions' => [
 						'header' => 'Update Invoice',
 						'inputType' => \kartik\editable\Editable::INPUT_TEXT,
@@ -630,10 +656,10 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					'vAlign'=>'middle',
 					'hAlign'=>'center',
 					'mergeHeader'=>true,
-					'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
-						//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
-						return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
-					},
+					// 'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+					// 	//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
+					// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
+					// },
 					'editableOptions' => [
 						'header' => 'Update NoFaktur pajak',
 						'inputType' => \kartik\editable\Editable::INPUT_TEXT,
@@ -667,9 +693,9 @@ $this->title = Yii::t('app', 'Trading Terms ');
 					'label'=>'Notes',
 					'hAlign'=>'left',
 					'mergeHeader'=>true,
-					'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
-						return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0;
-					},
+					// 'readonly'=>function($model, $key, $index, $widget) use ($headerStatus) {
+					// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0;
+					// },
 					'editableOptions' => [
 						'header' => 'Update program',
 						'inputType' => \kartik\editable\Editable::INPUT_TEXTAREA,
@@ -745,6 +771,150 @@ $this->title = Yii::t('app', 'Trading Terms ');
 		]);
 		?>
 	</div>
+	<?php
+	/*
+ * GRID list
+ * @author wawan  [aditiya@lukison.com]
+ * @since 1.2
+*/
+$actionClass='btn btn-info btn-xs';
+$actionLabel='Update';
+$attDinamik =[];
+/*GRIDVIEW ARRAY FIELD HEAD*/
+
+$headColomnBT=[
+	['ID' =>0, 'ATTR' =>['FIELD'=>'nminvest','SIZE' => '30px','label'=>'Investasi','center'=>'left','warna'=>'126, 189, 188, 0.3','grp'=>false]],
+	['ID' =>1, 'ATTR' =>['FIELD'=>'LIST_ALL','SIZE' => '30px','label'=>'Store','align'=>'left','warna'=>'126, 189, 188, 0.3','grp'=>false]],
+];
+$gvHeadColomnBT = ArrayHelper::map($headColomnBT, 'ID', 'ATTR');
+
+
+
+
+$attDinamik[] =[
+  'class'=>'kartik\grid\SerialColumn',
+  //'contentOptions'=>['class'=>'kartik-sheet-style'],
+  'width'=>'10px',
+  'header'=>'No.',
+  'headerOptions'=>[
+    'style'=>[
+      'text-align'=>'center',
+      'width'=>'10px',
+      'font-family'=>'verdana, arial, sans-serif',
+      'font-size'=>'9pt',
+      'background-color'=>'rgba(126, 189, 188, 0.3)',
+    ]
+  ],
+  'contentOptions'=>[
+    'style'=>[
+      'text-align'=>'center',
+      'width'=>'10px',
+      'font-family'=>'tahoma, arial, sans-serif',
+      'font-size'=>'9pt',
+    ]
+  ],
+];
+
+
+/*GRIDVIEW ARRAY ROWS*/
+foreach($gvHeadColomnBT as $key =>$value[]){
+      # code...
+      $attDinamik[]=[
+        'attribute'=>$value[$key]['FIELD'],
+        'label'=>$value[$key]['label'],
+        'filter'=>true,
+        'hAlign'=>'right',
+        'vAlign'=>'middle',
+        'noWrap'=>false,
+		//'group'=>$value[$key]['grp'],
+        'headerOptions'=>[
+            'style'=>[
+            'text-align'=>'center',
+            'width'=>$value[$key]['SIZE'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+            'background-color'=>'rgba('.$value[$key]['warna'].')',
+          ]
+        ],
+        'contentOptions'=>[
+          'style'=>[
+			'width'=>$value[$key]['SIZE'],
+            'text-align'=>$value[$key]['align'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+          ]
+        ],
+      ];
+
+    };
+
+
+// $urlx = Url::toRoute(['request-term/list-all','kd'=>$roHeader->KD_RIB,'term_id'=>$roHeader->TERM_ID,'cust_kd'=>$roHeader->CUST_ID_PARENT]);
+/*SHOW GRID VIEW LIST*/
+$gvlist=GridView::widget([
+  'id'=>'gv-list-id',
+  'dataProvider' => $dataProviderList,
+  // 'filterModel' => $searchModel,
+  'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+  'columns' => $attDinamik,
+  'pjax'=>true,
+  'pjaxSettings'=>[
+    'options'=>[
+		'enablePushState'=>false,
+		'id'=>'gv-list-id',
+    ],
+  ],
+  'panel' => [
+        'heading'=>false,
+        'type'=>'info',
+      'before'=> '',
+        'showFooter'=>false,
+  ],
+  /* 'export' =>['target' => GridView::TARGET_BLANK],
+  'exportConfig' => [
+    GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
+    GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
+  ], */
+  'toolbar'=> [
+        //'{export}',
+    //'{items}',
+  ],
+  'hover'=>true, //cursor select
+  'responsive'=>true,
+  'responsiveWrap'=>true,
+  'bordered'=>true,
+  'striped'=>true,
+]);
+?>
+<div class="col-md-12">
+		<div style="align:right;">
+
+		<?= $gvlist ?>
+</div>	
+<!-- </div> -->
+
+
+		
+
+	</div>
+
+	<!-- PO Note !-->
+	<div  class="row">
+		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
+			<dt><b>General Notes :</b></dt>
+			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
+			<div>
+				<div style="float:right;text-align:right;">
+					 <?= PoNote($roHeader->KD_RIB) ?>
+				</div>
+				<div style="margin-left:5px">
+					<dd><?= $roHeader->NOTE ?></dd>
+					<dt>Invoice exchange can be performed on Monday through Tuesday time of 09:00AM-16:00PM</dt>
+				</div>
+			</div>
+			<hr style="height:1px;margin-top: 1px;">
+		</div>
+	</div>
 
 	<!-- Signature !-->
 	<div  class="col-md-12">
@@ -757,7 +927,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 						<th  class="col-md-1" style="text-align: center; height:20px">
 							<div style="text-align:center;">
 								<?php
-									$placeTgl1=$roHeader->SIG1_TGL!=0 ? Yii::$app->ambilKonvesi->convert($roHeader->SIG1_TGL,'date') :'';
+									$placeTgl1=date('Y-m-d') ;
 									echo '<b>Tanggerang</b>,' . $placeTgl1;
 								?>
 							</div>
@@ -767,7 +937,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 						<th class="col-md-1" style="text-align: center; height:20px">
 							<div style="text-align:center;">
 								<?php
-									$placeTgl2=$roHeader->SIG2_TGL!=0 ? Yii::$app->ambilKonvesi->convert($roHeader->SIG2_TGL,'date') :'';
+									$placeTgl2=date('Y-m-d') ;
 									echo '<b>Tanggerang</b>,' . $placeTgl2;
 								?>
 							</div>
@@ -777,7 +947,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 						<th class="col-md-1" style="text-align: center; height:20px">
 							<div style="text-align:center;">
 								<?php
-									$placeTgl3=$roHeader->SIG3_TGL!=0 ? Yii::$app->ambilKonvesi->convert($roHeader->SIG3_TGL,'date') :'';
+									$placeTgl3=date('Y-m-d');
 									echo '<b>Tanggerang</b>,' . $placeTgl3;
 								?>
 							</div>
@@ -944,6 +1114,32 @@ $this->title = Yii::t('app', 'Trading Terms ');
 		});
 
 	",$this::POS_READY);
+
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#rqt-note-review').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+		",$this::POS_READY);
+
+	Modal::begin([
+		'id' => 'rqt-note-review',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-pencil-square-o"></div><div><h4 class="modal-title">Note</h4></div>',
+		//'size' => 'modal-lg',
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(131, 160, 245, 0.5)',
+			]
+	]);
+	Modal::end();
 
 	/*SIGN AUTHOR1*/
 	$this->registerJs("

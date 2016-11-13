@@ -1943,6 +1943,18 @@ class DraftPlanController extends Controller
     }
 	
 
+	/**
+	 * Syncronize plan to Actual
+	 * @author piter
+	 * @since 1.1.0
+	 * @return true
+	*/
+	public function actionCheckWeek(){
+		return $this->renderAjax('_formCheckWeek', [
+			'model' => $modelSyncActual,
+		]);
+    }
+	
     /**
      * Finds the DraftPlan model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

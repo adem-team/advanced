@@ -16,10 +16,18 @@ $this->sideMenu = 'esm_customers';                                  /* kd_menu u
 $this->title = Yii::t('app', 'ESM - Produk');          				/* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;   
 
+	$tabReviewMap=$this->render('_indexReviewMap');
 	$tabReviewDetail=$this->render('_indexReviewDetail',[
 		'dataProviderHeader1' => $dataProviderHeader1
 	]);	
+	$tabReviewIssue=$this->render('_indexIssue',[
+		'tglpos'=>$tglpos,
+		'searchModelIssue' => $searchModelIssue,
+		'dataProviderIssue' => $dataProviderIssue
+	]);	
+	$tabReviewChart=$this->render('_indexSalesMdChart');	
 	$tabReviewWeekly=$this->render('_indexWeekly');	
+
 		
 	if($tab==0){
 		$tab0=true;
@@ -40,11 +48,26 @@ $this->params['breadcrumbs'][] = $this->title;
 		$tab3=false;
 		$tab4=false;
 	}
-	
+	elseif($tab==3){
+		$tab0=false;
+		$tab1=false;
+		$tab2=false;
+		$tab3=true;
+		$tab4=false;
+	}
 	$items=[
 		[
-			'label'=>'<i class="fa fa-list-ol fa-2x"></i> Daily Detail','content'=>$tabReviewDetail,
+			'label'=>'<i class="fa fa-map-marker fa-2x"></i> Map','content'=>$tabReviewMap,
 			'active'=>$tab0,
+		],
+		[
+			'label'=>'<i class="fa fa-list-ol fa-2x"></i> Daily Detail','content'=>$tabReviewDetail,
+		],
+		[
+			'label'=>'<i class="fa fa-eye fa-2x"></i> Issue Memo','content'=>$tabReviewIssue,
+		],
+		[
+			'label'=>'<i class="fa fa-area-chart fa-2x"></i> Chart','content'=>$tabReviewChart,
 		],
 		[
 			'label'=>'<i class="fa fa-newspaper-o fa-2x"></i> Weekly Detail','content'=>$tabReviewWeekly,

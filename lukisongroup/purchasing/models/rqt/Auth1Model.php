@@ -86,7 +86,9 @@ class Auth1Model extends Model
 	*/
 	public function auth1_saved(){
 		if ($this->validate()) {
-			$rtheader = Requesttermheader::find()->where(['KD_RIB' =>$this->kdrib])->one();
+			$rtheader = Requesttermheader::find()->where(['KD_RIB' =>$this->kdrib])->one(); #header
+			$rtdetail = Rtdetail::find()->where(['KD_RIB'=>$this->kdrib])->one();#detail
+
 			$rtSignStt = Requesttermstatus::find()->where(['KD_RIB'=>$this->kdrib,'ID_USER'=>$this->getProfile()->EMP_ID])->one();
 				$rtheader->STATUS = $this->status;
 				$rtheader->SIG1_SVGBASE64 = $this->getProfile()->SIGSVGBASE64;
@@ -94,6 +96,8 @@ class Auth1Model extends Model
 				$rtheader->SIG1_NM = $this->getProfile()->EMP_NM . ' ' . $this->getProfile()->EMP_NM_BLK;
 				$rtheader->SIG1_TGL = date('Y-m-d');
 			if ($rtheader->save()) {
+				$rtdetail->STATUS = 100;
+				$rtdetail->save();
 					if (!$rtSignStt){
 						$rtheaderStt = new Requesttermstatus;
 						$rtheaderStt->KD_RIB = $this->kdrib;
@@ -127,8 +131,8 @@ class Auth1Model extends Model
 	}
 
   function getPermission(){
-    if (Yii::$app->getUserOpt->Modul_akses(3)){
-      return Yii::$app->getUserOpt->Modul_akses(3);
+    if (Yii::$app->getUserOpt->Modul_akses(5)){
+      return Yii::$app->getUserOpt->Modul_akses(5);
     }else{
       return false;
     }

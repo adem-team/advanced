@@ -55,7 +55,7 @@ use kartik\widgets\Select2;
 	        'format'=>'datetime',
 	        'type'=>DetailView::INPUT_DATETIME,
 	        'widgetOptions' => [
-	            'pluginOptions'=>['format' => 'dd-MM-yyyy HH:ii P'],
+	            'pluginOptions'=>['format' => 'yyyy-mm-dd H:i:s'],
 	            'pluginEvents'=>[
 		       'show' => "function(e) {errror}",
 		           ],
@@ -66,10 +66,10 @@ use kartik\widgets\Select2;
 		[
         	'attribute'=>'PLAN_DATE2', 
 	        'format'=>'datetime',
-	        'value'=>new DateTime(),
+	        //'value'=>new DateTime(),
 	        'type'=>DetailView::INPUT_DATETIME,
 	        'widgetOptions' => [
-	            'pluginOptions'=>['format' => 'dd-MM-yyyy HH:ii P'],
+	             'pluginOptions'=>['format' => 'yyyy-mm-dd H:i:s'],
 	            'pluginEvents'=>[
 		       'show' => "function(e) {errror}",
 		           ],
@@ -87,12 +87,13 @@ use kartik\widgets\Select2;
 			'groupOptions'=>['class'=>'text-left'] //text-center 
 		],
 		[
-        	'attribute'=>'ACTUAL_DATE1', 
+        	'attribute'=>'actualtglreplace', 
 	        'format'=>'datetime',
-	        'value'=>new DateTime(),
+	        //'value'=>new DateTime(),
 	        'type'=>DetailView::INPUT_DATETIME,
 	        'widgetOptions' => [
-	            'pluginOptions'=>['format' => 'dd-MM-yyyy HH:ii P'],
+				'pluginOptions'=>['format' => 'yyyy-mm-dd H:i:s'],
+	            //'pluginOptions'=>['format' => 'dd-MM-yyyy HH:ii P'],
 	            'pluginEvents'=>[
 		       'show' => "function(e) {errror}",
 		           ],
@@ -106,8 +107,8 @@ use kartik\widgets\Select2;
 	         'type'=>DetailView::INPUT_DATETIME,
 	        'value'=>new DateTime(),
 	        'widgetOptions' => [
-
-	            'pluginOptions'=>['format' => 'dd-MM-yyyy HH:ii P'],
+				'pluginOptions'=>['format' => 'yyyy-mm-dd H:i:s'],
+	            //'pluginOptions'=>['format' => 'dd-MM-yyyy HH:ii P'],
 	            'pluginEvents'=>[
 		       'show' => "function(e) {errror}",
 		           ],
@@ -141,7 +142,7 @@ use kartik\widgets\Select2;
 	       'value'=>$model->employenm,
 	       'widgetOptions'=>[
 				'data'=>$dropemploy,
-				'options'=>['placeholder'=>'Select ...'],
+				'options'=>['id'=>'destination-id-view','placeholder'=>'Select ...'],
 				'pluginOptions'=>['allowClear'=>true],
 			],	
 	        'valueColOptions'=>['style'=>'width:30%']
@@ -169,7 +170,8 @@ use kartik\widgets\Select2;
 	        'type'=>DetailView::INPUT_SWITCH,
 	        'format'=>'raw',
         	'value'=>$model->PARENT == 0 ? '<span class="label label-success">Parent</span>' : '<span class="label label-danger">No Parent</span>',
-        'widgetOptions' => [
+			'widgetOptions' => [
+			'options'=>['id'=>'parentzxc-id'],
             'pluginOptions' => [
                 'onText' => 'Yes',
                 'offText' => 'No',
@@ -183,7 +185,7 @@ use kartik\widgets\Select2;
 	       'value'=>$model->PARENT != 0?$model->parentName : $model->PILOT_NM,
 	       'widgetOptions'=>[
 				'data'=>$pilot,
-				'options'=>['placeholder'=>'Select ...'],
+				'options'=>['id'=>'parent-id-view','placeholder'=>'Select ...'],
 				'pluginOptions'=>['allowClear'=>true],
 			],	
 	        'valueColOptions'=>['style'=>'width:30%']
@@ -513,18 +515,21 @@ use kartik\widgets\Select2;
 		</div>
 		<div class="row" >
 		<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-			<?= $actual_view?>
+			<?= $dest_view?>
 		</div>
 		<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-			<?= $dest_view?> 
+			<?= $desta?>
 		</div>
 		</div>
 		<div class="row" >
 		<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+			
 			<?= $detail_update?>
 		</div>
 		<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-			<?= $desta?> 
+			
+			
+			<?= $actual_view?>
 		</div>
 	</div>
 </div>

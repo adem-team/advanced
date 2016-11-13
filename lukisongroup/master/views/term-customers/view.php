@@ -41,7 +41,8 @@ $this->title = Yii::t('app', 'Trading Terms ');
 	function statusTerm($model){
 		if($model['STATUS']==0){
 			/*New*/
-			return Html::a('<i class="fa fa-square-o fa-md"></i> New', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'100px'],'title'=>'New']);
+			return  Html::tag('p', 'New', ['class' => 'btn btn-info btn-xs']) ;
+			// return Html::a('<i class="fa fa-square-o fa-md"></i> New', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'100px'],'title'=>'New']);
 		}elseif($model['STATUS']==1){
 			/*Approved*/
 			return Html::a('<i class="fa fa-check-square-o fa-md"></i>Approved', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Approved']);
@@ -663,7 +664,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 							'style'=>'background-color:rgba(0, 95, 218, 0.3); align:center;',
 							'vAlign'=>'middle',
 						],
-						'format' => 'html',
+						'format' => 'raw',
 						'value'=>function ($model, $key, $index, $widget) {
 							return statusTerm($model);
 						},
@@ -804,6 +805,7 @@ $this->title = Yii::t('app', 'Trading Terms ');
 
 	<!-- PrintPdf !-->
 	<div style="text-align:right;float:right">
+	<a href="/master/term-customers/" class="btn btn-info btn-xs" role="button" style="width:90px">Back</a>
 		<?php echo PrintPdf($model); ?>
 	</div>
 

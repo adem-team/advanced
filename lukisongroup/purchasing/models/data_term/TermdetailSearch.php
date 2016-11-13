@@ -16,12 +16,13 @@ class TermdetailSearch extends Termdetail
     /**
      * @inheritdoc
      */
+    public $Namainvest;
     public function rules()
     {
         return [
             [['ID', 'STATUS'], 'integer'],
-            [['CUST_KD_PARENT', 'INVES_TYPE', 'BUDGET_SOURCE', 'PERIODE_START', 'PERIODE_END', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT'], 'safe'],
-            [['BUDGET_PLAN','BUDGET_ACTUAL'], 'number'],
+            [['CUST_KD_PARENT', 'INVES_TYPE', 'BUDGET_SOURCE', 'PERIODE_START', 'PERIODE_END', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT','Namainvest'], 'safe'],
+            [['BUDGET_PLAN','BUDGET_ACTUAL','INVES_ID'], 'number'],
         ];
     }
 
@@ -47,6 +48,7 @@ class TermdetailSearch extends Termdetail
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+
         ]);
 
         $this->load($params);
@@ -70,7 +72,7 @@ class TermdetailSearch extends Termdetail
         ]);
 
         $query->andFilterWhere(['like', 'CUST_KD_PARENT', $this->CUST_KD_PARENT])
-            ->andFilterWhere(['like', 'INVES_TYPE', $this->INVES_TYPE])
+            ->andFilterWhere(['like', 'INVES_TYPE', $this->Namainvest])
             ->andFilterWhere(['like', 'BUDGET_SOURCE', $this->BUDGET_SOURCE])
             ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
@@ -81,11 +83,14 @@ class TermdetailSearch extends Termdetail
     public function searchbudget($params,$id)
     {
 
-        $query = Termdetail::find()->where(['TERM_ID'=>$id]);
+        $query = Termdetail::find()->where(['TERM_ID'=>$id,'STATUS'=>0]);
 
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                        'pageSize' => 10,
+                    ],
         ]);
 
         $this->load($params);
@@ -107,7 +112,7 @@ class TermdetailSearch extends Termdetail
         ]);
 
         $query->andFilterWhere(['like', 'CUST_KD_PARENT', $this->CUST_KD_PARENT])
-            ->andFilterWhere(['like', 'INVES_TYPE', $this->INVES_TYPE])
+            ->andFilterWhere(['like', 'INVES_ID', $this->Namainvest])
             ->andFilterWhere(['like', 'BUDGET_SOURCE', $this->BUDGET_SOURCE])
             ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);
@@ -168,7 +173,7 @@ class TermdetailSearch extends Termdetail
 
 
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+            'query' => $query
         ]);
 
         $this->load($params);

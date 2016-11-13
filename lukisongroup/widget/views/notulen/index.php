@@ -142,7 +142,7 @@ EOF;
 				$attDinamikNotulen[]=[
 					'class'=>'kartik\grid\ActionColumn',
 					'dropdown' => true,
-					'template' => '{view}{review}{delete}',
+					'template' => '{view}',
 					'dropdownOptions'=>['class'=>'pull-left dropdown','style'=>['disable'=>true]],
 					'dropdownButton'=>[
 						'class' => $actionClass,
@@ -151,26 +151,11 @@ EOF;
 					],
 					'buttons' => [
 						'view' =>function($url, $model, $key){
-								return  '<li>' .Html::a('<span class="fa fa-random fa-dm"></span>'.Yii::t('app', 'Set Alias Customer'),
-															['/sistem/personalia/view','id'=>$model->id],[
-															'id'=>'alias-cust-id',
-															'data-toggle'=>"modal",
-															'data-target'=>"#alias-cust",
-															]). '</li>' . PHP_EOL;
-						},				
-						'review' =>function($url, $model, $key){
-								return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'Set Alias Prodak'),
-															['/sistem/personalia/view','id'=>$model->id],[
-															'id'=>'alias-prodak-id',
-															'data-toggle'=>"modal",
-															'data-target'=>"#alias-prodak",
-															]). '</li>' . PHP_EOL;
-						},	
-						'delete' =>function($url, $model, $key){
-								return  '<li>' . Html::a('<span class="fa fa-retweet fa-dm"></span>'.Yii::t('app', 'new Customer'),
-															['/sistem/personalia/view','id'=>$model->id],[
-															'data-toggle'=>"modal",
-															'data-target'=>"#alias-prodak",
+								return  '<li>' .Html::a('<span class="fa fa-eye"></span>'.Yii::t('app', 'View'),
+															['/widget/notulen/view','id'=>$model->id],[
+															'id'=>'notulen-id',
+															// 'data-toggle'=>"modal",
+															// 'data-target'=>"#alias-cust",
 															]). '</li>' . PHP_EOL;
 						},				
 					],
@@ -276,7 +261,7 @@ EOF;
 		<div class="col-sm-12 col-md-12 col-lg-12">
 			<?php
 			
-				print_r($dataProviderNotulen);
+				// print_r($dataProviderNotulen);
 			?>
 		</div>
 	</div>
@@ -295,7 +280,11 @@ EOF;
 Modal::begin([
     'id' => 'modal-notulen',
     'header' => '<div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>NOTULEN</b></h5></div>',
+<<<<<<< HEAD
     // 'size' => Modal::SIZE_LARGE,
+=======
+    'size' => Modal::SIZE_SMALL,
+>>>>>>> ad86637c0dc6fbf5a104e568c2a7da58df95468e
     'headerOptions'=>[
         'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
     ],

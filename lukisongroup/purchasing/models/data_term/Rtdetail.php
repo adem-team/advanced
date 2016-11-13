@@ -5,6 +5,7 @@ namespace lukisongroup\purchasing\models\data_term;
 use Yii;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\master\models\Terminvest;
+use lukisongroup\master\models\Customers;
 //use lukisongroup\master\models\Barang; /* Barang Pembelian untuk Operatioal | Inventaris*/
 use lukisongroup\master\models\Barang; /* Barang Pembelian/barang Produksi untuk dijual kembali*/
 use lukisongroup\purchasing\models\data_term\Requesttermheader;
@@ -54,8 +55,10 @@ class Rtdetail extends \yii\db\ActiveRecord
     {
         return [
 			[['KD_RIB'], 'required'],
-            [['INVESTASI_PROGRAM','HARGA'], 'safe'],
+            [['INVESTASI_PROGRAM','HARGA','PERIODE_START','PERIODE_END','PPN','PPH23','STORE_ID'], 'safe'],
 			['HARGA','default', 'value'=>0.00],
+      ['PPN','default', 'value'=>0],
+       ['PPH23','default', 'value'=>0],
 			[['STATUS','INVESTASI_TYPE'], 'integer'],
             //[['UNIT'], 'string'],
             [['UNIT','label'], 'string'],
@@ -77,6 +80,24 @@ class Rtdetail extends \yii\db\ActiveRecord
 		];
 	} */
 
+ 
+  public function getTotals(){
+      $total_pp23 = ($this->HARGA*$this->PPH23)/100;
+      $total_ppn =  ($this->HARGA*$this->PPN)/100;
+      $total = ($total_ppn + $this->HARGA)-$total_pp23 ;
+
+      return number_format($total,2);
+  }
+
+  public function getHrga()
+  {
+    return number_format($this->HARGA,2);
+  }
+
+ 
+
+
+
 
 	public function getCunit()
     {
@@ -88,8 +109,18 @@ class Rtdetail extends \yii\db\ActiveRecord
 		return $this->hasOne(Terminvest::className(), ['ID' => 'INVESTASI_TYPE']);
 	}
 
+    public function getCus(){
+    return $this->hasOne(Customers::className(), ['CUST_KD' => 'STORE_ID']);
+  }
+
+   public function getNmcus(){
+
+    return $this->cus->CUST_NM;
+   
+  }
+
 	public function getNminvest(){
-		return $this->invest->INVES_TYPE;
+    return $this->invest->INVES_TYPE;
 	}
 
 	public function getRetermheader(){

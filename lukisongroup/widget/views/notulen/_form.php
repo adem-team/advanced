@@ -12,35 +12,61 @@ use kartik\widgets\Select2;
 
 <div class="notulen-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'id'=>$model->formName(),
+        'enableClientValidation' => true,
+    ]); ?>
 
     <!--  $form->field($model, 'start')->textInput() ?>
 
      $form->field($model, 'end')->textInput() ?> -->
 
+<<<<<<< HEAD
+    <!--  $form->field($model, 'start')->textInput() ?>
+
+     $form->field($model, 'end')->textInput() ?> -->
+
+=======
+>>>>>>> ad86637c0dc6fbf5a104e568c2a7da58df95468e
     <?= $form->field($model, 'title')->textArea(['maxlength' => true]) ?>
 
      <!-- $form->field($model, 'USER_ID')->textInput(['maxlength' => true]) ?> -->
 
      <!-- $form->field($model, 'MODUL')->textInput(['maxlength' => true]) ?> -->
 
+<<<<<<< HEAD
       <?=  $form->field($model, 'USER_ID')->widget(Select2::classname(), [
+=======
+      <!--   $form->field($model, 'USER_ID')->widget(Select2::classname(), [
+>>>>>>> ad86637c0dc6fbf5a104e568c2a7da58df95468e
         'data' => $data_emp,
         'options' => ['placeholder' => 'Select ...'],
         'pluginOptions' => [
             'allowClear' => true
         ],
+<<<<<<< HEAD
     ]) ?>
 
     
     <!-- Usage with ActiveForm and model -->
     <?=  $form->field($model, 'MODUL')->widget(Select2::classname(), [
+=======
+    ]) ?> -->
+
+    
+    <!-- Usage with ActiveForm and model -->
+   <!--  $form->field($model, 'MODUL')->widget(Select2::classname(), [
+>>>>>>> ad86637c0dc6fbf5a104e568c2a7da58df95468e
         'data' => $data_modul,
         'options' => ['placeholder' => 'Select ...'],
         'pluginOptions' => [
             'allowClear' => true
         ],
+<<<<<<< HEAD
     ]) ?>
+=======
+    ]) ?> -->
+>>>>>>> ad86637c0dc6fbf5a104e568c2a7da58df95468e
 
     <?php if(!$model->isNewRecord) { ?>
     <?= $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']) ?>
