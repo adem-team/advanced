@@ -20,17 +20,19 @@ use yii\data\ArrayDataProvider;
     		[
 				'columns' => [
 					[
-						'attribute'=>'CUST_KD', 
+						'attribute'=>'KODE_REF', 
 						'label'=>'SO.NO',
 						'displayOnly'=>true,
-						'labelColOptions'=>['style'=>'width:10%;text-align:right'],
-						'valueColOptions'=>['style'=>'width:40%;text-align:left']
+						'format'=>'raw',
+						'labelColOptions'=>['style'=>'width:10%;text-align:right;font-family:tahoma, arial, sans-serif;font-size:7pt'],
+						'valueColOptions'=>['style'=>'width:40%;text-align:left;font-family:tahoma, arial, sans-serif;font-size:7pt'],
+						'value'=>"<span style='color:#ff0000;font-weight: bold'>".$model['KODE_REF']."</span>",
 					],
 					[
 						'attribute'=>'PIC', 
 						'label'=>'PIC',
-						'labelColOptions'=>['style'=>'width:10%;text-align:right'],
-						'valueColOptions'=>['style'=>'width:40%;text-align:left'],
+						'labelColOptions'=>['style'=>'width:10%;text-align:right;font-family:tahoma, arial, sans-serif;font-size:7pt'],
+						'valueColOptions'=>['style'=>'width:40%;text-align:left;font-family:tahoma, arial, sans-serif;font-size:7pt'],
 						'displayOnly'=>true
 					],
 				],
@@ -41,15 +43,15 @@ use yii\data\ArrayDataProvider;
 						'attribute'=>'CUST_KD', 
 						'label'=>'CUSTOMER.ID',
 						'displayOnly'=>true,
-						'labelColOptions'=>['style'=>'width:10%;text-align:right'],
-						'valueColOptions'=>['style'=>'width:40%;text-align:left']
+						'labelColOptions'=>['style'=>'width:10%;text-align:right;font-family:tahoma, arial, sans-serif;font-size:7pt'],
+						'valueColOptions'=>['style'=>'width:40%;text-align:left;font-family:tahoma, arial, sans-serif;font-size:7pt']
 					],
 					[
 						//JAM MEMULAI PERJALANAN DARI DISTRIBUTOR/OTHER
 						'attribute'=>'TLP2',
 						'label'=>'HP',						
-						'labelColOptions'=>['style'=>'width:10%;text-align:right'],
-						'valueColOptions'=>['style'=>'width:40%;text-align:left'],
+						'labelColOptions'=>['style'=>'width:10%;text-align:right;font-family:tahoma, arial, sans-serif;font-size:7pt'],
+						'valueColOptions'=>['style'=>'width:40%;text-align:left;font-family:tahoma, arial, sans-serif;font-size:7pt'],
 						'displayOnly'=>true
 					],
 				],
@@ -59,15 +61,15 @@ use yii\data\ArrayDataProvider;
 					[
 						'attribute'=>'CUST_NM', 
 						'label'=>'CUSTOMER',
-						'labelColOptions'=>['style'=>'width:10%;text-align:right'],
-						'valueColOptions'=>['style'=>'width:40%;text-align:left'],
+						'labelColOptions'=>['style'=>'width:10%;text-align:right;font-family:tahoma, arial, sans-serif;font-size:7pt'],
+						'valueColOptions'=>['style'=>'width:40%;text-align:left;font-family:tahoma, arial, sans-serif;font-size:7pt'],
 						'displayOnly'=>true
 					],
 					[
 						'attribute'=>'KTP', 
 						'label'=>'NO.KTP',
-						'labelColOptions'=>['style'=>'width:10%;text-align:right'],
-						'valueColOptions'=>['style'=>'width:40%;text-align:left'],
+						'labelColOptions'=>['style'=>'width:10%;text-align:right;font-family:tahoma, arial, sans-serif;font-size:7pt'],
+						'valueColOptions'=>['style'=>'width:40%;text-align:left;font-family:tahoma, arial, sans-serif;font-size:7pt'],
 						'displayOnly'=>true
 					],
 				],
@@ -78,14 +80,14 @@ use yii\data\ArrayDataProvider;
 						'attribute'=>'JOIN_DATE', 
 						'label'=>'Join Date',
 						'displayOnly'=>true,
-						'labelColOptions'=>['style'=>'width:10%;text-align:right'],
-						'valueColOptions'=>['style'=>'width:40%;text-align:left'],
+						'labelColOptions'=>['style'=>'width:10%;text-align:right;font-family:tahoma, arial, sans-serif;font-size:7pt'],
+						'valueColOptions'=>['style'=>'width:40%;text-align:left;font-family:tahoma, arial, sans-serif;font-size:7pt'],
 					],
 					[
 						'attribute'=>'NPWP', 
 						'label'=>'NPWP',
-						'labelColOptions'=>['style'=>'width:10%;text-align:right'],
-						'valueColOptions'=>['style'=>'width:40%;text-align:left'],
+						'labelColOptions'=>['style'=>'width:10%;text-align:right;font-family:tahoma, arial, sans-serif;font-size:7pt'],
+						'valueColOptions'=>['style'=>'width:40%;text-align:left;font-family:tahoma, arial, sans-serif;font-size:7pt'],
 						'displayOnly'=>true
 					],
 				],
@@ -95,16 +97,16 @@ use yii\data\ArrayDataProvider;
 					[
 						'attribute'=>'NM_FIRST', 
 						'label'=>'SALES NAME',
-						'labelColOptions'=>['style'=>'width:10%;text-align:right'],
-						'valueColOptions'=>['style'=>'width:40%;text-align:left'],
+						'labelColOptions'=>['style'=>'width:10%;text-align:right;font-family:tahoma, arial, sans-serif;font-size:7pt'],
+						'valueColOptions'=>['style'=>'width:40%;text-align:left;font-family:tahoma, arial, sans-serif;font-size:7pt'],
 						'displayOnly'=>true
 					],
 					[
 						
 						'attribute'=>'SIUP', 
 						'label'=>'SIUP',						
-						'labelColOptions'=>['style'=>'width:10%;text-align:right'],
-						'valueColOptions'=>['style'=>'width:40%;text-align:left'],
+						'labelColOptions'=>['style'=>'width:10%;text-align:right;font-family:tahoma, arial, sans-serif;font-size:7pt'],
+						'valueColOptions'=>['style'=>'width:40%;text-align:left;font-family:tahoma, arial, sans-serif;font-size:7pt'],
 						'displayOnly'=>true
 					],
 				],
@@ -114,8 +116,8 @@ use yii\data\ArrayDataProvider;
 					[
 						'attribute'=>'ALAMAT', 
 						'label'=>'ALAMAT',
-						'labelColOptions'=>['style'=>'width:10%;text-align:right'],
-						'valueColOptions'=>['style'=>'width:90%;text-align:left'],
+						'labelColOptions'=>['style'=>'width:10%;text-align:right;font-family:tahoma, arial, sans-serif;font-size:7pt'],
+						'valueColOptions'=>['style'=>'width:90%;text-align:left;font-family:tahoma, arial, sans-serif;font-size:7pt'],
 						'displayOnly'=>true
 					]
 				],
@@ -125,7 +127,7 @@ use yii\data\ArrayDataProvider;
 		'enableEditMode'=>false,
 		'mainTemplate'=>'{detail}',
 		'panel'=>[
-			'heading'=>"<i class='fa fa-info-circle fa-1x'></i> CUSTOMER INFO",
+			'heading'=>"<div style='font-family:tahoma, arial, sans-serif;font-size:9pt'> <i class='fa fa-info-circle fa-1x'></i> CUSTOMER INFO </div>",
 			'type'=>DetailView::TYPE_INFO,
 		],			
     ]); 

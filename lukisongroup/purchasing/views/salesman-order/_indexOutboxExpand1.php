@@ -34,7 +34,7 @@ use yii\data\ArrayDataProvider;
 				<div class="direct-chat-messages" style="height:380px">
 					<!-- Message. Default to the left -->
 						 <div class="raw">
-							<div class="col-sm-12 col-md-12 col-lg-12" style="font-family:tahoma, arial, sans-serif;font-size:9pt">
+							<div class="col-sm-12 col-md-12 col-lg-12" style="font-family:tahoma, arial, sans-serif;font-size:7pt">
 								<?php
 									$dvInfoCustomer=$this->render('_indexExpand1CustDetail',[
 										'model'=>$model,

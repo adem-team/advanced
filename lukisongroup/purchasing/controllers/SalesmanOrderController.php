@@ -17,6 +17,8 @@ use yii\widgets\Pjax;
 use kartik\mpdf\Pdf;
 use zyx\phpmailer\Mailer;
 
+use lukisongroup\purchasing\models\salesmanorder\SoHeaderSearch;
+
 use lukisongroup\purchasing\models\so\Salesorder;
 use lukisongroup\purchasing\models\so\SalesorderSearch;
 use lukisongroup\purchasing\models\so\Sodetail;
@@ -88,15 +90,19 @@ class SalesmanOrderController extends Controller
 		$apSalemanOrderInbox= new ArrayDataProvider([
 			'allModels'=>Yii::$app->db_esm->createCommand("
 				SELECT x1.ID,x1.TGL,x1.WAKTU_INPUT_INVENTORY,x1.CUST_KD,x1.CUST_NM,x1.KD_BARANG,x1.NM_BARANG,x1.SO_QTY,x1.SO_TYPE,x1.POS,x1.STATUS,x1.ID_GROUP,
-					x1.HARGA_PABRIK,x1.HARGA_DIS,x1.HARGA_LG,x1.HARGA_SALES,
+					#x1.HARGA_PABRIK,x1.HARGA_DIS,x1.HARGA_LG,x1.HARGA_SALES,
 					x1.KODE_REF,x1.USER_ID,x2.username,x3.NM_FIRST,x1.SUBMIT_QTY,x1.SUBMIT_PRICE,x1.NOTED,x4.ISI_MESSAGES,x5.CHECKIN_TIME,x5.CHECKOUT_TIME,
-					x6.PIC,x6.TLP1,x6.KTP,x6.NPWP,x6.SIUP,x6.ALAMAT,x6.JOIN_DATE,x6.TLP1,x6.TLP2
-				FROM `so_t2_13-11-2016` x1 
+					x6.PIC,x6.TLP1,x6.KTP,x6.NPWP,x6.SIUP,x6.ALAMAT,x6.JOIN_DATE,x6.TLP1,x6.TLP2,x8.NM_UNIT,x8.QTY AS UNIT_QTY,x7.HARGA_SALES,
+					x1.KODE_REF
+				FROM so_t2 x1 
 					LEFT JOIN dbm001.user x2 ON x2.id=x1.USER_ID
 					LEFT JOIN dbm_086.user_profile x3 ON x3.ID_USER=x2.id
 					LEFT JOIN c0014 x4 on x4.TGL=x1.TGL AND x4.ID_USER=x1.USER_ID
 					LEFT JOIN c0002scdl_detail x5 on x5.TGL=x1.TGL AND x5.CUST_ID=x1.CUST_KD
 					LEFT JOIN c0001 x6 on x6.CUST_KD=x1.CUST_KD
+					LEFT JOIN b0001 x7 on x7.KD_BARANG=x1.KD_BARANG
+					LEFT JOIN ub0001 x8 on x8.KD_UNIT=x7.KD_UNIT
+					LEFT JOIN so_0001 x9 on x9.KD_SO=x1.KODE_REF
 				WHERE x1.SO_TYPE=10
 				GROUP BY x1.TGL,x1.USER_ID,x1.CUST_KD
 			")->queryAll(),
@@ -107,38 +113,9 @@ class SalesmanOrderController extends Controller
 		//print_r($aryProviderSalemanOrder);	
 		//die();
 		
-		$searchModel = new SalesorderSearch();
-
-		$dataProvider = $searchModel->searchSo(Yii::$app->request->queryParams);
-		$dataProviderInbox = $searchModel->searchSoInbox(Yii::$app->request->queryParams);
-		$dataProviderOutbox = $searchModel->searchSoOutbox(Yii::$app->request->queryParams);
-    $profile=Yii::$app->getUserOpt->Profile_user();
-    $datacheckedso = Salesorder::find()->where("PARENT_ROSO = 1 AND STATUS = 101 AND STATUS <> 3 AND USER_CC='".$profile->emp->EMP_ID."'")
-                                        ->count();
-    $datacreateso = Salesorder::find()->where("PARENT_ROSO = 1 AND STATUS <> 3 AND STATUS = 0 AND ID_USER = '".$profile->emp->EMP_ID."'")
-                                        ->count();
-    $dataapprove = Salesorder::find()->where("PARENT_ROSO = 1 AND STATUS = 102 AND  STATUS <> 3 AND KD_DEP='".$profile->emp->DEP_ID."' OR STATUS = 5")
-                                        ->count();
-
-    $dataAprroveso = new ActiveDataProvider([
-                    'query' => Salesorder::find()->where("PARENT_ROSO = 1 AND STATUS = 102 AND STATUS<>3  AND KD_DEP='".$profile->emp->DEP_ID."'OR STATUS = 5"),
-                        'pagination' => [
-                          'pageSize' => 5,
-                                    ],
-                              ]);
-    $dataCheckedso = new ActiveDataProvider([
-                                'query' => Salesorder::find()->where("PARENT_ROSO = 1 AND  STATUS = 101 AND USER_CC='".$profile->emp->EMP_ID."'"),
-                                  'pagination' => [
-                                        'pageSize' => 5,
-                                                    ],
-                                            ]);
-    $dataCreateso = new ActiveDataProvider([
-                                'query' => Salesorder::find()->where("PARENT_ROSO = 1 AND STATUS <> 3 AND STATUS = 0 AND ID_USER = '".$profile->emp->EMP_ID."'"),
-                                  'pagination' => [
-                                        'pageSize' => 5,
-                                                    ],
-                                            ]);
-
+		$searchModel = new SoHeaderSearch();
+		$dataProvider = $searchModel->searchHeader(Yii::$app->request->queryParams);
+		//print_r($dataProvider);
 		return $this->render('index', [
 			'apSoHeaderInbox'=>$apSalemanOrderInbox,
 			'apSoHeaderOutbox'=>$apSalemanOrderInbox,
