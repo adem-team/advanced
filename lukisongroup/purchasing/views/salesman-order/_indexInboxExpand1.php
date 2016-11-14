@@ -31,7 +31,7 @@ use yii\data\ArrayDataProvider;
 			</div><!-- /.box-header -->
 			<div class="box-body">
 				<!-- Conversations are loaded here -->
-				<div class="direct-chat-messages" style="height:380px">
+				<div class="direct-chat-messages" style="height:600px">
 					<!-- Message. Default to the left -->
 						 <div class="raw">
 							<div class="col-sm-12 col-md-12 col-lg-12" style="font-family:tahoma, arial, sans-serif;font-size:9pt">
@@ -52,7 +52,7 @@ use yii\data\ArrayDataProvider;
 					<!-- Message to the right -->
 				</div><!--/.direct-chat-messages-->
 				<!-- Contacts are loaded here -->
-				<div class="direct-chat-contacts" style="height:380px; color:black;background-color:white">
+				<div class="direct-chat-contacts" style="height:600px; color:black;background-color:white">
 					<ul class="contacts-list">
 						<li>
 							<div class="raw">

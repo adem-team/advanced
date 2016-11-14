@@ -280,6 +280,409 @@ use lukisongroup\hrd\models\Dept;
 $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 'DEP_NM','DEP_NM');
 ?>
 	<?php
+	$columnIndexOutbox= [
+		/*No Urut*/
+		[
+			'class'=>'kartik\grid\SerialColumn',
+			'contentOptions'=>['class'=>'kartik-sheet-style'],
+			'width'=>'10px',
+			'header'=>'No.',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'10px',
+					'font-family'=>'verdana, arial, sans-serif',
+					'font-size'=>'7pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'10px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+				]
+			],
+		],
+		[
+			'class'=>'kartik\grid\ExpandRowColumn',
+			'width'=>'50px',
+			'header'=>'Detail',
+			'value'=>function ($model, $key, $index, $column) {
+				return GridView::ROW_COLLAPSED;
+			},
+			'detail'=>function ($model, $key, $index, $column){
+				$aryProviderSoDetailOutbox= new ArrayDataProvider([
+					'allModels'=>Yii::$app->db_esm->createCommand("
+						SELECT x1.ID,x1.TGL,x1.WAKTU_INPUT_INVENTORY,x1.CUST_KD,x1.CUST_NM,x1.KD_BARANG,x1.NM_BARANG,x1.SO_QTY,x1.SO_TYPE,x1.POS,x1.STATUS,x1.ID_GROUP,
+							x1.HARGA_PABRIK,x1.HARGA_DIS,x1.HARGA_LG,x1.HARGA_SALES,
+							x1.KODE_REF,x1.USER_ID,x2.username,x3.NM_FIRST,x1.SUBMIT_QTY,x1.SUBMIT_PRICE,x1.NOTED,x4.ISI_MESSAGES,x5.CHECKIN_TIME,x5.CHECKOUT_TIME,
+							x6.PIC,x6.TLP1,x6.KTP,x6.NPWP,x6.SIUP,x6.ALAMAT,x6.JOIN_DATE,x6.TLP1,x6.TLP2,x8.NM_UNIT,x8.QTY AS UNIT_QTY,x7.HARGA_SALES,
+							(x1.SO_QTY/x8.QTY) AS UNIT_BRG,
+							(x1.SO_QTY * x7.HARGA_SALES) as SUB_TOTAL,
+							(x1.SUBMIT_QTY * x1.SUBMIT_PRICE) as SUBMIT_SUB_TOTAL,
+							x1.KODE_REF
+						FROM so_t2 x1 
+							LEFT JOIN dbm001.user x2 ON x2.id=x1.USER_ID
+							LEFT JOIN dbm_086.user_profile x3 ON x3.ID_USER=x2.id
+							LEFT JOIN c0014 x4 on x4.TGL=x1.TGL AND x4.ID_USER=x1.USER_ID
+							LEFT JOIN c0002scdl_detail x5 on x5.TGL=x1.TGL AND x5.CUST_ID=x1.CUST_KD
+							LEFT JOIN c0001 x6 on x6.CUST_KD=x1.CUST_KD
+							LEFT JOIN b0001 x7 on x7.KD_BARANG=x1.KD_BARANG
+							LEFT JOIN ub0001 x8 on x8.KD_UNIT=x7.KD_UNIT
+							LEFT JOIN so_0001 x9 on x9.KD_SO=x1.KODE_REF
+						WHERE x1.SO_TYPE=".$model['SO_TYPE']." AND x1.TGL='".$model['TGL']."' AND x1.CUST_KD='".$model['CUST_KD']."';#CUS.2016.000638,CUS.2016.000619
+					")->queryAll(),
+					'pagination' => [
+						'pageSize' => 1000,
+					]
+				]);
+				return Yii::$app->controller->renderPartial('_indexOutboxExpand1',[
+					'model'=>$model,
+					'aryProviderSoDetailOutbox'=>$aryProviderSoDetailOutbox
+				]); 
+			},
+			'collapseTitle'=>'Close Exploler',
+			'expandTitle'=>'Click to views detail',
+			
+			//'headerOptions'=>['class'=>'kartik-sheet-style'] ,
+			// 'allowBatchToggle'=>true,
+			'expandOneOnly'=>true,
+			// 'enableRowClick'=>true,
+			//'disabled'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					
+					'text-align'=>'center',
+					'width'=>'10px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+					'background-color'=>'rgba(74, 206, 231, 1)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+				
+					'text-align'=>'center',
+					'width'=>'10px',
+					'height'=>'10px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+				]
+			],
+		],
+		/*KD_RO*/
+		[
+			'attribute'=>'KODE_REF',
+			'label'=>'Kode SO',
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			//'group'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'130px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'left',
+					'width'=>'130px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+				]
+			],
+		],
+		/*CREATE_AT Tanggal Pembuatan*/
+		[
+			'attribute'=>'TGL',
+			'label'=>'Create At',
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			//'value'=>function($model){
+				/*
+				 * max String Disply
+				 * @author ptrnov <piter@lukison.com>
+				*/
+			//	return substr($model->username, 0, 10);
+			//},
+			'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
+						'filterWidgetOptions' =>([
+							'attribute' =>'CREATED_AT',
+							'presetDropdown'=>TRUE,
+							'convertFormat'=>true,
+							'pluginOptions'=>[
+								'id'=>'tglpo',
+								'format'=>'Y/m/d',
+								'separator' => ' - ',
+								'opens'=>'right'
+							]
+			]),
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'90px',
+					'font-family'=>'verdana, arial, sans-serif',
+					'font-size'=>'7pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'left',
+					'width'=>'90px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt'
+				]
+			],
+		],
+		/*CUSTOMER*/
+		[
+			'attribute'=>'CUST_NM',
+			'label'=>'Customer',
+			//'filter' => $Combo_Dept,
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			//'group'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'190px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'left',
+					'width'=>'190px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+				]
+			],
+		],
+		/*Chck.IN*/
+		[
+			'attribute'=>'CHECKIN_TIME',
+			'label'=>'Time.IN',
+			//'filter' => $Combo_Dept,
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			//'group'=>true,
+			'value'=>function($model){
+				return substr($model['CHECKIN_TIME'], 8, 8);
+			},
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'left',
+					'width'=>'50px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+				]
+			],
+		],
+		/*Chck.OUT*/
+		[
+			'attribute'=>'CHECKOUT_TIME',
+			'label'=>'Time.IN',
+			//'filter' => $Combo_Dept,
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			//'group'=>true,
+			'value'=>function($model){
+				return substr($model['CHECKOUT_TIME'], 8, 8);
+			},
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'left',
+					'width'=>'50px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+				]
+			],
+		],
+		/*DIBUAT*/
+		[
+			'attribute'=>'NM_FIRST',
+			'label'=>'Created',
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			//'group'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'120px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'left',
+					'width'=>'120px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+				]
+			],
+		],
+		/*DIPERIKSA*/
+		[
+			'attribute'=>'SIG2_NM',
+			'label'=>'Checked',
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			//'group'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'120px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'left',
+					'width'=>'120px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+				]
+			],
+		],
+		/*DISETUJUI*/
+		[
+			'attribute'=>'SIG3_NM',
+			'label'=>'Approved',
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			//'group'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'120px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'left',
+					'width'=>'120px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+				]
+			],
+		],
+		/*Action*/
+		[
+			'class'=>'kartik\grid\ActionColumn',
+			'dropdown' => true,
+			'template' => '{view}{tambahEdit}{delete}{review}{closed}',
+			'dropdownOptions'=>['class'=>'pull-right dropup'],
+			//'headerOptions'=>['class'=>'kartik-sheet-style'],
+			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
+			'buttons' => [
+				/* View RO | Permissian All */
+				'view' => function ($url, $model) {
+								return tombolViewInbox($url, $model);
+						  },
+
+				/* View RO | Permissian Status 0; 0=process | User created = user login  */
+				'tambahEdit' => function ($url, $model) {
+								return tombolEditInbox($url, $model);
+							},
+
+				/* Delete RO | Permissian Status 0; 0=process | User created = user login */
+				'delete' => function ($url, $model) {
+								return tombolDeleteInbox($url, $model);
+							},
+
+				/* Approved RO | Permissian Status 0; 0=process | Dept = Dept login | GF >= M */
+				'review' => function ($url, $model) {
+								return tombolReview($url, $model);
+							},
+				 'closed' => function ($url, $model) use ($getPermissionInboxCheeck){
+								if ($getPermissionInboxCheeck['BTN_VIEW']==0) {
+									return Html::label('<i class="glyphicon glyphicon-lock dm"></i> LOCKED','',['class'=>'label label-danger','style'=>['align'=>'center']]);
+									//return  tombolKonci($url, $model);
+								}
+							},
+
+			],
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'140px',
+					'font-family'=>'verdana, arial, sans-serif',
+					'font-size'=>'7pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'140px',
+					'height'=>'10px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+				]
+			],
+		],
+		[
+			'label'=>'Notification',
+			'mergeHeader'=>true,
+			'format' => 'raw',
+			'hAlign'=>'center',
+			'value' => function ($model) {
+							return statusProcessRo($model);
+			},
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'130px',
+					'font-family'=>'verdana, arial, sans-serif',
+					'font-size'=>'7pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'130px',
+					'height'=>'10px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+				]
+			],
+		],
+
+	];
 		/*
 		 * OUTBOX SALESAN ORDER - MD Sales
 		 * ACTION CREATE
@@ -291,413 +694,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			'dataProvider'=> $apSoHeaderOutbox,
 			//'filterModel' => $searchModel,
 			'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
-			/*
-				'beforeHeader'=>[
-					[
-						'columns'=>[
-							['content'=>'List Permintaan Barang & Jasa', 'options'=>['colspan'=>4, 'class'=>'text-center success']],
-							['content'=>'Action Status ', 'options'=>['colspan'=>6, 'class'=>'text-center warning']],
-						],
-						'options'=>['class'=>'skip-export'] // remove this row from export
-					]
-				],
-			*/
-			'columns' => [
-					/*No Urut*/
-					[
-						'class'=>'kartik\grid\SerialColumn',
-						'contentOptions'=>['class'=>'kartik-sheet-style'],
-						'width'=>'10px',
-						'header'=>'No.',
-						'headerOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'10px',
-								'font-family'=>'verdana, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'10px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'8pt',
-							]
-						],
-					],
-					[
-						'class'=>'kartik\grid\ExpandRowColumn',
-						'width'=>'50px',
-						'header'=>'Detail',
-						'value'=>function ($model, $key, $index, $column) {
-							return GridView::ROW_COLLAPSED;
-						},
-						'detail'=>function ($model, $key, $index, $column){
-							$aryProviderSoDetailOutbox= new ArrayDataProvider([
-								'allModels'=>Yii::$app->db_esm->createCommand("
-									SELECT x1.ID,x1.TGL,x1.WAKTU_INPUT_INVENTORY,x1.CUST_KD,x1.CUST_NM,x1.KD_BARANG,x1.NM_BARANG,x1.SO_QTY,x1.SO_TYPE,x1.POS,x1.STATUS,x1.ID_GROUP,
-										x1.HARGA_PABRIK,x1.HARGA_DIS,x1.HARGA_LG,x1.HARGA_SALES,
-										x1.KODE_REF,x1.USER_ID,x2.username,x3.NM_FIRST,x1.SUBMIT_QTY,x1.SUBMIT_PRICE,x1.NOTED,x4.ISI_MESSAGES,x5.CHECKIN_TIME,x5.CHECKOUT_TIME,
-										x6.PIC,x6.TLP1,x6.KTP,x6.NPWP,x6.SIUP
-									FROM `so_t2_13-11-2016` x1 
-										LEFT JOIN dbm001.user x2 ON x2.id=x1.USER_ID
-										LEFT JOIN dbm_086.user_profile x3 ON x3.ID_USER=x2.id
-										LEFT JOIN c0014 x4 on x4.TGL=x1.TGL AND x4.ID_USER=x1.USER_ID
-									    LEFT JOIN c0002scdl_detail x5 on x5.TGL=x1.TGL AND x5.CUST_ID=x1.CUST_KD
-										LEFT JOIN c0001 x6 on x6.CUST_KD=x1.CUST_KD
-									WHERE x1.SO_TYPE=".$model['SO_TYPE']." AND x1.TGL='".$model['TGL']."' AND x1.CUST_KD='".$model['CUST_KD']."';#CUS.2016.000638,CUS.2016.000619
-								")->queryAll(),
-								'pagination' => [
-									'pageSize' => 1000,
-								]
-							]);
-							return Yii::$app->controller->renderPartial('_indexOutboxExpand1',[
-								'model'=>$model,
-								'aryProviderSoDetailOutbox'=>$aryProviderSoDetailOutbox
-							]); 
-						},
-						'collapseTitle'=>'Close Exploler',
-						'expandTitle'=>'Click to views detail',
-						
-						//'headerOptions'=>['class'=>'kartik-sheet-style'] ,
-						// 'allowBatchToggle'=>true,
-						'expandOneOnly'=>true,
-						// 'enableRowClick'=>true,
-						//'disabled'=>true,
-						'headerOptions'=>[
-							'style'=>[
-								
-								'text-align'=>'center',
-								'width'=>'10px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(74, 206, 231, 1)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-							
-								'text-align'=>'center',
-								'width'=>'10px',
-								'height'=>'10px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						],
-					],
-					/*KD_RO*/
-					[
-						'attribute'=>'KD_RO',
-						'label'=>'Kode SO',
-						'hAlign'=>'left',
-						'vAlign'=>'middle',
-						//'group'=>true,
-						'headerOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'130px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'left',
-								'width'=>'130px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						],
-					],
-					/*CREATE_AT Tanggal Pembuatan*/
-					[
-						'attribute'=>'TGL',
-						'label'=>'Create At',
-						'hAlign'=>'left',
-						'vAlign'=>'middle',
-						//'value'=>function($model){
-							/*
-							 * max String Disply
-							 * @author ptrnov <piter@lukison.com>
-							*/
-						//	return substr($model->username, 0, 10);
-						//},
-						'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
-									'filterWidgetOptions' =>([
-										'attribute' =>'CREATED_AT',
-										'presetDropdown'=>TRUE,
-										'convertFormat'=>true,
-										'pluginOptions'=>[
-											'id'=>'tglpo',
-											'format'=>'Y/m/d',
-											'separator' => ' - ',
-											'opens'=>'right'
-										]
-						]),
-						'headerOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'90px',
-								'font-family'=>'verdana, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'left',
-								'width'=>'90px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt'
-							]
-						],
-					],
-					/*CUSTOMER*/
-					[
-						'attribute'=>'CUST_NM',
-						'label'=>'Customer',
-						//'filter' => $Combo_Dept,
-						'hAlign'=>'left',
-						'vAlign'=>'middle',
-						//'group'=>true,
-						'headerOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'190px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'left',
-								'width'=>'190px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						],
-					],
-					/*Chck.IN*/
-					[
-						'attribute'=>'CHECKIN_TIME',
-						'label'=>'Time.IN',
-						//'filter' => $Combo_Dept,
-						'hAlign'=>'left',
-						'vAlign'=>'middle',
-						//'group'=>true,
-						'value'=>function($model){
-							return substr($model['CHECKIN_TIME'], 8, 8);
-						},
-						'headerOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'50px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'left',
-								'width'=>'50px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						],
-					],
-					/*Chck.OUT*/
-					[
-						'attribute'=>'CHECKOUT_TIME',
-						'label'=>'Time.IN',
-						//'filter' => $Combo_Dept,
-						'hAlign'=>'left',
-						'vAlign'=>'middle',
-						//'group'=>true,
-						'value'=>function($model){
-							return substr($model['CHECKOUT_TIME'], 8, 8);
-						},
-						'headerOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'50px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'left',
-								'width'=>'50px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						],
-					],
-					/*DIBUAT*/
-					[
-						'attribute'=>'NM_FIRST',
-						'label'=>'Created',
-						'hAlign'=>'left',
-						'vAlign'=>'middle',
-						//'group'=>true,
-						'headerOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'120px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'left',
-								'width'=>'120px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						],
-					],
-					/*DIPERIKSA*/
-					[
-						'attribute'=>'SIG2_NM',
-						'label'=>'Checked',
-						'hAlign'=>'left',
-						'vAlign'=>'middle',
-						//'group'=>true,
-						'headerOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'120px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'left',
-								'width'=>'120px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						],
-					],
-					/*DISETUJUI*/
-					[
-						'attribute'=>'SIG3_NM',
-						'label'=>'Approved',
-						'hAlign'=>'left',
-						'vAlign'=>'middle',
-						//'group'=>true,
-						'headerOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'120px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'left',
-								'width'=>'120px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						],
-					],
-					/*Action*/
-					[
-						'class'=>'kartik\grid\ActionColumn',
-						'dropdown' => true,
-						'template' => '{view}{tambahEdit}{delete}{review}{closed}',
-						'dropdownOptions'=>['class'=>'pull-right dropup'],
-						//'headerOptions'=>['class'=>'kartik-sheet-style'],
-						'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
-						'buttons' => [
-							/* View RO | Permissian All */
-							'view' => function ($url, $model) {
-											return tombolViewInbox($url, $model);
-									  },
-
-							/* View RO | Permissian Status 0; 0=process | User created = user login  */
-							'tambahEdit' => function ($url, $model) {
-											return tombolEditInbox($url, $model);
-										},
-
-							/* Delete RO | Permissian Status 0; 0=process | User created = user login */
-							'delete' => function ($url, $model) {
-											return tombolDeleteInbox($url, $model);
-										},
-
-							/* Approved RO | Permissian Status 0; 0=process | Dept = Dept login | GF >= M */
-							'review' => function ($url, $model) {
-											return tombolReview($url, $model);
-										},
-							 'closed' => function ($url, $model) use ($getPermissionInboxCheeck){
-											if ($getPermissionInboxCheeck['BTN_VIEW']==0) {
-												return Html::label('<i class="glyphicon glyphicon-lock dm"></i> LOCKED','',['class'=>'label label-danger','style'=>['align'=>'center']]);
-												//return  tombolKonci($url, $model);
-											}
-										},
-
-						],
-						'headerOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'140px',
-								'font-family'=>'verdana, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'140px',
-								'height'=>'10px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						],
-					],
-					[
-						'label'=>'Notification',
-						'mergeHeader'=>true,
-						'format' => 'raw',
-						'hAlign'=>'center',
-						'value' => function ($model) {
-										return statusProcessRo($model);
-						},
-						'headerOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'130px',
-								'font-family'=>'verdana, arial, sans-serif',
-								'font-size'=>'9pt',
-								'background-color'=>'rgba(97, 211, 96, 0.3)',
-							]
-						],
-						'contentOptions'=>[
-							'style'=>[
-								'text-align'=>'center',
-								'width'=>'130px',
-								'height'=>'10px',
-								'font-family'=>'tahoma, arial, sans-serif',
-								'font-size'=>'9pt',
-							]
-						],
-					],
-
-			],
+			'columns'=>$columnIndexOutbox,
 			'pjax'=>true,
 			'pjaxSettings'=>[
 				'options'=>[
@@ -713,9 +710,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			'autoXlFormat'=>true,
 			'export' => false,
 			'toolbar'=> [
-					['content'=>tombolCreate().tombolBarang().tombolKategori()],
-					//'{export}',
-					'{toggleData}',
+					''
 				],
 			'panel'=>[
 				'type'=>GridView::TYPE_DANGER,
