@@ -149,6 +149,14 @@ use yii\data\ArrayDataProvider;
 				'font-size'=>'7pt',
 			]
 		],
+		'pageSummaryOptions' => [
+			'style'=>[
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+					'text-align'=>'right',
+					'border-left'=>'0px',
+			]
+		],
 	],
 	/*UNIT_BRG*/
 	[
@@ -178,6 +186,14 @@ use yii\data\ArrayDataProvider;
 				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt',
+			]
+		],
+		'pageSummaryOptions' => [
+			'style'=>[
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+					'text-align'=>'right',
+					'border-left'=>'0px',
 			]
 		],
 	],
@@ -240,6 +256,14 @@ use yii\data\ArrayDataProvider;
 				'font-size'=>'7pt',
 			]
 		],
+		'pageSummaryOptions' => [
+			'style'=>[
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+					'text-align'=>'right',
+					'border-left'=>'0px',
+			]
+		],
 	],
 	/*SUBMIT_QTY*/
 	[
@@ -271,8 +295,16 @@ use yii\data\ArrayDataProvider;
 				'font-size'=>'7pt',
 			]
 		],
+		'pageSummaryOptions' => [
+			'style'=>[
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+					'text-align'=>'right',
+					'border-left'=>'0px',
+			]
+		],
 	],
-	/*SUBMIT_QTY*/
+	/*SUBMIT_PRICE*/
 	[
 		'attribute'=>'SUBMIT_PRICE',
 		'label'=>'PREMIT PRICE/Pcs',
@@ -329,6 +361,14 @@ use yii\data\ArrayDataProvider;
 				'width'=>'120px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt',
+			]
+		],
+		'pageSummaryOptions' => [
+			'style'=>[
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+					'text-align'=>'right',
+					'border-left'=>'0px',
 			]
 		],
 	],

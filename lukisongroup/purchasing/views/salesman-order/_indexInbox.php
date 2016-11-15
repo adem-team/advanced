@@ -217,14 +217,15 @@ use lukisongroup\hrd\models\Dept;
 	 * 2. Action APPROVAL Akan close atau tidak bisa di lakukan jika sudah Approved | status Approved =101 | Permission sign1
 	*/
 	function tombolReviewInbox($url, $model){
+		$kd=$model['KODE_REF']!=''?$model['KODE_REF']:$model['ID'];
+		$kdstt=$model['KODE_REF']!=''?1:0;
 		$title = Yii::t('app', 'Review');
-		$options = [ 'id'=>'reviewinbox',
-					 'data-pjax'=>true,
-					 'data-toggle-reviewinbox'=>$model['KD_RO'],
-		];
-		$icon = '<span class="glyphicon glyphicon-ok"></span>';
-		$label = $icon . ' ' . $title;
-		return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;	
+				$options = [ 'id'=>'so-review-inbox'];
+				$icon = '<span class="glyphicon glyphicon-ok"></span>';
+				$label = $icon . ' ' . $title;
+				$url = Url::toRoute(['/purchasing/salesman-order/review','id'=>$kd,'stt'=>$kdstt]);
+				$options['tabindex'] = '-1';
+				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
 	}
 
 

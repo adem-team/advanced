@@ -1118,6 +1118,58 @@ class CustomersController extends Controller
         }
     }
 
+
+    public function actionMapDetail($cust_kd)
+    {
+         $model_customers = $this->findModelcust($cust_kd);
+
+         $lock_map = $model_customers->LOCK_MAP;
+
+
+        $searchModel = new CustomersSearch();
+        $dataProvider = $searchModel->searchmapdetail(Yii::$app->request->queryParams);
+
+
+            return $this->renderAjax('map_detail', [
+                'model_customers' => $model_customers,
+                'dataProvider'=>$dataProvider,
+                'lock_map'=>$lock_map
+            ]);
+    }
+
+
+
+   /**
+     * update detail map using ajax.
+     * @author wawan
+     * @since 1.1.0
+     * @return mixed
+     */
+   public function actionUpdateDetailMap(){
+
+            if (Yii::$app->request->isAjax) {
+
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                $request= Yii::$app->request;
+                $data_latlg=$request->post('val');
+                $explode = explode(',',$data_latlg);
+
+
+                $model = $this->findModelcust($explode[0]);
+
+                $model->MAP_LAT = $explode[1];
+                $model->MAP_LNG = $explode[2];
+                $model->LOCK_MAP = 1;
+
+                $model->save();
+
+             
+         }
+         
+     return true;
+   
+       }
+
     // public function actionUpdateCust($id)
     // {
     //     $model = $this->findModelcust($id);
