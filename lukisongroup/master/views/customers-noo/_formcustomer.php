@@ -35,14 +35,11 @@ use kartik\widgets\DepDrop;
 				  'validationUrl'=>Url::toRoute('/master/customers-noo/valid')
 	]);
 
-	echo  $form->field($model, 'parentnama')->checkbox();
+	//echo  $form->field($model, 'parentnama')->checkbox();
 
 	echo $form->field($model, 'CUST_NM', $config)->widget(LabelInPlace::classname());
 
-		echo $form->field($model, 'ALAMAT', $config)->widget(LabelInPlace::classname());
-		?>
-		<div id="grp">
-			<?php
+	echo $form->field($model, 'ALAMAT', $config)->widget(LabelInPlace::classname());
 	echo $form->field($model, 'CUST_GRP')->widget(Select2::classname(), [
 		     'data' => $parent,
         'options' => [
@@ -53,10 +50,6 @@ use kartik\widgets\DepDrop;
              ],
 
     ]);
-		?>
-	</div>
-	<?php
-
 	echo $form->field($model, 'TLP1', $config)->widget(LabelInPlace::classname());
 
 	// echo  $form->field($model, 'PROVINCE_ID')->widget(Select2::classname(),[
