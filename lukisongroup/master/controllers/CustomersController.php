@@ -210,7 +210,7 @@ class CustomersController extends Controller
 		$sideMenu_control='umum_datamaster';
 		return $this->render('index', [
 			'sideMenu_control'=> $sideMenu_control,
-       'parent'=> $parent,
+			'parent'=> $parent,
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
 			'data_layer'=>$this->aryData_layer(),
@@ -254,7 +254,7 @@ class CustomersController extends Controller
      */
 	public function actionEsmIndex()
     {
-		$datacus = Customers::find()->where('CUST_GRP = CUST_KD')->asArray()->all();
+		$datacus = Customers::find()->where("CUST_GRP = CUST_KD AND CUST_KD<>'CUS.2016.000637'")->asArray()->all();
 		$parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
 
 		
