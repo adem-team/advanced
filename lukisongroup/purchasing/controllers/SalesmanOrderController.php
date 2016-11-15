@@ -113,10 +113,6 @@ class SalesmanOrderController extends Controller
 			$getUSER_ID=$modelSoT2->USER_ID;
 		}
 		
-		echo "TGL=".$modelSoT2->TGL;
-		echo "CUST_KD=".$modelSoT2->CUST_KD;
-		echo "USER_ID=".$modelSoT2->USER_ID;
-		
 		$searchModelDetail= new SoDetailSearch([
 			'TGL'=>$getTGL,
 			'CUST_KD'=>$getCUST_KD,
