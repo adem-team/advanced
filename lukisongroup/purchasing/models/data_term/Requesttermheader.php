@@ -7,6 +7,7 @@ use lukisongroup\hrd\models\Employe;
 use lukisongroup\hrd\models\Dept;
 use lukisongroup\purchasing\models\data_term\Rtdetail;
 use lukisongroup\hrd\models\Corp;
+use lukisongroup\master\models\Customers;
 
 /**
  * This is the model class for table "t0001header".
@@ -87,6 +88,10 @@ class Requesttermheader extends \yii\db\ActiveRecord
       {
          return $this->hasOne(Termdetail::className(), ['TERM_ID' => 'TERM_ID']);
       }
+
+public function getCusheader(){
+    return $this->hasOne(Customers::className(), ['CUST_GRP' => 'CUST_ID_PARENT']);
+  }
 
 
     /**

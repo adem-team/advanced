@@ -10,6 +10,8 @@ use kartik\detail\DetailView;
 /* namespace model*/
 use lukisongroup\master\models\Terminvest;
 
+
+
 /*array */
 $investData = ArrayHelper::map(Terminvest::find()->all(), 'ID', 'INVES_TYPE');
 $data = [ 2=>'2 persen',
@@ -36,13 +38,13 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
       ],
       [ #term_id
         'attribute' =>'temr_Id',
-        'value'=>$model_header->TERM_ID,
+        'value'=>$model->TERM_ID,
         'label'=>'Term Id',
         'labelColOptions' => ['style' => 'text-align:right;width: 30%']
       ],
       [ #cus_Perent
         'attribute' =>'cus_Perent',
-         'value'=>$cari_customers->CUST_NM,
+         'value'=>$model_header,
         'label'=>'Nama Customers',
         'labelColOptions' => ['style' => 'text-align:right;width: 30%']
       ],
