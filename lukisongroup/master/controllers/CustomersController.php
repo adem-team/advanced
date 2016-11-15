@@ -1013,7 +1013,7 @@ class CustomersController extends Controller
     {
         $model = new Customers();
         $model->scenario = "create";
-        $datacus = Customers::find()->where('CUST_GRP = CUST_KD')->asArray()->all();
+        $datacus = Customers::find()->where("CUST_GRP = CUST_KD AND CUST_KD <>'CUS.2016.000637'")->asArray()->all();
         $parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
 
     if ($model->load(Yii::$app->request->post()) ) {

@@ -87,9 +87,9 @@ use kartik\widgets\Select2;
 			'groupOptions'=>['class'=>'text-left'] //text-center 
 		],
 		[
-        	'attribute'=>'actualtglreplace', 
+        	'attribute'=>'ACTUAL_DATE1', 
 	        'format'=>'datetime',
-	        //'value'=>new DateTime(),
+	        'value'=>$model->actualtglreplace,
 	        'type'=>DetailView::INPUT_DATETIME,
 	        'widgetOptions' => [
 				'pluginOptions'=>['format' => 'yyyy-mm-dd H:i:s'],
@@ -99,12 +99,11 @@ use kartik\widgets\Select2;
 		           ],
 	        ],
 	        'valueColOptions'=>['style'=>'width:55%']
-    	],
-		
+    	],		
 		[
         	'attribute'=>'ACTUAL_DATE2', 
-	         'format'=>'datetime',
-	         'type'=>DetailView::INPUT_DATETIME,
+	        'format'=>'datetime',
+	        'type'=>DetailView::INPUT_DATETIME,
 	        'value'=>new DateTime(),
 	        'widgetOptions' => [
 				'pluginOptions'=>['format' => 'yyyy-mm-dd H:i:s'],
