@@ -150,6 +150,14 @@ use yii\data\ArrayDataProvider;
 				'font-size'=>'7pt',
 			]
 		],
+		'pageSummaryOptions' => [
+			'style'=>[
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+					'text-align'=>'right',
+					'border-left'=>'0px',
+			]
+		],
 	],
 	/*UNIT_BRG*/
 	[
@@ -179,6 +187,14 @@ use yii\data\ArrayDataProvider;
 				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt',
+			]
+		],
+		'pageSummaryOptions' => [
+			'style'=>[
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+					'text-align'=>'right',
+					'border-left'=>'0px',
 			]
 		],
 	],
@@ -241,6 +257,14 @@ use yii\data\ArrayDataProvider;
 				'font-size'=>'7pt',
 			]
 		],
+		'pageSummaryOptions' => [
+			'style'=>[
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+					'text-align'=>'right',
+					'border-left'=>'0px',
+			]
+		],
 	],
 	/*SUBMIT_QTY*/
 	[
@@ -270,6 +294,14 @@ use yii\data\ArrayDataProvider;
 				'width'=>'120px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt',
+			]
+		],
+		'pageSummaryOptions' => [
+			'style'=>[
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+					'text-align'=>'right',
+					'border-left'=>'0px',
 			]
 		],
 	],
@@ -332,6 +364,14 @@ use yii\data\ArrayDataProvider;
 				'font-size'=>'7pt',
 			]
 		],
+		'pageSummaryOptions' => [
+			'style'=>[
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+					'text-align'=>'right',
+					'border-left'=>'0px',
+			]
+		],
 	],
 ];
 
@@ -342,17 +382,6 @@ $_gvInboxSoDetail= GridView::widget([
 	//'filterModel' => $searchModel,
 	'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
 	'showPageSummary' => true,
-	/*
-		'beforeHeader'=>[
-			[
-				'columns'=>[
-					['content'=>'List Permintaan Barang & Jasa', 'options'=>['colspan'=>4, 'class'=>'text-center success']],
-					['content'=>'Action Status ', 'options'=>['colspan'=>6, 'class'=>'text-center warning']],
-				],
-				'options'=>['class'=>'skip-export'] // remove this row from export
-			]
-		],
-	*/
 	'columns' => $inboxColumn,
 	'pjax'=>true,
 	'pjaxSettings'=>[
@@ -375,7 +404,7 @@ $_gvInboxSoDetail= GridView::widget([
 		],
 	'panel'=>[
 		'type'=>GridView::TYPE_INFO,
-		'heading'=>"<div style='font-family:tahoma, arial, sans-serif;font-size:9pt'> <i class='fa fa-info-circle fa-1x'></i> CUSTOMER INFO </div>", //"<i class='fa fa-cart-plus fa-1x'></i> DETAIL ORDER", 
+		'heading'=>"<div style='font-family:tahoma, arial, sans-serif;font-size:9pt'> <i class='fa fa-info-circle fa-1x'></i> DETAIL ORDER </div>", //"<i class='fa fa-cart-plus fa-1x'></i> DETAIL ORDER", 
 	],
 ]);
 ?>
