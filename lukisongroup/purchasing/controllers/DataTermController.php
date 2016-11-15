@@ -516,9 +516,9 @@ class DataTermController extends Controller
       */
     public function actionActualView($id,$kd_term){
           $model = Rtdetail::find()->where(['KD_RIB'=>$id])->one();
-          $model_header = Requesttermheader::find()->where(['KD_RIB'=>$id])->one();
-          $cari_header_term = TermHeader::find()->where(['TERM_ID'=>$kd_term])->one();
-          $cari_customers = Customers::find()->where(['CUST_GRP'=>$cari_header_term->CUST_KD_PARENT])->one();
+          $model_header = Requesttermheader::find()->with('cusheader')->where(['KD_RIB'=>$id])->one();
+          // $cari_header_term = TermHeader::find()->where(['TERM_ID'=>$kd_term])->one();
+          // $cari_customers = Customers::find()->where(['CUST_GRP'=>$cari_header_term->CUST_KD_PARENT])->one();
 
 
           if ($model->load(Yii::$app->request->post())) {
@@ -530,8 +530,8 @@ class DataTermController extends Controller
               # code...
               return $this->renderAjax('view_actual',[
                     'model'=>$model,
-                    'model_header'=>$model_header,
-                    'cari_customers'=>$cari_customers
+                    'model_header'=>$model_header->cusheader->CUST_NM,
+                    // 'cari_customers'=>$cari_customers
               ]);
             }
           }

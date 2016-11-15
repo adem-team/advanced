@@ -13,6 +13,9 @@ use kartik\tabs\TabsX;
 use yii\widgets\ListView;
 use yii\data\ArrayDataProvider;
 
+use lukisongroup\purchasing\models\salesmanorder\SoDetailSearch;
+
+
 use lukisongroup\purchasing\models\so\Sodetail;
 use lukisongroup\master\models\Unitbarang;
 use lukisongroup\hrd\models\Employe;
@@ -213,32 +216,15 @@ use lukisongroup\hrd\models\Dept;
 	 * 1. Hanya User login dengan permission modul RO=1 dengan BTN_SIGN1==1 dan Permission Jabatan SVP keatas yang bisa melakukan Approval (Tanpa Kecuali)
 	 * 2. Action APPROVAL Akan close atau tidak bisa di lakukan jika sudah Approved | status Approved =101 | Permission sign1
 	*/
-	function tombolReview($url, $model){
-		if(getPermissionInbox()){
-			/* GF_ID>=4 Group Function[Director|GM|M|S] */
-			$gF=getPermissionInboxEmp()->GF_ID;
-			$Auth2=getPermissionInbox()->BTN_SIGN2; // Auth2
-			$Auth3=getPermissionInbox()->BTN_SIGN3; // Auth3
-			$BtnReview=getPermissionInbox()->BTN_REVIEW;
-			if ((($Auth2==1 or $Auth3==1) AND $gF<=4 AND $BtnReview=1) OR (getPermissionInboxEmp()->EMP_ID ==$model->USER_CC)){
-				$title = Yii::t('app', 'Review');
-				$options = [ //'id'=>'ro-approved',
-							//'data-method' => 'post',
-							 //'data-pjax'=>true,
-							 //'data'=>$model->KD_RO,
-							 //'data-pjax' => '0',
-							 //'data-toggle-active' => $model->KD_RO
-							//'data-confirm'=>'Anda yakin ingin menghapus RO ini?',
-				];
-				$icon = '<span class="glyphicon glyphicon-ok"></span>';
-				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/sales-order/review','kd'=>$model->KD_RO]);
-				//$url = Url::toRoute(['/purchasing/sales-order/approved']);
-				//$url = Url::toRoute(['/purchasing/sales-order/approved']);
-				$options['tabindex'] = '-1';
-				return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
-			}
-		}
+	function tombolReviewInbox($url, $model){
+		$title = Yii::t('app', 'Review');
+		$options = [ 'id'=>'reviewinbox',
+					 'data-pjax'=>true,
+					 'data-toggle-reviewinbox'=>$model['KD_RO'],
+		];
+		$icon = '<span class="glyphicon glyphicon-ok"></span>';
+		$label = $icon . ' ' . $title;
+		return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;	
 	}
 
 
@@ -311,7 +297,7 @@ use lukisongroup\hrd\models\Dept;
 				return GridView::ROW_COLLAPSED;
 			},
 			'detail'=>function ($model, $key, $index, $column){
-				$aryProviderSoDetailInbox= new ArrayDataProvider([
+				/* $aryProviderSoDetailInbox= new ArrayDataProvider([
 					'allModels'=>Yii::$app->db_esm->createCommand("
 						SELECT x1.ID,x1.TGL,x1.WAKTU_INPUT_INVENTORY,x1.CUST_KD,x1.CUST_NM,x1.KD_BARANG,x1.NM_BARANG,x1.SO_QTY,x1.SO_TYPE,x1.POS,x1.STATUS,x1.ID_GROUP,
 							x1.HARGA_PABRIK,x1.HARGA_DIS,x1.HARGA_LG,x1.HARGA_SALES,
@@ -335,7 +321,12 @@ use lukisongroup\hrd\models\Dept;
 					'pagination' => [
 						'pageSize' => 1000,
 					]
+				]); */
+				$searchModelDetail = new SoDetailSearch([
+					'TGL'=>$model['TGL'],
+					'CUST_KD'=>$model['CUST_KD']
 				]);
+				$aryProviderSoDetailInbox = $searchModelDetail->searchDetail(Yii::$app->request->queryParams);
 				return Yii::$app->controller->renderPartial('_indexInboxExpand1',[
 					'model'=>$model,
 					'aryProviderSoDetailInbox'=>$aryProviderSoDetailInbox
@@ -623,7 +614,7 @@ use lukisongroup\hrd\models\Dept;
 
 				/* Approved RO | Permissian Status 0; 0=process | Dept = Dept login | GF >= M */
 				'review' => function ($url, $model) {
-								return tombolReview($url, $model);
+								return tombolReviewInbox($url, $model);
 							},
 				 'closed' => function ($url, $model) use ($getPermissionInboxCheeck){
 								if ($getPermissionInboxCheeck['BTN_VIEW']==0) {
@@ -806,27 +797,19 @@ use lukisongroup\hrd\models\Dept;
 		Modal::end();
 
 		$this->registerJs("
-			$(document).on('click', '[data-toggle-active]', function(e){
-			e.preventDefault();
-
-			var id = $(this).data('toggle-active');
-
-			$.ajax({
-				url: '/purchasing/sales-order/approved&id=' + id,
-				type: 'POST',
-				success: function(result) {
-
-					if (result == 1)
-					{
-						// Success
-						$.pjax.reload({container:'#grid-pjax'});
-					} else {
-						// Fail
-					}
-				}
+			/* $(document).on('click', '[data-toggle-reviewinbox1]', function(e){
+				e.preventDefault();
+				var id = $(this).data('toggle-reviewinbox');
+				$.ajax({
+					url: '/purchasing/salesman-order/review',
+					type: 'POST',
+					data:'kd='+id,
+					dataType: 'json',
+					success: function(response) {
+						console.log('sukses');						
+					}					
 				});
-
-			});
+			}); */
 		",$this::POS_READY);
 
 	?>

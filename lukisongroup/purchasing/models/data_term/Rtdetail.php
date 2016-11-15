@@ -123,9 +123,10 @@ class Rtdetail extends \yii\db\ActiveRecord
     return $this->invest->INVES_TYPE;
 	}
 
-	public function getRetermheader(){
-		return $this->hasOne(Requesttermheader::className(), ['KD_RIB' => 'KD_RIB']);
-	}
+	// public function getRetermheader(){
+	// 	return $this->hasMany(Requesttermheader::className(), ['KD_RIB' => 'KD_RIB'])
+	// }
+
   public function getTermdet(){
 		return $this->hasOne(Termdetail::className(), ['INVES_ID' => 'INVESTASI_TYPE']);
 	}
