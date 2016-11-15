@@ -19,6 +19,8 @@ use zyx\phpmailer\Mailer;
 use yii\data\ActiveDataProvider;
 
 use lukisongroup\purchasing\models\salesmanorder\SoHeaderSearch;
+use lukisongroup\purchasing\models\salesmanorder\SoDetailSearch;
+use lukisongroup\purchasing\models\salesmanorder\SoT2;
 
 
 /**
@@ -89,23 +91,43 @@ class SalesmanOrderController extends Controller
      * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
-	public function actionReview()
-    {
-		/*
-		 * Render Approved View
-		 * @author ptrnov  <piter@lukison.com>
-		 * @since 1.1
-		**/
-		
-		
-		if (Yii::$app->request->isAjax) {
-			$request= Yii::$app->request;
-			$id=$request->post('kd');
-			return true;
-			/* return $this->renderAjax('_actionReview',[
-				'dataProvider'=>$id,
-			]); */
+	public function actionReview($id,$stt)
+    {		
+		if ($stt==0){
+			//CREATE KODE_REF
+			$modelSoT2 = SoT2::find()->where("ID='".$id."' AND SO_TYPE=10")->one();
+			$getSoType=10;
+			$getTGL=$modelSoT2->TGL;
+			$getCUST_KD=$modelSoT2->CUST_KD;
+			$getUSER_ID=$modelSoT2->USER_ID;	
+		    //PR create Generate Code. Tabel so_0001.
+			//Save kode generate  Tabel so_0001.
+			//Update SoT2 KODE_REF where ($getSoType,getTGL,getCUST_KD,getUSER_ID).
+			//Editing editable : SUBMIT_QTY,SUBMIT_PRICE
+		}else{
+			//VIEW KODE_REF
+			$modelSoT2 = SoT2::find()->where("KODE_REF='".$id."' AND SO_TYPE=10")->one();
+			$getSoType=10;
+			$getTGL=$modelSoT2->TGL;
+			$getCUST_KD=$modelSoT2->CUST_KD;
+			$getUSER_ID=$modelSoT2->USER_ID;
 		}
+		
+		echo "TGL=".$modelSoT2->TGL;
+		echo "CUST_KD=".$modelSoT2->CUST_KD;
+		echo "USER_ID=".$modelSoT2->USER_ID;
+		
+		$searchModelDetail= new SoDetailSearch([
+			'TGL'=>$getTGL,
+			'CUST_KD'=>$getCUST_KD,
+			'USER_ID'=>$getUSER_ID,
+		]); 
+		$aryProviderSoDetail = $searchModelDetail->searchDetail(Yii::$app->request->queryParams);
+		return $this->render('_actionReview',[
+			'aryProviderSoDetail'=>$aryProviderSoDetail,
+		]); 
+		
+		
 
     }
 

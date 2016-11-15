@@ -12,12 +12,6 @@ use lukisongroup\master\models\Terminvest;
 
 
 
-/*array */
-$investData = ArrayHelper::map(Terminvest::find()->all(), 'ID', 'INVES_TYPE');
-$data = [ 2=>'2 persen',
-          4=>'4 persen ',
-          10=>'10 persen',
-          15=>'15 persen'];
 
 
 $config = ['template'=>"{input}\n{error}\n{hint}"];

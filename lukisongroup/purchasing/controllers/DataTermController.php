@@ -488,10 +488,16 @@ class DataTermController extends Controller
       */
     public function actionUpdateTerm($id,$kd_term){
           $model = Rtdetail::find()->where(['KD_RIB'=>$id])->one();
-          $model_header = Requesttermheader::find()->where(['KD_RIB'=>$id])->one();
-          $cari_header_term = TermHeader::find()->where(['TERM_ID'=>$kd_term])->one();
-          $cari_customers = Customers::find()->where(['CUST_GRP'=>$cari_header_term->CUST_KD_PARENT])->one();
+           $model_header = Requesttermheader::find()->with('cusheader')->where(['KD_RIB'=>$id])->one();
+          // $model_header = Requesttermheader::find()->where(['KD_RIB'=>$id])->one();
+          // $cari_header_term = TermHeader::find()->where(['TERM_ID'=>$kd_term])->one();
+          // $cari_customers = Customers::find()->where(['CUST_GRP'=>$cari_header_term->CUST_KD_PARENT])->one();
 
+           /*array */
+          $data = [ 2=>'2 persen',
+                    4=>'4 persen ',
+                    10=>'10 persen',
+                    15=>'15 persen'];
 
           if ($model->load(Yii::$app->request->post())) {
 
@@ -502,15 +508,17 @@ class DataTermController extends Controller
               # code...
               return $this->renderAjax('edit_actual',[
                     'model'=>$model,
-                    'model_header'=>$model_header,
-                    'cari_customers'=>$cari_customers
+                    'model_header'=>$model_header->cusheader->CUST_NM,
+                    'investData'=>self::aryData_invest(),
+                    'data'=>$data
+                    // 'cari_customers'=>$cari_customers
               ]);
             }
           }
 
 
 
-           /**
+      /**
         *update request  term detail and header
         *@author wawan
       */
@@ -519,6 +527,13 @@ class DataTermController extends Controller
           $model_header = Requesttermheader::find()->with('cusheader')->where(['KD_RIB'=>$id])->one();
           // $cari_header_term = TermHeader::find()->where(['TERM_ID'=>$kd_term])->one();
           // $cari_customers = Customers::find()->where(['CUST_GRP'=>$cari_header_term->CUST_KD_PARENT])->one();
+
+          
+           /*array */
+          $data = [ 2=>'2 persen',
+                    4=>'4 persen ',
+                    10=>'10 persen',
+                    15=>'15 persen'];
 
 
           if ($model->load(Yii::$app->request->post())) {
@@ -531,6 +546,8 @@ class DataTermController extends Controller
               return $this->renderAjax('view_actual',[
                     'model'=>$model,
                     'model_header'=>$model_header->cusheader->CUST_NM,
+                    'investData'=>self::aryData_invest(),
+                    'data'=>$data
                     // 'cari_customers'=>$cari_customers
               ]);
             }
