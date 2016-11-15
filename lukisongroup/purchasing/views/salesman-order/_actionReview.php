@@ -439,8 +439,154 @@ $_gvSoDetail= GridView::widget([
 			<dd>: <?php echo date('d-M-Y'); ?></dd>
 		</dl>
 	</div>
-	<!-- Table Grid List RO Detail !-->
+	<!-- Table Grid List SO Detail !-->
 	<div class="col-md-12">
 		<?=$_gvSoDetail?>
 	</div>
+	<!-- Signature !-->
+		<div  class="col-md-12">
+			<div  class="row" >
+				<div class="col-md-6">
+					<table id="tblRo" class="table table-bordered" style="font-family: tahoma ;font-size: 8pt;">
+						<!-- Tanggal!-->
+						 <tr>
+							<!-- Tanggal Pembuat RO!-->
+							<th  class="col-md-1" style="text-align: center; height:20px">
+								<div style="text-align:center;">
+									<?php
+										//$placeTgl1=$poHeader->SIG1_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG1_TGL,'date') :'';
+										echo '<b>Tanggerang</b>,';// . $placeTgl1;
+									?>
+								</div>
+
+							</th>
+							<!-- Tanggal Pembuat RO!-->
+							<th class="col-md-1" style="text-align: center; height:20px">
+								<div style="text-align:center;">
+									<?php
+										//$placeTgl2=$poHeader->SIG2_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG2_TGL,'date') :'';
+										echo '<b>Tanggerang</b>,';// . $placeTgl2;
+									?>
+								</div>
+
+							</th>
+							<!-- Tanggal PO Approved!-->
+							<th class="col-md-1" style="text-align: center; height:20px">
+								<div style="text-align:center;">
+									<?php
+										//$placeTgl3=$poHeader->SIG3_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG3_TGL,'date') :'';
+										echo '<b>Tanggerang</b>,';// . $placeTgl3;
+									?>
+								</div>
+							</th>
+
+						</tr>
+						<!-- Department|Jbatan !-->
+						 <tr>
+							<th  class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+								<div>
+									<b><?php  echo 'Created'; ?></b>
+								</div>
+							</th>
+							<th class="col-md-1"  style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+								<div>
+									<b><?php  echo 'Checked'; ?></b>
+								</div>
+							</th>
+							<th class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+								<div>
+									<b><?php  echo 'Approved'; ?></b>
+								</div>
+							</th>
+						</tr>
+						<!-- Signature !-->
+						 <tr>
+							<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
+								<?php
+									//$ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG1_SVGBASE64.'></img>' :SignCreated($poHeader);
+									//echo $ttd1;
+								?>
+							</th>
+							<th class="col-md-1" style="text-align: center; vertical-align:middle">
+								<?php
+									//$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG2_SVGBASE64.'></img>' :SignChecked($poHeader);
+									//echo $ttd2;
+								?>
+							</th>
+							<th  class="col-md-1" style="text-align: center; vertical-align:middle">
+								<?php
+									/* if(getPermission())
+									{
+										if(getPermission()->BTN_SIGN3 == 0)
+										{
+											$ttd3 = '';
+											echo $ttd3;
+
+										}else{
+											$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : SignApproved($poHeader);
+											echo $ttd3;
+										}
+									}else{
+										$ttd3 = '';
+										echo $ttd3;
+									} */
+								?>
+							</th>
+						</tr>
+						<!--Nama !-->
+						 <tr>
+							<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
+								<div>
+									<?php
+										/* $sigNm1=$poHeader->SIG1_NM!='none' ? '<b>'.$poHeader->SIG1_NM.'</b>' : 'none';
+										echo $sigNm1; */
+									?>
+								</div>
+							</th>
+							<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
+								<div>
+									<?php
+										/* $sigNm2=$poHeader->SIG2_NM!='none' ? '<b>'.$poHeader->SIG2_NM.'</b>' : 'none';
+										echo $sigNm2; */
+									?>
+								</div>
+							</th>
+							<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
+								<div>
+									<?php
+										/* $sigNm3=$poHeader->SIG3_NM!='none' ? '<b>'.$poHeader->SIG3_NM.'</b>' : 'none';
+										echo $sigNm3; */
+									?>
+								</div>
+							</th>
+						</tr>
+						<!-- Department|Jbatan !-->
+						 <tr>
+							<th style="text-align: center; vertical-align:middle;height:20">
+								<div>
+									<b><?php  //echo 'Purchaser'; ?></b>
+								</div>
+							</th>
+							<th style="text-align: center; vertical-align:middle;height:20">
+								<div>
+									<b><?php  //echo 'F & A'; ?></b>
+								</div>
+							</th>
+							<th style="text-align: center; vertical-align:middle;height:20">
+								<div>
+									<b><?php  //echo 'Director'; ?></b>
+								</div>
+							</th>
+						</tr>
+					</table>
+				</div>
+				<!-- Button Submit!-->
+				<div style="text-align:right; margin-top:80px; margin-right:15px">
+					<a href="/purchasing/salesman-order" class="btn btn-info btn-xs" role="button" style="width:90px">Back</a>
+					<?php //echo Html::a('<i class="fa fa-print fa-fw"></i> Print', ['cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
+					<?php //echo Html::a('<i class="fa fa-print fa-fw"></i> tmp Print', ['temp-cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
+
+				</div>
+			</div>
+		</div>
 </div>

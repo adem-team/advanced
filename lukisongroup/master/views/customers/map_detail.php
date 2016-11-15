@@ -51,7 +51,7 @@ use kartik\grid\GridView;
       [ #LAT
         'attribute' =>'MAP_LNG',
         'label'=>'LNG',
-        'value'=>$model_customers->MAP_LNG ? $model_customers->MAP_LAT :'-',
+        'value'=>$model_customers->MAP_LNG ? $model_customers->MAP_LNG :'-',
         'labelColOptions' => ['style' => 'text-align:right;width: 30%']
       ],
     ],
