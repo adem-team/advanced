@@ -399,7 +399,8 @@ $_gvSoDetail= GridView::widget([
 		],
 	'panel'=>[
 		'type'=>GridView::TYPE_INFO,
-		'heading'=>"<div style='font-family:tahoma, arial, sans-serif;font-size:9pt'> <i class='fa fa-info-circle fa-1x'></i> CUSTOMER INFO </div>", //"<i class='fa fa-cart-plus fa-1x'></i> DETAIL ORDER", 
+		'heading'=>false //'<div> NO.SO :'.date("d-M-Y")
+		
 	],
 ]);
 
@@ -434,13 +435,14 @@ $_gvSoDetail= GridView::widget([
 	</div>
 	<!-- Title Descript !-->
 	<div class="col-md-12">
+		
+	</div>
+	<!-- Table Grid List SO Detail !-->
+	<div class="col-md-12">
 		<dl>
 			<dt style="width:100px; float:left;">Date</dt>
 			<dd>: <?php echo date('d-M-Y'); ?></dd>
 		</dl>
-	</div>
-	<!-- Table Grid List SO Detail !-->
-	<div class="col-md-12">
 		<?=$_gvSoDetail?>
 	</div>
 	<!-- Signature !-->

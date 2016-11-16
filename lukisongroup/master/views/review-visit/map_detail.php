@@ -204,7 +204,7 @@ use kartik\grid\GridView;
 	
 	/*GRID VIEW BASE*/
 	$gvGps= GridView::widget([
-		'id'=>'detail-grid-map-id',
+		'id'=>'detail-grid-map-id-review',
 		'dataProvider' => $dataProvider,
 		'filterModel' => $searchModelx,
 		'filterRowOptions'=>['style'=>'background-color:rgba(126, 189, 188, 0.9); align:center'],
@@ -213,7 +213,7 @@ use kartik\grid\GridView;
 		'pjaxSettings'=>[
 			'options'=>[
 				'enablePushState'=>false,
-				'id'=>'detail-grid-map-id',
+				'id'=>'detail-grid-map-id-review',
 			],
 		],
 		'panel' => [

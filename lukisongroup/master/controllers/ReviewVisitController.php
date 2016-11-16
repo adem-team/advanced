@@ -19,6 +19,8 @@ use lukisongroup\master\models\CustomercallTimevisitSearch;
 use lukisongroup\master\models\ReviewInventorySearch;
 use lukisongroup\master\models\Issuemd;
 use lukisongroup\master\models\IssuemdSearch;
+use lukisongroup\master\models\Customers;
+use lukisongroup\master\models\ScheduledetailSearch;
 
 class ReviewVisitController extends Controller
 {	
@@ -172,6 +174,60 @@ class ReviewVisitController extends Controller
 			}
 		};	
     }
+
+     public function actionMapDetail($cust_kd)
+    {
+         $model_customers = $this->findModelcust($cust_kd);
+
+         $lock_map = $model_customers->LOCK_MAP;
+
+
+        $searchModel = new ScheduledetailSearch();
+        $dataProvider = $searchModel->searchmapdetail(Yii::$app->request->queryParams);
+
+
+            return $this->renderAjax('map_detail', [
+                'model_customers' => $model_customers,
+                'dataProvider'=>$dataProvider,
+                 'searchModelx'=>$searchModel,
+                'lock_map'=>$lock_map,
+
+            ]);
+    }
+
+
+
+   /**
+     * update detail map using ajax.
+     * @author wawan
+     * @since 1.1.0
+     * @return mixed
+     */
+   public function actionUpdateDetailMap(){
+
+            if (Yii::$app->request->isAjax) {
+
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                $request= Yii::$app->request;
+                $data_latlg=$request->post('val');
+                $explode = explode(',',$data_latlg);
+
+
+                $model = $this->findModelcust($explode[0]);
+
+                $model->MAP_LAT = $explode[1];
+                $model->MAP_LNG = $explode[2];
+                $model->LOCK_MAP = 1;
+
+                $model->save();
+
+             
+         }
+         
+     return true;
+   
+       }
+
 	
 	/**
 	 * REVIEW DETAIL -> CHECK DATE
@@ -790,4 +846,13 @@ class ReviewVisitController extends Controller
 		/*  \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 		return $data; */
 	}
+
+	 protected function findModelcust($id)
+    {
+        if (($model = Customers::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
 }
