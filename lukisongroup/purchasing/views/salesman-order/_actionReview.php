@@ -441,7 +441,7 @@ $_gvSoDetail= GridView::widget([
 	<div class="col-md-12">
 		<dl>
 			<dt style="width:100px; float:left;">SO NO :</dt>
-			<dd>: <?php echo date('d-M-Y'); ?></dd>
+			<dd>: <?= $kode_som ?></dd>
 		</dl>
 		<?=$_gvSoDetail?>
 	</div>

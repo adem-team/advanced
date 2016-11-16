@@ -683,10 +683,10 @@ use lukisongroup\hrd\models\Dept;
 	$_gvInboxSo= GridView::widget([
 		'id'=>'gv-so-md-inbox',
 		'dataProvider'=> $apSoHeaderInbox,
-		//'filterModel' => $searchModel,
+		// 'filterModel' => $searchModel,
 		'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
 		'columns' =>$columnIndexInbox,		
-		'pjax'=>true,
+		'pjax'=>false,
 		'pjaxSettings'=>[
 			'options'=>[
 				'enablePushState'=>false,
