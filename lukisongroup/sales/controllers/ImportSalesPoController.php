@@ -424,7 +424,7 @@ class ImportSalesPoController extends Controller
 						$item_kd= $value['ITEM_ID_ALIAS'];
 						$item_qty= $value['QTY_PCS'];
 						$item_price= $value['HARGA_PCS'];
-						$dis_id= $value['KD_DISTRIBUTOR'];//$value['DIS_REF'];
+						$dis_id= $value['DIS_REF'];
 						$import_live=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_LIVE_create(
 											'STOCKG_SALESPO','".$tgl."','".$cust_kd."','".$item_kd."','".$item_qty."','".$item_price."','WEB_IMPORT','".$dis_id."','".$username."'
 										)");
