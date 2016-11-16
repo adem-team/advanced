@@ -226,7 +226,7 @@ function tombolMap(){
   'headerOptions'=>[
         'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
     ],
-    'header' => '<div style="float:left;margin-right:10px" class="fa fa-user"></div><div><h5 class="modal-title"><b>Update GPS CUSTOMERS</b></h5></div>',
+    'header' => '<div style="float:left;margin-right:10px" class="fa fa-user fa-2x"></div><div><h5 class="modal-title"><b>Update GPS CUSTOMERS</b></h5></div>',
     'size' => Modal::SIZE_LARGE,
   'id' => 'modal',
   //keeps from closing modal with esc key or by clicking out of the modal.

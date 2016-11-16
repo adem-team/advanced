@@ -4,7 +4,8 @@ use yii\helpers\Url;
 use kartik\helpers\Html;
 use kartik\grid\GridView;
 use kartik\nav\NavX;
-use lukisongroup\assets\MapAsset;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
+use lukisongroup\assets\MapAsset;
+use yii\bootstrap\Modal;       /* CLASS ASSET CSS/JS/THEME Author: -wawan-*/
 MapAsset::register($this);
 
  /*js mapping */
@@ -60,13 +61,26 @@ MapAsset::register($this);
 
         public_markers[i] = marker;
 
-        google.maps.event.addListener(public_markers[i], 'mouseover', function () {
+        google.maps.event.addListener(public_markers[i], 'click', function () {
           infowindow.setContent('<h1>' + point.CUST_NM + '</h1>' + '<p>' + point.ALAMAT + '</p>');
           infowindow.open(map, public_markers[i]);
         });
 
+         google.maps.event.addListener(public_markers[i], 'dblclick', function () {
+            getmodal(point.CUST_KD)
+        });
+
 
      });
+
+        function getmodal(cust_kd)
+        {
+          $.get('/master/review-visit/map-detail',{'cust_kd':cust_kd},function(data){
+            $('#modal').modal('show')
+            .find('#modalContent')
+            .html(data);
+          });
+        }
 
 
     });
@@ -84,6 +98,24 @@ MapAsset::register($this);
 		</div>
 	</div>
 </div>
+
+
+<?php
+
+Modal::begin([
+  'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+    ],
+    'header' => '<div style="float:left;margin-right:10px" class="fa fa-user fa-2x"></div><div><h5 class="modal-title"><b>Update GPS CUSTOMERS</b></h5></div>',
+    'size' => Modal::SIZE_LARGE,
+  'id' => 'modal',
+  //keeps from closing modal with esc key or by clicking out of the modal.
+  // user must click cancel or X to close
+  // 'clientOptions' => ['backdrop' => 'static', 'keyboard' => FALSE]
+]);
+echo "<div id='modalContent'></div>";
+Modal::end();
+
 	
 	
 	

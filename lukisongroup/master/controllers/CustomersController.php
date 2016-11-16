@@ -29,6 +29,7 @@ use lukisongroup\master\models\DraftLayerSearch;
 use lukisongroup\master\models\DraftGeo;
 use lukisongroup\master\models\DraftGeoSearch;
 use lukisongroup\master\models\DraftLayerMutasiSearch;
+use lukisongroup\master\models\ScheduledetailSearch;
 
 
 /**
@@ -1126,13 +1127,14 @@ class CustomersController extends Controller
          $lock_map = $model_customers->LOCK_MAP;
 
 
-        $searchModel = new CustomersSearch();
+        $searchModel = new ScheduledetailSearch();
         $dataProvider = $searchModel->searchmapdetail(Yii::$app->request->queryParams);
 
 
             return $this->renderAjax('map_detail', [
                 'model_customers' => $model_customers,
                 'dataProvider'=>$dataProvider,
+                'searchModelx'=>$searchModel,
                 'lock_map'=>$lock_map
             ]);
     }
