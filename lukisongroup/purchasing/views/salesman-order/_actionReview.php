@@ -440,7 +440,7 @@ $_gvSoDetail= GridView::widget([
 	<!-- Table Grid List SO Detail !-->
 	<div class="col-md-12">
 		<dl>
-			<dt style="width:100px; float:left;">Date</dt>
+			<dt style="width:100px; float:left;">SO NO :</dt>
 			<dd>: <?php echo date('d-M-Y'); ?></dd>
 		</dl>
 		<?=$_gvSoDetail?>
