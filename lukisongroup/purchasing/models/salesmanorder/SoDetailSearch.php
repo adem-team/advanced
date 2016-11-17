@@ -8,17 +8,19 @@ use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\debug\components\search\Filter;
 use yii\debug\components\search\matchers;
-
+use lukisongroup\purchasing\models\salesmanorder\SoT2;
 /**
  * Salesman Order Header.
  * @uthor piter novian [ptr.nov@gmail.com].
  */
-class SoDetailSearch extends Model
+class SoDetailSearch extends SoT2
 {	
 	public $TGL;
 	public $CUST_KD;
 	public $KD_BARANG;
 	public $USER_ID;
+	public $SUBMIT_QTY;
+	public $ID;
 	
     /**
      * @inheritdoc	
@@ -26,7 +28,7 @@ class SoDetailSearch extends Model
     public function rules()
     {
         return [
-            [['TGL','CUST_KD','KD_BARANG','USER_ID','TerminalID'], 'safe'],
+            [['TGL','CUST_KD','KD_BARANG','USER_ID','TerminalID','SUBMIT_QTY','ID'], 'safe'],
         ];
     }
 
@@ -60,12 +62,13 @@ class SoDetailSearch extends Model
 		")->queryAll();  
 		
 		$dataProvider= new ArrayDataProvider([
-			//'key' => 'ID',
+			'key' => 'ID',
 			'allModels'=>$soQueryJoin,			
 			'pagination' => [
 				'pageSize' => 50,
 			]
 		]);
+		
 		if (!($this->load($params) && $this->validate())) {
  			return $dataProvider;
  		}
