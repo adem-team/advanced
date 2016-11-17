@@ -205,7 +205,7 @@ $gridColumns = [
     [   #action column
       'class'=>'kartik\grid\ActionColumn',
       'dropdown' => true,
-      'template' => '{update}{price}',
+      'template' => '{update}{delete}',
       'dropdownOptions'=>['class'=>'pull-right dropup'],
 	    'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
       'buttons' => [
@@ -217,6 +217,11 @@ $gridColumns = [
                             'data-title'=> $model->KD_CUSTOMERS,
                             ]). '</li>';
           },
+          'delete' =>function($url, $model, $key)use($id_term){
+               return  '<li>' . Html::a('<span class="fa fa-trash fa-dm"></span>'.Yii::t('app', 'delete'),
+                             ['delete-alias','id'=>$model->ID],[
+                             ]). '</li>' . PHP_EOL;
+                           },
 
 
               ],

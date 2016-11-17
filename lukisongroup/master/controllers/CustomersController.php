@@ -859,6 +859,18 @@ class CustomersController extends Controller
       return ActiveForm::validate($model);
       }
     }
+
+     public function actionValidAliasUpdate()
+    {
+      # code...
+      $model = new Customersalias();
+      $model->scenario = "update";
+    if(Yii::$app->request->isAjax && $model->load($_POST))
+    {
+      Yii::$app->response->format = 'json';
+      return ActiveForm::validate($model);
+      }
+    }
    
    
    /**
@@ -1249,10 +1261,22 @@ class CustomersController extends Controller
     {
         $model = Customersalias::find()->where(['KD_CUSTOMERS'=>$id])->one();
 
+        // $model->scenario = 'update';
+
+           // if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+           //  Yii::$app->response->format = Response::FORMAT_JSON;
+           //  return ActiveForm::validate($model);
+        
+
         if ($model->load(Yii::$app->request->post()) ) {
-          $model->UPDATED_AT = date('Y-m-d');
-          $model->UPDATED_BY = Yii::$app->user->identity->username;
-          $model->save();
+          // if ($model->validate()) {
+                // all inputs are valid
+              $model->UPDATED_AT = date('Y-m-d');
+              $model->UPDATED_BY = Yii::$app->user->identity->username;
+              $model->save();
+            // } 
+           
+         
             return $this->redirect(['index-alias']);
         } else {
             return $this->renderAjax('alias_customers', [
@@ -1360,6 +1384,13 @@ class CustomersController extends Controller
 		$model->save();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionDeleteAlias($id)
+    {
+        $model = Customersalias::find()->where(['ID'=>$id])->one();
+        $model->delete();
+       return $this->redirect(['index-alias']);
     }
 
 
