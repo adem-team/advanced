@@ -26,6 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		'dataProviderIssue' => $dataProviderIssue
 	]);	
 	$tabReviewChart=$this->render('_indexSalesMdChart');	
+	$tabMonthSummary=$this->render('_indexMonthSummary');
 	$tabReviewWeekly=$this->render('_indexWeekly');	
 
 		
@@ -35,18 +36,21 @@ $this->params['breadcrumbs'][] = $this->title;
 		$tab2=false;
 		$tab3=false;
 		$tab4=false;
+		$tab5=false;
 	}elseif($tab==1){
 		$tab0=false;
 		$tab1=true;
 		$tab2=false;
 		$tab3=false;
 		$tab4=false;
+		$tab5=false;
 	}elseif($tab==2){
 		$tab0=false;
 		$tab1=false;
 		$tab2=true;
 		$tab3=false;
 		$tab4=false;
+		$tab5=false;
 	}
 	elseif($tab==3){
 		$tab0=false;
@@ -54,6 +58,23 @@ $this->params['breadcrumbs'][] = $this->title;
 		$tab2=false;
 		$tab3=true;
 		$tab4=false;
+		$tab5=false;
+	}
+	elseif($tab==4){
+		$tab0=false;
+		$tab1=false;
+		$tab2=false;
+		$tab3=false;
+		$tab4=true;
+		$tab5=false;
+	}
+	elseif($tab==5){
+		$tab0=false;
+		$tab1=false;
+		$tab2=false;
+		$tab3=false;		
+		$tab4=false;
+		$tab5=true;
 	}
 	$items=[
 		[
@@ -62,22 +83,25 @@ $this->params['breadcrumbs'][] = $this->title;
 		],
 		[
 			'label'=>'<i class="fa fa-list-ol fa-2x"></i> Daily Detail','content'=>$tabReviewDetail,
+			'active'=>$tab1,
 		],
 		[
 			'label'=>'<i class="fa fa-eye fa-2x"></i> Issue Memo','content'=>$tabReviewIssue,
+			'active'=>$tab2,
 		],
 		[
 			'label'=>'<i class="fa fa-area-chart fa-2x"></i> Chart','content'=>$tabReviewChart,
-		],
+			'active'=>$tab3,
+		],			
 		[
-			'label'=>'<i class="fa fa-newspaper-o fa-2x"></i> Weekly Detail','content'=>$tabReviewWeekly,
-			'active'=>$tab1,
-			//'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['/master/review-visit/tab-weekly-stock'])]
-		],		
-		[
-			'label'=>'<i class="fa fa-calculator fa-2x"></i>Monthly Summary','content'=>'',//$tabMonthSummary,
-			'active'=>$tab2,
+			'label'=>'<i class="fa fa-calculator fa-2x"></i>Monthly Summary','content'=>$tabMonthSummary,
+			'active'=>$tab4,
 		],	 	
+		[
+			'label'=>'<i class="fa fa-newspaper-o fa-2x"></i> History Stock','content'=>$tabReviewWeekly,
+			'active'=>$tab5,
+			//'linkOptions'=>['data-url'=>\yii\helpers\Url::to(['/master/review-visit/tab-weekly-stock'])]
+		],	
 	];
 
 	$tabReviewVisit= TabsX::widget([

@@ -194,7 +194,7 @@ class DraftPlanController extends Controller
 
     public function get_arygeoplangroup()
     {
-        $sql ='SELECT DISTINCT(left(SCL_NM,4)) as scl_nm FROM `c0002scdl_plan_group` where STATUS = 1';
+        $sql ='SELECT DISTINCT(left(SCL_NM,6)) as scl_nm FROM `c0002scdl_plan_group` where STATUS = 1';
         $rslt = self::conn_esm()->CreateCommand($sql)->queryAll();
         return ArrayHelper::map($rslt,'scl_nm','scl_nm');
     }
@@ -214,10 +214,10 @@ class DraftPlanController extends Controller
      public function get_execute_plan($scl_nm,$user_id)
     {
         /*draftplangroup*/
-       $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_group SET USER_ID="'.$user_id.'" WHERE left(SCL_NM,4) ="'.$scl_nm.'" AND STATUS = 1')->execute();
+       $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_group SET USER_ID="'.$user_id.'" WHERE left(SCL_NM,6) ="'.$scl_nm.'" AND STATUS = 1')->execute();
 
        // /*draftplanheader*/
-       $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET USER_ID="'.$user_id.'" WHERE left(NOTE,4) ="'.$scl_nm.'"')->execute();
+       $this->conn_esm()->CreateCommand('UPDATE c0002scdl_plan_header SET USER_ID="'.$user_id.'" WHERE left(NOTE,6) ="'.$scl_nm.'"')->execute();
     }
 
     public function ary_layer()
