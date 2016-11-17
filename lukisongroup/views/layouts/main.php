@@ -349,7 +349,7 @@ $this->title = 'LukisonGroup.com';
                                 );
 								*/
 							 ?>
-							  <div style="margin-top: 20px";>
+							  <div style="margin-top: 20px; min-height:680px">
 								<?php echo $content; ?>
 							  </div>
                             

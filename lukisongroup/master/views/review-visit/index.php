@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	]);	
 	$tabReviewChart=$this->render('_indexSalesMdChart');	
 	$tabMonthSummary=$this->render('_indexMonthSummary');
-	$tabReviewWeekly=$this->render('_indexWeekly');	
+	$tabReviewWeekly='';//$this->render('_indexWeekly');	
 
 		
 	if($tab==0){
@@ -76,11 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		$tab4=false;
 		$tab5=true;
 	}
-	$items=[
-	[
-			'label'=>'<i class="fa fa-calculator fa-2x"></i>Monthly Summary','content'=>$tabMonthSummary,
-			'active'=>true,
-		],	
+	$items=[		
 		[
 			'label'=>'<i class="fa fa-map-marker fa-2x"></i> Map','content'=>$tabReviewMap,
 			'active'=>$tab0,
@@ -97,7 +93,10 @@ $this->params['breadcrumbs'][] = $this->title;
 			'label'=>'<i class="fa fa-area-chart fa-2x"></i> Chart','content'=>$tabReviewChart,
 			'active'=>$tab3,
 		],			
-		 	
+		[
+			'label'=>'<i class="fa fa-calculator fa-2x"></i> Monthly Summary','content'=>$tabMonthSummary,
+			'active'=>$tab4,
+		],	
 		[
 			'label'=>'<i class="fa fa-newspaper-o fa-2x"></i> History Stock','content'=>$tabReviewWeekly,
 			'active'=>$tab5,
@@ -114,11 +113,10 @@ $this->params['breadcrumbs'][] = $this->title;
 	]);	
 		
 ?>
-<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
-<div class="row">
-	<div  class="col-lg-12" >
-		
-		<?=$tabReviewVisit?>
+<div style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
+	<div class="row">
+		<div  class="col-lg-12" >
+			<?=$tabReviewVisit?>
 		</div>
 	</div>
 </div>

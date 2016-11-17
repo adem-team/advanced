@@ -117,7 +117,7 @@ class PilotprojectChatController extends Controller
 		
 		//***get Data Pilotproject
 		$_modalPilot= new ActiveDataProvider([
-			'query' => Pilotproject::find()->Where(['CREATED_BY'=>Yii::$app->user->identity->username])->asArray(),
+			'query' => Pilotproject::find()->Where(['CREATED_BY'=>Yii::$app->user->identity->username]) ->orderBy('PLAN_DATE1')->asArray(),
 			'pagination' => [
 					'pageSize' => 200,
 				],				 
@@ -138,7 +138,7 @@ class PilotprojectChatController extends Controller
 			'allModels' => Yii::$app->db_widget->createCommand("
 					SELECT *,x1.ID as IDX
 					FROM sc0001 x1 RIGHT JOIN sc0001b x2 on x1.ENABLE_ACTUAL=x2.ENABLE_ACTUAL 
-					WHERE x2.ENABLE_ACTUAL=2;					
+					WHERE x2.ENABLE_ACTUAL=2 AND x1.CREATED_BY='".Yii::$app->user->identity->username."';					
 			")->queryAll(),
 			'pagination' => [
 					'pageSize' => 400,
@@ -162,8 +162,8 @@ class PilotprojectChatController extends Controller
 				$task[]=[
 					"label"=> "Actual",
 					"processid"=> strval($value['IDX']),
-					"start"=> Yii::$app->formatter->asDatetime($value['PLAN_DATE1'], 'php:Y-m-d'),
-					"end"=> Yii::$app->formatter->asDatetime($value['PLAN_DATE2'], 'php:Y-m-d'),
+					"start"=> Yii::$app->formatter->asDatetime($value['ACTUAL_DATE1'], 'php:Y-m-d'),
+					"end"=> Yii::$app->formatter->asDatetime($value['ACTUAL_DATE2'], 'php:Y-m-d'),
 					"id"=> strval($value['IDX']),
 					"color"=> "#6baa01",
 					"toppadding"=> "56%",
@@ -262,7 +262,7 @@ class PilotprojectChatController extends Controller
 						"headerbgcolor": "#6baa01",
 						"headerfontcolor": "#ffffff",
 						"headerfontsize": "12",
-						"width":"150",
+						"width":"100",
 						"align": "left",
 						"isbold": "1",
 						"bgalpha": "25",				
