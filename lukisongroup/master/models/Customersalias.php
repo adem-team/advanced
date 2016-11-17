@@ -49,7 +49,7 @@ class Customersalias extends \yii\db\ActiveRecord
 	
 	public function getCusp()
     {
-        return $this->hasOne(Customers::className(), ['CUST_GRP' => 'KD_PARENT']);
+        return $this->hasOne(Customers::className(), ['CUST_KD' => 'KD_PARENT']);
     }
     public function getCustpnma()
     {

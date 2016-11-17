@@ -45,7 +45,7 @@ class SoDetailSearch extends Model
 				(x1.SO_QTY/x8.QTY) AS UNIT_BRG,
 				(x1.SO_QTY * x7.HARGA_SALES) as SUB_TOTAL,
 				(x1.SUBMIT_QTY * x1.SUBMIT_PRICE) as SUBMIT_SUB_TOTAL,
-				x1.KODE_REF
+				x1.KODE_REF,x9.USER_SIGN1,x9.TGL_SIGN2,x9.USER_SIGN2,x9.TGL_SIGN3,x9.USER_SIGN3
 			FROM so_t2 x1 
 				LEFT JOIN dbm001.user x2 ON x2.id=x1.USER_ID
 				LEFT JOIN dbm_086.user_profile x3 ON x3.ID_USER=x2.id

@@ -359,7 +359,6 @@ use yii\helpers\ArrayHelper;
 	],
 ];
 
-
 $_gvSoDetail= GridView::widget([
 	'id'=>'gv-so-detail',
 	'dataProvider'=> $aryProviderSoDetail,
@@ -409,29 +408,50 @@ $_gvSoDetail= GridView::widget([
 
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt;">
 	<div class="col-md-12">
-		<div class="col-md-3" style="float:left;">
-			<dl>
-				<dt style="width:100px; float:left;">Date</dt>
-				<dd>: <?php echo date('d-M-Y'); ?></dd>
-				<dt style="width:100px; float:left;">Nomor</dt>
-				<dd>: <?php //echo $roHeader->KD_RO; ?></dd>
-				<dt style="width:100px; float:left;">Departement</dt>
-			</dl>
+		<div class="col-md-3" style="float:left">
+			<div  class="row" >
+				<dl>
+					<dt style="width:300px; float:left;font-family: verdana, arial, sans-serif ;font-size: 11pt;">
+						PT EFENBI SUKSES MAKMUR
+					</dt>
+					<dt style="width:100px; float:left;"></dt>
+					<dt style="width:200px; float:left;">
+						Ruko Demansion Blok C12
+					</dt>
+					<dt style="width:200px; float:left;">
+						Jalan jalur Sutera Timur
+					</dt>
+					<dt style="width:200px; float:left;">
+						Alam sutera - Tangerang
+					</dt>
+					<dt style="width:200px; float:left;">					
+						Telp : 021-30448598-99 /fax 021-30448597
+					</dt>
+				</dl>
+			</div>
 		</div>
-		<div class="col-md-6" style="padding-top:15px;"></div>
-		<div class="col-md-3" style="float:left;">
+		<div class="col-md-5" style="padding-top:15px;">
+		</div>
+		<div class="col-md-3" style="float:left;padding-bottom:-100px">
 			<dl>
-				<dt style="width:100px; float:left;">Date</dt>
-				<dd>: <?php echo date('d-M-Y'); ?></dd>
-				<dt style="width:100px; float:left;">Nomor</dt>
+				<dt style="width:100px; float:left;">Tanggal </dt>
+				<dd>: <?php echo date('d-m-Y'); ?></dd>
+				<dt style="width:100px; float:left;">Kode Cust</dt>
 				<dd>: <?php //echo $roHeader->KD_RO; ?></dd>
-				<dt style="width:100px; float:left;">Departement</dt>
+				<dt style="width:100px; float:left;">Customer </dt>
+				<dd>: <?php //echo $roHeader->KD_RO; ?></dd>
+				<dt style="width:100px; float:left;">Alamat  </dt>
+				<dd>: <?php //echo $roHeader->KD_RO; ?></dd>
+				<dt style="width:100px; float:left;">Telp   </dt>
+				<dd>: <?php //echo $roHeader->KD_RO; ?></dd>
+				<dt style="width:100px; float:left;">Tgl Kirim  </dt>
+				<dd>: <?php //echo $roHeader->KD_RO; ?></dd>
 			</dl>
 		</div>
 	</div>
 	<!-- HEADER !-->
-	<div class="col-md-12">
-		<h3 class="text-center"><b>SALES ORDER</b></h3>		
+	<div class="col-md-12 text-center"  style="float:left;font-family: verdana, arial, sans-serif ;font-size: 14pt;">
+		<b>SALES ORDER</b>	
 	</div>
 	<!-- Title Descript !-->
 	<div class="col-md-12">
@@ -440,7 +460,7 @@ $_gvSoDetail= GridView::widget([
 	<!-- Table Grid List SO Detail !-->
 	<div class="col-md-12">
 		<dl>
-			<dt style="width:100px; float:left;">SO NO :</dt>
+			<dt style="width:50px; float:left;">SO NO</dt>
 			<dd>: <?= $kode_som ?></dd>
 		</dl>
 		<?=$_gvSoDetail?>

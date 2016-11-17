@@ -238,8 +238,7 @@ class ImportSalesPoController extends Controller
 			return 0;
 		}else{
 			return 1;
-		}
-		
+		}		
 	}
 
 	/**=====================================
