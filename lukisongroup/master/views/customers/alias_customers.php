@@ -106,7 +106,7 @@ use kartik\detail\DetailView;
 
   /* Customers alias View Editing*/
   $alias=DetailView::widget([
-    'id'=>'customers-alias-view-id',
+    'id'=>$model->formName(),
     'model' => $model,
     'attributes'=>$attalias,
     'condensed'=>true,
@@ -114,10 +114,17 @@ use kartik\detail\DetailView;
     'mode'=>DetailView::MODE_VIEW,
     'buttons1'=>'{update}',
     'buttons2'=>'{view}{save}',
+    
     'panel'=>[
           'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-1x fa-list-alt"></div><div><h6 class="modal-title"><b>Alias Customers</b></h6></div>',
           'type'=>DetailView::TYPE_INFO,
         ],
+        'formOptions'=>[
+        'id'=>$model->formName(),
+                    'enableAjaxValidation'=>true,
+                    'enableClientValidation' => true,
+                      'validationUrl'=>Url::toRoute('/master/customers/valid-alias-update'),
+                ],
   ]);
 
   ?>

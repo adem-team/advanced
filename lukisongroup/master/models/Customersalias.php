@@ -74,10 +74,12 @@ class Customersalias extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['KD_PARENT','KD_CUSTOMERS','KD_DISTRIBUTOR','KD_ALIAS'], 'required'],
+            [['KD_PARENT','KD_CUSTOMERS','KD_DISTRIBUTOR','KD_ALIAS'], 'required','on'=>'create'],
             [['CREATED_AT', 'UPDATED_AT','KD_PARENT'], 'safe'],
             [['KD_CUSTOMERS', 'KD_ALIAS'], 'string', 'max' => 30],
             [['KD_CUSTOMERS','KD_ALIAS'], 'cekalias','on'=>'create'],
+            [['KD_ALIAS'], 'cekalias','on'=>'update'],
+            [['KD_ALIAS'], 'required','on'=>'update'],
             [['KD_DISTRIBUTOR'], 'string', 'max' => 50],
             [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 100]
         ];
