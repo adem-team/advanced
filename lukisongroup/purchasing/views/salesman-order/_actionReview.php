@@ -4,7 +4,31 @@ use kartik\grid\GridView;
 use yii\helpers\Url;
 use yii\bootstrap\Modal;
 use yii\helpers\ArrayHelper;
- //print_r($aryProviderSoDetail);
+
+
+
+$kode_so = Yii::$app->getRequest()->getQueryParam('id');
+$ary = $aryProviderSoDetail->getModels();
+
+/*
+ * Tombol Create
+ * 
+*/
+function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm){
+
+			$title1 = Yii::t('app', 'ADD NEW ITEM');
+			$options1 = [ 'id'=>'new-add-create',
+							'data-toggle'=>"modal",
+							'data-target'=>"#new-add",
+							'class' => 'btn btn-success btn-sm',
+			];
+			$icon1 = '<span class="fa fa-plus fa-lg"></span>';
+			$url = Url::toRoute(['/purchasing/salesman-order/create-new-add','cust_kd'=>$cust_kd,'user_id'=>$user_id,'id'=>$kode_so,'cust_nm'=>$cust_nm]);
+			$label1 = $icon1 . ' ' . $title1;
+			$content = Html::a($label1,$url,$options1);
+			return $content;
+		 }
+
  
  $soDetailColumn= [
 	/*No Urut*/
@@ -184,6 +208,7 @@ use yii\helpers\ArrayHelper;
 	],
 	/*HARGA_SALES_PCS*/
 	[
+
 		'attribute'=>'HARGA_SALES',
 		'label'=>'PRICE/Pcs',
 		'hAlign'=>'right',
@@ -251,17 +276,24 @@ use yii\helpers\ArrayHelper;
 		],
 	],
 	/*SUBMIT_QTY*/
+	#editable
 	[
-		'attribute'=>'SUBMIT_QTY',
+		//'class'=>'kartik\grid\EditableColumn',
+		//'attribute'=>'ID',
 		'label'=>'PREMIT QTY/Pcs',
 		'hAlign'=>'right',
 		'vAlign'=>'middle',
+		// 'editableOptions' => [
+		// 	'header' => 'Update PREMIT QTY/Pcs',
+		// 	'inputType' => \kartik\editable\Editable::INPUT_MONEY,
+		// 	'size' => 'xs',
+		// 	],
 		//'group'=>true,
 		'format'=>['decimal',2],
 		'pageSummaryFunc'=>GridView::F_SUM,
 		'pageSummary'=>true,
 		'value'=>function($model){
-			return round($model['SUBMIT_QTY'],0,PHP_ROUND_HALF_UP);
+			return round($model['ID'],0,PHP_ROUND_HALF_UP);
 		},
 		'headerOptions'=>[
 			'style'=>[
@@ -290,7 +322,9 @@ use yii\helpers\ArrayHelper;
 		],
 	],
 	/*SUBMIT_QTY*/
+	#editable
 	[
+		// 'class'=>'kartik\grid\EditableColumn',
 		'attribute'=>'SUBMIT_PRICE',
 		'label'=>'PREMIT PRICE/Pcs',
 		'hAlign'=>'right',
@@ -360,9 +394,9 @@ use yii\helpers\ArrayHelper;
 ];
 
 $_gvSoDetail= GridView::widget([
-	'id'=>'gv-so-detail',
+	'id'=>'gv-so-detail-md-inbox',
 	'dataProvider'=> $aryProviderSoDetail,
-	//'filterModel' => $searchModel,
+	'filterModel' => $searchModelDetail,
 	'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
 	'showPageSummary' => true,
 	/*
@@ -391,11 +425,9 @@ $_gvSoDetail= GridView::widget([
 	'striped'=>'4px',
 	'autoXlFormat'=>true,
 	'export' => false,
-	'toolbar'=> [''
-			//['content'=>''],
-			//'{export}',
-			//'{toggleData}',
-		],
+	'toolbar'=> [
+		 ['content'=>tombolCreate($cust_kd,$kode_so,$user_id,$ary[0]['CUST_NM'])],
+	 ],
 	'panel'=>[
 		'type'=>GridView::TYPE_INFO,
 		'heading'=>false //'<div> NO.SO :'.date("d-M-Y")
@@ -605,10 +637,44 @@ $_gvSoDetail= GridView::widget([
 				<!-- Button Submit!-->
 				<div style="text-align:right; margin-top:80px; margin-right:15px">
 					<a href="/purchasing/salesman-order" class="btn btn-info btn-xs" role="button" style="width:90px">Back</a>
-					<?php //echo Html::a('<i class="fa fa-print fa-fw"></i> Print', ['cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
+					<?php
+					 echo Html::a('<i class="fa fa-print fa-fw"></i> Print', ['cetakpdf'], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
 					<?php //echo Html::a('<i class="fa fa-print fa-fw"></i> tmp Print', ['temp-cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
 
 				</div>
 			</div>
 		</div>
 </div>
+
+
+<?php
+/*
+ * JS  CREATED
+ * @author wawan
+ * @since 1.2
+*/
+$this->registerJs("
+		$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+		$('#new-add').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			}),
+",$this::POS_READY);
+
+Modal::begin([
+		'id' => 'new-add',
+		'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>New Item</b></h4></div>',
+		// 'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+		]
+	]);
+Modal::end();

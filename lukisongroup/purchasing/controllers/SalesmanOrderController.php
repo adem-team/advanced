@@ -22,6 +22,7 @@ use lukisongroup\purchasing\models\salesmanorder\SoHeaderSearch;
 use lukisongroup\purchasing\models\salesmanorder\SoDetailSearch;
 use lukisongroup\purchasing\models\salesmanorder\SoT2;
 use lukisongroup\purchasing\models\salesmanorder\Somdetail;
+use lukisongroup\master\models\Barang;
 
 
 /**
@@ -86,6 +87,41 @@ class SalesmanOrderController extends Controller
 
     }  
 
+
+     public function get_aryBarang()
+    {
+      $sql = Barang::find()->where('KD_CORP="ESM" AND PARENT= 1 AND STATUS<>3')->all();
+      return ArrayHelper::map($sql,function ($sql, $defaultValue) {
+        return $sql->KD_BARANG . ',' . $sql->NM_BARANG; },'NM_BARANG');
+    }
+
+
+    public function actionCreateNewAdd($cust_kd,$user_id,$id,$cust_nm)
+    {
+      $model = new SoT2();
+      # code...
+      if ($model->load(Yii::$app->request->post()) ) {
+      	  $explode = explode(',', $model->KD_BARANG);
+      	  $model->NM_BARANG = $explode[1];
+      	  $model->KD_BARANG = $explode[0];
+          $model->CUST_KD = $cust_kd; # set cust_kd
+          $model->USER_ID = $user_id;
+          $model->CUST_NM = $cust_nm;
+          $model->KODE_REF = $id;
+          $model->SO_TYPE = 10;
+          $model->POS ='WEB';
+          $model->WAKTU_INPUT_INVENTORY =  date("Y-m-d H:i:s"); #set datetime
+          $model->TGL =  date("Y-m-d"); #set date
+          $model->save();
+          return $this->redirect(['/purchasing/salesman-order/review','id'=>$id,'stt'=>1]); ;
+      }else {
+        return $this->renderAjax('new_som', [
+            'model' => $model,
+            'data_barang' => self::get_aryBarang(), #array barang
+        ]);
+      }
+    }
+
 	/**
      * Action REVIEW | Prosess Checked and Approval
      * @param string $id
@@ -101,6 +137,9 @@ class SalesmanOrderController extends Controller
 			$getTGL=$modelSoT2->TGL;
 			$getCUST_KD=$modelSoT2->CUST_KD;
 			$getUSER_ID=$modelSoT2->USER_ID;
+
+			
+
 
 		
 			$connect = Yii::$app->db_esm;
@@ -142,10 +181,14 @@ class SalesmanOrderController extends Controller
 				'USER_ID'=>$getUSER_ID,
 			]); 
 			$aryProviderSoDetail = $searchModelDetail->searchDetail(Yii::$app->request->queryParams);
-			
+
 			return $this->render('_actionReview',[
 			'aryProviderSoDetail'=>$aryProviderSoDetail,
 			'kode_som'=>$modelSoT2->KODE_REF,
+			'cust_kd'=>$getCUST_KD,
+			// 'tgl'=>$getTGL,
+			'user_id'=>$getUSER_ID,
+				'searchModelDetail'=>$searchModelDetail
 			]); 
 		}
 	}
