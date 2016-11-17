@@ -77,6 +77,10 @@ $this->params['breadcrumbs'][] = $this->title;
 		$tab5=true;
 	}
 	$items=[
+	[
+			'label'=>'<i class="fa fa-calculator fa-2x"></i>Monthly Summary','content'=>$tabMonthSummary,
+			'active'=>true,
+		],	
 		[
 			'label'=>'<i class="fa fa-map-marker fa-2x"></i> Map','content'=>$tabReviewMap,
 			'active'=>$tab0,
@@ -93,10 +97,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'label'=>'<i class="fa fa-area-chart fa-2x"></i> Chart','content'=>$tabReviewChart,
 			'active'=>$tab3,
 		],			
-		[
-			'label'=>'<i class="fa fa-calculator fa-2x"></i>Monthly Summary','content'=>$tabMonthSummary,
-			'active'=>$tab4,
-		],	 	
+		 	
 		[
 			'label'=>'<i class="fa fa-newspaper-o fa-2x"></i> History Stock','content'=>$tabReviewWeekly,
 			'active'=>$tab5,
