@@ -113,7 +113,7 @@ class CustomersController extends Controller
     public function actionIndex()
     {
 
-      $datacus = Customers::find()->where('CUST_GRP = CUST_KD')->asArray()->all();
+      $datacus = Customers::find()->where('CUST_GRP = CUST_KD AND STATUS<>3')->asArray()->all();
     $parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
 
 		//*search individual*/
@@ -1026,7 +1026,7 @@ class CustomersController extends Controller
     {
         $model = new Customers();
         $model->scenario = "create";
-        $datacus = Customers::find()->where("CUST_GRP = CUST_KD AND CUST_KD <>'CUS.2016.000637'")->asArray()->all();
+        $datacus = Customers::find()->where("CUST_GRP = CUST_KD AND CUST_KD <>'CUS.2016.000637' AND STATUS<>3")->asArray()->all();
         $parent = ArrayHelper::map($datacus,'CUST_KD', 'CUST_NM');
 
     if ($model->load(Yii::$app->request->post()) ) {

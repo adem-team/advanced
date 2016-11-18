@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\Select2;
 use kartik\money\MaskMoney;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Kota */
@@ -17,9 +18,12 @@ use kartik\money\MaskMoney;
 
     <?php $form = ActiveForm::begin([
         'id' => $model->formName(),
-        'enableClientValidation' => true
+        'enableClientValidation' => true,
+        'enableAjaxValidation'=>true,
+        'validationUrl'=>Url::toRoute('/purchasing/salesman-order/valid-alias-barang'),
     ]); ?>
 
+    <?=  $form->field($model, 'KODE_REF')->textInput(['value'=>$kode_som,'readonly'=>true]); ?>
 
     <?= $form->field($model, 'KD_BARANG')->widget(Select2::classname(), [
         'data' => $data_barang,
@@ -32,6 +36,8 @@ use kartik\money\MaskMoney;
 
 
     ])->label('NM Barang');?>
+
+
 
     <?= $form->field($model, 'SO_QTY')->widget(MaskMoney::classname(), [
             'pluginOptions' => [

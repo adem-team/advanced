@@ -3,6 +3,8 @@
 namespace lukisongroup\purchasing\models\salesmanorder;
 
 use Yii;
+use lukisongroup\master\models\Customers;
+
 
 /**
  * This is the model class for table "so_t2".
@@ -41,6 +43,10 @@ class SoT2 extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public $UNIT_BRG;
+    public $SUB_TOTAL;
+    public $SUBMIT_SUB_TOTAL;
+    public $NM_UNIT;
     public static function tableName()
     {
         return 'so_t2';
@@ -60,16 +66,31 @@ class SoT2 extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['TGL', 'WAKTU_INPUT_INVENTORY'], 'safe'],
+            [['TGL', 'WAKTU_INPUT_INVENTORY','KD_BARANG'], 'safe'],
+            [['KD_BARANG', 'SO_QTY'], 'required','on'=>'create'],
+            [['KD_BARANG'], 'CekBarang','on'=>'create'],
             [['SO_QTY', 'UNIT_QTY', 'UNIT_BERAT', 'HARGA_PABRIK', 'HARGA_DIS', 'HARGA_SALES', 'HARGA_LG', 'SUBMIT_QTY', 'SUBMIT_PRICE'], 'number'],
             [['SO_TYPE', 'STATUS'], 'integer'],
             [['NOTED'], 'string'],
-            [['CUST_KD', 'CUST_KD_ALIAS', 'KD_BARANG', 'KD_DIS', 'USER_ID', 'UNIT_BARANG', 'KODE_REF'], 'string', 'max' => 50],
+            [['CUST_KD', 'CUST_KD_ALIAS', 'KD_DIS', 'USER_ID', 'UNIT_BARANG', 'KODE_REF'], 'string', 'max' => 50],
             [['CUST_NM', 'NM_BARANG', 'POS', 'NM_DIS'], 'string', 'max' => 255],
             [['KD_BARANG_ALIAS'], 'string', 'max' => 30],
             [['ID_GROUP'], 'string', 'max' => 20],
         ];
     }
+
+
+    public function CekBarang($model){
+        $explode = explode(',', $this->KD_BARANG);
+        $kondisi = SoT2::find()->where(['KD_BARANG'=>$explode[0],'KODE_REF'=>$this->KODE_REF])->one();
+        if($kondisi){
+            $this->addError($model, 'Duplicated Product because the Product already exists in this Salesman Order !, attention  change name Product or change code ');
+        }
+    }
+
+    public function getCust(){
+    return $this->hasOne(Customers::className(), ['CUST_KD'=>'CUST_KD']);
+  }
 
     /**
      * @inheritdoc

@@ -14,7 +14,7 @@ $ary = $aryProviderSoDetail->getModels();
  * Tombol Create
  * 
 */
-function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm){
+function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm,$tgl){
 
 			$title1 = Yii::t('app', 'ADD NEW ITEM');
 			$options1 = [ 'id'=>'new-add-create',
@@ -23,7 +23,7 @@ function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm){
 							'class' => 'btn btn-success btn-sm',
 			];
 			$icon1 = '<span class="fa fa-plus fa-lg"></span>';
-			$url = Url::toRoute(['/purchasing/salesman-order/create-new-add','cust_kd'=>$cust_kd,'user_id'=>$user_id,'id'=>$kode_so,'cust_nm'=>$cust_nm]);
+			$url = Url::toRoute(['/purchasing/salesman-order/create-new-add','cust_kd'=>$cust_kd,'user_id'=>$user_id,'id'=>$kode_so,'cust_nm'=>$cust_nm,'tgl'=>$tgl]);
 			$label1 = $icon1 . ' ' . $title1;
 			$content = Html::a($label1,$url,$options1);
 			return $content;
@@ -57,6 +57,7 @@ function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm){
 	],
 	/*CREATE_AT Tanggal Pembuatan*/
 	[
+		'class'=>'kartik\grid\EditableColumn',
 		'attribute'=>'TGL',
 		'label'=>'Create At',
 		'hAlign'=>'left',
@@ -105,6 +106,7 @@ function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm){
 	],						
 	/*NM_UNIT*/
 	[
+		// 'class'=>'kartik\grid\EditableColumn',
 		'attribute'=>'NM_UNIT',
 		'label'=>'UNIT',
 		'hAlign'=>'right',
@@ -278,17 +280,18 @@ function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm){
 	/*SUBMIT_QTY*/
 	#editable
 	[
-		//'class'=>'kartik\grid\EditableColumn',
-		//'attribute'=>'ID',
+		'class'=>'kartik\grid\EditableColumn',
+		'attribute'=>'SUBMIT_QTY',
+		'refreshGrid'=>true,
 		'label'=>'PREMIT QTY/Pcs',
 		'hAlign'=>'right',
 		'vAlign'=>'middle',
-		// 'editableOptions' => [
-		// 	'header' => 'Update PREMIT QTY/Pcs',
-		// 	'inputType' => \kartik\editable\Editable::INPUT_MONEY,
-		// 	'size' => 'xs',
-		// 	],
-		//'group'=>true,
+		'editableOptions' => [
+			'header' => 'PREMIT QTY/Pcs',
+			'inputType' => \kartik\editable\Editable::INPUT_MONEY,
+			'size' => 'xs',
+			],
+		'group'=>true,
 		'format'=>['decimal',2],
 		'pageSummaryFunc'=>GridView::F_SUM,
 		'pageSummary'=>true,
@@ -324,9 +327,15 @@ function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm){
 	/*SUBMIT_QTY*/
 	#editable
 	[
-		// 'class'=>'kartik\grid\EditableColumn',
+		'class'=>'kartik\grid\EditableColumn',
 		'attribute'=>'SUBMIT_PRICE',
+		'refreshGrid'=>true,
 		'label'=>'PREMIT PRICE/Pcs',
+		'editableOptions' => [
+			'header' => 'PREMIT PRICE/Pcs',
+			'inputType' => \kartik\editable\Editable::INPUT_MONEY,
+			'size' => 'xs',
+			],
 		'hAlign'=>'right',
 		'vAlign'=>'middle',
 		//'group'=>true,
@@ -396,7 +405,7 @@ function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm){
 $_gvSoDetail= GridView::widget([
 	'id'=>'gv-so-detail-md-inbox',
 	'dataProvider'=> $aryProviderSoDetail,
-	'filterModel' => $searchModelDetail,
+	// 'filterModel' => $searchModelDetail,
 	'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
 	'showPageSummary' => true,
 	/*
@@ -426,7 +435,7 @@ $_gvSoDetail= GridView::widget([
 	'autoXlFormat'=>true,
 	'export' => false,
 	'toolbar'=> [
-		 ['content'=>tombolCreate($cust_kd,$kode_so,$user_id,$ary[0]['CUST_NM'])],
+		 ['content'=>tombolCreate($cust_kd,$kode_so,$user_id,$ary[0]['CUST_NM'],$tgl)],
 	 ],
 	'panel'=>[
 		'type'=>GridView::TYPE_INFO,
@@ -469,13 +478,13 @@ $_gvSoDetail= GridView::widget([
 				<dt style="width:100px; float:left;">Tanggal </dt>
 				<dd>: <?php echo date('d-m-Y'); ?></dd>
 				<dt style="width:100px; float:left;">Kode Cust</dt>
-				<dd>: <?php //echo $roHeader->KD_RO; ?></dd>
+				<dd>: <?php echo $cust_kd  ?></dd>
 				<dt style="width:100px; float:left;">Customer </dt>
-				<dd>: <?php //echo $roHeader->KD_RO; ?></dd>
+				<dd>: <?php echo $ary[0]['CUST_NM']; ?></dd>
 				<dt style="width:100px; float:left;">Alamat  </dt>
-				<dd>: <?php //echo $roHeader->KD_RO; ?></dd>
+				<dd>: <?php echo $model_cus->ALAMAT; ?></dd>
 				<dt style="width:100px; float:left;">Telp   </dt>
-				<dd>: <?php //echo $roHeader->KD_RO; ?></dd>
+				<dd>: <?php echo $model_cus->TLP1; ?></dd>
 				<dt style="width:100px; float:left;">Tgl Kirim  </dt>
 				<dd>: <?php //echo $roHeader->KD_RO; ?></dd>
 			</dl>
