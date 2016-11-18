@@ -62,6 +62,24 @@ function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm,$tgl){
 		'label'=>'Create At',
 		'hAlign'=>'left',
 		'vAlign'=>'middle',
+		'filterType'=>GridView::FILTER_DATE,
+		'filter'=>true,
+		'filterWidgetOptions'=>[
+			'pluginOptions' => [
+			   'autoclose'=>true,
+				'format' => 'yyyy-mm-dd'
+				    ],
+				],
+		'editableOptions' => [
+				'header' => 'Update TGL',
+				'inputType' => \kartik\editable\Editable::INPUT_DATE,
+				'size' => 'sm',
+				'options' => [
+						'pluginOptions' => ['todayHighlight' => true,
+                           'autoclose'=>true,
+                             'format' => 'yyyy-m-dd']
+								]
+							],
 		'headerOptions'=>[
 			'style'=>[
 				'text-align'=>'center',

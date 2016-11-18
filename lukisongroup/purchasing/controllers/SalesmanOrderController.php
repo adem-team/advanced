@@ -217,6 +217,9 @@ class SalesmanOrderController extends Controller
            if (isset($posted['SUBMIT_QTY'])) {
             $output = $model->SUBMIT_QTY;
           }
+          if (isset($posted['TGL'])) {
+            $output = $model->TGL;
+          }
           $out = Json::encode(['output'=>$output, 'message'=>'']);
         }
         // return ajax json encoded response and exit
