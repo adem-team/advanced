@@ -110,7 +110,9 @@ public function getParent() {
  public function validasi($model)
     {
       
-      $data_customers = Yii::$app->db_esm->createCommand("SELECT DISTINCT CUST_NM FROM `c0001` where CUST_NM='".$this->CUST_NM."' and STATUS <>2")->queryScalar();
+      // $data_customers = Yii::$app->db_esm->createCommand("SELECT DISTINCT CUST_NM FROM `c0001` where CUST_NM='".$this->CUST_NM."' and STATUS <>2 and STATUS<>3")->queryScalar();
+
+        $data_customers = Yii::$app->db_esm->createCommand("SELECT DISTINCT CUST_NM FROM `c0001` where CUST_NM='".$this->CUST_NM."' and STATUS<>3")->queryScalar();
 
 
       if($data_customers === $this->CUST_NM)
