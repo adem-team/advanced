@@ -20,7 +20,7 @@ function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm,$tgl){
 			$options1 = [ 'id'=>'new-add-create',
 							'data-toggle'=>"modal",
 							'data-target'=>"#new-add",
-							'class' => 'btn btn-success btn-sm',
+							'class' => 'btn btn-danger btn-sm',
 			];
 			$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 			$url = Url::toRoute(['/purchasing/salesman-order/create-new-add','cust_kd'=>$cust_kd,'user_id'=>$user_id,'id'=>$kode_so,'cust_nm'=>$cust_nm,'tgl'=>$tgl]);
@@ -59,7 +59,7 @@ function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm,$tgl){
 	[
 		'class'=>'kartik\grid\EditableColumn',
 		'attribute'=>'TGL',
-		'label'=>'Create At',
+		'label'=>'DATE',
 		'hAlign'=>'left',
 		'vAlign'=>'middle',
 		'filterType'=>GridView::FILTER_DATE,
@@ -97,6 +97,7 @@ function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm,$tgl){
 				'font-size'=>'7pt'
 			]
 		],
+		
 	],	
 	/*CREATE_AT Tanggal Pembuatan*/
 	[
@@ -120,7 +121,7 @@ function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm,$tgl){
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt'
 			]
-		],
+		]
 	],						
 	/*NM_UNIT*/
 	[
@@ -453,13 +454,16 @@ $_gvSoDetail= GridView::widget([
 	'autoXlFormat'=>true,
 	'export' => false,
 	'toolbar'=> [
-		 ['content'=>tombolCreate($cust_kd,$kode_so,$user_id,$ary[0]['CUST_NM'],$tgl)],
+		 ''//['content'=>tombolCreate($cust_kd,$kode_so,$user_id,$ary[0]['CUST_NM'],$tgl)],
+		
 	 ],
 	'panel'=>[
-		'type'=>GridView::TYPE_INFO,
-		'heading'=>false //'<div> NO.SO :'.date("d-M-Y")
-		
-	],
+		'type'=>GridView::TYPE_PRIMARY,
+		'heading'=>tombolCreate($cust_kd,$kode_so,$user_id,$ary[0]['CUST_NM'],$tgl),//$this->render('indexTimelineStatus'),//false //'<div> NO.SO :'.date("d-M-Y")
+		'before'=>false,
+		'after'=>false,
+		'footer'=>'<div>asd dsadas ad asd asdas d asd as d ad as d asd wrfddsfds sdf sdfsdf sdf sdfsdfsdfds fsd fsd fds fdsfdsfdsf dsfdsf sdf sd</div>'		
+	]
 ]);
 
 ?>
@@ -671,6 +675,11 @@ $_gvSoDetail= GridView::widget([
 				</div>
 			</div>
 		</div>
+		<div class="col-lg-12" style="padding-top:40px">
+			<div  class="row" >
+				<?=$this->render('indexTimelineStatus')?>
+			</div>
+		</div>
 </div>
 
 
@@ -698,10 +707,10 @@ $this->registerJs("
 
 Modal::begin([
 		'id' => 'new-add',
-		'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>New Item</b></h4></div>',
+		'header' => "<div style='font-family:tahoma, arial, sans-serif;font-size:9pt'> <i class='fa fa-info-circle fa-2x'></i>  ADD ITEM PRODUCT </div>",//'<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>New Item</b></h4></div>',
 		// 'size' => Modal::SIZE_SMALL,
 		'headerOptions'=>[
-			'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			'style'=> 'border-radius:5px; background-color:rgba(0,255,0, 1)'
 		]
 	]);
 Modal::end();
