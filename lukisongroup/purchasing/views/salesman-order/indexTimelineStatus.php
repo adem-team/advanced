@@ -172,67 +172,70 @@ $this->registerCss('
   left: 20px;
 }
 ');
+
+$iconClass="glyphicon glyphicon-remove";
+$iconClass1="fa fa-times-circle";
 ?>
 <!--<div style="display:inline-block;width:100%;overflow-y:auto;">!-->
 	<ul class="timeline timeline-horizontal">
 		<li class="timeline-item">
-			<div class="timeline-badge danger"><i class="glyphicon glyphicon-check"></i></div>
+			<div class="timeline-badge danger"><i class="<?=$soHeaderData->sign1Nm!='None'?'glyphicon glyphicon-check':'glyphicon glyphicon-remove'?>"></i></div>
 			<div class="timeline-panel">
 				<div class="timeline-heading">
 					<h4 class="timeline-title">SALES MD</h4>
 					<p>
-						<small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11 hours ago </small><br>
-						<small class="text-muted"><i class="fa fa-user fa-lg"></i> 11 hours ago </small>
+						<small class="text-muted"><i class="glyphicon glyphicon-time"></i> <?=$soHeaderData->sign1SelisihWaktu.' hours ago' ?></small><br>
+						<small class="text-muted"><i class="fa fa-user fa-lg"></i> <?=$soHeaderData->sign1Nm!=''?$soHeaderData->sign1Nm:''?> </small>
 					</p>
 				</div>								
 			</div>
 		</li>
 		<li class="timeline-item">
-			<div class="timeline-badge info"><i class="glyphicon glyphicon-check"></i></div>
+			<div class="timeline-badge info"><i class="<?=$soHeaderData->sign2Nm!='None'?'glyphicon glyphicon-check':'glyphicon glyphicon-remove'?>"></i></div>
 			<div class="timeline-panel">
 				<div class="timeline-heading">
 					<h4 class="timeline-title">ESM ADMIN</h4>
 					<p>
-						<small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11 hours ago </small><br>
-						<small class="text-muted"><i class="fa fa-user fa-lg"></i> 11 hours ago </small>
+						<small class="text-muted"><i class="glyphicon glyphicon-time"></i> <?=$soHeaderData->sign2SelisihWaktu.' hours ago' ?> </small><br>
+						<small class="text-muted"><i class="fa fa-user fa-lg"></i> <?=$soHeaderData->sign2Nm!=''?$soHeaderData->sign2Nm:''?> </small>
 					</p>
 				</div>
 				
 			</div>
 		</li>
 		<li class="timeline-item">
-			<div class="timeline-badge success"><i class="glyphicon glyphicon-check"></i></div>
+			<div class="timeline-badge success"><i class="<?=$soHeaderData->sign3Nm!='None'?'glyphicon glyphicon-check':'glyphicon glyphicon-remove'?>"></i></div>
 			<div class="timeline-panel">
 				<div class="timeline-heading">
 					<h4 class="timeline-title">ESM CAM</h4>
 					<p>
-						<small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11 hours ago </small><br>
-						<small class="text-muted"><i class="fa fa-user fa-lg"></i> 11 hours ago </small>
+						<small class="text-muted"><i class="glyphicon glyphicon-time"></i> <?=$soHeaderData->sign3SelisihWaktu.' hours ago' ?></small><br>
+						<small class="text-muted"><i class="fa fa-user fa-lg"></i> <?=$soHeaderData->sign3Nm!=''?$soHeaderData->sign3Nm:''?> </small>
 					</p>
 				</div>								
 			</div>
 		</li>
 		<li class="timeline-item">
-			<div class="timeline-badge success"><i class="glyphicon glyphicon-check"></i></div>
+			<div class="timeline-badge success"><i class="<?=$soHeaderData->sign4Nm!='None'?'glyphicon glyphicon-check':'glyphicon glyphicon-remove'?>"></i></div>
 			<div class="timeline-panel">
 				<div class="timeline-heading">
 					<h4 class="timeline-title">ACCOUNTING</h4>
 					<p>
-						<small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11 hours ago </small><br>
-						<small class="text-muted"><i class="fa fa-user fa-lg"></i> 11 hours ago </small>
+						<small class="text-muted"><i class="glyphicon glyphicon-time"></i> <?=$soHeaderData->sign4SelisihWaktu.' hours ago' ?> </small><br>
+						<small class="text-muted"><i class="fa fa-user fa-lg"></i> <?=$soHeaderData->sign4Nm!=''?$soHeaderData->sign4Nm:''?> </small>
 					</p>
 				</div>
 				
 			</div>
 		</li>
 		<li class="timeline-item">
-			<div class="timeline-badge danger"><i class="glyphicon glyphicon-check"></i></div>
+			<div class="timeline-badge danger"><i class="<?=$soHeaderData->sign5Nm!='None'?'glyphicon glyphicon':'glyphicon glyphicon-remove'?>"></i></div>
 			<div class="timeline-panel">
 				<div class="timeline-heading">
 					<h4 class="timeline-title">WAREHOUSE</h4>
 					<p>
-						<small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11 hours ago </small><br>
-						<small class="text-muted"><i class="fa fa-user fa-lg"></i> 11 hours ago </small>
+						<small class="text-muted"><i class="glyphicon glyphicon-time"></i> <?=$soHeaderData->sign5SelisihWaktu.' hours ago' ?> </small><br>
+						<small class="text-muted"><i class="fa fa-user fa-lg"></i> <?=$soHeaderData->sign5Nm!=''?$soHeaderData->sign5Nm:''?> </small>
 					</p>
 				</div>								
 			</div>

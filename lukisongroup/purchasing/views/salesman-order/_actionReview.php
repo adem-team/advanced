@@ -6,6 +6,10 @@ use yii\bootstrap\Modal;
 use yii\helpers\ArrayHelper;
 
 
+$this->title = 'Sales Order';
+$this->params['breadcrumbs'][] = $this->title;
+$this->sideCorp = 'Sales Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
+$this->sideMenu = 'esm_customers';
 
 $kode_so = Yii::$app->getRequest()->getQueryParam('id');
 $ary = $aryProviderSoDetail->getModels();
@@ -454,13 +458,13 @@ $_gvSoDetail= GridView::widget([
 	'autoXlFormat'=>true,
 	'export' => false,
 	'toolbar'=> [
-		 ''//['content'=>tombolCreate($cust_kd,$kode_so,$user_id,$ary[0]['CUST_NM'],$tgl)],
+		 ['content'=>tombolCreate($cust_kd,$kode_so,$user_id,$ary[0]['CUST_NM'],$tgl)],
 		
 	 ],
 	'panel'=>[
-		'type'=>GridView::TYPE_PRIMARY,
-		'heading'=>tombolCreate($cust_kd,$kode_so,$user_id,$ary[0]['CUST_NM'],$tgl),//$this->render('indexTimelineStatus'),//false //'<div> NO.SO :'.date("d-M-Y")
-		'before'=>false,
+		'type'=>GridView::TYPE_SUCCESS,
+		'heading'=>false,//tombolCreate($cust_kd,$kode_so,$user_id,$ary[0]['CUST_NM'],$tgl),//$this->render('indexTimelineStatus'),//false //'<div> NO.SO :'.date("d-M-Y")
+		'before'=>'SO NO : '. $kode_som,
 		'after'=>false,
 		'footer'=>'<div>asd dsadas ad asd asdas d asd as d ad as d asd wrfddsfds sdf sdfsdf sdf sdfsdfsdfds fsd fsd fds fdsfdsfdsf dsfdsf sdf sd</div>'		
 	]
@@ -522,10 +526,6 @@ $_gvSoDetail= GridView::widget([
 	</div>
 	<!-- Table Grid List SO Detail !-->
 	<div class="col-md-12">
-		<dl>
-			<dt style="width:50px; float:left;">SO NO</dt>
-			<dd>: <?= $kode_som ?></dd>
-		</dl>
 		<?=$_gvSoDetail?>
 	</div>
 	<!-- Signature !-->
@@ -539,9 +539,10 @@ $_gvSoDetail= GridView::widget([
 							<th  class="col-md-1" style="text-align: center; height:20px">
 								<div style="text-align:center;">
 									<?php
-										//$placeTgl1=$poHeader->SIG1_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG1_TGL,'date') :'';
-										echo '<b>Tanggerang</b>,';// . $placeTgl1;
+										$tgl1=$soHeaderData->sign1Tgl!='' ? Yii::$app->ambilKonvesi->convert($soHeaderData->sign1Tgl,'date') :'';
+										$signTgl1='<b>Tanggerang</b>, '.$tgl1;
 									?>
+									<?=$signTgl1?>
 								</div>
 
 							</th>
@@ -549,9 +550,10 @@ $_gvSoDetail= GridView::widget([
 							<th class="col-md-1" style="text-align: center; height:20px">
 								<div style="text-align:center;">
 									<?php
-										//$placeTgl2=$poHeader->SIG2_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG2_TGL,'date') :'';
-										echo '<b>Tanggerang</b>,';// . $placeTgl2;
+										$tgl2=$soHeaderData->sign2Tgl!='' ? Yii::$app->ambilKonvesi->convert($soHeaderData->sign2Tgl,'date') :'';
+										$signTgl2='<b>Tanggerang</b>, '.$tgl2;
 									?>
+									<?=$signTgl2?>
 								</div>
 
 							</th>
@@ -559,9 +561,10 @@ $_gvSoDetail= GridView::widget([
 							<th class="col-md-1" style="text-align: center; height:20px">
 								<div style="text-align:center;">
 									<?php
-										//$placeTgl3=$poHeader->SIG3_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG3_TGL,'date') :'';
-										echo '<b>Tanggerang</b>,';// . $placeTgl3;
+										$tgl3=$soHeaderData->sign3Tgl!='' ? Yii::$app->ambilKonvesi->convert($soHeaderData->sign3Tgl,'date') :'';
+										$signTgl3='<b>Tanggerang</b>, '.$tgl3;
 									?>
+									<?=$signTgl3?>
 								</div>
 							</th>
 
@@ -588,34 +591,21 @@ $_gvSoDetail= GridView::widget([
 						 <tr>
 							<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
 								<?php
-									//$ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG1_SVGBASE64.'></img>' :SignCreated($poHeader);
-									//echo $ttd1;
+									$sign1 = $soHeaderData->sign1!=''?'<img style="width:80; height:40px" src='.$soHeaderData->sign1.'></img>' :'';
 								?>
+								<?=$sign1?>
 							</th>
 							<th class="col-md-1" style="text-align: center; vertical-align:middle">
 								<?php
-									//$ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img style="width:80; height:40px" src='.$poHeader->SIG2_SVGBASE64.'></img>' :SignChecked($poHeader);
-									//echo $ttd2;
+									$sign2 = $soHeaderData->sign2!=''?'<img style="width:80; height:40px" src='.$soHeaderData->sign2.'></img>' :'';
 								?>
+								<?=$sign2?>
 							</th>
 							<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 								<?php
-									/* if(getPermission())
-									{
-										if(getPermission()->BTN_SIGN3 == 0)
-										{
-											$ttd3 = '';
-											echo $ttd3;
-
-										}else{
-											$ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : SignApproved($poHeader);
-											echo $ttd3;
-										}
-									}else{
-										$ttd3 = '';
-										echo $ttd3;
-									} */
+									$sign3 = $soHeaderData->sign3!=''?'<img style="width:80; height:40px" src='.$soHeaderData->sign3.'></img>' :'';
 								?>
+								<?=$sign3?>
 							</th>
 						</tr>
 						<!--Nama !-->
@@ -623,25 +613,25 @@ $_gvSoDetail= GridView::widget([
 							<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 								<div>
 									<?php
-										/* $sigNm1=$poHeader->SIG1_NM!='none' ? '<b>'.$poHeader->SIG1_NM.'</b>' : 'none';
-										echo $sigNm1; */
+										$sign1NM = $soHeaderData->sign1Nm!=''?$soHeaderData->sign1Nm:'';
 									?>
+									<?=$sign1NM?>
 								</div>
 							</th>
 							<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 								<div>
 									<?php
-										/* $sigNm2=$poHeader->SIG2_NM!='none' ? '<b>'.$poHeader->SIG2_NM.'</b>' : 'none';
-										echo $sigNm2; */
+										$sign2NM = $soHeaderData->sign2Nm!=''?$soHeaderData->sign2Nm:'';
 									?>
+									<?=$sign2NM?>
 								</div>
 							</th>
 							<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 								<div>
 									<?php
-										/* $sigNm3=$poHeader->SIG3_NM!='none' ? '<b>'.$poHeader->SIG3_NM.'</b>' : 'none';
-										echo $sigNm3; */
+										$sign2NM = $soHeaderData->sign2Nm!=''?$soHeaderData->sign2Nm:'';
 									?>
+									<?=$sign2NM?>
 								</div>
 							</th>
 						</tr>
@@ -649,17 +639,17 @@ $_gvSoDetail= GridView::widget([
 						 <tr>
 							<th style="text-align: center; vertical-align:middle;height:20">
 								<div>
-									<b><?php  //echo 'Purchaser'; ?></b>
+									<b><?php  echo 'SALES MD'; ?></b>
 								</div>
 							</th>
 							<th style="text-align: center; vertical-align:middle;height:20">
 								<div>
-									<b><?php  //echo 'F & A'; ?></b>
+									<b><?php  echo 'ADMIN'; ?></b>
 								</div>
 							</th>
 							<th style="text-align: center; vertical-align:middle;height:20">
 								<div>
-									<b><?php  //echo 'Director'; ?></b>
+									<b><?php  echo 'CAM'; ?></b>
 								</div>
 							</th>
 						</tr>
@@ -677,7 +667,9 @@ $_gvSoDetail= GridView::widget([
 		</div>
 		<div class="col-lg-12" style="padding-top:40px">
 			<div  class="row" >
-				<?=$this->render('indexTimelineStatus')?>
+				<?=$this->render('indexTimelineStatus',[
+					'soHeaderData'=>$soHeaderData
+				])?>
 			</div>
 		</div>
 </div>

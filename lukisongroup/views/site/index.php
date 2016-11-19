@@ -72,13 +72,61 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 						?>
 				</div>
 			</div>
-		   <div class="row" >
+		   <div class="row" >				
+				<div class="col-xs-12 col-sm-6 col-dm-4  col-lg-4" >
+
+					<?php
+						echo Html::panel([
+								'id'=>'task',
+								'heading' => '<b>TASK MANAGE </b>',
+								'postBody' => Html::listGroup([
+										[
+											'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. 'Profile',
+											'url' => '/sistem/user-profile',
+
+										],
+										[
+											'content' => '<span class="fa fa-edit fa-lg"></span>'. '   '.'Daily Jobs',
+											'url' => '/widget/dailyjob',
+											'badge' => ''
+										],
+										/* [
+											'content' =>'<span class="fa fa-tags fa-lg"></span>'. '   '. 'Head Jobs ',
+											'url' => '/widget/headjob',
+											'badge' => ''
+										], */
+										[
+											'content' => '<span class="fa fa-upload fa-lg"></span>'. '   '.'Arsip File',
+											//'url' => '/widget/arsip',
+											'url' => '/filemanager/files',
+											'badge' => ''
+										],
+										[
+											'content' => '<span class="fa fa-envelope-o fa-lg"></span>'. '   '.'email',
+											'url' => '/email/mail-box',
+											'badge' => ''
+										],
+										[
+											'content' => '<span class="fa fa-sitemap fa-lg"></span>'. '   '.'Organization & Regulation ',
+											'url' => '/hrd/administrasi'
+										],
+									]),
+							],
+							Html::TYPE_DANGER
+						);
+					?>
+				</div>
 				<div class="col-xs-12 col-sm-6 col-dm-4  col-lg-4">
 					<?php
 						echo Html::panel([
 								'id'=>'widget',
-								'heading' => '<b>WIDGET</b>',
+								'heading' => '<b>WIDGET REMAINDER</b>',
 								'postBody' => Html::listGroup([
+										[
+											'content' => '<span class="fa fa-calendar-check-o fa-lg"></span>'. '   '.'Pilot Project',
+											'url' => '/widget/pilotproject',
+											'badge' => ''
+										],
 										[
 											'content' => '<span class="fa fa-folder-open fa-lg"></span>'. '   '. 'Berita Acara',
 											'url' => '/widget/berita',
@@ -104,57 +152,9 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 											'url' => '/widget/notulen',
 											'badge' => ''
 										],
-										[
-											'content' => '<span class="fa fa-envelope-o fa-lg"></span>'. '   '.'email',
-											'url' => '/email/mail-box',
-											'badge' => ''
-										],
+										
 
 
-									]),
-							],
-							Html::TYPE_DANGER
-						);
-					?>
-				</div>
-				<div class="col-xs-12 col-sm-6 col-dm-4  col-lg-4" >
-
-					<?php
-						echo Html::panel([
-								'id'=>'task',
-								'heading' => '<b>TASK MANAGE </b>',
-								'postBody' => Html::listGroup([
-										[
-											'content' => '<span class="fa fa-calendar-check-o fa-lg"></span>'. '   '.'Pilot Project',
-											'url' => '/widget/pilotproject',
-											'badge' => ''
-										],
-										[
-											'content' => '<span class="fa fa-edit fa-lg"></span>'. '   '.'Daily Jobs',
-											'url' => '/widget/dailyjob',
-											'badge' => ''
-										],
-										[
-											'content' =>'<span class="fa fa-tags fa-lg"></span>'. '   '. 'Head Jobs ',
-											'url' => '/widget/headjob',
-											'badge' => ''
-										],
-										[
-											'content' => '<span class="fa fa-upload fa-lg"></span>'. '   '.'Arsip File',
-											//'url' => '/widget/arsip',
-											'url' => '/filemanager/files',
-											'badge' => ''
-										],
-										/* [
-											'content' => '<span class="fa fa-book fa-lg"></span>'. '   '.'Documentation',
-											'url' => '/widget/docdba',
-											'badge' => ''
-										],	 */
-										[
-											'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. 'Profile',
-											'url' => '/sistem/user-profile',
-
-										],
 									]),
 							],
 							Html::TYPE_DANGER
@@ -166,18 +166,14 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 						echo Html::panel([
 								'id'=>'approval',
 								'heading' => '<b>REQUEST AND APPROVAL</b>',
-								'postBody' => Html::listGroup([
-										[
-											'content' => '<span class="fa fa-sitemap fa-lg"></span>'. '   '.'Administration ',
-											'url' => '/hrd/administrasi'
-										],
+								'postBody' => Html::listGroup([										
 										[
 											'content' => '<span class="fa fa-cart-arrow-down fa-lg"></span>'. '   '.'Request Order',
 											'url' => '/purchasing/request-order',
 											'badge' => ''
 										],
 										[
-											'content' => '<span class="fa fa-cart-plus fa-lg"></span>'. '   '.'Sales Order',
+											'content' => '<span class="fa fa-cart-plus fa-lg"></span>'. '   '.'Sales Order T1',
 											'url' => '/purchasing/sales-order',
 											'badge' => ''
 										],
@@ -187,10 +183,15 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 											'badge' => ''
 										],
 										[
+											'content' => '<span class="fa fa-chain fa-lg"></span>'. '   '.'Sales Order T2 ',
+											'url' => '/purchasing/salesman-order'
+										],
+										[
 											'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Request Trade invest',
 											'url' => '/purchasing/request-term',
 											'badge' => ''
 										],
+										
 
 									]),
 							],

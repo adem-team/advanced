@@ -1,0 +1,19 @@
+A. Android : 
+	1. Update tanggal kirim.
+	2. Update Customer, Alamat Shipping.
+
+B. WEB ERP- SALES MAINTAIN: 
+	1. Update tanggal Kirim : Button Modal.
+	2. Permission user.
+	3. Search Header, inbox,outbox,History.
+	4. Warehouse data list stock product: by Chip.
+
+C. WEB ERP- ACCOUNTING:
+	1. LIST SO (INBOX), OUTBOX=Fature Generate.
+	2. TOP payment.
+	3. 
+
+D. WEB ERP- WAREHOUSE:
+	1. CHIP = admin contorl.
+	2. ESM	= Erp web control (admin).
+

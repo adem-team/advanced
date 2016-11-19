@@ -23,7 +23,7 @@ use yii\widgets\ActiveForm;
 use lukisongroup\purchasing\models\salesmanorder\SoHeaderSearch;
 use lukisongroup\purchasing\models\salesmanorder\SoDetailSearch;
 use lukisongroup\purchasing\models\salesmanorder\SoT2;
-use lukisongroup\purchasing\models\salesmanorder\Somdetail;
+use lukisongroup\purchasing\models\salesmanorder\SoHeader;
 use lukisongroup\master\models\Barang;
 
 
@@ -152,6 +152,7 @@ class SalesmanOrderController extends Controller
 			$modelSoT2 = SoT2::find()->where("ID='".$id."' AND SO_TYPE=10")->one();
 			$getSoType=10;
 			$getTGL=$modelSoT2->TGL;
+			$setTGL=$modelSoT2->WAKTU_INPUT_INVENTORY;
 			$getCUST_KD=$modelSoT2->CUST_KD;
 			$getUSER_ID=$modelSoT2->USER_ID;
 		
@@ -163,7 +164,7 @@ class SalesmanOrderController extends Controller
 				$connect->createCommand()->insert('so_0001', 
 						[
 							'KD_SO'=>$kode,
-							'TGL' =>$getTGL,
+							'TGL' =>$setTGL,
 							'USER_SIGN1' =>$getUSER_ID,
 						])->execute();
 				//SO DETAIL -  STOCK
@@ -195,12 +196,13 @@ class SalesmanOrderController extends Controller
 			//Editing editable : SUBMIT_QTY,SUBMIT_PRICE
 		}else{
 			//VIEW KODE_REF
-			$modelSoT2 = SoT2::find()->with('cust')->where("KODE_REF='".$id."' AND SO_TYPE=10")->one();
+			$modelSoT2 = SoT2::find()->with('cust')->where("KODE_REF='".$id."' AND SO_TYPE=10")->one();	
+			$soHeaderData = SoHeader::find()->where(['KD_SO'=>$id])->one(); 		
 			$getSoType=10;
 			$getTGL=$modelSoT2->TGL;
 			$getCUST_KD=$modelSoT2->CUST_KD;
 			$getUSER_ID=$modelSoT2->USER_ID;
-
+			
 			$searchModelDetail= new SoDetailSearch([
 				// 'TGL'=>$getTGL,
 				'KODE_REF'=>$id,
@@ -248,6 +250,7 @@ class SalesmanOrderController extends Controller
 				'user_id'=>$getUSER_ID,
 				'searchModelDetail'=>$searchModelDetail,
 				'model_cus'=>$modelSoT2->cust,
+				'soHeaderData'=>$soHeaderData
 			]); 
 		}
 	}
