@@ -18,23 +18,40 @@ $ary = $aryProviderSoDetail->getModels();
  * Tombol Create
  * 
 */
-function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm,$tgl){
+	//ADD ITEMS
+	function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm,$tgl){
+		$title1 = Yii::t('app', 'ADD NEW ITEM');
+		$options1 = [ 'id'=>'new-add-create',
+						'data-toggle'=>"modal",
+						'data-target'=>"#new-add",
+						'class' => 'btn btn-danger btn-sm',
+		];
+		$icon1 = '<span class="fa fa-plus fa-lg"></span>';
+		$url = Url::toRoute(['/purchasing/salesman-order/create-new-add','cust_kd'=>$cust_kd,'user_id'=>$user_id,'id'=>$kode_so,'cust_nm'=>$cust_nm,'tgl'=>$tgl]);
+		$label1 = $icon1 . ' ' . $title1;
+		$content = Html::a($label1,$url,$options1);
+		return $content;
+	}
 
-			$title1 = Yii::t('app', 'ADD NEW ITEM');
-			$options1 = [ 'id'=>'new-add-create',
-							'data-toggle'=>"modal",
-							'data-target'=>"#new-add",
-							'class' => 'btn btn-danger btn-sm',
+	/*
+	 * LINK PRINT PDF
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.2
+	*/
+	function PrintPdf($kode_SO){
+			$title = Yii::t('app','Print');
+			$options = [ 'id'=>'pdf-print-id',
+						  'class'=>'btn btn-default btn-xs',
+						  'title'=>'Print PDF'
 			];
-			$icon1 = '<span class="fa fa-plus fa-lg"></span>';
-			$url = Url::toRoute(['/purchasing/salesman-order/create-new-add','cust_kd'=>$cust_kd,'user_id'=>$user_id,'id'=>$kode_so,'cust_nm'=>$cust_nm,'tgl'=>$tgl]);
-			$label1 = $icon1 . ' ' . $title1;
-			$content = Html::a($label1,$url,$options1);
+			$icon = '<span class="fa fa-print fa-fw"></span>';
+			$label = $icon . ' ' . $title;
+			$url = Url::toRoute(['/purchasing/salesman-order/cetakpdf','id'=>$kode_SO]);
+			$content = Html::a($label,$url, $options);
 			return $content;
-		 }
-
+	}
  
- $soDetailColumn= [
+	$soDetailColumn= [
 	/*No Urut*/
 	[
 		'class'=>'kartik\grid\SerialColumn',
@@ -464,7 +481,7 @@ $_gvSoDetail= GridView::widget([
 	'panel'=>[
 		'type'=>GridView::TYPE_SUCCESS,
 		'heading'=>false,//tombolCreate($cust_kd,$kode_so,$user_id,$ary[0]['CUST_NM'],$tgl),//$this->render('indexTimelineStatus'),//false //'<div> NO.SO :'.date("d-M-Y")
-		'before'=>'SO NO : '. $kode_som,
+		'before'=>'SO NO : '. $kode_SO,
 		'after'=>false,
 		'footer'=>'<div>asd dsadas ad asd asdas d asd as d ad as d asd wrfddsfds sdf sdfsdf sdf sdfsdfsdfds fsd fsd fds fdsfdsfdsf dsfdsf sdf sd</div>'		
 	]
@@ -658,10 +675,7 @@ $_gvSoDetail= GridView::widget([
 				<!-- Button Submit!-->
 				<div style="text-align:right; margin-top:80px; margin-right:15px">
 					<a href="/purchasing/salesman-order" class="btn btn-info btn-xs" role="button" style="width:90px">Back</a>
-					<?php
-					 echo Html::a('<i class="fa fa-print fa-fw"></i> Print', ['cetakpdf'], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
-					<?php //echo Html::a('<i class="fa fa-print fa-fw"></i> tmp Print', ['temp-cetakpdf','kdpo'=>$poHeader->KD_PO], ['target' => '_blank', 'class' => 'btn btn-warning btn-xs']); ?>
-
+					<?=PrintPdf($kode_SO); ?> 
 				</div>
 			</div>
 		</div>

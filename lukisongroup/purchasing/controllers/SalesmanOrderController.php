@@ -5,7 +5,6 @@ namespace lukisongroup\purchasing\controllers;
 use yii;
 use yii\web\Request;
 use yii\db\Query;
-//use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -244,7 +243,7 @@ class SalesmanOrderController extends Controller
 
 			return $this->render('_actionReview',[
 				'aryProviderSoDetail'=>$aryProviderSoDetail,
-				'kode_som'=>$modelSoT2->KODE_REF,
+				'kode_SO'=>$modelSoT2->KODE_REF,
 				'cust_kd'=>$getCUST_KD,
 				'tgl'=>$getTGL,
 				'user_id'=>$getUSER_ID,
@@ -255,4 +254,58 @@ class SalesmanOrderController extends Controller
 		}
 	}
 
+	public function actionCetakpdf($id){
+		$modelSoT2 = SoT2::find()->with('cust')->where("KODE_REF='".$id."' AND SO_TYPE=10")->one();	
+		$soHeaderData = SoHeader::find()->where(['KD_SO'=>$id])->one(); 		
+		$getSoType=10;
+		$getTGL=$modelSoT2->TGL;
+		$getCUST_KD=$modelSoT2->CUST_KD;
+		$getUSER_ID=$modelSoT2->USER_ID;
+		
+		$searchModelDetail= new SoDetailSearch([
+			// 'TGL'=>$getTGL,
+			'KODE_REF'=>$id,
+			'CUST_KD'=>$getCUST_KD,
+			'USER_ID'=>$getUSER_ID,
+		]); 
+		$aryProviderSoDetail = $searchModelDetail->searchDetail(Yii::$app->request->queryParams);
+		
+		
+		$content= $this->renderPartial( 'pdf', [
+			'soHeaderData'=>$soHeaderData,
+			'aryProviderSoDetail' => $aryProviderSoDetail,
+        ]);
+		
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE,
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4,
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_PORTRAIT,
+			// stream to browser inline
+			'destination' => Pdf::DEST_BROWSER,
+			//'destination' => Pdf::DEST_FILE ,
+			// your html content input
+			'content' => $content,
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting
+			//D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+			'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			'cssInline' => '.kv-heading-1{font-size:12px}',
+			 // set mPDF properties on the fly
+			'options' => ['title' => 'Form Request Order','subject'=>'ro'],
+			 // call mPDF methods on the fly
+			'methods' => [
+				'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
+				'SetFooter'=>['{PAGENO}'],
+			]
+		]);
+		/* KIRIM ATTACH emaiL */
+		//$to=['piter@lukison.com'];
+		//\Yii::$app->kirim_email->pdf($contentMailAttach,'PO',$to,'Purchase-Order',$contentMailAttachBody);
+
+		return $pdf->render();
+	}
 }
