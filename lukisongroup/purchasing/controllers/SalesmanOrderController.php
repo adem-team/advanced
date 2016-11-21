@@ -23,7 +23,9 @@ use lukisongroup\purchasing\models\salesmanorder\SoHeaderSearch;
 use lukisongroup\purchasing\models\salesmanorder\SoDetailSearch;
 use lukisongroup\purchasing\models\salesmanorder\SoT2;
 use lukisongroup\purchasing\models\salesmanorder\SoHeader;
+use lukisongroup\purchasing\models\salesmanorder\SoStatus;
 use lukisongroup\master\models\Barang;
+use lukisongroup\master\models\Customers;
 
 
 /**
@@ -98,10 +100,86 @@ class SalesmanOrderController extends Controller
 		},'NM_BARANG');
     }
 
+    public function get_aryCustomers()
+    {
+    	$sql = (new \yii\db\Query())
+    			->select(['CUST_KD', 'CUST_NM'])
+   				 ->from('dbc002.c0001')
+   				 ->where('CUST_KD = CUST_GRP AND STATUS<>3')
+    			 ->all();
+
+      return ArrayHelper::map($sql, 'CUST_KD','CUST_NM');
+    }
+
+
+    public function get_aryUser_id(){
+
+    	$sql = (new \yii\db\Query())
+    			->select(['u.id as id', 'u.username as username','up.NM_FIRST as NM_FIRST'])
+   				 ->from('dbm001.user u')
+   				 ->leftJoin('dbm_086.user_profile up','u.id = up.ID_USER')
+   				 ->where(['u.status'=>10,'u.POSITION_SITE'=>'CRM','u.POSITION_LOGIN'=>1,'u.POSITION_ACCESS'=>2])
+    			 ->all();
+
+      return ArrayHelper::map($sql,'id',function ($sql, $defaultValue) {
+			return $sql['username'] . '-' . $sql['NM_FIRST']; 
+		});
+
+    }
+
+
+     /**
+     * Depdrop child customers
+     * @author wawan
+     * @since 1.1.0
+     * @return mixed
+     */
+   public function actionLisChildCus() {
+    $out = [];
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+        if ($parents != null) {
+            $id = $parents[0];
+
+            $model = Customers::find()->asArray()->where(['CUST_GRP'=>$id])
+                                                     ->andwhere('STATUS <> 3')
+                                                    ->all();
+                                                    
+            //$out = self::getSubCatList($cat_id);
+            // the getSubCatList function will query the database based on the
+            // cat_id and return an array like below:
+            // [
+            //    ['id'=>'<sub-cat-id-1>', 'name'=>'<sub-cat-name1>'],
+            //    ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
+            // ]
+            foreach ($model as $key => $value) {
+                   $out[] = ['id'=>$value['CUST_KD'],'name'=> $value['CUST_NM']];
+               }
+
+               echo json_encode(['output'=>$out, 'selected'=>'']);
+               return;
+           }
+       }
+       echo Json::encode(['output'=>'', 'selected'=>'']);
+   }
+
+
 
     public function actionValidAliasBarang()
     {
 		$model = new SoT2();
+		$model->scenario = "create";
+		if(Yii::$app->request->isAjax && $model->load($_POST))
+		{
+			Yii::$app->response->format = 'json';
+			return ActiveForm::validate($model);
+		}
+    }
+
+
+    public function actionValidAliasHeader()
+    {
+		$model = new SoHeader();
 		$model->scenario = "create";
 		if(Yii::$app->request->isAjax && $model->load($_POST))
 		{
@@ -137,6 +215,161 @@ class SalesmanOrderController extends Controller
         ]);
       }
     }
+
+
+    public function actionSoNoteReview($kdso)
+    {
+      $model = SoHeader::find()->where(['KD_SO'=>$kdso])->one();
+      # code...
+      if ($model->load(Yii::$app->request->post()) ) {
+      	
+          $model->save();
+           return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model->USER_SIGN1,'tgl'=>$model->TGL]);
+      }else {
+        return $this->renderAjax('so_note', [
+            'model' => $model,
+            'kode_som'=>$kdso
+        ]);
+      }
+    }
+
+    public function actionSoNoteTopReview($kdso)
+    {
+      $model = SoHeader::find()->where(['KD_SO'=>$kdso])->one();
+      # code...
+      if ($model->load(Yii::$app->request->post()) ) {
+
+      	    $hsl = \Yii::$app->request->post();
+			$topType=$model->TOP_TYPE = $hsl['SoHeader']['TOP_TYPE'];
+			$topDuration =$hsl['SoHeader']['TOP_DURATION'];
+			$model->TOP_TYPE =$topType;
+			$model->TOP_DURATION = $topType=='Credit' ? $topDuration:'';
+      	
+          $model->save();
+         return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model->USER_SIGN1,'tgl'=>$model->TGL]);
+      }else {
+        return $this->renderAjax('sonote_top', [
+            'model' => $model,
+            'kode_som'=>$kdso
+        ]);
+      }
+    }
+
+
+    public function Esm_connent()
+    {
+    	return Yii::$app->db_esm;
+    }
+
+
+    public function actionCreateSales()
+    {
+      	$model = new SoHeader();
+
+      	$model_status = new SoStatus();
+
+      # code...
+      if ($model->load(Yii::$app->request->post())){
+      	  $transaction = self::Esm_connent()->beginTransaction();
+      	  try{
+      	  	 # SoHeader
+      	  	 $kode = Yii::$app->ambilkonci->getSMO();
+      	  	 $model->KD_SO = $kode;
+      	  	 $model->STT_PROCESS = 0;
+      	  	 $model->save();
+
+      	  	 # SoStatus
+      	  	 $model_status->KD_SO = $kode;
+      	  	 $model_status->ID_USER = $model->USER_SIGN1;
+      	  	 $model_status->STT_PROCESS = 0;
+      	  	 $model_status->save();
+
+      	  	// ...other DB operations...
+				$transaction->commit();
+			} catch(\Exception $e) {
+				$transaction->rollBack();
+				throw $e;
+			}
+      	 
+          return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model->USER_SIGN1,'tgl'=>$model->TGL]); ;
+      }else {
+        return $this->renderAjax('new_so', [
+            'model' => $model,
+            'data_cus' => self::get_aryCustomers(), #array customers
+            'data_user'=>self::get_aryUser_id(),
+            // 'data_user' => self
+            // 'kode_som'=>$id
+        ]);
+      }
+    }
+
+    /**
+     * Action REVIEW | Prosess Checked and Approval
+     * @param string $id
+     * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionReviewNew($id,$stt,$cust_kd,$user_id,$tgl)
+    {		
+		
+			//VIEW KODE_REF
+			$soHeaderData = SoHeader::find()->with('cust')->where(['KD_SO'=>$id])->one(); 		
+			$getSoType=10;
+			$getTGL=$tgl;
+			$getCUST_KD=$cust_kd;
+			$getUSER_ID=$user_id;
+			
+			$searchModelDetail= new SoDetailSearch([
+				// 'TGL'=>$getTGL,
+				'KODE_REF'=>$id,
+				'CUST_KD'=>$getCUST_KD,
+				'USER_ID'=>$getUSER_ID,
+			]); 
+			$aryProviderSoDetail = $searchModelDetail->searchDetail(Yii::$app->request->queryParams);
+
+			/*
+			* Process Editable Row [Columm SQTY]
+			* @author ptrnov  <piter@lukison.com>
+			* @since 1.1
+			**/
+			if (Yii::$app->request->post('hasEditable')) {
+				$id = Yii::$app->request->post('editableKey');
+				$model = SoT2::findOne($id);
+				$out = Json::encode(['output'=>'', 'message'=>'']);
+				$post = [];
+				$posted = current($_POST['SoT2']);
+				$post['SoT2'] = $posted;
+				if ($model->load($post)) {
+					$model->save();
+					$output = '';
+					if (isset($posted['SUBMIT_PRICE'])) {
+						$output = $model->SUBMIT_PRICE;
+					}
+					if (isset($posted['SUBMIT_QTY'])) {
+						$output = $model->SUBMIT_QTY;
+					}
+					if (isset($posted['TGL'])) {
+						$output = $model->TGL;
+					}
+					$out = Json::encode(['output'=>$output, 'message'=>'']);
+				}
+				// return ajax json encoded response and exit
+				echo $out;
+				return;
+			}
+
+			return $this->render('_actionReview',[
+				'aryProviderSoDetail'=>$aryProviderSoDetail,
+				'kode_som'=>$id,
+				'cust_kd'=>$getCUST_KD,
+				'tgl'=>$getTGL,
+				'user_id'=>$getUSER_ID,
+				'searchModelDetail'=>$searchModelDetail,
+				'model_cus'=>$soHeaderData->cust,
+				'soHeaderData'=>$soHeaderData
+			]); 
+		}
+	
 
 	/**
      * Action REVIEW | Prosess Checked and Approval
