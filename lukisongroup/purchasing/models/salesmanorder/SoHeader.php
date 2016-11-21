@@ -4,6 +4,7 @@ namespace lukisongroup\purchasing\models\salesmanorder;
 
 use Yii;
 use lukisongroup\purchasing\models\salesmanorder\Userprofile;
+use lukisongroup\master\models\Customers;
 
 /**
  * This is the model class for table "so_0001".
@@ -21,6 +22,7 @@ class SoHeader extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public $parent_cusid;
     public static function tableName()
     {
         return 'so_0001';
@@ -41,8 +43,9 @@ class SoHeader extends \yii\db\ActiveRecord
     {
         return [
             [['KD_SO'], 'required'],
+            [['CUST_ID','USER_SIGN1','parent_cusid'], 'required','on'=>'create'],
             [['STT_PROCESS'], 'integer'],
-            [['TGL', 'TGL_SIGN2', 'TGL_SIGN3', 'TGL_SIGN4', 'TGL_SIGN5'], 'safe'],
+            [['TGL', 'TGL_SIGN2', 'TGL_SIGN3', 'TGL_SIGN4', 'TGL_SIGN5','CUST_ID','NOTE','TOP_DURATION','TOP_TYPE'], 'safe'],
             [['KD_SO', 'USER_SIGN1', 'USER_SIGN2', 'USER_SIGN3', 'USER_SIGN4', 'USER_SIGN5'], 'string', 'max' => 50],
         ];
     }
@@ -66,6 +69,10 @@ class SoHeader extends \yii\db\ActiveRecord
             'USER_SIGN5' => 'WAREHOUSE',
         ];
     }
+
+      public function getCust(){
+    return $this->hasOne(Customers::className(), ['CUST_KD'=>'CUST_ID']);
+  }
 	
 	//Sign1- SALES MD
 	public function getUserProfileSign1Tbl(){

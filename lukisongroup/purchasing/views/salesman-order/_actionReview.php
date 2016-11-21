@@ -14,6 +14,55 @@ $this->sideMenu = 'esm_customers';
 $kode_so = Yii::$app->getRequest()->getQueryParam('id');
 $ary = $aryProviderSoDetail->getModels();
 
+if($ary){
+	$cust_nm = $ary[0]['CUST_NM'];
+}else{
+	$cust_nm = $model_cus->CUST_NM;
+}
+
+
+	/*
+	 * LINK PO Note
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.2
+	*/
+	function PoNote($soHeader){
+			$title = Yii::t('app','');
+			$options = [ 'id'=>'so-note-id',
+						  'data-toggle'=>"modal",
+						  'data-target'=>"#so-note-review",
+						  'class'=>'btn btn-info btn-xs',
+						  'title'=>'SO Note'
+			];
+			$icon = '<span class="fa fa-plus fa-lg"></span>';
+			$label = $icon . ' ' . $title;
+			$url = Url::toRoute(['/purchasing/salesman-order/so-note-review','kdso'=>$soHeader->KD_SO]);
+			$content = Html::a($label,$url, $options);
+			return $content;
+	}
+
+
+	/*
+	 * LINK PO Note TOP
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.2
+	*/
+	function PoNoteTOP($soHeader){
+			$title = Yii::t('app','');
+			$options = [ 'id'=>'so-notetop-id',
+						  'data-toggle'=>"modal",
+						  'data-target'=>"#so-notetop-review",
+						  'class'=>'btn btn-info btn-xs',
+						  'title'=>'SO Note'
+			];
+			$icon = '<span class="fa fa-plus fa-lg"></span>';
+			$label = $icon . ' ' . $title;
+			$url = Url::toRoute(['/purchasing/salesman-order/so-note-top-review','kdso'=>$soHeader->KD_SO]);
+			$content = Html::a($label,$url, $options);
+			return $content;
+	}
+
+
 /*
  * Tombol Create
  * 
@@ -425,6 +474,8 @@ function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm,$tgl){
 	],
 ];
 
+
+
 $_gvSoDetail= GridView::widget([
 	'id'=>'gv-so-detail-md-inbox',
 	'dataProvider'=> $aryProviderSoDetail,
@@ -458,7 +509,7 @@ $_gvSoDetail= GridView::widget([
 	'autoXlFormat'=>true,
 	'export' => false,
 	'toolbar'=> [
-		 ['content'=>tombolCreate($cust_kd,$kode_so,$user_id,$ary[0]['CUST_NM'],$tgl)],
+		 ['content'=>tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm,$tgl)],
 		
 	 ],
 	'panel'=>[
@@ -506,7 +557,7 @@ $_gvSoDetail= GridView::widget([
 				<dt style="width:100px; float:left;">Kode Cust</dt>
 				<dd>: <?php echo $cust_kd  ?></dd>
 				<dt style="width:100px; float:left;">Customer </dt>
-				<dd>: <?php echo $ary[0]['CUST_NM']; ?></dd>
+				<dd>: <?php echo $cust_nm ?></dd>
 				<dt style="width:100px; float:left;">Alamat  </dt>
 				<dd>: <?php echo $model_cus->ALAMAT; ?></dd>
 				<dt style="width:100px; float:left;">Telp   </dt>
@@ -527,6 +578,41 @@ $_gvSoDetail= GridView::widget([
 	<!-- Table Grid List SO Detail !-->
 	<div class="col-md-12">
 		<?=$_gvSoDetail?>
+	</div>
+
+	<!-- SO Term Of Payment !-->
+	<div  class="row">
+		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
+			<dt><b>Term Of Payment :</b></dt>
+			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
+			<div>
+				<div style="float:right;text-align:right;">
+					 <?= PoNoteTOP($soHeaderData); ?>
+				</div>
+				<div style="margin-left:5px">
+					<dt style="width:80px; float:left;"><?php echo $soHeaderData->TOP_TYPE; ?></dt>
+					<dd><?php echo $soHeaderData->TOP_DURATION; ?></dd>
+					<br/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- PO Note !-->
+	<div  class="row">
+		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
+			<dt><b>General Notes :</b></dt>
+			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
+			<div>
+				<div style="float:right;text-align:right;">
+					<?php echo PoNote($soHeaderData); ?>
+				</div>
+				<div style="margin-left:5px">
+					<dd><?php echo $soHeaderData->NOTE; ?></dd>
+				</div>
+			</div>
+			<hr style="height:1px;margin-top: 1px;">
+		</div>
 	</div>
 	<!-- Signature !-->
 		<div  class="col-md-12">
@@ -706,3 +792,58 @@ Modal::begin([
 		]
 	]);
 Modal::end();
+
+$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#so-note-review').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+		",$this::POS_READY);
+
+		Modal::begin([
+			'id' => 'so-note-review',
+			//'header' => '<h4 class="modal-title">Entry Request Order</h4>',
+			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Note</h4></div>',
+			'size' => 'modal-md',
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+			]
+		]);
+		Modal::end();
+
+
+		$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#so-notetop-review').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+		",$this::POS_READY);
+
+		Modal::begin([
+			'id' => 'so-notetop-review',
+			//'header' => '<h4 class="modal-title">Entry Request Order</h4>',
+			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">TOP</h4></div>',
+			'size' => 'modal-md',
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+			]
+		]);
+		Modal::end();

@@ -117,6 +117,23 @@ use lukisongroup\hrd\models\Dept;
 	return $content;
 }
 
+
+
+function tombolCreateSom()
+{
+	$title = Yii::t('app', 'CREATE SALES');
+	$options = [ 'id'=>'som-id-create',
+				'data-toggle'=>"modal",
+				'data-target'=>"#sales-modal-id",
+				'class' => 'btn btn-primary  btn-xs'
+	];
+	$icon = '<span class="fa fa-plus fa-xs"></span>';
+	$label = $icon . ' ' . $title;
+	$url = Url::toRoute(['/purchasing/salesman-order/create-sales']);
+	$options['tabindex'] = '-1';
+	return  Html::a($label, $url, $options);
+}
+
 	/*
 	 * Tombol Modul Barang Kategori
 	 * No Permission
@@ -692,7 +709,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			'autoXlFormat'=>true,
 			'export' => false,
 			'toolbar'=> [
-					''
+					'content'=>tombolCreateSom(),
 				],
 			'panel'=>[
 				'type'=>GridView::TYPE_DANGER,
@@ -754,6 +771,34 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			'id' => 'new-so',
 			//'header' => '<h4 class="modal-title">Entry Request Order</h4>',
 			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Entry Items Sales Order</h4></div>',
+			'size' => 'modal-md',
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+			]
+		]);
+		Modal::end();
+
+
+		$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#sales-modal-id').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+		",$this::POS_READY);
+
+		Modal::begin([
+			'id' => 'sales-modal-id',
+			//'header' => '<h4 class="modal-title">Entry Request Order</h4>',
+			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Sales Order</h4></div>',
 			'size' => 'modal-md',
 			'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
