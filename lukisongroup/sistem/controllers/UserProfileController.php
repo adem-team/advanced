@@ -11,6 +11,11 @@ use yii\widgets\Pjax;
 use yii\bootstrap\Modal;
 use zyx\phpmailer\Mailer;
 
+use lukisongroup\sistem\models\Absensi;
+use lukisongroup\sistem\models\AbsensiSearch;
+use lukisongroup\hrd\models\AbsenDaily;
+use lukisongroup\hrd\models\AbsenDailySearch;
+
 use lukisongroup\sistem\models\SignatureForm;
 use lukisongroup\sistem\models\ValidationLoginForm;
 use lukisongroup\hrd\models\Employe;			/* TABLE CLASS JOIN */
@@ -57,6 +62,16 @@ class UserProfileController extends Controller
 		}else{
 			$modelUpload = new FileManage();
 		}
+		
+		//ABSENSI LOG DATA.
+		//$searchModel = new AbsensiSearch();
+		$searchModel = new AbsenDailySearch([
+				//'tgllog'=>Yii::$app->ambilKonvesi->tglSekarang()
+			]);
+
+		//$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProviderField = $searchModel->dailyFieldTglRange();
+		$dataProvider = $searchModel->searchDailyTglRangeUser(Yii::$app->request->queryParams);
 
 		/*USER LOGIN*/
 		$model = $this->findModel(Yii::$app->user->identity->EMP_ID);
@@ -65,7 +80,10 @@ class UserProfileController extends Controller
 			'ttlheader'=>$ttlheader,
 			'fileLink'=>$fileLink,
 			'model'=> $model,
-			'modelUpload'=>$modelUpload
+			'modelUpload'=>$modelUpload,
+			//_indexAbsensiDaily
+			'dataProviderField'=>$dataProviderField,
+			'dataProvider'=>$dataProvider,
 		]);
 
     }

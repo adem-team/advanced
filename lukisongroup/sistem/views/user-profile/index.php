@@ -11,6 +11,8 @@ use yii\web\Response;
 use yii\widgets\Pjax;
 use lukisongroup\assets\Profile;
 Profile::register($this);
+use lukisongroup\assets\AppAssetFusionChart;
+AppAssetFusionChart::register($this);
 
 $this->sideCorp = 'User Profile';                          		/* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'profile';                                 	/* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -89,7 +91,25 @@ $userProfile=Yii::$app->getUserOpt->Profile_user();
 				</div>
 			</div>
 			<br>
-		  <!-- Accordion -->
+		  <!-- CALENDER INPUT -->
+		  <div class="w3-card-2 w3-round">
+				<div class="row" >
+					<div class="col-sm-12 col-md-12 col-lg-12">
+						<?php echo $calendar=$this->render('_indexCalendar');?>
+					</div>
+				</div>
+		  </div>
+		  <br>
+		   <!-- LIST TASK INPUT -->
+		  <div class="w3-card-2 w3-round">
+				<div class="row" >
+					<div class="col-sm-12 col-md-12 col-lg-12">
+						<?php echo $calendar=$this->render('_indexListTask');?>
+					</div>
+				</div>
+		  </div>
+		  <br>
+		   <!-- Accordion -->
 		  <div class="w3-card-2 w3-round">
 			<div class="w3-accordion w3-white">
 			  <button onclick="myFunction('Demo1')" class="w3-btn-block w3-theme-l1 w3-left-align"><i class="fa fa-circle-o-notch fa-fw w3-margin-right"></i> My Groups</button>
@@ -164,29 +184,58 @@ $userProfile=Yii::$app->getUserOpt->Profile_user();
     <!-- Middle Column -->
     <div class="w3-col m7">
     
-		 <!-- DAILY ATTENDANCE SUMMARY -->
+		<!-- DAILY ATTENDANCE SUMMARY -->
 		<div class="w3-row-padding">
 			<div class="w3-col m12">
 				<div class="w3-card-2 w3-round w3-white">
 					<div class="w3-container w3-padding">
-						<span class="w3-right w3-opacity">Daily</span>
-						<h4>Attendance Summary</h4>
+						<span class="w3-right w3-opacity">Day of Month</span>
+						<h4>Currently Attendance</h4>
 						<hr class="w3-clear">
 						<div class="w3-row-padding" style="margin:0 -16px">
-							<div class="w3-half">
-								<img src="img_lights.jpg" style="width:100%" alt="Northern Lights" class="w3-margin-bottom">
-							</div>
-							<div class="w3-half">
-								<img src="img_nature.jpg" style="width:100%" alt="Nature" class="w3-margin-bottom">
+							<div class="row" >
+								 <div class="col-sm-12 col-md-12 col-lg-12">								
+									<?php 
+										 $absenDaily=$this->render('_indexAbsenDaily',[
+												'dataProviderField'=>$dataProviderField,
+												'dataProvider'=>$dataProvider,
+										]);
+									?>
+									<?=$absenDaily?>
+								</div>
 							</div>
 						</div>
-						<button type="button" class="w3-btn w3-theme-d1 w3-margin-bottom"><i class="fa fa-thumbs-up"></i> &nbsp;Like</button> 
-						<button type="button" class="w3-btn w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i> &nbsp;Comment</button> 
 					</div>
 				</div>
 			</div>
 		</div>
 		<br>
+		<div class="w3-row-padding">
+			<div class="w3-col m12">
+				<div class="w3-card-2 w3-round w3-white">
+					<div class="w3-container w3-padding">
+						<span class="w3-right w3-opacity">Monthly</span>
+						<h4>Attendance Summary</h4>
+						<hr class="w3-clear">
+						<div class="w3-row-padding" style="margin:0 -16px">
+							<div class="row" >
+								 <div class="col-sm-12 col-md-12 col-lg-12">
+									 <div class="col-sm-1 col-md-6 col-lg-6">
+										<?php //echo $calendar=$this->render('indexCalendar');?>
+									</div>
+									 <div class="col-sm-1 col-md-6 col-lg-6">
+										<?php //echo $calendar=$this->render('_indexAbsenDaily');?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br> 
+		
+		
 		
 		 <!-- POSTING	 -->
 		<div class="w3-row-padding">		
@@ -203,9 +252,9 @@ $userProfile=Yii::$app->getUserOpt->Profile_user();
 		<div class="w3-container w3-card-2 w3-white w3-round w3-margin"><br>
 			<img src="img_avatar2.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
 			<span class="w3-right w3-opacity">1 min</span>
-			<h4>John Doe</h4><br>
+			<h4>Alam</h4><br>
 			<hr class="w3-clear">
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			<p>Human Resource Information System (HRIS) adalah program aplikasi komputer yang mengorganisir tata kelola dan tata laksana manajemen Sumber Daya Manusia di perusahaan guna mendukung proses pengambilan keputusan atau biasa disebut Decision Support System dengan menyediakan berbagai informasi yang diperlukan..</p>
 			<div class="w3-row-padding" style="margin:0 -16px">
 				<div class="w3-half">
 					<img src="img_lights.jpg" style="width:100%" alt="Northern Lights" class="w3-margin-bottom">
@@ -223,7 +272,7 @@ $userProfile=Yii::$app->getUserOpt->Profile_user();
       <div class="w3-container w3-card-2 w3-white w3-round w3-margin"><br>
         <img src="img_avatar5.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
         <span class="w3-right w3-opacity">16 min</span>
-        <h4>Jane Doe</h4><br>
+        <h4>Alam</h4><br>
         <hr class="w3-clear">
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
         <button type="button" class="w3-btn w3-theme-d1 w3-margin-bottom"><i class="fa fa-thumbs-up"></i> &nbsp;Like</button> 
@@ -233,7 +282,7 @@ $userProfile=Yii::$app->getUserOpt->Profile_user();
       <div class="w3-container w3-card-2 w3-white w3-round w3-margin"><br>
         <img src="img_avatar6.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
         <span class="w3-right w3-opacity">32 min</span>
-        <h4>Angie Jane</h4><br>
+        <h4>Alam</h4><br>
         <hr class="w3-clear">
         <p>Have you seen this?</p>
         <img src="img_nature.jpg" style="width:100%" class="w3-margin-bottom">
@@ -247,13 +296,43 @@ $userProfile=Yii::$app->getUserOpt->Profile_user();
     
     <!-- Right Column -->
     <div class="w3-col m2">
+		<!--  SISA CUTI Column -->
 		<div class="w3-card-2 w3-round w3-white w3-center">
-			<div class="w3-container">
-				<p>SISA CUTI:</p>
-				<img src="img_forest.jpg" alt="Forest" style="width:100%;">
-				<p><strong>Holiday</strong></p>
-				<p>Friday 15:00</p>
-				<p><button class="w3-btn w3-btn-block w3-theme-l4">Info</button></p>
+			<div class="row" >
+				<div class="w3-container text-center">
+					<p><button class="w3-btn w3-btn-block w3-theme-l4">SISA CUTI</button></p>				
+					<?php echo "<h2><strong>12</strong></h2>";?> 
+				</div>
+			</div>
+		</div>		
+		<br>
+		<!--  SISA CUTI Column -->
+		<div class="w3-card-2 w3-round w3-white w3-center">
+			<div class="row" >
+				<div class="w3-container text-center">
+					<p><button class="w3-btn w3-btn-block w3-theme-l4">CUTI SEKARANG</button></p>				
+					<?php echo "<h2><strong>12</strong></h2>";?> 
+				</div>
+			</div>
+		</div>
+		<br>
+		<!--  SISA CUTI Column -->
+		<div class="w3-card-2 w3-round w3-white w3-center">
+			<div class="row" >
+				<div class="w3-container text-center">
+					<p><button class="w3-btn w3-btn-block w3-theme-l4">CUTI LALU</button></p>				
+					<?php echo "<h2><strong>12</strong></h2>";?> 
+				</div>
+			</div>
+		</div>
+		<br>
+		<!--  SISA CUTI Column -->
+		<div class="w3-card-2 w3-round w3-white w3-center">
+			<div class="row" >
+				<div class="w3-container text-center">			
+					<p><button class="w3-btn w3-btn-block w3-theme-l4">PENGGUNAAN CUTI</button></p>
+					<?php echo "<h2><strong>12</strong></h2>";?> 				
+				</div>
 			</div>
 		</div>
 		<br>
@@ -262,7 +341,7 @@ $userProfile=Yii::$app->getUserOpt->Profile_user();
         <div class="w3-container">
           <p>Friend Request</p>
           <img src="img_avatar6.png" alt="Avatar" style="width:50%"><br>
-          <span>Jane Doe</span>
+          <span>Alam</span>
           <div class="w3-row w3-opacity">
             <div class="w3-half">
               <button class="w3-btn w3-green w3-btn-block w3-section" title="Accept"><i class="fa fa-check"></i></button>
