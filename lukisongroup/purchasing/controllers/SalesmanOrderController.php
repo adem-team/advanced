@@ -83,10 +83,13 @@ class SalesmanOrderController extends Controller
     {		
 		$searchModelHeader = new SoHeaderSearch();
 		$dataProvider = $searchModelHeader->searchHeader(Yii::$app->request->queryParams);		
+		$dataProviderInbox = $searchModelHeader->searchHeaderInbox(Yii::$app->request->queryParams);		
+		$dataProviderOutbox = $searchModelHeader->searchHeaderOutbox(Yii::$app->request->queryParams);		
+		$dataProviderHistory = $searchModelHeader->searchHeaderHistory(Yii::$app->request->queryParams);		
 		return $this->render('index', [
-			'apSoHeaderInbox'=>$dataProvider,
-			'apSoHeaderOutbox'=>$dataProvider,
-			'apSoHeaderHistory'=>$dataProvider
+			'apSoHeaderInbox'=>$dataProviderInbox,
+			'apSoHeaderOutbox'=>$dataProviderOutbox,
+			'apSoHeaderHistory'=>$dataProviderHistory
         ]);
 
     }  

@@ -121,7 +121,7 @@ use lukisongroup\hrd\models\Dept;
 
 function tombolCreateSom()
 {
-	$title = Yii::t('app', 'CREATE SALES');
+	$title = Yii::t('app', 'CREATE MANUAL SO');
 	$options = [ 'id'=>'som-id-create',
 				'data-toggle'=>"modal",
 				'data-target'=>"#sales-modal-id",
