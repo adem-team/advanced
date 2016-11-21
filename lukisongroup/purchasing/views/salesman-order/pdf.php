@@ -22,6 +22,9 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->sideCorp = 'Sales Order';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_customers';
 
+$kode_so = Yii::$app->getRequest()->getQueryParam('id');
+$ary = $aryProviderSoDetail->getModels();
+
 
 $soDetailColumn= [
 	/*No Urut*/
@@ -35,7 +38,7 @@ $soDetailColumn= [
 				'text-align'=>'center',
 				'width'=>'10px',
 				'font-family'=>'verdana, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 				'background-color'=>'rgba(97, 211, 96, 0.3)',
 			]
 		],
@@ -44,7 +47,7 @@ $soDetailColumn= [
 				'text-align'=>'center',
 				'width'=>'10px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'8pt',
+				'font-size'=>'12pt',
 			]
 		],
 	],
@@ -60,7 +63,7 @@ $soDetailColumn= [
 				'text-align'=>'center',
 				'width'=>'90px',
 				'font-family'=>'verdana, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 				'background-color'=>'rgba(97, 211, 96, 0.3)',
 			]
 		],
@@ -69,7 +72,7 @@ $soDetailColumn= [
 				'text-align'=>'left',
 				'width'=>'90px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'7pt'
+				'font-size'=>'12pt'
 			]
 		],
 		
@@ -83,18 +86,18 @@ $soDetailColumn= [
 		'headerOptions'=>[
 			'style'=>[
 				'text-align'=>'center',
-				'width'=>'250px',
+				'width'=>'300px',
 				'font-family'=>'verdana, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 				'background-color'=>'rgba(97, 211, 96, 0.3)',
 			]
 		],
 		'contentOptions'=>[
 			'style'=>[
 				'text-align'=>'left',
-				'width'=>'250px',
+				'width'=>'200px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'7pt'
+				'font-size'=>'12pt'
 			]
 		]
 	],						
@@ -108,18 +111,18 @@ $soDetailColumn= [
 		'headerOptions'=>[
 			'style'=>[
 				'text-align'=>'center',
-				'width'=>'80px',
+				'width'=>'90px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'9pt',
+				'font-size'=>'12pt',
 				'background-color'=>'rgba(97, 211, 96, 0.3)',
 			]
 		],
 		'contentOptions'=>[
 			'style'=>[
-				'text-align'=>'right',
-				'width'=>'80px',
+				'text-align'=>'left',
+				'width'=>'90px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 			]
 		],
 	],
@@ -141,7 +144,7 @@ $soDetailColumn= [
 				'text-align'=>'center',
 				'width'=>'120px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 				'background-color'=>'rgba(97, 211, 96, 0.3)',
 			]
 		],
@@ -150,13 +153,13 @@ $soDetailColumn= [
 				'text-align'=>'right',
 				'width'=>'120px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 			]
 		],
 		'pageSummaryOptions' => [
 			'style'=>[
 					'font-family'=>'tahoma',
-					'font-size'=>'8pt',
+					'font-size'=>'12pt',
 					'text-align'=>'right',
 					'border-left'=>'0px',
 			]
@@ -180,7 +183,7 @@ $soDetailColumn= [
 				'text-align'=>'center',
 				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 				'background-color'=>'rgba(97, 211, 96, 0.3)',
 			]
 		],
@@ -189,13 +192,13 @@ $soDetailColumn= [
 				'text-align'=>'right',
 				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 			]
 		],
 		'pageSummaryOptions' => [
 			'style'=>[
 					'font-family'=>'tahoma',
-					'font-size'=>'8pt',
+					'font-size'=>'12pt',
 					'text-align'=>'right',
 					'border-left'=>'0px',
 			]
@@ -218,7 +221,7 @@ $soDetailColumn= [
 				'text-align'=>'center',
 				'width'=>'120px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 				'background-color'=>'rgba(97, 211, 96, 0.3)',
 			]
 		],
@@ -227,7 +230,7 @@ $soDetailColumn= [
 				'text-align'=>'right',
 				'width'=>'120px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 			]
 		],
 	],
@@ -247,9 +250,10 @@ $soDetailColumn= [
 		'headerOptions'=>[
 			'style'=>[
 				'text-align'=>'center',
+				'text-valign'=>'center',
 				'width'=>'120px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 				'background-color'=>'rgba(97, 211, 96, 0.3)',
 			]
 		],
@@ -258,13 +262,13 @@ $soDetailColumn= [
 				'text-align'=>'right',
 				'width'=>'120px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 			]
 		],
 		'pageSummaryOptions' => [
 			'style'=>[
 					'font-family'=>'tahoma',
-					'font-size'=>'8pt',
+					'font-size'=>'12pt',
 					'text-align'=>'right',
 					'border-left'=>'0px',
 			]
@@ -289,7 +293,7 @@ $soDetailColumn= [
 				'text-align'=>'center',
 				'width'=>'120px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 				'background-color'=>'rgba(74, 206, 231, 1)',
 			]
 		],
@@ -298,15 +302,15 @@ $soDetailColumn= [
 				'text-align'=>'right',
 				'width'=>'120px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 			]
 		],
 		'pageSummaryOptions' => [
 			'style'=>[
-					'font-family'=>'tahoma',
-					'font-size'=>'8pt',
-					'text-align'=>'right',
-					'border-left'=>'0px',
+				'font-family'=>'tahoma',
+				'font-size'=>'12pt',
+				'text-align'=>'right',
+				'border-left'=>'0px',
 			]
 		],
 	],
@@ -327,7 +331,7 @@ $soDetailColumn= [
 				'text-align'=>'center',
 				'width'=>'120px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 				'background-color'=>'rgba(74, 206, 231, 1)',
 			]
 		],
@@ -336,7 +340,7 @@ $soDetailColumn= [
 				'text-align'=>'right',
 				'width'=>'120px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 			]
 		]
 	],
@@ -358,7 +362,7 @@ $soDetailColumn= [
 				'text-align'=>'center',
 				'width'=>'120px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 				'background-color'=>'rgba(74, 206, 231, 1)',
 			]
 		],
@@ -367,13 +371,13 @@ $soDetailColumn= [
 				'text-align'=>'right',
 				'width'=>'120px',
 				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'7pt',
+				'font-size'=>'12pt',
 			]
 		],
 		'pageSummaryOptions' => [
 			'style'=>[
 					'font-family'=>'tahoma',
-					'font-size'=>'8pt',
+					'font-size'=>'12pt',
 					'text-align'=>'right',
 					'border-left'=>'0px',
 			]
@@ -384,15 +388,9 @@ $soDetailColumn= [
 $_gvSoDetailPdf= GridView::widget([
 	'id'=>'gv-so-detail-pdf',
 	'dataProvider'=> $aryProviderSoDetail,
-	//'showPageSummary' => true,	
+	'showPageSummary' => true,	
 	'columns' => $soDetailColumn,
 	'pjax'=>true,
-	// 'pjaxSettings'=>[
-		// 'options'=>[
-			// 'enablePushState'=>false,
-			// 'id'=>'gv-so-detail-pdf',
-		   // ],
-	// ],
 	'hover'=>true, //cursor select
 	'responsive'=>true,
 	'responsiveWrap'=>true,
@@ -400,72 +398,51 @@ $_gvSoDetailPdf= GridView::widget([
 	'striped'=>'4px',
 	'autoXlFormat'=>true,
 	'export' => false,
-	// 'toolbar'=> [
-		// ''
+	'toolbar'=> [
+		''
 		
-	 // ],
-	// 'panel'=>[
-		// 'type'=>GridView::TYPE_SUCCESS,
-		// 'heading'=>false,//tombolCreate($cust_kd,$kode_so,$user_id,$ary[0]['CUST_NM'],$tgl),//$this->render('indexTimelineStatus'),//false //'<div> NO.SO :'.date("d-M-Y")
-		// 'before'=>'SO NO : '. $kode_SO,
-		// 'after'=>false,
-		// 'footer'=>'<div>asd dsadas ad asd asdas d asd as d ad as d asd wrfddsfds sdf sdfsdf sdf sdfsdfsdfds fsd fsd fds fdsfdsfdsf dsfdsf sdf sd</div>'		
-	// ]
+	 ],
+	'panel'=>[
+		'type'=>GridView::TYPE_SUCCESS,
+		'heading'=>false,//tombolCreate($cust_kd,$kode_so,$user_id,$ary[0]['CUST_NM'],$tgl),//$this->render('indexTimelineStatus'),//false //'<div> NO.SO :'.date("d-M-Y")
+		'before'=>' SO NO : '. $ary[0]['KODE_REF'],//$kode_SO,
+		'after'=>false,
+		'footer'=>'<div>asd dsadas ad asd asdas d asd as d ad as d asd wrfddsfds sdf sdfsdf sdf sdfsdfsdfds fsd fsd fds fdsfdsfdsf dsfdsf sdf sd</div>'		
+	]
 ]);
 ?>
-
- <?php
-        // $sup = Suplier::find()->where(['KD_SUPPLIER'=>$poHeader->KD_SUPPLIER])->one();
-        // $pod = Purchasedetail::find()->where(['KD_PO'=>$poHeader->KD_PO])->all();
-
-        // $ship = Nmperusahaan::find()->where(['ID' => $poHeader->SHIPPING])->one();
-        // $bill = Nmperusahaan::find()->where(['ID' => $poHeader->BILLING])->one();
-
-		/* $x=10;
-		function ax(){
-			return '10';
-		}
-		 */
-		/* function formulaAmount($summary, $data, $widget){
-				//$calculate = dataCell($model, $key, $index);
-				//$p = compact('model', 'key', 'index');
-				return '<div>'.$summary * $this->model().',</div>
-						<div>'.min($data).'</div>
-						<div>'.$summary.'</div>
-						<div>100,0</div>
-						<div><b>10000,0</b></div>';
-		}; */
-
- ?>
-
 <div class="container" style="font-family: tahoma ;font-size: 8pt;">
-	<!-- Header !-->
-	<div class="col-md-12">
-		<div class="col-md-3" style="float:left">
-			<div  class="row" >
-				<dl>
-					<dt style="width:300px; float:left;font-family: verdana, arial, sans-serif ;font-size: 11pt;">
-						PT EFENBI SUKSES MAKMUR
-					</dt>
-					<dt style="width:100px; float:left;"></dt>
-					<dt style="width:200px; float:left;">
-						Ruko Demansion Blok C12
-					</dt>
-					<dt style="width:200px; float:left;">
-						Jalan jalur Sutera Timur
-					</dt>
-					<dt style="width:200px; float:left;">
-						Alam sutera - Tangerang
-					</dt>
-					<dt style="width:200px; float:left;">					
-						Telp : 021-30448598-99 /fax 021-30448597
-					</dt>
-				</dl>
-			</div>
+	<!-- Header !-->	
+	<div class="row">
+		<!-- HEADER PRINCIPEL !-->		
+		<div style="width:210px;float:left">
+			<dl>
+				<dt style="font-family: verdana, arial, sans-serif ;font-size: 11pt;">
+					PT EFENBI SUKSES MAKMUR
+				</dt>
+				<dd></dd>
+				<dt>
+					Ruko Demansion Blok C12
+				</dt>
+				<dd></dd>
+				<dt >
+					Jalan jalur Sutera Timur
+				</dt>
+				<dd></dd>
+				<dt >
+					Alam sutera - Tangerang
+				</dt>
+				<dd></dd>
+				<dt>					
+					Telp : 021-30448598-99 /fax 021-30448597
+				</dt>
+			</dl>
+		</div>			
+		<div style="width:210px;font-family: verdana, arial, sans-serif ;font-size: 11pt;float:left">
+			<?php echo '.';?>
 		</div>
-		<div class="col-md-5" style="padding-top:15px;">
-		</div>
-		<div class="col-md-3" style="float:left;padding-bottom:-100px">
+		<!-- HEADER CUSTOMER !-->		
+		<div style="width:210px;float:left">
 			<dl>
 				<dt style="width:100px; float:left;">Tanggal </dt>
 				<dd>: <?php echo date('d-m-Y'); ?></dd>
@@ -482,19 +459,17 @@ $_gvSoDetailPdf= GridView::widget([
 			</dl>
 		</div>
 	</div>
-	<!-- HEADER !-->
+	<!-- TITLE !-->	
 	<div class="col-md-12 text-center"  style="float:left;font-family: verdana, arial, sans-serif ;font-size: 14pt;">
 		<b>SALES ORDER</b>	
 	</div>
 	<!-- Title GRID PO Detail !-->
 	<div class="row" >
-		<div class="col-md-12">
-			<?=$_gvSoDetailPdf?>
-		</div>
+		<?=$_gvSoDetailPdf?>
 	</div>
 	<!-- Title BOTTEM Descript !-->
 	<div class="row">
-		<div class="col-md-4" style="width:290px;float:left;">
+		<div style="width:290px;float:left;">
 			<dl>
 				<?php
 					// $shipNm= $ship !='' ? $ship->NM_ALAMAT : 'Shipping Not Set';
@@ -516,35 +491,10 @@ $_gvSoDetailPdf= GridView::widget([
 				<dd>:	<?=$shipPic; ?></dd>
 			</dl>
 		</div>
-		<div class="col-md-4">
-			<dl>
-				<?php
-					// $billNm= $bill !='' ? $bill->NM_ALAMAT : 'Billing Not Set';
-					// $billAddress= $bill!='' ? $bill->ALAMAT_LENGKAP :'Address Not Set';
-					// $billCity= $bill!='' ? $bill->KOTA : 'City Not Set';
-					// $billPhone= $bill!='' ? $bill->TLP : 'Phone Not Set';
-					// $billFax= $bill!='' ? $bill->FAX : 'Fax Not Set';
-					// $billPic= $bill!='' ? $bill->CP : 'PIC not Set';
-				?>
-				<dt><h6><u><b>Billing Address :</b></u></h6></dt>
-				<dt><?=$billNm;?></dt>
-				<dt><?=$billAddress;?></dt>
-				<dt><?=$billCity;?></dt>
-
-				<dt style="width:80px; float:left;">Tlp</dt>
-				<dd>:	<?=$billPhone;?></dd>
-
-				<dt style="width:80px; float:left;">FAX</dt>
-				<dd>:	<?=$billFax;?></dd>
-
-				<dt style="width:80px; float:left;">CP</dt>
-				<dd>:	<?=$billPic;?></dd>
-			</dl>
-		</div>
 	</div>
 	<!-- PO Term Of Payment !-->
 	<div  class="row">
-		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
+		<div style="font-family: tahoma ;font-size: 9pt;">
 			<dt><u><b>Term Of Payment :</b></u></dt>
 			<!-- <hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">!-->
 			<div>
@@ -558,7 +508,7 @@ $_gvSoDetailPdf= GridView::widget([
 	</div>
 	<!-- PO Note !-->
 	<div  class="row">
-		<div  class="col-md-12" style="margin-top:10px;font-family: tahoma ;font-size: 9pt;">
+		<div  style="margin-top:10px;font-family: tahoma ;font-size: 9pt;">
 			<dt><u><b>General Notes :</b></u></dt>
 			<!-- <hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">!-->
 			<div>
@@ -574,93 +524,103 @@ $_gvSoDetailPdf= GridView::widget([
 	<div class="row">
 		<table id="tblRo" class="table table-bordered" style="width:360px;font-family: tahoma ;font-size: 8pt;">
 			<!-- Tanggal!-->
-			 <tr>
+			<tr>
 				<!-- Tanggal Pembuat RO!-->
-				<th style="text-align: center; height:20px">
+				<th  class="col-md-1" style="text-align: center; height:20px">
 					<div style="text-align:center;">
 						<?php
-							//$placeTgl1=$poHeader->SIG1_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG1_TGL,'date') :'';
-							//echo '<b>Tangerang</b>,' . $placeTgl1;
+							$tgl1=$soHeaderData->sign1Tgl!='' ? Yii::$app->ambilKonvesi->convert($soHeaderData->sign1Tgl,'date') :'';
+							$signTgl1='<b>Tanggerang</b>, '.$tgl1;
 						?>
+						<?=$signTgl1?>
 					</div>
 
 				</th>
 				<!-- Tanggal Pembuat RO!-->
-				<th style="text-align: center; height:20px">
+				<th class="col-md-1" style="text-align: center; height:20px">
 					<div style="text-align:center;">
 						<?php
-							//$placeTgl2=$poHeader->SIG2_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG2_TGL,'date') :'';
-							//echo '<b>Tangerang</b>,' . $placeTgl2;
+							$tgl2=$soHeaderData->sign2Tgl!='' ? Yii::$app->ambilKonvesi->convert($soHeaderData->sign2Tgl,'date') :'';
+							$signTgl2='<b>Tanggerang</b>, '.$tgl2;
 						?>
+						<?=$signTgl2?>
 					</div>
 
 				</th>
 				<!-- Tanggal PO Approved!-->
-				<th style="text-align: center; height:20px">
+				<th class="col-md-1" style="text-align: center; height:20px">
 					<div style="text-align:center;">
 						<?php
-							//$placeTgl3=$poHeader->SIG3_TGL!=0 ? Yii::$app->ambilKonvesi->convert($poHeader->SIG3_TGL,'date') :'';
-							//echo '<b>Tangerang</b>,' . $placeTgl3;
+							$tgl3=$soHeaderData->sign3Tgl!='' ? Yii::$app->ambilKonvesi->convert($soHeaderData->sign3Tgl,'date') :'';
+							$signTgl3='<b>Tanggerang</b>, '.$tgl3;
 						?>
+						<?=$signTgl3?>
 					</div>
 				</th>
-
+			</tr>
+			<!-- Department|Jbatan !-->
+			<tr>
+				<th  class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+					<div>
+						<b><?php  echo 'Created'; ?></b>
+					</div>
+				</th>
+				<th class="col-md-1"  style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+					<div>
+						<b><?php  echo 'Checked'; ?></b>
+					</div>
+				</th>
+				<th class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
+					<div>
+						<b><?php  echo 'Approved'; ?></b>
+					</div>
+				</th>
 			</tr>
 			<!-- Signature !-->
-			 <tr>
-				<th style="text-align: center; vertical-align:middle;width:180; height:60px">
+			<tr>
+				<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
 					<?php
-						// $ttd1 = $poHeader->SIG1_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG1_SVGBASE64.'" height="60" width="150"></img>' : '';
-						// echo $ttd1;
+						$sign1 = $soHeaderData->sign1!=''?'<img style="width:80; height:40px" src='.$soHeaderData->sign1.'></img>' :'';
 					?>
+					<?=$sign1?>
 				</th>
-				<th style="text-align: center; vertical-align:middle;width:180">
+				<th class="col-md-1" style="text-align: center; vertical-align:middle">
 					<?php
-						// $ttd2 = $poHeader->SIG2_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG2_SVGBASE64.'" height="60" width="150"></img>' : '';
-						// echo $ttd2;
+						$sign2 = $soHeaderData->sign2!=''?'<img style="width:80; height:40px" src='.$soHeaderData->sign2.'></img>' :'';
 					?>
+					<?=$sign2?>
 				</th>
-				<th style="text-align: center; vertical-align:middle;width:180">
+				<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 					<?php
-          /**
-          *if po header status equal four then reject
-          *@author wawan
-          */
-          // if($poHeader->STATUS == 4)
-          // {
-            // $ttd3 = "<h4> <b> Reject </b></h4>";
-          // }else{
-            // $ttd3 = $poHeader->SIG3_SVGBASE64!='' ?  '<img src="'.$poHeader->SIG3_SVGBASE64.'" height="60" width="150"></img>' : '';
-          // }
-          // echo $ttd3;
-
+						$sign3 = $soHeaderData->sign3!=''?'<img style="width:80; height:40px" src='.$soHeaderData->sign3.'></img>' :'';
 					?>
+					<?=$sign3?>
 				</th>
 			</tr>
 			<!--Nama !-->
-			 <tr>
-				<th style="text-align: center; vertical-align:middle;height:20; background-color:#88b3ec;text-align: center;">
+			<tr>
+				<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 					<div>
 						<?php
-							// $sigNm1=$poHeader->SIG1_NM!='none' ? '<b>'.$poHeader->SIG1_NM.'</b>' : 'none';
-							// echo $sigNm1;
+							$sign1NM = $soHeaderData->sign1Nm!=''?$soHeaderData->sign1Nm:'';
 						?>
+						<?=$sign1NM?>
 					</div>
 				</th>
-				<th style="text-align: center; vertical-align:middle;height:20; background-color:#88b3ec;text-align: center;">
+				<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 					<div>
 						<?php
-							// $sigNm2=$poHeader->SIG2_NM!='none' ? '<b>'.$poHeader->SIG2_NM.'</b>' : 'none';
-							// echo $sigNm2;
+							$sign2NM = $soHeaderData->sign2Nm!=''?$soHeaderData->sign2Nm:'';
 						?>
+						<?=$sign2NM?>
 					</div>
 				</th>
-				<th style="text-align: center; vertical-align:middle;height:20; background-color:#88b3ec;text-align: center;">
+				<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 					<div>
 						<?php
-							// $sigNm3=$poHeader->SIG3_NM!='none' ? '<b>'.$poHeader->SIG3_NM.'</b>' : 'none';
-							// echo $sigNm3;
+							$sign2NM = $soHeaderData->sign2Nm!=''?$soHeaderData->sign2Nm:'';
 						?>
+						<?=$sign2NM?>
 					</div>
 				</th>
 			</tr>
@@ -668,17 +628,17 @@ $_gvSoDetailPdf= GridView::widget([
 			 <tr>
 				<th style="text-align: center; vertical-align:middle;height:20">
 					<div>
-						<b><?php  echo 'Purchaser'; ?></b>
+						<b><?php  echo 'SALES MD'; ?></b>
 					</div>
 				</th>
 				<th style="text-align: center; vertical-align:middle;height:20">
 					<div>
-						<b><?php  echo 'F & A'; ?></b>
+						<b><?php  echo 'ADMIN'; ?></b>
 					</div>
 				</th>
 				<th style="text-align: center; vertical-align:middle;height:20">
 					<div>
-						<b><?php  echo 'Director'; ?></b>
+						<b><?php  echo 'CAM'; ?></b>
 					</div>
 				</th>
 			</tr>
