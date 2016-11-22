@@ -234,31 +234,41 @@ function tombolCreateSom()
 	 * 2. Action APPROVAL Akan close atau tidak bisa di lakukan jika sudah Approved | status Approved =101 | Permission sign1
 	*/
 	function tombolReviewOutbox($url, $model){
-		if(getPermission()){
-			/* GF_ID>=4 Group Function[Director|GM|M|S] */
-			$gF=getPermissionEmp()->GF_ID;
-			$Auth2=getPermission()->BTN_SIGN2; // Auth2
-			$Auth3=getPermission()->BTN_SIGN3; // Auth3
-			$BtnReview=getPermission()->BTN_REVIEW;
-			if ((($Auth2==1 or $Auth3==1) AND $gF<=4 AND $BtnReview=1) OR (getPermissionEmp()->EMP_ID ==$model->USER_CC)){
-				$title = Yii::t('app', 'Review');
-				$options = [ //'id'=>'ro-approved',
-							//'data-method' => 'post',
-							 //'data-pjax'=>true,
-							 //'data'=>$model->KD_RO,
-							 //'data-pjax' => '0',
-							 //'data-toggle-active' => $model->KD_RO
-							//'data-confirm'=>'Anda yakin ingin menghapus RO ini?',
-				];
+		// if(getPermission()){
+		// 	/* GF_ID>=4 Group Function[Director|GM|M|S] */
+		// 	$gF=getPermissionEmp()->GF_ID;
+		// 	$Auth2=getPermission()->BTN_SIGN2; // Auth2
+		// 	$Auth3=getPermission()->BTN_SIGN3; // Auth3
+		// 	$BtnReview=getPermission()->BTN_REVIEW;
+		// 	if ((($Auth2==1 or $Auth3==1) AND $gF<=4 AND $BtnReview=1) OR (getPermissionEmp()->EMP_ID ==$model->USER_CC)){
+		// 		$title = Yii::t('app', 'Review');
+		// 		$options = [ //'id'=>'ro-approved',
+		// 					//'data-method' => 'post',
+		// 					 //'data-pjax'=>true,
+		// 					 //'data'=>$model->KD_RO,
+		// 					 //'data-pjax' => '0',
+		// 					 //'data-toggle-active' => $model->KD_RO
+		// 					//'data-confirm'=>'Anda yakin ingin menghapus RO ini?',
+		// 		];
+		// 		$icon = '<span class="glyphicon glyphicon-ok"></span>';
+		// 		$label = $icon . ' ' . $title;
+		// 		$url = Url::toRoute(['/purchasing/sales-order/review','kd'=>$model->KD_RO]);
+		// 		//$url = Url::toRoute(['/purchasing/sales-order/approved']);
+		// 		//$url = Url::toRoute(['/purchasing/sales-order/approved']);
+		// 		$options['tabindex'] = '-1';
+		// 		return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
+		// 	}
+
+		$kd=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')?$model['ID']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:$model['KD_SO_HEADER'];
+		$kdstt=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')!=''?0:1;
+		$title = Yii::t('app', 'Review');
+				$options = [ 'id'=>'so-review-outbox'];
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';
 				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/sales-order/review','kd'=>$model->KD_RO]);
-				//$url = Url::toRoute(['/purchasing/sales-order/approved']);
-				//$url = Url::toRoute(['/purchasing/sales-order/approved']);
+				$url = Url::toRoute(['/purchasing/salesman-order/review','id'=>$kd,'stt'=>$kdstt]);
 				$options['tabindex'] = '-1';
-				return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
-			}
-		}
+				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
+		// }
 	}
 
 

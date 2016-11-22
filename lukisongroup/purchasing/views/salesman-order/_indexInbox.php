@@ -217,8 +217,9 @@ use lukisongroup\hrd\models\Dept;
 	 * 2. Action APPROVAL Akan close atau tidak bisa di lakukan jika sudah Approved | status Approved =101 | Permission sign1
 	*/
 	function tombolReviewInbox($url, $model){
-		$kd=$model['KODE_REF']!=''?$model['KODE_REF']:$model['ID'];
-		$kdstt=$model['KODE_REF']!=''?1:0;
+		//$kd=($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']!='')?$model['KD_SO_HEADER']:$model['KD_SO_DETAIL'];
+		$kd=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')?$model['ID']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:$model['KD_SO_HEADER'];
+		$kdstt=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')!=''?0:1;
 		$title = Yii::t('app', 'Review');
 				$options = [ 'id'=>'so-review-inbox'];
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';

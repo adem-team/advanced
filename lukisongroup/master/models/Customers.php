@@ -52,6 +52,7 @@ class Customers extends \yii\db\ActiveRecord
     public $CusNm;
     public $CusT; // model manipulate form_scdl and contrroler create-scdl
     public $GruPCusT; // model manipulate form_scdl and contrroler create-scdl
+    public $kd_sodm;
     public static function tableName()
     {
         return 'c0001';
@@ -91,7 +92,7 @@ class Customers extends \yii\db\ActiveRecord
             // [['CUST_NM','CUST_KTG','JOIN_DATE','KD_DISTRIBUTOR','PROVINCE_ID','CITY_ID','NPWP', 'TLP1','STT_TOKO'], 'required'],
             [['CUST_TYPE','CUST_KTG','STT_TOKO', 'STATUS','PROVINCE_ID','SCDL_GROUP','CITY_ID','LAYER','GEO','DC_STATUS'], 'integer'],
 			[['TLP1', 'TLP2', 'FAX','CUST_GRP'],'safe'],
-            [['JOIN_DATE', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
+            [['JOIN_DATE', 'CREATED_AT', 'UPDATED_AT','ALAMAT_KIRIM'], 'safe'],
             [['ALAMAT', 'NOTE'], 'string'],
             [['CUST_KD', 'CUST_KD_ALIAS', 'MAP_LAT', 'MAP_LNG', 'NPWP','KD_DISTRIBUTOR'], 'string', 'max' => 50],
             [['CUST_NM', 'PIC', 'EMAIL', 'WEBSITE', 'DATA_ALL'], 'string', 'max' => 255],

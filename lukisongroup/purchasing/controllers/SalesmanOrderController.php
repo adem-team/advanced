@@ -131,6 +131,54 @@ class SalesmanOrderController extends Controller
     }
 
 
+    public function actionApprovedSoDetail(){
+    	if (Yii::$app->request->isAjax) {
+			$request= Yii::$app->request;
+			$id=$request->post('id');
+			//\Yii::$app->response->format = Response::FORMAT_JSON;
+			$soDetail = SoT2::findOne($id);
+			$soDetail->STATUS = 1;
+			//$ro->NM_BARANG=''
+			$soDetail->save();
+			return true;
+		}
+
+    }
+
+
+     public function actionRejectSoDetail(){
+    	if (Yii::$app->request->isAjax) {
+			$request= Yii::$app->request;
+			$id=$request->post('id');
+			//\Yii::$app->response->format = Response::FORMAT_JSON;
+			$soDetail = SoT2::findOne($id);
+			$soDetail->STATUS = 4;
+			//$ro->NM_BARANG=''
+			$soDetail->save();
+			return true;
+		}
+
+    }
+
+
+
+     public function actionDeleteSoDetail(){
+    	if (Yii::$app->request->isAjax) {
+			$request= Yii::$app->request;
+			$id=$request->post('id');
+			//\Yii::$app->response->format = Response::FORMAT_JSON;
+			$soDetail = SoT2::findOne($id);
+			$soDetail->STATUS = 3;
+			//$ro->NM_BARANG=''
+			$soDetail->save();
+			return true;
+		}
+
+    }
+
+    
+
+
      /**
      * Depdrop child customers
      * @author wawan
@@ -219,10 +267,9 @@ class SalesmanOrderController extends Controller
       }
     }
 
-
-    public function actionSoNoteReview($kdso)
+     public function actionSoNoteReview($kdso)
     {
-      $model = SoHeader::find()->where(['KD_SO'=>$kdso])->one();
+      $model = $this->findModelHeader($kdso);
       # code...
       if ($model->load(Yii::$app->request->post()) ) {
       	
@@ -236,9 +283,26 @@ class SalesmanOrderController extends Controller
       }
     }
 
+    public function actionSoShipingReview($cust_kd,$kode_so,$user_id,$tgl)
+    {
+       $model = $this->findModelCust($cust_kd);
+      # code...
+      if ($model->load(Yii::$app->request->post()) ) {
+      	
+          $model->save();
+
+           return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$kode_so,'stt'=>1,'cust_kd'=>$cust_kd,'user_id'=>$user_id,'tgl'=>$tgl]);
+      }else {
+        return $this->renderAjax('so_shiping', [
+            'model' => $model,
+            'kode_som'=>$kode_so
+        ]);
+      }
+    }
+
     public function actionSoNoteTopReview($kdso)
     {
-      $model = SoHeader::find()->where(['KD_SO'=>$kdso])->one();
+       $model = $this->findModelHeader($kdso);
       # code...
       if ($model->load(Yii::$app->request->post()) ) {
 
@@ -273,18 +337,25 @@ class SalesmanOrderController extends Controller
 
       # code...
       if ($model->load(Yii::$app->request->post())){
-      	  $transaction = self::Esm_connent()->beginTransaction();
-      	  try{
-      	  	 # SoHeader
-      	  	 $kode = Yii::$app->ambilkonci->getSMO();
+
+      		# SoHeader
+      		 $kode = Yii::$app->ambilkonci->getSMO();
       	  	 $model->KD_SO = $kode;
       	  	 $model->STT_PROCESS = 0;
-      	  	 $model->save();
+      	  	 $model->CREATE_BY = Yii::$app->user->identity->id;
 
       	  	 # SoStatus
       	  	 $model_status->KD_SO = $kode;
       	  	 $model_status->ID_USER = $model->USER_SIGN1;
       	  	 $model_status->STT_PROCESS = 0;
+      	  $transaction = self::Esm_connent()->beginTransaction();
+      	  try{
+      	  	 # SoHeader
+
+      	  	 $model->save();
+
+      	  	 # SoStatus
+      	  	
       	  	 $model_status->save();
 
       	  	// ...other DB operations...
@@ -294,7 +365,7 @@ class SalesmanOrderController extends Controller
 				throw $e;
 			}
       	 
-          return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model->USER_SIGN1,'tgl'=>$model->TGL]); ;
+          return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model->USER_SIGN1,'tgl'=>$model->TGL]);
       }else {
         return $this->renderAjax('new_so', [
             'model' => $model,
@@ -365,6 +436,7 @@ class SalesmanOrderController extends Controller
 				'aryProviderSoDetail'=>$aryProviderSoDetail,
 				'kode_som'=>$id,
 				'cust_kd'=>$getCUST_KD,
+				'cust_nmx'=>$soHeaderData->cust->CUST_NM,
 				'tgl'=>$getTGL,
 				'user_id'=>$getUSER_ID,
 				'searchModelDetail'=>$searchModelDetail,
@@ -401,6 +473,7 @@ class SalesmanOrderController extends Controller
 							'KD_SO'=>$kode,
 							'TGL' =>$setTGL,
 							'USER_SIGN1' =>$getUSER_ID,
+							'CUST_ID'=>$getCUST_KD,
 						])->execute();
 				//SO DETAIL -  STOCK
 				$connect->createCommand()->update('so_t2', 
@@ -432,7 +505,7 @@ class SalesmanOrderController extends Controller
 		}else{
 			//VIEW KODE_REF
 			$modelSoT2 = SoT2::find()->with('cust')->where("KODE_REF='".$id."' AND SO_TYPE=10")->one();	
-			$soHeaderData = SoHeader::find()->where(['KD_SO'=>$id])->one(); 		
+			$soHeaderData = SoHeader::find()->with('cust')->where(['KD_SO'=>$id])->one(); 		
 			$getSoType=10;
 			$getTGL=$modelSoT2->TGL;
 			$getCUST_KD=$modelSoT2->CUST_KD;
@@ -477,12 +550,24 @@ class SalesmanOrderController extends Controller
 				return;
 			}
 
-			return $this->render('_actionReview',[
+			// return $this->render('_actionReview',[
+			// 	'aryProviderSoDetail'=>$aryProviderSoDetail,
+			// 	'kode_SO'=>$modelSoT2->KODE_REF,
+			// 	'cust_kd'=>$getCUST_KD,
+			// 	'tgl'=>$getTGL,
+			// 	'user_id'=>$getUSER_ID,
+			// 	'searchModelDetail'=>$searchModelDetail,
+			// 	'model_cus'=>$modelSoT2->cust,
+			// 	'soHeaderData'=>$soHeaderData
+			// ]); 
+
+				return $this->render('_actionReview',[
 				'aryProviderSoDetail'=>$aryProviderSoDetail,
-				'kode_SO'=>$modelSoT2->KODE_REF,
-				'cust_kd'=>$getCUST_KD,
-				'tgl'=>$getTGL,
-				'user_id'=>$getUSER_ID,
+				'kode_SO'=>$soHeaderData->KD_SO,
+				'cust_kd'=>$soHeaderData->CUST_ID,
+				'cust_nmx'=>$soHeaderData->cust->CUST_NM,
+				'tgl'=>$soHeaderData->TGL,
+				'user_id'=>$soHeaderData->USER_SIGN1,
 				'searchModelDetail'=>$searchModelDetail,
 				'model_cus'=>$modelSoT2->cust,
 				'soHeaderData'=>$soHeaderData
@@ -544,4 +629,37 @@ class SalesmanOrderController extends Controller
 
 		return $pdf->render();
 	}
+
+
+	/**
+     * Finds the soheder model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return soheder the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModelHeader($id)
+    {
+        if (($model = SoHeader::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the Customers model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return Customers the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModelCust($id)
+    {
+        if (($model = Customers::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
 }
