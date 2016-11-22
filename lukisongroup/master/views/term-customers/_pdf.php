@@ -412,7 +412,7 @@ use kartik\grid\GridView;
            <tr>
             <th  class="col-md-1" style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
               <div>
-                <b><?php  echo 'Created'; ?></b>
+                <b><?php  echo 'Created' ?></b>
               </div>
             </th>
             <th class="col-md-1"  style="background-color:rgba(126, 189, 188, 0.3);text-align: center; vertical-align:middle;height:20">
@@ -432,14 +432,13 @@ use kartik\grid\GridView;
               <?php
               $ttd1 =  $data->SIG1_SVGBASE64 !='' ? '<img style="width:80; height:40px" src='.$data->SIG1_SVGBASE64.'></img>':'';
                 ?>
-                <?= $ttd1 ?>;
+                <?= $ttd1 ?>
 
             </th>
             <th class="col-md-1" style="text-align: center; vertical-align:middle">
               <?php
                 $ttd2 =  $data->SIG2_SVGBASE64 !='' ? '<img style="width:80; height:40px" src='.$data->SIG2_SVGBASE64.'></img>':'';
-                echo $ttd2;
-              ?>
+                echo $ttd2; ?>
             </th>
             <th  class="col-md-1" style="text-align: center; vertical-align:middle">
               <?php

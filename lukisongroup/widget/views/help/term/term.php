@@ -10,7 +10,13 @@ use yii\helpers\Html;
 	$imgTipro6= Html::img('@web/widget/docHelp/img_term/TIPRO6.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:300px;']);
 	$imgTipro7= Html::img('@web/widget/docHelp/img_term/TIPRO7.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:500px;']); 
 	$imgTipro8= Html::img('@web/widget/docHelp/img_term/TIPRO8.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:200px;']);
-	$imgTipro9= Html::img('@web/widget/docHelp/img_term/TIPRO9.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:200px;']); 	 	
+	$imgTipro9= Html::img('@web/widget/docHelp/img_term/TIPRO9.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:200px;']); 
+	$imgTipro10= Html::img('@web/widget/docHelp/img_term/TIPRO10.PNG',  ['class' => 'pnjg', 'style'=>'width:1000px;height:150px;']); 
+	$imgTipro11= Html::img('@web/widget/docHelp/img_term/TIPRO11.PNG',  ['class' => 'pnjg', 'style'=>'width:800px;height:400px;']); 
+	$imgTipro12= Html::img('@web/widget/docHelp/img_term/TIPRO12.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:400px;']); 
+	$imgTipro13= Html::img('@web/widget/docHelp/img_term/TIPRO13.PNG',  ['class' => 'pnjg', 'style'=>'width:100px;height:50px;']);
+	$imgTermdata1= Html::img('@web/widget/docHelp/img_term/TERMDATA1.PNG',  ['class' => 'pnjg', 'style'=>'width:200px;height:250px;']); 
+	$imgTermdata2= Html::img('@web/widget/docHelp/img_term/TERMDATA2.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:550px;']); 		
 ?>	
 <p>
 Penjelasan : Suatu bentuk perjanjian kerjasama yang persyaratannya disepakati oleh kedua belah pihak dalam hal ini retailer dan produsen / principle yang umumnya berlaku 1 tahun.</br>
@@ -37,7 +43,24 @@ Berikut tampilan Form TIPRO Plan : </br>
 <?php  echo $imgTipro7;?><p></br>
 8. Klik Tanda panah keatas pada <b>Conditional Rebates</b> untuk memasukan Reward yang diberikan yang tidak dalam target.</br>
 <?php  echo $imgTipro8;?><p></br>
-8. Klik Tanda panah keatas pada <b>Growth.</b></br>
+9. Klik Tanda panah keatas pada <b>Growth.</b></br>
 <?php  echo $imgTipro9;?><p></br>
+10. Klik pada <b>Drop files here to upload</b> untuk menambahkan file lampiran Term.</br>
+<?php  echo $imgTipro10;?><p></br>
+11. Klik pada tanda <b>Plus (+)</b> untuk menambahkan Notes / Keterangan, lalu klik <b>Update.</b></br>
+<?php  echo $imgTipro11;?><p></br>
+12. Setelah semuanya di create selanjutnya masukan Signature, Klik pada <b>Sign Here</b> di kolom Created, dan masukan password signature lalu klik <b>Login.</b></br>
+<?php  echo $imgTipro12;?><p></br>
+Setelah Signature di isi, selanjutnya tinggal menunggu “Checked dan Approved TIPRO Plan” oleh bagian terkait.</br>
+13. klik <b>Print</b> jika ingin mencetak TIPRO Plan.</br>
+<?php  echo $imgTipro13;?><p></br>
 
 _END_
+
+<p>
+<h4>Term Data</h4></br>
+Berikut cara pembuatan Term Data :</br>
+1. Klik <b>Term Data.</b></br>
+<?php  echo $imgTermdata1;?><p></br>
+2. Klik <b>New Term</b> Pada Form Masukan <b>Nama Customers, Nama Principal, Nama Distributor, Period Start, Period End dan Budget awal</b> lalu Klik <b>Create.</b></br></br>
+<?php  echo $imgTermdata2;?><p></br>

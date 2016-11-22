@@ -88,7 +88,7 @@ class SoDetailSearch extends SoT2
 				LEFT JOIN b0001 x7 on x7.KD_BARANG=x1.KD_BARANG
 				LEFT JOIN ub0001 x8 on x8.KD_UNIT=x7.KD_UNIT
 				LEFT JOIN so_0001 x9 on x9.KD_SO=x1.KODE_REF
-			WHERE x1.SO_TYPE=10 AND x1.KODE_REF='".$this->KODE_REF."' AND x1.CUST_KD='".$this->CUST_KD."'		
+			WHERE x1.SO_TYPE=10 AND x1.KODE_REF='".$this->KODE_REF."' AND x1.CUST_KD='".$this->CUST_KD."' AND x1.STATUS<>3		
 		";
 
 			$sql = SoT2::findBySql($soQueryJoin);

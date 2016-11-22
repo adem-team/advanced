@@ -20,9 +20,17 @@ if($ary){
 	$cust_nm = $model_cus->CUST_NM;
 }
 
+$city = (new \yii\db\Query())
+    			->select(['CITY_NAME'])
+   				 ->from('dbc002.c0001g2')
+   				 ->where(['CITY_ID'=>$model_cus->CITY_ID])
+    			 ->one();
+
+  	
+
 
 	/*
-	 * LINK PO Note
+	 * LINK SO Note
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.2
 	*/
@@ -37,6 +45,27 @@ if($ary){
 			$icon = '<span class="fa fa-plus fa-lg"></span>';
 			$label = $icon . ' ' . $title;
 			$url = Url::toRoute(['/purchasing/salesman-order/so-note-review','kdso'=>$soHeader->KD_SO]);
+			$content = Html::a($label,$url, $options);
+			return $content;
+	}
+
+
+	/*
+	 * LINK SO shipping
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.2
+	*/
+	function tombolSoshiping($cust_kd,$kode_so,$user_id,$tgl){
+			$title = Yii::t('app','');
+			$options = [ 'id'=>'so-shiping-id',
+						  'data-toggle'=>"modal",
+						  'data-target'=>"#so-shiping-review",
+						  'class'=>'btn btn-info btn-xs',
+						  'title'=>'SO Note'
+			];
+			$icon = '<span class="fa fa-edit fa-lg"></span>';
+			$label = $icon . ' ' . $title;
+			$url = Url::toRoute(['/purchasing/salesman-order/so-shiping-review','cust_kd'=>$cust_kd,'user_id'=>$user_id,'kode_so'=>$kode_so,'tgl'=>$tgl]);
 			$content = Html::a($label,$url, $options);
 			return $content;
 	}
@@ -99,8 +128,95 @@ if($ary){
 			$content = Html::a($label,$url, $options);
 			return $content;
 	}
+
+
+
+	/*
+	 * Tombol Approval Item
+	 * @author ptrnov [piter@lukison]
+	 * @since 1.2
+	*/
+	function tombolApproval($url, $model){
+				$title = Yii::t('app', 'Approved');
+				$options = [ 'id'=>'approved',
+							 'data-pjax' => true,
+							 'data-toggle-approved'=>$model->ID,
+				];
+				$icon = '<span class="glyphicon glyphicon-ok"></span>';
+				$label = $icon . ' ' . $title;
+				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
+	}
+
+
+	/*
+	 * Tombol Reject Item
+	 * @author ptrnov [piter@lukison]
+	 * @since 1.2
+	*/
+	function tombolReject($url, $model) {
+				$title = Yii::t('app', 'Reject');
+				$options = [ 'id'=>'reject',
+							 'data-pjax'=>true,
+							 'data-toggle-reject' => $model->ID
+				];
+				$icon = '<i class="fa fa-eraser" aria-hidden="true"></i>';
+				$label = $icon . ' ' . $title;
+				$options['tabindex'] = '-1';
+				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
+
+	}
+
+
+	/*
+	 * Tombol Delete Item
+	 * @author ptrnov [piter@lukison]
+	 * @since 1.2
+	*/
+	function tombolDelete($url, $model) {
+				$title = Yii::t('app', 'Delete');
+				$options = [ 'id'=>'delete',
+							 'data-pjax'=>true,
+							 'data-toggle-delete' => $model->ID
+				];
+				$icon = '<i class="fa fa-trash" aria-hidden="true"></i>';
+				$label = $icon . ' ' . $title;
+				$options['tabindex'] = '-1';
+				return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
+
+	}
+
+
+
+	/* author : wawan
+	 * STATUS Items
+	 * 1. NEW 	= 0 	| Create First items | jika di cancel maka status menjai 0 lagi atau new
+	 * 2. APPROVED	= 1 	| Item Approved
+	 * 6. DELETE	= 3 	| Data Hidden | Data Di hapus oleh pembuat petama, jika belum di Approved
+	 * 7. REJECT	= 4		| Data tidak di setujui oleh manager atau Atasan  lain
+	 * 9. UNKNOWN	<>		| Data Tidak valid atau tidak sah
+	*/
+	function statusItems($model){
+		if($model->STATUS==0){
+			/*New*/
+			return Html::a('<i class="fa fa-square-o fa-md"></i>', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'50px'],'title'=>'New']);
+		}elseif($model->STATUS==1){
+			/*Approved*/
+			return Html::a('<i class="fa fa-check-square-o fa-md"></i>', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'50px'], 'title'=>'Approved']);
+		}elseif ($model->STATUS==3){
+				/*DELETE*/
+			return Html::a('<i class="glyphicon glyphicon-remove"></i>', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'50px'], 'title'=>'Detail']);
+		}elseif ($model->STATUS==4){
+			/*REJECT*/
+			return Html::a('<i class="fa fa-remove fa-md"></i> ', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'50px'], 'title'=>'Reject']);
+		}else{
+			return Html::a('<i class="glyphicon glyphicon-question-sign"></i>', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'50px'], 'title'=>'Detail']);
+		};
+	}
+
  
 	$soDetailColumn= [
+
+	
 	/*No Urut*/
 	[
 		'class'=>'kartik\grid\SerialColumn',
@@ -489,7 +605,86 @@ if($ary){
 			]
 		],
 	],
+
+		[	//COL-1
+			/* Attribute Status Detail RO */
+			'attribute'=>'STATUS',
+			// 'options'=>['id'=>'test-ro'],
+			'label'=>'Status',
+			'hAlign'=>'center',
+			'vAlign'=>'middle',
+			'mergeHeader'=>true,
+			'contentOptions'=>['style'=>'width: 100px'],
+			'format' => 'html',
+			'value'=>function ($model, $key, $index, $widget) {
+						return statusItems($model);
+			},
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50px',
+					'font-family'=>'verdana, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(247, 245, 64, 0.6)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50px',
+					'font-family'=>'verdana, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(247, 245, 64, 0.6)',
+				]
+			],
+		],
+
+		/*Action*/
+		[
+			'class'=>'kartik\grid\ActionColumn',
+			'dropdown' => true,
+			'template' => '{approve}{reject}{delete}',
+			'dropdownOptions'=>['class'=>'pull-right dropup'],
+			//'headerOptions'=>['class'=>'kartik-sheet-style'],
+			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
+			'buttons' => [
+				/* View RO | Permissian All */
+				'approve' => function ($url, $model) {
+								return tombolApproval($url, $model);
+						  },
+
+				/* View RO | Permissian Status 0; 0=process | User created = user login  */
+				'reject' => function ($url, $model) {
+								return tombolReject($url, $model);
+							},
+
+				/* Delete RO | Permissian Status 0; 0=process | User created = user login */
+				'delete' => function ($url, $model) {
+								return tombolDelete($url, $model);
+							},
+
+			],
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'140px',
+					'font-family'=>'verdana, arial, sans-serif',
+					'font-size'=>'7pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'140px',
+					'height'=>'10px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+				]
+			],
+		],
 ];
+
 
 
 
@@ -526,7 +721,7 @@ $_gvSoDetail= GridView::widget([
 	'autoXlFormat'=>true,
 	'export' => false,
 	'toolbar'=> [
-		 ['content'=>tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm,$tgl)],
+		 ['content'=>tombolCreate($cust_kd,$kode_so,$user_id,$cust_nmx,$tgl)],
 		
 	 ],
 	'panel'=>[
@@ -537,6 +732,8 @@ $_gvSoDetail= GridView::widget([
 		'footer'=>'<div>asd dsadas ad asd asdas d asd as d ad as d asd wrfddsfds sdf sdfsdf sdf sdfsdfsdfds fsd fsd fds fdsfdsfdsf dsfdsf sdf sd</div>'		
 	]
 ]);
+
+
 
 ?>
 
@@ -595,6 +792,42 @@ $_gvSoDetail= GridView::widget([
 	<!-- Table Grid List SO Detail !-->
 	<div class="col-md-12">
 		<?=$_gvSoDetail?>
+	</div>
+
+	<!-- Title BOTTEM Descript !-->
+	<div  class="row">
+		<div class="col-md-12" style="font-family: tahoma ;font-size: 9pt;float:left;">
+
+			<div class="col-md-4" style="float:left;">
+			<div>
+					 <?= tombolSoshiping($cust_kd,$kode_so,$user_id,$tgl); ?>
+				</div>
+				<dl>
+					<?php
+						$shipNm= $model_cus->ALAMAT_KIRIM !='' ? $model_cus->ALAMAT_KIRIM: 'Shipping Not Set';
+						$shipAddress= $model_cus->ALAMAT!='' ? $model_cus->ALAMAT :'Address Not Set';
+						$shipCity= $city['CITY_NAME']!='' ? $city['CITY_NAME'] : 'City Not Set';
+						$shipPhone= $model_cus->TLP1!='' ? $model_cus->TLP1 : 'Phone Not Set';
+						$shipFax= $model_cus->FAX!='' ? $model_cus->FAX : 'Fax Not Set';
+						$shipPic= $model_cus->PIC!='' ? $model_cus->PIC : 'PIC not Set';
+					?>
+					<dt><h6><u><b>Shipping Address :</b></u></h6></dt>
+					<dt><?=$shipNm; ?></dt>
+					<dt><?=$shipCity; ?></dt>
+					<dt><?=$shipAddress;?></dt>
+					
+					<dt style="width:80px; float:left;">Tlp</dt>
+					<dd>:	<?=$shipPhone;?></dd>
+					<dt style="width:80px; float:left;">FAX</dt>
+					<dd>:	<?=$shipFax; ?></dd>
+					<dt style="width:80px; float:left;">CP</dt>
+					<dd>:	<?=$shipPic; ?></dd>
+				</dl>
+			</div>
+			<div class="col-md-3"></div>
+			<div class="col-md-4" style="float:left;">
+			</div>
+		</div>
 	</div>
 
 	<!-- SO Term Of Payment !-->
@@ -775,6 +1008,9 @@ $_gvSoDetail= GridView::widget([
 </div>
 
 
+
+
+
 <?php
 /*
  * JS  CREATED
@@ -837,6 +1073,34 @@ $this->registerJs("
 
 		$this->registerJs("
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#so-shiping-review').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+		",$this::POS_READY);
+
+		Modal::begin([
+			'id' => 'so-shiping-review',
+			//'header' => '<h4 class="modal-title">Entry Request Order</h4>',
+			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Note</h4></div>',
+			'size' => 'modal-md',
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+			]
+		]);
+		Modal::end();
+
+
+		$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
 			$('#so-notetop-review').on('show.bs.modal', function (event) {
 				var button = $(event.relatedTarget)
 				var modal = $(this)
@@ -861,3 +1125,67 @@ $this->registerJs("
 			]
 		]);
 		Modal::end();
+
+
+
+	/*
+	 * Action PO Detail
+	*/
+	$this->registerJs("
+		$(document).on('click', '[data-toggle-approved]', function(e){
+			e.preventDefault();
+			var idx = $(this).data('toggle-approved');
+			$.ajax({
+					url: '/purchasing/salesman-order/approved-so-detail',
+					type: 'POST',
+					//contentType: 'application/json; charset=utf-8',
+					data:'id='+idx,
+					dataType: 'json',
+					success: function(result) {
+						if (result == 1){
+							// Success
+							$.pjax.reload({container:'#gv-so-detail-md-inbox'});
+						} else {
+							// Fail
+						}
+					}
+				});
+
+		});
+
+
+		$(document).on('click', '[data-toggle-reject]', function(e){
+			e.preventDefault();
+			var idx = $(this).data('toggle-reject');
+			$.ajax({
+					url: '/purchasing/salesman-order/reject-so-detail',
+					type: 'POST',
+					//contentType: 'application/json; charset=utf-8',
+					data:'id='+idx,
+					dataType: 'json',
+					success: function(result) {
+						if (result == 1){
+							$.pjax.reload({container:'#gv-so-detail-md-inbox'});
+						}
+					}
+				});
+		});
+
+
+		$(document).on('click', '[data-toggle-delete]', function(e){
+			e.preventDefault();
+			var idx = $(this).data('toggle-delete');
+			$.ajax({
+					url: '/purchasing/salesman-order/delete-so-detail',
+					type: 'POST',
+					//contentType: 'application/json; charset=utf-8',
+					data:'id='+idx,
+					dataType: 'json',
+					success: function(result) {
+						if (result == 1){
+							$.pjax.reload({container:'#gv-so-detail-md-inbox'});
+						}
+					}
+				});
+		});
+	",$this::POS_READY);

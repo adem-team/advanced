@@ -82,7 +82,7 @@ class SoT2 extends \yii\db\ActiveRecord
 
     public function CekBarang($model){
         $explode = explode(',', $this->KD_BARANG);
-        $kondisi = SoT2::find()->where(['KD_BARANG'=>$explode[0],'KODE_REF'=>$this->KODE_REF])->one();
+        $kondisi = SoT2::find()->where(['KD_BARANG'=>$explode[0],'KODE_REF'=>$this->KODE_REF])->andwhere('STATUS<>3')->one();
         if($kondisi){
             $this->addError($model, 'Duplicated Product because the Product already exists in this Salesman Order !, attention  change name Product or change code ');
         }
