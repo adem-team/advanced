@@ -112,7 +112,7 @@ class ImportViewSearch extends ImportView
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
 			'pagination' => [
-				 'pageSize' => 200,
+				 'pageSize' => 1000,
 			]
         ]);
 
@@ -226,7 +226,7 @@ class ImportViewSearch extends ImportView
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
 			'pagination' => [
-				 'pageSize' => 200,
+				 'pageSize' => 2000,
 			]
         ]);
 

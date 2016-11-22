@@ -53,7 +53,7 @@ class SoT2 extends \yii\db\ActiveRecord
             [['UNIT_QTY', 'UNIT_BERAT', 'SO_QTY', 'HARGA_PABRIK', 'HARGA_DIS', 'HARGA_SALES', 'HARGA_LG'], 'number'],
             [['SO_TYPE'], 'integer'],
             [['NOTED'], 'string'],
-            [['CUST_KD_ALIAS', 'KD_DIS', 'USER_ID', 'UNIT_BARANG'], 'string', 'max' => 50],
+            [['CUST_KD_ALIAS','CUST_KD','KD_DIS', 'USER_ID', 'UNIT_BARANG'], 'string', 'max' => 50],
             [['KD_BARANG_ALIAS'], 'string', 'max' => 30],
             [['NM_BARANG'], 'string', 'max' => 255]
         ];

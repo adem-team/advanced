@@ -24,6 +24,7 @@ use lukisongroup\sales\models\UserFileGudang;
 use lukisongroup\sales\models\UserFileGudangSearch;
 use lukisongroup\sales\models\TempData;
 use lukisongroup\sales\models\TempDataSearch;
+use lukisongroup\sales\models\Sot2;
 
 use lukisongroup\sales\models\AliasCustomer;
 use lukisongroup\sales\models\AliasProdak;
@@ -207,7 +208,7 @@ class ImportGudangController extends Controller
 			foreach($data as $key => $value){
 
 				//$cmd->reset();
-				$tgl=$value['DATE'];
+				$tgl=date_format(date_create($value['DATE']),"Y-m-d");
 				//$cust_kd= $value['CUST_KD'];
 				//$cust_nm= $value['CUST_NM'];
 				$item_kd= $value['SKU_ID'];
@@ -414,35 +415,35 @@ class ImportGudangController extends Controller
 				
 				//Validation column
 				$sttValidationColumn=0;
+				$sttValidationDataReady=0;
 				foreach($dataImport as $key => $value){
 					if($value['TGL']=='NotSet' or $value['ITEM_ID_ALIAS']=='NotSet' or $value['ITEM_NM']=='NotSet' or $value['QTY_PCS']=='NotSet' or $value['DIS_REF']=='NotSet' or $value['HARGA_PCS']=='' ){
 						$sttValidationColumn=1;
 					}
+					$countDataSot2= Sot2::find()->where(['SO_TYPE' => 1,'TGL' => $value['TGL'], 'KD_BARANG_ALIAS' =>$value['ITEM_ID_ALIAS']])->count();
+					if($countDataSot2!=0){$sttValidationDataReady=$countDataSot2;};
 				}
 				//print_r($sttValidationColumn);
 				//die();
 				if($sttValidationColumn!=1){
-					foreach($dataImport as $key => $value){
-						//$cmd->reset();
-						$tgl=$value['TGL'];
-						$cust_kd= $value['CUST_KD_ALIAS'];
-						$item_kd= $value['ITEM_ID_ALIAS'];
-						$item_qty= $value['QTY_PCS'];
-						$item_price= $value['HARGA_PCS'];
-						$dis_id= $value['DIS_REF'];
-						$import_live=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_LIVE_create(
-											'STOCKG_GUDANG','".$tgl."','".$cust_kd."','".$item_kd."','".$item_qty."','".$item_price."','WEB_IMPORT','".$dis_id."','".$username."'
-										)");
-						$import_live->execute();
-						//$stt=1;
+					if ($sttValidationDataReady==0){
+						foreach($dataImport as $key => $value){
+							//$cmd->reset();
+							$tgl=date_format(date_create($value['TGL']),"Y-m-d");
+							$cust_kd= $value['CUST_KD_ALIAS'];
+							$item_kd= $value['ITEM_ID_ALIAS'];
+							$item_qty= $value['QTY_PCS'];
+							$item_price= $value['HARGA_PCS'];
+							$dis_id= $value['DIS_REF'];
+							$import_live=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_LIVE_create(
+												'STOCKG_GUDANG','".$tgl."','".$cust_kd."','".$item_kd."','".$item_qty."','".$item_price."','WEB_IMPORT','".$dis_id."','".$username."'
+											)");
+							$import_live->execute();
+						}
+						$rslt='sukses';
+					}else{
+						$rslt='datasudahada';
 					}
-					/*Delete After Import*/
-					/* $cmd_del=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-											'STOCK_DELETE','','','','','','','','','".$username."'
-										);
-								");
-					$cmd_del->execute(); */
-					$rslt='sukses';
 				}else{
 					$rslt='validasi';
 				}

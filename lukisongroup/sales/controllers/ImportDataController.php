@@ -554,7 +554,7 @@ class ImportDataController extends Controller
 				};
 				//print_r($result);
 				$cmd=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-								'STOCK','".$tgl."','".$cust_kd."','".$cust_nm."','".$item_kd."','".$item_nm."','".$qty."','".$dis_ref."','".$pos."','".$user_id."'
+								'STOCK','".date_format($tgl,"Y-m-d")."','".$cust_kd."','".$cust_nm."','".$item_kd."','".$item_nm."','".$qty."','".$dis_ref."','".$pos."','".$user_id."'
 						);
 				");
 				$cmd->execute();

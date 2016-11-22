@@ -98,6 +98,9 @@ class TempDataSearch extends TempData
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+			'pagination' => [
+				 'pageSize' => 2000,
+			]
         ]);
 
         $this->load($params);
@@ -147,6 +150,9 @@ class TempDataSearch extends TempData
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+			'pagination' => [
+				'pageSize' => 2000,
+			]
         ]);
 
         $this->load($params);

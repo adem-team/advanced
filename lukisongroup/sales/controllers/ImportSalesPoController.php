@@ -24,6 +24,7 @@ use lukisongroup\sales\models\UserFileSalesPo;
 use lukisongroup\sales\models\UserFileSalesPoSearch;
 use lukisongroup\sales\models\TempData;
 use lukisongroup\sales\models\TempDataSearch;
+use lukisongroup\sales\models\Sot2;
 
 use lukisongroup\sales\models\AliasCustomer;
 use lukisongroup\sales\models\AliasProdak;
@@ -205,7 +206,7 @@ class ImportSalesPoController extends Controller
 			foreach($data as $key => $value){
 
 				//$cmd->reset();
-				$tgl=$value['DATE'];
+				$tgl=date_format(date_create($value['DATE']),"Y-m-d");
 				$cust_kd= $value['CUST_KD'];
 				$cust_nm= $value['CUST_NM'];
 				$item_kd= $value['SKU_ID'];
@@ -391,6 +392,8 @@ class ImportSalesPoController extends Controller
 			FROM so_t2_tmp_file			
 			WHERE USER_ID='".$username."' AND SO_TYPE=3
 		")->queryAll();
+		
+		
 		\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 		if (Yii::$app->request->isAjax && $data_view) {			
 				$viewDataProvider= new ArrayDataProvider([
@@ -404,39 +407,39 @@ class ImportSalesPoController extends Controller
 				// print_r($viewDataProvider->allModels);
 				// die();
 				
-				//Validation column
+				//Validation Column Value Notset || Sot2 ready data or not yet
 				$sttValidationColumn=0;
+				$sttValidationDataReady=0;
 				foreach($dataImport as $key => $value){
 					if($value['TGL']=='NotSet' or $value['CUST_KD']=='NotSet' or $value['CUST_KD_ALIAS']=='NotSet'
 					or $value['ITEM_ID_ALIAS']=='NotSet' or $value['ITEM_NM']=='NotSet' or $value['QTY_PCS']=='NotSet' 
 					or $value['DIS_REF']=='NotSet' or $value['HARGA_PCS']=='' ){
 						$sttValidationColumn=1;
 					}
+					$countDataSot2= Sot2::find()->where(['SO_TYPE' => 3,'TGL' => $value['TGL'], 'CUST_KD' =>$value['CUST_KD']])->count();
+					if($countDataSot2!=0){$sttValidationDataReady=$countDataSot2;};					
 				}
-				//print_r($sttValidationColumn);
-				//die();
-				if($sttValidationColumn!=1){
-					foreach($dataImport as $key => $value){
-						//$cmd->reset();
-						$tgl=$value['TGL'];
-						$cust_kd= $value['CUST_KD_ALIAS'];
-						$item_kd= $value['ITEM_ID_ALIAS'];
-						$item_qty= $value['QTY_PCS'];
-						$item_price= $value['HARGA_PCS'];
-						$dis_id= $value['DIS_REF'];
-						$import_live=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_LIVE_create(
-											'STOCKG_SALESPO','".$tgl."','".$cust_kd."','".$item_kd."','".$item_qty."','".$item_price."','WEB_IMPORT','".$dis_id."','".$username."'
-										)");
-						$import_live->execute();
-						//$stt=1;
+				// print_r($countDataSot2);
+				// die();
+				if($sttValidationColumn!=1){					
+					if ($sttValidationDataReady==0){
+						foreach($dataImport as $key => $value){
+							//$cmd->reset();
+							$tgl=date_format(date_create($value['TGL']),"Y-m-d");
+							$cust_kd= $value['CUST_KD_ALIAS'];
+							$item_kd= $value['ITEM_ID_ALIAS'];
+							$item_qty= $value['QTY_PCS'];
+							$item_price= $value['HARGA_PCS'];
+							$dis_id= $value['DIS_REF'];
+							$import_live=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_LIVE_create(
+												'STOCKG_SALESPO','".$tgl."','".$cust_kd."','".$item_kd."','".$item_qty."','".$item_price."','WEB_IMPORT','".$dis_id."','".$username."'
+											)");
+							$import_live->execute();
+						}
+						$rslt='sukses';
+					}else{
+						$rslt='datasudahada';
 					}
-					/*Delete After Import*/
-					/* $cmd_del=Yii::$app->db_esm->createCommand("CALL ESM_SALES_IMPORT_TEMP_create(
-											'STOCK_DELETE','','','','','','','','','".$username."'
-										);
-								");
-					$cmd_del->execute(); */
-					$rslt='sukses';
 				}else{
 					$rslt='validasi';
 				}

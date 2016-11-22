@@ -154,6 +154,20 @@ use kartik\date\DatePicker;
 	]);
 		echo "<div>Data Gagal di Import, Excel data Column tidak Komplit, Check kembali data sebelum di import<br></div>";
 	Modal::end();
+	
+	/**
+	 * MODAL NOTIFY Validasi data Sudah ada
+	*/
+	Modal::begin([
+		'id' => 'validate-msg-stockgudang-ready',
+		'header' => 'WARNING',
+		'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+		]
+	]);
+		echo "<div>Data Gagal di Import, Data sudah ada atau pernah di import, check kembali data excel import, pastikan tidak ada data yang duplicated. <br></div>";
+	Modal::end();
 ?>
 
 <?php
@@ -184,6 +198,8 @@ use kartik\date\DatePicker;
 						$('#validate-msg-stockgudang').modal('show');
 					}else if(result == 'nodata'){
 						$('#nodata-msg-stockgudang').modal('show');
+					}else if(result == 'datasudahada'){
+						$('#validate-msg-stockgudang-ready').modal('show');
 					}
 				}
 			});
