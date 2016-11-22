@@ -143,7 +143,7 @@ use kartik\date\DatePicker;
 ?>
 
 <?php
-	
+	$url_dev = Url::base(true);
 	$this->registerJs("
 		/**====================================
 		 * ACTION : SEND DATA TO STORED
@@ -182,7 +182,8 @@ use kartik\date\DatePicker;
 			$('#success-msg-stocksalespo').on('hidden.bs.modal', function () {
 				//alert('The modal is now hidden.');
 				//$.post('/controller/action/whatever');
-				window.location.assign('http://lukisongroup.com/sales/import-sales-po/');
+				//window.location.assign('http://lukisongroup.com/sales/import-sales-po/');
+				window.location.assign('".$url_dev."/sales/import-gudang/');
 			});
 		});
 		
