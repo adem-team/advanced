@@ -38,8 +38,8 @@ class SoStatus extends \yii\db\ActiveRecord
     {
         return [
             [['STT_PROCESS'], 'integer'],
-            [['UPDATE_AT'], 'safe'],
-            [['KD_SO', 'ID_USER'], 'string', 'max' => 255],
+            [['UPDATE_AT','ID_USER'], 'safe'],
+            [['KD_SO'], 'string', 'max' => 255],
         ];
     }
 

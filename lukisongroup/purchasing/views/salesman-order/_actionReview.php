@@ -23,11 +23,73 @@ if($ary){
 $city = (new \yii\db\Query())
     			->select(['CITY_NAME'])
    				 ->from('dbc002.c0001g2')
-   				 ->where(['CITY_ID'=>$model_cus->CITY_ID])
+   				 ->where(['CITY_ID'=>$soHeaderData->cust->CITY_ID])
     			 ->one();
+
+
+
+
+	/*
+	 * SIGNATURE AUTH2 | CHECKED
+	 * Status Value Signature1 | PurchaseOrder
+	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
+	*/
+	function SignChecked($soHeader){
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'po-auth2',
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#so-auth1-sign",
+					  'class'=>'btn btn-info btn-xs',
+					  'style'=>['width'=>'100px'],
+					  'title'=>'Detail'
+		];
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/salesman-order/sign-auth2','kdso'=>$soHeader->KD_SO]);
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
+
+	/**
+	 * SIGNATURE AUTH3 | APPROVED
+	 * Status Value Signature1 | PurchaseOrder
+	 * Permission Edit [BTN_SIGN1==1] & [Status 0=process 1=CREATED]
+   	 * if poheader STATUS equal 4 then title reject and title Sign Hire
+	*/
+	function SignApproved($soHeader){
+		$title = Yii::t('app', 'Sign Hire');
+		$options = [ 'id'=>'po-auth2',
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#so-auth2-sign",
+					  'class'=>'btn btn-info btn-xs',
+					  'style'=>['width'=>'100px'],
+					  'title'=>'Detail'
+		];
+		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/salesman-order/sign-auth3','kdso'=>$soHeader->KD_SO]);
+		$content = Html::a($label,$url, $options);
+		return $content;
+	}
+
 
   	
 
+	function tombolEditCustom($soHeader){
+			$title = Yii::t('app','');
+			$options = [ 'id'=>'so-edit-tgl-id',
+						  'data-toggle'=>"modal",
+						  'data-target'=>"#so-edit-review",
+						  'class'=>'btn btn-info btn-xs',
+						  'title'=>'SO'
+			];
+			$icon = '<span class="fa fa-edit fa-lg"></span>';
+			$label = $icon . ' ' . $title;
+			$url = Url::toRoute(['/purchasing/salesman-order/so-edit-review','kdso'=>$soHeader->KD_SO]);
+			$content = Html::a($label,$url, $options);
+			return $content;
+
+	}
 
 	/*
 	 * LINK SO Note
@@ -688,6 +750,8 @@ $city = (new \yii\db\Query())
 
 
 
+
+
 $_gvSoDetail= GridView::widget([
 	'id'=>'gv-so-detail-md-inbox',
 	'dataProvider'=> $aryProviderSoDetail,
@@ -727,13 +791,13 @@ $_gvSoDetail= GridView::widget([
 	'panel'=>[
 		'type'=>GridView::TYPE_SUCCESS,
 		'heading'=>false,//tombolCreate($cust_kd,$kode_so,$user_id,$ary[0]['CUST_NM'],$tgl),//$this->render('indexTimelineStatus'),//false //'<div> NO.SO :'.date("d-M-Y")
-		'before'=>'SO NO : '. $kode_SO,
+		'before'=>'SO NO : '. $kode_so,
 		'after'=>false,
 		'footer'=>'<div>asd dsadas ad asd asdas d asd as d ad as d asd wrfddsfds sdf sdfsdf sdf sdfsdfsdfds fsd fsd fds fdsfdsfdsf dsfdsf sdf sd</div>'		
 	]
 ]);
 
-
+ $profile=Yii::$app->getUserOpt->Profile_user();
 
 ?>
 
@@ -765,20 +829,24 @@ $_gvSoDetail= GridView::widget([
 		<div class="col-md-5" style="padding-top:15px;">
 		</div>
 		<div class="col-md-3" style="float:left;padding-bottom:-100px">
+			<div>
+					 <?= tombolEditCustom($soHeaderData); ?>
+				</div>
 			<dl>
 				<dt style="width:100px; float:left;">Tanggal </dt>
 				<dd>: <?php echo date('d-m-Y'); ?></dd>
 				<dt style="width:100px; float:left;">Kode Cust</dt>
 				<dd>: <?php echo $cust_kd  ?></dd>
 				<dt style="width:100px; float:left;">Customer </dt>
-				<dd>: <?php echo $cust_nm ?></dd>
+				<dd>: <?php echo $cust_nmx ?></dd>
 				<dt style="width:100px; float:left;">Alamat  </dt>
-				<dd>: <?php echo $model_cus->ALAMAT; ?></dd>
+				<dd>: <?php echo $soHeaderData->cust->ALAMAT; ?></dd>
 				<dt style="width:100px; float:left;">Telp   </dt>
-				<dd>: <?php echo $model_cus->TLP1; ?></dd>
+				<dd>: <?php echo $soHeaderData->cust->TLP1; ?></dd>
 				<dt style="width:100px; float:left;">Tgl Kirim  </dt>
-				<dd>: <?php //echo $roHeader->KD_RO; ?></dd>
+				<dd>: <?php echo $soHeaderData->TGL_KIRIM; ?></dd>
 			</dl>
+
 		</div>
 	</div>
 	<!-- HEADER !-->
@@ -927,19 +995,34 @@ $_gvSoDetail= GridView::widget([
 						 <tr>
 							<th class="col-md-1" style="text-align: center; vertical-align:middle; height:40px">
 								<?php
-									$sign1 = $soHeaderData->sign1!=''?'<img style="width:80; height:40px" src='.$soHeaderData->sign1.'></img>' :'';
+
+								if($soHeaderData->USER_SIGN1 !='')
+								{
+
+									$sign1 = '<img style="width:80; height:40px" src='.$soHeaderData->sign1.'></img>';
+								}
 								?>
 								<?=$sign1?>
 							</th>
 							<th class="col-md-1" style="text-align: center; vertical-align:middle">
 								<?php
-									$sign2 = $soHeaderData->sign2!=''?'<img style="width:80; height:40px" src='.$soHeaderData->sign2.'></img>' :'';
+								   if($soHeaderData->USER_SIGN2 !=''){
+								   	 $sign2 = '<img style="width:80; height:40px" src='.$soHeaderData->sign2.'></img>';
+								   }else{
+								   	 $sign2 = SignChecked($soHeaderData);
+								   }
+									// $sign2 = $soHeaderData->sign2!=?'<img style="width:80; height:40px" src='.$profile->emp->SIGSVGBASE64.'></img>' :
 								?>
 								<?=$sign2?>
 							</th>
 							<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 								<?php
-									$sign3 = $soHeaderData->sign3!=''?'<img style="width:80; height:40px" src='.$soHeaderData->sign3.'></img>' :'';
+								if($soHeaderData->USER_SIGN3 !=''){
+								   	 $sign3 = '<img style="width:80; height:40px" src='.$soHeaderData->sign3.'></img>';
+								   }else{
+								   	 $sign3 = SignApproved($soHeaderData);
+								   }
+									// $sign3 = $soHeaderData->sign3!=''?'<img style="width:80; height:40px" src='.$soHeaderData->sign3.'></img>' :SignApproved($soHeaderData);
 								?>
 								<?=$sign3?>
 							</th>
@@ -1042,6 +1125,95 @@ Modal::begin([
 		]
 	]);
 Modal::end();
+
+
+/*
+	 * JS AUTH1 | CREATED
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#so-auth1-sign').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+	",$this::POS_READY);
+
+	Modal::begin([
+			'id' => 'so-auth1-sign',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+
+
+
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#so-auth2-sign').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+	",$this::POS_READY);
+
+	Modal::begin([
+			'id' => 'so-auth2-sign',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Signature Authorize</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
+
+
+$this->registerJs("
+		$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+		$('#so-edit-review').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			}),
+",$this::POS_READY);
+
+Modal::begin([
+		'id' => 'so-edit-review',
+		'header' => "<div style='font-family:tahoma, arial, sans-serif;font-size:9pt'> <i class='fa fa-info-circle fa-2x'></i>  Edit </div>",//'<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>New Item</b></h4></div>',
+		// 'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(0,255,0, 1)'
+		]
+	]);
+Modal::end();
+
+
 
 $this->registerJs("
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};

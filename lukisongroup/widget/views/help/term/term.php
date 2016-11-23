@@ -16,7 +16,8 @@ use yii\helpers\Html;
 	$imgTipro12= Html::img('@web/widget/docHelp/img_term/TIPRO12.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:400px;']); 
 	$imgTipro13= Html::img('@web/widget/docHelp/img_term/TIPRO13.PNG',  ['class' => 'pnjg', 'style'=>'width:100px;height:50px;']);
 	$imgTermdata1= Html::img('@web/widget/docHelp/img_term/TERMDATA1.PNG',  ['class' => 'pnjg', 'style'=>'width:200px;height:250px;']); 
-	$imgTermdata2= Html::img('@web/widget/docHelp/img_term/TERMDATA2.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:550px;']); 		
+	$imgTermdata2= Html::img('@web/widget/docHelp/img_term/TERMDATA2.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:550px;']);
+	$imgTermdata= Html::img('@web/widget/docHelp/img_term/TERMDATA.PNG',  ['class' => 'pnjg', 'style'=>'width:1000px;height:400px;']); 	
 ?>	
 <p>
 Penjelasan : Suatu bentuk perjanjian kerjasama yang persyaratannya disepakati oleh kedua belah pihak dalam hal ini retailer dan produsen / principle yang umumnya berlaku 1 tahun.</br>
@@ -64,3 +65,7 @@ Berikut cara pembuatan Term Data :</br>
 <?php  echo $imgTermdata1;?><p></br>
 2. Klik <b>New Term</b> Pada Form Masukan <b>Nama Customers, Nama Principal, Nama Distributor, Period Start, Period End dan Budget awal</b> lalu Klik <b>Create.</b></br></br>
 <?php  echo $imgTermdata2;?><p></br>
+Berikut tampilan awal Term Data :</br>
+<?php  echo $imgTermdata;?><p></br>
+
+

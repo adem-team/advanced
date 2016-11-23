@@ -24,6 +24,8 @@ use lukisongroup\purchasing\models\salesmanorder\SoDetailSearch;
 use lukisongroup\purchasing\models\salesmanorder\SoT2;
 use lukisongroup\purchasing\models\salesmanorder\SoHeader;
 use lukisongroup\purchasing\models\salesmanorder\SoStatus;
+use lukisongroup\purchasing\models\salesmanorder\Auth2Model;
+use lukisongroup\purchasing\models\salesmanorder\Auth3Model;
 use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\Customers;
 
@@ -240,6 +242,27 @@ class SalesmanOrderController extends Controller
     }
 
 
+     public function actionValidSign2()
+    {
+		$model = new Auth2Model();
+		if(Yii::$app->request->isAjax && $model->load($_POST))
+		{
+			Yii::$app->response->format = 'json';
+			return ActiveForm::validate($model);
+		}
+    }
+
+       public function actionValidSign3()
+    {
+		$model = new Auth3Model();
+		if(Yii::$app->request->isAjax && $model->load($_POST))
+		{
+			Yii::$app->response->format = 'json';
+			return ActiveForm::validate($model);
+		}
+    }
+
+
     public function actionCreateNewAdd($cust_kd,$user_id,$id,$cust_nm,$tgl)
     {
       $model = new SoT2();
@@ -282,6 +305,100 @@ class SalesmanOrderController extends Controller
         ]);
       }
     }
+
+
+     public function actionSignAuth2($kdso)
+    {
+      $model = new Auth2Model();
+      $model_header =  $this->findModelHeader($kdso);
+
+      $model_status = new SoStatus();
+
+      $profile=Yii::$app->getUserOpt->Profile_user();
+      $id = $profile->id;
+      # code...
+      if ($model->load(Yii::$app->request->post()) ) {
+
+      	 $transaction = self::Esm_connent()->beginTransaction();
+      	  try{
+      	  	 # SoHeader
+      	  	 $model_header->STT_PROCESS = $model->status;
+      	  	 $model_header->USER_SIGN2 = $id;
+      	  	 $model_header->TGL_SIGN2 = date('Y-m-d h:i:s');
+      	  	 $model_header->save();
+
+
+
+      	  	 # SoStatus
+      	  	 $model_status->KD_SO = $model->kdso;
+      	  	 $model_status->STT_PROCESS = $model->status;
+      	  	 $model_status->ID_USER = $id;
+      	  	 $model_status->save();
+      	  	// ...other DB operations...
+				$transaction->commit();
+			} catch(\Exception $e) {
+				$transaction->rollBack();
+				throw $e;
+			}
+      	
+
+     		 return $this->redirect(['/purchasing/salesman-order/review','id'=>$kdso,'stt'=>1]);
+      }else {
+        return $this->renderAjax('sign_2', [
+            'model' => $model,
+            'kode_som'=>$kdso
+        ]);
+      }
+    }
+
+
+    public function actionSignAuth3($kdso)
+    {
+      $model = new Auth3Model();
+
+       $model_header =  $this->findModelHeader($kdso);
+
+      $model_status = new SoStatus();
+
+      $profile=Yii::$app->getUserOpt->Profile_user();
+      $id = $profile->id;
+      # code...
+      if ($model->load(Yii::$app->request->post()) ) {
+      	
+
+      	 $transaction = self::Esm_connent()->beginTransaction();
+      	  try{
+      	  	 # SoHeader
+      	  	 $model_header->STT_PROCESS = $model->status;
+      	  	 $model_header->USER_SIGN3 = $id;
+      	  	 $model_header->TGL_SIGN2 = date('Y-m-d h:i:s');
+      	  	 $model_header->save();
+
+
+
+      	  	 # SoStatus
+      	  	 $model_status->KD_SO = $model->kdso;
+      	  	 $model_status->STT_PROCESS = $model->status;
+      	  	 $model_status->ID_USER = $id;
+      	  	 $model_status->save();
+      	  	// ...other DB operations...
+				$transaction->commit();
+			} catch(\Exception $e) {
+				$transaction->rollBack();
+				throw $e;
+			}
+     
+           return $this->redirect(['/purchasing/salesman-order/review','id'=>$kdso,'stt'=>1]);
+      }else {
+        return $this->renderAjax('sign_3', [
+            'model' => $model,
+            'kode_som'=>$kdso
+        ]);
+      }
+    }
+
+
+     
 
     public function actionSoShipingReview($cust_kd,$kode_so,$user_id,$tgl)
     {
@@ -387,7 +504,9 @@ class SalesmanOrderController extends Controller
     {		
 		
 			//VIEW KODE_REF
-			$soHeaderData = SoHeader::find()->with('cust')->where(['KD_SO'=>$id])->one(); 		
+			$soHeaderData = SoHeader::find()->with('cust')->where(['KD_SO'=>$id])->one(); 
+
+			// $status_sign = SoStatus::find()->where(['KD_SO'=>$id])->count();		
 			$getSoType=10;
 			$getTGL=$tgl;
 			$getCUST_KD=$cust_kd;
@@ -441,8 +560,28 @@ class SalesmanOrderController extends Controller
 				'user_id'=>$getUSER_ID,
 				'searchModelDetail'=>$searchModelDetail,
 				'model_cus'=>$soHeaderData->cust,
-				'soHeaderData'=>$soHeaderData
+				'soHeaderData'=>$soHeaderData,
+				// 'status'=>$status_sign
 			]); 
+		}
+
+
+
+		public function actionSoEditReview($kdso){
+
+			$model = $this->findModelHeader($kdso);
+		      # code...
+		      if ($model->load(Yii::$app->request->post()) ) {
+		      	
+		          $model->save();
+		           return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model->USER_SIGN1,'tgl'=>$model->TGL]);
+		      }else {
+		        return $this->renderAjax('so_tgl_kirim', [
+		            'model' => $model,
+		            'kode_som'=>$kdso
+		        ]);
+		      }
+
 		}
 	
 
@@ -510,6 +649,8 @@ class SalesmanOrderController extends Controller
 			$getTGL=$modelSoT2->TGL;
 			$getCUST_KD=$modelSoT2->CUST_KD;
 			$getUSER_ID=$modelSoT2->USER_ID;
+
+			// $status_sign = SoStatus::find()->where(['KD_SO'=>$id])->count();
 			
 			$searchModelDetail= new SoDetailSearch([
 				// 'TGL'=>$getTGL,
@@ -570,7 +711,8 @@ class SalesmanOrderController extends Controller
 				'user_id'=>$soHeaderData->USER_SIGN1,
 				'searchModelDetail'=>$searchModelDetail,
 				'model_cus'=>$modelSoT2->cust,
-				'soHeaderData'=>$soHeaderData
+				'soHeaderData'=>$soHeaderData,
+				// 'status'=>$status_sign
 			]); 
 		}
 	}
