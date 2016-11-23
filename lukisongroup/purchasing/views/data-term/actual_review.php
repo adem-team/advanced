@@ -445,7 +445,7 @@ $id_term = $_GET['id'];
 		}elseif($value[$key]['FIELD'] == 'nminvest'){
 			$attDinamikInputActual[]=[
 							/* Attribute */
-							'class'=>'kartik\grid\EditableColumn',
+							// 'class'=>'kartik\grid\EditableColumn',
 							'attribute'=>$value[$key]['FIELD'],
 							// 'refreshGrid'=>true,
 							'label'=>$value[$key]['label'],
@@ -467,20 +467,20 @@ $id_term = $_GET['id'];
 							// 	//return (101 == $model->STATUS || 10 == $model->STATUS  || 3 == $model->STATUS  || 4 == $model->STATUS);// or 101 == $roHeader->STATUS);
 							// 	return (0 <> $model->STATUS || 103==$headerStatus); // Allow Status Process = 0);
 							// },
-							'editableOptions' => [
-								'header' => 'Update Toko',
-								'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
-								'size' => 'xs',
-							'options' => [
-							  'data' =>$data_toko,
-							  'pluginOptions' => [
-								'allowClear' => true,
+							// 'editableOptions' => [
+							// 	'header' => 'Update Toko',
+							// 	'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+							// 	'size' => 'xs',
+							// 'options' => [
+							//   'data' =>$data_toko,
+							//   'pluginOptions' => [
+							// 	'allowClear' => true,
 								
-							  ],
-							],    
-								// Refresh Display
-								'displayValueConfig' => $data_toko,
-								],
+							//   ],
+							// ],    
+							// 	// Refresh Display
+							// 	'displayValueConfig' => $data_toko,
+							// 	],
 								'headerOptions'=>[
 								'style'=>[
 								'text-align'=>'center',

@@ -45,8 +45,8 @@ class SoHeader extends \yii\db\ActiveRecord
             [['KD_SO'], 'required'],
             [['CUST_ID','USER_SIGN1','parent_cusid'], 'required','on'=>'create'],
             [['STT_PROCESS'], 'integer'],
-            [['TGL', 'TGL_SIGN2', 'TGL_SIGN3', 'TGL_SIGN4', 'TGL_SIGN5','CUST_ID','NOTE','TOP_DURATION','TOP_TYPE'], 'safe'],
-            [['KD_SO', 'USER_SIGN1', 'USER_SIGN2', 'USER_SIGN3', 'USER_SIGN4', 'USER_SIGN5'], 'string', 'max' => 50],
+            [['TGL', 'TGL_SIGN2', 'TGL_SIGN3', 'TGL_SIGN4', 'TGL_SIGN5','CUST_ID','NOTE','TOP_DURATION','TOP_TYPE','TGL_KIRIM','USER_SIGN2','USER_SIGN1', 'USER_SIGN3', 'USER_SIGN4', 'USER_SIGN5'], 'safe'],
+            [['KD_SO'], 'string', 'max' => 50],
         ];
     }
 
