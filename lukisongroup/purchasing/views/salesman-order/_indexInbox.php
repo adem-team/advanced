@@ -680,6 +680,8 @@ use lukisongroup\hrd\models\Dept;
 		],
 
 	];
+
+	
 	
 	/*
 	 * INBOX SALESAN ORDER - MD Sales

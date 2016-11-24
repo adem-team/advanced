@@ -38,7 +38,7 @@ class RptEsmChartSalesmdController extends Controller
 				'class' => \yii\filters\Cors::className(),
 				'cors' => [
 					// restrict access to
-					'Origin' => ['http://lukisongroup.com','http://www.lukisongroup.com'],
+					'Origin' => ['http://lukisongroup.com','http://www.lukisongroup.com','http://labtest1-erp.int'],
 					'Access-Control-Request-Method' => ['POST', 'PUT','GET'],
 					// Allow only POST and PUT methods
 					'Access-Control-Request-Headers' => ['X-Wsse'],
@@ -85,6 +85,143 @@ class RptEsmChartSalesmdController extends Controller
 				) x2 on x2.TGL=x1.TGL
 				#WHERE MONTH(x1.TGL)=10 AND x1.TGL <= CURDATE()
 				WHERE MONTH(x1.TGL)=month('".$tglParam."') AND x1.TGL <= CURDATE()
+			")->queryAll(), 
+			'pagination' => [
+					'pageSize' => 200,
+			],				 
+		]);
+		$_modelVisiting=ArrayHelper::toArray($_visiting->getModels());		
+		foreach($_modelVisiting as $row => $value){			
+			$hari[]=["label"=>$value['hari']."-".$value['TGL_NO']."-".$value['bulan']];					
+			$cc[]=["value"=> strval($value['CCval'])];					
+			$ac[]=["value"=>strval($value['ACval'])];					
+			$ec[]=["value"=> strval($value['ECval'])];					
+			$case[]=["value"=> strval($value['CASEval'])];
+			$acSum[] =$value['ACval'];
+			$ecSum[] =$value['ECval'];
+		};
+		//***get AVG AC FROM data visiting
+		$cntAC=count($acSum);
+		$sumAC =array_sum($acSum);
+		$avgAC=($sumAC/$cntAC);
+		$avgACnm="AvgAC (".number_format($avgAC,2).")";
+		//***get AVG EC FROM data visiting
+		$cntEC=count($ecSum);
+		$sumEC =array_sum($ecSum);
+		$avgEC=($sumEC/$cntEC);
+		$avgECnm="AvgEC (".number_format($avgEC,2).")";
+		
+		/**
+		 * Maping Chart 
+		 * Type : msline
+		 * 
+		*/
+		$rsltSrc='{
+			"chart": {
+				"caption": " Daily Customers Visits",
+				"subCaption": "Custommer Call, Active Customer, Efictif Customer",
+				"captionFontSize": "12",
+				"subcaptionFontSize": "10",
+				"subcaptionFontBold": "0",
+				"paletteColors": "#cc0000,#1e86e5,#16ce87,#b7843d",
+				"bgcolor": "#ffffff",
+				"showBorder": "0",
+				"showShadow": "0",
+				"showCanvasBorder": "0",
+				"usePlotGradientColor": "0",
+				"legendBorderAlpha": "0",
+				"legendShadow": "0",
+				"showAxisLines": "0",
+				"showAlternateHGridColor": "0",
+				"divlineThickness": "1",
+				"divLineIsDashed": "1",
+				"divLineDashLen": "1",
+				"divLineGapLen": "1",
+				"xAxisName": "Day",
+				"showValues": "0"               
+			},
+			"categories": [
+				{
+					"category": '.Json::encode($hari).'
+				}
+			],
+			"dataset": [
+				{
+					"seriesname": "CC",
+					"data":'.Json::encode($cc).'
+				}, 
+				{
+					"seriesname": "AC",
+					"data":'.Json::encode($ac).'
+				},
+				{
+					"seriesname": "EC",
+					"data":'.Json::encode($ec).'
+				},
+				{
+					"seriesname": "CASE",
+					"data":'.Json::encode($case).'
+				}
+			],
+			"trendlines": [
+                {
+                    "line": [
+                        {
+                            "startvalue": "'.$avgAC.'",
+                            "color": "#0b0d0f",
+                            "valueOnRight": "1",
+                            "displayvalue":"'.$avgACnm.'"
+                        },
+						{
+                            "startvalue": "'.$avgEC.'",
+                            "color": "#0b0d0f",
+                            "valueOnRight": "1",
+                            "displayvalue": "'.$avgECnm.'"
+                        }
+                    ]
+                }
+            ]
+			
+		}';
+		
+		return json::decode($rsltSrc);
+		//return $avgAc;
+	}
+	
+	/**
+     * DAILY CUSTOMER VISIT PER SALES.
+     * @author ptr.nov [ptr.nov@gmail.com]
+	 * @since 1.2
+     */
+	public function actionVisitPerSales(){
+		$request = Yii::$app->request;		
+		$tgl= $request->get('tgl');	
+		//$tglParam=$tgl!=''?$tgl:date('Y-m-d');
+		$tglParam=$tgl!=''?$tgl:date('m');
+		$userIdParam= $request->get('id');
+		
+		//***get count data visiting
+		$_visiting= new ArrayDataProvider([
+			'allModels'=>Yii::$app->db_esm->createCommand("	
+				SELECT 	x1.TGL, month(x1.TGL) AS bulan,DATE_FORMAT(x1.TGL,'%d') as TGL_NO,LEFT(COMPONEN_hari(x1.TGL),2) as hari, 
+						x1.CCval,x1.ACval,x2.ECval,x1.CASEval,x2.ACval_COMPARE,x1.USER_ID			
+				FROM
+				(	SELECT 
+					sum(CASE WHEN  a1.CUST_ID <> '' AND a1.STATUS_CASE<>1 THEN  1 ELSE 0 END) AS CCval,
+					sum(CASE WHEN a1.CUST_ID <> '' AND a1.STATUS= 1 THEN  1 ELSE 0 END) AS ACval,
+					sum(CASE WHEN a1.CUST_ID <> '' AND a1.STATUS_CASE=1 THEN  1 ELSE 0 END) AS CASEval,a1.TGL,a1.USER_ID
+					FROM c0002scdl_detail a1 LEFT JOIN c0001 a2 ON a2.CUST_KD=a1.CUST_ID
+					WHERE a1.USER_ID AND a1.STATUS<>3 AND a2.CUST_NM not LIKE 'customer demo%' 
+					GROUP BY  a1.TGL,a1.USER_ID
+				) x1 LEFT JOIN
+				(	SELECT sum(CASE WHEN  b1.ID IS NOT NULL THEN  1 ELSE 0 END) AS ACval_COMPARE,b1.USER_ID,
+							sum(CASE WHEN b1.STATUS_EC IS NOT NULL THEN  1 ELSE 0 END) AS ECval,b1.TGL
+					FROM c0002rpt_cc_time b1
+					WHERE b1.CUST_NM not LIKE 'customer demo%'	
+					GROUP BY b1.TGL,b1.USER_ID
+				) x2 on x2.TGL=x1.TGL AND x2.USER_ID=x1.USER_ID
+				WHERE  MONTH(x1.TGL)='".$tglParam."' AND x1.TGL <= CURDATE() AND x1.USER_ID='".$userIdParam."'
+				#WHERE x1.USER_ID='".$userIdParam."' AND MONTH(x1.TGL)=10 AND x1.TGL <= CURDATE()
 			")->queryAll(), 
 			'pagination' => [
 					'pageSize' => 200,

@@ -21,6 +21,8 @@ use lukisongroup\master\models\Unitbarang;
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\hrd\models\Dept;
 
+
+
 	/*
 	 * Declaration Componen User Permission
 	 * Function getPermission

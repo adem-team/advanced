@@ -17,13 +17,20 @@ AppAssetDahboardDatamaster::register($this);
 use ptrnov\fusionchart\ChartAsset;
 ChartAsset::register($this);
 
+	$btn_srchData = Html::button(Yii::t('app', 'Search Data'),
+						['value'=>url::to(['ambil-tanggal-chart']),
+						'id'=>'modal-button-monthly-id',
+						'class'=>"btn btn-info btn-sm",
+					  ]);
+				  
+					  
 	$mslineCustomerVisit= Chart::Widget([
-		'urlSource'=> url::base().'/dashboard/rpt-esm-chart-salesmd/visit',
+		'urlSource'=> url::base().'/dashboard/rpt-esm-chart-salesmd/visit-per-sales?id=56',
 		'userid'=>'piter@lukison.com',
 		'dataArray'=>'[]',//$actionChartGrantPilotproject,				//array scource model or manual array or sqlquery
 		'dataField'=>'[]',//['label','value'],							//field['label','value'], normaly value is numeric
 		'type'=>'msline',//msline//'bar3d',//'gantt',					//Chart Type 
-		'renderid'=>'msline-dashboard-salesmd-visit',								//unix name render
+		'renderid'=>'msline-monthly-salesmd-visit',								//unix name render
 		'autoRender'=>true,
 		'width'=>'100%',
 		'height'=>'500%',
@@ -64,6 +71,7 @@ ChartAsset::register($this);
 		<div class="col-lg-9" style="height:600px;">
 			<div class="row">
 				<span class="w3-right w3-opacity">4 week</span>
+				<div><?=$btn_srchData?></div>
 				<hr class="w3-clear">
 				<div class="col-xs-6 col-sm-3 col-md-3 col-lg-3">
 					<!-- NOO!-->
@@ -170,4 +178,29 @@ ChartAsset::register($this);
 		</div>		
 	</div>
 </div> 
-	  
+
+<?php
+	$this->registerJs("		
+		$.fn.modal.Constructor.prototype.enforceFocus = function(){};	
+		$(document).on('click','#modal-button-monthly-id', function(ehead){ 			  
+			$('#button-monthly-id').modal('show')
+			.find('#button-monthly-id')
+			.load(ehead.target.value);
+		});		  
+			 
+	",$this::POS_READY);
+	 
+     Modal::begin([		
+         'id' => 'button-monthly-id',		
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search"></div><div><h4 class="modal-title"> SEARCH DATA</h4></div>',	
+		 'size' => Modal::SIZE_SMALL,	
+         'headerOptions'=>[		
+                 'style'=> 'border-radius:5px; background-color: rgba(90, 171, 255, 0.7)',		
+         ],		
+     ]);		
+		echo "<div id='button-monthly-id'></div>";
+     Modal::end();
+	 
+	//$("#msline-salesmd-visit").updateFusionCharts({dataSource: 'jsonURL', dataFormat: 'MyNewChart.json’});
+
+?>	

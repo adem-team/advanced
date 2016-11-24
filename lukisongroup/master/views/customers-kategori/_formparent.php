@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
+use kartik\widgets\Select2;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\master\models\Kategoricus */
@@ -18,16 +20,33 @@ use yii\helpers\ArrayHelper;
 <div class="kategoricus-form">
 
     <?php $form = ActiveForm::begin([
-	  'id'=>'createform',
+	  'id'=>$model->formName(),
       'enableClientValidation' => true,
+      'enableAjaxValidation'=>true,
+      'validationUrl'=>Url::toRoute('/master/customers-kategori/valid')
 
 	]); ?>
 
 
+    <?=  $form->field($model, 'parentnama')->checkbox() ?>
 
     <?= $form->field($model, 'CUST_KTG_NM')->textInput(['maxlength' => true])->label('Nama Parent') ?>
 
-      <?= $form->field($model, 'STATUS')->dropDownList(['' => ' -- Silahkan Pilih --', '0' => 'Tidak Aktif', '1' => 'Aktif']) ?>
+      <div id="grp">
+      <?php
+  echo $form->field($model, 'CUST_KTG_PARENT')->widget(Select2::classname(), [
+         'data' => $parent,
+        'options' => [
+        'placeholder' => 'Pilih Parent ...'],
+        'pluginOptions' => [
+            'allowClear' => true
+             ],
+
+    ]);
+    ?>
+  </div>
+
+
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
@@ -39,33 +58,20 @@ use yii\helpers\ArrayHelper;
 <?php
 $this->registerJs("
 
-   $('#createform').on('beforeSubmit',function(e)
-    {
-        var \$form = $(this);
-        $.post(
-            \$form.attr('action'),
-            \$form.serialize()
 
-        )
+$('#kategoricus-parentnama').click(function(){
+ var checkedValue = $('#kategoricus-parentnama:checked').val();
 
-            .done(function(result){
-			        if(result == 1 )
-                                          {
-
-                                             $(document).find('#formparent').modal('hide');
-                                             $('#createform').trigger('reset');
-                                             $.pjax.reload({container:'#gv-kat'});
-                                          }
-                                        else{
-                                           console.log(result)
-                                        }
-
-            });
-
-return false;
-
+  if(checkedValue == 1)
+  {
+    $('#grp').hide();
+  }
+  else
+  {
+      $('#grp').show();
+  }
 
 });
 
 
- ",$this::POS_END);
+ ",$this::POS_READY);
