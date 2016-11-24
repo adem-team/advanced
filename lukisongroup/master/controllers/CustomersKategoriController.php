@@ -207,8 +207,7 @@ class CustomersKategoriController extends Controller
 
  
 
-
-    /**
+     /**
      * Create  Kategoricus model.
      * Create  parent Kategoricus.
      * @author wawan
@@ -219,33 +218,68 @@ class CustomersKategoriController extends Controller
     {
         $model = new Kategoricus();
 
+         $post = Yii::$app->request->post();
+
+         $val = $post['Kategoricus']['parentnama'];
+
+
         if ($model->load(Yii::$app->request->post()) ) {
 
+          if($val){
+              $transaction = Kategoricus::getDb()->beginTransaction();
 
-          $data = Kategoricus::find()->count();
-          if($data == 0)
-          {
+              try {
+                    $model->STATUS = 1;
+                    $model->CREATED_BY =  Yii::$app->user->identity->username;
+                    $model->CREATED_AT = date("Y-m-d H:i:s");
+                    $model->save();
 
-              $model->CUST_KTG_PARENT = 1;
-          }
-          else{
-              $datax = Kategoricus::find()->MAX('CUST_KTG');
+                  Kategoricus::getDb()->createCommand()->update('c0001k', 
+                      ['CUST_KTG_PARENT'=>$model->CUST_KTG], 
+                      [
+                        'CUST_KTG'=>$model->CUST_KTG,
+                      ])->execute();
+                    // ...other DB operations...
+                    $transaction->commit();
+                } catch(\Exception $e) {
+                    $transaction->rollBack();
+                    throw $e;
+                }
 
-                $model->CUST_KTG_PARENT = $datax+1;
-          }
+            }else{
 
-       	    if($model->validate())
-            {
-
-
+                $model->STATUS = 1;
                 $model->CREATED_BY =  Yii::$app->user->identity->username;
                 $model->CREATED_AT = date("Y-m-d H:i:s");
                 $model->save();
 
+            }
+
+
+          // $data = Kategoricus::find()->count();
+          // if($data == 0)
+          // {
+
+          //     $model->CUST_KTG_PARENT = 1;
+          // }
+          // else{
+          //     $datax = Kategoricus::find()->MAX('CUST_KTG');
+
+          //       $model->CUST_KTG_PARENT = $datax+1;
+          // }
+
+          //   if($model->validate())
+          //   {
+
+
+          //       $model->CREATED_BY =  Yii::$app->user->identity->username;
+          //       $model->CREATED_AT = date("Y-m-d H:i:s");
+          //       $model->save();
+
 
               
 
-            }
+          //   }
             return $this->redirect(['esm-index-kategori']);
         } else {
             return $this->renderAjax('_formparent', [
