@@ -343,8 +343,9 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			},
 			'detail'=>function ($model, $key, $index, $column){
 				$searchModelDetail = new SoDetailSearch([
-					'TGL'=>$model['TGL'],
-					'CUST_KD'=>$model['CUST_KD']
+					'KODE_REF'=>$model['KODE_REF'],
+					'CUST_KD'=>$model['CUST_KD'],
+					'USER_ID'=>$model['USER_ID'],
 				]);
 				$aryProviderSoDetailOutbox = $searchModelDetail->searchDetail(Yii::$app->request->queryParams);
 				return Yii::$app->controller->renderPartial('_indexOutboxExpand1',[

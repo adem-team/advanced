@@ -13,7 +13,7 @@ use yii\helpers\ArrayHelper;
 use yii\web\Request;
 use kartik\daterange\DateRangePicker;
 use yii\db\ActiveRecord;
-use yii\data\ArrayDataProvider;
+// use yii\data\ArrayDataProvider;
 	
 /*
  * INBOX SALESAN ORDER - MD Sales
@@ -377,8 +377,8 @@ use yii\data\ArrayDataProvider;
 
 
 $_gvInboxSoDetail= GridView::widget([
-	'id'=>'gv-so-detail-md-inbox',
-	'dataProvider'=> $aryProviderSoDetailInbox,
+	'id'=>'gv-so-detail-md-inbox1',
+	'dataProvider'=> $aryProviderSoDetailInbox1,
 	//'filterModel' => $searchModel,
 	'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
 	'showPageSummary' => true,
@@ -387,7 +387,7 @@ $_gvInboxSoDetail= GridView::widget([
 	'pjaxSettings'=>[
 		'options'=>[
 			'enablePushState'=>false,
-			'id'=>'gv-so-detail-md-inbox',
+			'id'=>'gv-so-detail-md-inbox1',
 		   ],
 	],
 	'hover'=>true, //cursor select
