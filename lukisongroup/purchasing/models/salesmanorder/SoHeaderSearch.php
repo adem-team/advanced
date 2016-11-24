@@ -125,7 +125,7 @@ class SoHeaderSearch extends Model
 						 LEFT JOIN c0002scdl_detail x5 on x5.TGL=x1.TGL AND x5.CUST_ID=x1.CUST_KD
 						 LEFT JOIN c0014 x6 on x6.TGL=x1.TGL AND x6.ID_USER=x1.USER_SIGN1
 					WHERE 
-						(x1.STT_PROCESS<>'105' AND  x1.CREATE_BY<>'".$userLogin."')
+						(x1.STT_PROCESS<>'105' OR x1.STT_PROCESS IS NULL) AND  (x1.CREATE_BY IS NULL OR x1.CREATE_BY<>'".$userLogin."')
 						AND (x1.USER_SIGN1 IS NULL OR x1.USER_SIGN1<>'".$userLogin."')
 						AND (x1.USER_SIGN2 IS NULL OR x1.USER_SIGN2<>'".$userLogin."') 
 						AND (x1.USER_SIGN3 IS NULL OR x1.USER_SIGN3<>'".$userLogin."') 
