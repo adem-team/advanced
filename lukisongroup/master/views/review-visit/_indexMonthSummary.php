@@ -18,7 +18,7 @@ use ptrnov\fusionchart\ChartAsset;
 ChartAsset::register($this);
 
 	$btn_srchData = Html::button(Yii::t('app', 'Search Data'),
-						['value'=>url::to(['ambil-tanggal-chart']),
+						['value'=>url::to(['ambil-monthly']),
 						'id'=>'modal-button-monthly-id',
 						'class'=>"btn btn-info btn-sm",
 					  ]);
