@@ -38,6 +38,7 @@ ChartAsset::register($this);
 <?php yii\widgets\Pjax::end() ?>	
 
 <?php
+$url_dev = Url::base(true);
 $this->registerJs("
 	/**
 	* Before Action Handling Modal.
@@ -52,7 +53,8 @@ $this->registerJs("
 		 }; 		
 		var valTgl = $('#dynamicmodel-tglchart').val();
 		$.ajax({
-			url: 'http://lukisongroup.com/dashboard/rpt-esm-chart-salesmd/visit',
+			//url: 'http://lukisongroup.com/dashboard/rpt-esm-chart-salesmd/visit',
+			url: '".$url_dev."/dashboard/rpt-esm-chart-salesmd/visit',
 			type: 'GET',
 			//data: form.serialize(),
 			data:'tgl='+valTgl,
@@ -74,7 +76,8 @@ $this->registerJs("
 		});
 		
 		$.ajax({
-			url: 'http://lukisongroup.com/dashboard/rpt-esm-chart-salesmd/visit-stock',
+			//url: 'http://lukisongroup.com/dashboard/rpt-esm-chart-salesmd/visit-stock',
+			url: '".$url_dev."/dashboard/rpt-esm-chart-salesmd/visit-stock',
 			type: 'GET',
 			data:'tgl='+valTgl,
 			success: function (response_stock) {
@@ -95,7 +98,8 @@ $this->registerJs("
 		});
 		
 		$.ajax({
-			url: 'http://lukisongroup.com/dashboard/rpt-esm-chart-salesmd/visit-request',
+			//url: 'http://lukisongroup.com/dashboard/rpt-esm-chart-salesmd/visit-request',
+			url: '".$url_dev."/dashboard/rpt-esm-chart-salesmd/visit-request',
 			type: 'GET',
 			data:'tgl='+valTgl,
 			success: function (response_stock) {

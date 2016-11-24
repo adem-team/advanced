@@ -118,53 +118,7 @@ $headColomnBT=[
 ];
 $gvHeadColomnBT = ArrayHelper::map($headColomnBT, 'ID', 'ATTR');
 
-/*GRIDVIEW ARRAY ACTION*/
-$attDinamik[]=[
-  'class'=>'kartik\grid\ActionColumn',
-  'dropdown' => true,
-  'template' => '{edit} {view} {update}',
-  'dropdownOptions'=>['class'=>'pull-left dropup','style'=>['disable'=>true]],
-  'dropdownButton'=>[
-    'class' => $actionClass,
-  ],
-  'buttons' => [ 'edit' =>function($url, $model, $key){
-    return  '<li>' .  Html::a('<span class="glyphicon glyphicon-plus"></span>'.Yii::t('app', 'Tambah'),['create','id'=> $model->CUST_KTG_PARENT],['data-toggle'=>"modal",'data-target'=>"#formparent",
-                            'data-title'=> $model->CUST_KTG_NM,
-                                ]).'<li>';},
-                  'view' =>function($url, $model, $key){
-                    return  '<li>' . Html::a('<span class="glyphicon glyphicon-eye-open"></span>'.Yii::t('app', 'View'),['view','id'=>$model->CUST_KTG],['data-toggle'=>"modal", 'data-target'=>"#viewparent",'data-title'=> $model->CUST_KTG_PARENT, ]).'</li>'; },
 
-                         'update' =>function($url, $model, $key){
-                                 return  '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Update'),['update-kate','id'=>$model->CUST_KTG],[
-                                                            'data-toggle'=>"modal",
-                                                            'data-target'=>"#formparent",
-                                                            'data-title'=> $model->CUST_KTG_PARENT,
-                                                            ]).'</li>';
-
-                                                            },
-
-                                              ],
-
-                                         
-  'headerOptions'=>[
-    'style'=>[
-      'text-align'=>'center',
-      'width'=>'10px',
-      'font-family'=>'tahoma, arial, sans-serif',
-      'font-size'=>'9pt',
-      'background-color'=>'rgba(97, 211, 96, 0.3)',
-    ]
-  ],
-  'contentOptions'=>[
-    'style'=>[
-      'text-align'=>'center',
-      'width'=>'10px',
-      'height'=>'10px',
-      'font-family'=>'tahoma, arial, sans-serif',
-      'font-size'=>'9pt',
-    ]
-  ],
-];
 
 /*GRIDVIEW ARRAY ROWS*/
 foreach($gvHeadColomnBT as $key =>$value[]){
@@ -245,6 +199,54 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 
 };
 
+/*GRIDVIEW ARRAY ACTION*/
+$attDinamik[]=[
+  'class'=>'kartik\grid\ActionColumn',
+  'dropdown' => true,
+  'template' => '{edit} {view} {update}',
+  'dropdownOptions'=>['class'=>'pull-left dropup','style'=>['disable'=>true]],
+  'dropdownButton'=>[
+    'class' => $actionClass,
+  ],
+  'buttons' => [ 'edit' =>function($url, $model, $key){
+    return  '<li>' .  Html::a('<span class="glyphicon glyphicon-plus"></span>'.Yii::t('app', 'Tambah'),['create','id'=> $model->CUST_KTG_PARENT],['data-toggle'=>"modal",'data-target'=>"#formparent",
+                            'data-title'=> $model->CUST_KTG_NM,
+                                ]).'<li>';},
+                  'view' =>function($url, $model, $key){
+                    return  '<li>' . Html::a('<span class="glyphicon glyphicon-eye-open"></span>'.Yii::t('app', 'View'),['view','id'=>$model->CUST_KTG],['data-toggle'=>"modal", 'data-target'=>"#viewparent",'data-title'=> $model->CUST_KTG_PARENT, ]).'</li>'; },
+
+                         'update' =>function($url, $model, $key){
+                                 return  '<li>'. Html::a('<span class="glyphicon glyphicon-pencil"></span>'.Yii::t('app', 'Update'),['update-kate','id'=>$model->CUST_KTG],[
+                                                            'data-toggle'=>"modal",
+                                                            'data-target'=>"#formparent",
+                                                            'data-title'=> $model->CUST_KTG_PARENT,
+                                                            ]).'</li>';
+
+                                                            },
+
+                                              ],
+
+                                         
+  'headerOptions'=>[
+    'style'=>[
+      'text-align'=>'center',
+      'width'=>'10px',
+      'font-family'=>'tahoma, arial, sans-serif',
+      'font-size'=>'9pt',
+      'background-color'=>'rgba(97, 211, 96, 0.3)',
+    ]
+  ],
+  'contentOptions'=>[
+    'style'=>[
+      'text-align'=>'center',
+      'width'=>'10px',
+      'height'=>'10px',
+      'font-family'=>'tahoma, arial, sans-serif',
+      'font-size'=>'9pt',
+    ]
+  ],
+];
+
 
 /*SHOW GRID VIEW LIST*/
  $tabcrud =  GridView::widget([
@@ -267,7 +269,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
                         ['modelClass' => 'Kategoricus',]),'/master/customers-kategori/createparent',[
                                                             'data-toggle'=>"modal",
                                                             'data-target'=>"#formparent",
-                                                            'class' => 'btn btn-success'
+                                                            'class' => 'btn btn-success btn-xs'
                                                             ])
                     ],
   'toolbar'=> [

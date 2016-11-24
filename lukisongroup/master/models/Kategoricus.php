@@ -22,7 +22,7 @@ class Kategoricus extends \yii\db\ActiveRecord
      * @inheritdoc
      */
 
-
+    public $parentnama;
     public static function tableName()
     {
         return 'c0001k';
@@ -44,8 +44,9 @@ class Kategoricus extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-						[['CUST_KTG_NM','STATUS'], 'required'],
-            [['CUST_KTG_PARENT', 'STATUS'], 'integer'],
+			[['CUST_KTG_NM'], 'required','on'=>'parent'],
+            [['CUST_KTG_NM','CUST_KTG_PARENT'], 'required','on'=>'child'],
+            [['CUST_KTG_PARENT', 'STATUS','CUST_KTG'], 'integer'],
             [['CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['CUST_KTG_NM'], 'string', 'max' => 255],
             [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 100]
@@ -58,6 +59,7 @@ class Kategoricus extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+            'parentnama'=> 'Is Parent',
             'CUST_KTG' => 'Cust  Ktg',
             'CUST_KTG_PARENT' => 'Customer Kategori Parent',
             'CUST_KTG_NM' => 'Customers Kategori',

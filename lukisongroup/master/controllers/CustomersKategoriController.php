@@ -108,15 +108,10 @@ class CustomersKategoriController extends Controller
         {
             $model->UPDATED_AT = date("Y-m-d H:i:s");
             $model->UPDATED_BY = Yii::$app->user->identity->username;
-          if($model->save())
-          {
-            echo 1;
-          }
-          else{
-            echo 0;
-          }
+          $model->save();
+        
         }
-
+         return $this->redirect(['esm-index-kategori']);
           //  return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_form_child', [
@@ -140,6 +135,34 @@ class CustomersKategoriController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
+
+
+  /**
+     * validasi ajax in page _formparent
+     * @author wawan
+     * @since 1.1.0
+     * @return mixed
+     */
+      public function actionValid()
+      {
+        # code...
+        $post = Yii::$app->request->post();
+        if($post['Kategoricus']['parentnama'] == 1)
+        {
+          $model = new Kategoricus();
+          $model->scenario = "parent";
+        }else{
+          $model = new Kategoricus();
+          $model->scenario = "child";
+        }
+
+          // $model = new Customers();
+        if(Yii::$app->request->isAjax && $model->load($_POST))
+        {
+          Yii::$app->response->format = 'json';
+          return ActiveForm::validate($model);
+        }
+      }
     
 
 
@@ -169,17 +192,12 @@ class CustomersKategoriController extends Controller
             $model->STATUS = 1;
 					  $model->CREATED_BY =  Yii::$app->user->identity->username;
 						$model->CREATED_AT = date("Y-m-d H:i:s");
-            if($model->save())
-            {
-              echo 1;
-            }
-            else{
-              echo 0;
-            }
+            $model->save();
+
 
 				}
 
-            // return $this->redirect(['index']);
+            return $this->redirect(['esm-index-kategori']);
         } else {
             return $this->renderAjax('_form', [
                 'model' => $model,
@@ -202,6 +220,8 @@ class CustomersKategoriController extends Controller
         $model = new Kategoricus();
 
         if ($model->load(Yii::$app->request->post()) ) {
+
+
           $data = Kategoricus::find()->count();
           if($data == 0)
           {
@@ -220,20 +240,27 @@ class CustomersKategoriController extends Controller
 
                 $model->CREATED_BY =  Yii::$app->user->identity->username;
                 $model->CREATED_AT = date("Y-m-d H:i:s");
-                if($model->save())
-                {
-                  echo 1;
-                }
-                else{
-                  echo 0;
-                }
+                $model->save();
+
+
+              
 
             }
+            return $this->redirect(['esm-index-kategori']);
         } else {
             return $this->renderAjax('_formparent', [
                 'model' => $model,
+                'parent'=> self::AryParent()
             ]);
         }
+    }
+
+
+    public function AryParent()
+    {
+       $sql = Kategoricus::find()->where('CUST_KTG = CUST_KTG_PARENT')->all();
+
+       return ArrayHelper::map($sql, 'CUST_KTG','CUST_KTG_NM');
     }
 
 
