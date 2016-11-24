@@ -299,6 +299,8 @@ use lukisongroup\hrd\models\Dept;
 				return GridView::ROW_COLLAPSED;
 			},
 			'detail'=>function ($model, $key, $index, $column){
+
+
 				/* $aryProviderSoDetailInbox= new ArrayDataProvider([
 					'allModels'=>Yii::$app->db_esm->createCommand("
 						SELECT x1.ID,x1.TGL,x1.WAKTU_INPUT_INVENTORY,x1.CUST_KD,x1.CUST_NM,x1.KD_BARANG,x1.NM_BARANG,x1.SO_QTY,x1.SO_TYPE,x1.POS,x1.STATUS,x1.ID_GROUP,
@@ -324,14 +326,18 @@ use lukisongroup\hrd\models\Dept;
 						'pageSize' => 1000,
 					]
 				]); */
-				$searchModelDetail = new SoDetailSearch([
-					'TGL'=>$model['TGL'],
-					'CUST_KD'=>$model['CUST_KD']
+				$searchModelDetailx = new SoDetailSearch([
+					// 'TGL'=>$model['TGL'],
+
+					'KODE_REF'=>$model['KODE_REF'],
+					'CUST_KD'=>$model['CUST_KD'],
+					'USER_ID'=>$model['USER_ID'],
 				]);
-				$aryProviderSoDetailInbox = $searchModelDetail->searchDetail(Yii::$app->request->queryParams);
+				$aryProviderSoDetailInbox = $searchModelDetailx->searchDetail1(Yii::$app->request->queryParams);
 				return Yii::$app->controller->renderPartial('_indexInboxExpand1',[
 					'model'=>$model,
-					'aryProviderSoDetailInbox'=>$aryProviderSoDetailInbox
+					'aryProviderSoDetailInbox2'=>$aryProviderSoDetailInbox,
+					'searchModelDetailx'=>$searchModelDetailx
 				]); 
 			},
 			'collapseTitle'=>'Close Exploler',

@@ -26,8 +26,7 @@ $city = (new \yii\db\Query())
    				 ->where(['CITY_ID'=>$soHeaderData->cust->CITY_ID])
     			 ->one();
 
-
-
+								
 
 	/*
 	 * SIGNATURE AUTH2 | CHECKED
@@ -793,7 +792,7 @@ $_gvSoDetail= GridView::widget([
 		'heading'=>false,//tombolCreate($cust_kd,$kode_so,$user_id,$ary[0]['CUST_NM'],$tgl),//$this->render('indexTimelineStatus'),//false //'<div> NO.SO :'.date("d-M-Y")
 		'before'=>'SO NO : '. $kode_so,
 		'after'=>false,
-		'footer'=>'<div>asd dsadas ad asd asdas d asd as d ad as d asd wrfddsfds sdf sdfsdf sdf sdfsdfsdfds fsd fsd fds fdsfdsfdsf dsfdsf sdf sd</div>'		
+		'footer'=>'<div>'.$soHeaderData['ISI_MESSAGES'].'</div>'		
 	]
 ]);
 
@@ -1017,11 +1016,17 @@ $_gvSoDetail= GridView::widget([
 							</th>
 							<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 								<?php
-								if($soHeaderData->USER_SIGN3 !=''){
+								if($soHeaderData->USER_SIGN2 !='')
+								{
+									if($soHeaderData->USER_SIGN3 !=''){
 								   	 $sign3 = '<img style="width:80; height:40px" src='.$soHeaderData->sign3.'></img>';
 								   }else{
 								   	 $sign3 = SignApproved($soHeaderData);
 								   }
+								}
+
+
+								
 									// $sign3 = $soHeaderData->sign3!=''?'<img style="width:80; height:40px" src='.$soHeaderData->sign3.'></img>' :SignApproved($soHeaderData);
 								?>
 								<?=$sign3?>
@@ -1048,9 +1053,9 @@ $_gvSoDetail= GridView::widget([
 							<th class="col-md-1" style="text-align: center; vertical-align:middle;height:20; background-color:rgba(126, 189, 188, 0.3);text-align: center;">
 								<div>
 									<?php
-										$sign2NM = $soHeaderData->sign2Nm!=''?$soHeaderData->sign2Nm:'';
+										$sign3NM = $soHeaderData->sign3Nm!=''?$soHeaderData->sign3Nm:'';
 									?>
-									<?=$sign2NM?>
+									<?=$sign3NM?>
 								</div>
 							</th>
 						</tr>

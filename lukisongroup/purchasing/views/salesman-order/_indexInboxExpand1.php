@@ -14,7 +14,6 @@ use yii\web\Request;
 use kartik\daterange\DateRangePicker;
 use yii\db\ActiveRecord;
 use yii\data\ArrayDataProvider;
-
 ?>
  <div class="raw">
 	<div class="panel panel-info">
@@ -40,7 +39,7 @@ use yii\data\ArrayDataProvider;
 										'model'=>$model,
 									]);	
 									$dvSoCustomerInbox=$this->render('_indexInboxExpand1SoDetail',[
-										'aryProviderSoDetailInbox'=>$aryProviderSoDetailInbox,
+										'aryProviderSoDetailInbox1'=>$aryProviderSoDetailInbox2,
 										'model'=>$model,
 									]);													
 									//print_r($aryProviderSODetail);									

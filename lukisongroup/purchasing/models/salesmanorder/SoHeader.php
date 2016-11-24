@@ -23,6 +23,8 @@ class SoHeader extends \yii\db\ActiveRecord
      * @inheritdoc
      */
     public $parent_cusid;
+	 public $ISI_MESSAGES;
+	
     public static function tableName()
     {
         return 'so_0001';
@@ -96,14 +98,21 @@ class SoHeader extends \yii\db\ActiveRecord
 	}
 	
 	//Sign2- ADMIN
+	// public function getUserProfileSign2Tbl(){
+		// return $this->hasOne(Userprofile::className(), ['ID_USER' => 'USER_SIGN2']);
+	// }	
+	public function getUserTbl()
+    {
+        return $this->hasOne(Userlogin::className(), ['id' => 'USER_SIGN2']);
+    }
 	public function getUserProfileSign2Tbl(){
-		return $this->hasOne(Userprofile::className(), ['ID_USER' => 'USER_SIGN2']);
+		return $this->hasOne(Employe::className(), ['EMP_ID' => 'EMP_ID'])->viatable('dbm001.user',['id' => 'USER_SIGN2']);
 	}	
 	public function getSign2(){
-		 return $this->userProfileSign2Tbl!=''?$this->userProfileSign2Tbl->IMG_SIGNATURE:'';
+		 return $this->userProfileSign2Tbl!=''?$this->userProfileSign2Tbl->SIGSVGBASE64:'';
 	}	
 	public function getSign2Nm(){
-		 return $this->userProfileSign2Tbl!=''?$this->userProfileSign2Tbl->NM_FIRST:'None';
+		 return $this->userProfileSign2Tbl!=''?$this->userProfileSign2Tbl->EMP_NM.' '.$this->userProfileSign2Tbl->EMP_NM_BLK:'None';
 	}
 	public function getSign2Tgl(){
 		 return $this->TGL_SIGN2;
@@ -124,7 +133,7 @@ class SoHeader extends \yii\db\ActiveRecord
 		 return $this->userProfileSign3Tbl!=''?$this->userProfileSign3Tbl->IMG_SIGNATURE:'';
 	}
 	public function getSign3Nm(){
-		 return $this->userProfileSign3Tbl!=''?$this->userProfileSign3Tbl->NM_FIRST:'None';
+		 return $this->userProfileSign3Tbl!=''?$this->userProfileSign3Tbl->NM_FIRST.' '.$this->userProfileSign2Tbl->EMP_NM_BLK:'None';
 	}
 	public function getSign3Tgl(){
 		 return $this->TGL_SIGN3;
