@@ -96,7 +96,7 @@ class RptEsmChartSalesmdController extends Controller
 			$cc[]=["value"=> strval($value['CCval'])];					
 			$ac[]=["value"=>strval($value['ACval'])];					
 			$ec[]=["value"=> strval($value['ECval'])];					
-			$case[]=["value"=> strval($value['CASEval'])];
+			$case[]=["value"=> strval($value['CCval']+$value['CASEval'])];
 			$acSum[] =$value['ACval'];
 			$ecSum[] =$value['ECval'];
 		};
@@ -233,7 +233,7 @@ class RptEsmChartSalesmdController extends Controller
 			$cc[]=["value"=> strval($value['CCval'])];					
 			$ac[]=["value"=>strval($value['ACval'])];					
 			$ec[]=["value"=> strval($value['ECval'])];					
-			$case[]=["value"=> strval($value['CASEval'])];
+			$case[]=["value"=> strval($value['CCval']+$value['CASEval'])];
 			$acSum[] =$value['ACval'];
 			$ecSum[] =$value['ECval'];
 		};
