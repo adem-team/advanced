@@ -66,87 +66,7 @@ $this->title = Yii::t('app', 'Customers');
 			],					
 	];
 	
-	/*ACTION ATTRIBUTE*/
-	$attDinamik[]=[
-		'class'=>'kartik\grid\ActionColumn',
-		'dropdown' => true,
-		//'template' => '{view}{edit0}{edit1}{edit2}{edit3}{lihat}',
-		'template' => '{view}',
-		'dropdownOptions'=>['class'=>'pull-left dropdown'],
-		'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
-		'buttons' => [				
-			'edit0' =>function($url, $model, $key){
-					return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Set Identity'),
-												['/master/employe/edit-identity','id'=>$model->LAYER_ID],[
-												'data-toggle'=>"modal",
-												'data-target'=>"#edit-title",
-												'data-title'=> $model->LAYER_ID,
-												]). '</li>' . PHP_EOL;
-			},
-			'edit1' =>function($url, $model, $key){
-					return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Set Title'),
-												['/master/employe/edit-titel','id'=>$model->LAYER_ID],[
-												'data-toggle'=>"modal",
-												'data-target'=>"#edit-title",
-												'data-title'=> $model->LAYER_ID,
-												]). '</li>' . PHP_EOL;
-			},
-			'edit2' =>function($url, $model, $key){
-					return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Set Profile'),
-												['/master/employe/edit','id'=>$model->LAYER_ID],[
-												'data-toggle'=>"modal",
-												'data-target'=>"#edit-profile",
-												'data-title'=> $model->LAYER_ID,
-												]). '</li>' . PHP_EOL;
-			},
-			'edit3' =>function($url, $model, $key) {
-					//$gF=getPermissionEmp()->GF_ID;
-					//if ($gF<=4){
-						return  '<li>' . Html::a('<span class="fa fa-money fa-dm"></span>'.Yii::t('app', 'Set Payroll'),
-												['/master/employe/edit','id'=>$model->LAYER_ID],[
-												'data-toggle'=>"modal",
-												'data-target'=>"#edit-payroll",
-												]). '</li>' . PHP_EOL;
-					//}
-			},
-			'view' =>function($url, $model, $key){
-					return  '<li>' .Html::button('<span class="fa fa-eye fa-dm"></span>  '.Yii::t('app', 'View'),
-												['value'=>url::to(['/master/employe/view','id'=>$model->LAYER_ID]),
-												'id'=>'modalButton',													
-												'style'=>['width'=>'100%','text-align'=>'left','border'=>0, 'background-color'=>'white', 'padding-left'=>'20px'],
-												]). '</li>' . PHP_EOL; 
-												
-												/* return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),'',
-												['value'=>url::to(['/master/employe/view?id='.$model->LAYER_ID]),
-												//['value'=>url::to(['/master/employe/view','id'=>$model->LAYER_ID]),
-												'id'=>'modalButton',
-												//'data-toggle'=>"modal",
-												//'data-target'=>"#modal-view",
-												'data-title'=> $model->LAYER_ID,
-												//'data-ajax'=>true,
-												]). '</li>' . PHP_EOL;  */
-			},
-		],
-		'headerOptions'=>[
-			'style'=>[
-				'text-align'=>'center',
-				'width'=>'10px',
-				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'9pt',
-				'background-color'=>'rgba(97, 211, 96, 0.3)',
-			]
-		],
-		'contentOptions'=>[
-			'style'=>[
-				'text-align'=>'center',
-				'width'=>'10px',
-				'height'=>'10px',
-				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'9pt',
-			]
-		],
 	
-	];
 	
 	
 	/*OTHER ATTRIBUTE*/
@@ -242,7 +162,61 @@ $this->title = Yii::t('app', 'Customers');
 				]
 			],	
 		];	
-	};			
+	};
+
+	/*ACTION ATTRIBUTE*/
+	$attDinamik[]=[
+		'class'=>'kartik\grid\ActionColumn',
+		'dropdown' => true,
+		//'template' => '{view}{edit0}{edit1}{edit2}{edit3}{lihat}',
+		'template' => '{view}{edit}{delete}',
+		'dropdownOptions'=>['class'=>'pull-right dropdown'],
+		'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
+		'buttons' => [				
+			'edit' =>function($url, $model, $key){
+					return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Edit'),
+												['/master/customers/edit-layers','id'=>$model->LAYER_ID],[
+												'data-toggle'=>"modal",
+												'data-target'=>"#edit-layers",
+												'data-title'=> $model->LAYER_ID,
+												]). '</li>' . PHP_EOL;
+			},
+			'delete' =>function($url, $model, $key){
+					return  '<li>' . Html::a('<span class="fa fa-trash fa-dm"></span>'.Yii::t('app', 'delete'),
+												['/master/customers/delete-layers','id'=>$model->LAYER_ID]
+												). '</li>' . PHP_EOL;
+			},
+			'view' =>function($url, $model, $key){
+					return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>  '.Yii::t('app', 'View'),
+												['/master/customers/view-layers','id'=>$model->LAYER_ID],[
+												'data-toggle'=>"modal",
+												'data-target'=>"#view-layers",
+												'data-title'=> $model->LAYER_ID,													
+												]). '</li>' . PHP_EOL; 
+												
+										
+			},
+		],
+		'headerOptions'=>[
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'10px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'9pt',
+				'background-color'=>'rgba(97, 211, 96, 0.3)',
+			]
+		],
+		'contentOptions'=>[
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'10px',
+				'height'=>'10px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'9pt',
+			]
+		],
+	
+	];			
 		
 	$emp_active= GridView::widget([
 		'id'=>'active-emp',
@@ -258,17 +232,17 @@ $this->title = Yii::t('app', 'Customers');
 			'heading'=>false,
 			'type'=>'warning',
 			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create Layer ',
-									['modelClass' => 'Kategori',]),'#',[
+									['modelClass' => 'Kategori',]),'/master/customers/tambah-layers',[
 										'data-toggle'=>"modal",
 										'data-target'=>"#modal-create",
-										'class' => 'btn btn-success btn-sm'
+										'class' => 'btn btn-success btn-xs'
 									]
 						).' '.
 						Html::a('<i class="fa fa-history "></i> '.Yii::t('app', 'Refresh'),
 									'/master/customers/esm-index-layer',
 									[
 									  // 'id'=>'refresh-cust',
-									   'class' => 'btn btn-info btn-sm',
+									   'class' => 'btn btn-info btn-xs',
 									   //'data-pjax'=>false,
 									]
 						).' '.
@@ -277,7 +251,7 @@ $this->title = Yii::t('app', 'Customers');
 									[
 										//'id'=>'export-data',
 										//'data-pjax' => true,
-										'class' => 'btn btn-info btn-sm'
+										'class' => 'btn btn-info btn-xs'
 									]
 						),
 						'showFooter'=>false,
@@ -344,4 +318,93 @@ $this->title = Yii::t('app', 'Customers');
 		</div>
 	</div>
 </div>
+
+
+<?php
+$this->registerJs("
+  $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+
+  $('#modal-create').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var modal = $(this)
+    var title = button.data('title')
+    var href = button.attr('href')
+
+    //modal.find('.modal-title').html(title)
+    modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+    $.post(href)
+      .done(function( data ) {
+        modal.find('.modal-body').html(data)
+      });
+
+
+    })
+
+",$this::POS_READY);
+Modal::begin([
+  'id' => 'modal-create',
+  'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">New Layers</h4></div>',
+  'headerOptions'=>[
+      'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.9)',
+  ],
+]);
+Modal::end();
+
+$this->registerJs("
+  $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+
+  $('#edit-layers').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var modal = $(this)
+    var title = button.data('title')
+    var href = button.attr('href')
+
+    //modal.find('.modal-title').html(title)
+    modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+    $.post(href)
+      .done(function( data ) {
+        modal.find('.modal-body').html(data)
+      });
+
+
+    })
+
+",$this::POS_READY);
+Modal::begin([
+  'id' => 'edit-layers',
+  'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">New Layers</h4></div>',
+  'headerOptions'=>[
+      'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.9)',
+  ],
+]);
+Modal::end();
+
+$this->registerJs("
+  $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+
+  $('#view-layers').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var modal = $(this)
+    var title = button.data('title')
+    var href = button.attr('href')
+
+    //modal.find('.modal-title').html(title)
+    modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+    $.post(href)
+      .done(function( data ) {
+        modal.find('.modal-body').html(data)
+      });
+
+
+    })
+
+",$this::POS_READY);
+Modal::begin([
+  'id' => 'view-layers',
+  'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">New Layers</h4></div>',
+  'headerOptions'=>[
+      'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.9)',
+  ],
+]);
+Modal::end();
 

@@ -685,6 +685,26 @@ class CustomersController extends Controller
             ]);
         }
    }
+
+
+    /*create layer*/
+   public function actionTambahLayers()
+   {
+     $model = new DraftLayer();
+
+    if ($model->load(Yii::$app->request->post()) ) {
+      
+        $model->save();
+
+        return $this->redirect(['esm-index-layer']);
+
+      
+        } else {
+            return $this->renderAjax('_form_layers', [
+                'model' => $model,
+            ]);
+        }
+   }
    
     /**
      * INDEX 
@@ -1152,6 +1172,49 @@ class CustomersController extends Controller
     }
 
 
+    public function actionEditLayers($id){
+         $model = $this->findModellayers($id);
+
+          if ($model->load(Yii::$app->request->post()) ) {
+
+              $model->save();
+
+               return $this->redirect(['esm-index-layer']);
+
+          }else{
+              return $this->renderAjax('_edit_layers', [
+                'model' => $model,
+            ]);
+
+          }
+    }
+
+
+    public function actionViewLayers($id){
+         $model = $this->findModellayers($id);
+
+          if ($model->load(Yii::$app->request->post()) ) {
+               $model->save();
+                return $this->redirect(['esm-index-layer']);
+          }else{
+             return $this->renderAjax('view_layers', [
+                'model' => $model,
+            ]);
+          }
+    }
+
+
+    public function actionDeleteLayers($id){
+         $model = $this->findModellayers($id);
+         
+         $model->delete();
+
+         return $this->redirect(['esm-index-layer']);
+
+
+    }
+
+
 
    /**
      * update detail map using ajax.
@@ -1424,6 +1487,16 @@ class CustomersController extends Controller
 	 protected function findModelcust($id)
     {
         if (($model = Customers::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+
+     protected function findModellayers($id)
+    {
+        if (($model = DraftLayer::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

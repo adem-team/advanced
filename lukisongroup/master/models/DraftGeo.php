@@ -47,7 +47,7 @@ class DraftGeo extends \yii\db\ActiveRecord
             [['GEO_DCRIP'], 'string'],
             [['CUST_MAX_NORMAL', 'CUST_MAX_LAYER', 'STATUS'], 'integer'],
             [['CREATE_AT', 'UPDATE_AT'], 'safe'],
-            [['GEO_NM'], 'string', 'max' => 4],
+            [['GEO_NM'], 'string', 'max' =>10],
             [['START_LAT', 'START_LONG'], 'string', 'max' => 50],
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100],
         ];

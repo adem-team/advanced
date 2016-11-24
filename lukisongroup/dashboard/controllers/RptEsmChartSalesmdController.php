@@ -194,11 +194,13 @@ class RptEsmChartSalesmdController extends Controller
 	 * @since 1.2
      */
 	public function actionVisitPerSales(){
-		$request = Yii::$app->request;		
-		$tgl= $request->get('tgl');	
+		$request = Yii::$app->request;	
+		$userIdParam= $request->get('id');		
+		$ambilTgl= $request->get('tgl');	
+		$tglParam=$ambilTgl!=''?$ambilTgl:date('Y-m-d');
 		//$tglParam=$tgl!=''?$tgl:date('Y-m-d');
-		$tglParam=$tgl!=''?$tgl:date('m');
-		$userIdParam= $request->get('id');
+		//$tglParam=$tgl!=''?$tgl:date('m');
+		
 		
 		//***get count data visiting
 		$_visiting= new ArrayDataProvider([
@@ -220,8 +222,7 @@ class RptEsmChartSalesmdController extends Controller
 					WHERE b1.CUST_NM not LIKE 'customer demo%'	
 					GROUP BY b1.TGL,b1.USER_ID
 				) x2 on x2.TGL=x1.TGL AND x2.USER_ID=x1.USER_ID
-				WHERE  MONTH(x1.TGL)='".$tglParam."' AND x1.TGL <= CURDATE() AND x1.USER_ID='".$userIdParam."'
-				#WHERE x1.USER_ID='".$userIdParam."' AND MONTH(x1.TGL)=10 AND x1.TGL <= CURDATE()
+				WHERE  MONTH(x1.TGL)=MONTH('".$tglParam."') AND x1.TGL <= CURDATE() AND x1.USER_ID='".$userIdParam."'
 			")->queryAll(), 
 			'pagination' => [
 					'pageSize' => 200,

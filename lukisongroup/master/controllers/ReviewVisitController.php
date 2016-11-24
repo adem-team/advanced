@@ -228,6 +228,41 @@ class ReviewVisitController extends Controller
    
        }
 
+	public function arySalesUser(){
+
+    	$sql = (new \yii\db\Query())
+    			->select(['u.id as id', 'u.username as username','up.NM_FIRST as NM_FIRST'])
+   				 ->from('dbm001.user u')
+   				 ->leftJoin('dbm_086.user_profile up','u.id = up.ID_USER')
+   				 ->where(['u.status'=>10,'u.POSITION_SITE'=>'CRM','u.POSITION_LOGIN'=>1,'u.POSITION_ACCESS'=>2])
+    			 ->all();
+
+      return ArrayHelper::map($sql,'id',function ($sql, $defaultValue) {
+			return $sql['username'] . '-' . $sql['NM_FIRST']; 
+		});
+
+    }
+	/**
+	 * REVIEW DETAIL -> Month Summary
+	 * @author Piter Novian [ptr.nov@gmail.com]
+	 * @since 2.0
+	*/
+	public function actionAmbilMonthly()
+	{
+		$model = new \yii\base\DynamicModel(['tgl_detail_month','USER_ID']);
+		$model->addRule(['tgl_detail_month','USER_ID'], 'required');
+		if (!$model->load(Yii::$app->request->post())){
+			return $this->renderAjax('_indexformSummaryMonth', [
+				'model'=>$model,
+				'arySalesUser'=>self::arySalesUser()
+			]);
+		}else{
+			if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}
+		}
+	}
 	
 	/**
 	 * REVIEW DETAIL -> CHECK DATE
