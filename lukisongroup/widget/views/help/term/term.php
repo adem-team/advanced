@@ -17,7 +17,11 @@ use yii\helpers\Html;
 	$imgTipro13= Html::img('@web/widget/docHelp/img_term/TIPRO13.PNG',  ['class' => 'pnjg', 'style'=>'width:100px;height:50px;']);
 	$imgTermdata1= Html::img('@web/widget/docHelp/img_term/TERMDATA1.PNG',  ['class' => 'pnjg', 'style'=>'width:200px;height:250px;']); 
 	$imgTermdata2= Html::img('@web/widget/docHelp/img_term/TERMDATA2.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:550px;']);
-	$imgTermdata= Html::img('@web/widget/docHelp/img_term/TERMDATA.PNG',  ['class' => 'pnjg', 'style'=>'width:1000px;height:400px;']); 	
+	$imgTermdata= Html::img('@web/widget/docHelp/img_term/TERMDATA.PNG',  ['class' => 'pnjg', 'style'=>'width:1000px;height:400px;']);
+	$imgTermdata3= Html::img('@web/widget/docHelp/img_term/TERMDATA3.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:400px;']); 	
+	$imgTermdata4= Html::img('@web/widget/docHelp/img_term/TERMDATA4.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:300px;']); 
+	$imgTermdata5= Html::img('@web/widget/docHelp/img_term/TERMDATA5.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:300px;']); 	
+	$imgTermdata6= Html::img('@web/widget/docHelp/img_term/TERMDATA6.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:300px;']); 	
 ?>	
 <p>
 Penjelasan : Suatu bentuk perjanjian kerjasama yang persyaratannya disepakati oleh kedua belah pihak dalam hal ini retailer dan produsen / principle yang umumnya berlaku 1 tahun.</br>
@@ -67,5 +71,13 @@ Berikut cara pembuatan Term Data :</br>
 <?php  echo $imgTermdata2;?><p></br>
 Berikut tampilan awal Term Data :</br>
 <?php  echo $imgTermdata;?><p></br>
+3. Jika ingin merubah Parties/Pihak bersangkutan, Klik pada tanda <b>panah biru</b> berikut ini lalu klik pada logo <b>Pensil.</b></br>
+<?php  echo $imgTermdata3;?><p></br>
+4. Jika ingin merubah Periode/Jangka waktu, Klik pada tanda <b>panah biru</b> berikut ini lalu klik pada logo <b>Pensil.</b></br>
+<?php  echo $imgTermdata4;?><p></br>
+5. Klik tanda panah biru pada <b>Target</b> untuk memasukan nilai target yang akan di capai.</br>
+<?php  echo $imgTermdata5;?><p></br>
+6. Jika ingin merubah Budget, Klik pada tanda <b>panah biru</b> berikut ini lalu klik pada logo <b>Pensil.</b></br>
+<?php  echo $imgTermdata6;?><p></br>
 
 

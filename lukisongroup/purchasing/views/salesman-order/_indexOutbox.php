@@ -26,11 +26,11 @@ use lukisongroup\hrd\models\Dept;
 	/*
 	 * Declaration Componen User Permission
 	 * Function getPermission
-	 * Modul Name[2=SO]
+	 * Modul Name[8=SO2]
 	*/
 	function getPermission(){
-		if (Yii::$app->getUserOpt->Modul_akses(2)){
-			return Yii::$app->getUserOpt->Modul_akses(2);
+		if (Yii::$app->getUserOpt->Modul_akses(8)){
+			return Yii::$app->getUserOpt->Modul_akses(8);
 		}else{
 			return false;
 		}
@@ -123,15 +123,33 @@ use lukisongroup\hrd\models\Dept;
 
 function tombolCreateSom()
 {
-	$title = Yii::t('app', 'CREATE MANUAL SO');
-	$options = [ 'id'=>'som-id-create',
+	if(getPermission()->BTN_CREATE && getPermission()->BTN_PROCESS1 ){
+		$options = [ 'id'=>'som-id-create',
 				'data-toggle'=>"modal",
 				'data-target'=>"#sales-modal-id",
 				'class' => 'btn btn-primary  btn-xs'
 	];
+	$url = Url::toRoute(['/purchasing/salesman-order/create-sales']);
+}else{
+	$options = [ 'id'=>'som-id-create',
+				'data-toggle'=>"modal",
+				'data-target'=>"#confirm-permission-alert",
+				'class' => 'btn btn-primary  btn-xs'
+	];
+	$url = Url::toRoute(['#']);
+
+}
+	$title = Yii::t('app', 'CREATE MANUAL SO');
+	// $options = [ 'id'=>'som-id-create',
+	// 			'data-toggle'=>"modal",
+	// 			'data-target'=>"#sales-modal-id",
+	// 			'class' => 'btn btn-primary  btn-xs'
+	// ];
+	$options;
 	$icon = '<span class="fa fa-plus fa-xs"></span>';
 	$label = $icon . ' ' . $title;
-	$url = Url::toRoute(['/purchasing/salesman-order/create-sales']);
+	// $url = Url::toRoute(['/purchasing/salesman-order/create-sales']);
+	$url;
 	$options['tabindex'] = '-1';
 	return  Html::a($label, $url, $options);
 }
@@ -261,15 +279,42 @@ function tombolCreateSom()
 		// 		return '<li>' . Html::a($label, $url , $options) . '</li>' . PHP_EOL;
 		// 	}
 
-		$kd=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')?$model['ID']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:$model['KD_SO_HEADER'];
-		$kdstt=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')!=''?0:1;
-		$title = Yii::t('app', 'Review');
-				$options = [ 'id'=>'so-review-outbox'];
+		if(getPermission()){
+			if(getPermission()->BTN_REVIEW && $model['STT_PROCESS'] == 0)
+			{
+				$kd=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')?$model['ID']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:$model['KD_SO_HEADER'];
+				$kdstt=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')!=''?0:1;
+				$title = Yii::t('app', 'Review');
+				$options = [ 'id'=>'so-review-inbox'];
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';
 				$label = $icon . ' ' . $title;
 				$url = Url::toRoute(['/purchasing/salesman-order/review','id'=>$kd,'stt'=>$kdstt]);
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
+			}elseif(getPermission()->BTN_REVIEW && getPermission()->BTN_SIGN2 && $model['STT_PROCESS'] == 101){
+				$kd=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')?$model['ID']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:$model['KD_SO_HEADER'];
+				$kdstt=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')!=''?0:1;
+				$title = Yii::t('app', 'Review');
+				$options = [ 'id'=>'so-review-inbox'];
+				$icon = '<span class="glyphicon glyphicon-ok"></span>';
+				$label = $icon . ' ' . $title;
+				$url = Url::toRoute(['/purchasing/salesman-order/review','id'=>$kd,'stt'=>$kdstt]);
+				$options['tabindex'] = '-1';
+				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
+
+			}elseif(getPermission()->BTN_REVIEW && getPermission()->BTN_SIGN3 && $model['STT_PROCESS'] == 102){
+				$kd=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')?$model['ID']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:$model['KD_SO_HEADER'];
+				$kdstt=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')!=''?0:1;
+				$title = Yii::t('app', 'Review');
+				$options = [ 'id'=>'so-review-inbox'];
+				$icon = '<span class="glyphicon glyphicon-ok"></span>';
+				$label = $icon . ' ' . $title;
+				$url = Url::toRoute(['/purchasing/salesman-order/review','id'=>$kd,'stt'=>$kdstt]);
+				$options['tabindex'] = '-1';
+				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
+
+			}
+		}
 		// }
 	}
 
@@ -734,6 +779,22 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 
 
 	<?php
+
+		Modal::begin([
+			'id' => 'confirm-permission-alert',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/warning/denied.png',  ['class' => 'pnjg', 'style'=>'width:40px;height:40px;']).'</div><div style="margin-top:10px;"><h4><b>Permmission Confirm !</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+			]
+		]);
+		echo "<div>You do not have permission for this module.
+				<dl>
+					<dt>Contact : itdept@lukison.com</dt>
+				</dl>
+			</div>";
+	Modal::end();
+
 	$this->registerJs("
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
 			$('#confirm-permission-alert-so').on('show.bs.modal', function (event) {

@@ -27,7 +27,20 @@ $city = (new \yii\db\Query())
     			 ->one();
 
 
-								
+	
+	/*
+	 * Declaration Componen User Permission
+	 * Function getPermission
+	 * Modul Name[8=SO2]
+	*/
+	function getPermission(){
+		if (Yii::$app->getUserOpt->Modul_akses(8)){
+			return Yii::$app->getUserOpt->Modul_akses(8);
+		}else{
+			return false;
+		}
+	}
+
 
 	/*
 	 * SIGNATURE AUTH2 | CHECKED
@@ -159,7 +172,7 @@ $city = (new \yii\db\Query())
  * 
 */
 	//ADD ITEMS
-	function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm,$tgl){
+	function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm,$tgl,$soHeader){
 		$title1 = Yii::t('app', 'ADD NEW ITEM');
 		$options1 = [ 'id'=>'new-add-create',
 						'data-toggle'=>"modal",
@@ -785,7 +798,7 @@ $_gvSoDetail= GridView::widget([
 	'autoXlFormat'=>true,
 	'export' => false,
 	'toolbar'=> [
-		 ['content'=>tombolCreate($cust_kd,$kode_so,$user_id,$cust_nmx,$tgl)],
+		 ['content'=>tombolCreate($cust_kd,$kode_so,$user_id,$cust_nmx,$tgl,$soHeaderData)],
 		
 	 ],
 	'panel'=>[
@@ -1006,25 +1019,40 @@ $_gvSoDetail= GridView::widget([
 							</th>
 							<th class="col-md-1" style="text-align: center; vertical-align:middle">
 								<?php
-								   if($soHeaderData->USER_SIGN2 !=''){
-								   	 $sign2 = '<img style="width:80; height:40px" src='.$soHeaderData->sign2.'></img>';
+								if(getPermission()){
+									if(getPermission()->BTN_SIGN2){
+										$sign2 = $soHeaderData->USER_SIGN2 ? '<img style="width:80; height:40px" src='.$soHeaderData->sign2.'></img>' : SignChecked($soHeaderData);
+								   	 // $sign2 = '<img style="width:80; height:40px" src='.$soHeaderData->sign2.'></img>';
 								   }else{
-								   	 $sign2 = SignChecked($soHeaderData);
+								   	 $sign2 = $soHeaderData->USER_SIGN2 ? '<img style="width:80; height:40px" src='.$soHeaderData->sign2.'></img>':'';
 								   }
+
+								}
+								   
 									// $sign2 = $soHeaderData->sign2!=?'<img style="width:80; height:40px" src='.$profile->emp->SIGSVGBASE64.'></img>' :
 								?>
 								<?=$sign2?>
 							</th>
 							<th  class="col-md-1" style="text-align: center; vertical-align:middle">
 								<?php
-								if($soHeaderData->USER_SIGN2 !='')
-								{
-									if($soHeaderData->USER_SIGN3 !=''){
-								   	 $sign3 = '<img style="width:80; height:40px" src='.$soHeaderData->sign3.'></img>';
+
+								if(getPermission()){
+									if(getPermission()->BTN_SIGN3){
+										$sign3 = $soHeaderData->USER_SIGN3 ? '<img style="width:80; height:40px" src='.$soHeaderData->sign3.'></img>' : SignApproved($soHeaderData);
+								   	 // $sign2 = '<img style="width:80; height:40px" src='.$soHeaderData->sign2.'></img>';
 								   }else{
-								   	 $sign3 = SignApproved($soHeaderData);
+								   	 $sign3 = $soHeaderData->USER_SIGN3 ? '<img style="width:80; height:40px" src='.$soHeaderData->sign3.'></img>':'';
 								   }
+
 								}
+								// if($soHeaderData->USER_SIGN2 !='')
+								// {
+								// 	if($soHeaderData->USER_SIGN3 !=''){
+								//    	 $sign3 = '<img style="width:80; height:40px" src='.$soHeaderData->sign3.'></img>';
+								//    }else{
+								//    	 $sign3 = SignApproved($soHeaderData);
+								//    }
+								// }
 
 
 								

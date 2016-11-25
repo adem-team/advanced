@@ -30,6 +30,8 @@ use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\Customers;
 
 
+
+
 /**
  * CUSTOMER - SALESMAN ORDER 
  * @author ptrnov [piter@lukison.com]
@@ -76,25 +78,47 @@ class SalesmanOrderController extends Controller
 		}
     }
 
+   
+
    /**
      * Index
      * @author ptrnov  <piter@lukison.com>
      * @since 1.1
      */
     public function actionIndex()
-    {		
-		$searchModelHeader = new SoHeaderSearch();
-		$dataProvider = $searchModelHeader->searchHeader(Yii::$app->request->queryParams);		
-		$dataProviderInbox = $searchModelHeader->searchHeaderInbox(Yii::$app->request->queryParams);		
-		$dataProviderOutbox = $searchModelHeader->searchHeaderOutbox(Yii::$app->request->queryParams);		
-		$dataProviderHistory = $searchModelHeader->searchHeaderHistory(Yii::$app->request->queryParams);		
-		return $this->render('index', [
-			'apSoHeaderInbox'=>$dataProviderInbox,
-			'apSoHeaderOutbox'=>$dataProviderOutbox,
-			'apSoHeaderHistory'=>$dataProviderHistory
-        ]);
+    {	
+      
+        if(self::getPermission()->BTN_CREATE){
+         $searchModelHeader = new SoHeaderSearch();
+          $dataProvider = $searchModelHeader->searchHeader(Yii::$app->request->queryParams);    
+          $dataProviderInbox = $searchModelHeader->searchHeaderInbox(Yii::$app->request->queryParams);    
+          $dataProviderOutbox = $searchModelHeader->searchHeaderOutbox(Yii::$app->request->queryParams);    
+          $dataProviderHistory = $searchModelHeader->searchHeaderHistory(Yii::$app->request->queryParams);    
+          return $this->render('index', [
+            'apSoHeaderInbox'=>$dataProviderInbox,
+            'apSoHeaderOutbox'=>$dataProviderOutbox,
+            'apSoHeaderHistory'=>$dataProviderHistory
+              ]);
+        }else{
 
-    }  
+           $this->redirect(array('/site/validasi'));  //
+
+        }
+
+    }
+
+     /*
+   * Declaration Componen User Permission
+   * Function getPermission
+   * Modul Name[8=SO2]
+  */
+  public function getPermission(){
+    if (Yii::$app->getUserOpt->Modul_akses('8')){
+      return Yii::$app->getUserOpt->Modul_akses('8');
+    }else{
+      return false;
+    }
+  }  
 
 
     public function get_aryBarang()
@@ -592,7 +616,9 @@ class SalesmanOrderController extends Controller
      * @since 1.1
      */
 	public function actionReview($id,$stt)
-    {		
+    {
+
+      if(self::getPermission()->BTN_REVIEW){		
 		if ($stt==0){
 			//CREATE KODE_REF
 			$modelSoT2 = SoT2::find()->where("ID='".$id."' AND SO_TYPE=10")->one();
@@ -636,7 +662,8 @@ class SalesmanOrderController extends Controller
 				$transaction->rollBack();
 				throw $e;
 			}
-            $this->redirect(['/purchasing/salesman-order/review','id'=>$kode,'stt'=>1]);      	
+            $this->redirect(['/purchasing/salesman-order/review','id'=>$kode,'stt'=>1]); 
+
 		    //PR create Generate Code dari komponent. Tabel so_0001.
 			//Save kode generate  Tabel so_0001.
 			//Update SoT2 KODE_REF where ($getSoType,getTGL,getCUST_KD,getUSER_ID).
@@ -715,6 +742,9 @@ class SalesmanOrderController extends Controller
 				// 'status'=>$status_sign
 			]); 
 		}
+    }else{
+         $this->redirect(array('/site/validasi'));  //
+    } 
 	}
 
 	public function actionCetakpdf($id){
