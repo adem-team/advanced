@@ -49,7 +49,10 @@ ChartAsset::register($this);
 		],
 	]);	 
 	
+	print_r('asd'.$test);
 ?>
+
+
 
 <div class="container-fluid w3-content pale-blue" style="max-width:1400px;max-height:1400px;margin-top:10px;font-family: verdana, arial, sans-serif ;font-size: 8pt">
 	<!-- The Grid -->
@@ -108,7 +111,7 @@ ChartAsset::register($this);
 								<div class="col-xs-12col-lg-12 col-md-12 text-right">
 									<!-- <div class="huge"  ng-repeat="nilai in Employe_Summary">{{nilai.emp_total}}</div> !-->
 									<?php echo $cntAktifEmp!=''? $cntAktifEmp:'0'; ?> 								
-									<div>Sales Target</div>
+									<div>Sales Target <?php print_r($_GET['response']);?></div>
 								</div>
 							</div>
 						</div>

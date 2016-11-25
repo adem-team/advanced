@@ -29,6 +29,8 @@ use kartik\widgets\DepDrop;
 		'pluginOptions' => [
 		   'autoclose'=>true,
 		   'format' => 'yyyy-mm-dd',
+		   'startView'=>'year',
+		   'minViewMode'=>'months',
 		]
 
 		])->label('Tanggal')  ?>
@@ -87,6 +89,9 @@ $this->registerJs("
 									
 			
 				})
+				//document.write('<?php $abc=1 ;?>');
+				//$result='<div id='result'>test</div>';
+				//var xx ='asdasd';
 			   console.log(valTgl);
 			}
 		});
@@ -107,5 +112,6 @@ $this->registerJs("
 ",$this::POS_READY);
 
 
+$test = isset($_GET['valUser']);
 
-
+?>

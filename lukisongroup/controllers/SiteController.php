@@ -28,7 +28,7 @@ class SiteController extends Controller
                 'rules' => [
                     [
                         /* Author: -ptr.nov- : Permission Allow No Login |index|error|login */
-                        'actions' => ['index', 'error','login'],
+                        'actions' => ['index', 'error','login','validasi'],
                         'allow' => true,
                     ],
                     [
@@ -80,6 +80,9 @@ class SiteController extends Controller
             ]);
         }
     }
+
+
+    
 	
 	public function beforeAction($action)
 	{
@@ -121,6 +124,32 @@ class SiteController extends Controller
             $this->getView()->registerJs($js);
             return $this->render('login',['model' => $model]);
         }
+    }
+
+    public function actionValidasi(){
+
+            /* Author: -wawan- :validasi salesman-order*/
+         if (\Yii::$app->user->isGuest) {
+            $model = new LoginForm();
+            return $this->render('index_nologin', [
+                'model' => $model,
+            ]);
+        } else {
+            $ModelUser = UserloginSearch::findUserAttr(Yii::$app->user->id)->one();
+            $model = $this->findModel1($ModelUser->emp->EMP_ID);
+            $searchModel1 = new EmployeSearch();
+            $dataProvider = $searchModel1->search_empid($ModelUser->emp->EMP_ID);
+
+                $js='$("#confirm-permission-alert").modal("show")';
+                $this->getView()->registerJs($js);
+            // echo  \yii\helpers\Json::encode($dataProvider);
+            //print_r($dataProvider->getModels());
+            return $this->render('index', [
+                'model' => $model,
+                'dataProvider'=>$dataProvider->getModels(),
+            ]);
+        }
+
     }
 
 	 protected  function afterLogin(){

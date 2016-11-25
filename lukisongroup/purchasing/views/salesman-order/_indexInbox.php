@@ -24,11 +24,11 @@ use lukisongroup\hrd\models\Dept;
 	/*
 	 * Declaration Componen User Permission
 	 * Function getPermissionInbox
-	 * Modul Name[2=SO]
+	 * Modul Name[8=SO2]
 	*/
 	function getPermissionInbox(){
-		if (Yii::$app->getUserOpt->Modul_akses(2)){
-			return Yii::$app->getUserOpt->Modul_akses(2);
+		if (Yii::$app->getUserOpt->Modul_akses(8)){
+			return Yii::$app->getUserOpt->Modul_akses(8);
 		}else{
 			return false;
 		}
@@ -218,15 +218,20 @@ use lukisongroup\hrd\models\Dept;
 	*/
 	function tombolReviewInbox($url, $model){
 		//$kd=($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']!='')?$model['KD_SO_HEADER']:$model['KD_SO_DETAIL'];
-		$kd=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')?$model['ID']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:$model['KD_SO_HEADER'];
-		$kdstt=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')!=''?0:1;
-		$title = Yii::t('app', 'Review');
+		if(getPermissionInbox()){
+			if(getPermissionInbox()->BTN_REVIEW)
+			{
+				$kd=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')?$model['ID']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:$model['KD_SO_HEADER'];
+				$kdstt=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')!=''?0:1;
+				$title = Yii::t('app', 'Review');
 				$options = [ 'id'=>'so-review-inbox'];
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';
 				$label = $icon . ' ' . $title;
 				$url = Url::toRoute(['/purchasing/salesman-order/review','id'=>$kd,'stt'=>$kdstt]);
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
+			}
+		}
 	}
 
 
@@ -723,6 +728,8 @@ use lukisongroup\hrd\models\Dept;
 
 
 	<?php
+
+	
 	$this->registerJs("
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
 			$('#confirm-permission-alert-so').on('show.bs.modal', function (event) {

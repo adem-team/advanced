@@ -10,6 +10,34 @@ use kartik\builder\FormGrid;
 use kartik\tabs\TabsX;
 use yii\helpers\Url;
 $this->title = Yii::t('app', 'lukisongroup');
+
+
+    /**
+    *@author wawan
+   * Declaration Componen User Permission
+   * Function getPermission
+   * Modul Name[8=SO2]
+  */
+   function getPermission(){
+    if (Yii::$app->getUserOpt->Modul_akses('8')){
+      return Yii::$app->getUserOpt->Modul_akses('8');
+    }else{
+      return false;
+    }
+  }
+
+  // if(getPermission()){
+  	 if(getPermission()->BTN_CREATE){
+  		$link = '/purchasing/salesman-order';
+
+  	}else{
+  		$link = '/site/validasi';
+  	}
+
+  // }
+
+
+
 $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctype'=>'multipart/form-data']]);
 	$ProfAttribute1 = [
 		[
@@ -184,7 +212,7 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 										],
 										[
 											'content' => '<span class="fa fa-chain fa-lg"></span>'. '   '.'Sales Order T2 ',
-											'url' => '/purchasing/salesman-order'
+											'url' => $link
 										],
 										[
 											'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Request Trade invest',
@@ -221,3 +249,24 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 </body>
 </html>
 <?php ActiveForm::end(); ?>
+
+
+<?php
+
+	Modal::begin([
+			'id' => 'confirm-permission-alert',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/warning/denied.png',  ['class' => 'pnjg', 'style'=>'width:40px;height:40px;']).'</div><div style="margin-top:10px;"><h4><b>Permmission Confirm !</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+			]
+		]);
+		echo "<div>You do not have permission for this module.
+				<dl>
+					<dt>Contact : itdept@lukison.com</dt>
+				</dl>
+			</div>";
+	Modal::end();
+
+
+
