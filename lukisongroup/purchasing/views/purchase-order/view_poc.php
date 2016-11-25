@@ -488,7 +488,7 @@ $y=4;
 				<dl>
 					<!-- Date !-->
 					<dt style="width:80px; float:left;">Date</dt>
-					<dd>: <?php echo date('d-M-Y'); ?></dd>
+					<dd>: <?php echo \Yii::$app->formatter->asDate($poHeader->CREATE_AT,'Y-M-d');//date('d-M-Y'); ?></dd>
 					<!-- PO NO !-->
 					<dt style="width:80px; float:left;">No. Order</dt>
 					<dd>: <?= $poHeader->KD_PO; ?></dd>
