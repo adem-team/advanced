@@ -489,6 +489,7 @@ class SalesmanOrderController extends Controller
       	  	 $model->KD_SO = $kode;
       	  	 $model->STT_PROCESS = 0;
       	  	 $model->CREATE_BY = Yii::$app->user->identity->id;
+             $model->CREATE_AT = date('Y-m-d h:i:s');
 
       	  	 # SoStatus
       	  	 $model_status->KD_SO = $kode;
@@ -626,15 +627,17 @@ class SalesmanOrderController extends Controller
       if(self::getPermission()->BTN_REVIEW){		
 		if ($stt==0){
 			//CREATE KODE_REF
-			$modelSoT2 = SoT2::find()->where("ID='".$id."' AND SO_TYPE=10")->one();
+			$modelSoT2 = SoT2::find()->with('cust')->where("ID='".$id."' AND SO_TYPE=10")->one();
 			$getSoType=10;
 			$getTGL=$modelSoT2->TGL;
 			$setTGL=$modelSoT2->WAKTU_INPUT_INVENTORY;
 			$getCUST_KD=$modelSoT2->CUST_KD;
 			$getUSER_ID=$modelSoT2->USER_ID;
+
+      $user_alias = $modelSoT2->cust->USER_ALIAS;
 		
 			$connect = Yii::$app->db_esm;
-			$kode = Yii::$app->ambilkonci->getSMO();
+			$kode = Yii::$app->ambilkonci->getSMO($user_alias);
 			$transaction = $connect->beginTransaction();
 			try {		
 				//SO HEADER
@@ -644,6 +647,7 @@ class SalesmanOrderController extends Controller
 							'TGL' =>$setTGL,
 							'USER_SIGN1' =>$getUSER_ID,
 							'CUST_ID'=>$getCUST_KD,
+              'CREATE_AT'=>date('Y-m-d h:i:s'),
 						])->execute();
 				//SO DETAIL -  STOCK
 				$connect->createCommand()->update('so_t2', 
