@@ -144,15 +144,17 @@ class SalesmanOrderController extends Controller
     public function get_aryUser_id(){
 
     	$sql = (new \yii\db\Query())
-    			->select(['u.id as id', 'u.username as username','up.NM_FIRST as NM_FIRST'])
+    			->select(['u.id as id', 'u.username as username','u.USER_ALIAS as USER_ALIAS','up.NM_FIRST as NM_FIRST'])
    				 ->from('dbm001.user u')
    				 ->leftJoin('dbm_086.user_profile up','u.id = up.ID_USER')
    				 ->where(['u.status'=>10,'u.POSITION_SITE'=>'CRM','u.POSITION_LOGIN'=>1,'u.POSITION_ACCESS'=>2])
     			 ->all();
 
-      return ArrayHelper::map($sql,'id',function ($sql, $defaultValue) {
-			return $sql['username'] . '-' . $sql['NM_FIRST']; 
-		});
+      return ArrayHelper::map($sql,function ($sql, $defaultValue) {
+            return $sql['id'] . '-' . $sql['USER_ALIAS'];},function ($sql, $defaultValue) {
+			      return $sql['username'] . '-' . $sql['NM_FIRST']; 
+		    });
+
 
     }
 
@@ -479,15 +481,18 @@ class SalesmanOrderController extends Controller
       # code...
       if ($model->load(Yii::$app->request->post())){
 
+          #explode USER_SIGN1
+          $user_explode = explode('-', $model->USER_SIGN1);
+
       		# SoHeader
-      		 $kode = Yii::$app->ambilkonci->getSMO();
+      		 $kode = Yii::$app->ambilkonci->getSMO($user_explode[1]);
       	  	 $model->KD_SO = $kode;
       	  	 $model->STT_PROCESS = 0;
       	  	 $model->CREATE_BY = Yii::$app->user->identity->id;
 
       	  	 # SoStatus
       	  	 $model_status->KD_SO = $kode;
-      	  	 $model_status->ID_USER = $model->USER_SIGN1;
+      	  	 $model_status->ID_USER = $user_explode[0];
       	  	 $model_status->STT_PROCESS = 0;
       	  $transaction = self::Esm_connent()->beginTransaction();
       	  try{
@@ -506,7 +511,7 @@ class SalesmanOrderController extends Controller
 				throw $e;
 			}
       	 
-          return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model->USER_SIGN1,'tgl'=>$model->TGL]);
+          return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model_status->ID_USER,'tgl'=>$model->TGL]);
       }else {
         return $this->renderAjax('new_so', [
             'model' => $model,

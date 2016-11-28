@@ -32,7 +32,7 @@ class Userlogin extends \yii\db\ActiveRecord
 			[['username','auth_key','password_hash','password_reset_token','EMP_ID'], 'string'],
       [['email','avatar','avatarImage'], 'string'],
 			[['id','status','created_at','updated_at'],'integer'],
-			[['POSITION_SITE','POSITION_LOGIN'], 'safe'],
+			[['POSITION_SITE','POSITION_LOGIN','USER_ALIAS'], 'safe'],
 		];
     }
 

@@ -133,18 +133,20 @@ foreach($gvHeadColomnBT as $key =>$value[]){
   };
 
    /*GRIDVIEW ARRAY ACTION*/
-   /*  $attDinamik[]=[
+     $attDinamik[]=[
       'class'=>'kartik\grid\ActionColumn',
+      'template' => '{edit}',
       'dropdown' => true,
-      'dropdownOptions'=>['class'=>'pull-left dropup','style'=>['disable'=>true]],
+      'dropdownOptions'=>['class'=>'pull-right dropup','style'=>['disable'=>true]],
       'dropdownButton'=>[
         'class' => $actionClass,
       ],
       'buttons' => [
-        'view' =>function($url, $model, $key){
-            return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
-                          ['view','id'=>$model->ID],[
-                          'id'=>'gv-grid-draft-id',
+        'edit' =>function($url, $model, $key){
+            return  '<li>' .Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Edit'),
+                          ['edit-user','id'=>$model->id],[
+                            'data-toggle'=>"modal",
+                            'data-target'=>"#modal-edit-user",
                           ]). '</li>' . PHP_EOL;
         },
       ],
@@ -166,7 +168,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
           'font-size'=>'9pt',
         ]
       ],
-    ]; */
+    ]; 
 
 
 
@@ -265,6 +267,30 @@ $gvGroupUser=GridView::widget([
         'id' => 'modal-create-user',
         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search-plus"></div><div><h4 class="modal-title">ADD USER</h4></div>',
 		'headerOptions'=>[
+                'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+        ],
+    ]);
+    Modal::end();
+
+    $this->registerJs("
+         $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+         $('#modal-edit-user').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var title = button.data('title')
+            var href = button.attr('href')
+            //modal.find('.modal-title').html(title)
+            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+            $.post(href)
+                .done(function( data ) {
+                    modal.find('.modal-body').html(data)
+                });
+            })
+    ",$this::POS_READY);
+    Modal::begin([
+        'id' => 'modal-edit-user',
+        'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-search-plus"></div><div><h4 class="modal-title">ADD USER</h4></div>',
+    'headerOptions'=>[
                 'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
         ],
     ]);
