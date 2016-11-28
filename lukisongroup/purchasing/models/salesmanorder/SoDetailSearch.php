@@ -23,6 +23,7 @@ class SoDetailSearch extends SoT2
 	public $SUBMIT_QTY;
 	public $ID;
 	public $TerminalID;
+	public $KODE_REF;
 	
     /**
      * @inheritdoc	

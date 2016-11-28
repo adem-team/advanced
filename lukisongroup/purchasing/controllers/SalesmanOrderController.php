@@ -77,8 +77,19 @@ class SalesmanOrderController extends Controller
 			return true;
 		}
     }
-
-   
+	
+	/*
+	* Declaration Componen User Permission
+	* Function getPermission
+	* Modul Name[8=SO2]
+	*/
+	public function getPermission(){
+		if (Yii::$app->getUserOpt->Modul_akses('8')){
+			return Yii::$app->getUserOpt->Modul_akses('8');
+		}else{
+			return false;
+		}
+	}     
 
 	/**
 	* Index
@@ -88,7 +99,6 @@ class SalesmanOrderController extends Controller
 	*/
     public function actionIndex()
     {	
-      
         if(self::getPermission()->BTN_CREATE){
 			$searchModelHeader = new SoHeaderSearch();
 			$dataProvider = $searchModelHeader->searchHeader(Yii::$app->request->queryParams);    
@@ -168,23 +178,29 @@ class SalesmanOrderController extends Controller
 			}else{
 				//VIEW KODE_REF
 				//$modelSoT2 = SoT2::find()->with('cust')->where("KODE_REF='".$id."' AND SO_TYPE=10")->one();	
+				
 				//$soHeaderData = SoHeader::find()->with('cust')->where(['ID'=>$id])->one(); 		
-				$soHeaderData = SoHeader::find()->where(['ID'=>$id])->one(); 		
+				$soHeaderData = SoHeader::find()->where(['ID'=>$id])->one(); 
+				$modelSoT2 = SoT2::find()->where("KODE_REF='".$soHeaderData->KD_SO."' AND SO_TYPE=10")->one();					
 				$getSoType=10;
 				$getTGL=$modelSoT2->TGL;
 				$getCUST_KD=$modelSoT2->CUST_KD;
 				$getUSER_ID=$modelSoT2->USER_ID;
+				$getKd_SO=$soHeaderData->KD_SO;
 				//print_r($soHeaderData);
 				//die();
 				// $status_sign = SoStatus::find()->where(['KD_SO'=>$id])->count();
 				
 				$searchModelDetail= new SoDetailSearch([
 					// 'TGL'=>$getTGL,
-					'KODE_REF'=>$id,
+					'KODE_REF'=>$getKd_SO,
 					'CUST_KD'=>$getCUST_KD,
 					'USER_ID'=>$getUSER_ID,
 				]); 
 				$aryProviderSoDetail = $searchModelDetail->searchDetail(Yii::$app->request->queryParams);
+				
+				 //print_r($aryProviderSoDetail->getModels());
+				 //die();
 				
 				// Process Editable Row [Columm SQTY]
 				// @author ptrnov  <piter@lukison.com>
@@ -225,6 +241,7 @@ class SalesmanOrderController extends Controller
 					'searchModelDetail'=>$searchModelDetail,
 					'model_cus'=>$modelSoT2->cust,
 					'soHeaderData'=>$soHeaderData,
+					'id_so'=>$id
 					// 'status'=>$status_sign
 				]); 
 			}
@@ -286,6 +303,57 @@ class SalesmanOrderController extends Controller
 		} 
     }
 	
+	/**
+	* Add Items
+	* @param string $id
+	* @author wawan update by ptrnov  <piter@lukison.com>
+	* @since 1.1
+	*/
+	//public function actionCreateNewAdd($cust_kd,$user_id,$id,$cust_nm,$tgl)
+	public function actionCreateNewAdd($id)
+    {
+		$soHeaderData = SoHeader::find()->where(['ID'=>$id])->one();
+		$model = new SoT2();
+		# code...
+		if ($model->load(Yii::$app->request->post()) ) {
+			$explode = explode(',', $model->KD_BARANG);
+			$setUser = explode('-', $soHeaderData->USER_SIGN1);
+			$model->NM_BARANG = $explode[1];
+			$model->KD_BARANG = $explode[0];
+			$model->CUST_KD = $soHeaderData->CUST_ID;
+			$model->USER_ID = $setUser[0];
+			$model->CUST_NM = $soHeaderData->custNm;
+			$model->KODE_REF = $soHeaderData->KD_SO;
+			$model->SO_TYPE = 10;
+			$model->POS ='WEB';
+			$model->WAKTU_INPUT_INVENTORY =  date("Y-m-d H:i:s"); #set datetime
+			$model->TGL =  date_format(date_create($soHeaderData->TGL),"Y-m-d");
+			$model->save();
+			return $this->redirect(['/purchasing/salesman-order/review','id'=>$id,'stt'=>1]); ;
+		}else {
+		return $this->renderAjax('new_items', [
+			'model' => $model,
+			'data_barang' => self::get_aryBarang(), #array barang
+			'kode_som'=>$soHeaderData->KD_SO
+		]);
+		}
+    }	
+	
+	/**
+	* Validation Alias Barang
+	* @author waawan update ptrnov  <piter@lukison.com>
+	* @since 1.1
+	*/
+	public function actionValidAliasBarang()
+    {
+		$model = new SoT2();
+		$model->scenario = "create";
+		if(Yii::$app->request->isAjax && $model->load($_POST))
+		{
+			Yii::$app->response->format = 'json';
+			return ActiveForm::validate($model);
+		}
+    }
 	
 	/**
 	* Action REVIEW | Prosess Checked and Approval
@@ -357,18 +425,7 @@ class SalesmanOrderController extends Controller
 		]); 
 	} */
 	
-	/*
-	* Declaration Componen User Permission
-	* Function getPermission
-	* Modul Name[8=SO2]
-	*/
-	public function getPermission(){
-		if (Yii::$app->getUserOpt->Modul_akses('8')){
-			return Yii::$app->getUserOpt->Modul_akses('8');
-		}else{
-			return false;
-		}
-	}  
+	
 
 
     public function get_aryBarang()
@@ -485,16 +542,7 @@ class SalesmanOrderController extends Controller
 
 
 
-    public function actionValidAliasBarang()
-    {
-		$model = new SoT2();
-		$model->scenario = "create";
-		if(Yii::$app->request->isAjax && $model->load($_POST))
-		{
-			Yii::$app->response->format = 'json';
-			return ActiveForm::validate($model);
-		}
-    }
+   
 
 
     public function actionValidAliasHeader()
@@ -530,32 +578,7 @@ class SalesmanOrderController extends Controller
     }
 
 
-    public function actionCreateNewAdd($cust_kd,$user_id,$id,$cust_nm,$tgl)
-    {
-      $model = new SoT2();
-      # code...
-      if ($model->load(Yii::$app->request->post()) ) {
-      	  $explode = explode(',', $model->KD_BARANG);
-      	  $model->NM_BARANG = $explode[1];
-      	  $model->KD_BARANG = $explode[0];
-          $model->CUST_KD = $cust_kd; # set cust_kd
-          $model->USER_ID = $user_id;
-          $model->CUST_NM = $cust_nm;
-          $model->KODE_REF = $id;
-          $model->SO_TYPE = 10;
-          $model->POS ='WEB';
-          $model->WAKTU_INPUT_INVENTORY =  date("Y-m-d H:i:s"); #set datetime
-          $model->TGL =  $tgl; #set date
-          $model->save();
-          return $this->redirect(['/purchasing/salesman-order/review','id'=>$id,'stt'=>1]); ;
-      }else {
-        return $this->renderAjax('new_som', [
-            'model' => $model,
-            'data_barang' => self::get_aryBarang(), #array barang
-            'kode_som'=>$id
-        ]);
-      }
-    }
+   
 
      public function actionSoNoteReview($kdso)
     {

@@ -12,6 +12,7 @@ $this->sideCorp = 'Sales Order';                       /* Title Select Company p
 $this->sideMenu = 'esm_customers';
 
 $kode_so = Yii::$app->getRequest()->getQueryParam('id');
+$id_so = Yii::$app->getRequest()->getQueryParam('id');
 $ary = $aryProviderSoDetail->getModels();
 
 if($ary){
@@ -172,7 +173,7 @@ $city = (new \yii\db\Query())
  * 
 */
 	//ADD ITEMS
-	function tombolCreate($cust_kd,$kode_so,$user_id,$cust_nm,$tgl,$soHeader){
+	function tombolCreate($id_so){
 		$title1 = Yii::t('app', 'ADD NEW ITEM');
 		$options1 = [ 'id'=>'new-add-create',
 						'data-toggle'=>"modal",
@@ -180,7 +181,8 @@ $city = (new \yii\db\Query())
 						'class' => 'btn btn-danger btn-sm',
 		];
 		$icon1 = '<span class="fa fa-plus fa-lg"></span>';
-		$url = Url::toRoute(['/purchasing/salesman-order/create-new-add','cust_kd'=>$cust_kd,'user_id'=>$user_id,'id'=>$kode_so,'cust_nm'=>$cust_nm,'tgl'=>$tgl]);
+		//$url = Url::toRoute(['/purchasing/salesman-order/create-new-add','cust_kd'=>$cust_kd,'user_id'=>$user_id,'id'=>$kode_so,'cust_nm'=>$cust_nm,'tgl'=>$tgl]);
+		$url = Url::toRoute(['/purchasing/salesman-order/create-new-add','id'=>$id_so]);
 		$label1 = $icon1 . ' ' . $title1;
 		$content = Html::a($label1,$url,$options1);
 		return $content;
@@ -798,7 +800,8 @@ $_gvSoDetail= GridView::widget([
 	'autoXlFormat'=>true,
 	'export' => false,
 	'toolbar'=> [
-		 ['content'=>tombolCreate($cust_kd,$kode_so,$user_id,$cust_nmx,$tgl,$soHeaderData)],
+		 //['content'=>tombolCreate($cust_kd,$kode_so,$user_id,$cust_nmx,$tgl,$soHeaderData)],
+		 ['content'=>tombolCreate($id_so)],
 		
 	 ],
 	'panel'=>[

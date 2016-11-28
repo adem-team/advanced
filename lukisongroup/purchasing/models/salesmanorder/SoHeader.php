@@ -72,10 +72,13 @@ class SoHeader extends \yii\db\ActiveRecord
         ];
     }
 
-      public function getCust(){
+  public function getCust(){
     return $this->hasOne(Customers::className(), ['CUST_KD'=>'CUST_ID']);
   }
 
+  public function getCustNm(){
+	return $this->cust!=''?$this->cust->CUST_NM:'None';
+  }
 
   public function getCustmemoTbl(){
   	return $this->hasOne(CustomercallMemo::className(), ['CUST_ID' => 'KD_CUSTOMER']);
