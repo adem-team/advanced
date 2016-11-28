@@ -80,29 +80,31 @@ class SalesmanOrderController extends Controller
 
    
 
-	/**
-	* Index
-	* @author ptrnov  <piter@lukison.com>
-	* @since 1.1
-	* STATUS : FIX
-	*/
+   /**
+     * Index
+     * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
     public function actionIndex()
     {	
       
         if(self::getPermission()->BTN_CREATE){
-			$searchModelHeader = new SoHeaderSearch();
-			$dataProvider = $searchModelHeader->searchHeader(Yii::$app->request->queryParams);    
-			$dataProviderInbox = $searchModelHeader->searchHeaderInbox(Yii::$app->request->queryParams);    
-			$dataProviderOutbox = $searchModelHeader->searchHeaderOutbox(Yii::$app->request->queryParams);    
-			$dataProviderHistory = $searchModelHeader->searchHeaderHistory(Yii::$app->request->queryParams);    
-			return $this->render('index', [
-				'apSoHeaderInbox'=>$dataProviderInbox,
-				'apSoHeaderOutbox'=>$dataProviderOutbox,
-				'apSoHeaderHistory'=>$dataProviderHistory
-			]);
+         $searchModelHeader = new SoHeaderSearch();
+          $dataProvider = $searchModelHeader->searchHeader(Yii::$app->request->queryParams);    
+          $dataProviderInbox = $searchModelHeader->searchHeaderInbox(Yii::$app->request->queryParams);    
+          $dataProviderOutbox = $searchModelHeader->searchHeaderOutbox(Yii::$app->request->queryParams);    
+          $dataProviderHistory = $searchModelHeader->searchHeaderHistory(Yii::$app->request->queryParams);    
+          return $this->render('index', [
+            'apSoHeaderInbox'=>$dataProviderInbox,
+            'apSoHeaderOutbox'=>$dataProviderOutbox,
+            'apSoHeaderHistory'=>$dataProviderHistory
+              ]);
         }else{
+
            $this->redirect(array('/site/validasi'));  //
+
         }
+
     }
 
 	/**
@@ -110,19 +112,21 @@ class SalesmanOrderController extends Controller
      * @param string $id
      * @author ptrnov  <piter@lukison.com>
      * @since 1.1
-	 * STATUS : FIX
      */
-	public function actionReview($id,$stt){
-		if(self::getPermission()->BTN_REVIEW){		
+	public function actionReview($id,$stt)
+    {
+      if(self::getPermission()->BTN_REVIEW){		
 			if ($stt==0){
-				//CREATE HEADER KD_SO
+				//CREATE KODE_REF
 				$modelSoT2 = SoT2::find()->with('cust')->where("ID='".$id."' AND SO_TYPE=10")->one();
 				$getSoType=10;
 				$getTGL=$modelSoT2->TGL;
 				$setTGL=$modelSoT2->WAKTU_INPUT_INVENTORY;
 				$getCUST_KD=$modelSoT2->CUST_KD;
 				$getUSER_ID=$modelSoT2->USER_ID;
-				
+
+				//$user_alias = $modelSoT2->cust->USER_ALIAS;
+			
 				$connect = Yii::$app->db_esm;
 				$kode = Yii::$app->ambilkonci->getSMO($getUSER_ID);
 				$transaction = $connect->beginTransaction();
@@ -134,7 +138,7 @@ class SalesmanOrderController extends Controller
 								'TGL' =>$setTGL,
 								'USER_SIGN1' =>$getUSER_ID,
 								'CUST_ID'=>$getCUST_KD,
-								'CREATE_AT'=>date('Y-m-d h:i:s'),
+				  'CREATE_AT'=>date('Y-m-d h:i:s'),
 							])->execute();
 					//SO DETAIL -  STOCK
 					$connect->createCommand()->update('so_t2', 
@@ -185,10 +189,12 @@ class SalesmanOrderController extends Controller
 					'USER_ID'=>$getUSER_ID,
 				]); 
 				$aryProviderSoDetail = $searchModelDetail->searchDetail(Yii::$app->request->queryParams);
-				
-				// Process Editable Row [Columm SQTY]
-				// @author ptrnov  <piter@lukison.com>
-				// @since 1.1				
+
+				/*
+				* Process Editable Row [Columm SQTY]
+				* @author ptrnov  <piter@lukison.com>
+				* @since 1.1
+				**/
 				if (Yii::$app->request->post('hasEditable')) {
 					$id = Yii::$app->request->post('editableKey');
 					$model = SoT2::findOne($id);
@@ -214,8 +220,19 @@ class SalesmanOrderController extends Controller
 					echo $out;
 					return;
 				}
-				
-				return $this->render('_actionReview',[
+
+				// return $this->render('_actionReview',[
+				// 	'aryProviderSoDetail'=>$aryProviderSoDetail,
+				// 	'kode_SO'=>$modelSoT2->KODE_REF,
+				// 	'cust_kd'=>$getCUST_KD,
+				// 	'tgl'=>$getTGL,
+				// 	'user_id'=>$getUSER_ID,
+				// 	'searchModelDetail'=>$searchModelDetail,
+				// 	'model_cus'=>$modelSoT2->cust,
+				// 	'soHeaderData'=>$soHeaderData
+				// ]); 
+
+					return $this->render('_actionReview',[
 					'aryProviderSoDetail'=>$aryProviderSoDetail,
 					'kode_SO'=>$soHeaderData->KD_SO,
 					'cust_kd'=>$soHeaderData->CUST_ID,
