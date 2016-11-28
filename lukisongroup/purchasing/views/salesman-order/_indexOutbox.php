@@ -667,17 +667,17 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			'buttons' => [
 				/* View RO | Permissian All */
 				'view' => function ($url, $model) {
-								return tombolViewInbox($url, $model);
+								//return tombolViewInbox($url, $model);
 						  },
 
 				/* View RO | Permissian Status 0; 0=process | User created = user login  */
 				'tambahEdit' => function ($url, $model) {
-								return tombolEditInbox($url, $model);
+								//return tombolEditInbox($url, $model);
 							},
 
 				/* Delete RO | Permissian Status 0; 0=process | User created = user login */
 				'delete' => function ($url, $model) {
-								return tombolDeleteInbox($url, $model);
+								//return tombolDeleteInbox($url, $model);
 							},
 
 				/* Approved RO | Permissian Status 0; 0=process | Dept = Dept login | GF >= M */

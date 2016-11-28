@@ -54,7 +54,7 @@ use lukisongroup\hrd\models\Dept;
 	 * Tombol Modul Create
 	 * permission crate Ro
 	*/
-	function tombolCreateInbox(){
+	/* function tombolCreateInbox(){
 		if(getPermissionInbox()){
 			if(getPermissionInbox()->BTN_CREATE==1){
 				$title1 = Yii::t('app', 'New');
@@ -97,62 +97,62 @@ use lukisongroup\hrd\models\Dept;
 				$content = Html::a($label1,$url1, $options1);
 				return $content;
 		}
-	}
+	} */
 
 	/*
 	 * Tombol Modul Barang
 	 * No Permission
 	*/
-	function tombolBarangInbox(){
-	$title = Yii::t('app', 'Barang');
-	$options = ['id'=>'ro-barang',
-				'data-toggle'=>"modal",
-				'data-target'=>"#check-barang",
-				'class' => 'btn btn-default  btn-xs'
-	];
-	$icon = '<span class="glyphicon glyphicon-search"></span>';
-	$label = $icon . ' ' . $title;
-	$url = Url::toRoute(['/purchasing/sales-order/create']);
-	$content = Html::a($label,$url, $options);
-	return $content;
-}
+	/* function tombolBarangInbox(){
+		$title = Yii::t('app', 'Barang');
+		$options = ['id'=>'ro-barang',
+					'data-toggle'=>"modal",
+					'data-target'=>"#check-barang",
+					'class' => 'btn btn-default  btn-xs'
+		];
+		$icon = '<span class="glyphicon glyphicon-search"></span>';
+		$label = $icon . ' ' . $title;
+		$url = Url::toRoute(['/purchasing/sales-order/create']);
+		$content = Html::a($label,$url, $options);
+		return $content; 
+	}*/
 
 	/*
 	 * Tombol Modul Barang Kategori
 	 * No Permission
 	*/
-	function tombolKategoriInbox(){
-	$title = Yii::t('app', 'Kategori');
-	$options = ['id'=>'ro-kategori',
-				'data-toggle'=>"modal",
-				'data-target'=>"#check-kategori",
-				'class' => 'btn btn-default  btn-xs'
-	];
-	$icon = '<span class="glyphicon glyphicon-search"></span>';
-	$label = $icon . ' ' . $title;
-	$url = Url::toRoute(['/purchasing/sales-order/create']);
-	$content = Html::a($label,$url, $options);
-	return $content;
-}
+	// function tombolKategoriInbox(){
+	// $title = Yii::t('app', 'Kategori');
+	// $options = ['id'=>'ro-kategori',
+				// 'data-toggle'=>"modal",
+				// 'data-target'=>"#check-kategori",
+				// 'class' => 'btn btn-default  btn-xs'
+	// ];
+	// $icon = '<span class="glyphicon glyphicon-search"></span>';
+	// $label = $icon . ' ' . $title;
+	// $url = Url::toRoute(['/purchasing/sales-order/create']);
+	// $content = Html::a($label,$url, $options);
+	// return $content;
+	//}
 
 	/*
 	 * Tombol Modul View
 	 * permission View [BTN_VIEW==1]
 	 * Check By User login
 	*/
-	function tombolViewInbox($url, $model){
-		if(getPermissionInbox()){
-			if(getPermissionInbox()->BTN_VIEW==1){
-				$title = Yii::t('app', 'View');
-				$options = [ 'id'=>'ro-view'];
-				$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
-				$label = $icon . ' ' . $title;
-				$url = Url::toRoute(['/purchasing/sales-order/view','kd'=>$model->KD_RO]);
-				$options['tabindex'] = '-1';
-				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
-			}
-		}
-	}
+	// function tombolViewInbox($url, $model){
+		// if(getPermissionInbox()){
+			// if(getPermissionInbox()->BTN_VIEW==1){
+				// $title = Yii::t('app', 'View');
+				// $options = [ 'id'=>'ro-view'];
+				// $icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
+				// $label = $icon . ' ' . $title;
+				// $url = Url::toRoute(['/purchasing/sales-order/view','kd'=>$model->KD_RO]);
+				// $options['tabindex'] = '-1';
+				// return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
+			// }
+		// }
+	// }
 
 	/*
 	 * Tombol Modul Edit -> Check By User login
@@ -162,25 +162,25 @@ use lukisongroup\hrd\models\Dept;
 	 * 1. Hanya User login yang bisa melakukan Edit Request Order yang sudah di Create user tersebut (Tanpa Kecuali)
 	 * 2. Action EDIT Akan close atau tidak bisa di lakukan jika sudah Approved | status Approved =103 | Permission sign1
 	*/
-	function tombolEditInbox($url, $model){
-		if(getPermissionInbox()){
-			if(getPermissionInboxEmp()->EMP_ID == $model->ID_USER AND getPermissionInbox()->BTN_EDIT==1){
-				 if($model->STATUS == 0){ // 0=process 101=Approved
-					$title = Yii::t('app', 'Edit Detail');
-					$options = [ //'id'=>'ro-edit',
-								//'data-toggle'=>"modal",
-								//'data-target'=>"#add-ro",
-								//'data-confirm'=>'Anda yakin ingin menghapus RO ini?',
-					];
-					$icon = '<span class="fa fa-pencil-square-o fa-lg"></span>';
-					$label = $icon . ' ' . $title;
-					$url = Url::toRoute(['/purchasing/sales-order/edit','kd'=>$model->KD_RO]);
-					$options['tabindex'] = '-1';
-					return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
-				}
-			}
-		}
-	}
+	// function tombolEditInbox($url, $model){
+		// if(getPermissionInbox()){
+			// if(getPermissionInboxEmp()->EMP_ID == $model->ID_USER AND getPermissionInbox()->BTN_EDIT==1){
+				 // if($model->STATUS == 0){ // 0=process 101=Approved
+					// $title = Yii::t('app', 'Edit Detail');
+					// $options = [ //'id'=>'ro-edit',
+								/* 'data-toggle'=>"modal",
+								'data-target'=>"#add-ro",
+								'data-confirm'=>'Anda yakin ingin menghapus RO ini?', */
+					// ];
+					// $icon = '<span class="fa fa-pencil-square-o fa-lg"></span>';
+					// $label = $icon . ' ' . $title;
+					// $url = Url::toRoute(['/purchasing/sales-order/edit','kd'=>$model->KD_RO]);
+					// $options['tabindex'] = '-1';
+					// return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
+				// }
+			// }
+		// }
+	// }
 
 	/*
 	 * Tombol Modul Delete -> Check By User login
@@ -190,23 +190,23 @@ use lukisongroup\hrd\models\Dept;
 	 * 1. Hanya User login yang bisa melakukan DELETE Request Order yang sudah di Create user tersebut (Tanpa Kecuali)
 	 * 2. Action DELETE  Akan close atau tidak bisa di lakukan jika sudah Approved | status Approved =103 | Permission sign1
 	*/
-	function tombolDeleteInbox($url, $model){
-		if(getPermissionInbox()){
-			if(getPermissionInboxEmp()->EMP_ID == $model->ID_USER AND getPermissionInbox()->BTN_DELETE==1){
-				if($model->STATUS == 0){ // 0=process 101=Approved
-					$title = Yii::t('app', 'Delete');
-					$options = [ 'id'=>'ro-delete',
-								'data-confirm'=>'Anda yakin ingin menghapus RO ini?',
-					];
-					$icon = '<span class="fa fa-trash-o fa-lg"></span>';
-					$label = $icon . ' ' . $title;
-					$url = Url::toRoute(['/purchasing/sales-order/hapusro','kd'=>$model->KD_RO]);
-					$options['tabindex'] = '-1';
-					return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
-				}
-			}
-		}
-	}
+	// function tombolDeleteInbox($url, $model){
+		// if(getPermissionInbox()){
+			// if(getPermissionInboxEmp()->EMP_ID == $model->ID_USER AND getPermissionInbox()->BTN_DELETE==1){
+				// if($model->STATUS == 0){ // 0=process 101=Approved
+					// $title = Yii::t('app', 'Delete');
+					// $options = [ 'id'=>'ro-delete',
+								// 'data-confirm'=>'Anda yakin ingin menghapus RO ini?',
+					// ];
+					// $icon = '<span class="fa fa-trash-o fa-lg"></span>';
+					// $label = $icon . ' ' . $title;
+					// $url = Url::toRoute(['/purchasing/sales-order/hapusro','kd'=>$model->KD_RO]);
+					// $options['tabindex'] = '-1';
+					// return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
+				// }
+			// }
+		// }
+	// }
 
 	/*
 	 * Tombol Modul Approval -> Check By User login
@@ -221,8 +221,11 @@ use lukisongroup\hrd\models\Dept;
 		if(getPermissionInbox()){
 			if(getPermissionInbox()->BTN_REVIEW)
 			{
-				$kd=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')?$model['ID']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:$model['KD_SO_HEADER'];
-				$kdstt=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')!=''?0:1;
+				// $kd=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')?$model['ID']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:$model['KD_SO_HEADER'];
+				// $kdstt=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')!=''?0:1;
+				$kd=($model['SOT_ID']!='' AND $model['SO_ID']=='')?$model['SOT_ID']:$model['SO_ID'];//($model['SOT_ID']=='' AND $model['SO_ID']!='')?$model['SO_ID']:$model['SO_ID'];
+				$kdstt=$model['SOT_ID']==''?0:$model['SO_ID']==''?0:1;
+				
 				$title = Yii::t('app', 'Review');
 				$options = [ 'id'=>'so-review-inbox'];
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';
@@ -612,17 +615,17 @@ use lukisongroup\hrd\models\Dept;
 			'buttons' => [
 				/* View RO | Permissian All */
 				'view' => function ($url, $model) {
-								return tombolViewInbox($url, $model);
+								//return tombolViewInbox($url, $model);
 						  },
 
 				/* View RO | Permissian Status 0; 0=process | User created = user login  */
 				'tambahEdit' => function ($url, $model) {
-								return tombolEditInbox($url, $model);
+								//return tombolEditInbox($url, $model);
 							},
 
 				/* Delete RO | Permissian Status 0; 0=process | User created = user login */
 				'delete' => function ($url, $model) {
-								return tombolDeleteInbox($url, $model);
+								//return tombolDeleteInbox($url, $model);
 							},
 
 				/* Approved RO | Permissian Status 0; 0=process | Dept = Dept login | GF >= M */

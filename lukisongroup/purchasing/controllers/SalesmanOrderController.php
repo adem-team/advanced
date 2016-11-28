@@ -107,18 +107,285 @@ class SalesmanOrderController extends Controller
 
     }
 
-     /*
-   * Declaration Componen User Permission
-   * Function getPermission
-   * Modul Name[8=SO2]
-  */
-  public function getPermission(){
-    if (Yii::$app->getUserOpt->Modul_akses('8')){
-      return Yii::$app->getUserOpt->Modul_akses('8');
-    }else{
-      return false;
+	/**
+     * Action REVIEW | Prosess Checked and Approval
+     * @param string $id
+     * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionReview($id,$stt)
+    {
+      if(self::getPermission()->BTN_REVIEW){		
+			if ($stt==0){
+				//CREATE KODE_REF
+				$modelSoT2 = SoT2::find()->with('cust')->where("ID='".$id."' AND SO_TYPE=10")->one();
+				$getSoType=10;
+				$getTGL=$modelSoT2->TGL;
+				$setTGL=$modelSoT2->WAKTU_INPUT_INVENTORY;
+				$getCUST_KD=$modelSoT2->CUST_KD;
+				$getUSER_ID=$modelSoT2->USER_ID;
+
+				//$user_alias = $modelSoT2->cust->USER_ALIAS;
+			
+				$connect = Yii::$app->db_esm;
+				$kode = Yii::$app->ambilkonci->getSMO($getUSER_ID);
+				$transaction = $connect->beginTransaction();
+				try {		
+					//SO HEADER
+					$connect->createCommand()->insert('so_0001', 
+							[
+								'KD_SO'=>$kode,
+								'TGL' =>$setTGL,
+								'USER_SIGN1' =>$getUSER_ID,
+								'CUST_ID'=>$getCUST_KD,
+				  'CREATE_AT'=>date('Y-m-d h:i:s'),
+							])->execute();
+					//SO DETAIL -  STOCK
+					$connect->createCommand()->update('so_t2', 
+							['KODE_REF'=>$kode], 
+							[
+								'SO_TYPE'=>$getSoType,
+								'TGL'=>$getTGL,
+								'CUST_KD'=>$getCUST_KD,
+								'USER_ID'=>$getUSER_ID
+							])->execute();
+					//STATUS PROCESS
+					$connect->createCommand()->insert('so_0002', 
+							[
+								'KD_SO'=>$kode,
+								'ID_USER' =>$getUSER_ID,
+								'STT_PROCESS' =>'0',
+							])->execute();						
+					// ...other DB operations...
+					$transaction->commit();
+				} catch(\Exception $e) {
+					$transaction->rollBack();
+					throw $e;
+				}
+				$soHeaderData = SoHeader::find()->where(['KD_SO'=>$kode])->one(); 
+				$this->redirect(['/purchasing/salesman-order/review','id'=>$soHeaderData->ID,'stt'=>1]); 
+
+				//PR create Generate Code dari komponent. Tabel so_0001.
+				//Save kode generate  Tabel so_0001.
+				//Update SoT2 KODE_REF where ($getSoType,getTGL,getCUST_KD,getUSER_ID).
+				//Editing editable : SUBMIT_QTY,SUBMIT_PRICE
+			}else{
+				//VIEW KODE_REF
+				//$modelSoT2 = SoT2::find()->with('cust')->where("KODE_REF='".$id."' AND SO_TYPE=10")->one();	
+				//$soHeaderData = SoHeader::find()->with('cust')->where(['ID'=>$id])->one(); 		
+				$soHeaderData = SoHeader::find()->where(['ID'=>$id])->one(); 		
+				$getSoType=10;
+				$getTGL=$modelSoT2->TGL;
+				$getCUST_KD=$modelSoT2->CUST_KD;
+				$getUSER_ID=$modelSoT2->USER_ID;
+				//print_r($soHeaderData);
+				//die();
+				// $status_sign = SoStatus::find()->where(['KD_SO'=>$id])->count();
+				
+				$searchModelDetail= new SoDetailSearch([
+					// 'TGL'=>$getTGL,
+					'KODE_REF'=>$id,
+					'CUST_KD'=>$getCUST_KD,
+					'USER_ID'=>$getUSER_ID,
+				]); 
+				$aryProviderSoDetail = $searchModelDetail->searchDetail(Yii::$app->request->queryParams);
+
+				/*
+				* Process Editable Row [Columm SQTY]
+				* @author ptrnov  <piter@lukison.com>
+				* @since 1.1
+				**/
+				if (Yii::$app->request->post('hasEditable')) {
+					$id = Yii::$app->request->post('editableKey');
+					$model = SoT2::findOne($id);
+					$out = Json::encode(['output'=>'', 'message'=>'']);
+					$post = [];
+					$posted = current($_POST['SoT2']);
+					$post['SoT2'] = $posted;
+					if ($model->load($post)) {
+						$model->save();
+						$output = '';
+						if (isset($posted['SUBMIT_PRICE'])) {
+							$output = $model->SUBMIT_PRICE;
+						}
+						if (isset($posted['SUBMIT_QTY'])) {
+							$output = $model->SUBMIT_QTY;
+						}
+						if (isset($posted['TGL'])) {
+							$output = $model->TGL;
+						}
+						$out = Json::encode(['output'=>$output, 'message'=>'']);
+					}
+					// return ajax json encoded response and exit
+					echo $out;
+					return;
+				}
+
+				// return $this->render('_actionReview',[
+				// 	'aryProviderSoDetail'=>$aryProviderSoDetail,
+				// 	'kode_SO'=>$modelSoT2->KODE_REF,
+				// 	'cust_kd'=>$getCUST_KD,
+				// 	'tgl'=>$getTGL,
+				// 	'user_id'=>$getUSER_ID,
+				// 	'searchModelDetail'=>$searchModelDetail,
+				// 	'model_cus'=>$modelSoT2->cust,
+				// 	'soHeaderData'=>$soHeaderData
+				// ]); 
+
+					return $this->render('_actionReview',[
+					'aryProviderSoDetail'=>$aryProviderSoDetail,
+					'kode_SO'=>$soHeaderData->KD_SO,
+					'cust_kd'=>$soHeaderData->CUST_ID,
+					'cust_nmx'=>$soHeaderData->cust->CUST_NM,
+					'tgl'=>$soHeaderData->TGL,
+					'user_id'=>$soHeaderData->USER_SIGN1,
+					'searchModelDetail'=>$searchModelDetail,
+					'model_cus'=>$modelSoT2->cust,
+					'soHeaderData'=>$soHeaderData,
+					// 'status'=>$status_sign
+				]); 
+			}
+		}else{
+			$this->redirect(array('/site/validasi'));  //
+		} 
+	}
+	
+	public function actionCreateSales()
+    {
+      	$model = new SoHeader();
+
+      	$model_status = new SoStatus();
+
+		# code...
+		if ($model->load(Yii::$app->request->post())){
+
+			#explode USER_SIGN1
+			$user_explode = explode('-', $model->USER_SIGN1);
+
+			# SoHeader
+			$kode = Yii::$app->ambilkonci->getSMO($user_explode[0]);
+			$model->KD_SO = $kode;
+			$model->STT_PROCESS = 0;
+			$model->CREATE_BY = Yii::$app->user->identity->id;
+			$model->CREATE_AT = date('Y-m-d h:i:s');
+
+			# SoStatus
+			$model_status->KD_SO = $kode;
+			$model_status->ID_USER = $user_explode[0];
+			$model_status->STT_PROCESS = 0;
+			$transaction = self::Esm_connent()->beginTransaction();
+			try{
+				# SoHeader
+
+				$model->save();
+
+				# SoStatus
+
+				$model_status->save();
+
+				// ...other DB operations...
+				$transaction->commit();
+			} catch(\Exception $e) {
+				$transaction->rollBack();
+				throw $e;
+			}
+			$soHeaderData = SoHeader::find()->where(['KD_SO'=>$kode])->one(); 
+			$this->redirect(['/purchasing/salesman-order/review','id'=>$soHeaderData->ID,'stt'=>1]); 
+		  //return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model_status->ID_USER,'tgl'=>$model->TGL]);
+		}else {
+			return $this->renderAjax('new_so', [
+				'model' => $model,
+				'data_cus' => self::get_aryCustomers(), #array customers
+				'data_user'=>self::get_aryUser_id(),
+				// 'data_user' => self
+				// 'kode_som'=>$id
+			]);
+		} 
     }
-  }  
+	
+	
+	/**
+	* Action REVIEW | Prosess Checked and Approval
+	* @param string $id
+	* @author ptrnov  <piter@lukison.com>
+	* @since 1.1
+	*/
+	/* public function actionReviewNew($id,$stt,$cust_kd,$user_id,$tgl)
+	{			
+		//VIEW KODE_REF
+		$soHeaderData = SoHeader::find()->with('cust')->where(['KD_SO'=>$id])->one(); 
+
+		// $status_sign = SoStatus::find()->where(['KD_SO'=>$id])->count();		
+		$getSoType=10;
+		$getTGL=$tgl;
+		$getCUST_KD=$cust_kd;
+		$getUSER_ID=$user_id;
+		
+		$searchModelDetail= new SoDetailSearch([
+			// 'TGL'=>$getTGL,
+			'KODE_REF'=>$id,
+			'CUST_KD'=>$getCUST_KD,
+			'USER_ID'=>$getUSER_ID,
+		]); 
+		$aryProviderSoDetail = $searchModelDetail->searchDetail(Yii::$app->request->queryParams);
+
+		
+		// Process Editable Row [Columm SQTY]
+		// @author ptrnov  <piter@lukison.com>
+		// @since 1.1
+		
+		if (Yii::$app->request->post('hasEditable')) {
+			$id = Yii::$app->request->post('editableKey');
+			$model = SoT2::findOne($id);
+			$out = Json::encode(['output'=>'', 'message'=>'']);
+			$post = [];
+			$posted = current($_POST['SoT2']);
+			$post['SoT2'] = $posted;
+			if ($model->load($post)) {
+				$model->save();
+				$output = '';
+				if (isset($posted['SUBMIT_PRICE'])) {
+					$output = $model->SUBMIT_PRICE;
+				}
+				if (isset($posted['SUBMIT_QTY'])) {
+					$output = $model->SUBMIT_QTY;
+				}
+				if (isset($posted['TGL'])) {
+					$output = $model->TGL;
+				}
+				$out = Json::encode(['output'=>$output, 'message'=>'']);
+			}
+			// return ajax json encoded response and exit
+			echo $out;
+			return;
+		}
+
+		return $this->render('_actionReview',[
+			'aryProviderSoDetail'=>$aryProviderSoDetail,
+			'kode_som'=>$id,
+			'cust_kd'=>$getCUST_KD,
+			'cust_nmx'=>$soHeaderData->cust->CUST_NM,
+			'tgl'=>$getTGL,
+			'user_id'=>$getUSER_ID,
+			'searchModelDetail'=>$searchModelDetail,
+			'model_cus'=>$soHeaderData->cust,
+			'soHeaderData'=>$soHeaderData,
+			// 'status'=>$status_sign
+		]); 
+	} */
+	
+	/*
+	* Declaration Componen User Permission
+	* Function getPermission
+	* Modul Name[8=SO2]
+	*/
+	public function getPermission(){
+		if (Yii::$app->getUserOpt->Modul_akses('8')){
+			return Yii::$app->getUserOpt->Modul_akses('8');
+		}else{
+			return false;
+		}
+	}  
 
 
     public function get_aryBarang()
@@ -142,7 +409,6 @@ class SalesmanOrderController extends Controller
 
 
     public function get_aryUser_id(){
-
     	$sql = (new \yii\db\Query())
     			->select(['u.id as id', 'u.username as username','u.USER_ALIAS as USER_ALIAS','up.NM_FIRST as NM_FIRST'])
    				 ->from('dbm001.user u')
@@ -150,12 +416,11 @@ class SalesmanOrderController extends Controller
    				 ->where(['u.status'=>10,'u.POSITION_SITE'=>'CRM','u.POSITION_LOGIN'=>1,'u.POSITION_ACCESS'=>2])
     			 ->all();
 
-      return ArrayHelper::map($sql,function ($sql, $defaultValue) {
-            return $sql['id'] . '-' . $sql['USER_ALIAS'];},function ($sql, $defaultValue) {
-			      return $sql['username'] . '-' . $sql['NM_FIRST']; 
-		    });
-
-
+		return ArrayHelper::map($sql,function ($sql, $defaultValue) {
+            return $sql['id'] . '-' . $sql['USER_ALIAS'];
+		},function ($sql, $defaultValue) {
+			return $sql['username'] . '-' . $sql['NM_FIRST']; 
+		});
     }
 
 
@@ -170,11 +435,9 @@ class SalesmanOrderController extends Controller
 			$soDetail->save();
 			return true;
 		}
-
     }
 
-
-     public function actionRejectSoDetail(){
+    public function actionRejectSoDetail(){
     	if (Yii::$app->request->isAjax) {
 			$request= Yii::$app->request;
 			$id=$request->post('id');
@@ -185,12 +448,10 @@ class SalesmanOrderController extends Controller
 			$soDetail->save();
 			return true;
 		}
-
     }
 
 
-
-     public function actionDeleteSoDetail(){
+    public function actionDeleteSoDetail(){
     	if (Yii::$app->request->isAjax) {
 			$request= Yii::$app->request;
 			$id=$request->post('id');
@@ -201,43 +462,40 @@ class SalesmanOrderController extends Controller
 			$soDetail->save();
 			return true;
 		}
-
     }
 
-    
 
+	/**
+	* Depdrop child customers
+	* @author wawan
+	* @since 1.1.0
+	* @return mixed
+	*/
+	public function actionLisChildCus() {
+		$out = [];
+		if (isset($_POST['depdrop_parents'])) {
+			$parents = $_POST['depdrop_parents'];
+			if ($parents != null) {
+				$id = $parents[0];
 
-     /**
-     * Depdrop child customers
-     * @author wawan
-     * @since 1.1.0
-     * @return mixed
-     */
-   public function actionLisChildCus() {
-    $out = [];
-    if (isset($_POST['depdrop_parents'])) {
-        $parents = $_POST['depdrop_parents'];
-        if ($parents != null) {
-            $id = $parents[0];
+				$model = Customers::find()->asArray()->where(['CUST_GRP'=>$id])
+														 ->andwhere('STATUS <> 3')
+														->all();
+														
+				//$out = self::getSubCatList($cat_id);
+				// the getSubCatList function will query the database based on the
+				// cat_id and return an array like below:
+				// [
+				//    ['id'=>'<sub-cat-id-1>', 'name'=>'<sub-cat-name1>'],
+				//    ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
+				// ]
+				foreach ($model as $key => $value) {
+					   $out[] = ['id'=>$value['CUST_KD'],'name'=> $value['CUST_NM']];
+				   }
 
-            $model = Customers::find()->asArray()->where(['CUST_GRP'=>$id])
-                                                     ->andwhere('STATUS <> 3')
-                                                    ->all();
-                                                    
-            //$out = self::getSubCatList($cat_id);
-            // the getSubCatList function will query the database based on the
-            // cat_id and return an array like below:
-            // [
-            //    ['id'=>'<sub-cat-id-1>', 'name'=>'<sub-cat-name1>'],
-            //    ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
-            // ]
-            foreach ($model as $key => $value) {
-                   $out[] = ['id'=>$value['CUST_KD'],'name'=> $value['CUST_NM']];
-               }
-
-               echo json_encode(['output'=>$out, 'selected'=>'']);
-               return;
-           }
+				   echo json_encode(['output'=>$out, 'selected'=>'']);
+				   return;
+			}
        }
        echo Json::encode(['output'=>'', 'selected'=>'']);
    }
@@ -472,289 +730,28 @@ class SalesmanOrderController extends Controller
     }
 
 
-    public function actionCreateSales()
-    {
-      	$model = new SoHeader();
+    
 
-      	$model_status = new SoStatus();
+   
+	public function actionSoEditReview($kdso){
 
-      # code...
-      if ($model->load(Yii::$app->request->post())){
-
-          #explode USER_SIGN1
-          $user_explode = explode('-', $model->USER_SIGN1);
-
-      		# SoHeader
-      		 $kode = Yii::$app->ambilkonci->getSMO($user_explode[1]);
-      	  	 $model->KD_SO = $kode;
-      	  	 $model->STT_PROCESS = 0;
-      	  	 $model->CREATE_BY = Yii::$app->user->identity->id;
-             $model->CREATE_AT = date('Y-m-d h:i:s');
-
-      	  	 # SoStatus
-      	  	 $model_status->KD_SO = $kode;
-      	  	 $model_status->ID_USER = $user_explode[0];
-      	  	 $model_status->STT_PROCESS = 0;
-      	  $transaction = self::Esm_connent()->beginTransaction();
-      	  try{
-      	  	 # SoHeader
-
-      	  	 $model->save();
-
-      	  	 # SoStatus
-      	  	
-      	  	 $model_status->save();
-
-      	  	// ...other DB operations...
-				$transaction->commit();
-			} catch(\Exception $e) {
-				$transaction->rollBack();
-				throw $e;
-			}
-      	 
-          return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model_status->ID_USER,'tgl'=>$model->TGL]);
-      }else {
-        return $this->renderAjax('new_so', [
-            'model' => $model,
-            'data_cus' => self::get_aryCustomers(), #array customers
-            'data_user'=>self::get_aryUser_id(),
-            // 'data_user' => self
-            // 'kode_som'=>$id
-        ]);
-      }
-    }
-
-    /**
-     * Action REVIEW | Prosess Checked and Approval
-     * @param string $id
-     * @author ptrnov  <piter@lukison.com>
-     * @since 1.1
-     */
-	public function actionReviewNew($id,$stt,$cust_kd,$user_id,$tgl)
-    {		
-		
-			//VIEW KODE_REF
-			$soHeaderData = SoHeader::find()->with('cust')->where(['KD_SO'=>$id])->one(); 
-
-			// $status_sign = SoStatus::find()->where(['KD_SO'=>$id])->count();		
-			$getSoType=10;
-			$getTGL=$tgl;
-			$getCUST_KD=$cust_kd;
-			$getUSER_ID=$user_id;
+		$model = $this->findModelHeader($kdso);
+		  # code...
+		  if ($model->load(Yii::$app->request->post()) ) {
 			
-			$searchModelDetail= new SoDetailSearch([
-				// 'TGL'=>$getTGL,
-				'KODE_REF'=>$id,
-				'CUST_KD'=>$getCUST_KD,
-				'USER_ID'=>$getUSER_ID,
-			]); 
-			$aryProviderSoDetail = $searchModelDetail->searchDetail(Yii::$app->request->queryParams);
+			  $model->save();
+			   return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model->USER_SIGN1,'tgl'=>$model->TGL]);
+		  }else {
+			return $this->renderAjax('so_tgl_kirim', [
+				'model' => $model,
+				'kode_som'=>$kdso
+			]);
+		  }
 
-			/*
-			* Process Editable Row [Columm SQTY]
-			* @author ptrnov  <piter@lukison.com>
-			* @since 1.1
-			**/
-			if (Yii::$app->request->post('hasEditable')) {
-				$id = Yii::$app->request->post('editableKey');
-				$model = SoT2::findOne($id);
-				$out = Json::encode(['output'=>'', 'message'=>'']);
-				$post = [];
-				$posted = current($_POST['SoT2']);
-				$post['SoT2'] = $posted;
-				if ($model->load($post)) {
-					$model->save();
-					$output = '';
-					if (isset($posted['SUBMIT_PRICE'])) {
-						$output = $model->SUBMIT_PRICE;
-					}
-					if (isset($posted['SUBMIT_QTY'])) {
-						$output = $model->SUBMIT_QTY;
-					}
-					if (isset($posted['TGL'])) {
-						$output = $model->TGL;
-					}
-					$out = Json::encode(['output'=>$output, 'message'=>'']);
-				}
-				// return ajax json encoded response and exit
-				echo $out;
-				return;
-			}
-
-			return $this->render('_actionReview',[
-				'aryProviderSoDetail'=>$aryProviderSoDetail,
-				'kode_som'=>$id,
-				'cust_kd'=>$getCUST_KD,
-				'cust_nmx'=>$soHeaderData->cust->CUST_NM,
-				'tgl'=>$getTGL,
-				'user_id'=>$getUSER_ID,
-				'searchModelDetail'=>$searchModelDetail,
-				'model_cus'=>$soHeaderData->cust,
-				'soHeaderData'=>$soHeaderData,
-				// 'status'=>$status_sign
-			]); 
-		}
-
-
-
-		public function actionSoEditReview($kdso){
-
-			$model = $this->findModelHeader($kdso);
-		      # code...
-		      if ($model->load(Yii::$app->request->post()) ) {
-		      	
-		          $model->save();
-		           return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model->USER_SIGN1,'tgl'=>$model->TGL]);
-		      }else {
-		        return $this->renderAjax('so_tgl_kirim', [
-		            'model' => $model,
-		            'kode_som'=>$kdso
-		        ]);
-		      }
-
-		}
+	}
 	
 
-	/**
-     * Action REVIEW | Prosess Checked and Approval
-     * @param string $id
-     * @author ptrnov  <piter@lukison.com>
-     * @since 1.1
-     */
-	public function actionReview($id,$stt)
-    {
-
-      if(self::getPermission()->BTN_REVIEW){		
-		if ($stt==0){
-			//CREATE KODE_REF
-			$modelSoT2 = SoT2::find()->with('cust')->where("ID='".$id."' AND SO_TYPE=10")->one();
-			$getSoType=10;
-			$getTGL=$modelSoT2->TGL;
-			$setTGL=$modelSoT2->WAKTU_INPUT_INVENTORY;
-			$getCUST_KD=$modelSoT2->CUST_KD;
-			$getUSER_ID=$modelSoT2->USER_ID;
-
-      $user_alias = $modelSoT2->cust->USER_ALIAS;
-		
-			$connect = Yii::$app->db_esm;
-			$kode = Yii::$app->ambilkonci->getSMO($user_alias);
-			$transaction = $connect->beginTransaction();
-			try {		
-				//SO HEADER
-				$connect->createCommand()->insert('so_0001', 
-						[
-							'KD_SO'=>$kode,
-							'TGL' =>$setTGL,
-							'USER_SIGN1' =>$getUSER_ID,
-							'CUST_ID'=>$getCUST_KD,
-              'CREATE_AT'=>date('Y-m-d h:i:s'),
-						])->execute();
-				//SO DETAIL -  STOCK
-				$connect->createCommand()->update('so_t2', 
-						['KODE_REF'=>$kode], 
-						[
-							'SO_TYPE'=>$getSoType,
-							'TGL'=>$getTGL,
-							'CUST_KD'=>$getCUST_KD,
-							'USER_ID'=>$getUSER_ID
-						])->execute();
-				//STATUS PROCESS
-				$connect->createCommand()->insert('so_0002', 
-						[
-							'KD_SO'=>$kode,
-							'ID_USER' =>$getUSER_ID,
-							'STT_PROCESS' =>'0',
-						])->execute();						
-				// ...other DB operations...
-				$transaction->commit();
-			} catch(\Exception $e) {
-				$transaction->rollBack();
-				throw $e;
-			}
-            $this->redirect(['/purchasing/salesman-order/review','id'=>$kode,'stt'=>1]); 
-
-		    //PR create Generate Code dari komponent. Tabel so_0001.
-			//Save kode generate  Tabel so_0001.
-			//Update SoT2 KODE_REF where ($getSoType,getTGL,getCUST_KD,getUSER_ID).
-			//Editing editable : SUBMIT_QTY,SUBMIT_PRICE
-		}else{
-			//VIEW KODE_REF
-			$modelSoT2 = SoT2::find()->with('cust')->where("KODE_REF='".$id."' AND SO_TYPE=10")->one();	
-			$soHeaderData = SoHeader::find()->with('cust')->where(['KD_SO'=>$id])->one(); 		
-			$getSoType=10;
-			$getTGL=$modelSoT2->TGL;
-			$getCUST_KD=$modelSoT2->CUST_KD;
-			$getUSER_ID=$modelSoT2->USER_ID;
-
-			// $status_sign = SoStatus::find()->where(['KD_SO'=>$id])->count();
-			
-			$searchModelDetail= new SoDetailSearch([
-				// 'TGL'=>$getTGL,
-				'KODE_REF'=>$id,
-				'CUST_KD'=>$getCUST_KD,
-				'USER_ID'=>$getUSER_ID,
-			]); 
-			$aryProviderSoDetail = $searchModelDetail->searchDetail(Yii::$app->request->queryParams);
-
-			/*
-			* Process Editable Row [Columm SQTY]
-			* @author ptrnov  <piter@lukison.com>
-			* @since 1.1
-			**/
-			if (Yii::$app->request->post('hasEditable')) {
-				$id = Yii::$app->request->post('editableKey');
-				$model = SoT2::findOne($id);
-				$out = Json::encode(['output'=>'', 'message'=>'']);
-				$post = [];
-				$posted = current($_POST['SoT2']);
-				$post['SoT2'] = $posted;
-				if ($model->load($post)) {
-					$model->save();
-					$output = '';
-					if (isset($posted['SUBMIT_PRICE'])) {
-						$output = $model->SUBMIT_PRICE;
-					}
-					if (isset($posted['SUBMIT_QTY'])) {
-						$output = $model->SUBMIT_QTY;
-					}
-					if (isset($posted['TGL'])) {
-						$output = $model->TGL;
-					}
-					$out = Json::encode(['output'=>$output, 'message'=>'']);
-				}
-				// return ajax json encoded response and exit
-				echo $out;
-				return;
-			}
-
-			// return $this->render('_actionReview',[
-			// 	'aryProviderSoDetail'=>$aryProviderSoDetail,
-			// 	'kode_SO'=>$modelSoT2->KODE_REF,
-			// 	'cust_kd'=>$getCUST_KD,
-			// 	'tgl'=>$getTGL,
-			// 	'user_id'=>$getUSER_ID,
-			// 	'searchModelDetail'=>$searchModelDetail,
-			// 	'model_cus'=>$modelSoT2->cust,
-			// 	'soHeaderData'=>$soHeaderData
-			// ]); 
-
-				return $this->render('_actionReview',[
-				'aryProviderSoDetail'=>$aryProviderSoDetail,
-				'kode_SO'=>$soHeaderData->KD_SO,
-				'cust_kd'=>$soHeaderData->CUST_ID,
-				'cust_nmx'=>$soHeaderData->cust->CUST_NM,
-				'tgl'=>$soHeaderData->TGL,
-				'user_id'=>$soHeaderData->USER_SIGN1,
-				'searchModelDetail'=>$searchModelDetail,
-				'model_cus'=>$modelSoT2->cust,
-				'soHeaderData'=>$soHeaderData,
-				// 'status'=>$status_sign
-			]); 
-		}
-    }else{
-         $this->redirect(array('/site/validasi'));  //
-    } 
-	}
+	
 
 	public function actionCetakpdf($id){
 		$modelSoT2 = SoT2::find()->with('cust')->where("KODE_REF='".$id."' AND SO_TYPE=10")->one();	

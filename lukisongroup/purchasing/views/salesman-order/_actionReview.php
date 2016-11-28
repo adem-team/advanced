@@ -804,7 +804,7 @@ $_gvSoDetail= GridView::widget([
 	'panel'=>[
 		'type'=>GridView::TYPE_SUCCESS,
 		'heading'=>false,//tombolCreate($cust_kd,$kode_so,$user_id,$ary[0]['CUST_NM'],$tgl),//$this->render('indexTimelineStatus'),//false //'<div> NO.SO :'.date("d-M-Y")
-		'before'=>'SO NO : '. $kode_so,
+		'before'=>'SO NO : '. $kode_SO,
 		'after'=>false,
 		'footer'=>'<div>'.$soHeaderData['ISI_MESSAGES'].'</div>'		
 	]
