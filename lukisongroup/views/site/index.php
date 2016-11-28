@@ -11,7 +11,6 @@ use kartik\tabs\TabsX;
 use yii\helpers\Url;
 $this->title = Yii::t('app', 'lukisongroup');
 
-
     /**
     *@author wawan
    * Declaration Componen User Permission
