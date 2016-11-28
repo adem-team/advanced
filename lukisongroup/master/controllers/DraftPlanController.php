@@ -653,6 +653,7 @@ class DraftPlanController extends Controller
           $authkey =  Yii::$app->security->generatePasswordHash($auth);
           $model->password_hash = $security;
           $model->auth_key = $authkey;
+          $model->USER_ALIAS = Yii::$app->ambilkonci->SetKodeAliasUser();
           $model->save();
           $user_profile->ID_USER = $model->id;
           $user_profile->CREATED_BY = $usercreate;
@@ -1953,6 +1954,78 @@ class DraftPlanController extends Controller
 		return $this->renderAjax('_formCheckWeek', [
 			'model' => $modelSyncActual,
 		]);
+    }
+
+
+     public function ary_status(){
+          $aryStt= [
+              ['STATUS' => 1, 'STT_NM' => 'DISABLE'],
+              ['STATUS' => 10, 'STT_NM' => 'ENABLE'],
+          ];
+          $valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
+          return $valStt;
+     }
+
+
+    public function actionEditUser($id){
+       $model_userlogin = $this->findModelUserLogin($id); #model userlogin
+
+       $model_userprofile = Userprofile::find()->where(['ID_USER'=>$id])->one(); #model userprofile
+
+
+        if ($model_userlogin->load(Yii::$app->request->post()) || $model_userprofile->load(Yii::$app->request->post())) {
+
+              $kode = Yii::$app->ambilkonci->SetKodeAliasUser();
+             if(!$model_userlogin->USER_ALIAS){
+                 $model_userlogin->USER_ALIAS = $kode;
+              }
+             
+              $model_userlogin->save();
+              $model_userprofile->save();
+                       
+                       
+           
+           return $this->redirect(['index?tab=4']);
+        } else {
+            return $this->renderAjax('update_user', [
+                'model_userlogin' => $model_userlogin,
+                'model_userprofile' => $model_userprofile,
+                'ary_status'=>self::ary_status()
+            ]);
+        }
+
+    }
+
+      /**
+     * Finds the UserLogin model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param int $id
+     * @return DraftPlan the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModelUserLogin($id)
+    {
+        if (($model = Userlogin::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+      /**
+     * Finds the UserProfile model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param int $id
+     * @return DraftPlan the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModelUserProfile($id)
+    {
+        if (($model = UserProfile::find(['ID_USER'=>$id])) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 	
     /**
