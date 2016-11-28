@@ -63,7 +63,9 @@ class ModulPermissionController extends Controller
         $searchModel = new UserloginSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        $searchModelpermision = new MdlpermissionSearch();
+        $searchModelpermision = new MdlpermissionSearch([
+			'USER_ID'=>1
+		]);
         $dataProviderpermision = $searchModelpermision->search(Yii::$app->request->queryParams);
         $params = Yii::$app->request->queryParams;
         $baris = Modulerp::find()->count();

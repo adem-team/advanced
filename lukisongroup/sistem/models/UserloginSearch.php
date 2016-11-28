@@ -48,6 +48,9 @@ class UserloginSearch extends Userlogin
 		$query = Userlogin::find();
         $dataProvider_Userlogin = new ActiveDataProvider([
             'query' => $query,
+			'pagination'=>[
+				'pageSize'=>100,
+			]   
         ]);
 
 		/*[5.3] LOAD VALIDATION PARAMS */

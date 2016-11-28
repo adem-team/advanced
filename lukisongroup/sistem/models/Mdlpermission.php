@@ -3,7 +3,7 @@
 namespace lukisongroup\sistem\models;
 
 use Yii;
-
+use lukisongroup\sistem\models\Userlogin;
 /**
  * This is the model class for table "modul_permission".
  *
@@ -100,4 +100,15 @@ class Mdlpermission extends \yii\db\ActiveRecord
 	{
 		return $this->modul->MODUL_DCRP;
 	}
+	
+	public function getUser()
+	{
+	  return $this->hasOne(Userlogin::className(), ['id' => 'USER_ID']);
+	}
+	
+	public function getUserNm()
+	{
+		return $this->user->username;
+	}
+	
 }
