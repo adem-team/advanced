@@ -169,7 +169,7 @@ function kembali(){
 		$options = [ 'id'=>'notulen-auth2',
 					  'data-toggle'=>"modal",
 					  'data-target'=>"#notulen-auth2-sign",
-					  'class'=>'btn btn-warning btn-xs',
+					  'class'=>'a_demo_two',
 					  'style'=>['width'=>'100px'],
 					  'title'=>'Detail'
 		];
@@ -198,184 +198,236 @@ function kembali(){
 
 ?>
 <div id='body-notulen'>
-<!--<div class="fold">-->
-	<!-- Tema  -->
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		<div class="row" style="margin-left:1px;margin-right:10px;">
-			<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-				<?php echo Html::img('http://lukisongroup.com/img_setting/kop/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
-			</div>
-			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-center">
-				<!-- <h5 class="text-left"><b>FORM PERMINTAAN BARANG & JASA</b></h5> !-->
-				<h4 class="text-center" style="padding-top:30px"><b>NOTULEN RAPAT</b></h4>
-			</div>
-			
-			<div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 text-left" >
-				<div class="hidden-xs">
-					<!-- <b class="text-right"> echo btnTanggal($model) ?></b> -->
-					<nav class="menu" style="padding-top:100px;">
-						<input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open" />
-						<label class="menu-open-button" for="menu-open"> <span class="lines line-1"></span> <span class="lines line-2"></span> <span class="lines line-3"></span> </label>
-						<a href="#" class="menu-item item-1"> <i class="fa fa-anchor"></i> </a> 
-						<a href="#" class="menu-item item-2"> <i class="fa fa-coffee"></i> </a> 
-						<a href="#" class="menu-item item-3"> <i class="fa fa-envelope-o"></i> </a> 
-						<a href="/widget/notulen/" class="menu-item item-4"> <i class="fa fa-undo"></i></a> 
-						<a href="#" class="menu-item item-5"> <i class="fa fa-print fa-fw"></i> </a> 
-						<a href="#" class="menu-item item-6"> <i class="fa fa-diamond"></i> </a>
-					</nav>
-				 </div>
-			</div>
-			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-left">			
-				<div style="padding-top:20px;">
-					<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
-					<hr style="height:1px;margin-top: 1px; margin-bottom: 10px;">
-				</div>
-			</div>
+<div class="fold">
+<!-- Tema  -->
+ <div>
+		<div style="width:240px; float:left;">
+			<?php echo Html::img('http://lukisongroup.com/img_setting/kop/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
 		</div>
-	</div>
-	<!-- header -->
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		<div class="row" style="margin-left:1px;padding-top:10px">
-			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"  style="margin-left:0;">
-				<dl>
-				<!-- tanggal -->
-				  <dt style="width:150px; float:left;">Tanggal</dt> 
-				  <dd style="color:rgba(87, 163, 247, 1)">:<b><?php echo btnTanggal($model) ?></b></dd>
-				  <!-- waktu -->
-				  <dt style="width:150px; float:left;">Waktu</dt>
-				  <dd style="color:rgba(87, 163, 247, 1)">:<?= btnSetTime($acara) ?> </dd>
-
-				   <!-- tempat -->
-						<dt style="width:150px; float:left;">Tempat</dt>
-						<dd style="color:rgba(87, 163, 247, 1)">:  <b>Ruang Meeting</b></dd>
-						<!-- materi rapat -->
-						<dt style="width:150px; float:left;">Materi Rapat</dt>
-						<dd>: <?php echo btnSetMateri($model); ?></dd>
-				</dl>
-				
-			</div>
+		<div style="padding-top:40px;">
+			<!-- <h5 class="text-left"><b>FORM PERMINTAAN BARANG & JASA</b></h5> !-->
+			<h4 class="text-left"><b><?= $model->title ?></b></h4>
 		</div>
+		<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
+		<hr style="height:1px;margin-top: 1px; margin-bottom: 10px;">
+
 	</div>
-	
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
-		<div class="row" style="margin-left:10px;margin-right:10px;">
-			<!-- <div class="col-sm-12"> -->
-			<section class="ac-container" >
-				<div>
-					  <input id="ac-1" name="accordion-1" type="radio" checked="">
-					  <label for="ac-1"> 
+<!-- header -->
+   <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"  style="margin-left:0;">
+        <dl>
+        <!-- tanggal -->
+          <dt style="width:150px; float:left;">Tanggal</dt> 
+          <dd style="color:rgba(87, 163, 247, 1)">:<b><?php echo btnTanggal($model) ?></b></dd>
+          <!-- waktu -->
+          <dt style="width:150px; float:left;">Waktu</dt>
+          <dd style="color:rgba(87, 163, 247, 1)">:<?= btnSetTime($acara) ?> </dd>
 
-					   <!--    Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-person','id'=>$acara[0]->NOTULEN_ID],
-											['data-toggle'=>"modal",
-											'id'=>'per-id',
-													'data-target'=>"#person-notulen"]) ?> -->
-						  <?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>','#',['id'=>'per-id']) ?>
-						   Peserta Rapat
+           <!-- tempat -->
+                <dt style="width:150px; float:left;">Tempat</dt>
+                <dd style="color:rgba(87, 163, 247, 1)">:  <b>Ruang Meeting</b></dd>
+                <!-- materi rapat -->
+                <dt style="width:150px; float:left;">Materi Rapat</dt>
+                <dd>: <?php echo btnSetMateri($model); ?></dd>
+        </dl>
+         <div class="hidden-xs">
+            <!-- <b class="text-right"> echo btnTanggal($model) ?></b> -->
+            <nav class="menu">
+            <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open" />
+            <label class="menu-open-button" for="menu-open"> <span class="lines line-1"></span> <span class="lines line-2"></span> <span class="lines line-3"></span> </label>
+            <a href="#" class="menu-item item-1"> <i class="fa fa-anchor"></i> </a> 
+            <a href="#" class="menu-item item-2"> <i class="fa fa-coffee"></i> </a> 
+            <a href="#" class="menu-item item-3"> <i class="fa fa-envelope-o"></i> </a> 
+            <a href="/widget/notulen/" class="menu-item item-4"> <i class="fa fa-undo"></i></a> 
+            <a href="#" class="menu-item item-5"> <i class="fa fa-print fa-fw"></i> </a> 
+            <a href="#" class="menu-item item-6"> <i class="fa fa-diamond"></i> </a>
+         </nav>
+         </div>
+        </div>
+    </div>
+    
 
 
-					  </label>
-					<article class="ac-small">
-						<br>
-							<ul>
-								<?php
-								   $peserta = explode(',',$acara[0]->USER_ID);
-								   if(count($peserta) != 0)
-								   {
+<div class="row">
+          <!-- <div class="col-sm-12"> -->
+          <section class="ac-container">
+        <div>
+          <input id="ac-1" name="accordion-1" type="radio" checked="">
 
-									 foreach ($peserta as  $value) {
-									   # code...
-									  ?>
-										<li><?= Html::a($value, ['/widget/notulen/set-person','id'=>$acara[0]->NOTULEN_ID],
-													['data-toggle'=>"modal",
-															'data-target'=>"#person-notulen"]) ?> 
-										</li>
-									<?php
-										}
-									}
-								 ?>
+          <label for="ac-1"> 
 
-							</ul>
-						<br>
-					</article>
-				</div>
-				<div>
-					<input id="ac-2" name="accordion-1" type="radio">
-					<label for="ac-2">			  
-						<?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-acara','id'=>$acara[0]->NOTULEN_ID],
-										['data-toggle'=>"modal",
-												'data-target'=>"#acara"]) ?>
-					   Susunan Acara
+           <!--    Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-person','id'=>$acara[0]->NOTULEN_ID],
+                                ['data-toggle'=>"modal",
+                                'id'=>'per-id',
+                                        'data-target'=>"#person-notulen"]) ?> -->
+              <?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>','#',['id'=>'per-id']) ?>
+               Peserta Rapat
 
-					</label>
-					<article class="ac-medium">
-						<?= btnAcara($acara) ?>
-					</article>
-				</div>
-				<div>
-					<input  id="ac-3" name="accordion-1" type="radio">
-					<label for="ac-3">
-						<?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-hasil','id'=>$acara[0]->NOTULEN_ID],
-										['data-toggle'=>"modal",
-										 'data-target'=>"#rapat",
-										 
 
-										 ]);
-						?>
-						Hasil Rapat
-					</label>
-					<article class="ac-large">
-						<?= btnRapat($acara) ?>
-					</article>
-				</div>
-		  </section>
-		  <!-- </div> -->
-		</div>
-	</div>
+          </label>
+          <article class="ac-small">
+          <br>
+            <ul>
+               <?php
 
-	<div  class="row">
-		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"  >
-			<div  class="row" style="margin-top:50px;margin-left:50px;margin-bottom:50px">
-				<dl>
-					<dt>Notulis,</dt>
-					</dl>
-					  <dl>
-					  <?php
-						 $ttd2 = $acara[0]->SIGN_STT2!= 0 ?  '<img style="width:80 ; height:40px;" src='.SIGN_2($acara).'></img>' :SignCreated2($acara);
-						 echo $ttd2;
-					  ?>
-				</dl>
-				<dl>
-					  <?php
-							$name2 = $acara[0]->SIG2_NM != '' ? $acara[0]->SIG2_NM : 'none' ;
-							echo $name2;
-					   ?>
-				</dl>
-			</div>
-		</div>
-	</div>
+               $peserta = explode(',',$acara[0]->USER_ID);
+               if(count($peserta) != 0)
+               {
 
-	<!-- Modal -->
-	<div class="modal fade" id="person-notulen" role="dialog">
-		<div class="modal-dialog">		
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header">
-				  <button type="button" class="close" data-dismiss="modal">&times;</button>
-				   <div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>NOTULEN</b></h5></div>
-				</div>
-				<div class="modal-body">
-				  <?= $this->render('set_person',[
-					  'person_form'=>$person_form,
-					  'items'=>$items,
-					  'id'=>$model->id
-				  ]) ?>
-				</div>
-				<div class="modal-footer">
-				</div>
-			</div>		  
-		</div>
-	</div>
- </div>
+                 foreach ($peserta as  $value) {
+                   # code...
+                  ?>
+                    <li><?= Html::a($value, ['/widget/notulen/set-person','id'=>$acara[0]->NOTULEN_ID],
+                                ['data-toggle'=>"modal",
+                                        'data-target'=>"#person-notulen"]) ?> 
+                    </li>
+                  <?php
+                    }
+                }
+                 ?>
+
+              </ul>
+              <br>
+          </article>
+        </div>
+        <div>
+          <input id="ac-2" name="accordion-1" type="radio">
+          <label for="ac-2">
+          
+             <?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-acara','id'=>$acara[0]->NOTULEN_ID],
+                                ['data-toggle'=>"modal",
+                                        'data-target'=>"#acara"]) ?>
+               Susunan Acara
+
+          </label>
+          <article class="ac-medium">
+             <?= btnAcara($acara) ?>
+          </article>
+        </div>
+        <div>
+          <input  id="ac-3" name="accordion-1" type="radio">
+          <label for="ac-3">
+
+
+
+             <?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-hasil','id'=>$acara[0]->NOTULEN_ID],
+                                ['data-toggle'=>"modal",
+                                 'data-target'=>"#rapat",
+                                 
+
+                                 ]) ?>
+
+          Hasil Rapat
+
+
+          </label>
+          <article class="ac-large">
+             <?= btnRapat($acara) ?>
+          </article>
+        </div>
+      </section>
+      <!-- </div> -->
+    </div>
+
+
+    <div style="margin-top:10%" class="row">
+      <div class="col-sm-1">
+      </div>
+          <div class="col-sm-2">
+                 <dl>
+                <dt>Director,</dt>
+                </dl>
+                  <dl>
+                  <?php
+                  if($profile->GF_ID == 1 || $profile->GF_ID == 2)
+                  {
+
+	                $ttd1 = $acara[0]->SIGN_STT1!= 0 ?  '<img style="width:80; height:40px" src='.$ttd.'></img>' : SignCreated($acara);
+	                 echo $ttd1;
+             }else{
+             	 $ttd1 = $acara[0]->SIGN_STT1!= 0 ?  '<img style="width:80; height:40px" src='.SIGN_1($acara).'></img>' :  Signvalid();
+	                 echo $ttd1;
+
+             }
+
+                  ?>
+                </dl>
+	            <dl>
+			          <?php
+			            $name = $acara[0]->SIG1_NM != '' ? $acara[0]->SIG1_NM : 'none' ;;
+			            echo $name;
+			           ?>
+	        	</dl>
+          </div>
+           <div class="col-sm-1">
+            </div>
+             <div class="col-sm-2">
+                <dl>
+                <dt>Notulis,</dt>
+                </dl>
+                 <dl>
+                  <?php
+                    $ttd2 = $acara[0]->SIGN_STT2!= 0 ?  '<img style="width:80 ; height:40px;" src='.SIGN_2($acara).'></img>' :SignCreated2($acara);
+                    echo $ttd2;
+                  ?>
+                </dl>
+                 <dl>
+                 	<?php
+			            $name2 = $acara[0]->SIG2_NM != '' ? $acara[0]->SIG2_NM : 'none' ;
+			            echo $name2;
+			           ?>
+        		</dl>
+          </div>
+          <div class="col-sm-3">
+         
+          </div>
+          <div class="col-sm-3">
+          		 <input type="hidden" value='<?= $acara[0]->NOTULEN_ID ?>' id='hide' name="person-hide">
+
+          </div>
+
+        <!-- <dl> -->
+          <!-- <dt style="float:left;">Tangerang, $date = date("d M Y",strtotime($model->CREATE_AT)); ?></dt><br> -->
+
+        <!-- </dl> -->
+         <!-- <dl> -->
+         
+        <!-- </dl> -->
+        <!-- <dl> -->
+          <!--  <dt style="float:left;margin-left:40%">Notulis,</dt> -->
+        <!-- </dl> -->
+        
+
+    </div>
+
+
+</div>
+
+
+ <!-- Modal -->
+  <div class="modal fade" id="person-notulen" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+           <div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>NOTULEN</b></h5></div>
+        </div>
+        <div class="modal-body">
+          <?= $this->render('set_person',[
+              'person_form'=>$person_form,
+              'items'=>$items,
+              'id'=>$model->id
+          ]) ?>
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+      
+    </div>
+  </div>
 
 
 
