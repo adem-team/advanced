@@ -54,6 +54,10 @@ use kartik\widgets\Select2;
 			'attribute' =>'username',
 			'label'=>'user login name',
 		],
+		[ 	//USER_ALIAS
+			'attribute' =>'USER_ALIAS',
+			'label'=>'user alias',
+		],
 		
 		[ 	//status
 			'attribute' =>'status',
@@ -98,7 +102,7 @@ use kartik\widgets\Select2;
 	/*Detail data View Editing*/
 	$detail_data_view=DetailView::widget([
 		'id'=>'detail-data-view-user-id',
-		'model' => $model_userlogin,
+		'model' =>$model_userlogin,
 		'attributes'=>$update_user,
 		'condensed'=>true,
 		'hover'=>true,
@@ -109,6 +113,12 @@ use kartik\widgets\Select2;
 					'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-1x fa-list-alt"></div><div><h6 class="modal-title"><b> Detail User Login</b></h6></div>',
 					'type'=>DetailView::TYPE_INFO,
 				],
+				 'formOptions'=>[
+                   'id'=>$model_userlogin->formName(),
+                    'enableAjaxValidation'=>true,
+                    'enableClientValidation' => true,
+                      'validationUrl'=>Url::toRoute('/master/draft-plan/valid-alias-user'),
+                ],
 		// 'saveOptions'=>[ 
 		// 	'id' =>'saveBtn',
 		// 	'value'=>'/master/customers/viewcust?id='.$model->CUST_KD,

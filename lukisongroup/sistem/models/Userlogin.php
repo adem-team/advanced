@@ -31,6 +31,7 @@ class Userlogin extends \yii\db\ActiveRecord
 			[['new_pass','username','status'], 'required','on' =>'updateuser'],
 			[['username','auth_key','password_hash','password_reset_token','EMP_ID'], 'string'],
       [['email','avatar','avatarImage'], 'string'],
+      [['USER_ALIAS'],'unique','on'=>'updateuseralias'],
 			[['id','status','created_at','updated_at'],'integer'],
 			[['POSITION_SITE','POSITION_LOGIN','USER_ALIAS'], 'safe'],
 		];
@@ -88,7 +89,7 @@ class Userlogin extends \yii\db\ActiveRecord
         return $this->crmUserprofileTbl!=''?$this->crmUserprofileTbl->HP:'none';
     }
 
-
+  
 
 	/**
      * Generates password hash from password signature
