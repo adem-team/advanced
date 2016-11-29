@@ -21,7 +21,8 @@ use yii\helpers\Html;
 	$imgTermdata3= Html::img('@web/widget/docHelp/img_term/TERMDATA3.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:400px;']); 	
 	$imgTermdata4= Html::img('@web/widget/docHelp/img_term/TERMDATA4.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:300px;']); 
 	$imgTermdata5= Html::img('@web/widget/docHelp/img_term/TERMDATA5.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:300px;']); 	
-	$imgTermdata6= Html::img('@web/widget/docHelp/img_term/TERMDATA6.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:300px;']); 	
+	$imgTermdata6= Html::img('@web/widget/docHelp/img_term/TERMDATA6.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:300px;']);
+	$imgTermdata7= Html::img('@web/widget/docHelp/img_term/TERMDATA7.PNG',  ['class' => 'pnjg', 'style'=>'width:500px;height:400px;']); 	 	
 ?>	
 <p>
 Penjelasan : Suatu bentuk perjanjian kerjasama yang persyaratannya disepakati oleh kedua belah pihak dalam hal ini retailer dan produsen / principle yang umumnya berlaku 1 tahun.</br>
@@ -79,5 +80,7 @@ Berikut tampilan awal Term Data :</br>
 <?php  echo $imgTermdata5;?><p></br>
 6. Jika ingin merubah Budget, Klik pada tanda <b>panah biru</b> berikut ini lalu klik pada logo <b>Pensil.</b></br>
 <?php  echo $imgTermdata6;?><p></br>
+7. Klik pada <b>Account Investment.</b></br>
+<?php  echo $imgTermdata7;?><p></br>
 
 

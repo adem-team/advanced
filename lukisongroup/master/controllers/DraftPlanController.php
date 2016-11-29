@@ -93,6 +93,18 @@ class DraftPlanController extends Controller
         return Yii::$app->db_esm;
     }
 
+     public function actionValidAliasUser()
+    {
+      # code...
+      $model = new Userlogin();
+      $model->scenario = "updateuseralias";
+    if(Yii::$app->request->isAjax && $model->load($_POST))
+    {
+      Yii::$app->response->format = 'json';
+      return ActiveForm::validate($model);
+      }
+    }
+
 
     
     public function get_arycusdetail()
