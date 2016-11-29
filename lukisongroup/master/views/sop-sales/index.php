@@ -21,6 +21,7 @@ use lukisongroup\master\models\SopSalesDetailSearch;
 // $this->params['breadcrumbs'][] = $this->title;
 
 
+$this->sideMenu = 'esm_customers'; 
 ?>
 
 
