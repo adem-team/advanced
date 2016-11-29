@@ -43,10 +43,10 @@ function kembali(){
      }else{
         $title = Yii::t('app','xxxx-xx-xx'.' - '.'xxxx-xx-xx');
      }
-        // $title = Yii::t('app','xxxx-xx-xx');
+        //$title = Yii::t('app','xxxx-xx-xx');
         $options = [ 'id'=>'notu-tgl-id',
              'data-toggle'=>"modal",
-             'data-target'=>"#acara",
+             'data-target'=>"#tanggal-id",
              'class'=>'btn-xs',
              'title'=>$title,
         ];
@@ -121,7 +121,7 @@ function kembali(){
         $options = [ 'id'=>'notu-set-time',
              'class'=>'btn-xs',
              'data-toggle'=>"modal",
-             'data-target'=>"#rapat",
+             'data-target'=>"#jam-id",
              'title'=>$title,
         ];
         // $icon = '<span class="fa fa-rotate-left fa-xs"> Back</span>';
@@ -439,32 +439,32 @@ Modal::begin([
     Modal::end(); 
 
 
-$this->registerJs("
-            $.fn.modal.Constructor.prototype.enforceFocus = function() {};
-            $('#rapat').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget)
-                var modal = $(this)
-                var title = button.data('title')
-                var href = button.attr('href')
-                modal.find('.modal-title').html(title)
-                modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-                $.post(href)
-                    .done(function( data ) {
-                        modal.find('.modal-body').html(data)
-                    });
-                }),
-    ",$this::POS_READY);
+	$this->registerJs("
+				$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+				$('#rapat').on('show.bs.modal', function (event) {
+					var button = $(event.relatedTarget)
+					var modal = $(this)
+					var title = button.data('title')
+					var href = button.attr('href')
+					modal.find('.modal-title').html(title)
+					modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+					$.post(href)
+						.done(function( data ) {
+							modal.find('.modal-body').html(data)
+						});
+					}),
+		",$this::POS_READY);
 
-/*modal*/
-Modal::begin([
-    'id' => 'rapat',
-    'header' => '<div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>NOTULEN</b></h5></div>',
-    // 'size' => Modal::SIZE_SMALL,
-    'headerOptions'=>[
-        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
-    ],
-  ]);
-    echo "<div id='modalContentNotulen'></div>";
+	/*modal*/
+	Modal::begin([
+		'id' => 'rapat',
+		'header' => '<div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>NOTULEN</b></h5></div>',
+		// 'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+		],
+	]);
+		echo "<div id='modalContentNotulen'></div>";
     Modal::end(); 
 
     $this->registerJs("
@@ -526,8 +526,66 @@ Modal::begin([
 //     Modal::end(); 
 
  
+ 
+ 
+ 
+ 
+ 
+	/*MODAL JAM NOTULEN*/
+	$this->registerJs("
+				$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+				$('#jam-id').on('show.bs.modal', function (event) {
+					var button = $(event.relatedTarget)
+					var modal = $(this)
+					var title = button.data('title')
+					var href = button.attr('href')
+					modal.find('.modal-title').html(title)
+					modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+					$.post(href)
+						.done(function( data ) {
+							modal.find('.modal-body').html(data)
+						});
+					}),
+		",$this::POS_READY);
 
-    
+	/*modal*/
+	Modal::begin([
+		'id' => 'jam-id',
+		'header' => '<div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>TIME NOTULEN</b></h5></div>',
+		'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+		],
+	]);
+		echo "<div id='modalContentNotulen'></div>";
+    Modal::end();
+	
+	/*MODAL TANGGAL NOTULEN*/
+    $this->registerJs("
+		$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+		$('#tanggal-id').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			}),
+    ",$this::POS_READY);
+	Modal::begin([
+		'id' => 'tanggal-id',
+		'header' => '<div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>TANGGAL NOTULEN</b></h5></div>',
+		'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+		],
+	]);
+		echo "<div id='modalContentacara'></div>";
+    Modal::end();    
 
 
 ?>
