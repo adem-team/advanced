@@ -41,7 +41,7 @@ class NotulenSearch extends Notulen
      */
     public function search($params)
     {
-        $query = Notulen::find();
+        $query = Notulen::find()->orderby(['start'=>SORT_DESC]);
 
         // add conditions that should always apply here
 

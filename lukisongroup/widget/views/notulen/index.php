@@ -328,7 +328,7 @@ EOF;
 			],
 		],
 		'panel' => [
-					'heading'=>"<span class='fa fa-cart-plus fa-edit'><b> LIST NOTULEN</b></span>",
+					'heading'=>"<span class='fa fa-edit'><b> LIST NOTULEN</b></span>",
 					'type'=>'info',
 					'showFooter'=>false,
 		],
@@ -351,6 +351,7 @@ EOF;
 		</div>
 		 <div class="col-sm-4 col-md-4 col-lg-4" >
 			<?=$panelNutulen?>
+			<div style="font-family:tahoma,arial, sans-serif;font-size:9pt; color:red;"><b style="font-size:12pt;">*</b><b style="font-size:8pt;"> Klik Tanggal, untuk memulai Notulen baru</b></div>
 		</div>
 		<div class="col-sm-12 col-md-12 col-lg-12">
 			<?php

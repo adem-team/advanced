@@ -201,7 +201,7 @@ function kembali(){
 <!--<div class="fold">-->
 	<!-- Tema  -->
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		<div class="row" style="margin-left:1px;margin-right:10px;">
+		<div class="row" style="margin-top:35px;margin-left:1px;margin-right:10px;">
 			<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
 				<?php echo Html::img('http://lukisongroup.com/img_setting/kop/lukison.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']); ?>
 			</div>
@@ -234,7 +234,7 @@ function kembali(){
 		</div>
 	</div>
 	<!-- header -->
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+	<div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
 		<div class="row" style="margin-left:1px;padding-top:10px">
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"  style="margin-left:0;">
 				<dl>
@@ -258,7 +258,7 @@ function kembali(){
 	</div>
 	
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
-		<div class="row" style="margin-left:10px;margin-right:10px;">
+		<div class="row" style="margin-top:10px;margin-left:10px;margin-right:10px;">
 			<!-- <div class="col-sm-12"> -->
 			<section class="ac-container" >
 				<div>
