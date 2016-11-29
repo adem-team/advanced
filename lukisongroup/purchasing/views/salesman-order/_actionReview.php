@@ -275,25 +275,23 @@ $city = (new \yii\db\Query())
 	function statusItems($model){
 		if($model->STATUS==0){
 			/*New*/
-			return Html::a('<i class="fa fa-square-o fa-md"></i>', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'50px'],'title'=>'New']);
+			return Html::a('<i class="fa fa-square-o fa-md"></i>', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'25px'],'title'=>'New']);
 		}elseif($model->STATUS==1){
 			/*Approved*/
-			return Html::a('<i class="fa fa-check-square-o fa-md"></i>', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'50px'], 'title'=>'Approved']);
+			return Html::a('<i class="fa fa-check-square-o fa-md"></i>', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'25px'], 'title'=>'Approved']);
 		}elseif ($model->STATUS==3){
 				/*DELETE*/
-			return Html::a('<i class="glyphicon glyphicon-remove"></i>', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'50px'], 'title'=>'Detail']);
+			return Html::a('<i class="glyphicon glyphicon-remove"></i>', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'25px'], 'title'=>'Detail']);
 		}elseif ($model->STATUS==4){
 			/*REJECT*/
-			return Html::a('<i class="fa fa-remove fa-md"></i> ', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'50px'], 'title'=>'Reject']);
+			return Html::a('<i class="fa fa-remove fa-md"></i> ', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'25px'], 'title'=>'Reject']);
 		}else{
-			return Html::a('<i class="glyphicon glyphicon-question-sign"></i>', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'50px'], 'title'=>'Detail']);
+			return Html::a('<i class="glyphicon glyphicon-question-sign"></i>', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'25px'], 'title'=>'Detail']);
 		};
 	}
 
  
-	$soDetailColumn= [
-
-	
+	$soDetailColumn= [	
 	/*No Urut*/
 	[
 		'class'=>'kartik\grid\SerialColumn',
@@ -346,7 +344,7 @@ $city = (new \yii\db\Query())
 		'headerOptions'=>[
 			'style'=>[
 				'text-align'=>'center',
-				'width'=>'90px',
+				'width'=>'100px',
 				'font-family'=>'verdana, arial, sans-serif',
 				'font-size'=>'7pt',
 				'background-color'=>'rgba(97, 211, 96, 0.3)',
@@ -355,7 +353,7 @@ $city = (new \yii\db\Query())
 		'contentOptions'=>[
 			'style'=>[
 				'text-align'=>'left',
-				'width'=>'90px',
+				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt'
 			]
@@ -428,7 +426,7 @@ $city = (new \yii\db\Query())
 		'headerOptions'=>[
 			'style'=>[
 				'text-align'=>'center',
-				'width'=>'120px',
+				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt',
 				'background-color'=>'rgba(97, 211, 96, 0.3)',
@@ -437,7 +435,7 @@ $city = (new \yii\db\Query())
 		'contentOptions'=>[
 			'style'=>[
 				'text-align'=>'right',
-				'width'=>'120px',
+				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt',
 			]
@@ -459,7 +457,7 @@ $city = (new \yii\db\Query())
 		'vAlign'=>'middle',
 		//'group'=>true,
 		'value'=>function($model){
-			return round($model['UNIT_BRG'],0,PHP_ROUND_HALF_UP);
+			return round($model['SO_QTY'],0,PHP_ROUND_HALF_UP);
 		},
 		'format'=>['decimal',2],
 		'pageSummaryFunc'=>GridView::F_SUM,
@@ -505,7 +503,7 @@ $city = (new \yii\db\Query())
 		'headerOptions'=>[
 			'style'=>[
 				'text-align'=>'center',
-				'width'=>'120px',
+				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt',
 				'background-color'=>'rgba(97, 211, 96, 0.3)',
@@ -514,7 +512,7 @@ $city = (new \yii\db\Query())
 		'contentOptions'=>[
 			'style'=>[
 				'text-align'=>'right',
-				'width'=>'120px',
+				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt',
 			]
@@ -536,7 +534,7 @@ $city = (new \yii\db\Query())
 		'headerOptions'=>[
 			'style'=>[
 				'text-align'=>'center',
-				'width'=>'120px',
+				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt',
 				'background-color'=>'rgba(97, 211, 96, 0.3)',
@@ -545,7 +543,7 @@ $city = (new \yii\db\Query())
 		'contentOptions'=>[
 			'style'=>[
 				'text-align'=>'right',
-				'width'=>'120px',
+				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt',
 			]
@@ -578,12 +576,12 @@ $city = (new \yii\db\Query())
 		'pageSummaryFunc'=>GridView::F_SUM,
 		'pageSummary'=>true,
 		'value'=>function($model){
-			return round($model['ID'],0,PHP_ROUND_HALF_UP);
+			return round($model['SUBMIT_QTY'],0,PHP_ROUND_HALF_UP);
 		},
 		'headerOptions'=>[
 			'style'=>[
 				'text-align'=>'center',
-				'width'=>'120px',
+				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt',
 				'background-color'=>'rgba(74, 206, 231, 1)',
@@ -592,7 +590,7 @@ $city = (new \yii\db\Query())
 		'contentOptions'=>[
 			'style'=>[
 				'text-align'=>'right',
-				'width'=>'120px',
+				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt',
 			]
@@ -628,7 +626,7 @@ $city = (new \yii\db\Query())
 		'headerOptions'=>[
 			'style'=>[
 				'text-align'=>'center',
-				'width'=>'120px',
+				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt',
 				'background-color'=>'rgba(74, 206, 231, 1)',
@@ -637,7 +635,7 @@ $city = (new \yii\db\Query())
 		'contentOptions'=>[
 			'style'=>[
 				'text-align'=>'right',
-				'width'=>'120px',
+				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt',
 			]
@@ -659,7 +657,7 @@ $city = (new \yii\db\Query())
 		'headerOptions'=>[
 			'style'=>[
 				'text-align'=>'center',
-				'width'=>'120px',
+				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt',
 				'background-color'=>'rgba(74, 206, 231, 1)',
@@ -668,7 +666,7 @@ $city = (new \yii\db\Query())
 		'contentOptions'=>[
 			'style'=>[
 				'text-align'=>'right',
-				'width'=>'120px',
+				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt',
 			]
@@ -687,11 +685,11 @@ $city = (new \yii\db\Query())
 			/* Attribute Status Detail RO */
 			'attribute'=>'STATUS',
 			// 'options'=>['id'=>'test-ro'],
-			'label'=>'Status',
+			'label'=>'STT',
 			'hAlign'=>'center',
 			'vAlign'=>'middle',
 			'mergeHeader'=>true,
-			'contentOptions'=>['style'=>'width: 100px'],
+			'contentOptions'=>['style'=>'width: 50px'],
 			'format' => 'html',
 			'value'=>function ($model, $key, $index, $widget) {
 						return statusItems($model);
@@ -699,7 +697,7 @@ $city = (new \yii\db\Query())
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'50px',
+					'width'=>'10px',
 					'font-family'=>'verdana, arial, sans-serif',
 					'font-size'=>'8pt',
 					'background-color'=>'rgba(247, 245, 64, 0.6)',
@@ -708,10 +706,10 @@ $city = (new \yii\db\Query())
 			'contentOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'50px',
+					'width'=>'10px',
 					'font-family'=>'verdana, arial, sans-serif',
 					'font-size'=>'8pt',
-					'background-color'=>'rgba(247, 245, 64, 0.6)',
+					
 				]
 			],
 		],
@@ -744,7 +742,7 @@ $city = (new \yii\db\Query())
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'140px',
+					'width'=>'50px',
 					'font-family'=>'verdana, arial, sans-serif',
 					'font-size'=>'7pt',
 					'background-color'=>'rgba(97, 211, 96, 0.3)',
@@ -753,7 +751,7 @@ $city = (new \yii\db\Query())
 			'contentOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'140px',
+					'width'=>'50px',
 					'height'=>'10px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'7pt',
@@ -762,28 +760,24 @@ $city = (new \yii\db\Query())
 		],
 ];
 
-
-
-
-
-
 $_gvSoDetail= GridView::widget([
 	'id'=>'gv-so-detail-md-inbox',
 	'dataProvider'=> $aryProviderSoDetail,
 	// 'filterModel' => $searchModelDetail,
 	'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
 	'showPageSummary' => true,
-	/*
+	
 		'beforeHeader'=>[
 			[
 				'columns'=>[
-					['content'=>'List Permintaan Barang & Jasa', 'options'=>['colspan'=>4, 'class'=>'text-center success']],
-					['content'=>'Action Status ', 'options'=>['colspan'=>6, 'class'=>'text-center warning']],
+					['content'=>'Sales Order Detail', 'options'=>['colspan'=>8, 'class'=>'text-center success']],
+					['content'=>'Approval ', 'options'=>['colspan'=>3, 'class'=>'text-center success']],
+					['content'=>'Action Status ', 'options'=>['colspan'=>2, 'class'=>'text-center success']],
 				],
 				'options'=>['class'=>'skip-export'] // remove this row from export
 			]
 		],
-	*/
+	
 	'columns' => $soDetailColumn,
 	'pjax'=>true,
 	'pjaxSettings'=>[
