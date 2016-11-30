@@ -434,6 +434,9 @@ class NotulenController extends Controller
         $person_form =  new PostPerson();
 
         $person = Person::find()->where(['NOTULEN_ID'=>$id])->all();
+
+         $searchModel = new NotulenSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
     
         return $this->render('view', [
             'model' => $model,
@@ -444,6 +447,7 @@ class NotulenController extends Controller
             'person'=>$person,
             'person_form'=>$person_form,
             'items'=>self::get_aryPerson(),
+            'dataProvider'=>$dataProvider
         ]);
     }
 

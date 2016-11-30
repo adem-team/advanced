@@ -9,6 +9,7 @@ use yii\bootstrap\Modal;
 use lukisongroup\widget\models\NotulenModul;
 
 use lukisongroup\hrd\models\Employe;
+use yii\helpers\ArrayHelper;
 
 $this->registerCss($this->render('letter.css'));
 
@@ -46,7 +47,9 @@ function kembali(){
     //     $title = Yii::t('app','xxxx-xx-xx'.' - '.'xxxx-xx-xx');
     //  }
 
-    $title = $model->start != '' ? $model->start : Yii::t('app','xxxx-xx-xx');
+
+
+    $title = $model->start != '' ? Yii::$app->formatter->format($model->start, 'date'): Yii::t('app','xxxx-xx-xx');
 
         //$title = Yii::t('app','xxxx-xx-xx');
         $options = [ 'id'=>'notu-tgl-id',
@@ -217,6 +220,179 @@ function kembali(){
 		return $data->SIGSVGBASE64;
 	}
 
+	/*
+	 * LIST MEMO CALENDAR 
+	 * PERIODE 23-22
+	 * @author ptrnov  [piter@lukison.com]
+	 * @since 1.2
+	*/
+	$actionClass='btn btn-info btn-xs';
+	$actionLabel='Update';
+	$attDinamikNotulen =[];				
+	/*GRIDVIEW ARRAY FIELD HEAD*/
+	$headColomnNotulen=[
+		['ID' =>0, 'ATTR' =>['FIELD'=>'title','SIZE' => '300px','label'=>'TITLE','align'=>'left','warna'=>'159, 221, 66, 1']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'start','SIZE' => '20px','label'=>'DATE START','align'=>'left','warna'=>'159, 221, 66, 1']],				
+		['ID' =>2, 'ATTR' =>['FIELD'=>'end','SIZE' => '20px','label'=>'DATE END','align'=>'left','warna'=>'159, 221, 66, 1']],
+		
+	];
+	$gvHeadColomnNotulen = ArrayHelper::map($headColomnNotulen, 'ID', 'ATTR');
+	/*GRIDVIEW NUMBER*/
+	$attDinamikNotulen[]=[
+		/* Attribute Serial No */
+			'class'=>'kartik\grid\SerialColumn',
+			'width'=>'5px',
+			'header'=>'No.',
+			'hAlign'=>'center',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'5px',
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(0, 95, 218, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'5px',
+					'font-family'=>'tahoma',
+					'font-size'=>'8pt',
+				]
+			],
+			'pageSummaryOptions' => [
+				'style'=>[
+					'border-right'=>'0px',
+				]
+			]
+	];
+	
+	/*GRIDVIEW ARRAY ROWS*/
+	foreach($gvHeadColomnNotulen as $key =>$value[]){
+		$attDinamikNotulen[]=[		
+			'attribute'=>$value[$key]['FIELD'],
+			'label'=>$value[$key]['label'],
+			'filter'=>true,
+			'hAlign'=>'right',
+			'vAlign'=>'middle',
+			//'mergeHeader'=>true,
+			'noWrap'=>true,			
+			'headerOptions'=>[		
+					'style'=>[									
+					'text-align'=>'center',
+					'width'=>$value[$key]['SIZE'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(97, 211, 96, 0.3)',
+					'background-color'=>'rgba('.$value[$key]['warna'].')',
+				]
+			],  
+			'contentOptions'=>[
+				'style'=>[
+					'width'=>$value[$key]['SIZE'],
+					'text-align'=>$value[$key]['align'],
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					//'background-color'=>'rgba(13, 127, 3, 0.1)',
+				]
+			],
+			//'pageSummaryFunc'=>GridView::F_SUM,
+			//'pageSummary'=>true,
+			// 'pageSummaryOptions' => [
+				// 'style'=>[
+						// 'text-align'=>'right',		
+						//'width'=>'12px',
+						// 'font-family'=>'tahoma',
+						// 'font-size'=>'8pt',	
+						// 'text-decoration'=>'underline',
+						// 'font-weight'=>'bold',
+						// 'border-left-color'=>'transparant',		
+						// 'border-left'=>'0px',									
+				// ]
+			// ],	
+		];	
+	};
+	
+	/*GRIDVIEW ARRAY ACTION*/
+	$attDinamikNotulen[]=[
+		'class'=>'kartik\grid\ActionColumn',
+		'dropdown' => true,
+		'template' => '{view}',
+		'dropdownOptions'=>['class'=>'pull-right dropdown','style'=>['disable'=>true]],
+		'dropdownButton'=>[
+			'class' => $actionClass,
+			'label'=>$actionLabel,
+			//'caret'=>'<span class="caret"></span>',
+		],
+		'buttons' => [
+			'view' =>function($url, $model, $key){
+					return  '<li>' .Html::a('<span class="fa fa-eye"></span>'.Yii::t('app', 'View'),
+												['/widget/notulen/view','id'=>$model->id],[
+												'id'=>'notulen-id',
+												// 'data-toggle'=>"modal",
+												// 'data-target'=>"#alias-cust",
+												]). '</li>' . PHP_EOL;
+			},				
+		],
+		'headerOptions'=>[
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'10px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'9pt',
+				'background-color'=>'rgba(159, 221, 66, 1)',
+			]
+		],
+		'contentOptions'=>[
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'10px',
+				'height'=>'10px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'9pt',
+			]
+		],
+	];
+	
+	/*SET  GRID VIEW LIST EVENT*/
+	$gvNutulen= GridView::widget([
+		'dataProvider' => $dataProvider,
+		// 'filterModel' => $searchModelNotulen,
+		'filterRowOptions'=>['style'=>'background-color:rgba(255, 221, 66, 1); align:center'],
+		'columns' => $attDinamikNotulen,
+		'floatOverflowContainer'=>true,
+		'floatHeader'=>true,
+		/* [
+			['class' => 'yii\grid\SerialColumn'],
+			'start',
+			'end',
+			'title',
+			['class' => 'yii\grid\ActionColumn'],
+		], */
+		'pjax'=>true,
+		'pjaxSettings'=>[
+			'options'=>[
+				'enablePushState'=>false,
+				'id'=>'absen-rekap',
+			],
+		],
+		'panel' => [
+					'heading'=>"<span class='fa fa-edit'><b> LIST NOTULEN</b></span>",
+					'type'=>'info',
+					'showFooter'=>false,
+		],
+		'toolbar'=> [
+			//'{items}',
+		],
+		'hover'=>true, //cursor select
+		'responsive'=>true,
+		'responsiveWrap'=>true,
+		'bordered'=>true,
+		'striped'=>true,
+	]); 
+
+
 
 
 ?>
@@ -348,6 +524,8 @@ function kembali(){
 					</label>
 					<article class="ac-large">
 						<?= btnRapat($acara) ?>
+						<?=$gvNutulen?>
+
 					</article>
 				</div>
 		  </section>
