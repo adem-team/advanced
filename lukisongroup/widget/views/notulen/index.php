@@ -269,7 +269,7 @@ EOF;
 		'class'=>'kartik\grid\ActionColumn',
 		'dropdown' => true,
 		'template' => '{view}',
-		'dropdownOptions'=>['class'=>'pull-left dropdown','style'=>['disable'=>true]],
+		'dropdownOptions'=>['class'=>'pull-right dropdown','style'=>['disable'=>true]],
 		'dropdownButton'=>[
 			'class' => $actionClass,
 			'label'=>$actionLabel,
