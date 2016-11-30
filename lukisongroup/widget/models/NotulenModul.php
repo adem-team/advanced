@@ -51,9 +51,9 @@ class NotulenModul extends \yii\db\ActiveRecord
             [['TIME_START','TIME_END'],'Validtime','on'=>self::SCENARIOWAKTU],
             [['MODUL_POLICY'], 'string'],
             [['STATUS'], 'integer'],
-            [['CREATE_AT', 'UPDATE_AT','SCHEDULE','RESULT_SCHEDULE','NOTULEN_ID','TIME_START','TIME_END'], 'safe'],
+            [['CREATE_AT', 'UPDATE_AT','SCHEDULE','RESULT_SCHEDULE','NOTULEN_ID','TIME_START','TIME_END','USER_ID','KONTAK_PERSON'], 'safe'],
             [['SCHEDULE', 'RESULT_SCHEDULE'], 'string', 'max' => 255],
-            [['USER_ID'], 'string', 'max' => 50],
+            // [['USER_ID'], 'string', 'max' => 50],
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100],
         ];
     }

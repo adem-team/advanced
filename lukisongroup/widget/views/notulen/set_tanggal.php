@@ -17,8 +17,8 @@ use yii\helpers\Url;
     <?php $form = ActiveForm::begin([
         'id'=>$model->formName(),
         'enableClientValidation' => true,
-        'enableAjaxValidation'=>true,
-        'validationUrl'=>Url::toRoute('/widget/notulen/valid-notulen-tanggal')
+        // 'enableAjaxValidation'=>true,
+        // 'validationUrl'=>Url::toRoute('/widget/notulen/valid-notulen-tanggal')
     ]); ?>
 
    <?php echo $form->field($model, 'start')->widget(DatePicker::classname(), [
@@ -34,7 +34,7 @@ use yii\helpers\Url;
                     ]);
         ?>
 
-        <?php echo $form->field($model, 'end')->widget(DatePicker::classname(), [
+        <!--  echo $form->field($model, 'end')->widget(DatePicker::classname(), [
                     'options' => ['placeholder' => '...'],
                         'pluginOptions' => [
                             'todayHighlight' => true,
@@ -45,7 +45,7 @@ use yii\helpers\Url;
                             'show' => "function(e) {show}",
                         ],
                     ]);
-        ?>
+        ?> -->
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

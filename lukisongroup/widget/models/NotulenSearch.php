@@ -41,7 +41,9 @@ class NotulenSearch extends Notulen
      */
     public function search($params)
     {
-        $query = Notulen::find()->orderby(['start'=>SORT_DESC]);
+        $profile = Yii::$app->getUserOpt->profile_user(); //componen
+        $id = $profile->id;
+        $query = Notulen::find()->where('USER_ID like "%'.$id.'%"')->andwhere(['CREATE_BY'=>$id])->orderby(['start'=>SORT_DESC]);
 
         // add conditions that should always apply here
 
