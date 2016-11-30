@@ -145,10 +145,23 @@ class NotulenController extends Controller
       foreach ($explode as $value) {
         # code...
 
-         $datax[] = '<option value='.$value.'  selected>'.$value.'</option>';
+         // $datax[] = '<option value='.$value.'  selected>'.$value.'</option>';
 
-
+         $val_id[] = $value;
       }
+
+       $selected = (new \yii\db\Query())
+            ->select(['us.id',"CONCAT(em.EMP_NM, ' ',em.EMP_NM_BLK) AS full_name"])
+            ->from('dbm001.user as us')
+            ->innerJoin('dbm002.a0001 as em','em.EMP_ID = us.EMP_ID')
+            ->where(['and','us.status' => 10,['<>','us.EMP_ID','LG.2015.000000'],['in', 'us.id',$val_id]])
+            ->all();
+
+
+            foreach ($selected as $key => $value) {
+              # code...
+               $datax[] = '<option value='.$value['id'].'  selected>'.$value['full_name'].'</option>';
+            }
 
       // $emp = \lukisongroup\sistem\models\Userlogin::find()->with('emp')->where('status<>1')->asArray()->all();
 
@@ -156,7 +169,7 @@ class NotulenController extends Controller
             ->select(['us.id', 'EMP_NM','EMP_NM_BLK'])
             ->from('dbm001.user as us')
             ->innerJoin('dbm002.a0001 as em','em.EMP_ID = us.EMP_ID')
-            ->where(['and','us.status' => 10,['<>','us.EMP_ID','LG.2015.000000']])
+            ->where(['and','us.status' => 10,['<>','us.EMP_ID','LG.2015.000000'],['not in', 'us.id',$val_id]])
             ->all();
 
       // $emp = (new \yii\db\Query())

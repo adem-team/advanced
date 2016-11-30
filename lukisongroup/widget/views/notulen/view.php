@@ -477,20 +477,44 @@ function kembali(){
 						<br>
 							<ul>
 								<?php
+
 								   $peserta = explode(',',$acara[0]->USER_ID);
-								   if(count($peserta) != 0)
+								  
+
+									 if(count($peserta) != 0)
 								   {
 
-									 foreach ($peserta as  $value) {
-									   # code...
-									  ?>
-										<li><?= Html::a($value, ['/widget/notulen/set-person','id'=>$acara[0]->NOTULEN_ID],
+								   	 foreach ($peserta as $key => $value) {
+								   	 	# code...
+								   	 	$val_id[] = $value;
+								   	 }
+
+
+								   	 $selected = (new \yii\db\Query())
+									            ->select(["CONCAT(em.EMP_NM, ' ',em.EMP_NM_BLK) AS full_name"])
+									            ->from('dbm001.user as us')
+									            ->innerJoin('dbm002.a0001 as em','em.EMP_ID = us.EMP_ID')
+									            ->where(['and','us.status' => 10,['<>','us.EMP_ID','LG.2015.000000'],['in', 'us.id',$val_id]])
+									            ->all();
+
+									  foreach ($selected as $key => $value) {
+									  	# code...
+									  	?>
+
+									  	<li><?= Html::a($value['full_name'], ['/widget/notulen/set-person','id'=>$acara[0]->NOTULEN_ID],
 													['data-toggle'=>"modal",
 															'data-target'=>"#person-notulen"]) ?> 
 										</li>
-									<?php
-										}
-									}
+
+
+									  	<?php
+
+									  }
+
+								   }
+
+
+
 								 ?>
 
 							</ul>

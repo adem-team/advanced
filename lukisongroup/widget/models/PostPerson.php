@@ -70,7 +70,7 @@ class PostPerson extends Model
            $transaction = Notulen::getDb()->beginTransaction();
 
             try {
-                  $execute = Yii::$app->db_widget->createCommand()->update('m0002',['USER_ID'=>$data_fullname],'NOTULEN_ID="'.$this->NotulenId.'"')->execute();
+                  $execute = Yii::$app->db_widget->createCommand()->update('m0002',['USER_ID'=>$data_id],'NOTULEN_ID="'.$this->NotulenId.'"')->execute();
 
 
                $execute2 = Yii::$app->db_widget->createCommand()->update('m0001',['USER_ID'=>$data_id],'id="'.$this->NotulenId.'"')->execute(); 
