@@ -55,11 +55,11 @@ class Notulen extends \yii\db\ActiveRecord
         return [
             [['title'],'required','on'=>self::SCENARIO_NOTE],
             // [['start','end'],'ValidDate','on'=>self::SCENARIO_TGL],
-            [['start', 'end', 'CREATE_AT', 'UPDATE_AT','ROOM','USER_ID'], 'safe'],
+            [['start', 'end', 'CREATE_AT', 'UPDATE_AT','ROOM','USER_ID','CREATE_BY'], 'safe'],
             [['MODUL', 'STATUS'], 'integer'],
             [['title'], 'string', 'max' => 255],
             // [['USER_ID'], 'string', 'max' => 50],
-            [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100],
+            [['UPDATE_BY'], 'string', 'max' => 100],
         ];
     }
 

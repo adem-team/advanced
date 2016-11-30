@@ -455,24 +455,25 @@ class NotulenController extends Controller
     public function actionCreate($start,$end)
     {
         $model = new Notulen();
-        $model->scenario = Notulen::SCENARIO_NOTE;
+        // $model->scenario = Notulen::SCENARIO_NOTE;
 
         $model_modul = new NotulenModul();
 
         if ($model->load(Yii::$app->request->post())) {
 
+
+
               $transaction = Notulen::getDb()->beginTransaction();
                     try {
 
+                        
                             $model->start = $start;
                             $model->end = $end;
                             $model->CREATE_BY = self::Get_profile()->id;
                             $model->CREATE_AT = date("Y-m-d H:i:s");
-                            $model->save();
+                             $model->save();
 
-
-                            
-                            $model_modul->NOTULEN_ID = $model->id;
+                           $model_modul->NOTULEN_ID = $model->id;
                             $model_modul->save();
                         // ...other DB operations...
                         $transaction->commit();
@@ -480,6 +481,7 @@ class NotulenController extends Controller
                         $transaction->rollBack();
                         throw $e;
                     }
+                   
           
            return $this->redirect(['view', 'id' => $model->id]);
         } else {
