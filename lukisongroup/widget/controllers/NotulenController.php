@@ -140,34 +140,58 @@ class NotulenController extends Controller
       $data = NotulenModul::find()->where(['NOTULEN_ID'=>$id])->asArray()->one();
 
       $explode = explode(',', $data['USER_ID']);
+     
+
       foreach ($explode as $value) {
         # code...
 
-         $datax[] = '<option value='.$value.' selected>'.$value.'</option>';
+         $datax[] = '<option value='.$value.'  selected>'.$value.'</option>';
 
-         $ary1[] = $value;
 
       }
 
-      $emp = \lukisongroup\hrd\models\Employe::find()->where('STATUS<>3')->asArray()->all();
+      // $emp = \lukisongroup\sistem\models\Userlogin::find()->with('emp')->where('status<>1')->asArray()->all();
 
-       foreach ($emp as $key => $valuex) {
+      $emp = (new \yii\db\Query())
+            ->select(['us.id', 'EMP_NM','EMP_NM_BLK'])
+            ->from('dbm001.user as us')
+            ->innerJoin('dbm002.a0001 as em','em.EMP_ID = us.EMP_ID')
+            ->where(['and','us.status' => 10,['<>','us.EMP_ID','LG.2015.000000']])
+            ->all();
+
+      // $emp = (new \yii\db\Query())
+      //       ->select(['us.id', 'EMP_NM','EMP_NM_BLK'])
+      //       ->from('dbm001.user as us')
+      //       ->innerJoin('dbm002.a0001 as em','em.EMP_ID = us.EMP_ID')
+      //       ->where(['and','us.status' => 10,['<>','us.EMP_ID','LG.2015.000000'],['in','id']])
+      //       ->all();
+      //       ['in', 'id', [1, 2, 3]]
+
+
+
+
+       // foreach ($emp as $key => $valuex) {
          # code...
          // $op[] ='<option value='.$valuex['EMP_NM'].' '.$valuex['EMP_NM_BLK'].'>'.$valuex['EMP_NM'].' '.$valuex['EMP_NM_BLK'].'</option>';
 
-         $ary2[] = $valuex['EMP_NM'].' '.$valuex['EMP_NM_BLK'];
-       }
+       //   $ary2[] = $valuex['id'].' '.$valuex['EMP_NM'].' '.$valuex['EMP_NM_BLK'];
+       // }
 
-       $ary_dif = array_merge($ary1,$ary2);
+       // $ary_dif = array_merge($ary1,$ary2);
 
-       $ary_uniq = array_unique($ary_dif);
+       // $ary_uniq = array_unique($ary_dif);
 
-       foreach ($ary_uniq as $key => $values) {
+       // print_r($ary_uniq);
+
+
+
+
+       foreach ($emp as $key => $values) {
          # code...
         if($values != '')
         {
 
-          $op[] ='<option value='.$values.'>'.$values.'</option>';
+          $op[] ='<option value='.$values['id'].'>'.$values['EMP_NM'].' '.$values['EMP_NM_BLK'].'</option>';
         }
        }
 
@@ -194,10 +218,11 @@ class NotulenController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             $format_start = Yii::$app->formatter->asDate($model->start, 'yyyy-MM-dd');
-            $format_end = Yii::$app->formatter->asDate($model->end, 'yyyy-MM-dd');
+            // $format_end = Yii::$app->formatter->asDate($model->end, 'yyyy-MM-dd');
             $model->start = $format_start;
-            $model->end = $format_end;
+            // $model->end = $format_end;
             $model->save();
+
             return $this->redirect(['view','id'=>$id]);
         } else {
             return $this->renderAjax('set_tanggal', [
@@ -241,6 +266,20 @@ class NotulenController extends Controller
             return $this->redirect(['view','id'=>$id]);
         } else {
             return $this->renderAjax('set_title', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    public function actionSetRuang($id)
+    {
+        $model = self::findModel($id);
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->save();
+            return $this->redirect(['view','id'=>$id]);
+        } else {
+            return $this->renderAjax('set_ruang', [
                 'model' => $model,
             ]);
         }
@@ -424,13 +463,15 @@ class NotulenController extends Controller
 
               $transaction = Notulen::getDb()->beginTransaction();
                     try {
+
                             $model->start = $start;
                             $model->end = $end;
-                            $model->CREATE_BY = self::Get_profile()->username;
+                            $model->CREATE_BY = self::Get_profile()->id;
                             $model->CREATE_AT = date("Y-m-d H:i:s");
                             $model->save();
 
 
+                            
                             $model_modul->NOTULEN_ID = $model->id;
                             $model_modul->save();
                         // ...other DB operations...

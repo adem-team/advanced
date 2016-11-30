@@ -9,8 +9,8 @@
 
     $('#per-id').on("click",function(){
        $("#person-notulen").modal();
-       var val =  $('#hide').val();
-    
+       var val =  $('#postperson-notulenid').val();
+     
 
     $.get('/widget/notulen/set-person-select?id='+val,function(data){ 
          

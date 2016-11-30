@@ -54,26 +54,26 @@ class Notulen extends \yii\db\ActiveRecord
     {
         return [
             [['title'],'required','on'=>self::SCENARIO_NOTE],
-            [['start','end'],'ValidDate','on'=>self::SCENARIO_TGL],
-            [['start', 'end', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
+            // [['start','end'],'ValidDate','on'=>self::SCENARIO_TGL],
+            [['start', 'end', 'CREATE_AT', 'UPDATE_AT','ROOM','USER_ID'], 'safe'],
             [['MODUL', 'STATUS'], 'integer'],
             [['title'], 'string', 'max' => 255],
-            [['USER_ID'], 'string', 'max' => 50],
+            // [['USER_ID'], 'string', 'max' => 50],
             [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 100],
         ];
     }
 
-     public function ValidDate($attribute)
-    {
-             $start =  strtotime($this->start);
-             $end = strtotime($this->end);
+    //  public function ValidDate($attribute)
+    // {
+    //          $start =  strtotime($this->start);
+    //          $end = strtotime($this->end);
         
-        if ( $start > $end) {
-                // whatever you have to do here
-            $this->addError($attribute,'Date Start greather Date End');
-        }
+    //     if ( $start > $end) {
+    //             // whatever you have to do here
+    //         $this->addError($attribute,'Date Start greather Date End');
+    //     }
 
-    }
+    // }
 
     public function getNotulenTbl()
     {

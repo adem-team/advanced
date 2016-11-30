@@ -6,6 +6,7 @@ use dosamigos\gallery\Gallery;
 use kartik\grid\GridView;
 use kartik\editable\Editable;
 use yii\bootstrap\Modal;
+use lukisongroup\widget\models\NotulenModul;
 
 use lukisongroup\hrd\models\Employe;
 
@@ -14,6 +15,7 @@ $this->registerCss($this->render('letter.css'));
 $this->registerCss($this->render('accordion.css'));
 
 $this->registerJs($this->render('set_person.js'),$this::POS_READY);
+
 
 function kembali(){
         $title = Yii::t('app','');
@@ -31,18 +33,21 @@ function kembali(){
 
 
   function btnTanggal($model){
-    if($model->start != '' && $model->end == '')
-    {
-      $title = Yii::t('app',substr($model->start,0,11).' - '.'xxxx-xx-xx');
-    }elseif($model->end != '' && $model->start == '')
-    {
-      $title = Yii::t('app','xxxx-xx-xx'.' - '.substr($model->end,0,11));
-    }elseif($model->start != '' && $model->end != '')
-    {
-       $title = Yii::t('app',substr($model->start,0,11).' - '.substr($model->end,0,11));
-     }else{
-        $title = Yii::t('app','xxxx-xx-xx'.' - '.'xxxx-xx-xx');
-     }
+    // if($model->start != '' && $model->end == '')
+    // {
+    //   $title = Yii::t('app',substr($model->start,0,11).' - '.'xxxx-xx-xx');
+    // }elseif($model->end != '' && $model->start == '')
+    // {
+    //   $title = Yii::t('app','xxxx-xx-xx'.' - '.substr($model->end,0,11));
+    // }elseif($model->start != '' && $model->end != '')
+    // {
+    //    $title = Yii::t('app',substr($model->start,0,11).' - '.substr($model->end,0,11));
+    //  }else{
+    //     $title = Yii::t('app','xxxx-xx-xx'.' - '.'xxxx-xx-xx');
+    //  }
+
+    $title = $model->start != '' ? $model->start : Yii::t('app','xxxx-xx-xx');
+
         //$title = Yii::t('app','xxxx-xx-xx');
         $options = [ 'id'=>'notu-tgl-id',
              'data-toggle'=>"modal",
@@ -105,6 +110,24 @@ function kembali(){
         $content = Html::a($label,$url, $options);
         return $content;
     }
+
+
+     function btnSetRoom($model){
+        $title = $model->ROOM != '' ? $model->ROOM : Yii::t('app','---------------');
+        $options = [ 'id'=>'notu-ruang-id',
+             'class'=>'btn-xs',
+             'data-toggle'=>"modal",
+             'data-target'=>"#ruang",
+             'title'=>$title,
+        ];
+        // $icon = '<span class="fa fa-rotate-left fa-xs"> Back</span>';
+        $label = $title;
+        //$label = 'Reply';
+        $url = Url::toRoute(['/widget/notulen/set-ruang','id'=>$model->id]);
+        $content = Html::a($label,$url, $options);
+        return $content;
+    }
+
 
     function btnSetTime($acara){
       if( $acara[0]->TIME_START != '' && $acara[0]->TIME_END != '' )
@@ -247,7 +270,7 @@ function kembali(){
 
 				   <!-- tempat -->
 						<dt style="width:150px; float:left;">Tempat</dt>
-						<dd style="color:rgba(87, 163, 247, 1)">:  <b>Ruang Meeting</b></dd>
+						<dd style="color:rgba(87, 163, 247, 1)">:  <b><?= btnSetRoom($model) ?></b></dd>
 						<!-- materi rapat -->
 						<dt style="width:150px; float:left;">Materi Rapat</dt>
 						<dd>: <?php echo btnSetMateri($model); ?></dd>
@@ -458,6 +481,34 @@ Modal::begin([
 	/*modal*/
 	Modal::begin([
 		'id' => 'rapat',
+		'header' => '<div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>NOTULEN</b></h5></div>',
+		// 'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+		],
+	]);
+		echo "<div id='modalContentNotulen'></div>";
+    Modal::end(); 
+
+    $this->registerJs("
+				$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+				$('#ruang').on('show.bs.modal', function (event) {
+					var button = $(event.relatedTarget)
+					var modal = $(this)
+					var title = button.data('title')
+					var href = button.attr('href')
+					modal.find('.modal-title').html(title)
+					modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+					$.post(href)
+						.done(function( data ) {
+							modal.find('.modal-body').html(data)
+						});
+					}),
+		",$this::POS_READY);
+
+	/*modal*/
+	Modal::begin([
+		'id' => 'ruang',
 		'header' => '<div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>NOTULEN</b></h5></div>',
 		// 'size' => Modal::SIZE_SMALL,
 		'headerOptions'=>[

@@ -74,6 +74,7 @@ class Authmodel2 extends Model
 			   $NotulenModul->SIG2_ID = $this->getProfile()->EMP_ID;
 			   $NotulenModul->SIG2_NM = $this->getProfile()->EMP_NM . ' ' . $this->getProfile()->EMP_NM_BLK;
 			   $NotulenModul->save();
+			 
 					
 			return $NotulenModul;
 		}
