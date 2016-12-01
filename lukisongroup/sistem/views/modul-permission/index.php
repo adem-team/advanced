@@ -21,16 +21,18 @@ $this->title = Yii::t('app', 'ERP Modul - Administrator');  /* title pada header
 	* Function getPermission
 	* Modul Name[8=SO2]
 	*/
-	function getPermission(){
-		if (Yii::$app->getUserOpt->Modul_akses('10')){
-			return Yii::$app->getUserOpt->Modul_akses('10');
-		}else{
-			return false;
-		}
-	}
-
+	// function getPermission(){
+		// if (Yii::$app->getUserOpt->Modul_akses('10')){
+			// return Yii::$app->getUserOpt->Modul_akses('10');
+		// }else{
+			// return false;
+		// }
+	// };
+	
+	// $varValidate=$this->getPermission();
+	
   //if(getPermission()){
-  	if(getPermission()->BTN_CREATE){
+  	if($prmissionCheck->BTN_CREATE){
   		$link = '/sistem/modul-permission';
 
   	}else{
@@ -269,6 +271,22 @@ $this->title = Yii::t('app', 'ERP Modul - Administrator');  /* title pada header
 			'filter' => $valStt,
 			'attribute' => 'BTN_CREATE',
 			'label'=>'BTN CREATE',
+			'format' => 'raw',
+			'value'=>function($model){
+				if ($model->BTN_CREATE == 1) {
+					return Html::a('<i class="fa fa-unlock "></i>');
+				} else if ($model->BTN_CREATE == 0) {
+					return Html::a('<i class="fa fa-lock"></i>');
+					
+				}
+			},
+			'readonly'=>function() use ($userPrmission) {
+				   if($userPrmission==1 OR $userPrmission==2){
+						return false;  
+				   }else{
+					  return true;  
+				   }
+			},
 			'editableOptions' => [
 				'header' => 'CREATE',
 				'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
@@ -301,287 +319,415 @@ $this->title = Yii::t('app', 'ERP Modul - Administrator');  /* title pada header
 			],
 		],
 		[  	//col-4
-		  //BTN_EDIT
-		  'class'=>'kartik\grid\EditableColumn',
-		  'attribute' => 'BTN_EDIT',
-		  'label'=>'BTN EDIT',
-		  'filter' => $valStt,
-		  'editableOptions' => [
-				   'header' => 'Update Permission',
-				   'inputType' =>\kartik\editable\Editable::INPUT_CHECKBOX_X,
-				   'size'=>'sm',
-				   'options' => [
-				   ],
-				   'displayValueConfig'=> [
-						   '1' => '<i class="fa fa-unlock "></i>',
-						   '0' => '<i class="fa fa-lock"></i>',
-						 ],
-				 ],
-		  'hAlign'=>'left',
-		  'vAlign'=>'middle',
-		  'headerOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			  'background-color'=>'rgba(255, 160, 51, 1)',
-			]
-		  ],
-		  'contentOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			]
-		  ],
-		],
-		[  	//col-5
-		  //BTN_DELETE
-		  'class'=>'kartik\grid\EditableColumn',
-		  'attribute' => 'BTN_DELETE',
-		  'label'=>'BTN DELETE',
-		  'filter' => $valStt,
-		  'editableOptions' => [
-				   'header' => 'Update Permission',
-				   'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
-				   'size'=>'sm',
-				   'options' => [
-				   ],
-				   'displayValueConfig'=> [
-					 '1' => '<i class="fa fa-unlock "></i>',
-					 '0' => '<i class="fa fa-lock"></i>',
-						 ],
-				 ],
-		  'hAlign'=>'left',
-		  'vAlign'=>'middle',
-		  'headerOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			  'background-color'=>'rgba(255, 160, 51, 1)',
-			]
-		  ],
-		  'contentOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			]
-		  ],
-		],
-		[  	//col-6
-		  //BTN_view
-		  'class'=>'kartik\grid\EditableColumn',
-		  'attribute' => 'BTN_VIEW',
-		  'label'=>'BTN VIEW',
-		  'filter' => $valStt,
-		  'editableOptions' => [
-				   'header' => 'Update Permission',
-				   'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
-				   'size'=>'sm',
-
-				   'options' => [
-					  // 'value' => 'Kartik Visweswaran',
-					],
-					'displayValueConfig'=> [
-					  '1' => '<i class="fa fa-unlock "></i>',
-					  '0' => '<i class="fa fa-lock"></i>',
-						  ],
-					//  'editableValueOptions'=>['class'=>'Kartik Visweswaran']
-				 ],
-		  'hAlign'=>'left',
-		  'vAlign'=>'middle',
-		  'headerOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			  'background-color'=>'rgba(255, 160, 51, 1)',
-			]
-		  ],
-		  'contentOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			]
-		  ],
-		],
-		[  	//col-6
-		  //BTN_REVIEW
-		  'class'=>'kartik\grid\EditableColumn',
-		  'attribute' => 'BTN_REVIEW',
-		  'label'=>'BTN REVIEW',
-		  'filter' => $valStt,
-		  'editableOptions' => [
-				   'header' => 'Update Permission',
-				   'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
-				   'size'=>'sm',
-				   'options' => [
-				   ],
-					 'displayValueConfig'=> [
+			//BTN_EDIT
+			'class'=>'kartik\grid\EditableColumn',
+			'attribute' => 'BTN_EDIT',
+			'label'=>'BTN EDIT',
+			'filter' => $valStt,
+			'format' => 'raw',
+			'value'=>function($model){
+				if ($model->BTN_EDIT == 1) {
+					return Html::a('<i class="fa fa-unlock "></i>');
+				} else if ($model->BTN_EDIT == 0) {
+					return Html::a('<i class="fa fa-lock"></i>');
+					
+				}
+			},
+			'readonly'=>function() use ($userPrmission) {
+				   if($userPrmission==1 OR $userPrmission==2){
+						return false;  
+				   }else{
+					  return true;  
+				   }
+			},
+			'editableOptions' => [
+			   'header' => 'Update Permission',
+			   'inputType' =>\kartik\editable\Editable::INPUT_CHECKBOX_X,
+			   'size'=>'sm',
+			   'options' => [
+			   ],
+			   'displayValueConfig'=> [
 					   '1' => '<i class="fa fa-unlock "></i>',
 					   '0' => '<i class="fa fa-lock"></i>',
-						   ],
-				 ],
-		  'hAlign'=>'left',
-		  'vAlign'=>'middle',
-		  'headerOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			  'background-color'=>'rgba(255, 160, 51, 1)',
-			]
-		  ],
-		  'contentOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			]
-		  ],
+					 ],
+			 ],
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 160, 51, 1)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+				  'text-align'=>'center',
+				  'width'=>'200px',
+				  'font-family'=>'tahoma, arial, sans-serif',
+				  'font-size'=>'8pt',
+				]
+			],
+		],
+		[  	//col-5
+			//BTN_DELETE
+			'class'=>'kartik\grid\EditableColumn',
+			'attribute' => 'BTN_DELETE',
+			'label'=>'BTN DELETE',
+			'filter' => $valStt,
+			'format' => 'raw',
+			'value'=>function($model){
+				if ($model->BTN_DELETE == 1) {
+					return Html::a('<i class="fa fa-unlock "></i>');
+				} else if ($model->BTN_DELETE == 0) {
+					return Html::a('<i class="fa fa-lock"></i>');
+					
+				}
+			},
+			'readonly'=>function() use ($userPrmission) {
+				   if($userPrmission==1 OR $userPrmission==2){
+						return false;  
+				   }else{
+					  return true;  
+				   }
+			},
+			'editableOptions' => [
+			   'header' => 'Update Permission',
+			   'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
+			   'size'=>'sm',
+			   'options' => [
+			   ],
+			   'displayValueConfig'=> [
+					'1' => '<i class="fa fa-unlock "></i>',
+					'0' => '<i class="fa fa-lock"></i>',
+				],
+			],
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 160, 51, 1)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+				  'text-align'=>'center',
+				  'width'=>'200px',
+				  'font-family'=>'tahoma, arial, sans-serif',
+				  'font-size'=>'8pt',
+				]
+			],
+		],
+		[  	//col-6
+			//BTN_view
+			'class'=>'kartik\grid\EditableColumn',
+			'attribute' => 'BTN_VIEW',
+			'label'=>'BTN VIEW',
+			'filter' => $valStt,
+			'format' => 'raw',
+			'value'=>function($model){
+				if ($model->BTN_VIEW == 1) {
+					return Html::a('<i class="fa fa-unlock "></i>');
+				} else if ($model->BTN_VIEW == 0) {
+					return Html::a('<i class="fa fa-lock"></i>');
+					
+				}
+			},
+			'readonly'=>function() use ($userPrmission) {
+				   if($userPrmission==1 OR $userPrmission==2){
+						return false;  
+				   }else{
+					  return true;  
+				   }
+			},
+			'editableOptions' => [
+				'header' => 'Update Permission',
+				'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
+				'size'=>'sm',
+
+				'options' => [
+				  // 'value' => 'Kartik Visweswaran',
+				],
+				'displayValueConfig'=> [
+					'1' => '<i class="fa fa-unlock "></i>',
+					'0' => '<i class="fa fa-lock"></i>',
+				],
+			],
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 160, 51, 1)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+				]
+			],
+		],
+		[  	//col-6
+			//BTN_REVIEW
+			'class'=>'kartik\grid\EditableColumn',
+			'attribute' => 'BTN_REVIEW',
+			'label'=>'BTN REVIEW',
+			'filter' => $valStt,
+			'format' => 'raw',
+			'value'=>function($model){
+				if ($model->BTN_REVIEW == 1) {
+					return Html::a('<i class="fa fa-unlock "></i>');
+				} else if ($model->BTN_REVIEW == 0) {
+					return Html::a('<i class="fa fa-lock"></i>');
+					
+				}
+			},
+			'readonly'=>function() use ($userPrmission) {
+				   if($userPrmission==1 OR $userPrmission==2){
+						return false;  
+				   }else{
+					  return true;  
+				   }
+			},
+			'editableOptions' => [
+				'header' => 'Update Permission',
+				'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
+				'size'=>'sm',
+				'options' => [
+				],
+				'displayValueConfig'=> [
+					'1' => '<i class="fa fa-unlock "></i>',
+					'0' => '<i class="fa fa-lock"></i>',
+				],
+			],
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 160, 51, 1)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+				]
+			],
 		],
 		[  	//col-7
-		  //BTN_PROCESS1
-		  'class'=>'kartik\grid\EditableColumn',
-		  'attribute' => 'BTN_PROCESS1',
-		  'label'=>'BTN PROCESS1',
-		  'filter' => $valStt,
-		  'editableOptions' => [
-				   'header' => 'Update Permission',
-				   'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
-				   'size'=>'sm',
-				   'options' => [
-				   ],
-				   'displayValueConfig'=> [
-					 '1' => '<i class="fa fa-unlock "></i>',
-					 '0' => '<i class="fa fa-lock"></i>',
-						 ],
-				 ],
-		  'hAlign'=>'left',
-		  'vAlign'=>'middle',
-		  'headerOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			  'background-color'=>'rgba(255, 160, 51, 1)',
-			]
-		  ],
-		  'contentOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			]
-		  ],
+			//BTN_PROCESS1
+			'class'=>'kartik\grid\EditableColumn',
+			'attribute' => 'BTN_PROCESS1',
+			'label'=>'BTN PROCESS1',
+			'filter' => $valStt,
+			'format' => 'raw',
+			'value'=>function($model){
+				if ($model->BTN_PROCESS1 == 1) {
+					return Html::a('<i class="fa fa-unlock "></i>');
+				} else if ($model->BTN_PROCESS1 == 0) {
+					return Html::a('<i class="fa fa-lock"></i>');
+					
+				}
+			},
+			'readonly'=>function() use ($userPrmission) {
+				   if($userPrmission==1 OR $userPrmission==2){
+						return false;  
+				   }else{
+					  return true;  
+				   }
+			},
+			'editableOptions' => [
+				'header' => 'Update Permission',
+				'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
+				'size'=>'sm',
+				'options' => [
+				],
+				'displayValueConfig'=> [
+					'1' => '<i class="fa fa-unlock "></i>',
+					'0' => '<i class="fa fa-lock"></i>',
+				],
+			],
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 160, 51, 1)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+				]
+			],
 		],
 		[  	//col-8
-		  //BTN_PROCESS2
-		  'class'=>'kartik\grid\EditableColumn',
-		  'attribute' => 'BTN_PROCESS2',
-		  'label'=>'BTN PROCESS2',
-		  'filter' => $valStt,
-		  'editableOptions' => [
-				   'header' => 'Update Permission',
-				   'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
-				   'size'=>'sm',
-				   'options' => [
-				   ],
-				   'displayValueConfig'=> [
-					 '1' => '<i class="fa fa-unlock "></i>',
-					 '0' => '<i class="fa fa-lock"></i>',
-						 ],
-				 ],
-		  'hAlign'=>'left',
-		  'vAlign'=>'middle',
-		  'headerOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			  'background-color'=>'rgba(255, 160, 51, 1)',
-			]
-		  ],
-		  'contentOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			]
-		  ],
+			//BTN_PROCESS2
+			'class'=>'kartik\grid\EditableColumn',
+			'attribute' => 'BTN_PROCESS2',
+			'label'=>'BTN PROCESS2',
+			'filter' => $valStt,
+			'format' => 'raw',
+			'value'=>function($model){
+				if ($model->BTN_PROCESS2 == 1) {
+					return Html::a('<i class="fa fa-unlock "></i>');
+				} else if ($model->BTN_PROCESS2 == 0) {
+					return Html::a('<i class="fa fa-lock"></i>');
+					
+				}
+			},
+			'readonly'=>function() use ($userPrmission) {
+				   if($userPrmission==1 OR $userPrmission==2){
+						return false;  
+				   }else{
+					  return true;  
+				   }
+			},
+			'editableOptions' => [
+				'header' => 'Update Permission',
+				'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
+				'size'=>'sm',
+				'options' => [
+				],
+				'displayValueConfig'=> [
+					'1' => '<i class="fa fa-unlock "></i>',
+					'0' => '<i class="fa fa-lock"></i>',
+				],
+			],
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 160, 51, 1)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+				]
+			],
 		],
 		[  	//col-8
-		  //BTN_PROCESS3
-		  'class'=>'kartik\grid\EditableColumn',
-		  'attribute' => 'BTN_PROCESS3',
-		  'label'=>'BTN PROCESS3',
-		  'filter' => $valStt,
-		  'editableOptions' => [
-				   'header' => 'Update Permission',
-				   'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
-				   'size'=>'sm',
-				   'options' => [
-				   ],
-				   'displayValueConfig'=> [
-					 '1' => '<i class="fa fa-unlock "></i>',
-					 '0' => '<i class="fa fa-lock"></i>',
-						 ],
-				 ],
-		  'hAlign'=>'left',
-		  'vAlign'=>'middle',
-		  'headerOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			  'background-color'=>'rgba(255, 160, 51, 1)',
-			]
-		  ],
-		  'contentOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			]
-		  ],
+			//BTN_PROCESS3
+			'class'=>'kartik\grid\EditableColumn',
+			'attribute' => 'BTN_PROCESS3',
+			'label'=>'BTN PROCESS3',
+			'filter' => $valStt,
+			'format' => 'raw',
+			'value'=>function($model){
+				if ($model->BTN_PROCESS3 == 1) {
+					return Html::a('<i class="fa fa-unlock "></i>');
+				} else if ($model->BTN_PROCESS3 == 0) {
+					return Html::a('<i class="fa fa-lock"></i>');
+					
+				}
+			},
+			'readonly'=>function() use ($userPrmission) {
+				   if($userPrmission==1 OR $userPrmission==2){
+						return false;  
+				   }else{
+					  return true;  
+				   }
+			},
+			'editableOptions' => [
+				'header' => 'Update Permission',
+				'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
+				'size'=>'sm',
+				'options' => [
+				],
+				'displayValueConfig'=> [
+					'1' => '<i class="fa fa-unlock "></i>',
+					'0' => '<i class="fa fa-lock"></i>',
+				],
+			],
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 160, 51, 1)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+				]
+			],
 		],
 		[  	//col-8
-		  //BTN_PROCESS4
-		  'class'=>'kartik\grid\EditableColumn',
-		  'attribute' => 'BTN_PROCESS4',
-		  'label'=>'BTN PROCESS4',
-		  'filter' => $valStt,
-		  'editableOptions' => [
-				   'header' => 'Update Permission',
-				   'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
-				   'size'=>'sm',
-				   'options' => [
-				   ],
-				   'displayValueConfig'=> [
-					 '1' => '<i class="fa fa-unlock "></i>',
-					 '0' => '<i class="fa fa-lock"></i>',
-						 ],
-				 ],
-		  'hAlign'=>'left',
-		  'vAlign'=>'middle',
-		  'headerOptions'=>[
+			//BTN_PROCESS4
+			'class'=>'kartik\grid\EditableColumn',
+			'attribute' => 'BTN_PROCESS4',
+			'label'=>'BTN PROCESS4',
+			'format'=>'raw',
+			'filter' => $valStt,
+			'value'=>function($model){
+				if ($model->BTN_PROCESS4 == 1) {
+					return Html::a('<i class="fa fa-unlock "></i>');
+				} else if ($model->BTN_PROCESS4 == 0) {
+					return Html::a('<i class="fa fa-lock"></i>');
+					
+				}
+			},
+			'readonly'=>function() use ($userPrmission) {
+				   if($userPrmission==1 OR $userPrmission==2){
+						return false;  
+				   }else{
+					  return true;  
+				   }
+			},
+			'editableOptions' => [				
+			   'header' => 'Update Permission',
+			   'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
+			   'size'=>'sm',
+			   'options' => [
+			   ],			   
+			   // 'submitOnEnter' => false,
+			   'displayValueConfig'=> [
+				 '1' => '<i class="fa fa-unlock "></i>',
+				 '0' => '<i class="fa fa-lock"></i>',
+					 ],
+			],			
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'headerOptions'=>[
 			'style'=>[
 			  'text-align'=>'center',
 			  'width'=>'200px',
@@ -589,131 +735,196 @@ $this->title = Yii::t('app', 'ERP Modul - Administrator');  /* title pada header
 			  'font-size'=>'9pt',
 			  'background-color'=>'rgba(255, 160, 51, 1)',
 			]
-		  ],
-		  'contentOptions'=>[
+			],
+			'contentOptions'=>[
 			'style'=>[
 			  'text-align'=>'center',
 			  'width'=>'200px',
 			  'font-family'=>'tahoma, arial, sans-serif',
 			  'font-size'=>'8pt',
 			]
-		  ],
+			],
 		],
 		[  	//col-10
-		  //BTN_PROCESS5
-		  'class'=>'kartik\grid\EditableColumn',
-		  'attribute' => 'BTN_PROCESS5',
-		  'label'=>'BTN PROCESS5',
-		  'filter' => $valStt,
-		  'editableOptions' => [
-				   'header' => 'Update Permission',
-				   'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
-				   'size'=>'sm',
-				   'options' => [
-				   ],
-				   'displayValueConfig'=> [
-					 '1' => '<i class="fa fa-unlock "></i>',
-					 '0' => '<i class="fa fa-lock"></i>',
-						 ],
-				 ],
-		  'hAlign'=>'left',
-		  'vAlign'=>'middle',
-		  'headerOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			  'background-color'=>'rgba(255, 160, 51, 1)',
-			]
-		  ],
-		  'contentOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			]
-		  ],
+			//BTN_PROCESS5
+			'class'=>'kartik\grid\EditableColumn',
+			'attribute' => 'BTN_PROCESS5',
+			'label'=>'BTN PROCESS5',
+			'filter' => $valStt,
+			'format' => 'raw',
+			'value'=>function($model){
+				if ($model->BTN_PROCESS5 == 1) {
+					return Html::a('<i class="fa fa-unlock "></i>');
+				} else if ($model->BTN_PROCESS5 == 0) {
+					return Html::a('<i class="fa fa-lock"></i>');
+					
+				}
+			},
+			'readonly'=>function() use ($userPrmission) {
+				   if($userPrmission==1 OR $userPrmission==2){
+						return false;  
+				   }else{
+					  return true;  
+				   }
+			},
+			'editableOptions' => [
+				'header' => 'Update Permission',
+				'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
+				'size'=>'sm',
+				'options' => [
+				],
+				'displayValueConfig'=> [
+					'1' => '<i class="fa fa-unlock "></i>',
+					'0' => '<i class="fa fa-lock"></i>',
+				],
+			],
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 160, 51, 1)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+				]
+			],
 		],
 		[  	//col-11
-		  //BTN_SIGN1
-		  'class'=>'kartik\grid\EditableColumn',
-		  'attribute' => 'BTN_SIGN1',
-		  'label'=>'BTN SIGN1',
-		  'filter' => $valStt,
-		  'editableOptions' => [
-				   'header' => 'Update Permission',
-				   'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
-				   'size'=>'sm',
-				   'options' => [
-				   ],
-				   'displayValueConfig'=> [
-					 '1' => '<i class="fa fa-unlock "></i>',
-					 '0' => '<i class="fa fa-lock"></i>',
-						 ],
-				 ],
-		  'hAlign'=>'left',
-		  'vAlign'=>'middle',
-		  'headerOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			  'background-color'=>'rgba(255, 160, 51, 1)',
-			]
-		  ],
-		  'contentOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			]
-		  ],
+			//BTN_SIGN1
+			'class'=>'kartik\grid\EditableColumn',
+			'attribute' => 'BTN_SIGN1',
+			'label'=>'BTN SIGN1',
+			'filter' => $valStt,
+			'format' => 'raw',
+			'value'=>function($model){
+				if ($model->BTN_SIGN1 == 1) {
+					return Html::a('<i class="fa fa-unlock "></i>');
+				} else if ($model->BTN_SIGN1 == 0) {
+					return Html::a('<i class="fa fa-lock"></i>');
+					
+				}
+			},
+			'readonly'=>function() use ($userPrmission) {
+				   if($userPrmission==1 OR $userPrmission==2){
+						return false;  
+				   }else{
+					  return true;  
+				   }
+			},
+			'editableOptions' => [
+				'header' => 'Update Permission',
+				'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
+				'size'=>'sm',
+				'options' => [
+				],
+				'displayValueConfig'=> [
+					'1' => '<i class="fa fa-unlock "></i>',
+					'0' => '<i class="fa fa-lock"></i>',
+				],
+			],
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 160, 51, 1)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+				]
+			],
 		],
 		[  	//col-12
-		  //BTN_SIGN2
-		  'class'=>'kartik\grid\EditableColumn',
-		  'attribute' => 'BTN_SIGN2',
-		  'label'=>'BTN SIGN2',
-		  'filter' => $valStt,
-		  'editableOptions' => [
-				   'header' => 'Update Permission',
-				   'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
-				   'size'=>'sm',
-				   'options' => [
-				   ],
-				   'displayValueConfig'=> [
-					 '1' => '<i class="fa fa-unlock "></i>',
-					 '0' => '<i class="fa fa-lock"></i>',
-						 ],
-				 ],
-		  'hAlign'=>'left',
-		  'vAlign'=>'middle',
-		  'headerOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			  'background-color'=>'rgba(255, 160, 51, 1)',
-			]
-		  ],
-		  'contentOptions'=>[
-			'style'=>[
-			  'text-align'=>'center',
-			  'width'=>'200px',
-			  'font-family'=>'tahoma, arial, sans-serif',
-			  'font-size'=>'8pt',
-			]
-		  ],
+			//BTN_SIGN2
+			'class'=>'kartik\grid\EditableColumn',
+			'attribute' => 'BTN_SIGN2',
+			'label'=>'BTN SIGN2',
+			'filter' => $valStt,
+			'format' => 'raw',
+			'value'=>function($model){
+				if ($model->BTN_SIGN2 == 1) {
+					return Html::a('<i class="fa fa-unlock "></i>');
+				} else if ($model->BTN_SIGN2 == 0) {
+					return Html::a('<i class="fa fa-lock"></i>');
+					
+				}
+			},
+			'readonly'=>function() use ($userPrmission) {
+				   if($userPrmission==1 OR $userPrmission==2){
+						return false;  
+				   }else{
+					  return true;  
+				   }
+			},
+			'editableOptions' => [
+				'header' => 'Update Permission',
+				'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
+				'size'=>'sm',
+				'options' => [
+				],
+				'displayValueConfig'=> [
+					'1' => '<i class="fa fa-unlock "></i>',
+					'0' => '<i class="fa fa-lock"></i>',
+				],
+			],
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 160, 51, 1)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'200px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+				]
+			],
 		],
 		[  	//BTN_SIGN3
 			'class'=>'kartik\grid\EditableColumn',
 			'attribute' => 'BTN_SIGN3',
 			'label'=>'BTN SIGN3',
+			'filter' => $valStt,
+			'format' => 'raw',
+			'value'=>function($model){
+				if ($model->BTN_SIGN3 == 1) {
+					return Html::a('<i class="fa fa-unlock "></i>');
+				} else if ($model->BTN_SIGN3 == 0) {
+					return Html::a('<i class="fa fa-lock"></i>');
+					
+				}
+			},
+			'readonly'=>function() use ($userPrmission) {
+				   if($userPrmission==1 OR $userPrmission==2){
+						return false;  
+				   }else{
+					  return true;  
+				   }
+			},
 			'editableOptions' => [
 				'header' => 'BTN_SIGN3',
 				'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
@@ -749,6 +960,22 @@ $this->title = Yii::t('app', 'ERP Modul - Administrator');  /* title pada header
 			'attribute' => 'BTN_SIGN4',
 			'label'=>'BTN SIGN4',
 			'filter' => $valStt,
+			'format' => 'raw',
+			'value'=>function($model){
+				if ($model->BTN_SIGN4 == 1) {
+					return Html::a('<i class="fa fa-unlock "></i>');
+				} else if ($model->BTN_SIGN4 == 0) {
+					return Html::a('<i class="fa fa-lock"></i>');
+					
+				}
+			},
+			'readonly'=>function() use ($userPrmission) {
+				   if($userPrmission==1 OR $userPrmission==2){
+						return false;  
+				   }else{
+					  return true;  
+				   }
+			},
 			'editableOptions' => [
 				'header' => 'BTN_SIGN4',
 				'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,
@@ -784,6 +1011,22 @@ $this->title = Yii::t('app', 'ERP Modul - Administrator');  /* title pada header
 			'attribute' => 'BTN_SIGN5',
 			'label'=>'BTN SIGN5',
 			'filter' => $valStt,
+			'format' => 'raw',
+			'value'=>function($model){
+				if ($model->BTN_SIGN5 == 1) {
+					return Html::a('<i class="fa fa-unlock "></i>');
+				} else if ($model->BTN_SIGN5 == 0) {
+					return Html::a('<i class="fa fa-lock"></i>');
+					
+				}
+			},
+			'readonly'=>function() use ($userPrmission) {
+				   if($userPrmission==1 OR $userPrmission==2){
+						return false;  
+				   }else{
+					  return true;  
+				   }
+			},
 			'editableOptions' => [
 				'header' => 'BTN_SIGN5',
 				'inputType' => \kartik\editable\Editable::INPUT_CHECKBOX_X,

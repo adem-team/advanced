@@ -193,12 +193,14 @@ class ModulPermissionController extends Controller
 				$jsMsg='$("#msg-alert").modal("show")';
 				$this->getView()->registerJs($jsMsg);
 			}
-			
+			$profile = Yii::$app->getUserOpt->profile_user(); //componen
+			$userId = $profile->id;
 			return $this->render('index', [
 				'searchModel' => $searchModel,
 				'dataProvider' => $dataProvider,
 				'searchModelpermision'=>$searchModelpermision,
-				'dataProviderpermision'=>$dataProviderpermision
+				'dataProviderpermision'=>$dataProviderpermision,
+				'userPrmission'=>$userId
 			]);
 		}else{
            $this->redirect(array('/site/validasi'));  //
