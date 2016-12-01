@@ -11,6 +11,7 @@ use lukisongroup\hrd\models\Employe;
 use lukisongroup\hrd\models\EmployeSearch;
 use lukisongroup\sistem\models\UserloginSearch;
 use yii\web\NotFoundHttpException;
+use lukisongroup\sistem\models\ValidationLoginForm;
 
 /**
  * Site controller
@@ -89,12 +90,13 @@ class SiteController extends Controller
 
 		if (!parent::beforeAction($action)) {
 			return false;
-		}
+		} 
 		
 		if ( !Yii::$app->user->isGuest)  {
 			if (Yii::$app->session['userSessionTimeout'] < time()) {
 				Yii::$app->user->logout();
 				$this->redirect(array('/site/login'));
+				//$this->redirect(['/site/ubah-password']);
 			} else {
 				Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);				
 				return true; 
@@ -152,6 +154,66 @@ class SiteController extends Controller
 
     }
 
+	/*
+	 * FORM LOGIN UTAMA | FORM CHANGE PASSWORD
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+	*/
+	public function actionUbahPassword()
+    {
+		$js='$("#ubah-password-modal").modal("show")';
+        $this->getView()->registerJs($js);
+		$validationFormLogin = new ValidationLoginForm();
+		return $this->renderAjax('_changePasswordUtama',[
+					'validationFormLogin'=>$validationFormLogin,
+			]);
+	}
+	/*
+	 * FORM LOGIN UTAMA | SAVE PASSWORD
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+	*/
+	public function actionPasswordUtamaSave()
+    {
+		$validationFormLogin = new ValidationLoginForm();
+
+		/*
+		 * Ajax validate Old password Signature
+		 * @author ptrnov  <piter@lukison.com>
+		 * @since 1.1
+		*/
+		if(Yii::$app->request->isAjax){
+			$validationFormLogin->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($validationFormLogin));
+		}
+
+		if($validationFormLogin->load(Yii::$app->request->post())){
+			if ($validationFormLogin->addpassword()) {
+				$model = $this->findModel(Yii::$app->user->identity->EMP_ID);
+				$newPassword=$validationFormLogin->repassword;
+				$dataHtml =$this->renderPartial('NotifyChangePassword',[
+								//'model'=>$model,
+								'newPassword'=>$newPassword
+							]);
+				if($model->EMP_EMAIL!=''){
+					 Yii::$app->mailer->compose()
+					 ->setFrom(['postman@lukison.com' => 'LG-ERP-POSTMAN'])
+					 //->setTo(['piter@lukison.com'])
+					 //->setTo(['it-dept@lukison.com'])
+					 ->setTo($model->EMP_EMAIL)
+					 ->setSubject('Change Login Password')
+					 ->setHtmlBody($dataHtml)
+					 ->send();
+				}
+				return $this->redirect('index');
+			}else{
+				 $model = $this->findModel(Yii::$app->user->identity->EMP_ID);
+				return $this->redirect('index');
+			}
+		}
+	}
+	
+	
 	 protected  function afterLogin(){
 		 
 		 yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']); 

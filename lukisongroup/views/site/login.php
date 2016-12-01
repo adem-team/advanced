@@ -9,10 +9,25 @@ use kartik\widgets\ActiveForm;
 use kartik\builder\Form;
 use kartik\builder\FormGrid;
 use yii\bootstrap\Modal;
+use yii\helpers\Url;
 /* $this->registerCss("div#modal_login{ padding-right: 11000%;
 												}"); */
 //use kartik\widgets\FileInput;
 //echo $pk_emp.'ok';
+
+	$title1 = Yii::t('app','Set Password');
+	$options1 = [ //'id'=>'password',
+				 // '/data-toggle'=>"modal",
+				 // 'data-target'=>"#ubah-password-modal",
+				  'class' => 'btn btn-primary',
+				 // 'style' => 'text-align:left',
+	];
+	$icon1 = '<span class="fa fa-shield fa-md"></span>';
+	$label1 = $icon1 . ' ' . $title1;
+	$url1 = Url::toRoute(['/site/ubah-password']);
+	$content = Html::a($label1,$url1, $options1);
+	//return $content;
+		
 $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'id'=>'form']);
 
 $formlogin= FormGrid::widget([
@@ -77,6 +92,20 @@ $formlogin= FormGrid::widget([
                 ],
             ],
         ],
+		
+		/* [ //-Action Author: -ptr.nov-
+            'columns'=>6,
+            'attributes'=>[
+                'actions'=>[    // embed raw HTML content
+				'columns'=>7,
+                    'type'=>Form::INPUT_RAW,
+                    'value'=>  '<div style="text-align: right; margin-top: 25px">' .
+
+                        $content .
+                        '</div>'
+                ],
+            ],
+        ], */
     ]
 
 ]);

@@ -47,6 +47,59 @@ $userProfile=Yii::$app->getUserOpt->Profile_user();
 		$content = Html::a($label1,$url1, $options1);
 		return $content;
 	}
+	
+	function tombolSetting(){
+		$title1 = Yii::t('app', 'Setting');
+		$options1 = [ 'id'=>'setting',
+					  //'data-toggle'=>"modal",
+					  'data-target'=>"#profile-setting",
+					  //'class' => 'btn btn-default',
+					  'style' => 'text-align:left',
+		];
+		$icon1 = '<span class="fa fa-cogs fa-md"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/sistem/user-profile/setting']);//,'kd'=>$kd]);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
+	
+	/**
+     * New|Change|Reset| Password Login
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	function tombolPasswordUtama(){
+		$title1 = Yii::t('app','Change Login-Password');
+		$options1 = [ 'id'=>'password',
+					  'data-toggle'=>"modal",
+					  'data-target'=>"#profile-password",
+					  //'class' => 'btn btn-default',
+					 // 'style' => 'text-align:left',
+		];
+		$icon1 = '<span class="fa fa-shield fa-md"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/sistem/user-profile/password-utama-view']);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
+	/**
+     * Create Signature
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	function tombolSignature(){
+		$title1 = Yii::t('app','Change Login-Signature');
+		$options1 = [ 'id'=>'signature',
+					  //'data-toggle'=>"modal",
+					  'data-target'=>"#profile-signature",
+					  //'class' => 'btn btn-default',
+		];
+		$icon1 = '<span class="fa fa-shield fa-md"></span>';
+		$label1 = $icon1 . ' ' . $title1;
+		$url1 = Url::toRoute(['/sistem/user-profile/signature']);//,'kd'=>$kd]);
+		$content = Html::a($label1,$url1, $options1);
+		return $content;
+	}
 ?>
 
 <!-- Page Container -->
@@ -67,6 +120,21 @@ $userProfile=Yii::$app->getUserOpt->Profile_user();
 					<p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i><?=$userProfile->emp->EMP_TGL_LAHIR?></p>
 					<p><i class="fa fa-phone fa-fw w3-margin-right w3-text-theme"></i><?=$userProfile->emp->EMP_HP?></p>
 					<p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i><?=$userProfile->emp->EMP_ALAMAT?></p>
+					<p>
+						<div class="btn-group pull-right" style="padding-button:50px">
+						<div class="row" >
+							<button id="asd" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+								<span class="caret"></span>
+								<span id="asdasd" class="sr-only">Toggle Dropdown</span>
+							</button>
+							  <ul class="dropdown-menu" role="menu">
+								<li class="divider"></li>
+								<li><?php echo tombolPasswordUtama();?></li>
+								<li><?php echo tombolSignature(); ?></li>
+							 </ul>
+						</div >
+						</div >
+					</p>
 				</div>
 			</div>
 			<br>
@@ -109,6 +177,7 @@ $userProfile=Yii::$app->getUserOpt->Profile_user();
 				</div>
 		  </div>
 		  <br>
+		  
 		   <!-- Accordion -->
 		  <div class="w3-card-2 w3-round">
 			<div class="w3-accordion w3-white">
