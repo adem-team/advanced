@@ -10,6 +10,8 @@ use yii\web\JsExpression;
 use yii\widgets\Pjax;
 use ptrnov\fullcalendar\FullcalendarScheduler;
 
+ 
+
 $JSCode = <<<EOF
 	function(start, end) {
 		// var title = prompt('Event Title:');
@@ -57,6 +59,19 @@ $JSCode = <<<EOF
 		//$('#w0').fullCalendar('unselect');
 	}
 EOF;
+
+if(getPermission()->BTN_CREATE){
+
+	$JSCode;
+
+	}else{
+		$JSCode = <<<EOF
+	function(start, end) {
+		$('#confirm-permission-alert').modal('show')
+	}
+EOF;
+
+	}
 	
 $JSDropEvent = <<<EOF
 	function(date) {
@@ -94,7 +109,7 @@ EOF;
 			'language'=>'id',
 		],		
 		'optionsEventUrl'=>[
-			'events' => [],							//should be set data event "your Controller link" 	
+			'events' => Url::to(['/widget/notulen/json-calendar-event']),						//should be set data event "your Controller link" 	
 			'resources'=>[],						//should be set "your Controller link" 								//harus kosong, depedensi dengan button prev/next get resources
 			'changeDropUrl'=>[],					//should be set "your Controller link" to get(start,end) from select. You can use model for scenario.
 			'dragableReceiveUrl'=>[],				//dragable, new data, star date, end date, id form increment db
@@ -168,6 +183,59 @@ EOF;
 		['heading' => 'NOTULEN CLENDER ', 'body' =>$fcNutulen],
 		Html::TYPE_PRIMARY
 	);
+
+
+/*
+	 * Declaration Componen User Permission
+	 * Function getPermission
+	 * Modul Name[9=notulen]
+	*/
+	function getPermission(){
+		if (Yii::$app->getUserOpt->Modul_akses('9')){
+			return Yii::$app->getUserOpt->Modul_akses('9');
+		}else{
+			return false;
+		}
+	}
+
+	/*
+	 * Tombol Modul View
+	 * permission View [BTN_VIEW==1]
+	*/
+	function tombolView($url, $model){
+		if(getPermission()){
+			if(getPermission()->BTN_VIEW){
+				$title = Yii::t('app', 'View');
+				$options = [ 'id'=>'notulen-view'];
+				$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
+				$label = $icon . ' ' . $title;
+				$url = Url::toRoute(['/widget/notulen/view','id'=>$model->id]);
+				$options['tabindex'] = '-1';
+				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
+			}
+		}
+	}
+
+
+/*
+	 * Tombol Modul Review
+	 * permission Review [BTN_REVIEW==1]
+	*/
+	function tombolReview($url, $model){
+		if(getPermission()){
+			if(getPermission()->BTN_REVIEW){
+				$title = Yii::t('app', 'Review');
+				$options = [ 'id'=>'notulen-review'];
+				$icon = '<span class="glyphicon glyphicon-zoom-in"></span>';
+				$label = $icon . ' ' . $title;
+				$url = Url::toRoute(['/widget/notulen/review','id'=>$model->id]);
+				$options['tabindex'] = '-1';
+				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
+			}
+		}
+	}
+
+	
 	
 
 	/*
@@ -268,7 +336,7 @@ EOF;
 	$attDinamikNotulen[]=[
 		'class'=>'kartik\grid\ActionColumn',
 		'dropdown' => true,
-		'template' => '{view}',
+		'template' => '{view}{review}',
 		'dropdownOptions'=>['class'=>'pull-right dropdown','style'=>['disable'=>true]],
 		'dropdownButton'=>[
 			'class' => $actionClass,
@@ -277,13 +345,11 @@ EOF;
 		],
 		'buttons' => [
 			'view' =>function($url, $model, $key){
-					return  '<li>' .Html::a('<span class="fa fa-eye"></span>'.Yii::t('app', 'View'),
-												['/widget/notulen/view','id'=>$model->id],[
-												'id'=>'notulen-id',
-												// 'data-toggle'=>"modal",
-												// 'data-target'=>"#alias-cust",
-												]). '</li>' . PHP_EOL;
-			},				
+					return tombolView($url, $model);
+			},
+			'review'=>function($url, $model, $key){
+					return tombolReview($url, $model);
+					}				
 		],
 		'headerOptions'=>[
 			'style'=>[
@@ -383,3 +449,31 @@ Modal::begin([
 	echo "<div id='modalContentNotulen'></div>";
 	Modal::end(); 
  ?>
+
+ <?php
+	/*
+	 * Button Modal Confirm PERMISION DENAID
+	 * @author ptrnov [piter@lukison]
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#confirm-permission-alert').on('show.bs.modal', function (event) {
+				}),
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'confirm-permission-alert',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/warning/denied.png',  ['class' => 'pnjg', 'style'=>'width:40px;height:40px;']).'</div><div style="margin-top:10px;"><h4><b>Permmission Confirm !</b></h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+			]
+		]);
+		echo "<div>You do not have permission for this module.
+				<dl>
+					<dt>Contact : itdept@lukison.com</dt>
+				</dl>
+			</div>";
+	Modal::end();
+
+?>

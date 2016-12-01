@@ -11,7 +11,8 @@ use lukisongroup\widget\models\NotulenModul;
 // $this->registerJs($this->render('set_person.js'),$this::POS_READY);
 
  $form = ActiveForm::begin([
-    'id' => 'person-form',
+    'id' => $person_form->formName(),
+    'enableClientValidation' => true,
     'action'=>'/widget/notulen/set-person?id='.$id,
     'method'=>'post'
     // 'enableAjaxValidation' => true,
@@ -23,7 +24,7 @@ echo Html::activeHiddenInput($person_form, 'NotulenId',['value'=>$id]) ;
 $options = [
        'multiple' => true,
        'size' => 20,
-       'id'=>'tes'
+       // 'id'=>'tes'
 
    ];
 

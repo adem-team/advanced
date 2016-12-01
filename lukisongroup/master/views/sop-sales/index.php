@@ -598,7 +598,7 @@ function tombolCreate(){
     $attDinamik[]=[
         'class'=>'kartik\grid\ActionColumn',
         'dropdown' => true,
-        'template' => '{activ}{review}',
+        'template' => '{activ}{deathactive}',
         'dropdownOptions'=>['class'=>'pull-right dropup','style'=>['disable'=>true]],
         'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
         'dropdownButton'=>[
@@ -619,7 +619,14 @@ function tombolCreate(){
                                                 ['/master/sop-sales/activ-header','id'=>$model->ID],[
                                                 //'data-target'=>"#img1-visit",
                                                 ]). '</li>' . PHP_EOL ;
+            },
+            'deathactive' =>function($url, $model, $key){
+                    return  '<li>' .Html::a('<span class="fa fa-trash "></span>'.Yii::t('app', 'NonActiv'),
+                                                ['/master/sop-sales/nonactiv-header','id'=>$model->ID],[
+                                                //'data-target'=>"#img1-visit",
+                                                ]). '</li>' . PHP_EOL ;
             }
+
         ],
         'headerOptions'=>[
             'style'=>[
