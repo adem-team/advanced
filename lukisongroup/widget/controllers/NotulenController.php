@@ -18,6 +18,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\widgets\ActiveForm;
+use kartik\mpdf\Pdf;
 
 /**
  * NotulenController implements the CRUD actions for Notulen model.
@@ -236,7 +237,7 @@ class NotulenController extends Controller
             // $model->end = $format_end;
             $model->save();
 
-            return $this->redirect(['view','id'=>$id]);
+            return $this->redirect(['review','id'=>$id]);
         } else {
             return $this->renderAjax('set_tanggal', [
                 'model' => $model,
@@ -276,7 +277,7 @@ class NotulenController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             $model->save();
-            return $this->redirect(['view','id'=>$id]);
+            return $this->redirect(['review','id'=>$id]);
         } else {
             return $this->renderAjax('set_title', [
                 'model' => $model,
@@ -290,7 +291,7 @@ class NotulenController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             $model->save();
-            return $this->redirect(['view','id'=>$id]);
+            return $this->redirect(['review','id'=>$id]);
         } else {
             return $this->renderAjax('set_ruang', [
                 'model' => $model,
@@ -323,7 +324,7 @@ class NotulenController extends Controller
 
 
             $model->saveAccount();
-            return $this->redirect(['view','id'=>$id]);
+            return $this->redirect(['review','id'=>$id]);
         } 
 
         // else {
@@ -338,14 +339,96 @@ class NotulenController extends Controller
         // }
     }
 
+    public function sendMailNotulen($model){
+      if($model->notulenTbl2->USER_ID != ''){
+          $explode_user_id = explode(',',$model->notulenTbl2->USER_ID);
+
+          foreach ($explode_user_id as $key => $value) {
+            # code...
+            $ary_id []= $value; 
+          }
+
+          
+
+
+            $content= $this->renderPartial('pdf', [
+               'header_notulen' => $model,
+              'detail_notulen' => $model->notulenTbl2,
+              ]);
+                    # code...
+
+            /*Attachment*/
+            $contentMailAttach= $this->renderPartial('sendmailcontent',[
+              'header_notulen' => $model,
+              'detail_notulen' => $model->notulenTbl2,
+            ]);
+
+              /*Body Notify*/
+              $contentMailAttachBody= $this->renderPartial('postman_body',[
+                'model_modul' =>$model->notulenTbl2,
+                'model'=>$model,
+                'header_title' => $model->title,
+              ]);
+
+            $pdf = new Pdf([
+                    // set to use core fonts only
+                    'mode' => Pdf::MODE_CORE,
+                    // A4 paper format
+                    'format' => Pdf::FORMAT_A4,
+                    // portrait orientation
+                    'orientation' => Pdf::ORIENT_PORTRAIT,
+                    // stream to browser inline
+                    'destination' => Pdf::DEST_BROWSER,
+                    //'destination' => Pdf::DEST_FILE ,
+                    // your html content input
+                    'content' => $content,
+                    // format content from your own css file if needed or use the
+                    // enhanced bootstrap css built by Krajee for mPDF formatting
+                    //D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+                    'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+                    // any css to be embedded if required
+                    'cssInline' => '.kv-heading-1{font-size:12px}',
+                     // set mPDF properties on the fly
+                    'options' => ['title' =>$model->title,'subject'=>'ro'],
+                     // call mPDF methods on the fly
+                    'methods' => [
+                      'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
+                      'SetFooter'=>['{PAGENO}'],
+                    ]
+                  ]);
+
+            $sql_cariemail = (new \yii\db\Query())
+            ->select(['us.email'])
+            ->from('dbm001.user as us')
+            ->where(['and','us.status' => 10,['in', 'us.id',$ary_id]])
+            ->all();
+
+            foreach ($sql_cariemail as $key => $value) {
+              # code...
+                // \Yii::$app->kirim_email->pdf($contentMailAttach,'reminder',$value['email'],'meeting',$contentMailAttachBody);
+              $to[] = $value['email'];
+            }
+
+            /* KIRIM ATTACH emaiL */
+         \Yii::$app->kirim_email->pdf($contentMailAttach,'reminder',$to,'meeting',$contentMailAttachBody);
+
+      }
+
+
+    }
+
 
       public function actionSetAcara($id)
     {
         $model = NotulenModul::find()->where(['NOTULEN_ID'=>$id])->one();
+
+        $data_modul = Notulen::find()->with('notulenTbl2')->where(['id'=>$id])->one();
        
         if ($model->load(Yii::$app->request->post())) {
-            $model->save();
-           return $this->redirect(['view', 'id' => $id]);
+            if($model->save()){
+              self::sendMailNotulen($data_modul);
+            }
+           return $this->redirect(['review', 'id' => $id]);
         } else {
             return $this->renderAjax('set_acara', [
                 'model' => $model,
@@ -359,7 +442,7 @@ class NotulenController extends Controller
        
         if ($model->load(Yii::$app->request->post())) {
             $model->save();
-           return $this->redirect(['view', 'id' => $id]);
+           return $this->redirect(['review', 'id' => $id]);
         } else {
             return $this->renderAjax('set_time', [
                 'model' => $model,
@@ -439,6 +522,36 @@ class NotulenController extends Controller
      * @param string $id
      * @return mixed
      */
+    public function actionReview($id)
+    {
+        $model = self::findModel($id);
+        $acara = $model->notulenTbl;
+
+        $person_form =  new PostPerson();
+
+        $person = Person::find()->where(['NOTULEN_ID'=>$id])->all();
+
+         $searchModel = new NotulenSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    
+        return $this->render('review', [
+            'model' => $model,
+            'acara' =>  $acara,
+            'ttd'=>self::Get_profile()->emp->SIGSVGBASE64,
+            'profile'=>self::Get_profile()->emp,
+            'emp_nm'=>self::Get_profile()->emp->EMP_NM,
+            'person'=>$person,
+            'person_form'=>$person_form,
+            'items'=>self::get_aryPerson(),
+            'dataProvider'=>$dataProvider
+        ]);
+    }
+
+    /**
+     * Displays a single Notulen model.
+     * @param string $id
+     * @return mixed
+     */
     public function actionView($id)
     {
         $model = self::findModel($id);
@@ -500,7 +613,7 @@ class NotulenController extends Controller
                     }
                    
           
-           return $this->redirect(['view', 'id' => $model->id]);
+           return $this->redirect(['review', 'id' => $model->id]);
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,
@@ -528,6 +641,20 @@ class NotulenController extends Controller
             ]);
         }
     }
+
+    public function actionJsonCalendarEvent($start,$end)
+    {     
+         $date_format_start = Yii::$app->formatter->asDate($start, 'php:Y-m-d');
+       
+         $date_format_end = Yii::$app->formatter->asDate($end, 'php:Y-m-d');
+         $query_calendar = (new \yii\db\Query())
+            ->select(['start','end','title'])
+            ->from('dbm005.m0001 as m1')
+            ->where(['or','start'=>$date_format_start,'end'=>$date_format_end])
+            ->all();
+
+        return Json::encode($query_calendar);
+  }
 
     /**
      * Deletes an existing Notulen model.

@@ -211,9 +211,19 @@ function kembali(){
 
 	function SIGN_2($acara)
 	{
-		$data = Employe::find()->where(['EMP_ID'=>$acara[0]->SIG2_ID])->one();
-		return $data->SIGSVGBASE64;
+		// $data = Employe::find()->where(['EMP_ID'=>$acara[0]->SIG2_ID])->one();
+		// return $data->SIGSVGBASE64;
+
+		 $data = (new \yii\db\Query())
+				      ->select(['SIGSVGBASE64'])
+		              ->from('dbm002.a0001')
+					  ->where(['EMP_ID'=>$acara[0]->SIG2_ID])
+					  ->one();
+		 return $data['SIGSVGBASE64'];
+
 	}
+
+	
 
 	function SIGN_1($acara)
 	{
@@ -394,33 +404,6 @@ function kembali(){
 	]); 
 
 
-#tanggal
-$tanggal = $model->start != '' ? Yii::$app->formatter->format($model->start, 'date'): Yii::t('app','xxxx-xx-xx');
-
-#time
-if($acara[0]->TIME_START != '' && $acara[0]->TIME_END != '' )
-      {
-         $time = $acara[0]->TIME_START.' - '.$acara[0]->TIME_END;
-      }elseif($acara[0]->TIME_END != '' && $acara[0]->TIME_START == '' ){
-         $time ='xx:xx'.' - '.$acara[0]->TIME_END;
-      }elseif($acara[0]->TIME_START != '' && $acara[0]->TIME_END == '')
-      {
-         $time =$acara[0]->TIME_START.' - '.'xx:xx';
-       }else{
-           $time ='xx:xx'.' - '.'xx:xx';
-       }
-
- #Tempat
- $Tempat = $model->ROOM != '' ? $model->ROOM : Yii::t('app','---------------');
-
- #Materi Rapat
- $Materi = $model->title != '' ? $model->title : Yii::t('app','---------------');
-
- # Susunan Acara
- $Susunan_acra = $acara[0]->SCHEDULE != '' ? $acara[0]->SCHEDULE : Yii::t('app','---------------');
-
- #Hasil Rapat
- $Hasil_rapat = $acara[0]->RESULT_SCHEDULE != '' ? $acara[0]->RESULT_SCHEDULE : Yii::t('app','---------------');
 
 
 ?>
@@ -467,17 +450,17 @@ if($acara[0]->TIME_START != '' && $acara[0]->TIME_END != '' )
 				<dl>
 				<!-- tanggal -->
 				  <dt style="width:150px; float:left;">Tanggal</dt> 
-				  <dd style="color:rgba(87, 163, 247, 1)">:<b><?= $tanggal ?></b></dd>
+				  <dd style="color:rgba(87, 163, 247, 1)">:<b><?php echo btnTanggal($model) ?></b></dd>
 				  <!-- waktu -->
 				  <dt style="width:150px; float:left;">Waktu</dt>
-				  <dd style="color:rgba(87, 163, 247, 1)">:<?= $time ?> </dd>
+				  <dd style="color:rgba(87, 163, 247, 1)">:<?= btnSetTime($acara) ?> </dd>
 
 				   <!-- tempat -->
 						<dt style="width:150px; float:left;">Tempat</dt>
-						<dd style="color:rgba(87, 163, 247, 1)">:  <b><?= $Tempat ?></b></dd>
+						<dd style="color:rgba(87, 163, 247, 1)">:  <b><?= btnSetRoom($model) ?></b></dd>
 						<!-- materi rapat -->
 						<dt style="width:150px; float:left;">Materi Rapat</dt>
-						<dd>: <?php echo $Materi; ?></dd>
+						<dd>: <?php echo btnSetMateri($model); ?></dd>
 				</dl>
 				
 			</div>
@@ -496,7 +479,7 @@ if($acara[0]->TIME_START != '' && $acara[0]->TIME_END != '' )
 											['data-toggle'=>"modal",
 											'id'=>'per-id',
 													'data-target'=>"#person-notulen"]) ?> -->
-						   <!-- Html::a('<i class="fa fa-plus" aria-hidden="true"></i>','#',['id'=>'per-id']) ?> -->
+						  <?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>','#',['id'=>'per-id']) ?>
 						   Peserta Rapat
 
 
@@ -526,10 +509,14 @@ if($acara[0]->TIME_START != '' && $acara[0]->TIME_END != '' )
 									            ->all();
 
 									  foreach ($selected as $key => $value) {
-									  	# code...
+									  	 // Html::a($value['full_name'], ['/widget/notulen/set-person','id'=>$acara[0]->NOTULEN_ID],
+													// ['data-toggle'=>"modal",
+													// 		'data-target'=>"#person-notulen2"]) 
+									  	
 									  	?>
 
-									  	<li><?=$value['full_name']?> 
+									  	<li> <?= $value['full_name'] ?>
+
 										</li>
 
 
@@ -550,33 +537,30 @@ if($acara[0]->TIME_START != '' && $acara[0]->TIME_END != '' )
 				<div>
 					<input id="ac-2" name="accordion-1" type="radio">
 					<label for="ac-2">			  
-					<!-- 	Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-acara','id'=>$acara[0]->NOTULEN_ID],
+						<?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-acara','id'=>$acara[0]->NOTULEN_ID],
 										['data-toggle'=>"modal",
-												'data-target'=>"#acara"]) ?> -->
-											
+												'data-target'=>"#acara"]) ?>
 					   Susunan Acara
 
 					</label>
 					<article class="ac-medium">
-					<?= $Susunan_acra ?>
-						 <!-- btnAcara($acara) ?> -->
+						<?= btnAcara($acara) ?>
 					</article>
 				</div>
 				<div>
 					<input  id="ac-3" name="accordion-1" type="radio">
 					<label for="ac-3">
-						<!--  Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-hasil','id'=>$acara[0]->NOTULEN_ID],
+						<?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-hasil','id'=>$acara[0]->NOTULEN_ID],
 										['data-toggle'=>"modal",
 										 'data-target'=>"#rapat",
 										 
 
-										 ]); -->
-						<!-- ?> -->
+										 ]);
+						?>
 						Hasil Rapat
 					</label>
 					<article class="ac-large">
-					<?= $Hasil_rapat ?>
-						 <!-- btnRapat($acara) ?> -->
+						<?= btnRapat($acara) ?>
 						<?=$gvNutulen?>
 
 					</article>
@@ -594,7 +578,7 @@ if($acara[0]->TIME_START != '' && $acara[0]->TIME_END != '' )
 					</dl>
 					  <dl>
 					  <?php
-						 $ttd2 = $acara[0]->SIGN_STT2!= 0 ?  '<img style="width:80 ; height:40px;" src='.SIGN_2($acara).'></img>' :'';
+						 $ttd2 = $acara[0]->SIGN_STT2!= 0 ?  '<img style="width:80 ; height:40px;" src='.SIGN_2($acara).'></img>' :SignCreated2($acara);
 						 echo $ttd2;
 					  ?>
 				</dl>

@@ -34,7 +34,7 @@ class PostPerson extends Model
         public function rules()
         {
             return [
-                ['Person', 'required'],
+                // ['Person', 'required'],
                 [['Person', 'NotulenId'], 'safe'],
             ];
         }
@@ -46,26 +46,32 @@ class PostPerson extends Model
      */
     public function saveAccount()
     {
-           
-           if($this->Person[0] == 'selected'){
+          
+
+             if($this->Person[0] == 'selected'){
              $data_id_slice = array_slice($this->Person,1);
            }else{
               $data_id_slice = $this->Person;
            }
-
-            $data_id = implode(",",$data_id_slice);
-           
-           $rows = (new \yii\db\Query())
-                    ->select(["CONCAT(em.EMP_NM, ' ',em.EMP_NM_BLK) AS full_name"])
-                    ->from('dbm001.user us')
-                    ->leftjoin('dbm002.a0001 as em','em.EMP_ID = us.EMP_ID')
-                    ->where(['us.id' => $data_id_slice])
-                    ->all();
-           foreach ($rows as $key => $value) {
-               # code...
-               $val[] = $value['full_name'];
+           if($data_id_slice != ''){
+             $data_id = implode(",",$data_id_slice);
+           }else{
+             $data_id = '';
            }
-           $data_fullname = implode(',',$val);
+
+            
+           
+           // $rows = (new \yii\db\Query())
+           //          ->select(["CONCAT(em.EMP_NM, ' ',em.EMP_NM_BLK) AS full_name"])
+           //          ->from('dbm001.user us')
+           //          ->leftjoin('dbm002.a0001 as em','em.EMP_ID = us.EMP_ID')
+           //          ->where(['us.id' => $data_id_slice])
+           //          ->all();
+           // foreach ($rows as $key => $value) {
+           //     # code...
+           //     $val[] = $value['full_name'];
+           // }
+           // $data_fullname = implode(',',$val);
 
            $transaction = Notulen::getDb()->beginTransaction();
 
@@ -82,10 +88,7 @@ class PostPerson extends Model
                         throw $e;
                     }
 
-            
-
-       
- 
+           
         
        
                //     # code...

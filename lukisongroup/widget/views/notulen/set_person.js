@@ -18,12 +18,12 @@
           var x = JSON.parse(data);
           var y = x.option;
           // alert(y);
-          $('#tes').append(x.selected); // add data
-           $('#tes').append(y); // add data
+          $('#postperson-person').append(x.selected); // add data
+           $('#postperson-person').append(y); // add data
           // $('#tes option:selected').remove() //remove data
 
           // $('#tes').trigger('bootstrapduallistbox.refresh');
-          $('#tes').bootstrapDualListbox('refresh');
+          $('#postperson-person').bootstrapDualListbox('refresh');
 
 
         });
@@ -31,8 +31,9 @@
 
 
 
-         }); 
+         });
 
+      
    
 // });
   // $('#per-id').bind("click",function(){
@@ -114,9 +115,9 @@
 //   }
 
   $('#person-notulen').on("hidden.bs.modal",function(){
-  $('#tes option:selected').remove()
-   $('#tes option').remove()
-   $('#tes').bootstrapDualListbox('refresh');
+  $('#postperson-person option:selected').remove()
+   $('#postperson-person option').remove()
+   $('#postperson-person').bootstrapDualListbox('refresh');
 
     // $('#tes').bootstrapDualListbox('destroy');
 

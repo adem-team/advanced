@@ -79,6 +79,10 @@ class Notulen extends \yii\db\ActiveRecord
     {
         return $this->hasMany(NotulenModul::className(), ['NOTULEN_ID' => 'id']);
     }
+     public function getNotulenTbl2()
+    {
+        return $this->hasOne(NotulenModul::className(), ['NOTULEN_ID' => 'id']);
+    }
 
     public function getSchedule() 
   {
