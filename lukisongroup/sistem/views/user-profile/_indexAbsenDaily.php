@@ -148,12 +148,14 @@ use lukisongroup\hrd\models\Employe;
 	{
 		$i=2;
 		$kd = explode('.',$key);
-		$x=date('N', strtotime(date("Y-m-d")));		
-		if ($x!=2 or $x!=7){
-			$headerColor='rgba(97, 211, 96, 0.3)';
-		};
 		if($key!='EMP_NM' AND $key!='TerminalID' AND $kd[0]!='OTIN' AND $kd[0]!='OTOUT'){
 			if ($kd[0]=='IN'){$lbl='IN';} elseif($kd[0]=='OUT'){$lbl='OUT';}else {$lbl='';};
+				$x=date('N', $kd[1]);	
+		if ($x!=6 or $x!=7){
+			$headerColor='rgba(97, 211, 96, 0.3)';
+		}else{
+			$headerColor='rgba(255, 142, 138, 1)';
+		};
 				$attDinamik[]=[
 					'attribute'=>$key,
 					'label'=>$lbl,
@@ -187,7 +189,7 @@ use lukisongroup\hrd\models\Employe;
 							//'width'=>'12px',
 							'font-family'=>'tahoma, arial, sans-serif',
 							'font-size'=>'8pt',
-							'background-color'=>'rgba(97, 211, 96, 0.3)',
+							'background-color'=>$headerColor,//'rgba(97, 211, 96, 0.3)',
 						]
 					],
 					'contentOptions'=>[

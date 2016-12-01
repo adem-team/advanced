@@ -13,20 +13,22 @@ $this->title = Yii::t('app', 'lukisongroup');
 
     /**
     *@author wawan
-   * Declaration Componen User Permission
-   * Function getPermission
-   * Modul Name[8=SO2]
-  */
-   function getPermission(){
-    if (Yii::$app->getUserOpt->Modul_akses('8')){
-      return Yii::$app->getUserOpt->Modul_akses('8');
-    }else{
-      return false;
-    }
-  }
+	* Declaration Componen User Permission
+	* Function getPermission
+	* Modul Name[8=SO2]
+	*/
+	function getPermission(){
+		if (Yii::$app->getUserOpt->Modul_akses('8')){
+			return Yii::$app->getUserOpt->Modul_akses('8');
+		// }elseif(Yii::$app->getUserOpt->Modul_akses('10')){
+			// return Yii::$app->getUserOpt->Modul_akses('10');
+		}else{
+			return false;
+		}
+	}
 
-  // if(getPermission()){
-  	 if(getPermission()->BTN_CREATE){
+  //if(getPermission()){
+  	if(getPermission()->BTN_CREATE){
   		$link = '/purchasing/salesman-order';
 
   	}else{

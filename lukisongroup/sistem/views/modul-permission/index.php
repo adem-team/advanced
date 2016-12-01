@@ -15,6 +15,29 @@ $this->sideCorp = 'PT.Lukisongroup';                        /* Title Select Comp
 $this->sideMenu = 'admin';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'ERP Modul - Administrator');  /* title pada header page */
 
+	/**
+    *@author wawan
+	* Declaration Componen User Permission
+	* Function getPermission
+	* Modul Name[8=SO2]
+	*/
+	function getPermission(){
+		if (Yii::$app->getUserOpt->Modul_akses('10')){
+			return Yii::$app->getUserOpt->Modul_akses('10');
+		}else{
+			return false;
+		}
+	}
+
+  //if(getPermission()){
+  	if(getPermission()->BTN_CREATE){
+  		$link = '/sistem/modul-permission';
+
+  	}else{
+  		$link = '/site/validasi';
+  	}
+
+
 	$aryStt= [
 		  ['STATUS' => 0, 'STT_NM' => 'DISABLE'],		  
 		  ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
@@ -955,5 +978,26 @@ $this->title = Yii::t('app', 'ERP Modul - Administrator');  /* title pada header
 			'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
 		],
 	]);
+	Modal::end();
+	
+	
+	/**
+	  * MSG MODAL PERMISSION.
+	  * LOCAL PERMISSION.
+	  * @author piter [ptr.nov@gmail.com]
+	*/
+	Modal::begin([
+		'id' => 'msg-alert',
+		'header' => '<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/warning/denied.png',  ['class' => 'pnjg', 'style'=>'width:40px;height:40px;']).'</div><div style="margin-top:10px;"><h4><b>Permmission Confirm !</b></h4></div>',
+		'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+		]
+	]);
+		echo "<div>You do not have permission for this module.
+			<dl>
+				<dt>Contact : itdept@lukison.com</dt>
+			</dl>
+		</div>";
 	Modal::end();
 ?>

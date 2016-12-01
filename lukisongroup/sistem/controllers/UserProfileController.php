@@ -10,7 +10,7 @@ use yii\helpers\Url;
 use yii\widgets\Pjax;
 use yii\bootstrap\Modal;
 use zyx\phpmailer\Mailer;
-
+use yii\web\NotFoundHttpException;
 use lukisongroup\sistem\models\Absensi;
 use lukisongroup\sistem\models\AbsensiSearch;
 use lukisongroup\hrd\models\AbsenDaily;
