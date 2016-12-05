@@ -74,6 +74,9 @@ class EmployeSearch extends Employe
 						 //->andFilterWhere(['EMP_ID'=>'006']);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+			'pagination' => [
+				'pageSize' => 200,
+			]
         ]);
 
 		/*[5.2] SHORTING */

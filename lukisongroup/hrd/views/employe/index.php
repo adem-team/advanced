@@ -38,6 +38,8 @@ $tab_employe= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
 		'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+		'floatOverflowContainer'=>true,
+		'floatHeader'=>true,
         'columns' => $dinamkkColumn1,
 		'panel'=>[
             //'heading' =>true,// $hdr,//<div class="col-lg-4"><h8>'. $hdr .'</h8></div>',

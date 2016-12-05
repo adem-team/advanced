@@ -25,7 +25,7 @@ class AgendaNotulen extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'M0003';
+        return 'm0003';
     }
 
     /**

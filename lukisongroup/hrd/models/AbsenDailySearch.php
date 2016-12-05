@@ -86,7 +86,7 @@ class AbsenDailySearch extends Personallog
 	*/
 	public function searchDailyTglRangeUser($params){
 		$user_id=  Yii::$app->user->identity->id;
-		$dailyAbsensi= Yii::$app->db2->createCommand("CALL absensi_calender_user('bulan','2016-11-30','".$user_id."')")->queryAll();
+		$dailyAbsensi= Yii::$app->db2->createCommand("CALL absensi_calender_user('bulan','2016-12-23','".$user_id."')")->queryAll();
 		$dataProvider= new ArrayDataProvider([
 			//'key' => 'ID',
 			'allModels'=>$dailyAbsensi,
