@@ -5,6 +5,7 @@ namespace lukisongroup\purchasing\models\salesmanorder;
 use Yii;
 use lukisongroup\purchasing\models\salesmanorder\Userprofile;
 use lukisongroup\master\models\Customers;
+use lukisongroup\master\models\Distributor;
 
 /**
  * This is the model class for table "so_0001".
@@ -48,7 +49,7 @@ class SoHeader extends \yii\db\ActiveRecord
             [['CUST_ID','USER_SIGN1','parent_cusid'], 'required','on'=>'create'],
             [['STT_PROCESS','ID'], 'integer'],
             [['TGL', 'TGL_SIGN2', 'TGL_SIGN3', 'TGL_SIGN4', 'TGL_SIGN5','CUST_ID','NOTE','TOP_DURATION','TOP_TYPE','TGL_KIRIM','USER_SIGN2','USER_SIGN1', 'USER_SIGN3', 'USER_SIGN4', 'USER_SIGN5'], 'safe'],
-            [['KD_SO'], 'string', 'max' => 50],
+            [['KD_SO','DESTINATION'], 'string', 'max' => 50],
         ];
     }
 
@@ -72,6 +73,10 @@ class SoHeader extends \yii\db\ActiveRecord
         ];
     }
 
+  public function getDest(){
+    return $this->hasOne(Distributor::className(), ['KD_DISTRIBUTOR'=>'DESTINATION']);
+  } 
+  
   public function getCust(){
     return $this->hasOne(Customers::className(), ['CUST_KD'=>'CUST_ID']);
   }

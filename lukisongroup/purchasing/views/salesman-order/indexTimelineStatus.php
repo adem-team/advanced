@@ -207,7 +207,7 @@ $iconClass1="fa fa-times-circle";
 			<div class="timeline-badge success"><i class="<?=$soHeaderData->sign3Nm!='None'?'glyphicon glyphicon-check':'glyphicon glyphicon-remove'?>"></i></div>
 			<div class="timeline-panel">
 				<div class="timeline-heading">
-					<h4 class="timeline-title">ESM CAM</h4>
+					<h4 class="timeline-title">ESM KAM</h4>
 					<p>
 						<small class="text-muted"><i class="glyphicon glyphicon-time"></i> <?=$soHeaderData->sign3SelisihWaktu.' hours ago' ?></small><br>
 						<small class="text-muted"><i class="fa fa-user fa-lg"></i> <?=$soHeaderData->sign3Nm!=''?$soHeaderData->sign3Nm:''?> </small>

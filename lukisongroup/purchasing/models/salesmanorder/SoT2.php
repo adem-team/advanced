@@ -89,8 +89,8 @@ class SoT2 extends \yii\db\ActiveRecord
     }
 
     public function getCust(){
-    return $this->hasOne(Customers::className(), ['CUST_KD'=>'CUST_KD']);
-  }
+		return $this->hasOne(Customers::className(), ['CUST_KD'=>'CUST_KD']);
+	}
 
     /**
      * @inheritdoc

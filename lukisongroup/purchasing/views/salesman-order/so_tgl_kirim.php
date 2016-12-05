@@ -19,7 +19,7 @@ use yii\helpers\Url;
         'enableClientValidation' => true,
     ]); ?>
 
-    <?=  $form->field($model, 'KODE_REF')->textInput(['value'=>$kode_som,'readonly'=>true]); ?>
+    <?=  $form->field($model, 'KODE_REF')->textInput(['value'=>$model->KD_SO,'readonly'=>true]); ?>
 
      <?= $form->field($model, 'TGL_KIRIM')->widget(DatePicker::classname(), [
             'options' => ['placeholder' => ' pilih ...'],

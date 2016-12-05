@@ -239,7 +239,8 @@ class SalesmanOrderController extends Controller
 					'tgl'=>$soHeaderData->TGL,
 					'user_id'=>$soHeaderData->USER_SIGN1,
 					'searchModelDetail'=>$searchModelDetail,
-					'model_cus'=>$modelSoT2->cust,
+					'model_cus'=>$soHeaderData->cust,
+					'model_dest'=>$soHeaderData->dest,
 					'soHeaderData'=>$soHeaderData,
 					'id_so'=>$id
 					// 'status'=>$status_sign
@@ -577,25 +578,34 @@ class SalesmanOrderController extends Controller
 		}
     }
 
-
-   
-
-     public function actionSoNoteReview($kdso)
+    public function actionSoNoteReview($id)
     {
-      $model = $this->findModelHeader($kdso);
+      $model = $this->findModelHeader($id);
       # code...
       if ($model->load(Yii::$app->request->post()) ) {
       	
           $model->save();
-           return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model->USER_SIGN1,'tgl'=>$model->TGL]);
+           //return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model->USER_SIGN1,'tgl'=>$model->TGL]);
+           return $this->redirect(['/purchasing/salesman-order/review','id'=>$model->ID,'stt'=>1]);
       }else {
         return $this->renderAjax('so_note', [
             'model' => $model,
-            'kode_som'=>$kdso
         ]);
       }
     }
 
+	public function actionSoDestinationReview($id_so){
+		$model = $this->findModelHeader($id_so);
+		# code...
+		if ($model->load(Yii::$app->request->post()) ) {
+			$model->save();
+			return $this->redirect(['/purchasing/salesman-order/review','id'=>$model->ID,'stt'=>1]);
+		}else {
+			return $this->renderAjax('so_destination', [
+				'model' => $model,
+			]);
+		}
+	}
 
      public function actionSignAuth2($kdso)
     {
@@ -690,7 +700,7 @@ class SalesmanOrderController extends Controller
 
      
 
-    public function actionSoShipingReview($cust_kd,$kode_so,$user_id,$tgl)
+    public function actionSoShipingReview($cust_kd,$id_so,$user_id,$tgl)
     {
        $model = $this->findModelCust($cust_kd);
       # code...
@@ -698,7 +708,8 @@ class SalesmanOrderController extends Controller
       	
           $model->save();
 
-           return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$kode_so,'stt'=>1,'cust_kd'=>$cust_kd,'user_id'=>$user_id,'tgl'=>$tgl]);
+           //return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$kode_so,'stt'=>1,'cust_kd'=>$cust_kd,'user_id'=>$user_id,'tgl'=>$tgl]);
+           return $this->redirect(['/purchasing/salesman-order/review','id'=>$id_so,'stt'=>1]);
       }else {
         return $this->renderAjax('so_shiping', [
             'model' => $model,
@@ -720,7 +731,8 @@ class SalesmanOrderController extends Controller
 			$model->TOP_DURATION = $topType=='Credit' ? $topDuration:'';
       	
           $model->save();
-         return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model->USER_SIGN1,'tgl'=>$model->TGL]);
+         //return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model->USER_SIGN1,'tgl'=>$model->TGL]);
+         return $this->redirect(['/purchasing/salesman-order/review','id'=>$model->ID,'stt'=>1]);
       }else {
         return $this->renderAjax('sonote_top', [
             'model' => $model,
@@ -739,18 +751,19 @@ class SalesmanOrderController extends Controller
     
 
    
-	public function actionSoEditReview($kdso){
+	public function actionSoEditReview($id){
 
-		$model = $this->findModelHeader($kdso);
+		$model = $this->findModelHeader($id);
 		  # code...
 		  if ($model->load(Yii::$app->request->post()) ) {
 			
 			  $model->save();
-			   return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model->USER_SIGN1,'tgl'=>$model->TGL]);
+			   //return $this->redirect(['/purchasing/salesman-order/review-new','id'=>$model->KD_SO,'stt'=>1,'cust_kd'=>$model->CUST_ID,'user_id'=>$model->USER_SIGN1,'tgl'=>$model->TGL]);
+			   return $this->redirect(['/purchasing/salesman-order/review','id'=>$model->ID,'stt'=>1]);
 		  }else {
 			return $this->renderAjax('so_tgl_kirim', [
 				'model' => $model,
-				'kode_som'=>$kdso
+				'kode_som'=>$id
 			]);
 		  }
 
@@ -841,6 +854,7 @@ class SalesmanOrderController extends Controller
     protected function findModelCust($id)
     {
         if (($model = Customers::findOne($id)) !== null) {
+       // if (($model = Customers::find->where(['CUST_KD'=>$id]))) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

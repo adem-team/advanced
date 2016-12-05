@@ -32,7 +32,7 @@ use dosamigos\ckeditor\CKEditor;
 		]);
 	?>
 
- <?= $form->field($model, 'KD_SO')->textInput(['value'=>$kode_som,'maxlength' => true,'readonly'=>true]) ?>
+ <?= $form->field($model, 'ID')->hiddenInput(['value'=>$model->ID,'maxlength' => true,'readonly'=>true])->label(false) ?>
  
 	<?= $form->field($model, 'TOP_TYPE')->dropDownList($valTopType,[
 			'id'=>'purchaseorder-top_type',

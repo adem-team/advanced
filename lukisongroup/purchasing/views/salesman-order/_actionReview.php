@@ -99,7 +99,8 @@ $city = (new \yii\db\Query())
 			];
 			$icon = '<span class="fa fa-edit fa-lg"></span>';
 			$label = $icon . ' ' . $title;
-			$url = Url::toRoute(['/purchasing/salesman-order/so-edit-review','kdso'=>$soHeader->KD_SO]);
+			//$url = Url::toRoute(['/purchasing/salesman-order/so-edit-review','kdso'=>$soHeader->KD_SO]);
+			$url = Url::toRoute(['/purchasing/salesman-order/so-edit-review','id'=>$soHeader->ID]);
 			$content = Html::a($label,$url, $options);
 			return $content;
 
@@ -109,6 +110,7 @@ $city = (new \yii\db\Query())
 	 * LINK SO Note
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.2
+	 * actionSoNoteReview
 	*/
 	function PoNote($soHeader){
 			$title = Yii::t('app','');
@@ -120,7 +122,7 @@ $city = (new \yii\db\Query())
 			];
 			$icon = '<span class="fa fa-plus fa-lg"></span>';
 			$label = $icon . ' ' . $title;
-			$url = Url::toRoute(['/purchasing/salesman-order/so-note-review','kdso'=>$soHeader->KD_SO]);
+			$url = Url::toRoute(['/purchasing/salesman-order/so-note-review','id'=>$soHeader->ID]);
 			$content = Html::a($label,$url, $options);
 			return $content;
 	}
@@ -130,8 +132,9 @@ $city = (new \yii\db\Query())
 	 * LINK SO shipping
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.2
+	 * actionSoShipingReview
 	*/
-	function tombolSoshiping($cust_kd,$kode_so,$user_id,$tgl){
+	function tombolSoshiping($cust_kd,$id_so,$user_id,$tgl){
 			$title = Yii::t('app','');
 			$options = [ 'id'=>'so-shiping-id',
 						  'data-toggle'=>"modal",
@@ -141,16 +144,38 @@ $city = (new \yii\db\Query())
 			];
 			$icon = '<span class="fa fa-edit fa-lg"></span>';
 			$label = $icon . ' ' . $title;
-			$url = Url::toRoute(['/purchasing/salesman-order/so-shiping-review','cust_kd'=>$cust_kd,'user_id'=>$user_id,'kode_so'=>$kode_so,'tgl'=>$tgl]);
+			//$url = Url::toRoute(['/purchasing/salesman-order/so-shiping-review','cust_kd'=>$cust_kd,'user_id'=>$user_id,'kode_so'=>$kode_so,'tgl'=>$tgl]);
+			$url = Url::toRoute(['/purchasing/salesman-order/so-shiping-review','cust_kd'=>$cust_kd,'user_id'=>$user_id,'id_so'=>$id_so,'tgl'=>$tgl]);
 			$content = Html::a($label,$url, $options);
 			return $content;
 	}
 
+	/*
+	 * Distination Handling
+	 * @author ptrnov  <piter@lukison.com>
+     * @since 1.2
+	 * actionSoDestinationReview
+	*/
+	function tombolSoDestination($id_so){
+			$title = Yii::t('app','');
+			$options = [ 'id'=>'so-dstination-id',
+						  'data-toggle'=>"modal",
+						  'data-target'=>"#so-destination-review",
+						  'class'=>'btn btn-info btn-xs',
+						  'title'=>'SO Destination'
+			];
+			$icon = '<span class="fa fa-edit fa-lg"></span>';
+			$label = $icon . ' ' . $title;
+			$url = Url::toRoute(['/purchasing/salesman-order/so-destination-review','id_so'=>$id_so]);
+			$content = Html::a($label,$url, $options);
+			return $content;
+	}
 
 	/*
 	 * LINK PO Note TOP
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.2
+	 * actionSoNoteTopReview
 	*/
 	function PoNoteTOP($soHeader){
 			$title = Yii::t('app','');
@@ -162,7 +187,8 @@ $city = (new \yii\db\Query())
 			];
 			$icon = '<span class="fa fa-plus fa-lg"></span>';
 			$label = $icon . ' ' . $title;
-			$url = Url::toRoute(['/purchasing/salesman-order/so-note-top-review','kdso'=>$soHeader->KD_SO]);
+			//$url = Url::toRoute(['/purchasing/salesman-order/so-note-top-review','kdso'=>$soHeader->KD_SO]);
+			$url = Url::toRoute(['/purchasing/salesman-order/so-note-top-review','kdso'=>$soHeader->ID]);
 			$content = Html::a($label,$url, $options);
 			return $content;
 	}
@@ -183,6 +209,36 @@ $city = (new \yii\db\Query())
 		$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 		//$url = Url::toRoute(['/purchasing/salesman-order/create-new-add','cust_kd'=>$cust_kd,'user_id'=>$user_id,'id'=>$kode_so,'cust_nm'=>$cust_nm,'tgl'=>$tgl]);
 		$url = Url::toRoute(['/purchasing/salesman-order/create-new-add','id'=>$id_so]);
+		$label1 = $icon1 . ' ' . $title1;
+		$content = Html::a($label1,$url,$options1);
+		return $content;
+	}
+	
+	//ADD ITEMS
+	function tombolViewStock(){
+		$title1 = Yii::t('app', 'View-Stock');
+		$options1 = [ 'id'=>'view-stock',
+						'data-toggle'=>"modal",
+						'data-target'=>"#view-stock",
+						'class' => 'btn btn-info btn-sm',
+		];
+		$icon1 = '<span class="fa fa-eye fa-lg"></span>';
+		$url = Url::toRoute(['/purchasing/salesman-order/view-stock']);
+		$label1 = $icon1 . ' ' . $title1;
+		$content = Html::a($label1,$url,$options1);
+		return $content;
+	}
+
+	//ADD ITEMS
+	function tombolViewPrice(){
+		$title1 = Yii::t('app', 'View-Price');
+		$options1 = [ 'id'=>'view-price',
+						'data-toggle'=>"modal",
+						'data-target'=>"#view-price",
+						'class' => 'btn btn-success btn-sm',
+		];
+		$icon1 = '<span class="fa fa-money fa-lg"></span>';
+		$url = Url::toRoute(['/purchasing/salesman-order/view-price']);
 		$label1 = $icon1 . ' ' . $title1;
 		$content = Html::a($label1,$url,$options1);
 		return $content;
@@ -795,7 +851,7 @@ $_gvSoDetail= GridView::widget([
 	'export' => false,
 	'toolbar'=> [
 		 //['content'=>tombolCreate($cust_kd,$kode_so,$user_id,$cust_nmx,$tgl,$soHeaderData)],
-		 ['content'=>tombolCreate($id_so)],
+		 ['content'=>tombolViewPrice().' '.tombolViewStock().' '.tombolCreate($id_so)],
 		
 	 ],
 	'panel'=>[
@@ -818,7 +874,7 @@ $_gvSoDetail= GridView::widget([
 			<div  class="row" >
 				<dl>
 					<dt style="width:300px; float:left;font-family: verdana, arial, sans-serif ;font-size: 11pt;">
-						PT EFENBI SUKSES MAKMUR
+						PT. Efenbi Sukses Makmur
 					</dt>
 					<dt style="width:100px; float:left;"></dt>
 					<dt style="width:200px; float:left;">
@@ -839,9 +895,6 @@ $_gvSoDetail= GridView::widget([
 		<div class="col-md-5" style="padding-top:15px;">
 		</div>
 		<div class="col-md-3" style="float:left;padding-bottom:-100px">
-			<div>
-					 <?= tombolEditCustom($soHeaderData); ?>
-				</div>
 			<dl>
 				<dt style="width:100px; float:left;">Tanggal </dt>
 				<dd>: <?php echo date('d-m-Y'); ?></dd>
@@ -854,7 +907,7 @@ $_gvSoDetail= GridView::widget([
 				<dt style="width:100px; float:left;">Telp   </dt>
 				<dd>: <?php echo $soHeaderData->cust->TLP1; ?></dd>
 				<dt style="width:100px; float:left;">Tgl Kirim  </dt>
-				<dd>: <?php echo $soHeaderData->TGL_KIRIM; ?></dd>
+				<dd>: <?php echo $soHeaderData->TGL_KIRIM .' '. tombolEditCustom($soHeaderData); ?></dd>
 			</dl>
 
 		</div>
@@ -877,29 +930,54 @@ $_gvSoDetail= GridView::widget([
 		<div class="col-md-12" style="font-family: tahoma ;font-size: 9pt;float:left;">
 
 			<div class="col-md-4" style="float:left;">
-			<div>
+				<div>
 					 <?= tombolSoshiping($cust_kd,$kode_so,$user_id,$tgl); ?>
 				</div>
 				<dl>
 					<?php
-						$shipNm= $model_cus->ALAMAT_KIRIM !='' ? $model_cus->ALAMAT_KIRIM: 'Shipping Not Set';
-						$shipAddress= $model_cus->ALAMAT!='' ? $model_cus->ALAMAT :'Address Not Set';
-						$shipCity= $city['CITY_NAME']!='' ? $city['CITY_NAME'] : 'City Not Set';
+						$shipNm= $model_cus->CUST_NM !='' ? $model_cus->CUST_NM: 'Shipping Not Set';
+						$shipAddress= $model_cus->ALAMAT_KIRIM!='' ? $model_cus->ALAMAT_KIRIM :'Address Not Set';
+						$shipCity='';// $city['CITY_NAME']!='' ? $city['CITY_NAME'] : 'City Not Set';
 						$shipPhone= $model_cus->TLP1!='' ? $model_cus->TLP1 : 'Phone Not Set';
 						$shipFax= $model_cus->FAX!='' ? $model_cus->FAX : 'Fax Not Set';
 						$shipPic= $model_cus->PIC!='' ? $model_cus->PIC : 'PIC not Set';
 					?>
 					<dt><h6><u><b>Shipping Address :</b></u></h6></dt>
-					<dt><?=$shipNm; ?></dt>
+					<dt style="width:300px;font-family: verdana, arial, sans-serif ;font-size: 11pt;">
+						<?=$shipNm; ?>
+					</dt>
+					<dt ><?=$shipAddress;?></dt>					
+					<dt style="width:80px; float:left;">Tlp</dt>
+					<dd>:<?=$shipPhone;?></dd>
+					<dt style="width:80px; float:left;">FAX</dt>
+					<dd>:<?=$shipFax; ?></dd>
+					<dt style="width:80px; float:left;">CP</dt>
+					<dd>:<?=$shipPic; ?></dd>
+				</dl>
+			</div>
+			<div class="col-md-4" style="float:left;">
+				<div>
+					 <?= tombolSoDestination($kode_so); ?>
+				</div>
+				<dl>
+					<?php
+						$destinationNm= $model_dest->NM_DISTRIBUTOR !='' ? $model_dest->NM_DISTRIBUTOR: 'none';
+						$destinationAddress= $model_dest->ALAMAT!='' ? $model_dest->ALAMAT :'none';
+						$destinationPhone= $model_dest->TLP1!='' ? $model_dest->TLP1 : 'Phone Not Set';
+						$destinationFax= $model_dest->FAX!='' ? $model_dest->FAX : 'Fax Not Set';
+						$destinationPic= $model_dest->PIC!='' ? $model_dest->PIC : 'PIC not Set';
+					?>
+					<dt><h6><u><b>Destination :</b></u></h6></dt>
+					<dt style="width:300px;font-family: verdana, arial, sans-serif ;font-size: 11pt;"><?=$destinationNm; ?></dt>
 					<dt><?=$shipCity; ?></dt>
-					<dt><?=$shipAddress;?></dt>
+					<dt><?=$destinationAddress;?></dt>
 					
 					<dt style="width:80px; float:left;">Tlp</dt>
-					<dd>:	<?=$shipPhone;?></dd>
+					<dd>:<?=$destinationPhone;?></dd>
 					<dt style="width:80px; float:left;">FAX</dt>
-					<dd>:	<?=$shipFax; ?></dd>
+					<dd>:<?=$destinationFax; ?></dd>
 					<dt style="width:80px; float:left;">CP</dt>
-					<dd>:	<?=$shipPic; ?></dd>
+					<dd>:<?=$destinationPic; ?></dd>
 				</dl>
 			</div>
 			<div class="col-md-3"></div>
@@ -909,38 +987,35 @@ $_gvSoDetail= GridView::widget([
 	</div>
 
 	<!-- SO Term Of Payment !-->
-	<div  class="row">
-		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
-			<dt><b>Term Of Payment :</b></dt>
-			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
-			<div>
-				<div style="float:right;text-align:right;">
-					 <?= PoNoteTOP($soHeaderData); ?>
-				</div>
-				<div style="margin-left:5px">
-					<dt style="width:80px; float:left;"><?php echo $soHeaderData->TOP_TYPE; ?></dt>
-					<dd><?php echo $soHeaderData->TOP_DURATION; ?></dd>
-					<br/>
-				</div>
+	<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
+		<dt><b>Term Of Payment :</b></dt>
+		<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
+		<div>
+			<div style="width:300px;float:right;text-align:right;">
+				 <?= PoNoteTOP($soHeaderData); ?>
+			</div>
+			<div style="margin-left:5px">
+				<dt style="width:5px; float:left;"><?= ' # '; ?></dt>
+				<dd style="padding-left:10px;width:200px;"><?=$soHeaderData->TOP_DURATION!=''?$soHeaderData->TOP_TYPE.' - '.$soHeaderData->TOP_DURATION:$soHeaderData->TOP_TYPE; ?></dd>
+				<br/>
 			</div>
 		</div>
 	</div>
-
+	
 	<!-- PO Note !-->
-	<div  class="row">
-		<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
-			<dt><b>General Notes :</b></dt>
-			<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
-			<div>
-				<div style="float:right;text-align:right;">
-					<?php echo PoNote($soHeaderData); ?>
-				</div>
-				<div style="margin-left:5px">
-					<dd><?php echo $soHeaderData->NOTE; ?></dd>
-				</div>
+	<div  class="col-md-12" style="font-family: tahoma ;font-size: 9pt;">
+		<dt><b>General Notes :</b></dt>
+		<hr style="height:1px;margin-top: 1px; margin-bottom: 1px;font-family: tahoma ;font-size:8pt;">
+		<div>
+			<div style="float:right;text-align:right;">
+				<?php echo PoNote($soHeaderData); ?>
 			</div>
-			<hr style="height:1px;margin-top: 1px;">
+			<div style="margin-left:5px">
+				<dt style="width:5px; float:left;"><?= ' # '; ?></dt>
+				<dd style="padding-left:10px;width:200px;"><?=$soHeaderData->NOTE;?></dd>
+			</div>
 		</div>
+		<hr style="height:1px;margin-top: 1px;">
 	</div>
 	<!-- Signature !-->
 		<div  class="col-md-12">
@@ -1099,7 +1174,7 @@ $_gvSoDetail= GridView::widget([
 							</th>
 							<th style="text-align: center; vertical-align:middle;height:20">
 								<div>
-									<b><?php  echo 'CAM'; ?></b>
+									<b><?php  echo 'KAM'; ?></b>
 								</div>
 							</th>
 						</tr>
@@ -1150,7 +1225,7 @@ $this->registerJs("
 Modal::begin([
 		'id' => 'new-add',
 		'header' => "<div style='font-family:tahoma, arial, sans-serif;font-size:9pt'> <i class='fa fa-info-circle fa-2x'></i>  ADD ITEM PRODUCT </div>",//'<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>New Item</b></h4></div>',
-		// 'size' => Modal::SIZE_SMALL,
+		'size' => Modal::SIZE_SMALL,
 		'headerOptions'=>[
 			'style'=> 'border-radius:5px; background-color:rgba(0,255,0, 1)'
 		]
@@ -1217,36 +1292,36 @@ Modal::end();
 		]);
 	Modal::end();
 
+		//EDIT
+		$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#so-edit-review').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+		",$this::POS_READY);
 
-$this->registerJs("
-		$.fn.modal.Constructor.prototype.enforceFocus = function() {};
-		$('#so-edit-review').on('show.bs.modal', function (event) {
-			var button = $(event.relatedTarget)
-			var modal = $(this)
-			var title = button.data('title')
-			var href = button.attr('href')
-			modal.find('.modal-title').html(title)
-			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-			$.post(href)
-				.done(function( data ) {
-					modal.find('.modal-body').html(data)
-				});
-			}),
-",$this::POS_READY);
+		Modal::begin([
+				'id' => 'so-edit-review',
+				'header' => "<div style='font-family:tahoma, arial, sans-serif;font-size:9pt'> <i class='fa fa-info-circle fa-2x'></i>  Edit </div>",//'<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>New Item</b></h4></div>',
+				'size' => Modal::SIZE_SMALL,
+				'headerOptions'=>[
+					'style'=> 'border-radius:5px; background-color:rgba(0,255,0, 1)'
+				]
+			]);
+		Modal::end();
 
-Modal::begin([
-		'id' => 'so-edit-review',
-		'header' => "<div style='font-family:tahoma, arial, sans-serif;font-size:9pt'> <i class='fa fa-info-circle fa-2x'></i>  Edit </div>",//'<div style="float:left;margin-right:10px">'. Html::img('@web/img_setting/login/login1.png',  ['class' => 'pnjg', 'style'=>'width:100px;height:70px;']).'</div><div style="margin-top:10px;"><h4><b>New Item</b></h4></div>',
-		// 'size' => Modal::SIZE_SMALL,
-		'headerOptions'=>[
-			'style'=> 'border-radius:5px; background-color:rgba(0,255,0, 1)'
-		]
-	]);
-Modal::end();
-
-
-
-$this->registerJs("
+	
+		//NOTED
+		$this->registerJs("
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
 			$('#so-note-review').on('show.bs.modal', function (event) {
 				var button = $(event.relatedTarget)
@@ -1268,12 +1343,12 @@ $this->registerJs("
 			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Note</h4></div>',
 			'size' => 'modal-md',
 			'headerOptions'=>[
-				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+				'style'=> 'border-radius:5px; background-color: rgba(0,255,0, 1)',
 			]
 		]);
 		Modal::end();
 
-
+		//SHIIPING
 		$this->registerJs("
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
 			$('#so-shiping-review').on('show.bs.modal', function (event) {
@@ -1296,12 +1371,12 @@ $this->registerJs("
 			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Note</h4></div>',
 			'size' => 'modal-md',
 			'headerOptions'=>[
-				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+				'style'=> 'border-radius:5px; background-color: rgba(0,255,0, 1)',
 			]
 		]);
 		Modal::end();
 
-
+		//TERM OF PAYMENT - TOP
 		$this->registerJs("
 			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
 			$('#so-notetop-review').on('show.bs.modal', function (event) {
@@ -1322,9 +1397,37 @@ $this->registerJs("
 			'id' => 'so-notetop-review',
 			//'header' => '<h4 class="modal-title">Entry Request Order</h4>',
 			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">TOP</h4></div>',
-			'size' => 'modal-md',
+			'size' => Modal::SIZE_SMALL,
 			'headerOptions'=>[
-				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+				'style'=> 'border-radius:5px; background-color: rgba(0,255,0, 1)',
+			]
+		]);
+		Modal::end();
+		
+		//DESTINATION
+		$this->registerJs("
+			$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+			$('#so-destination-review').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget)
+				var modal = $(this)
+				var title = button.data('title')
+				var href = button.attr('href')
+				modal.find('.modal-title').html(title)
+				modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+				$.post(href)
+					.done(function( data ) {
+						modal.find('.modal-body').html(data)
+					});
+				}),
+		",$this::POS_READY);
+
+		Modal::begin([
+			'id' => 'so-destination-review',
+			//'header' => '<h4 class="modal-title">Entry Request Order</h4>',
+			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-truck"></div><div><h4 class="modal-title">Destination Handling</h4></div>',
+			'size' => Modal::SIZE_SMALL,
+			'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(0,255,0, 1)',
 			]
 		]);
 		Modal::end();

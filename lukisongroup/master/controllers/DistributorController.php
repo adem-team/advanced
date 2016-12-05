@@ -153,7 +153,7 @@ class DistributorController extends Controller
 			  
 			if($model->validate())
 			{
-				$model->UPDATED_AT = Yii::$app->user->identity->username;
+				$model->UPDATED_BY = Yii::$app->user->identity->username;
 					$model->save();
 			}
 		
