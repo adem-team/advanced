@@ -7,6 +7,8 @@ use lukisongroup\widget\models\Notulen;
 use lukisongroup\widget\models\NotulenModul;
 use lukisongroup\hrd\models\Employe;
 use lukisongroup\widget\models\NotulenSearch;
+use lukisongroup\widget\models\AgendaNotulenSearch;
+use lukisongroup\widget\models\AgendaNotulen;
 use lukisongroup\widget\models\PostPerson;
 use lukisongroup\widget\models\Person;
 use lukisongroup\widget\models\Authmodel1;
@@ -531,8 +533,12 @@ class NotulenController extends Controller
 
         $person = Person::find()->where(['NOTULEN_ID'=>$id])->all();
 
-         $searchModel = new NotulenSearch();
+        $searchModel = new NotulenSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+
+        $searchModel_agenda = new AgendaNotulenSearch();
+        $dataProvider_agenda = $searchModel_agenda->search(Yii::$app->request->queryParams);
     
         return $this->render('review', [
             'model' => $model,
@@ -543,7 +549,9 @@ class NotulenController extends Controller
             'person'=>$person,
             'person_form'=>$person_form,
             'items'=>self::get_aryPerson(),
-            'dataProvider'=>$dataProvider
+            'dataProvider'=>$dataProvider,
+            'searchModel_agenda'=>$searchModel_agenda,
+            'dataProvider_agenda'=>$dataProvider_agenda
         ]);
     }
 
@@ -618,6 +626,31 @@ class NotulenController extends Controller
             return $this->renderAjax('create', [
                 'model' => $model,
                 'data_modul'=>self::getary_modul(),
+                'data_emp'=>self::get_aryEmploye()
+            ]);
+        }
+    }
+
+     /**
+     * Creates a new Notulen model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreateAgenda($id)
+    {
+        $model = new AgendaNotulen();
+     
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            $model->NOTULEN_ID = $id;
+            $model->save();
+                   
+          
+           return $this->redirect(['review', 'id' => $model->NOTULEN_ID]);
+        } else {
+            return $this->renderAjax('create_agenda', [
+                'model' => $model,
                 'data_emp'=>self::get_aryEmploye()
             ]);
         }
