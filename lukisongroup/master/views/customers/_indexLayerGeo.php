@@ -262,7 +262,7 @@ $this->title = Yii::t('app', 'Customers');
 			'heading'=>false,
 			'type'=>'warning',
 			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create Geografis ',
-									['modelClass' => 'Kategori',]),'#',[
+									['modelClass' => 'Kategori',]),'/master/customers/create-geo',[
 										'data-toggle'=>"modal",
 										'data-target'=>"#modal-create",
 										'class' => 'btn btn-success btn-sm'
@@ -349,3 +349,33 @@ $this->title = Yii::t('app', 'Customers');
 	</div>
 </div>
 
+<?php
+// create customers via modal
+$this->registerJs("
+  $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+
+  $('#modal-create').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var modal = $(this)
+    var title = button.data('title')
+    var href = button.attr('href')
+
+    //modal.find('.modal-title').html(title)
+    modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+    $.post(href)
+      .done(function( data ) {
+        modal.find('.modal-body').html(data)
+      });
+
+
+    })
+
+",$this::POS_READY);
+Modal::begin([
+  'id' => 'modal-create',
+  'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">New Customer</h4></div>',
+  'headerOptions'=>[
+      'style'=> 'border-radius:5px; background-color: rgba(126, 189, 188, 0.9)',
+  ],
+]);
+Modal::end();
