@@ -18,6 +18,25 @@ $this->registerCss($this->render('accordion.css'));
 $this->registerJs($this->render('set_person.js'),$this::POS_READY);
 
 
+/*
+ * Tombol Create
+ *  create 
+*/
+function tombolCreate($acara){
+			$title1 = Yii::t('app', 'New Agenda');
+			$options1 = [ 'id'=>'agenda-create',
+							'data-toggle'=>"modal",
+							'data-target'=>"#new-agenda",
+							'class' => 'btn btn-success btn-xs',
+			];
+			$icon1 = '<span class="fa fa-plus fa-lg"></span>';
+			$url = Url::toRoute(['/widget/notulen/create-agenda','id'=>$acara]);
+			$label1 = $icon1 . ' ' . $title1;
+			$content = Html::a($label1,$url,$options1);
+			return $content;
+		 }
+
+
 
 function kembali(){
         $title = Yii::t('app','');
@@ -231,177 +250,6 @@ function kembali(){
 		return $data->SIGSVGBASE64;
 	}
 
-	/*
-	 * LIST MEMO CALENDAR 
-	 * PERIODE 23-22
-	 * @author ptrnov  [piter@lukison.com]
-	 * @since 1.2
-	*/
-	$actionClass='btn btn-info btn-xs';
-	$actionLabel='Update';
-	$attDinamikNotulen =[];				
-	/*GRIDVIEW ARRAY FIELD HEAD*/
-	$headColomnNotulen=[
-		['ID' =>0, 'ATTR' =>['FIELD'=>'title','SIZE' => '300px','label'=>'TITLE','align'=>'left','warna'=>'159, 221, 66, 1']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'start','SIZE' => '20px','label'=>'DATE START','align'=>'left','warna'=>'159, 221, 66, 1']],				
-		['ID' =>2, 'ATTR' =>['FIELD'=>'end','SIZE' => '20px','label'=>'DATE END','align'=>'left','warna'=>'159, 221, 66, 1']],
-		
-	];
-	$gvHeadColomnNotulen = ArrayHelper::map($headColomnNotulen, 'ID', 'ATTR');
-	/*GRIDVIEW NUMBER*/
-	$attDinamikNotulen[]=[
-		/* Attribute Serial No */
-			'class'=>'kartik\grid\SerialColumn',
-			'width'=>'5px',
-			'header'=>'No.',
-			'hAlign'=>'center',
-			'headerOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'5px',
-					'font-family'=>'tahoma',
-					'font-size'=>'8pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
-				]
-			],
-			'contentOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'5px',
-					'font-family'=>'tahoma',
-					'font-size'=>'8pt',
-				]
-			],
-			'pageSummaryOptions' => [
-				'style'=>[
-					'border-right'=>'0px',
-				]
-			]
-	];
-	
-	/*GRIDVIEW ARRAY ROWS*/
-	foreach($gvHeadColomnNotulen as $key =>$value[]){
-		$attDinamikNotulen[]=[		
-			'attribute'=>$value[$key]['FIELD'],
-			'label'=>$value[$key]['label'],
-			'filter'=>true,
-			'hAlign'=>'right',
-			'vAlign'=>'middle',
-			//'mergeHeader'=>true,
-			'noWrap'=>true,			
-			'headerOptions'=>[		
-					'style'=>[									
-					'text-align'=>'center',
-					'width'=>$value[$key]['SIZE'],
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'8pt',
-					//'background-color'=>'rgba(97, 211, 96, 0.3)',
-					'background-color'=>'rgba('.$value[$key]['warna'].')',
-				]
-			],  
-			'contentOptions'=>[
-				'style'=>[
-					'width'=>$value[$key]['SIZE'],
-					'text-align'=>$value[$key]['align'],
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'8pt',
-					//'background-color'=>'rgba(13, 127, 3, 0.1)',
-				]
-			],
-			//'pageSummaryFunc'=>GridView::F_SUM,
-			//'pageSummary'=>true,
-			// 'pageSummaryOptions' => [
-				// 'style'=>[
-						// 'text-align'=>'right',		
-						//'width'=>'12px',
-						// 'font-family'=>'tahoma',
-						// 'font-size'=>'8pt',	
-						// 'text-decoration'=>'underline',
-						// 'font-weight'=>'bold',
-						// 'border-left-color'=>'transparant',		
-						// 'border-left'=>'0px',									
-				// ]
-			// ],	
-		];	
-	};
-	
-	/*GRIDVIEW ARRAY ACTION*/
-	$attDinamikNotulen[]=[
-		'class'=>'kartik\grid\ActionColumn',
-		'dropdown' => true,
-		'template' => '{view}',
-		'dropdownOptions'=>['class'=>'pull-right dropdown','style'=>['disable'=>true]],
-		'dropdownButton'=>[
-			'class' => $actionClass,
-			'label'=>$actionLabel,
-			//'caret'=>'<span class="caret"></span>',
-		],
-		'buttons' => [
-			'view' =>function($url, $model, $key){
-					return  '<li>' .Html::a('<span class="fa fa-eye"></span>'.Yii::t('app', 'View'),
-												['/widget/notulen/view','id'=>$model->id],[
-												'id'=>'notulen-id',
-												// 'data-toggle'=>"modal",
-												// 'data-target'=>"#alias-cust",
-												]). '</li>' . PHP_EOL;
-			},				
-		],
-		'headerOptions'=>[
-			'style'=>[
-				'text-align'=>'center',
-				'width'=>'10px',
-				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'9pt',
-				'background-color'=>'rgba(159, 221, 66, 1)',
-			]
-		],
-		'contentOptions'=>[
-			'style'=>[
-				'text-align'=>'center',
-				'width'=>'10px',
-				'height'=>'10px',
-				'font-family'=>'tahoma, arial, sans-serif',
-				'font-size'=>'9pt',
-			]
-		],
-	];
-	
-	/*SET  GRID VIEW LIST EVENT*/
-	$gvNutulen= GridView::widget([
-		'dataProvider' => $dataProvider,
-		// 'filterModel' => $searchModelNotulen,
-		'filterRowOptions'=>['style'=>'background-color:rgba(255, 221, 66, 1); align:center'],
-		'columns' => $attDinamikNotulen,
-		'floatOverflowContainer'=>true,
-		'floatHeader'=>true,
-		/* [
-			['class' => 'yii\grid\SerialColumn'],
-			'start',
-			'end',
-			'title',
-			['class' => 'yii\grid\ActionColumn'],
-		], */
-		'pjax'=>true,
-		'pjaxSettings'=>[
-			'options'=>[
-				'enablePushState'=>false,
-				'id'=>'absen-rekap',
-			],
-		],
-		'panel' => [
-					'heading'=>"<span class='fa fa-edit'><b> LIST NOTULEN</b></span>",
-					'type'=>'info',
-					'showFooter'=>false,
-		],
-		'toolbar'=> [
-			//'{items}',
-		],
-		'hover'=>true, //cursor select
-		'responsive'=>true,
-		'responsiveWrap'=>true,
-		'bordered'=>true,
-		'striped'=>true,
-	]); 
 
 
 
@@ -543,8 +391,18 @@ function kembali(){
 					   Susunan Acara
 
 					</label>
-					<article class="ac-medium">
+					<article class="ac-large">
 						<?= btnAcara($acara) ?>
+
+
+
+						<?= Yii::$app->controller->renderPartial('list_agenda',[
+							 'searchModel_agenda'=>$searchModel_agenda,
+            				 'dataProvider_agenda'=>$dataProvider_agenda,
+            				 'id'=>$acara[0]->NOTULEN_ID
+						]); ?>
+
+						<!-- gvNutulen?> -->
 					</article>
 				</div>
 				<div>
@@ -561,7 +419,7 @@ function kembali(){
 					</label>
 					<article class="ac-large">
 						<?= btnRapat($acara) ?>
-						<?=$gvNutulen?>
+						
 
 					</article>
 				</div>
@@ -760,6 +618,35 @@ Modal::begin([
     ],
   ]);
     echo "<div id='modalContentacara'></div>";
+    Modal::end();
+
+     $this->registerJs("
+            $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+            $('#new-agenda').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget)
+                var modal = $(this)
+                var title = button.data('title')
+                var href = button.attr('href')
+                modal.find('.modal-title').html(title)
+                modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+                $.post(href)
+                    .done(function( data ) {
+                        modal.find('.modal-body').html(data)
+                    });
+                }),
+    ",$this::POS_READY);
+
+
+    /*modal*/
+Modal::begin([
+    'id' => 'new-agenda',
+    'header' => '<div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>NOTULEN</b></h5></div>',
+    // 'size' => Modal::SIZE_SMALL,
+    'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+    ],
+  ]);
+    echo "<div id='modalContentagenda'></div>";
     Modal::end();
 
 //      $this->registerJs("
