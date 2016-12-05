@@ -1189,6 +1189,23 @@ class CustomersController extends Controller
           }
     }
 
+    public function actionCreateGeo(){
+         $model = new DraftGeo() ;
+
+          if ($model->load(Yii::$app->request->post()) ) {
+
+              $model->save();
+
+               return $this->redirect(['esm-index-geo']);
+
+          }else{
+              return $this->renderAjax('form_create_geo', [
+                'model' => $model,
+            ]);
+
+          }
+    }
+
 
     public function actionViewLayers($id){
          $model = $this->findModellayers($id);
