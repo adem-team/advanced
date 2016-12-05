@@ -627,7 +627,7 @@ $city = (new \yii\db\Query())
 			'inputType' => \kartik\editable\Editable::INPUT_MONEY,
 			'size' => 'xs',
 			],
-		'group'=>true,
+		//'group'=>true,
 		'format'=>['decimal',2],
 		'pageSummaryFunc'=>GridView::F_SUM,
 		'pageSummary'=>true,
