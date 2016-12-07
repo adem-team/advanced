@@ -249,7 +249,7 @@ $city = (new \yii\db\Query())
 	 * @author ptrnov  <piter@lukison.com>
      * @since 1.2
 	*/
-	function PrintPdf($kode_SO){
+	function PrintPdf($soHeaderData){
 			$title = Yii::t('app','Print');
 			$options = [ 'id'=>'pdf-print-id',
 						  'class'=>'btn btn-default btn-xs',
@@ -257,7 +257,7 @@ $city = (new \yii\db\Query())
 			];
 			$icon = '<span class="fa fa-print fa-fw"></span>';
 			$label = $icon . ' ' . $title;
-			$url = Url::toRoute(['/purchasing/salesman-order/cetakpdf','id'=>$kode_SO]);
+			$url = Url::toRoute(['/purchasing/salesman-order/cetakpdf','id'=>$soHeaderData->ID]);
 			$content = Html::a($label,$url, $options);
 			return $content;
 	}
@@ -400,7 +400,7 @@ $city = (new \yii\db\Query())
 		'headerOptions'=>[
 			'style'=>[
 				'text-align'=>'center',
-				'width'=>'100px',
+				'width'=>'115px',
 				'font-family'=>'verdana, arial, sans-serif',
 				'font-size'=>'7pt',
 				'background-color'=>'rgba(97, 211, 96, 0.3)',
@@ -451,7 +451,7 @@ $city = (new \yii\db\Query())
 		'headerOptions'=>[
 			'style'=>[
 				'text-align'=>'center',
-				'width'=>'80px',
+				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'9pt',
 				'background-color'=>'rgba(97, 211, 96, 0.3)',
@@ -460,7 +460,7 @@ $city = (new \yii\db\Query())
 		'contentOptions'=>[
 			'style'=>[
 				'text-align'=>'right',
-				'width'=>'80px',
+				'width'=>'100px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'7pt',
 			]
@@ -798,7 +798,7 @@ $city = (new \yii\db\Query())
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'50px',
+					'width'=>'30px',
 					'font-family'=>'verdana, arial, sans-serif',
 					'font-size'=>'7pt',
 					'background-color'=>'rgba(97, 211, 96, 0.3)',
@@ -807,8 +807,7 @@ $city = (new \yii\db\Query())
 			'contentOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
-					'width'=>'50px',
-					'height'=>'10px',
+					'width'=>'30px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'7pt',
 				]
@@ -896,18 +895,26 @@ $_gvSoDetail= GridView::widget([
 		</div>
 		<div class="col-md-3" style="float:left;padding-bottom:-100px">
 			<dl>
+				<?php
+					$infoCustTgl=Yii::$app->formatter->asDate($soHeaderData->TGL,'php:Y-m-d');
+					$infoCustId=$soHeaderData->CUST_ID;
+					$infoCustNm=$soHeaderData->cust->CUST_NM;
+					$infoCustAlamat=$soHeaderData->cust->ALAMAT;
+					$infoCustTlp=$soHeaderData->cust->TLP1;
+					$infoCustTglKirim=$soHeaderData->TGL_KIRIM;
+				?>
 				<dt style="width:100px; float:left;">Tanggal </dt>
-				<dd>: <?php echo date('d-m-Y'); ?></dd>
+				<dd>: <?=$infoCustTgl?></dd>
 				<dt style="width:100px; float:left;">Kode Cust</dt>
-				<dd>: <?php echo $cust_kd  ?></dd>
+				<dd>: <?=$infoCustId?></dd>
 				<dt style="width:100px; float:left;">Customer </dt>
-				<dd>: <?php echo $cust_nmx ?></dd>
+				<dd>: <?=$infoCustNm?></dd>
 				<dt style="width:100px; float:left;">Alamat  </dt>
-				<dd>: <?php echo $soHeaderData->cust->ALAMAT; ?></dd>
+				<dd>: <?=$infoCustAlamat?></dd>
 				<dt style="width:100px; float:left;">Telp   </dt>
-				<dd>: <?php echo $soHeaderData->cust->TLP1; ?></dd>
+				<dd>: <?=$infoCustTlp?></dd>
 				<dt style="width:100px; float:left;">Tgl Kirim  </dt>
-				<dd>: <?php echo $soHeaderData->TGL_KIRIM .' '. tombolEditCustom($soHeaderData); ?></dd>
+				<dd>: <?php echo $infoCustTglKirim .' '. tombolEditCustom($soHeaderData); ?></dd>
 			</dl>
 
 		</div>
@@ -928,7 +935,6 @@ $_gvSoDetail= GridView::widget([
 	<!-- Title BOTTEM Descript !-->
 	<div  class="row">
 		<div class="col-md-12" style="font-family: tahoma ;font-size: 9pt;float:left;">
-
 			<div class="col-md-4" style="float:left;">
 				<div>
 					 <?= tombolSoshiping($cust_kd,$kode_so,$user_id,$tgl); ?>
@@ -1183,7 +1189,7 @@ $_gvSoDetail= GridView::widget([
 				<!-- Button Submit!-->
 				<div style="text-align:right; margin-top:80px; margin-right:15px">
 					<a href="/purchasing/salesman-order" class="btn btn-info btn-xs" role="button" style="width:90px">Back</a>
-					<?=PrintPdf($kode_SO); ?> 
+					<?=PrintPdf($soHeaderData); ?> 
 				</div>
 			</div>
 		</div>

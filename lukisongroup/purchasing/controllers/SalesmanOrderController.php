@@ -773,8 +773,8 @@ class SalesmanOrderController extends Controller
 	
 
 	public function actionCetakpdf($id){
-		$modelSoT2 = SoT2::find()->with('cust')->where("KODE_REF='".$id."' AND SO_TYPE=10")->one();	
-		$soHeaderData = SoHeader::find()->where(['KD_SO'=>$id])->one(); 		
+		$soHeaderData = SoHeader::find()->where(['id'=>$id])->one(); 	
+		$modelSoT2 = SoT2::find()->with('cust')->where("KODE_REF='".$soHeaderData->KD_SO."' AND SO_TYPE=10")->one();			
 		$getSoType=10;
 		$getTGL=$modelSoT2->TGL;
 		$getCUST_KD=$modelSoT2->CUST_KD;
@@ -782,8 +782,8 @@ class SalesmanOrderController extends Controller
 		
 		$searchModelDetail= new SoDetailSearch([
 			// 'TGL'=>$getTGL,
-			'KODE_REF'=>$id,
-			'CUST_KD'=>$getCUST_KD,
+			'KODE_REF'=>$soHeaderData->KD_SO,
+			'CUST_KD'=>$soHeaderData->CUST_ID,//$getCUST_KD,
 			'USER_ID'=>$getUSER_ID,
 		]); 
 		$aryProviderSoDetail = $searchModelDetail->searchDetail(Yii::$app->request->queryParams);
