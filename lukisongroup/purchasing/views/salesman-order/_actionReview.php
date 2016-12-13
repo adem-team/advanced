@@ -59,7 +59,7 @@ $city = (new \yii\db\Query())
 		];
 		$icon = '<span class="glyphicon glyphicon-retweet"></span>';
 		$label = $icon . ' ' . $title;
-		$url = Url::toRoute(['/purchasing/salesman-order/sign-auth2','kdso'=>$soHeader->KD_SO]);
+		$url = Url::toRoute(['/purchasing/salesman-order/sign-auth2','id'=>$soHeader->ID]);
 		$content = Html::a($label,$url, $options);
 		return $content;
 	}
@@ -893,7 +893,7 @@ $_gvSoDetail= GridView::widget([
 		</div>
 		<div class="col-md-5" style="padding-top:15px;">
 		</div>
-		<div class="col-md-3" style="float:left;padding-bottom:-100px">
+		<div class="col-md-3" style="width:300px;float:left;padding-bottom:-100px">
 			<dl>
 				<?php
 					$infoCustTgl=Yii::$app->formatter->asDate($soHeaderData->TGL,'php:Y-m-d');

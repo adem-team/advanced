@@ -378,7 +378,7 @@ use lukisongroup\hrd\models\Dept;
 		],
 		/*CREATE_AT Tanggal Pembuatan*/
 		[
-			'attribute'=>'TGL',
+			'attribute'=>'TGL_HISTORY',
 			'label'=>'Create At',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
@@ -389,18 +389,17 @@ use lukisongroup\hrd\models\Dept;
 				*/
 			//	return substr($model->username, 0, 10);
 			//},
-			'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
-						'filterWidgetOptions' =>([
-							'attribute' =>'CREATED_AT',
-							'presetDropdown'=>TRUE,
-							'convertFormat'=>true,
-							'pluginOptions'=>[
-								'id'=>'tglpo',
-								'format'=>'Y/m/d',
-								'separator' => ' - ',
-								'opens'=>'right'
-							]
-			]),
+			'filterType' => GridView::FILTER_DATE,
+            'filterWidgetOptions' => [
+					'pluginOptions' => [
+                    'format' => 'yyyy-mm-dd',					 
+                    'autoclose' => true,
+                    'todayHighlight' => true,
+					//'format' => 'dd-mm-yyyy hh:mm',
+					'autoWidget' => false,
+					//'todayBtn' => true,
+                ]
+            ],
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
@@ -426,6 +425,9 @@ use lukisongroup\hrd\models\Dept;
 			//'filter' => $Combo_Dept,
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
+			'filterOptions'=>[
+				'colspan'=>3,
+			  ],
 			//'group'=>true,
 			'headerOptions'=>[
 				'style'=>[
@@ -451,8 +453,8 @@ use lukisongroup\hrd\models\Dept;
 			'label'=>'Time.IN',
 			//'filter' => $Combo_Dept,
 			'hAlign'=>'left',
-			'vAlign'=>'middle',
-			//'group'=>true,
+			'vAlign'=>'top',
+			'mergeHeader'=>true,
 			'value'=>function($model){
 				return substr($model['CHECKIN_TIME'], 8, 8);
 			},
@@ -480,8 +482,8 @@ use lukisongroup\hrd\models\Dept;
 			'label'=>'Time.IN',
 			//'filter' => $Combo_Dept,
 			'hAlign'=>'left',
-			'vAlign'=>'middle',
-			//'group'=>true,
+			'vAlign'=>'top',
+			'mergeHeader'=>true,
 			'value'=>function($model){
 				return substr($model['CHECKOUT_TIME'], 8, 8);
 			},
@@ -639,7 +641,7 @@ use lukisongroup\hrd\models\Dept;
 			'format' => 'raw',
 			'hAlign'=>'center',
 			'value' => function ($model) {
-							return statusProcessRo($model);
+							return statusProcessSot2($model);
 			},
 			'headerOptions'=>[
 				'style'=>[
@@ -671,8 +673,8 @@ use lukisongroup\hrd\models\Dept;
 		$_gvHistorySo= GridView::widget([
 			'id'=>'gv-so-md-history',
 			'dataProvider'=> $apSoHeaderHistory,
-			//'filterModel' => $searchModel,
-			'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+			'filterModel' => $searchModelHeader,
+			'filterRowOptions'=>['style'=>'background-color:rgba(214, 255, 138, 1); align:center'],
 			'columns'=>$columnIndexHistory,
 			'pjax'=>true,
 			'pjaxSettings'=>[
@@ -694,7 +696,7 @@ use lukisongroup\hrd\models\Dept;
 					//'{toggleData}',
 				],
 			'panel'=>[
-				'type'=>GridView::TYPE_DANGER,
+				'type'=>GridView::TYPE_SUCCESS,
 				'heading'=>"<span class='fa fa-cart-plus fa-xs'><b> LIST SALES ORDER</b></span>",
 			],
 		]);

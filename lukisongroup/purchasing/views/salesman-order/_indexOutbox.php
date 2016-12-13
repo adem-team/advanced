@@ -282,8 +282,10 @@ function tombolCreateSom()
 		if(getPermission()){
 			if(getPermission()->BTN_REVIEW && $model['STT_PROCESS'] == 0)
 			{
-				$kd=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')?$model['ID']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:$model['KD_SO_HEADER'];
-				$kdstt=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')!=''?0:1;
+				// $kd=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')?$model['ID']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:$model['KD_SO_HEADER'];
+				// $kdstt=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')!=''?0:1;
+				$kd=($model['SOT_ID']!='' AND $model['SO_ID']=='')?$model['SOT_ID']:$model['SO_ID'];//($model['SOT_ID']=='' AND $model['SO_ID']!='')?$model['SO_ID']:$model['SO_ID'];
+				$kdstt=$model['SOT_ID']==''?0:$model['SO_ID']==''?0:1;
 				$title = Yii::t('app', 'Review');
 				$options = [ 'id'=>'so-review-inbox'];
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';
@@ -292,8 +294,10 @@ function tombolCreateSom()
 				$options['tabindex'] = '-1';
 				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
 			}elseif(getPermission()->BTN_REVIEW && getPermission()->BTN_SIGN2 && $model['STT_PROCESS'] == 101){
-				$kd=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')?$model['ID']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:$model['KD_SO_HEADER'];
-				$kdstt=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')!=''?0:1;
+				// $kd=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')?$model['ID']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:$model['KD_SO_HEADER'];
+				// $kdstt=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')!=''?0:1;
+				$kd=($model['SOT_ID']!='' AND $model['SO_ID']=='')?$model['SOT_ID']:$model['SO_ID'];//($model['SOT_ID']=='' AND $model['SO_ID']!='')?$model['SO_ID']:$model['SO_ID'];
+				$kdstt=$model['SOT_ID']==''?0:$model['SO_ID']==''?0:1;
 				$title = Yii::t('app', 'Review');
 				$options = [ 'id'=>'so-review-inbox'];
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';
@@ -303,8 +307,10 @@ function tombolCreateSom()
 				return '<li>' . Html::a($label, $url, $options) . '</li>' . PHP_EOL;
 
 			}elseif(getPermission()->BTN_REVIEW && getPermission()->BTN_SIGN3 && $model['STT_PROCESS'] == 102){
-				$kd=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')?$model['ID']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:$model['KD_SO_HEADER'];
-				$kdstt=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')!=''?0:1;
+				// $kd=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')?$model['ID']:($model['KD_SO_HEADER']!='' AND $model['KD_SO_DETAIL']=='')?$model['KD_SO_HEADER']:$model['KD_SO_HEADER'];
+				// $kdstt=($model['KD_SO_HEADER']=='' AND $model['KD_SO_DETAIL']=='')!=''?0:1;
+				$kd=($model['SOT_ID']!='' AND $model['SO_ID']=='')?$model['SOT_ID']:$model['SO_ID'];//($model['SOT_ID']=='' AND $model['SO_ID']!='')?$model['SO_ID']:$model['SO_ID'];
+				$kdstt=$model['SOT_ID']==''?0:$model['SO_ID']==''?0:1;
 				$title = Yii::t('app', 'Review');
 				$options = [ 'id'=>'so-review-inbox'];
 				$icon = '<span class="glyphicon glyphicon-ok"></span>';
@@ -316,41 +322,6 @@ function tombolCreateSom()
 			}
 		}
 		// }
-	}
-
-
-	//Pjax::end();
-	/*
-	 * STATUS FLOW DATA
-	 * 1. NEW		= 0 	| Create First
-	 * 2. APPROVED	= 1 	| Item Approved
-	 * 3. PROCESS	= 101	| Sign Auth1 | Data Sudah di buat dan di tanda tangani
-	 * 4. CHECKED	= 102	| Sign Auth2 | Data Sudah Di Check  dan di tanda tangani
-	 * 5. APPROVED	= 103	| Sign Auth3 | Data Sudah Di disetujui dan di tanda tangani
-	 * 6. DELETE	= 3 	| Data Hidden | Data Di hapus oleh pembuat petama, jika belum di Approved
-	 * 7. REJECT	= 4		| Data tidak di setujui oleh manager atau Atasan  lain
-	 * 8. UNKNOWN	<>		| Data Tidak valid atau tidak sah
-	*/
-	function statusProcessRoOutbox($model){
-		if($model->STATUS==0){
-			return Html::a('<i class="glyphicon glyphicon-retweet"></i> New', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
-		}elseif($model->STATUS==1){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> Approved', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==3){
-			return Html::a('<i class="glyphicon glyphicon-remove"></i> DELETE', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==4){
-			return Html::a('<i class="glyphicon glyphicon-thumbs-down"></i> REJECT', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif($model->STATUS==5){
-			return Html::a('<i class="glyphicon glyphicon-retweet"></i> Pending', '#',['class'=>'btn btn-danger btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
-		}elseif ($model->STATUS==101){
-			return Html::a('<i class="glyphicon glyphicon-time"></i> Proccess', '#',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==102){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> Checked', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==103){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> Approved', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}else{
-			return Html::a('<i class="glyphicon glyphicon-question-sign"></i> Unknown', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		};
 	}
 
 $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 'DEP_NM','DEP_NM');
@@ -456,10 +427,10 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 		],
 		/*CREATE_AT Tanggal Pembuatan*/
 		[
-			'attribute'=>'TGL',
+			'attribute'=>'TGL_OUTBOX',
 			'label'=>'Create At',
 			'hAlign'=>'left',
-			'vAlign'=>'middle',
+			'vAlign'=>'middle',			
 			//'value'=>function($model){
 				/*
 				 * max String Disply
@@ -467,18 +438,17 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 				*/
 			//	return substr($model->username, 0, 10);
 			//},
-			'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
-						'filterWidgetOptions' =>([
-							'attribute' =>'CREATED_AT',
-							'presetDropdown'=>TRUE,
-							'convertFormat'=>true,
-							'pluginOptions'=>[
-								'id'=>'tglpo',
-								'format'=>'Y/m/d',
-								'separator' => ' - ',
-								'opens'=>'right'
-							]
-			]),
+			'filterType' => GridView::FILTER_DATE,
+            'filterWidgetOptions' => [
+					'pluginOptions' => [
+                    'format' => 'yyyy-mm-dd',					 
+                    'autoclose' => true,
+                    'todayHighlight' => true,
+					//'format' => 'dd-mm-yyyy hh:mm',
+					'autoWidget' => false,
+					//'todayBtn' => true,
+                ]
+            ],	
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
@@ -504,6 +474,9 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			//'filter' => $Combo_Dept,
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
+			'filterOptions'=>[
+				'colspan'=>3,
+			  ],
 			//'group'=>true,
 			'headerOptions'=>[
 				'style'=>[
@@ -529,8 +502,8 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			'label'=>'Time.IN',
 			//'filter' => $Combo_Dept,
 			'hAlign'=>'left',
-			'vAlign'=>'middle',
-			//'group'=>true,
+			'vAlign'=>'top',
+			'mergeHeader'=>true,
 			'value'=>function($model){
 				return substr($model['CHECKIN_TIME'], 8, 8);
 			},
@@ -558,8 +531,8 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			'label'=>'Time.IN',
 			//'filter' => $Combo_Dept,
 			'hAlign'=>'left',
-			'vAlign'=>'middle',
-			//'group'=>true,
+			'vAlign'=>'top',
+			'mergeHeader'=>true,
 			'value'=>function($model){
 				return substr($model['CHECKOUT_TIME'], 8, 8);
 			},
@@ -660,7 +633,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 		[
 			'class'=>'kartik\grid\ActionColumn',
 			'dropdown' => true,
-			'template' => '{view}{tambahEdit}{delete}{review}{closed}',
+			'template' => '{view}{review}{closed}',
 			'dropdownOptions'=>['class'=>'pull-right dropup'],
 			//'headerOptions'=>['class'=>'kartik-sheet-style'],
 			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
@@ -669,17 +642,6 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 				'view' => function ($url, $model) {
 								//return tombolViewInbox($url, $model);
 						  },
-
-				/* View RO | Permissian Status 0; 0=process | User created = user login  */
-				'tambahEdit' => function ($url, $model) {
-								//return tombolEditInbox($url, $model);
-							},
-
-				/* Delete RO | Permissian Status 0; 0=process | User created = user login */
-				'delete' => function ($url, $model) {
-								//return tombolDeleteInbox($url, $model);
-							},
-
 				/* Approved RO | Permissian Status 0; 0=process | Dept = Dept login | GF >= M */
 				'review' => function ($url, $model) {
 								return tombolReviewOutbox($url, $model);
@@ -712,12 +674,13 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 			],
 		],
 		[
+			'attribute'=>'STT_PROCESS',
 			'label'=>'Notification',
 			'mergeHeader'=>true,
 			'format' => 'raw',
 			'hAlign'=>'center',
 			'value' => function ($model) {
-							return statusProcessRo($model);
+				return statusProcessSot2($model);
 			},
 			'headerOptions'=>[
 				'style'=>[
@@ -749,8 +712,8 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 		$_gvOutboxSo= GridView::widget([
 			'id'=>'gv-so-md-outbox',
 			'dataProvider'=> $apSoHeaderOutbox,
-			//'filterModel' => $searchModel,
-			'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+			'filterModel' => $searchModelHeader,
+			'filterRowOptions'=>['style'=>'background-color:rgba(214, 255, 138, 1); align:center'],
 			'columns'=>$columnIndexOutbox,
 			'pjax'=>true,
 			'pjaxSettings'=>[
@@ -770,7 +733,7 @@ $Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 
 					'content'=>tombolCreateSom(),
 				],
 			'panel'=>[
-				'type'=>GridView::TYPE_DANGER,
+				'type'=>GridView::TYPE_WARNING,
 				'heading'=>"<span class='fa fa-cart-plus fa-xs'><b> LIST SALES ORDER</b></span>",
 			],
 		]);

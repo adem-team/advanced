@@ -16,9 +16,17 @@ use yii\debug\components\search\matchers;
 class SoHeaderSearch extends Model
 {	
 	public $TGL;
+	public $TGL_INBOX;
+	public $TGL_OUTBOX;
+	public $TGL_HISTORY;
 	public $CUST_KD;
 	public $KD_BARANG;
 	public $USER_ID;
+	public $KODE_REF;
+	public $CUST_NM;
+	public $NM_FIRST;
+	public $SIG2_NM;
+	public $SIG3_NM;
 	
     /**
      * @inheritdoc	
@@ -26,7 +34,7 @@ class SoHeaderSearch extends Model
     public function rules()
     {
         return [
-            [['TGL','CUST_KD','KD_BARANG','USER_ID','TerminalID'], 'safe'],
+            [['TGL_INBOX','TGL_OUTBOX','TGL_HISTORY','TGL','KODE_REF','CUST_KD','CUST_NM','KD_BARANG','USER_ID','NM_FIRST','SIG2_NM','SIG3_NM'], 'safe'],
         ];
     }
 
@@ -69,7 +77,9 @@ class SoHeaderSearch extends Model
 		
 		$filter = new Filter();
  		$this->addCondition($filter, 'TGL', true);
+ 		$this->addCondition($filter, 'KODE_REF', true);
  		$this->addCondition($filter, 'CUST_KD', true);	
+ 		$this->addCondition($filter, 'CUST_NM', true);	
  		$this->addCondition($filter, 'KD_BARANG', true);	
  		$this->addCondition($filter, 'USER_ID', true);	
  		$dataProvider->allModels = $filter->filter($soQueryJoin);
@@ -88,7 +98,7 @@ class SoHeaderSearch extends Model
 	public function searchHeaderInbox($params){
 		$userLogin=Yii::$app->user->id;
 		$soQueryJoin= Yii::$app->db_esm->createCommand("
-			SELECT  x1.SOT_ID,x1.SO_ID,x1.KD_SO_HEADER,x1.KD_SO_DETAIL,x1.KODE_REF,x1.TGL,x1.CUST_KD,x1.USER_SIGN1,x1.CREATE_BY,x1.CREATE_AT,x1.STT_PROCESS
+			SELECT  x1.SOT_ID,x1.SO_ID,x1.KD_SO_HEADER,x1.KD_SO_DETAIL,x1.KODE_REF,x1.TGL as TGL_INBOX,x1.CUST_KD,x1.USER_SIGN1,x1.CREATE_BY,x1.CREATE_AT,x1.STT_PROCESS
 					,x1.USER_SIGN2,x1.USER_SIGN3,x1.USER_SIGN4,x1.USER_SIGN5
 					,x2.NM_FIRST,x3a.SIG2_NM,x3b.SIG3_NM,x3c.SIG4_NM,x3d.SIG5_NM
 					,x4.CUST_NM,x4.PIC,x4.TLP1,x4.KTP,x4.NPWP,x4.SIUP,x4.ALAMAT,x4.ALAMAT_KIRIM,x4.JOIN_DATE,x4.TLP1,x4.TLP2
@@ -131,6 +141,7 @@ class SoHeaderSearch extends Model
 						AND (x1.USER_SIGN3 IS NULL OR x1.USER_SIGN3<>'".$userLogin."') 
 						AND (x1.USER_SIGN4 IS NULL OR x1.USER_SIGN4<>'".$userLogin."')
 						AND (x1.USER_SIGN5 IS NULL OR x1.USER_SIGN5<>'".$userLogin."')
+					ORDER BY x1.CREATE_AT DESC
 		")->queryAll();  
 		
 		$dataProvider= new ArrayDataProvider([
@@ -145,10 +156,15 @@ class SoHeaderSearch extends Model
  		}
 		
 		$filter = new Filter();
- 		$this->addCondition($filter, 'TGL', true);
+ 		$this->addCondition($filter, 'TGL_INBOX', true);
+ 		$this->addCondition($filter, 'KODE_REF', true);
  		$this->addCondition($filter, 'CUST_KD', true);	
+ 		$this->addCondition($filter, 'CUST_NM', true);	
  		$this->addCondition($filter, 'KD_BARANG', true);	
  		$this->addCondition($filter, 'USER_ID', true);	
+ 		$this->addCondition($filter, 'NM_FIRST', true);
+ 		$this->addCondition($filter, 'SIG2_NM', true);	
+ 		$this->addCondition($filter, 'SIG2_NM', true);	
  		$dataProvider->allModels = $filter->filter($soQueryJoin);
 		
 		return $dataProvider;
@@ -164,7 +180,7 @@ class SoHeaderSearch extends Model
 	public function searchHeaderOutbox($params){
 		$userLogin=Yii::$app->user->id;
 		$soQueryJoin= Yii::$app->db_esm->createCommand("
-			SELECT  x1.SOT_ID,x1.SO_ID,x1.KD_SO_HEADER,x1.KD_SO_DETAIL,x1.KODE_REF,x1.TGL,x1.CUST_KD,x1.USER_SIGN1,x1.CREATE_BY,x1.CREATE_AT,x1.STT_PROCESS
+			SELECT  x1.SOT_ID,x1.SO_ID,x1.KD_SO_HEADER,x1.KD_SO_DETAIL,x1.KODE_REF,x1.TGL as TGL_OUTBOX,x1.CUST_KD,x1.USER_SIGN1,x1.CREATE_BY,x1.CREATE_AT,x1.STT_PROCESS
 					,x1.USER_SIGN2,x1.USER_SIGN3,x1.USER_SIGN4,x1.USER_SIGN5
 					,x2.NM_FIRST,x3a.SIG2_NM,x3b.SIG3_NM,x3c.SIG4_NM,x3d.SIG5_NM
 					,x4.CUST_NM,x4.PIC,x4.TLP1,x4.KTP,x4.NPWP,x4.SIUP,x4.ALAMAT,x4.ALAMAT_KIRIM,x4.JOIN_DATE,x4.TLP1,x4.TLP2
@@ -200,14 +216,15 @@ class SoHeaderSearch extends Model
 						 LEFT JOIN c0001 x4 on x4.CUST_KD=x1.CUST_KD
 						 LEFT JOIN c0002scdl_detail x5 on x5.TGL=x1.TGL AND x5.CUST_ID=x1.CUST_KD
 						 LEFT JOIN c0014 x6 on x6.TGL=x1.TGL AND x6.ID_USER=x1.USER_SIGN1
-			WHERE	x1.STT_PROCESS<>'105' AND 
-					( 	x1.CREATE_BY='".$userLogin."'
-						OR x1.USER_SIGN1='".$userLogin."' 
-						OR x1.USER_SIGN2='".$userLogin."' 
-						OR x1.USER_SIGN3='".$userLogin."' 
-						OR x1.USER_SIGN4='".$userLogin."' 
-						OR x1.USER_SIGN5='".$userLogin."'
-					)			 
+					WHERE	x1.STT_PROCESS<>'105' AND 
+						( 	x1.CREATE_BY='".$userLogin."'
+							OR x1.USER_SIGN1='".$userLogin."' 
+							OR x1.USER_SIGN2='".$userLogin."' 
+							OR x1.USER_SIGN3='".$userLogin."' 
+							OR x1.USER_SIGN4='".$userLogin."' 
+							OR x1.USER_SIGN5='".$userLogin."'
+						)			 
+					ORDER BY x1.CREATE_AT DESC
 		")->queryAll();  
 		
 		$dataProvider= new ArrayDataProvider([
@@ -222,10 +239,15 @@ class SoHeaderSearch extends Model
  		}
 		
 		$filter = new Filter();
- 		$this->addCondition($filter, 'TGL', true);
+ 		$this->addCondition($filter, 'TGL_OUTBOX', true);
+ 		$this->addCondition($filter, 'KODE_REF', true);
  		$this->addCondition($filter, 'CUST_KD', true);	
+ 		$this->addCondition($filter, 'CUST_NM', true);	
  		$this->addCondition($filter, 'KD_BARANG', true);	
  		$this->addCondition($filter, 'USER_ID', true);	
+		$this->addCondition($filter, 'NM_FIRST', true);
+ 		$this->addCondition($filter, 'SIG2_NM', true);	
+ 		$this->addCondition($filter, 'SIG2_NM', true);	
  		$dataProvider->allModels = $filter->filter($soQueryJoin);
 		
 		return $dataProvider;
@@ -241,7 +263,7 @@ class SoHeaderSearch extends Model
 	public function searchHeaderHistory($params){
 		$userLogin=Yii::$app->user->id;
 		$soQueryJoin= Yii::$app->db_esm->createCommand("
-			SELECT  x1.SOT_ID,x1.SO_ID,x1.KD_SO_HEADER,x1.KD_SO_DETAIL,x1.KODE_REF,x1.TGL,x1.CUST_KD,x1.USER_SIGN1,x1.CREATE_BY,x1.CREATE_AT,x1.STT_PROCESS
+			SELECT  x1.SOT_ID,x1.SO_ID,x1.KD_SO_HEADER,x1.KD_SO_DETAIL,x1.KODE_REF,x1.TGL as TGL_HISTORY,x1.CUST_KD,x1.USER_SIGN1,x1.CREATE_BY,x1.CREATE_AT,x1.STT_PROCESS
 					,x1.USER_SIGN2,x1.USER_SIGN3,x1.USER_SIGN4,x1.USER_SIGN5
 					,x2.NM_FIRST,x3a.SIG2_NM,x3b.SIG3_NM,x3c.SIG4_NM,x3d.SIG5_NM
 					,x4.CUST_NM,x4.PIC,x4.TLP1,x4.KTP,x4.NPWP,x4.SIUP,x4.ALAMAT,x4.ALAMAT_KIRIM,x4.JOIN_DATE,x4.TLP1,x4.TLP2
@@ -277,7 +299,8 @@ class SoHeaderSearch extends Model
 						 LEFT JOIN c0001 x4 on x4.CUST_KD=x1.CUST_KD
 						 LEFT JOIN c0002scdl_detail x5 on x5.TGL=x1.TGL AND x5.CUST_ID=x1.CUST_KD
 						 LEFT JOIN c0014 x6 on x6.TGL=x1.TGL AND x6.ID_USER=x1.USER_SIGN1
-				WHERE  x1.STT_PROCESS='105'
+					WHERE  x1.STT_PROCESS='105'
+					ORDER BY x1.CREATE_AT DESC
 		")->queryAll();  
 		
 		$dataProvider= new ArrayDataProvider([
@@ -292,10 +315,15 @@ class SoHeaderSearch extends Model
  		}
 		
 		$filter = new Filter();
- 		$this->addCondition($filter, 'TGL', true);
+ 		$this->addCondition($filter, 'TGL_HISTORY', true);
+ 		$this->addCondition($filter, 'KODE_REF', true);
  		$this->addCondition($filter, 'CUST_KD', true);	
+ 		$this->addCondition($filter, 'CUST_NM', true);	
  		$this->addCondition($filter, 'KD_BARANG', true);	
  		$this->addCondition($filter, 'USER_ID', true);	
+		$this->addCondition($filter, 'NM_FIRST', true);
+ 		$this->addCondition($filter, 'SIG2_NM', true);	
+ 		$this->addCondition($filter, 'SIG2_NM', true);	
  		$dataProvider->allModels = $filter->filter($soQueryJoin);
 		
 		return $dataProvider;

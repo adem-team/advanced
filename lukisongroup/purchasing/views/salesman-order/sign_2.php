@@ -22,7 +22,7 @@ $profile=Yii::$app->getUserOpt->Profile_user();
 	?>
 
 		<?php echo  $form->field($model, 'empNm')->textInput(['value' => $profile->emp->EMP_NM .' '. $profile->emp->EMP_NM_BLK ,'maxlength' => true, 'readonly' => true])->label('Employee Name')->label(false); ?>
-		<?php echo  $form->field($model, 'kdso')->hiddenInput(['value' => $kode_som,'maxlength' => true, 'readonly' => true])->label(false); ?>
+		<?php echo  $form->field($model, 'kdso')->hiddenInput(['value' => $modelHeader->KD_SO,'maxlength' => true, 'readonly' => true])->label(false); ?>
 		<?php echo  $form->field($model, 'status')->hiddenInput(['value'=>101])->label(false); ?>
 		<?php echo  $form->field($model, 'password')->textInput(['type'=>'password','maxlength' => true])->label('Password'); ?>
 		<div style="text-align: right;">

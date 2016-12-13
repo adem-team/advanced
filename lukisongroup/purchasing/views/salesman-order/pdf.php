@@ -420,7 +420,7 @@ $_gvSoDetailPdf= GridView::widget([
 			<div style="width:210px;float:left">
 				<dl>
 					<dt style="font-family: verdana, arial, sans-serif ;font-size: 11pt;">
-						PT EFENBI SUKSES MAKMUR
+						PT. Efenbi Sukses Makmur
 					</dt>
 					<dd></dd>
 					<dt>

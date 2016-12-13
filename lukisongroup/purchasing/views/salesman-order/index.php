@@ -18,12 +18,15 @@ $this->sideCorp = 'Sales Order';                       /* Title Select Company p
 $this->sideMenu = 'esm_customers';                     /* kd_menu untuk list menu pada sidemenu, get from table of database */
 
 	$inboxSo= Yii::$app->controller->renderPartial('_indexInbox',[
-		'apSoHeaderInbox'=>$apSoHeaderInbox
+		'searchModelHeader'=>$searchModelHeader,
+		'apSoHeaderInbox'=>$apSoHeaderInbox,		
 	]);
 	$outboxSo= Yii::$app->controller->renderPartial('_indexOutbox',[
+		'searchModelHeader'=>$searchModelHeader,
 		'apSoHeaderOutbox'=>$apSoHeaderOutbox,
 	]);
 	$historySo= Yii::$app->controller->renderPartial('_indexHistory',[
+		'searchModelHeader'=>$searchModelHeader,
 		'apSoHeaderHistory'=>$apSoHeaderHistory,
 	]);
 	

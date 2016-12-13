@@ -78,43 +78,38 @@ use lukisongroup\hrd\models\Dept;
 		}
 	}
 
-
-	//Pjax::end();
 	/*
 	 * STATUS FLOW DATA
-	 * 1. NEW		= 0 	| Create First
-	 * 2. APPROVED	= 1 	| Item Approved
-	 * 3. PROCESS	= 101	| Sign Auth1 | Data Sudah di buat dan di tanda tangani
-	 * 4. CHECKED	= 102	| Sign Auth2 | Data Sudah Di Check  dan di tanda tangani
-	 * 5. APPROVED	= 103	| Sign Auth3 | Data Sudah Di disetujui dan di tanda tangani
-	 * 6. DELETE	= 3 	| Data Hidden | Data Di hapus oleh pembuat petama, jika belum di Approved
-	 * 7. REJECT	= 4		| Data tidak di setujui oleh manager atau Atasan  lain
-	 * 8. UNKNOWN	<>		| Data Tidak valid atau tidak sah
+	 * 1. NEW			= 0 	| SOT2 Create
+	 * 2. VALIDATE  	= 101	| ADMIN PROCESS VALIDATE
+	 * 3. APPROVED		= 102	| KAM APPROVED
+	 * 4. FACTURE		= 103	| ACCOUNTING APPROVED |  Facture Generate (Invoice)
+	 * 5. SURAT JALAN 	=104	| Surat Jalan.
+	 * 6. Shiping		=105	| Warehouse.
+	 * 7. SONE106		=106	| Finish.
+	 * 4. REJECT		= 4		| Data tidak di setujui oleh manager atau Atasan  lain
 	*/
-	function statusProcessRo($model){
-		if($model->STATUS==0){
-			return Html::a('<i class="glyphicon glyphicon-retweet"></i> New', '#',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
-		}elseif($model->STATUS==1){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> Approved', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==3){
-			return Html::a('<i class="glyphicon glyphicon-remove"></i> DELETE', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==4){
-			return Html::a('<i class="glyphicon glyphicon-thumbs-down"></i> REJECT', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif($model->STATUS==5){
-			return Html::a('<i class="glyphicon glyphicon-retweet"></i> Pending', '#',['class'=>'btn btn-danger btn-xs', 'style'=>['width'=>'100px'],'title'=>'Detail']);
-		}elseif ($model->STATUS==101){
-			return Html::a('<i class="glyphicon glyphicon-time"></i> Proccess', '#',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==102){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> Checked', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}elseif ($model->STATUS==103){
-			return Html::a('<i class="glyphicon glyphicon-ok"></i> Approved', '#',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
-		}else{
-			return Html::a('<i class="glyphicon glyphicon-question-sign"></i> Unknown', '#',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px'], 'title'=>'Detail']);
+	function statusProcessSot2($model){
+		if($model['STT_PROCESS']==0){
+			return Html::a('<i class="glyphicon glyphicon-time"></i> New', '',['class'=>'btn btn-info btn-xs', 'style'=>['width'=>'100px','text-align'=>'left'],'title'=>'New']);
+		}elseif($model['STT_PROCESS']==101){
+			return Html::a('<i class="glyphicon glyphicon-time"></i> Validate ', '',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px','text-align'=>'left'], 'title'=>'Validate']);
+		}elseif ($model['STT_PROCESS']==102){
+			return Html::a('<i class="glyphicon glyphicon-ok"></i> Approved', '',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px','text-align'=>'left'], 'title'=>'Approved']);
+		}elseif ($model['STT_PROCESS']==103){
+			return Html::a('<i class="glyphicon glyphicon-ok"></i> Invoice', '',['class'=>'btn btn-warning btn-xs','style'=>['width'=>'100px','text-align'=>'left'], 'title'=>'Detail']);
+		}elseif($model['STT_PROCESS']==104){
+			return Html::a('<i class="glyphicon glyphicon-time"></i> Shiping', '',['class'=>'btn btn-warning btn-xs', 'style'=>['width'=>'100px','text-align'=>'left'],'title'=>'Detail']);
+		}elseif ($model['STT_PROCESS']==105){
+			return Html::a('<i class="glyphicon glyphicon-time"></i> Finish', '',['class'=>'btn btn-success btn-xs','style'=>['width'=>'100px','text-align'=>'left'], 'title'=>'Detail']);
+		}elseif ($model['STT_PROCESS']==4){
+			return Html::a('<i class="glyphicon glyphicon-remove"></i> Reject', '',['class'=>'btn btn-danger btn-xs','style'=>['width'=>'100px','text-align'=>'left'], 'title'=>'Detail']);
 		};
 	}
 
 	$Combo_Dept = ArrayHelper::map(Dept::find()->orderBy('SORT')->asArray()->all(), 'DEP_NM','DEP_NM');
 	
+
 	$columnIndexInbox= [
 		/*No Urut*/
 		[
@@ -197,6 +192,7 @@ use lukisongroup\hrd\models\Dept;
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
 			//'group'=>true,
+			'filter'=>true,
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
@@ -217,10 +213,10 @@ use lukisongroup\hrd\models\Dept;
 		],
 		/*CREATE_AT Tanggal Pembuatan*/
 		[
-			'attribute'=>'TGL',
+			'attribute'=>'TGL_INBOX',
 			'label'=>'Create At',
 			'hAlign'=>'left',
-			'vAlign'=>'middle',
+			'vAlign'=>'middle',			
 			//'value'=>function($model){
 				/*
 				 * max String Disply
@@ -228,18 +224,20 @@ use lukisongroup\hrd\models\Dept;
 				*/
 			//	return substr($model->username, 0, 10);
 			//},
-			'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
-						'filterWidgetOptions' =>([
-							'attribute' =>'CREATED_AT',
-							'presetDropdown'=>TRUE,
-							'convertFormat'=>true,
-							'pluginOptions'=>[
-								'id'=>'tglpo',
-								'format'=>'Y/m/d',
-								'separator' => ' - ',
-								'opens'=>'right'
-							]
-			]),
+			'filterType' => GridView::FILTER_DATE,
+			'filterOptions'=>[
+				'style'=>'id:test',
+			 ],
+            'filterWidgetOptions' => [					
+				'pluginOptions' => [
+                    'format' => 'yyyy-mm-dd',					 
+                    'autoclose' => true,
+                    'todayHighlight' => true,
+					//'format' => 'dd-mm-yyyy hh:mm',
+					'autoWidget' => false,
+					//'todayBtn' => true,
+                ]
+            ],	
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
@@ -262,10 +260,11 @@ use lukisongroup\hrd\models\Dept;
 		[
 			'attribute'=>'CUST_NM',
 			'label'=>'Customer',
-			//'filter' => $Combo_Dept,
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
-			//'group'=>true,
+			'filterOptions'=>[
+				'colspan'=>3,
+			  ],
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
@@ -287,11 +286,11 @@ use lukisongroup\hrd\models\Dept;
 		/*Chck.IN*/
 		[
 			'attribute'=>'CHECKIN_TIME',
-			'label'=>'Time.IN',
-			//'filter' => $Combo_Dept,
+			'label'=>'Time.In',
+			'filter' => false,
 			'hAlign'=>'left',
-			'vAlign'=>'middle',
-			//'group'=>true,
+			'vAlign'=>'top',
+			'mergeHeader'=>true,
 			'value'=>function($model){
 				return substr($model['CHECKIN_TIME'], 8, 8);
 			},
@@ -316,11 +315,11 @@ use lukisongroup\hrd\models\Dept;
 		/*Chck.OUT*/
 		[
 			'attribute'=>'CHECKOUT_TIME',
-			'label'=>'Time.IN',
-			//'filter' => $Combo_Dept,
+			'label'=>'Time.Out',
+			'filter' => false,
 			'hAlign'=>'left',
-			'vAlign'=>'middle',
-			//'group'=>true,
+			'vAlign'=>'top',
+			'mergeHeader'=>true,
 			'value'=>function($model){
 				return substr($model['CHECKOUT_TIME'], 8, 8);
 			},
@@ -473,12 +472,13 @@ use lukisongroup\hrd\models\Dept;
 			],
 		],
 		[
+			'attribute'=>'STT_PROCESS',
 			'label'=>'Notification',
 			'mergeHeader'=>true,
 			'format' => 'raw',
 			'hAlign'=>'center',
 			'value' => function ($model) {
-							return statusProcessRo($model);
+							return statusProcessSot2($model);
 			},
 			'headerOptions'=>[
 				'style'=>[
@@ -513,10 +513,10 @@ use lukisongroup\hrd\models\Dept;
 	$_gvInboxSo= GridView::widget([
 		'id'=>'gv-so-md-inbox',
 		'dataProvider'=> $apSoHeaderInbox,
-		// 'filterModel' => $searchModel,
-		'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],
+		'filterModel' => $searchModelHeader,
+		'filterRowOptions'=>['style'=>'background-color:rgba(214, 255, 138, 1); align:center'],
 		'columns' =>$columnIndexInbox,		
-		'pjax'=>false,
+		'pjax'=>true,
 		'pjaxSettings'=>[
 			'options'=>[
 				'enablePushState'=>false,
@@ -530,14 +530,16 @@ use lukisongroup\hrd\models\Dept;
 		'striped'=>'4px',
 		'autoXlFormat'=>true,
 		'export' => false,
-		'toolbar'=> [''
+		'toolbar'=> ['',
 				//['content'=>''],
 				//'{export}',
 				//'{toggleData}',
+				
 			],
 		'panel'=>[
-			'type'=>GridView::TYPE_DANGER,
+			'type'=>GridView::TYPE_INFO, //rgba(214, 255, 138, 1)
 			'heading'=>"<span class='fa fa-cart-plus fa-xs'><b> LIST SALES ORDER</b></span>",
+			'before'=>false
 		],
 	]);
 	?>

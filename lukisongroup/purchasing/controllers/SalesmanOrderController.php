@@ -106,7 +106,8 @@ class SalesmanOrderController extends Controller
 			$dataProviderOutbox = $searchModelHeader->searchHeaderOutbox(Yii::$app->request->queryParams);    
 			$dataProviderHistory = $searchModelHeader->searchHeaderHistory(Yii::$app->request->queryParams);    
 			return $this->render('index', [
-				'apSoHeaderInbox'=>$dataProviderInbox,
+				'searchModelHeader'=>$searchModelHeader,
+				'apSoHeaderInbox'=>$dataProviderInbox,				
 				'apSoHeaderOutbox'=>$dataProviderOutbox,
 				'apSoHeaderHistory'=>$dataProviderHistory
 			]);
@@ -356,80 +357,7 @@ class SalesmanOrderController extends Controller
 		}
     }
 	
-	/**
-	* Action REVIEW | Prosess Checked and Approval
-	* @param string $id
-	* @author ptrnov  <piter@lukison.com>
-	* @since 1.1
-	*/
-	/* public function actionReviewNew($id,$stt,$cust_kd,$user_id,$tgl)
-	{			
-		//VIEW KODE_REF
-		$soHeaderData = SoHeader::find()->with('cust')->where(['KD_SO'=>$id])->one(); 
-
-		// $status_sign = SoStatus::find()->where(['KD_SO'=>$id])->count();		
-		$getSoType=10;
-		$getTGL=$tgl;
-		$getCUST_KD=$cust_kd;
-		$getUSER_ID=$user_id;
-		
-		$searchModelDetail= new SoDetailSearch([
-			// 'TGL'=>$getTGL,
-			'KODE_REF'=>$id,
-			'CUST_KD'=>$getCUST_KD,
-			'USER_ID'=>$getUSER_ID,
-		]); 
-		$aryProviderSoDetail = $searchModelDetail->searchDetail(Yii::$app->request->queryParams);
-
-		
-		// Process Editable Row [Columm SQTY]
-		// @author ptrnov  <piter@lukison.com>
-		// @since 1.1
-		
-		if (Yii::$app->request->post('hasEditable')) {
-			$id = Yii::$app->request->post('editableKey');
-			$model = SoT2::findOne($id);
-			$out = Json::encode(['output'=>'', 'message'=>'']);
-			$post = [];
-			$posted = current($_POST['SoT2']);
-			$post['SoT2'] = $posted;
-			if ($model->load($post)) {
-				$model->save();
-				$output = '';
-				if (isset($posted['SUBMIT_PRICE'])) {
-					$output = $model->SUBMIT_PRICE;
-				}
-				if (isset($posted['SUBMIT_QTY'])) {
-					$output = $model->SUBMIT_QTY;
-				}
-				if (isset($posted['TGL'])) {
-					$output = $model->TGL;
-				}
-				$out = Json::encode(['output'=>$output, 'message'=>'']);
-			}
-			// return ajax json encoded response and exit
-			echo $out;
-			return;
-		}
-
-		return $this->render('_actionReview',[
-			'aryProviderSoDetail'=>$aryProviderSoDetail,
-			'kode_som'=>$id,
-			'cust_kd'=>$getCUST_KD,
-			'cust_nmx'=>$soHeaderData->cust->CUST_NM,
-			'tgl'=>$getTGL,
-			'user_id'=>$getUSER_ID,
-			'searchModelDetail'=>$searchModelDetail,
-			'model_cus'=>$soHeaderData->cust,
-			'soHeaderData'=>$soHeaderData,
-			// 'status'=>$status_sign
-		]); 
-	} */
-	
-	
-
-
-    public function get_aryBarang()
+	public function get_aryBarang()
     {
 		$sql = Barang::find()->where('KD_CORP="ESM" AND PARENT= 1 AND STATUS<>3')->all();
 		return ArrayHelper::map($sql,function ($sql, $defaultValue) {
@@ -541,11 +469,6 @@ class SalesmanOrderController extends Controller
        echo Json::encode(['output'=>'', 'selected'=>'']);
    }
 
-
-
-   
-
-
     public function actionValidAliasHeader()
     {
 		$model = new SoHeader();
@@ -607,10 +530,10 @@ class SalesmanOrderController extends Controller
 		}
 	}
 
-     public function actionSignAuth2($kdso)
+     public function actionSignAuth2($id)
     {
       $model = new Auth2Model();
-      $model_header =  $this->findModelHeader($kdso);
+      $modelHeader =  $this->findModelHeader($id);
 
       $model_status = new SoStatus();
 
@@ -622,15 +545,12 @@ class SalesmanOrderController extends Controller
       	 $transaction = self::Esm_connent()->beginTransaction();
       	  try{
       	  	 # SoHeader
-      	  	 $model_header->STT_PROCESS = $model->status;
-      	  	 $model_header->USER_SIGN2 = $id;
-      	  	 $model_header->TGL_SIGN2 = date('Y-m-d h:i:s');
-      	  	 $model_header->save();
-
-
-
+      	  	 $modelHeader->STT_PROCESS = 101; //Admin validate;
+      	  	 $modelHeader->USER_SIGN2 = $id;
+      	  	 $modelHeader->TGL_SIGN2 = date('Y-m-d h:i:s');
+      	  	 $modelHeader->save();
       	  	 # SoStatus
-      	  	 $model_status->KD_SO = $model->kdso;
+      	  	 $model_status->KD_SO = $modelHeader->KD_SO;
       	  	 $model_status->STT_PROCESS = $model->status;
       	  	 $model_status->ID_USER = $id;
       	  	 $model_status->save();
@@ -640,13 +560,11 @@ class SalesmanOrderController extends Controller
 				$transaction->rollBack();
 				throw $e;
 			}
-      	
-
-     		 return $this->redirect(['/purchasing/salesman-order/review','id'=>$kdso,'stt'=>1]);
+			return $this->redirect(['/purchasing/salesman-order/review','id'=>$id,'stt'=>1]);
       }else {
         return $this->renderAjax('sign_2', [
             'model' => $model,
-            'kode_som'=>$kdso
+			'modelHeader' => $modelHeader,
         ]);
       }
     }
@@ -827,7 +745,98 @@ class SalesmanOrderController extends Controller
 		return $pdf->render();
 	}
 
+	public function actionSendmail($id){
+		
+		$soHeaderData = SoHeader::find()->where(['id'=>$id])->one(); 	
+		$modelSoT2 = SoT2::find()->with('cust')->where("KODE_REF='".$soHeaderData->KD_SO."' AND SO_TYPE=10")->one();			
+		$getSoType=10;
+		$getTGL=$modelSoT2->TGL;
+		$getCUST_KD=$modelSoT2->CUST_KD;
+		$getUSER_ID=$modelSoT2->USER_ID;
+		
+		$searchModelDetail= new SoDetailSearch([
+			// 'TGL'=>$getTGL,
+			'KODE_REF'=>$soHeaderData->KD_SO,
+			'CUST_KD'=>$soHeaderData->CUST_ID,//$getCUST_KD,
+			'USER_ID'=>$getUSER_ID,
+		]); 
+		$aryProviderSoDetail = $searchModelDetail->searchDetail(Yii::$app->request->queryParams);
+		
+		
+		$content= $this->renderPartial( 'pdf', [
+			'soHeaderData'=>$soHeaderData,
+			'aryProviderSoDetail' => $aryProviderSoDetail,
+        ]);
+		
+		/*Attachmen Content*/
+		$contentMailAttach= $this->renderPartial('sendmailcontent',[
+			'soHeaderData'=>$soHeaderData,
+			'aryProviderSoDetail' => $aryProviderSoDetail,
+		]);
 
+		/*Body Notify*/
+		$contentMailAttachBody= $this->renderPartial('postman_body',[
+			'soHeaderData'=>$soHeaderData,
+		]);
+
+
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE,
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4,
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_PORTRAIT,
+			// stream to browser inline
+			'destination' => Pdf::DEST_BROWSER,
+			//'destination' => Pdf::DEST_FILE ,
+			// your html content input
+			'content' => $content,
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting
+			//D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+			'cssFile' => '@lukisongroup/web/widget/pdf-asset/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			'cssInline' => '.kv-heading-1{font-size:12px}',
+			 // set mPDF properties on the fly
+			'options' => ['title' => 'Form Purchase Order','subject'=>'po'],
+			 // call mPDF methods on the fly
+			'methods' => [
+			  'SetHeader'=>['Copyright@LukisonGroup '.date("r")],
+			  'SetFooter'=>['{PAGENO}'],
+			]
+		]);
+		/* KIRIM ATTACH emaiL */
+		 //$to=['purchasing@lukison.com'];//,'piter@lukison.com'];
+
+		$url_dev = Url::base(true);
+			if($url_dev == 'http://labtest1-erp.int')
+			{
+				$to =['labtest@lukison.com'];
+			}else{
+				//$to =['purchasing@lukison.com'];
+				$to =['piter@lukison.com'];
+			}
+
+		\Yii::$app->kirim_email->pdf($contentMailAttach,'SO-T2',$to,'Sales-Order-T2',$contentMailAttachBody);
+	}
+	
+	
+	//TEST CONTENT
+	public function actionTestContent($id){
+		
+		$soHeaderData = SoHeader::find()->where(['id'=>$id])->one(); 	
+		$modelSoT2 = SoT2::find()->with('cust')->where("KODE_REF='".$soHeaderData->KD_SO."' AND SO_TYPE=10")->one();			
+		$getSoType=10;
+		$getTGL=$modelSoT2->TGL;
+		$getCUST_KD=$modelSoT2->CUST_KD;
+		$getUSER_ID=$modelSoT2->USER_ID;
+		
+		/*Body Notify*/
+		return $this->renderPartial('postman_body',[
+			'soHeaderData'=>$soHeaderData,
+		]);
+	}
 	/**
      * Finds the soheder model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
