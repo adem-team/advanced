@@ -3,6 +3,7 @@
 namespace lukisongroup\roadsales\models;
 
 use Yii;
+use lukisongroup\roadsales\models\SalesRoadHeader;
 
 /**
  * This is the model class for table "c0022Image".
@@ -44,6 +45,14 @@ class SalesRoadImage extends \yii\db\ActiveRecord
             [['CREATED_AT'], 'safe'],
             [['ID_ROAD', 'CREATED_BY'], 'string', 'max' => 50],
         ];
+    }
+
+     public function getRoadTbl(){
+        return $this->hasOne(SalesRoadHeader::className(), ['ROAD_D' => 'ID_ROAD']);
+    }
+
+    public function getJudulRoad(){
+        return $this->roadTbl != '' ? $this->roadTbl->JUDUL : 'none';
     }
 
     /**

@@ -40,9 +40,9 @@ class SalesRoadList extends \yii\db\ActiveRecord
         return [
             [['CASE_DSCRIP'], 'string'],
             [['STATUS'], 'integer'],
-            [['CREATED_AT'], 'safe'],
+            [['CREATED_AT','CREATED_BY'], 'safe'],
             [['CASE_NAME'], 'string', 'max' => 255],
-            [['CREATED_BY'], 'string', 'max' => 50],
+            // [['CREATED_BY'], 'string', 'max' => 50],
         ];
     }
 

@@ -4,10 +4,12 @@ namespace lukisongroup\roadsales\controllers;
 
 use Yii;
 use lukisongroup\roadsales\models\SalesRoadImage;
+use lukisongroup\roadsales\models\SalesRoadHeader;
 use lukisongroup\roadsales\models\SalesRoadImageSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * RoadImageController implements the CRUD actions for SalesRoadImage model.
@@ -44,6 +46,11 @@ class RoadImageController extends Controller
         ]);
     }
 
+     #list array 
+    public function Ary_road(){
+        return ArrayHelper::map(SalesRoadHeader::find()->all(),'ROAD_D','JUDUL');
+    }
+
     /**
      * Displays a single SalesRoadImage model.
      * @param integer $id
@@ -68,8 +75,9 @@ class RoadImageController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->ID]);
         } else {
-            return $this->render('create', [
+            return $this->renderAjax('create', [
                 'model' => $model,
+                'data_road'=>self::Ary_road()
             ]);
         }
     }
