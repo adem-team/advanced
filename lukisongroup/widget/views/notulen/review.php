@@ -87,7 +87,7 @@ function kembali(){
     }
 
     function btnAcara($acara){
-      $title = $acara[0]->SCHEDULE != '' ? $acara[0]->SCHEDULE : Yii::t('app','---------------');
+      $title = $acara[0]->SCHEDULE != '' ? Yii::t('app','Agenda:'.$acara[0]->SCHEDULE) : Yii::t('app','---------------');
         $options = [ 'id'=>'notu-acara-id',
              'class'=>'btn-xs',
              'data-toggle'=>"modal",
@@ -333,7 +333,9 @@ function kembali(){
 
 					  </label>
 					<article class="ac-small">
+					<b>Peserta Rapat</b>
 						<br>
+
 							<ul>
 								<?php
 
@@ -384,7 +386,8 @@ function kembali(){
 				</div>
 				<div>
 					<input id="ac-2" name="accordion-1" type="radio">
-					<label for="ac-2">			  
+					<label for="ac-2">
+
 						<?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-acara','id'=>$acara[0]->NOTULEN_ID],
 										['data-toggle'=>"modal",
 												'data-target'=>"#acara"]) ?>
