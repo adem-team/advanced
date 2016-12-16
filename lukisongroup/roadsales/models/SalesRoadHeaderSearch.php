@@ -12,6 +12,13 @@ use lukisongroup\roadsales\models\SalesRoadHeader;
  */
 class SalesRoadHeaderSearch extends SalesRoadHeader
 {
+	
+	public function attributes()
+	{
+		/*Author -ptr.nov- add related fields to searchable attributes */
+		return array_merge(parent::attributes(), ['TGL']);
+	}
+	
     /**
      * @inheritdoc
      */
@@ -19,7 +26,7 @@ class SalesRoadHeaderSearch extends SalesRoadHeader
     {
         return [
             [['ROAD_D'], 'integer'],
-            [['USER_ID', 'CASE_ID', 'CASE_NOTE', 'CREATED_BY', 'CREATED_AT'], 'safe'],
+            [['USER_ID','JUDUL','CUSTOMER','CASE_ID','CASE_NM', 'CASE_NOTE', 'CREATED_BY', 'CREATED_AT','TGL'], 'safe'],
             [['LAT', 'LAG'], 'number'],
         ];
     }
@@ -62,12 +69,15 @@ class SalesRoadHeaderSearch extends SalesRoadHeader
         $query->andFilterWhere([
             'ROAD_D' => $this->ROAD_D,
             'LAT' => $this->LAT,
-            'LAG' => $this->LAG,
-            'CREATED_AT' => $this->CREATED_AT,
+            'LAG' => $this->LAG
         ]);
 
         $query->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
+            ->andFilterWhere(['like', 'CREATED_AT', $this->TGL])
+            ->andFilterWhere(['like', 'JUDUL', $this->JUDUL])
+            ->andFilterWhere(['like', 'CUSTOMER', $this->CUSTOMER])
             ->andFilterWhere(['like', 'CASE_ID', $this->CASE_ID])
+            ->andFilterWhere(['like', 'CASE_NM', $this->CASE_NM])
             ->andFilterWhere(['like', 'CASE_NOTE', $this->CASE_NOTE])
             ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY]);
 

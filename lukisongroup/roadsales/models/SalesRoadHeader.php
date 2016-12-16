@@ -3,6 +3,8 @@
 namespace lukisongroup\roadsales\models;
 
 use Yii;
+use lukisongroup\sistem\models\Userlogin;
+use lukisongroup\hrd\models\Employe;
 
 /**
  * This is the model class for table "c0022Header".
@@ -40,9 +42,9 @@ class SalesRoadHeader extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['CASE_ID', 'CASE_NOTE'], 'string'],
+            [['JUDUL','CASE_ID','CASE_NM', 'CASE_NOTE','CUSTOMER'], 'string'],
             [['LAT', 'LAG'], 'number'],
-            [['CREATED_AT'], 'safe'],
+            [['CREATED_AT','TGL'], 'safe'],
             [['USER_ID'], 'string', 'max' => 50],
             [['CREATED_BY'], 'string', 'max' => 20],
         ];
@@ -54,14 +56,40 @@ class SalesRoadHeader extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'ROAD_D' => 'Road  D',
-            'USER_ID' => 'User  ID',
-            'CASE_ID' => 'Case  ID',
-            'CASE_NOTE' => 'Case  Note',
+            'ROAD_D' => 'Road.ID',
+            'USER_ID' => 'User.ID',
+            'JUDUL' => 'Judul',
+            'CASE_ID' => 'Case.ID',
+            'CUSTOMER' => 'Customer',
+            'CASE_NM' => 'Case Name',
+            'CASE_NOTE' => 'Note',
             'LAT' => 'Lat',
             'LAG' => 'Lag',
             'CREATED_BY' => 'Created  By',
             'CREATED_AT' => 'Created  At',
         ];
     }
+	
+	public function getTGL(){
+		return Yii::$app->formatter->asDate($this->CREATED_AT,'php:Y-m-d');
+	}
+	
+	public function getUserTbl()
+    {
+        return $this->hasOne(Userlogin::className(), ['id' => 'USER_ID']);
+	}
+	
+	public function getUsername(){
+		return $this->userTbl!=''?$this->userTbl->username:'';
+	}	
+	
+	public function getEmpTbl()
+    {
+		return $this->hasOne(Employe::className(), ['EMP_ID' => 'EMP_ID'])->via('userTbl');
+    }
+	public function getEmployeNm(){
+		 return $this->empTbl!=''?$this->empTbl->EMP_NM:'';
+	}	
+	
+	
 }
