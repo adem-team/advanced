@@ -11,6 +11,7 @@ use kartik\daterange\DateRangePicker;
 use kartik\tabs\TabsX;
 use yii\widgets\ListView;
 use yii\data\ArrayDataProvider;
+use yii\web\View;
 
 /* @var $this yii\web\View */
 /* @var $searchModel lukisongroup\roadsales\models\SalesRoadListSearch */
@@ -20,6 +21,101 @@ $this->sideCorp = 'PT.Effembi Sukses Makmur';                       /* Title Sel
 $this->sideMenu = 'sales_road';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'ESM - CASE LIST ROAD');          				/* title pada header page */
 $this->params['breadcrumbs'][] = $this->title; 
+
+/*
+ * Tombol Create
+ *  create 
+*/
+function tombolCreate(){
+      $title1 = Yii::t('app', 'New Case');
+      $url = Url::toRoute(['/roadsales/road-list/create']);
+      $options1 = ['value'=>$url,
+                    'id'=>'new-list-road',
+                    'class'=>"btn btn-success btn-xs"  
+      ];
+      $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+      
+      $label1 = $icon1 . ' ' . $title1;
+      $content = Html::button($label1,$options1);
+      return $content;
+     }
+
+
+  function tombolRefresh(){
+      $title = Yii::t('app', 'Refresh');
+      $url =  Url::toRoute(['/roadsales/road-list/']);
+      $options = ['id'=>'road-list-id-refresh',
+                  'data-pjax' => 0,
+                  'class'=>"btn btn-info btn-xs",
+                ];
+      $icon = '<span class="fa fa-history fa-lg"></span>';
+      $label = $icon . ' ' . $title;
+
+      return $content = Html::a($label,$url,$options);
+    }
+
+
+	function tombolExport(){
+
+		$title = Yii::t('app', 'Export');
+
+		$url = Url::toRoute(['/roadsales/road-list/export-excel']);
+
+		$options = ['id'=>'export-list-road',
+	                 'class'=>"btn btn-info btn-xs",
+	                 'data-pjax' => 0,
+	                ];
+
+	    $icon = '<span class="fa fa-download"></span>';
+
+	    $label = $title. ' '.$icon;
+
+
+	    $content = Html::a($label,$url,$options);
+
+	    return $content;
+
+	}
+
+	 /*
+   * Tombol View
+  */
+  function tombolView($url, $model){
+        $title = Yii::t('app', 'View');
+        $icon = '<span class="fa fa-eye"></span>';
+        $label = $icon . ' ' . $title;
+        $url = Url::toRoute(['/roadsales/road-list/view','id'=>$model->ID]);
+        $options1 = ['value'=>$url,
+                    'id'=>'view-road-list-id',
+                    'class'=>"btn btn-default btn-xs",      
+                    'style'=>['width'=>'170px', 'height'=>'25px','border'=> 'none','background-color'=>'white'],  
+                ];
+        $content = Html::button($label,$options1);
+        return $content;
+    }
+
+
+
+ /*
+   * Tombol Update
+  */
+  function tombolUpdate($url, $model){
+        $title = Yii::t('app', 'Edit');
+        $icon = '<span class="fa fa-edit"></span>';
+        $label = $icon . ' ' . $title;
+        $url = Url::toRoute(['/roadsales/road-list/edit','id'=>$model->ID]);
+        $options1 = ['value'=>$url,
+                    'id'=>'edit-road-id',
+                    'class'=>"btn btn-default btn-xs",      
+                    'style'=>['width'=>'170px', 'height'=>'25px','border'=>'none','background-color'=>'white'],  
+                ];
+        $content = Html::button($label,$options1);
+        return $content;
+    }
+
+     
+
+
 
 	/**
 	* STATUS DISABLE/ENABLE
@@ -141,6 +237,8 @@ $this->params['breadcrumbs'][] = $this->title;
 			],
 		],
 	];
+
+
 	
 	
 	
@@ -169,8 +267,8 @@ $this->params['breadcrumbs'][] = $this->title;
 		'striped'=>'4px',
 		'autoXlFormat'=>true,
 		'export' => false,
-		'toolbar'=> ['',
-				//['content'=>''],
+		'toolbar'=> [
+				['content'=>tombolExport()],
 				//'{export}',
 				//'{toggleData}',
 				
@@ -179,21 +277,8 @@ $this->params['breadcrumbs'][] = $this->title;
 			'type'=>GridView::TYPE_INFO, //rgba(214, 255, 138, 1)
 			'heading'=>"<span class='fa fa-list-ol fa-xs'><b> List Sales Road</b></span>",
 			'type'=>'info',
-			'before'=>  Html::a('<i class="fa fa-plus"></i> '.
-								Yii::t('app', 'New',['modelClass' => 'New',]),'/roadsales/road-list/create',[
-									'id'=>'new-list-road',
-									'data-toggle'=>"modal",
-									'data-target'=>"#model-new-list-road",
-									'class' => 'btn btn-success btn-sm'
-								]
-						).' '.	
-						Html::a('<i class="fa fa-download"></i> '.
-								Yii::t('app', 'Export',['modelClass' => 'Export',]),'/roadsales/road-list/export-excel',[
-									'id'=>'export-list-road',
-									'data-pjax' => '1',
-									'class' => 'btn btn-info btn-sm'
-								]
-						),											
+			'before'=>tombolCreate().' '.tombolRefresh()
+															
 			//'footer'=>false,
 		],
 		'floatOverflowContainer'=>true,
@@ -207,3 +292,24 @@ $this->params['breadcrumbs'][] = $this->title;
 		</div>
 	</div>
 </div>
+
+<?php
+
+
+Modal::begin([    
+         'id' => 'modal-road-list',   
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-plus"></div><div><h4 class="modal-title">'.Html::encode('Road').'</h4></div>', 
+     // 'size' => Modal::SIZE_, 
+         'headerOptions'=>[   
+                 'style'=> 'border-radius:5px; background-color: rgba(90, 171, 255, 0.7)',    
+         ],   
+     ]);    
+    echo "<div id='modalContentroadlist'></div>";
+  Modal::end();
+
+$this->registerJs("$.fn.modal.Constructor.prototype.enforceFocus = function(){};  
+    $(document).on('click','#new-list-road', function(ehead){        
+      $('#modal-road-list').modal('show')
+      .find('#modalContentroadlist').html('<i class=\"fa fa-2x fa-spinner fa-spin\"></i>')
+      .load(ehead.target.value);
+    });",View::POS_READY);

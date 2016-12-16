@@ -61,7 +61,16 @@ class RoadListController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new SalesRoadListSearch();
+
+       $paramCari=Yii::$app->getRequest()->getQueryParam('id');
+
+     if($paramCari != ''){
+        $cari=['ID'=>$paramCari];
+      }else{
+        $cari='';
+      };
+
+        $searchModel = new SalesRoadListSearch($cari);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -91,10 +100,14 @@ class RoadListController extends Controller
     {
         $model = new SalesRoadList();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
+        if ($model->load(Yii::$app->request->post())) {
+
+            $model->CREATED_BY = Yii::$app->user->identity->id;
+            $model->CREATED_AT = date('Y-m-d h:i:s');       
+            $model->save();
+            return $this->redirect(['index', 'id' => $model->ID]);
         } else {
-            return $this->render('create', [
+            return $this->renderAjax('create', [
                 'model' => $model,
             ]);
         }
