@@ -371,7 +371,7 @@ $this->registerJs("
             })
     ",$this::POS_READY);
 
-$this->registerJs("
+	$this->registerJs("
          $('#modal-ktg-create').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var modal = $(this)

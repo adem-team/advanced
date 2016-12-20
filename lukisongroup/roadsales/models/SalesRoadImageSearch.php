@@ -60,13 +60,13 @@ class SalesRoadImageSearch extends SalesRoadImage
         // grid filtering conditions
         $query->andFilterWhere([
             'ID' => $this->ID,
-            'STATUS' => $this->STATUS,
-            'CREATED_AT' => $this->CREATED_AT,
+            'STATUS' => $this->STATUS
         ]);
 
         $query->andFilterWhere(['like', 'ID_ROAD', $this->ID_ROAD])
             ->andFilterWhere(['like', 'IMGBASE64', $this->IMGBASE64])
             ->andFilterWhere(['like', 'IMG_NAME', $this->IMG_NAME])
+            ->andFilterWhere(['like', 'CREATED_AT', $this->CREATED_AT])
             ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY]);
 
         return $dataProvider;

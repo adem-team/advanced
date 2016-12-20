@@ -94,62 +94,6 @@ $this->params['breadcrumbs'][] = $this->title;
 					'font-size'=>'7pt',
 				]
 			],
-		],		
-		/*HARI*/
-		[
-			'attribute'=>'TGL',
-			'label'=>'HARI',
-			'hAlign'=>'center',
-			'vAlign'=>'middle',
-			'mergeHeader'=>true,
-			'filter' =>false,
-			'value'=>function($model){
-				$nilaiHari= Yii::$app->formatter->asDate($model->CREATED_AT,'php:N');
-				if ($nilaiHari==1){
-					return "Senin";
-				}elseif ($nilaiHari==2){
-					return "Selasa";
-				}elseif ($nilaiHari==3){
-					return "Rabu";
-				}elseif ($nilaiHari==4){
-					return "Kamis";
-				}elseif ($nilaiHari==5){
-					return "Jumat";
-				}elseif ($nilaiHari==6){
-					return "Sabtu";
-				}elseif ($nilaiHari==7){
-					return "Minggu";
-				}else{
-					return $nilaiHari;
-				}
-			},
-            'filterWidgetOptions' => [					
-				'pluginOptions' => [
-                    'format' => 'yyyy-mm-dd',					 
-                    'autoclose' => true,
-                    'todayHighlight' => true,
-					//'format' => 'dd-mm-yyyy hh:mm',
-					'autoWidget' => false,
-					//'todayBtn' => true,
-                ]
-            ],	
-			'headerOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'150px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'7pt',
-					'background-color'=>'rgba(113, 235, 29, 0.8)',
-				]
-			],
-			'contentOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'150px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'7pt',
-				]
-			],
 		],
 		/*TGL*/
 		[
@@ -197,7 +141,8 @@ $this->params['breadcrumbs'][] = $this->title;
 			'label'=>'Employee',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
-			//'mergeHeader'=>true,
+			//'group'=>true,
+			'filter'=>true,
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
@@ -216,21 +161,92 @@ $this->params['breadcrumbs'][] = $this->title;
 				]
 			],
 		],		
+		/*CUSTOMER*/
 		[
-			'class'=>'kartik\grid\ActionColumn',
-			//'dropdown' => false,
-			'template' => '{view}',
-			//'dropdownOptions'=>['class'=>'pull-right dropup'],	
-			//'dropdownButton'=>['class'=>'btn btn-default btn-lg'],
-			'buttons' => [
-					'view' =>function($url, $model, $key){
-							return  Html::a('<span class="fa fa-eye fa-lg"></span>'.Yii::t('app', ''),
-														['/roadsales/header/view-detail','tgl'=>$model->TGL,'user'=>$model->USER_ID],[
-														'data-toggle'=>"modal",
-														'data-target'=>"#modal-view-header",
-														]);
-					},
+			'attribute'=>'CUSTOMER',
+			'label'=>'CUSTOMER',
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			//'group'=>true,
+			'filter'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'100px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+					'background-color'=>'rgba(113, 235, 29, 0.8)',
+				]
 			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'left',
+					'width'=>'100px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+				]
+			],
+		],
+		/*SUBJECT*/
+		[
+			'attribute'=>'JUDUL',
+			'label'=>'SUBJECT',
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			//'group'=>true,
+			'filter'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'300px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+					'background-color'=>'rgba(113, 235, 29, 0.8)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'left',
+					'width'=>'300px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+				]
+			],
+		],
+		/*NOTE*/
+		[
+			'attribute'=>'CASE_NOTE',
+			'label'=>'NOTE',
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			//'group'=>true,
+			'filter'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'300px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+					'background-color'=>'rgba(113, 235, 29, 0.8)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'left',
+					'width'=>'300px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+				]
+			],
+		],
+		/*LATITUDE*/
+		[
+			'attribute'=>'LAT',
+			'label'=>'LAT',
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			//'group'=>true,
+			'filter'=>true,
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',
@@ -242,13 +258,39 @@ $this->params['breadcrumbs'][] = $this->title;
 			],
 			'contentOptions'=>[
 				'style'=>[
-					'text-align'=>'center',
+					'text-align'=>'left',
 					'width'=>'50px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'7pt',
 				]
-			],				
-		], 
+			],
+		],
+		/*LONGITUDE*/
+		[
+			'attribute'=>'LAG',
+			'label'=>'LAG',
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			//'group'=>true,
+			'filter'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+					'background-color'=>'rgba(113, 235, 29, 0.8)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'left',
+					'width'=>'50px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'7pt',
+				]
+			],
+		],
 	];
 
 	/*
@@ -300,42 +342,3 @@ $this->params['breadcrumbs'][] = $this->title;
 		</div>
 	</div>
 </div>
-
-<?php
-	Modal::begin([
-			'id' => 'modal-view',
-			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-file-image-o"></div><div><h5 class="modal-title"><b>VIEWS IMAGE</b></h5></div>',
-			'size' => Modal::SIZE_LARGE,
-			'headerOptions'=>[
-					'style'=> 'border-radius:5px; background-color: rgba(113, 235, 29, 0.8)',
-			]
-	]);
-	echo "<div id='modalContent' style='min-height:500px'></div>";
-	Modal::end();	
-	
-	
-	$this->registerJs("
-         $('#modal-view-header').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-            var modal = $(this)
-            var title = button.data('title') 
-            var href = button.attr('href') 
-            //modal.find('.modal-title').html(title)
-            modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-            $.post(href)
-                .done(function( data ) {
-                    modal.find('.modal-body').html(data)
-                });
-            })
-    ",$this::POS_READY);
-	
-	Modal::begin([
-			'id' => 'modal-view-header',
-			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-map-o"></div><div><h5 class="modal-title"><b>DETAIL VIEWS</b></h5></div>',
-			'size' => Modal::SIZE_LARGE,
-			'headerOptions'=>[
-					'style'=> 'border-radius:5px; background-color: rgba(113, 235, 29, 0.8)',
-			]
-	]);
-	Modal::end();	
-?>

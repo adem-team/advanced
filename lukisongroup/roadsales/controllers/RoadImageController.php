@@ -37,7 +37,7 @@ class RoadImageController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new SalesRoadImageSearch();
+        $searchModel = new SalesRoadImageSearch(['CREATED_AT'=>'2016-12-20','CREATED_BY'=>'61']);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [

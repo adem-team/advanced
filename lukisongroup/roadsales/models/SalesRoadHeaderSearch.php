@@ -16,7 +16,7 @@ class SalesRoadHeaderSearch extends SalesRoadHeader
 	public function attributes()
 	{
 		/*Author -ptr.nov- add related fields to searchable attributes */
-		return array_merge(parent::attributes(), ['TGL']);
+		return array_merge(parent::attributes(), ['TGL','Username']);
 	}
 	
     /**
@@ -26,7 +26,7 @@ class SalesRoadHeaderSearch extends SalesRoadHeader
     {
         return [
             [['ROAD_D'], 'integer'],
-            [['USER_ID','JUDUL','CUSTOMER','CASE_ID','CASE_NM', 'CASE_NOTE', 'CREATED_BY', 'CREATED_AT','TGL'], 'safe'],
+            [['USER_ID','JUDUL','CUSTOMER','CASE_ID','CASE_NM', 'CASE_NOTE', 'CREATED_BY', 'CREATED_AT','TGL','Username'], 'safe'],
             [['LAT', 'LAG'], 'number'],
         ];
     }
@@ -47,9 +47,55 @@ class SalesRoadHeaderSearch extends SalesRoadHeader
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function searchDetail($params)
     {
+		
         $query = SalesRoadHeader::find();
+		// $sql = 'SELECT *, date(CREATED_AT) as TGL FROM c0022Header ORDER BY date(CREATED_AT) DESC';
+		// $query = SalesRoadHeader::findBySql($sql);  
+		
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+             $query->where('0=1');
+            return $dataProvider;
+        }
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'ROAD_D' => $this->ROAD_D,
+            'LAT' => $this->LAT,
+            'LAG' => $this->LAG
+        ]);
+
+        $query->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
+            ->andFilterWhere(['like', 'CREATED_AT', $this->CREATED_AT])
+            ->andFilterWhere(['like', 'JUDUL', $this->JUDUL])
+            ->andFilterWhere(['like', 'CUSTOMER', $this->CUSTOMER])
+            ->andFilterWhere(['like', 'CASE_ID', $this->CASE_ID])
+            ->andFilterWhere(['like', 'CASE_NM', $this->CASE_NM])
+            ->andFilterWhere(['like', 'CASE_NOTE', $this->CASE_NOTE])
+            ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY]);
+        return $dataProvider;
+    }
+	
+	/**
+     * HEADER SEARCH.
+     * @return ActiveDataProvider.
+     */
+    public function searchGroup($params)
+    {
+        //$query = SalesRoadHeader::find()->groupBy(date_format(date_create('CREATED_AT'),"Y-m-d"));
+        $query = SalesRoadHeader::find()->groupBy(['USER_ID','date(CREATED_AT)'])->orderBy(['date(CREATED_AT)'=>SORT_DESC]);
+		//$sql = 'SELECT *, date(CREATED_AT) as TGL FROM c0022Header GROUP BY USER_ID,date(CREATED_AT) ORDER BY date(CREATED_AT) DESC';
+		//$query = SalesRoadHeader::findBySql($sql);  
 
         // add conditions that should always apply here
 
@@ -61,7 +107,7 @@ class SalesRoadHeaderSearch extends SalesRoadHeader
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
+            $query->where('0=1');
             return $dataProvider;
         }
 
