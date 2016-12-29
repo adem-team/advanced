@@ -132,9 +132,9 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 					],
 					
 					
-					// [
-						// 'label'=>'<i class="glyphicon glyphicon-home"></i> Example Chat','content'=>$exampleChart,
-					// ]
+					[
+						'label'=>'<i class="glyphicon glyphicon-home"></i> Example Chat','content'=>$exampleChart,
+					]
 				];
 			
 				$tabDdashboardEsm= TabsX::widget([

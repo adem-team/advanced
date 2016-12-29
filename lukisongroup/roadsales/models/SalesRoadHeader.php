@@ -67,12 +67,13 @@ class SalesRoadHeader extends \yii\db\ActiveRecord
             'LAG' => 'Lag',
             'CREATED_BY' => 'Created  By',
             'CREATED_AT' => 'Created  At',
+            'TGL' => 'Date',
         ];
     }
 	
-	public function getTGL(){
-		return Yii::$app->formatter->asDate($this->CREATED_AT,'php:Y-m-d');
-	}
+	// public function getTGL(){
+		// return Yii::$app->formatter->asDate($this->CREATED_AT,'php:Y-m-d');
+	// }
 	
 	public function getUserTbl()
     {

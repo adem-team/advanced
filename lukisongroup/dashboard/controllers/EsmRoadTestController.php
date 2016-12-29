@@ -16,6 +16,11 @@ use yii\helpers\ArrayHelper;
 use yii\filters\ContentNegotiator;
 use yii\filters\AccessControl;
 
+use lukisongroup\roadsales\models\SalesRoadHeader;
+use lukisongroup\roadsales\models\SalesRoadHeaderSearch;
+use lukisongroup\roadsales\models\SalesRoadImage;
+use lukisongroup\roadsales\models\SalesRoadImageSearch;
+use lukisongroup\roadsales\models\SalesRoadReport;
 use lukisongroup\roadsales\models\SalesRoadList;
 use lukisongroup\roadsales\models\SalesRoadListSearch;
 
@@ -28,7 +33,7 @@ use lukisongroup\master\models\Barang;
 use lukisongroup\master\models\BarangSearch;
 use lukisongroup\master\models\ValidationLoginPrice;
 
-class EsmRoadController extends Controller
+class EsmRoadTestController extends Controller
 {
 	//\Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
      public function behaviors(){
@@ -68,7 +73,7 @@ class EsmRoadController extends Controller
 	 * @author ptrnov  <piter@lukison.com>
 	 * @since 1.1
      */
-	  public function beforeAction($action){
+	   public function beforeAction($action){
 			if (Yii::$app->user->isGuest)  {
 				 Yii::$app->user->logout();
                    $this->redirect(array('/site/login'));  //
@@ -347,6 +352,78 @@ class EsmRoadController extends Controller
 	}
 	
 	
+	public function actionCoba(){
+		$searchModel = new SalesRoadHeaderSearch([
+			'USER_ID'=>'34'
+		]);
+		
+		        //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->searchAryChart(Yii::$app->request->queryParams);
+		$listImg=$dataProvider->getModels();
+		//print_r($listImg[0]->CASE_NM);
+		
+		/**
+		 * FILE WITH OTHER FILED DATA ARRAY 
+		 * @author ptr.nov [ptr.nov@gmail.com]
+		 * @since 1.2
+		 * FOREACH FIELD DATA ARRAY 
+		 * ADD FILED NO Array
+		 * RESULT ROW DATA.
+		 */
+		foreach ($listImg as $key1 => $nilai1){
+			$val=explode(",",$listImg[$key1]['CASE_ID']);
+			foreach ($val as $key2 => $nilai2){
+					$resultDetail[]=['USER_ID'=>$listImg[$key1]['USER_ID'],'TGL'=>$listImg[$key1]['CREATED_AT'],'CASE_ID'=>$nilai2];					
+			};
+			
+		}	
+	
+		// $dataProvider2= new ArrayDataProvider([
+			// 'key' => 'USER_ID',
+			// 'allModels'=>$resultDetail,
+			// 'sort' => [
+				// 'attributes' => ['TGL'],
+			// ],
+			// 'pagination' => [
+				// 'pageSize' => 500,
+			// ]
+		// ]); 
+		
+		// foreach($resultDetail as $key => $value){
+			// $model = new SalesRoadReport();
+			// $model->TGL = $value['TGL'];				//date("Y-m-d");;
+			// $model->CASE_ID = $value['CASE_ID'];		//'123';
+			// $model->CREATED_AT = $value['TGL'];			//date("Y-m-d H:m:s");;
+			// $model->CREATED_BY = $value['USER_ID'];		//'123';
+			// $model->save();
+		// }
+		
+		
+		//print_r($result);
+		//$resultX = ArrayHelper::index($result, null, 'user');
+		//print_r($dataProvider2->getCount());
+		// $groupBy1=self::array_group_by($dataProvider2->getModels(),'TGL');
+		// $groupBy2=self::array_group_by($groupBy1,'USER_ID');
+		// $groupBy3=self::array_group_by($groupBy2,'CASE_NM');
+		//$aryRslt=self::sortArrayByKey($groupBy2,'USER_ID'	,true,false);
+		//print_r($groupBy3);
+		//return  json_encode($groupBy3);
+		//return count($dataProvider2->getModels(), COUNT_RECURSIVE);
+		
+		// if (in_array("Irix", $os)) {
+			// echo "Got Irix";
+		// }
+		
+		
+
+		print_r($resultDetail);
+		
+	}
+	
+	
+	
+	
+	
 	//ROAD LIST FIND
     protected function findModelList($id)
     {
@@ -356,7 +433,95 @@ class EsmRoadController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+	
+	/**
+	 * =================================
+	 * ==== PROCEDURE REFRENCE =========
+	 * ====   SALES_ROAD_rpt1  =========
+	 * =================================
+	*/
+	/*
+		BEGIN
+			DECLARE fnsh INTEGER DEFAULT 0;
+			DECLARE Suser_id INTEGER DEFAULT NULL;
+			DECLARE Scase_id,Scase_nm TEXT DEFAULT NULL;
+			DECLARE STgl DATE DEFAULT NULL;
+			DEClARE HeaderCursor CURSOR FOR SELECT group_concat(CASE_ID) AS CASE_ID
+																				 ,CREATED_BY AS USER_ID
+																				 ,DATE_FORMAT(CREATED_AT,'%Y-%m-%d') AS CREATED_AT
+																				 ,group_concat(CASE_NM) AS CASE_NM				 		 
+																	FROM c0022Header
+																	WHERE MONTH(TGL)=DATE_FORMAT(IN_TGL,'%m')AND YEAR(TGL)=DATE_FORMAT(IN_TGL,'%Y')
+																	GROUP BY CREATED_BY;
+			DECLARE CONTINUE HANDLER FOR NOT FOUND SET fnsh = 1;
+			#DROP DINAMIK TMP TABLE.
+			#DROP TABLE IF EXISTS temp_explode; 
+			SET @tblNm := CONCAT('tmpTblRoad_',IN_USER);
+				SET @SQL_TBL_DROP := CONCAT("DROP TABLE IF EXISTS ",@tblNm,"; "); 
+				PREPARE stmt FROM @SQL_TBL_DROP; 
+				EXECUTE stmt;
+				DEALLOCATE PREPARE stmt; 
+			#CREATTE DINAMIK TMP TABLE.
+		  #CREATE TEMPORARY TABLE temp_explode (id INT AUTO_INCREMENT PRIMARY KEY NOT NULL, case_id VARCHAR(40),user_id VARCHAR(40),tgl VARCHAR(40)); 
+			SET @SQL_TBL_CREATED := CONCAT("CREATE TEMPORARY TABLE ",@tblNm," (id INT AUTO_INCREMENT PRIMARY KEY NOT NULL, case_id VARCHAR(40),user_id VARCHAR(40),tgl VARCHAR(40))"); 
+				PREPARE stmt FROM @SQL_TBL_CREATED; 
+				EXECUTE stmt;
+				DEALLOCATE PREPARE stmt;
+
+			#CONTINUE LOOP DATA.
+			OPEN HeaderCursor;
+				GetForeach: LOOP
+				FETCH HeaderCursor INTO Scase_id,Suser_id,STgl,Scase_nm;
+				IF fnsh = 1 THEN 
+					LEAVE GetForeach;
+				END IF;
+						SET @usr=CONCAT("'),(",Suser_id,"),('",STgl,"')),(('");
+						#SET @usr=CONCAT("'),(",Suser_id,")),(('");
+						SET @sql := CONCAT("INSERT INTO ",@tblNm,"(case_id,user_id,tgl) VALUES ((", REPLACE(QUOTE(Scase_id), ",",@usr), '),(',Suser_id,'),("',STgl,'"))');  
+						#SET @sql := CONCAT("INSERT INTO temp_explode (case_id,user_id) VALUES ((", REPLACE(QUOTE(Scase_id), ",","'),(1)),(('"), '),(',Suser_id,'))');  
+						#SET @sql := CONCAT('INSERT INTO temp_explode (case_id) VALUES (', REPLACE(QUOTE(Scase_id), ',',"'),('"), ')');  
+						#SET @sql := CONCAT('INSERT INTO temp_explode (case_id,user_id) VALUES ((', REPLACE(QUOTE(Scase_id), ',', '\'),(1)), ((\''), '),(1))');  
+						#SET @sql := CONCAT('INSERT INTO temp_explode (user_id,case_id) VALUES ("',Suser_id,'",(', REPLACE(QUOTE(Scase_id), ',', '\'), (\''), '))');  
+						#SET @sql := CONCAT('INSERT INTO temp_explode (case_id,user_id) VALUES ("', Scase_id,'","', Suser_id,'")');  
+						PREPARE stmt FROM @sql; 
+						EXECUTE stmt;
+						DEALLOCATE PREPARE stmt; 
+						#SELECT Scase_id,Suser_id,STgl,Scase_nm;
+
+				END LOOP GetForeach;
+			CLOSE HeaderCursor;
+			
+			#SELECT @sql;
+
+			#===============================
+		  #==== CHART LINE REQUREMENT ====
+		  #===============================
+			#PARAMETER(MENU,IN_USER,IN_TGL )
+		  #SALES_ROAD_rpt1('DEFAULT','69','2016-12-01')
+		  #SALES_ROAD_rpt1('GROUP_ALL','69','2016-12-01')
+		  #SALES_ROAD_rpt1('GROUP_USER','69','2016-12-01')
+			IF MENU='DEFAULT' THEN
+				SELECT * FROM tmpTblRoad_69;
+			END IF;
+
+			IF MENU='GROUP_ALL' THEN
+				SELECT x1.case_id,x1.user_id,x1.tgl,x2.CASE_NAME as label, COUNT(x1.case_id) AS value 
+				FROM tmpTblRoad_69 x1 LEFT JOIN c0022List x2 on x2.ID=x1.case_id
+				GROUP BY x1.tgl,x1.case_id
+				ORDER BY x1.case_id,x1.tgl;
+			END IF;
+
+			IF MENU='GROUP_USER' THEN
+				SELECT x1.case_id,x1.user_id,x1.tgl,x2.CASE_NAME as label, COUNT(x1.case_id) AS value 
+				FROM tmpTblRoad_69 x1 LEFT JOIN c0022List x2 on x2.ID=x1.case_id
+				WHERE x1.user_id=IN_USER 
+				GROUP BY x1.user_id,x1.case_id,x1.tgl
+				ORDER BY x1.user_id,x1.case_id,x1.tgl; 
+			END IF;
+
+		END
+	*/
+	
+	
 }
-
-
 

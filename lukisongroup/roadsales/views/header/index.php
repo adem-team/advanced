@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				$searchModelExpand = new SalesRoadHeaderSearch([
 					'USER_ID'=>$model->USER_ID,
 					//'CREATED_BY'=>$models->CREATED_BY,
-					'CREATED_AT'=>$model->TGL
+					'TGL'=>$model->TGL
 				]);
 				$dataProviderExpand = $searchModelExpand->searchDetail(Yii::$app->request->queryParams);
 				
@@ -104,7 +104,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'mergeHeader'=>true,
 			'filter' =>false,
 			'value'=>function($model){
-				$nilaiHari= Yii::$app->formatter->asDate($model->CREATED_AT,'php:N');
+				$nilaiHari= Yii::$app->formatter->asDate($model->TGL,'php:N');
 				if ($nilaiHari==1){
 					return "Senin";
 				}elseif ($nilaiHari==2){
