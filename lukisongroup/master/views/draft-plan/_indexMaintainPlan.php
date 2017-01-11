@@ -382,6 +382,8 @@ $gvDraftPlan=GridView::widget([
 
         'showFooter'=>false,
   ],
+  'floatOverflowContainer'=>true,
+  'floatHeader'=>true,
   // 'export' =>['target' => GridView::TARGET_BLANK],
   // 'exportConfig' => [
     // GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],

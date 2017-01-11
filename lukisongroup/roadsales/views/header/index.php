@@ -11,13 +11,25 @@ use kartik\daterange\DateRangePicker;
 use kartik\tabs\TabsX;
 use yii\widgets\ListView;
 use yii\data\ArrayDataProvider;
+
 use lukisongroup\roadsales\models\SalesRoadHeaderSearch;
+use lukisongroup\sistem\models\Userlogin;
 
 $this->sideCorp = 'PT.Effembi Sukses Makmur';                       /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'sales_road';                                  /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'ESM - SALES ROAD');          				/* title pada header page */
 $this->params['breadcrumbs'][] = $this->title; 
 
+	/* function AryUserSalesKAM()
+    {
+		$sql = Userlogin::find()->with('emp')->where('POSITION_ACCESS = 1 AND status <>1')->all();
+		return ArrayHelper::map($sql,'id','username');
+		
+		// return ArrayHelper::map($sql,'username',function ($sql, $defaultValue) {
+			// return $sql->emp->EMP_NM . ' - ' . $sql->emp->EMP_NM_BLK; });
+    } */
+
+	$userArray=ArrayHelper::map(Userlogin::find()->with('emp')->where('POSITION_ACCESS = 1 AND status <>1')->all(),'id','username');
 	/**
 	* COLUMN DATA.
 	*/
@@ -193,11 +205,30 @@ $this->params['breadcrumbs'][] = $this->title;
 		],
 		/*USER*/
 		[
-			'attribute'=>'Username',
+			'attribute'=>'USER_ID',
 			'label'=>'Employee',
 			'hAlign'=>'left',
 			'vAlign'=>'middle',
 			//'mergeHeader'=>true,
+			'filter' => $userArray,
+			/* 'filter'=>true,
+			'filterType'=>GridView::FILTER_SELECT2,
+			'filter' => $userArray,
+			'filterWidgetOptions'=>[
+				'pluginOptions'=>[
+					'allowClear'=>true,
+					'contentOptions'=>[
+						'style'=>[
+						  'text-align'=>'left',
+						  'font-family'=>'tahoma, arial, sans-serif',
+						  'font-size'=>'8pt',
+						]	
+					]
+				],
+			],  */
+			'value'=>function($model){
+				return $model->username;
+			},
 			'headerOptions'=>[
 				'style'=>[
 					'text-align'=>'center',

@@ -65,30 +65,31 @@ class SalesRoadHeaderSearch extends SalesRoadHeader
             'query' => $query,
         ]);
 
-        $this->load($params);
+        //$this->load($params); //* disable if user Detail expand 
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
-             $query->where('0=1');
+            // $query->where('0=1');
             return $dataProvider;
         }
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'ROAD_D' => $this->ROAD_D,
-            'LAT' => $this->LAT,
-            'LAG' => $this->LAG,
-			'TGL'=>$this->TGL
+            //'ROAD_D' => $this->ROAD_D,
+            //LAT' => $this->LAT,
+            //'LAG' => $this->LAG,
+			'TGL'=>$this->TGL,
+			'USER_ID'=>$this->USER_ID
         ]);
 
-        $query->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
-            ->andFilterWhere(['like', 'CREATED_AT', $this->CREATED_AT])
-            ->andFilterWhere(['like', 'JUDUL', $this->JUDUL])
-            ->andFilterWhere(['like', 'CUSTOMER', $this->CUSTOMER])
-            ->andFilterWhere(['like', 'CASE_ID', $this->CASE_ID])
-            ->andFilterWhere(['like', 'CASE_NM', $this->CASE_NM])
-            ->andFilterWhere(['like', 'CASE_NOTE', $this->CASE_NOTE])
-            ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY]);
+        //$query->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
+           // ->andFilterWhere(['like', 'CREATED_AT', $this->CREATED_AT])
+            //->andFilterWhere(['like', 'JUDUL', $this->JUDUL])
+            //->andFilterWhere(['like', 'CUSTOMER', $this->CUSTOMER])
+            //->andFilterWhere(['like', 'CASE_ID', $this->CASE_ID])
+            //->andFilterWhere(['like', 'CASE_NM', $this->CASE_NM])
+            //->andFilterWhere(['like', 'CASE_NOTE', $this->CASE_NOTE])
+            //->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY]);
         return $dataProvider;
     }
 	
@@ -132,7 +133,6 @@ class SalesRoadHeaderSearch extends SalesRoadHeader
             ->andFilterWhere(['like', 'CASE_NM', $this->CASE_NM])
             ->andFilterWhere(['like', 'CASE_NOTE', $this->CASE_NOTE])
             ->andFilterWhere(['like', 'CREATED_BY', $this->CREATED_BY]);
-
         return $dataProvider;
     }
 	

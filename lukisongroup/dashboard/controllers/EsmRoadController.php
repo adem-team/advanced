@@ -15,6 +15,9 @@ use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\filters\ContentNegotiator;
 use yii\filters\AccessControl;
+use kartik\widgets\Spinner;	
+use ptrnov\fusionchart\Chart;
+
 
 use lukisongroup\roadsales\models\SalesRoadList;
 use lukisongroup\roadsales\models\SalesRoadListSearch;
@@ -95,20 +98,81 @@ class EsmRoadController extends Controller
      */
     public function actionIndex()
     {
+		//$loading=Spinner::widget(['id'=>'spn1-load-road','preset' => 'large', 'align' => 'center', 'color' => 'blue']);
+		/*  $js='
+			//document.getElementById("page").style.display = "none";
+           //document.getElementById("spn1-load-road").style.diplay = "none";
+		 
+			';
+		
+            $this->getView()->registerJs($js); */
         //$searchModel = new BarangSearch();
         //$dataProvider = $searchModel->searchBarangESM(Yii::$app->request->queryParams);
-         return $this->render('dashboard', [
+        return $this->render('dashboard', [
+			//$loading=>$loading,
             //'searchModel' => $searchModel,
             //'dataProvider' => $dataProvider,
         ]); 
+		
     }
 
+	/**
+	 * CARI TANGGAL -> CHECK DATE
+	 * @author Piter Novian [ptr.nov@gmail.com]
+	 * @since 2.0
+	*/
+	public function actionAmbilTanggal()
+	{
+		$model = new \yii\base\DynamicModel(['tgl_detail','USER_ID']);
+		$model->addRule(['tgl_detail','USER_ID'], 'required');
+		if (!$model->load(Yii::$app->request->post())){
+			return $this->renderAjax('_indexform', [
+				'model'=>$model,
+				'arySalesUser'=>self::arySalesUser()
+			]);
+		}else{
+			if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}
+		}
+	}
 	
+	public function arySalesUser(){
+
+    	$sql = (new \yii\db\Query())
+    			->select(['u.id as id', 'u.username as username','up.NM_FIRST as NM_FIRST'])
+   				 ->from('dbm001.user u')
+   				 ->leftJoin('dbm_086.user_profile up','u.id = up.ID_USER')
+   				 ->where(['u.status'=>10,'u.POSITION_SITE'=>'ERP','u.POSITION_LOGIN'=>0,'u.POSITION_ACCESS'=>1])
+    			 ->all();
+
+      return ArrayHelper::map($sql,'id',function ($sql, $defaultValue) {
+			return $sql['username'] . '-' . $sql['NM_FIRST']; 
+		});
+
+    }
+	
+	/**
+     * ROAD SALES - DAY OF MONTH.
+     * @author ptr.nov [ptr.nov@gmail.com]
+	 * @since 1.2
+	 * ARRAY RETURN mengunakan "beforeAction".
+	 * Pritty Jeson tanpa mengunakan "beforeAction".
+     */
 	function actionChart(){
+		//INPUT DATA 
 		$request = Yii::$app->request;		
 		$tgl= $request->get('tgl');
+		$userIdParam= '69';//$request->get('id')==0?0:$request->get('id');
 		$tglParam=$tgl!=''?$tgl:date('Y-m-d');
 		$bulan = date('F - Y', strtotime($tglParam));
+		if ($userIdParam!=0){
+			$qrySrc="call SALES_ROAD_rpt1('GROUP_USER','".$userIdParam."','".$tglParam."')";
+		}else{
+			$qrySrc="call SALES_ROAD_rpt1('GROUP_ALL','".$userIdParam."','".$tglParam."')";
+		};
+				
 		//RANGE DATE FOR SET CATEGORY 
 		$ctg=Yii::$app->arrayBantuan->ArrayDayOfMonth($tglParam);
 		
@@ -117,10 +181,8 @@ class EsmRoadController extends Controller
         $dataProviderSeriesname = $searchModelSeriesname->search(Yii::$app->request->queryParams);
 		$dataSet=$dataProviderSeriesname->getModels();
 		
-		//VALUE - DATASET CHART
-		$queryDataValue= Yii::$app->db_esm->createCommand("
-			call SALES_ROAD_rpt1('GROUP_ALL','69','".$tglParam."')
-		")->queryAll();		
+		//DATA VALUE - DATASET CHART		
+		$queryDataValue= Yii::$app->db_esm->createCommand($qrySrc)->queryAll();			
 		$apDataValue= new ArrayDataProvider([
 			//'key' => 'ID',
 			'allModels'=>$queryDataValue,
@@ -206,6 +268,222 @@ class EsmRoadController extends Controller
 		 * Error 	: Response content must not be an array, use Json::encode($aryDataSet)
 		*/
 	}
+	
+	/**
+     * ROAD SALES - MONTHLY CHART PIE
+     * @author ptr.nov [ptr.nov@gmail.com]
+	 * @since 1.2
+	 * ARRAY RETURN mengunakan "beforeAction".
+	 * Pritty Jeson tanpa mengunakan "beforeAction".
+     */
+	function actionPie(){
+		//INPUT DATA 
+		$request = Yii::$app->request;		
+		$tgl= $request->get('tgl');
+		$userIdParam= '69';//$request->get('id')==0?0:$request->get('id');
+		$tglParam=$tgl!=''?$tgl:date('Y-m-d');
+		$bulan = date('F - Y', strtotime($tglParam));
+		if ($userIdParam!=0){
+			$qrySrcPie="call SALES_ROAD_rpt1('MONTH_GROUP_USER','".$userIdParam."','".$tglParam."')";
+		}else{
+			$qrySrcPie="call SALES_ROAD_rpt1('MONTH_GROUP_ALL','".$userIdParam."','".$tglParam."')";
+		};
+				
+		//ROAD LIST CASE - FOR SET SERIALNAME DATASET
+		$searchModelSeriesname = new SalesRoadListSearch();
+        $dataProviderSeriesname = $searchModelSeriesname->search(Yii::$app->request->queryParams);
+		$dataSet=$dataProviderSeriesname->getModels();
+		
+		//DATA VALUE - DATASET CHART		
+		$queryDataValue= Yii::$app->db_esm->createCommand($qrySrcPie)->queryAll();			
+		$apDataValue= new ArrayDataProvider([
+			//'key' => 'ID',
+			'allModels'=>$queryDataValue,
+			'pagination' => [
+				'pageSize' => 500,
+			]
+		]);
+		$dataValue=$apDataValue->getModels(); 
+				
+		//SET DATASET/SERINAME CHART
+		foreach($dataSet as $key1 => $value1){
+			$nilaiData[]='';
+			unset($dataSeachRslt);
+				$nilaiData[]=['value'=>$value2['label']];
+				$search=['case_id'=>$value1['ID'],'user_id'=>'69'];
+				$dataPencarian=Yii::$app->arrayBantuan->findWhere($dataValue,$search);
+				if($dataPencarian!=false){
+					$dataSeachRslt=$dataPencarian;
+				}
+				else{
+					$dataSeachRslt=[	
+						//"case_id"=> $value1['ID'],					
+						//"user_id"=> $value2['user_id'],
+						//"tgl"=> $value2['TGL'],						
+						"label"=> $value1['CASE_NAME'],
+						"value"=> "0"					
+					];
+				}
+				
+			$aryDataSet[]=$dataSeachRslt;
+			
+		}		
+		
+		/**
+		 * Maping Chart 
+		 * Type : msline
+		 * 
+		*/
+		$rsltSrc='{
+			"chart": {
+				"caption": " Percent Road Case",
+				"subCaption": '.'"'.$bulan.'"'.',
+				"captionFontSize": "12",
+				"subcaptionFontSize": "10",
+				"subcaptionFontBold": "0",
+				"paletteColors": '.'"'.Yii::$app->arrayBantuan->ArrayPaletteColors().'"'.',
+				"bgColor": "#ffffff",
+				"legendBorderAlpha": "0",
+				"legendShadow": "0",
+				"showBorder": "0",
+				"use3DLighting": "0",
+				"showShadow": "0",
+				"enableSmartLabels": "1",
+				"startingAngle": "0",
+				"showPercentValues": "1",
+				"showPercentInTooltip": "0",
+				"decimals": "1",
+				"toolTipColor": "#ffffff",
+				"toolTipBorderThickness": "0",
+				"toolTipBgColor": "#000000",
+				"toolTipBgAlpha": "80",
+				"toolTipBorderRadius": "2",
+				"toolTipPadding": "5",
+				"showHoverEffect": "1",
+				"showLegend": "1",
+				"legendBgColor": "#ffffff",
+				"legendItemFontSize": "10",
+				"legendItemFontColor": "#666666",
+				"useDataPlotColorForLabels": "1"       
+			},
+			"data": '.Json::encode($aryDataSet).'
+			
+		}';
+		return  $rsltSrc;
+		/*
+		 * NOTE 	: CHECK  beforeAction for array disply.
+		 * Error 	: Response content must not be an array, use Json::encode($aryDataSet)
+		*/
+	}
+	
+	
+	/**
+     * ROAD SALES - MONTHLY CHART BAR
+     * @author ptr.nov [ptr.nov@gmail.com]
+	 * @since 1.2
+	 * ARRAY RETURN mengunakan "beforeAction".
+	 * Pritty Jeson tanpa mengunakan "beforeAction".
+     */
+	function actionBar(){
+		//INPUT DATA 
+		$request = Yii::$app->request;		
+		$tgl= $request->get('tgl');
+		$userIdParam= '69';//$request->get('id')==0?0:$request->get('id');
+		$tglParam=$tgl!=''?$tgl:date('Y-m-d');
+		$bulan = date('F - Y', strtotime($tglParam));
+		if ($userIdParam!=0){
+			$qrySrcPie="call SALES_ROAD_rpt1('MONTH_GROUP_USER','".$userIdParam."','".$tglParam."')";
+		}else{
+			$qrySrcPie="call SALES_ROAD_rpt1('MONTH_GROUP_ALL','".$userIdParam."','".$tglParam."')";
+		};
+				
+		//ROAD LIST CASE - FOR SET SERIALNAME DATASET
+		$searchModelSeriesname = new SalesRoadListSearch();
+        $dataProviderSeriesname = $searchModelSeriesname->search(Yii::$app->request->queryParams);
+		$dataSet=$dataProviderSeriesname->getModels();
+		
+		//DATA VALUE - DATASET CHART		
+		$queryDataValue=Yii::$app->db_esm->createCommand($qrySrcPie)->queryAll();			
+		$apDataValue= new ArrayDataProvider([
+			//'key' => 'ID',
+			'allModels'=>$queryDataValue,
+			'pagination' => [
+				'pageSize' => 500,
+			]
+		]);
+		$dataValue=$apDataValue->getModels(); 
+				
+		//SET DATASET/SERINAME CHART
+		foreach($dataSet as $key1 => $value1){
+			$nilaiData[]='';
+			unset($dataSeachRslt);
+				$nilaiData[]=['value'=>$value2['label']];
+				$search=['case_id'=>$value1['ID'],'user_id'=>'69'];
+				$dataPencarian=Yii::$app->arrayBantuan->findWhere($dataValue,$search);
+				if($dataPencarian!=false){
+					$dataSeachRslt=$dataPencarian;
+				}
+				else{
+					$dataSeachRslt=[	
+						//"case_id"=> $value1['ID'],					
+						//"user_id"=> $value2['user_id'],
+						//"tgl"=> $value2['TGL'],						
+						"label"=> $value1['CASE_NAME'],
+						"value"=> "0"					
+					];
+				}
+				
+			$aryDataSet[]=$dataSeachRslt;
+			
+		}		
+		
+		/**
+		 * Maping Chart 
+		 * Type : msline
+		 * 
+		*/
+		$rsltSrc='{
+			"chart": {
+				"caption": " Percent Road Case",
+				"subCaption": '.'"'.$bulan.'"'.',
+				"captionFontSize": "12",
+				"subcaptionFontSize": "10",
+				"subcaptionFontBold": "0",
+				"paletteColors": '.'"'.Yii::$app->arrayBantuan->ArrayPaletteColors().'"'.',
+				"bgColor": "#ffffff",
+				"legendBorderAlpha": "0",
+				"legendShadow": "0",
+				"showBorder": "0",
+				"use3DLighting": "0",
+				"showShadow": "0",
+				"enableSmartLabels": "1",
+				"startingAngle": "0",
+				"showPercentValues": "1",
+				"showPercentInTooltip": "0",
+				"decimals": "1",
+				"toolTipColor": "#ffffff",
+				"toolTipBorderThickness": "0",
+				"toolTipBgColor": "#000000",
+				"toolTipBgAlpha": "80",
+				"toolTipBorderRadius": "2",
+				"toolTipPadding": "5",
+				"showHoverEffect": "1",
+				"showLegend": "1",
+				"legendBgColor": "#ffffff",
+				"legendItemFontSize": "10",
+				"legendItemFontColor": "#666666",
+				"useDataPlotColorForLabels": "1"       
+			},
+			"data": '.Json::encode($aryDataSet).'
+			
+		}';
+		return  $rsltSrc;
+		/*
+		 * NOTE 	: CHECK  beforeAction for array disply.
+		 * Error 	: Response content must not be an array, use Json::encode($aryDataSet)
+		*/
+	}
+	
 	
 	/**
      * SALES VISIT ACTIVITY

@@ -123,9 +123,8 @@ class EsmRoadTestController extends Controller
 		$dataSet=$dataProviderSeriesname->getModels();
 		
 		//VALUE - DATASET CHART
-		$queryDataValue= Yii::$app->db_esm->createCommand("
-			call SALES_ROAD_rpt1('GROUP_ALL','69','".$tglParam."')
-		")->queryAll();		
+		$qrySrc="call SALES_ROAD_rpt1('GROUP_ALL','69','".$tglParam."')";
+		$queryDataValue= Yii::$app->db_esm->createCommand($qrySrc)->queryAll();		
 		$apDataValue= new ArrayDataProvider([
 			//'key' => 'ID',
 			'allModels'=>$queryDataValue,
