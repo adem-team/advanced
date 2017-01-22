@@ -90,13 +90,15 @@ class RptEsmChartSalesmdController extends Controller
 					'pageSize' => 200,
 			],				 
 		]);
+		$lineColor = ArrayHelper::toArray(Yii::$app->arrayBantuan->ArrayRowPaletteColors());
+		
 		$_modelVisiting=ArrayHelper::toArray($_visiting->getModels());		
 		foreach($_modelVisiting as $row => $value){			
 			$hari[]=["label"=>$value['hari']."-".$value['TGL_NO']."-".$value['bulan']];					
-			$cc[]=["value"=> strval($value['CCval'])];					
-			$ac[]=["value"=>strval($value['ACval'])];					
-			$ec[]=["value"=> strval($value['ECval'])];					
-			$case[]=["value"=> strval($value['CCval']+$value['CASEval'])];
+			$cc[]=["value"=> strval($value['CCval']),"anchorBgColor"=> $lineColor[0]];					
+			$ac[]=["value"=>strval($value['ACval']),"anchorBgColor"=> $lineColor[1]];					
+			$ec[]=["value"=> strval($value['ECval']),"anchorBgColor"=> $lineColor[2]];					
+			$case[]=["value"=> strval($value['CCval']+$value['CASEval']),"anchorBgColor"=> $lineColor[3]];
 			$acSum[] =$value['ACval'];
 			$ecSum[] =$value['ECval'];
 		};
@@ -123,22 +125,28 @@ class RptEsmChartSalesmdController extends Controller
 				"captionFontSize": "12",
 				"subcaptionFontSize": "10",
 				"subcaptionFontBold": "0",
-				"paletteColors": "#cc0000,#1e86e5,#16ce87,#b7843d",
+				"paletteColors": '.'"'.Yii::$app->arrayBantuan->ArrayPaletteColors().'"'.',
 				"bgcolor": "#ffffff",
 				"showBorder": "0",
 				"showShadow": "0",
-				"showCanvasBorder": "0",
+				"showCanvasBorder": "1",
+				"canvasBorderThickness": "1",
 				"usePlotGradientColor": "0",
 				"legendBorderAlpha": "0",
 				"legendShadow": "0",
-				"showAxisLines": "0",
+				"showAxisLines": "1",
 				"showAlternateHGridColor": "0",
 				"divlineThickness": "1",
-				"divLineIsDashed": "1",
-				"divLineDashLen": "1",
+				"divLineIsDashed": "0",				
+				"divLineDashLen": "1",				
 				"divLineGapLen": "1",
+				"vDivLineDashed": "0",
+				"numVDivLines": "11",
+				"vDivLineThickness": "1",
 				"xAxisName": "Day",
-				"showValues": "0"               
+				"showValues": "0",
+				"anchorradius": "6",
+				"plotHighlightEffect": "fadeout|color=#7f7f7f, alpha=60"				
 			},
 			"categories": [
 				{

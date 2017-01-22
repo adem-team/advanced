@@ -35,8 +35,8 @@
 	<body>
 	  <?php
 		echo Yii::$app->controller->renderPartial('pdf',[
-			'header_notulen' => $model,
-             'detail_notulen' => $model->notulenTbl,
+			'header_notulen' => $header_notulen,
+            'detail_notulen' => $detail_notulen,
 		]);
 	  ?>
 	</body>

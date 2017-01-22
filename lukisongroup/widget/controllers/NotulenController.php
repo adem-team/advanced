@@ -21,6 +21,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\widgets\ActiveForm;
 use kartik\mpdf\Pdf;
+use yii\data\ArrayDataProvider;
 
 /**
  * NotulenController implements the CRUD actions for Notulen model.
@@ -341,29 +342,31 @@ class NotulenController extends Controller
         // }
     }
 
-    public function sendMailNotulen($model){
-      if($model->notulenTbl2->USER_ID != ''){
+    // public function sendMailNotulen($model){
+		
+		
+	// }
+    // public function actionMailNotulen($id){
+    public function sendMailNotulen($id){
+		$model = Notulen::find()->where(['id'=>$id])->one();
+		if($model->notulenTbl2->USER_ID != ''){
           $explode_user_id = explode(',',$model->notulenTbl2->USER_ID);
 
           foreach ($explode_user_id as $key => $value) {
             # code...
             $ary_id []= $value; 
           }
-
-          
-
-
             $content= $this->renderPartial('pdf', [
-               'header_notulen' => $model,
-              'detail_notulen' => $model->notulenTbl2,
-              ]);
+				'header_notulen' => $model,
+				'detail_notulen' => $model->notulenTbl2,
+            ]);
                     # code...
 
             /*Attachment*/
-            $contentMailAttach= $this->renderPartial('sendmailcontent',[
-              'header_notulen' => $model,
-              'detail_notulen' => $model->notulenTbl2,
-            ]);
+            // $contentMailAttach= $this->renderPartial('sendmailcontent',[
+              // 'header_notulen' => $model,
+              // 'detail_notulen' => $model->notulenTbl2,
+            // ]);
 
               /*Body Notify*/
               $contentMailAttachBody= $this->renderPartial('postman_body',[
@@ -412,15 +415,15 @@ class NotulenController extends Controller
             }
 
             /* KIRIM ATTACH emaiL */
-         \Yii::$app->kirim_email->pdf($contentMailAttach,'reminder',$to,'meeting',$contentMailAttachBody);
-
+			\Yii::$app->kirim_email->pdf($content,'reminder',$to,'meeting',$contentMailAttachBody);
+			//return $content;
       }
 
 
     }
 
 
-      public function actionSetAcara($id)
+    public function actionSetAcara($id)
     {
         $model = NotulenModul::find()->where(['NOTULEN_ID'=>$id])->one();
 
@@ -428,7 +431,7 @@ class NotulenController extends Controller
        
         if ($model->load(Yii::$app->request->post())) {
             if($model->save()){
-              self::sendMailNotulen($data_modul);
+              //self::sendMailNotulen($data_modul);
             }
            return $this->redirect(['review', 'id' => $id]);
         } else {
@@ -487,13 +490,13 @@ class NotulenController extends Controller
                 if ($auth1Mdl->auth1_saved()){
                     $hsl = \Yii::$app->request->post();
                     $id = $hsl['Authmodel1']['NotuID'];
-                    return $this->redirect(['view', 'id'=>$id]);
+                    return $this->redirect(['review', 'id'=>$id]);
                 }
             }
         }
     }
 
-     public function actionSignAuth2View($id){
+    public function actionSignAuth2View($id){
         $auth2Mdl = new Authmodel2();
         $acara = NotulenModul::find()->where(['NOTULEN_ID' =>$id])->one();
             return $this->renderAjax('sign_auth2', [
@@ -509,10 +512,11 @@ class NotulenController extends Controller
             return Json::encode(\yii\widgets\ActiveForm::validate($auth2Mdl));
         }else{  /*Normal Load*/
             if($auth2Mdl->load(Yii::$app->request->post())){
-                if ($auth2Mdl->auth2_saved()){
+                if ($auth2Mdl->auth2_saved()){					
                     $hsl = \Yii::$app->request->post();
                     $id = $hsl['Authmodel2']['NotuID'];
-                    return $this->redirect(['view', 'id'=>$id]);
+					self::sendMailNotulen($id);
+                    return $this->redirect(['review', 'id'=>$id]);
                 }
             }
         }
@@ -532,26 +536,65 @@ class NotulenController extends Controller
         $person_form =  new PostPerson();
 
         $person = Person::find()->where(['NOTULEN_ID'=>$id])->all();
-
-        $searchModel = new NotulenSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-
+		
         $searchModel_agenda = new AgendaNotulenSearch();
         $dataProvider_agenda = $searchModel_agenda->search(Yii::$app->request->queryParams);
-    
+ 
+		$searchModel = new NotulenSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		
+		//DATA PESERTA
+		$peserta = explode(',',$acara[0]->USER_ID);		
+		if(count($peserta) != 0){
+			foreach ($peserta as $key => $value) {
+				$val_id[] = $value;
+			}
+			//FIND ID IN QUERY
+			$selectedData = (new \yii\db\Query())
+					->select(["CONCAT(em.EMP_NM, ' ',em.EMP_NM_BLK) AS full_name"])
+					->from('dbm001.user as us')
+					->innerJoin('dbm002.a0001 as em','em.EMP_ID = us.EMP_ID')
+					->where(['and','us.status' => 10,['<>','us.EMP_ID','LG.2015.000000'],['in', 'us.id',$val_id]])
+					->all();
+
+					foreach ($selectedData as $key => $value) {
+						$datapeserta[]=['peserta'=>$value['full_name']];
+					}
+		}
+		
+		$adpDataPeserta= new ArrayDataProvider([
+			'allModels'=>$datapeserta,
+			'pagination' => [
+				'pageSize' => 500,
+			]
+		]);
+		
+		
+		$modelSaved = NotulenModul::find()->where(['NOTULEN_ID'=>$id])->one();
+
+        $data_modul = Notulen::find()->with('notulenTbl2')->where(['id'=>$id])->one();
+       
+        if ($modelSaved->load(Yii::$app->request->post())) {
+            if($modelSaved->save()){
+              //self::sendMailNotulen($id);
+            }
+           return $this->redirect(['review', 'id' => $id]);
+        }
+		
         return $this->render('review', [
+            'modelSaved' => $modelSaved,
             'model' => $model,
             'acara' =>  $acara,
             'ttd'=>self::Get_profile()->emp->SIGSVGBASE64,
-            'profile'=>self::Get_profile()->emp,
-            'emp_nm'=>self::Get_profile()->emp->EMP_NM,
-            'person'=>$person,
+            //'profile'=>self::Get_profile()->emp,
+            //'emp_nm'=>self::Get_profile()->emp->EMP_NM,
+            //'person'=>$person,
             'person_form'=>$person_form,
             'items'=>self::get_aryPerson(),
             'dataProvider'=>$dataProvider,
-            'searchModel_agenda'=>$searchModel_agenda,
-            'dataProvider_agenda'=>$dataProvider_agenda
+            //'searchModel_agenda'=>$searchModel_agenda,
+            //'dataProvider_agenda'=>$dataProvider_agenda,
+			'adpDataPeserta'=>$adpDataPeserta
         ]);
     }
 
@@ -726,4 +769,17 @@ class NotulenController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+	
+	public function actionMeetingScdl(){
+		$from_name='piter FT'; 
+		$from_address='piter@foodtown.co.id'; 
+		$to_name='Indri'; 
+		$to_address='indri@lukison.com'; 
+		$startTime='09:00:00'; 
+		$endTime='11:00:00'; 
+		$subject='test schedule meeting'; 
+		$description='testing tanggal 13-01-2017 '; 
+		$location='Dmension';
+		Yii::$app->emailevent->sendIcalEvent($from_name, $from_address, $to_name, $to_address, $startTime, $endTime, $subject, $description, $location);
+	}
 }

@@ -9,19 +9,11 @@ use app\models\dashboard\RptsssSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\data\ArrayDataProvider;
-use yii\helpers\Json;
-use yii\helpers\ArrayHelper;
-use yii\filters\ContentNegotiator;
-use yii\web\Response;
-
-use lukisongroup\dashboard\models\Foodtown;
-use lukisongroup\dashboard\models\FoodtownSearch;
 
 /**
  * DashboardController implements the CRUD actions for Dashboard model.
  */
-class RptSssController extends Controller
+class RptSssChartController extends Controller
 {
     public function behaviors()
     {
@@ -91,26 +83,7 @@ class RptSssController extends Controller
      */
     public function actionIndex()
     {
-		$totalGrandHari= Foodtown::find()->where(['Val_Nm'=>'Total_Grand_Hari'])->one();
-		$totalTransHari= Foodtown::find()->where(['Val_Nm'=>'Total_Trans_Hari'])->one();		
-		$totalMember= Foodtown::find()->where(['Val_Nm'=>'Member'])->one();
-		$top5MemberMonth= Foodtown::find()->where(['Val_Nm'=>'Top5_Member_Month'])->one();
-		$top5TenantMonth= Foodtown::find()->where(['Val_Nm'=>'Top5_Tenant_Month'])->one();
-		$top5MemberNew= Foodtown::find()->where(['Val_Nm'=>'Top5_Member_New'])->one();
-		$top5TenantNew= Foodtown::find()->where(['Val_Nm'=>'Top5_Tenant_New'])->one();
-		$top5TenantYear= Foodtown::find()->where(['Val_Nm'=>'Top5_Tenant_Year'])->one();
-		$top5MemberYear= Foodtown::find()->where(['Val_Nm'=>'Top5_Member_Year'])->one();
-	   return $this->render('index',[
-			'totalGrandHari'=>$totalGrandHari->Val_1,
-			'totalTransHari'=>$totalTransHari->Val_1,
-			'totalMember'=>$totalMember->Val_1,
-			'top5MemberMonth'=>$top5MemberMonth->Val_Json,
-			'top5TenantMonth'=>$top5TenantMonth->Val_Json,
-			'top5MemberNew'=>$top5MemberNew->Val_Json,
-			'top5TenantNew'=>$top5TenantNew->Val_Json,
-			'top5TenantYear'=>$top5TenantYear->Val_Json,
-			'top5MemberYear'=>$top5MemberYear->Val_Json
-		]);
+        return $this->render('index');
 
     }
 	public function actionTabsData()

@@ -7,9 +7,6 @@ use kartik\grid\GridView;
 use kartik\editable\Editable;
 use yii\bootstrap\Modal;
 use lukisongroup\widget\models\NotulenModul;
-use yii\widgets\ActiveForm;
-use dosamigos\ckeditor\CKEditor;
-
 
 use lukisongroup\hrd\models\Employe;
 use yii\helpers\ArrayHelper;
@@ -253,85 +250,12 @@ function kembali(){
 		return $data->SIGSVGBASE64;
 	}
 
-	$gvPesertaRapat=GridView::widget([
-		'id'=>'gv-peserta-rapat',
-		'dataProvider' => $adpDataPeserta,		
-		'columns' =>[
-			[	'class' => 'yii\grid\SerialColumn',
-				'headerOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'10px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'7pt',
-					'background-color'=>'rgba(113, 235, 29, 0.8)',
-				]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						'width'=>'10px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'7pt',
-					]
-				],
-			],
-			[
-				'attribute'=>'peserta',
-				'label'=>'Peserta Rapat',
-				'hAlign'=>'left',
-				'vAlign'=>'middle',
-				'mergeHeader'=>true,
-				'headerOptions'=>[
-					'style'=>[
-						'text-align'=>'left',
-						'width'=>'100px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'7pt',
-						'background-color'=>'rgba(113, 235, 29, 0.8)',
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>'left',
-						'width'=>'100px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'7pt',
-					]
-				]
-			],
-		],
-		'pjax'=>true,
-		'pjaxSettings'=>[
-			'options'=>[
-				'enablePushState'=>false,
-				'id'=>'gv-peserta-rapat',
-			],
-		],
-		'panel'=> [
-					'heading'=>Html::a('<i class="fa fa-user-plus" aria-hidden="true"></i>','#',['id'=>'per-id']),
-					'type'=>'info',
-					'footer'=>false,
-					'after'=>false,
-					'before'=>false,
-		],
-		'summary' => false,
-		'toolbar'=> [''],
-		'hover'=>true, //cursor select
-		'responsive'=>true,
-		'responsiveWrap'=>false	,
-		'bordered'=>false,
-		'striped'=>false,
-		// 'floatOverflowContainer'=>true,
-		// 'floatHeader'=>true,
-	]); 
-	
+
+
 
 
 ?>
-
 <div id='body-notulen'>
-	
 <!--<div class="fold">-->
 	<!-- Tema  -->
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -367,25 +291,24 @@ function kembali(){
 			</div>
 		</div>
 	</div>
-	
 	<!-- header -->
-	<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+	<div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
 		<div class="row" style="margin-left:1px;padding-top:10px">
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"  style="margin-left:0;">
 				<dl>
 				<!-- tanggal -->
 				  <dt style="width:150px; float:left;">Tanggal</dt> 
-				  <dd style="color:rgba(87, 163, 247, 1)">:<b><?=btnTanggal($model) ?></b></dd>
+				  <dd style="color:rgba(87, 163, 247, 1)">:<b><?php echo btnTanggal($model) ?></b></dd>
 				  <!-- waktu -->
 				  <dt style="width:150px; float:left;">Waktu</dt>
-				  <dd style="color:rgba(87, 163, 247, 1)">:<b><?=btnSetTime($acara) ?> </dd>
+				  <dd style="color:rgba(87, 163, 247, 1)">:<?= btnSetTime($acara) ?> </dd>
 
 				   <!-- tempat -->
 						<dt style="width:150px; float:left;">Tempat</dt>
-						<dd style="color:rgba(87, 163, 247, 1)">:<b><?= btnSetRoom($model) ?></b></dd>
+						<dd style="color:rgba(87, 163, 247, 1)">:  <b><?= btnSetRoom($model) ?></b></dd>
 						<!-- materi rapat -->
 						<dt style="width:150px; float:left;">Materi Rapat</dt>
-						<dd style="color:rgba(87, 163, 247, 1)">:<?=btnSetMateri($model); ?></dd>
+						<dd>: <?php echo btnSetMateri($model); ?></dd>
 				</dl>
 				
 			</div>
@@ -393,51 +316,118 @@ function kembali(){
 	</div>
 	
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
-		<div class="row" style="margin-left:1px;padding-top:10px">			
-			<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 text-left" >
-				<div class="notulen-form">
-						<?php $form = ActiveForm::begin([
-							'id'=>$modelSaved->formName(),
-							// 'enableClientValidation' => true,
+		<div class="row" style="margin-top:10px;margin-left:10px;margin-right:10px;">
+			<!-- <div class="col-sm-12"> -->
+			<section class="ac-container" >
+				<div>
+					  <input id="ac-1" name="accordion-1" type="radio" checked="">
+					  <label for="ac-1"> 
+
+					   <!--    Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-person','id'=>$acara[0]->NOTULEN_ID],
+											['data-toggle'=>"modal",
+											'id'=>'per-id',
+													'data-target'=>"#person-notulen"]) ?> -->
+						  <?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>','#',['id'=>'per-id']) ?>
+						   Peserta Rapat
+
+
+					  </label>
+					<article class="ac-small">
+					<b>Peserta Rapat</b>
+						<br>
+
+							<ul>
+								<?php
+
+								   $peserta = explode(',',$acara[0]->USER_ID);
+								  
+
+									 if(count($peserta) != 0)
+								   {
+
+								   	 foreach ($peserta as $key => $value) {
+								   	 	# code...
+								   	 	$val_id[] = $value;
+								   	 }
+
+
+								   	 $selected = (new \yii\db\Query())
+									            ->select(["CONCAT(em.EMP_NM, ' ',em.EMP_NM_BLK) AS full_name"])
+									            ->from('dbm001.user as us')
+									            ->innerJoin('dbm002.a0001 as em','em.EMP_ID = us.EMP_ID')
+									            ->where(['and','us.status' => 10,['<>','us.EMP_ID','LG.2015.000000'],['in', 'us.id',$val_id]])
+									            ->all();
+
+									  foreach ($selected as $key => $value) {
+									  	 // Html::a($value['full_name'], ['/widget/notulen/set-person','id'=>$acara[0]->NOTULEN_ID],
+													// ['data-toggle'=>"modal",
+													// 		'data-target'=>"#person-notulen2"]) 
+									  	
+									  	?>
+
+									  	<li> <?= $value['full_name'] ?>
+
+										</li>
+
+
+									  	<?php
+
+									  }
+
+								   }
+
+
+
+								 ?>
+
+							</ul>
+						<br>
+					</article>
+				</div>
+				<div>
+					<input id="ac-2" name="accordion-1" type="radio">
+					<label for="ac-2">
+
+						<?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-acara','id'=>$acara[0]->NOTULEN_ID],
+										['data-toggle'=>"modal",
+												'data-target'=>"#acara"]) ?>
+					   Susunan Acara
+
+					</label>
+					<article class="ac-large">
+						<?= btnAcara($acara) ?>
+
+
+
+						<?= Yii::$app->controller->renderPartial('list_agenda',[
+							 'searchModel_agenda'=>$searchModel_agenda,
+            				 'dataProvider_agenda'=>$dataProvider_agenda,
+            				 'id'=>$acara[0]->NOTULEN_ID
 						]); ?>
 
-						<?= $form->field($modelSaved, 'SCHEDULE')->widget(CKEditor::className(), [
-							'options' => ['rows' => 100],
-							//'preset' => 'basic'
-							'preset' =>'custom', 		
-							'clientOptions' => [
-								//'extraPlugins' => 'pbckcode',
-								'toolbarGroups' => [
-									//['name' => 'editing', 'groups' => ['tools', 'about']],
-									['name' => 'editing', 'groups' => ['tools']],
-									//['name' => 'document', 'groups' => ['mode', 'document', 'doctools']],
-									['name' => 'document', 'groups' => ['document', 'doctools']],					
-									['name' => 'insert'],
-									'/',
-									['name' => 'basicstyles', 'groups' => ['basicstyles', 'cleanup']],
-									['name' => 'colors'],
-									//['name' => 'links'],
-									['name' => 'others'],
-									//['name' => 'clipboard', 'groups' => ['mode', 'undo', 'selection', 'clipboard', 'doctools']],
-									['name' => 'clipboard', 'groups' => ['undo', 'selection', 'clipboard', 'doctools']],
-									['name' => 'paragraph', 'groups' => ['templates', 'list', 'indent', 'align']],
-								] 
-							]
-						])->label(false); //->label('Description') 
+						<!-- gvNutulen?> -->
+					</article>
+				</div>
+				<div>
+					<input  id="ac-3" name="accordion-1" type="radio">
+					<label for="ac-3">
+						<?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>', ['/widget/notulen/set-hasil','id'=>$acara[0]->NOTULEN_ID],
+										['data-toggle'=>"modal",
+										 'data-target'=>"#rapat",
+										 
+
+										 ]);
 						?>
+						Hasil Rapat
+					</label>
+					<article class="ac-large">
+						<?= btnRapat($acara) ?>
+						
 
-						<div class="form-group">
-							<?php //Html::submitButton($modelSaved->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $modelSaved->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-						</div>
-
-						<?php ActiveForm::end(); ?>
-
-				</div>				
-			  <!-- </div> -->
-			</div>
-			<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" >
-				<?=$gvPesertaRapat?>
-			</div>
+					</article>
+				</div>
+		  </section>
+		  <!-- </div> -->
 		</div>
 	</div>
 
@@ -622,14 +612,14 @@ Modal::begin([
 
 
     /*modal*/
-	Modal::begin([
-		'id' => 'acara',
-		'header' => '<div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>NOTULEN</b></h5></div>',
-		'size' => Modal::SIZE_LARGE,
-		'headerOptions'=>[
-			'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
-		],
-	]);
+Modal::begin([
+    'id' => 'acara',
+    'header' => '<div style="float:left;margin-right:10px;" class="fa fa-2x fa fa-pencil"></div><div><h5 class="modal-title"><h5><b>NOTULEN</b></h5></div>',
+    // 'size' => Modal::SIZE_SMALL,
+    'headerOptions'=>[
+        'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+    ],
+  ]);
     echo "<div id='modalContentacara'></div>";
     Modal::end();
 
