@@ -100,7 +100,7 @@ $this->registerJs("
 						type: 'stackedcolumn3d',					
 						renderAt: 'msline-road-visit',
 						'width':'100%',
-						'height':'350px',	
+						'height':'300px',	
 						dataFormat: 'json',
 						dataSource: response
 					}).render();
@@ -126,7 +126,7 @@ $this->registerJs("
 						type: 'pie3d',					
 						renderAt: 'pie-road-sales',
 						'width':'100%',
-						'height':'450px',	
+						'height':'300px',	
 						dataFormat: 'json',
 						dataSource: response
 					}).render();

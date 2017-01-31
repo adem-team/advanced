@@ -152,7 +152,8 @@ class ImportSalesPoController extends Controller
 			'searchModelViewImport'=>$searchModelViewImport,
 			'dataProviderViewImport'=>$dataProviderViewImport,
 			'dataProviderAllDataImport'=>$dataProviderAllDataImport,
-			'errorModal'=>$errorModal
+			'errorModal'=>$errorModal,
+			'aryBrgID'=>self::aryBrgID()
 		]);
     }
 

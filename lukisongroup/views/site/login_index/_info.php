@@ -7,6 +7,7 @@ use kartik\widgets\ActiveForm;
 use lukisongroup\assets\AppAssetQr;  	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
 AppAssetQr::register($this);
 
+
 ?>
 	
 	<div class="col-xs-12 col-sm-3 col-dm-2 col-lg-2"  style="valign:bottom; margin-left:0 ; text-align: center"  >

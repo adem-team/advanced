@@ -25,7 +25,7 @@ ChartAsset::register($this);
 		'renderid'=>'msline-dashboard-general-sales',					//unix name render
 		'autoRender'=>true,
 		'width'=>'100%',
-		'height'=>'500%',
+		'height'=>'400px',
 		'chartOption'=>[				
 			'caption'=>'Daily Customers Visits',						//Header Title
 			'subCaption'=>'Custommer Call, Active Customer, Efictif Customer',			//Sub Title
@@ -52,19 +52,14 @@ ChartAsset::register($this);
 				?>				
 			</div>
 		</div>	
-		<div class="col-xs-12 col-sm-12 col-dm-12  col-lg-12">
-			<div class="row" >
-				<?php
-					 echo Html::panel(
-						[
-							'heading' => false,
-							'body'=> $mslineGeneralVisit,
-						],
-						Html::TYPE_INFO
-					);
-				?>
-				
-			</div>
+		<div class="col-sm-12 col-md-12 col-lg-12" style="margin-top:10px">
+			<div class="w3-card-2 w3-round w3-white w3-center">
+				<div class="panel-heading">
+					<div class="row">
+						<div style="min-height:400px"><div style="height:400px"><?=$mslineGeneralVisit?></div></div><div class="clearfix"></div>
+					</div>
+				</div>	
+			</div>			
 		</div>
 </div>
 <?php

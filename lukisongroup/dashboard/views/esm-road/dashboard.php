@@ -10,6 +10,8 @@ use yii\bootstrap\Modal;
 use ptrnov\fusionchart\Chart;
 use ptrnov\fusionchart\ChartAsset;
 ChartAsset::register($this);
+use lukisongroup\assets\Profile;
+Profile::register($this);
 //use backend\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
 //AppAsset::register($this);		/* INDEPENDENT CSS/JS/THEME FOR PAGE  Author: -ptr.nov-*/
 
@@ -35,9 +37,9 @@ $this->params['breadcrumbs'][] = $this->title;
 	 * @author Piter Novian [ptr.nov@gmail.com].
 	 * @since 2.0
 	*/		  
-	$loadingSpinner1=Spinner::widget(['id'=>'spn1-load-road','preset' => 'large', 'align' => 'center', 'color' => 'blue']);
-	$loadingSpinner2=Spinner::widget(['id'=>'spn2-load-road','preset' => 'large', 'align' => 'center', 'color' => 'blue']);
-	$loadingSpinner3=Spinner::widget(['id'=>'spn3-load-road','preset' => 'large', 'align' => 'center', 'color' => 'blue']);
+	// $loadingSpinner1=Spinner::widget(['id'=>'spn1-load-road','preset' => 'large', 'align' => 'center', 'color' => 'blue']);
+	// $loadingSpinner2=Spinner::widget(['id'=>'spn2-load-road','preset' => 'large', 'align' => 'center', 'color' => 'blue']);
+	// $loadingSpinner3=Spinner::widget(['id'=>'spn3-load-road','preset' => 'large', 'align' => 'center', 'color' => 'blue']);
 	
 	
 	/**
@@ -54,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		'renderid'=>'msline-road-visit',								//unix name render
 		'autoRender'=>true,
 		'width'=>'100%',
-		'height'=>'350px'
+		'height'=>'300px'
 		
 	]);	 		
 	
@@ -72,7 +74,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		'renderid'=>'pie-road-sales',								//unix name render
 		'autoRender'=>true,
 		'width'=>'100%',
-		'height'=>'450px',
+		'height'=>'300px',
 		'chartOption'=>[				
 			'caption'=>'Daily Customers Visits',			//Header Title
 			'subCaption'=>'Custommer Call, Active Customer, Efictif Customer',			//Sub Title
@@ -121,40 +123,36 @@ $this->params['breadcrumbs'][] = $this->title;
 	
 ?>
 
-
+<div id="loaderPtr"></div>
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt; padding-top:-150px">
-    <div  class="row" style="padding-left: 5px; padding-right: 5px">
-	
+    <div  class="row" style="padding-left: 5px; padding-right: 5px">	
         <div class="col-sm-12 col-md-12 col-lg-12">
-            <?php
-			
-            echo Html::panel(
-                ['heading' => 'VISIT ACTIVITIES '.$btn_srchChart, 'body' =>'<div style="min-height:350px"><div style="height:350px">'.$mslineSalsesVisit.'</div></div><div class="clearfix"></div>'],
-                Html::TYPE_SUCCESS
-            );
-			// echo Html::panel(
-                // ['heading' => 'VISIT ACTIVITIES '.$btn_srchChart, 'body' =>'<div style="min-height:350px"><div id="msline-road-visit" style="height:350px"></div></div>'],
-                // Html::TYPE_SUCCESS
-            // );
-            ?>
+			<?=$btn_srchChart?>
+			<div class="w3-card-2 w3-round w3-white w3-center" style="margin-top:5px">
+				<div class="panel-heading">
+					<div class="row">						
+						<div style="min-height:300px"><div style="height:300px"><?=$mslineSalsesVisit?></div></div><div class="clearfix"></div>
+					</div>
+					
+				</div>	
+			</div>		
         </div>
-		<?=$loadingSpinner1?>
-		<div class="col-sm-6 col-md-6 col-lg-6 ">
-            <?php
-            echo Html::panel(
-                ['heading' => 'ACTIVITY PERCENTAGE' , 'body' => '<div style="min-height:450px">'.$loadingSpinner2.'<div style="height:450px">'.$pieSalsesVisit.'</div></div><div class="clearfix"></div>'],
-                Html::TYPE_SUCCESS
-            );
-            ?>
-        </div> 
-		
-		<div class="col-sm-6 col-md-6 col-lg-6 ">
-            <?php
-            echo Html::panel(
-                ['heading' => 'ACTIVITY COUNT' , 'body' => '<div style="min-height:450px">'.$loadingSpinner3.'<div style="height:450px">'.$barSalsesVisit.'</div></div><div class="clearfix"></div>'],
-                Html::TYPE_SUCCESS
-            );
-            ?>
+		<div class="col-sm-12 col-md-12 col-lg-12 ">			
+			<div class="w3-card-2 w3-round w3-white w3-center" style="margin-top:5px;">
+				<div class="panel-heading">
+					<div class="row">						
+						<div style="min-height:300px"><div style="height:300px"><?=$pieSalsesVisit?></div></div><div class="clearfix"></div>
+					</div>						
+				</div>	
+			</div>			
+       
+			<div class="w3-card-2 w3-round w3-white w3-center" style="margin-top:5px">
+				<div class="panel-heading">
+					<div class="row">						
+						<div style="min-height:450px"><div style="height:450px"><?=$barSalsesVisit?></div></div><div class="clearfix"></div>
+					</div>						
+				</div>	
+			</div>							   
         </div>
     </div>
 </div>
@@ -192,7 +190,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	 * @since 2.0
 	*/
 	$this->registerJs("	
-		$(document).ready(function() {
+		/* $(document).ready(function() {
 			var spnr1= document.getElementById('spn1-load-road');
 			var spnr2= document.getElementById('spn2-load-road');
 			var spnr3= document.getElementById('spn3-load-road');
@@ -215,7 +213,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			spnr1.hidden=true;
 			spnr2.hidden=true;
 			spnr3.hidden=true;
-		}); 
+		});  */
 		
 		// $(document).on('msline-road-visit', function() {
 			// var s= document.getElementById('spn1-load-road1');

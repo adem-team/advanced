@@ -7,8 +7,6 @@ use yii\helpers\ArrayHelper;
 use yii\web\Request;
 use yii\web\View;
 use ptrnov\fusionchart\Chart;
-use ptrnov\fusionchart\ChartAsset;
-ChartAsset::register($this);
 // $xaxis=0;
 // $canvasEndY=200;
 

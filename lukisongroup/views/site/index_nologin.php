@@ -2,6 +2,8 @@
 /* @var $this yii\web\View */
 use kartik\helpers\Html;
 use yii\bootstrap\Carousel;
+use lukisongroup\assets\Profile;
+Profile::register($this);
 
 $this->title = 'My Yii Application';
 ?>
@@ -38,37 +40,75 @@ $this->title = 'My Yii Application';
 				   //'options' =>[ 'style' =>'width: 100%!important; height: 300px;'],
 				]);
 			?>
-<div class="content">
-			<div class="content">					
+
+							
+					
 				
-				 <div class="row">
-					<div class="col-md-12">						
-						<h4 class="page-head-line">Perusahaan</h4>
-                <p>Lukison group considered being one of the largest premium food court in the city and it is a great mix of old favorites and new restaurants. With the large space more than 2000m2 and futuristic and old style design, Lukison offered a coz/ambiance and warm place to enjoy your dinning experiences.
-
-					complete with 3D lenticular light box and vintage wood plank will make the visitors feel relax and chill with new ambiance that they can’t discover in another place. With all variety of different kinds of food, Lukison give you many choices to eat and simplicity payment that will save your time
-
-					And that’s where you come in. You’re an experienced professional with a passion for people and hospitality; someone who will proudly promote our brands while always striving to create the ultimate guest experience. At Prime you’ll enjoy competitive compensation and benefits, and advance your career with a team that values your contributions and helps you reach your goals.
-				</p>
-
-
-				</div>
-				</div>
-				 <!--<div class="row">
-					<div class="col-md-12">
-						<h4 class="page-head-line">CONTACT</h4>	!-->				
-						<?php
-							/* echo Html::well(Html::address(
-							'Ruko De Mansion Blok C No.12',
-							 ['Jl. Jalur Sutera, Alam Sutera, Serpong','Tangerang Selatan.'],
-							 ['Tel ' => '(021) 3044-85-98/99'],
-							 ['Fax ' => '(021) 3044 85 97'],
-							 ['Website : ' => 'www.lukison.com', 'Email' => 'info@lukison.com']
-							), Html::SIZE_TINY); */
-						?>		
-					<!--</div>
-				</div>!-->				
-			</div>				
-		</div>
-</div>
+	<div class="row">					
+		<div class="w3-card-2 w3-round w3-white w3-center" style="margin-top:5px;margin-left:5px;margin-right:5px;">
+			<div class="panel-heading" style="background-color:#2292d0;">
+				<div class="row" >						
+					<div style="min-height:10px; height:40px">										
+					</div>	
+					<div class="col-lg-12 col-xs-12">
+						<div class="row" >	
+							<div class="col-lg-4 col-xs-12" style="background-color:#c72b42;">
+								<div class="row" >	
+									<div class="col-lg-12 col-xs-12" style="min-height:150px;height:150px;background-color:#c72b42;">								
+										<div class="col-lg-6 col-xs-6 text-right" style="margin-top:30px;">								
+											<span class="fa-stack fa-3x">
+												<i class="fa fa-circle fa-stack-2x " style="color:#25ca4f"></i>
+												<i class="fa fa-phone fa-stack-1x" style="color:#fbfbfb"></i>
+											</span> 
+										</div>
+										<div class="col-lg-6 col-xs-6 text-left" style="margin-top:30px;">								
+											<div style="color:#fbfbfb"><b>Call</b></div>
+											<div style="color:#dfd6d8">T: 021-30448598/99</div>
+											<div style="color:#dfd6d8">F: 021-30448597</div>													
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4 col-xs-12">
+								<div class="row" >	
+									<div class="col-lg-12 col-xs-12" style="min-height:150px;height:150px;background-color:#c72b42;">
+										<div class="col-lg-6 col-xs-6 text-right" style="margin-top:30px;">								
+											<span class="fa-stack fa-3x">
+												<i class="fa fa-circle fa-stack-2x " style="color:#25ca4f"></i>
+												<i class="fa fa-envelope-o fa-stack-1x" style="color:#fbfbfb"></i>
+											</span> 
+										</div>
+										<div class="col-lg-6 col-xs-6 text-left" style="margin-top:40px;">								
+											<div style="color:#fbfbfb"><b>Contact</b></div>
+											<div style="color:#dfd6d8">info@lukison.com</div>												
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="col-lg-4 col-xs-12">
+								<div class="row" >	
+									<div class="col-lg-12 col-xs-12" style="min-height:150px;height:150px;background-color:#c72b42;">
+										<div class="col-lg-6 col-xs-6 text-right" style="margin-top:30px;">								
+											<span class="fa-stack fa-3x">
+												<i class="fa fa-circle fa-stack-2x " style="color:#25ca4f"></i>
+												<i class="fa fa-copyright fa-stack-1x" style="color:#fbfbfb"></i>
+											</span> 
+										</div>
+										<div class="col-lg-6 col-xs-6 text-left" style="margin-top:40px;">								
+											<div style="color:#dfd6d8">© 2016 / 2017 by lukisongroup.com</div>												
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div style="min-height:200px;background-color:#2292d0;">										
+					</div>		
+				</div>			
+			</div>		
+		</div>		
+	</div>		
+					
+	
 

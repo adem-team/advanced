@@ -196,7 +196,10 @@ class FoodtownController extends Controller
 				"numDivLines": "8",
 				"xAxisNamePadding": "30",
 				"showHoverEffect":"1",
-				"animation": "1"
+				"animation": "1",
+				"exportEnabled": "1",
+				"exportFileName":"FT-SalesYears",
+				"exportAtClientSide":"1"
 							
 			},
 			"categories": [
@@ -246,8 +249,9 @@ class FoodtownController extends Controller
 		$aryDataModel= $dataModel[0]['Val_Json'];
 		// case karena ada tanda koma dan sepasi di belakang
 		// ingat untuk bisa di decode Json, harus format array yang sempurna.
-		$aryDataModelFixFormatArray= str_replace(', }','}',$aryDataModel); 
-		$arrayFromJason = json_decode($aryDataModelFixFormatArray);
+		//$aryDataModelFixFormatArray= str_replace(', }','}',$aryDataModel); 
+		//$arrayFromJason = json_decode($aryDataModelFixFormatArray);
+		$arrayFromJason =Yii::$app->arrayBantuan->fix_json_format_value($aryDataModel);
 		//category
 		for ($i = 10; $i <= 22; $i++){
 			 $ctg[]=["label"=>(string)$i];	
@@ -919,6 +923,10 @@ class FoodtownController extends Controller
 			5. Number
 				"numberPrefix": "", //depan
 				"numberSuffix": "jt", //belakang
+		 * EXPORT CLIENT SIDE
+				"exportEnabled": "1",
+				"exportFileName":"FT-SalesYears",
+				"exportAtClientSide":"1"
 		*/
 	
 	

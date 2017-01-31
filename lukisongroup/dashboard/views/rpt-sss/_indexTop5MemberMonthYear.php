@@ -6,8 +6,6 @@ use yii\web\Response;
 use yii\helpers\ArrayHelper;
 use yii\web\Request;
 use ptrnov\fusionchart\Chart;
-use ptrnov\fusionchart\ChartAsset;
-ChartAsset::register($this);
 
 function tabelMember($data,$head){
 	$fillhead1='<thead><tr><th width="1%">'.'#</th><th>Nama</th><th>GrandTotal</th></tr></thead><tbody>';

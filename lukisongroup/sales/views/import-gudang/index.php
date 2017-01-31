@@ -22,7 +22,7 @@ $this->sideMenu = 'esm_sales';                                      /* kd_menu u
 $this->title = Yii::t('app', 'ESM - Sales Dashboard');              /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;                      /* belum di gunakan karena sudah ada list sidemenu, on plan next*/
 
-/**
+	/**
 	 * Import Data Gudang.
 	 * Status 	: Fixed.
 	 * Issue	: PO Online/ import PO manual / Po MTI/NKA
@@ -42,7 +42,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 			/*VIEW IMPORT*/
 			'gvRows'=>$gvRows,
 			'searchModelViewImport'=>$searchModelViewImport,
-			'dataProviderViewImport'=>$dataProviderViewImport	
+			'dataProviderViewImport'=>$dataProviderViewImport
+			
 	]);
 	
 	/**
@@ -54,7 +55,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	$_indexGudangLatestImport=$this->render('_indexImportGudangLatestImport',[
 		'gvRows'=>$gvRows,
 		'searchModelViewImport'=>$searchModelViewImport,
-		'dataProviderViewImport'=>$dataProviderViewImport	
+		'dataProviderViewImport'=>$dataProviderViewImport,
+		'aryBrgID'=>$aryBrgID		
 	]);
 
 	/**
@@ -66,7 +68,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	$_indexGudangDataAll=$this->render('_indexImportGudangdataAll',[
 		'gvRows'=>$gvRows,
 		'searchModelViewImport'=>$searchModelViewImport,
-		'dataProviderAllDataImport'=>$dataProviderAllDataImport	
+		'dataProviderAllDataImport'=>$dataProviderAllDataImport,
+		'aryBrgID'=>$aryBrgID
 	]);
 
 		

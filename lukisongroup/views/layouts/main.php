@@ -148,13 +148,14 @@ $this->title = 'LukisonGroup.com';
 				<?php $this->beginBody(); ?>
                 <div class="wrapper">
                     <header class="main-header">
-                        <a  class="logo bg-red">
+                        <div  class="logo bg-red">
                             <?php
-                            echo Html::img('http://lukisongroup.com/favicon.ico', ['width'=>'20']);
+                           // echo Html::img('http://lukisongroup.com/favicon.ico', ['width'=>'50']);
                             ?>
-                            <!-- LOGO -->
-                            LukisonGroup
-                        </a>
+                            <!-- LOGO 
+                            LukisonGroup-->
+							<b>LUKISONGROUP</b>
+                        </div>
                            <!--  <div class="navbar-custom-menu">!-->
                                 <?php
                                     // echo  \yii\helpers\Json::encode($menuItems);

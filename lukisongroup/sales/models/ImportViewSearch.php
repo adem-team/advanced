@@ -18,14 +18,14 @@ class ImportViewSearch extends ImportView
 	public function attributes()
 	{
 		// Author -ptr.nov- add related fields to searchable attributes 
-		return array_merge(parent::attributes(), ['disNm']);
+		return array_merge(parent::attributes(), ['disNm','TGLAlias1','TGLAlias2','KdBrg1','KdBrg2','disNm1','disNm2']);
 	} 
 	
     public function rules()
     {
         return [
             [['ID', 'SO_TYPE', 'STATUS'], 'integer'],
-            [['TGL', 'CUST_KD', 'CUST_KD_ALIAS', 'CUST_NM', 'KD_BARANG', 'KD_BARANG_ALIAS', 'NM_BARANG', 'POS', 'KD_DIS', 'NM_DIS', 'USER_ID', 'UNIT_BARANG', 'NOTED','disNm','kartonqty'], 'safe'],
+            [['TGL','TGLAlias1','TGLAlias2','KdBrg1','KdBrg2','disNm1','disNm2','CUST_KD', 'CUST_KD_ALIAS', 'CUST_NM', 'KD_BARANG', 'KD_BARANG_ALIAS', 'NM_BARANG', 'POS', 'KD_DIS', 'NM_DIS', 'USER_ID', 'UNIT_BARANG', 'NOTED','disNm','kartonqty'], 'safe'],
             [['SO_QTY', 'UNIT_QTY', 'UNIT_BERAT', 'HARGA_PABRIK', 'HARGA_DIS', 'HARGA_SALES', 'HARGA_LG'], 'number'],
         ];
     }
@@ -88,7 +88,7 @@ class ImportViewSearch extends ImportView
             ->andFilterWhere(['like', 'KD_BARANG_ALIAS', $this->KD_BARANG_ALIAS])
             ->andFilterWhere(['like', 'NM_BARANG', $this->NM_BARANG])
             ->andFilterWhere(['like', 'POS', $this->POS])
-            ->andFilterWhere(['like', 'KD_DIS', $this->disNm])
+            ->andFilterWhere(['like', 'KD_DIS', $this->disNm1])
             ->andFilterWhere(['like', 'NM_DIS', $this->NM_DIS])
             ->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
             ->andFilterWhere(['like', 'UNIT_BARANG', $this->UNIT_BARANG])
@@ -123,11 +123,12 @@ class ImportViewSearch extends ImportView
             // $query->where('0=1');
             return $dataProvider;
         }
-	
+		
+		// ALIAS FILTER SAME PAGE, harus beda id (TGLAlias1,KdBrg1,disNm1);
         // grid filtering conditions
         $query->andFilterWhere([
             'ID' => $this->ID,
-            'TGL' =>$this->TGL,
+            'TGL' =>$this->TGLAlias1,
             'SO_QTY' => $this->SO_QTY, 
             'SO_TYPE' => '1',
             'UNIT_QTY' => $this->UNIT_QTY,
@@ -142,11 +143,11 @@ class ImportViewSearch extends ImportView
         $query->andFilterWhere(['like', 'CUST_KD', $this->CUST_KD])
             ->andFilterWhere(['like', 'CUST_KD_ALIAS', $this->CUST_KD_ALIAS])
             ->andFilterWhere(['like', 'CUST_NM', $this->CUST_NM])
-            ->andFilterWhere(['like', 'KD_BARANG', $this->KD_BARANG])
+            ->andFilterWhere(['like', 'KD_BARANG', $this->KdBrg1])
             ->andFilterWhere(['like', 'KD_BARANG_ALIAS', $this->KD_BARANG_ALIAS])
             ->andFilterWhere(['like', 'NM_BARANG', $this->NM_BARANG])
             ->andFilterWhere(['like', 'POS', 'WEB_IMPORT'])
-            ->andFilterWhere(['like', 'KD_DIS',$this->getAttribute('disNm')])
+            ->andFilterWhere(['like', 'KD_DIS',$this->getAttribute('disNm1')])
             ->andFilterWhere(['like', 'NM_DIS', $this->NM_DIS])
             ->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
             ->andFilterWhere(['like', 'UNIT_BARANG', $this->UNIT_BARANG])
@@ -183,8 +184,8 @@ class ImportViewSearch extends ImportView
         // grid filtering conditions
         $query->andFilterWhere([
             'ID' => $this->ID,
-            'TGL' => $this->TGL,
-            'SO_QTY' => $this->SO_QTY,
+            'TGL' => $this->TGLAlias2, //filter TGL ->(TGLAlias1,TGLAlias2)
+            'SO_QTY' => $this->SO_QTY, 
             'SO_TYPE' => '1',
             'UNIT_QTY' => $this->UNIT_QTY,
             'UNIT_BERAT' => $this->UNIT_BERAT,
@@ -198,11 +199,11 @@ class ImportViewSearch extends ImportView
         $query->andFilterWhere(['like', 'CUST_KD', $this->CUST_KD])
             ->andFilterWhere(['like', 'CUST_KD_ALIAS', $this->CUST_KD_ALIAS])
             ->andFilterWhere(['like', 'CUST_NM', $this->CUST_NM])
-            ->andFilterWhere(['like', 'KD_BARANG', $this->KD_BARANG])
+            ->andFilterWhere(['like', 'KD_BARANG', $this->KdBrg2])
             ->andFilterWhere(['like', 'KD_BARANG_ALIAS', $this->KD_BARANG_ALIAS])
             ->andFilterWhere(['like', 'NM_BARANG', $this->NM_BARANG])
             ->andFilterWhere(['like', 'POS', 'WEB_IMPORT'])
-            ->andFilterWhere(['like', 'KD_DIS',$this->getAttribute('disNm')])
+            ->andFilterWhere(['like', 'KD_DIS',$this->getAttribute('disNm2')])
             ->andFilterWhere(['like', 'NM_DIS', $this->NM_DIS])
             ->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
             ->andFilterWhere(['like', 'UNIT_BARANG', $this->UNIT_BARANG])
@@ -229,7 +230,7 @@ class ImportViewSearch extends ImportView
 				 'pageSize' => 2000,
 			]
         ]);
-
+		// ALIAS FILTER SAME PAGE, harus beda id (TGLAlias2,KdBrg2,disNm2);
         $this->load($params);
 
         if (!$this->validate()) {

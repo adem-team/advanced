@@ -66,7 +66,8 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 	$_indexSalespoDataAll=$this->render('_indexImportSalespodataAll',[
 		'gvRows'=>$gvRows,
 		'searchModelViewImport'=>$searchModelViewImport,
-		'dataProviderAllDataImport'=>$dataProviderAllDataImport	
+		'dataProviderAllDataImport'=>$dataProviderAllDataImport,
+		//'aryBrgID'=>$aryBrgID
 	]);
 
 		

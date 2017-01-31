@@ -18,8 +18,8 @@ use app\models\hrd\Dept;
 use lukisongroup\master\models\Distributor;
 
 	$dropDist = ArrayHelper::map(Distributor::find()->all(), 'KD_DISTRIBUTOR', 'NM_DISTRIBUTOR');
-	$aryField= [
-		/*MAIN DATA*/
+	/* $aryField= [
+		//MAIN DATA 
 		['ID' =>0, 'ATTR' =>['FIELD'=>'TGL','SIZE' => '50px','label'=>'Date','align'=>'center','vAlign'=>'middle','warna'=>'255, 255, 48, 4','warnaFilter'=>'255, 255, 255, 1','filter'=>false,'filterType'=>false,'mergeHeader'=>false,'filterColspn'=>0]],
 		['ID' =>1, 'ATTR' =>['FIELD'=>'NM_BARANG','SIZE' => '250px','label'=>'SKU NM','align'=>'left','vAlign'=>'top','warna'=>'255, 255, 48, 4','warnaFilter'=>'255, 255, 255, 1','filter'=>true,'filterType'=>false,'mergeHeader'=>false,'filterColspn'=>7]],
 		['ID' =>2, 'ATTR' =>['FIELD'=>'SO_QTY','SIZE' => '50px','label'=>'QTY.PCS','align'=>'right','vAlign'=>'top','warna'=>'255, 255, 48, 4','warnaFilter'=>'255, 255, 255, 1','filter'=>true,'filterType'=>false,'mergeHeader'=>true,'filterColspn'=>0]],		
@@ -82,13 +82,453 @@ use lukisongroup\master\models\Distributor;
 				]
 			],
 		];
-	};
+	};  */
+	 $attributeManualLatest=[
+		//TGL
+		[
+			'attribute'=>'TGLAlias1',
+			'label'=>'Date',
+			'filterType'=>GridView::FILTER_DATE,
+			'filterWidgetOptions'=>[	
+				'pluginOptions' => [				
+						'format' => 'yyyy-mm-dd',					 
+						'autoclose' => true,
+						'todayHighlight' => true,
+						//'format' => 'dd-mm-yyyy hh:mm',
+						'autoWidget' => false,
+						//'todayBtn' => true,
+				]
+			],
+			'filter'=>true,
+			'filterOptions'=>[
+				
+				'style'=>'background-color:rgba(255, 255, 255, 1); align:center',
+				'colspan'=>'0',
+			],			
+			'hAlign'=>'right',
+			'vAlign'=>'middle',
+			'mergeHeader'=>false,
+			'noWrap'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 255, 48, 4)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt'
+				]
+			],
+		],
+		//NM_BARANG
+		[
+			'attribute'=>'KdBrg1',
+			'label'=>'SKU NM',
+			'filterType'=>GridView::FILTER_SELECT2,
+			'filterWidgetOptions'=>[	
+				'pluginOptions'=>[
+					'allowClear'=>true,
+					'contentOptions'=>[
+						'style'=>[
+						  'text-align'=>'left',
+						  'font-family'=>'tahoma, arial, sans-serif',
+						  'font-size'=>'8pt',
+						]
+					]
+				],
+			],
+			'filter'=>$aryBrgID,
+			'filterOptions'=>[
+				'style'=>'background-color:rgba(255, 255, 255, 1); align:center',
+				'colspan'=>'7',
+			],		
+			'filterInputOptions'=>['placeholder'=>'--Pilih--'],		
+			'value'=>function($model){
+					return $model['NM_BARANG'];
+			},
+			'hAlign'=>'right',
+			'vAlign'=>'top',
+			'mergeHeader'=>false,
+			'noWrap'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'250',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 255, 48, 4)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'left',
+					'width'=>'250',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt'
+				]
+			],
+		],
+		//QTY.PCS
+		[
+			'attribute'=>'SO_QTY',
+			'label'=>'QTY.PCS',
+			'filterType'=>false,
+			'filterWidgetOptions'=>[	
+				'pluginOptions'=>[
+					'allowClear'=>true,
+					'contentOptions'=>[
+						'style'=>[
+						  'text-align'=>'left',
+						  'font-family'=>'tahoma, arial, sans-serif',
+						  'font-size'=>'8pt',
+						]
+					]
+				],
+			],
+			'filter'=>true,
+			'filterOptions'=>[
+				'style'=>'background-color:rgba(255, 255, 255, 1); align:center',
+				'colspan'=>'0',
+			],		
+			'hAlign'=>'right',
+			'vAlign'=>'top',
+			'mergeHeader'=>true,
+			'noWrap'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 255, 48, 4)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'right',
+					'width'=>'50',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt'
+				]
+			],
+		],
+		//UNIT_BARANG
+		[
+			'attribute'=>'UNIT_BARANG',
+			'label'=>'UNIT',
+			'filterType'=>false,
+			'filterWidgetOptions'=>[	
+				'pluginOptions'=>[
+					'allowClear'=>true,
+					'contentOptions'=>[
+						'style'=>[
+						  'text-align'=>'left',
+						  'font-family'=>'tahoma, arial, sans-serif',
+						  'font-size'=>'8pt',
+						]
+					]
+				],
+			],
+			'filter'=>true,
+			'filterOptions'=>[
+				'style'=>'background-color:rgba(255, 255, 255, 1); align:center',
+				'colspan'=>'0',
+			],		
+			'hAlign'=>'right',
+			'vAlign'=>'top',
+			'mergeHeader'=>true,
+			'noWrap'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 255, 48, 4)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt'
+				]
+			],
+		],
+		//QTY-CARTON
+		[
+			'attribute'=>'kartonqty',
+			'label'=>'QTY.CARTON',
+			'filterType'=>false,
+			'filterWidgetOptions'=>[	
+				'pluginOptions'=>[
+					'allowClear'=>true,
+					'contentOptions'=>[
+						'style'=>[
+						  'text-align'=>'left',
+						  'font-family'=>'tahoma, arial, sans-serif',
+						  'font-size'=>'8pt',
+						]
+					]
+				],
+			],
+			'filter'=>true,
+			'filterOptions'=>[
+				'style'=>'background-color:rgba(255, 255, 255, 1); align:center',
+				'colspan'=>'0',
+			],		
+			'hAlign'=>'right',
+			'vAlign'=>'top',
+			'mergeHeader'=>true,
+			'noWrap'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 255, 48, 4)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'right',
+					'width'=>'50',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt'
+				]
+			],
+		],
+		//WEIGHT.GRAM
+		[
+			'attribute'=>'beratunit',
+			'label'=>'QTY.CARTON',
+			'filterType'=>false,
+			'filterWidgetOptions'=>[	
+				'pluginOptions'=>[
+					'allowClear'=>true,
+					'contentOptions'=>[
+						'style'=>[
+						  'text-align'=>'left',
+						  'font-family'=>'tahoma, arial, sans-serif',
+						  'font-size'=>'8pt',
+						]
+					]
+				],
+			],
+			'filter'=>true,
+			'filterOptions'=>[
+				'style'=>'background-color:rgba(255, 255, 255, 1); align:center',
+				'colspan'=>'0',
+			],		
+			'hAlign'=>'right',
+			'vAlign'=>'top',
+			'mergeHeader'=>true,
+			'noWrap'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 255, 48, 4)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'right',
+					'width'=>'50',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt'
+				]
+			],
+		],
+		//HARGA_DIS
+		[
+			'attribute'=>'HARGA_DIS',
+			'label'=>'DIST.PRICE',
+			'filterType'=>false,
+			'filterWidgetOptions'=>[	
+				'pluginOptions'=>[
+					'allowClear'=>true,
+					'contentOptions'=>[
+						'style'=>[
+						  'text-align'=>'left',
+						  'font-family'=>'tahoma, arial, sans-serif',
+						  'font-size'=>'8pt',
+						]
+					]
+				],
+			],
+			'filter'=>true,
+			'filterOptions'=>[
+				'style'=>'background-color:rgba(255, 255, 255, 1); align:center',
+				'colspan'=>'0',
+			],		
+			'hAlign'=>'right',
+			'vAlign'=>'top',
+			'mergeHeader'=>true,
+			'noWrap'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 255, 48, 4)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'right',
+					'width'=>'50',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt'
+				]
+			],
+		],
+		//SUB.TTL
+		[
+			'attribute'=>'subtotaldist',
+			'label'=>'SUB.TTL',
+			'filterType'=>false,
+			'filterWidgetOptions'=>[	
+				'pluginOptions'=>[
+					'allowClear'=>true,
+					'contentOptions'=>[
+						'style'=>[
+						  'text-align'=>'left',
+						  'font-family'=>'tahoma, arial, sans-serif',
+						  'font-size'=>'8pt',
+						]
+					]
+				],
+			],
+			'filter'=>true,
+			'filterOptions'=>[
+				'style'=>'background-color:rgba(255, 255, 255, 1); align:center',
+				'colspan'=>'0',
+			],		
+			'hAlign'=>'right',
+			'vAlign'=>'top',
+			'mergeHeader'=>true,
+			'noWrap'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 255, 48, 4)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'right',
+					'width'=>'50',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt'
+				]
+			],
+		],
+		//DISTRIBUTION
+		[
+			'attribute'=>'disNm1',
+			'label'=>'DISTRIBUTION',			
+			'filterType'=>GridView::FILTER_SELECT2,
+			'filter'=>$dropDist,
+			'filterInputOptions'=>['placeholder'=>'--Pilih--'],
+			'filterWidgetOptions'=>[				
+				'pluginOptions'=>[
+					'allowClear'=>true,
+					'maximumInputLength' => 10
+				],
+			],	
+			'filterOptions'=>[
+				'style'=>'background-color:rgba(255, 255, 255, 1); align:center; width:100',
+				'colspan'=>'0',
+			],					
+			'hAlign'=>'right',
+			'vAlign'=>'top',
+			'mergeHeader'=>false,
+			'noWrap'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'100',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 255, 48, 4)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'Left',
+					'width'=>'100',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt'
+				]
+			],
+		],
+		//USER_ID
+		[
+			'attribute'=>'USER_ID',
+			'label'=>'IMPORT.BY',
+			'filterType'=>false,
+			'filterWidgetOptions'=>[	
+				'pluginOptions'=>[
+					'allowClear'=>true,
+					'contentOptions'=>[
+						'style'=>[
+						  'text-align'=>'left',
+						  'font-family'=>'tahoma, arial, sans-serif',
+						  'font-size'=>'8pt',
+						]
+					]
+				],
+			],
+			'filter'=>true,
+			'filterOptions'=>[
+				'style'=>'background-color:rgba(255, 255, 255, 1); align:center',
+				'colspan'=>'0',
+			],		
+			'hAlign'=>'right',
+			'vAlign'=>'top',
+			'mergeHeader'=>true,
+			'noWrap'=>true,
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt',
+					'background-color'=>'rgba(255, 255, 48, 4)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'Left',
+					'width'=>'50',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'8pt'
+				]
+			],
+		]
+	]; 
 	
 	$gvListImport=GridView::widget([
 		'id'=>'gv-data-latest-gudang',
 		'dataProvider' => $dataProviderViewImport,
 		'filterModel' => $searchModelViewImport,
-		'columns'=>$attDinamik,					
+		'columns'=>$attributeManualLatest,//$attDinamik,					
 		'pjax'=>true,
 		'pjaxSettings'=>[
 			'options'=>[

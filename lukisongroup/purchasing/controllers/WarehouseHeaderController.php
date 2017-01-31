@@ -3,14 +3,17 @@
 namespace lukisongroup\purchasing\controllers;
 
 use Yii;
-use lukisongroup\purchasing\models\warehouse\HeaderDetail;
-use lukisongroup\purchasing\models\warehouse\HeaderDetailSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use lukisongroup\purchasing\models\warehouse\HeaderDetailRcvd;
+use lukisongroup\purchasing\models\warehouse\HeaderDetailRcvdSearch;
+use lukisongroup\purchasing\models\warehouse\HeaderDetailRelease;
+use lukisongroup\purchasing\models\warehouse\HeaderDetailReleaseSearch;
+
 
 /**
- * HeaderDetailController implements the CRUD actions for HeaderDetail model.
+ * HeaderDetailRcvdController implements the CRUD actions for HeaderDetailRcvd model.
  */
 class WarehouseHeaderController extends Controller
 {
@@ -29,23 +32,56 @@ class WarehouseHeaderController extends Controller
         ];
     }
 
+	/**
+     * Before Action Index
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	public function beforeAction($action){
+		if (Yii::$app->user->isGuest)  {
+			 Yii::$app->user->logout();
+			   $this->redirect(array('/site/login'));  //
+		}
+		// Check only when the user is logged in
+		if (!Yii::$app->user->isGuest)  {
+		   if (Yii::$app->session['userSessionTimeout']< time() ) {
+			   // timeout
+			   Yii::$app->user->logout();
+			   $this->redirect(array('/site/login'));  //
+		   } else {
+			   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+			   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+			   return true;
+		   }
+		} else {
+			return true;
+		}
+    }
+	
     /**
-     * Lists all HeaderDetail models.
+     * Lists all HeaderDetailRcvd models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new HeaderDetailSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		//RCVD
+		$searchModelRcvd = new HeaderDetailRcvdSearch();
+        $dataProviderRcvd = $searchModelRcvd->search(Yii::$app->request->queryParams);
+
+    	//RELEASE
+		$searchModelRelease = new HeaderDetailReleaseSearch();
+        $dataProviderRelease = $searchModelRelease->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'searchModelRcvd' => $searchModelRcvd,
+            'dataProviderRcvd' => $dataProviderRcvd,
+			'searchModelRelease' => $searchModelRelease,
+            'dataProviderRelease' => $dataProviderRelease,
         ]);
     }
 
     /**
-     * Displays a single HeaderDetail model.
+     * Displays a single HeaderDetailRcvd model.
      * @param integer $id
      * @return mixed
      */
@@ -57,13 +93,13 @@ class WarehouseHeaderController extends Controller
     }
 
     /**
-     * Creates a new HeaderDetail model.
+     * Creates a new HeaderDetailRcvd model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new HeaderDetail();
+        $model = new HeaderDetailRcvd();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->ID]);
@@ -75,7 +111,7 @@ class WarehouseHeaderController extends Controller
     }
 
     /**
-     * Updates an existing HeaderDetail model.
+     * Updates an existing HeaderDetailRcvd model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -94,7 +130,7 @@ class WarehouseHeaderController extends Controller
     }
 
     /**
-     * Deletes an existing HeaderDetail model.
+     * Deletes an existing HeaderDetailRcvd model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -107,15 +143,15 @@ class WarehouseHeaderController extends Controller
     }
 
     /**
-     * Finds the HeaderDetail model based on its primary key value.
+     * Finds the HeaderDetailRcvd model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return HeaderDetail the loaded model
+     * @return HeaderDetailRcvd the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = HeaderDetail::findOne($id)) !== null) {
+        if (($model = HeaderDetailRcvd::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

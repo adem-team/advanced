@@ -154,7 +154,8 @@ class ImportGudangController extends Controller
 			/*Latest Dadta IMPORT*/
 			'searchModelViewImport'=>$searchModelViewImport,
 			'dataProviderAllDataImport'=>$dataProviderAllDataImport,
-			'errorModal'=>$errorModal
+			'errorModal'=>$errorModal,
+			'aryBrgID'=>self::aryBrgID()
 		]);
     }
 

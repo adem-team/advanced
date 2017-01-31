@@ -7,9 +7,10 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\Url;
 use ptrnov\fusionchart\Chart;
 use ptrnov\fusionchart\ChartAsset;
+ChartAsset::register($this);
 use lukisongroup\assets\Profile;
 Profile::register($this);
-ChartAsset::register($this);
+
 
 $this->sideCorp = 'PT.Sarana Sinar Surya';                              /* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = '';                                                   /* kd_menu untuk list menu pada sidemenu, get from table of database */
@@ -71,9 +72,9 @@ $this->params['breadcrumbs'][] = $this->title;                          /* belum
 			'align'=>TabsX::ALIGN_LEFT,						
 		]);											
 ?>
+<div id="loaderPtr"></div>
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt; padding-top:-150px">
 		<div class="row" >
 			<?=$tabSss?>			
 		</div>
-
 </div>

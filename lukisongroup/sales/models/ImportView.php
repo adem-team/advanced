@@ -100,11 +100,30 @@ class ImportView extends \yii\db\ActiveRecord
         ];
     }
 	
+	public function getTglAlias1(){
+		return $this->TGL;
+	}
+	public function getTglAlias2(){
+		return $this->TGL;
+	}
+	public function getKdBrg1(){
+		return $this->KD_BARANG;
+	}
+	public function getKdBrg2(){
+		return $this->KD_BARANG;
+	}
+	
 	public function getDistributor(){
 		return $this->hasOne(Distributor::className(), ['KD_DISTRIBUTOR'=>'KD_DIS']);
 	}
 	
 	public function getDisNm(){
+		return $this->distributor!=''?$this->distributor->NM_DISTRIBUTOR:'';
+	}
+	public function getDisNm1(){
+		return $this->distributor!=''?$this->distributor->NM_DISTRIBUTOR:'';
+	}
+	public function getDisNm2(){
 		return $this->distributor!=''?$this->distributor->NM_DISTRIBUTOR:'';
 	}
 	
@@ -126,8 +145,12 @@ class ImportView extends \yii\db\ActiveRecord
 	
 	public function getKartonqty() 
     {
-        $valKartonQty=round(($this->SO_QTY * $this->UNIT_QTY),0,PHP_ROUND_HALF_UP);
-		return  number_format($valKartonQty,2);
+		if ($this->SO_QTY!=0){
+			 $valKartonQty=round(($this->SO_QTY / $this->UNIT_QTY),0,PHP_ROUND_HALF_UP);
+			 //$valKartonQty=($this->SO_QTY / $this->UNIT_QTY);
+		return  number_format($valKartonQty,2);	
+		}
+       
     }
 	
 	

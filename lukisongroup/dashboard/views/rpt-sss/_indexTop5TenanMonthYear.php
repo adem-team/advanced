@@ -6,8 +6,7 @@ use yii\web\Response;
 use yii\helpers\ArrayHelper;
 use yii\web\Request;
 use ptrnov\fusionchart\Chart;
-use ptrnov\fusionchart\ChartAsset;
-ChartAsset::register($this);
+
 
 //print_r($top5MemberMonth);
 function tabelTenant($data,$head){

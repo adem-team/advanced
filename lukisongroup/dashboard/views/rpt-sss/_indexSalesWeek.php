@@ -7,8 +7,6 @@ use yii\helpers\ArrayHelper;
 use yii\web\Request;
 use yii\bootstrap\Modal;
 use ptrnov\fusionchart\Chart;
-use ptrnov\fusionchart\ChartAsset;
-ChartAsset::register($this);
 
 	$btn_srchChart = Html::button(Yii::t('app', 'Search Date'),
 		['value'=>url::to(['ambil-tanggal-chart']),

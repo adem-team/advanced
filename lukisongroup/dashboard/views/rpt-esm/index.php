@@ -7,7 +7,10 @@ use kartik\tabs\TabsX;
 use yii\helpers\Json;
 use yii\web\Response;
 use yii\helpers\ArrayHelper;
-
+use lukisongroup\assets\Profile;
+Profile::register($this);
+use ptrnov\fusionchart\ChartAsset;
+ChartAsset::register($this);
 // use lukisongroup\assets\AppAssetFusionChart;
 // AppAssetFusionChart::register($this);
 
@@ -106,7 +109,7 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 				
 				$items=[
 					[
-						'label'=>'<i class="fa fa-balance-scale fa-2x"></i> Balance','content'=>$_indexGeneral,
+						'label'=>'<i class="fa fa-balance-scale fa-2x"></i> Balance-In','content'=>$_indexGeneral,
 						'active'=>true,
 					],					
 					[
@@ -149,10 +152,10 @@ $this->params['breadcrumbs'][] = $this->title;                      /* belum di 
 						'align'=>TabsX::ALIGN_LEFT,						
 					]);											
 				?>
+<div id="loaderPtr"></div>
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt; padding-top:-150px">
 	<div class="row">
-		<div  class="col-lg-12" >		
-			<?=$tabDdashboardEsm?>
-		</div>
+				<?=$tabDdashboardEsm?>
+		
 	</div>
 </div>
