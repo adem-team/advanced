@@ -1,8 +1,8 @@
 <?php
 
 namespace lukisongroup\marketing\models;
-
 use Yii;
+//use lukisongroup\master\models\Customers;
 
 /**
  * This is the model class for table "c0023".
@@ -25,6 +25,7 @@ use Yii;
  */
 class SalesPromo extends \yii\db\ActiveRecord
 {
+	public $KD_PARENT;
     /**
      * @inheritdoc
      */
@@ -47,7 +48,9 @@ class SalesPromo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['PROMO', 'MEKANISME', 'KOMPENSASI', 'KETERANGAN'], 'string'],
+			[['TGL_START','TGL_END','PROMO','STATUS','CUST_ID','OVERDUE'],'required','on'=>'create'],
+			[['TGL_START','TGL_END'],'validasiTgl','on'=>'create'],
+			[['PROMO', 'MEKANISME', 'KOMPENSASI', 'KETERANGAN'], 'string'],
             [['TGL_START', 'TGL_END', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['OVERDUE', 'STATUS'], 'integer'],
             [['CUST_ID'], 'string', 'max' => 50],
@@ -55,7 +58,43 @@ class SalesPromo extends \yii\db\ActiveRecord
             [['CREATED_BY', 'UPDATED_BY'], 'string', 'max' => 100],
         ];
     }
-
+	
+	public function validasiTgl($model){
+		if (!$this->hasErrors()) {
+			$date1=strtotime(\Yii::$app->formatter->asDate($this->TGL_START,'Y-M-d'));
+			$date2=strtotime(\Yii::$app->formatter->asDate($this->TGL_END,'Y-M-d'));
+			if ($date2 < $date1) {
+					$this->addError($model, 'Tanggal Start Harus lebih kecil dari Tanggal End');
+							
+			}else{
+				return true;
+			}
+		}
+	} 
+	
+	Public function getRunOverdue(){
+		if($this->STATUS==1){
+			$today=date_create(\Yii::$app->formatter->asDate(date("Y-m-d"),'Y-M-d'));
+			$date2=date_create(\Yii::$app->formatter->asDate($this->TGL_END,'Y-M-d'));
+			$selisih=date_diff($today,$date2);
+			if ($today == $date2){
+				return 0;
+			}elseif($today < $date2){
+				return '-'.$selisih->d;
+			}elseif($today > $date2){
+				return '+'.$selisih->d;
+			};			
+			// $this->OVERDUE=0;
+			// $this->save();
+		}else{
+			return 0;
+		}		
+	}
+	// public function getParent() {
+		// return $this->hasOne(Customers::classname(),
+           // ['CUST_KD'=>'CUST_GRP'])->
+           // from(self::tableName() . ' AS parent');
+	// }
     /**
      * @inheritdoc
      */
@@ -63,14 +102,15 @@ class SalesPromo extends \yii\db\ActiveRecord
     {
         return [
             'ID' => 'ID',
-            'CUST_ID' => 'Customer.ID',
+			'KD_PARENT'=>'Customer Parent',
+            'CUST_ID' => 'Customer',
             'CUST_NM' => 'Customer',
-            'PROMO' => 'Promotion',
-            'TGL_START' => 'Periode.Start',
-            'TGL_END' => 'Periode.End',
+            'PROMO' => 'Promotion Name',
+            'TGL_START' => 'Start Periode',
+            'TGL_END' => 'End Periode',
             'OVERDUE' => 'Overdue',
             'MEKANISME' => 'Mekanisme',
-            'KOMPENSASI' => 'Mechanism',
+            'KOMPENSASI' => 'Kompensasi',
             'KETERANGAN' => 'Description',
             'STATUS' => 'Status',
             'CREATED_BY' => 'Created  By',

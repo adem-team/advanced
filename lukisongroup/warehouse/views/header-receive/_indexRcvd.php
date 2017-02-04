@@ -27,14 +27,14 @@ use kartik\date\DatePicker;
 				'pluginOptions' =>Yii::$app->gv->gvPliginDate(),
 			],
 			'filter'=>true,
-			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0'),
+			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px'),
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
 			'mergeHeader'=>false,
 			'noWrap'=>false,
 			//gvContainHeader($align,$width,$bColor)
-			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50','rgba(255, 255, 48, 4)'),
-			'contentOptions'=>Yii::$app->gv->gvContainBody('center','50',''),			
+			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50px','rgba(255, 255, 48, 4)'),
+			'contentOptions'=>Yii::$app->gv->gvContainBody('center','50px',''),			
 		],
 		//TGL
 		[
@@ -45,16 +45,46 @@ use kartik\date\DatePicker;
 				'pluginOptions' =>Yii::$app->gv->gvPliginSelect2(),
 			],
 			'filter'=>true,
-			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0'),
+			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px'),
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
 			'mergeHeader'=>false,
 			'noWrap'=>false,
 			//gvContainHeader($align,$width,$bColor)
-			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50','rgba(255, 255, 48, 4)'),
-			'contentOptions'=>Yii::$app->gv->gvContainBody('center','50',''),
+			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50px','rgba(255, 255, 48, 4)'),
+			'contentOptions'=>Yii::$app->gv->gvContainBody('center','50px',''),
 			
 		],
+		//ACTION
+		[
+			'class' => 'kartik\grid\ActionColumn',
+			'template' => '{view}{edit}{deny}',
+			'header'=>'Action',
+			'dropdown' => true,
+			'dropdownOptions'=>[
+				'class'=>'pull-right dropup',
+				'style'=>'width:60px;background-color:#E6E6FA'				
+			],
+			'dropdownButton'=>[
+				'label'=>'Action',
+				'class'=>'btn btn-default btn-xs',
+				'style'=>'width:100%;'		
+			],
+			'buttons' => [
+				'view' =>function ($url, $model){
+				  return  tombolView($url, $model);
+				},
+				'edit' =>function($url, $model,$key){
+					return  tombolRemainder($url, $model);
+				},
+				'deny' =>function($url, $model,$key){
+					return  tombolDeny($url, $model);
+				}
+
+			],
+			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','10px',$bColor),
+			'contentOptions'=>Yii::$app->gv->gvContainBody('center','10px',''),
+		]
 		/* ['class' => 'yii\grid\SerialColumn'],
 
 		'ID',
@@ -107,17 +137,19 @@ use kartik\date\DatePicker;
 		'panel' => [
 			'heading'=>'GUDANG -  RECEIVED <i class="fa fa fa-level-down fa-1x"></i>', 
 			'type'=>'info',
-			'before'=> Html::a('<i class="fa fa-edit"></i> '.Yii::t('app', 'Input Recive'),'/sales/import-gudang/export_datagudang',
-									[
-										'id'=>'export-datagudang-id',
-										'data-pjax' => true,
-										'class' => 'btn btn-info btn-sm'
-									]
-						),						
+			'before'=>tombolCreate().' '.tombolRefresh(),
+			
+				// Html::a('<i class="fa fa-edit"></i> '.Yii::t('app', 'Input Recive'),'/sales/import-gudang/export_datagudang',
+									// [
+										// 'id'=>'export-datagudang-id',
+										// 'data-pjax' => true,
+										// 'class' => 'btn btn-info btn-sm'
+									// ]
+						// ),						
 			'showFooter'=>false,
 		],
 		'floatOverflowContainer'=>true,
-		'floatHeader'=>true,
+		//'floatHeader'=>true,
 	]);  
 	
 	

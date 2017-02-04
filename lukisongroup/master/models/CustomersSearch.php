@@ -96,7 +96,7 @@ class CustomersSearch extends Customers
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
 			'pagination' => [
-				'pageSize' => 50,
+				'pageSize' => 100,
 			],
         ]);
 
@@ -128,7 +128,7 @@ class CustomersSearch extends Customers
         ->andFilterWhere(['like', 'FAX', $this->FAX])
         ->andFilterWhere(['like', 'CUST_KTG', $this->getAttribute('c0001k.CUST_KTG')])
         ->andFilterWhere(['like', 'CUST_TYPE', $this->getAttribute('custype.CUST_KTG_NM')])
-        ->andFilterWhere(['like', 'CUST_NM', $this->CUST_NM])
+        ->andFilterWhere(['like', 'CUST_NM', '%'.$this->CUST_NM.'%',false])
         ->andFilterWhere(['like', 'CUST_GRP', $this->CUST_GRP])
         ->andFilterWhere(['like', 'MAP_LAT', $this->MAP_LAT])
         ->andFilterWhere(['like', 'MAP_LNG', $this->MAP_LNG])

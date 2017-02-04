@@ -134,7 +134,8 @@ $formlogin= FormGrid::widget([
         'options' => ['class'=>'slide'],
 		'headerOptions'=>[
 			//'style'=> 'border-radius:5px; background-color:rgba(230, 251, 225, 1);'
-			'style'=> 'border-radius:5px; background-color:rgba(61, 235, 64, 1);'
+			//'style'=> 'border-radius:5px; background-color:rgba(61, 235, 64, 1);'
+			'style'=> 'border-radius:5px; background-color:rgba(204, 0, 0, .7);'
 		], 
 		/* 'options'=>[
 			'style'=> 'display:bloack;padding-right:270px;'

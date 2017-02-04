@@ -648,6 +648,8 @@ $tabcustomersData = \kartik\grid\GridView::widget([
     'showConfirmAlert'=>false,
     'target'=>GridView::TARGET_BLANK
   ],
+  'floatOverflowContainer'=>true,
+	'floatHeader'=>true,
   ]);
  ?>
 <?php
@@ -683,7 +685,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
 		  ?>
 		  <!-- Customers !-->
 		</div>
-		<div class="col-sm-12">
+		<div class="col-sm-12" style="font-family: verdana, arial, sans-serif ;font-size: 6pt">
 			<?php
 				echo $tabcustomersData;
 			?>

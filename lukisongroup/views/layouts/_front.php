@@ -22,13 +22,13 @@ AppAsset_front::register($this);
 						$menuItemsNoLogin[] = [
 							'label' =>'About', 'url' => ['/site/profile/index'],
 								'items' => [
-									['label' => 'Lukison Group', 'url' => '#',
-										'items' => [
-											['label' =>'Profile', 'url' => '/front/profile?id=lg'],
-											['label' => 'Product', 'url' => '/front/product?id=lg'],
-											['label' => 'Teams', 'url' => '/front/teams?id=lg'],
-										]
-									],
+									// ['label' => 'Lukison Group', 'url' => '#',
+										// 'items' => [
+											// ['label' =>'Profile', 'url' => '/front/profile?id=lg'],
+											// ['label' => 'Product', 'url' => '/front/product?id=lg'],
+											// ['label' => 'Teams', 'url' => '/front/teams?id=lg'],
+										// ]
+									// ],
 									['label' => 'Sarana Sinar Surya', 'url' => '#',
 										'items' => [
 												['label' =>'Profile', 'url' => '/front/profile?id=sss'],
@@ -36,20 +36,20 @@ AppAsset_front::register($this);
 												['label' =>'Teams', 'url' => '/front/teams?id=sss'],
 										]
 									],
-									['label' => 'Effembi Sukses Makmur', 'url' => '#',
+									['label' => 'Efenbi Sukses Makmur', 'url' => '#',
 										'items' => [
 												['label' => 'Profile', 'url' => '/front/profile?id=esm'],
 												['label' =>'Product', 'url' => '/front/product?id=sss'],
 												['label' => 'Teams', 'url' => '/front/teams?id=sss'],
 										]
 									],
-									['label' => 'Arta Lipat Ganda', 'url' => '#',
-										'items' => [
-											['label' =>'Profile', 'url' => '/front/profile?id=alg'],
-											['label' => 'Product', 'url' => '/front/product?id=alg'],
-											['label' => 'Teams', 'url' => '/front/teams?id=alg'],
-										]
-									],
+									// ['label' => 'Arta Lipat Ganda', 'url' => '#',
+										// 'items' => [
+											// ['label' =>'Profile', 'url' => '/front/profile?id=alg'],
+											// ['label' => 'Product', 'url' => '/front/product?id=alg'],
+											// ['label' => 'Teams', 'url' => '/front/teams?id=alg'],
+										// ]
+									// ],
 								],
 						];
 						$menuItemsNoLogin[] = ['label' => 'Events', 'url' => ['/front/event/index']];
@@ -60,7 +60,7 @@ AppAsset_front::register($this);
 								'items' => [
 									['label' => 'e-Procurement', 'url' => '/front/procurement/index'],
 									['label' => 'e-Recruitment', 'url' => '/front/recruitment/index'],
-									['label' => 'e-CRM', 'url' => 'http://crm.lukisongroup.com'],
+									//['label' => 'e-CRM', 'url' => 'http://crm.lukisongroup.com'],
 								
 								],
 						];
@@ -69,7 +69,7 @@ AppAsset_front::register($this);
 						<div class="navbar navbar-inverse navbar-fixed-top headroom" ></div>
 						<?php
 						NavBar::begin([
-							'brandLabel' => '<img src="http://lukisongroup.com/logo.png" class="navbar-fixed-top" style="width:150px; height:110px; margin-left:50px; margin-top:10px"/>',//.'<div class=" navbar-fixed-top pull-right" style="margin-left:20%; margin-top:10px; color:black"><h5>Under Maintenance !!</h5> </div>',//.'<div class=" navbar-fixed-top pull-right" style="margin-left:20%; margin-top:10px; color:black"><h5>info@lukison.com / Support: 021888888</h5> </div>',
+							'brandLabel' => '<img src="http://lukisongroup.com/logo.png" class="navbar-fixed-top" style="width:120px; height:80px; margin-left:20px; margin-top:10px"/>',//.'<div class=" navbar-fixed-top pull-right" style="margin-left:20%; margin-top:10px; color:black"><h5>Under Maintenance !!</h5> </div>',//.'<div class=" navbar-fixed-top pull-right" style="margin-left:20%; margin-top:10px; color:black"><h5>info@lukison.com / Support: 021888888</h5> </div>',
 								
 							//'<div style="margin-left:50px"><img src="http://lukisongroup.com/favicon.ico"/>LukisonGroup</div>',
 							//'brandUrl' => Yii::$app->homeUrl,

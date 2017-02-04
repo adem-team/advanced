@@ -13,7 +13,7 @@ class TeamsController extends Controller
 		}elseif ($id=='sss'){
 			$corp="PT. Sarana Sinar Surya";
 		}elseif ($id=='esm'){
-			$corp="PT. Effembi Sukses Makmur";
+			$corp="PT. Efenbi Sukses Makmur";
 		}elseif ($id=='alg'){
 			$corp="PT. Artha Lipat Ganda";
 		}		

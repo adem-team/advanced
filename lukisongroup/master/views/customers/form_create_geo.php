@@ -30,7 +30,7 @@ use lukisongroup\master\models\Kategoricus;
 
      <?= $form->field($model, 'GEO_NM')->textInput(['maxlength' => true]) ?>
 
-     <?= $form->field($model, 'GEO_NM')->textArea(['rows' => 6]) ?>
+     <?= $form->field($model, 'GEO_DCRIP')->textArea(['rows' => 6]) ?>
     <div class="form-group">
             <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

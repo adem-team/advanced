@@ -1,6 +1,5 @@
 <?php
 use kartik\helpers\Html;
-use kartik\widgets\Select2;
 use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\widgets\Breadcrumbs;
@@ -16,7 +15,6 @@ use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
 use yii\web\View;
 
-use lukisongroup\marketing\models\SalesPromo;
 $this->sideCorp = 'PT. Efenbi Sukses Makmur';                       	/* Title Select Company pada header pasa sidemenu/menu samping kiri */
 $this->sideMenu = 'esm_marketing';                                      /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'ESM - Marketing Dashboard');              /* title pada header page */
@@ -48,8 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'filterWidgetOptions'=>[
 				'pluginOptions' =>Yii::$app->gv->gvPliginSelect2(),
 			],
-			'filterInputOptions'=>['placeholder'=>'Select'], // wajib to clear button x
-			'filter'=>ArrayHelper::map(SalesPromo::find()->asArray()->all(), 'CUST_NM','CUST_NM'),
+			'filter'=>true,
 			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','200px'),
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
@@ -64,6 +61,10 @@ $this->params['breadcrumbs'][] = $this->title;
 		[
 			'attribute'=>'PROMO',
 			'label'=>'Promotion',
+			'filterType'=>GridView::FILTER_SELECT2,
+			'filterWidgetOptions'=>[
+				'pluginOptions' =>Yii::$app->gv->gvPliginSelect2(),
+			],
 			'filter'=>true,
 			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','200px'),
 			'hAlign'=>'right',
@@ -120,7 +121,6 @@ $this->params['breadcrumbs'][] = $this->title;
 			'filterWidgetOptions'=>[
 				'pluginOptions' =>Yii::$app->gv->gvPliginSelect2(),
 			],
-			'filterInputOptions'=>['placeholder'=>'Select'],
 			'filter'=>Yii::$app->gv->gvStatusArray(),
 			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px'),
 			'hAlign'=>'right',
@@ -140,11 +140,6 @@ $this->params['breadcrumbs'][] = $this->title;
 					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
 					  <i class="fa fa-check fa-stack-1x" style="color:#000000"></i>
 					</span>','',['title'=>'Deactive']);
-				}	else if ($model->STATUS == 2) {
-				  return Html::a('<span class="fa-stack fa-xl">
-					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
-					  <i class="fa fa-clock-o fa-stack-1x" style="color:#ee0b0b"></i>
-					</span>','',['title'=>'panding']);
 				}
 			},
 			//gvContainHeader($align,$width,$bColor)
@@ -154,7 +149,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		],
 		//OVEDRUE
 		[
-			'attribute'=>'RunOverdue',
+			'attribute'=>'OVERDUE',
 			'label'=>'Overdue',
 			'filter'=>false,
 			'hAlign'=>'right',

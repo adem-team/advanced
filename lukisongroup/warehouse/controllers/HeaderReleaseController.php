@@ -1,21 +1,21 @@
 <?php
 
-namespace lukisongroup\purchasing\controllers;
+namespace lukisongroup\warehouse\controllers;
 
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use lukisongroup\purchasing\models\warehouse\HeaderDetailRcvd;
-use lukisongroup\purchasing\models\warehouse\HeaderDetailRcvdSearch;
-use lukisongroup\purchasing\models\warehouse\HeaderDetailRelease;
-use lukisongroup\purchasing\models\warehouse\HeaderDetailReleaseSearch;
+use lukisongroup\warehouse\models\HeaderDetailRcvd;
+use lukisongroup\warehouse\models\HeaderDetailRcvdSearch;
+use lukisongroup\warehouse\models\HeaderDetailRelease;
+use lukisongroup\warehouse\models\HeaderDetailReleaseSearch;
 
 
 /**
  * HeaderDetailRcvdController implements the CRUD actions for HeaderDetailRcvd model.
  */
-class WarehouseHeaderController extends Controller
+class HeaderReleaseController extends Controller
 {
     /**
      * @inheritdoc
