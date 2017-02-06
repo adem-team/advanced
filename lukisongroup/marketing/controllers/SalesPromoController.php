@@ -12,6 +12,9 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\bootstrap\Modal;
 use yii\widgets\Pjax;
+use ptrnov\postman4excel\Postman4ExcelBehavior;
+use yii\data\ArrayDataProvider;
+use yii\helpers\ArrayHelper;
 
 use lukisongroup\marketing\models\SalesPromo;
 use lukisongroup\marketing\models\SalesPromoSearch;
@@ -27,13 +30,22 @@ class SalesPromoController extends Controller
      */
     public function behaviors()
     {
-        return [
+ 		return [
+            // 'export2excel' => [
+                // 'class' => Postman4ExcelBehavior::className(),
+            // ],
+			'export4excel' => [
+				'class' => Postman4ExcelBehavior::className(),
+				'downloadPath'=>Yii::getAlias('@lukisongroup').'/export/tmp/',
+				'widgetType'=>'download',
+				'columnAutoSize'=>false,
+			], 
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'delete' => ['post'],
                 ],
-            ],
+            ]
         ];
     }
 	/*
@@ -132,6 +144,120 @@ class SalesPromoController extends Controller
         return $this->renderAjax('view', [
             'model' => $this->findModel($id),
         ]);
+    }
+	
+	/**
+     * Displays a single SalesPromo model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionReview($id)
+    {
+		
+        return $this->renderAjax('review', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+	
+	/**
+     * Dynamic Model model.
+     * Export Excel
+     */
+    public function actionExportExcel()
+    {
+		$model = new \yii\base\DynamicModel(['STATUS']);
+		$model->addRule(['STATUS'], 'required');
+		
+		if (!$model->load(Yii::$app->request->post())){
+			//Show Form.
+			return $this->renderAjax('_formExport', [
+				'model'=>$model				
+			]);
+		}else{
+			//Validation.
+			if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			};
+			if ($model->load(Yii::$app->request->post())){
+				//get request post
+				$request=\Yii::$app->request->post();
+				$dataStatus=$request['DynamicModel']['STATUS'];
+				if ($dataStatus!=3){
+					$valStatus=$dataStatus;
+				}else{
+					$valStatus='';
+				}
+				//print_r($dataStatus);
+				//die();
+				
+				/**
+				 * DIIRECT DATA FROM MODEL SEARCH TO FUNCTION:  function fields().
+				 * ALL FUNCTION MODEL.
+				 * Untuk API array to Json sangat cocok.
+				*/
+				//$modelClassArray=SalesPromo::find()->all();							//Tidak bisa di gunakan jika sudah mengunakan  Fungsian COMMAND SQL [SELECT/WHERE/DLL]
+				$searchModel = new SalesPromoSearch(['STATUS'=>$valStatus]);					//search yang bagus untuk semua function di model.[gunakan model search untuk sql command].
+				$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+				$modelClassArray=$dataProvider->getModels();
+				$aryFieldSalesPromo=ArrayHelper::toArray($modelClassArray);				//Array Field & Function Fields
+				//print_r($aryFieldSalesPromo);
+				//die();
+							
+				$rsltExcel = Postman4ExcelBehavior::excelDataFormat($aryFieldSalesPromo);
+				$rsltExcel_ceil = $rsltExcel['excel_ceils'];
+				$excel_content = [
+					[
+						'sheet_name' => 'KALENDER PROMO',					
+						'sheet_title' => [
+							['CUST_NM','STATUS','TGL_START','TGL_END','OVERDUE','PROMO','MEKANISME','KOMPENSASI','KETERANGAN','CREATED_BY','CREATED_AT']
+						],
+						'ceils' =>$rsltExcel_ceil,
+						'freezePane' => 'A2',
+						'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
+						'headerStyle'=>[					
+							[
+								'CUST_NM' => ['align'=>'center','width'=>'32.29','valign'=>'center','wrap'=>true],
+								'STATUS' => ['align'=>'center','width'=>'9.29','valign'=>'center'],							
+								'TGL_START' =>['align'=>'center','width'=>'11.29','valign'=>'center'],
+								'TGL_END' =>['align'=>'center','width'=>'11.29','valign'=>'center'],
+								'OVERDUE' => ['align'=>'center','width'=>'10.14','valign'=>'center'],
+								'PROMO' =>['align'=>'center','width'=>'33.14','wrap'=>true,'valign'=>'center',], 
+								'MEKANISME' =>['align'=>'center','width'=>'47.14','wrap'=>true,'valign'=>'center',],
+								'KOMPENSASI' => ['align'=>'center','width'=>'47.14','wrap'=>true,'valign'=>'center',],
+								'KETERANGAN' => ['align'=>'center','width'=>'47.14','wrap'=>true,'valign'=>'center',],					
+								'CREATED_BY' => ['align'=>'center','width'=>'23.71','valign'=>'center'],						
+								'CREATED_AT' => ['align'=>'center','width'=>'20.57','valign'=>'center'],						
+								//'UPDATED_BY' => ['align'=>'center']							
+							]
+							
+						],
+						'contentStyle'=>[
+							[						
+								'CUST_NM' => ['align'=>'left',],
+								'STATUS' => ['align'=>'left'],							 
+								'TGL_START' =>['align'=>'center'],
+								'TGL_END' =>['align'=>'center'],
+								'OVERDUE' => ['align'=>'center'],
+								'PROMO' =>['align'=>'left'],
+								'MEKANISME' =>['align'=>'left'],
+								'KOMPENSASI' => ['align'=>'left'],
+								'KETERANGAN' => ['align'=>'left'],
+								'CREATED_BY' => ['align'=>'left'],						
+								'CREATED_AT' => ['align'=>'center'],						
+								//'UPDATED_BY' => ['align'=>'left']									
+							]
+						],            
+						'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+						'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
+					]
+				];
+				//$excel_file = "CustomerDataERPPilih".'-'.date('Ymd-his');
+				$excel_file = "SalesPromo";
+				//$this->export2excel($excel_content, $excel_file,1);
+				$this->export4excel($excel_content, $excel_file); 
+			}
+		}
     }
 	
 	/**

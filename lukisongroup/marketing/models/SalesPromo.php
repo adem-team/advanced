@@ -42,7 +42,7 @@ class SalesPromo extends \yii\db\ActiveRecord
         return Yii::$app->get('db_esm');
     }
 
-    /**
+	/**
      * @inheritdoc
      */
     public function rules()
@@ -71,6 +71,64 @@ class SalesPromo extends \yii\db\ActiveRecord
 			}
 		}
 	} 
+	
+	
+	//Gunakan model Search
+	//ptr.nov
+	public function fields()
+	{
+		return [
+			'CUST_NM'=>function () {
+				return $this->CUST_NM;
+			},
+			'STATUS'=>function () {
+				return $this->STATUS==0?'Deactive':($this->STATUS==1?'Aktif':($this->STATUS==2?'panding':''));
+			},
+			'TGL_START'=>function () {
+				return $this->TGL_START;
+			},
+			'TGL_END'=>function () {
+				return $this->TGL_END;
+			},			
+			'OVERDUE' => function () {
+				if($this->STATUS==1){
+					$today=date_create(\Yii::$app->formatter->asDate(date("Y-m-d"),'Y-M-d'));
+					$date2=date_create(\Yii::$app->formatter->asDate($this->TGL_END,'Y-M-d'));
+					$selisih=date_diff($today,$date2);
+					if ($today == $date2){
+						return 0;
+					}elseif($today < $date2){
+						return '-'.$selisih->d;
+					}elseif($today > $date2){
+						return '+'.$selisih->d;
+					};			
+					// $this->OVERDUE=0;
+					// $this->save();
+				}else{
+					return 0;
+				}		
+			},
+			'PROMO'=>function () {
+				return $this->PROMO;
+			},
+			'MEKANISME'=>function () {
+				return $this->MEKANISME;
+			},
+			'KOMPENSASI'=>function () {
+				return $this->KOMPENSASI;
+			},
+			'KETERANGAN'=>function () {
+				return $this->KETERANGAN;
+			},
+			'CREATED_BY'=>function () {
+				return $this->CREATED_BY;
+			},
+			'CREATED_AT'=>function () {
+				return $this->CREATED_AT;
+			},
+		];
+	} 
+	
 	
 	Public function getRunOverdue(){
 		if($this->STATUS==1){
@@ -105,7 +163,7 @@ class SalesPromo extends \yii\db\ActiveRecord
 			'KD_PARENT'=>'Customer Parent',
             'CUST_ID' => 'Customer',
             'CUST_NM' => 'Customer',
-            'PROMO' => 'Promotion Name',
+            'PROMO' => 'Promotion',
             'TGL_START' => 'Start Periode',
             'TGL_END' => 'End Periode',
             'OVERDUE' => 'Overdue',

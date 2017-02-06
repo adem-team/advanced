@@ -28,12 +28,32 @@ $(document).on('click','#salespromo-button-view', function(ehead){
 });
 
 /*
+ * SalesPromo-REview.
+*/
+$.fn.modal.Constructor.prototype.enforceFocus = function(){};	
+$(document).on('click','#salespromo-button-review', function(ehead){ 			  
+	$('#salespromo-modal-review').modal('show')
+	.find('#salespromo-modal-content-review').html('<i class=\"fa fa-2x fa-spinner fa-spin\"></i>')
+	.load(ehead.target.value);
+});
+
+/*
  * SalesPromo-Remainder.
 */
 $.fn.modal.Constructor.prototype.enforceFocus = function(){};	
 $(document).on('click','#salespromo-button-remainder', function(ehead){ 			  
 	$('#salespromo-modal-remainder').modal('show')
 	.find('#salespromo-modal-content-remainder').html('<i class=\"fa fa-2x fa-spinner fa-spin\"></i>')
+	.load(ehead.target.value);
+});
+
+/*
+ * SalesPromo-Export-Excel.
+*/
+$.fn.modal.Constructor.prototype.enforceFocus = function(){};	
+$(document).on('click','#salespromo-button-export-excel', function(ehead){ 			  
+	$('#salespromo-modal-export-excel').modal('show')
+	.find('#salespromo-modal-content-export-excel').html('<i class=\"fa fa-2x fa-spinner fa-spin\"></i>')
 	.load(ehead.target.value);
 });
 

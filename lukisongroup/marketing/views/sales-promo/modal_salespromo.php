@@ -84,6 +84,34 @@ use yii\helpers\Url;
 	}
 	
 	/*
+	 * Button - REVIEW.
+	*/
+	function tombolReview($url, $model){
+		if(getPermission()){
+			//Jika REVIEW Show maka Bisa Update/Editing.
+			if(getPermission()->BTN_REVIEW==1){
+				$title1 = Yii::t('app',' Review');
+				$options1 = [
+					'value'=>url::to(['/marketing/sales-promo/review','id'=>$model->ID]),
+					'id'=>'salespromo-button-review',
+					'class'=>"btn btn-default btn-xs",      
+					'style'=>['text-align'=>'left','width'=>'100%', 'height'=>'25px','border'=> 'none'],
+				];
+				//thin -> untuk bulet luar
+				$icon1 = '
+					<span class="fa-stack fa-xs">																	
+						<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
+						<i class="fa fa-edit fa-stack-1x" style="color:#fbfbfb"></i>
+					</span>
+				';      
+				$label1 = $icon1 . '  ' . $title1;
+				$content = Html::button($label1,$options1);		
+				return $content;
+			}
+		}
+	}
+	
+	/*
 	 * Button - REMAINDER.
 	 * BTN_PROCESS1.
 	*/	
@@ -150,6 +178,25 @@ use yii\helpers\Url;
 		return $content = Html::a($label,$url,$options);
 	}
 	
+	/*
+	 * Button - EXPORT EXCEL.
+	*/
+	function tombolExportExcel(){
+		if(getPermission()){
+			if(getPermission()->BTN_PROCESS1==1){
+				$title1 = Yii::t('app', ' Export Excel');
+				$url = Url::toRoute(['/marketing/sales-promo/export-excel']);
+				$options1 = ['value'=>$url,
+							'id'=>'salespromo-button-export-excel',
+							'class'=>"btn btn-info btn-xs"  
+				];
+				$icon1 = '<span class="fa fa-file-excel-o fa-lg"></span>';
+				$label1 = $icon1 . ' ' . $title1;
+				$content = Html::button($label1,$options1);
+				return $content;
+			}
+		}
+	}	
 	
 /**
  * ===============================
@@ -199,6 +246,25 @@ use yii\helpers\Url;
 	Modal::end();
 	
 	/*
+	 * SalesPromo - REVIEW.
+	*/
+	Modal::begin([
+		'id' => 'salespromo-modal-review',
+		'header' => '
+			<span class="fa-stack fa-xs">																	
+				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
+				<i class="fa fa-edit fa-stack-1x" style="color:#fbfbfb"></i>
+			</span><b> REVIEW CALENDAR PROMOTION</b>
+		',		
+		'size' => Modal::SIZE_LARGE,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:'.$modalHeaderColor,
+		],
+	]);
+	echo "<div id='salespromo-modal-content-review'></div>";
+	Modal::end();
+	
+	/*
 	 * SalesPromo - Remainder.
 	*/
 	Modal::begin([
@@ -215,5 +281,25 @@ use yii\helpers\Url;
 		],
 	]);
 	echo "<div id='salespromo-modal-content-remainder'></div>";
+	Modal::end();
+	
+	/*
+	 * SalesPromo - EXPORT EXCEL.
+	*/
+	$modalHeaderColor='#fbfbfb';//' rgba(74, 206, 231, 1)';
+	Modal::begin([
+		'id' => 'salespromo-modal-export-excel',
+		'header' => '
+			<span class="fa-stack fa-xs">																	
+				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
+				<i class="fa fa-file-excel-o fa-stack-1x" style="color:#fbfbfb"></i>
+			</span><b> Export to Excel</b>
+		',		
+		'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:'.$modalHeaderColor,
+		],
+	]);
+	echo "<div id='salespromo-modal-content-export-excel'></div>";
 	Modal::end();
 ?>

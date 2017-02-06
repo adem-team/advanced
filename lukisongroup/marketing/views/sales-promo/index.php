@@ -134,12 +134,12 @@ $this->params['breadcrumbs'][] = $this->title;
 					<span class="fa-stack fa-xl">
 					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
 					  <i class="fa fa-close fa-stack-1x" style="color:#ee0b0b"></i>
-					</span>','',['title'=>'Aktif']);
+					</span>','',['title'=>'Deactive']);
 				} else if ($model->STATUS == 1) {
 				  return Html::a('<span class="fa-stack fa-xl">
 					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
 					  <i class="fa fa-check fa-stack-1x" style="color:#000000"></i>
-					</span>','',['title'=>'Deactive']);
+					</span>','',['title'=>'Aktif']);
 				}	else if ($model->STATUS == 2) {
 				  return Html::a('<span class="fa-stack fa-xl">
 					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
@@ -176,14 +176,14 @@ $this->params['breadcrumbs'][] = $this->title;
 			'noWrap'=>false,
 			//gvContainHeader($align,$width,$bColor)
 			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','80px',$bColor),
-			'contentOptions'=>Yii::$app->gv->gvContainBody('center','80px',''),
+			'contentOptions'=>Yii::$app->gv->gvContainBody('left','80px',''),
 			
 		],
 		
 		//ACTION
 		[
 			'class' => 'kartik\grid\ActionColumn',
-			'template' => '{view}{edit}{deny}',
+			'template' => '{view}{edit}{reminder}{deny}',
 			'header'=>'Action',
 			'dropdown' => true,
 			'dropdownOptions'=>[
@@ -200,6 +200,9 @@ $this->params['breadcrumbs'][] = $this->title;
 				  return  tombolView($url, $model);
 				},
 				'edit' =>function($url, $model,$key){
+					return  tombolReview($url, $model);
+				},
+				'reminder' =>function($url, $model,$key){
 					return  tombolRemainder($url, $model);
 				},
 				'deny' =>function($url, $model,$key){
@@ -263,7 +266,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				  <i class="fa fa-calendar fa-stack-1x"></i>
 				</span> Promotion Calendar',  
 			'type'=>'info',
-			'before'=> tombolCreate().' '.tombolRefresh(),
+			'before'=> tombolCreate().' '.tombolRefresh().' '.tombolExportExcel(),
 			'showFooter'=>false,
 		],
 		 'floatOverflowContainer'=>true,
