@@ -98,9 +98,9 @@ class SalesPromo extends \yii\db\ActiveRecord
 					if ($today == $date2){
 						return 0;
 					}elseif($today < $date2){
-						return '-'.$selisih->d;
-					}elseif($today > $date2){
 						return '+'.$selisih->d;
+					}elseif($today > $date2){
+						return '-'.$selisih->d;
 					};			
 					// $this->OVERDUE=0;
 					// $this->save();
@@ -138,9 +138,9 @@ class SalesPromo extends \yii\db\ActiveRecord
 			if ($today == $date2){
 				return 0;
 			}elseif($today < $date2){
-				return '-'.$selisih->d;
-			}elseif($today > $date2){
 				return '+'.$selisih->d;
+			}elseif($today > $date2){
+				return '-'.$selisih->d;
 			};			
 			// $this->OVERDUE=0;
 			// $this->save();
