@@ -12,7 +12,13 @@ use kartik\widgets\TouchSpin;
 
 use lukisongroup\master\models\Customers;
 $cus_data=ArrayHelper::map(Customers::find()->where('CUST_KD = CUST_GRP')->andwhere('STATUS<>3')->all(), 'CUST_GRP','CUST_NM');
-
+	$aryStt= [
+			  ['STATUS' => 0, 'STT_NM' => 'RUNNING'],		  
+			  ['STATUS' => 1, 'STT_NM' => 'FINISH'],
+			  ['STATUS' => 2, 'STT_NM' => 'PANDING'],
+			  ['STATUS' => 3, 'STT_NM' => 'PLANING'],
+		];	
+	$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
 ?>
 
 
@@ -100,7 +106,7 @@ $cus_data=ArrayHelper::map(Customers::find()->where('CUST_KD = CUST_GRP')->andwh
 				])
 			?>		
 			<?= $form->field($model, 'STATUS')->widget(Select2::classname(), [
-					'data' =>Yii::$app->gv->gvStatusArray(),
+					'data' =>$valStt,//Yii::$app->gv->gvStatusArray(),
 					'options' => ['placeholder' => 'Pilih Status...'],
 				]);
 			?>

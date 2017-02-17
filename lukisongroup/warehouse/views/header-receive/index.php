@@ -20,8 +20,15 @@ $this->sideCorp = 'PT. Efenbi Sukses Makmur';                           /* Title
 $this->sideMenu = 'esm_warehouse';                                      /* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'ESM - Warehouse Dashboard');              /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title; 
+	
+	
+	//print_r($dataProviderPenerimaan->getModels());
+	//print_r($dataProviderReleaseRcvdHeader->getModels());
+	//print_r($dataProviderReleaseRcvdDetail->getModels());
 
-
+	$test1=$dataProviderPenerimaan->getModels();
+	//print_r(ArrayHelper::toArray($test1));
+	
 	//INCLUDE MODAL JS AND CONTENT 
 	$this->registerJs($this->render('modal_receive.js'),View::POS_READY);
 	echo $this->render('modal_receive'); //echo difinition
@@ -34,8 +41,8 @@ $this->params['breadcrumbs'][] = $this->title;
 	 * Update	: 26/01/2017
 	*/
 	$_indexRcvd=$this->render('_indexRcvd',[
-		'searchModelRcvd' => $searchModelRcvd,
-        'dataProviderRcvd' => $dataProviderRcvd,
+		'searchModelPenerimaan' => $searchModelPenerimaan,
+        'dataProviderPenerimaan' => $dataProviderPenerimaan,
 	]);
 	/**
 	 * Warehouse pengeluaran Barang.
@@ -44,10 +51,10 @@ $this->params['breadcrumbs'][] = $this->title;
 	 * Author 	: piter novian [ptr.nov@gmail.com]
 	 * Update	: 26/01/2017
 	*/
-	$_indexRelease=$this->render('_indexRelease',[
-		'searchModelRelease' => $searchModelRelease,
-		'dataProviderRelease' => $dataProviderRelease,
-	]);
+	// $_indexRelease=$this->render('_indexChar',[
+		// 'searchModelRelease' => $searchModelRelease,
+		// 'dataProviderRelease' => $dataProviderRelease,
+	// ]);
 	
 	//Tabs Items
 	$itemsEsmWh=[
@@ -64,8 +71,8 @@ $this->params['breadcrumbs'][] = $this->title;
 			'label'=>'
 				<span class="fa-stack fa-lg">
 				  <i class="fa fa-circle-thin fa-stack-2x"></i>
-				  <i class="fa fa-upload fa-stack-1x"></i>
-				</span> Release',
+				  <i class="fa fa-bar-chart fa-stack-1x"></i>
+				</span> Reporing',
 				'content'=>$_indexRelease,
 				'active'=>$tab1,
 		],

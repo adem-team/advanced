@@ -4,9 +4,17 @@ use kartik\detail\DetailView;
 use kartik\widgets\DepDrop;
 use yii\helpers\Url;
 use kartik\widgets\Select2;
+use yii\helpers\ArrayHelper;
 
-
-	$dvAttributLeft=[
+	$aryStt= [
+	  ['STATUS' => 0, 'STT_NM' => 'RUNNING'],		  
+	  ['STATUS' => 1, 'STT_NM' => 'FINISH'],
+	  ['STATUS' => 2, 'STT_NM' => 'PANDING'],
+	  ['STATUS' => 3, 'STT_NM' => 'PLANING']
+	];	
+	$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
+	
+	$drvAttributLeft=[
 		[
 			'attribute' =>'CUST_ID',
 			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
@@ -24,14 +32,47 @@ use kartik\widgets\Select2;
 		],
 		[
 			'attribute' =>'TGL_START',
-			'type'=>DetailView::INPUT_TEXT,
+			'format'=>'raw',
+			'type'=>DetailView::INPUT_DATE,
+			'widgetOptions' => [
+				'pluginOptions'=>Yii::$app->gv->gvPliginDate()
+			],
 			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
 		],
 		[
 			'attribute' =>'TGL_END',
-			'type'=>DetailView::INPUT_TEXT,
+			'format'=>'raw',
+			'type'=>DetailView::INPUT_DATE,
+			'widgetOptions' => [
+				'pluginOptions'=>Yii::$app->gv->gvPliginDate()
+			],
 			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
 		],
+		[
+			'attribute' =>'STATUS',			
+			'format'=>'raw',
+			'value'=>$model->STATUS==0?'RUNNING':($model->STATUS==1?'FINISH':($model->STATUS==2?'PANDING':'PLANING')),
+			'type'=>DetailView::INPUT_SELECT2,
+			'widgetOptions'=>[
+				'data'=>$valStt,//Yii::$app->gv->gvStatusArray(),
+				'options'=>['id'=>'status-review-id','placeholder'=>'Select ...'],
+				'pluginOptions'=>['allowClear'=>true],
+			],	
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
+		],
+		[
+			'attribute' =>'TGL_FINISH',
+			'value'=>$model->TGL_FINISH!=''?"<kbd>".\Yii::$app->formatter->asDate($model->TGL_FINISH, 'Y-m-d')."</kbd>":"",
+			'format'=>'raw',
+			'type'=>DetailView::INPUT_DATE,
+			'widgetOptions' => [
+				'pluginOptions'=>Yii::$app->gv->gvPliginDate()
+			],
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
+		],
+	];
+	
+	$drvAttributInfo=[
 		[
 			'attribute' =>'CREATED_BY',
 			'displayOnly'=>true,	
@@ -49,20 +90,24 @@ use kartik\widgets\Select2;
 			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
 		],
 		[
-			'attribute' =>'STATUS',
-			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
-			'format'=>'raw',
-			'value'=>$model->STATUS==0?'Deactive':($model->STATUS==1?'Aktif':($model->STATUS==2?'panding':'')),
-			'type'=>DetailView::INPUT_SELECT2,
-			'widgetOptions'=>[
-				'data'=>Yii::$app->gv->gvStatusArray(),
-				'options'=>['placeholder'=>'Select ...'],
-				'pluginOptions'=>['allowClear'=>true],
-			],	
-		]
+			'attribute' =>'UPDATED_BY',
+			'displayOnly'=>true,
+			'format'=>'raw', 
+            'value'=>'<kbd>'.$model->UPDATED_BY.'</kbd>',
+			'type'=>DetailView::INPUT_TEXT,
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
+		],[
+			'attribute' =>'UPDATED_AT',
+			'displayOnly'=>true,
+			'format'=>'raw', 
+            'value'=>'<kbd>'.$model->UPDATED_AT.'</kbd>',
+			'type'=>DetailView::INPUT_TEXT,
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
+		],
+		
 	];
 	
-	$dvAttributRight=[
+	$drvAttributRight=[
 		[
 			'attribute' =>'PROMO',
 			'type'=>DetailView::INPUT_TEXTAREA,
@@ -89,10 +134,10 @@ use kartik\widgets\Select2;
 		]			
 	];
 	
-	$dvLeftCalendarPromo=DetailView::widget([
+	$drvLeftCalendarPromo=DetailView::widget([
 		'id'=>'dv-review-left',
 		'model' => $model,
-		'attributes'=>$dvAttributLeft,
+		'attributes'=>$drvAttributLeft,
 		'condensed'=>true,
 		'hover'=>true,
 		'panel'=>[
@@ -109,15 +154,23 @@ use kartik\widgets\Select2;
 		'buttons2'=>'{view}{save}',		
 		'saveOptions'=>[ 
 			'id' =>'editBtn1',
-			'value'=>'/marketing/sales-promo/view?id='.$model->ID,
+			'value'=>'/marketing/sales-promo/review?id='.$model->ID,
 			'params' => ['custom_param' => true],
 		],		
 	]);
 	
-	$dvRightCalendarPromo=DetailView::widget([
+	$drvInfoCalendarPromo=DetailView::widget([
+		'id'=>'dv-review-info',
+		'model' => $model,
+		'attributes'=>$drvAttributInfo,
+		'condensed'=>true,
+		'hover'=>true
+	]);
+	
+	$drvRightCalendarPromo=DetailView::widget([
 		'id'=>'dv-review-right',
 		'model' => $model,
-		'attributes'=>$dvAttributRight,
+		'attributes'=>$drvAttributRight,
 		'condensed'=>true,
 		'hover'=>true,
 		'panel'=>[
@@ -134,7 +187,7 @@ use kartik\widgets\Select2;
 		'buttons2'=>'{view}{save}',		
 		'saveOptions'=>[ 
 			'id' =>'editBtn2',
-			'value'=>'/marketing/sales-promo/view?id='.$model->ID,
+			'value'=>'/marketing/sales-promo/review?id='.$model->ID,
 			'params' => ['custom_param' => true],
 		],		
 	]);
@@ -164,10 +217,11 @@ use kartik\widgets\Select2;
 <div style="height:100%;font-family: verdana, arial, sans-serif ;font-size: 8pt">
 	<div class="row" >
 		<div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">
-			<?=$dvLeftCalendarPromo ?>
+			<?=$drvLeftCalendarPromo ?>
+			<?=$drvInfoCalendarPromo ?>
 		</div>
 		<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">
-			<?=$dvRightCalendarPromo ?>
+			<?=$drvRightCalendarPromo ?>
 		</div>
 	</div>
 </div>

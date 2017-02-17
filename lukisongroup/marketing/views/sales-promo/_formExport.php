@@ -7,10 +7,11 @@ use yii\helpers\Url;
 use kartik\widgets\Select2;
 
 	$aryStt= [
-		  ['STATUS' => 0, 'STT_NM' => 'DISABLE'],		  
-		  ['STATUS' => 1, 'STT_NM' => 'ENABLE'],
+		  ['STATUS' => 0, 'STT_NM' => 'RUNNING'],		  
+		  ['STATUS' => 1, 'STT_NM' => 'FINISH'],
 		  ['STATUS' => 2, 'STT_NM' => 'PANDING'],
-		  ['STATUS' => 3, 'STT_NM' => 'ALL'],
+		  ['STATUS' => 3, 'STT_NM' => 'PLANING'],
+		  ['STATUS' => 4, 'STT_NM' => 'ALL STATUS'],
 	];	
 	$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
 ?>

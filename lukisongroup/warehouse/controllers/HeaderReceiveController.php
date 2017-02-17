@@ -6,10 +6,16 @@ use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use lukisongroup\warehouse\models\RcvdReleaseHeader;
+use lukisongroup\warehouse\models\RcvdReleaseHeaderSearch;
+use lukisongroup\warehouse\models\RcvdReleaseDetail;
+use lukisongroup\warehouse\models\RcvdReleaseDetailSearch;
+
+use lukisongroup\warehouse\models\HeaderPenerimaanSearch;
 use lukisongroup\warehouse\models\HeaderDetailRcvd;
-use lukisongroup\warehouse\models\HeaderDetailRcvdSearch;
-use lukisongroup\warehouse\models\HeaderDetailRelease;
-use lukisongroup\warehouse\models\HeaderDetailReleaseSearch;
+// use lukisongroup\warehouse\models\HeaderDetailRcvdSearch;
+// use lukisongroup\warehouse\models\HeaderDetailRelease;
+// use lukisongroup\warehouse\models\HeaderDetailReleaseSearch;
 
 
 /**
@@ -64,19 +70,43 @@ class HeaderReceiveController extends Controller
      */
     public function actionIndex()
     {
-		//RCVD
-		$searchModelRcvd = new HeaderDetailRcvdSearch();
-        $dataProviderRcvd = $searchModelRcvd->search(Yii::$app->request->queryParams);
-
-    	//RELEASE
-		$searchModelRelease = new HeaderDetailReleaseSearch();
-        $dataProviderRelease = $searchModelRelease->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModelRcvd' => $searchModelRcvd,
-            'dataProviderRcvd' => $dataProviderRcvd,
-			'searchModelRelease' => $searchModelRelease,
-            'dataProviderRelease' => $dataProviderRelease,
+    	/**
+		  * HEADER SEARCH RELEASE & RCVD.
+		  * MODEL & MODEL SEARCH.
+		  * UPDATE 	: 08/02/2017
+		  * Author	: ptr.nov@gmail.com.
+		*/
+		$searchModelReleaseRcvdHeader = new RcvdReleaseHeaderSearch();
+        $dataProviderReleaseRcvdHeader = $searchModelReleaseRcvdHeader->search(Yii::$app->request->queryParams);
+		
+		/**
+		  * DETAIL SEARCH RELEASE & RCVD.
+		  * MODEL & MODEL SEARCH.
+		  * UPDATE 	: 08/02/2017
+		  * Author	: ptr.nov@gmail.com.
+		*/
+		$searchModelReleaseRcvdDetail = new RcvdReleaseDetailSearch();
+        $dataProviderReleaseRcvdDetail = $searchModelReleaseRcvdDetail->search(Yii::$app->request->queryParams);
+		
+		/**
+		  * MANIPULASI DETAIL->HEADER RCVD
+		  * Many To ONE (DETAI TO HEADER).
+		  * UPDATE 	: 08/02/2017
+		  * Author	: ptr.nov@gmail.com.
+		*/
+		$searchModelPenerimaan = new HeaderPenerimaanSearch();
+        $dataProviderPenerimaan = $searchModelPenerimaan->search(Yii::$app->request->queryParams);
+		
+        return $this->render('index', [			
+			// HEADER SEARCH RELEASE & RCVD.
+			'searchModelReleaseRcvdHeader'=>$searchModelReleaseRcvdHeader,
+			'dataProviderReleaseRcvdHeader'=>$dataProviderReleaseRcvdHeader,
+			// DETAIL SEARCH RELEASE & RCVD.
+			'searchModelReleaseRcvdDetail'=>$searchModelReleaseRcvdDetail,
+			'dataProviderReleaseRcvdDetail'=>$dataProviderReleaseRcvdDetail,
+			//MANIPULASI DETAIL->HEADER RCVD
+         	'dataProviderPenerimaan'=>$dataProviderPenerimaan,
+			'searchModelPenerimaan'=>$searchModelPenerimaan,
         ]);
     }
 

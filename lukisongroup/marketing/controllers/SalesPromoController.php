@@ -38,7 +38,7 @@ class SalesPromoController extends Controller
 				'class' => Postman4ExcelBehavior::className(),
 				'downloadPath'=>Yii::getAlias('@lukisongroup').'/export/tmp/',
 				'widgetType'=>'download',
-				'columnAutoSize'=>false,
+				//'columnAutoSize'=>false,
 			], 
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -139,11 +139,10 @@ class SalesPromoController extends Controller
      * @return mixed
      */
     public function actionView($id)
-    {
-		
-        return $this->renderAjax('view', [
-            'model' => $this->findModel($id),
-        ]);
+    {		
+		return $this->renderAjax('view', [
+			'model' => $this->findModel($id),
+		]);		
     }
 	
 	/**
@@ -153,11 +152,100 @@ class SalesPromoController extends Controller
      */
     public function actionReview($id)
     {
+		$model = $this->findModel($id);
+		//$model->scenario = "create";
+		if ($model->load(Yii::$app->request->post())){
+			$request=\Yii::$app->request->post();
+			$dataStatus=$request['SalesPromo']['STATUS'];
+			if($dataStatus==1){
+				$model->TGL_FINISH = date("Y-m-d");  //STATUS=FINISH, SET TGL_FINISH.
+			}			
+			$model->UPDATED_AT = date("Y-m-d H:i:s");
+			$model->UPDATED_BY =  Yii::$app->user->identity->username;
+			if($model->save()){
+				return $this->redirect(['/marketing/sales-promo','id'=>$id]);
+			};
+		}else{
+			return $this->renderAjax('review', [
+			'model' => $this->findModel($id),
+			]);
+		}
 		
-        return $this->renderAjax('review', [
-            'model' => $this->findModel($id),
-        ]);
+        // return $this->renderAjax('review', [
+            // 'model' => $this->findModel($id),
+        // ]);
     }
+	public function actionTest(){
+		$ary=[
+			'0'=>['nama'=>'piter','tempat'=>'palembang','alamat'=>'duta bintaro'],			
+			'1'=>['nama'=>'syaka','tempat'=>'tangerang','alamat'=>'regensi'],
+			'2'=>['nama'=>'piter','tempat'=>'palembang','alamat'=>'duta bintaro'],
+			'3'=>['nama'=>'syaka','tempat'=>'tangerang','alamat'=>'regensi'],		
+			'4'=>['nama'=>'piter','tempat'=>'tangerang','alamat'=>'regensi'],			
+			'5'=>['nama'=>'syaka','tempat'=>'palembang','alamat'=>'regensi']			
+		];
+		$data=$this->full2sorting($ary,['tempat']);
+		print_r($data);// ArrayHelper::toArray($ary);
+		
+	}
+	
+	/**
+	 * 2 Sorting for Grouping.
+	 * author	: ptr.nov@gmail.com
+	 * update	: 14/02/2017
+	*/
+	private function full2sorting($array,$column=[]){
+		foreach($column as $rows =>$value){
+			$val[]=$value;		
+		}
+		if(count($column)==1){
+			$arySortColumn0=self::array_sorting($array,$val[0], SORT_ASC);
+		}elseif(count($column)==2){	
+			$arySortColumn0=self::array_sorting($array,$val[0], SORT_ASC);
+			$arySortColumn1=self::array_sorting($array,$val[1], SORT_ASC);
+			array_multisort($arySortColumn0,SORT_ASC,$arySortColumn1,SORT_ASC,$array);
+		}
+		return $arySortColumn0;
+	}
+	
+	private function array_sorting($array, $on, $order=SORT_ASC)
+	{
+		$new_array = array();
+		$sortable_array = array();
+
+		if (count($array) > 0) {
+			foreach ($array as $k => $v) {
+				if (is_array($v)) {
+					foreach ($v as $k2 => $v2) {
+						if ($k2 == $on) {
+							$sortable_array[$k] = $v2;
+						}
+					}
+				} else {
+					$sortable_array[$k] = $v;
+				}
+			}
+
+			switch ($order) {
+				case SORT_ASC:
+					asort($sortable_array);
+				break;
+				case SORT_DESC:
+					arsort($sortable_array);
+				break;
+			}
+
+			foreach ($sortable_array as $k => $v) {
+				$new_array[$k] = $array[$k];
+			}
+		}
+	
+		//refresh row increment.
+		foreach ($new_array as $row =>$value){
+			$reversIncrement[]=$value;			
+		}
+		return $reversIncrement;
+	}
 	
 	/**
      * Dynamic Model model.
@@ -165,6 +253,7 @@ class SalesPromoController extends Controller
      */
     public function actionExportExcel()
     {
+		
 		$model = new \yii\base\DynamicModel(['STATUS']);
 		$model->addRule(['STATUS'], 'required');
 		
@@ -183,7 +272,7 @@ class SalesPromoController extends Controller
 				//get request post
 				$request=\Yii::$app->request->post();
 				$dataStatus=$request['DynamicModel']['STATUS'];
-				if ($dataStatus!=3){
+				if ($dataStatus!=4){
 					$valStatus=$dataStatus;
 				}else{
 					$valStatus='';
@@ -198,59 +287,74 @@ class SalesPromoController extends Controller
 				*/
 				//$modelClassArray=SalesPromo::find()->all();							//Tidak bisa di gunakan jika sudah mengunakan  Fungsian COMMAND SQL [SELECT/WHERE/DLL]
 				$searchModel = new SalesPromoSearch(['STATUS'=>$valStatus]);					//search yang bagus untuk semua function di model.[gunakan model search untuk sql command].
-				$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+				$dataProvider = $searchModel->searchPrint(Yii::$app->request->queryParams);
 				$modelClassArray=$dataProvider->getModels();
 				$aryFieldSalesPromo=ArrayHelper::toArray($modelClassArray);				//Array Field & Function Fields
-				//print_r($aryFieldSalesPromo);
-				//die();
+				/* $adpPromo=new ArrayDataProvider([
+					'allModels'=>$aryFieldSalesPromo,//Yii::$app->arrayBantuan->array_sort($aryFieldSalesPromo, 'CUST_NM', SORT_ASC),
+					'sort'=>[
+						'attributes'=>['CUST_NM']
+					]
+				]); */
+				$arySort=Yii::$app->arrayBantuan->array_sort($aryFieldSalesPromo, 'CUST_NM', SORT_ASC);
+				
+				// print_r($f);
+				 // die();
 							
 				$rsltExcel = Postman4ExcelBehavior::excelDataFormat($aryFieldSalesPromo);
 				$rsltExcel_ceil = $rsltExcel['excel_ceils'];
+				$rsltExcel1 = Postman4ExcelBehavior::excelDataFormat(['0'=>['A'=>'12','B'=>'123']]);
+				$rsltExcel_ceil1 = $rsltExcel1['excel_ceils'];
 				$excel_content = [
 					[
 						'sheet_name' => 'KALENDER PROMO',					
 						'sheet_title' => [
-							['CUST_NM','STATUS','TGL_START','TGL_END','OVERDUE','PROMO','MEKANISME','KOMPENSASI','KETERANGAN','CREATED_BY','CREATED_AT']
+							//['asd'],
+							['CUST_NM','STATUS','PERIODE_START','PERIODE_END','DATE_FINISH','OVERDUE','PROMO','MEKANISME','KOMPENSASI','KETERANGAN','CREATED_BY','CREATED_AT']
 						],
-						'ceils' =>$rsltExcel_ceil,
-						'freezePane' => 'A2',
+						'ceils' =>$aryFieldSalesPromo,
+						'freezePane' => 'A2',						
+						'columnGroup'=>['CUST_NM'],
+						'autoSize'=>true,
 						'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
 						'headerStyle'=>[					
 							[
-								'CUST_NM' => ['align'=>'center','width'=>'32.29','valign'=>'center','wrap'=>true],
-								'STATUS' => ['align'=>'center','width'=>'9.29','valign'=>'center'],							
-								'TGL_START' =>['align'=>'center','width'=>'11.29','valign'=>'center'],
-								'TGL_END' =>['align'=>'center','width'=>'11.29','valign'=>'center'],
-								'OVERDUE' => ['align'=>'center','width'=>'10.14','valign'=>'center'],
-								'PROMO' =>['align'=>'center','width'=>'33.14','wrap'=>true,'valign'=>'center',], 
-								'MEKANISME' =>['align'=>'center','width'=>'47.14','wrap'=>true,'valign'=>'center',],
-								'KOMPENSASI' => ['align'=>'center','width'=>'47.14','wrap'=>true,'valign'=>'center',],
-								'KETERANGAN' => ['align'=>'center','width'=>'47.14','wrap'=>true,'valign'=>'center',],					
-								'CREATED_BY' => ['align'=>'center','width'=>'23.71','valign'=>'center'],						
-								'CREATED_AT' => ['align'=>'center','width'=>'20.57','valign'=>'center'],						
+								'CUST_NM' => ['font-size'=>'8','align'=>'center','valign'=>'center','wrap'=>true],
+								'STATUS' => ['font-size'=>'8','align'=>'center','width'=>'8.14','valign'=>'center'],							
+								'PERIODE_START' =>['font-size'=>'8','align'=>'center','width'=>'11','valign'=>'center'],
+								'PERIODE_END' =>['font-size'=>'8','align'=>'center','width'=>'11','valign'=>'center'],
+								'DATE_FINISH' =>['font-size'=>'8','align'=>'center','width'=>'11','valign'=>'center'],
+								'OVERDUE' => ['font-size'=>'8','align'=>'center','width'=>'7','valign'=>'center'],
+								'PROMO' =>['font-size'=>'8','align'=>'center','width'=>'29.29','wrap'=>true,'valign'=>'center',], 
+								'MEKANISME' =>['font-size'=>'8','align'=>'center','width'=>'34.14','wrap'=>true,'valign'=>'center',],
+								'KOMPENSASI' => ['font-size'=>'8','align'=>'center','width'=>'34.14','wrap'=>true,'valign'=>'center',],
+								'KETERANGAN' => ['font-size'=>'8','align'=>'center','width'=>'34.14','wrap'=>true,'valign'=>'center',],					
+								'CREATED_BY' => ['font-size'=>'8','align'=>'center','width'=>'14.86','valign'=>'center'],						
+								'CREATED_AT' => ['font-size'=>'8','align'=>'center','width'=>'15','valign'=>'center'],						
 								//'UPDATED_BY' => ['align'=>'center']							
-							]
-							
+							]							
 						],
 						'contentStyle'=>[
 							[						
-								'CUST_NM' => ['align'=>'left',],
-								'STATUS' => ['align'=>'left'],							 
-								'TGL_START' =>['align'=>'center'],
-								'TGL_END' =>['align'=>'center'],
-								'OVERDUE' => ['align'=>'center'],
-								'PROMO' =>['align'=>'left'],
-								'MEKANISME' =>['align'=>'left'],
-								'KOMPENSASI' => ['align'=>'left'],
-								'KETERANGAN' => ['align'=>'left'],
-								'CREATED_BY' => ['align'=>'left'],						
-								'CREATED_AT' => ['align'=>'center'],						
+								'CUST_NM' => ['font-size'=>'8','align'=>'left',],
+								'STATUS' => ['font-size'=>'8','align'=>'left'],							 
+								'PERIODE_START' =>['font-size'=>'8','align'=>'center'],
+								'PERIODE_END' =>['font-size'=>'8','align'=>'center'],
+								'TGL_FINISH' =>['font-size'=>'8','align'=>'center'],
+								'OVERDUE' => ['font-size'=>'8','align'=>'center'],
+								'PROMO' =>['font-size'=>'8','align'=>'left'],
+								'MEKANISME' =>['font-size'=>'8','align'=>'left'],
+								'KOMPENSASI' => ['font-size'=>'8','align'=>'left'],
+								'KETERANGAN' => ['font-size'=>'8','align'=>'left'],
+								'CREATED_BY' => ['font-size'=>'8','align'=>'left'],						
+								'CREATED_AT' => ['font-size'=>'8','align'=>'center'],						
 								//'UPDATED_BY' => ['align'=>'left']									
 							]
 						],            
 						'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
 						'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 					]
+					
 				];
 				//$excel_file = "CustomerDataERPPilih".'-'.date('Ymd-his');
 				$excel_file = "SalesPromo";

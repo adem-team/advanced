@@ -22,6 +22,13 @@ $this->sideMenu = 'esm_marketing';                                      /* kd_me
 $this->title = Yii::t('app', 'ESM - Marketing Dashboard');              /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;  
 
+	$aryStt= [
+			  ['STATUS' => 0, 'STT_NM' => 'RUNNING'],		  
+			  ['STATUS' => 1, 'STT_NM' => 'FINISH'],
+			  ['STATUS' => 2, 'STT_NM' => 'PANDING'],
+			  ['STATUS' => 3, 'STT_NM' => 'PLANING'],
+		];	
+	$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
 	//INCLUDE MODAL JS AND CONTENT 
 	$this->registerJs($this->render('modal_salespromo.js'),View::POS_READY);
 	echo $this->render('modal_salespromo'); //echo difinition
@@ -71,14 +78,14 @@ $this->params['breadcrumbs'][] = $this->title;
 			'mergeHeader'=>false,
 			'noWrap'=>false,
 			//gvContainHeader($align,$width,$bColor)
-			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','200',$bColor),
-			'contentOptions'=>Yii::$app->gv->gvContainBody('left','200',''),
+			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','200px',$bColor),
+			'contentOptions'=>Yii::$app->gv->gvContainBody('left','200px',''),
 			
 		],
 		//PERIODE TGL START
 		[
 			'attribute'=>'TGL_START',
-			'label'=>'Periode Start',
+			//'label'=>'Periode Start',
 			'filterType'=>GridView::FILTER_DATE,
 			'filterWidgetOptions'=>[
 				'pluginOptions' =>Yii::$app->gv->gvPliginDate(),
@@ -96,13 +103,39 @@ $this->params['breadcrumbs'][] = $this->title;
 		//PERIODE TGL END
 		[
 			'attribute'=>'TGL_END',
-			'label'=>'Periode End',
+			//'label'=>'Periode End',
 			'filterType'=>GridView::FILTER_DATE,
 			'filterWidgetOptions'=>[
 				'pluginOptions' =>Yii::$app->gv->gvPliginDate(),
 				'layout'=>'{picker}{remove}{input}'
 			],
 			'filter'=>true,
+			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px'),
+			'hAlign'=>'right',
+			'vAlign'=>'middle',
+			'mergeHeader'=>false,
+			'noWrap'=>false,
+			//gvContainHeader($align,$width,$bColor)
+			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50px',$bColor),
+			'contentOptions'=>Yii::$app->gv->gvContainBody('center','50px',''),			
+		],
+		//PERIODE TGL FINISH
+		[
+			'attribute'=>'TGL_FINISH',
+			//'label'=>'Finish',
+			'filterType'=>GridView::FILTER_DATE,
+			'filterWidgetOptions'=>[
+				'pluginOptions' =>Yii::$app->gv->gvPliginDate(),
+				'layout'=>'{picker}{remove}{input}'
+			],
+			'filter'=>true,
+			'value'=>function($model){
+				if ($model->TGL_FINISH!=''){
+					return $model->TGL_FINISH;
+				}else{
+					return '';
+				}
+			},
 			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px'),
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
@@ -121,7 +154,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				'pluginOptions' =>Yii::$app->gv->gvPliginSelect2(),
 			],
 			'filterInputOptions'=>['placeholder'=>'Select'],
-			'filter'=>Yii::$app->gv->gvStatusArray(),
+			'filter'=>$valStt,//Yii::$app->gv->gvStatusArray(),
 			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px'),
 			'hAlign'=>'right',
 			'vAlign'=>'top',
@@ -133,18 +166,23 @@ $this->params['breadcrumbs'][] = $this->title;
 				  return Html::a('
 					<span class="fa-stack fa-xl">
 					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
-					  <i class="fa fa-close fa-stack-1x" style="color:#ee0b0b"></i>
-					</span>','',['title'=>'Deactive']);
+					  <i class="fa fa-check fa-stack-1x" style="color:#0f39ab"></i>
+					</span>','',['title'=>'Running']);
 				} else if ($model->STATUS == 1) {
 				  return Html::a('<span class="fa-stack fa-xl">
 					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
-					  <i class="fa fa-check fa-stack-1x" style="color:#000000"></i>
-					</span>','',['title'=>'Aktif']);
+					  <i class="fa fa-close fa-stack-1x" style="color:#ee0b0b"></i>
+					</span>','',['title'=>'Finish']);
 				}	else if ($model->STATUS == 2) {
 				  return Html::a('<span class="fa-stack fa-xl">
 					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
-					  <i class="fa fa-clock-o fa-stack-1x" style="color:#ee0b0b"></i>
-					</span>','',['title'=>'panding']);
+					  <i class="fa fa-pause fa-stack-1x" style="color:#ee0b0b"></i>
+					</span>','',['title'=>'Panding']);
+				}	else if ($model->STATUS == 3) {
+				  return Html::a('<span class="fa-stack fa-xl">
+					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
+					  <i class="fa fa-thumb-tack fa-stack-1x" style="color:#0f39ab"></i>
+					</span>','',['title'=>'Planing']);
 				}
 			},
 			//gvContainHeader($align,$width,$bColor)
@@ -166,7 +204,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'contentOptions'=>Yii::$app->gv->gvContainBody('center','50px',''),
 			
 		],//CREATED_BY
-		[
+		/* [
 			'attribute'=>'CREATED_BY',
 			'label'=>'Create.By',
 			'filter'=>false,
@@ -178,7 +216,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','80px',$bColor),
 			'contentOptions'=>Yii::$app->gv->gvContainBody('left','80px',''),
 			
-		],
+		], */
 		
 		//ACTION
 		[
@@ -187,7 +225,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'header'=>'Action',
 			'dropdown' => true,
 			'dropdownOptions'=>[
-				'class'=>'pull-right dropup',
+				'class'=>'pull-right dropdown',
 				'style'=>'width:60px;background-color:#E6E6FA'				
 			],
 			'dropdownButton'=>[
@@ -200,7 +238,9 @@ $this->params['breadcrumbs'][] = $this->title;
 				  return  tombolView($url, $model);
 				},
 				'edit' =>function($url, $model,$key){
-					return  tombolReview($url, $model);
+					if($model->STATUS!=1){ //Jika sudah close tidak bisa di edit.
+						return  tombolReview($url, $model);
+					}					
 				},
 				'reminder' =>function($url, $model,$key){
 					return  tombolRemainder($url, $model);
@@ -269,8 +309,8 @@ $this->params['breadcrumbs'][] = $this->title;
 			'before'=> tombolCreate().' '.tombolRefresh().' '.tombolExportExcel(),
 			'showFooter'=>false,
 		],
-		 'floatOverflowContainer'=>true,
-		// 'floatHeader'=>true,
+		'floatOverflowContainer'=>true,
+		'floatHeader'=>true,
 	]); 
 	
 ?>

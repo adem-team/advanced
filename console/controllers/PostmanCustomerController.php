@@ -144,7 +144,7 @@ class PostmanCustomerController extends Controller
 		$cusAllDataProvider= new ArrayDataProvider([
 			'key' => 'ID',
 			'allModels'=>Yii::$app->db_esm->createCommand("	
-				SELECT a.CUST_KD,
+				SELECT a.CUST_KD as CUST_ID,
 						(CASE WHEN g.KD_ALIAS!='' THEN g.KD_ALIAS ELSE 'Kosong' END) as DIST_ID,
 						a.CUST_NM,
 						(CASE WHEN b.CUST_KTG_NM!='' THEN b.CUST_KTG_NM ELSE 'Kosong' END) as TYPE_NM,		
@@ -280,9 +280,7 @@ class PostmanCustomerController extends Controller
 		
 		/*SOURCE NEW  CUSTOMER*/
 		$excel_dataNEW= Postman4ExcelBehavior::excelDataFormat($aryCusNewDataProvider);      
-        $excel_ceilsNEW = $excel_dataNEW['excel_ceils'];
-		
-		
+        $excel_ceilsNEW = $excel_dataNEW['excel_ceils'];		
 		
 		$excel_content = [
 			[
@@ -290,40 +288,42 @@ class PostmanCustomerController extends Controller
                 'sheet_title' => [
 					['CUST_ID','DIST_ID','CUST_NM','TYPE','LAYER','GEO.MAINTAIN','ALAMAT','PROVINSI','KOTA','KODE.POS','PHONE','CONTACT.PERSON'],
 				],
-			    'ceils' => $excel_ceilsAll,
+			    'ceils' => $aryCusAllDataProvider,//excel_ceilsAll,
                 'freezePane' => 'A2',
+				'columnGroup'=>['CUST_ID'],
+				'autoSize'=>false,
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
 				'headerStyle'=>[					
 					[
-						'CUST_ID' =>['align'=>'center'],
-						'DIST_ID' =>['align'=>'center'],
-						'CUST_NM' => ['align'=>'center'],
-						'TYPE' => ['align'=>'center'],
-						'LAYER' => ['align'=>'center'],
-						'GEO.MAINTAIN' =>['align'=>'center'],
-						'ALAMAT' => ['align'=>'center'],
-						'PROVINSI' => ['align'=>'center'], 
-						'KOTA' => ['align'=>'center'],
-						'KODE.POS' => ['align'=>'center'],
-						'PHONE' => ['align'=>'center'],
-						'CONTACT.PERSON' => ['align'=>'center']
+						'CUST_ID' =>['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'DIST_ID' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'CUST_NM' => ['font-size'=>'8','width'=>'28','valign'=>'center','align'=>'center','wrap'=>true],
+						'TYPE' => ['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'LAYER' => ['font-size'=>'8','width'=>'6','valign'=>'center','align'=>'center'],
+						'GEO.MAINTAIN' =>['font-size'=>'8','width'=>'25','valign'=>'center','align'=>'center'],
+						'ALAMAT' => ['font-size'=>'8','width'=>'60','valign'=>'center','align'=>'center','wrap'=>true],
+						'PROVINSI' => ['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'], 
+						'KOTA' => ['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						'KODE.POS' => ['font-size'=>'8','width'=>'7','valign'=>'center','align'=>'center'],
+						'PHONE' => ['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'CONTACT.PERSON' => ['font-size'=>'8','width'=>'16','valign'=>'center','align'=>'center']
 					]
 						
 				],
 				'contentStyle'=>[
 					[						
-						'CUST_ID' =>['align'=>'center'],
-						'DIST_ID' =>['align'=>'center'],
-						'CUST_NM' => ['align'=>'left'],
-						'TYPE' => ['align'=>'left'],
-						'LAYER' => ['align'=>'center'],
-						'GEO.MAINTAIN' =>['align'=>'left'],
-						'ALAMAT' => ['align'=>'left'],
-						'PROVINSI' => ['align'=>'left'], 
-						'KOTA' => ['align'=>'left'],
-						'KODE.POS' => ['align'=>'center'],
-						'PHONE' => ['align'=>'left'],
-						'CONTACT.PERSON' => ['align'=>'left']
+						'CUST_ID' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'DIST_ID' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'CUST_NM' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'TYPE' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'LAYER' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'GEO.MAINTAIN' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'ALAMAT' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'PROVINSI' => ['font-size'=>'8','valign'=>'center','align'=>'left'], 
+						'KOTA' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'KODE.POS' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'PHONE' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'CONTACT.PERSON' => ['font-size'=>'8','valign'=>'center','align'=>'left']
 					]
 				],
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
@@ -339,35 +339,35 @@ class PostmanCustomerController extends Controller
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerStyle'=>[					
 					[
-						'CUST_ID' =>['align'=>'center'],
-						'DIST_ID' =>['align'=>'center'],
-						'CUST_NM' => ['align'=>'center'],
-						'TYPE' => ['align'=>'center'],
-						'LAYER' => ['align'=>'center'],
-						'GEO.MAINTAIN' =>['align'=>'center'],
-						'ALAMAT' => ['align'=>'center'],
-						'PROVINSI' => ['align'=>'center'], 
-						'KOTA' => ['align'=>'center'],
-						'KODE.POS' => ['align'=>'center'],
-						'PHONE' => ['align'=>'center'],
-						'CONTACT.PERSON' => ['align'=>'center']
+						'CUST_ID' =>['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'DIST_ID' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'CUST_NM' => ['font-size'=>'8','width'=>'28','valign'=>'center','align'=>'center','wrap'=>true],
+						'TYPE' => ['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'LAYER' => ['font-size'=>'8','width'=>'6','valign'=>'center','align'=>'center'],
+						'GEO.MAINTAIN' =>['font-size'=>'8','width'=>'25','valign'=>'center','align'=>'center'],
+						'ALAMAT' => ['font-size'=>'8','width'=>'60','valign'=>'center','align'=>'center','wrap'=>true],
+						'PROVINSI' => ['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'], 
+						'KOTA' => ['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						'KODE.POS' => ['font-size'=>'8','width'=>'7','valign'=>'center','align'=>'center'],
+						'PHONE' => ['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'CONTACT.PERSON' => ['font-size'=>'8','width'=>'16','valign'=>'center','align'=>'center']
 					]
 						
 				],
 				'contentStyle'=>[
 					[						
-						'CUST_ID' =>['align'=>'center'],
-						'DIST_ID' =>['align'=>'center'],
-						'CUST_NM' => ['align'=>'left'],
-						'TYPE' => ['align'=>'left'],
-						'LAYER' => ['align'=>'center'],
-						'GEO.MAINTAIN' =>['align'=>'left'],
-						'ALAMAT' => ['align'=>'left'],
-						'PROVINSI' => ['align'=>'left'], 
-						'KOTA' => ['align'=>'left'],
-						'KODE.POS' => ['align'=>'center'],
-						'PHONE' => ['align'=>'left'],
-						'CONTACT.PERSON' => ['align'=>'left']
+						'CUST_ID' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'DIST_ID' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'CUST_NM' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'TYPE' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'LAYER' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'GEO.MAINTAIN' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'ALAMAT' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'PROVINSI' => ['font-size'=>'8','valign'=>'center','align'=>'left'], 
+						'KOTA' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'KODE.POS' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'PHONE' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'CONTACT.PERSON' => ['font-size'=>'8','valign'=>'center','align'=>'left']
 					]
 				],
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
@@ -383,35 +383,35 @@ class PostmanCustomerController extends Controller
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerStyle'=>[					
 					[
-						'CUST_ID' =>['align'=>'center'],
-						'DIST_ID' =>['align'=>'center'],
-						'CUST_NM' => ['align'=>'center'],
-						'TYPE' => ['align'=>'center'],
-						'LAYER' => ['align'=>'center'],
-						'GEO.MAINTAIN' =>['align'=>'center'],
-						'ALAMAT' => ['align'=>'center'],
-						'PROVINSI' => ['align'=>'center'], 
-						'KOTA' => ['align'=>'center'],
-						'KODE.POS' => ['align'=>'center'],
-						'PHONE' => ['align'=>'center'],
-						'CONTACT.PERSON' => ['align'=>'center']
+						'CUST_ID' =>['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'DIST_ID' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'CUST_NM' => ['font-size'=>'8','width'=>'28','valign'=>'center','align'=>'center','wrap'=>true],
+						'TYPE' => ['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'LAYER' => ['font-size'=>'8','width'=>'6','valign'=>'center','align'=>'center'],
+						'GEO.MAINTAIN' =>['font-size'=>'8','width'=>'25','valign'=>'center','align'=>'center'],
+						'ALAMAT' => ['font-size'=>'8','width'=>'60','valign'=>'center','align'=>'center','wrap'=>true],
+						'PROVINSI' => ['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'], 
+						'KOTA' => ['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						'KODE.POS' => ['font-size'=>'8','width'=>'7','valign'=>'center','align'=>'center'],
+						'PHONE' => ['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'CONTACT.PERSON' => ['font-size'=>'8','width'=>'16','valign'=>'center','align'=>'center']
 					]
 						
 				],
 				'contentStyle'=>[
 					[						
-						'CUST_ID' =>['align'=>'center'],
-						'DIST_ID' =>['align'=>'center'],
-						'CUST_NM' => ['align'=>'left'],
-						'TYPE' => ['align'=>'left'],
-						'LAYER' => ['align'=>'center'],
-						'GEO.MAINTAIN' =>['align'=>'left'],
-						'ALAMAT' => ['align'=>'left'],
-						'PROVINSI' => ['align'=>'left'], 
-						'KOTA' => ['align'=>'left'],
-						'KODE.POS' => ['align'=>'center'],
-						'PHONE' => ['align'=>'left'],
-						'CONTACT.PERSON' => ['align'=>'left']
+						'CUST_ID' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'DIST_ID' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'CUST_NM' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'TYPE' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'LAYER' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'GEO.MAINTAIN' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'ALAMAT' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'PROVINSI' => ['font-size'=>'8','valign'=>'center','align'=>'left'], 
+						'KOTA' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'KODE.POS' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'PHONE' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'CONTACT.PERSON' => ['font-size'=>'8','valign'=>'center','align'=>'left']
 					]
 				],
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
@@ -427,35 +427,35 @@ class PostmanCustomerController extends Controller
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerStyle'=>[					
 					[
-						'CUST_ID' =>['align'=>'center'],
-						'DIST_ID' =>['align'=>'center'],
-						'CUST_NM' => ['align'=>'center'],
-						'TYPE' => ['align'=>'center'],
-						'LAYER' => ['align'=>'center'],
-						'GEO.MAINTAIN' =>['align'=>'center'],
-						'ALAMAT' => ['align'=>'center'],
-						'PROVINSI' => ['align'=>'center'], 
-						'KOTA' => ['align'=>'center'],
-						'KODE.POS' => ['align'=>'center'],
-						'PHONE' => ['align'=>'center'],
-						'CONTACT.PERSON' => ['align'=>'center']
+						'CUST_ID' =>['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'DIST_ID' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'CUST_NM' => ['font-size'=>'8','width'=>'28','valign'=>'center','align'=>'center','wrap'=>true],
+						'TYPE' => ['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'LAYER' => ['font-size'=>'8','width'=>'6','valign'=>'center','align'=>'center'],
+						'GEO.MAINTAIN' =>['font-size'=>'8','width'=>'25','valign'=>'center','align'=>'center'],
+						'ALAMAT' => ['font-size'=>'8','width'=>'60','valign'=>'center','align'=>'center','wrap'=>true],
+						'PROVINSI' => ['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'], 
+						'KOTA' => ['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						'KODE.POS' => ['font-size'=>'8','width'=>'7','valign'=>'center','align'=>'center'],
+						'PHONE' => ['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'CONTACT.PERSON' => ['font-size'=>'8','width'=>'16','valign'=>'center','align'=>'center']
 					]
 						
 				],
 				'contentStyle'=>[
 					[						
-						'CUST_ID' =>['align'=>'center'],
-						'DIST_ID' =>['align'=>'center'],
-						'CUST_NM' => ['align'=>'left'],
-						'TYPE' => ['align'=>'left'],
-						'LAYER' => ['align'=>'center'],
-						'GEO.MAINTAIN' =>['align'=>'left'],
-						'ALAMAT' => ['align'=>'left'],
-						'PROVINSI' => ['align'=>'left'], 
-						'KOTA' => ['align'=>'left'],
-						'KODE.POS' => ['align'=>'center'],
-						'PHONE' => ['align'=>'left'],
-						'CONTACT.PERSON' => ['align'=>'left']
+						'CUST_ID' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'DIST_ID' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'CUST_NM' => ['font-size'=>'8','valign'=>'center','align'=>'left','wrap'=>true],
+						'TYPE' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'LAYER' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'GEO.MAINTAIN' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'ALAMAT' => ['font-size'=>'8','valign'=>'center','align'=>'left','wrap'=>true],
+						'PROVINSI' => ['font-size'=>'8','valign'=>'center','align'=>'left'], 
+						'KOTA' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'KODE.POS' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'PHONE' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'CONTACT.PERSON' => ['font-size'=>'8','valign'=>'center','align'=>'left']
 					]
 				],
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
@@ -471,39 +471,38 @@ class PostmanCustomerController extends Controller
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
 				'headerStyle'=>[					
 					[
-						'DELETE.BY'=>['align'=>'center'],
-						'DELETE.AT'=>['align'=>'center'],
-						'CUST.ID' =>['align'=>'center'],
-						'DIST.ID' =>['align'=>'center'],
-						'CUST.NM' =>['align'=>'center'],
-						'TYPE' =>['align'=>'center'],
-						'LAYER' =>['align'=>'center'],
-						'GEO.MAINTAIN' =>['align'=>'center'],
-						'ALAMAT' =>['align'=>'center'],
-						'PROVINSI' =>['align'=>'center'], 
-						'KOTA' =>['align'=>'center'],
-						'KODE.POS' =>['align'=>'center'],
-						'PHONE' =>['align'=>'center'],
-						'CONTACT.PERSON' =>['align'=>'center']
-					]
-						
+						'DELETE.BY'=>['font-size'=>'8','width'=>'16','valign'=>'center','align'=>'center'],
+						'DELETE.AT'=>['font-size'=>'8','width'=>'15','valign'=>'center','align'=>'center'],
+						'CUST.ID' =>['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'DIST.ID' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						'CUST.NM' =>['font-size'=>'8','width'=>'28','valign'=>'center','align'=>'center','wrap'=>true],
+						'TYPE' =>['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'LAYER' =>['font-size'=>'8','width'=>'6','valign'=>'center','align'=>'center'],
+						'GEO.MAINTAIN' =>['font-size'=>'8','width'=>'25','valign'=>'center','align'=>'center'],
+						'ALAMAT' =>['font-size'=>'8','width'=>'60','valign'=>'center','align'=>'center','wrap'=>true],
+						'PROVINSI' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'], 
+						'KOTA' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						'KODE.POS' =>['font-size'=>'8','width'=>'7','valign'=>'center','align'=>'center'],
+						'PHONE' =>['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'CONTACT.PERSON' =>['font-size'=>'8','width'=>'16','valign'=>'center','align'=>'center']
+					]						
 				],
 				'contentStyle'=>[
 					[						
-						'DELETE.BY'=>['align'=>'center'],
-						'DELETE.AT'=>['align'=>'center'],
-						'CUST.ID' =>['align'=>'center'],
-						'DIST.ID' =>['align'=>'center'],
-						'CUST.NM' =>['align'=>'center'],
-						'TYPE' =>['align'=>'center'],
-						'LAYER' =>['align'=>'center'],
-						'GEO.MAINTAIN' =>['align'=>'center'],
-						'ALAMAT' =>['align'=>'center'],
-						'PROVINSI' =>['align'=>'center'], 
-						'KOTA' =>['align'=>'center'],
-						'KODE.POS' =>['align'=>'center'],
-						'PHONE' =>['align'=>'center'],
-						'CONTACT.PERSON' =>['align'=>'center']
+						'DELETE.BY'=>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'DELETE.AT'=>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'CUST.ID' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'DIST.ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'CUST.NM' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'TYPE' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'LAYER' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'GEO.MAINTAIN' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'ALAMAT' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'PROVINSI' =>['font-size'=>'8','valign'=>'center','align'=>'left'], 
+						'KOTA' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'KODE.POS' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'PHONE' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'CONTACT.PERSON' =>['font-size'=>'8','valign'=>'center','align'=>'left']
 					]
 				],            
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
@@ -519,38 +518,38 @@ class PostmanCustomerController extends Controller
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerStyle'=>[					
 					[
-						'UPDATE.BY'=>['align'=>'center'],
-						'UPDATE.AT'=>['align'=>'center'],
-						'CUST.ID' =>['align'=>'center'],
-						'DIST.ID' =>['align'=>'center'],
-						'CUST.NM' =>['align'=>'center'],
-						'TYPE' =>['align'=>'center'],
-						'LAYER' =>['align'=>'center'],
-						'GEO.MAINTAIN' =>['align'=>'center'],
-						'ALAMAT' =>['align'=>'center'],
-						'PROVINSI' =>['align'=>'center'], 
-						'KOTA' =>['align'=>'center'],
-						'KODE.POS' =>['align'=>'center'],
-						'PHONE' =>['align'=>'center'],
-						'CONTACT.PERSON' =>['align'=>'center']
+						'UPDATE.BY'=>['font-size'=>'8','width'=>'16','valign'=>'center','align'=>'center'],
+						'UPDATE.AT'=>['font-size'=>'8','width'=>'15','valign'=>'center','align'=>'center'],
+						'CUST.ID' =>['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'DIST.ID' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						'CUST.NM' =>['font-size'=>'8','width'=>'28','valign'=>'center','align'=>'center','wrap'=>true],
+						'TYPE' =>['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'LAYER' =>['font-size'=>'8','width'=>'6','valign'=>'center','align'=>'center'],
+						'GEO.MAINTAIN' =>['font-size'=>'8','width'=>'25','valign'=>'center','align'=>'center'],
+						'ALAMAT' =>['font-size'=>'8','width'=>'60','valign'=>'center','align'=>'center','wrap'=>true],
+						'PROVINSI' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'], 
+						'KOTA' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						'KODE.POS' =>['font-size'=>'8','width'=>'7','valign'=>'center','align'=>'center'],
+						'PHONE' =>['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'CONTACT.PERSON' =>['font-size'=>'8','width'=>'16','valign'=>'center','align'=>'center']
 					]						
 				],
 				'contentStyle'=>[
 					[						
-						'UPDATE.BY'=>['align'=>'center'],
-						'UPDATE.AT'=>['align'=>'center'],
-						'CUST.ID' =>['align'=>'center'],
-						'DIST.ID' =>['align'=>'center'],
-						'CUST.NM' =>['align'=>'center'],
-						'TYPE' =>['align'=>'center'],
-						'LAYER' =>['align'=>'center'],
-						'GEO.MAINTAIN' =>['align'=>'center'],
-						'ALAMAT' =>['align'=>'center'],
-						'PROVINSI' =>['align'=>'center'], 
-						'KOTA' =>['align'=>'center'],
-						'KODE.POS' =>['align'=>'center'],
-						'PHONE' =>['align'=>'center'],
-						'CONTACT.PERSON' =>['align'=>'center']
+						'UPDATE.BY'=>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'UPDATE.AT'=>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'CUST.ID' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'DIST.ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'CUST.NM' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'TYPE' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'LAYER' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'GEO.MAINTAIN' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'ALAMAT' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'PROVINSI' =>['font-size'=>'8','valign'=>'center','align'=>'left'], 
+						'KOTA' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'KODE.POS' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'PHONE' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'CONTACT.PERSON' =>['font-size'=>'8','valign'=>'center','align'=>'left']
 					]
 				],
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
@@ -564,22 +563,42 @@ class PostmanCustomerController extends Controller
 				'ceils' => $excel_ceilsNEW,
                 'freezePane' => 'A2',
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
-                'headerColumnCssClass' => [
-					 'CREATE.AT' => Postman4ExcelBehavior::getCssClass('header'),
-					 'CREATE.BY' => Postman4ExcelBehavior::getCssClass('header'),
-					 'CUST_KD' => Postman4ExcelBehavior::getCssClass('header'),
-                     'DIST_ID' => Postman4ExcelBehavior::getCssClass('header'),
-                     'CUST_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                     'TYPE_NM' => Postman4ExcelBehavior::getCssClass('header'),
-                     'LAYER_GRADE' => Postman4ExcelBehavior::getCssClass('header'),
-                     'GEO_MAINTAIN' => Postman4ExcelBehavior::getCssClass('header'),
-                     'ALAMAT' => Postman4ExcelBehavior::getCssClass('header'),
-					 'PROVINCE' => Postman4ExcelBehavior::getCssClass('header'),              
-                     'CITY_NAME' => Postman4ExcelBehavior::getCssClass('header'),  
-                     'POSTAL_CODE' => Postman4ExcelBehavior::getCssClass('header'),  
-                     'PHONE' => Postman4ExcelBehavior::getCssClass('header'),
-                     'CP' => Postman4ExcelBehavior::getCssClass('header')          
-                ],
+				'headerStyle'=>[					
+					[
+						'CREATE.BY'=>['font-size'=>'8','width'=>'16','valign'=>'center','align'=>'center'],
+						'CREATE.AT'=>['font-size'=>'8','width'=>'15','valign'=>'center','align'=>'center'],
+						'CUST.ID' =>['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'DIST.ID' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						'CUST.NM' =>['font-size'=>'8','width'=>'28','valign'=>'center','align'=>'center','wrap'=>true],
+						'TYPE' =>['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'LAYER' =>['font-size'=>'8','width'=>'6','valign'=>'center','align'=>'center'],
+						'GEO.MAINTAIN' =>['font-size'=>'8','width'=>'25','valign'=>'center','align'=>'center'],
+						'ALAMAT' =>['font-size'=>'8','width'=>'60','valign'=>'center','align'=>'center','wrap'=>true],
+						'PROVINSI' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'], 
+						'KOTA' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						'KODE.POS' =>['font-size'=>'8','width'=>'7','valign'=>'center','align'=>'center'],
+						'PHONE' =>['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'CONTACT.PERSON' =>['font-size'=>'8','width'=>'16','valign'=>'center','align'=>'center']
+					]						
+				],
+				'contentStyle'=>[
+					[						
+						'CREATE.BY'=>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'CREATE.AT'=>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'CUST.ID' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'DIST.ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'CUST.NM' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'TYPE' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'LAYER' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'GEO.MAINTAIN' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'ALAMAT' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'PROVINSI' =>['font-size'=>'8','valign'=>'center','align'=>'left'], 
+						'KOTA' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'KODE.POS' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'PHONE' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'CONTACT.PERSON' =>['font-size'=>'8','valign'=>'center','align'=>'left']
+					]
+				],
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
                'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],

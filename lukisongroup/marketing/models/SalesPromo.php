@@ -45,13 +45,13 @@ class SalesPromo extends \yii\db\ActiveRecord
 	/**
      * @inheritdoc
      */
-    public function rules()
+    public function rules() 
     {
         return [
 			[['TGL_START','TGL_END','PROMO','STATUS','CUST_ID','OVERDUE'],'required','on'=>'create'],
 			[['TGL_START','TGL_END'],'validasiTgl','on'=>'create'],
 			[['PROMO', 'MEKANISME', 'KOMPENSASI', 'KETERANGAN'], 'string'],
-            [['TGL_START', 'TGL_END', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
+            [['TGL_START', 'TGL_END','TGL_FINISH', 'CREATED_AT', 'UPDATED_AT'], 'safe'],
             [['OVERDUE', 'STATUS'], 'integer'],
             [['CUST_ID'], 'string', 'max' => 50],
             [['CUST_NM'], 'string', 'max' => 255],
@@ -82,16 +82,19 @@ class SalesPromo extends \yii\db\ActiveRecord
 				return $this->CUST_NM;
 			},
 			'STATUS'=>function () {
-				return $this->STATUS==0?'Deactive':($this->STATUS==1?'Aktif':($this->STATUS==2?'panding':''));
+				return $this->STATUS==0?'RUNNING':($this->STATUS==1?'FINISH':($this->STATUS==2?'PANDING':'PLANING'));
 			},
-			'TGL_START'=>function () {
+			'PERIODE_START'=>function () {
 				return $this->TGL_START;
 			},
-			'TGL_END'=>function () {
+			'PERIODE_END'=>function () {
 				return $this->TGL_END;
+			},	
+			'DATE_FINISH'=>function () {
+				return $this->TGL_FINISH;
 			},			
 			'OVERDUE' => function () {
-				if($this->STATUS==1){
+				if($this->STATUS!=1){
 					$today=date_create(\Yii::$app->formatter->asDate(date("Y-m-d"),'Y-M-d'));
 					$date2=date_create(\Yii::$app->formatter->asDate($this->TGL_END,'Y-M-d'));
 					$selisih=date_diff($today,$date2);
@@ -131,7 +134,7 @@ class SalesPromo extends \yii\db\ActiveRecord
 	
 	
 	Public function getRunOverdue(){
-		if($this->STATUS==1){
+		if($this->STATUS!=1){
 			$today=date_create(\Yii::$app->formatter->asDate(date("Y-m-d"),'Y-M-d'));
 			$date2=date_create(\Yii::$app->formatter->asDate($this->TGL_END,'Y-M-d'));
 			$selisih=date_diff($today,$date2);
@@ -164,8 +167,9 @@ class SalesPromo extends \yii\db\ActiveRecord
             'CUST_ID' => 'Customer',
             'CUST_NM' => 'Customer',
             'PROMO' => 'Promotion',
-            'TGL_START' => 'Start Periode',
-            'TGL_END' => 'End Periode',
+            'TGL_START' => 'Periode Start',
+            'TGL_END' => 'Periode End',
+            'TGL_FINISH' => 'Date Finish',
             'OVERDUE' => 'Overdue',
             'MEKANISME' => 'Mekanisme',
             'KOMPENSASI' => 'Kompensasi',

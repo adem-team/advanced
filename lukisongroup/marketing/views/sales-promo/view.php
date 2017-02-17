@@ -9,17 +9,18 @@ use kartik\widgets\Select2;
 	$dvAttributLeft=[
 		[
 			'attribute' =>'CUST_ID',
-			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
-		],
-		[
-			'attribute' =>'CUST_NM',
-			'type'=>DetailView::INPUT_TEXT,
-			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
+			'displayOnly'=>true,	
+			'format'=>'raw', 
+            'value'=>'<kbd>'.$model->CUST_ID.'</kbd>',
 		],
 		[
 			'attribute' =>'CUST_NM',
 			'type'=>DetailView::INPUT_TEXTAREA,
-			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
+			'displayOnly'=>true,	
+			'format'=>'raw', 
+            //'value'=>'<kbd>'.$model->CUST_NM.'</kbd>',
 		],
 		[
 			'attribute' =>'TGL_START',
@@ -32,6 +33,23 @@ use kartik\widgets\Select2;
 			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
 		],
 		[
+			'attribute' =>'STATUS',
+			'type'=>DetailView::INPUT_TEXT,
+			'value'=>$model->STATUS==0?'RUNNING':($model->STATUS==1?'FINISH':($model->STATUS==2?'PANDING':'PLANING')),
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
+			
+		],
+		[
+			'attribute' =>'TGL_FINISH',
+			'format'=>'raw',
+			'type'=>DetailView::INPUT_TEXT,
+			'value'=>$model->TGL_FINISH!=''?"<kbd>".\Yii::$app->formatter->asDate($model->TGL_FINISH, 'Y-m-d')."</kbd>":"",			
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
+		],
+	];
+	
+	$dvAttributInfo=[
+		[
 			'attribute' =>'CREATED_BY',
 			'type'=>DetailView::INPUT_TEXT,
 			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
@@ -42,17 +60,15 @@ use kartik\widgets\Select2;
 			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
 		],
 		[
-			'attribute' =>'STATUS',
-			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
-			'format'=>'raw',
-			'value'=>$model->STATUS==0?'Deactive':($model->STATUS==1?'Aktif':($model->STATUS==2?'panding':'')),
-			'type'=>DetailView::INPUT_SELECT2,
-			'widgetOptions'=>[
-				'data'=>Yii::$app->gv->gvStatusArray(),
-				'options'=>['placeholder'=>'Select ...'],
-				'pluginOptions'=>['allowClear'=>true],
-			],	
-		]
+			'attribute' =>'UPDATED_BY',
+			'type'=>DetailView::INPUT_TEXT,
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
+		],[
+			'attribute' =>'UPDATED_AT',
+			'type'=>DetailView::INPUT_TEXT,
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
+		],
+		
 	];
 	
 	$dvAttributRight=[
@@ -97,6 +113,15 @@ use kartik\widgets\Select2;
 		'buttons1'=>'',	
 	]);
 	
+	$dvInfoCalendarPromo=DetailView::widget([
+		'id'=>'dv-view-info',
+		'model' => $model,
+		'attributes'=>$dvAttributInfo,
+		'condensed'=>true,
+		'hover'=>true,
+		'buttons1'=>'',	
+	]);
+	
 	$dvRightCalendarPromo=DetailView::widget([
 		'id'=>'dv-view-right',
 		'model' => $model,
@@ -120,6 +145,7 @@ use kartik\widgets\Select2;
 	<div class="row" >
 		<div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">
 			<?=$dvLeftCalendarPromo ?>
+			<?=$dvInfoCalendarPromo ?>
 		</div>
 		<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">
 			<?=$dvRightCalendarPromo ?>

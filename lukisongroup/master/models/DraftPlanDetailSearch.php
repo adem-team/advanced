@@ -50,7 +50,7 @@ class DraftPlanDetailSearch extends DraftPlanDetail
     public function search($params)
     {
         //$query = DraftPlanDetail::find()->orderBy(['TGL'=>SORT_ASC,'SCDL_GROUP'=>SORT_ASC,]);
-        $query = DraftPlanDetail::find()->where('STATUS<>2 AND STATUS<>3')->groupBy(['TGL','SCDL_GROUP','CUST_ID'])->orderBy(['TGL'=>SORT_ASC,'SCDL_GROUP'=>SORT_ASC]);
+        $query = DraftPlanDetail::find()->where('STATUS<>2 AND STATUS<>3 AND YEAR(TGL)=2017')->groupBy(['TGL','SCDL_GROUP','CUST_ID'])->orderBy(['TGL'=>SORT_ASC,'SCDL_GROUP'=>SORT_ASC]);
         //$query = DraftPlanDetail::find()->where('STATUS<>2')->orderBy(['TGL'=>SORT_ASC]);
 
         // add conditions that should always apply here
@@ -88,6 +88,7 @@ class DraftPlanDetailSearch extends DraftPlanDetail
 
         $query->andFilterWhere(['like', 'CUST_ID', $this->custNm])
            // ->andFilterWhere(['like', 'USER_ID', $this->USER_ID])
+            //->andFilterWhere(['like', 'TGL', '%2016'])
             ->andFilterWhere(['like', 'NOTE', $this->NOTE])
             ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY]);

@@ -575,8 +575,27 @@ use lukisongroup\master\models\Distributor;
 						),						
 			'showFooter'=>false,
 		],
+		//'resizableColumns'=>true,
 		'floatOverflowContainer'=>true,
-		'floatHeader'=>true,
+		'floatHeader'=>GridView::FILTER_POS_FOOTER,
 	]);  
 ?>
+
 <?=$gvDataAllGudang?>
+
+<?php
+$this->registerJs("
+	/**
+	 * EVENT TOGLE MENU SIDEBAR.
+	 * author	: piter.nov@gmail.com.
+	 * update	: 17/02/2017
+	*/
+	$(document).ready(function(){
+		$('body').on('expanded.pushMenu collapsed.pushMenu', function(e) {
+			//console.log('ok');
+			$.pjax.reload({container:'#gv-data-all-gudang'});
+		});
+	});
+	   
+",$this::POS_READY);
+?>

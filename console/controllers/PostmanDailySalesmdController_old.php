@@ -7,7 +7,6 @@ use yii\base\DynamicModel;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\Request;
-//use yii\console\Request;
 use yii\helpers\Json;
 use yii\data\ArrayDataProvider;
 use yii\console\Controller;			// Untuk console 
@@ -17,9 +16,7 @@ use yii\filters\VerbFilter;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use ptrnov\postman4excel\Postman4ExcelBehavior;
-
 use lukisongroup\master\models\CustomercallTimevisitSearch;
-use lukisongroup\salesmd\models\RekapStockVisitSearch;
 
 class PostmanDailySalesmdController extends Controller
 {
@@ -31,7 +28,7 @@ class PostmanDailySalesmdController extends Controller
 				//'downloadPath'=>Yii::getAlias('@lukisongroup').'/cronjob/',
 				'downloadPath'=>'/var/www/backup/salesmd/excel/',
 				'widgetType'=>'CUSTOMPATH',
-				//'columnAutoSize'=>true,
+				'columnAutoSize'=>true,
 			], 
 			'verbs' => [
                 'class' => VerbFilter::className(),
@@ -42,9 +39,6 @@ class PostmanDailySalesmdController extends Controller
         ];
     }
 	
-	// function actionIndex(){
-		 // Yii::$app->response->format = Response::FORMAT_JSON;
-	// }
 	/*
 	 * EXPORT DATA CUSTOMER TO EXCEL
 	 * export_data
@@ -54,23 +48,48 @@ class PostmanDailySalesmdController extends Controller
 		$x=date('N', strtotime(date("Y-m-d")));		
 		if ($x!=2 or $x!=7){
 			$tglIn=date("Y-m-d");//'2016-09-07';
-			//$tglIn='2016-10-27';		
+			//$tglIn='2016-10-27';
+			//DAILY REPORT INVENTORY SALES
+			$dailySalesReport= new ArrayDataProvider([
+				'key' => 'ID',
+				'allModels'=>Yii::$app->db_esm->createCommand("	
+					# x1 = Schadule Detail; x2 = Sales Order; x3 = customer;x4 = barang; x5 = Visit Memo; x6 = Alias customer; x7 = Alias barang; x8 = USER PROFILE
+					SELECT x1.TGL,
+				x8.NM_FIRST,
+				x1.CUST_ID AS CUST_ID_ESM,
+				x6.KD_ALIAS AS CUST_ID_DISTRIBUTOR,
+				x1.CUST_NM,
+				x2.KD_BARANG AS KD_BARANG_ESM, 
+				x7.KD_ALIAS As ID_BARANG_DISTRIBUTOR,
+				x4.NM_BARANG, 
+						SUM(CASE WHEN x2.SO_TYPE=5 THEN (CASE WHEN  x2.SO_QTY<>-1 THEN x2.SO_QTY ELSE 0 END) ELSE 0 END) as STOCK,
+						SUM(CASE WHEN x2.SO_TYPE=8 THEN (CASE WHEN  x2.SO_QTY<>-1 THEN x2.SO_QTY ELSE 0 END) ELSE 0 END) as RETURN_INV,
+						SUM(CASE WHEN x2.SO_TYPE=9 THEN (CASE WHEN  x2.SO_QTY<>-1 THEN x2.SO_QTY ELSE 0 END) ELSE 0 END) as REQUEST_INV,
+						SUM(CASE WHEN x2.SO_TYPE=6 THEN (CASE WHEN  x2.SO_QTY<>-1 THEN x2.SO_QTY ELSE 0 END) ELSE 0 END) as SELL_IN,
+						SUM(CASE WHEN x2.SO_TYPE=7 THEN (CASE WHEN  x2.SO_QTY<>-1 THEN x2.SO_QTY ELSE 0 END) ELSE 0 END) as SELL_OUT,				
+						x5.ISI_MESSAGES
+						FROM c0002rpt_cc_time x1 INNER JOIN so_t2 x2 ON  x2.TGL=x1.TGL AND x2.CUST_KD=x1.CUST_ID 
+						LEFT JOIN b0001 x4 on x4.KD_BARANG=x2.KD_BARANG		
+						LEFT JOIN c0014 x5 on x5.TGL=x1.TGL AND x5.KD_CUSTOMER=x1.CUST_ID AND x5.ID_USER=x1.USER_ID
+						LEFT JOIN c0002 x6 on x6.KD_CUSTOMERS=x1.CUST_ID
+						LEFT JOIN b0002 x7 on x7.KD_BARANG=x2.KD_BARANG
+						LEFT JOIN dbm_086.user_profile x8 on x8.ID_USER=x1.USER_ID
+						WHERE  x1.TGL='".$tglIn."' AND x1.USER_ID NOT IN ('61','62')
+						GROUP BY x1.CUST_ID,x2.KD_BARANG	
+						ORDER BY x1.USER_ID,x1.CUST_ID
+				")->queryAll(),
+			]);	
+			$apDailySalesReport=$dailySalesReport->allModels;
+			$excel_DailySalesReport = Postman4ExcelBehavior::excelDataFormat($apDailySalesReport);
+			$excel_ceilsDailySalesReport = $excel_DailySalesReport['excel_ceils'];
 			
-			/**
-			 * SALE MD -  DAILY REPORT SALES QUALITY TIME.
-			 * Author 	: ptr.nov@gmail.com.
-			 * Update	: 16/02/2017.
-			 * TABEL	: sot2_rekap_salesmd_stock.
-			 * PLSQL	: 
-			 * Query	: sot2_rekap_salesmd_stock.
-			 * PR		: REQUEST_INV harus menjadi sales Order.
-			*/
+			// DAILY REPORT SALES QUALITY TIME  
 			$dailySalesQt= new ArrayDataProvider([
 				'key' => 'ID',
 				'allModels'=>Yii::$app->db_esm->createCommand("
 					#call ERP_CUSTOMER_VISIT_CRONJOB_kwalitas_time('ALL_HEAD2','55','2016-08-18')
 					SELECT 
-						SALES_NM AS SALESMD,TGL,
+						TGL,SALES_NM,
 						CUST_ID,CUST_NM,	
 						ABSEN_MASUK,ABSEN_KELUAR,	
 						CUST_CHKIN AS CHEKIN, CUST_CHKOUT AS CHECKOUT,LIVE_TIME AS VISIT_TIME, JRK_TEMPUH AS DISTANCE,
@@ -79,16 +98,15 @@ class PostmanDailySalesmdController extends Controller
 						(CASE WHEN STS_CASE=0 THEN 'PLAN' ELSE 'CASE' END) as SCDL_EVENT,
 						(CASE WHEN STS_CASE_PIC='' THEN 'SYSTEM' ELSE STS_CASE_PIC END) AS AUTHORIZED 
 					FROM c0002rpt_cc_time WHERE TGL='".$tglIn."' AND USER_ID NOT IN ('61','62')
-					#FROM c0002rpt_cc_time WHERE TGL='2017-02-13' AND USER_ID NOT IN ('61','62')
 					ORDER BY USER_ID,CUST_CHKIN,CUST_CHKOUT
 				")->queryAll(),
 			]);				
 			$apSalesQT=$dailySalesQt->allModels;
-			// $excel_DailySalesQT = Postman4ExcelBehavior::excelDataFormat($apSalesQT);
-			// $excel_ceilsSalesQT = $excel_DailySalesQT['excel_ceils'];
+			$excel_DailySalesQT = Postman4ExcelBehavior::excelDataFormat($apSalesQT);
+			$excel_ceilsSalesQT = $excel_DailySalesQT['excel_ceils'];
 			
 			// DAILY REPORT EXPIRED DATE 
-			/* $dailySalesExpired= new ArrayDataProvider([
+			$dailySalesExpired= new ArrayDataProvider([
 				'allModels'=>Yii::$app->db_esm->createCommand("
 					SELECT 
 							DATE_FORMAT(x1.TGL_KJG,'%Y-%m-%d') AS TGL_KJG,
@@ -112,150 +130,110 @@ class PostmanDailySalesmdController extends Controller
 					GROUP BY x1.DATE_EXPIRED,x1.BRG_ID,x1.CUST_ID
 					ORDER BY x1.USER_ID,x1.CUST_ID,x1.BRG_ID,x1.DATE_EXPIRED
 				")->queryAll(),
-			]);	 */			
+			]);				
 			$apSalesExpired=$dailySalesExpired->allModels;
 			$excel_DailySalesExpired = Postman4ExcelBehavior::excelDataFormat($apSalesExpired);
 			$excel_ceilsSalesExpired = $excel_DailySalesExpired['excel_ceils'];
 			
-			/**
-			 * SALE MD - DAILY VISIT STOCK.
-			 * Author 	: ptr.nov@gmail.com.
-			 * Update	: 16/02/2017.
-			 * TABEL	: sot2_rekap_salesmd_stock.
-			 * PLSQL	: 
-			 * Query	: sot2_rekap_salesmd_stock.
-			 * PR		: REQUEST_INV harus menjadi sales Order.
-			*/
-			//DAILY VISIT STOCK.
-			$dailySalesReport= new ArrayDataProvider([
-				'key' => 'ID',
-				'allModels'=>Yii::$app->db_esm->createCommand("	
-					# x1 = Schadule Detail; x2 = Sales Order; x3 = customer;x4 = barang; x5 = Visit Memo; x6 = Alias customer; x7 = Alias barang; x8 = USER PROFILE
-					SELECT 
-				x8.NM_FIRST AS SALESMD,
-				x1.TGL,
-				x1.CUST_ID AS CUST_ID_ESM,
-				x6.KD_ALIAS AS CUST_ID_DISTRIBUTOR,
-				x1.CUST_NM,
-				x2.KD_BARANG AS KD_BARANG_ESM, 
-				x7.KD_ALIAS As ID_BARANG_DISTRIBUTOR,
-				x4.NM_BARANG, 
-						SUM(CASE WHEN x2.SO_TYPE=5 THEN (CASE WHEN  x2.SO_QTY<>-1 THEN x2.SO_QTY ELSE 0 END) ELSE 0 END) as STOCK,
-						SUM(CASE WHEN x2.SO_TYPE=8 THEN (CASE WHEN  x2.SO_QTY<>-1 THEN x2.SO_QTY ELSE 0 END) ELSE 0 END) as RETURN_INV,
-						SUM(CASE WHEN x2.SO_TYPE=9 THEN (CASE WHEN  x2.SO_QTY<>-1 THEN x2.SO_QTY ELSE 0 END) ELSE 0 END) as REQUEST_INV,
-						SUM(CASE WHEN x2.SO_TYPE=6 THEN (CASE WHEN  x2.SO_QTY<>-1 THEN x2.SO_QTY ELSE 0 END) ELSE 0 END) as SELL_IN,
-						SUM(CASE WHEN x2.SO_TYPE=7 THEN (CASE WHEN  x2.SO_QTY<>-1 THEN x2.SO_QTY ELSE 0 END) ELSE 0 END) as SELL_OUT,				
-						x5.ISI_MESSAGES
-						FROM c0002rpt_cc_time x1 INNER JOIN so_t2 x2 ON  x2.TGL=x1.TGL AND x2.CUST_KD=x1.CUST_ID 
-						LEFT JOIN b0001 x4 on x4.KD_BARANG=x2.KD_BARANG		
-						LEFT JOIN c0014 x5 on x5.TGL=x1.TGL AND x5.KD_CUSTOMER=x1.CUST_ID AND x5.ID_USER=x1.USER_ID
-						LEFT JOIN c0002 x6 on x6.KD_CUSTOMERS=x1.CUST_ID
-						LEFT JOIN b0002 x7 on x7.KD_BARANG=x2.KD_BARANG
-						LEFT JOIN dbm_086.user_profile x8 on x8.ID_USER=x1.USER_ID
-						#WHERE  x1.TGL='2017-02-13' AND x1.USER_ID NOT IN ('61','62')
-						WHERE x1.USER_ID NOT IN ('61','62')
-						GROUP BY x1.CUST_ID,x2.KD_BARANG	
-						ORDER BY x1.USER_ID,x1.CUST_ID
-				")->queryAll(),
-			]);	
-			$apDailySalesReport=$dailySalesReport->allModels;
-			$excel_DailySalesReport = Postman4ExcelBehavior::excelDataFormat($apDailySalesReport);
-			$excel_ceilsDailySalesReport = $excel_DailySalesReport['excel_ceils'];
-			
-			/**
-			 * SALE MD - YEARLY VISIT STOCK.
-			 * Author 	: ptr.nov@gmail.com.
-			 * Update	: 16/02/2017.
-			 * TABEL	: sot2_rekap_salesmd_stock.
-			 * PLSQL	: 
-			 * Query	: sot2_rekap_salesmd_stock.
-			 * PR		: Summary SO,Frekwensi SO, max. Stock, Min Stock, AVG Stock, .
-			*/
-			$searchModelRekap = new RekapStockVisitSearch();
-			$dataProviderRekap = $searchModelRekap->search($params);
-			$modelFieldRekap=$dataProviderRekap->getModels();		
-			$aryFieldRekap=ArrayHelper::toArray($modelFieldRekap);
-			$headerColumn1=[
-				'SALESMAN' => ['font-size'=>'8','align'=>'center','width'=>'12','valign'=>'center','wrap'=>true],
-				'CUSTOMER_KD' => ['font-size'=>'8','align'=>'center','width'=>'14','valign'=>'center','wrap'=>true],
-				'CUSTOMER' => ['font-size'=>'8','align'=>'center','width'=>'28','valign'=>'center','wrap'=>true],
-				'SKU_ID' => ['font-size'=>'8','align'=>'center','width'=>'17','valign'=>'center','wrap'=>true],
-				'SKU' => ['font-size'=>'8','align'=>'center','width'=>'24','valign'=>'center','wrap'=>true],
-				'YEAR' => ['font-size'=>'8','align'=>'center','width'=>'5','valign'=>'center','wrap'=>true],										
-			];	
-			$headerRow1=[						
-				'SALESMAN' => ['font-size'=>'8','align'=>'left'],
-				'CUSTOMER_KD' => ['font-size'=>'8','align'=>'center'],
-				'CUSTOMER' => ['font-size'=>'8','align'=>'left'],
-				'SKU_ID' => ['font-size'=>'8','align'=>'center'],
-				'SKU' => ['font-size'=>'8','align'=>'left'],
-				'YEAR' => ['font-size'=>'8','align'=>'center'],
-			];
-			
-			for($h=0;$h<=53;$h++){
-				//Column
-				$addHeaderColumn=['w'.$h=>['font-size'=>'8','align'=>'center','width'=>'4.5','valign'=>'center']];				
-				$headerColumn=arrayHelper::merge($headerColumn,$headerColumn1,$addHeaderColumn);
-				//Rows			
-				$addHeaderRows=['w'.$h=>['font-size'=>'8','align'=>'center']];
-				$headerRow=arrayHelper::merge($headerRow,$headerRow1,$addHeaderRows);
-			}
-			
-			// print_r($headerColumn);
-			// die();
-			
-			$excel_content = [				
-				[	//SALE MD - DAILY REPORT SALES QUALITY TIME.
-					'sheet_name' => 'DAILY REPORT QUALITY TIME',
+			$excel_content = [
+				  [ 	// DAILY REPORT INVENTORY SALES 
+					'sheet_name' => 'DAILY REPORT INVENTORY',
 					'sheet_title' => [
-						['SALESMD','DATE','CUSTOMERS.ID','CUSTOMERS','START.ABSENSI','END.ABSENSI','CHECK.IN','CHECK.OUT','VISIT.TIME','DISTANCE','STATUS','AREA','SCDL.EVENT','SCDL.AUTHORIZED']
-					],					
-					'ceils' => $apSalesQT,
+						['TGL','SALESMD','CUST_ID_ESM','CUST_ID_DIST','CUST_NM','KD_BARANG_ESM','ID_BARANG_DIST','NM_BARANG',
+						'STOCK/Pcs','RETURE/Pcs','REQUEST.ORDER/Pcs','SELL.IN/Pcs','SELL.OUT/Pcs','NOTE']
+					],
+					'ceils' => $excel_ceilsDailySalesReport,
 					'freezePane' => 'A2',
-					'autoSize'=>true,
-					'columnGroup'=>['SALESMD'],	
-					'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
+					'headerColor' => Postman4ExcelBehavior::getCssClass("header"),            
 					'headerStyle'=>[					
 						[
-							'SALESMD' =>['font-size'=>'8','width'=>'13','align'=>'center'], 
-							'DATE' => ['font-size'=>'8','width'=>'9','align'=>'center'],
-							'CUSTOMERS.ID' =>['font-size'=>'8','width'=>'13','align'=>'center'],
-							'CUSTOMERS' =>['font-size'=>'8','width'=>'28','align'=>'center'],
-							'START.ABSENSI' => ['font-size'=>'8','width'=>'11','align'=>'center'],
-							'END.ABSENSI' =>['font-size'=>'8','width'=>'11','align'=>'center'],
-							'CHECK.IN' => ['font-size'=>'8','width'=>'11','align'=>'center'],
-							'CHECK.OUT' => ['font-size'=>'8','width'=>'11','align'=>'center'],
-							'VISIT.TIME' => ['font-size'=>'8','width'=>'11','align'=>'center'],
-							'DISTANCE' =>['font-size'=>'8','width'=>'11','align'=>'center'],
-							'STATUS' => ['font-size'=>'8','width'=>'7','align'=>'center'],
-							'AREA' => ['font-size'=>'8','width'=>'11','align'=>'center'],
-							'SCDL.EVENT'=>['font-size'=>'8','width'=>'11','align'=>'center'],
-							'SCDL.AUTHORIZED'=>['font-size'=>'8','width'=>'18','align'=>'center']
+							'TGL' => ['align'=>'center'],
+							'SALESMD' => ['align'=>'center'],
+							'CUST_ID_ESM' =>['align'=>'center'],
+							'CUST_ID_DIST' => ['align'=>'center'],
+							'CUST_NM' =>['align'=>'center'],
+							'KD_BARANG_ESM' => ['align'=>'center'],
+							'ID_BARANG_DIST' =>['align'=>'center'],
+							'NM_BARANG' => ['align'=>'center'],
+							'STOCK/Pcs' =>['align'=>'center'],          
+							'RETURE/Pcs' =>['align'=>'center'],              
+							'REQUEST.ORDER/Pcs' => ['align'=>'center'],           
+							'SELL.IN/Pcs' => ['align'=>'center'],          
+							'SELL.OUT/Pcs' => ['align'=>'center'],          
+							'NOTE' => ['align'=>'center']   
 						]
 						
 					],
 					'contentStyle'=>[
 						[						
-							'SALESMD' =>['font-size'=>'8','align'=>'left'], 
-							'DATE' => ['font-size'=>'8','align'=>'center'],
-							'CUSTOMERS.ID' =>['font-size'=>'8','align'=>'center'],
-							'CUSTOMERS' =>['font-size'=>'8','align'=>'left'],
-							'START.ABSENSI' => ['font-size'=>'8','align'=>'center'],
-							'END.ABSENSI' =>['font-size'=>'8','align'=>'center'],
-							'CHECK.IN' => ['font-size'=>'8','align'=>'center'],
-							'CHECK.OUT' => ['font-size'=>'8','align'=>'center'],
-							'VISIT.TIME' => ['font-size'=>'8','align'=>'center'],
-							'DISTANCE' =>['font-size'=>'8','align'=>'center'],
-							'STATUS' => ['font-size'=>'8','align'=>'center'],
-							'AREA' => ['font-size'=>'8','align'=>'left'],
-							'SCDL.EVENT'=>['font-size'=>'8','align'=>'center'],
-							'SCDL.AUTHORIZED'=>['font-size'=>'8','align'=>'left']
+							'TGL' => ['align'=>'center'],
+							'SALESMD' => ['align'=>'left'],
+							'CUST_ID_ESM' =>['align'=>'center'],
+							'CUST_ID_DIST' => ['align'=>'center'],
+							'CUST_NM' =>['align'=>'left'],
+							'KD_BARANG_ESM' => ['align'=>'center'],
+							'ID_BARANG_DIST' =>['align'=>'center'],
+							'NM_BARANG' => ['align'=>'left'],
+							'STOCK/Pcs' =>['align'=>'right'],          
+							'RETURE/Pcs' =>['align'=>'right'],              
+							'REQUEST.ORDER/Pcs' => ['align'=>'right'],           
+							'SELL.IN/Pcs' => ['align'=>'right'],          
+							'SELL.OUT/Pcs' => ['align'=>'right'],          
+							'NOTE' => ['align'=>'left']   
+							]
+					], 
+				   'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+				   'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
+				], 
+				[	// DAILY REPORT SALES QUALITY TIME 
+					'sheet_name' => 'DAILY REPORT QUALITY TIME',
+					'sheet_title' => [
+						['DATE','SALES.NAME','CUSTOMERS.ID','CUSTOMERS','START.ABSENSI','END.ABSENSI','CHECK.IN','CHECK.OUT','VISIT.TIME','DISTANCE','STATUS','AREA','SCDL.EVENT','SCDL.AUTHORIZED']
+					],					
+					'ceils' => $excel_ceilsSalesQT,
+					'freezePane' => 'A2',
+					'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
+					'headerStyle'=>[					
+						[
+							'DATE' => ['align'=>'center'],
+							'SALES.NAME' =>['align'=>'center'], 
+							'CUSTOMERS.ID' =>['align'=>'center'],
+							'CUSTOMERS' =>['align'=>'center'],
+							'START.ABSENSI' => ['align'=>'center'],
+							'END.ABSENSI' =>['align'=>'center'],
+							'CHECK.IN' => ['align'=>'center'],
+							'CHECK.OUT' => ['align'=>'center'],
+							'VISIT.TIME' => ['align'=>'center'],
+							'DISTANCE' =>['align'=>'center'],
+							'STATUS' => ['align'=>'center'],
+							'AREA' => ['align'=>'center'],
+							'SCDL.EVENT'=>['align'=>'center'],
+							'SCDL.AUTHORIZED'=>['align'=>'center']
+						]
+						
+					],
+					'contentStyle'=>[
+						[						
+							'DATE' => ['align'=>'center'],
+							'SALES.NAME' =>['align'=>'left'], 
+							'CUSTOMERS.ID' =>['align'=>'center'],
+							'CUSTOMERS' =>['align'=>'left'],
+							'START.ABSENSI' => ['align'=>'center'],
+							'END.ABSENSI' =>['align'=>'center'],
+							'CHECK.IN' => ['align'=>'center'],
+							'CHECK.OUT' => ['align'=>'center'],
+							'VISIT.TIME' => ['align'=>'center'],
+							'DISTANCE' =>['align'=>'center'],
+							'STATUS' => ['align'=>'center'],
+							'AREA' => ['align'=>'left'],
+							'SCDL.EVENT'=>['align'=>'center'],
+							'SCDL.AUTHORIZED'=>['align'=>'left']
 						]
 					],            
 				   'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
 				   'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 				],
-				/* [	// DAILY REPORT EXPIRED DATE  
+				[	// DAILY REPORT EXPIRED DATE  
 					'sheet_name' => 'DAILY REPORT EXPIRED DATE',
 					'sheet_title' => [
 						['DATE','SALES.NAME','CUSTOMERS.ID','CUSTOMERS','KD_BARANG_ESM','ID_BARANG_DIST','NM_BARANG','QTY','DATE_EXPIRED']
@@ -292,103 +270,7 @@ class PostmanDailySalesmdController extends Controller
 					],            
 				   'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
 				   'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
-				],  */
-				[ 	//SALE MD - DAILY VISIT STOCK.
-					'sheet_name' => 'DAILY VISIT STOK',
-					'sheet_title' => [
-						['SALESMD','TGL','CUST_ID_ESM','CUST_ID_DIST','CUST_NM','KD_BARANG_ESM','ID_BARANG_DIST','NM_BARANG',
-						'STOCK','RETURE','SO','SELL.IN','SELL.OUT','NOTE']
-					],
-					'ceils' => $apDailySalesReport,//$excel_ceilsDailySalesReport,
-					'freezePane' => 'A2',
-					'autoSize'=>true,
-					'columnGroup'=>['SALESMD'],					
-					'headerColor' => Postman4ExcelBehavior::getCssClass("header"),            
-					'headerStyle'=>[					
-						[
-							'SALESMD' => ['font-size'=>'8','width'=>'11','align'=>'center'],
-							'TGL' => ['font-size'=>'8','width'=>'9','align'=>'center'],
-							'CUST_ID_ESM' =>['font-size'=>'8','width'=>'13','align'=>'center'],
-							'CUST_ID_DIST' => ['font-size'=>'8','width'=>'13','align'=>'center'],
-							'CUST_NM' =>['font-size'=>'8','width'=>'28','align'=>'center'],
-							'KD_BARANG_ESM' => ['font-size'=>'8','width'=>'17','align'=>'center'],
-							'ID_BARANG_DIST' =>['font-size'=>'8','width'=>'12','align'=>'center'],
-							'NM_BARANG' => ['font-size'=>'8','width'=>'24','align'=>'center'],
-							'STOCK' =>['font-size'=>'8','width'=>'7','align'=>'center'],          
-							'RETURE' =>['font-size'=>'8','width'=>'7','align'=>'center'],              
-							'SO' => ['font-size'=>'8','width'=>'7','align'=>'center'],           
-							'SELL.IN' => ['font-size'=>'8','width'=>'7','align'=>'center'],          
-							'SELL.OUT' => ['font-size'=>'8','width'=>'7','align'=>'center'],          
-							'NOTE' => ['font-size'=>'8','width'=>'150','align'=>'center']   
-						]
-					],
-					'contentStyle'=>[
-						[						
-							'SALESMD' => ['font-size'=>'8','align'=>'left'],
-							'TGL' => ['font-size'=>'8','align'=>'center'],
-							'CUST_ID_ESM' =>['font-size'=>'8','align'=>'center'],
-							'CUST_ID_DIST' => ['font-size'=>'8','align'=>'center'],
-							'CUST_NM' =>['font-size'=>'8','align'=>'left'],
-							'KD_BARANG_ESM' => ['font-size'=>'8','align'=>'center'],
-							'ID_BARANG_DIST' =>['font-size'=>'8','align'=>'center'],
-							'NM_BARANG' => ['font-size'=>'8','align'=>'left'],
-							'STOCK' =>['font-size'=>'8','align'=>'right'],          
-							'RETURE' =>['font-size'=>'8','align'=>'right'],              
-							'SO' => ['font-size'=>'8','align'=>'right'],           
-							'SELL.IN' => ['font-size'=>'8','align'=>'right'],          
-							'SELL.OUT' => ['font-size'=>'8','align'=>'right'],          
-							'NOTE' => ['font-size'=>'8','align'=>'left']   
-							]
-					], 
-				   'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
-				   'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 				], 
-				[	//SALE MD - YEARLY VISIT STOCK.
-					'sheet_name' => 'YEARLY VISIT STOCK',					
-					'sheet_title' => [
-						[
-							'SALESMAN','CUSTOMER_KD','CUSTOMER','SKU_ID','SKU','YEAR',
-							'w0','w1','w2','w3','w4','w5','w6','w7','w8','w9','w10','w11','w12','w13','w14','w15',
-							'w16','w17','w18','w19','w20','w21','w22','w23','w24','w25','w26','w27','w28','w29','w30',
-							'w31','w32','w33','w34','w35','w36','w37','w38','w39','w40','w41','w42','w43','w44','w45',
-							'w46','w47','w48','w49','w50','w51','w52','w53'						
-						]
-					],
-					'ceils' =>$aryFieldRekap,
-					'freezePane' => 'A2',
-					'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
-					'columnGroup'=>['SALESMAN','CUSTOMER_KD'],
-					'autoSize'=>false,
-					'headerStyle'=>[$headerColumn					
-						/* [
-							'SALESMAN' => ['font-size'=>'8','align'=>'center','width'=>'12','valign'=>'center','wrap'=>true],
-							'CUSTOMER_KD' => ['font-size'=>'8','align'=>'center','width'=>'14','valign'=>'center','wrap'=>true],
-							'CUSTOMER' => ['font-size'=>'8','align'=>'center','width'=>'28','valign'=>'center','wrap'=>true],
-							'SKU_ID' => ['font-size'=>'8','align'=>'center','width'=>'17','valign'=>'center','wrap'=>true],
-							'SKU' => ['font-size'=>'8','align'=>'center','width'=>'24','valign'=>'center','wrap'=>true],
-							'YEAR' => ['font-size'=>'8','align'=>'center','width'=>'5','valign'=>'center','wrap'=>true],											
-							// 'w0' => ['font-size'=>'8','align'=>'center','width'=>'4.5','valign'=>'center'],
-							// 'w1' => ['font-size'=>'8','align'=>'center','width'=>'4.5','valign'=>'center'],	
-							$addloopColumn
-																				
-						] */
-						
-					],
-					'contentStyle'=>[$headerRow
-						/* [						
-							'SALESMAN' => ['font-size'=>'8','align'=>'left',],
-							'CUSTOMER_KD' => ['font-size'=>'8','align'=>'center',],
-							'CUSTOMER' => ['font-size'=>'8','align'=>'left',],
-							'SKU_ID' => ['font-size'=>'8','align'=>'center',],
-							'SKU' => ['font-size'=>'8','align'=>'left',],
-							'YEAR' => ['font-size'=>'8','align'=>'center',],
-							'w0' => ['font-size'=>'8','align'=>'center'],													
-							'w1' => ['font-size'=>'8','align'=>'center'],													
-						] */
-					],            
-					'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
-					'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
-				],
 			];		
 			$excel_file = "PostmanDailySalesMd"."-".$tglIn;
 			$this->export4excel($excel_content, $excel_file,0); 

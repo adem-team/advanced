@@ -41,5 +41,15 @@ class TrigerReviewVisitController extends Controller
 					call CRONJOB_CUSTOMERCALL_TIMEVISIT('".$tglIn."')
 		")->execute();
 	}
+	
+	public function actionYearlyVisitStok(){
+		//./yii triger-review-visit/yearly-visit-stok
+		//$tglIn=date("Y-m-d");
+		$tahun=date("Y");
+		$type='5'; //5=Type Stock Android Input.
+		Yii::$app->db_esm->createCommand("
+					call CRONJOB_SALESMD_53WEEK('".$tahun."','".$type."')
+		")->execute();
+	}
 }
 ?>

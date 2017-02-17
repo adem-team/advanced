@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model lukisongroup\marketing\models\SalesPromo */
+/* @var $model lukisongroup\warehouse\models\TypeKtg */
 
 $this->title = $model->ID;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Sales Promos'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Type Ktgs'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="sales-promo-view">
+<div class="type-ktg-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,20 +29,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'ID',
-            'CUST_ID',
-            'CUST_NM',
-            'PROMO:ntext',
-            'TGL_START',
-            'TGL_END',
-            'OVERDUE',
-            'MEKANISME:ntext',
-            'KOMPENSASI:ntext',
-            'KETERANGAN:ntext',
-            'STATUS',
-            'CREATED_BY',
-            'CREATED_AT',
-            'UPDATED_BY',
-            'UPDATED_AT',
+            'TYPE',
+            'TYPE_KTG',
+            'TYPE_NM',
+            'DSCRPT:ntext',
         ],
     ]) ?>
 
