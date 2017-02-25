@@ -30,7 +30,7 @@ use yii\helpers\Url;
 	
 /**
 * ===============================
- * Button & Link Modal wh-tab1-receive
+ * Button & Link Modal SalesPromo
  * Author	: ptr.nov2gmail.com
  * Update	: 21/01/2017
  * Version	: 2.1
@@ -42,13 +42,13 @@ use yii\helpers\Url;
 	function tombolCreate(){
 		if(getPermission()){
 			if(getPermission()->BTN_CREATE==1){
-				$title1 = Yii::t('app', ' Add');
-				$url = Url::toRoute(['/warehouse/header-receive/create']);
+				$title1 = Yii::t('app', ' New');
+				$url = Url::toRoute(['/marketing/sales-promo/create']);
 				$options1 = ['value'=>$url,
-							'id'=>'wh-tab1-receive-button-create',
-							'class'=>"btn btn-danger btn-sm"  
+							'id'=>'salespromo-button-create',
+							'class'=>"btn btn-danger btn-xs"  
 				];
-				$icon1 = '<span class="fa fa-download fa-lg"></span>';
+				$icon1 = '<span class="fa fa-plus fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
 				$content = Html::button($label1,$options1);
 				return $content;
@@ -65,8 +65,8 @@ use yii\helpers\Url;
 			if(getPermission()->BTN_VIEW==1 OR getPermission()->BTN_CREATE==1){
 				$title1 = Yii::t('app',' View');
 				$options1 = [
-					'value'=>url::to(['/warehouse/header-receive/view','id'=>$model->ID]),
-					'id'=>'wh-tab1-receive-button-view',
+					'value'=>url::to(['/marketing/sales-promo/view','id'=>$model->ID]),
+					'id'=>'salespromo-button-view',
 					'class'=>"btn btn-default btn-xs",      
 					'style'=>['text-align'=>'left','width'=>'100%', 'height'=>'25px','border'=> 'none'],
 				];
@@ -84,6 +84,34 @@ use yii\helpers\Url;
 	}
 	
 	/*
+	 * Button - REVIEW.
+	*/
+	function tombolReview($url, $model){
+		if(getPermission()){
+			//Jika REVIEW Show maka Bisa Update/Editing.
+			if(getPermission()->BTN_REVIEW==1){
+				$title1 = Yii::t('app',' Review');
+				$options1 = [
+					'value'=>url::to(['/marketing/sales-promo/review','id'=>$model->ID]),
+					'id'=>'salespromo-button-review',
+					'class'=>"btn btn-default btn-xs",      
+					'style'=>['text-align'=>'left','width'=>'100%', 'height'=>'25px','border'=> 'none'],
+				];
+				//thin -> untuk bulet luar
+				$icon1 = '
+					<span class="fa-stack fa-xs">																	
+						<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
+						<i class="fa fa-edit fa-stack-1x" style="color:#fbfbfb"></i>
+					</span>
+				';      
+				$label1 = $icon1 . '  ' . $title1;
+				$content = Html::button($label1,$options1);		
+				return $content;
+			}
+		}
+	}
+	
+	/*
 	 * Button - REMAINDER.
 	 * BTN_PROCESS1.
 	*/	
@@ -91,10 +119,10 @@ use yii\helpers\Url;
 		if(getPermission()){
 			if(getPermission()->BTN_PROCESS1==1){
 				$title1 = Yii::t('app',' Remainder');
-				$url = url::to(['/warehouse/header-receive/remainder','id'=>$model->ID]);
+				$url = url::to(['/marketing/sales-promo/remainder','id'=>$model->ID]);
 				$options1 = [
 					'value'=>$url,
-					'id'=>'wh-tab1-receive-button-remainder',
+					'id'=>'salespromo-button-remainder',
 					'class'=>"btn btn-default btn-xs",      
 					'style'=>['text-align'=>'left','width'=>'100%', 'height'=>'25px','border'=> 'none'],
 				];
@@ -118,10 +146,10 @@ use yii\helpers\Url;
 	function tombolDeny($url, $model){
 		if(Yii::$app->getUserOpt->Modul_aksesDeny('11')==0){
 			$title1 = Yii::t('app',' Limited Access');
-			$url = url::to(['/warehouse/header-receive']);
+			$url = url::to(['/marketing/sales-promo']);
 			$options1 = [
 				'value'=>$url,
-				'id'=>'wh-tab1-receive-button-deny',
+				'id'=>'salespromo-button-deny',
 				'class'=>"btn btn-default btn-xs",      
 				'style'=>['text-align'=>'left','width'=>'100%', 'height'=>'25px','border'=> 'none'],
 			];
@@ -139,10 +167,10 @@ use yii\helpers\Url;
 	//Link Button Refresh 
 	function tombolRefresh(){
 		$title = Yii::t('app', 'Refresh');
-		$url =  Url::toRoute(['/warehouse/header-receive']);
+		$url =  Url::toRoute(['/marketing/sales-promo']);
 		$options = ['id'=>'jenisobat-id-refresh',
 				  'data-pjax' => 0,
-				  'class'=>"btn btn-info btn-sm",
+				  'class'=>"btn btn-info btn-xs",
 				];
 		$icon = '<span class="fa fa-history fa-lg"></span>';
 		$label = $icon . ' ' . $title;
@@ -150,40 +178,59 @@ use yii\helpers\Url;
 		return $content = Html::a($label,$url,$options);
 	}
 	
+	/*
+	 * Button - EXPORT EXCEL.
+	*/
+	function tombolExportExcel(){
+		if(getPermission()){
+			if(getPermission()->BTN_PROCESS1==1){
+				$title1 = Yii::t('app', ' Export Excel');
+				$url = Url::toRoute(['/marketing/sales-promo/export-excel']);
+				$options1 = ['value'=>$url,
+							'id'=>'salespromo-button-export-excel',
+							'class'=>"btn btn-info btn-xs"  
+				];
+				$icon1 = '<span class="fa fa-file-excel-o fa-lg"></span>';
+				$label1 = $icon1 . ' ' . $title1;
+				$content = Html::button($label1,$options1);
+				return $content;
+			}
+		}
+	}	
 	
 /**
  * ===============================
- * Modal wh-tab1-receive
+ * Modal SalesPromo
  * Author	: ptr.nov2gmail.com
  * Update	: 21/01/2017
  * Version	: 2.1
  * ==============================
 */
 	/*
-	 * wh-tab1-receive - CREATE.
+	 * SalesPromo - CREATE.
 	*/
 	$modalHeaderColor='#fbfbfb';//' rgba(74, 206, 231, 1)';
 	Modal::begin([
-		'id' => 'wh-tab1-receive-modal-create',
+		'id' => 'salespromo-modal-create',
 		'header' => '
 			<span class="fa-stack fa-xs">																	
 				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
 				<i class="fa fa-plus fa-stack-1x" style="color:#fbfbfb"></i>
-			</span><b> Input Data Items</b>
+			</span><b> CREATE PROMOTION</b>
 		',		
 		'size' => Modal::SIZE_LARGE,
 		'headerOptions'=>[
 			'style'=> 'border-radius:5px; background-color:'.$modalHeaderColor,
 		],
 	]);
-	echo "<div id='wh-tab1-receive-modal-content-create'></div>";
+	echo "<div id='salespromo-modal-content-create'></div>";
 	Modal::end();
 	
 	/*
-	 * wh-tab1-receive - VIEW.
+	 * SalesPromo - VIEW.
 	*/
 	Modal::begin([
-		'id' => 'wh-tab1-receive-modal-view',
+		'id' => 'salespromo-modal-view',
 		'header' => '
 			<span class="fa-stack fa-xs">																	
 				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
@@ -195,14 +242,33 @@ use yii\helpers\Url;
 			'style'=> 'border-radius:5px; background-color:'.$modalHeaderColor,
 		],
 	]);
-	echo "<div id='wh-tab1-receive-modal-content-view'></div>";
+	echo "<div id='salespromo-modal-content-view'></div>";
 	Modal::end();
 	
 	/*
-	 * wh-tab1-receive - Remainder.
+	 * SalesPromo - REVIEW.
 	*/
 	Modal::begin([
-		'id' => 'wh-tab1-receive-modal-remainder',
+		'id' => 'salespromo-modal-review',
+		'header' => '
+			<span class="fa-stack fa-xs">																	
+				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
+				<i class="fa fa-edit fa-stack-1x" style="color:#fbfbfb"></i>
+			</span><b> REVIEW CALENDAR PROMOTION</b>
+		',		
+		'size' => Modal::SIZE_LARGE,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:'.$modalHeaderColor,
+		],
+	]);
+	echo "<div id='salespromo-modal-content-review'></div>";
+	Modal::end();
+	
+	/*
+	 * SalesPromo - Remainder.
+	*/
+	Modal::begin([
+		'id' => 'salespromo-modal-remainder',
 		'header' => '
 			<span class="fa-stack fa-xs">																	
 				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
@@ -214,6 +280,26 @@ use yii\helpers\Url;
 			'style'=> 'border-radius:5px; background-color:'.$modalHeaderColor,
 		],
 	]);
-	echo "<div id='wh-tab1-receive-modal-content-remainder'></div>";
+	echo "<div id='salespromo-modal-content-remainder'></div>";
+	Modal::end();
+	
+	/*
+	 * SalesPromo - EXPORT EXCEL.
+	*/
+	$modalHeaderColor='#fbfbfb';//' rgba(74, 206, 231, 1)';
+	Modal::begin([
+		'id' => 'salespromo-modal-export-excel',
+		'header' => '
+			<span class="fa-stack fa-xs">																	
+				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
+				<i class="fa fa-file-excel-o fa-stack-1x" style="color:#fbfbfb"></i>
+			</span><b> Export to Excel</b>
+		',		
+		'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:'.$modalHeaderColor,
+		],
+	]);
+	echo "<div id='salespromo-modal-content-export-excel'></div>";
 	Modal::end();
 ?>

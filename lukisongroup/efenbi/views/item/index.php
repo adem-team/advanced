@@ -16,32 +16,21 @@ use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
 use yii\web\View;
 
-use lukisongroup\marketing\models\SalesPromo;
 $this->sideCorp = 'PT. Efenbi Sukses Makmur';                       	/* Title Select Company pada header pasa sidemenu/menu samping kiri */
-$this->sideMenu = 'esm_marketing';                                      /* kd_menu untuk list menu pada sidemenu, get from table of database */
+$this->sideMenu = 'efenbi';                                     		/* kd_menu untuk list menu pada sidemenu, get from table of database */
 $this->title = Yii::t('app', 'ESM - Marketing Dashboard');              /* title pada header page */
 $this->params['breadcrumbs'][] = $this->title;  
-
-
-
+$this->registerJs($this->render('modal_item.js'),View::POS_READY);
+echo $this->render('modal_item'); //echo difinition
 
 	$aryStt= [
-			  ['STATUS' => 0, 'STT_NM' => 'RUNNING'],		  
-			  ['STATUS' => 1, 'STT_NM' => 'FINISH'],
-			  ['STATUS' => 2, 'STT_NM' => 'PANDING'],
-			  ['STATUS' => 3, 'STT_NM' => 'PLANING'],
-		];	
+		  ['STATUS' => 0, 'STT_NM' => 'DISABLE'],		  
+		  ['STATUS' => 1, 'STT_NM' => 'ENABLE']
+	];	
 	$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
-	//INCLUDE MODAL JS AND CONTENT 
-	$this->registerJs($this->render('modal_salespromo.js'),View::POS_READY);
-	echo $this->render('modal_salespromo'); //echo difinition
 	
-	//Check Limited Access.
-	//print_r(Yii::$app->getUserOpt->Modul_aksesDeny('11'));
-
-	//print_r(gvContain('header','center','50',$bColor));
-	$bColor='rgba(255, 255, 48, 4)';
-	$gvAttributePromo=[
+	$bColor='rgba(52, 203, 255, 1)';
+	$gvAttributeItem=[
 		[
 			'class'=>'kartik\grid\SerialColumn',
 			'contentOptions'=>['class'=>'kartik-sheet-style'],
@@ -50,16 +39,29 @@ $this->params['breadcrumbs'][] = $this->title;
 			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','30px',$bColor),
 			'contentOptions'=>Yii::$app->gv->gvContainBody('center','30px',''),
 		],
-		//CUSTOMER
+		//ITEM NAME
+		[	
+			'attribute'=>'IMG64',
+			'filterType'=>false,
+			'format'=>'raw', 
+			'value'=>function($model){
+				$image64 ='data:image/jpg;charset=utf-8;base64,'.$model->IMG64;
+				return $model->IMG64!=''?Html::img($image64,['width'=>'30','height'=>'30']):Html::img('data:image/jpg;charset=utf-8;base64,'.$model->noimage,['width'=>'30','height'=>'30']);
+			},
+			'hAlign'=>'right',
+			'vAlign'=>'middle',
+			'mergeHeader'=>true,
+			'noWrap'=>false,
+			//gvContainHeader($align,$width,$bColor)
+			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','30px',$bColor),
+			'contentOptions'=>Yii::$app->gv->gvContainBody('center','30px',''),
+			
+		],		
+		//ITEM NAME
 		[
-			'attribute'=>'CUST_NM',
-			'label'=>'Cutomer',
-			'filterType'=>GridView::FILTER_SELECT2,
-			'filterWidgetOptions'=>[
-				'pluginOptions' =>Yii::$app->gv->gvPliginSelect2(),
-			],
-			'filterInputOptions'=>['placeholder'=>'Select'], // wajib to clear button x
-			'filter'=>ArrayHelper::map(SalesPromo::find()->asArray()->all(), 'CUST_NM','CUST_NM'),
+			'attribute'=>'ITEM_NM',
+			//'label'=>'Cutomer',
+			'filterType'=>true,
 			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','200px'),
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
@@ -69,63 +71,38 @@ $this->params['breadcrumbs'][] = $this->title;
 			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','200px',$bColor),
 			'contentOptions'=>Yii::$app->gv->gvContainBody('left','200px',''),
 			
-		],
-		//PROMO NAME
+		],		
+		//HPP
 		[
-			'attribute'=>'PROMO',
-			'label'=>'Promotion',
-			'filter'=>true,
-			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','200px'),
+			'attribute'=>'HPP',
+			'filterType'=>true,
+			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px'),
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
 			'mergeHeader'=>false,
 			'noWrap'=>false,
 			//gvContainHeader($align,$width,$bColor)
-			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','200px',$bColor),
-			'contentOptions'=>Yii::$app->gv->gvContainBody('left','200px',''),
+			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','100px',$bColor),
+			'contentOptions'=>Yii::$app->gv->gvContainBody('left','100px',''),
 			
 		],
-		//PERIODE TGL START
+		//KD_BARCODE
 		[
-			'attribute'=>'TGL_START',
-			//'label'=>'Periode Start',
-			'filterType'=>GridView::FILTER_DATE,
-			'filterWidgetOptions'=>[
-				'pluginOptions' =>Yii::$app->gv->gvPliginDate(),
-			],
-			'filter'=>true,
-			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px'),
+			'attribute'=>'KD_BARCODE',
+			'filterType'=>true,
+			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','80px'),
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
 			'mergeHeader'=>false,
 			'noWrap'=>false,
 			//gvContainHeader($align,$width,$bColor)
-			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50px',$bColor),
-			'contentOptions'=>Yii::$app->gv->gvContainBody('center','50px',''),			
+			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','100px',$bColor),
+			'contentOptions'=>Yii::$app->gv->gvContainBody('left','100px',''),
+			
 		],
-		//PERIODE TGL END
+		//CREATE_AT
 		[
-			'attribute'=>'TGL_END',
-			//'label'=>'Periode End',
-			'filterType'=>GridView::FILTER_DATE,
-			'filterWidgetOptions'=>[
-				'pluginOptions' =>Yii::$app->gv->gvPliginDate(),
-				'layout'=>'{picker}{remove}{input}'
-			],
-			'filter'=>true,
-			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px'),
-			'hAlign'=>'right',
-			'vAlign'=>'middle',
-			'mergeHeader'=>false,
-			'noWrap'=>false,
-			//gvContainHeader($align,$width,$bColor)
-			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50px',$bColor),
-			'contentOptions'=>Yii::$app->gv->gvContainBody('center','50px',''),			
-		],
-		//PERIODE TGL FINISH
-		[
-			'attribute'=>'TGL_FINISH',
-			//'label'=>'Finish',
+			'attribute'=>'CREATE_AT',
 			'filterType'=>GridView::FILTER_DATE,
 			'filterWidgetOptions'=>[
 				'pluginOptions' =>Yii::$app->gv->gvPliginDate(),
@@ -133,8 +110,8 @@ $this->params['breadcrumbs'][] = $this->title;
 			],
 			'filter'=>true,
 			'value'=>function($model){
-				if ($model->TGL_FINISH!=''){
-					return $model->TGL_FINISH;
+				if ($model->CREATE_AT!=''){
+					return $model->CREATE_AT;
 				}else{
 					return '';
 				}
@@ -146,12 +123,40 @@ $this->params['breadcrumbs'][] = $this->title;
 			'noWrap'=>false,
 			//gvContainHeader($align,$width,$bColor)
 			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50px',$bColor),
-			'contentOptions'=>Yii::$app->gv->gvContainBody('center','50px',''),			
+			'contentOptions'=>Yii::$app->gv->gvContainBody('left','50px',''),
+			
+		],
+		//CREATE_BY
+		[
+			'attribute'=>'CREATE_BY',
+			'filterType'=>true,
+			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px'),
+			'hAlign'=>'right',
+			'vAlign'=>'middle',
+			'mergeHeader'=>false,
+			'noWrap'=>false,
+			//gvContainHeader($align,$width,$bColor)
+			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50px',$bColor),
+			'contentOptions'=>Yii::$app->gv->gvContainBody('left','50px',''),
+			
+		],		
+		//UPDATE_BY
+		[
+			'attribute'=>'UPDATE_BY',
+			'filterType'=>true,
+			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px'),
+			'hAlign'=>'right',
+			'vAlign'=>'middle',
+			'mergeHeader'=>false,
+			'noWrap'=>false,
+			//gvContainHeader($align,$width,$bColor)
+			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50px',$bColor),
+			'contentOptions'=>Yii::$app->gv->gvContainBody('left','50px',''),
+			
 		],
 		//'STATUS',
 		[
 			'attribute'=>'STATUS',
-			'label'=>'Status',
 			'filterType'=>GridView::FILTER_SELECT2,
 			'filterWidgetOptions'=>[
 				'pluginOptions' =>Yii::$app->gv->gvPliginSelect2(),
@@ -169,58 +174,19 @@ $this->params['breadcrumbs'][] = $this->title;
 				  return Html::a('
 					<span class="fa-stack fa-xl">
 					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
-					  <i class="fa fa-check fa-stack-1x" style="color:#0f39ab"></i>
+					  <i class="fa fa-close fa-stack-1x" style="color:#0f39ab"></i>
 					</span>','',['title'=>'Running']);
 				} else if ($model->STATUS == 1) {
 				  return Html::a('<span class="fa-stack fa-xl">
 					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
-					  <i class="fa fa-close fa-stack-1x" style="color:#ee0b0b"></i>
+					  <i class="fa fa-check fa-stack-1x" style="color:#ee0b0b"></i>
 					</span>','',['title'=>'Finish']);
-				}	else if ($model->STATUS == 2) {
-				  return Html::a('<span class="fa-stack fa-xl">
-					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
-					  <i class="fa fa-pause fa-stack-1x" style="color:#ee0b0b"></i>
-					</span>','',['title'=>'Panding']);
-				}	else if ($model->STATUS == 3) {
-				  return Html::a('<span class="fa-stack fa-xl">
-					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
-					  <i class="fa fa-thumb-tack fa-stack-1x" style="color:#0f39ab"></i>
-					</span>','',['title'=>'Planing']);
 				}
 			},
 			//gvContainHeader($align,$width,$bColor)
 			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50',$bColor),
-			'contentOptions'=>Yii::$app->gv->gvContainBody('center','50',''),
-			
+			'contentOptions'=>Yii::$app->gv->gvContainBody('center','50','')			
 		],
-		//OVEDRUE
-		[
-			'attribute'=>'RunOverdue',
-			'label'=>'Overdue',
-			'filter'=>false,
-			'hAlign'=>'right',
-			'vAlign'=>'middle',
-			'mergeHeader'=>true,
-			'noWrap'=>false,
-			//gvContainHeader($align,$width,$bColor)
-			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50px',$bColor),
-			'contentOptions'=>Yii::$app->gv->gvContainBody('center','50px',''),
-			
-		],//CREATED_BY
-		/* [
-			'attribute'=>'CREATED_BY',
-			'label'=>'Create.By',
-			'filter'=>false,
-			'hAlign'=>'right',
-			'vAlign'=>'middle',
-			'mergeHeader'=>true,
-			'noWrap'=>false,
-			//gvContainHeader($align,$width,$bColor)
-			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','80px',$bColor),
-			'contentOptions'=>Yii::$app->gv->gvContainBody('left','80px',''),
-			
-		], */
-		
 		//ACTION
 		[
 			'class' => 'kartik\grid\ActionColumn',
@@ -257,45 +223,24 @@ $this->params['breadcrumbs'][] = $this->title;
 			'contentOptions'=>Yii::$app->gv->gvContainBody('center','10px',''),
 		]
 	];
-	/* 'columns' => [
-		['class' => 'yii\grid\SerialColumn'],
 
-		'ID',
-		'CUST_ID',
-		'CUST_NM',
-		'PROMO:ntext',
-		'TGL_START',
-		// 'TGL_END',
-		// 'OVERDUE',
-		// 'MEKANISME:ntext',
-		// 'KOMPENSASI:ntext',
-		// 'KETERANGAN:ntext',
-		// 'STATUS',
-		// 'CREATED_BY',
-		// 'CREATED_AT',
-		// 'UPDATED_BY',
-		// 'UPDATED_AT',
-
-		['class' => 'yii\grid\ActionColumn'],
-	], */
-		
-	$gvSalesPromo=GridView::widget([
-		'id'=>'gv-sales-promo',
+	$gvItem=GridView::widget([
+		'id'=>'gv-item',
 		'dataProvider' => $dataProvider,
 		'filterModel' => $searchModel,
-		'columns'=>$gvAttributePromo,//$attDinamik,					
+		'columns'=>$gvAttributeItem,				
 		'pjax'=>true,
 		'pjaxSettings'=>[
 			'options'=>[
 				'enablePushState'=>false,
-				'id'=>'gv-sales-promo',
+				'id'=>'gv-item',
 		    ],						  
 		],
 		'hover'=>true, //cursor select
 		'responsive'=>true,
 		'responsiveWrap'=>true,
 		'bordered'=>true,
-		'striped'=>'4px',
+		'striped'=>true,
 		'autoXlFormat'=>true,
 		'export' => false,
 		'panel'=>[''],
@@ -303,11 +248,12 @@ $this->params['breadcrumbs'][] = $this->title;
 			''
 		],
 		'panel' => [
-			'heading'=>'
-				<span class="fa-stack fa-sm">
-				  <i class="fa fa-circle-thin fa-stack-2x" style="color:#25ca4f"></i>
-				  <i class="fa fa-calendar fa-stack-1x"></i>
-				</span> Promotion Calendar',  
+			'heading'=>false,
+			// 'heading'=>'
+				// <span class="fa-stack fa-sm">
+				  // <i class="fa fa-circle-thin fa-stack-2x" style="color:#25ca4f"></i>
+				  // <i class="fa fa-cubes fa-stack-1x"></i>
+				// </span> Items',  
 			'type'=>'info',
 			'before'=> tombolCreate().' '.tombolRefresh().' '.tombolExportExcel(),
 			'showFooter'=>false,
@@ -320,8 +266,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
 	<div class="col-xs-12 col-sm-12 col-lg-12" style="font-family: tahoma ;font-size: 9pt;">
 		<div class="row">
-			<?=$gvSalesPromo?>
+			<?=$gvItem?>
 		</div>
 	</div>
 </div>
-
