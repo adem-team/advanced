@@ -101,9 +101,28 @@ class ItemController extends Controller
      */
     public function actionView($id)
     {
-        return $this->renderAjax('view', [
-            'model' => $this->findModel($id),
-        ]);
+        $model=$this->findModel($id);
+		if ($model->load(Yii::$app->request->post())) {
+			$editUploadImage = $model->uploadImage();
+			$image64edit=$editUploadImage != ''? $this->convertBase64(file_get_contents($editUploadImage->tempName)): '';
+			$model->IMG64 = $image64edit;
+			$model->UPDATE_BY =  Yii::$app->user->identity->username;
+			// print_r($image64edit);
+			// die();
+			if($model->save()){
+				if ($editUploadImage !== false) {
+					$path=$model->pathImage();					
+					$editUploadImage->saveAs($path);
+					// print_r($path);
+					// die();
+				}
+				return $this->redirect(['index', 'id' => $model->ID_ITEM]);
+			}			
+        } else {
+            return $this->renderAjax('view', [
+				'model' => $this->findModel($id),
+			]);
+        }
     }
 
     /**
@@ -114,13 +133,22 @@ class ItemController extends Controller
     public function actionCreate()
     {
         $model = new Item();
-		//$model->scenario = "create";
-		$ambilUploadImage = $model->uploadImage();
-		$image64=$ambilUploadImage != ''? $this->convertBase64(file_get_contents($ambilUploadImage->tempName)): '';
-		$model->CREATE_BY =  Yii::$app->user->identity->username;
-		$model->CREATE_AT = date("Y-m-d H:i:s");
-		$model->IMG64 = $image64;
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+		//$model->scenario = "create";		
+        if ($model->load(Yii::$app->request->post())) {
+			$ambilUploadImage = $model->uploadImage();
+			$image64=$ambilUploadImage != ''? $this->convertBase64(file_get_contents($ambilUploadImage->tempName)): '';
+			$model->CREATE_BY =  Yii::$app->user->identity->username;
+			$model->CREATE_AT = date("Y-m-d H:i:s");
+			$model->IMG64 = $image64;
+			if ( $model->save()){
+				if ($ambilUploadImage !== false) {
+					$path=$model->pathImage();					
+					$ambilUploadImage->saveAs($path);
+					// print_r($path);
+					// die();
+				}
+			}
+			
             //return $this->redirect(['view', 'id' => $model->ID_ITEM]);
 			return $this->redirect(['index', 'id' => $model->ID_ITEM]);
         } else {
@@ -182,6 +210,7 @@ class ItemController extends Controller
      */
     protected function findModel($id)
     {
+        //if (($model = Item::findOne(['ID_ITEM'=>$id])) !== null) {
         if (($model = Item::findOne($id)) !== null) {
             return $model;
         } else {

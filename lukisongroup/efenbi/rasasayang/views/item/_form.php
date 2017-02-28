@@ -35,14 +35,11 @@ use kartik\widgets\TouchSpin;
 					'options' => ['placeholder' => 'Pilih Status...'],
 				]);
 			?>
-		
-
-			
-			
 			
 		</div>
 		<div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
 			<?=$form->field($model, 'image')->widget(FileInput::classname(), [
+				'name'=>'item-input-file',
 				'options'=>[
 					'width'=>'100px',
 					'accept'=>'image/*',

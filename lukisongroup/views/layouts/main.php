@@ -66,7 +66,7 @@ $this->title = 'LukisonGroup.com';
 	 *	'theme' => NotificationsWidget::THEME_NOTY,
 	 *	'theme' => NotificationsWidget::THEME_GROWL,
 	*/
-	/*  NotificationsWidget::widget([
+	 NotificationsWidget::widget([
 		'theme' => NotificationsWidget::THEME_NOTIFIT,
 		 'clientOptions' => [
 			'location' => 'id',
@@ -80,7 +80,7 @@ $this->title = 'LukisonGroup.com';
 			  'size' => 'large',
 		  ],
 		'listSelector' => '#notifications',
-	]);		  */ 
+	]);		 
 
 ?>
 <?php $this->beginPage() ?>
