@@ -8,7 +8,7 @@ use yii\web\UploadedFile;
 /**
  * This is the model class for table "Item".
  *
- * @property integer $ID_ITEM
+ * @property integer $ITEM_ID
  * @property string $CREATE_BY
  * @property string $CREATE_AT
  * @property string $UPDATE_BY
@@ -49,10 +49,9 @@ class Item extends \yii\db\ActiveRecord
 			//[['ITEM_NM'], 'required','on'=>'create'],
 			[['ITEM_NM','STATUS','IMGNM'], 'required','on'=>'create'],
 			//[['TGL_START','TGL_END'],'validasiTgl','on'=>'create'],
-            [['CREATE_AT', 'UPDATE_AT','IMG64','image'], 'safe'],
+            [['ITEM_ID','CREATE_AT', 'UPDATE_AT','IMG64','image'], 'safe'],
             [['STATUS'], 'integer'],
-            [['HPP'], 'number'],
-            [['CREATE_BY', 'UPDATE_BY', 'KD_BARCODE'], 'string', 'max' => 50],
+            [['CREATE_BY', 'UPDATE_BY'], 'string', 'max' => 50],
             [['ITEM_NM'], 'string', 'max' => 100],
             [['IMGNM'], 'string'],
 			//[['image'], 'file', 'skipOnEmpty' => true,'extensions'=>'jpg,png', 'mimeTypes'=>'image/jpeg, image/png',],
@@ -65,15 +64,13 @@ class Item extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'ID_ITEM' => Yii::t('app', 'ID_ITEM'),
+            'ITEM_ID' => Yii::t('app', 'ITEM_ID'),
             'CREATE_BY' => Yii::t('app', 'CREATE-BY'),
             'CREATE_AT' => Yii::t('app', 'CREATE-AT'),
             'UPDATE_BY' => Yii::t('app', 'UPDATE-BY'),
             'UPDATE_AT' => Yii::t('app', 'UPDATE-AT'),
             'STATUS' => Yii::t('app', 'STATUS'),
-            'KD_BARCODE' => Yii::t('app', 'BARCODE'),
-            'ITEM_NM' => Yii::t('app', 'ITEM'),
-            'HPP' => Yii::t('app', 'HPP'),
+            'ITEM_NM' => Yii::t('app', 'ITEM NAME'),
             'IMG64' => Yii::t('app', 'GAMBAR'),
             'IMGNM' => Yii::t('app', 'GAMBAR'),
         ];

@@ -12,18 +12,21 @@ function tabelMember($data,$head){
 	$fillhead2='<thead><tr><th width="1%">'.'#</th><th>Card ID</th><th>Join Date</th></tr></thead><tbody>';
 	$fillbody='';
 	$nourut= 0;
-	$parsed_json = json_decode($data);
-		foreach ($parsed_json as $key => $value) {
-			$nourut+= 1;
-			$fillbody = $fillbody . '<tr><td>'. $nourut .'</td><td>' . $value->nama . '</td><td class="right-align">'. $value->grandtotal . '</td></tr>';
+	if(is_array($data)){
+		$parsed_json = json_decode($data);
+			foreach ($parsed_json as $key => $value) {
+				$nourut+= 1;
+				$fillbody = $fillbody . '<tr><td>'. $nourut .'</td><td>' . $value->nama . '</td><td class="right-align">'. $value->grandtotal . '</td></tr>';
 
+			}
+		$fillbody = $fillbody . '<tbody>';
+		if ($head==1){
+			return $fillhead1.$fillbody;
+		}else{
+			return $fillhead2.$fillbody;
 		}
-	$fillbody = $fillbody . '<tbody>';
-	if ($head==1){
-		return $fillhead1.$fillbody;
-	}else{
-		return $fillhead2.$fillbody;
 	}
+	return [];
 }
 
 	$memberAllTotal= Chart::Widget([

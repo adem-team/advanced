@@ -23,6 +23,12 @@
 					</td>
 				</tr>
 				<tr>
+					<td style="background: #ddd; margin-top:5px; margin-button: 18px; text-align: center;">
+						Kami Informasikan,Anda mendapatkan pesan PO yang harus anda disetujui atau tidak anda disetujui.
+						Harap mengecek pada <a href="http://lukisongroup.com">ERP</a> pada menu Purchase_order.
+					</td>
+				</tr>
+				<tr>
 					<td>
 						<table style="font-size: 12px; font-family: Verdana, sans-serif;">
 							<tr>

@@ -62,11 +62,11 @@ class ItemController extends Controller
 			   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
 			   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
 			   //Modul permission URL, author -ptr.nov@gail.com-
-			   if(self::getPermission()->BTN_CREATE OR self::getPermission()->BTN_VIEW){
+			  // if(self::getPermission()->BTN_CREATE OR self::getPermission()->BTN_VIEW){
 					return true;
-			   }else{
-				   $this->redirect(array('/site/validasi'));
-			   }
+			  // }else{
+				//   $this->redirect(array('/site/validasi'));
+			  // }
 		   }
 		} else {
 			return true;
@@ -80,7 +80,7 @@ class ItemController extends Controller
     {
 		$paramCari=Yii::$app->getRequest()->getQueryParam('id');
 		if($paramCari){
-		    $searchModel = new ItemSearch(['ID_ITEM'=>$paramCari]);
+		    $searchModel = new ItemSearch(['ITEM_ID'=>$paramCari]);
 			$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		}else{
 			$searchModel = new ItemSearch();
@@ -116,7 +116,7 @@ class ItemController extends Controller
 					// print_r($path);
 					// die();
 				}
-				return $this->redirect(['index', 'id' => $model->ID_ITEM]);
+				return $this->redirect(['index', 'id' => $model->ITEM_ID]);
 			}			
         } else {
             return $this->renderAjax('view', [
@@ -135,11 +135,17 @@ class ItemController extends Controller
         $model = new Item();
 		//$model->scenario = "create";		
         if ($model->load(Yii::$app->request->post())) {
-			$ambilUploadImage = $model->uploadImage();
-			$image64=$ambilUploadImage != ''? $this->convertBase64(file_get_contents($ambilUploadImage->tempName)): '';
-			$model->CREATE_BY =  Yii::$app->user->identity->username;
-			$model->CREATE_AT = date("Y-m-d H:i:s");
-			$model->IMG64 = $image64;
+			//Image Base64
+				$ambilUploadImage = $model->uploadImage();
+				$image64=$ambilUploadImage != ''? $this->convertBase64(file_get_contents($ambilUploadImage->tempName)): '';
+			//Generate Code.
+				$maxID=Item::find()->max('ITEM_ID');
+				$newID=str_pad($maxID+1,4,"0",STR_PAD_LEFT);
+			//Attribute -Save-
+				$model->ITEM_ID =$newID;
+				$model->CREATE_BY =  Yii::$app->user->identity->username;
+				$model->CREATE_AT = date("Y-m-d H:i:s");
+				$model->IMG64 = $image64;
 			if ( $model->save()){
 				if ($ambilUploadImage !== false) {
 					$path=$model->pathImage();					
@@ -149,8 +155,8 @@ class ItemController extends Controller
 				}
 			}
 			
-            //return $this->redirect(['view', 'id' => $model->ID_ITEM]);
-			return $this->redirect(['index', 'id' => $model->ID_ITEM]);
+            //return $this->redirect(['view', 'id' => $model->ITEM_ID]);
+			return $this->redirect(['index', 'id' => $model->ITEM_ID]);
         } else {
             return $this->renderAjax('_form', [
                 'model' => $model,
@@ -167,6 +173,7 @@ class ItemController extends Controller
 			Yii::$app->response->format = 'json';
 			return ActiveForm::validate($model);
 		}
+		return 'test';
     }
 	
     /**
@@ -180,7 +187,7 @@ class ItemController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID_ITEM]);
+            return $this->redirect(['view', 'id' => $model->ITEM_ID]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -210,7 +217,7 @@ class ItemController extends Controller
      */
     protected function findModel($id)
     {
-        //if (($model = Item::findOne(['ID_ITEM'=>$id])) !== null) {
+        //if (($model = Item::findOne(['ITEM_ID'=>$id])) !== null) {
         if (($model = Item::findOne($id)) !== null) {
             return $model;
         } else {

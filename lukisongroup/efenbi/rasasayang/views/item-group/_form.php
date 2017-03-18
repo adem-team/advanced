@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model lukisongroup\efenbi\models\ItemGroup */
+/* @var $model lukisongroup\efenbi\rasasayang\models\ItemGroup */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -22,13 +22,25 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'STATUS')->textInput() ?>
 
-    <?= $form->field($model, 'TYPE')->textInput() ?>
+    <?= $form->field($model, 'LOCATE')->textInput() ?>
 
-    <?= $form->field($model, 'TYPE_NM')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'LOCATE_DCRP')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'ID_STORE')->textInput() ?>
+    <?= $form->field($model, 'LOCATE_SUB')->textInput() ?>
 
-    <?= $form->field($model, 'ID_ITEM')->textInput() ?>
+    <?= $form->field($model, 'LOCATE_SUB_DCRP')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'OUTLET_ID')->textInput() ?>
+
+    <?= $form->field($model, 'OUTLET_NM')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'OUTLET_BARCODE')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'ITEM_ID')->textInput() ?>
+
+    <?= $form->field($model, 'ITEM_NM')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'ITEM_BARCODE')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'PERSEN_MARGIN')->textInput(['maxlength' => true]) ?>
 

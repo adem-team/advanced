@@ -5,7 +5,7 @@ namespace lukisongroup\efenbi\rasasayang\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use lukisongroup\efenbi\models\Item;
+use lukisongroup\efenbi\rasasayang\models\Item;
 
 /**
  * ItemSearch represents the model behind the search form about `lukisongroup\efenbi\models\Item`.
@@ -18,9 +18,8 @@ class ItemSearch extends Item
     public function rules()
     {
         return [
-            [['ID_ITEM', 'STATUS'], 'integer'],
-            [['CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT', 'KD_BARCODE', 'ITEM_NM','IMG64'], 'safe'],
-            [['HPP'], 'number'],
+            [['STATUS'], 'integer'],
+            [['ITEM_ID','CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT','ITEM_NM','IMG64'], 'safe'],
         ];
     }
 
@@ -60,19 +59,17 @@ class ItemSearch extends Item
 
         // grid filtering conditions
         $query->andFilterWhere([
-            // 'ID_ITEM' => $this->ID_ITEM,
+            // 'ITEM_ID' => $this->ITEM_ID,
             // 'CREATE_AT' => $this->CREATE_AT,
             // 'UPDATE_AT' => $this->UPDATE_AT,
-            'STATUS' => $this->STATUS,
-            'HPP' => $this->HPP,
+            'STATUS' => $this->STATUS
         ]);
 
-        $query->andFilterWhere(['like', 'ID_ITEM', $this->ID_ITEM])
+        $query->andFilterWhere(['like', 'ITEM_ID', $this->ITEM_ID])
 			->andFilterWhere(['like', 'CREATE_AT', $this->CREATE_AT])
 			->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY])
             ->andFilterWhere(['like', 'UPDATE_AT', $this->UPDATE_AT])
-            ->andFilterWhere(['like', 'KD_BARCODE', $this->KD_BARCODE])
             ->andFilterWhere(['like', 'ITEM_NM', $this->ITEM_NM]);
 
         return $dataProvider;

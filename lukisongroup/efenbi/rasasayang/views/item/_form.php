@@ -23,13 +23,12 @@ use kartik\widgets\TouchSpin;
 	'options'=>['enctype'=>'multipart/form-data'],
 	//'enableClientValidation'=> true,
 	'enableAjaxValidation'=>true, 															//true = harus beda url action controller dengan post saved  url controller.
-	'validationUrl'=>Url::toRoute('/efenbi/item/valid-item'),
+	'validationUrl'=>Url::toRoute('/efenbi-rasasayang/item/valid-item'),
 	]); ?>
 <div style="height:100%;font-family: verdana, arial, sans-serif ;font-size: 8pt">
 	<div class="row" >
 		<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">	
 			<?= $form->field($model, 'ITEM_NM')->textInput(['maxlength' => true]) ?>
-			<?= $form->field($model, 'KD_BARCODE')->textInput(['maxlength' => true]) ?>
 			<?= $form->field($model, 'STATUS')->widget(Select2::classname(), [
 					'data' =>$valStt,//Yii::$app->gv->gvStatusArray(),
 					'options' => ['placeholder' => 'Pilih Status...'],

@@ -12,14 +12,19 @@ function tabel($data){
 	$fillhead='<thead><tr><th width="1%">'.'#</th><th>Nama</th><th>GrandTotal</th></tr></thead><tbody>';
 	$fillbody='';
 	$nourut= 0;
-	$parsed_json = json_decode($data);
-		foreach ($parsed_json as $key => $value) {
-			$nourut+= 1;
-			$fillbody = $fillbody . '<tr><td>'. $nourut .'</td><td>' . $value->nama . '</td><td class="right-align">'. $value->grandtotal . '</td></tr>';
+	// print_r($data);
+	// die();
+	if(is_array($data)){
+		$parsed_json = json_decode($data);
+			foreach ($parsed_json as $key => $value) {
+				$nourut+= 1;
+				$fillbody = $fillbody . '<tr><td>'. $nourut .'</td><td>' . $value->nama . '</td><td class="right-align">'. $value->grandtotal . '</td></tr>';
 
-		}
-	$fillbody = $fillbody . '<tbody>';
-	return $fillhead.$fillbody;
+			}
+		$fillbody = $fillbody . '<tbody>';
+		return $fillhead.$fillbody;
+	}
+	return [];
 }
 
 

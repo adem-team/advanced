@@ -12,15 +12,22 @@ use lukisongroup\efenbi\rasasayang\models\ItemGroup;
  */
 class ItemGroupSearch extends ItemGroup
 {
+	public function attributes()
+	{
+		//Author -ptr.nov- add related fields to searchable attributes 
+		return array_merge(parent::attributes(), ['ItemNm']);
+	}
+	
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['ID_DTL_ITEM', 'STATUS', 'TYPE', 'ID_STORE', 'ID_ITEM'], 'integer'],
-            [['CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT', 'TYPE_NM'], 'safe'],
+            [['CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT','ITEM_BARCODE', 'ItemNm','HPP', 'OUTLET_ID','GRP_DISPLAY'], 'safe'],
+            [['STATUS','LOCATE', 'LOCATE_SUB'], 'integer'],
             [['PERSEN_MARGIN'], 'number'],
+            [['ITEM_ID','FORMULA_ID'], 'string'],
         ];
     }
 
@@ -42,7 +49,7 @@ class ItemGroupSearch extends ItemGroup
      */
     public function search($params)
     {
-        $query = ItemGroup::find();
+        $query = ItemGroup::find()->JoinWith('itemTbl',true,'LEFT JOIN');
 
         // add conditions that should always apply here
 
@@ -60,19 +67,21 @@ class ItemGroupSearch extends ItemGroup
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'ID_DTL_ITEM' => $this->ID_DTL_ITEM,
-            'CREATE_AT' => $this->CREATE_AT,
-            'UPDATE_AT' => $this->UPDATE_AT,
-            'STATUS' => $this->STATUS,
-            'TYPE' => $this->TYPE,
-            'ID_STORE' => $this->ID_STORE,
-            'ID_ITEM' => $this->ID_ITEM,
-            'PERSEN_MARGIN' => $this->PERSEN_MARGIN,
+            'Item_group.CREATE_AT' => $this->CREATE_AT,
+            'Item_group.UPDATE_AT' => $this->UPDATE_AT,
+            'Item_group.STATUS' => $this->STATUS,
+            'Item_group.LOCATE' => $this->LOCATE,
+            'Item_group.LOCATE_SUB' => $this->LOCATE_SUB,
+            'Item_group.OUTLET_ID' => $this->OUTLET_ID,
+            'Item_group.ITEM_ID' => $this->ITEM_ID,
+            'Item_group.PERSEN_MARGIN' => $this->PERSEN_MARGIN,
         ]);
 
-        $query->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
-            ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY])
-            ->andFilterWhere(['like', 'TYPE_NM', $this->TYPE_NM]);
+        $query->andFilterWhere(['like', 'Item_group.CREATE_BY', $this->CREATE_BY])
+            ->andFilterWhere(['like', 'Item_group.UPDATE_BY', $this->UPDATE_BY])
+            ->andFilterWhere(['like', 'Item_group.GRP_DISPLAY',$this->getAttribute('GRP_DISPLAY')])
+            ->andFilterWhere(['like', 'item.ITEM_NM',$this->getAttribute('ItemNm')])
+            ->andFilterWhere(['like', 'ITEM_BARCODE', $this->ITEM_BARCODE]);
 
         return $dataProvider;
     }

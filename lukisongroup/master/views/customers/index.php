@@ -139,7 +139,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
       'filter' => $parent,
 
 	  'filterOptions'=>[
-		'colspan'=>2,
+		'colspan'=>1,
 	  ],
 	  'filterWidgetOptions'=>[
         'pluginOptions'=>[
@@ -191,8 +191,8 @@ $tabcustomersData = \kartik\grid\GridView::widget([
       'label'=>'Customer.Id',
       'hAlign'=>'left',
       'vAlign'=>'top',
-  	  'filter'=>false,
-  	  'mergeHeader'=>true,
+  	  'filter'=>true,
+  	  'mergeHeader'=>false,
   	  'headerOptions'=>[
         'style'=>[
           'text-align'=>'center',
@@ -535,7 +535,7 @@ $tabcustomersData = \kartik\grid\GridView::widget([
       'template' => '{view}{edit}',
       'header'=>'Action',
       'dropdown' => true,
-      'dropdownOptions'=>['class'=>'pull-right dropup'],
+      'dropdownOptions'=>['class'=>'pull-right dropdown'],
       'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
       'buttons' => [
             'view' =>function($url, $model, $key){

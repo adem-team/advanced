@@ -65,7 +65,7 @@ use yii\helpers\Url;
 			if(getPermission()->BTN_VIEW==1 OR getPermission()->BTN_CREATE==1){
 				$title1 = Yii::t('app',' View');
 				$options1 = [
-					'value'=>url::to(['/efenbi/item-formula/view','id'=>$model->ID_DTL_FORMULA]),
+					'value'=>url::to(['/efenbi/item-formula/view','id'=>$model->ID]),
 					'id'=>'item-formula-button-view',
 					'class'=>"btn btn-default btn-xs",      
 					'style'=>['text-align'=>'left','width'=>'100%', 'height'=>'25px','border'=> 'none'],
@@ -92,7 +92,7 @@ use yii\helpers\Url;
 			if(getPermission()->BTN_REVIEW==1){
 				$title1 = Yii::t('app',' Review');
 				$options1 = [
-					'value'=>url::to(['/efenbi/item-formula/review','id'=>$model->ID_DTL_FORMULA]),
+					'value'=>url::to(['/efenbi/item-formula/review','id'=>$model->ID]),
 					'id'=>'item-formula-button-review',
 					'class'=>"btn btn-default btn-xs",      
 					'style'=>['text-align'=>'left','width'=>'100%', 'height'=>'25px','border'=> 'none'],
@@ -119,7 +119,7 @@ use yii\helpers\Url;
 		if(getPermission()){
 			if(getPermission()->BTN_PROCESS1==1){
 				$title1 = Yii::t('app',' Remainder');
-				$url = url::to(['/efenbi/item-formula/remainder','id'=>$model->ID_DTL_FORMULA]);
+				$url = url::to(['/efenbi/item-formula/remainder','id'=>$model->ID]);
 				$options1 = [
 					'value'=>$url,
 					'id'=>'item-formula-button-remainder',

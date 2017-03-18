@@ -3,11 +3,14 @@
 namespace lukisongroup\efenbi\rasasayang\controllers;
 
 use Yii;
-use lukisongroup\efenbi\rasasayang\models\ItemFormula;
-use lukisongroup\efenbi\rasasayang\models\ItemFormulaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
+use lukisongroup\efenbi\rasasayang\models\ItemFormula;
+use lukisongroup\efenbi\rasasayang\models\ItemFormulaSearch;
+use lukisongroup\efenbi\rasasayang\models\ItemFormulaDetail;
+use lukisongroup\efenbi\rasasayang\models\ItemFormulaDetailSearch;
 
 /**
  * ItemFormulaController implements the CRUD actions for ItemFormula model.
@@ -28,61 +31,33 @@ class ItemFormulaController extends Controller
             ],
         ];
     }
-	/*
-	* Declaration Component User Permission
-	* Function getPermission
-	* Modul Name[11=Calendar Promo]
-	* Permission LINK URL.
-	*/
-	public function getPermission(){
-		if (Yii::$app->getUserOpt->Modul_akses('11')){
-			return Yii::$app->getUserOpt->Modul_akses('11');
-		}else{
-			return false;
-		}
-	}  
-	/**
-     * Before Action Index
-	 * @author ptrnov  <piter@lukison.com>
-	 * @since 1.1
-     */
-	public function beforeAction($action){
-		if (Yii::$app->user->isGuest)  {
-			 Yii::$app->user->logout();
-			   $this->redirect(array('/site/login'));  //
-		}
-		// Check only when the user is logged in
-		if (!Yii::$app->user->isGuest)  {
-		   if (Yii::$app->session['userSessionTimeout']< time() ) {
-			   // timeout
-			   Yii::$app->user->logout();
-			   $this->redirect(array('/site/login'));  //
-		   } else {
-			   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
-			   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
-			   //Modul permission URL, author -ptr.nov@gail.com-
-			   if(self::getPermission()->BTN_CREATE OR self::getPermission()->BTN_VIEW){
-					return true;
-			   }else{
-				   $this->redirect(array('/site/validasi'));
-			   }
-		   }
-		} else {
-			return true;
-		}
-    }
+
     /**
      * Lists all ItemFormula models.
      * @return mixed
      */
     public function actionIndex()
-    {
-        $searchModel = new ItemFormulaSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    {		
+		$searchModel = new ItemFormulaSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		
+		$paramCari = Yii::$app->request->queryParams;
+		if($paramCari){
+			$formulaID=ItemFormula::find()->select(['FORMULA_ID'])->where(['ID'=>$paramCari['id']])->asArray()->one();
+			// print_r($formulaID['']);
+			// die();
+			$searchModelDetail = new ItemFormulaDetailSearch($formulaID);
+			$dataProviderDetail = $searchModelDetail->search(Yii::$app->request->queryParams);
+		}else{
+			$searchModelDetail = new ItemFormulaDetailSearch();
+			$dataProviderDetail = $searchModelDetail->search(Yii::$app->request->queryParams);
+		}
 
         return $this->render('index', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'dataProvider' => $dataProvider, 
+			'searchModelDetail' => $searchModelDetail,
+            'dataProviderDetail' => $dataProviderDetail,
         ]);
     }
 
@@ -108,7 +83,7 @@ class ItemFormulaController extends Controller
         $model = new ItemFormula();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID_DTL_FORMULA]);
+            return $this->redirect(['view', 'id' => $model->ITEM_GRP_ID]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -127,7 +102,7 @@ class ItemFormulaController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID_DTL_FORMULA]);
+            return $this->redirect(['view', 'id' => $model->ITEM_GRP_ID]);
         } else {
             return $this->render('update', [
                 'model' => $model,

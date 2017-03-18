@@ -43,7 +43,7 @@ use yii\helpers\Url;
 		if(getPermission()){
 			if(getPermission()->BTN_CREATE==1){
 				$title1 = Yii::t('app', ' New');
-				$url = Url::toRoute(['/efenbi/item-group/create']);
+				$url = Url::toRoute(['/efenbi-rasasayang/item-group/create']);
 				$options1 = ['value'=>$url,
 							'id'=>'item-group-button-create',
 							'class'=>"btn btn-danger btn-xs"  
@@ -65,7 +65,7 @@ use yii\helpers\Url;
 			if(getPermission()->BTN_VIEW==1 OR getPermission()->BTN_CREATE==1){
 				$title1 = Yii::t('app',' View');
 				$options1 = [
-					'value'=>url::to(['/efenbi/item-group/view','id'=>$model->ID_item-group]),
+					'value'=>url::to(['/efenbi-rasasayang/item-group/view','id'=>$model->ID]),
 					'id'=>'item-group-button-view',
 					'class'=>"btn btn-default btn-xs",      
 					'style'=>['text-align'=>'left','width'=>'100%', 'height'=>'25px','border'=> 'none'],
@@ -92,7 +92,7 @@ use yii\helpers\Url;
 			if(getPermission()->BTN_REVIEW==1){
 				$title1 = Yii::t('app',' Review');
 				$options1 = [
-					'value'=>url::to(['/efenbi/item-group/review','id'=>$model->ID_item-group]),
+					'value'=>url::to(['/efenbi-rasasayang/item-group/review','id'=>$model->ID]),
 					'id'=>'item-group-button-review',
 					'class'=>"btn btn-default btn-xs",      
 					'style'=>['text-align'=>'left','width'=>'100%', 'height'=>'25px','border'=> 'none'],
@@ -119,7 +119,7 @@ use yii\helpers\Url;
 		if(getPermission()){
 			if(getPermission()->BTN_PROCESS1==1){
 				$title1 = Yii::t('app',' Remainder');
-				$url = url::to(['/efenbi/item-group/remainder','id'=>$model->ID_item-group]);
+				$url = url::to(['/efenbi-rasasayang/item-group/remainder','id'=>$model->ID]);
 				$options1 = [
 					'value'=>$url,
 					'id'=>'item-group-button-remainder',
@@ -148,7 +148,7 @@ use yii\helpers\Url;
 	function tombolDeny($url, $model){
 		//if(Yii::$app->getUserOpt->Modul_aksesDeny('12')==0){
 			$title1 = Yii::t('app',' Limited Access');
-			$url = url::to(['/efenbi/item-group']);
+			$url = url::to(['/efenbi-rasasayang/item-group']);
 			$options1 = [
 				'value'=>$url,
 				'id'=>'item-group-button-deny',
@@ -169,7 +169,7 @@ use yii\helpers\Url;
 	//Link Button Refresh 
 	function tombolRefresh(){
 		$title = Yii::t('app', 'Refresh');
-		$url =  Url::toRoute(['/efenbi/item-group']);
+		$url =  Url::toRoute(['/efenbi-rasasayang/item-group']);
 		$options = ['id'=>'item-group-id-refresh',
 				  'data-pjax' => 0,
 				  'class'=>"btn btn-info btn-xs",
@@ -187,7 +187,7 @@ use yii\helpers\Url;
 		// if(getPermission()){
 			// if(getPermission()->BTN_PROCESS1==1){
 				$title1 = Yii::t('app', ' Export Excel');
-				$url = Url::toRoute(['/efenbi/item-group/export-excel']);
+				$url = Url::toRoute(['/efenbi-rasasayang/item-group/export-excel']);
 				$options1 = ['value'=>$url,
 							'id'=>'item-group-button-export-excel',
 							'class'=>"btn btn-info btn-xs"  
@@ -218,7 +218,7 @@ use yii\helpers\Url;
 			<span class="fa-stack fa-xs">																	
 				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
 				<i class="fa fa-plus fa-stack-1x" style="color:#fbfbfb"></i>
-			</span><b> CREATE PROMOTION</b>
+			</span><b> ITEMS OF OUTLET</b>
 		',		
 		'size' => Modal::SIZE_LARGE,
 		'headerOptions'=>[
@@ -237,9 +237,9 @@ use yii\helpers\Url;
 			<span class="fa-stack fa-xs">																	
 				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
 				<i class="fa fa-eye fa-stack-1x" style="color:#fbfbfb"></i>
-			</span><b> VIEW item-group</b>
+			</span><b> Discription Detail </b>
 		',		
-		'size' => Modal::SIZE_LARGE,
+		'size' => 'modal-dm',
 		'headerOptions'=>[
 			'style'=> 'border-radius:5px; background-color:'.$modalHeaderColor,
 		],
@@ -256,9 +256,9 @@ use yii\helpers\Url;
 			<span class="fa-stack fa-xs">																	
 				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
 				<i class="fa fa-edit fa-stack-1x" style="color:#fbfbfb"></i>
-			</span><b> REVIEW item-groupS</b>
+			</span><b> REVIEW Details</b>
 		',		
-		'size' => Modal::SIZE_LARGE,
+		'size' =>'modal-dm',
 		'headerOptions'=>[
 			'style'=> 'border-radius:5px; background-color:'.$modalHeaderColor,
 		],

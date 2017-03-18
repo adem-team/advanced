@@ -19,6 +19,7 @@ use yii\helpers\ArrayHelper;
 use ptrnov\postman4excel\Postman4ExcelBehavior;
 
 use lukisongroup\marketing\models\SalesPromoSearch;
+use lukisongroup\marketing\models\SalesPromo;
 
 class PostmanSalesPromoController extends Controller
 {
@@ -47,6 +48,22 @@ class PostmanSalesPromoController extends Controller
 	 * STATUS: 0=RUNNING/Current; 1=FINISH; 2=PANDING; 3=PLANING.
 	*/
 	public function actionExport(){	
+		$tglIn=date("Y-m-d");
+		//UPDATE STATUS FINISH
+		$SalesPromoData = SalesPromo::find()->select(['ID'])->where(['<=','TGL_END',$tglIn])->andwhere(['=','STATUS','0'])->asArray()->all();	
+		if(count($SalesPromoData)){
+			
+			 foreach ($SalesPromoData as $key => $value) {
+				$modelSalesPromo = SalesPromo::findOne($value['ID']);
+				$modelSalesPromo['STATUS'] ='1';
+				$modelSalesPromo['TGL_FINISH']=$tglIn;
+				$modelSalesPromo['OVERDUE']='0';
+				$modelSalesPromo->save();
+				//$data[]=$value['ID'];
+			 };
+			 //print_r($modelSalesPromo);
+		}; 
+		
 		//Search STATUS
 		$searchModelPlaning = new SalesPromoSearch(['STATUS'=>'3']);					
 		$searchModelPanding = new SalesPromoSearch(['STATUS'=>'2']);					
@@ -69,8 +86,8 @@ class PostmanSalesPromoController extends Controller
 		$aryFieldCurrent=ArrayHelper::toArray($modelFieldClassCurrent);
 		
 		
-		//Excute - Export Excel.
-		$tglIn=date("Y-m-d");
+		
+		//Excute - Export Excel.		
 		$excel_content = [
 			[
 				'sheet_name' => 'PLANING-PROMO',					

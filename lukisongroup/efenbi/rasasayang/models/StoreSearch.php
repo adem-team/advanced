@@ -12,14 +12,19 @@ use lukisongroup\efenbi\rasasayang\models\Store;
  */
 class StoreSearch extends Store
 {
+	public function attributes()
+	{
+		//Author -ptr.nov- add related fields to searchable attributes 
+		return array_merge(parent::attributes(), ['LocatesubNm','LocateNm']);
+	}
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['ID', 'STATUS', 'TYPE'], 'integer'],
-            [['CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT', 'TYPE_NM', 'KD_BARCODE', 'STORE_NM', 'ALAMAT', 'PIC', 'TLP'], 'safe'],
+            [['ID', 'STATUS','LOCATE_SUB', 'LOCATE'], 'integer'],
+            [['CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT','OUTLET_BARCODE', 'OUTLET_NM', 'ALAMAT', 'PIC', 'TLP','LocatesubNm','LocateNm'], 'safe'],
         ];
     }
 
@@ -41,7 +46,7 @@ class StoreSearch extends Store
      */
     public function search($params)
     {
-        $query = Store::find();
+        $query = Store::find()->JoinWith('locateTbl',true,'LEFT JOIN')->JoinWith('locatesubTbl',true,'LEFT JOIN');
 
         // add conditions that should always apply here
 
@@ -60,20 +65,31 @@ class StoreSearch extends Store
         // grid filtering conditions
         $query->andFilterWhere([
             'ID' => $this->ID,
-            'CREATE_AT' => $this->CREATE_AT,
-            'UPDATE_AT' => $this->UPDATE_AT,
             'STATUS' => $this->STATUS,
-            'TYPE' => $this->TYPE,
+            'LOCATE' => $this->LOCATE,
         ]);
-
-        $query->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
-            ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY])
-            ->andFilterWhere(['like', 'TYPE_NM', $this->TYPE_NM])
-            ->andFilterWhere(['like', 'KD_BARCODE', $this->KD_BARCODE])
-            ->andFilterWhere(['like', 'STORE_NM', $this->STORE_NM])
+		/* SORTING Group Function Author -ptr.nov-*/
+		$dataProvider->sort->attributes['LocateNm'] = [
+			'asc' => ['locate.LOCATE_NAME' => SORT_ASC],
+			'desc' => ['locate.LOCATE_NAME' => SORT_DESC],
+		];
+		$dataProvider->sort->attributes['LocatesubNm'] = [
+			'asc' => ['locate.LOCATE_NAME' => SORT_ASC],
+			'desc' => ['locate.LOCATE_NAME' => SORT_DESC],
+		];
+		
+        $query->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])           
+            ->andFilterWhere(['like', 'CREATE_AT', $this->CREATE_AT])
+			 ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY])
+            ->andFilterWhere(['like', 'UPDATE_AT', $this->UPDATE_AT])
+            ->andFilterWhere(['like', 'LOCATE_SUB', $this->LOCATE_SUB])
+            ->andFilterWhere(['like', 'OUTLET_BARCODE', $this->OUTLET_BARCODE])
+            ->andFilterWhere(['like', 'OUTLET_NM', $this->OUTLET_NM])
             ->andFilterWhere(['like', 'ALAMAT', $this->ALAMAT])
             ->andFilterWhere(['like', 'PIC', $this->PIC])
-            ->andFilterWhere(['like', 'TLP', $this->TLP]);
+            ->andFilterWhere(['like', 'TLP', $this->TLP])
+            ->andFilterWhere(['like', 'locate.LOCATE_NAME', $this->getAttribute('LocateNm')])
+            ->andFilterWhere(['like', 'locatesub.LOCATE_NAME', $this->getAttribute('LocatesubNm')]);
 
         return $dataProvider;
     }

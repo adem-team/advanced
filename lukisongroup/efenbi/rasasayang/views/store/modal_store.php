@@ -42,7 +42,7 @@ use yii\helpers\Url;
 	function tombolCreate(){
 		if(getPermission()){
 			if(getPermission()->BTN_CREATE==1){
-				$title1 = Yii::t('app', ' New');
+				$title1 = Yii::t('app', ' Add Store');
 				$url = Url::toRoute(['/efenbi-rasasayang/store/create']);
 				$options1 = ['value'=>$url,
 							'id'=>'store-button-create',
@@ -187,14 +187,15 @@ use yii\helpers\Url;
 		// if(getPermission()){
 			// if(getPermission()->BTN_PROCESS1==1){
 				$title1 = Yii::t('app', ' Export Excel');
-				$url = Url::toRoute(['/efenbi-rasasayang/store/export-excel']);
-				$options1 = ['value'=>$url,
+				$url = Url::toRoute(['/efenbi-rasasayang/store/export']);
+				$options1 = [
 							'id'=>'store-button-export-excel',
+							'data-pjax' => true,
 							'class'=>"btn btn-info btn-xs"  
 				];
 				$icon1 = '<span class="fa fa-file-excel-o fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
-				$content = Html::button($label1,$options1);
+				$content = Html::a($label1,$url,$options1);
 				return $content;
 			// }
 		// }
@@ -218,9 +219,9 @@ use yii\helpers\Url;
 			<span class="fa-stack fa-xs">																	
 				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
 				<i class="fa fa-plus fa-stack-1x" style="color:#fbfbfb"></i>
-			</span><b> CREATE PROMOTION</b>
+			</span><b> CREATE STORE</b>
 		',		
-		'size' => Modal::SIZE_LARGE,
+		'size' => 'modal-dm',
 		'headerOptions'=>[
 			'style'=> 'border-radius:5px; background-color:'.$modalHeaderColor,
 		],
@@ -237,9 +238,9 @@ use yii\helpers\Url;
 			<span class="fa-stack fa-xs">																	
 				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
 				<i class="fa fa-eye fa-stack-1x" style="color:#fbfbfb"></i>
-			</span><b> VIEW store</b>
+			</span><b> VIEW STORE</b>
 		',		
-		'size' => Modal::SIZE_LARGE,
+		'size' => 'modal-dm',
 		'headerOptions'=>[
 			'style'=> 'border-radius:5px; background-color:'.$modalHeaderColor,
 		],
@@ -256,9 +257,9 @@ use yii\helpers\Url;
 			<span class="fa-stack fa-xs">																	
 				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
 				<i class="fa fa-edit fa-stack-1x" style="color:#fbfbfb"></i>
-			</span><b> REVIEW storeS</b>
+			</span><b> REVIEW STORE</b>
 		',		
-		'size' => Modal::SIZE_LARGE,
+		'size' =>'modal-dm',
 		'headerOptions'=>[
 			'style'=> 'border-radius:5px; background-color:'.$modalHeaderColor,
 		],
@@ -288,7 +289,7 @@ use yii\helpers\Url;
 	/*
 	 * store - EXPORT EXCEL.
 	*/
-	$modalHeaderColor='#fbfbfb';//' rgba(74, 206, 231, 1)';
+	/* $modalHeaderColor='#fbfbfb';//' rgba(74, 206, 231, 1)';
 	Modal::begin([
 		'id' => 'store-modal-export-excel',
 		'header' => '
@@ -303,5 +304,5 @@ use yii\helpers\Url;
 		],
 	]);
 	echo "<div id='store-modal-content-export-excel'></div>";
-	Modal::end();
+	Modal::end(); */
 ?>

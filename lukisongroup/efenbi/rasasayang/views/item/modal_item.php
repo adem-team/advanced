@@ -65,7 +65,7 @@ use yii\helpers\Url;
 			if(getPermission()->BTN_VIEW==1 OR getPermission()->BTN_CREATE==1){
 				$title1 = Yii::t('app',' View');
 				$options1 = [
-					'value'=>url::to(['/efenbi-rasasayang/item/view','id'=>$model->ID_ITEM]),
+					'value'=>url::to(['/efenbi-rasasayang/item/view','id'=>$model->ID]),
 					'id'=>'item-button-view',
 					'class'=>"btn btn-default btn-xs",      
 					'style'=>['text-align'=>'left','width'=>'100%', 'height'=>'25px','border'=> 'none'],
@@ -92,7 +92,7 @@ use yii\helpers\Url;
 			if(getPermission()->BTN_REVIEW==1){
 				$title1 = Yii::t('app',' Review');
 				$options1 = [
-					'value'=>url::to(['/efenbi-rasasayang/item/review','id'=>$model->ID_ITEM]),
+					'value'=>url::to(['/efenbi-rasasayang/item/review','id'=>$model->ID]),
 					'id'=>'item-button-review',
 					'class'=>"btn btn-default btn-xs",      
 					'style'=>['text-align'=>'left','width'=>'100%', 'height'=>'25px','border'=> 'none'],
@@ -119,7 +119,7 @@ use yii\helpers\Url;
 		if(getPermission()){
 			if(getPermission()->BTN_PROCESS1==1){
 				$title1 = Yii::t('app',' Remainder');
-				$url = url::to(['/efenbi-rasasayang/item/remainder','id'=>$model->ID_ITEM]);
+				$url = url::to(['/efenbi-rasasayang/item/remainder','id'=>$model->ID]);
 				$options1 = [
 					'value'=>$url,
 					'id'=>'item-button-remainder',

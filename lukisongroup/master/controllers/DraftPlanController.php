@@ -1533,6 +1533,7 @@ class DraftPlanController extends Controller
 
          if ($model->load(Yii::$app->request->post())) {
 
+		 
            self::GantiDetailHeader($model->CUST_ID,$model->TGL);
            self::GantiJadwalPlan($model->CUST_ID,$model->TGL);
 
@@ -1812,7 +1813,9 @@ class DraftPlanController extends Controller
 
          DraftPlanDetail::deleteAll('LEFT(TGL,4) ="'.$tgl.'" AND CUST_ID="'.$custId.'" AND STATUS = 0');
 
-        DraftPlanHeader::deleteAll('LEFT(TGL,4) ="'.$tgl.'" AND STATUS = 1');
+		//UPDATE BY	: [ptr.nov@gmail.com],
+		//UPDATE AT	: 01/03/2017
+        //DraftPlanHeader::deleteAll('LEFT(TGL,4) ="'.$tgl.'" AND STATUS = 1'); 
     }
 
 

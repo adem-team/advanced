@@ -1,45 +1,189 @@
 <?php
+use kartik\helpers\Html;
+use kartik\detail\DetailView;
+use kartik\widgets\DepDrop;
+use yii\helpers\Url;
+use kartik\widgets\Select2;
+use yii\helpers\ArrayHelper;
+use kartik\widgets\FileInput;
+use kartik\widgets\ActiveField;
+use kartik\widgets\ActiveForm;
 
-use yii\helpers\Html;
-use yii\widgets\DetailView;
-
-/* @var $this yii\web\View */
-/* @var $model lukisongroup\efenbi\models\ItemGroup */
-
-$this->title = $model->ID_DTL_ITEM;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Item Groups'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+	$aryStt= [
+	  ['STATUS' => 0, 'STT_NM' => 'Disable'],		  
+	  ['STATUS' => 1, 'STT_NM' => 'Enable']
+	];	
+	$valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
+	
+	$attributeItemGrpup=[
+		//STORE - INFO.
+		[
+			'group'=>true,
+			'label'=>'OUTLET INFO',
+			'rowOptions'=>['class'=>'info'],
+			//'groupOptions'=>['class'=>'text-center']
+		],		
+		//STORE - STORE NAME.
+		[
+			'attribute' =>'StoreNm',
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
+			'displayOnly'=>true,	
+			'format'=>'raw', 
+		],
+		//STORE - STORE LOCATE.
+		[
+			'attribute' =>'LocateNm',
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
+			'displayOnly'=>true,	
+			'format'=>'raw', 
+		],
+		//STORE - STORE LOCATE SUB.
+		[
+			'attribute' =>'LocatesubNm',
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
+			'displayOnly'=>true,	
+			'format'=>'raw', 
+		],	
+		//ITEM - INFO.
+		[
+			'group'=>true,
+			'label'=>'ITEMS INFO',
+			'rowOptions'=>['class'=>'info'],
+			//'groupOptions'=>['class'=>'text-center']
+		],	
+		//ITEM - NAME.
+		[
+			'attribute' =>'ItemNm',
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
+			'displayOnly'=>true,	
+			'format'=>'raw', 
+		],	
+		[
+			'attribute' =>'Gambar',
+			'label'=>false,
+			'value'=> Html::img($model->Gambar),
+			'format'=>['raw',['width'=>'100','height'=>'120']],
+		],	
+		//HARGA - INFO.
+		[
+			'group'=>true,
+			'label'=>'ITEMS PRICE',
+			'rowOptions'=>['class'=>'info'],
+			//'groupOptions'=>['class'=>'text-center']
+		],
+		//HARGA - HPP.
+		[
+			'attribute' =>'HPP',
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
+			'displayOnly'=>true,	
+			'format'=>'raw', 
+		],	
+		//HARGA - PERCENT MARGIN.
+		[
+			'attribute' =>'PERSEN_MARGIN',
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
+			'displayOnly'=>true,	
+			'format'=>'raw', 
+		],	
+		//STORE - INFO.
+		[
+			'group'=>true,
+			'label'=>'SETTING FORMULA',
+			'rowOptions'=>['class'=>'info'],
+			//'groupOptions'=>['class'=>'text-center']
+		],	
+		//FORMULA - PERCENT MARGIN.
+		[
+			'attribute' =>'FORMULA_ID',
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
+			'displayOnly'=>true,	
+			'format'=>'raw', 
+		],	
+		//FORMULA - NAME.
+		[
+			'attribute' =>'FomulaHeaderNm',
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
+			'displayOnly'=>true,	
+			'format'=>'raw', 
+		],	
+		//FORMULA - DISCRIPTION.
+		[
+			'attribute' =>'FomulaHeaderDcrip',
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
+			'displayOnly'=>true,	
+			'format'=>'raw', 
+		],				
+	];
+	
+	$dvItemsGroup=DetailView::widget([
+		'id'=>'dv-items-group',
+		'model' => $model,
+		'attributes'=>$attributeItemGrpup,
+		'condensed'=>true,
+		'hover'=>true,
+		'panel'=>[
+			'heading'=>false,
+			// 'heading'=>'
+				// <span class="fa-stack fa-1">
+					  // <i class="fa fa-circle fa-stack-2x" style="color:#635e5e"></i>
+					  // <i class="fa fa-list-ul fa-stack-1x" style="color:#ffffff"></i>
+				// </span> <b>Discription Detail</b>
+			// ',
+			'type'=>DetailView::TYPE_INFO,
+		],
+		'mode'=>DetailView::MODE_VIEW,
+		'buttons1'=>'{update}',
+		'buttons2'=>'{view}{save}',		
+		/* 'saveOptions'=>[ 
+			'id' =>'editBtn1',
+			'value'=>'/marketing/sales-promo/review?id='.$model->ID,
+			'params' => ['custom_param' => true],
+		],	 */	
+	]);
 ?>
-<div class="item-group-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->ID_DTL_ITEM], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->ID_DTL_ITEM], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'ID_DTL_ITEM',
-            'CREATE_BY',
-            'CREATE_AT',
-            'UPDATE_BY',
-            'UPDATE_AT',
-            'STATUS',
-            'TYPE',
-            'TYPE_NM',
-            'ID_STORE',
-            'ID_ITEM',
-            'PERSEN_MARGIN',
-        ],
-    ]) ?>
-
+<div style="height:100%;font-family: verdana, arial, sans-serif ;font-size: 8pt">
+	<div class="row" >
+		
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<div class="row" >
+			<?=$dvItemsGroup?>
+		</div>
+		</div>
+		<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+			<?=$dvItems ?>
+		</div>
+	</div>
 </div>
+
+
+
+
+   
+    <?php
+	
+	// DetailView::widget([
+        // 'model' => $model,
+        // 'attributes' => [
+		////Store
+		// 'OUTLET_ID',
+		// 'StoreNm',
+		// 'LocateNm',
+		// 'LocatesubNm',          
+		///Items.
+		  // 'ITEM_ID',
+		  // 'ITEM_BARCODE',
+            // 'CREATE_BY',
+            // 'CREATE_AT',
+            // 'UPDATE_BY',
+            // 'UPDATE_AT',
+            // 'STATUS',
+            // 'LOCATE',
+            // 'LOCATE_SUB',
+            // 'OUTLET_ID',
+            // 'ITEM_ID',
+            // 'ITEM_BARCODE',
+            // 'PERSEN_MARGIN',
+        // ],
+    // ]) 
+	
+	?>

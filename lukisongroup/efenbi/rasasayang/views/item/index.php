@@ -56,6 +56,20 @@ echo $this->render('modal_item'); //echo difinition
 			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','30px',$bColor),
 			'contentOptions'=>Yii::$app->gv->gvContainBody('center','30px',''),
 			
+		],	
+		//KD_BARCODE
+		[
+			'attribute'=>'ITEM_ID',
+			'filterType'=>true,
+			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','80px'),
+			'hAlign'=>'right',
+			'vAlign'=>'middle',
+			'mergeHeader'=>false,
+			'noWrap'=>false,
+			//gvContainHeader($align,$width,$bColor)
+			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','100px',$bColor),
+			'contentOptions'=>Yii::$app->gv->gvContainBody('left','100px',''),
+			
 		],		
 		//ITEM NAME
 		[
@@ -72,34 +86,6 @@ echo $this->render('modal_item'); //echo difinition
 			'contentOptions'=>Yii::$app->gv->gvContainBody('left','200px',''),
 			
 		],		
-		//HPP
-		[
-			'attribute'=>'HPP',
-			'filterType'=>true,
-			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px'),
-			'hAlign'=>'right',
-			'vAlign'=>'middle',
-			'mergeHeader'=>false,
-			'noWrap'=>false,
-			//gvContainHeader($align,$width,$bColor)
-			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','100px',$bColor),
-			'contentOptions'=>Yii::$app->gv->gvContainBody('left','100px',''),
-			
-		],
-		//KD_BARCODE
-		[
-			'attribute'=>'KD_BARCODE',
-			'filterType'=>true,
-			'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','80px'),
-			'hAlign'=>'right',
-			'vAlign'=>'middle',
-			'mergeHeader'=>false,
-			'noWrap'=>false,
-			//gvContainHeader($align,$width,$bColor)
-			'headerOptions'=>Yii::$app->gv->gvContainHeader('center','100px',$bColor),
-			'contentOptions'=>Yii::$app->gv->gvContainBody('left','100px',''),
-			
-		],
 		//CREATE_AT
 		[
 			'attribute'=>'CREATE_AT',

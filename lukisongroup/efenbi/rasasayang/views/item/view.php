@@ -17,11 +17,11 @@ use kartik\widgets\ActiveForm;
 	
 	$attributeItem=[
 		[
-			'attribute' =>'ID_ITEM',
+			'attribute' =>'ITEM_ID',
 			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
 			'displayOnly'=>true,	
 			'format'=>'raw', 
-            'value'=>'<kbd>'.$model->ID_ITEM.'</kbd>',
+            'value'=>'<kbd>'.$model->ITEM_ID.'</kbd>',
 		],
 		[
 			'attribute' =>'ITEM_NM',
@@ -32,24 +32,32 @@ use kartik\widgets\ActiveForm;
             //'value'=>'<kbd>'.$model->ITEM_NM.'</kbd>',
 		],
 		[
-			'attribute' =>'HPP',
+			'attribute' =>'CREATE_BY',
 			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
-			//'displayOnly'=>true,	
-			//'format'=>'raw', 
-            //'value'=>'<kbd>'.$model->ID_ITEM.'</kbd>',
+			'displayOnly'=>true,
+			'format'=>'raw', 
+			'value'=>'<kbd>'.$model->CREATE_BY.'</kbd>',
 		],
 		[
-			'attribute' =>'CREATE_BY',
+			'attribute' =>'CREATE_AT',
 			'format'=>'raw',
-			'type'=>DetailView::INPUT_DATE,
+			'type'=>DetailView::INPUT_DATETIME,
 			'widgetOptions' => [
 				'pluginOptions'=>Yii::$app->gv->gvPliginDate()
 			],
 			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
 		],
 		[
-			'attribute' =>'CREATE_BY',
+			'attribute' =>'UPDATE_BY',
+			'format'=>'raw', 
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%'],
+			'displayOnly'=>true,
+			'value'=>'<kbd>'.$model->UPDATE_BY.'</kbd>',
+		],
+		[
+			'attribute' =>'UPDATE_AT',
 			'format'=>'raw',
+			'displayOnly'=>true,
 			'type'=>DetailView::INPUT_DATE,
 			'widgetOptions' => [
 				'pluginOptions'=>Yii::$app->gv->gvPliginDate()
@@ -136,7 +144,7 @@ use kartik\widgets\ActiveForm;
 			'buttons2'=>'{view}{save}',		
 			'saveOptions'=>[ 
 				'id' =>'editBtn2',
-				'value'=>'/efenbi-rasasayang/item/view?id='.$model->ID_ITEM,
+				'value'=>'/efenbi-rasasayang/item/view?id='.$model->ITEM_ID,
 				'params' => ['custom_param' => true],
 			],	
 		]);

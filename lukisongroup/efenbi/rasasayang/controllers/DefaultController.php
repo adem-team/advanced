@@ -1,6 +1,6 @@
 <?php
 
-namespace lukisongroup\efenbi\controllers;
+namespace lukisongroup\efenbi\rasasayang\controllers;
 
 use yii\web\Controller;
 
